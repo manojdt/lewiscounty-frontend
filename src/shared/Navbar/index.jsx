@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import { useDispatch } from "react-redux";
 import { ReactComponent as NotificationIcon } from "../../assets/icons/notification.svg";
 import { ReactComponent as SettingsIcon } from "../../assets/icons/settings.svg";
 import UserImage from "../../assets/images/user.jpg";
 
 export const Navbar = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -15,7 +17,9 @@ export const Navbar = () => {
     };
     const handleClose = () => {
         setAnchorEl(null);
-        localStorage.clear();
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        dispatch({ type: "logout" })
         navigate("/login");
     };
 

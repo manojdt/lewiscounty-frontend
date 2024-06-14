@@ -32,10 +32,7 @@ export const Login = () => {
   const onSubmit = (data) => {
     const { email, password } = data;
     if (email !== "" && password !== "") {
-      console.log('Login Data', data);
       dispatch(userAccountLogin(data))
-      // localStorage.setItem('loggedIn', true)
-      // navigate("/dashboard");
     }
   };
 

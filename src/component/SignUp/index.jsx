@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import LoadingButton from '@mui/lab/LoadingButton';
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
 import { SignupFields } from "../../utils/loginFields";
 import LogoSlide from "../LogoSlide";
 import { userAccountCreate } from '../../services/loginInfo'
@@ -12,6 +14,7 @@ import SocialMediaLogin from "../../shared/SocialMedia";
 
 export const Signup = () => {
   const [passwordVisibility, setPasswordVisibility] = useState(false);
+  const userData = useSelector(state => state.userInfo)
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const {
@@ -22,14 +25,21 @@ export const Signup = () => {
 
   const onSubmit = (data) => {
     console.log(data);
-    const { userfullname, useremail, userpassword } = data;
-    if (userfullname !== "" && useremail !== "" && userpassword !== "") {
+    const { first_name, last_name, email, password } = data;
+    if (first_name !== "" && last_name !== '' && email !== "" && password !== "") {
       // localStorage.setItem('loggedIn', true)
       // dispatch(setUserInfo(data))
       dispatch(userAccountCreate(data))
       // navigate("/login-type");
     }
   };
+
+
+  useEffect(() => {
+    if (!userData.loading && Object.keys(userData.data).length) {
+      navigate("/dashboard");
+    }
+  }, [userData])
 
 
   console.log('errors', errors)
@@ -41,7 +51,13 @@ export const Signup = () => {
           <div className="block bg-white shadow-lg h-full">
             <div className="g-0 lg:flex lg:flex-row h-full">
               <LogoSlide />
+              <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={userData.loading}
 
+              >
+                <CircularProgress color="inherit" />
+              </Backdrop>
               <div className="px-4 md:px-0 lg:w-6/12 text-black">
                 <div className="md:mx-6 md:p-12">
                   <div className="text-left">

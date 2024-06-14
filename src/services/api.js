@@ -11,7 +11,7 @@ const api = axios.create({
 api.interceptors.response.use(
   (response) => {
     console.log("Res", response);
-    if (response.status === 200) {
+    if (response.status === 200 || response.status === 201) {
       return { data: response.data, status : response.status };
     }
     return response;
