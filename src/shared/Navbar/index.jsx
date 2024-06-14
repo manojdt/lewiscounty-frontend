@@ -1,9 +1,28 @@
-import React from 'react'
+import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import { useDispatch } from "react-redux";
 import { ReactComponent as NotificationIcon } from "../../assets/icons/notification.svg";
 import { ReactComponent as SettingsIcon } from "../../assets/icons/settings.svg";
 import UserImage from "../../assets/images/user.jpg";
 
 export const Navbar = () => {
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        dispatch({ type: "logout" })
+        navigate("/login");
+    };
+
     return (
         <div className="px-4" style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
             <nav className="bg-white border-gray-200">
@@ -56,8 +75,22 @@ export const Navbar = () => {
                         </div>
                         <NotificationIcon />
                         <SettingsIcon />
-                        <div>
-                            <img className='rounded-3xl object-cover h-8 w-8' src={UserImage} alt="User Icon" />
+
+                        <div className='reletive'>
+                            <img className='rounded-3xl object-cover h-8 w-8 cursor-pointer' src={UserImage} alt="User Icon"
+                                onClick={handleClick} />
+                            <Menu
+                                id="basic-menu"
+                                anchorEl={anchorEl}
+                                open={open}
+                                onClose={handleClose}
+                                MenuListProps={{
+                                    'aria-labelledby': 'basic-button',
+                                }}
+                            >
+                                <MenuItem onClick={handleClose}>Logout</MenuItem>
+                            </Menu>
+
                         </div>
                     </div>
                 </div>

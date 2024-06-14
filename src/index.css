@@ -2,8 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: "Plus Jakarta Sans", sans-serif;
+body, button {
+  font-family: "Plus Jakarta Sans", sans-serif !important;
 }
 
 #root {
@@ -15,7 +15,8 @@ body {
 }
 
 .logoColor {
-  color: #1d5bbf;
+  color: rgba(29, 91, 191, 1);
+  font-weight: 600;
 }
 
 .error {

@@ -108,15 +108,6 @@ export const curatedPrograms = [
   {
     programImage: ProgramImage,
     category: "Category4",
-    name: "Teaching Education Program4",
-    desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-    time: "4/7/2024",
-    hour: "10 A.M (GMT + 7)",
-    posted: "20 Mins ago",
-  },
-  {
-    programImage: ProgramImage,
-    category: "Category1",
     name: "Teaching Education Program1",
     desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
     time: "4/7/2024",
@@ -125,11 +116,107 @@ export const curatedPrograms = [
   },
   {
     programImage: ProgramImage,
-    category: "Category2",
+    category: "Category5",
     name: "Teaching Education Program2",
     desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
     time: "4/7/2024",
     hour: "10 A.M (GMT + 7)",
     posted: "45 Mins ago",
   },
+  {
+    programImage: ProgramImage,
+    category: "Category6",
+    name: "Teaching Education Program3",
+    desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    time: "4/7/2024",
+    hour: "10 A.M (GMT + 7)",
+    posted: "32 Mins ago",
+  },
+  {
+    programImage: ProgramImage,
+    category: "Category7",
+    name: "Teaching Education Program1",
+    desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    time: "4/7/2024",
+    hour: "10 A.M (GMT + 7)",
+    posted: "10 Mins ago",
+  },
+  {
+    programImage: ProgramImage,
+    category: "Category8",
+    name: "Teaching Education Program2",
+    desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    time: "4/7/2024",
+    hour: "10 A.M (GMT + 7)",
+    posted: "45 Mins ago",
+  },
+  {
+    programImage: ProgramImage,
+    category: "Category9",
+    name: "Teaching Education Program3",
+    desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    time: "4/7/2024",
+    hour: "10 A.M (GMT + 7)",
+    posted: "32 Mins ago",
+  },
+  
+  
 ];
+
+
+export const recentRequest = [
+    {
+        name: 'Rhea Ripley',
+        type: 'Student',
+        attended : 25,
+        completed: 14
+    },
+    {
+        name: 'Jhon Smith',
+        type: 'CSR Employee',
+        attended : 78,
+        completed: 47
+    },
+    {
+        name: 'Michael St',
+        type: 'Student',
+        attended : 32,
+        completed: 12
+    },
+    {
+        name: 'Rhea Ripley',
+        type: 'Student',
+        attended : 85,
+        completed: 43
+    },
+    {
+        name: 'Rhea Ripley',
+        type: 'Student',
+        attended : 44,
+        completed: 16
+    },
+]
+
+
+export const programFeeds = [
+    {
+        title: 'Math’s Teaching  Program',
+        desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.'
+    },
+    {
+        title: 'Math’s Teaching  Program',
+        desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.'
+    },
+    {
+        title: 'Math’s Teaching  Program',
+        desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.'
+    },
+    {
+        title: 'Math’s Teaching  Program',
+        desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.'
+    },
+    {
+        title: 'Math’s Teaching  Program',
+        desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.'
+    },
+]

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { updateUserInfo } from "../../features/user/userSlice";
+import { userAccountLogin } from "../../features/user/userSlice";
 
 export const LoginType = () => {
     const navigate = useNavigate();
@@ -20,7 +20,7 @@ export const LoginType = () => {
         if (loginType !== '') {
             setError(false)
             console.log(loginType);
-            dispatch(updateUserInfo({ login_type: loginType }))
+            // dispatch(updateUserInfo({ login_type: loginType }))
             navigate("/questions");
         }
 

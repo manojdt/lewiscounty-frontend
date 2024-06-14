@@ -1,21 +1,46 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { userAccountCreate, userAccountLogin } from "../../services/loginInfo";
 
-const initialState = {};
+const initialState = {
+  data: {},
+  loading: false,
+  error: "",
+};
 
 export const userSlice = createSlice({
   name: "userInfo",
   initialState,
-  reducers: {
-    setUserInfo: (state, action) => {
-      return state = action.payload
-    },
-    updateUserInfo: (state, action) =>  {
-      return state = { ...state, ...action.payload }
-    }
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(userAccountCreate.pending, (state) => {
+        return { ...state, loading: true };
+      })
+      .addCase(userAccountCreate.fulfilled, (state, action) => {
+        return { ...state, data: action.payload, loading: false };
+      })
+      .addCase(userAccountCreate.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
+    builder
+      .addCase(userAccountLogin.pending, (state) => {
+        return { ...state, loading: true };
+      })
+      .addCase(userAccountLogin.fulfilled, (state, action) => {
+        return { ...state, data: action.payload, loading: false };
+      })
+      .addCase(userAccountLogin.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
   },
 });
-
-// Action creators are generated for each case reducer function
-export const { setUserInfo, updateUserInfo } = userSlice.actions;
 
 export default userSlice.reducer;

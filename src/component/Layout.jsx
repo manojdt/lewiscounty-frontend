@@ -1,0 +1,67 @@
+import React from 'react'
+import {  Outlet } from "react-router-dom";
+import { Navbar } from '../shared'
+
+export default function Layout() {
+    return (
+        <div>
+            <Navbar />
+            <div className="py-8" style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)' }}>
+        <ul className="flex flex-col gap-20 justify-center items-center p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 ">
+          <li className="dashboard-menu-active">
+            <a href="/" className="block py-2 px-3 rounded md:p-0" aria-current="page">Dashboard</a>
+          </li>
+          <li>
+            <a href="/" className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0">Programs</a>
+          </li>
+          <li>
+            <a href="/" className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0">Mentees</a>
+          </li>
+          <li>
+
+            <div className="relative inline-block text-left">
+              <div>
+                <button type="button" className="inline-flex w-full justify-center gap-x-1.5  px-3 py-2 text-gray-900" id="menu-button" aria-expanded="true" aria-haspopup="true">
+                  Objectives
+                  <svg className="-mr-1 h-6 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
+                  </svg>
+                </button>
+              </div>
+              {/* <div className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabIndex="-1">
+                <div className="py-1" role="none">
+                  <a href="/dashboard" className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1" id="menu-item-0">Account settings</a>
+                </div>
+              </div> */}
+            </div>
+          </li>
+          <li>
+            <a href="/" className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0">Calendar</a>
+          </li>
+          <li>
+            <a href="/" className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0">Discussions</a>
+          </li>
+          <li>
+            <div className="relative inline-block text-left">
+              <div>
+                <button type="button" className="inline-flex w-full justify-center gap-x-1.5  px-3 py-2  text-gray-900" id="menu-button" aria-expanded="true" aria-haspopup="true">
+                  More
+                  <svg className="-mr-1 h-6 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
+                  </svg>
+                </button>
+              </div>
+              {/* <div className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabIndex="-1">
+                <div className="py-1" role="none">
+                  <a href="/dashboard" className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1" id="menu-item-0">Account settings</a>
+                </div>
+              </div> */}
+            </div>
+          </li>
+        </ul>
+
+      </div>
+            <Outlet />
+        </div>
+    )
+}

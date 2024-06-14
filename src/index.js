@@ -7,14 +7,27 @@ import "./assets/fonts/fonts.css";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import { createTheme, ThemeProvider  } from "@mui/material/styles";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
+
+const theme = createTheme ({
+  Button: {
+    fontFamily: [
+      "Plus Jakarta Sans",
+      "sans-serif",
+    ].join(","),
+  },
+});
+
 root.render(
-  <Provider store={store}>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </Provider>
+  <ThemeProvider theme={theme}>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
+  </ThemeProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function
