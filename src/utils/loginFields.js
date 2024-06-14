@@ -3,37 +3,29 @@ import { emailPattern } from "./InputRules";
 export const SignupFields = [
   {
     type: "input",
-    name: "user_firstname",
+    name: "first_name",
     fieldtype: "text",
-    label: "Full Name",
-    placeholder: "Full Name",
+    label: "First Name",
+    placeholder: "Enter your first name",
     inputRules: {
-      required: "Fullname is required",
+      required: "First name is required",
     },
+    size: true,
   },
   {
     type: "input",
-    name: "user_lastname",
+    name: "last_name",
     fieldtype: "text",
     label: "Last Name",
-    placeholder: "Last Name",
+    placeholder: "Enter your last name",
     inputRules: {
-      required: "Fullname is required",
+      required: "Last name is required",
     },
+    size: true,
   },
   {
     type: "input",
-    name: "user_phonenumber",
-    fieldtype: "number",
-    label: "Phone Number",
-    placeholder: "Enter your phone number",
-    inputRules: {
-      required: "Phone Number is required",
-    },
-  },
-  {
-    type: "input",
-    name: "user_email",
+    name: "email",
     fieldtype: "email",
     label: "Email",
     placeholder: "Enter your email",
@@ -44,27 +36,19 @@ export const SignupFields = [
         message: "Invalid email address",
       },
     },
+    size: false,
   },
   {
     type: "input",
-    name: "user_password",
+    name: "password",
     fieldtype: "password",
     label: "Password",
     placeholder: "Enter your password",
     inputRules: {
       required: "Password is required",
     },
-  },
-  {
-    type: "input",
-    name: "user_confirm_password",
-    fieldtype: "password",
-    label: "Confirm Password",
-    placeholder: "Enter your confirm password",
-    inputRules: {
-      required: "Confirm Password is required",
-    },
-  },
+    size: false,
+  }
 ];
 
 export const LoginFields = [
