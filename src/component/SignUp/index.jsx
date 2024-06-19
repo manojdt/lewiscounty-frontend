@@ -2,18 +2,27 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import LoadingButton from '@mui/lab/LoadingButton';
+
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
-import { SignupFields } from "../../utils/loginFields";
+import { SignupFields, PasswordRules } from "../../utils/loginFields";
 import LogoSlide from "../LogoSlide";
-import { userAccountCreate } from '../../services/loginInfo'
+import { userAccountCreate, resetUserInfo } from '../../services/loginInfo'
 import { ReactComponent as EyeCloseIcon } from "../../assets/icons/eyeClose.svg";
 import { ReactComponent as EyeOpenIcon } from "../../assets/icons/eyeOpen.svg";
 import SocialMediaLogin from "../../shared/SocialMedia";
+import { PasswordRulesSet, userStatus } from "../../utils/constant";
+import SuccessIcon from "../../assets/images/Success_tic1x.png"
 
 export const Signup = () => {
   const [passwordVisibility, setPasswordVisibility] = useState(false);
+  const [verifyPasswordRule, setVerifyPasswordRule] = useState({
+    [PasswordRulesSet.character]: false,
+    [PasswordRulesSet.upperlowercase]: false,
+    [PasswordRulesSet.number]: true,
+    [PasswordRulesSet.email]: false,
+    [PasswordRulesSet.common]: false,
+  })
   const userData = useSelector(state => state.userInfo)
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -27,17 +36,25 @@ export const Signup = () => {
     console.log(data);
     const { first_name, last_name, email, password } = data;
     if (first_name !== "" && last_name !== '' && email !== "" && password !== "") {
-      // localStorage.setItem('loggedIn', true)
-      // dispatch(setUserInfo(data))
       dispatch(userAccountCreate(data))
-      // navigate("/login-type");
     }
   };
 
+  const handleField = (field, value) => {
+    console.log('World', field, value)
+  }
 
   useEffect(() => {
-    if (!userData.loading && Object.keys(userData.data).length) {
-      navigate("/dashboard");
+    dispatch(resetUserInfo())
+  }, [])
+
+
+  useEffect(() => {
+    if (!userData.loading && Object.keys(userData.data).length && userData.status === userStatus.create) {
+      console.log('userData.data', userData.data)
+      setTimeout(() => {
+        navigate("/login-type");
+      }, 2000)
     }
   }, [userData])
 
@@ -53,13 +70,21 @@ export const Signup = () => {
               <LogoSlide />
               <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={userData.loading}
-
+                open={userData.loading || userData.status === userStatus.create}
               >
-                <CircularProgress color="inherit" />
+                {
+                  userData.status === userStatus.create ?
+                    <div className="w-2/6 bg-white flex flex-col gap-4 h-[330px] justify-center items-center">
+                      <img src={SuccessIcon} alt="VerifyIcon" />
+                      <span style={{ color: '#232323', fontWeight: 600 }}>Account Created Successfully!</span>
+                    </div>
+                    :
+                    <CircularProgress color="inherit" />
+                }
+
               </Backdrop>
-              <div className="px-4 md:px-0 lg:w-6/12 text-black">
-                <div className="md:mx-6 md:p-12">
+              <div className="px-4 md:px-0 lg:w-7/12 text-black">
+                <div className="md:mx-4 md:p-8">
                   <div className="text-left">
                     <div className="flex  items-center">
                       <svg
@@ -109,48 +134,87 @@ export const Signup = () => {
                         OR
                       </p>
                     </div>
+                    {
+                      userData.error !== '' ? <div className="pb-7">
+                        <p className="error" role="alert">
+                          {userData.error}
+                        </p></div> : null
+                    }
                     <div className="flex flex-wrap gap-2">
                       {
                         SignupFields.map((field, index) =>
+                          <>
+                            <div className={`relative mb-6 ${field.size ? 'width-49' : 'w-full'}`} key={index}>
+                              <label className="block tracking-wide text-gray-700 mb-2 text-[14px]">
+                                {field.label} *
+                              </label>
+                              <input
+                                type={field.fieldtype === 'password' ? (passwordVisibility ? 'text' : field.fieldtype) : field.fieldtype}
+                                className={`w-full rounded px-3 py-[0.32rem] text-[14px] leading-[2.15] h-[60px] ${errors[field.name] ? 'focus:border-teal focus:outline-none focus:ring-0' : ''}`}
+                                placeholder={field.placeholder}
+                                style={{
+                                  color: "#232323",
+                                  border: `1px solid ${errors[field.name] ? 'rgb(239 68 68)' : '#3E3E3E'}`,
+                                }}
+                                {...register(field.name, field.inputRules)}
+                                {...field.fieldtype === 'password' ? { onKeyUp : (e) => handleField(field.fieldtype, e.target.value)} : {} }
+                                // onBlur={(e) => handleField(field.fieldtype, e.target.value)}
+                                aria-invalid={errors[field.name] ? "true" : "false"}
+                              />
+                              {
+                                field.fieldtype === 'password' &&
 
-                          <div className={`relative mb-6 ${field.size ? 'width-49' : 'w-full'}`} key={index}>
-                            <label className="block tracking-wide text-gray-700 mb-2 text-[14px]">
-                              {field.label} *
-                            </label>
-                            <input
-                              type={field.fieldtype === 'password' ? (passwordVisibility ? 'text' : field.fieldtype) : field.fieldtype}
-                              className={`w-full rounded px-3 py-[0.32rem] leading-[2.15] h-[65px] ${errors[field.name] ? 'focus:border-teal focus:outline-none focus:ring-0' : ''}`}
-                              placeholder={field.placeholder}
-                              style={{
-                                color: "#232323",
-                                border: `1px solid ${errors[field.name] ? 'rgb(239 68 68)' : '#3E3E3E'}`,
-                              }}
-                              {...register(field.name, field.inputRules)}
-                              aria-invalid={errors[field.name] ? "true" : "false"}
-                            />
+                                <button
+                                  type="button"
+                                  className="absolute top-9 end-0 p-3.5 rounded-e-md"
+                                  onClick={() =>
+                                    setPasswordVisibility(!passwordVisibility)
+                                  }
+                                >
+                                  {passwordVisibility ? (
+                                    <EyeOpenIcon />
+                                  ) : (
+                                    <EyeCloseIcon />
+                                  )}
+                                </button>
+                              }
+
+                              {errors[field.name] && (
+                                <p className="error" role="alert">
+                                  {errors[field.name].message}
+                                </p>
+                              )}
+                            </div>
                             {
                               field.fieldtype === 'password' &&
+                              <div className="pb-3 leading-6">
+                                <p className="text-[14px] pb-1">Create a password That:</p>
+                                <ul className="">
+                                  {
+                                    PasswordRules.map((rule, index) => {
+                                      let icon = '\\2022'
+                                      let pd = 3
+                                      let textColor = '#000'
+                                      if (verifyPasswordRule[rule.key]) {
+                                        icon = '\\2714\\0020'
+                                        pd = 2
+                                        textColor = '#00AEBD'
+                                      }
 
-                              <button
-                                type="button"
-                                className="absolute top-9 end-0 p-3.5 rounded-e-md"
-                                onClick={() =>
-                                  setPasswordVisibility(!passwordVisibility)
-                                }
-                              >
-                                {passwordVisibility ? (
-                                  <EyeOpenIcon />
-                                ) : (
-                                  <EyeCloseIcon />
-                                )}
-                              </button>
+                                      return (
+                                        <li key={index} className={`text-[12px] list-none before:content-['${icon}'] before:pr-${pd} before:text-[10px]`}
+                                          style={{ color: textColor }}>{rule.name}</li>)
+                                    })
+                                  }
+                                  {/* <li className="text-[12px] list-none before:content-['\2714\0020'] before:pr-2">Contains at least 8 characters</li>
+                                  <li className="text-[12px] list-none before:content-['\2022'] before:pr-3">Contains both lower (a-z) and upper case letters(A-Z)</li>
+                                  <li className="text-[12px] list-none before:content-['\2714\0020'] before:pr-2">Contains at least one number (0-9) or a symbol</li>
+                                  <li className="text-[12px] list-none before:content-['\2714\0020'] before:pr-2">Does not contain your email address</li>
+                                  <li className="text-[12px] list-none before:content-['\2714\0020'] before:pr-2">Is not commonly used</li> */}
+                                </ul>
+                              </div>
                             }
-                            {errors[field.name] && (
-                              <p className="error" role="alert">
-                                {errors[field.name].message}
-                              </p>
-                            )}
-                          </div>
+                          </>
                         )
                       }
                     </div>

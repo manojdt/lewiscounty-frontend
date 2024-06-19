@@ -1,4 +1,5 @@
 import { emailPattern } from "./InputRules";
+import { PasswordRulesSet } from './constant';
 
 export const SignupFields = [
   {
@@ -77,3 +78,26 @@ export const LoginFields = [
     },
   },
 ];
+
+export const PasswordRules = [
+  {
+    name : 'Contains at least 8 characters',
+    key: PasswordRulesSet.character
+  },
+  {
+    name : 'Contains both lower (a-z) and upper case letters(A-Z)',
+    key: PasswordRulesSet.upperlowercase
+  },
+  {
+    name : 'Contains at least one number (0-9) or a symbol',
+    key: PasswordRulesSet.number
+  },
+  {
+    name : 'Does not contain your email address',
+    key: PasswordRulesSet.email
+  },
+  {
+    name : 'Is not commonly used',
+    key: PasswordRulesSet.common
+  }
+]

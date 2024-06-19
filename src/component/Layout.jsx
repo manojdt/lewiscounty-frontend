@@ -1,21 +1,26 @@
 import React from 'react'
-import {  Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Navbar } from '../shared'
 
 export default function Layout() {
-    return (
-        <div>
-            <Navbar />
-            <div className="py-8" style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)' }}>
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { pathname } = location
+  console.log('location', location)
+  return (
+    <div>
+      <Navbar />
+      <div className="py-8" style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)' }}>
         <ul className="flex flex-col gap-20 justify-center items-center p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 ">
-          <li className="dashboard-menu-active">
-            <a href="/" className="block py-2 px-3 rounded md:p-0" aria-current="page">Dashboard</a>
+          <li className={`${pathname === '/dashboard' ? 'dashboard-menu-active': ''}`}>
+            <span onClick={() => navigate('/dashboard')} className="block py-2 px-3 rounded md:p-0 cursor-pointer" aria-current="page">Dashboard</span>
           </li>
-          <li>
-            <a href="/" className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0">Programs</a>
+          <li className={`${pathname === '/programs' ? 'dashboard-menu-active': ''}`}>
+            <span onClick={() => navigate('/dashboard')} className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer">Programs</span>
           </li>
-          <li>
-            <a href="/" className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0">Mentees</a>
+          <li className={`${pathname === '/mentees' ? 'dashboard-menu-active': ''}`}>
+            <span onClick={() => navigate('/dashboard')} className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer">Mentees</span>
           </li>
           <li>
 
@@ -35,11 +40,11 @@ export default function Layout() {
               </div> */}
             </div>
           </li>
-          <li>
-            <a href="/" className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0">Calendar</a>
+          <li className={`${pathname === '/calendar' ? 'dashboard-menu-active': ''}`}>
+            <span onClick={() => navigate('/dashboard')} className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer">Calendar</span>
           </li>
-          <li>
-            <a href="/" className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0">Discussions</a>
+          <li className={`${pathname === '/discussions' ? 'dashboard-menu-active': ''}`}>
+            <span onClick={() => navigate('/dashboard')} className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer">Discussions</span>
           </li>
           <li>
             <div className="relative inline-block text-left">
@@ -61,7 +66,7 @@ export default function Layout() {
         </ul>
 
       </div>
-            <Outlet />
-        </div>
-    )
+      <Outlet />
+    </div>
+  )
 }

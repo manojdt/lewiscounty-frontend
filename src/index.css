@@ -58,6 +58,32 @@ body, button {
   width: 49%;
 }
 
+.width-47{
+  width: 47%;
+}
+
+.width-32{
+  width: 32.5%;
+}
+
+
+
+.width-82{
+  width: 82%;
+}
+
+.width-17{
+  width: 17%;
+}
+
+
+@media only screen and (min-device-width: 481px) and (max-device-width: 1440px) {
+  /* For landscape layouts only */
+  .width-32{
+    width: 32%;
+  }
+}
+
 
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
@@ -82,3 +108,4 @@ input[type="number"] {
           scrollbar-width: none;  /* Firefox */
     }
   }
+

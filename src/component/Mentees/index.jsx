@@ -3,6 +3,7 @@ import MuiTable from '../../shared/Table'
 import FilterIcon from '../../assets/icons/Filter.svg';
 
 import Dropdown from '../../shared/Dropdown';
+import { menteeColumns, menteeMoreMenu, menteeRows } from '../../mock';
 
 export const Mentees = () => {
 
@@ -10,9 +11,9 @@ export const Mentees = () => {
     return (
         <div className="px-9 py-9">
             <div className='px-3 py-5' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
-                <div className='flex justify-between px-5 items-center'>
-                    <div className='flex gap-5 items-center'>
-                        <p>Mentees</p>
+                <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
+                    <div className='flex gap-5 items-center '>
+                        <p>My Mentees</p>
                         <p><img src={FilterIcon} alt="FilterIcon" /></p>
                     </div>
                     <div className='flex gap-8 items-center'>
@@ -32,7 +33,13 @@ export const Mentees = () => {
                         <Dropdown />
                     </div>
                 </div>
-                <MuiTable />
+                <div className='mx-5'>
+                    <MuiTable
+                        columns={menteeColumns}
+                        data={menteeRows}
+                        actionMenu={menteeMoreMenu}
+                    />
+                </div>
             </div>
         </div>
     )

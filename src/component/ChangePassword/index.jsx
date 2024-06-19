@@ -1,10 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
 import LogoSlide from "../LogoSlide";
 import { ReactComponent as EyeCloseIcon } from "../../assets/icons/eyeClose.svg";
 import { ReactComponent as EyeOpenIcon } from "../../assets/icons/eyeOpen.svg";
+import { useDispatch, useSelector } from "react-redux";
+import { updatePassword } from "../../services/loginInfo";
+import { userStatus } from "../../utils/constant";
 
 export const ChangePassword = () => {
+  const dispatch = useDispatch();
+  const [searchParams] = useSearchParams();
+  const userEmail = searchParams.get("email");
+  const navigate = useNavigate();
+  const userInfo = useSelector(state => state.userInfo);
   const [passwordVisibility, setPasswordVisibility] = useState({
     new_password: false,
     confirm_password: false,
@@ -13,11 +24,32 @@ export const ChangePassword = () => {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm();
 
   const onSubmit = (data) => {
     console.log(data);
+    console.log('errors', errors)
+    const { new_password, confirm_password } = data
+    if (new_password !== '' && confirm_password !== '' && new_password !== confirm_password) {
+      console.log('lll')
+      setError("confirm_password", {
+        type: "custom",
+        message: "New password and Confirm password should be same",
+      })
+    } else if (userEmail !== '' && new_password === confirm_password) {
+      dispatch(updatePassword({ email: userEmail, new_password: new_password }))
+    }
   };
+
+  useEffect(() => {
+    if (!userInfo.loading && userInfo.status === userStatus.changePassword) {
+      navigate('/')
+    }
+  }, [userInfo])
+
+
+  console.log('mmm', errors)
 
   return (
     <div className="h-full">
@@ -26,7 +58,12 @@ export const ChangePassword = () => {
           <div className="block bg-white shadow-lg h-full">
             <div className="g-0 lg:flex lg:flex-row h-full">
               <LogoSlide />
-
+              <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={userInfo.loading}
+              >
+                <CircularProgress color="inherit" />
+              </Backdrop>
               <div className="px-4 md:px-0 lg:w-6/12 text-black flex justify-center items-center">
                 <div className="w-9/12">
                   <div className="text-center">
@@ -59,12 +96,21 @@ export const ChangePassword = () => {
                   </div>
 
                   <form onSubmit={handleSubmit(onSubmit)}>
+                  {
+                      userInfo.error !== '' ? <div className="pb-7">
+                        <p className="error" role="alert">
+                          {userInfo.error}
+                        </p></div> : null
+                    }
                     <div className="relative mb-6">
+                      <label className="block tracking-wide text-gray-700 text-xs mb-2">
+                        New Password
+                      </label>
                       <input
                         type={`${passwordVisibility.new_password ? "text" : "password"
                           }`}
-                        className="w-full rounded px-3 py-[0.32rem] leading-[2.15]"
-                        placeholder="Enter your email"
+                        className="w-full rounded px-3 py-[0.32rem] leading-[2.15] text-[14px] h-[60px]"
+                        placeholder="Enter new password"
                         style={{
                           color: "#232323",
                           border: "1px solid #3E3E3E",
@@ -77,7 +123,7 @@ export const ChangePassword = () => {
 
                       <button
                         type="button"
-                        className="absolute top-0 end-0 p-3.5 rounded-e-md"
+                        className="absolute top-7 end-0 p-3.5 rounded-e-md"
                         onClick={() =>
                           setPasswordVisibility({
                             ...passwordVisibility,
@@ -86,9 +132,9 @@ export const ChangePassword = () => {
                         }
                       >
                         {passwordVisibility.new_password ? (
-                          <EyeOpenIcon width="100%" height="100%" />
+                          <EyeOpenIcon />
                         ) : (
-                          <EyeCloseIcon width="100%" height="100%" />
+                          <EyeCloseIcon />
                         )}
                       </button>
                       {errors.new_password?.type === "required" && (
@@ -99,13 +145,16 @@ export const ChangePassword = () => {
                     </div>
 
                     <div className="relative mb-6">
+                      <label className="block tracking-wide text-gray-700 text-xs mb-2">
+                        Confirm Password
+                      </label>
                       <input
                         type={`${passwordVisibility.confirm_password
-                            ? "text"
-                            : "password"
+                          ? "text"
+                          : "password"
                           }`}
-                        className="w-full rounded px-3 py-[0.32rem] leading-[2.15]"
-                        placeholder="Enter your email"
+                        className="w-full rounded px-3 py-[0.32rem] leading-[2.15] text-[14px] h-[60px]"
+                        placeholder="Enter confirm password"
                         style={{
                           color: "#232323",
                           border: "1px solid #3E3E3E",
@@ -117,9 +166,10 @@ export const ChangePassword = () => {
                           errors.confirm_password ? "true" : "false"
                         }
                       />
+
                       <button
                         type="button"
-                        className="absolute top-0 end-0 p-3.5 rounded-e-md"
+                        className="absolute top-7 end-0 p-3.5 rounded-e-md"
                         onClick={() =>
                           setPasswordVisibility({
                             ...passwordVisibility,
@@ -129,14 +179,14 @@ export const ChangePassword = () => {
                         }
                       >
                         {passwordVisibility.confirm_password ? (
-                          <EyeOpenIcon width="100%" height="100%" />
+                          <EyeOpenIcon />
                         ) : (
-                          <EyeCloseIcon width="100%" height="100%" />
+                          <EyeCloseIcon />
                         )}
                       </button>
-                      {errors.confirm_password?.type === "required" && (
+                      {errors.confirm_password?.type === "required" || errors.confirm_password?.type === "custom" && (
                         <p className="error" role="alert">
-                          Confirm Password is required
+                          {errors.confirm_password?.type === "custom" ? errors.confirm_password?.message : "Confirm Password is required"}
                         </p>
                       )}
                     </div>
