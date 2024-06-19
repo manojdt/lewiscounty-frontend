@@ -1,10 +1,19 @@
-import React, { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useRef, useState, useEffect } from "react";
+import { useNavigate, useSearchParams  } from "react-router-dom";
 import LogoSlide from "../LogoSlide";
+import { useDispatch, useSelector } from "react-redux";
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
+import { validateOTP } from "../../services/loginInfo";
+import { userStatus } from "../../utils/constant";
 
 export const VerifyOTP = () => {
-  const numberOfDigits = 4;
+  const numberOfDigits = 6;
+  const [searchParams] = useSearchParams();
+  const userEmail = searchParams.get("email");
   const navigate = useNavigate();
+  const dispatch = useDispatch()
+  const userInfo = useSelector(state => state.userInfo);
   const [otp, setOtp] = useState(new Array(numberOfDigits).fill(""));
   const [disableSubmit, setDisableSubmit] = useState(true);
   const otpBoxReference = useRef([]);
@@ -12,8 +21,18 @@ export const VerifyOTP = () => {
   const handleSubmit = () => {
     const verifyOtp = otp.join("");
     console.log("OTP", verifyOtp, verifyOtp.length, typeof verifyOtp);
-    navigate('/login-type')
+    console.log('useremail', userEmail, searchParams)
+    if(verifyOtp !== '' && verifyOtp.length === 6 && userEmail !== ''){
+      console.log('Submit')
+      dispatch(validateOTP({"email" : userEmail, "otp": verifyOtp}))
+    }
   };
+
+  useEffect(() => {
+    if(!userInfo.loading && userInfo.status === userStatus.otpSuccess){
+      navigate(`/change-password?email=${userEmail}`)
+    }
+  },[userInfo])
 
   function handleChange(value, index) {
     let newArr = [...otp];
@@ -33,9 +52,9 @@ export const VerifyOTP = () => {
       otpBoxReference.current[index + 1].focus();
     }
 
-    if (otp.join("").length === 4) setDisableSubmit(false);
+    if (otp.join("").length === 6) setDisableSubmit(false);
 
-    if (otp.join("").length > 4 || otp.join("").length < 4) setDisableSubmit(true);
+    if (otp.join("").length > 6 || otp.join("").length < 6) setDisableSubmit(true);
   }
 
   console.log("otp.le", otp.length, otp);
@@ -49,7 +68,12 @@ export const VerifyOTP = () => {
           <div className="block bg-white shadow-lg h-full">
             <div className="g-0 lg:flex lg:flex-row h-full">
               <LogoSlide />
-
+              <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={userInfo.loading}
+              >
+                <CircularProgress color="inherit" />
+              </Backdrop>
               <div className="px-4 md:px-0 lg:w-6/12 text-black flex justify-center items-center">
                 <div className="w-9/12">
                   <div className="text-center">
@@ -82,6 +106,12 @@ export const VerifyOTP = () => {
                   </div>
 
                   <form>
+                  {
+                      userInfo.error !== '' ? <div className="pb-7">
+                        <p className="error" role="alert">
+                          {userInfo.error}
+                        </p></div> : null
+                    }
                     <div className="relative mb-6 flex justify-evenly gap-10 pl-5 pr-5">
                       {otp.map((digit, index) => (
                         <input
@@ -94,7 +124,7 @@ export const VerifyOTP = () => {
                           ref={(reference) =>
                             (otpBoxReference.current[index] = reference)
                           }
-                          className={`border w-20 h-auto  p-3 rounded-md block  focus:border-2 focus:outline-none appearance-none`}
+                          className={`border w-12 h-auto  p-3 rounded-md block  focus:border-2 focus:outline-none appearance-none`}
                         />
                       ))}
                      

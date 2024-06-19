@@ -1,5 +1,4 @@
-export const StepsList = [
-  {
+export const StepsList = [{
     name: "Personal Information",
     status: "In-Progress",
   },
@@ -36,3 +35,22 @@ export const StepsList = [
     status: "In-Progress",
   },
 ];
+
+export const userStatus = {
+  create: 'created',
+  login: 'loggedin',
+  token: 'tokenfetched',
+  getToken: 'getToken',
+  role : 'roleUpdated',
+  otp : 'otpTriggered',
+  otpSuccess : 'otpVerified',
+  changePassword : 'passwordUpdated',
+}
+
+export const PasswordRulesSet = {
+  character : 'character',
+  upperlowercase : 'upperlowercase',
+  number : 'number',
+  email : 'email',
+  common : 'common',
+}

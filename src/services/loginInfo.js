@@ -1,7 +1,13 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import { jwtDecode } from "jwt-decode";
+import {
+  createAsyncThunk,
+  createAction
+} from "@reduxjs/toolkit";
+import {
+  jwtDecode
+} from "jwt-decode";
 import api from "./api";
 
+// User Create Account
 export const userAccountCreate = createAsyncThunk(
   "userCreate",
   async (data) => {
@@ -10,19 +16,110 @@ export const userAccountCreate = createAsyncThunk(
       localStorage.setItem("access_token", userCreate.data.access);
       localStorage.setItem("refresh_token", userCreate.data.refresh);
       let decoded = jwtDecode(userCreate.data.access);
+      console.log('Create Token', decoded)
       return decoded;
     }
     return userCreate;
   }
 );
 
+export const updateInfo = createAsyncThunk(
+  "updateInfo",
+  async () => {
+    const userToken = localStorage.getItem("access_token");
+    if (userToken) {
+      let decoded = jwtDecode(userToken);
+      return decoded;
+    }
+    return {};
+  }
+);
+
+export const updateUserInfo = createAction('update/userInfo')
+
+export const resetUserInfo = createAction('reset/userInfo')
+
+// User Login
 export const userAccountLogin = createAsyncThunk("userLogin", async (data) => {
   const userlogin = await api.post("/login", data);
-  if (userlogin.status === 200) {
+  if (userlogin.status && userlogin.status === 200) {
     localStorage.setItem("access_token", userlogin.data.access);
     localStorage.setItem("refresh_token", userlogin.data.refresh);
     let decoded = jwtDecode(userlogin.data.access);
+    console.log('Login Token', decoded)
     return decoded;
   }
-  return userlogin;
+  console.log('userlogin', userlogin)
+  return userlogin
 });
+
+
+// Get User Token
+export const userAccessToken = createAsyncThunk("refreshUserToken", async (data) => {
+  const userToken = await api.post("/token/", data);
+  if (userToken.status && userToken.status === 200) {
+    localStorage.setItem("access_token", userToken.data.access);
+    localStorage.setItem("refresh_token", userToken.data.refresh);
+    let decoded = jwtDecode(userToken.data.access);
+    console.log('decoded', decoded)
+    return decoded;
+  }
+  console.log('access token', userToken)
+  return userToken
+});
+
+// Update User Role
+export const updateUserRole = createAsyncThunk("updateUserRole", async (data) => {
+  const updateRole = await api.post("/update-role", data);
+  if (updateRole.status && updateRole.status === 200) {
+    localStorage.setItem("access_token", updateRole.data.access);
+    localStorage.setItem("refresh_token", updateRole.data.refresh);
+    let decoded = jwtDecode(updateRole.data.access);
+    return decoded;
+  }
+  return {
+    ...updateRole
+  }
+});
+
+
+// Forgot password
+export const forgotPassword = createAsyncThunk(
+  "userTriggerOtp",
+  async (data) => {
+    const triggerOtp = await api.post("/trigger-otp", data);
+    console.log('triggerOtp', triggerOtp)
+    if (triggerOtp.status === 200) {
+      return triggerOtp;
+    }
+    if (triggerOtp.status === 500) {
+      return {...triggerOtp, error: 'Server error' };
+    }
+    return triggerOtp;
+  }
+);
+
+// Validate OTP
+export const validateOTP = createAsyncThunk(
+  "userValidateOTP",
+  async (data) => {
+    const validateOTP = await api.post("/validate-otp", data);
+    console.log('validateOTP', validateOTP)
+    if (validateOTP.status === 200) {
+      return validateOTP;
+    }
+    return validateOTP;
+  }
+);
+
+// Validate OTP
+export const updatePassword = createAsyncThunk(
+  "userUpdatePassword",
+  async (data) => {
+    const updatePassword = await api.post("/update-pwd", data);
+    if (updatePassword.status === 200) {
+      return updatePassword;
+    }
+    return updatePassword;
+  }
+);

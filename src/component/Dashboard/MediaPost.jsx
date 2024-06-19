@@ -6,7 +6,7 @@ export default function MediaPost() {
     return (
         <div style={{ boxShadow: '4px 4px 15px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }} className="bg-white py-8 px-8">
             <div>
-                <input name="post" className="w-full h-[100px] py-3 px-3" style={{ border: '1px solid rgba(62, 62, 62, 0.75)', borderRadius: '25px' }}
+                <input name="post" className="w-full h-[100px] py-3 px-3" style={{ border: '1px solid rgba(62, 62, 62, 0.75)', borderRadius: '48px' }}
                     placeholder="Start Post"
                 />
             </div>

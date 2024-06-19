@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { userAccountLogin } from "../../features/user/userSlice";
+import CircularProgress from '@mui/material/CircularProgress';
+import Backdrop from '@mui/material/Backdrop';
+import { updateUserInfo, updateUserRole } from "../../services/loginInfo";
+import { userStatus } from "../../utils/constant";
 
 export const LoginType = () => {
     const navigate = useNavigate();
@@ -10,21 +13,25 @@ export const LoginType = () => {
     const [loginType, setLoginType] = useState('');
     const [error, setError] = useState(false)
 
-
-    useEffect(() => {
-        if (userInfo.login_type) setLoginType(userInfo.login_type)
-    }, [userInfo]);
-
     const handleSubmit = () => {
         if (loginType === '') setError(true)
         if (loginType !== '') {
             setError(false)
             console.log(loginType);
-            // dispatch(updateUserInfo({ login_type: loginType }))
-            navigate("/questions");
+            dispatch(updateUserRole({ role: loginType }))
         }
-
     };
+
+    useEffect(() => {
+        if (userInfo.login_type) setLoginType(userInfo.login_type)
+    }, [userInfo]);
+
+    useEffect(() => {
+        if (!userInfo.loading && userInfo.status === userStatus.role) {
+            dispatch(updateUserInfo({ role: loginType }))
+            navigate("/questions")
+        }
+    }, [userInfo])
 
     console.log('loginType', loginType, error)
 
@@ -32,6 +39,13 @@ export const LoginType = () => {
         <div className="h-full">
             <div className="flex flex-wrap h-full">
                 <div className="w-full">
+                    <Backdrop
+                        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                        open={userInfo.loading}
+
+                    >
+                        <CircularProgress color="inherit" />
+                    </Backdrop>
                     <div className="block bg-white shadow-lg h-full">
                         <div className="g-0 flex justify-center items-center h-full">
                             <div className="px-4 md:px-0 lg:w-4/12 flex justify-center items-center">
