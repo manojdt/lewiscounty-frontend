@@ -6,7 +6,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { emailPattern } from "../../utils/InputRules";
 import LogoSlide from "../LogoSlide";
 import { useDispatch, useSelector } from "react-redux";
-import { forgotPassword } from "../../services/loginInfo";
+import { forgotPassword, resetUserInfo } from "../../services/loginInfo";
 import { userStatus } from "../../utils/constant";
 
 
@@ -27,6 +27,10 @@ export const ForgotPassword = () => {
     }
     console.log(data);
   };
+
+  useEffect(() => {
+    dispatch(resetUserInfo())
+  }, [])
 
   useEffect(() => {
 

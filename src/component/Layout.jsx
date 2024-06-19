@@ -1,25 +1,33 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Outlet } from "react-router-dom";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Navbar } from '../shared'
+import { useSelector } from 'react-redux';
 
 export default function Layout() {
   const navigate = useNavigate();
   const location = useLocation();
+  const userInfo = useSelector(state => state.userInfo);
+
   const { pathname } = location
   console.log('location', location)
+
+  useEffect(() => {
+    if (userInfo.data.role === 'fresher') { navigate('/login-type'); }
+    if(!userInfo.data.is_registered) navigate('/questions')
+  }, [])
   return (
     <div>
       <Navbar />
       <div className="py-8" style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)' }}>
         <ul className="flex flex-col gap-20 justify-center items-center p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 ">
-          <li className={`${pathname === '/dashboard' ? 'dashboard-menu-active': ''}`}>
+          <li className={`${pathname === '/dashboard' ? 'dashboard-menu-active' : ''}`}>
             <span onClick={() => navigate('/dashboard')} className="block py-2 px-3 rounded md:p-0 cursor-pointer" aria-current="page">Dashboard</span>
           </li>
-          <li className={`${pathname === '/programs' ? 'dashboard-menu-active': ''}`}>
+          <li className={`${pathname === '/programs' ? 'dashboard-menu-active' : ''}`}>
             <span onClick={() => navigate('/dashboard')} className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer">Programs</span>
           </li>
-          <li className={`${pathname === '/mentees' ? 'dashboard-menu-active': ''}`}>
+          <li className={`${pathname === '/mentees' ? 'dashboard-menu-active' : ''}`}>
             <span onClick={() => navigate('/dashboard')} className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer">Mentees</span>
           </li>
           <li>
@@ -40,10 +48,10 @@ export default function Layout() {
               </div> */}
             </div>
           </li>
-          <li className={`${pathname === '/calendar' ? 'dashboard-menu-active': ''}`}>
+          <li className={`${pathname === '/calendar' ? 'dashboard-menu-active' : ''}`}>
             <span onClick={() => navigate('/dashboard')} className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer">Calendar</span>
           </li>
-          <li className={`${pathname === '/discussions' ? 'dashboard-menu-active': ''}`}>
+          <li className={`${pathname === '/discussions' ? 'dashboard-menu-active' : ''}`}>
             <span onClick={() => navigate('/dashboard')} className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer">Discussions</span>
           </li>
           <li>

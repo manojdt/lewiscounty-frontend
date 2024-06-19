@@ -19,7 +19,7 @@ export const Signup = () => {
   const [verifyPasswordRule, setVerifyPasswordRule] = useState({
     [PasswordRulesSet.character]: false,
     [PasswordRulesSet.upperlowercase]: false,
-    [PasswordRulesSet.number]: true,
+    [PasswordRulesSet.number]: false,
     [PasswordRulesSet.email]: false,
     [PasswordRulesSet.common]: false,
   })
@@ -30,23 +30,61 @@ export const Signup = () => {
     register,
     handleSubmit,
     formState: { errors },
+    getValues,
+    setError
   } = useForm();
 
   const onSubmit = (data) => {
     console.log(data);
     const { first_name, last_name, email, password } = data;
     if (first_name !== "" && last_name !== '' && email !== "" && password !== "") {
-      dispatch(userAccountCreate(data))
+      if (!verifyPasswordRule[PasswordRulesSet.character] || !verifyPasswordRule[PasswordRulesSet.upperlowercase] ||
+        !verifyPasswordRule[PasswordRulesSet.number] || !verifyPasswordRule[PasswordRulesSet.email] ||
+        !verifyPasswordRule[PasswordRulesSet.common]) {
+          setError("password", {
+            type: "manual",
+            message: "All Conditions must be satisfied",
+          })
+      } else {
+        dispatch(userAccountCreate(data))
+      }
     }
   };
 
+  const eightCharacter = (str) => /^.{8,}$/.test(str)
+  const upperLowerCase = (str) => /^(?=.*[a-z])(?=.*[A-Z])\S+$/.test(str)
+  const letterSymbol = (str) => /[\d!@#$%^&*()_+={}\[\]:;<>,.?\\\/\-]/.test(str)
+
   const handleField = (field, value) => {
+    const email = `${getValues('email')}`
+    let emailExist = email !== '' && value !== ''
+    if (email !== '') {
+      const emailValidation = new RegExp(email);
+      emailExist = !emailValidation.test(value)
+    }
+    const eightCharacterExist = eightCharacter(value)
+    const upperLowerCaseExist = upperLowerCase(value)
+    const letterSymbolExist = letterSymbol(value)
+
+    const passRule = {
+      [PasswordRulesSet.character]: eightCharacterExist,
+      [PasswordRulesSet.upperlowercase]: upperLowerCaseExist,
+      [PasswordRulesSet.number]: letterSymbolExist,
+      [PasswordRulesSet.email]: emailExist,
+      [PasswordRulesSet.common]: eightCharacterExist && upperLowerCaseExist && letterSymbolExist && emailExist
+    }
+    // console.log(letterSymbol(value))
+
+    console.log(passRule)
+    // console.log(regex.test(value))
     console.log('World', field, value)
+    setVerifyPasswordRule(passRule)
   }
 
   useEffect(() => {
     dispatch(resetUserInfo())
   }, [])
+
 
 
   useEffect(() => {
@@ -157,7 +195,7 @@ export const Signup = () => {
                                   border: `1px solid ${errors[field.name] ? 'rgb(239 68 68)' : '#3E3E3E'}`,
                                 }}
                                 {...register(field.name, field.inputRules)}
-                                {...field.fieldtype === 'password' ? { onKeyUp : (e) => handleField(field.fieldtype, e.target.value)} : {} }
+                                {...field.fieldtype === 'password' ? { onKeyUp: (e) => handleField(field.fieldtype, e.target.value) } : {}}
                                 // onBlur={(e) => handleField(field.fieldtype, e.target.value)}
                                 aria-invalid={errors[field.name] ? "true" : "false"}
                               />
@@ -250,7 +288,7 @@ export const Signup = () => {
                     <div className="flex justify-center text-center lg:text-left">
                       <button
                         type="submit"
-                        className="inline-block rounded px-7 pb-3 pt-3 text-sm font-medium text-white w-1/3"
+                        className="inline-block rounded px-7 pb-3 pt-3 text-sm font-medium text-white w-2/5"
                         data-twe-ripple-init
                         data-twe-ripple-color="light"
                         style={{
