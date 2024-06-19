@@ -15,7 +15,7 @@ export default function RecentRequests() {
             <div className="content flex gap-4 py-5 px-5 overflow-x-auto">
                 {
                     recentRequest.map((recentRequest, index) =>
-                        <div key={index} className="w-1/3 py-3 px-3" style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '10px' }}>
+                        <div key={index} className="lg:w-5/12 md:w-1/3 py-3 px-3" style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '10px' }}>
                             <div className="flex gap-2 pb-3" style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
                                 <div className="w-1/4" style={{ background: 'rgba(223, 237, 255, 1)', borderRadius: '5px', height: '60px' }}></div>
                                 <div className="flex flex-col gap-2">
@@ -26,12 +26,12 @@ export default function RecentRequests() {
                             </div>
                             <div className="flex gap-3 pt-3">
                                 <div className="flex items-center gap-1">
-                                    <span className="w-3 h-3  rounded-full" style={{ background: 'rgba(29, 91, 191, 1)' }}></span>
-                                    <span className="text-[12px]">Attended({recentRequest.attended})</span>
+                                    <span className="lg:w-2 lg:h-2  rounded-full" style={{ background: 'rgba(29, 91, 191, 1)' }}></span>
+                                    <span className="lg:text-[10px]">Attended({recentRequest.attended})</span>
                                 </div>
                                 <div className="flex items-center gap-1">
-                                    <span className="w-3 h-3  rounded-full" style={{ background: 'rgba(0, 174, 189, 1)' }}></span>
-                                    <span className="text-[12px]">Completed({recentRequest.completed})</span>
+                                    <span className="lg:w-2 lg:h-2  rounded-full" style={{ background: 'rgba(0, 174, 189, 1)' }}></span>
+                                    <span className="lg:text-[10px]">Completed({recentRequest.completed})</span>
                                 </div>
                             </div>
                         </div>

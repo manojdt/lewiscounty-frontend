@@ -4,7 +4,7 @@ import LogoSlide from "../LogoSlide";
 import { useDispatch, useSelector } from "react-redux";
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
-import { validateOTP } from "../../services/loginInfo";
+import { resetUserInfo, validateOTP } from "../../services/loginInfo";
 import { userStatus } from "../../utils/constant";
 
 export const VerifyOTP = () => {
@@ -27,6 +27,10 @@ export const VerifyOTP = () => {
       dispatch(validateOTP({"email" : userEmail, "otp": verifyOtp}))
     }
   };
+
+  useEffect(() => {
+    dispatch(resetUserInfo())
+  }, [])
 
   useEffect(() => {
     if(!userInfo.loading && userInfo.status === userStatus.otpSuccess){
@@ -74,7 +78,7 @@ export const VerifyOTP = () => {
               >
                 <CircularProgress color="inherit" />
               </Backdrop>
-              <div className="px-4 md:px-0 lg:w-6/12 text-black flex justify-center items-center">
+              <div className="px-4 md:px-0 lg:w-7/12 text-black flex justify-center items-center">
                 <div className="w-9/12">
                   <div className="text-center">
                     <div className="flex justify-center items-center">
@@ -112,7 +116,7 @@ export const VerifyOTP = () => {
                           {userInfo.error}
                         </p></div> : null
                     }
-                    <div className="relative mb-6 flex justify-evenly gap-10 pl-5 pr-5">
+                    <div className="relative mb-6 flex justify-evenly gap-5  pr-5">
                       {otp.map((digit, index) => (
                         <input
                           type="number"

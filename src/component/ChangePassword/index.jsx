@@ -7,7 +7,7 @@ import LogoSlide from "../LogoSlide";
 import { ReactComponent as EyeCloseIcon } from "../../assets/icons/eyeClose.svg";
 import { ReactComponent as EyeOpenIcon } from "../../assets/icons/eyeOpen.svg";
 import { useDispatch, useSelector } from "react-redux";
-import { updatePassword } from "../../services/loginInfo";
+import { resetUserInfo, updatePassword } from "../../services/loginInfo";
 import { userStatus } from "../../utils/constant";
 
 export const ChangePassword = () => {
@@ -32,7 +32,6 @@ export const ChangePassword = () => {
     console.log('errors', errors)
     const { new_password, confirm_password } = data
     if (new_password !== '' && confirm_password !== '' && new_password !== confirm_password) {
-      console.log('lll')
       setError("confirm_password", {
         type: "custom",
         message: "New password and Confirm password should be same",
@@ -41,6 +40,10 @@ export const ChangePassword = () => {
       dispatch(updatePassword({ email: userEmail, new_password: new_password }))
     }
   };
+
+  useEffect(() => {
+    dispatch(resetUserInfo())
+  }, [])
 
   useEffect(() => {
     if (!userInfo.loading && userInfo.status === userStatus.changePassword) {

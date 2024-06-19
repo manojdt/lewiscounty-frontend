@@ -88,7 +88,8 @@ export const userSlice = createSlice({
       return {
         ...state,
         loading: false,
-        data: action.payload
+        data: action.payload,
+        error: ''
       }
     })
     builder

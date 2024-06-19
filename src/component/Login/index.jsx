@@ -5,10 +5,11 @@ import { useDispatch, useSelector } from "react-redux";
 import CircularProgress from '@mui/material/CircularProgress';
 import Backdrop from '@mui/material/Backdrop';
 
+
 import LogoSlide from "../LogoSlide";
 import { LoginFields } from "../../utils/loginFields";
 import SocialMediaLogin from "../../shared/SocialMedia";
-import { userAccountLogin, userAccessToken, resetUserInfo } from "../../services/loginInfo";
+import { userAccountLogin, resetUserInfo } from "../../services/loginInfo";
 import { userStatus } from "../../utils/constant";
 
 import { ReactComponent as EyeCloseIcon } from "../../assets/icons/eyeClose.svg";
@@ -54,17 +55,10 @@ export const Login = () => {
   }, [])
 
   useEffect(() => {
-    if (!userData.loading) {
-      // if (userData.status === userStatus.getToken) {
-      //   dispatch(userAccessToken(userFormDetails))
-      // }
-
-      if (userData.status === userStatus.login) {
-        setTimeout(() => {
-          handleRedirect()
-        }, 2000)
-        
-      }
+    if (!userData.loading && userData.status === userStatus.login) {
+      setTimeout(() => {
+        handleRedirect()
+      }, 2000)
     }
   }, [userData])
 

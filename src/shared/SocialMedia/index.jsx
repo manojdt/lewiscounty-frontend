@@ -1,9 +1,7 @@
 import React from 'react'
 import GoogleIcon from '../../assets/images/google1x.png';
-// import InstagramIcon from '../../assets/images/instagram_1x.png';
 import FacebookIcon from '../../assets/images/facebook1x.png';
 import InstagramIcon from '../../assets/images/instagram1x.png';
-
 
 export default function SocialMediaLogin() {
     return (

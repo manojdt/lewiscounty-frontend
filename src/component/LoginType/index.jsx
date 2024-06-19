@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import CircularProgress from '@mui/material/CircularProgress';
 import Backdrop from '@mui/material/Backdrop';
-import { updateUserInfo, updateUserRole } from "../../services/loginInfo";
+import { updateUserRole } from "../../services/loginInfo";
 import { userStatus } from "../../utils/constant";
 
 export const LoginType = () => {
@@ -23,12 +23,14 @@ export const LoginType = () => {
     };
 
     useEffect(() => {
-        if (userInfo.login_type) setLoginType(userInfo.login_type)
-    }, [userInfo]);
+        if(userInfo.data.role !== 'fresher'){
+            if(userInfo.data.is_registered) navigate('/dashboard')
+                else navigate('/questions')
+        }
+    }, [])
 
     useEffect(() => {
         if (!userInfo.loading && userInfo.status === userStatus.role) {
-            dispatch(updateUserInfo({ role: loginType }))
             navigate("/questions")
         }
     }, [userInfo])
