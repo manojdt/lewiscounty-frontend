@@ -4,12 +4,16 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import CircularProgress from '@mui/material/CircularProgress';
 import Backdrop from '@mui/material/Backdrop';
+
 import LogoSlide from "../LogoSlide";
 import { LoginFields } from "../../utils/loginFields";
 import SocialMediaLogin from "../../shared/SocialMedia";
-import { userAccountLogin } from "../../services/loginInfo";
+import { userAccountLogin, userAccessToken, resetUserInfo } from "../../services/loginInfo";
+import { userStatus } from "../../utils/constant";
+
 import { ReactComponent as EyeCloseIcon } from "../../assets/icons/eyeClose.svg";
 import { ReactComponent as EyeOpenIcon } from "../../assets/icons/eyeOpen.svg";
+import SuccessIcon from "../../assets/images/Success_tic1x.png"
 
 
 export const Login = () => {
@@ -17,6 +21,7 @@ export const Login = () => {
   // Internal State
   const [remeberPassword, setRememberPassword] = useState(false);
   const [passwordVisibility, setPasswordVisibility] = useState(false);
+  const [userFormDetails, setFormDetails] = useState({ email: '', password: '' })
 
   // Redux
   const dispatch = useDispatch();
@@ -33,16 +38,37 @@ export const Login = () => {
     const { email, password } = data;
     if (email !== "" && password !== "") {
       dispatch(userAccountLogin(data))
+      setFormDetails(data)
     }
   };
 
   const handleRemeberPassword = () => setRememberPassword(!remeberPassword);
 
+  const handleRedirect = () => {
+    if (userData.data.role === 'fresher') navigate("/login-type");
+    else navigate("/questions");
+  }
+
   useEffect(() => {
-    if (!userData.loading && Object.keys(userData.data).length) {
-      navigate("/dashboard");
+    dispatch(resetUserInfo())
+  }, [])
+
+  useEffect(() => {
+    if (!userData.loading) {
+      // if (userData.status === userStatus.getToken) {
+      //   dispatch(userAccessToken(userFormDetails))
+      // }
+
+      if (userData.status === userStatus.login) {
+        setTimeout(() => {
+          handleRedirect()
+        }, 2000)
+        
+      }
     }
   }, [userData])
+
+
 
   return (
     <div className="h-full">
@@ -53,10 +79,19 @@ export const Login = () => {
               <LogoSlide />
               <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={userData.loading}
+                open={userData.loading || userData.status === userStatus.login}
 
               >
-                <CircularProgress color="inherit" />
+                {
+                  userData.status === userStatus.login ?
+                    <div className="w-2/6 bg-white flex flex-col gap-4 h-[330px] justify-center items-center">
+                      <img src={SuccessIcon} alt="VerifyIcon" />
+                      <span style={{ color: '#232323', fontWeight: 600 }}>Login  Successful!</span>
+                    </div>
+                    :
+                    <CircularProgress color="inherit" />
+                }
+
               </Backdrop>
               <div className="px-4 md:px-0 lg:w-6/12 text-black">
                 <div className="md:mx-6 md:p-12">
@@ -105,7 +140,12 @@ export const Login = () => {
                         OR
                       </p>
                     </div>
-
+                    {
+                      userData.error !== '' ? <div className="pb-7">
+                        <p className="error" role="alert">
+                          {userData.error}
+                        </p></div> : null
+                    }
                     {
                       LoginFields.map((field, index) =>
 
@@ -115,7 +155,7 @@ export const Login = () => {
                           </label>
                           <input
                             type={field.fieldtype === 'password' ? (passwordVisibility ? 'text' : field.fieldtype) : field.fieldtype}
-                            className={`w-full rounded px-3 py-[0.32rem] leading-[2.15] h-[65px] ${errors[field.name] ? 'focus:border-teal focus:outline-none focus:ring-0' : ''}`}
+                            className={`w-full rounded px-3 py-[0.32rem] text-[14px] leading-[2.15] h-[60px] ${errors[field.name] ? 'focus:border-teal focus:outline-none focus:ring-0' : ''}`}
                             placeholder={field.placeholder}
                             style={{
                               color: "#232323",
