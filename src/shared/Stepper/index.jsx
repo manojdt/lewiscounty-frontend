@@ -1,30 +1,44 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import { ReactComponent as ArrowRight } from "../../assets/icons/arrowRight.svg";
 import { ReactComponent as PreviousIcon } from "../../assets/icons/previousIcon.svg";
 import { ReactComponent as NextIcon } from "../../assets/icons/nextIcon.svg";
 import './stepper.css'
 
-export const Stepper = ({ steps, currentStep = 0 }) => {
+export const Stepper = ({ steps, currentStep = 0, btnTypeAction }) => {
   const [iconsVisibility, setIconsVisibility] = useState({ prevIcon: false, nextIcon: true })
   const slideLeft = () => {
     const slider = document.getElementById('slider');
-    const scroll = slider.scrollLeft - 500;
+    const scroll = slider.scrollLeft - 200;
     slider.scrollLeft = scroll;
     setIconsVisibility({ prevIcon: scroll > 0, nextIcon: true })
   };
 
   const slideRight = () => {
     const slider = document.getElementById('slider');
-    const scroll = slider.scrollLeft + 500;
+    const scroll = slider.scrollLeft + 200;
     slider.scrollLeft = scroll;
     setIconsVisibility({ prevIcon: true, nextIcon: slider.clientWidth - scroll > 500 })
   };
 
+
+  useEffect(() => {
+    const slider = document.getElementById('slider');
+    if(btnTypeAction.next && currentStep > 3 ){
+      slideRight()
+    }
+    if(btnTypeAction.back && currentStep <= 3){
+      const slider = document.getElementById('slider');
+      const scroll = slider.scrollLeft - 400;
+      slider.scrollLeft = scroll;
+      setIconsVisibility({ prevIcon: scroll > 0, nextIcon: true })
+    }
+  },[currentStep])
+
   return (
     <Box sx={{ width: '100%' }} className="relative">
       {
-        iconsVisibility.prevIcon && <div className='previousIcon absolute ' onClick={slideLeft}> <PreviousIcon /></div>
+        iconsVisibility.prevIcon && <div className='previousIcon absolute cursor-pointer' onClick={slideLeft}> <PreviousIcon /></div>
       }
       <div
         id='slider'
@@ -39,9 +53,10 @@ export const Stepper = ({ steps, currentStep = 0 }) => {
           {
             steps.map((step, index) => {
               const currentIndex = parseInt(index)
+              const fieldView = step.status === 'In-Progress' ? 'opacity-50' : 'opacity-100'
               return (
                 <li className="flex flex-row items-center" style={{ color: `${currentStep >= currentIndex + 1 ? 'rgba(29, 91, 191, 1)' : '#000'}` }} key={index}>
-                  <span className="flex items-center justify-center w-5 h-5 me-2 text-sm border rounded-2xl px-4 py-4"
+                  <span className={`flex items-center justify-center w-5 h-5 me-2 text-sm border rounded-2xl px-4 py-4 ${fieldView}`}
                     style={{
                       background: `${currentStep >= currentIndex + 1 ? 'rgba(29, 91, 191, 1)' : 'rgba(217, 228, 242, 1)'}`,
                       color: `${currentStep >= currentIndex + 1 ? '#fff' : 'rgba(24, 40, 61, 1)'}`
@@ -50,8 +65,13 @@ export const Stepper = ({ steps, currentStep = 0 }) => {
                     {index + 1}
                   </span>
                   <div className="flex flex-col text-left pr-4">
-                    <div className='font-semibold'>{step.name}</div>
-                    <div className="text-xs">{step.status}</div>
+                    <div className={
+                     `
+                      ${step.status === 'In-Progress' ? 'opacity-50' : 'opacity-100'} 
+                
+                      font-medium`
+                      }>{step.name}</div>
+                    <div className={`text-xs ${fieldView}`}>{step.status}</div>
                   </div>
                   <ArrowRight />
                 </li>
@@ -61,7 +81,7 @@ export const Stepper = ({ steps, currentStep = 0 }) => {
         </ol>
       </div>
       {
-        iconsVisibility.nextIcon && <div className='nextIcon absolute' onClick={slideRight}> <NextIcon />  </div>
+        iconsVisibility.nextIcon && <div className='nextIcon absolute cursor-pointer' onClick={slideRight}> <NextIcon />  </div>
       }
 
     </Box>

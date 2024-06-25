@@ -1,5 +1,5 @@
 import React from 'react'
-import TrackImage from '../../assets/images/track_program_image1x.png'
+import TrackImage from '../../assets/images/track_program.png'
 
 export default function TrackInfo() {
     return (

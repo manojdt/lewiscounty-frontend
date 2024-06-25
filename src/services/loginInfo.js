@@ -123,3 +123,16 @@ export const updatePassword = createAsyncThunk(
     return updatePassword;
   }
 );
+
+// Update Questions
+export const updateQuestions = createAsyncThunk(
+  "userUpdateQuestions",
+  async (data) => {
+    const updateQuestion = await api.put("/user_info_update", data);
+    if (updateQuestion.status === 200) {
+      console.log('updateQuestion', updateQuestion)
+      return updateQuestion;
+    }
+    return updateQuestion;
+  }
+);

@@ -8,6 +8,7 @@ export const PersonalInformationFields = [{
       required: "This field is required",
     },
     size: true,
+    disable: true
   },
   {
     type: "input",
@@ -19,6 +20,7 @@ export const PersonalInformationFields = [{
       required: "This field is required",
     },
     size: true,
+    disable: true
   },
   {
     type: "input",
@@ -31,30 +33,30 @@ export const PersonalInformationFields = [{
     },
     size: true,
   },
-  {
-    type: "dropdown",
-    name: "is_linkedin_available",
-    label: "LinkedIn Profile (if available)",
-    placeholder: "",
-    inputRules: {
-      required: "This field is required",
-    },
-    options: [{
-        key: "yes",
-        value: "Yes"
-      },
-      {
-        key: "no",
-        value: "No"
-      },
-    ],
-    size: true,
-  },
+  // {
+  //   type: "dropdown",
+  //   name: "linked_in",
+  //   label: "LinkedIn Profile (if available)",
+  //   placeholder: "",
+  //   inputRules: {
+  //     required: "This field is required",
+  //   },
+  //   options: [{
+  //       key: "yes",
+  //       value: "Yes"
+  //     },
+  //     {
+  //       key: "no",
+  //       value: "No"
+  //     },
+  //   ],
+  //   size: true,
+  // },
 ];
 
 export const ProfessionalBackgroundFields = [{
     type: "input",
-    name: "current_job_title",
+    name: "job_title",
     fieldtype: "text",
     label: "Current Job Title",
     placeholder: "Current Job Title",
@@ -65,7 +67,7 @@ export const ProfessionalBackgroundFields = [{
   },
   {
     type: "input",
-    name: "current_employee",
+    name: "current_employer",
     fieldtype: "text",
     label: "Current Employee ",
     placeholder: "Current Employee ",
@@ -76,7 +78,7 @@ export const ProfessionalBackgroundFields = [{
   },
   {
     type: "input",
-    name: "industry",
+    name: "industry_type",
     fieldtype: "text",
     label: "Industry",
     placeholder: "Industry",
@@ -87,7 +89,7 @@ export const ProfessionalBackgroundFields = [{
   },
   {
     type: "dropdown",
-    name: "is_linkedin_available",
+    name: "linked_in",
     label: "LinkedIn Profile (if available)",
     placeholder: "",
     options: [{
@@ -108,7 +110,7 @@ export const ProfessionalBackgroundFields = [{
 
 export const EducationalBackgroundFields = [{
     type: "input",
-    name: "current_job_title",
+    name: "highest_degree",
     fieldtype: "text",
     label: "Highest Degree Achieved",
     placeholder: "Highest Degree Achieved",
@@ -119,7 +121,7 @@ export const EducationalBackgroundFields = [{
   },
   {
     type: "input",
-    name: "current_employee",
+    name: "field_of_study",
     fieldtype: "text",
     label: "Field of Study",
     placeholder: "Field of Study",
@@ -128,22 +130,22 @@ export const EducationalBackgroundFields = [{
     },
     size: true,
   },
-  {
-    type: "input",
-    name: "industry",
-    fieldtype: "text",
-    label: "Industry",
-    placeholder: "Industry",
-    inputRules: {
-      required: "This field is required",
-    },
-    size: false,
-  },
+  // {
+  //   type: "input",
+  //   name: "industry1",
+  //   fieldtype: "text",
+  //   label: "Industry",
+  //   placeholder: "Industry",
+  //   inputRules: {
+  //     required: "This field is required",
+  //   },
+  //   size: false,
+  // },
 ];
 
 export const AreaOfExpertiseFields = [{
     type: "input",
-    name: "current_job_title",
+    name: "areas_of_expertise",
     fieldtype: "text",
     label: "Please list your areas of expertise",
     placeholder: "(e.g., project management, software development, marketing)",
@@ -154,7 +156,7 @@ export const AreaOfExpertiseFields = [{
   },
   {
     type: "input",
-    name: "current_employee",
+    name: "confident_areas_of_expertise",
     fieldtype: "text",
     label: "What specific skills or knowledge are you most confident in sharing with a mentee?",
     placeholder: "Skils",
@@ -167,14 +169,14 @@ export const AreaOfExpertiseFields = [{
 
 export const MentorShipExperienceFields = [{
     type: "checkbox",
-    name: "current_job_title",
+    name: "prev_mentorship",
     label: "Have you previously mentored someone?",
     options: [{
-        key: "yes",
+        key: true,
         value: "Yes"
       },
       {
-        key: "no",
+        key: false,
         value: "No"
       },
     ],
@@ -185,20 +187,17 @@ export const MentorShipExperienceFields = [{
   },
   {
     type: "input",
-    name: "current_employee",
+    name: "mentor_exp_desc",
     fieldtype: "text",
     label: "If yes, please briefly describe your mentorship experience",
     placeholder: "mentorship experience",
-    inputRules: {
-      required: "This field is required",
-    },
     size: false,
   },
 ];
 
 export const MentorshipPreferenceFields = [{
     type: "input",
-    name: "current_job_title",
+    name: "interested_mentee_type",
     fieldtype: "text",
     label: "What type of mentee are you most interested in mentoring?",
     placeholder: "(e.g., students, early-career professionals, career changers)",
@@ -209,7 +208,7 @@ export const MentorshipPreferenceFields = [{
   },
   {
     type: "input",
-    name: "current_employee",
+    name: "communication_mode",
     fieldtype: "text",
     label: "Preferred method of communication",
     placeholder: "(e.g., email, video calls, in-person meetings)",
@@ -220,7 +219,7 @@ export const MentorshipPreferenceFields = [{
   },
   {
     type: "input",
-    name: "industry",
+    name: "availability_frequency",
     fieldtype: "text",
     label: "How often are you available to meet with a mentee?",
     placeholder: "(e.g., weekly, bi-weekly, monthly)",
@@ -233,7 +232,7 @@ export const MentorshipPreferenceFields = [{
 
 export const GoalsandExperienceFields = [{
     type: "input",
-    name: "current_job_title",
+    name: "mentorship_achievement",
     fieldtype: "text",
     label: "What do you hope to achieve through this mentorship program?",
     placeholder: "",
@@ -244,7 +243,7 @@ export const GoalsandExperienceFields = [{
   },
   {
     type: "input",
-    name: "current_employee",
+    name: "mentor_expectations",
     fieldtype: "text",
     label: "What are your expectations from the mentee?",
     placeholder: "",
@@ -257,7 +256,7 @@ export const GoalsandExperienceFields = [{
 
 export const AvailabilityCommitmentFields = [{
     type: "input",
-    name: "current_job_title",
+    name: "max_mentee_count",
     fieldtype: "text",
     label: "How many mentees are you willing to take on at a time?",
     placeholder: "",
@@ -268,7 +267,7 @@ export const AvailabilityCommitmentFields = [{
   },
   {
     type: "input",
-    name: "current_employee",
+    name: "pref_mentorship_duration",
     fieldtype: "text",
     label: "What is your preferred duration for a mentorship relationship?",
     placeholder: "",
@@ -281,7 +280,7 @@ export const AvailabilityCommitmentFields = [{
 
 export const AdditionalInformationFields = [{
   type: "textbox",
-  name: "current_job_title",
+  name: "additional_info",
   label: "Is there any additional information you would like to provide about yourself or your mentorship style?",
   placeholder: "",
   inputRules: {
@@ -315,21 +314,21 @@ export const Stepname = [
 
 
 export const ProgramTabs = [{
-  name: 'Program Information',
-  key: 'program_information'
-},
-{
-  name: 'About Program',
-  key: 'about_program'
-},
-{
-  name: 'Program Outcomes',
-  key: 'program_outcomes'
-},
-{
-  name: 'Program Testimonials',
-  key: 'program_testimonials'
-},
+    name: 'Program Information',
+    key: 'program_information'
+  },
+  {
+    name: 'About Program',
+    key: 'about_program'
+  },
+  {
+    name: 'Program Outcomes',
+    key: 'program_outcomes'
+  },
+  {
+    name: 'Program Testimonials',
+    key: 'program_testimonials'
+  },
 ]
 export const ProgramInformationFields = [{
     type: "dropdown",
@@ -363,7 +362,7 @@ export const ProgramInformationFields = [{
   },
   {
     type: "dropdown",
-    name: "add_sessions",
+    name: "sessions",
     label: "Add Sessions",
     placeholder: "Select Sessions",
     inputRules: {
@@ -411,7 +410,7 @@ export const ProgramInformationFields = [{
   },
   {
     type: "date",
-    name: "program_name",
+    name: "program_start_date",
     label: "Program Start Date and Time",
     placeholder: "Select Program Start Date and Time",
     inputRules: {
@@ -421,7 +420,7 @@ export const ProgramInformationFields = [{
   },
   {
     type: "date",
-    name: "program_name",
+    name: "program_end_date",
     label: "Program End Date and Time",
     placeholder: "Select Program End Date and Time",
     inputRules: {
@@ -439,6 +438,7 @@ export const ProgramInformationFields = [{
       required: "This field is required",
     },
     width: 'w-full',
+    icon: 'add'
   },
   {
     type: "input",
@@ -499,6 +499,7 @@ export const ProgramInformationFields = [{
       required: "This field is required",
     },
     width: 'w-full',
+    icon: 'location'
   },
 ];
 
@@ -517,9 +518,6 @@ export const AboutProgramFields = [{
     type: "htmlbuilder",
     name: "html_builder",
     text: "Use HTML Builder",
-    inputRules: {
-      required: "This field is required",
-    },
     width: 'width-17',
   },
 
@@ -533,6 +531,7 @@ export const AboutProgramFields = [{
       required: "This field is required",
     },
     width: 'w-full',
+    icon: 'add'
   },
   {
     type: "file",
@@ -562,9 +561,6 @@ export const ProgramOutcomesFields = [{
     type: "htmlbuilder",
     name: "html_builder",
     text: "Use HTML Builder",
-    inputRules: {
-      required: "This field is required",
-    },
     width: 'width-17',
   },
 
@@ -578,13 +574,14 @@ export const ProgramOutcomesFields = [{
       required: "This field is required",
     },
     width: 'w-full',
+    icon: 'add'
   },
 ]
 
 
 export const ProgramTestimonialsFields = [{
     type: "input",
-    name: "benefits",
+    name: "members",
     label: "Members",
     placeholder: "Add request for testimonials",
     fieldtype: 'text',
@@ -592,6 +589,7 @@ export const ProgramTestimonialsFields = [{
       required: "This field is required",
     },
     width: 'w-full',
+    icon: 'add'
   },
   {
     type: "dropdown",
@@ -619,4 +617,99 @@ export const ProgramFields = [
   AboutProgramFields,
   ProgramOutcomesFields,
   ProgramTestimonialsFields
+];
+
+
+
+
+export const AssignMenteesFields = [{
+    type: "dropdown",
+    name: "category",
+    label: "Category",
+    placeholder: "Select Category",
+    inputRules: {
+      required: "This field is required",
+    },
+    options: [{
+        key: "yes",
+        value: "Category 1"
+      },
+      {
+        key: "no",
+        value: "Category 2"
+      },
+    ],
+    width: 'width-32',
+  },
+  {
+    type: "input",
+    name: "program_name",
+    fieldtype: "text",
+    label: "Program Name",
+    placeholder: "Enter Program Name",
+    inputRules: {
+      required: "This field is required",
+    },
+    width: 'width-32',
+  },
+  {
+    type: "input",
+    name: "mentor_name",
+    fieldtype: "text",
+    label: "Mentor Name",
+    placeholder: "Enter Program Name",
+    inputRules: {
+      required: "This field is required",
+    },
+    width: 'width-32',
+  },
+  {
+    type: "date",
+    name: "program_name",
+    label: "Program Start Date and Time",
+    placeholder: "Select Program Start Date and Time",
+    inputRules: {
+      required: "This field is required",
+    },
+    width: 'width-32',
+  },
+  {
+    type: "date",
+    name: "program_name",
+    label: "Program End Date and Time",
+    placeholder: "Select Program End Date and Time",
+    inputRules: {
+      required: "This field is required",
+    },
+    width: 'width-32',
+  },
+  {
+    type: "input",
+    name: "program_durations",
+    fieldtype: "text",
+    label: "Program Durations",
+    placeholder: "Enter Program Durations",
+    inputRules: {
+      required: "This field is required",
+    },
+    width: 'width-32',
+  },
+  {
+    type: "text",
+    name: "mentees_list",
+    label: "Add Mentees for this Program",
+    width: 'w-full',
+  },
+  {
+    type: "editor",
+    name: "task_details",
+    fieldtype: "text",
+    label: "Task Details",
+    placeholder: "List out Task Details",
+    inputRules: {
+      required: "This field is required",
+    },
+    width: 'w-full',
+  },
+
 ];

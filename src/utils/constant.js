@@ -1,38 +1,47 @@
 export const StepsList = [{
     name: "Personal Information",
     status: "In-Progress",
+    key: 'personal_information'
   },
   {
     name: "Professional Background",
-    status: "In-Progress",
+    status: "",
+    key: 'professional_information'
   },
   {
     name: "Educational Background",
-    status: "In-Progress",
+    status: "",
+    key: 'educational_background'
   },
   {
     name: "Area Of Expertise",
-    status: "In-Progress",
+    status: "",
+    key: 'area_of_expertise'
   },
   {
     name: "Mentorship Experience",
-    status: "In-Progress",
+    status: "",
+    key: 'mentor_ship_experience'
   },
   {
     name: "Mentorship Preference",
-    status: "In-Progress",
+    status: "",
+    key: 'mentor_ship_preference'
   },
   {
     name: "Goals and Expectations",
-    status: "In-Progress",
+    status: "",
+    key: 'goals_expectations'
   },
   {
     name: "Availability and Commitment",
-    status: "In-Progress",
+    status: "",
+    key: 'availability_commitment'
   },
   {
     name: "Additional Information",
-    status: "In-Progress",
+    status: "",
+    key: 'additional_information'
   },
 ];
 
@@ -45,6 +54,7 @@ export const userStatus = {
   otp : 'otpTriggered',
   otpSuccess : 'otpVerified',
   changePassword : 'passwordUpdated',
+  questions : 'questionsUpdated',
 }
 
 export const PasswordRulesSet = {

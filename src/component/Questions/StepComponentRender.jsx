@@ -1,22 +1,56 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useNavigate } from "react-router-dom";
 import { Button } from '../../shared';
 import { useForm } from "react-hook-form";
 
-const StepComponenRender = ({ fields, currentStep, handleNextStep, handlePreviousStep, stepData }) => {
+const StepComponenRender = ({ stepFields, currentStep, handleNextStep, handlePreviousStep, stepData, stepName, totalSteps }) => {
     const navigate = useNavigate();
     const {
         register,
         formState: { errors },
         handleSubmit,
-        reset
+        reset,
+        getValues,
     } = useForm();
 
     const onSubmit = (data) => {
+        // console.log('Next Submit', data)
         handleNextStep(data)
         console.log(data)
         reset()
     }
+
+    const previousStep = () => {
+        const { first_name, email, ...rest } = getValues()
+        // console.log('getValues', rest)
+        handlePreviousStep(rest)
+    }
+
+    const handleCheckbox = (e) => {
+        const value = e.target.value;
+        if (value ===  true) {
+            register('mentor_exp_desc', {
+                required: "This field is required",
+            })
+        } else {
+            register('mentor_exp_desc', {
+                required: false,
+            })
+        }
+    }
+
+
+    useEffect(() => {
+        const fName = [];
+        const f = {}
+        stepFields.forEach(step => fName.push(step.name))
+        for (const field in stepData) {
+            if(fName.includes(field)) f[field] = stepData[field]
+        }
+        reset(f)
+    }, [stepFields, stepData])
+
+
 
     return (
         <>
@@ -24,7 +58,8 @@ const StepComponenRender = ({ fields, currentStep, handleNextStep, handlePreviou
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="flex flex-wrap gap-4">
                         {
-                            fields.map((field, index) => {
+                            stepFields.map((field, index) => {
+                                const checkbox = field.type === 'checkbox' ? register(field.name, field.inputRules) : undefined
                                 return (
                                     <div className={`relative mb-6 ${field.size ? 'width-49' : 'w-full'}`} key={index}>
                                         <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor={field.label}>
@@ -41,6 +76,7 @@ const StepComponenRender = ({ fields, currentStep, handleNextStep, handlePreviou
                                                         style={{
                                                             color: "#232323",
                                                         }}
+                                                        disabled={field.disable ? field.disable : false}
                                                         aria-invalid={!!errors[field.name]}
                                                     />
 
@@ -83,16 +119,26 @@ const StepComponenRender = ({ fields, currentStep, handleNextStep, handlePreviou
                                                         field.type === 'checkbox' ?
                                                             <div className="flex items-center me-4">
                                                                 {
-                                                                    field.options.map((option, index) =>
-                                                                        <div className="flex items-center me-4" key={index}>
-                                                                            <input type="radio" className="w-4 h-4 text-blue-600 bg-gray-100
-                                                                                border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 
-                                                                                dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700
-                                                                                dark:border-gray-600"
-                                                                                {...register(field.name, field.inputRules)}
-                                                                            />
-                                                                            <label className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{option.value}</label>
-                                                                        </div>
+                                                                    // const firstName = register('firstName', { required: true })
+                                                                    field.options.map((option, index) => {
+                                                                        return (
+                                                                            <div className="flex items-center me-4" key={index}>
+                                                                                <input type="radio" className="w-4 h-4 text-blue-600 bg-gray-100
+                                                                                    border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 
+                                                                                    dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700
+                                                                                    dark:border-gray-600"
+                                                                                    {...checkbox}
+                                                                                    onChange={e => {
+                                                                                        checkbox.onChange(e);
+                                                                                        handleCheckbox(e);
+                                                                                    }}
+                                                                                    value={option.key}
+                                                                                // {...register(field.name, field.inputRules)}
+                                                                                />
+                                                                                <label className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{option.value}</label>
+                                                                            </div>
+                                                                        )
+                                                                    }
                                                                     )
                                                                 }
 
@@ -108,8 +154,8 @@ const StepComponenRender = ({ fields, currentStep, handleNextStep, handlePreviou
                     </div>
                     <div className="flex gap-6 justify-center align-middle">
                         {currentStep === 1 && <Button btnName='Cancel' btnCategory="secondary" onClick={() => navigate('/login-type')} />}
-                        {currentStep > 1 && <Button btnName='Back' btnCategory="secondary" onClick={handlePreviousStep} />}
-                        <Button btnType="submit" btnName='Next' btnCategory="primary" />
+                        {currentStep > 1 && <Button btnName='Back' btnCategory="secondary" onClick={previousStep} />}
+                        <Button btnType="submit" btnName={currentStep === totalSteps ? 'Submit' : 'Next'} btnCategory="primary" />
                     </div>
                 </form>
             </div>

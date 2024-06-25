@@ -1,5 +1,7 @@
 import React from 'react'
 import MoreIcon from '../../assets/icons/moreIcon.svg'
+import MaleIcon from '../../assets/images/male-profile1x.png'
+import FemaleIcon from '../../assets/images/female-profile1x.png'
 import { recentRequest } from '../../utils/mock'
 
 export default function RecentRequests() {
@@ -17,7 +19,7 @@ export default function RecentRequests() {
                     recentRequest.map((recentRequest, index) =>
                         <div key={index} className="lg:w-5/12 md:w-1/3 py-3 px-3" style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '10px' }}>
                             <div className="flex gap-2 pb-3" style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
-                                <div className="w-1/4" style={{ background: 'rgba(223, 237, 255, 1)', borderRadius: '5px', height: '60px' }}></div>
+                                <div className="w-1/4"> <img src={index %2 === 0 ? MaleIcon : FemaleIcon} alt="male-icon" /> </div>
                                 <div className="flex flex-col gap-2">
                                     <p className="text-[14px]">{recentRequest.name}</p>
                                     <p className="text-[12px]">{recentRequest.type}</p>

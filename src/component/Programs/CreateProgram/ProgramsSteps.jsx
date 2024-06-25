@@ -1,21 +1,26 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from "react-router-dom";
-import { Button } from '../../../shared';
 import { useForm } from "react-hook-form";
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Calendar } from 'primereact/calendar';
+
+import { Button } from '../../../shared';
+
 import CalendarIcon from '../../../assets/images/calender_1x.png'
 import HTMLIcon from '../../../assets/images/html1x.png'
+import LocationIcon from '../../../assets/images/Location1x.png'
+import PlusIcon from '../../../assets/images/plus_temp.png'
 
 
-const ProgramSteps = ({ fields, currentStep, handleNextStep, handlePreviousStep, currentStepData, stepData }) => {
+import "primereact/resources/themes/lara-light-cyan/theme.css";
+
+const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousStep, currentStepData, stepData, handleAction, totalSteps }) => {
     const navigate = useNavigate();
-    const [date, setDate] = useState(null);
+    const [dateFormat, setDateFormat] = useState({})
     const {
         register,
         formState: { errors },
         handleSubmit,
-        reset
+        reset, 
     } = useForm();
 
     const onSubmit = (data) => {
@@ -25,10 +30,20 @@ const ProgramSteps = ({ fields, currentStep, handleNextStep, handlePreviousStep,
     }
 
     useEffect(() => {
-        if(currentStepData !== undefined && Object.keys(currentStepData).length){
+        if (currentStepData !== undefined && Object.keys(currentStepData).length) {
             reset(currentStepData)
         }
-    },[])
+    }, [])
+
+    useEffect(() => {
+        const fName = [];
+        const f = {}
+        stepFields.forEach(step => fName.push(step.name))
+        for (const field in stepData) {
+            if(fName.includes(field)) f[field] = stepData[field]
+        }
+        reset(f)
+    }, [stepFields, stepData])
 
     console.log('currentStepData', currentStepData)
 
@@ -38,7 +53,9 @@ const ProgramSteps = ({ fields, currentStep, handleNextStep, handlePreviousStep,
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="flex flex-wrap gap-4">
                         {
-                            fields.map((field, index) => {
+                            stepFields.map((field, index) => {
+                                const dateField = field.type === 'date' ? register(field.name, field.inputRules) : undefined
+                                console.log('dateField', dateField)
                                 return (
                                     <div className={`relative mb-6 ${field.width}`} key={index}>
                                         <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor={field.label}>
@@ -46,7 +63,7 @@ const ProgramSteps = ({ fields, currentStep, handleNextStep, handlePreviousStep,
                                         </label>
                                         {
                                             field.type === 'input' ?
-                                                <>
+                                                <div className='relative'>
                                                     <input {...register(field.name, field.inputRules)}
                                                         type={field.fieldtype}
                                                         className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none 
@@ -58,19 +75,28 @@ const ProgramSteps = ({ fields, currentStep, handleNextStep, handlePreviousStep,
                                                         }}
                                                         aria-invalid={!!errors[field.name]}
                                                     />
+                                                    {
+                                                        field.icon && field.icon === 'location' &&
+                                                        <img className='absolute top-4 right-4' src={LocationIcon} alt="LocationIcon" />
+                                                    }
+
+                                                    {
+                                                        field.icon && field.icon === 'add' &&
+                                                        <img className='absolute top-4 right-4 cursor-pointer' onClick={() => handleAction(field.name)} src={PlusIcon} alt="PlusIcon" />
+                                                    }
 
                                                     {errors[field.name] && (
                                                         <p className="error" role="alert">
                                                             {errors[field.name].message}
                                                         </p>
                                                     )}
-                                                </>
+                                                </div>
                                                 :
                                                 field.type === 'dropdown' ?
                                                     <>
                                                         <select
                                                             {...register(field.name, field.inputRules)}
-                                                            className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg h-11 
+                                                            className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg 
                                                             focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
                                                             placeholder={field.placeholder}
                                                             style={{
@@ -124,9 +150,24 @@ const ProgramSteps = ({ fields, currentStep, handleNextStep, handlePreviousStep,
                                                             </div>
                                                             :
                                                             field.type === 'date' ?
-                                                                // <Calendar value={date} onChange={(e) => setDate(e.value)} dateFormat="dd/mm/yy" />
-                                                                <>
-                                                                    <div className='relative'>
+
+                                                                <div className='relative'>
+                                                                    {/* <Calendar value={date} onChange={(e) => setDate(e.value)} showTime hourFormat="12" /> */}
+                                                                    <Calendar
+                                                                        className='calendar-control'
+                                                                        {...register(field.name, field.inputRules)}
+                                                                        value={dateFormat[field.name]}
+                                                                        onChange={(e) => {
+                                                                            console.log('dateField123', dateField)
+                                                                            dateField.onChange(e)
+                                                                            setDateFormat({ ...dateFormat, [field.name]: e.value })
+                                                                        }}
+                                                                        showTime
+                                                                        hourFormat="12"
+                                                                        dateFormat="dd/mm/yy"
+                                                                    />
+                                                                    <img className='absolute top-5 right-2' src={CalendarIcon} alt="CalendarIcon" />
+                                                                    {/* <div className='relative'>
                                                                         <input {...register(field.name, field.inputRules)}
                                                                             type={'text'}
                                                                             className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg 
@@ -139,13 +180,13 @@ const ProgramSteps = ({ fields, currentStep, handleNextStep, handlePreviousStep,
                                                                             }}
                                                                             aria-invalid={!!errors[field.name]} />
                                                                         <img className='absolute top-5 right-2' src={CalendarIcon} alt="CalendarIcon" />
-                                                                    </div>
+                                                                    </div> */}
                                                                     {errors[field.name] && (
                                                                         <p className="error" role="alert">
                                                                             {errors[field.name].message}
                                                                         </p>
                                                                     )}
-                                                                </>
+                                                                </div>
                                                                 :
                                                                 field.type === 'htmlbuilder' ?
                                                                     <div className='input-bg h-[282px] mt-6 flex items-center justify-center text-[12px] flex-col gap-2 cursor-pointer' style={{ borderRadius: '3px' }}>
@@ -181,7 +222,7 @@ const ProgramSteps = ({ fields, currentStep, handleNextStep, handlePreviousStep,
                     <div className="flex gap-6 justify-center align-middle">
                         {currentStep === 1 && <Button btnName='Cancel' btnCategory="secondary" onClick={() => navigate('/programs')} />}
                         {currentStep > 1 && <Button btnName='Back' btnCategory="secondary" onClick={handlePreviousStep} />}
-                        <Button btnType="submit" btnName='Next' btnCategory="primary" />
+                        <Button btnType="submit" btnName={currentStep === totalSteps ? 'Submit' : 'Next'} btnCategory="primary" />
                     </div>
                 </form>
             </div>

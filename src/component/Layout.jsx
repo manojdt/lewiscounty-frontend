@@ -12,10 +12,10 @@ export default function Layout() {
   const { pathname } = location
   console.log('location', location)
 
-  useEffect(() => {
-    if (userInfo.data.role === 'fresher') { navigate('/login-type'); }
-    if(!userInfo.data.is_registered) navigate('/questions')
-  }, [])
+  // useEffect(() => {
+  //   if (userInfo.data.role === 'fresher') { navigate('/login-type'); }
+  //   if(!userInfo.data.is_registered) navigate('/questions')
+  // }, [])
   return (
     <div>
       <Navbar />
@@ -25,7 +25,7 @@ export default function Layout() {
             <span onClick={() => navigate('/dashboard')} className="block py-2 px-3 rounded md:p-0 cursor-pointer" aria-current="page">Dashboard</span>
           </li>
           <li className={`${pathname === '/programs' ? 'dashboard-menu-active' : ''}`}>
-            <span onClick={() => navigate('/dashboard')} className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer">Programs</span>
+            <span onClick={() => navigate('/programs')} className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer">Programs</span>
           </li>
           <li className={`${pathname === '/mentees' ? 'dashboard-menu-active' : ''}`}>
             <span onClick={() => navigate('/dashboard')} className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer">Mentees</span>

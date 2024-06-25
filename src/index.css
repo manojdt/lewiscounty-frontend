@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-body, button {
+body, button, .MuiMenuItem-root  {
   font-family: "Plus Jakarta Sans", sans-serif !important;
 }
 
@@ -66,6 +66,10 @@ body, button {
   width: 32.5%;
 }
 
+.width-80{
+  width: 85%;
+}
+
 
 
 .width-82{
@@ -74,6 +78,22 @@ body, button {
 
 .width-17{
   width: 17%;
+}
+
+.calendar-control{
+  width: 100%;
+}
+
+.calendar-control input{
+  background: rgba(29, 91, 191, 0.05);
+  height: 60px;
+  width: 100%;
+  border-radius: unset;
+  padding-left: 15px;
+}
+
+.calendar-control input:focus{
+  box-shadow :none
 }
 
 
