@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { useDispatch } from "react-redux";
-import { ReactComponent as NotificationIcon } from "../../assets/icons/notification.svg";
-import { ReactComponent as SettingsIcon } from "../../assets/icons/settings.svg";
+import NotificationIcon from "../../assets/images/message1x.png";
+import SettingsIcon  from "../../assets/images/setting1x.png";
 import UserImage from "../../assets/images/user.jpg";
 
 export const Navbar = () => {
@@ -73,8 +73,8 @@ export const Navbar = () => {
                                 </svg>
                             </div>
                         </div>
-                        <NotificationIcon />
-                        <SettingsIcon />
+                       <img src={NotificationIcon} alt="NotificationIcon" />
+                       <img src={SettingsIcon} alt="NotificationIcon" />
 
                         <div className='reletive'>
                             <img className='rounded-3xl object-cover h-8 w-8 cursor-pointer' src={UserImage} alt="User Icon"

@@ -9,7 +9,7 @@ import Backdrop from '@mui/material/Backdrop';
 import LogoSlide from "../LogoSlide";
 import { LoginFields } from "../../utils/loginFields";
 import SocialMediaLogin from "../../shared/SocialMedia";
-import { userAccountLogin, resetUserInfo } from "../../services/loginInfo";
+import { userAccountLogin, resetUserInfo, updateInfo } from "../../services/loginInfo";
 import { userStatus } from "../../utils/constant";
 
 import { ReactComponent as EyeCloseIcon } from "../../assets/icons/eyeClose.svg";
@@ -46,7 +46,9 @@ export const Login = () => {
   const handleRemeberPassword = () => setRememberPassword(!remeberPassword);
 
   const handleRedirect = () => {
+    dispatch(updateInfo())
     if (userData.data.role === 'fresher') navigate("/login-type");
+    else if(userData.data.is_registered) navigate("/dashboard")
     else navigate("/questions");
   }
 

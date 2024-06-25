@@ -11,7 +11,8 @@ import {
   updateUserRole,
   forgotPassword,
   updatePassword,
-  validateOTP
+  validateOTP,
+  updateQuestions
 } from "../../services/loginInfo";
 import {
   userStatus
@@ -84,11 +85,12 @@ export const userSlice = createSlice({
     })
     builder.addCase(resetUserInfo, (state, action) => initialState)
     builder.addCase(updateInfo.fulfilled, (state, action) => {
-      console.log('action', action, state)
+      // console.log('action', action, state)
       return {
         ...state,
         loading: false,
         data: action.payload,
+        status: '',
         error: ''
       }
     })
@@ -199,6 +201,30 @@ export const userSlice = createSlice({
         };
       })
       .addCase(updatePassword.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+
+        };
+      })
+
+      builder
+      .addCase(updateQuestions.pending, (state) => {
+        return {
+          ...state,
+          loading: true
+        };
+      })
+      .addCase(updateQuestions.fulfilled, (state, action) => {
+        console.log('change password', action)
+        return {
+          ...state,
+          loading: false,
+          status : userStatus.questions
+        };
+      })
+      .addCase(updateQuestions.rejected, (state, action) => {
         return {
           ...state,
           loading: false,

@@ -18,7 +18,8 @@ import Programs from "./component/Programs";
 import Calendar from "./component/Calendar";
 import Discussions from "./component/Discussions";
 import CreatePrograms from "./component/Programs/CreateProgram";
-import UserGuard from "./component/UserGuard";
+
+
 
 function App() {
  
@@ -31,6 +32,7 @@ function App() {
         dispatch(updateInfo())
       }
     },[])
+    // return <Outlet />
     return loggedIn ? <Outlet /> : <Navigate to="/login" />;
   };
 
@@ -57,6 +59,7 @@ function App() {
           <Route element={<Layout />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/programs" element={<Programs />} />
+
             <Route path="/create-programs" element={<CreatePrograms />} />
             <Route path="/calendar" element={<Calendar />} />
             <Route path="/discussions" element={<Discussions />} />

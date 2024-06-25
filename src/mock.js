@@ -79,13 +79,253 @@ export const menteeRows = [
     createData('Canada95', 'CA', 37602103, 9984670, 3287263, 3287263, 3287263),
 ];
 
-export const menteeMoreMenu = [
-    {
+export const menteeMoreMenu = [{
         name: 'Edit',
-        onClickEvent : (data) => console.log('Edit Event', data)
+        onClickEvent: (data) => console.log('Edit Event', data)
     },
     {
         name: 'Delete',
-        onClickEvent : (data) => console.log('Delete Event', data)
+        onClickEvent: (data) => console.log('Delete Event', data)
     },
 ]
+
+
+export const assignMenteeColumns = [{
+        field: 'name',
+        headerName: 'Name',
+        width: 140,
+        id: 0,
+    },
+    {
+        field: 'professional',
+        headerName: 'Professional',
+        width: 150,
+        id: 1,
+    },
+    {
+        field: 'contact',
+        headerName: 'Contact',
+        width: 150,
+        id: 2,
+    },
+    {
+        field: 'email',
+        headerName: 'Email',
+        width: 150,
+        id: 3,
+    },
+    {
+        field: 'location',
+        headerName: 'Location',
+        width: 150,
+        id: 4,
+    },
+    {
+        field: 'certificates',
+        headerName: 'Certificates',
+        width: 150,
+        id: 5,
+    },
+    {
+        field: 'view',
+        headerName: 'View',
+        width: 200,
+        id: 6,
+    },
+];
+
+
+function addignCreateData(name, professional, contact, email, location, certificates, view) {
+    return {
+        name,
+        professional,
+        contact,
+        email,
+        location,
+        certificates,
+        view
+    };
+}
+export const assignMenteeRows = [
+    addignCreateData('Name 1', 'Freelancer', 1324171354, 'John Doe@gmail.com', 'Lorem ipsum dolor sit amet..', '06', 3287263),
+    addignCreateData('Name 2', 'Freelancer', 1324171354, 'John Doe@gmail.com', 'Lorem ipsum dolor sit amet..', '06', 3287263),
+    addignCreateData('Name 3', 'Freelancer', 1324171354, 'John Doe@gmail.com', 'Lorem ipsum dolor sit amet..', '06', 3287263),
+    addignCreateData('Name 4', 'Freelancer', 1324171354, 'John Doe@gmail.com', 'Lorem ipsum dolor sit amet..', '06', 3287263),
+    addignCreateData('Name 5', 'Freelancer', 1324171354, 'John Doe@gmail.com', 'Lorem ipsum dolor sit amet..', '06', 3287263),
+    addignCreateData('Name 6', 'Freelancer', 1324171354, 'John Doe@gmail.com', 'Lorem ipsum dolor sit amet..', '06', 3287263),
+    addignCreateData('Name 7', 'Freelancer', 1324171354, 'John Doe@gmail.com', 'Lorem ipsum dolor sit amet..', '06', 3287263),
+    addignCreateData('Name 8', 'Freelancer', 1324171354, 'John Doe@gmail.com', 'Lorem ipsum dolor sit amet..', '06', 3287263),
+    addignCreateData('Name 9', 'Freelancer', 1324171354, 'John Doe@gmail.com', 'Lorem ipsum dolor sit amet..', '06', 3287263),
+    addignCreateData('Name 10', 'Freelancer', 1324171354, 'John Doe@gmail.com', 'Lorem ipsum dolor sit amet..', '06', 3287263),
+    addignCreateData('Name 11', 'Freelancer', 1324171354, 'John Doe@gmail.com', 'Lorem ipsum dolor sit amet..', '06', 3287263),
+    addignCreateData('Name 12', 'Freelancer', 1324171354, 'John Doe@gmail.com', 'Lorem ipsum dolor sit amet..', '06', 3287263),
+    addignCreateData('Name 13', 'Freelancer', 1324171354, 'John Doe@gmail.com', 'Lorem ipsum dolor sit amet..', '06', 3287263),
+    addignCreateData('Name 14', 'Freelancer', 1324171354, 'John Doe@gmail.com', 'Lorem ipsum dolor sit amet..', '06', 3287263),
+    addignCreateData('Name 15', 'Freelancer', 1324171354, 'John Doe@gmail.com', 'Lorem ipsum dolor sit amet..', '06', 3287263),
+    addignCreateData('Name 16', 'Freelancer', 1324171354, 'John Doe@gmail.com', 'Lorem ipsum dolor sit amet..', '06', 3287263),
+    addignCreateData('Name 17', 'Freelancer', 1324171354, 'John Doe@gmail.com', 'Lorem ipsum dolor sit amet..', '06', 3287263),
+    addignCreateData('Name 18', 'Freelancer', 1324171354, 'John Doe@gmail.com', 'Lorem ipsum dolor sit amet..', '06', 3287263),
+    addignCreateData('Name 19', 'Freelancer', 1324171354, 'John Doe@gmail.com', 'Lorem ipsum dolor sit amet..', '06', 3287263),
+    addignCreateData('Name 20', 'Freelancer', 1324171354, 'John Doe@gmail.com', 'Lorem ipsum dolor sit amet..', '06', 3287263),
+];
+
+
+
+function materialData(material_name, material_type, material_size, action) {
+    return {
+        material_name,
+        material_type,
+        material_size,
+        action,
+    };
+}
+
+const createMaterialRow = () => {
+    const data = []
+    for (let a = 1; a <= 20; a++) {
+        data.push(materialData(`Materials Name ${a}`, 'Video.mp4', '5MB', 3287263))
+    }
+
+    console.log('data', data)
+    return data
+}
+
+export const createMaterialsRows = createMaterialRow()
+
+export const MaterialColumns = [{
+        field: 'material_name',
+        headerName: 'Material Name',
+        width: 200,
+        id: 0,
+    },
+    {
+        field: 'material_type',
+        headerName: 'Material Type',
+        width: 200,
+        id: 1,
+    },
+    {
+        field: 'material_size',
+        headerName: 'Material Size',
+        width: 200,
+        id: 2,
+    },
+    {
+        field: 'action',
+        headerName: 'Action',
+        width: 200,
+        id: 3,
+        renderCell: (params) => {
+            return <button style={{    background: 'rgb(29, 91, 191)',
+                color: 'rgb(255, 255, 255)',
+                padding: '2px 20px',
+                height: '32px',
+                margin: '9px 0px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: '3px'}} 
+                onClick={() => console.log('click')}>View Details</button>;
+        }
+    },
+];
+
+
+
+function skillData(name, skills_desc, action) {
+    return {
+        name,
+        skills_desc,
+        action,
+    };
+}
+const createSkillsRow = () => {
+    const data = []
+    for (let a = 1; a <= 20; a++) {
+        data.push(skillData(`Skills Name ${a}`, 'test', 3287263))
+    }
+
+    console.log('data', data)
+    return data
+}
+
+
+export const createSkillsRows = createSkillsRow()
+
+export const SkillsColumns = [{
+    field: 'name',
+    headerName: 'Skills Name',
+    width: 200,
+    id: 0,
+},
+{
+    field: 'skills_desc',
+    headerName: 'Skills Description',
+    width: 200,
+    id: 1,
+},
+{
+    field: 'action',
+    headerName: 'Action',
+    width: 200,
+    id: 3,
+    renderCell: (params) => {
+        return <button style={{    background: 'rgb(29, 91, 191)',
+            color: 'rgb(255, 255, 255)',
+            padding: '2px 20px',
+            height: '32px',
+            margin: '9px 0px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: '3px'}} 
+            onClick={() => console.log('click')}>View Details</button>;
+    }
+},
+];
+
+
+function certificateData(name, action) {
+    return {
+        name,
+        action,
+    };
+}
+
+const certificateRow = () => {
+    const data = []
+    for (let a = 1; a <= 20; a++) {
+        data.push(certificateData(`Certificate Name ${a}`, 3287263))
+    }
+
+    console.log('data', data)
+    return data
+}
+
+export const certificateRows = certificateRow()
+
+export const CertificateColumns = [{
+    field: 'name',
+    headerName: 'Certificate Name',
+    width: 200,
+    id: 0,
+},
+{
+    field: 'action',
+    headerName: 'Action',
+    width: 200,
+    id: 3,
+    renderCell: (params) => {
+        return <button style={{    background: 'rgb(29, 91, 191)',
+            color: 'rgb(255, 255, 255)',
+            padding: '2px 20px',
+            height: '32px',
+            margin: '9px 0px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: '3px'}} 
+            onClick={() => console.log('click')}>View Details</button>;
+    }
+},
+];
