@@ -339,11 +339,11 @@ export const ProgramInformationFields = [{
       required: "This field is required",
     },
     options: [{
-        key: "yes",
+        key: "Category 1",
         value: "Category 1"
       },
       {
-        key: "no",
+        key: "Category 2",
         value: "Category 2"
       },
     ],
@@ -369,11 +369,11 @@ export const ProgramInformationFields = [{
       required: "This field is required",
     },
     options: [{
-        key: "yes",
+        key: "Session 1",
         value: "Session 1"
       },
       {
-        key: "no",
+        key: "Session 2",
         value: "Session 2"
       },
     ],
@@ -398,11 +398,11 @@ export const ProgramInformationFields = [{
       required: "This field is required",
     },
     options: [{
-        key: "yes",
+        key: "Medium",
         value: "Medium"
       },
       {
-        key: "no",
+        key: "Difficult",
         value: "Difficult"
       },
     ],
@@ -600,11 +600,11 @@ export const ProgramTestimonialsFields = [{
       required: "This field is required",
     },
     options: [{
-        key: "yes",
+        key: "Type 1",
         value: "Type 1"
       },
       {
-        key: "no",
+        key: "Type 2",
         value: "Type 2"
       },
     ],

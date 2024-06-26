@@ -217,10 +217,10 @@ export const userSlice = createSlice({
         };
       })
       .addCase(updateQuestions.fulfilled, (state, action) => {
-        console.log('change password', action)
         return {
           ...state,
           loading: false,
+          data: action.payload,
           status : userStatus.questions
         };
       })
