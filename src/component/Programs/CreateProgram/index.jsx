@@ -18,6 +18,7 @@ import DataTable from '../../../shared/DataGrid';
 export default function CreatePrograms() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const userInfo = useSelector(state => state.userInfo)
     const [loading, setLoading] = useState({ create: false, success: false })
     const { programDetails, allPrograms } = useSelector(state => state.programInfo)
     const [actionTab, setActiveTab] = useState('program_information')
@@ -28,27 +29,28 @@ export default function CreatePrograms() {
     const handleTab = (key) => {
         const tabIndex = ProgramTabs.findIndex(tab => tab.key === key)
         console.log(tabIndex)
-        // setCurrentStep(tabIndex + 1)
+        setCurrentStep(tabIndex + 1)
         setActiveTab(key)
     }
 
     const handleNextStep = (data) => {
         // setStepData({ ...stepData, [ProgramTabs[currentStep - 1].key]: data })
         console.log('Next step')
-        // const fieldData = { ...stepData, ...data }
-        // setStepData(fieldData)
-        // if (ProgramFields.length === currentStep) {
-        //     console.log('Submit', stepData)
-        //     const updateProgram = [...allPrograms, fieldData]
-        //     //   navigate("/dashboard");
-        //     setLoading({ ...loading, create: true })
-        //     dispatch(updateAllPrograms(updateProgram))
-        // }
-        // else {
-        //     setCurrentStep(currentStep + 1)
-        //     console.log('llll', ProgramTabs[currentStep])
-        //     setActiveTab(ProgramTabs[currentStep].key)
-        // }
+        const fieldData = { ...stepData, ...data }
+        setStepData(fieldData)
+        if (ProgramFields.length === currentStep) {
+            console.log('Submit', stepData)
+            const apiData = { ...fieldData, posted: new Date(), id: allPrograms.length + 1 }
+            const updateProgram = [...allPrograms, apiData]
+            //   navigate("/dashboard");
+            setLoading({ ...loading, create: true })
+            dispatch(updateAllPrograms(updateProgram))
+        }
+        else {
+            setCurrentStep(currentStep + 1)
+            console.log('llll', ProgramTabs[currentStep])
+            setActiveTab(ProgramTabs[currentStep].key)
+        }
     }
 
     console.log('stepData', stepData)
@@ -125,6 +127,12 @@ export default function CreatePrograms() {
             }, [3000])
         }
     }, [allPrograms])
+
+    useEffect(() => {
+        if (userInfo && userInfo.data && userInfo.data.role !== 'mentor') {
+            navigate('/programs')
+        }
+    }, [])
 
 
     console.log('actionModal', actionModal)
