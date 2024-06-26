@@ -57,6 +57,10 @@ export const userStatus = {
   questions : 'questionsUpdated',
 }
 
+export const programStatus = {
+  create: 'programCreated',
+}
+
 export const PasswordRulesSet = {
   character : 'character',
   upperlowercase : 'upperlowercase',
