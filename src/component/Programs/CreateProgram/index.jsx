@@ -39,12 +39,12 @@ export default function CreatePrograms() {
         const fieldData = { ...stepData, ...data }
         setStepData(fieldData)
         if (ProgramFields.length === currentStep) {
-            console.log('Submit', stepData)
             const apiData = { ...fieldData, posted: new Date(), id: allPrograms.length + 1 }
             const updateProgram = [...allPrograms, apiData]
+            console.log('Submit', updateProgram)
             //   navigate("/dashboard");
-            setLoading({ ...loading, create: true })
-            dispatch(updateAllPrograms(updateProgram))
+            // setLoading({ ...loading, create: true })
+            // dispatch(updateAllPrograms(updateProgram))
         }
         else {
             setCurrentStep(currentStep + 1)
@@ -149,7 +149,7 @@ export default function CreatePrograms() {
                     </div>
                 </div>
 
-                <MuiModal modalOpen={loading.success} modalClose={() => setLoading({ create: false, success: false })} noheader>
+                {/* <MuiModal modalOpen={loading.success} modalClose={() => setLoading({ create: false, success: false })} noheader>
                     <div className='px-5 py-1 flex justify-center items-center'>
                         <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
                             style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
@@ -158,9 +158,9 @@ export default function CreatePrograms() {
                         </div>
 
                     </div>
-                </MuiModal>
+                </MuiModal> */}
 
-                <MuiModal modalSize='lg' modalOpen={actionModal !== ''} modalClose={() => setActionModal('')} noheader>
+                {/* <MuiModal modalSize='lg' modalOpen={actionModal !== ''} modalClose={() => setActionModal('')} noheader>
                     <div className='relative'>
                         <input className='input-bg w-full h-[60px] px-5 mb-4 text-[14px]' style={{ borderRadius: '50px', }}
                             placeholder='Search learning materials name' />
@@ -188,7 +188,7 @@ export default function CreatePrograms() {
 
                     }
 
-                </MuiModal>
+                </MuiModal> */}
 
                 <Backdrop
                     sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}

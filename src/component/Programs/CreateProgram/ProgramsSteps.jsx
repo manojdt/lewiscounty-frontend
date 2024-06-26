@@ -120,7 +120,7 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                     field.type === 'textbox' ?
                                                         <>
                                                             <textarea id="message" rows="4" className={`block p-2.5 input-bg w-full text-sm text-gray-900  rounded-lg border
-                                                                   focus:visible:outline-none focus:visible:border-none ${field.width === 'width-82' ? 'h-[282px]' : ''}`}
+                                                                   focus-visible:outline-none focus-visible:border-none ${field.width === 'width-82' ? 'h-[282px]' : ''}`}
                                                                 placeholder={field.placeholder}
                                                                 {...register(field.name, field.inputRules)}></textarea>
                                                             {errors[field.name] && (

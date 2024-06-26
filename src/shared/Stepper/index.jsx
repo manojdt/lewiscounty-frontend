@@ -88,7 +88,7 @@ export const Stepper = ({ steps, currentStep = 0, btnTypeAction }) => {
                       }>{step.name}</div>
                     <div className={`text-xs ${fieldView}`}>{step.status}</div>
                   </div>
-                  <ArrowRight />
+                  { currentIndex !== steps.length-1 ? <ArrowRight /> : null }
                 </li>
               )
             })
