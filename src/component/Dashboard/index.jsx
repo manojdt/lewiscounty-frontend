@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from '../../shared';
 import UserImage from "../../assets/images/user.jpg";
 import { menusList, curatedPrograms } from '../../utils/mock'
@@ -7,6 +7,7 @@ import CalenderIcon from '../../assets/icons/Calender.svg';
 import FilterIcon from '../../assets/icons/Filter.svg';
 import InviteFriendsIcon from '../../assets/icons/Invite-friends.svg'
 import BookmarkedIcon from '../../assets/icons/Bookmarked.svg'
+import ProgramImage from "../../assets/images/logo_image.jpg";
 
 import RecentRequests from "./RecentRequests";
 import TeamGroups from "./TeamGroups";
@@ -17,8 +18,51 @@ import Programs from "./Programs";
 import MediaPost from "./MediaPost";
 import TrackInfo from "./TrackInfo";
 import Carousel from "../../shared/Carousel";
+import { useDispatch, useSelector } from "react-redux";
+import { programStatus } from "../../utils/constant";
+import { updateAllPrograms, updateProgramDetails } from "../../services/programInfo";
+import { useNavigate } from "react-router-dom";
 
 export const Dashboard = () => {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const { allPrograms, status } = useSelector(state => state.programInfo)
+  console.log('status', status)
+
+  // const data = [
+  //   {
+  //     "category": "Category 1",
+  //     "program_name": "Test Program",
+  //     "sessions": "Session 1",
+  //     "decription": "Test description about this program",
+  //     "course_level": "Medium",
+  //     "program_start_date": "2024-06-26T17:45:21.439Z",
+  //     "program_end_date": "2024-06-27T17:45:21.440Z",
+  //     "learning_materials": "Materials",
+  //     "mentee_limits": "10",
+  //     "group_discussion": "yes",
+  //     "individual_discussion": "yes",
+  //     "location": "USA",
+  //     "about_program": "About program desc",
+  //     "skills": "Skills1",
+  //     "sponsor_logo": {},
+  //     "benefits": "Benefits data",
+  //     "certificates": "Certificates",
+  //     "posted" : new Date(),
+  //     "id": allPrograms.length+1
+  //   }
+  // ]
+
+  // useEffect(() => {
+  //   dispatch(updateAllPrograms(data))
+  // }, [])
+
+  const handleNavigateDetails = (id) => {
+    const programDetails = allPrograms.find(all => all.id === id)
+    dispatch(updateProgramDetails(programDetails))
+    navigate(`/program-details/${id}`)
+  }
+  console.log('allPrograms1', allPrograms)
   return (
     <>
 
@@ -75,6 +119,103 @@ export const Dashboard = () => {
 
 
           <div className="col-span-4">
+
+            {
+              status === programStatus.create && allPrograms.length ?
+
+                <div style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }}>
+                  <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
+                    <div className="flex gap-4">
+                      <div className="card-dash" style={{ background: 'linear-gradient(180deg, #00B1C0 0%, #005DC6 100%)' }} ></div>
+                      <h4> Recent Programs</h4>
+                      <img src={FilterIcon} alt="statistics" />
+                    </div>
+                    <p className="text-[12px] py-2 px-2 cursor-pointer" style={{
+                      background: 'rgba(217, 228, 242, 1)', color: 'rgba(29, 91, 191, 1)', borderRadius: '3px'
+                    }}>View All</p>
+                  </div>
+
+
+
+
+                  <div className="py-3 px-3 ">
+                    <Carousel>
+                      {
+                        allPrograms.map((allprogram, index) => {
+                          let startDate = ''
+                          if(allprogram.program_start_date !== ''){
+                            startDate = new Date(allprogram.program_start_date).toISOString().substring(0, 10).split("-")
+                          }
+                          const actualStartDate = startDate.length ? `${startDate[2]}/${startDate[1]}/${startDate[0]}` : ''
+
+
+                          let postedDate = ''
+                          if(allprogram.posted !== ''){
+                            postedDate = new Date(allprogram.posted).toISOString().substring(0, 10).split("-")
+                          }
+                          const actualPostDate = postedDate.length ? `${postedDate[2]}/${postedDate[1]}/${postedDate[0]}` : ''
+
+                          // const endDate = new Date(allprogram.poste).toISOString().substring(0, 10).split("-")
+                          // const actualEndDate = `${endDate[2]}/${endDate[1]}/${endDate[0]}`
+
+                          // console.log('date2', startDate)
+                          // console.log('date', allprogram.program_start_date)
+                          // console.log('date1', new Date(allprogram.program_start_date).toISOString().substring(0, 10))
+
+                          return (
+                            <div key={index} className="curated-programs flex gap-1 items-center py-8 px-5 w-2/5">
+
+                              <div className="w-full" style={{ boxShadow: '4px 4px 15px 0px rgba(0, 0, 0, 0.1)', borderRadius: '10px' }}>
+                                <div className="flex py-6 px-7 border-b-2 relative">
+                                  <div className="w-6/12 h-full">
+                                    <img className="object-cover w-full h-[130px]" src={ProgramImage} alt="Program Logo" />
+                                  </div>
+                                  <div className="flex flex-col gap-3">
+                                    <p className={`py-1 px-1 text-[12px] text-center rounded-3xl ${allPrograms.length === 1 ? 'w-5/12' : 'w-1/3'}`} style={{ border: '1px solid rgba(238, 238, 238, 1)' }}>
+                                      {allprogram.category}
+                                    </p>
+                                    <h4 className="text-[16px]">{allprogram.program_name}</h4>
+                                    <span className="text-[12px]">{allprogram.decription}</span>
+                                    <button className="text-white text-[12px] py-2 w-5/12"
+                                    // onClick={() => handleNavigateDetails(index+1)}
+                                    style={{ background: 'rgba(29, 91, 191, 1)', borderRadius: '5px' }}>
+                                      View Details</button>
+                                  </div>
+                                  <img className="absolute top-4 right-4 cursor-pointer" src={BookmarkedIcon} alt="BookmarkedIcon" />
+                                </div>
+
+
+                                <div className="flex justify-between pb-3 mx-4 my-4 items-center">
+                                  <div className="flex text-[12px] gap-4 items-center">
+                                    <img src={CalenderIcon} alt="CalendarImage" />
+                                    <span>{actualStartDate}</span>
+      
+                                    <div
+                                      className="w-[6px] h-[6px]  mx-[-1px]  flex items-center justify-center">
+                                      <span className="w-[6px] h-[6px]  rounded-full" style={{ background: 'rgba(0, 0, 0, 1)' }}></span>
+                                    </div>
+
+                                    {/* <span>{'allprogram.program_start_date'}</span> */}
+                                    <span>{'10 A.M (GMT + 7)'}</span>
+                                  </div>
+                                  <div className="text-[12px] px-2 py-2" style={{ background: 'rgba(241, 241, 241, 1)', borderRadius: '3px' }}
+                                  >{'10 Mins ago'}</div>
+                                </div>
+                              </div>
+                            </div>
+                          )
+                        }
+                        )
+                      }
+                    </Carousel>
+                  </div>
+
+
+
+                </div>
+
+                : null
+            }
             <div style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }}>
               <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
                 <div className="flex gap-4">
@@ -106,7 +247,7 @@ export const Dashboard = () => {
                             </div>
                             <img className="absolute top-4 right-4 cursor-pointer" src={BookmarkedIcon} alt="BookmarkedIcon" />
                           </div>
-                          
+
 
                           <div className="flex justify-between pb-3 mx-4 my-4 items-center">
                             <div className="flex text-[12px] gap-4 items-center">

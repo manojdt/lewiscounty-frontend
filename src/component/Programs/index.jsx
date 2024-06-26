@@ -6,10 +6,12 @@ import CalenderIcon from '../../assets/icons/Calender.svg';
 import BookmarkedIcon from '../../assets/icons/Bookmarked.svg';
 import CalendarIcon from '../../assets/images/calender_1x.png';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 
 export default function Programs() {
     const navigate = useNavigate()
+    const userInfo = useSelector(state => state.userInfo)
     const programFilter = [
         {
             name: 'Quarter 1',
@@ -24,9 +26,13 @@ export default function Programs() {
         <div className="dashboard-content px-8 mt-10">
             <div className='flex justify-between items-center mb-8'>
                 <div>All Programs</div>
-                <div>
-                    <button onClick={() => navigate('/create-programs')} className='text-[12px] px-3 py-4' style={{ background: '#1D5BBF', color: '#fff', borderRadius: '6px' }}>Create New Program Request</button>
-                </div>
+                {
+                    userInfo && userInfo.data && userInfo.data.role === 'mentor' &&
+                    <div>
+                        <button onClick={() => navigate('/create-programs')} className='text-[12px] px-3 py-4' style={{ background: '#1D5BBF', color: '#fff', borderRadius: '6px' }}>Create New Program Request</button>
+                    </div>
+                }
+
             </div>
             <div className="grid grid-cols-5 gap-3">
                 <div className="row-span-3 flex flex-col gap-8">

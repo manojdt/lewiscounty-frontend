@@ -6,8 +6,10 @@ import {
     getAllPrograms,
     getProgramDetails,
     updateAllPrograms,
+    updateProgramDetails,
 } from "../../services/programInfo";
 import {
+    programStatus,
     userStatus
 } from '../../utils/constant'
 
@@ -102,7 +104,7 @@ export const programSlice = createSlice({
                 return {
                     ...state,
                     allPrograms: action.payload,
-                    status: userStatus.create,
+                    status: programStatus.create,
                     loading: false
                 };
             })
@@ -113,6 +115,30 @@ export const programSlice = createSlice({
                     error: action.error.message,
                 };
             })
+
+        builder.addCase(updateProgramDetails.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true
+                };
+            })
+            .addCase(updateProgramDetails.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    programDetails: action.payload,
+                    status: programStatus.create,
+                    loading: false
+                };
+            })
+            .addCase(updateProgramDetails.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            })
+
+
     },
 });
 

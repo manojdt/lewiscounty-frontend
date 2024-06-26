@@ -76,6 +76,8 @@ export const Questions = () => {
     setBtnTypeAction({ back: true, next: false })
   }
 
+
+
   return (
     <>
       <Navbar />

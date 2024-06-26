@@ -55,3 +55,15 @@ export const updateAllPrograms = createAsyncThunk(
         return data;
     }
 );
+
+export const updateProgramDetails = createAsyncThunk(
+    "updateProgramDetails",
+    async (data) => {
+        // const validateOTP = await api.post("/validate-otp", data);
+        // if (validateOTP.status === 200) {
+        //     return validateOTP;
+        // }
+        // return validateOTP;
+        return data;
+    }
+);

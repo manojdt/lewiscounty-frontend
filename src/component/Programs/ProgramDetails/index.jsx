@@ -13,12 +13,14 @@ import './program-details.css'
 import Carousel from '../../../shared/Carousel';
 import { curatedPrograms } from '../../../utils/mock';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 
 export default function ProgramDetails() {
     const navigate = useNavigate()
     const [activeTab, setActiveTab] = useState('about_program')
     const [certificateActiveTab, setCertificateActiveTab] = useState('participated')
+    const { programDetails } = useSelector(state => state.programInfo)
     const tabs = [
         {
             name: 'About Program',
@@ -57,6 +59,13 @@ export default function ProgramDetails() {
         setCertificateActiveTab(key)
     }
 
+
+    if(!Object.keys(programDetails).length){
+        navigate('/dashboard')
+    }
+
+
+
     return (
         <div className="px-9 my-6 grid">
             <div className='grid mb-10' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)', borderRadius: '5px' }}>
@@ -86,27 +95,25 @@ export default function ProgramDetails() {
                             {/* Left Side Content */}
                             <div className='left-side-content col-span-2'>
                                 <div className='flex items-center gap-6 pb-6'>
-                                    <h3 className='font-semibold text-[18px]' style={{ color: 'rgba(29, 91, 191, 1)' }}>Teaching Program</h3>
+                                    <h3 className='font-semibold text-[18px]' style={{ color: 'rgba(29, 91, 191, 1)' }}>{programDetails.program_name}</h3>
                                     <div className='text-[10px] px-3 py-2' style={{
                                         background: 'rgba(238, 240, 244, 1)',
                                         color: 'rgba(253, 0, 58, 1)',
                                         borderRadius: '5px'
                                     }}>
-                                        Category 1
+                                        {programDetails.category}
                                     </div>
                                 </div>
 
                                 <div className='text-[12px]'>
-                                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                                    when an unknown printer took a galley of type and scrambled it to make a type specimen book.It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
-                                    It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop.
+                                    {programDetails.decription}
                                 </div>
 
                                 <div className='flex gap-6 py-6'>
                                     <div className='flex gap-2 items-center'>
                                         <img src={LocationIcon} alt="LocationIcon" />
                                         <span className='text-[12px]'>
-                                            America
+                                            {programDetails.location}
                                         </span>
                                     </div>
                                     <div style={{ borderRight: '1px solid rgba(24, 40, 61, 1)' }}></div>
@@ -130,7 +137,7 @@ export default function ProgramDetails() {
                                         background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
                                         borderRadius: '5px'
                                     }}
-                                        onClick={() => navigate('/program-task/1')}
+                                        // onClick={() => navigate('/program-task/1')}
                                     >Join Program
                                         <span className='pl-8 pt-1'><img style={{ width: '15px', height: '13px' }} src={DoubleArrowIcon} alt="DoubleArrowIcon" /></span>
                                     </button>
