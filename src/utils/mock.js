@@ -1,34 +1,41 @@
 import ProgramImage from "../assets/images/logo_image.jpg";
+import {
+  programStatus
+} from "./constant";
 
-export const menusList = [
-  {
+export const menusList = [{
     name: "All Programs",
     count: 13,
+    page: '/programs'
   },
   {
     name: "Curated Programs",
     count: 62,
+    page: '/programs?type=curated'
   },
   {
     name: "Recent Join Programs",
     count: 12,
+    page: '/programs?type=yettoplan'
   },
   {
     name: "Ongoing Programs",
     count: 78,
+    page: '/programs?type=planned'
   },
   {
     name: "Bookmarked Programs",
     count: 24,
+    page: '/programs?type=bookmarked'
   },
   {
     name: "Completed Programs",
     count: 67,
+    page: '/programs?type=completed'
   },
 ];
 
-export const Impressions = [
-  {
+export const Impressions = [{
     name: "Total views",
     count: 10,
   },
@@ -38,8 +45,7 @@ export const Impressions = [
   },
 ];
 
-export const Teams = [
-  {
+export const Teams = [{
     name: "Team Members",
     count: 10,
   },
@@ -49,8 +55,7 @@ export const Teams = [
   },
 ];
 
-export const recentActivities = [
-  {
+export const recentActivities = [{
     name: "Program 1 Report",
     status: "Approved by Admin",
     color: "rgba(29, 91, 191, 1)",
@@ -77,146 +82,326 @@ export const recentActivities = [
   },
 ];
 
-export const curatedPrograms = [
-  {
+export const curatedPrograms = [{
+    id: 1,
     programImage: ProgramImage,
     category: "Category1",
-    name: "Teaching Education Program1",
-    desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-    time: "4/7/2024",
-    hour: "10 A.M (GMT + 7)",
-    posted: "10 Mins ago",
+    program_name: "Teaching Education Program1",
+    sessions: "Session 1",
+    decription: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    course_level: "Medium",
+    program_start_date: "2024-07-02T17:45:21.439Z",
+    program_end_date: "2024-07-03T17:45:21.440Z",
+    learning_materials: "Materials",
+    mentee_limits: "10",
+    group_discussion: "yes",
+    individual_discussion: "yes",
+    location: "USA",
+    about_program: "About program desc",
+    skills: "Skills1",
+    sponsor_logo: {},
+    benefits: "Benefits data",
+    certificates: "Certificates",
+    posted: new Date(),
+    bookmark: false,
+    status: programStatus.yetToPlan
   },
   {
+    id: 2,
     programImage: ProgramImage,
     category: "Category2",
-    name: "Teaching Education Program2",
-    desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-    time: "4/7/2024",
-    hour: "10 A.M (GMT + 7)",
-    posted: "45 Mins ago",
+    program_name: "Teaching Education Program2",
+    sessions: "Session 2",
+    decription: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    course_level: "Medium",
+    program_start_date: "2024-06-28T17:45:21.439Z",
+    program_end_date: "2024-06-28T17:45:21.440Z",
+    learning_materials: "Materials",
+    mentee_limits: "10",
+    group_discussion: "yes",
+    individual_discussion: "yes",
+    location: "USA",
+    about_program: "About program desc",
+    skills: "Skills2",
+    sponsor_logo: {},
+    benefits: "Benefits data",
+    certificates: "Certificates",
+    posted: new Date(),
+    bookmark: false,
+    status: programStatus.planned
   },
   {
+    id: 3,
     programImage: ProgramImage,
     category: "Category3",
-    name: "Teaching Education Program3",
-    desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-    time: "4/7/2024",
-    hour: "10 A.M (GMT + 7)",
-    posted: "32 Mins ago",
+    program_name: "Teaching Education Program3",
+    sessions: "Session 3",
+    decription: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    course_level: "Medium",
+    program_start_date: "2024-06-28T17:45:21.439Z",
+    program_end_date: "2024-06-29T17:45:21.440Z",
+    learning_materials: "Materials",
+    mentee_limits: "10",
+    group_discussion: "yes",
+    individual_discussion: "yes",
+    location: "USA",
+    about_program: "About program desc",
+    skills: "Skills1",
+    sponsor_logo: {},
+    benefits: "Benefits data",
+    certificates: "Certificates",
+    posted: new Date(),
+    bookmark: false,
+    status: programStatus.inProgress
   },
   {
+    id: 4,
     programImage: ProgramImage,
     category: "Category4",
-    name: "Teaching Education Program1",
-    desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-    time: "4/7/2024",
-    hour: "10 A.M (GMT + 7)",
-    posted: "10 Mins ago",
+    program_name: "Teaching Education Program1",
+    sessions: "Session 4",
+    decription: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    course_level: "Medium",
+    program_start_date: "2024-06-29T17:45:21.439Z",
+    program_end_date: "2024-06-30T17:45:21.440Z",
+    learning_materials: "Materials",
+    mentee_limits: "10",
+    group_discussion: "yes",
+    individual_discussion: "yes",
+    location: "USA",
+    about_program: "About program desc",
+    skills: "Skills1",
+    sponsor_logo: {},
+    benefits: "Benefits data",
+    certificates: "Certificates",
+    posted: new Date(),
+    bookmark: false,
+    status: programStatus.completed
   },
   {
+    id: 5,
     programImage: ProgramImage,
     category: "Category5",
-    name: "Teaching Education Program2",
-    desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-    time: "4/7/2024",
-    hour: "10 A.M (GMT + 7)",
-    posted: "45 Mins ago",
+    program_name: "Teaching Education Program2",
+    sessions: "Session 5",
+    decription: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    course_level: "Medium",
+    program_start_date: "2024-06-30T17:45:21.439Z",
+    program_end_date: "2024-06-31T17:45:21.440Z",
+    learning_materials: "Materials",
+    mentee_limits: "10",
+    group_discussion: "yes",
+    individual_discussion: "yes",
+    location: "USA",
+    about_program: "About program desc",
+    skills: "Skills1",
+    sponsor_logo: {},
+    benefits: "Benefits data",
+    certificates: "Certificates",
+    posted: new Date(),
+    bookmark: false,
+    status: programStatus.yetToPlan
   },
   {
+    id: 6,
     programImage: ProgramImage,
     category: "Category6",
-    name: "Teaching Education Program3",
-    desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-    time: "4/7/2024",
-    hour: "10 A.M (GMT + 7)",
-    posted: "32 Mins ago",
+    program_name: "Teaching Education Program3",
+    sessions: "Session 6",
+    decription: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    course_level: "Medium",
+    program_start_date: "2024-07-03T17:45:21.439Z",
+    program_end_date: "2024-07-04T17:45:21.440Z",
+    learning_materials: "Materials",
+    mentee_limits: "10",
+    group_discussion: "yes",
+    individual_discussion: "yes",
+    location: "USA",
+    about_program: "About program desc",
+    skills: "Skills1",
+    sponsor_logo: {},
+    benefits: "Benefits data",
+    certificates: "Certificates",
+    posted: new Date(),
+    bookmark: false,
+    status: programStatus.planned
   },
   {
+    id: 7,
     programImage: ProgramImage,
     category: "Category7",
-    name: "Teaching Education Program1",
-    desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-    time: "4/7/2024",
-    hour: "10 A.M (GMT + 7)",
-    posted: "10 Mins ago",
+    program_name: "Teaching Education Program1",
+    sessions: "Session 7",
+    decription: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    course_level: "Medium",
+    program_start_date: "2024-07-02T17:45:21.439Z",
+    program_end_date: "2024-07-02T17:45:21.440Z",
+    learning_materials: "Materials",
+    mentee_limits: "10",
+    group_discussion: "yes",
+    individual_discussion: "yes",
+    location: "USA",
+    about_program: "About program desc",
+    skills: "Skills1",
+    sponsor_logo: {},
+    benefits: "Benefits data",
+    certificates: "Certificates",
+    posted: new Date(),
+    bookmark: false,
+    status: programStatus.inProgress
   },
   {
+    id: 8,
     programImage: ProgramImage,
     category: "Category8",
-    name: "Teaching Education Program2",
-    desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-    time: "4/7/2024",
-    hour: "10 A.M (GMT + 7)",
-    posted: "45 Mins ago",
+    program_name: "Teaching Education Program2",
+    sessions: "Session 8",
+    decription: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    course_level: "Medium",
+    program_start_date: "2024-07-04T17:45:21.439Z",
+    program_end_date: "2024-07-05T17:45:21.440Z",
+    learning_materials: "Materials",
+    mentee_limits: "10",
+    group_discussion: "yes",
+    individual_discussion: "yes",
+    location: "USA",
+    about_program: "About program desc",
+    skills: "Skills1",
+    sponsor_logo: {},
+    benefits: "Benefits data",
+    certificates: "Certificates",
+    posted: new Date(),
+    bookmark: true,
+    status: programStatus.completed
   },
   {
+    id: 9,
     programImage: ProgramImage,
     category: "Category9",
-    name: "Teaching Education Program3",
-    desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-    time: "4/7/2024",
-    hour: "10 A.M (GMT + 7)",
-    posted: "32 Mins ago",
+    program_name: "Teaching Education Program3",
+    sessions: "Session 9",
+    decription: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    course_level: "Medium",
+    program_start_date: "2024-07-05T17:45:21.439Z",
+    program_end_date: "2024-07-05T17:45:21.440Z",
+    learning_materials: "Materials",
+    mentee_limits: "10",
+    group_discussion: "yes",
+    individual_discussion: "yes",
+    location: "USA",
+    about_program: "About program desc",
+    skills: "Skills1",
+    sponsor_logo: {},
+    benefits: "Benefits data",
+    certificates: "Certificates",
+    posted: new Date(),
+    bookmark: true,
+    status: programStatus.yetToPlan
   },
-  
-  
+  {
+    id: 10,
+    programImage: ProgramImage,
+    category: "Category10",
+    program_name: "Teaching Education Program10",
+    sessions: "Session 1",
+    decription: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    course_level: "Medium",
+    program_start_date: "2024-07-02T17:45:21.439Z",
+    program_end_date: "2024-07-03T17:45:21.440Z",
+    learning_materials: "Materials",
+    mentee_limits: "10",
+    group_discussion: "yes",
+    individual_discussion: "yes",
+    location: "USA",
+    about_program: "About program desc",
+    skills: "Skills1",
+    sponsor_logo: {},
+    benefits: "Benefits data",
+    certificates: "Certificates",
+    posted: new Date(),
+    bookmark: false,
+    status: programStatus.yetToPlan
+  },
+  {
+    id: 11,
+    programImage: ProgramImage,
+    category: "Category11",
+    program_name: "Teaching Education Program11",
+    sessions: "Session 1",
+    decription: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    course_level: "Medium",
+    program_start_date: "2024-07-02T17:45:21.439Z",
+    program_end_date: "2024-07-03T17:45:21.440Z",
+    learning_materials: "Materials",
+    mentee_limits: "10",
+    group_discussion: "yes",
+    individual_discussion: "yes",
+    location: "USA",
+    about_program: "About program desc",
+    skills: "Skills1",
+    sponsor_logo: {},
+    benefits: "Benefits data",
+    certificates: "Certificates",
+    posted: new Date(),
+    bookmark: false,
+    status: programStatus.inProgress
+  }
+
+
 ];
 
 
-export const recentRequest = [
-    {
-        name: 'Rhea Ripley',
-        type: 'Student',
-        attended : 25,
-        completed: 14
-    },
-    {
-        name: 'Jhon Smith',
-        type: 'CSR Employee',
-        attended : 78,
-        completed: 47
-    },
-    {
-        name: 'Michael St',
-        type: 'Student',
-        attended : 32,
-        completed: 12
-    },
-    {
-        name: 'Rhea Ripley',
-        type: 'Student',
-        attended : 85,
-        completed: 43
-    },
-    {
-        name: 'Rhea Ripley',
-        type: 'Student',
-        attended : 44,
-        completed: 16
-    },
+export const recentRequest = [{
+    name: 'Rhea Ripley',
+    type: 'Student',
+    attended: 25,
+    completed: 14
+  },
+  {
+    name: 'Jhon Smith',
+    type: 'CSR Employee',
+    attended: 78,
+    completed: 47
+  },
+  {
+    name: 'Michael St',
+    type: 'Student',
+    attended: 32,
+    completed: 12
+  },
+  {
+    name: 'Rhea Ripley',
+    type: 'Student',
+    attended: 85,
+    completed: 43
+  },
+  {
+    name: 'Rhea Ripley',
+    type: 'Student',
+    attended: 44,
+    completed: 16
+  },
 ]
 
 
-export const programFeeds = [
-    {
-        title: 'Math’s Teaching  Program',
-        desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.'
-    },
-    {
-        title: 'Math’s Teaching  Program',
-        desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.'
-    },
-    {
-        title: 'Math’s Teaching  Program',
-        desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.'
-    },
-    {
-        title: 'Math’s Teaching  Program',
-        desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.'
-    },
-    {
-        title: 'Math’s Teaching  Program',
-        desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.'
-    },
+export const programFeeds = [{
+    title: 'Math’s Teaching  Program',
+    desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.'
+  },
+  {
+    title: 'Math’s Teaching  Program',
+    desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.'
+  },
+  {
+    title: 'Math’s Teaching  Program',
+    desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.'
+  },
+  {
+    title: 'Math’s Teaching  Program',
+    desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.'
+  },
+  {
+    title: 'Math’s Teaching  Program',
+    desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.'
+  },
 ]

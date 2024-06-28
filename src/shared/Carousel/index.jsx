@@ -4,19 +4,19 @@ import "slick-carousel/slick/slick-theme.css";
 import './carousel.css';
 import Slider from "react-slick";
 
-export default function Carousel({ children }) {
+export default function Carousel({ children, slideCount = 3 }) {
     let settings = {
         dots: true,
         infinite: false,
         speed: 900,
-        slidesToShow: 3,
+        slidesToShow: slideCount,
         slidesToScroll: 3,
         initialSlide: 0,
         responsive: [
             {
                 breakpoint: 1024,
                 settings: {
-                    slidesToShow: 3,
+                    slidesToShow: slideCount,
                     slidesToScroll: 3,
                     infinite: true,
                     dots: true

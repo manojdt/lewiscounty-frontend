@@ -195,13 +195,13 @@ export const createMaterialsRows = createMaterialRow()
 export const MaterialColumns = [{
         field: 'material_name',
         headerName: 'Material Name',
-        width: 200,
+        width: 400,
         id: 0,
     },
     {
         field: 'material_type',
         headerName: 'Material Type',
-        width: 200,
+        width: 250,
         id: 1,
     },
     {
@@ -255,13 +255,13 @@ export const createSkillsRows = createSkillsRow()
 export const SkillsColumns = [{
     field: 'name',
     headerName: 'Skills Name',
-    width: 200,
+    width: 400,
     id: 0,
 },
 {
     field: 'skills_desc',
     headerName: 'Skills Description',
-    width: 200,
+    width: 400,
     id: 1,
 },
 {
@@ -307,7 +307,7 @@ export const certificateRows = certificateRow()
 export const CertificateColumns = [{
     field: 'name',
     headerName: 'Certificate Name',
-    width: 200,
+    width: 600,
     id: 0,
 },
 {

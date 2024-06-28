@@ -56,14 +56,33 @@ export const updateAllPrograms = createAsyncThunk(
     }
 );
 
+
+
+export const createNewProgram = createAsyncThunk(
+    "createNewProgram",
+    async (data) => {
+        return data;
+    }
+);
+
+export const loadAllPrograms = createAsyncThunk(
+    "loadAllPrograms",
+    async (data) => {
+        return data;
+    }
+);
+
+
+export const updateNewPrograms = createAsyncThunk(
+    "updateNewPrograms",
+    async (data) => {
+        return data;
+    }
+);
+
 export const updateProgramDetails = createAsyncThunk(
     "updateProgramDetails",
     async (data) => {
-        // const validateOTP = await api.post("/validate-otp", data);
-        // if (validateOTP.status === 200) {
-        //     return validateOTP;
-        // }
-        // return validateOTP;
         return data;
     }
 );

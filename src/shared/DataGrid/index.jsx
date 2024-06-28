@@ -40,6 +40,7 @@ export default function DataTable({ rows, columns, footerAction, footerComponent
                     footer: {footerAction},
                 }}
                 disableRowSelectionOnClick 
+                onSelectionModelChange={itm => console.log(itm)}
             />
         </div>
     );

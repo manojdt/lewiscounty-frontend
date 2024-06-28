@@ -22,6 +22,14 @@ export default function ProgramPerformance() {
         return entry;
     });
 
+    function getWindowDimensions() {
+        const { innerWidth: width, innerHeight: height } = window;
+        return {
+          width,
+          height
+        };
+      }
+
     return (
         <div style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }}>
             <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
@@ -42,7 +50,7 @@ export default function ProgramPerformance() {
 
 
             </div>
-            <div className='h-[450px] py-9 relative'>
+            <div style={{ height : getWindowDimensions().width <=1536 ? '370px' : '450px' }} className="py-9 relative">
                 {/* <div className='relative'> */}
                 <PieChart
                     data={updateddata}

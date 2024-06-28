@@ -138,7 +138,7 @@ export default function ProgramCompletion() {
                 </div>
 
                 <div className="flex gap-6 justify-center align-middle py-10">
-                    <Button btnName='Cancel' btnCls="w-[13%]" btnCategory="secondary" onClick={() => navigate('/program-details/1')} />
+                    <Button btnName='Cancel' btnCls="w-[13%]" btnCategory="secondary" onClick={() => navigate('/programs')} />
                     <Button btnType="button" btnCls="w-[13%]" onClick={() => { }} btnName='Create Report' btnCategory="primary" />
                 </div>
 

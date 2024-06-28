@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import UserImage from "../../../assets/images/user.jpg";
 import LocationIcon from '../../../assets/images/Location1x.png';
 import CalendarIcon from '../../../assets/images/calender_1x.png';
@@ -13,14 +13,19 @@ import './program-details.css'
 import Carousel from '../../../shared/Carousel';
 import { curatedPrograms } from '../../../utils/mock';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { programStatus } from '../../../utils/constant';
+import { updateNewPrograms, updateProgramDetails } from '../../../services/programInfo';
+import { Backdrop, CircularProgress } from '@mui/material';
 
 
 export default function ProgramDetails() {
+    const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const [activeTab, setActiveTab] = useState('about_program')
     const [certificateActiveTab, setCertificateActiveTab] = useState('participated')
-    const { programDetails } = useSelector(state => state.programInfo)
+    const { programDetails, createdPrograms, allPrograms } = useSelector(state => state.programInfo)
     const tabs = [
         {
             name: 'About Program',
@@ -60,14 +65,47 @@ export default function ProgramDetails() {
     }
 
 
-    if(!Object.keys(programDetails).length){
+    if (!Object.keys(programDetails).length) {
         navigate('/dashboard')
     }
+
+    const handleJoinProgram = (programId) => {
+        let updatedProgramDetails = {}
+        const updatedPrograms = allPrograms.map(allprogram => {
+            if (allprogram.id === programId) {
+                updatedProgramDetails = { ...allprogram, status: programStatus.planned }
+                return updatedProgramDetails
+            }
+            return allprogram
+        })
+        setLoading(true)
+        dispatch(updateNewPrograms({ allPrograms: updatedPrograms, status: '' }))
+        dispatch(updateProgramDetails(updatedProgramDetails))
+
+    }
+
+    useEffect(() => {
+        if (programDetails && Object.keys(programDetails).length && programDetails.status === programStatus.planned) {
+            setTimeout(() => {
+                setLoading(false)
+                navigate(`/program-task/${programDetails.id}`)
+            }, [3000])
+
+        }
+    }, [programDetails])
 
 
 
     return (
         <div className="px-9 my-6 grid">
+
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={loading}
+
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
             <div className='grid mb-10' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)', borderRadius: '5px' }}>
                 <div className='breadcrum'>
                     <nav className="flex px-7 pt-6 pb-5 mx-2 border-b-2" aria-label="Breadcrumb">
@@ -137,7 +175,7 @@ export default function ProgramDetails() {
                                         background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
                                         borderRadius: '5px'
                                     }}
-                                        // onClick={() => navigate('/program-task/1')}
+                                        onClick={() => handleJoinProgram(programDetails.id)}
                                     >Join Program
                                         <span className='pl-8 pt-1'><img style={{ width: '15px', height: '13px' }} src={DoubleArrowIcon} alt="DoubleArrowIcon" /></span>
                                     </button>

@@ -76,13 +76,19 @@ export const Questions = () => {
     setBtnTypeAction({ back: true, next: false })
   }
 
+  useEffect(() => {
+    if(userInfo && userInfo.data.is_registered){
+      navigate('/dashboard')
+    }
+  },[userInfo])
+
 
 
   return (
     <>
       <Navbar />
       <div className="px-9">
-        <h2 className="text-xl text-left py-8">
+        <h2 className="text-xl text-left py-8" style={{color:'rgba(24, 40, 61, 1)', fontWeight: 500}}>
           Fill the Question and Answer
         </h2>
         <Backdrop

@@ -1,7 +1,11 @@
 import React from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 export default function Card({ cardTitle, cardContent, cardFilter = [], cardCountColor = '#000' }) {
     console.log('filter', cardFilter)
+    const navigate = useNavigate()
+    const [searchParams] = useSearchParams();
+    console.log('searchParams.get("type")', searchParams.get("type"))
     return (
         <div className="pb-3" style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }}>
             <div className="title flex justify-between py-3 px-4 border-b-2">
@@ -10,7 +14,7 @@ export default function Card({ cardTitle, cardContent, cardFilter = [], cardCoun
                     <p className="text-sm leading-8">
                         <select className='focus:outline-none py-1' style={{ background: 'rgba(217, 228, 242, 1)', border: 'none' }}>
                             {
-                                cardFilter.map((filter, index) => 
+                                cardFilter.map((filter, index) =>
                                     <option key={index}>{filter.name}</option>
                                 )
                             }
@@ -23,10 +27,11 @@ export default function Card({ cardTitle, cardContent, cardFilter = [], cardCoun
             <ul className="flex flex-col gap-1 p-4 md:p-0 mt-4 font-medium">
                 {
                     cardContent.map((menu, index) => <li className="" key={index}>
-                        <a href="/" className="flex justify-between py-2 px-6 rounded" aria-current="page">
+                        <div onClick={() => navigate(menu.page)} className={`flex justify-between py-2 px-6 rounded cursor-pointer menu-content 
+                        ${searchParams.get("type") === menu.status ||     (searchParams.get("type") === null && menu.status === 'all') ? 'active' : ''}`} aria-current="page">
                             <span className="text-sm">{menu.name}</span>
                             <span className="text-base" style={{ color: cardCountColor }}>{menu.count}</span>
-                        </a>
+                        </div>
                     </li>)
                 }
             </ul>

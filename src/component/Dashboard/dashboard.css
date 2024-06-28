@@ -21,3 +21,8 @@
   opacity: 1;
   transform: translateY(-50%);
 }
+
+.menu-content:hover, .menu-content.active{
+    background: rgba(246, 250, 255, 1);
+    color: rgba(29, 91, 191, 1);
+}
