@@ -20,7 +20,7 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
         register,
         formState: { errors },
         handleSubmit,
-        reset, 
+        reset,
     } = useForm();
 
     const onSubmit = (data) => {
@@ -40,10 +40,18 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
         const f = {}
         stepFields.forEach(step => fName.push(step.name))
         for (const field in stepData) {
-            if(fName.includes(field)) f[field] = stepData[field]
+            if (fName.includes(field)) f[field] = stepData[field]
         }
         reset(f)
     }, [stepFields, stepData])
+
+    function getWindowDimensions() {
+        const { innerWidth: width, innerHeight: height } = window;
+        return {
+            width,
+            height
+        };
+    }
 
     console.log('currentStepData', currentStepData)
 
@@ -57,7 +65,7 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                 const dateField = field.type === 'date' ? register(field.name, field.inputRules) : undefined
                                 console.log('dateField', dateField)
                                 return (
-                                    <div className={`relative mb-6 ${field.width}`} key={index}>
+                                    <div className={`relative mb-6  ${getWindowDimensions().width <=1536 && field.width === 'width-82' ? 'w-[81%]' :  field.width}`} key={index}>
                                         <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor={field.label}>
                                             {field.label}
                                         </label>
@@ -101,7 +109,8 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                             placeholder={field.placeholder}
                                                             style={{
                                                                 color: "#232323",
-                                                                borderRadius: '3px'
+                                                                borderRadius: '3px',
+                                                                borderRight: '16px solid transparent'
                                                             }}
                                                         >
                                                             <option value="">Select</option>
@@ -122,6 +131,7 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                             <textarea id="message" rows="4" className={`block p-2.5 input-bg w-full text-sm text-gray-900  rounded-lg border
                                                                    focus-visible:outline-none focus-visible:border-none ${field.width === 'width-82' ? 'h-[282px]' : ''}`}
                                                                 placeholder={field.placeholder}
+                                                                
                                                                 {...register(field.name, field.inputRules)}></textarea>
                                                             {errors[field.name] && (
                                                                 <p className="error" role="alert">
@@ -222,7 +232,7 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                     <div className="flex gap-6 justify-center align-middle">
                         {currentStep === 1 && <Button btnName='Cancel' btnCategory="secondary" onClick={() => navigate('/programs')} />}
                         {currentStep > 1 && <Button btnName='Back' btnCategory="secondary" onClick={handlePreviousStep} />}
-                        <Button btnType="submit" btnName={currentStep === totalSteps ? 'Submit' : 'Next'} btnCategory="primary" />
+                        <Button btnType="submit" btnCls="w-[100px]" btnName={currentStep === totalSteps ? 'Submit' : 'Next'} btnCategory="primary" />
                     </div>
                 </form>
             </div>

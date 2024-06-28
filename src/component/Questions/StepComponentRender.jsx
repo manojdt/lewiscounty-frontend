@@ -96,6 +96,7 @@ const StepComponenRender = ({ stepFields, currentStep, handleNextStep, handlePre
                                                             placeholder={field.placeholder}
                                                             style={{
                                                                 color: "#232323",
+                                                                borderRight: '16px solid transparent'
                                                             }}
                                                         >
                                                             <option value="">Select</option>
@@ -155,7 +156,7 @@ const StepComponenRender = ({ stepFields, currentStep, handleNextStep, handlePre
                     <div className="flex gap-6 justify-center align-middle">
                         {currentStep === 1 && <Button btnName='Cancel' btnCategory="secondary" onClick={() => navigate('/login-type')} />}
                         {currentStep > 1 && <Button btnName='Back' btnCategory="secondary" onClick={previousStep} />}
-                        <Button btnType="submit" btnName={currentStep === totalSteps ? 'Submit' : 'Next'} btnCategory="primary" />
+                        <Button btnType="submit" btnCls="w-[100px]" btnName={currentStep === totalSteps ? 'Submit' : 'Next'} btnCategory="primary" />
                     </div>
                 </form>
             </div>

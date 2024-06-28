@@ -4,6 +4,13 @@ import UserImage from "../../assets/images/user.jpg";
 import { programFeeds } from '../../utils/mock'
 
 export default function Programs() {
+    function getWindowDimensions() {
+        const { innerWidth: width, innerHeight: height } = window;
+        return {
+          width,
+          height
+        };
+      }
     return (
         <div style={{ boxShadow: '4px 4px 15px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }}>
             <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
@@ -22,7 +29,7 @@ export default function Programs() {
                 programFeeds.map((programFeeds, index) =>
                     <div key={index} style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '5px' }} className="mx-9 my-9">
                         <div className="flex py-3 px-3 gap-4">
-                            <img src={UserImage} className="w-1/6 rounded-xl" alt="" />
+                            <img src={UserImage} className={`${getWindowDimensions().width <=1536 ? 'w-1/5' : 'w-1/6'} rounded-xl h-[100px]`} style={{height: getWindowDimensions().width <=1536 ? '90px' : '100px'}} alt="" />
                             <div className="flex flex-col gap-4">
                                 <h3 >{programFeeds.title}</h3>
                                 <h4 className="text-[12px]">{programFeeds.desc}</h4>

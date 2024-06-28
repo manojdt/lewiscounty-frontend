@@ -18,8 +18,12 @@ import Programs from "./component/Programs";
 import Calendar from "./component/Calendar";
 import Discussions from "./component/Discussions";
 import CreatePrograms from "./component/Programs/CreateProgram";
-
-
+import UserGuard from "./component/UserGuard";
+import ProgramDetails from "./component/Programs/ProgramDetails";
+import ProgramTask from "./component/Programs/ProgramDetails/ProgramTask";
+import AssignTask from "./component/Programs/ProgramDetails/AssignTask";
+import AssignMentees from "./component/Programs/ProgramDetails/AssignMentees";
+import ProgramCompletion from "./component/Programs/ProgramCompletion";
 
 function App() {
  
@@ -59,6 +63,12 @@ function App() {
           <Route element={<Layout />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/programs" element={<Programs />} />
+            <Route path="/program-details/:id" element={<ProgramDetails />} />
+            <Route path="/program-task/:id" element={<ProgramTask />} />
+            <Route path="/assign-task/:id" element={<AssignTask />} />
+            <Route path="/assign-mentees/:id" element={<AssignMentees />} />
+            <Route path="/start-program-request/:id" element={<AssignTask />} />
+            <Route path="/program-completion/:id" element={<ProgramCompletion />} />
 
             <Route path="/create-programs" element={<CreatePrograms />} />
             <Route path="/calendar" element={<Calendar />} />

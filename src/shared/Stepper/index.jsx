@@ -13,12 +13,11 @@ export const Stepper = ({ steps, currentStep = 0, btnTypeAction }) => {
     slider.scrollLeft = scroll;
     setIconsVisibility({ prevIcon: scroll > 0, nextIcon: true })
   };
-
   const slideRight = () => {
     const slider = document.getElementById('slider');
     const scroll = slider.scrollLeft + 300;
     slider.scrollLeft = scroll;
-    setIconsVisibility({ prevIcon: true, nextIcon: slider.clientWidth - scroll > 500 })
+    setIconsVisibility({ prevIcon: true, nextIcon: slider.clientWidth - scroll > (getWindowDimensions().width <=1536 ? 10 : 500)  })
   };
 
 
@@ -34,14 +33,14 @@ export const Stepper = ({ steps, currentStep = 0, btnTypeAction }) => {
   useEffect(() => {
     const slider = document.getElementById('slider');
     if(btnTypeAction.next && currentStep > 3 ){
-      const slideMove = getWindowDimensions().width >= 1536 ? 500 : 300
+      const slideMove =  300
       const slider = document.getElementById('slider');
       const scroll = slider.scrollLeft + slideMove;
       slider.scrollLeft = scroll;
-      setIconsVisibility({ prevIcon: true, nextIcon: slider.clientWidth - scroll > 500 })
+      setIconsVisibility({ prevIcon: true, nextIcon: slider.clientWidth - scroll > (getWindowDimensions().width <=1536 ? 10 : 500) })
     }
     if(btnTypeAction.back && currentStep >= 3){
-      const slideMove = getWindowDimensions().width >= 1536 ? 700 : 400
+      const slideMove = 400
       const slider = document.getElementById('slider');
       const scroll = slider.scrollLeft - slideMove;
       slider.scrollLeft = scroll;

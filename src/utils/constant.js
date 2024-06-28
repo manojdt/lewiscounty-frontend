@@ -58,7 +58,16 @@ export const userStatus = {
 }
 
 export const programStatus = {
-  create: 'programCreated',
+  create: 'programcreated',
+  curated: 'curated',
+  yetToPlan: 'yettoplan',
+  bookmarked: 'bookmarked',
+  planned: 'planned',
+  assigned: 'assigned',
+  inProgress: 'inprogress',
+  start: 'start',
+  paused: 'paused',
+  completed: 'completed'
 }
 
 export const PasswordRulesSet = {
@@ -68,3 +77,4 @@ export const PasswordRulesSet = {
   email : 'email',
   common : 'common',
 }
+

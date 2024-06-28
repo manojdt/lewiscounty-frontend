@@ -28,7 +28,9 @@ import InstagramIcon from '../../../assets/images/instagram_1x.png';
 import FacebookOutlineIcon from '../../../assets/images/facebook-outline1x.png';
 import TwitterIcon from '../../../assets/images/twitter1x.png';
 import CancelIcon from '../../../assets/images/cancel-colour1x.png';
-
+import PauseIcon from '../../../assets/images/pause1x.png';
+import ResumeIcon from '../../../assets/images/resume1x.png';
+import CompleteIcon from '../../../assets/images/completed1x.png'
 
 
 import './program-details.css'
@@ -38,10 +40,15 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import MuiModal from '../../../shared/Modal';
 import { Button } from '../../../shared';
 import { useForm } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
+import { programStatus } from '../../../utils/constant';
+import { updateNewPrograms } from '../../../services/programInfo';
 
 
 export default function AssignTask() {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const { allPrograms, programDetails } = useSelector(state => state.programInfo)
     const [currentPage, setCurrentPage] = useState('')
     const location = useLocation()
     const [anchorEl, setAnchorEl] = useState(null);
@@ -105,8 +112,54 @@ export default function AssignTask() {
     }
 
     const handleActionPage = () => {
-        if (currentPage === 'assigntask') { navigate('/assign-mentees/1') }
-        if (currentPage === 'startprogram') { setStartProgramModal({ ...startProgramModal, loading: true }) }
+        if (programDetails.status === programStatus.planned) {
+            let details = {}
+            const programs = [...allPrograms].map(program => {
+                if (program.id === programDetails.id) {
+                    details = { ...program, status: programStatus.assigned }
+                    return details
+                }
+                return program
+            })
+            dispatch(updateNewPrograms({ allPrograms: programs, programDetails: details, status: '' }))
+            navigate('/assign-mentees/1')
+        }
+        if (programDetails.status === programStatus.assigned) {
+            let details = {}
+            const programs = [...allPrograms].map(program => {
+                if (program.id === programDetails.id) {
+                    details = { ...program, status: programStatus.inProgress }
+                    return details
+                }
+                return program
+            })
+            dispatch(updateNewPrograms({ allPrograms: programs, programDetails: details, status: '' }))
+            setStartProgramModal({ ...startProgramModal, loading: true })
+        }
+
+        if (programDetails.status === programStatus.inProgress) {
+            let details = {}
+            const programs = [...allPrograms].map(program => {
+                if (program.id === programDetails.id) {
+                    details = { ...program, status: programStatus.paused }
+                    return details
+                }
+                return program
+            })
+            dispatch(updateNewPrograms({ allPrograms: programs, programDetails: details, status: '' }))
+        }
+
+        if (programDetails.status === programStatus.paused) {
+            let details = {}
+            const programs = [...allPrograms].map(program => {
+                if (program.id === programDetails.id) {
+                    details = { ...program, status: programStatus.inProgress }
+                    return details
+                }
+                return program
+            })
+            dispatch(updateNewPrograms({ allPrograms: programs, programDetails: details, status: '' }))
+        }
     }
 
     const handleMenu = (key) => {
@@ -135,6 +188,20 @@ export default function AssignTask() {
         // reset()
     }
 
+    const handleComplete = (programId) => {
+        let details = {}
+        const programs = [...allPrograms].map(program => {
+            if (program.id === programDetails.id) {
+                details = { ...program, status: programStatus.completed }
+                return details
+            }
+            return program
+        })
+        handleClose()
+        dispatch(updateNewPrograms({ allPrograms: programs, programDetails: details, status: '' }))
+        navigate(`/program-completion/${programId}`)
+    }
+
     useEffect(() => {
         const pathname = location.pathname.split('/')
         if (pathname.length && pathname.includes('assign-task')) {
@@ -155,10 +222,14 @@ export default function AssignTask() {
         if (startProgramModal.success) {
             setTimeout(() => {
                 setStartProgramModal({ loading: false, success: false })
-                navigate('/program-completion/1')
+                // navigate('/program-completion/1')
             }, [2000])
         }
     }, [startProgramModal])
+
+    if (!Object.keys(programDetails).length) {
+        navigate('/programs')
+    }
 
     console.log('moreMenuModal', moreMenuModal)
 
@@ -169,17 +240,17 @@ export default function AssignTask() {
                     <nav className="flex px-7 pt-6 pb-5 mx-2 border-b-2 justify-between" aria-label="Breadcrumb">
                         <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
                             <li className="inline-flex items-center">
-                                <a href="#" className="inline-flex items-center text-sm font-medium" style={{ color: 'rgba(89, 117, 162, 1)' }}>
+                                <div className="inline-flex items-center text-sm font-medium" style={{ color: 'rgba(89, 117, 162, 1)' }}>
                                     Program
-                                </a>
+                                </div>
                                 <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
                                 </svg>
                             </li>
                             <li>
                                 <div className="flex items-center">
-                                    <a href="#" className="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">
-                                        Planned Program </a>
+                                    <div className="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">
+                                        Planned Program </div>
                                 </div>
                             </li>
 
@@ -198,24 +269,27 @@ export default function AssignTask() {
                             }}
                         >
                             {
-                                currentPage === 'assigntask' ?
+                                currentPage === 'assigntask1' ?
                                     <>
-                                        <MenuItem onClick={() => handleMenu('create-task')} className='!text-[12px]'>
+                                        <MenuItem onClick={() => handleMenu('create-taskk')} className='!text-[12px]'>
                                             <img src={CreateTaskIcon} alt="CreateTaskIcon" className='pr-3 w-[25px]' />
                                             Create Task from Mentees</MenuItem>
-                                        <MenuItem onClick={() => handleMenu('share')} className='!text-[12px]'>
+                                        <MenuItem onClick={() => handleMenu('sharee')} className='!text-[12px]'>
                                             <img src={ShareIcon} alt="ShareIcon" className='pr-3 w-[25px]' />
                                             Share
                                         </MenuItem>
-                                        <MenuItem onClick={() => handleMenu('reschedule')} className='!text-[12px]'>
+                                        <MenuItem onClick={() => handleMenu('reschedulee')} className='!text-[12px]'>
                                             <img src={RescheduleIcon} alt="RescheduleIcon" className='pr-3 w-[25px]' /> Reschedule</MenuItem>
-                                        <MenuItem onClick={() => handleMenu('discussion')} className='!text-[12px]'>
+                                        <MenuItem onClick={() => handleMenu('discussionn')} className='!text-[12px]'>
                                             <img src={DiscussionsIcon} alt="DiscussionsIcon" className='pr-3 w-[25px]' />Discussions</MenuItem>
                                     </>
                                     :
                                     currentPage === 'startprogram' ?
                                         <>
-                                            <MenuItem onClick={handleClose} className='!text-[12px]'>
+                                            <MenuItem onClick={() => handleComplete(programDetails.id)} className='!text-[12px]'>
+                                                <img src={CompleteIcon}  alt="AbortIcon" className='pr-3 w-[25px]' />
+                                                Complete</MenuItem>
+                                            {/* <MenuItem onClick={handleClose} className='!text-[12px]'>
                                                 <img src={AbortIcon} alt="AbortIcon" className='pr-3 w-[25px]' />
                                                 Abort</MenuItem>
                                             <MenuItem onClick={handleClose} className='!text-[12px]'>
@@ -225,7 +299,7 @@ export default function AssignTask() {
                                             <MenuItem onClick={handleClose} className='!text-[12px]'>
                                                 <img src={ShareIcon} alt="ShareIcon" className='pr-3 w-[25px]' /> Share</MenuItem>
                                             <MenuItem onClick={handleClose} className='!text-[12px]'>
-                                                <img src={DiscussionsIcon} alt="DiscussionsIcon" className='pr-3 w-[25px]' />Discussions</MenuItem>
+                                                <img src={DiscussionsIcon} alt="DiscussionsIcon" className='pr-3 w-[25px]' />Discussions</MenuItem> */}
                                         </>
                                         : null
                             }
@@ -244,21 +318,19 @@ export default function AssignTask() {
                                         color: 'rgba(253, 0, 58, 1)',
                                         borderRadius: '5px'
                                     }}>
-                                        Category 1
+                                        {programDetails.category}
                                     </div>
                                 </div>
 
                                 <div className='text-[12px]'>
-                                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                                    when an unknown printer took a galley of type and scrambled it to make a type specimen book.It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
-                                    It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop.
+                                    {programDetails.description}
                                 </div>
 
                                 <div className='flex gap-6 py-6'>
                                     <div className='flex gap-2 items-center'>
                                         <img src={LocationIcon} alt="LocationIcon" />
                                         <span className='text-[12px]'>
-                                            America
+                                            {programDetails.location}
                                         </span>
                                     </div>
                                     <div style={{ borderRight: '1px solid rgba(24, 40, 61, 1)' }}></div>
@@ -312,14 +384,53 @@ export default function AssignTask() {
 
 
                                 <div className='py-9'>
-                                    <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                        background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
-                                        borderRadius: '5px'
-                                    }}
-                                        onClick={handleActionPage}
-                                    >{currentPage === 'assigntask' ? 'Assign Task To  Mentees' : currentPage === 'startprogram' ? 'Start Program Request' : 'Join Program'}
+                                    {
+                                        programDetails.status === programStatus.inProgress || programDetails.status === programStatus.paused ?
+                                            <div className='flex gap-9'>
+                                                <div className='flex gap-6 items-center justify-center'>
+                                                    <p className="flex flex-col gap-2 items-center justify-center">
+                                                        <span className='px-2 py-1 text-[20px]' style={{ background: 'rgba(231, 241, 242, 1)', color: 'rgba(0, 174, 189, 1)', borderRadius: '5px', fontWeight: 700 }}>00</span>
+                                                        <span className="text-[12px]" style={{ color: 'rgba(118, 118, 118, 1)' }}>Hrs</span>
+                                                    </p>
+                                                    <p className="flex flex-col gap-2 items-center justify-center">
+                                                        <span className='px-2 py-1 text-[20px]' style={{ background: 'rgba(231, 241, 242, 1)', color: 'rgba(0, 174, 189, 1)', borderRadius: '5px', fontWeight: 700 }}>20</span>
+                                                        <span className="text-[12px]" style={{ color: 'rgba(118, 118, 118, 1)' }}>Mins</span>
+                                                    </p>
+                                                    <p className="flex flex-col gap-2 items-center justify-center">
+                                                        <span className='px-2 py-1 text-[20px]' style={{ background: 'rgba(231, 241, 242, 1)', color: 'rgba(0, 174, 189, 1)', borderRadius: '5px', fontWeight: 700 }}>04</span>
+                                                        <span className="text-[12px]" style={{ color: 'rgba(118, 118, 118, 1)' }}>Secs</span>
+                                                    </p>
+                                                </div>
+                                                <button className='py-3 px-10 text-white text-[14px] flex items-center' title="Pause" style={{
+                                                    color: programDetails.status !== programStatus.paused ? 'rgba(29, 91, 191, 1)' : '#fff',
+                                                    borderRadius: '5px',
+                                                    border: '1px solid rgba(29, 91, 191, 1)',
+                                                    background: programDetails.status === programStatus.paused ? 'linear-gradient(97.32deg, #1D5BBF -32.84%, #00AEBD 128.72%)' : 'transparent'
+                                                }}
+                                                    onClick={handleActionPage}
+                                                >
+                                                    <img src={programDetails.status !== programStatus.inProgress ? ResumeIcon : PauseIcon} alt="PauseIcon" className='pr-4' />
+                                                    {programDetails.status === programStatus.inProgress ? 'Pause' : 'Start'}</button>
+                                            </div>
+                                            : null
 
-                                    </button>
+                                    }
+                                    {
+                                        programDetails.status !== programStatus.inProgress && programDetails.status !== programStatus.paused && programDetails.status !== programStatus.start &&
+
+                                        <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                            background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
+                                            borderRadius: '5px'
+                                        }}
+                                            onClick={handleActionPage}
+                                        >{
+                                                programDetails.status === programStatus.planned ? 'Assign Task To  Mentees'
+                                                    : programDetails.status === programStatus.assigned ? 'Start Program Request' :
+                                                        'Join Program'}
+
+                                        </button>
+                                    }
+
                                 </div>
 
                             </div>
@@ -650,7 +761,7 @@ export default function AssignTask() {
                                 <Button btnName='Cancel' btnCategory="secondary" onClick={() => setMoreMenuModal({ share: false, reschedule: false })} />
                                 <Button btnType="button" onClick={() => {
                                     setMoreMenuModal({ share: false, reschedule: false });
-                                    setStartProgramModal({loading: false, success: true})
+                                    setStartProgramModal({ loading: false, success: true })
                                 }} btnName='Submit' btnCategory="primary" />
                             </div>
                         </div>

@@ -2,10 +2,13 @@ import {
     createSlice
 } from "@reduxjs/toolkit";
 import {
+    createNewProgram,
     createProgram,
     getAllPrograms,
     getProgramDetails,
+    loadAllPrograms,
     updateAllPrograms,
+    updateNewPrograms,
     updateProgramDetails,
 } from "../../services/programInfo";
 import {
@@ -16,6 +19,7 @@ import {
 const initialState = {
     allPrograms: [],
     programDetails: {},
+    createdPrograms: [],
     loading: false,
     status: '',
     error: ''
@@ -94,6 +98,26 @@ export const programSlice = createSlice({
                     error: action.error.message,
                 };
             })
+        builder.addCase(loadAllPrograms.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true
+                };
+            })
+            .addCase(loadAllPrograms.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    allPrograms: action.payload,
+                    loading: false
+                };
+            })
+            .addCase(loadAllPrograms.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            })
         builder.addCase(updateAllPrograms.pending, (state) => {
                 return {
                     ...state,
@@ -116,6 +140,49 @@ export const programSlice = createSlice({
                 };
             })
 
+        builder.addCase(createNewProgram.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true
+                };
+            })
+            .addCase(createNewProgram.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    allPrograms: action.payload,
+                    status: programStatus.create,
+                    loading: false
+                };
+            })
+            .addCase(createNewProgram.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            })
+
+        builder.addCase(updateNewPrograms.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true
+                };
+            })
+            .addCase(updateNewPrograms.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    ...action.payload,
+                    loading: false
+                };
+            })
+            .addCase(updateNewPrograms.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            })
+
         builder.addCase(updateProgramDetails.pending, (state) => {
                 return {
                     ...state,
@@ -126,7 +193,6 @@ export const programSlice = createSlice({
                 return {
                     ...state,
                     programDetails: action.payload,
-                    status: programStatus.create,
                     loading: false
                 };
             })

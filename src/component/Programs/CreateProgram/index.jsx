@@ -10,17 +10,18 @@ import ProgramSteps from './ProgramsSteps'
 import { ProgramTabs, ProgramFields } from '../../../utils/formFields'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { createProgram, updateAllPrograms } from '../../../services/programInfo'
+import { createProgram, updateNewPrograms, createNewProgram } from '../../../services/programInfo'
 import MuiModal from '../../../shared/Modal'
 import { CertificateColumns, MaterialColumns, SkillsColumns, assignMenteeColumns, assignMenteeRows, certificateRows, createMaterialsRows, createSkillsRows } from '../../../mock';
 import DataTable from '../../../shared/DataGrid';
+import { programStatus } from '../../../utils/constant';
 
 export default function CreatePrograms() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const userInfo = useSelector(state => state.userInfo)
     const [loading, setLoading] = useState({ create: false, success: false })
-    const { programDetails, allPrograms } = useSelector(state => state.programInfo)
+    const { programDetails, allPrograms, createdPrograms } = useSelector(state => state.programInfo)
     const [actionTab, setActiveTab] = useState('program_information')
     const [currentStep, setCurrentStep] = useState(1)
     const [stepData, setStepData] = useState({})
@@ -39,12 +40,13 @@ export default function CreatePrograms() {
         const fieldData = { ...stepData, ...data }
         setStepData(fieldData)
         if (ProgramFields.length === currentStep) {
-            const apiData = { ...fieldData, posted: new Date(), id: allPrograms.length + 1 }
+            const apiData = { ...fieldData, posted: new Date(), id: allPrograms.length + 1, bookmark: false, status: programStatus.yetToPlan }
             const updateProgram = [...allPrograms, apiData]
+            // const newPrograms = [...createdPrograms, updateProgram]
             console.log('Submit', updateProgram)
             //   navigate("/dashboard");
-            // setLoading({ ...loading, create: true })
-            // dispatch(updateAllPrograms(updateProgram))
+            setLoading({ ...loading, create: true })
+            dispatch(createNewProgram(updateProgram))
         }
         else {
             setCurrentStep(currentStep + 1)
@@ -113,7 +115,7 @@ export default function CreatePrograms() {
             setTimeout(() => {
                 setLoading({ create: false, success: false })
                 if (allPrograms && allPrograms.length) {
-                    navigate('/dashboard')
+                    navigate(`/dashboard?type=${programStatus.yetToPlan}`)
                 }
             }, [3000])
 
@@ -128,11 +130,13 @@ export default function CreatePrograms() {
         }
     }, [allPrograms])
 
-    useEffect(() => {
-        if (userInfo && userInfo.data && userInfo.data.role !== 'mentor') {
-            navigate('/programs')
-        }
-    }, [])
+    // useEffect(() => {
+    //     if (userInfo && userInfo.data && userInfo.data.role !== 'mentor') {
+    //         navigate('/programs')
+    //     }
+    // }, [])
+
+   
 
 
     console.log('actionModal', actionModal)
@@ -149,7 +153,7 @@ export default function CreatePrograms() {
                     </div>
                 </div>
 
-                {/* <MuiModal modalOpen={loading.success} modalClose={() => setLoading({ create: false, success: false })} noheader>
+                <MuiModal modalOpen={loading.success} modalClose={() => setLoading({ create: false, success: false })} noheader>
                     <div className='px-5 py-1 flex justify-center items-center'>
                         <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
                             style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
@@ -158,9 +162,9 @@ export default function CreatePrograms() {
                         </div>
 
                     </div>
-                </MuiModal> */}
+                </MuiModal>
 
-                {/* <MuiModal modalSize='lg' modalOpen={actionModal !== ''} modalClose={() => setActionModal('')} noheader>
+                <MuiModal modalSize='lg' modalOpen={actionModal !== ''} modalClose={() => setActionModal('')} noheader>
                     <div className='relative'>
                         <input className='input-bg w-full h-[60px] px-5 mb-4 text-[14px]' style={{ borderRadius: '50px', }}
                             placeholder='Search learning materials name' />
@@ -188,7 +192,7 @@ export default function CreatePrograms() {
 
                     }
 
-                </MuiModal> */}
+                </MuiModal>
 
                 <Backdrop
                     sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
