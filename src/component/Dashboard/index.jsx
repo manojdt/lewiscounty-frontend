@@ -30,6 +30,7 @@ export const Dashboard = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate()
   const { allPrograms, status, createdPrograms } = useSelector(state => state.programInfo)
+  const userInfo = useSelector(state => state.userInfo)
   const [programMenusList, setProgramMenusList] = useState([])
   const [currentPrograms, setCurrentPrograms] = useState({ title: '', page: '', programs: [] })
   const [allprogramsList, setAllProgramsList] = useState({ allPrograms: [], yettoplan: [], planned: [], inprogress: [], bookmarked: [], completed: [] })
@@ -220,11 +221,11 @@ export const Dashboard = () => {
             <div className="pb-3 w-full max-w-sm bg-white rounded-lg" style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', background: 'rgba(255, 255, 255, 1)' }}>
               <div className="flex flex-col items-center pb-10 pt-14 border-b-2">
                 <img className="w-24 h-24 mb-3 rounded-full shadow-lg object-cover" src={UserImage} alt="User logo" />
-                <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">John Doe</h5>
+                <h5 className="mb-1 text-xl font-medium text-gray-900 ">{userInfo?.data?.first_name} {userInfo?.data?.last_name}</h5>
                 <span className="text-sm text-gray-500  pb-5" style={{
                   color: 'rgba(35, 35, 35, 1)'
-                }}>Visual Designer</span>
-                <span className="text-sm text-gray-500 ">Mentor | Teaching Proffessional</span>
+                }}>{userInfo?.data?.userinfo?.current_employer}</span>
+                <span className="text-sm text-gray-500 " style={{textTransform: 'capitalize'}}>{userInfo.data.role} | Teaching Proffessional</span>
               </div>
 
               <ul className="flex flex-col gap-2 p-4 md:p-0 mt-4 font-medium">
