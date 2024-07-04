@@ -10,12 +10,12 @@ export default function Layout() {
   const userInfo = useSelector(state => state.userInfo);
 
   const { pathname } = location
-  console.log('location', location)
+  // console.log('location', location)
 
-  useEffect(() => {
-    if (userInfo.data.role === 'fresher') { navigate('/login-type'); }
-    if(!userInfo.data.is_registered) navigate('/questions')
-  }, [])
+  // useEffect(() => {
+  //   if (userInfo.data.role === 'fresher') { navigate('/login-type'); }
+  //   if(!userInfo.data.is_registered) navigate('/questions')
+  // }, [])
   return (
     <div>
       <Navbar />

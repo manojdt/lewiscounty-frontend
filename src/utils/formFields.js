@@ -362,26 +362,30 @@ export const ProgramInformationFields = [{
   },
   {
     type: "dropdown",
-    name: "sessions",
+    name: "session_count",
     label: "Add Sessions",
     placeholder: "Select Sessions",
     inputRules: {
       required: "This field is required",
     },
     options: [{
-        key: "Session 1",
-        value: "Session 1"
+        key: 10,
+        value: 10
       },
       {
-        key: "Session 2",
-        value: "Session 2"
+        key: 20,
+        value: 20
+      },
+      {
+        key: 30,
+        value: 30
       },
     ],
     width: 'width-32',
   },
   {
     type: "textbox",
-    name: "decription",
+    name: "description",
     label: "Description",
     placeholder: "",
     inputRules: {
@@ -397,20 +401,25 @@ export const ProgramInformationFields = [{
     inputRules: {
       required: "This field is required",
     },
-    options: [{
-        key: "Medium",
-        value: "Medium"
+    options: [
+      {
+        key: "beginner",
+        value: "Beginner"
       },
       {
-        key: "Difficult",
-        value: "Difficult"
+        key: "intermediate",
+        value: "Intermediate"
+      },
+      {
+        key: "expert",
+        value: "Expert"
       },
     ],
     width: 'width-32',
   },
   {
     type: "date",
-    name: "program_start_date",
+    name: "start_date",
     label: "Program Start Date and Time",
     placeholder: "Select Program Start Date and Time",
     inputRules: {
@@ -420,7 +429,7 @@ export const ProgramInformationFields = [{
   },
   {
     type: "date",
-    name: "program_end_date",
+    name: "end_date",
     label: "Program End Date and Time",
     placeholder: "Select Program End Date and Time",
     inputRules: {
@@ -429,7 +438,7 @@ export const ProgramInformationFields = [{
     width: 'width-32',
   },
   {
-    type: "input",
+    type: "popup-input",
     name: "learning_materials",
     label: "Learning Materials",
     fieldtype: "text",
@@ -442,9 +451,9 @@ export const ProgramInformationFields = [{
   },
   {
     type: "input",
-    name: "mentee_limits",
+    name: "max_mentee_count",
     label: "Maximum Mentee Limits",
-    fieldtype: "text",
+    fieldtype: "number",
     placeholder: "Select Mentee Limits",
     inputRules: {
       required: "This field is required",
@@ -453,18 +462,18 @@ export const ProgramInformationFields = [{
   },
   {
     type: "dropdown",
-    name: "group_discussion",
+    name: "group_chat_requirement",
     label: "If you need Group Chat Discussions for this Program",
     placeholder: "Select",
     inputRules: {
       required: "This field is required",
     },
     options: [{
-        key: "yes",
+        key: true,
         value: "Yes"
       },
       {
-        key: "no",
+        key: false,
         value: "No"
       },
     ],
@@ -472,18 +481,18 @@ export const ProgramInformationFields = [{
   },
   {
     type: "dropdown",
-    name: "individual_discussion",
+    name: "individual_chat_requirement",
     label: "If you need Individual chat discussions for this Program",
     placeholder: "Select",
     inputRules: {
       required: "This field is required",
     },
     options: [{
-        key: "yes",
+        key: true,
         value: "Yes"
       },
       {
-        key: "no",
+        key: false,
         value: "No"
       },
     ],
@@ -491,7 +500,7 @@ export const ProgramInformationFields = [{
   },
   {
     type: "input",
-    name: "location",
+    name: "venue",
     label: "Add Location for this Program/Events",
     fieldtype: "text",
     placeholder: "Add Location",
@@ -522,7 +531,7 @@ export const AboutProgramFields = [{
   },
 
   {
-    type: "input",
+    type: "popup-input",
     name: "skills",
     label: "Skills Gain",
     fieldtype: "text",
@@ -535,7 +544,7 @@ export const AboutProgramFields = [{
   },
   {
     type: "file",
-    name: "sponsor_logo",
+    name: "image",
     label: "Add Sponsor Logo/Program Related Image",
     fieldtype: "text",
     placeholder: "Multiple Skills added",
@@ -565,7 +574,7 @@ export const ProgramOutcomesFields = [{
   },
 
   {
-    type: "input",
+    type: "popup-input",
     name: "certificates",
     label: "Program Certificates",
     fieldtype: "text",
@@ -580,7 +589,7 @@ export const ProgramOutcomesFields = [{
 
 
 export const ProgramTestimonialsFields = [{
-    type: "input",
+    type: "popup-input",
     name: "members",
     label: "Members",
     placeholder: "Add request for testimonials",
@@ -593,19 +602,23 @@ export const ProgramTestimonialsFields = [{
   },
   {
     type: "dropdown",
-    name: "testimonials_type",
+    name: "testimonial_type",
     label: "Testimonials Type",
     placeholder: "",
     inputRules: {
       required: "This field is required",
     },
     options: [{
-        key: "Type 1",
-        value: "Type 1"
+        key: "blog",
+        value: "Blog"
       },
       {
-        key: "Type 2",
-        value: "Type 2"
+        key: "case_study",
+        value: "Case Studies"
+      },
+      {
+        key: "success_story",
+        value: "Success Story"
       },
     ],
     width: 'w-full',

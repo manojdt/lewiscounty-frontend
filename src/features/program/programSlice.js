@@ -3,8 +3,14 @@ import {
 } from "@reduxjs/toolkit";
 import {
     createNewProgram,
+    createNewPrograms,
     createProgram,
+    getAllCategories,
+    getAllCertificates,
+    getAllMaterials,
+    getAllMembers,
     getAllPrograms,
+    getAllSkills,
     getProgramDetails,
     loadAllPrograms,
     updateAllPrograms,
@@ -20,6 +26,11 @@ const initialState = {
     allPrograms: [],
     programDetails: {},
     createdPrograms: [],
+    category: [],
+    materials: [],
+    certificate: [],
+    members: [],
+    skills: [],
     loading: false,
     status: '',
     error: ''
@@ -92,6 +103,30 @@ export const programSlice = createSlice({
                 };
             })
             .addCase(createProgram.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            })
+        builder
+            .addCase(createNewPrograms.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true
+                };
+            })
+            .addCase(createNewPrograms.fulfilled, (state, action) => {
+                console.log('action', action)
+                const responseStatus = action.payload.status || 500;
+                const status =  responseStatus === 200 ? programStatus.exist : responseStatus === 500 ? programStatus.error : responseStatus === 201 ? programStatus.create : '';
+                return {
+                    ...state,
+                    status: status,
+                    loading: false
+                };
+            })
+            .addCase(createNewPrograms.rejected, (state, action) => {
                 return {
                     ...state,
                     loading: false,
@@ -183,26 +218,111 @@ export const programSlice = createSlice({
                 };
             })
 
-        builder.addCase(updateProgramDetails.pending, (state) => {
+        builder.addCase(getAllCategories.pending, (state) => {
                 return {
                     ...state,
                     loading: true
                 };
             })
-            .addCase(updateProgramDetails.fulfilled, (state, action) => {
+            .addCase(getAllCategories.fulfilled, (state, action) => {
                 return {
                     ...state,
-                    programDetails: action.payload,
+                    category: action.payload,
                     loading: false
                 };
             })
-            .addCase(updateProgramDetails.rejected, (state, action) => {
+            .addCase(getAllCategories.rejected, (state, action) => {
                 return {
                     ...state,
                     loading: false,
                     error: action.error.message,
                 };
             })
+
+        builder.addCase(getAllMaterials.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true
+                };
+            })
+            .addCase(getAllMaterials.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    materials: action.payload,
+                    loading: false
+                };
+            })
+            .addCase(getAllMaterials.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            })
+
+        builder.addCase(getAllCertificates.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true
+                };
+            })
+            .addCase(getAllCertificates.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    certificate: action.payload,
+                    loading: false
+                };
+            })
+            .addCase(getAllCertificates.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            })
+
+        builder.addCase(getAllSkills.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true
+                };
+            })
+            .addCase(getAllSkills.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    skills: action.payload,
+                    loading: false
+                };
+            })
+            .addCase(getAllSkills.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            })
+
+        builder.addCase(getAllMembers.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true
+                };
+            })
+            .addCase(getAllMembers.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    members: action.payload,
+                    loading: false
+                };
+            })
+            .addCase(getAllMembers.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            })
+
 
 
     },

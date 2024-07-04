@@ -20,7 +20,7 @@ api.interceptors.request.use(function (config) {
 
 api.interceptors.response.use(
   (response) => {
-    console.log("Res", response);
+    // console.log("Res", response);
     if (response.status && (response.status === 200 || response.status === 201)) {
       return {
         data: response.data,

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 
 
@@ -18,29 +18,52 @@ const rows = [
 export function CustomFooterStatusComponent(props) {
     return (
         <div className='flex gap-6 justify-center items-center py-4'>
-            <button onClick={props.footerAction} className='py-3 px-6 w-[16%]' style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '3px', color: 'rgba(29, 91, 191, 1)' }}>Cancel</button>
-            <button onClick={props.footerAction} className='text-white py-3 px-6 w-[16%]' style={{ background: 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)', borderRadius: '3px' }}>Add Mentees</button>
+            <button onClick={props.footerAction} className='py-3 px-6 w-[16%]' 
+                style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '3px', color: 'rgba(29, 91, 191, 1)' }}>Cancel</button>
+            <button onClick={props.footerAction} className='text-white py-3 px-6 w-[16%]' 
+                style={{ background: 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)', borderRadius: '3px' }}>Add Mentees</button>
         </div>
     );
 }
 
-export default function DataTable({ rows, columns, footerAction, footerComponent }) {
+export default function DataTable({ rows, columns, footerAction, footerComponent, selectedAllRows = [] }) {
+    console.log('rows', rows)
+    const [selectedRows, setSelectedRows] = useState([])
+    const [selectedIds, setSelectedIds] = useState([])
+
+    const handleRowSelection = (ids) => {
+        const selected = [...rows].filter(row => ids.includes(row.id))
+        console.log('se', selected)
+        setSelectedIds(ids)
+        setSelectedRows(selected)
+    }
+
+    useEffect(() => {
+        console.log('selectedAllRowsselectedAllRows', selectedAllRows)
+        const ids = []
+        selectedAllRows.forEach(row => ids.push(row.id))
+        console.log('idsids', ids)
+        setSelectedIds(ids)
+    },[])
+
     return (
         <div style={{ height: 600, width: '100%', position: 'relative' }}>
             <DataGrid
                 rows={rows}
                 columns={columns}
                 hideFooterPagination={true}
-                getRowId={(row) => row.name || row.material_name}
+                getRowId={(row) => row.id || row.first_name}
                 checkboxSelection
                 slots={{
                     footer: footerComponent,
                 }}
                 slotProps={{
-                    footer: {footerAction},
+                    footer: {footerAction, selectedRows},
                 }}
                 disableRowSelectionOnClick 
-                onSelectionModelChange={itm => console.log(itm)}
+                rowSelectionModel={selectedIds}
+                onRowSelectionModelChange={(itm, i) => handleRowSelection(itm)}
+        
             />
         </div>
     );
