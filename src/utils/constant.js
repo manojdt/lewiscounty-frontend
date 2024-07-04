@@ -59,6 +59,8 @@ export const userStatus = {
 
 export const programStatus = {
   create: 'programcreated',
+  exist: 'alreadyexist',
+  error: 'error',
   curated: 'curated',
   yetToPlan: 'yettoplan',
   bookmarked: 'bookmarked',

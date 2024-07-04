@@ -7,7 +7,7 @@ import BookmarkedIcon from '../../assets/icons/Bookmarked.svg';
 import CalendarIcon from '../../assets/images/calender_1x.png';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { loadAllPrograms } from '../../services/programInfo';
+import { getAllCategories, getAllCertificates, getAllMaterials, getAllMembers, getAllSkills, loadAllPrograms } from '../../services/programInfo';
 import { programStatus } from '../../utils/constant';
 import ProgramImage from "../../assets/images/logo_image.jpg";
 
@@ -66,8 +66,8 @@ export default function Programs() {
         page: '/programs?type=completed',
         status: programStatus.completed
     }]
-    useEffect(() => {
 
+    useEffect(() => {
         setProgramMenusList(menus)
         setProgramsList(programInfo.allPrograms)
     }, [programInfo.allPrograms])
@@ -92,19 +92,19 @@ export default function Programs() {
     function getWindowDimensions() {
         const { innerWidth: width, innerHeight: height } = window;
         return {
-          width,
-          height
+            width,
+            height
         };
-      }
+    }
 
 
     return (
         <div className="dashboard-content px-8 mt-10">
             <div className='flex justify-between items-center mb-8'>
                 <div>
-                    { menus.find(menu => menu.status === searchParams.get("type"))?.name || 'All Programs' }
-                    
-                    </div>
+                    {menus.find(menu => menu.status === searchParams.get("type"))?.name || 'All Programs'}
+
+                </div>
                 {
                     userInfo && userInfo.data && userInfo.data.role === 'mentor' &&
                     <div>
@@ -146,7 +146,7 @@ export default function Programs() {
                                     const actualStartDate = startDate.length ? `${startDate[2]}/${startDate[1]}/${startDate[0]}` : ''
                                     console.log('curatedProgram', curatedProgram)
                                     return (
-                                        <div key={index} className={`curated-programs flex gap-4 items-center py-8 px-9 ${getWindowDimensions().width <=1536 ? 'w-[49%]' : 'w-1/3'}`}>
+                                        <div key={index} className={`curated-programs flex gap-4 items-center py-8 px-9 ${getWindowDimensions().width <= 1536 ? 'w-[49%]' : 'w-1/3'}`}>
                                             <div className="w-full" style={{ boxShadow: '4px 4px 15px 0px rgba(0, 0, 0, 0.1)', borderRadius: '10px' }}>
                                                 <div className="flex py-6 px-7 border-b-2 relative">
                                                     <div className="w-6/12 h-full">

@@ -48,7 +48,7 @@ export const Login = () => {
   const handleRedirect = () => {
     dispatch(updateInfo())
     if (userData.data.role === 'fresher') navigate("/login-type");
-    else if(userData.data.is_registered) navigate("/dashboard")
+    else if (userData.data.is_registered) navigate("/dashboard")
     else navigate("/questions");
   }
 
@@ -72,6 +72,9 @@ export const Login = () => {
         <div className="w-full">
           <div className="block bg-white shadow-lg h-full">
             <div className="g-0 lg:flex lg:flex-row h-full">
+
+
+
               <LogoSlide />
               <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}

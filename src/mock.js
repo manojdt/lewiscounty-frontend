@@ -186,14 +186,14 @@ const createMaterialRow = () => {
         data.push(materialData(`Materials Name ${a}`, 'Video.mp4', '5MB', 3287263))
     }
 
-    console.log('data', data)
+    // console.log('data', data)
     return data
 }
 
 export const createMaterialsRows = createMaterialRow()
 
 export const MaterialColumns = [{
-        field: 'material_name',
+        field: 'name',
         headerName: 'Material Name',
         width: 400,
         id: 0,
@@ -231,6 +231,45 @@ export const MaterialColumns = [{
 ];
 
 
+export const MemberColumns = [{
+    field: 'first_name',
+    headerName: 'First Name',
+    width: 400,
+    id: 0,
+},
+{
+    field: 'last_name',
+    headerName: 'Last Name',
+    width: 250,
+    id: 1,
+},
+{
+    field: 'email',
+    headerName: 'Email',
+    width: 200,
+    id: 2,
+},
+{
+    field: 'action',
+    headerName: 'Action',
+    width: 200,
+    id: 3,
+    renderCell: (params) => {
+        return <button style={{    background: 'rgb(29, 91, 191)',
+            color: 'rgb(255, 255, 255)',
+            padding: '2px 20px',
+            height: '32px',
+            margin: '9px 0px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: '3px'}} 
+            onClick={() => console.log('click')}>View Details</button>;
+    }
+},
+];
+
+
 
 function skillData(name, skills_desc, action) {
     return {
@@ -245,7 +284,7 @@ const createSkillsRow = () => {
         data.push(skillData(`Skills Name ${a}`, 'test', 3287263))
     }
 
-    console.log('data', data)
+    // console.log('data', data)
     return data
 }
 
@@ -259,7 +298,7 @@ export const SkillsColumns = [{
     id: 0,
 },
 {
-    field: 'skills_desc',
+    field: 'desc',
     headerName: 'Skills Description',
     width: 400,
     id: 1,
@@ -298,7 +337,7 @@ const certificateRow = () => {
         data.push(certificateData(`Certificate Name ${a}`, 3287263))
     }
 
-    console.log('data', data)
+    // console.log('data', data)
     return data
 }
 

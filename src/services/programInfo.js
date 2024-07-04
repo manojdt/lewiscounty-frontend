@@ -44,6 +44,22 @@ export const createProgram = createAsyncThunk(
 );
 
 
+export const createNewPrograms = createAsyncThunk(
+    "createNewPrograms",
+    async (data) => {
+        api.interceptors.request.use(function (config) {
+            config.headers['Content-Type'] = 'multipart/form-data';
+            return config;
+        })
+        const createProgram = await api.post("/programs/", data);
+        if (createProgram.status === 201) {
+            return createProgram;
+        }
+        return createProgram;
+    }
+);
+
+
 export const updateAllPrograms = createAsyncThunk(
     "updatePrograms",
     async (data) => {
@@ -84,5 +100,64 @@ export const updateProgramDetails = createAsyncThunk(
     "updateProgramDetails",
     async (data) => {
         return data;
+    }
+);
+
+
+export const getAllCategories = createAsyncThunk(
+    "getAllCategories",
+    async (data) => {
+        const allCategory = await api.get("/category", data);
+        if (allCategory.status === 200 && allCategory.data) {
+            return allCategory.data;
+        }
+        return allCategory;
+    }
+);
+
+
+export const getAllMaterials = createAsyncThunk(
+    "getAllMaterials",
+    async (data) => {
+        const allMaterial = await api.get(`/materials?category_id=${data}`);
+        if (allMaterial.status === 200 && allMaterial.data) {
+            return allMaterial.data;
+        }
+        return allMaterial;
+    }
+);
+
+
+export const getAllCertificates = createAsyncThunk(
+    "getAllCertificates",
+    async (data) => {
+        const allCertificates = await api.get(`/certificate?category_id=${data}`);
+        if (allCertificates.status === 200 && allCertificates.data) {
+            return allCertificates.data;
+        }
+        return allCertificates;
+    }
+);
+
+
+export const getAllSkills = createAsyncThunk(
+    "getAllSkills",
+    async (data) => {
+        const allSkills = await api.get(`/skills?category_id=${data}`);
+        if (allSkills.status === 200 && allSkills.data) {
+            return allSkills.data;
+        }
+        return allSkills;
+    }
+);
+
+export const getAllMembers = createAsyncThunk(
+    "getAllMembers",
+    async (data) => {
+        const allMembers = await api.get(`/members?category_id=${data}`);
+        if (allMembers.status === 200 && allMembers.data) {
+            return allMembers.data;
+        }
+        return allMembers;
     }
 );
