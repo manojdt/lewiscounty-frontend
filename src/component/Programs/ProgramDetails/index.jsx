@@ -28,6 +28,7 @@ export default function ProgramDetails() {
     const [searchParams] = useSearchParams();
     const [activeTab, setActiveTab] = useState('about_program')
     const [certificateActiveTab, setCertificateActiveTab] = useState('participated')
+    const userdetails = useSelector(state => state.userInfo)
     const { programdetails, loading: programLoading, error } = useSelector(state => state.userPrograms)
     const tabs = [
         {
@@ -212,7 +213,7 @@ export default function ProgramDetails() {
                                         <div className='flex items-center gap-3 text-[12px]' >
                                             <img src={UserImage} style={{ borderRadius: '50%', width: '35px', height: '35px' }} alt="UserImage" />
                                             <span>Instructor :</span>
-                                            <span>Johnson</span>
+                                            <span>{userdetails.data.first_name}{' '} {userdetails.data.last_name}</span>
                                         </div>
 
                                         <div className='py-9'>
@@ -303,9 +304,7 @@ export default function ProgramDetails() {
                                             <div className='sponsor pt-8'>
                                                 <div className='font-semibold pb-5'>Sponsored by </div>
                                                 <ul className='flex gap-5'>
-                                                    <img src={SponsorIcon} alt="SponsorIcon" />
-                                                    <img src={SponsorIcon} alt="SponsorIcon" />
-                                                    <img src={SponsorIcon} alt="SponsorIcon" />
+                                                <img style={{width:'100px', height:'100px'}} src={programdetails.image} alt="SponsorIcon" />
                                                 </ul>
                                             </div>
 
@@ -377,8 +376,7 @@ export default function ProgramDetails() {
                                                         <img src={QuoteIcon} className='absolute top-[-16px]' alt="QuoteIcon" />
                                                         <div className='relative'>
                                                             <p className='pb-7'>
-                                                                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                                                                ook.standard dummy text ever since the 1500s, ook.
+                                                              {programdetails.testimonial_types}
                                                             </p>
                                                             <hr className='absolute' style={{ width: '496px', left: '-15px' }} />
                                                         </div>
@@ -393,7 +391,7 @@ export default function ProgramDetails() {
 
                                                     </div>
 
-                                                    <div className='pt-16 pb-2 px-7 leading-5 relative' style={{ background: 'rgba(248, 249, 250, 1)', }}>
+                                                    {/* <div className='pt-16 pb-2 px-7 leading-5 relative' style={{ background: 'rgba(248, 249, 250, 1)', }}>
                                                         <img src={QuoteIcon} className='absolute top-[-16px]' alt="QuoteIcon" />
                                                         <div className='relative'>
                                                             <p className='pb-7'>
@@ -431,7 +429,7 @@ export default function ProgramDetails() {
                                                             </div>
                                                         </div>
 
-                                                    </div>
+                                                    </div> */}
                                                 </div>
                                             </div>
 
