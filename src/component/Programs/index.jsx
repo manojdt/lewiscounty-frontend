@@ -1,24 +1,34 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { Backdrop, CircularProgress } from '@mui/material';
+
 import Card from '../../shared/Card';
 import { curatedPrograms, menusList } from '../../utils/mock';
 import SearchIcon from '../../assets/icons/search.svg';
 import CalenderIcon from '../../assets/icons/Calender.svg';
 import BookmarkedIcon from '../../assets/icons/Bookmarked.svg';
 import CalendarIcon from '../../assets/images/calender_1x.png';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { getAllCategories, getAllCertificates, getAllMaterials, getAllMembers, getAllSkills, loadAllPrograms } from '../../services/programInfo';
-import { programStatus } from '../../utils/constant';
+import BookmarkedColorIcon from '../../assets/images/bookmarked-colour1x.png'
 import ProgramImage from "../../assets/images/logo_image.jpg";
+
+
+import { getAllCategories, getAllCertificates, getAllMaterials, getAllMembers, getAllSkills, loadAllPrograms } from '../../services/programInfo';
+import { pipeUrls, programActionStatus, programMenus, programStatus, statusAction } from '../../utils/constant';
+import { getProgramCounts, getProgramDetails, getUserPrograms, updateProgram } from '../../services/userprograms';
+
 
 export default function Programs() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const [searchParams] = useSearchParams();
+
     const [programsList, setProgramsList] = useState([])
     const [programMenusList, setProgramMenusList] = useState([])
-    const programInfo = useSelector(state => state.programInfo)
+
     const userInfo = useSelector(state => state.userInfo)
+    const userprograms = useSelector(state => state.userPrograms)
+
     const programFilter = [
         {
             name: 'Quarter 1',
@@ -30,64 +40,10 @@ export default function Programs() {
         },
     ]
 
-    const menus = [{
-        name: "All Programs",
-        count: programInfo.allPrograms.length,
-        page: '/programs',
-        status: 'all'
-    },
-    {
-        name: "Curated Programs",
-        count: programInfo.allPrograms.filter(program => program.status === programStatus.planned).length,
-        page: '/programs?type=planned',
-        status: programStatus.planned
-    },
-    {
-        name: "Recent Join Programs",
-        count: programInfo.allPrograms.filter(program => program.status === programStatus.yetToPlan).length,
-        page: '/programs?type=yettoplan',
-        status: programStatus.yetToPlan
-    },
-    {
-        name: "Ongoing Programs",
-        count: programInfo.allPrograms.filter(program => program.status === programStatus.inProgress).length,
-        page: '/programs?type=inprogress',
-        status: programStatus.inProgress
-    },
-    {
-        name: "Bookmarked Programs",
-        count: programInfo.allPrograms.filter(program => program.status === programStatus.bookmarked).length,
-        page: '/programs?type=bookmarked',
-        status: programStatus.bookmarked
-    },
-    {
-        name: "Completed Programs",
-        count: programInfo.allPrograms.filter(program => program.status === programStatus.completed).length,
-        page: '/programs?type=completed',
-        status: programStatus.completed
-    }]
+    const filterType = searchParams.get("type");
+    const isBookmark = searchParams.get("is_bookmark");
 
-    useEffect(() => {
-        setProgramMenusList(menus)
-        setProgramsList(programInfo.allPrograms)
-    }, [programInfo.allPrograms])
 
-    useEffect(() => {
-        if (!programInfo.allPrograms.length) {
-            dispatch(loadAllPrograms(curatedPrograms))
-        }
-    }, [])
-
-    useEffect(() => {
-        console.log('searchParams', searchParams)
-        const filterType = searchParams.get("type");
-        if (filterType && filterType !== '') {
-            const allprograms = [...programInfo.allPrograms].filter(program => program.status === filterType)
-            setProgramsList(allprograms)
-        } else {
-            setProgramsList(programInfo.allPrograms)
-        }
-    }, [searchParams])
 
     function getWindowDimensions() {
         const { innerWidth: width, innerHeight: height } = window;
@@ -97,18 +53,118 @@ export default function Programs() {
         };
     }
 
+    const handleBookmark = (program) => {
+        dispatch(updateProgram({ id: program.id, is_bookmark: !program.is_bookmark }))
+    }
+
+    const handleNavigation = (programid) => {
+        let baseUrl = pipeUrls.programdetails
+        const filterProgram = programsList.find(program => program.id === programid)
+        if (Object.keys(filterProgram).length) {
+            if (filterProgram.status === programActionStatus.yettostart) baseUrl = pipeUrls.assigntask
+            navigate(`${baseUrl}/${programid}`)
+        }
+
+    }
+
+
+    useEffect(() => {
+        const programMenu = [...programMenus('program')].map(menu => {
+            if (menu.status === 'all') {
+                return { ...menu, count: userprograms.totalPrograms }
+            }
+            if (statusAction.includes(menu.status)) {
+                console.log('userprograms.statusCounts', userprograms.statusCounts, menu.status)
+                return { ...menu, count: userprograms.statusCounts[menu.status] }
+            }
+            return menu
+        })
+        console.log('programMenu', programMenu)
+        setProgramMenusList(programMenu)
+
+        // setProgramsList(programInfo.allPrograms)
+    }, [userprograms.statusCounts])
+
+    useEffect(() => {
+        console.log('searchParamsssss', searchParams, searchParams.size)
+        const filterType = searchParams.get("type");
+        const isBookmark = searchParams.get("is_bookmark");
+
+        let query = {}
+
+        if (filterType && filterType !== '') {
+            query = { type: 'status', value: filterType }
+        }
+
+        if (isBookmark && isBookmark !== '') {
+            query = { type: 'is_bookmark', value: isBookmark }
+        }
+
+        console.log('tttttt', Object.keys(searchParams));
+
+        if (Object.keys(query).length) {
+            dispatch(getUserPrograms(query));
+        }
+
+        if (searchParams.size === 0) {
+            dispatch(getUserPrograms())
+        }
+    }, [searchParams])
+
+    useEffect(() => {
+        if (userprograms.status === programStatus.bookmarked) {
+            dispatch(getUserPrograms());
+        }
+
+        if (userprograms.status === programStatus.load) {
+            let loadProgram = []
+            console.log('filterType', filterType, isBookmark)
+            if (filterType === null && isBookmark === null) {
+                loadProgram = userprograms.allprograms
+            }
+
+            if (isBookmark !== null && isBookmark !== '') {
+                loadProgram = userprograms.bookmarked
+            }
+
+            if (filterType !== null && filterType !== '') {
+                loadProgram = userprograms[filterType]
+            }
+
+            console.log('loadProgram', loadProgram)
+            setProgramsList(loadProgram)
+        }
+    }, [userprograms])
+
+    useEffect(() => {
+        if (filterType === null && isBookmark === null) {
+            dispatch(getUserPrograms());
+        }
+        dispatch(getProgramCounts())
+    }, [])
+
 
     return (
         <div className="dashboard-content px-8 mt-10">
             <div className='flex justify-between items-center mb-8'>
+                <Backdrop
+                    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                    open={userprograms.loading}
+                >
+                    {
+                        userprograms.loading ?
+                            <CircularProgress color="inherit" />
+                            : null
+                    }
+                </Backdrop>
                 <div>
-                    {menus.find(menu => menu.status === searchParams.get("type"))?.name || 'All Programs'}
-
+                    {programMenusList.find(menu => menu.status === searchParams.get("type"))?.name || (searchParams.get("is_bookmark") ? 'Bookmarked Programs' : 'All Programs')}
                 </div>
                 {
                     userInfo && userInfo.data && userInfo.data.role === 'mentor' &&
                     <div>
-                        <button onClick={() => navigate('/create-programs')} className='text-[12px] px-3 py-4' style={{ background: '#1D5BBF', color: '#fff', borderRadius: '6px' }}>Create New Program Request</button>
+                        <button onClick={() => navigate('/create-programs')} className='text-[12px] px-3 py-4'
+                            style={{ background: '#1D5BBF', color: '#fff', borderRadius: '6px' }}>Create New Program Request</button>
                     </div>
                 }
 
@@ -138,27 +194,36 @@ export default function Programs() {
                         </div>
                         <div className="py-3 px-3 flex  flex-wrap">
                             {
-                                programsList.length ? programsList.map((curatedProgram, index) => {
+                                programsList.length ? programsList.map((program, index) => {
                                     let startDate = ''
-                                    if (curatedProgram.program_start_date !== '') {
-                                        startDate = new Date(curatedProgram.program_start_date).toISOString().substring(0, 10).split("-")
+                                    if (program.start_date !== '') {
+                                        startDate = new Date(program.start_date).toISOString().substring(0, 10).split("-")
                                     }
                                     const actualStartDate = startDate.length ? `${startDate[2]}/${startDate[1]}/${startDate[0]}` : ''
-                                    console.log('curatedProgram', curatedProgram)
+                                    // console.log('curatedProgram', curatedProgram)
                                     return (
-                                        <div key={index} className={`curated-programs flex gap-4 items-center py-8 px-9 ${getWindowDimensions().width <= 1536 ? 'w-[49%]' : 'w-1/3'}`}>
+                                        <div key={index} className={`curated-programs flex gap-4 items-center py-8 px-9 
+                                            ${getWindowDimensions().width <= 1536 ? 'w-[49%]' : 'w-1/3'}`}>
                                             <div className="w-full" style={{ boxShadow: '4px 4px 15px 0px rgba(0, 0, 0, 0.1)', borderRadius: '10px' }}>
                                                 <div className="flex py-6 px-7 border-b-2 relative">
                                                     <div className="w-6/12 h-full">
                                                         <img className="object-cover w-full h-[150px]" src={ProgramImage} alt="Program Logo" />
                                                     </div>
                                                     <div className="flex flex-col gap-3 w-[90%]">
-                                                        <p className="py-1 px-1 text-[12px] text-center rounded-3xl w-[90px]" style={{ border: '1px solid rgba(238, 238, 238, 1)' }}>{curatedProgram.category}</p>
-                                                        <h4 className="text-[16px]">{curatedProgram.program_name}</h4>
-                                                        <span className="text-[12px] line-clamp-2 h-[38px]">{curatedProgram.decription}</span>
-                                                        <button className="text-white text-[12px] py-2 w-[90px]" style={{ background: 'rgba(29, 91, 191, 1)', borderRadius: '5px' }}>View Details</button>
+                                                        {
+                                                            program.categories.length ?
+                                                                <p className="py-1 px-1 text-[12px] text-center rounded-3xl w-[90px]"
+                                                                    style={{ border: '1px solid rgba(238, 238, 238, 1)' }}>{program.categories[0].name}</p>
+                                                                : null
+                                                        }
+
+                                                        <h4 className="text-[16px]">{program.program_name}</h4>
+                                                        <span className="text-[12px] line-clamp-2 h-[38px]">{program.description}</span>
+                                                        <button className="text-white text-[12px] py-2 w-[90px]"
+                                                            onClick={() => handleNavigation(program.id)}
+                                                            style={{ background: 'rgba(29, 91, 191, 1)', borderRadius: '5px' }}>View Details</button>
                                                     </div>
-                                                    <img className="absolute top-4 right-4 cursor-pointer" src={BookmarkedIcon} alt="BookmarkedIcon" />
+                                                    <img onClick={() => handleBookmark(program)} className="absolute top-4 right-4 cursor-pointer" src={program.is_bookmark ? BookmarkedColorIcon : BookmarkedIcon} alt="BookmarkedIcon" />
                                                 </div>
 
 

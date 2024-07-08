@@ -91,8 +91,8 @@ export const menteeMoreMenu = [{
 
 
 export const assignMenteeColumns = [{
-        field: 'name',
-        headerName: 'Name',
+        field: 'first_name',
+        headerName: 'first_name',
         width: 140,
         id: 0,
     },
@@ -249,24 +249,24 @@ export const MemberColumns = [{
     width: 200,
     id: 2,
 },
-{
-    field: 'action',
-    headerName: 'Action',
-    width: 200,
-    id: 3,
-    renderCell: (params) => {
-        return <button style={{    background: 'rgb(29, 91, 191)',
-            color: 'rgb(255, 255, 255)',
-            padding: '2px 20px',
-            height: '32px',
-            margin: '9px 0px',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: '3px'}} 
-            onClick={() => console.log('click')}>View Details</button>;
-    }
-},
+// {
+//     field: 'action',
+//     headerName: 'Action',
+//     width: 200,
+//     id: 3,
+//     renderCell: (params) => {
+//         return <button style={{    background: 'rgb(29, 91, 191)',
+//             color: 'rgb(255, 255, 255)',
+//             padding: '2px 20px',
+//             height: '32px',
+//             margin: '9px 0px',
+//             display: 'flex',
+//             justifyContent: 'center',
+//             alignItems: 'center',
+//             borderRadius: '3px'}} 
+//             onClick={() => console.log('click')}>View Details</button>;
+//     }
+// },
 ];
 
 

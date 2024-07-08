@@ -11,7 +11,7 @@ import api from "./api";
 export const userAccountCreate = createAsyncThunk(
   "userCreate",
   async (data) => {
-    const userCreate = await api.post("/register", data);
+    const userCreate = await api.post("register", data);
     if (userCreate.status === 201) {
       localStorage.setItem("access_token", userCreate.data.access);
       localStorage.setItem("refresh_token", userCreate.data.refresh);
@@ -41,13 +41,18 @@ export const resetUserInfo = createAction('reset/userInfo')
 
 // User Login
 export const userAccountLogin = createAsyncThunk("userLogin", async (data) => {
-  const userlogin = await api.post("/login", data);
-  if (userlogin.status && userlogin.status === 200) {
-    localStorage.setItem("access_token", userlogin.data.access);
-    localStorage.setItem("refresh_token", userlogin.data.refresh);
-    let decoded = jwtDecode(userlogin.data.access);
-    console.log('Login Token', decoded)
-    return decoded;
+  const userlogin = await api.post("login", data);
+  if (userlogin.status) {
+    if (userlogin.status === 200) {
+      localStorage.setItem("access_token", userlogin.data.access);
+      localStorage.setItem("refresh_token", userlogin.data.refresh);
+      let decoded = jwtDecode(userlogin.data.access);
+      console.log('Login Token', decoded)
+      return decoded;
+    }
+    if (userlogin.status === 401) {
+      userlogin.error = 'Invalid Credentials'
+    }
   }
   console.log('userlogin', userlogin)
   return userlogin
@@ -70,7 +75,7 @@ export const userAccessToken = createAsyncThunk("refreshUserToken", async (data)
 
 // Update User Role
 export const updateUserRole = createAsyncThunk("updateUserRole", async (data) => {
-  const updateRole = await api.post("/update-role", data);
+  const updateRole = await api.post("update-role", data);
   if (updateRole.status && updateRole.status === 200) {
     localStorage.setItem("access_token", updateRole.data.access);
     localStorage.setItem("refresh_token", updateRole.data.refresh);
@@ -87,13 +92,22 @@ export const updateUserRole = createAsyncThunk("updateUserRole", async (data) =>
 export const forgotPassword = createAsyncThunk(
   "userTriggerOtp",
   async (data) => {
-    const triggerOtp = await api.post("/trigger-otp", data);
+    const triggerOtp = await api.post("trigger-otp", data);
     console.log('triggerOtp', triggerOtp)
     if (triggerOtp.status === 200) {
       return triggerOtp;
     }
     if (triggerOtp.status === 500) {
-      return {...triggerOtp, error: 'Server error' };
+      return {
+        ...triggerOtp,
+        error: 'Server error'
+      };
+    }
+    if (triggerOtp.status === 401) {
+      return {
+        ...triggerOtp,
+        error: triggerOtp?.message || 'Invalid Email'
+      };
     }
     return triggerOtp;
   }
@@ -103,7 +117,7 @@ export const forgotPassword = createAsyncThunk(
 export const validateOTP = createAsyncThunk(
   "userValidateOTP",
   async (data) => {
-    const validateOTP = await api.post("/validate-otp", data);
+    const validateOTP = await api.post("validate-otp", data);
     console.log('validateOTP', validateOTP)
     if (validateOTP.status === 200) {
       return validateOTP;
@@ -116,7 +130,7 @@ export const validateOTP = createAsyncThunk(
 export const updatePassword = createAsyncThunk(
   "userUpdatePassword",
   async (data) => {
-    const updatePassword = await api.post("/update-pwd", data);
+    const updatePassword = await api.post("update-pwd", data);
     if (updatePassword.status === 200) {
       return updatePassword;
     }
@@ -128,7 +142,7 @@ export const updatePassword = createAsyncThunk(
 export const updateQuestions = createAsyncThunk(
   "userUpdateQuestions",
   async (data) => {
-    const updateQuestion = await api.put("/user_info_update", data);
+    const updateQuestion = await api.put("user_info_update", data);
     if (updateQuestion.status === 200) {
       localStorage.setItem("access_token", updateQuestion.data.access);
       localStorage.setItem("refresh_token", updateQuestion.data.refresh);

@@ -50,14 +50,15 @@ export const userStatus = {
   login: 'loggedin',
   token: 'tokenfetched',
   getToken: 'getToken',
-  role : 'roleUpdated',
-  otp : 'otpTriggered',
-  otpSuccess : 'otpVerified',
-  changePassword : 'passwordUpdated',
-  questions : 'questionsUpdated',
+  role: 'roleUpdated',
+  otp: 'otpTriggered',
+  otpSuccess: 'otpVerified',
+  changePassword: 'passwordUpdated',
+  questions: 'questionsUpdated',
 }
 
 export const programStatus = {
+  load: 'loaded',
   create: 'programcreated',
   exist: 'alreadyexist',
   error: 'error',
@@ -73,10 +74,90 @@ export const programStatus = {
 }
 
 export const PasswordRulesSet = {
-  character : 'character',
-  upperlowercase : 'upperlowercase',
-  number : 'number',
-  email : 'email',
-  common : 'common',
+  character: 'character',
+  upperlowercase: 'upperlowercase',
+  number: 'number',
+  email: 'email',
+  common: 'common',
 }
 
+export const statusAction = ['yettoapprove', 'yettojoin', 'yettostart', 'inprogress', 'completed', 'cancelled', 'bookmarked']
+
+export const programActionStatus = {
+  all: 'all',
+  yettoapprove: 'yettoapprove',
+  yettojoin: 'yettojoin',
+  yettostart: 'yettostart',
+  assigned: 'assigned',
+  paused: 'paused',
+  inprogress: 'inprogress',
+  completed: 'completed',
+  cancelled: 'cancelled',
+  bookmark: 'bookmarked'
+}
+
+
+
+export const pipeUrls = {
+  login: '/login',
+  register: '/register',
+  dashboard: '/dashboard',
+  programs: '/programs',
+  programdetails: '/program-details',
+  programtask: '/program-task',
+  assigntask: '/assign-task',
+  assignmentess : '/assign-mentees',
+  createprogram: '/create-program',
+  startprogram: '/start-program-request'
+}
+
+export const programFilterUrls = {
+  yettoapprove: `?type=${programActionStatus.yettoapprove}`,
+  yettojoin: `?type=${programActionStatus.yettojoin}`,
+  yettostart: `?type=${programActionStatus.yettostart}`,
+  inprogress: `?type=${programActionStatus.inprogress}`,
+  completed: `?type=${programActionStatus.completed}`,
+  cancelled: `?type=${programActionStatus.cancelled}`,
+  bookmark: '?is_bookmark=true',
+}
+
+export const programMenus = (page = 'dashboard') => {
+  const pipeUrl = page === 'program' ? pipeUrls.programs : pipeUrls.dashboard
+  return [{
+      name: "All Programs",
+      count: 0,
+      page: pipeUrls.programs,
+      status: 'all'
+    },
+    {
+      name: "Recent Join Programs",
+      count: 0,
+      page: `${pipeUrl}${programFilterUrls.yettostart}`,
+      status: programActionStatus.yettostart
+    },
+    {
+      name: "Curated Programs",
+      count: 0,
+      page: `${pipeUrl}${programFilterUrls.yettojoin}`,
+      status: programActionStatus.yettojoin
+    },
+    {
+      name: "Ongoing Programs",
+      count: 0,
+      page: `${pipeUrl}${programFilterUrls.inprogress}`,
+      status: programActionStatus.inprogress
+    },
+    {
+      name: "Bookmarked Programs",
+      count: 0,
+      page: `${pipeUrl}${programFilterUrls.bookmark}`,
+      status: programActionStatus.bookmark
+    },
+    {
+      name: "Completed Programs",
+      count: 0,
+      page: `${pipeUrl}${programFilterUrls.completed}`,
+      status: programActionStatus.completed
+    }
+  ]
+}

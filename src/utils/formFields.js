@@ -30,6 +30,10 @@ export const PersonalInformationFields = [{
     placeholder: "Enter Phone Number",
     inputRules: {
       required: "This field is required",
+      pattern:{
+        value: /^[0-9]{10}$/,
+        message: 'Enter valid phone number'
+     },
     },
     size: true,
   },
@@ -653,6 +657,7 @@ export const AssignMenteesFields = [{
       },
     ],
     width: 'width-32',
+    disabled: true
   },
   {
     type: "input",
@@ -664,6 +669,7 @@ export const AssignMenteesFields = [{
       required: "This field is required",
     },
     width: 'width-32',
+    disabled: true
   },
   {
     type: "input",
@@ -672,46 +678,61 @@ export const AssignMenteesFields = [{
     label: "Mentor Name",
     placeholder: "Enter Program Name",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     width: 'width-32',
+    disabled: true
   },
   {
     type: "date",
-    name: "program_name",
+    name: "start_date",
     label: "Program Start Date and Time",
     placeholder: "Select Program Start Date and Time",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     width: 'width-32',
+    disabled: true
   },
   {
     type: "date",
-    name: "program_name",
+    name: "end_date",
     label: "Program End Date and Time",
     placeholder: "Select Program End Date and Time",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     width: 'width-32',
+    disabled: true
   },
   {
     type: "input",
-    name: "program_durations",
-    fieldtype: "text",
+    name: "duration",
     label: "Program Durations",
-    placeholder: "Enter Program Durations",
+    fieldtype: "text",
+    placeholder: "Program Durations",
     inputRules: {
       required: "This field is required",
     },
     width: 'width-32',
+    disabled: true
   },
   {
     type: "text",
     name: "mentees_list",
     label: "Add Mentees for this Program",
     width: 'w-full',
+    inputRules: {
+      required: "This field is required",
+    },
+  },
+  {
+    type: "link",
+    name: "reference_link",
+    fieldtype: "text",
+    label: "Reference Link",
+    width: 'w-full',
+    disabled: true
   },
   {
     type: "editor",
@@ -719,6 +740,16 @@ export const AssignMenteesFields = [{
     fieldtype: "text",
     label: "Task Details",
     placeholder: "List out Task Details",
+    inputRules: {
+      required: "This field is required",
+    },
+    width: 'w-full',
+  },
+  {
+    type: "date",
+    name: "due_date",
+    label: "Due Date",
+    placeholder: "Due Date",
     inputRules: {
       required: "This field is required",
     },

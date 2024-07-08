@@ -1,5 +1,6 @@
 import React from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import { programActionStatus } from '../../utils/constant';
 
 export default function Card({ cardTitle, cardContent, cardFilter = [], cardCountColor = '#000' }) {
     console.log('filter', cardFilter)
@@ -28,7 +29,7 @@ export default function Card({ cardTitle, cardContent, cardFilter = [], cardCoun
                 {
                     cardContent.map((menu, index) => <li className="" key={index}>
                         <div onClick={() => navigate(menu.page)} className={`flex justify-between py-2 px-6 rounded cursor-pointer menu-content 
-                        ${searchParams.get("type") === menu.status ||     (searchParams.get("type") === null && menu.status === 'all') ? 'active' : ''}`} aria-current="page">
+                        ${searchParams.get("type") === menu.status || (searchParams.get("is_bookmark") !== null && menu.status === programActionStatus.bookmark) ||  (searchParams.get("type") === null && searchParams.get("is_bookmark") === null && menu.status === 'all') ? 'active' : ''}`} aria-current="page">
                             <span className="text-sm">{menu.name}</span>
                             <span className="text-base" style={{ color: cardCountColor }}>{menu.count}</span>
                         </div>

@@ -244,11 +244,6 @@ export default function CreatePrograms() {
         // }
     }, [])
 
-    // useEffect(() => {
-    //     if (userInfo && userInfo.data && userInfo.data.role !== 'mentor') {
-    //         navigate('/programs')
-    //     }
-    // }, [])
 
     const handleModalSearch = (field) => {
         // console.log('value', field.target.value)
@@ -275,12 +270,6 @@ export default function CreatePrograms() {
         }
     }
 
-
-    // useEffect(() => {
-    //     if (!apiLoading) {
-    //         setFormDetails({ category: category, materials: materials, certificate: certificate, skills: skills })
-    //     }
-    // }, [apiLoading])
 
     useEffect(() => {
         // console.log('Current', currentStep)
@@ -445,7 +434,7 @@ export default function CreatePrograms() {
                     {
                         status === programStatus.create || status === programStatus.exist || status === programStatus.error ?
                             <div className="w-2/6 bg-white flex flex-col gap-4 h-[330px] justify-center items-center">
-                                <img src={programStatus.exist ? FailedIcon : programStatus.create ? SuccessIcon : FailedIcon} alt="VerifyIcon" />
+                                {/* <img src={programStatus.exist ? FailedIcon : programStatus.create ? SuccessIcon : FailedIcon} alt="VerifyIcon" /> */}
                                 <span style={{ color: '#232323', fontWeight: 600 }}>
                                     {status === programStatus.exist ? 'Program already exist' : status === programStatus.error ? 'There is a Server Error. Please try again later' : 'Program Created Successfully!'}
                                 </span>

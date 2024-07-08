@@ -4,11 +4,13 @@ import {
 } from "@reduxjs/toolkit";
 import userReducer from "../features/user/userSlice";
 import programReducer from "../features/program/programSlice";
+import userProgramReducer from "../features/userprograms/userProgramSlice";
 
 
 const combinedReducer = combineReducers({
   userInfo: userReducer,
-  programInfo: programReducer
+  programInfo: programReducer,
+  userPrograms: userProgramReducer
 });
 
 const rootReducer = (state, action) => {
