@@ -2,17 +2,20 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
-import { SignupFields, PasswordRules } from "../../utils/loginFields";
+
 import LogoSlide from "../LogoSlide";
+
 import { userAccountCreate, resetUserInfo } from '../../services/loginInfo'
 import { ReactComponent as EyeCloseIcon } from "../../assets/icons/eyeClose.svg";
 import { ReactComponent as EyeOpenIcon } from "../../assets/icons/eyeOpen.svg";
-import SocialMediaLogin from "../../shared/SocialMedia";
-import { PasswordRulesSet, userStatus } from "../../utils/constant";
 import SuccessIcon from "../../assets/images/Success_tic1x.png"
+
+import SocialMediaLogin from "../../shared/SocialMedia";
+import { SignupFields, PasswordRules } from "../../utils/loginFields";
+import { PasswordRulesSet, userStatus } from "../../utils/constant";
+
 
 export const Signup = () => {
   const [passwordVisibility, setPasswordVisibility] = useState(false);
@@ -73,11 +76,6 @@ export const Signup = () => {
       [PasswordRulesSet.email]: emailExist,
       [PasswordRulesSet.common]: eightCharacterExist && upperLowerCaseExist && letterSymbolExist && emailExist
     }
-    // console.log(letterSymbol(value))
-
-    console.log(passRule)
-    // console.log(regex.test(value))
-    console.log('World', field, value)
     setVerifyPasswordRule(passRule)
   }
 
@@ -96,8 +94,6 @@ export const Signup = () => {
     }
   }, [userData])
 
-
-  console.log('errors', errors)
 
   return (
     <div className="h-full">
@@ -244,11 +240,6 @@ export const Signup = () => {
                                           style={{ color: textColor }}>{rule.name}</li>)
                                     })
                                   }
-                                  {/* <li className="text-[12px] list-none before:content-['\2714\0020'] before:pr-2">Contains at least 8 characters</li>
-                                  <li className="text-[12px] list-none before:content-['\2022'] before:pr-3">Contains both lower (a-z) and upper case letters(A-Z)</li>
-                                  <li className="text-[12px] list-none before:content-['\2714\0020'] before:pr-2">Contains at least one number (0-9) or a symbol</li>
-                                  <li className="text-[12px] list-none before:content-['\2714\0020'] before:pr-2">Does not contain your email address</li>
-                                  <li className="text-[12px] list-none before:content-['\2714\0020'] before:pr-2">Is not commonly used</li> */}
                                 </ul>
                               </div>
                             }
@@ -299,25 +290,6 @@ export const Signup = () => {
                       >
                         Create Account
                       </button>
-
-                      {/* <LoadingButton
-                        type="submit"
-                        size="small"
-                        onClick={() => console.log('pp')}
-                        loading={true}
-                        disabled={false}
-                        loadingPosition="end"
-                        className="w-1/3 !normal-case !py-3 !text-white"
-                        style={{
-                          background:
-                            "linear-gradient(to right, #00AEBD, #1D5BBF)",
-
-                        }}
-                      >
-                        <span>Create Account</span>
-                      </LoadingButton> */}
-
-
                     </div>
                   </form>
                 </div>

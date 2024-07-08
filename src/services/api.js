@@ -4,7 +4,7 @@ let refresh = false;
 
 // const baseUrl = "http://52.88.78.226:8000/api";
 
-const baseUrl = "https://mentor-backend.dataterrain-dev.net/api"
+const baseUrl = "https://mentor-backend.dataterrain-dev.net/api/"
 
 const api = axios.create({
   baseURL: baseUrl,
@@ -12,6 +12,7 @@ const api = axios.create({
 
 api.interceptors.request.use(function (config) {
   const token = localStorage.getItem('access_token');
+  console.log('config', config)
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;;
   }
@@ -37,7 +38,13 @@ api.interceptors.response.use(
       error.message = "There is a Server Error. Please try again later."
     }
     if (error.code && error.code === "ERR_BAD_REQUEST" && error.response.status === 401) {
-      error.message = "Invalid Credentials"
+      console.log('error99', error)
+      if (localStorage.getItem('access_token')) {
+        console.log('tooooo')
+        console.log(window.location.origin + '/logout')
+        window.location.replace(window.location.origin + '/logout')
+      }
+      error.message = error.response.data?.error || error.response.data?.message
     }
     if (error.code && error.code === "ERR_BAD_REQUEST" && error.response.status === 400) {
       error.message = "Something went wrong. Please try again later"

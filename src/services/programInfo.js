@@ -9,7 +9,7 @@ import api from "./api";
 export const getAllPrograms = createAsyncThunk(
     "getAllPrograms",
     async (data) => {
-        const validateOTP = await api.post("/validate-otp", data);
+        const validateOTP = await api.post("validate-otp", data);
         if (validateOTP.status === 200) {
             return validateOTP;
         }
@@ -22,7 +22,7 @@ export const getAllPrograms = createAsyncThunk(
 export const getProgramDetails = createAsyncThunk(
     "getProgramDetails",
     async (data) => {
-        const validateOTP = await api.post("/validate-otp", data);
+        const validateOTP = await api.post("validate-otp", data);
         if (validateOTP.status === 200) {
             return validateOTP;
         }
@@ -51,11 +51,24 @@ export const createNewPrograms = createAsyncThunk(
             config.headers['Content-Type'] = 'multipart/form-data';
             return config;
         })
-        const createProgram = await api.post("/programs/", data);
+        const createProgram = await api.post("programs", data);
+        console.log('createProgram', createProgram)
         if (createProgram.status === 201) {
             return createProgram;
         }
         return createProgram;
+    }
+);
+
+
+export const fetchProgram = createAsyncThunk(
+    "fetchProgram",
+    async (data) => {
+        const fetchProgram = await api.get("fetch_program", data);
+        if (fetchProgram.status === 200) {
+            return fetchProgram;
+        }
+        return fetchProgram;
     }
 );
 
@@ -107,7 +120,7 @@ export const updateProgramDetails = createAsyncThunk(
 export const getAllCategories = createAsyncThunk(
     "getAllCategories",
     async (data) => {
-        const allCategory = await api.get("/category", data);
+        const allCategory = await api.get("category", data);
         if (allCategory.status === 200 && allCategory.data) {
             return allCategory.data;
         }
@@ -119,7 +132,7 @@ export const getAllCategories = createAsyncThunk(
 export const getAllMaterials = createAsyncThunk(
     "getAllMaterials",
     async (data) => {
-        const allMaterial = await api.get(`/materials?category_id=${data}`);
+        const allMaterial = await api.get(`materials?category_id=${data}`);
         if (allMaterial.status === 200 && allMaterial.data) {
             return allMaterial.data;
         }
@@ -131,7 +144,7 @@ export const getAllMaterials = createAsyncThunk(
 export const getAllCertificates = createAsyncThunk(
     "getAllCertificates",
     async (data) => {
-        const allCertificates = await api.get(`/certificate?category_id=${data}`);
+        const allCertificates = await api.get(`certificate?category_id=${data}`);
         if (allCertificates.status === 200 && allCertificates.data) {
             return allCertificates.data;
         }
@@ -143,7 +156,7 @@ export const getAllCertificates = createAsyncThunk(
 export const getAllSkills = createAsyncThunk(
     "getAllSkills",
     async (data) => {
-        const allSkills = await api.get(`/skills?category_id=${data}`);
+        const allSkills = await api.get(`skills?category_id=${data}`);
         if (allSkills.status === 200 && allSkills.data) {
             return allSkills.data;
         }
@@ -154,7 +167,7 @@ export const getAllSkills = createAsyncThunk(
 export const getAllMembers = createAsyncThunk(
     "getAllMembers",
     async (data) => {
-        const allMembers = await api.get(`/members?category_id=${data}`);
+        const allMembers = await api.get(`members?category_id=${data}`);
         if (allMembers.status === 200 && allMembers.data) {
             return allMembers.data;
         }

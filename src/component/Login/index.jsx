@@ -33,17 +33,25 @@ export const Login = () => {
     register,
     handleSubmit,
     formState: { errors },
+    reset
   } = useForm();
 
   const onSubmit = (data) => {
     const { email, password } = data;
     if (email !== "" && password !== "") {
+      if (localStorage.getItem('rememberme') === 'true') {
+        localStorage.setItem('useremail', email)
+        localStorage.setItem('userpassword', btoa(password))
+      }
       dispatch(userAccountLogin(data))
       setFormDetails(data)
     }
   };
 
-  const handleRemeberPassword = () => setRememberPassword(!remeberPassword);
+  const handleRemeberPassword = () => {
+    localStorage.setItem('rememberme', !remeberPassword)
+    setRememberPassword(!remeberPassword);
+  }
 
   const handleRedirect = () => {
     dispatch(updateInfo())
@@ -53,7 +61,15 @@ export const Login = () => {
   }
 
   useEffect(() => {
+    const rememberme = localStorage.getItem('rememberme')
+    const email = localStorage.getItem('useremail')
+    const password = localStorage.getItem('userpassword')
+    console.log('rememberme', rememberme, typeof rememberme)
     dispatch(resetUserInfo())
+    if (localStorage.getItem('rememberme') === 'true') {
+      setRememberPassword(true)
+      reset({ email, password: atob(password) })
+    }
   }, [])
 
   useEffect(() => {

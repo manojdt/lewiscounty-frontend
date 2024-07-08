@@ -4,14 +4,27 @@ import ProgramVideo from '../../../assets/images/video.png';
 import ProgramDoc from '../../../assets/images/book.png';
 import SuccessTik from '../../../assets/images/blue_tik1x.png';
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { getProgramDetails, updateProgram } from '../../../services/userprograms';
+import { useDispatch, useSelector } from 'react-redux';
+import { Backdrop, CircularProgress } from '@mui/material';
+import { pipeUrls, programActionStatus } from '../../../utils/constant';
 
 export default function ProgramTask() {
     const navigate = useNavigate()
+    const [searchParams] = useSearchParams();
+    const dispatch = useDispatch()
+    const params = useParams();
+    const { programdetails, loading: programLoading, error, status } = useSelector(state => state.userPrograms)
+    const [loading, setLoading] = useState({ initial: true, join: false })
     const [taskStage, setTaskStage] = useState('desc')
 
     const handleTaskStage = (stage) => {
-        setTaskStage(stage)
+        if (stage === 'submit') {
+            setLoading({ initial: false, join: true })
+            dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.yettostart }))
+        }
+        else setTaskStage(stage)
     }
 
     const handleBack = () => {
@@ -20,16 +33,59 @@ export default function ProgramTask() {
         if (taskStage === 'docs') setTaskStage('video')
     }
 
+    // useEffect(() => {
+    //     if (taskStage === '') {
+    //         navigate(`${pipeUrls.assigntask}/${programdetails.id}`)
+    //         // setTimeout(() => {
+
+    //         // navigate(`${pipeUrls.assigntask}/${programdetails.id}`)
+    //         // }, [2000])
+    //     }
+    // }, [taskStage])
+
     useEffect(() => {
-        if(taskStage === 'submit'){
-            setTimeout(() => {
-                navigate('/assign-task/1')
-            },[2000])
+        if (Object.keys(programdetails).length) {
+            setLoading({ ...loading, initial: false })
         }
-    },[taskStage])
+    }, [programdetails])
+
+    useEffect(() => {
+        if (status === programActionStatus.yettostart) {
+            setTaskStage('submit')
+            // setTimeout(() => {
+            setLoading({ initial: false, join: false })
+            setTimeout(() => {
+                setTaskStage('')
+                navigate(`${pipeUrls.assigntask}/${programdetails.id}`)
+            }, [2000])
+
+            // }, [2000])
+        }
+    }, [status])
+
+
+    useEffect(() => {
+        console.log('searchParams', params)
+        // const programId = searchParams.get("id");
+        const programId = params.id;
+        // if (programId === null) {
+        //   navigate(pipeUrls.programs)
+        // }
+
+        if (programId && programId !== '') {
+            dispatch(getProgramDetails(programId))
+        }
+
+    }, [params.id])
 
     return (
         <div className="px-9 my-6 grid">
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={loading.initial || loading.join}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
             <div className='grid mb-10' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)', borderRadius: '5px' }}>
                 <div className='breadcrum'>
                     <nav className="flex px-7 pt-6 pb-5 mx-2 border-b-2" aria-label="Breadcrumb">
@@ -184,7 +240,7 @@ export default function ProgramTask() {
 
                                             <div className='flex justify-center items-center gap-6 pt-16'>
                                                 <button className='py-2 px-9 text-[12px] flex items-center' style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '28px' }}
-                                                    onClick={() => navigate('/program-details/1')}
+                                                    onClick={() => navigate(`/program-details/${programdetails.id}`)}
                                                 >Cancel
                                                 </button>
 
@@ -200,7 +256,7 @@ export default function ProgramTask() {
                                         : taskStage === 'submit' ?
 
                                             <div className='px-96 py-16 flex justify-center items-center' style={{ border: '1px solid rgba(107, 107, 107, 1)', borderRadius: '7px' }}>
-                                                <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20' 
+                                                <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
                                                     style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
                                                     <img src={SuccessTik} alt="SuccessTik" />
                                                     <p className='text-white text-[12px]'>You have selected for this program.</p>

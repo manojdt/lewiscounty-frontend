@@ -355,7 +355,7 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                                                                 //     console.log(e.target.files[0].type)
                                                                                                 //     if (types.includes(e.target.files[0].type)) {
                                                                                                 //         setLogoImage(URL.createObjectURL(e.target.files[0]));
-                                                                                                //     }else{
+                                                                                                //     } else {
                                                                                                 //         setError([field.name], 'Invalid file type')
                                                                                                 //     }
                                                                                                 // }
@@ -364,7 +364,16 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                                                     </label>
 
                                                                                 </div>
-                                                                                {logoImage !== '' && <img src={logoImage} alt="altlogo" />}
+                                                                                {logoImage !== '' &&
+                                                                                    <>
+                                                                                        <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Image</div>
+                                                                                        <div style={{ border: '1px soli rgba(29, 91, 191, 0.5)' }}>
+                                                                                            <img src={logoImage} alt="altlogo" />
+                                                                                        </div>
+                                                                                        {/* <img src={logoImage} alt="altlogo" /> */}
+
+                                                                                    </>
+                                                                                }
                                                                                 {errors[field.name] && (
                                                                                     <p className="error" role="alert">
                                                                                         {errors[field.name].message}
