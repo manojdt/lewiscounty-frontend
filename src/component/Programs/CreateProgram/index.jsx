@@ -60,12 +60,12 @@ export default function CreatePrograms() {
         // }
 
         // console.log('Updated Values', u)
-        
+
 
 
 
         let fieldData = {
-            ...stepData, ...data, 
+            ...stepData, ...data,
         }
 
         console.log('fieldData', new Date(fieldData.start_date).toISOString())
@@ -76,7 +76,7 @@ export default function CreatePrograms() {
 
             // start_date: '2024-07-26T12:08:20.587Z', end_date: '2024-07-26T12:08:20.587Z'
 
-           
+
 
             const apiData = { ...fieldData, posted: new Date(), id: allPrograms.length + 1, bookmark: false, status: programStatus.yetToPlan }
             const updateProgram = [...allPrograms, apiData]
@@ -408,6 +408,8 @@ export default function CreatePrograms() {
 
     // console.log('updatedMaterialColumn', updatedMaterialColumn)
 
+    console.log('viewDetailsInfo', viewDetailsInfo)
+
     return (
         <div className="dashboard-content px-8 mt-10">
             <div style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }}>
@@ -486,15 +488,26 @@ export default function CreatePrograms() {
                                 <p className='text-[12px] pb-6'>
                                     {viewDetailsInfo.material?.material_details}
                                 </p>
-                                <video width="auto" height="auto" controls autoplay >
-                                    <source src={'https://download.samplelib.com/mp4/sample-5s.mp4'} type="video/ogg" />
-                                    Your browser does not support the video tag.
-                                </video>
-                                <p className='text-[12px] py-6'>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                                    ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit
-                                    in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                </p>
+                                {
+                                    viewDetailsInfo.material.material_type === 'document' ?
+
+                                        <a href={viewDetailsInfo.material.file} target='_blank' ></a>
+                                        : null
+
+                                }
+
+                                {
+                                    viewDetailsInfo.material.material_type === 'video' ?
+
+                                        <video width="auto" height="auto" controls autoplay >
+                                            <source src={viewDetailsInfo.material.file} type="video/ogg" />
+                                            Your browser does not support the video tag.
+                                        </video>
+                                        : null
+
+                                }
+
+                               
                             </div>
                             <div className='flex justify-center items-center pt-5 pb-10'>
                                 <button onClick={() => setViewDetails(resetViewInfo)}

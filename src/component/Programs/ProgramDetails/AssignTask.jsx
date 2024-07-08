@@ -53,6 +53,7 @@ export default function AssignTask() {
     const params = useParams();
 
     const { allPrograms, programDetails } = useSelector(state => state.programInfo)
+    const userdetails = useSelector(state => state.userInfo)
     const { programdetails, loading: programLoading, error, status } = useSelector(state => state.userPrograms)
 
     const [currentPage, setCurrentPage] = useState('')
@@ -404,7 +405,7 @@ export default function AssignTask() {
                                             <div className='flex gap-3 items-center text-[12px]'>
                                                 <img src={UserImage} style={{ borderRadius: '50%', width: '35px', height: '35px' }} alt="UserImage" />
                                                 <span>Instructor :</span>
-                                                <span style={{ color: 'rgba(29, 91, 191, 1)', textDecoration: 'underline', cursor: 'pointer' }}>Johnson</span>
+                                                <span style={{ color: 'rgba(29, 91, 191, 1)', textDecoration: 'underline', cursor: 'pointer' }}>{userdetails.data.first_name}{' '} {userdetails.data.last_name}</span>
                                             </div>
 
                                         </div>
@@ -585,9 +586,7 @@ export default function AssignTask() {
                                             <div className='sponsor pt-8'>
                                                 <div className='font-semibold pb-5'>Sponsored by </div>
                                                 <ul className='flex gap-5'>
-                                                    <img src={SponsorIcon} alt="SponsorIcon" />
-                                                    <img src={SponsorIcon} alt="SponsorIcon" />
-                                                    <img src={SponsorIcon} alt="SponsorIcon" />
+                                                    <img style={{width:'100px', height:'100px'}} src={programdetails.image} alt="SponsorIcon" />
                                                 </ul>
                                             </div>
 
@@ -659,8 +658,7 @@ export default function AssignTask() {
                                                         <img src={QuoteIcon} className='absolute top-[-16px]' alt="QuoteIcon" />
                                                         <div className='relative'>
                                                             <p className='pb-7'>
-                                                                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                                                                ook.standard dummy text ever since the 1500s, ook.
+                                                                {programdetails.testimonial_types}
                                                             </p>
                                                             <hr className='absolute' style={{ width: '496px', left: '-15px' }} />
                                                         </div>
@@ -668,14 +666,14 @@ export default function AssignTask() {
                                                         <div className='flex gap-3 py-5'>
                                                             <img src={UserImage} alt="user" style={{ borderRadius: '50%', width: '38px', height: '35px' }} />
                                                             <div className='flex flex-col'>
-                                                                <span style={{ color: 'rgba(0, 174, 189, 1)' }}>Alexander Johnson</span>
+                                                                <span style={{ color: 'rgba(0, 174, 189, 1)' }}>{userdetails.data.first_name}{' '} {userdetails.data.last_name}</span>
                                                                 <span>Mentor</span>
                                                             </div>
                                                         </div>
 
                                                     </div>
 
-                                                    <div className='pt-16 pb-2 px-7 leading-5 relative' style={{ background: 'rgba(248, 249, 250, 1)', }}>
+                                                    {/* <div className='pt-16 pb-2 px-7 leading-5 relative' style={{ background: 'rgba(248, 249, 250, 1)', }}>
                                                         <img src={QuoteIcon} className='absolute top-[-16px]' alt="QuoteIcon" />
                                                         <div className='relative'>
                                                             <p className='pb-7'>
@@ -713,7 +711,7 @@ export default function AssignTask() {
                                                             </div>
                                                         </div>
 
-                                                    </div>
+                                                    </div> */}
                                                 </div>
                                             </div>
 
