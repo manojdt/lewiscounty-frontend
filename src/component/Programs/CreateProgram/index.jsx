@@ -18,6 +18,7 @@ import MuiModal from '../../../shared/Modal'
 import { CertificateColumns, MaterialColumns, MemberColumns, SkillsColumns, assignMenteeColumns, assignMenteeRows, certificateRows, createMaterialsRows, createSkillsRows } from '../../../mock';
 import DataTable from '../../../shared/DataGrid';
 import { programStatus } from '../../../utils/constant';
+import ReactPlayer from 'react-player';
 
 export default function CreatePrograms() {
     const navigate = useNavigate()
@@ -491,7 +492,7 @@ export default function CreatePrograms() {
                                 {
                                     viewDetailsInfo.material.material_type === 'document' ?
 
-                                        <a href={viewDetailsInfo.material.file} target='_blank' ></a>
+                                        <a className='underline' href={viewDetailsInfo.material.file} target='_blank' >{viewDetailsInfo.material.name}</a>
                                         : null
 
                                 }
@@ -499,15 +500,19 @@ export default function CreatePrograms() {
                                 {
                                     viewDetailsInfo.material.material_type === 'video' ?
 
-                                        <video width="auto" height="auto" controls autoplay >
-                                            <source src={viewDetailsInfo.material.file} type="video/ogg" />
-                                            Your browser does not support the video tag.
-                                        </video>
+                                        <ReactPlayer
+                                            // onPlay={this.handlePlay()}
+                                            // onPause={this.handlePause()}
+                                            url={viewDetailsInfo.material.file} />
+                                        // <video width="auto" height="auto" controls autoplay >
+                                        //     <source src={viewDetailsInfo.material.file} type="video/ogg" />
+                                        //     Your browser does not support the video tag.
+                                        // </video>
                                         : null
 
                                 }
 
-                               
+
                             </div>
                             <div className='flex justify-center items-center pt-5 pb-10'>
                                 <button onClick={() => setViewDetails(resetViewInfo)}
