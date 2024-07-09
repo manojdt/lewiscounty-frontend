@@ -71,7 +71,18 @@ export default function ProgramDetails() {
     useEffect(() => {
         if (Object.keys(programdetails).length) {
             console.log('programdetails.status', programdetails.status)
-            if (programdetails.status !== programActionStatus.yettojoin && programdetails.status !== programActionStatus.inprogress) navigate(pipeUrls.programs)
+            if (programdetails.status === programActionStatus.yettostart){
+                navigate(`${pipeUrls.assigntask}/${programdetails.id}`)
+            }
+
+            else if(programdetails.status === programActionStatus.inprogress){
+                navigate(`${pipeUrls.startprogram}/${programdetails.id}`)
+            }
+                
+                
+                
+                
+                // || programdetails.status === programActionStatus.inprogress) navigate(pipeUrls.programs)
             else setLoading({ ...loading, initial: false })
         }
     }, [programdetails])
@@ -205,6 +216,7 @@ export default function ProgramDetails() {
                                             <div className='flex gap-3 items-center'>
                                                 <img src={CalendarIcon} alt="CalendarIcon" />
                                                 <span className='text-[12px]'>
+                                                    
                                                     Begins Jun 5th and 6:00Pm
                                                 </span>
                                             </div>

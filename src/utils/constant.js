@@ -108,7 +108,7 @@ export const pipeUrls = {
   assigntask: '/assign-task',
   assignmentess : '/assign-mentees',
   createprogram: '/create-program',
-  startprogram: '/start-program-request'
+  startprogram: '/start-program'
 }
 
 export const programFilterUrls = {

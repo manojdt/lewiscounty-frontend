@@ -62,6 +62,7 @@ export default function Programs() {
         const filterProgram = programsList.find(program => program.id === programid)
         if (Object.keys(filterProgram).length) {
             if (filterProgram.status === programActionStatus.yettostart) baseUrl = pipeUrls.assigntask
+            if (filterProgram.status === programActionStatus.inprogress) baseUrl = pipeUrls.startprogram
             navigate(`${baseUrl}/${programid}`)
         }
 
@@ -133,7 +134,10 @@ export default function Programs() {
                 dispatch(getUserPrograms());
             }
         }
+    }, [userprograms.status])
 
+
+    useEffect(() => {
         if (userprograms.status === programStatus.load) {
             let loadProgram = []
             console.log('filterType', filterType, isBookmark)
@@ -152,7 +156,7 @@ export default function Programs() {
             console.log('loadProgram', loadProgram)
             setProgramsList(loadProgram)
         }
-    }, [userprograms.status])
+    },[userprograms])
 
     useEffect(() => {
         if (filterType === null && isBookmark === null) {

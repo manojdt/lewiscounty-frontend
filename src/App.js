@@ -72,7 +72,7 @@ function App() {
           <Route path="/program-task/:id" element={<ProgramTask />} />
           <Route path="/assign-task/:id" element={<AssignTask />} />
           <Route path="/assign-mentees/:id" element={<AssignMentees />} />
-          <Route path="/start-program-request/:id" element={<AssignTask />} />
+          <Route path="/start-program/:id" element={<AssignTask />} />
           <Route path="/program-completion/:id" element={<ProgramCompletion />} />
 
           <Route path="/create-programs" element={<CreatePrograms />} />
