@@ -45,12 +45,15 @@ import { pipeUrls, programActionStatus, programStatus } from '../../../utils/con
 import { updateNewPrograms } from '../../../services/programInfo';
 import { getProgramDetails, updateProgram } from '../../../services/userprograms';
 import { Backdrop, CircularProgress } from '@mui/material';
+import useTimer from '../../../hooks/useTimer';
 
 
 export default function AssignTask() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const params = useParams();
+
+    const timerData = useTimer()
 
     const { allPrograms, programDetails } = useSelector(state => state.programInfo)
     const userdetails = useSelector(state => state.userInfo)
@@ -128,6 +131,8 @@ export default function AssignTask() {
         if(status === programActionStatus.inprogress){
 
         }
+
+       
     },[status])
 
     // useEffect(() => {
@@ -235,7 +240,7 @@ export default function AssignTask() {
         if (pathname.length && pathname.includes('assign-task')) {
             setCurrentPage('assigntask')
         }
-        if (pathname.length && pathname.includes('start-program-request')) {
+        if (pathname.length && pathname.includes('start-program')) {
             setCurrentPage('startprogram')
         }
     }, [location])
@@ -268,6 +273,12 @@ export default function AssignTask() {
     useEffect(() => {
         if (Object.keys(programdetails).length) {
             setLoading({ ...loading, initial: false })
+
+            console.log('statusstatus23', programdetails.status)
+            if(programdetails.status === programActionStatus.assigned){
+                console.log('loading')
+                timerData.loadTime(0, 20,0)
+            }
         }
     }, [programdetails])
 
@@ -462,25 +473,25 @@ export default function AssignTask() {
                                                         <div className='flex gap-6 items-center justify-center'>
                                                             <p className="flex flex-col gap-2 items-center justify-center">
                                                                 <span className='px-2 py-1 text-[20px]'
-                                                                    style={{ background: 'rgba(231, 241, 242, 1)', color: 'rgba(0, 174, 189, 1)', borderRadius: '5px', fontWeight: 700 }}>{timer.hrs}</span>
+                                                                    style={{ background: 'rgba(231, 241, 242, 1)', color: 'rgba(0, 174, 189, 1)', borderRadius: '5px', fontWeight: 700 }}>{timerData.hours}</span>
                                                                 <span className="text-[12px]" style={{ color: 'rgba(118, 118, 118, 1)' }}>Hrs</span>
                                                             </p>
                                                             <p className="flex flex-col gap-2 items-center justify-center">
                                                                 <span className='px-2 py-1 text-[20px]'
-                                                                    style={{ background: 'rgba(231, 241, 242, 1)', color: 'rgba(0, 174, 189, 1)', borderRadius: '5px', fontWeight: 700 }}>{timer.min}</span>
+                                                                    style={{ background: 'rgba(231, 241, 242, 1)', color: 'rgba(0, 174, 189, 1)', borderRadius: '5px', fontWeight: 700 }}>{timerData.minutes}</span>
                                                                 <span className="text-[12px]" style={{ color: 'rgba(118, 118, 118, 1)' }}>Mins</span>
                                                             </p>
                                                             <p className="flex flex-col gap-2 items-center justify-center">
                                                                 <span className='px-2 py-1 text-[20px]'
-                                                                    style={{ background: 'rgba(231, 241, 242, 1)', color: 'rgba(0, 174, 189, 1)', borderRadius: '5px', fontWeight: 700 }}>{timer.sec}</span>
+                                                                    style={{ background: 'rgba(231, 241, 242, 1)', color: 'rgba(0, 174, 189, 1)', borderRadius: '5px', fontWeight: 700 }}>{timerData.seconds}</span>
                                                                 <span className="text-[12px]" style={{ color: 'rgba(118, 118, 118, 1)' }}>Secs</span>
                                                             </p>
                                                         </div>
                                                         <button className='py-3 px-10 text-white text-[14px] flex items-center' title="Pause" style={{
-                                                            color: programdetails.status !== programActionStatus.paused ? 'rgba(29, 91, 191, 1)' : '#fff',
+                                                            color: programdetails.status !== programActionStatus.paused && programdetails.status !== programActionStatus.assigned ? 'rgba(29, 91, 191, 1)' : '#fff',
                                                             borderRadius: '5px',
                                                             border: '1px solid rgba(29, 91, 191, 1)',
-                                                            background: programdetails.status === programActionStatus.paused ? 'linear-gradient(97.32deg, #1D5BBF -32.84%, #00AEBD 128.72%)' : 'transparent'
+                                                            background: programdetails.status === programActionStatus.paused || programdetails.status === programActionStatus.assigned ? 'linear-gradient(97.32deg, #1D5BBF -32.84%, #00AEBD 128.72%)' : 'transparent'
                                                         }}
                                                             onClick={handleActionPage}
                                                         >
