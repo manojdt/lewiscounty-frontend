@@ -52,6 +52,7 @@ export const createNewPrograms = createAsyncThunk(
             return config;
         })
         const createProgram = await api.post("programs", data);
+        // const createProgram = { status : 201}
         console.log('createProgram', createProgram)
         if (createProgram.status === 201) {
             return createProgram;

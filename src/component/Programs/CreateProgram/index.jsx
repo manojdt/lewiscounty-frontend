@@ -11,6 +11,8 @@ import CertificateIcon from '../../../assets/images/dummy_certificate.png';
 import SuccessIcon from "../../../assets/images/Success_tic1x.png"
 import FailedIcon from "../../../assets/images/cancel3x.png"
 
+
+
 import ProgramSteps from './ProgramsSteps'
 import { ProgramTabs, ProgramFields } from '../../../utils/formFields'
 import { createProgram, updateNewPrograms, createNewProgram, getAllCategories, getAllMaterials, getAllCertificates, getAllSkills, getAllMembers, createNewPrograms } from '../../../services/programInfo'
@@ -69,20 +71,15 @@ export default function CreatePrograms() {
             ...stepData, ...data,
         }
 
-        console.log('fieldData', new Date(fieldData.start_date).toISOString())
-        console.log('fieldData', fieldData.end_date)
+        // console.log('fieldData', new Date(fieldData.start_date).toISOString())
+        // console.log('fieldData', fieldData.end_date)
 
         setStepData(fieldData)
         if (ProgramFields.length === currentStep) {
 
-            // start_date: '2024-07-26T12:08:20.587Z', end_date: '2024-07-26T12:08:20.587Z'
 
 
 
-            const apiData = { ...fieldData, posted: new Date(), id: allPrograms.length + 1, bookmark: false, status: programStatus.yetToPlan }
-            const updateProgram = [...allPrograms, apiData]
-            // const newPrograms = [...createdPrograms, updateProgram]
-            // console.log('Submit', updateProgram)
             let bodyFormData = new FormData();
 
             const fiel = ['learning_materials', 'skills', 'certificates', 'members']
@@ -91,7 +88,6 @@ export default function CreatePrograms() {
             for (let a in fieldData) {
                 if (a === 'image') { console.log(logo); bodyFormData.append(a, logo); }
                 if (a === 'start_date' || a === 'end_date') { console.log(logo); bodyFormData.append(a, new Date(fieldData[a]).toISOString()); }
-                // if (a === 'end_date') { console.log(logo); bodyFormData.append(a, new Date(fieldData[a]).toISOString()); }
                 else if (fiel.includes(a)) { bodyFormData.append(a, JSON.stringify(fieldData[a])) }
                 else bodyFormData.append(a, fieldData[a]);
             }
@@ -104,6 +100,7 @@ export default function CreatePrograms() {
                 console.log(pair[0] + ': ' + pair[1]);
             }
             dispatch(createNewPrograms(bodyFormData))
+            // dispatch(createNewPrograms({}))
         }
         else {
 
@@ -398,6 +395,7 @@ export default function CreatePrograms() {
     })
 
     useEffect(() => {
+        console.log('statusstatus', status)
         if (status === programStatus.create || status === programStatus.exist || status === programStatus.error) {
             setTimeout(() => {
                 dispatch(updateNewPrograms({ status: '' }))
@@ -437,7 +435,7 @@ export default function CreatePrograms() {
                     {
                         status === programStatus.create || status === programStatus.exist || status === programStatus.error ?
                             <div className="w-2/6 bg-white flex flex-col gap-4 h-[330px] justify-center items-center">
-                                {/* <img src={programStatus.exist ? FailedIcon : programStatus.create ? SuccessIcon : FailedIcon} alt="VerifyIcon" /> */}
+                                <img  src={status === programStatus.exist ? FailedIcon : status === programStatus.create ? SuccessIcon : FailedIcon} alt="VerifyIcon" />
                                 <span style={{ color: '#232323', fontWeight: 600 }}>
                                     {status === programStatus.exist ? 'Program already exist' : status === programStatus.error ? 'There is a Server Error. Please try again later' : 'Program Created Successfully!'}
                                 </span>
