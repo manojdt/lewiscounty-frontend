@@ -61,7 +61,7 @@ export default function DashboardCard({ title, viewpage, handleNavigateDetails, 
                                             <div className="w-full" style={{ boxShadow: '4px 4px 15px 0px rgba(0, 0, 0, 0.1)', borderRadius: '10px' }}>
                                                 <div className="flex py-6 px-7 border-b-2 relative">
                                                     <div className="w-6/12 h-full">
-                                                        <img className="object-cover w-full h-[150px]" src={ProgramImage} alt="Program Logo" />
+                                                        <img className="object-cover w-full h-[150px]" src={curatedProgram.image} alt="Program Logo" />
                                                     </div>
                                                     <div className="flex flex-col gap-3 w-[80%]">
                                                         <p className="py-1 px-1 text-[12px] text-center rounded-3xl w-[90px]" style={{ border: '1px solid rgba(238, 238, 238, 1)' }}>{curatedProgram.category}</p>
@@ -114,9 +114,9 @@ export default function DashboardCard({ title, viewpage, handleNavigateDetails, 
                                                             ${getWindowDimensions().width <= 1536 ? 'w-2/5' : 'w-1/3'}`}>
 
                                                 <div className="w-full" style={{ boxShadow: '4px 4px 15px 0px rgba(0, 0, 0, 0.1)', borderRadius: '10px' }}>
-                                                    <div className="flex py-6 px-7 border-b-2 relative">
+                                                    <div className="flex  gap-4 py-6 px-7 border-b-2 relative">
                                                         <div className="w-6/12 h-full">
-                                                            <img className="object-cover w-full h-[130px]" src={ProgramImage} alt="Program Logo" />
+                                                            <img className="object-cover w-full h-[150px]" src={currentProgram.image} alt="Program Logo" />
                                                         </div>
                                                         <div className="flex flex-col gap-3">
                                                             {
@@ -132,7 +132,7 @@ export default function DashboardCard({ title, viewpage, handleNavigateDetails, 
                                                                 style={{ background: 'rgba(29, 91, 191, 1)', borderRadius: '5px' }}>View Details</button>
                                                         </div>
                                                         <img className="absolute top-4 right-4 cursor-pointer"
-                                                            onClick={() => handleBookmark(currentProgram.id)}
+                                                            onClick={() => handleBookmark(currentProgram)}
                                                             src={currentProgram.bookmark ? BookmarkedColorIcon : BookmarkedIcon} alt="BookmarkedIcon" />
                                                     </div>
 

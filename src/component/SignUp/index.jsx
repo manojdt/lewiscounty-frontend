@@ -94,6 +94,8 @@ export const Signup = () => {
     }
   }, [userData])
 
+  console.log('Password', getValues('password'))
+
 
   return (
     <div className="h-full">
@@ -153,7 +155,7 @@ export const Signup = () => {
                   </div>
 
                   <form onSubmit={handleSubmit(onSubmit)}>
-                    <SocialMediaLogin />
+                    <SocialMediaLogin view={'horizontal'} />
 
                     <div className="mb-8 mt-8 flex items-center before:mt-0.5 before:flex-1 before:border-t
                      before:border-neutral-300 after:mt-0.5 after:flex-1 after:border-t
@@ -220,7 +222,7 @@ export const Signup = () => {
                               )}
                             </div>
                             {
-                              field.fieldtype === 'password' &&
+                              field.fieldtype === 'password' && getValues('password') !== undefined && getValues('password') !== '' &&
                               <div className="pb-3 leading-6">
                                 <p className="text-[14px] pb-1">Create a password That:</p>
                                 <ul className="">

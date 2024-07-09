@@ -78,6 +78,7 @@ export const userProgramSlice = createSlice({
                     bookmarked: [],
                 }
 
+                console.log('action123', action.payload)
                 if (filterType === '') {
                     updateState.allprograms = programs
 
@@ -113,7 +114,7 @@ export const userProgramSlice = createSlice({
                 console.log('update', action.payload)
                 return {
                     ...state,
-                    programdetails: action.payload,
+                    programdetails: action.payload.programdetails,
                     status: action.payload.status,
                     loading: false
                 };

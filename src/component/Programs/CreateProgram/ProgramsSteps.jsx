@@ -9,6 +9,9 @@ import CalendarIcon from '../../../assets/images/calender_1x.png'
 import HTMLIcon from '../../../assets/images/html1x.png'
 import LocationIcon from '../../../assets/images/Location1x.png'
 import PlusIcon from '../../../assets/images/plus_temp.png'
+import UploadIcon from "../../../assets/images/image_1x.png"
+import DeleteIcon from "../../../assets/images/delete_1x.png"
+
 
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 
@@ -25,7 +28,8 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
         reset,
         getFieldState,
         getValues,
-        setError
+        setError,
+        setValue
     } = useForm();
 
     const fieldState = getValues("planned_start_date")
@@ -97,7 +101,14 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
 
     // console.log('stepFields', stepFields)
 
+
+    const handleDeleteImage = () => {
+       setValue('image','')
+       setLogoImage('')
+    }
     // console.log('stepData steps', stepData)
+
+    console.log('Images', getValues('image'))
 
     return (
         <>
@@ -349,16 +360,16 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                                                             onChange={(e) => {
                                                                                                 imageField.onChange(e);
                                                                                                 console.log(e)
-                                                                                                // if (e.target.files && e.target.files[0]) {
-                                                                                                //     console.log(e.target.files[0])
-                                                                                                //     let types = ['image/png', 'image/jpeg']
-                                                                                                //     console.log(e.target.files[0].type)
-                                                                                                //     if (types.includes(e.target.files[0].type)) {
-                                                                                                //         setLogoImage(URL.createObjectURL(e.target.files[0]));
-                                                                                                //     } else {
-                                                                                                //         setError([field.name], 'Invalid file type')
-                                                                                                //     }
-                                                                                                // }
+                                                                                                if (e.target.files && e.target.files[0]) {
+                                                                                                    console.log(e.target.files[0])
+                                                                                                    let types = ['image/png', 'image/jpeg']
+                                                                                                    console.log(e.target.files[0].type)
+                                                                                                    if (types.includes(e.target.files[0].type)) {
+                                                                                                        setLogoImage(URL.createObjectURL(e.target.files[0]));
+                                                                                                    } else {
+                                                                                                        setError([field.name], 'Invalid file type')
+                                                                                                    }
+                                                                                                }
                                                                                             }}
                                                                                             className="hidden" />
                                                                                     </label>
@@ -367,9 +378,16 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                                                 {logoImage !== '' &&
                                                                                     <>
                                                                                         <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Image</div>
-                                                                                        <div style={{ border: '1px soli rgba(29, 91, 191, 0.5)' }}>
-                                                                                            <img src={logoImage} alt="altlogo" />
+
+                                                                                        <div className='flex justify-between items-center w-[30%] mt-5 px-4 py-4' 
+                                                                                            style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }}>
+                                                                                            <div className='flex w-[80%] gap-3 items-center'>
+                                                                                                <img src={UploadIcon} alt="altlogo" />
+                                                                                                <span className='text-[12px]'> {getValues('image') && getValues('image')[0]?.name}</span>
+                                                                                            </div>
+                                                                                            <img className='w-[30px] cursor-pointer' onClick={handleDeleteImage} src={DeleteIcon} alt="DeleteIcon" />
                                                                                         </div>
+
                                                                                         {/* <img src={logoImage} alt="altlogo" /> */}
 
                                                                                     </>

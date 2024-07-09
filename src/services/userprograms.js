@@ -32,6 +32,7 @@ export const getUserPrograms = createAsyncThunk(
 export const updateProgram = createAsyncThunk(
     "updateProgram",
     async (data) => {
+        console.log('data',data)
         const updateUserProgram = await api.post("update_program", data);
         if (updateUserProgram.status === 200 && updateUserProgram.data) {
             console.log('updateUserProgram', updateUserProgram)
@@ -39,12 +40,12 @@ export const updateProgram = createAsyncThunk(
             if (data.status && data.status !== '') {
                 status = data.status
             }
-            if (data.bookmark && data.bookmark !== '') {
+            if (data.is_bookmark !== '') {
                 status = programActionStatus.bookmark
             }
             return {
-                ...updateUserProgram.data,
-                status
+                programdetails: updateUserProgram.data,
+                status 
             };
         }
         return updateUserProgram;

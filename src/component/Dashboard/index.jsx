@@ -183,9 +183,31 @@ export const Dashboard = () => {
   }
 
   const handleBookmark = (program) => {
-    console.log('id', program.id)
+    console.log('iduuuuuu', program.id)
     dispatch(updateProgram({ id: program.id, is_bookmark: !program.is_bookmark }))
   }
+
+  useEffect(() => {
+    if (userpragrams.status === programStatus.bookmarked) {
+
+      let query = {}
+      const filterType = searchParams.get("type");
+      const isBookmark = searchParams.get("is_bookmark");
+      if (filterType && filterType !== '') {
+        query = { type: 'status', value: filterType }
+      }
+  
+      if (isBookmark && isBookmark !== '') {
+        query = { type: 'is_bookmark', value: isBookmark }
+      }
+  
+      if (Object.keys(query).length) {
+        dispatch(getUserPrograms(query));
+      }else{
+        dispatch(getUserPrograms({ type: 'status', value: 'yettojoin' }));
+      }
+    }
+  },[userpragrams.status])
 
   function getWindowDimensions() {
     const { innerWidth: width, innerHeight: height } = window;
@@ -232,7 +254,10 @@ export const Dashboard = () => {
                 {
                   programMenusList.map((menu, index) => <li className="" key={index}>
                     <div className={`flex justify-between py-2 px-6 rounded cursor-pointer 
-                      menu-content ${searchParams.get("type") === menu.status || (searchParams.get("is_bookmark") === 'true' && menu.status === programActionStatus.bookmark) ? 'active' : ''}`} aria-current="page"
+                      menu-content 
+                      ${searchParams.get("type") === menu.status 
+                          || (searchParams.get("is_bookmark") === 'true' && menu.status === programActionStatus.bookmark)
+                          || (searchParams.get("type") === null && searchParams.get("is_bookmark") === null && menu.status === programActionStatus.yettojoin)  ? 'active' : ''}`} aria-current="page"
                       onClick={() => navigate(menu.page)}>
                       <span className="text-sm">{menu.name}</span>
                       <span className="text-base">{menu.count}</span>

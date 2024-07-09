@@ -111,9 +111,27 @@ export default function Programs() {
         }
     }, [searchParams])
 
+
+
     useEffect(() => {
         if (userprograms.status === programStatus.bookmarked) {
-            dispatch(getUserPrograms());
+
+            let query = {}
+            const filterType = searchParams.get("type");
+            const isBookmark = searchParams.get("is_bookmark");
+            if (filterType && filterType !== '') {
+                query = { type: 'status', value: filterType }
+            }
+
+            if (isBookmark && isBookmark !== '') {
+                query = { type: 'is_bookmark', value: isBookmark }
+            }
+
+            if (Object.keys(query).length) {
+                dispatch(getUserPrograms(query));
+            } else {
+                dispatch(getUserPrograms());
+            }
         }
 
         if (userprograms.status === programStatus.load) {
@@ -134,7 +152,7 @@ export default function Programs() {
             console.log('loadProgram', loadProgram)
             setProgramsList(loadProgram)
         }
-    }, [userprograms])
+    }, [userprograms.status])
 
     useEffect(() => {
         if (filterType === null && isBookmark === null) {
@@ -205,9 +223,9 @@ export default function Programs() {
                                         <div key={index} className={`curated-programs flex gap-4 items-center py-8 px-9 
                                             ${getWindowDimensions().width <= 1536 ? 'w-[49%]' : 'w-1/3'}`}>
                                             <div className="w-full" style={{ boxShadow: '4px 4px 15px 0px rgba(0, 0, 0, 0.1)', borderRadius: '10px' }}>
-                                                <div className="flex py-6 px-7 border-b-2 relative">
+                                                <div className="flex py-6 px-7 gap-4 border-b-2 relative">
                                                     <div className="w-6/12 h-full">
-                                                        <img className="object-cover w-full h-[150px]" src={ProgramImage} alt="Program Logo" />
+                                                        <img className="object-cover w-full h-[150px]" src={program.image} alt="Program Logo" />
                                                     </div>
                                                     <div className="flex flex-col gap-3 w-[90%]">
                                                         {
@@ -217,7 +235,7 @@ export default function Programs() {
                                                                 : null
                                                         }
 
-                                                        <h4 className="text-[16px]">{program.program_name}</h4>
+                                                        <h4 className="text-[16px]">{program.program_name} {program.id}</h4>
                                                         <span className="text-[12px] line-clamp-2 h-[38px]">{program.description}</span>
                                                         <button className="text-white text-[12px] py-2 w-[90px]"
                                                             onClick={() => handleNavigation(program.id)}
