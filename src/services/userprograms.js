@@ -40,7 +40,7 @@ export const updateProgram = createAsyncThunk(
             if (data.status && data.status !== '') {
                 status = data.status
             }
-            if (data.is_bookmark !== '') {
+            if (data.hasOwnProperty('is_bookmark') && data.is_bookmark !== '') {
                 status = programActionStatus.bookmark
             }
             return {
