@@ -18,6 +18,7 @@ import { assignMenteeColumns, assignMenteeRows, MemberColumns } from '../../../m
 import DataTable from '../../../shared/DataGrid';
 import SuccessTik from '../../../assets/images/blue_tik1x.png';
 import { getAllCategories } from '../../../services/programInfo';
+import './program.css'
 
 import { getMentees, getProgramDetails, updateProgram } from '../../../services/userprograms';
 import { pipeUrls, programActionStatus } from '../../../utils/constant';
@@ -336,7 +337,7 @@ export default function AssignMentees() {
                                                                             :
                                                                             field.type === 'date' ?
 
-                                                                                <div className='relative'>
+                                                                                <div className='relative input-bg'>
                                                                                     <Calendar
                                                                                         className='calendar-control'
                                                                                         // {...dateField}
@@ -350,6 +351,7 @@ export default function AssignMentees() {
                                                                                         showTime
                                                                                         hourFormat="12"
                                                                                         dateFormat="dd/mm/yy"
+                                                                                        style={{width: '30%'}}
                                                                                     />
                                                                                     <img className='absolute top-5 right-2' src={CalendarIcon} alt="CalendarIcon" />
                                                                                     {errors[field.name] && (
