@@ -18,15 +18,15 @@ const rows = [
 export function CustomFooterStatusComponent(props) {
     return (
         <div className='flex gap-6 justify-center items-center py-4'>
-            <button onClick={props.footerAction} className='py-3 px-6 w-[16%]' 
+            <button onClick={props.footerAction} className='py-3 px-6 w-[16%]'
                 style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '3px', color: 'rgba(29, 91, 191, 1)' }}>Cancel</button>
-            <button onClick={props.footerAction} className='text-white py-3 px-6 w-[16%]' 
+            <button onClick={props.footerAction} className='text-white py-3 px-6 w-[16%]'
                 style={{ background: 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)', borderRadius: '3px' }}>Add Mentees</button>
         </div>
     );
 }
 
-export default function DataTable({ rows, columns, footerAction, footerComponent, selectedAllRows = [] }) {
+export default function DataTable({ rows, columns, footerAction, footerComponent, selectedAllRows = [], hideCheckbox = false, hideFooter = false }) {
     console.log('rows', rows)
     const [selectedRows, setSelectedRows] = useState([])
     const [selectedIds, setSelectedIds] = useState([])
@@ -44,7 +44,7 @@ export default function DataTable({ rows, columns, footerAction, footerComponent
         selectedAllRows.forEach(row => ids.push(row.id))
         console.log('idsids', ids)
         setSelectedIds(ids)
-    },[])
+    }, [])
 
     return (
         <div style={{ height: 600, width: '100%', position: 'relative' }}>
@@ -53,17 +53,18 @@ export default function DataTable({ rows, columns, footerAction, footerComponent
                 columns={columns}
                 hideFooterPagination={true}
                 getRowId={(row) => row.id || row.first_name}
-                checkboxSelection
+                checkboxSelection={!hideCheckbox}
                 slots={{
                     footer: footerComponent,
                 }}
                 slotProps={{
-                    footer: {footerAction, selectedRows},
+                    footer: { footerAction, selectedRows },
                 }}
-                disableRowSelectionOnClick 
+                hideFooter={hideFooter}
+                disableRowSelectionOnClick
                 rowSelectionModel={selectedIds}
                 onRowSelectionModelChange={(itm, i) => handleRowSelection(itm)}
-        
+
             />
         </div>
     );

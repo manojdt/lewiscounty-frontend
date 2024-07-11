@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-body, button, .MuiMenuItem-root  {
+body, button, .MuiMenuItem-root, .css-n3fyjk-MuiDataGrid-root  {
   font-family: "Plus Jakarta Sans", sans-serif !important;
 }
 
@@ -62,6 +62,15 @@ select {
   height: 52px;
 }
 
+
+input[type="range"]::-webkit-slider-thumb,
+input[type="range"]::-moz-range-thumb,
+input[type="range"]::-ms-thumb {
+  -webkit-appearance: none;
+    opacity:0;
+    visibility: hidden;
+}
+
 .width-49{
   width: 49%;
 }
@@ -109,7 +118,14 @@ select {
   color: rgba(29, 91, 191, 1);
 }
 
+.MuiDataGrid-columnHeader{
+  background: rgba(223, 237, 255, 1);
+}
 
+.MuiDataGrid-columnHeaderTitle {
+  color: rgba(24, 40, 61, 1);
+  font-weight: 600 !important;
+}
 
 
 @media only screen and (min-device-width: 481px) and (max-device-width: 1440px) {

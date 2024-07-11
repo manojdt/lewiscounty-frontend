@@ -7,10 +7,12 @@ import ProgramImage from "../../assets/images/logo_image.jpg";
 import BookmarkedIcon from '../../assets/icons/Bookmarked.svg'
 import BookmarkedColorIcon from '../../assets/images/bookmarked-colour1x.png'
 import CalenderIcon from '../../assets/icons/Calender.svg';
+import { useSelector } from 'react-redux';
 
 export default function DashboardCard({ title, viewpage, handleNavigateDetails, handleBookmark, programs }) {
     const navigate = useNavigate()
-
+    const userInfo = useSelector(state => state.userInfo)
+    const role = userInfo.data.role
     function getWindowDimensions() {
         const { innerWidth: width, innerHeight: height } = window;
         return {
@@ -21,7 +23,7 @@ export default function DashboardCard({ title, viewpage, handleNavigateDetails, 
 
     return (
 
-        <div style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }}>
+        <div style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px', height: role === 'mentee'? '528px' : 'auto'}}>
             <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
                 <div className="flex gap-4">
                     <div className="card-dash" style={{ background: 'linear-gradient(180deg, #00B1C0 0%, #005DC6 100%)' }} ></div>
