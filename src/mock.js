@@ -368,3 +368,51 @@ export const CertificateColumns = [{
     }
 },
 ];
+
+
+
+
+function topMentorData(id,name, designation, skills, ratings) {
+    return {
+        id,
+        name,
+        designation,
+        skills,
+        ratings
+    };
+}
+const topMentorRow = () => {
+    const data = []
+    for (let a = 1; a <= 10; a++) {
+        data.push(topMentorData(a, `Test ${a}`, 'Developer', 'Teaching','4.5'))
+    }
+    return data
+}
+
+
+export const topMentorRows = topMentorRow()
+
+
+function programActivityData(id,name, manager, start_date, end_date, admin) {
+    return {
+        id,
+        name,
+        manager,
+        start_date,
+        end_date,
+        admin
+    };
+}
+
+const programActivityRow = () => {
+    const data = []
+    for (let a = 1; a <= 10; a++) {
+        data.push(programActivityData(a, `Program Name ${a}`, `Johnson ${a}`, '04/23/2024','04/23/2024','Admin'))
+    }
+    return data
+}
+
+export const programActivityRows = programActivityRow()
+
+
+

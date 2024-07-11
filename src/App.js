@@ -26,6 +26,7 @@ import AssignMentees from "./component/Programs/ProgramDetails/AssignMentees";
 import ProgramCompletion from "./component/Programs/ProgramCompletion";
 import Loader from "./shared/Loader";
 import Logout from "./component/Logout";
+import MentorDetails from "./component/MentorDetails";
 
 function App() {
  
@@ -74,6 +75,9 @@ function App() {
           <Route path="/assign-mentees/:id" element={<AssignMentees />} />
           <Route path="/start-program/:id" element={<AssignTask />} />
           <Route path="/program-completion/:id" element={<ProgramCompletion />} />
+
+
+          <Route path="/mentor-details/:id" element={<MentorDetails />} />
 
           <Route path="/create-programs" element={<CreatePrograms />} />
           <Route path="/calendar" element={<Calendar />} />

@@ -3,7 +3,7 @@ import SearchIcon from '../../assets/icons/search.svg';
 import UserImage from "../../assets/images/user.jpg";
 import { programFeeds } from '../../utils/mock'
 
-export default function Programs() {
+export default function Programs({ title = 'Program Feeds' } ) {
     function getWindowDimensions() {
         const { innerWidth: width, innerHeight: height } = window;
         return {
@@ -16,7 +16,7 @@ export default function Programs() {
             <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
                 <div className="flex gap-4">
                     <div className="card-dash" style={{ background: 'linear-gradient(180deg, #00B1C0 0%, #005DC6 100%)' }} ></div>
-                    <h4>Program Feeds</h4>
+                    <h4>{title}</h4>
                 </div>
                 <div className="flex gap-4 items-center">
                     <img src={SearchIcon} alt="statistics" />
