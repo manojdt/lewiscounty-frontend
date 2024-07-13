@@ -140,11 +140,6 @@ input[type="range"]::-ms-thumb {
   grid-column: span 4 / span 4;
 }
 
-.dashboard-content .root-layer {
-  display: grid;
-  grid-template-rows: repeat(2, minmax(0, 1fr));
-}
-
 
 @media only screen and (min-device-width: 481px) and (max-device-width: 1440px) {
 
@@ -257,6 +252,42 @@ input[type="number"] {
     display: none;
   }
 
+  .leftsidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #fff;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+  }
+
+  .leftsidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #000;
+    display: block;
+    transition: 0.3s;
+  }
+
+  .leftsidenav a:hover {
+    color: #f1f1f1;
+  }
+
+  .leftsidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+  }
+
+
+
   .sidenav {
     height: 100%;
     width: 0;
@@ -264,7 +295,7 @@ input[type="number"] {
     z-index: 1;
     top: 0;
     right: 0;
-    background-color: grey;
+    background-color: #fff;
     overflow-x: hidden;
     transition: 0.5s;
     padding-top: 60px;
@@ -274,7 +305,7 @@ input[type="number"] {
     padding: 8px 8px 8px 32px;
     text-decoration: none;
     font-size: 25px;
-    color: #fff;
+    color: #000;
     display: block;
     transition: 0.3s;
   }
@@ -297,16 +328,40 @@ input[type="number"] {
 
 
   /* Dashboard */
+  .dashboard-content{
+    margin-top: 10px;
+    padding: 10px;
+  }
+
   .dashboard-content .left-bar {
     display: none;
   }
 
   .dashboard-content .programs-list {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 490px;
+    position: relative;
     grid-column: span 7 / span 7;
   }
 
   .dashboard-content .programs-list .program-container {
     width: 100%;
+    padding: 2px;
+  }
+
+  .dashboard-content .programs-list .program-time-info{
+    font-size: 10px;
+    gap: 8px;
+  }
+
+  .dashboard-content .programs-list .root-layer .track-info{
+    position: absolute;
+    bottom: 30px;
+  }
+
+  .dashboard-content .programs-list .posted-time{
+    font-size: 10px;
   }
 
   .dashboard-content .media-post,
@@ -361,4 +416,5 @@ input[type="number"] {
   .dashboard-content .program-feeds .program-feed-root .feed-content h4 {
     font-size: 12px;
   }
+
 }

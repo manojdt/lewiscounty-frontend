@@ -46,6 +46,23 @@ export const Navbar = () => {
 
     }
 
+    const handleLeftSidebar = () => {
+        const leftElement = document.getElementById("leftSideNav");
+        const leftBar = document.getElementsByClassName('left-bar')[0];
+        leftElement.style.width = "300px";
+        leftElement.style.display = 'block';
+        document.getElementById("left-content").appendChild(leftBar)
+    
+        console.log('left', leftBar)
+    }
+
+    
+    function closeLeftNav() {
+        document.getElementById("leftSideNav").style.width = "0";
+        document.getElementById("leftSideNav").style.display = 'none';
+
+    }
+
     return (
         <div className="navbar-content px-4" style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
             <nav className="bg-white border-gray-200">
@@ -71,9 +88,9 @@ export const Navbar = () => {
                             </svg>
                             <span className="self-center text-2xl font-semibold whitespace-nowrap">Logo</span>
                         </div>
-                        <div className='navbar-mobile-menu'>
+                        <div className='navbar-mobile-menu' onClick={handleLeftSidebar}>
                             <div className='user-image'>
-                                <img className="rounded-3xl object-cover h-10 w-10 cursor-pointer" src={UserImage} alt="User logo" />
+                                <img className="rounded-3xl object-cover h-10 w-10 cursor-pointer" src={UserImage} alt="User logo1" />
                             </div>
                         </div>
                         {/* <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-search">
@@ -128,19 +145,19 @@ export const Navbar = () => {
 
                             <ul className="flex flex-col gap-2  p-4 md:p-0 mt-4 font-medium">
                                 <li className={`${pathname === '/dashboard' ? 'dashboard-menu-active' : ''}`}>
-                                    <span onClick={() => navigate('/dashboard')} className="block py-2 text-white px-3 rounded md:p-0 cursor-pointer" aria-current="page">Dashboard</span>
+                                    <span onClick={() => navigate('/dashboard')} className="block py-2 text-black px-3 rounded md:p-0 cursor-pointer" aria-current="page">Dashboard</span>
                                 </li>
                                 <li className={`${pathname === '/programs' ? 'dashboard-menu-active1' : ''}`}>
-                                    <span onClick={() => navigate('/programs')} className="block py-2 px-3 text-white rounded md:hover:bg-transparent md:p-0 cursor-pointer">Programs</span>
+                                    <span onClick={() => navigate('/programs')} className="block py-2 px-3 text-black rounded md:hover:bg-transparent md:p-0 cursor-pointer">Programs</span>
                                 </li>
                                 <li className={`${pathname === '/mentees' ? 'dashboard-menu-active' : ''}`}>
-                                    <span onClick={() => navigate('/dashboard')} className="block py-2 px-3 text-white rounded md:hover:bg-transparent md:p-0 cursor-pointer">Mentees</span>
+                                    <span onClick={() => navigate('/dashboard')} className="block py-2 px-3 text-black rounded md:hover:bg-transparent md:p-0 cursor-pointer">Mentees</span>
                                 </li>
                                 <li>
 
                                     <div className="relative inline-block text-left">
                                         <div>
-                                            <button type="button" className="inline-flex w-full justify-center gap-x-1.5  px-3 py-2 text-white" id="menu-button" aria-expanded="true" aria-haspopup="true">
+                                            <button type="button" className="inline-flex w-full justify-center gap-x-1.5  px-3 py-2 text-black" id="menu-button" aria-expanded="true" aria-haspopup="true">
                                                 Objectives
                                                 <svg className="-mr-1 h-6 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                                     <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
@@ -151,15 +168,15 @@ export const Navbar = () => {
                                     </div>
                                 </li>
                                 <li className={`${pathname === '/calendar' ? 'dashboard-menu-active' : ''}`}>
-                                    <span onClick={() => navigate('/dashboard')} className="block py-2 px-3 text-white rounded md:hover:bg-transparent md:p-0 cursor-pointer">Calendar</span>
+                                    <span onClick={() => navigate('/dashboard')} className="block py-2 px-3 text-black rounded md:hover:bg-transparent md:p-0 cursor-pointer">Calendar</span>
                                 </li>
                                 <li className={`${pathname === '/discussions' ? 'dashboard-menu-active' : ''}`}>
-                                    <span onClick={() => navigate('/dashboard')} className="block py-2 px-3 text-white rounded md:hover:bg-transparent md:p-0 cursor-pointer">Discussions</span>
+                                    <span onClick={() => navigate('/dashboard')} className="block py-2 px-3 text-black rounded md:hover:bg-transparent md:p-0 cursor-pointer">Discussions</span>
                                 </li>
                                 <li>
                                     <div className="relative inline-block text-left">
                                         <div>
-                                            <button type="button" className="inline-flex w-full justify-center gap-x-1.5  px-3 py-2  text-white" id="menu-button" aria-expanded="true" aria-haspopup="true">
+                                            <button type="button" className="inline-flex w-full justify-center gap-x-1.5  px-3 py-2  text-black" id="menu-button" aria-expanded="true" aria-haspopup="true">
                                                 More
                                                 <svg className="-mr-1 h-6 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                                     <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
@@ -170,9 +187,17 @@ export const Navbar = () => {
                                     </div>
                                 </li>
                                 <li>
-                                    <span onClick={() => navigate('/logout')} className="block py-2 px-3 text-white rounded md:hover:bg-transparent md:p-0 cursor-pointer">Logout</span>
+                                    <span onClick={() => navigate('/logout')} className="block py-2 px-3 text-black rounded md:hover:bg-transparent md:p-0 cursor-pointer">Logout</span>
                                 </li>
                             </ul>
+                        </div>
+
+
+                        <div id="leftSideNav" class="sub-menu leftsidenav hidden">
+                            <a href="#" class="closebtn" onClick={() => closeLeftNav()}>&times;</a>
+
+                            <div id='left-content' className="px-3"></div>
+                            
                         </div>
                     </div>
                 </div>

@@ -23,7 +23,7 @@ export default function DashboardCard({ title, viewpage, handleNavigateDetails, 
 
     return (
 
-        <div style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px', height: role === 'mentee'? '528px' : 'auto'}}>
+        <div className='main-program' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px', height: role === 'mentee'? '528px' : 'auto'}}>
             <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
                 <div className="flex gap-4">
                     <div className="card-dash" style={{ background: 'linear-gradient(180deg, #00B1C0 0%, #005DC6 100%)' }} ></div>
@@ -140,17 +140,17 @@ export default function DashboardCard({ title, viewpage, handleNavigateDetails, 
 
 
                                                     <div className="flex justify-between pb-3 mx-4 my-4 items-center">
-                                                        <div className="flex text-[12px] gap-4 items-center">
+                                                        <div className="program-time-info flex text-[12px] gap-4 items-center">
                                                             <img src={CalenderIcon} alt="CalendarImage" />
-                                                            <span>{actualStartDate}</span>
+                                                            <span className='program-date'>{actualStartDate}</span>
                                                             <div
                                                                 className="w-[6px] h-[6px]  mx-[-1px]  flex items-center justify-center">
                                                                 <span className="w-[6px] h-[6px]  rounded-full" style={{ background: 'rgba(0, 0, 0, 1)' }}></span>
                                                             </div>
 
-                                                            <span>{'10 A.M (GMT + 7)'}</span>
+                                                            <span className='program-time'>{'10 A.M (GMT + 7)'}</span>
                                                         </div>
-                                                        <div className="text-[12px] px-2 py-2" style={{ background: 'rgba(241, 241, 241, 1)', borderRadius: '3px' }}>{'10 Mins ago'}</div>
+                                                        <div className="posted-time text-[12px] px-2 py-2" style={{ background: 'rgba(241, 241, 241, 1)', borderRadius: '3px' }}>{'10 Mins ago'}</div>
                                                     </div>
                                                 </div>
                                             </div>
