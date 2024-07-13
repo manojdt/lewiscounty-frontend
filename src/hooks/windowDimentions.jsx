@@ -2,15 +2,12 @@ import React from 'react'
 
 
 export const useWindowDimentions = () => {
-    function getWindowDimensions() {
-        const { innerWidth: width, innerHeight: height } = window;
-        return {
-            width,
-            height
-        };
-    }
+
+    const { innerWidth: width, innerHeight: height } = window;
+
+
 
     return {
-        windowDimention :  getWindowDimensions()
+        width, height
     }
 }

@@ -58,7 +58,7 @@ export default function DashboardCard({ title, viewpage, handleNavigateDetails, 
                                     const actualStartDate = startDate.length ? `${startDate[2]}/${startDate[1]}/${startDate[0]}` : ''
 
                                     return (
-                                        <div key={index} className="curated-programs flex gap-0 items-center py-8 px-5 w-2/5">
+                                        <div key={index} className="curated-programs program-container flex gap-0 items-center py-8 px-5 w-2/5">
 
                                             <div className="w-full" style={{ boxShadow: '4px 4px 15px 0px rgba(0, 0, 0, 0.1)', borderRadius: '10px' }}>
                                                 <div className="flex py-6 px-7 border-b-2 relative">
@@ -112,7 +112,7 @@ export default function DashboardCard({ title, viewpage, handleNavigateDetails, 
                                         const actualStartDate = startDate.length ? `${startDate[2]}/${startDate[1]}/${startDate[0]}` : ''
 
                                         return (
-                                            <div key={index} className={`curated-programs flex gap-1 items-center py-8 px-5 
+                                            <div key={index} className={`curated-programs program-container flex gap-1 items-center py-8 px-5 
                                                             ${getWindowDimensions().width <= 1536 ? 'w-2/5' : 'w-1/3'}`}>
 
                                                 <div className="w-full" style={{ boxShadow: '4px 4px 15px 0px rgba(0, 0, 0, 0.1)', borderRadius: '10px' }}>

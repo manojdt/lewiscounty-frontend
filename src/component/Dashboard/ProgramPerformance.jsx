@@ -31,12 +31,12 @@ export default function ProgramPerformance() {
       }
 
     return (
-        <div style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }}>
+        <div className='program-performance' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }}>
             <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
                 <div className="flex gap-4">
                     <div className="card-dash" style={{ background: 'linear-gradient(180deg, #00B1C0 0%, #005DC6 100%)' }} ></div>
                     <h4>Program Performance</h4>
-                    <img className='cursor-pointer' src={ExpandeIcon} alt="statistics" />
+                    <img className='cursor-pointer statistic-icon' src={ExpandeIcon} alt="statistics" />
                 </div>
                 <p className="text-[12px] py-2 px-2 cursor-pointer" style={{
                     background: 'rgba(217, 228, 242, 1)', color: 'rgba(29, 91, 191, 1)', borderRadius: '3px'
@@ -50,7 +50,7 @@ export default function ProgramPerformance() {
 
 
             </div>
-            <div style={{ height : getWindowDimensions().width <=1536 ? '370px' : '450px' }} className="py-9 relative">
+            <div style={{ height : getWindowDimensions().width <=1536 ? '370px' : '450px' }} className="chart-view py-9 relative flex justify-center">
                 {/* <div className='relative'> */}
                 <PieChart
                     data={updateddata}

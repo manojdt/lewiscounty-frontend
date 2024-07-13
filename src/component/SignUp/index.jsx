@@ -119,10 +119,10 @@ export const Signup = () => {
                 }
 
               </Backdrop>
-              <div className="px-4 md:px-0 lg:w-7/12 text-black">
+              <div className="signup-content px-4 md:px-0 lg:w-7/12 text-black">
                 <div className="md:mx-4 md:p-8">
                   <div className="text-left">
-                    <div className="flex  items-center">
+                    <div className="flex items-center logo">
                       <svg
                         width="59"
                         height="59"
@@ -278,7 +278,7 @@ export const Signup = () => {
                     </div>
 
 
-                    <div className="flex justify-center text-center lg:text-left">
+                    <div className="flex create-button justify-center text-center lg:text-left">
                       <button
                         type="submit"
                         className="inline-block rounded px-7 pb-3 pt-3 text-sm font-medium text-white w-2/5"

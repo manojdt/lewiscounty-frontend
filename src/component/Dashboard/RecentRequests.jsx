@@ -6,7 +6,7 @@ import { recentRequest } from '../../utils/mock'
 
 export default function RecentRequests() {
     return (
-        <div style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }}>
+        <div className='recent-request' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }}>
             <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
                 <div className="flex gap-4">
                     <div className="card-dash" style={{ background: 'linear-gradient(180deg, #00B1C0 0%, #005DC6 100%)' }} ></div>
