@@ -20,9 +20,11 @@ import { Backdrop, CircularProgress } from "@mui/material";
 import DashboardCard from "../../shared/Card/DashboardCard";
 import { pipeUrls, programMenus } from '../../utils/constant';
 import Invite from "./Invite";
+import { useWindowDimentions } from "../../hooks/windowDimentions";
 
 export const Mentor = () => {
     const dispatch = useDispatch()
+    const { width } = useWindowDimentions()
     const [searchParams] = useSearchParams();
     const navigate = useNavigate()
     const { allPrograms, status, createdPrograms } = useSelector(state => state.programInfo)
@@ -147,8 +149,9 @@ export const Mentor = () => {
 
                 </Backdrop>
 
-                <div className="grid grid-cols-5 gap-3">
-                    <div className="row-span-3 flex flex-col gap-8">
+                <div className="main-grid grid grid-cols-5 gap-3">
+                    <div className="left-bar row-span-3 flex flex-col gap-8">
+                    {/* <div className="row-span-3 flex flex-col gap-8"> */}
 
                         <div className="pb-3 w-full max-w-sm bg-white rounded-lg" style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', background: 'rgba(255, 255, 255, 1)' }}>
                             <div className="flex flex-col items-center pb-10 pt-14 border-b-2">
@@ -197,7 +200,8 @@ export const Mentor = () => {
 
                     </div>
 
-                    <div className="col-span-4">
+                    <div className="programs-list">
+                    {/* <div className="col-span-4"> */}
 
                         {
                             (searchParams.get("type") === 'yettojoin' || (searchParams.get("type") === null && searchParams.get("is_bookmark") === null)) &&
@@ -257,26 +261,18 @@ export const Mentor = () => {
                         }
 
 
-
-                        <div className="grid grid-cols-2 gap-8 pt-6">
-
-                            <div className="flex flex-col gap-4">
-
+                        {/* <div className="root-layer lg:gap-8 pt-6"> */}
+                        <div className="root-layer grid grid-cols-2 gap-8 pt-6">
+                            <div className="layer-first flex flex-col sm:gap-6 gap-4">
                                 <ProgramPerformance />
                                 <RecentRequests />
                                 <TrackInfo />
-
-
-
                             </div>
 
-                            <div className="flex flex-col gap-10">
-
+                            <div className="layer-second flex flex-col gap-8">
                                 <MediaPost />
-
                                 <Programs />
                             </div>
-
                         </div>
                     </div>
                 </div>

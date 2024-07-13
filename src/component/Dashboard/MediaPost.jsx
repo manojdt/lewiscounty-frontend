@@ -12,7 +12,7 @@ export default function MediaPost() {
       }
 
     return (
-        <div style={{ boxShadow: '4px 4px 15px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }} className="bg-white py-8 px-8">
+        <div style={{ boxShadow: '4px 4px 15px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }} className="bg-white py-8 px-8 media-post">
             <div>
                 <input name="post" className="w-full focus-visible:border-none input-no-focus py-3 px-3" 
                     style={{ border: '1px solid rgba(62, 62, 62, 0.75)', borderRadius: '48px', height: getWindowDimensions().width <=1536 ? '70px' :'80px' }}

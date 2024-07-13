@@ -99,7 +99,7 @@ export const Login = () => {
               >
                 {
                   userData.status === userStatus.login ?
-                    <div className="w-2/6 bg-white flex flex-col gap-4 h-[330px] justify-center items-center">
+                    <div className="popup-content w-2/6 bg-white flex flex-col gap-4 h-[330px] justify-center items-center">
                       <img src={SuccessIcon} alt="VerifyIcon" />
                       <span style={{ color: '#232323', fontWeight: 600 }}>Login  Successful!</span>
                     </div>
@@ -108,10 +108,10 @@ export const Login = () => {
                 }
 
               </Backdrop>
-              <div className="px-4 md:px-0 lg:w-7/12 text-black">
+              <div className="login-content px-4 md:px-0 lg:w-7/12 text-black">
                 <div className="md:mx-6 md:p-12">
                   <div className="text-left">
-                    <div className="flex items-center">
+                    <div className="flex items-center logo">
                       <svg
                         width="59"
                         height="59"
@@ -227,7 +227,7 @@ export const Login = () => {
                       </button>
                     </div>
 
-                    <div className="flex justify-center text-center lg:text-left relative">
+                    <div className="login-button flex justify-center text-center lg:text-left relative">
                       <button
                         type="submit"
                         className="inline-block w-1/3 rounded px-7 pb-3 pt-3 text-sm font-medium text-white"

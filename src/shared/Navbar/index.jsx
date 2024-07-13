@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { useDispatch } from "react-redux";
@@ -7,13 +7,15 @@ import NotificationIcon from "../../assets/images/message1x.png";
 import SettingsIcon from "../../assets/images/setting1x.png";
 import UserImage from "../../assets/images/user.jpg";
 import SearchIcon from "../../assets/images/search1x.png";
-
+import SearchNavIcon from '../../assets/icons/search.svg';
 
 export const Navbar = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const dispatch = useDispatch();
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
+    const { pathname } = location
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -28,17 +30,45 @@ export const Navbar = () => {
     function getWindowDimensions() {
         const { innerWidth: width, innerHeight: height } = window;
         return {
-          width,
-          height
+            width,
+            height
         };
-      }
+    }
+
+    function openNav() {
+        document.getElementById("mySidenav").style.width = "250px";
+        document.getElementById("mySidenav").style.display = 'block';
+    }
+
+    function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+        document.getElementById("mySidenav").style.display = 'none';
+
+    }
+
+    const handleLeftSidebar = () => {
+        const leftElement = document.getElementById("leftSideNav");
+        const leftBar = document.getElementsByClassName('left-bar')[0];
+        leftElement.style.width = "300px";
+        leftElement.style.display = 'block';
+        document.getElementById("left-content").appendChild(leftBar)
+    
+        console.log('left', leftBar)
+    }
+
+    
+    function closeLeftNav() {
+        document.getElementById("leftSideNav").style.width = "0";
+        document.getElementById("leftSideNav").style.display = 'none';
+
+    }
 
     return (
-        <div className="px-4" style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
+        <div className="navbar-content px-4" style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
             <nav className="bg-white border-gray-200">
                 <div className='flex justify-between'>
-                    <div className="flex justify-between w-3/12 p-4">
-                        <a href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
+                    <div className="contain flex justify-between w-3/12 p-4">
+                        <div className="site-logo cursor-pointer flex items-center space-x-3 rtl:space-x-reverse">
                             <svg
                                 width="40"
                                 height="35"
@@ -57,7 +87,12 @@ export const Navbar = () => {
                                 />
                             </svg>
                             <span className="self-center text-2xl font-semibold whitespace-nowrap">Logo</span>
-                        </a>
+                        </div>
+                        <div className='navbar-mobile-menu' onClick={handleLeftSidebar}>
+                            <div className='user-image'>
+                                <img className="rounded-3xl object-cover h-10 w-10 cursor-pointer" src={UserImage} alt="User logo1" />
+                            </div>
+                        </div>
                         {/* <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-search">
                             <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 ">
                                 <li>
@@ -73,18 +108,21 @@ export const Navbar = () => {
                         </div> */}
                     </div>
 
-                    <div className={`flex items-center justify-between ${getWindowDimensions().width <=1536 ? 'w-3/6' : 'w-2/5'} p-4`}>
-                        <div className="relative mt-1">
+                    <div className={`navbar-icons flex items-center justify-between ${getWindowDimensions().width <= 1536 ? 'w-3/6' : 'w-2/5'} p-4`}>
+                        <div className="relative mt-1 search-container">
                             <input type="text" id="search-navbar" className="block w-full p-2 text-sm text-gray-900 border-none rounded-lg"
-                                placeholder="Search..." style={{ backgroundColor: '#F5F9FF', width: '430px', height: '50px', borderRadius:'3px' }} />
+                                placeholder="Search..." style={{ backgroundColor: '#F5F9FF', width: '430px', height: '50px', borderRadius: '3px' }} />
                             <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
                                 <img src={SearchIcon} alt="SearchIcon" />
                             </div>
                         </div>
+                        <img className='search-icon hidden' src={SearchIcon} alt="SearchIcon" />
                         <img src={NotificationIcon} alt="NotificationIcon" />
-                        <img src={SettingsIcon} alt="NotificationIcon" />
+                        <img src={SettingsIcon} alt="SettingsIcon" />
 
-                        <div className='reletive'>
+                        <span className='more-icon-menu cursor-pointer hidden text-[25px]' onClick={() => openNav()}>&#9776;</span>
+
+                        <div className='reletive action-menu'>
                             <img className='rounded-3xl object-cover h-8 w-8 cursor-pointer' src={UserImage} alt="User Icon"
                                 onClick={handleClick} />
                             <Menu
@@ -99,6 +137,67 @@ export const Navbar = () => {
                                 <MenuItem onClick={handleClose}>Logout</MenuItem>
                             </Menu>
 
+                        </div>
+
+                        <div id="mySidenav" class="sub-menu sidenav hidden">
+                            <a href="javascript:void(0)" class="closebtn" onClick={() => closeNav()}>&times;</a>
+
+
+                            <ul className="flex flex-col gap-2  p-4 md:p-0 mt-4 font-medium">
+                                <li className={`${pathname === '/dashboard' ? 'dashboard-menu-active' : ''}`}>
+                                    <span onClick={() => navigate('/dashboard')} className="block py-2 text-black px-3 rounded md:p-0 cursor-pointer" aria-current="page">Dashboard</span>
+                                </li>
+                                <li className={`${pathname === '/programs' ? 'dashboard-menu-active1' : ''}`}>
+                                    <span onClick={() => navigate('/programs')} className="block py-2 px-3 text-black rounded md:hover:bg-transparent md:p-0 cursor-pointer">Programs</span>
+                                </li>
+                                <li className={`${pathname === '/mentees' ? 'dashboard-menu-active' : ''}`}>
+                                    <span onClick={() => navigate('/dashboard')} className="block py-2 px-3 text-black rounded md:hover:bg-transparent md:p-0 cursor-pointer">Mentees</span>
+                                </li>
+                                <li>
+
+                                    <div className="relative inline-block text-left">
+                                        <div>
+                                            <button type="button" className="inline-flex w-full justify-center gap-x-1.5  px-3 py-2 text-black" id="menu-button" aria-expanded="true" aria-haspopup="true">
+                                                Objectives
+                                                <svg className="-mr-1 h-6 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                    <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
+                                                </svg>
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                </li>
+                                <li className={`${pathname === '/calendar' ? 'dashboard-menu-active' : ''}`}>
+                                    <span onClick={() => navigate('/dashboard')} className="block py-2 px-3 text-black rounded md:hover:bg-transparent md:p-0 cursor-pointer">Calendar</span>
+                                </li>
+                                <li className={`${pathname === '/discussions' ? 'dashboard-menu-active' : ''}`}>
+                                    <span onClick={() => navigate('/dashboard')} className="block py-2 px-3 text-black rounded md:hover:bg-transparent md:p-0 cursor-pointer">Discussions</span>
+                                </li>
+                                <li>
+                                    <div className="relative inline-block text-left">
+                                        <div>
+                                            <button type="button" className="inline-flex w-full justify-center gap-x-1.5  px-3 py-2  text-black" id="menu-button" aria-expanded="true" aria-haspopup="true">
+                                                More
+                                                <svg className="-mr-1 h-6 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                    <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
+                                                </svg>
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                </li>
+                                <li>
+                                    <span onClick={() => navigate('/logout')} className="block py-2 px-3 text-black rounded md:hover:bg-transparent md:p-0 cursor-pointer">Logout</span>
+                                </li>
+                            </ul>
+                        </div>
+
+
+                        <div id="leftSideNav" class="sub-menu leftsidenav hidden">
+                            <a href="#" class="closebtn" onClick={() => closeLeftNav()}>&times;</a>
+
+                            <div id='left-content' className="px-3"></div>
+                            
                         </div>
                     </div>
                 </div>
