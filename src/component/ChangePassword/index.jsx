@@ -67,7 +67,7 @@ export const ChangePassword = () => {
               >
                 <CircularProgress color="inherit" />
               </Backdrop>
-              <div className="px-4 md:px-0 lg:w-6/12 text-black flex justify-center items-center">
+              <div className="change-password px-4 md:px-0 lg:w-6/12 text-black flex justify-center items-center">
                 <div className="w-9/12">
                   <div className="text-center">
                     <div className="flex justify-center items-center">

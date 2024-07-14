@@ -202,6 +202,10 @@ input[type="number"] {
     margin-bottom: 20px;
   }
 
+  .login-content , .signup-content{
+    margin-bottom: 90px;
+  }
+
   .signup-content .create-button {
     margin-bottom: 20px;
   }
@@ -340,7 +344,7 @@ input[type="number"] {
   .dashboard-content .programs-list {
     display: flex;
     flex-direction: column;
-    padding-bottom: 490px;
+    padding-bottom: 410px;
     position: relative;
     grid-column: span 7 / span 7;
   }
@@ -415,6 +419,35 @@ input[type="number"] {
 
   .dashboard-content .program-feeds .program-feed-root .feed-content h4 {
     font-size: 12px;
+  }
+
+  .recent-activities .program-status .timeline{
+    right: -220px;
+  }
+
+
+  /* Forgot Password */
+  .forgot-password-logo{
+    margin-top: 15px;
+  }
+
+  /* Verify logo */
+  .verify-otp{
+    margin-top: 15px;
+  }
+
+  .verify-otp .otp-root{
+    width: 90%;
+  }
+
+  .verify-otp .otp-input{
+    width: 35px;
+    height: 40px;
+  }
+
+  .change-password{
+    margin-top: 15px;
+    margin-bottom: 90px;
   }
 
 }
