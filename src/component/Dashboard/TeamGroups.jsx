@@ -11,10 +11,10 @@ export default function TeamGroups() {
             <ul className="flex flex-col gap-1 p-4 md:p-0 mt-4 font-medium">
                 {
                     Teams.map((menu, index) => <li className="" key={index}>
-                        <a href="/" className="flex justify-between py-2 px-6 rounded" aria-current="page">
+                        <div className="flex justify-between py-2 px-6 rounded" aria-current="page">
                             <span className="text-sm">{menu.name}</span>
                             <span className="text-base">{menu.count}</span>
-                        </a>
+                        </div>
                     </li>)
                 }
             </ul>

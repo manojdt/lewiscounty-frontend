@@ -10,11 +10,12 @@ export default function ViewImpression() {
             </div>
             <ul className="flex flex-col gap-1 p-4 md:p-0 mt-4 font-medium">
                 {
-                    Impressions.map((menu, index) => <li className="" key={index}>
-                        <a href="/" className="flex justify-between py-2 px-6 rounded" aria-current="page">
+                    Impressions.map((menu, index) => 
+                    <li className="" key={index}>
+                        <div className="flex justify-between py-2 px-6 rounded" aria-current="page">
                             <span className="text-sm">{menu.name}</span>
                             <span className="text-base" style={{ color: 'rgba(0, 174, 189, 1)' }}>{menu.count}</span>
-                        </a>
+                        </div>
                     </li>)
                 }
             </ul>
