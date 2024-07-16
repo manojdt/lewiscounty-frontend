@@ -82,7 +82,7 @@ export const Questions = () => {
 
   useEffect(() => {
     if (userInfo && userInfo.data.is_registered) {
-      // navigate('/dashboard')
+      navigate('/dashboard')
     }
   }, [userInfo])
 
