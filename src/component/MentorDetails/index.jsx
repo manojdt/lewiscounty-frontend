@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 
 import DataTable from '../../shared/DataGrid';
+import { Button } from '../../shared';
 
 import UserImage from "../../assets/images/user.jpg";
 import MoreIcon from '../../assets/images/more1x.png';
@@ -14,6 +15,8 @@ import FemaleProfileIcon from '../../assets/images/female-profile1x.png'
 import CalendarIcon from '../../assets/images/Birthdaydate1x.png'
 import MobileIcon from '../../assets/images/Mobilenumber1x.png'
 import LocationIcon from '../../assets/images/Locationcolour1x.png'
+import ConnectIcon from '../../assets/images/Connectpop1x.png'
+
 import EmailIcon from '../../assets/icons/EmailColor.svg'
 
 import StarIcon from '../../assets/icons/filledYellowStar.svg'
@@ -22,8 +25,11 @@ import Programs from '../Dashboard/Programs';
 
 import { programActivityRows } from '../../mock';
 import { recentRequest, programFeeds } from '../../utils/mock'
+import { Backdrop } from '@mui/material';
 
 export default function MentorDetails() {
+
+    const [activity, setActivity] = useState({ modal: false, following: false })
 
     const programActivityColumns = [{
         field: 'name',
@@ -88,6 +94,15 @@ export default function MentorDetails() {
             height
         };
     }
+
+    const handleFollow = () => {
+        setActivity({ modal: false, following: !activity.following })
+    }
+
+    const handleShowPopup = () => {
+        // setActivity({ ...activity, modal: true })
+    }
+
     return (
         <div className="px-9 my-6 grid">
 
@@ -115,6 +130,29 @@ export default function MentorDetails() {
                             <img src={MoreIcon} alt='MoreIcon' />
                         </div>
                     </nav>
+
+                    <Backdrop
+                        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                        open={activity.modal}
+                    >
+                        <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
+                            <img src={ConnectIcon} alt="ConnectIcon" />
+                            <span style={{ color: '#232323', fontWeight: 600, fontSize: '24px' }}>Follow</span>
+
+                            <div className='py-5'>
+                                <p style={{ color: 'rgba(24, 40, 61, 1)',fontWeight: 600, fontSize: '18px' }}>Are you sure you want to {activity.following ? 'Unfollow' : 'Follow'} Mentor?</p>
+                            </div>
+                            <div className='flex justify-center'>
+                                <div className="flex gap-6 justify-center align-middle">
+                                    <Button btnName='Cancel' btnCategory="secondary" onClick={() =>  setActivity({ modal: false, following: false })} />
+                                    <Button btnType="button" btnCls="w-[110px]" btnName={activity.following ? 'Unfollow' : 'Follow'} btnCategory="primary"
+                                    onClick={handleFollow}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                    </Backdrop>
 
                     <div className='content px-8'>
                         <div className="grid grid-cols-3 gap-7 mt-10">
@@ -326,8 +364,9 @@ export default function MentorDetails() {
                                         </div>
 
                                         <div className='flex justify-center pt-6 gap-5'>
-                                            <button style={{background:'rgba(29, 91, 191, 1)', color:'#fff', borderRadius:'6px'}} className='py-3 px-4 text-[14px] w-[20%]'>Follow</button>
-                                            <button style={{background:'rgba(0, 174, 189, 1)', color:'#fff', borderRadius:'6px'}} className='py-3 px-4 text-[14px] w-[20%]'>Chat</button>
+                                            <button onClick={handleShowPopup} style={{ background: 'rgba(29, 91, 191, 1)', color: '#fff', borderRadius: '6px' }} 
+                                            className='py-3 px-4 text-[14px] w-[20%]'>{activity.following ? 'Unfollow' : 'Follow'}</button>
+                                            <button style={{ background: 'rgba(0, 174, 189, 1)', color: '#fff', borderRadius: '6px' }} className='py-3 px-4 text-[14px] w-[20%]'>Chat</button>
                                         </div>
 
 
