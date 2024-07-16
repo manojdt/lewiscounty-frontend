@@ -45,6 +45,85 @@ export const StepsList = [{
   },
 ];
 
+
+
+export const MenteeStepsList = [{
+    name: "Personal Information",
+    status: "In-Progress",
+    key: 'personal_information'
+  },
+  {
+    name: "Career/Academic Goals",
+    status: "",
+    key: 'career_goals'
+  },
+  {
+    name: "Current Status",
+    status: "",
+    key: 'current_status'
+  },
+  {
+    name: "Mentoring Preferences",
+    status: "",
+    key: 'mentoring_preference'
+  },
+  {
+    name: "Skills and Interests",
+    status: "",
+    key: 'skills_and_interests'
+  },
+  {
+    name: "Expectations & Goals",
+    status: "",
+    key: 'expectations_goals'
+  },
+  {
+    name: "Availability",
+    status: "",
+    key: 'availability'
+  },
+  {
+    name: "Detailed Career",
+    status: "",
+    key: 'detailed_career'
+  },
+  {
+    name: "Challenges & Obstacles",
+    status: "",
+    key: 'challenges_obstacles'
+  },
+  {
+    name: "Mentoring Experience",
+    status: "",
+    key: 'mentoring_experience'
+  },
+  {
+    name: "Learning Style & Preference",
+    status: "",
+    key: 'challenges_obstacles'
+  },
+  {
+    name: "Network & Preference",
+    status: "",
+    key: 'network_preference'
+  },
+  {
+    name: "Personal Development",
+    status: "",
+    key: 'personal_development'
+  },
+  {
+    name: "Mentoring Relationship",
+    status: "",
+    key: 'mentoring_relationship'
+  },
+  {
+    name: "Long-term Vision",
+    status: "",
+    key: 'long_term_vision'
+  },
+];
+
 export const userStatus = {
   create: 'created',
   login: 'loggedin',
