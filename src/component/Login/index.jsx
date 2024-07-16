@@ -55,6 +55,7 @@ export const Login = () => {
 
   const handleRedirect = () => {
     dispatch(updateInfo())
+    console.log('Redirect', userData)
     if (userData.data.role === 'fresher') navigate("/login-type");
     else if (userData.data.is_registered) navigate("/dashboard")
     else navigate("/questions");
