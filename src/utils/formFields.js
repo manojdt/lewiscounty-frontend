@@ -30,10 +30,10 @@ export const PersonalInformationFields = [{
     placeholder: "Enter Phone Number",
     inputRules: {
       required: "This field is required",
-      pattern:{
+      pattern: {
         value: /^[0-9]{10}$/,
         message: 'Enter valid phone number'
-     },
+      },
     },
     size: true,
   },
@@ -405,8 +405,7 @@ export const ProgramInformationFields = [{
     inputRules: {
       required: "This field is required",
     },
-    options: [
-      {
+    options: [{
         key: "beginner",
         value: "Beginner"
       },
@@ -757,3 +756,4 @@ export const AssignMenteesFields = [{
   },
 
 ];
+

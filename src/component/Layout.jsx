@@ -10,6 +10,7 @@ export default function Layout() {
   const userInfo = useSelector(state => state.userInfo);
 
   const { pathname } = location
+  const role = userInfo.data.role || ''
   // console.log('location', location)
 
   // useEffect(() => {
@@ -27,9 +28,20 @@ export default function Layout() {
           <li className={`${pathname === '/programs' ? 'dashboard-menu-active' : ''}`}>
             <span onClick={() => navigate('/programs')} className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer">Programs</span>
           </li>
-          <li className={`${pathname === '/mentees' ? 'dashboard-menu-active' : ''}`}>
-            <span onClick={() => navigate('/dashboard')} className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer">Mentees</span>
-          </li>
+          {
+            role === 'mentee' &&
+            <li className={`${pathname === '/mentors' ? 'dashboard-menu-active' : ''}`}>
+              <span onClick={() => navigate('/mentors')} className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer">Mentors</span>
+            </li>
+          }
+
+          {
+            role === 'mentor' &&
+            <li className={`${pathname === '/mentees' ? 'dashboard-menu-active' : ''}`}>
+              <span onClick={() => navigate('/dashboard')} className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer">Mentees</span>
+            </li>
+          }
+
           <li>
 
             <div className="relative inline-block text-left">

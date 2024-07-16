@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import NotificationIcon from "../../assets/images/message1x.png";
 import SettingsIcon from "../../assets/images/setting1x.png";
 import UserImage from "../../assets/images/user.jpg";
@@ -11,11 +11,15 @@ import SearchNavIcon from '../../assets/icons/search.svg';
 
 export const Navbar = () => {
     const navigate = useNavigate();
+    const userInfo = useSelector(state => state.userInfo)
     const location = useLocation();
     const dispatch = useDispatch();
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const { pathname } = location
+    const role = userInfo.data.role || ''
+
+
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -150,9 +154,21 @@ export const Navbar = () => {
                                 <li className={`${pathname === '/programs' ? 'dashboard-menu-active1' : ''}`}>
                                     <span onClick={() => navigate('/programs')} className="block py-2 px-3 text-black rounded md:hover:bg-transparent md:p-0 cursor-pointer">Programs</span>
                                 </li>
-                                <li className={`${pathname === '/mentees' ? 'dashboard-menu-active' : ''}`}>
-                                    <span onClick={() => navigate('/dashboard')} className="block py-2 px-3 text-black rounded md:hover:bg-transparent md:p-0 cursor-pointer">Mentees</span>
-                                </li>
+                                {
+                                    role === 'mentee' &&
+                                    <li className={`${pathname === '/mentors' ? 'dashboard-menu-active' : ''}`}>
+                                        <span onClick={() => navigate('/dashboard')} className="block py-2 px-3 text-white rounded md:hover:bg-transparent md:p-0 cursor-pointer">Mentors</span>
+                                    </li>
+                                }
+
+                                {
+                                    role === 'mentors' &&
+                                    <li className={`${pathname === '/mentees' ? 'dashboard-menu-active' : ''}`}>
+                                        <span onClick={() => navigate('/dashboard')} className="block py-2 px-3 text-white rounded md:hover:bg-transparent md:p-0 cursor-pointer">Mentees</span>
+                                    </li>
+                                }
+
+
                                 <li>
 
                                     <div className="relative inline-block text-left">

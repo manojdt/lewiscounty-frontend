@@ -45,7 +45,7 @@ export default function Topmentors() {
     {
         field: 'ratings',
         headerName: 'Ratings',
-        width: 300,
+        width: 200,
         id: 3,
         renderCell: (params) => {
             return <div className='flex gap-2 items-center'> <img src={StarIcon} alt="StarIcon" /> 4.5</div>
@@ -59,7 +59,7 @@ export default function Topmentors() {
         renderCell: (params) => {
             console.log('params', params)
             return <>
-                <div className='cursor-pointer' onClick={handleClick}>
+                <div className='cursor-pointer h-full flex items-center' onClick={handleClick}>
                     <img src={MoreIcon} alt='MoreIcon' />
                 </div>
                 <Menu

@@ -11,6 +11,11 @@ import SearchIcon from '../../assets/icons/search.svg';
 import MaleProfileIcon from '../../assets/images/male-profile1x.png'
 import FemaleProfileIcon from '../../assets/images/female-profile1x.png'
 
+import CalendarIcon from '../../assets/images/Birthdaydate1x.png'
+import MobileIcon from '../../assets/images/Mobilenumber1x.png'
+import LocationIcon from '../../assets/images/Locationcolour1x.png'
+import EmailIcon from '../../assets/icons/EmailColor.svg'
+
 import StarIcon from '../../assets/icons/filledYellowStar.svg'
 
 import Programs from '../Dashboard/Programs';
@@ -128,22 +133,22 @@ export default function MentorDetails() {
                                             <div className="grid grid-cols-2 gap-7">
                                                 <div >
                                                     <div className='contact-info flex gap-3 items-center pt-2 pb-4'>
-                                                        <img src={PhoneIcon} alt="PhoneIcon" />
+                                                        <img src={MobileIcon} alt="PhoneIcon" />
                                                         <span className='text-[12px]'>+1 43 456890</span>
                                                     </div>
                                                     <div className='contact-info flex gap-3 items-center pt-2'>
-                                                        <img src={PhoneIcon} alt="PhoneIcon" />
+                                                        <img src={CalendarIcon} alt="CalendarIcon" />
                                                         <span className='text-[12px]'>19/03/1980</span>
                                                     </div>
                                                 </div>
 
                                                 <div className='pb-5'>
                                                     <div className='contact-info flex gap-3 items-center pt-2 pb-4'>
-                                                        <img src={PhoneIcon} alt="PhoneIcon" />
+                                                        <img src={EmailIcon} alt="EmailIcon" />
                                                         <span className='text-[12px]'>Johnson@gmail.com</span>
                                                     </div>
                                                     <div className='contact-info flex gap-3 items-center pt-2'>
-                                                        <img src={PhoneIcon} alt="PhoneIcon" />
+                                                        <img src={LocationIcon} alt="LocationIcon" />
                                                         <span className='text-[12px]'>101, Elanxa Apartments, 340 N Madison Avenue</span>
                                                     </div>
                                                 </div>
