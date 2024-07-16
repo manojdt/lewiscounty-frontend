@@ -27,6 +27,8 @@ import ProgramCompletion from "./component/Programs/ProgramCompletion";
 import Loader from "./shared/Loader";
 import Logout from "./component/Logout";
 import MentorDetails from "./component/MentorDetails";
+import { Mentor } from "./component/Dashboard/Mentor";
+import { Mentors } from "./component/Mentors";
 
 function App() {
  
@@ -83,6 +85,7 @@ function App() {
           <Route path="/calendar" element={<Calendar />} />
           <Route path="/discussions" element={<Discussions />} />
           <Route path="/mentees" element={<Mentees />} />
+          <Route path="/mentors" element={<Mentors />} />
         </Route>
       </Route>
 

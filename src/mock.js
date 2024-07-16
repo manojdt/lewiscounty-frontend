@@ -416,3 +416,62 @@ export const programActivityRows = programActivityRow()
 
 
 
+
+
+export const mentorColumns = [
+    {
+        field: 'name',
+        headerName: 'Name',
+        width: 250,
+        id: 0,
+    },
+    {
+        field: 'designation',
+        headerName: 'Designation',
+        width: 250,
+        id: 1,
+    },
+    {
+        field: 'skills',
+        headerName: 'Skills',
+        width: 250,
+        id: 2,
+    },{
+        field: 'email',
+        headerName: 'Email',
+        width: 250,
+        id: 1,
+    },
+    {
+        field: 'location',
+        headerName: 'Location',
+        width: 400,
+        id: 2,
+    }
+];
+
+
+
+
+function mentorListData(id,name, designation, skills, email, location) {
+    return {
+        id,
+        name,
+        designation,
+        skills,
+        email,
+        location
+    };
+}
+
+
+const mentorData = () => {
+    const data = []
+    for (let a = 1; a <= 30; a++) {
+        data.push(mentorListData(a, `Name ${a}`, `Developer`, `Teaching ${a}`,'John Doe@gmail.com','Lorem ipsum dolor sit amet..'))
+    }
+    return data
+}
+
+export const mentorRows = mentorData();
+
