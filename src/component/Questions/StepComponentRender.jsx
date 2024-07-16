@@ -28,7 +28,7 @@ const StepComponenRender = ({ stepFields, currentStep, handleNextStep, handlePre
 
     const handleCheckbox = (e) => {
         const value = e.target.value;
-        if (value ===  true) {
+        if (value === true) {
             register('mentor_exp_desc', {
                 required: "This field is required",
             })
@@ -45,7 +45,7 @@ const StepComponenRender = ({ stepFields, currentStep, handleNextStep, handlePre
         const f = {}
         stepFields.forEach(step => fName.push(step.name))
         for (const field in stepData) {
-            if(fName.includes(field)) f[field] = stepData[field]
+            if (fName.includes(field)) f[field] = stepData[field]
         }
         reset(f)
     }, [stepFields, stepData])
@@ -117,7 +117,7 @@ const StepComponenRender = ({ stepFields, currentStep, handleNextStep, handlePre
                                                                    focus:visible:outline-none focus:visible:border-none" placeholder="Write your thoughts here..."
                                                             {...register(field.name, field.inputRules)}></textarea>
                                                         :
-                                                        field.type === 'checkbox' ?
+                                                        field.type === 'radio' ?
                                                             <div className="flex items-center me-4">
                                                                 {
                                                                     // const firstName = register('firstName', { required: true })
@@ -146,7 +146,43 @@ const StepComponenRender = ({ stepFields, currentStep, handleNextStep, handlePre
 
                                                             </div>
                                                             :
-                                                            null
+                                                            field.type === 'checkbox' ?
+                                                                <>
+                                                                    <div className="flex items-center me-4">
+                                                                        {
+                                                                            // const firstName = register('firstName', { required: true })
+                                                                            field.options.map((option, index) => {
+                                                                                return (
+                                                                                    <div className="flex items-center me-4" key={index}>
+                                                                                        <input type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100
+                                                                                    border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 
+                                                                                    dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700
+                                                                                    dark:border-gray-600"
+                                                                                            {...checkbox}
+                                                                                            onChange={e => {
+                                                                                                checkbox.onChange(e);
+                                                                                                handleCheckbox(e);
+                                                                                            }}
+                                                                                            value={option.key}
+                                                                                        // {...register(field.name, field.inputRules)}
+                                                                                        />
+                                                                                        <label className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{option.value}</label>
+                                                                                    </div>
+                                                                                )
+                                                                            }
+                                                                            )
+                                                                        }
+
+                                                                       
+                                                                    </div>
+                                                                    {errors[field.name] && (
+                                                                            <p className="error" role="alert">
+                                                                                {errors[field.name].message}
+                                                                            </p>
+                                                                        )}
+                                                                </>
+                                                                :
+                                                                null
                                         }
                                     </div>
                                 )

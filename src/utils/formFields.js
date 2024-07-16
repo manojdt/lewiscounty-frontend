@@ -37,25 +37,6 @@ export const PersonalInformationFields = [{
     },
     size: true,
   },
-  // {
-  //   type: "dropdown",
-  //   name: "linked_in",
-  //   label: "LinkedIn Profile (if available)",
-  //   placeholder: "",
-  //   inputRules: {
-  //     required: "This field is required",
-  //   },
-  //   options: [{
-  //       key: "yes",
-  //       value: "Yes"
-  //     },
-  //     {
-  //       key: "no",
-  //       value: "No"
-  //     },
-  //   ],
-  //   size: true,
-  // },
 ];
 
 export const ProfessionalBackgroundFields = [{
@@ -172,7 +153,7 @@ export const AreaOfExpertiseFields = [{
 ];
 
 export const MentorShipExperienceFields = [{
-    type: "checkbox",
+    type: "radio",
     name: "prev_mentorship",
     label: "Have you previously mentored someone?",
     options: [{
@@ -304,6 +285,687 @@ export const StepFormFields = [
   AdditionalInformationFields,
 ];
 
+const ageField = () => {
+  const field = []
+  for (let a = 10; a <= 99; a++) {
+    field.push({
+      key: a,
+      value: a
+    })
+  }
+  return field
+}
+
+export const MenteePersonalInformationFields = [{
+    type: "input",
+    name: "first_name",
+    fieldtype: "text",
+    label: "First Name",
+    placeholder: "Enter First Name",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+    disable: true
+  },
+  {
+    type: "input",
+    name: "email",
+    fieldtype: "email",
+    label: "E-mail",
+    placeholder: "Enter Email",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+    disable: true
+  },
+  {
+    type: "input",
+    name: "phone_number",
+    fieldtype: "number",
+    label: "Phone Number",
+    placeholder: "Enter Phone Number",
+    inputRules: {
+      required: "This field is required",
+      pattern: {
+        value: /^[0-9]{10}$/,
+        message: 'Enter valid phone number'
+      },
+    },
+    size: true,
+  },
+  {
+    type: "dropdown",
+    name: "age",
+    label: "Age",
+    placeholder: "",
+    options: ageField(),
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+  },
+  {
+    type: "checkbox",
+    name: "gender",
+    label: "Gender",
+    placeholder: "",
+    options: [{
+        key: 'male',
+        value: 'Male'
+      },
+      {
+        key: 'female',
+        value: 'Female'
+      },
+      {
+        key: 'others',
+        value: 'Others'
+      }
+    ],
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+  },
+  {
+    type: "input",
+    name: "location",
+    fieldtype: "text",
+    label: "Location",
+    placeholder: "Enter Location",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+  },
+  {
+    type: "dropdown",
+    name: "education_level",
+    label: "Current Education level",
+    placeholder: "",
+    options: [{
+        key: "be",
+        value: "B.E"
+      },
+      {
+        key: "bcom",
+        value: "B.Com"
+      },
+    ],
+    inputRules: {
+      required: "This field is required",
+    },
+    size: false,
+  },
+
+];
+
+export const MenteeCareerInformationFields = [{
+    type: "input",
+    name: "goals",
+    fieldtype: "text",
+    label: "What are your current academic or career goals?",
+    placeholder: "Enter career goals",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+  },
+  {
+    type: "input",
+    name: "skills",
+    fieldtype: "text",
+    label: "What specific skills or knowledge do you hope to gain from a mentor?",
+    placeholder: "Enter skills or knowledge",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+  },
+  {
+    type: "input",
+    name: "field_industry",
+    fieldtype: "text",
+    label: "What field or industry are you interested in?",
+    placeholder: "Enter field or industry ",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+  },
+  {
+    type: "dropdown",
+    name: "future_yourself",
+    label: "Where do you see yourself in 5 years?",
+    placeholder: "",
+    options: [{
+        key: 'option1',
+        value: 'Option 1'
+      },
+      {
+        key: 'option2',
+        value: 'Option 2'
+      },
+      {
+        key: 'option3',
+        value: 'Option 3'
+      }
+    ],
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+  },
+];
+
+export const MenteeCurrentStatusFields = [{
+    type: "input",
+    name: "current_major",
+    fieldtype: "text",
+    label: "What is your current major or field of study (if applicable)?",
+    placeholder: "Enter current major or field",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+  },
+  {
+    type: "input",
+    name: "work_experience",
+    fieldtype: "text",
+    label: "Do you have any work experience? If so, please describe.",
+    placeholder: "Enter work experience",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+  },
+  {
+    type: "input",
+    name: "extracurricular",
+    fieldtype: "text",
+    label: "Are you currently involved in any extracurricular activities, clubs, or organizations?",
+    placeholder: "Enter extracurricular activities",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: false,
+  },
+
+];
+
+export const MenteeMentoringPreferenceFields = [{
+    type: "dropdown",
+    name: "type_of_mentoring",
+    label: "What type of mentoring are you looking for? ",
+    placeholder: "",
+    options: [{
+      key: 'option1',
+      value: 'Option 1'
+    }, ],
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+  },
+  {
+    type: "dropdown",
+    name: "meet_mentor",
+    label: "How often would you like to meet with your mentor?",
+    placeholder: "",
+    options: [{
+      key: 'option1',
+      value: 'Option 1'
+    }, ],
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+  },
+  {
+    type: "dropdown",
+    name: "method_communication",
+    label: "What is your preferred method of communication with your mentor?",
+    placeholder: "",
+    options: [{
+      key: 'option1',
+      value: 'Option 1'
+    }, ],
+    inputRules: {
+      required: "This field is required",
+    },
+    size: false,
+  }
+
+];
+
+export const MenteeSkillsFields = [{
+    type: "input",
+    name: "strongest_skills",
+    fieldtype: "text",
+    label: "What are your strongest skills?",
+    placeholder: "Strongest skills?",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+  },
+  {
+    type: "input",
+    name: "improvement",
+    fieldtype: "text",
+    label: "What areas do you feel you need the most improvement in?",
+    placeholder: "You need the most improvement in",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+  },
+  {
+    type: "input",
+    name: "outside_of_academics",
+    fieldtype: "text",
+    label: "What are your hobbies or interests outside of academics or work?",
+    placeholder: "Your hobbies or interests outside of academics or work?",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: false,
+  },
+
+];
+
+export const MenteeExpectationGoalsFields = [{
+    type: "input",
+    name: "expectations_relationship",
+    fieldtype: "text",
+    label: "What are your expectations from your mentoring relationship?",
+    placeholder: "Your expectations from your mentoring relationship",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+  },
+  {
+    type: "input",
+    name: "achieve_mentorship",
+    fieldtype: "text",
+    label: "Do you have any specific goals you want to achieve through this mentorship?",
+    placeholder: "you have any specific goals you want to achieve through this mentorship",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+  },
+  {
+    type: "input",
+    name: "specific_mentor",
+    fieldtype: "text",
+    label: "Is there anything specific you would like your mentor to know about you?",
+    placeholder: "Is there anything specific you would like your mentor to know about you",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: false,
+  },
+
+];
+
+export const MenteeAvailabilitysFields = [{
+    type: "input",
+    name: "meetings",
+    fieldtype: "text",
+    label: "What days and times are you typically available for meetings?",
+    placeholder: "Days and times are you typically available for meetings",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: false,
+  },
+  {
+    type: "input",
+    name: "virtual_meetings",
+    fieldtype: "text",
+    label: "Are you open to virtual meetings if in-person meetings are not possible?",
+    placeholder: "Are you open to virtual meetings if in-person meetings are not possible?",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: false,
+  }
+
+];
+
+export const MenteeDetailedCareerFields = [{
+    type: "input",
+    name: "pursue",
+    fieldtype: "text",
+    label: "What inspired you to pursue your current field or major?",
+    placeholder: "inspired you to pursue your current field or major",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+  },
+  {
+    type: "input",
+    name: "research",
+    fieldtype: "text",
+    label: "Are there any specific projects or research topics you are passionate about?",
+    placeholder: "Are there any specific projects or research topics you are passionate about?",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+  },
+  {
+    type: "input",
+    name: "career_path",
+    fieldtype: "text",
+    label: "What is your dream job or career path?",
+    placeholder: "Your dream job or career path",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+  },
+  {
+    type: "input",
+    name: "companies",
+    fieldtype: "text",
+    label: "Have you identified any specific companies or organizations you would like to work for in the future?",
+    placeholder: "Have you identified any specific companies or organizations you would like to work for in the future?",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+  }
+];
+
+export const MenteeChallengesFields = [{
+    type: "input",
+    name: "biggest_challenges",
+    fieldtype: "text",
+    label: "What are the biggest challenges you are currently facing in your academic or career journey?",
+    placeholder: "The biggest challenges you are currently facing in your academic or career journey",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+  },
+  {
+    type: "input",
+    name: "obstacles",
+    fieldtype: "text",
+    label: "Have you encountered any obstacles that have hindered your progress?",
+    placeholder: "Have you encountered any obstacles that have hindered your progress?",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+  },
+  {
+    type: "input",
+    name: "setbacks",
+    fieldtype: "text",
+    label: "How do you typically handle setbacks or failures?",
+    placeholder: "You typically handle setbacks or failures",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: false,
+  }
+];
+
+export const MenteeMentoringExperienceFields = [{
+    type: "input",
+    name: "mentor_exp",
+    fieldtype: "text",
+    label: "Have you had a mentor before? If so, what was your experience like?",
+    placeholder: "Have you had a mentor before? If so, what was your experience like",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+  },
+  {
+    type: "input",
+    name: "previous_experience",
+    fieldtype: "text",
+    label: "What did you find most valuable about your previous mentoring experience?",
+    placeholder: "You find most valuable about your previous mentoring experience",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+  },
+  {
+    type: "input",
+    name: "mentoring_relationship",
+    fieldtype: "text",
+    label: "What would you like to be different in this mentoring relationship compared to previous ones?",
+    placeholder: "Would you like to be different in this mentoring relationship compared to previous ones",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: false,
+  }
+];
+
+export const MenteeLearningFields = [{
+    type: "dropdown",
+    name: "guidance",
+    label: "How do you prefer to receive feedback and guidance?",
+    placeholder: "",
+    options: [{
+        key: 'option1',
+        value: 'Option 1'
+      },
+      {
+        key: 'option2',
+        value: 'Option 2'
+      }
+    ],
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+  }, ,
+  {
+    type: "input",
+    name: "learning",
+    fieldtype: "text",
+    label: "What is your preferred learning style?",
+    placeholder: "Your preferred learning style",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+  },
+  {
+    type: "input",
+    name: "structured",
+    fieldtype: "text",
+    label: "Do you prefer structured sessions with specific topics, or more informal, flexible discussions?",
+    placeholder: "You prefer structured sessions with specific topics, or more informal, flexible discussions",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: false,
+  }
+];
+
+export const MenteeNetworkingFields = [{
+    type: "input",
+    name: "opportunities",
+    fieldtype: "text",
+    label: "Are you interested in networking opportunities through your mentor?",
+    placeholder: "Are you interested in networking opportunities through your mentor?",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+  },
+  {
+    type: "input",
+    name: "strategies",
+    fieldtype: "text",
+    label: "Do you need assistance with resume writing, interview preparation, or job search strategies?",
+    placeholder: "Your preferred learning style",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+  },
+  {
+    type: "input",
+    name: "workshops",
+    fieldtype: "text",
+    label: "Would you like to learn about professional development resources such as workshops, seminars, or conferences?",
+    placeholder: "Would you like to learn about professional development resources such as workshops, seminars, or conferences",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: false,
+  }
+];
+
+export const MenteePersonalDevelopmentFields = [{
+    type: "input",
+    name: "qualities",
+    fieldtype: "text",
+    label: "What personal qualities or skills would you like to develop further?",
+    placeholder: "Personal qualities or skills would you like to develop further?",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+  },
+  {
+    type: "input",
+    name: "challenges",
+    fieldtype: "text",
+    label: "Are there any specific personal challenges you are working on overcoming?",
+    placeholder: "Are there any specific personal challenges you are working on overcoming?",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+  },
+  {
+    type: "input",
+    name: "healthy",
+    fieldtype: "text",
+    label: "How do you manage stress and maintain a healthy work-life balance?",
+    placeholder: "Would you like to learn about professional development resources such as workshops, seminars, or conferences",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: false,
+  }
+];
+
+export const MenteeMentoringRelationshipFields = [{
+    type: "input",
+    name: "qualities",
+    fieldtype: "text",
+    label: "What qualities are you looking for in a mentor?",
+    placeholder: "What qualities are you looking for in a mentor??",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+  },
+  {
+    type: "input",
+    name: "activities",
+    fieldtype: "text",
+    label: "Are there any specific mentoring activities or exercises you are interested in?",
+    placeholder: "Are there any specific mentoring activities or exercises you are interested in?",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+  },
+  {
+    type: "input",
+    name: "relationship",
+    fieldtype: "text",
+    label: "How do you measure success in a mentoring relationship?",
+    placeholder: "You measure success in a mentoring relationship",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+  },
+  {
+    type: "input",
+    name: "distance",
+    fieldtype: "text",
+    label: "Do you prefer a mentor who takes a hands-on approach or one who offers guidance from a distance?",
+    placeholder: "You prefer a mentor who takes a hands-on approach or one who offers guidance from a distance",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+  }
+];
+
+export const MenteeLongTermFields = [{
+  type: "input",
+  name: "aspirations",
+  fieldtype: "text",
+  label: "What are your long-term personal and professional aspirations?",
+  placeholder: "Your long-term personal and professional aspirations",
+  inputRules: {
+    required: "This field is required",
+  },
+  size: true,
+},
+{
+  type: "input",
+  name: "community",
+  fieldtype: "text",
+  label: "How do you plan to give back to your community or field in the future?",
+  placeholder: "You plan to give back to your community or field in the future",
+  inputRules: {
+    required: "This field is required",
+  },
+  size: true,
+},
+{
+  type: "input",
+  name: "legacy",
+  fieldtype: "text",
+  label: "What legacy do you want to leave behind in your career or personal life?",
+  placeholder: "legacy do you want to leave behind in your career or personal life",
+  inputRules: {
+    required: "This field is required",
+  },
+  size: false,
+}
+];
+
+export const MenteeStepFormFields = [
+  MenteePersonalInformationFields,
+  MenteeCareerInformationFields,
+  MenteeCurrentStatusFields,
+  MenteeMentoringPreferenceFields,
+  MenteeSkillsFields,
+  MenteeExpectationGoalsFields,
+  MenteeAvailabilitysFields,
+  MenteeDetailedCareerFields,
+  MenteeChallengesFields,
+  MenteeMentoringExperienceFields,
+  MenteeLearningFields,
+  MenteeNetworkingFields,
+  MenteePersonalDevelopmentFields,
+  MenteeMentoringRelationshipFields,
+  MenteeLongTermFields
+];
+
 export const Stepname = [
   "personal_information",
   "professional_information",
@@ -315,7 +977,6 @@ export const Stepname = [
   "availability_commitment",
   "additional_information",
 ];
-
 
 export const ProgramTabs = [{
     name: 'Program Information',
@@ -334,6 +995,7 @@ export const ProgramTabs = [{
     key: 'program_testimonials'
   },
 ]
+
 export const ProgramInformationFields = [{
     type: "dropdown",
     name: "category",
@@ -515,7 +1177,6 @@ export const ProgramInformationFields = [{
   },
 ];
 
-
 export const AboutProgramFields = [{
     type: "textbox",
     name: "about_program",
@@ -558,7 +1219,6 @@ export const AboutProgramFields = [{
   },
 ]
 
-
 export const ProgramOutcomesFields = [{
     type: "textbox",
     name: "benefits",
@@ -589,7 +1249,6 @@ export const ProgramOutcomesFields = [{
     icon: 'add'
   },
 ]
-
 
 export const ProgramTestimonialsFields = [{
     type: "popup-input",
@@ -634,9 +1293,6 @@ export const ProgramFields = [
   ProgramOutcomesFields,
   ProgramTestimonialsFields
 ];
-
-
-
 
 export const AssignMenteesFields = [{
     type: "dropdown",
@@ -756,4 +1412,3 @@ export const AssignMenteesFields = [{
   },
 
 ];
-

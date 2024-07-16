@@ -6,8 +6,8 @@ import { useNavigate } from "react-router-dom";
 
 import SuccessTik from '../../assets/images/blue_tik1x.png';
 import { Navbar, Stepper } from '../../shared';
-import { StepsList, userStatus } from '../../utils/constant';
-import { StepFormFields, Stepname } from "../../utils/formFields";
+import { MenteeStepsList, StepsList, userStatus } from '../../utils/constant';
+import { StepFormFields, Stepname, MenteeStepFormFields } from "../../utils/formFields";
 import StepComponenRender from "./StepComponentRender";
 
 import { updateInfo, updateQuestions } from "../../services/loginInfo";
@@ -19,10 +19,13 @@ export const Questions = () => {
   const userInfo = useSelector(state => state.userInfo)
   const dispatch = useDispatch();
   const [currentStep, setCurrentStep] = useState(1)
-  const [allStepList, setAllStepList] = useState(StepsList)
+  const [allStepList, setAllStepList] = useState([])
+  const [formFields, setFormFields] = useState([])
   const [stepData, setStepData] = useState({})
   const [btnTypeAction, setBtnTypeAction] = useState({ back: false, next: false })
   const [loading, setLoading] = useState(false)
+
+  const role = userInfo.data.role || ''
 
   const handleNextStep = (data) => {
     const activeSteps = allStepList.map(step => {
@@ -33,24 +36,25 @@ export const Questions = () => {
     const fieldData = { ...stepData, ...data }
     setStepData(fieldData)
     setAllStepList(activeSteps)
-    if (StepFormFields.length === currentStep) {
+    if (formFields.length === currentStep) {
       const { first_name, email, ...apiData } = { ...fieldData, prev_mentorship: stepData.prev_mentorship === "true" }
       console.log('Submit', apiData)
-      dispatch(updateQuestions(apiData))
+      if (role === 'mentee') { console.log(apiData) }
+      else { dispatch(updateQuestions(apiData)) }
     }
     else setCurrentStep(currentStep + 1)
     setBtnTypeAction({ back: false, next: true })
   }
 
   useEffect(() => {
-    if(loading) {
+    if (loading) {
       setTimeout(() => {
         dispatch(updateInfo())
         setLoading(false)
         navigate("/dashboard");
-      },[3000])
+      }, [3000])
     }
-  },[loading])
+  }, [loading])
 
   useEffect(() => {
     if (userInfo && userInfo.data && Object.keys(userInfo.data).length && currentStep === 1) {
@@ -77,18 +81,30 @@ export const Questions = () => {
   }
 
   useEffect(() => {
-    if(userInfo && userInfo.data.is_registered){
-      navigate('/dashboard')
+    if (userInfo && userInfo.data.is_registered) {
+      // navigate('/dashboard')
     }
-  },[userInfo])
+  }, [userInfo])
+
+  useEffect(() => {
+    if (role === 'mentee') {
+      setAllStepList(MenteeStepsList)
+      setFormFields(MenteeStepFormFields)
+    }
+    else {
+      setAllStepList(StepsList)
+      setFormFields(StepFormFields)
+    }
+  }, [role])
 
 
+  console.log('formFields', formFields)
 
   return (
     <>
       <Navbar />
       <div className="px-9">
-        <h2 className="text-xl text-left py-8" style={{color:'rgba(24, 40, 61, 1)', fontWeight: 500}}>
+        <h2 className="text-xl text-left py-8" style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 500 }}>
           Fill the Question and Answer
         </h2>
         <Backdrop
@@ -122,15 +138,19 @@ export const Questions = () => {
           <div className="steps pl-24 pr-28" style={{ boxShadow: '4px 4px 15px 0px rgba(0, 0, 0, 0.1)' }}>
             <Stepper steps={allStepList} currentStep={currentStep} btnTypeAction={btnTypeAction} />
           </div>
-          <StepComponenRender
-            stepData={stepData}
-            stepName={Stepname[currentStep - 1]}
-            stepFields={StepFormFields[currentStep - 1]}
-            currentStep={currentStep}
-            handleNextStep={handleNextStep}
-            handlePreviousStep={handlePreviousStep}
-            totalSteps={StepFormFields.length}
-          />
+          {
+            formFields.length ? <StepComponenRender
+              stepData={stepData}
+              stepName={Stepname[currentStep - 1]}
+              stepFields={formFields[currentStep - 1]}
+              currentStep={currentStep}
+              handleNextStep={handleNextStep}
+              handlePreviousStep={handlePreviousStep}
+              totalSteps={formFields.length}
+            />
+              : null
+          }
+
         </div>
       </div>
     </>

@@ -3,6 +3,8 @@ import Box from '@mui/material/Box';
 import { ReactComponent as ArrowRight } from "../../assets/icons/arrowRight.svg";
 import { ReactComponent as PreviousIcon } from "../../assets/icons/previousIcon.svg";
 import { ReactComponent as NextIcon } from "../../assets/icons/nextIcon.svg";
+import ArrorwRightIcon from '../../assets/icons/ArrorRight.svg'
+import ArrorwLeftIcon from '../../assets/icons/ArrowLeft.svg'
 import './stepper.css'
 
 export const Stepper = ({ steps, currentStep = 0, btnTypeAction }) => {
@@ -52,7 +54,7 @@ export const Stepper = ({ steps, currentStep = 0, btnTypeAction }) => {
   return (
     <Box sx={{ width: '100%' }} className="relative">
       {
-        iconsVisibility.prevIcon && <div className='previousIcon absolute cursor-pointer' onClick={slideLeft}> <PreviousIcon /></div>
+        iconsVisibility.prevIcon && <div className='previousIcon absolute cursor-pointer' onClick={slideLeft}> <img src={ArrorwLeftIcon} alt="ArrorwLeftIcon" /></div>
       }
       <div
         id='slider'
@@ -95,7 +97,7 @@ export const Stepper = ({ steps, currentStep = 0, btnTypeAction }) => {
         </ol>
       </div>
       {
-        iconsVisibility.nextIcon && <div className='nextIcon absolute cursor-pointer' onClick={slideRight}> <NextIcon />  </div>
+        iconsVisibility.nextIcon && <div className='nextIcon absolute cursor-pointer' onClick={slideRight}> <img src={ArrorwRightIcon} alt="ArrorwRightIcon" />  </div>
       }
 
     </Box>
