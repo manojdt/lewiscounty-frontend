@@ -91,7 +91,7 @@ export default function SocialMediaLogin({ view = 'vertical' }) {
                             onResolve={(e) => {
                                 console.log(e)
                                 console.log('googleRef', googleRef)
-                                onLoginSuccess(e.data)
+                                // onLoginSuccess(e.data)
                                 console.log(e.data, "data");
                                 console.log(e.provider, "provider");
                             }}
