@@ -26,10 +26,16 @@ import Programs from '../Dashboard/Programs';
 import { programActivityRows } from '../../mock';
 import { recentRequest, programFeeds } from '../../utils/mock'
 import { Backdrop } from '@mui/material';
+import { useSelector } from 'react-redux';
+import MediaPost from '../Dashboard/MediaPost';
 
 export default function MentorDetails() {
 
     const [activity, setActivity] = useState({ modal: false, following: false })
+
+    const userInfo = useSelector(state => state.userInfo)
+
+    const role = userInfo.data.role || ''
 
     const programActivityColumns = [{
         field: 'name',
@@ -100,8 +106,10 @@ export default function MentorDetails() {
     }
 
     const handleShowPopup = () => {
-        // setActivity({ ...activity, modal: true })
+        setActivity({ ...activity, modal: true })
     }
+
+    console.log('role', role)
 
     return (
         <div className="px-9 my-6 grid">
@@ -112,7 +120,7 @@ export default function MentorDetails() {
                         <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
                             <li className="inline-flex items-center">
                                 <a href="#" className="inline-flex items-center text-sm font-medium" style={{ color: 'rgba(89, 117, 162, 1)' }}>
-                                    Top Mentor
+                                    {role === 'mentor' ? 'My Mentee' : 'Top Mentor'}
                                 </a>
                                 <svg className="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
@@ -121,7 +129,7 @@ export default function MentorDetails() {
                             <li>
                                 <div className="flex items-center">
                                     <a href="#" className="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">
-                                        Mentor Profile </a>
+                                        {role === 'mentor' ? 'Mentee' : 'Mentor'} Profile </a>
                                 </div>
                             </li>
 
@@ -137,16 +145,16 @@ export default function MentorDetails() {
                     >
                         <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
                             <img src={ConnectIcon} alt="ConnectIcon" />
-                            <span style={{ color: '#232323', fontWeight: 600, fontSize: '24px' }}>Follow</span>
+                            <span style={{ color: '#232323', fontWeight: 600, fontSize: '24px' }}>{ activity.following ? 'UnFollow' : 'Follow' }</span>
 
                             <div className='py-5'>
-                                <p style={{ color: 'rgba(24, 40, 61, 1)',fontWeight: 600, fontSize: '18px' }}>Are you sure you want to {activity.following ? 'Unfollow' : 'Follow'} Mentor?</p>
+                                <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 600, fontSize: '18px' }}>Are you sure you want to {activity.following ? 'Unfollow' : 'Follow'} Mentor?</p>
                             </div>
                             <div className='flex justify-center'>
                                 <div className="flex gap-6 justify-center align-middle">
-                                    <Button btnName='Cancel' btnCategory="secondary" onClick={() =>  setActivity({ modal: false, following: false })} />
+                                    <Button btnName='Cancel' btnCategory="secondary" onClick={() => setActivity({ modal: false, following: false })} />
                                     <Button btnType="button" btnCls="w-[110px]" btnName={activity.following ? 'Unfollow' : 'Follow'} btnCategory="primary"
-                                    onClick={handleFollow}
+                                        onClick={handleFollow}
                                     />
                                 </div>
                             </div>
@@ -304,42 +312,47 @@ export default function MentorDetails() {
                                         </div>
                                     </div>
 
+                                    {
 
-                                    <div style={{ boxShadow: '4px 4px 15px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }} className='mt-8'>
-                                        <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
-                                            <div className="flex gap-4">
-                                                <div className="card-dash" style={{ background: 'linear-gradient(180deg, #00B1C0 0%, #005DC6 100%)' }} ></div>
-                                                <h4>{'Related Mentors'}</h4>
+                                        role === 'mentee' &&
+
+                                        <div style={{ boxShadow: '4px 4px 15px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }} className='mt-8'>
+                                            <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
+                                                <div className="flex gap-4">
+                                                    <div className="card-dash" style={{ background: 'linear-gradient(180deg, #00B1C0 0%, #005DC6 100%)' }} ></div>
+                                                    <h4>{'Related Mentors'}</h4>
+                                                </div>
+                                                <div className="flex gap-4 items-center">
+                                                    <p className="text-[12px] py-2 px-2" style={{ background: 'rgba(223, 237, 255, 1)', borderRadius: '5px' }}>View All</p>
+                                                </div>
                                             </div>
-                                            <div className="flex gap-4 items-center">
-                                                <p className="text-[12px] py-2 px-2" style={{ background: 'rgba(223, 237, 255, 1)', borderRadius: '5px' }}>View All</p>
-                                            </div>
-                                        </div>
 
-                                        <div className="content flex gap-4 py-5 px-5 overflow-x-auto">
-                                            {
-                                                recentRequest.map((recentRequest, index) =>
-                                                    <div key={index} className="lg:w-5/12 md:w-1/3 py-3 px-3" style={{ border: '1px solid rgba(219, 224, 229, 1)', borderRadius: '10px' }}>
-                                                        <div className="flex gap-2 pb-3">
-                                                            <div className="w-1/4"> <img src={index % 2 === 0 ? MaleProfileIcon : FemaleProfileIcon} alt="male-icon" /> </div>
-                                                            <div className="flex flex-col gap-2">
-                                                                <p className="text-[12px]">{recentRequest.name}<span>(Mentor)</span></p>
-                                                                <p className="text-[12px]">Software Developer</p>
-                                                                <p className="text-[12px] flex gap-1"><img src={StarIcon} alt="StarIcon" /> 4.5 Ratings</p>
+                                            <div className="content flex gap-4 py-5 px-5 overflow-x-auto">
+                                                {
+                                                    recentRequest.map((recentRequest, index) =>
+                                                        <div key={index} className="lg:w-5/12 md:w-1/3 py-3 px-3" style={{ border: '1px solid rgba(219, 224, 229, 1)', borderRadius: '10px' }}>
+                                                            <div className="flex gap-2 pb-3">
+                                                                <div className="w-1/4"> <img src={index % 2 === 0 ? MaleProfileIcon : FemaleProfileIcon} alt="male-icon" /> </div>
+                                                                <div className="flex flex-col gap-2">
+                                                                    <p className="text-[12px]">{recentRequest.name}<span>(Mentor)</span></p>
+                                                                    <p className="text-[12px]">Software Developer</p>
+                                                                    <p className="text-[12px] flex gap-1"><img src={StarIcon} alt="StarIcon" /> 4.5 Ratings</p>
 
-                                                                <button style={{ border: '1px solid rgba(29, 91, 191, 1)', color: 'rgba(29, 91, 191, 1)', fontSize: '12px', borderRadius: '30px', padding: '7px' }}>Connect</button>
+                                                                    <button style={{ border: '1px solid rgba(29, 91, 191, 1)', color: 'rgba(29, 91, 191, 1)', fontSize: '12px', borderRadius: '30px', padding: '7px' }}>Connect</button>
+                                                                </div>
+                                                                <div className="pt-1 cursor-pointer" style={{ marginLeft: 'auto' }}><img src={MoreIcon} alt="MoreIcon" /></div>
                                                             </div>
-                                                            <div className="pt-1 cursor-pointer" style={{ marginLeft: 'auto' }}><img src={MoreIcon} alt="MoreIcon" /></div>
+
+
                                                         </div>
 
+                                                    )
+                                                }
+                                            </div>
 
-                                                    </div>
-
-                                                )
-                                            }
                                         </div>
+                                    }
 
-                                    </div>
                                 </div>
 
                             </div>
@@ -364,8 +377,14 @@ export default function MentorDetails() {
                                         </div>
 
                                         <div className='flex justify-center pt-6 gap-5'>
-                                            <button onClick={handleShowPopup} style={{ background: 'rgba(29, 91, 191, 1)', color: '#fff', borderRadius: '6px' }} 
-                                            className='py-3 px-4 text-[14px] w-[20%]'>{activity.following ? 'Unfollow' : 'Follow'}</button>
+                                            
+
+                                                <button onClick={handleShowPopup} style={{ background: 'rgba(29, 91, 191, 1)', color: '#fff', borderRadius: '6px' }}
+                                                className='py-3 px-4 text-[14px] w-[20%]'>{activity.following ? 'Unfollow' : 'Follow'}</button>
+
+                                               
+
+                                               
                                             <button style={{ background: 'rgba(0, 174, 189, 1)', color: '#fff', borderRadius: '6px' }} className='py-3 px-4 text-[14px] w-[20%]'>Chat</button>
                                         </div>
 
@@ -373,12 +392,20 @@ export default function MentorDetails() {
                                     </div>
                                 </div>
 
+                                {
+                                    role === 'mentor' &&
+                                    <div className='mt-8'>
+                                        <MediaPost />
+                                    </div>
+                                }
+
+
                                 <div style={{ boxShadow: '4px 4px 15px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }} className='mt-8'>
                                     <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
                                         <div className="flex gap-4">
                                             <div className="card-dash" style={{ background: 'linear-gradient(180deg, #00B1C0 0%, #005DC6 100%)' }} ></div>
                                             <h4>
-                                                Mentor Feeds
+                                                {role === 'mentor' ? 'Program' : 'Mentor'} Feeds
                                             </h4>
                                         </div>
                                         <div className="flex gap-4 items-center">

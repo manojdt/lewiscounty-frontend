@@ -50,7 +50,7 @@ export default function Layout() {
           {
             role === 'mentor' &&
             <li className={`${pathname === '/mentees' ? 'dashboard-menu-active' : ''}`}>
-              <span onClick={() => navigate('/dashboard')} className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer">Mentees</span>
+              <span onClick={() => navigate('/mentees')} className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer">Mentees</span>
             </li>
           }
 

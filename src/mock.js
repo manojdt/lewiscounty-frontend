@@ -9,42 +9,7 @@ export const loginUser = [{
 ]
 
 
-export const menteeColumns = [{
-        id: 'name',
-        label: 'Name',
-        minWidth: 140
-    },
-    {
-        id: 'professional',
-        label: 'Professional',
-        minWidth: 150
-    },
-    {
-        id: 'contact',
-        label: 'Contact',
-        minWidth: 150,
-    },
-    {
-        id: 'email',
-        label: 'Email',
-        minWidth: 150,
-    },
-    {
-        id: 'location',
-        label: 'Location',
-        minWidth: 150,
-    },
-    {
-        id: 'attended_programs',
-        label: 'Attended Programs',
-        minWidth: 150
-    },
-    {
-        id: 'last_attended_programs',
-        label: 'Last Attend Program',
-        minWidth: 200
-    },
-];
+
 
 function createData(name, professional, contact, email, location, attended_programs, last_attended_programs) {
     return {
@@ -78,6 +43,74 @@ export const menteeRows = [
     createData('Canada86', 'CA', 37602103, 9984670, 3287263, 3287263, 3287263),
     createData('Canada95', 'CA', 37602103, 9984670, 3287263, 3287263, 3287263),
 ];
+
+export const menteeColumns = [{
+    field: 'name',
+    headerName: 'Name',
+    width: 200,
+    id: 0,
+},
+{
+    field: 'professional',
+    headerName: 'Professional',
+    width: 200,
+    id: 1,
+},
+{
+    field: 'contact',
+    headerName: 'Contact',
+    width: 150,
+    id: 2,
+}, {
+    field: 'email',
+    headerName: 'Email',
+    width: 250,
+    id: 1,
+},
+{
+    field: 'location',
+    headerName: 'Location',
+    width: 400,
+    id: 2,
+},
+{
+    field: 'attn_program',
+    headerName: 'Attended Programs',
+    width: 250,
+    id: 2,
+}, {
+    field: 'last_attn_program',
+    headerName: 'Last Attend Program',
+    width: 250,
+    id: 1,
+}
+];
+
+function menteesListData(id, name, professional, contact, email, location, attn_program, last_attn_program) {
+    return {
+        id,
+        name,
+        professional,
+        contact,
+        email,
+        location,
+        attn_program,
+        last_attn_program
+    };
+}
+
+
+const menteeRowData = () => {
+    const data = []
+    for (let a = 1; a <= 30; a++) {
+        data.push(menteesListData(a, `Name ${a}`, `Student `, '1234567890', 'John Doe@gmail.com', 'Lorem ipsum dolor sit amet..','Teaching program','Teaching program'))
+    }
+    return data
+}
+
+export const menteeRow = menteeRowData();
+
+
 
 export const menteeMoreMenu = [{
         name: 'Edit',
@@ -216,57 +249,63 @@ export const MaterialColumns = [{
         width: 200,
         id: 3,
         renderCell: (params) => {
-            return <button style={{    background: 'rgb(29, 91, 191)',
-                color: 'rgb(255, 255, 255)',
-                padding: '2px 20px',
-                height: '32px',
-                margin: '9px 0px',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderRadius: '3px'}} 
-                onClick={() => console.log('click')}>View Details</button>;
+            return <button style = {
+                {
+                    background: 'rgb(29, 91, 191)',
+                    color: 'rgb(255, 255, 255)',
+                    padding: '2px 20px',
+                    height: '32px',
+                    margin: '9px 0px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    borderRadius: '3px'
+                }
+            }
+            onClick = {
+                () => console.log('click')
+            } > View Details </button>;
         }
     },
 ];
 
 
 export const MemberColumns = [{
-    field: 'first_name',
-    headerName: 'First Name',
-    width: 400,
-    id: 0,
-},
-{
-    field: 'last_name',
-    headerName: 'Last Name',
-    width: 250,
-    id: 1,
-},
-{
-    field: 'email',
-    headerName: 'Email',
-    width: 200,
-    id: 2,
-},
-// {
-//     field: 'action',
-//     headerName: 'Action',
-//     width: 200,
-//     id: 3,
-//     renderCell: (params) => {
-//         return <button style={{    background: 'rgb(29, 91, 191)',
-//             color: 'rgb(255, 255, 255)',
-//             padding: '2px 20px',
-//             height: '32px',
-//             margin: '9px 0px',
-//             display: 'flex',
-//             justifyContent: 'center',
-//             alignItems: 'center',
-//             borderRadius: '3px'}} 
-//             onClick={() => console.log('click')}>View Details</button>;
-//     }
-// },
+        field: 'first_name',
+        headerName: 'First Name',
+        width: 400,
+        id: 0,
+    },
+    {
+        field: 'last_name',
+        headerName: 'Last Name',
+        width: 250,
+        id: 1,
+    },
+    {
+        field: 'email',
+        headerName: 'Email',
+        width: 200,
+        id: 2,
+    },
+    // {
+    //     field: 'action',
+    //     headerName: 'Action',
+    //     width: 200,
+    //     id: 3,
+    //     renderCell: (params) => {
+    //         return <button style={{    background: 'rgb(29, 91, 191)',
+    //             color: 'rgb(255, 255, 255)',
+    //             padding: '2px 20px',
+    //             height: '32px',
+    //             margin: '9px 0px',
+    //             display: 'flex',
+    //             justifyContent: 'center',
+    //             alignItems: 'center',
+    //             borderRadius: '3px'}} 
+    //             onClick={() => console.log('click')}>View Details</button>;
+    //     }
+    // },
 ];
 
 
@@ -292,35 +331,41 @@ const createSkillsRow = () => {
 export const createSkillsRows = createSkillsRow()
 
 export const SkillsColumns = [{
-    field: 'name',
-    headerName: 'Skills Name',
-    width: 400,
-    id: 0,
-},
-{
-    field: 'desc',
-    headerName: 'Skills Description',
-    width: 400,
-    id: 1,
-},
-{
-    field: 'action',
-    headerName: 'Action',
-    width: 200,
-    id: 3,
-    renderCell: (params) => {
-        return <button style={{    background: 'rgb(29, 91, 191)',
-            color: 'rgb(255, 255, 255)',
-            padding: '2px 20px',
-            height: '32px',
-            margin: '9px 0px',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: '3px'}} 
-            onClick={() => console.log('click')}>View Details</button>;
-    }
-},
+        field: 'name',
+        headerName: 'Skills Name',
+        width: 400,
+        id: 0,
+    },
+    {
+        field: 'desc',
+        headerName: 'Skills Description',
+        width: 400,
+        id: 1,
+    },
+    {
+        field: 'action',
+        headerName: 'Action',
+        width: 200,
+        id: 3,
+        renderCell: (params) => {
+            return <button style = {
+                {
+                    background: 'rgb(29, 91, 191)',
+                    color: 'rgb(255, 255, 255)',
+                    padding: '2px 20px',
+                    height: '32px',
+                    margin: '9px 0px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    borderRadius: '3px'
+                }
+            }
+            onClick = {
+                () => console.log('click')
+            } > View Details </button>;
+        }
+    },
 ];
 
 
@@ -344,35 +389,41 @@ const certificateRow = () => {
 export const certificateRows = certificateRow()
 
 export const CertificateColumns = [{
-    field: 'name',
-    headerName: 'Certificate Name',
-    width: 600,
-    id: 0,
-},
-{
-    field: 'action',
-    headerName: 'Action',
-    width: 200,
-    id: 3,
-    renderCell: (params) => {
-        return <button style={{    background: 'rgb(29, 91, 191)',
-            color: 'rgb(255, 255, 255)',
-            padding: '2px 20px',
-            height: '32px',
-            margin: '9px 0px',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: '3px'}} 
-            onClick={() => console.log('click')}>View Details</button>;
-    }
-},
+        field: 'name',
+        headerName: 'Certificate Name',
+        width: 600,
+        id: 0,
+    },
+    {
+        field: 'action',
+        headerName: 'Action',
+        width: 200,
+        id: 3,
+        renderCell: (params) => {
+            return <button style = {
+                {
+                    background: 'rgb(29, 91, 191)',
+                    color: 'rgb(255, 255, 255)',
+                    padding: '2px 20px',
+                    height: '32px',
+                    margin: '9px 0px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    borderRadius: '3px'
+                }
+            }
+            onClick = {
+                () => console.log('click')
+            } > View Details </button>;
+        }
+    },
 ];
 
 
 
 
-function topMentorData(id,name, designation, skills, ratings) {
+function topMentorData(id, name, designation, skills, ratings) {
     return {
         id,
         name,
@@ -384,7 +435,7 @@ function topMentorData(id,name, designation, skills, ratings) {
 const topMentorRow = () => {
     const data = []
     for (let a = 1; a <= 10; a++) {
-        data.push(topMentorData(a, `Test ${a}`, 'Developer', 'Teaching','4.5'))
+        data.push(topMentorData(a, `Test ${a}`, 'Developer', 'Teaching', '4.5'))
     }
     return data
 }
@@ -393,7 +444,7 @@ const topMentorRow = () => {
 export const topMentorRows = topMentorRow()
 
 
-function programActivityData(id,name, manager, start_date, end_date, admin) {
+function programActivityData(id, name, manager, start_date, end_date, admin) {
     return {
         id,
         name,
@@ -407,7 +458,7 @@ function programActivityData(id,name, manager, start_date, end_date, admin) {
 const programActivityRow = () => {
     const data = []
     for (let a = 1; a <= 10; a++) {
-        data.push(programActivityData(a, `Program Name ${a}`, `Johnson ${a}`, '04/23/2024','04/23/2024','Admin'))
+        data.push(programActivityData(a, `Program Name ${a}`, `Johnson ${a}`, '04/23/2024', '04/23/2024', 'Admin'))
     }
     return data
 }
@@ -418,8 +469,7 @@ export const programActivityRows = programActivityRow()
 
 
 
-export const mentorColumns = [
-    {
+export const mentorColumns = [{
         field: 'name',
         headerName: 'Name',
         width: 250,
@@ -436,7 +486,7 @@ export const mentorColumns = [
         headerName: 'Skills',
         width: 250,
         id: 2,
-    },{
+    }, {
         field: 'email',
         headerName: 'Email',
         width: 250,
@@ -450,7 +500,7 @@ export const mentorColumns = [
     }
 ];
 
-function mentorListData(id,name, designation, skills, email, location) {
+function mentorListData(id, name, designation, skills, email, location) {
     return {
         id,
         name,
@@ -465,7 +515,7 @@ function mentorListData(id,name, designation, skills, email, location) {
 const mentorData = () => {
     const data = []
     for (let a = 1; a <= 30; a++) {
-        data.push(mentorListData(a, `Name ${a}`, `Developer`, `Teaching ${a}`,'John Doe@gmail.com','Lorem ipsum dolor sit amet..'))
+        data.push(mentorListData(a, `Name ${a}`, `Developer`, `Teaching ${a}`, 'John Doe@gmail.com', 'Lorem ipsum dolor sit amet..'))
     }
     return data
 }
@@ -478,14 +528,14 @@ const taskData = () => {
     for (let a = 1; a <= 30; a++) {
         data.push({
             id: a,
-            assigned_date : '02/05/2024',
-            task_name : `Task Name ${a+1}`,
+            assigned_date: '02/05/2024',
+            task_name: `Task Name ${a+1}`,
             program_name: `Teaching Program ${a+1}`,
             task_description: 'Lorem ipsum dolor......',
             start_date: '02/05/2024',
             completed_date: '02/05/2024',
             task_sent: 'Mentor',
-            status : 'Done',
+            status: 'Done',
             file_size: '5mb',
             mark: '09'
         })
@@ -495,8 +545,7 @@ const taskData = () => {
 
 export const taskRows = taskData();
 
-export const taskColumns = [
-    {
+export const taskColumns = [{
         field: 'assigned_date',
         headerName: 'Assigned Date',
         width: 150,
@@ -513,7 +562,7 @@ export const taskColumns = [
         headerName: 'Program Name',
         width: 200,
         id: 2,
-    },{
+    }, {
         field: 'task_description',
         headerName: 'Task Description',
         width: 200,
