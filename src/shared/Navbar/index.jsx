@@ -143,8 +143,8 @@ export const Navbar = () => {
 
                         </div>
 
-                        <div id="mySidenav" class="sub-menu sidenav hidden">
-                            <a href="javascript:void(0)" class="closebtn" onClick={() => closeNav()}>&times;</a>
+                        <div id="mySidenav" className="sub-menu sidenav hidden">
+                            <a href="javascript:void(0)" className="closebtn" onClick={() => closeNav()}>&times;</a>
 
 
                             <ul className="flex flex-col gap-2  p-4 md:p-0 mt-4 font-medium">
@@ -209,8 +209,8 @@ export const Navbar = () => {
                         </div>
 
 
-                        <div id="leftSideNav" class="sub-menu leftsidenav hidden">
-                            <a href="#" class="closebtn" onClick={() => closeLeftNav()}>&times;</a>
+                        <div id="leftSideNav" className="sub-menu leftsidenav hidden">
+                            <a href="#" className="closebtn" onClick={() => closeLeftNav()}>&times;</a>
 
                             <div id='left-content' className="px-3"></div>
                             
