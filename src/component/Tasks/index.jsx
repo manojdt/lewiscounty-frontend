@@ -88,7 +88,7 @@ export const Tasks = () => {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
-                        <MenuItem onClick={() => navigate(`/tasks-details/1`)} className='!text-[12px]'>
+                        <MenuItem onClick={() => navigate(`/mentee-tasks-details/1`)} className='!text-[12px]'>
                             <img src={ViewIcon} alt="ViewIcon" className='pr-3 w-[30px]' />
                             View
                         </MenuItem>

@@ -28,7 +28,7 @@ export const TaskDetails = () => {
         if(loading){
             setTimeout(() => {
                 setLoading(false)
-                navigate('/tasks')
+                navigate('/mentee-tasks')
             },3000)
         }
     },[loading])
@@ -54,7 +54,7 @@ export const TaskDetails = () => {
                         {
                             params.id === '2' && !startTask &&
                             <div className="inset-y-0 end-0 flex items-center pe-3 cursor-pointer"
-                                onClick={() => navigate('/tasks')}
+                                onClick={() => navigate('/mentee-tasks')}
                             >
                                 <img src={EditIcon} alt='EditIcon' />
                             </div>
@@ -64,7 +64,7 @@ export const TaskDetails = () => {
                     <div className='flex gap-8 items-center'>
                         <div className="relative">
                             <div className="inset-y-0 end-0 flex items-center pe-3 cursor-pointer"
-                                onClick={() => navigate('/tasks')}
+                                onClick={() => navigate('/mentee-tasks')}
                             >
                                 <img src={CancelIcon} alt='SearchIcon' />
                             </div>
@@ -238,7 +238,7 @@ export const TaskDetails = () => {
                             params.id === '2' ?
 
                                 <>
-                                    <Button btnName='Cancel' btnCls="w-[12%]" btnCategory="secondary" onClick={() => navigate('/tasks')} />
+                                    <Button btnName='Cancel' btnCls="w-[12%]" btnCategory="secondary" onClick={() => navigate('/mentee-tasks')} />
                                     {
                                         startTask ?
                                             <Button btnType="button" btnCls={`${startTask ? 'w-[14%]' : 'w-[12%]'}`} onClick={handleSubmitTask} btnName='Submit to Mentor' btnCategory="primary" />
@@ -248,7 +248,7 @@ export const TaskDetails = () => {
 
                                 </>
                                 :
-                                <Button btnType="button" btnCls="w-[10%]" onClick={() => { navigate('/tasks') }} btnName='Close' btnCategory="primary" />
+                                <Button btnType="button" btnCls="w-[10%]" onClick={() => { navigate('/mentee-tasks') }} btnName='Close' btnCategory="primary" />
                         }
 
                     </div>

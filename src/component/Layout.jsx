@@ -25,7 +25,7 @@ export default function Layout() {
   const items = [
     {
       label: 'Task',
-      command: () => navigate('/tasks')
+      command: () => navigate(role === 'mentee' ? '/mentee-tasks' : '/mentor-tasks')
     },
   ];
 
@@ -60,7 +60,7 @@ export default function Layout() {
               <div className='drodown'>
                 <button type="button" className="submenu inline-flex w-full justify-center gap-x-1.5  px-3 py-2 text-gray-900"
 
-                  onClick={(event) => role === 'mentee' ?  menuRight.current.toggle(event) : undefined}
+                  onClick={(event) =>  menuRight.current.toggle(event)}
                   id="menu-button" aria-expanded="true" aria-haspopup="true">
                   Objectives
                   <svg className="-mr-1 h-6 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
