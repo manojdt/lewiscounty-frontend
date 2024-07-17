@@ -29,6 +29,8 @@ import Logout from "./component/Logout";
 import MentorDetails from "./component/MentorDetails";
 import { Mentor } from "./component/Dashboard/Mentor";
 import { Mentors } from "./component/Mentors";
+import { Tasks } from "./component/Tasks";
+import { TaskDetails } from "./component/Tasks/TaskDetails";
 
 function App() {
  
@@ -86,6 +88,8 @@ function App() {
           <Route path="/discussions" element={<Discussions />} />
           <Route path="/mentees" element={<Mentees />} />
           <Route path="/mentors" element={<Mentors />} />
+          <Route path="/tasks" element={<Tasks />} />
+          <Route path="/tasks-details/:id" element={<TaskDetails />} />
         </Route>
       </Route>
 

@@ -450,9 +450,6 @@ export const mentorColumns = [
     }
 ];
 
-
-
-
 function mentorListData(id,name, designation, skills, email, location) {
     return {
         id,
@@ -475,3 +472,87 @@ const mentorData = () => {
 
 export const mentorRows = mentorData();
 
+
+const taskData = () => {
+    const data = []
+    for (let a = 1; a <= 30; a++) {
+        data.push({
+            id: a,
+            assigned_date : '02/05/2024',
+            task_name : `Task Name ${a+1}`,
+            program_name: `Teaching Program ${a+1}`,
+            task_description: 'Lorem ipsum dolor......',
+            start_date: '02/05/2024',
+            completed_date: '02/05/2024',
+            task_sent: 'Mentor',
+            status : 'Done',
+            file_size: '5mb',
+            mark: '09'
+        })
+    }
+    return data
+}
+
+export const taskRows = taskData();
+
+export const taskColumns = [
+    {
+        field: 'assigned_date',
+        headerName: 'Assigned Date',
+        width: 150,
+        id: 0,
+    },
+    {
+        field: 'task_name',
+        headerName: 'Task Name',
+        width: 150,
+        id: 1,
+    },
+    {
+        field: 'program_name',
+        headerName: 'Program Name',
+        width: 200,
+        id: 2,
+    },{
+        field: 'task_description',
+        headerName: 'Task Description',
+        width: 200,
+        id: 1,
+    },
+    {
+        field: 'start_date',
+        headerName: 'Start Date',
+        width: 150,
+        id: 2,
+    },
+    {
+        field: 'completed_date',
+        headerName: 'Completed  Date',
+        width: 150,
+        id: 2,
+    },
+    {
+        field: 'task_sent',
+        headerName: 'Task Sent by',
+        width: 150,
+        id: 2,
+    },
+    {
+        field: 'status',
+        headerName: 'Status',
+        width: 100,
+        id: 2,
+    },
+    {
+        field: 'file_size',
+        headerName: 'File Size',
+        width: 100,
+        id: 2,
+    },
+    {
+        field: 'mark',
+        headerName: 'Mark',
+        width: 100,
+        id: 2,
+    }
+];
