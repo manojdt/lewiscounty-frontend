@@ -31,6 +31,7 @@ import { Mentor } from "./component/Dashboard/Mentor";
 import { Mentors } from "./component/Mentors";
 import { Tasks } from "./component/Tasks";
 import { TaskDetails } from "./component/Tasks/TaskDetails";
+import  MentorTask  from "./component/Mentor/Task";
 
 function App() {
  
@@ -81,17 +82,19 @@ function App() {
           <Route path="/program-completion/:id" element={<ProgramCompletion />} />
 
 
-          <Route path="/mentor-details/:id" element={<MentorDetails />} />
-
           <Route path="/create-programs" element={<CreatePrograms />} />
           <Route path="/calendar" element={<Calendar />} />
           <Route path="/discussions" element={<Discussions />} />
+          
+         
+          <Route path="/mentors" element={<Mentors />} />
+          <Route path="/mentor-details/:id" element={<MentorDetails />} />
+          <Route path="/mentor-tasks" element={<MentorTask />} />
+
           <Route path="/mentees" element={<Mentees />} />
           <Route path="/mentee-details/:id" element={<MentorDetails />} />
-
-          <Route path="/mentors" element={<Mentors />} />
-          <Route path="/tasks" element={<Tasks />} />
-          <Route path="/tasks-details/:id" element={<TaskDetails />} />
+          <Route path="/mentee-tasks" element={<Tasks />} />
+          <Route path="/mentee-tasks-details/:id" element={<TaskDetails />} />
         </Route>
       </Route>
 

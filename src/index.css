@@ -341,7 +341,7 @@ input[type="number"] {
     display: none;
   }
 
-  .dashboard-content .programs-list {
+  .dashboard-content .programs-list, .mentor-task .programs-list {
     display: flex;
     flex-direction: column;
     padding-bottom: 410px;
