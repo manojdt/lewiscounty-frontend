@@ -605,3 +605,75 @@ export const taskColumns = [{
         id: 2,
     }
 ];
+
+
+
+const mentorTaskData = () => {
+    const data = []
+    for (let a = 1; a <= 30; a++) {
+        data.push({
+            id: a,
+            program_name: `Teaching Program ${a+1}`,
+            mentee_name: `Mentee ${a+1}`,
+            task_description: 'Lorem ipsum dolor......',
+            create_date: '02/05/2024',
+            sub_date: '02/05/2024',
+            task_status: 'Done',
+            mark: '09',
+            file_by: '5mb'
+        })
+    }
+    return data
+}
+
+export const mentorTaskRows = mentorTaskData();
+
+export const mentorTaskColumns = [{
+    field: 'program_name',
+    headerName: 'Program Name',
+    width: 250,
+    id: 0,
+},
+{
+    field: 'mentee_name',
+    headerName: 'Mentee Name',
+    width: 200,
+    id: 1,
+},
+{
+    field: 'task_description',
+    headerName: 'Task description',
+    width: 250,
+    id: 2,
+},
+{
+    field: 'create_date',
+    headerName: 'Create Date',
+    width: 150,
+    id: 2,
+},
+{
+    field: 'sub_date',
+    headerName: 'Sub. Date',
+    width: 150,
+    id: 2,
+},
+{
+    field: 'task_status',
+    headerName: 'Task Status',
+    width: 150,
+    id: 2,
+},
+{
+    field: 'mark',
+    headerName: 'Mark',
+    width: 100,
+    id: 2,
+},
+{
+    field: 'file_by',
+    headerName: 'File by',
+    width: 100,
+    id: 2,
+}
+];

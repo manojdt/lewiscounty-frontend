@@ -3,6 +3,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Backdrop from '@mui/material/Backdrop';
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
+import ReactPlayer from 'react-player';
 
 import CancelIcon from '../../../assets/images/cancel-colour1x.png'
 import SuccessTik from '../../../assets/images/blue_tik1x.png';
@@ -12,15 +13,14 @@ import SuccessIcon from "../../../assets/images/Success_tic1x.png"
 import FailedIcon from "../../../assets/images/cancel3x.png"
 
 
-
 import ProgramSteps from './ProgramsSteps'
 import { ProgramTabs, ProgramFields } from '../../../utils/formFields'
 import { createProgram, updateNewPrograms, createNewProgram, getAllCategories, getAllMaterials, getAllCertificates, getAllSkills, getAllMembers, createNewPrograms } from '../../../services/programInfo'
-import MuiModal from '../../../shared/Modal'
 import { CertificateColumns, MaterialColumns, MemberColumns, SkillsColumns, assignMenteeColumns, assignMenteeRows, certificateRows, createMaterialsRows, createSkillsRows } from '../../../mock';
 import DataTable from '../../../shared/DataGrid';
 import { programStatus } from '../../../utils/constant';
-import ReactPlayer from 'react-player';
+import MuiModal from '../../../shared/Modal'
+import Tooltip from '../../../shared/Tooltip';
 
 export default function CreatePrograms() {
     const navigate = useNavigate()
@@ -417,7 +417,10 @@ export default function CreatePrograms() {
                         <h4>Create New Program  Request</h4>
                     </div>
                     <div className="flex gap-20 items-center">
-                        <img className='cursor-pointer' onClick={() => navigate('/programs')} src={CancelIcon} alt="CancelIcon" />
+                        <Tooltip title="Cancel">
+                            <img className='cursor-pointer' onClick={() => navigate('/programs')} src={CancelIcon} alt="CancelIcon" />
+                        </Tooltip>
+
                     </div>
                 </div>
 
@@ -435,7 +438,7 @@ export default function CreatePrograms() {
                     {
                         status === programStatus.create || status === programStatus.exist || status === programStatus.error ?
                             <div className="w-2/6 bg-white flex flex-col gap-4 h-[330px] justify-center items-center">
-                                <img  src={status === programStatus.exist ? FailedIcon : status === programStatus.create ? SuccessIcon : FailedIcon} alt="VerifyIcon" />
+                                <img src={status === programStatus.exist ? FailedIcon : status === programStatus.create ? SuccessIcon : FailedIcon} alt="VerifyIcon" />
                                 <span style={{ color: '#232323', fontWeight: 600 }}>
                                     {status === programStatus.exist ? 'Program already exist' : status === programStatus.error ? 'There is a Server Error. Please try again later' : 'Program Created Successfully!'}
                                 </span>
@@ -449,14 +452,16 @@ export default function CreatePrograms() {
                     <div className='flex gap-3'>
                         {
                             ProgramTabs.map((actionBtn, index) =>
-                                <button key={index} className='px-5 py-4 text-[14px]' style={{
-                                    background: actionTab === actionBtn.key ? 'linear-gradient(97.86deg, #005DC6 -15.07%, #00B1C0 112.47%)' :
-                                        'rgba(249, 249, 249, 1)',
-                                    color: actionTab === actionBtn.key ? '#fff' : '#000',
-                                    borderRadius: '3px'
-                                }}
-                                    onClick={() => handleTab(actionBtn.key)}
-                                >{actionBtn.name}</button>
+                                <Tooltip title={actionBtn.name}>
+                                    <button key={index} className='px-5 py-4 text-[14px]' style={{
+                                        background: actionTab === actionBtn.key ? 'linear-gradient(97.86deg, #005DC6 -15.07%, #00B1C0 112.47%)' :
+                                            'rgba(249, 249, 249, 1)',
+                                        color: actionTab === actionBtn.key ? '#fff' : '#000',
+                                        borderRadius: '3px'
+                                    }}
+                                        onClick={() => handleTab(actionBtn.key)}
+                                    >{actionBtn.name}</button>
+                                </Tooltip>
                             )
                         }
                     </div>

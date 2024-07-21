@@ -29,6 +29,8 @@ export default function Programs() {
     const userInfo = useSelector(state => state.userInfo)
     const userprograms = useSelector(state => state.userPrograms)
 
+    const role = userInfo.data.role || ''
+
     const programFilter = [
         {
             name: 'Quarter 1',
@@ -70,7 +72,9 @@ export default function Programs() {
 
 
     useEffect(() => {
-        const programMenu = [...programMenus('program')].map(menu => {
+        const listPrograms = programMenus('program').filter(programs => programs.for.includes(role));
+
+        const programMenu = [...listPrograms].map(menu => {
             if (menu.status === 'all') {
                 return { ...menu, count: userprograms.totalPrograms }
             }
@@ -156,7 +160,7 @@ export default function Programs() {
             console.log('loadProgram', loadProgram)
             setProgramsList(loadProgram)
         }
-    },[userprograms])
+    }, [userprograms])
 
     useEffect(() => {
         if (filterType === null && isBookmark === null) {
@@ -194,7 +198,11 @@ export default function Programs() {
             <div className="grid grid-cols-5 gap-3">
                 <div className="row-span-3 flex flex-col gap-8">
                     <Card cardTitle={'Programs'} cardContent={programMenusList} />
-                    <Card cardTitle={'Program Performance'} cardContent={menusList} cardFilter={programFilter} />
+                    {
+                        role === 'mentor' &&
+                        <Card cardTitle={'Program Performance'} cardContent={menusList} cardFilter={programFilter} />
+                    }
+
                 </div>
 
                 <div className="col-span-4">
@@ -239,7 +247,7 @@ export default function Programs() {
                                                                 : null
                                                         }
 
-                                                        <h4 className="text-[16px]">{program.program_name} {program.id}</h4>
+                                                        <h4 className="text-[16px]">{program.program_name}</h4>
                                                         <span className="text-[12px] line-clamp-2 h-[38px]">{program.description}</span>
                                                         <button className="text-white text-[12px] py-2 w-[90px]"
                                                             onClick={() => handleNavigation(program.id)}

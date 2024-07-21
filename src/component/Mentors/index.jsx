@@ -8,12 +8,14 @@ import MoreIcon from '../../assets/icons/moreIcon.svg'
 import ViewIcon from '../../assets/images/view1x.png'
 import SearchIcon from '../../assets/images/search1x.png'
 import ReportIcon from '../../assets/icons/report.svg'
+import FollowIcon from '../../assets/images/connect1x.png'
 
 import Dropdown from '../../shared/Dropdown';
 import { mentorColumns, mentorRows } from '../../mock';
+import { useNavigate } from 'react-router-dom';
 
 export const Mentors = () => {
-
+    const navigate = useNavigate()
     const [anchorEl, setAnchorEl] = useState(null);
 
     const [mentorType, setMentorType] = useState('mymentor')
@@ -93,13 +95,13 @@ export const Mentors = () => {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
-                        <MenuItem onClick={() => console.log('ee')} className='!text-[12px]'>
+                        <MenuItem onClick={() => navigate('/mentor-details/1')} className='!text-[12px]'>
                             <img src={ViewIcon} alt="ViewIcon" className='pr-3 w-[30px]' />
                             View
                         </MenuItem>
                         <MenuItem onClick={() => console.log('report', params)} className='!text-[12px]'>
-                            <img src={ReportIcon} alt="ReportIcon" className='pr-3 w-[27px]' />
-                            Reports
+                            <img src={FollowIcon} alt="FollowIcon" className='pr-3 w-[27px]' />
+                            Follow
                         </MenuItem>
                     </Menu>
                 </>

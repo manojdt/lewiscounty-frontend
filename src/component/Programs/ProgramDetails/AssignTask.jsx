@@ -46,6 +46,7 @@ import { updateNewPrograms } from '../../../services/programInfo';
 import { getProgramDetails, updateProgram } from '../../../services/userprograms';
 import { Backdrop, CircularProgress } from '@mui/material';
 import useTimer from '../../../hooks/useTimer';
+import SkillsSet from '../../SkillsSet';
 
 
 export default function AssignTask() {
@@ -68,7 +69,7 @@ export default function AssignTask() {
     const [startProgramModal, setStartProgramModal] = useState({ loading: false, success: false })
     const [moreMenuModal, setMoreMenuModal] = useState({ share: false, reschedule: false })
     const [timer, setTimer] = useState({ hrs: 0, min: 20, sec: 0, })
-
+    const role = userdetails.data.role || ''
 
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -128,12 +129,12 @@ export default function AssignTask() {
 
 
     useEffect(() => {
-        if(status === programActionStatus.inprogress){
+        if (status === programActionStatus.inprogress) {
 
         }
 
-       
-    },[status])
+
+    }, [status])
 
     // useEffect(() => {
     //     if(status === programActionStatus.)
@@ -158,16 +159,16 @@ export default function AssignTask() {
         }
 
         // if (programdetails.status === programStatus.assigned) {
-            // let details = {}
-            // const programs = [...allPrograms].map(program => {
-            //     if (program.id === programdetails.id) {
-            //         details = { ...program, status: programStatus.inProgress }
-            //         return details
-            //     }
-            //     return program
-            // })
-            // dispatch(updateNewPrograms({ allPrograms: programs, programdetails: details, status: '' }))
-            // setStartProgramModal({ ...startProgramModal, loading: true })
+        // let details = {}
+        // const programs = [...allPrograms].map(program => {
+        //     if (program.id === programdetails.id) {
+        //         details = { ...program, status: programStatus.inProgress }
+        //         return details
+        //     }
+        //     return program
+        // })
+        // dispatch(updateNewPrograms({ allPrograms: programs, programdetails: details, status: '' }))
+        // setStartProgramModal({ ...startProgramModal, loading: true })
         // }
 
         if (programdetails.status === programStatus.inProgress) {
@@ -275,9 +276,9 @@ export default function AssignTask() {
             setLoading({ ...loading, initial: false })
 
             console.log('statusstatus23', programdetails.status)
-            if(programdetails.status === programActionStatus.assigned){
+            if (programdetails.status === programActionStatus.assigned) {
                 console.log('loading')
-                timerData.loadTime(0, 20,0)
+                timerData.loadTime(0, 20, 0)
             }
         }
     }, [programdetails])
@@ -467,8 +468,8 @@ export default function AssignTask() {
                                         <div className='py-9'>
                                             {
                                                 programdetails.status === programActionStatus.inprogress || programdetails.status === programActionStatus.paused ||
-                                                programdetails.status === programActionStatus.assigned
-                                                ?
+                                                    programdetails.status === programActionStatus.assigned
+                                                    ?
                                                     <div className='flex gap-9'>
                                                         <div className='flex gap-6 items-center justify-center'>
                                                             <p className="flex flex-col gap-2 items-center justify-center">
@@ -487,16 +488,34 @@ export default function AssignTask() {
                                                                 <span className="text-[12px]" style={{ color: 'rgba(118, 118, 118, 1)' }}>Secs</span>
                                                             </p>
                                                         </div>
-                                                        <button className='py-3 px-10 text-white text-[14px] flex items-center' title="Pause" style={{
-                                                            color: programdetails.status !== programActionStatus.paused && programdetails.status !== programActionStatus.assigned ? 'rgba(29, 91, 191, 1)' : '#fff',
-                                                            borderRadius: '5px',
-                                                            border: '1px solid rgba(29, 91, 191, 1)',
-                                                            background: programdetails.status === programActionStatus.paused || programdetails.status === programActionStatus.assigned ? 'linear-gradient(97.32deg, #1D5BBF -32.84%, #00AEBD 128.72%)' : 'transparent'
-                                                        }}
-                                                            onClick={handleActionPage}
-                                                        >
-                                                            <img src={programdetails.status !== programActionStatus.inprogress ? ResumeIcon : PauseIcon} alt={programdetails.status !== programActionStatus.inprogress ? 'ResumeIcon' : 'PauseIcon' } className='pr-4' />
-                                                            {programdetails.status === programActionStatus.inprogress ? 'Pause' : 'Start'}</button>
+                                                        {
+                                                            role === 'mentor' &&
+                                                            <button className='py-3 px-10 text-white text-[14px] flex items-center' title="Pause" style={{
+                                                                color: programdetails.status !== programActionStatus.paused && programdetails.status !== programActionStatus.assigned ? 'rgba(29, 91, 191, 1)' : '#fff',
+                                                                borderRadius: '5px',
+                                                                border: '1px solid rgba(29, 91, 191, 1)',
+                                                                background: programdetails.status === programActionStatus.paused || programdetails.status === programActionStatus.assigned ? 'linear-gradient(97.32deg, #1D5BBF -32.84%, #00AEBD 128.72%)' : 'transparent'
+                                                            }}
+                                                                onClick={handleActionPage}
+                                                            >
+                                                                <img src={programdetails.status !== programActionStatus.inprogress ? ResumeIcon : PauseIcon} alt={programdetails.status !== programActionStatus.inprogress ? 'ResumeIcon' : 'PauseIcon'} className='pr-4' />
+                                                                {programdetails.status === programActionStatus.inprogress ? 'Pause' : 'Start'}</button>
+                                                        }
+
+                                                        {
+                                                            role === 'mentee' &&
+                                                            <div>
+                                                                <p className="flex flex-col  items-center justify-center">
+                                                                    <span className='px-2 py-1 text-[16px]'
+                                                                        style={{
+                                                                            color: 'background: rgba(0, 0, 0, 1)',
+                                                                            borderRadius: '5px', fontWeight: 700
+                                                                        }}>EST. TIME LEFT</span>
+                                                                    <span className="text-[16px]" style={{ color: 'rgba(255, 67, 0, 1)' }}>2 Hours 30 mins</span>
+                                                                </p>
+                                                            </div>
+                                                        }
+
                                                     </div>
                                                     : null
 
@@ -520,10 +539,9 @@ export default function AssignTask() {
 
                                         </div>
 
+
+
                                     </div>
-
-
-
 
 
                                     {/* Right Side Content */}
@@ -558,6 +576,13 @@ export default function AssignTask() {
                                     </div>
 
                                 </div>
+
+
+                                {
+                                    role === 'mentee' && (programdetails.status === programActionStatus.inprogress || programdetails.status === programActionStatus.paused ||
+                                        programdetails.status === programActionStatus.assigned) && <SkillsSet />
+                                }
+                                
 
                                 {/* Detail Section */}
                                 <div className='details-section px-6 py-11 mb-10' style={{ background: 'rgba(249, 249, 249, 1)', borderRadius: '10px' }}>
@@ -597,7 +622,7 @@ export default function AssignTask() {
                                             <div className='sponsor pt-8'>
                                                 <div className='font-semibold pb-5'>Sponsored by </div>
                                                 <ul className='flex gap-5'>
-                                                    <img style={{width:'100px', height:'100px'}} src={programdetails.image} alt="SponsorIcon" />
+                                                    <img style={{ width: '100px', height: '100px' }} src={programdetails.image} alt="SponsorIcon" />
                                                 </ul>
                                             </div>
 

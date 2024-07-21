@@ -95,6 +95,7 @@ export default function MentorDetails() {
 
     function getWindowDimensions() {
         const { innerWidth: width, innerHeight: height } = window;
+        console.log('width', width)
         return {
             width,
             height
@@ -145,7 +146,7 @@ export default function MentorDetails() {
                     >
                         <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
                             <img src={ConnectIcon} alt="ConnectIcon" />
-                            <span style={{ color: '#232323', fontWeight: 600, fontSize: '24px' }}>{ activity.following ? 'UnFollow' : 'Follow' }</span>
+                            <span style={{ color: '#232323', fontWeight: 600, fontSize: '24px' }}>{activity.following ? 'UnFollow' : 'Follow'}</span>
 
                             <div className='py-5'>
                                 <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 600, fontSize: '18px' }}>Are you sure you want to {activity.following ? 'Unfollow' : 'Follow'} Mentor?</p>
@@ -162,13 +163,13 @@ export default function MentorDetails() {
 
                     </Backdrop>
 
-                    <div className='content px-8'>
+                    <div className='mentor-mentee-container content px-8'>
                         <div className="grid grid-cols-3 gap-7 mt-10">
                             <div className="col-span-2">
                                 <div className='flex flex-col'>
                                     <div className='mentor-details flex py-4 px-4 items-center' style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '3px' }}>
-                                        <div className='w-[165px] px-5 flex justify-center items-center h-[180px]' style={{ borderRight: '1px solid rgba(29, 91, 191, 1)' }}>
-                                            <img style={{ borderRadius: '50%', height: '117px', width: '100%' }} src={MaleIcon} alt="MaleIcon" />
+                                        <div className='user-image w-[200px] px-5 flex justify-center items-center h-[180px]' style={{ borderRight: '1px solid rgba(29, 91, 191, 1)' }}>
+                                            <img style={{ borderRadius: '50%', height: '117px', width: '100%', objectFit: 'cover' }} src={MaleIcon} alt="MaleIcon" />
                                         </div>
                                         <div className='pl-4'>
                                             <div>Jhon Doe (Software Developer)</div>
@@ -295,7 +296,6 @@ export default function MentorDetails() {
                                         </div>
                                     </div>
 
-
                                     <div style={{ boxShadow: '4px 4px 15px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }} className='mt-8'>
                                         <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
                                             <div className="flex gap-4">
@@ -313,9 +313,7 @@ export default function MentorDetails() {
                                     </div>
 
                                     {
-
                                         role === 'mentee' &&
-
                                         <div style={{ boxShadow: '4px 4px 15px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }} className='mt-8'>
                                             <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
                                                 <div className="flex gap-4">
@@ -352,9 +350,7 @@ export default function MentorDetails() {
 
                                         </div>
                                     }
-
                                 </div>
-
                             </div>
                             <div>
 
@@ -377,14 +373,14 @@ export default function MentorDetails() {
                                         </div>
 
                                         <div className='flex justify-center pt-6 gap-5'>
-                                            
 
-                                                <button onClick={handleShowPopup} style={{ background: 'rgba(29, 91, 191, 1)', color: '#fff', borderRadius: '6px' }}
+
+                                            <button onClick={handleShowPopup} style={{ background: 'rgba(29, 91, 191, 1)', color: '#fff', borderRadius: '6px' }}
                                                 className='py-3 px-4 text-[14px] w-[20%]'>{activity.following ? 'Unfollow' : 'Follow'}</button>
 
-                                               
 
-                                               
+
+
                                             <button style={{ background: 'rgba(0, 174, 189, 1)', color: '#fff', borderRadius: '6px' }} className='py-3 px-4 text-[14px] w-[20%]'>Chat</button>
                                         </div>
 
@@ -400,7 +396,7 @@ export default function MentorDetails() {
                                 }
 
 
-                                <div style={{ boxShadow: '4px 4px 15px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }} className='mt-8'>
+                                <div className='program-feeds mt-8' style={{ boxShadow: '4px 4px 15px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }} >
                                     <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
                                         <div className="flex gap-4">
                                             <div className="card-dash" style={{ background: 'linear-gradient(180deg, #00B1C0 0%, #005DC6 100%)' }} ></div>
@@ -417,12 +413,12 @@ export default function MentorDetails() {
 
                                     {
                                         programFeeds.map((programFeeds, index) =>
-                                            <div key={index} className="mx-9 my-9">
+                                            <div key={index} className="feed-list mx-9 my-9">
                                                 <div className="flex py-3 px-3 gap-4">
-                                                    <img src={UserImage} className={`${getWindowDimensions().width <= 1536 ? 'w-1/5' : 'w-1/6'} rounded-xl h-[100px]`} style={{ height: getWindowDimensions().width <= 1536 ? '90px' : '100px' }} alt="" />
+                                                    <img src={UserImage} className={`program-user-img ${getWindowDimensions().width <= 1536 ? 'w-1/5' : 'w-1/6'} rounded-xl h-[100px]`} style={{ height: getWindowDimensions().width <= 1536 ? '90px' : '100px' }} alt="" />
                                                     <div className="flex flex-col gap-4">
-                                                        <div className='flex items-center gap-3'>
-                                                            <h3 >{programFeeds.title}  </h3>
+                                                        <div className='program-title flex items-center gap-3'>
+                                                            <h3 className='program-name' >{programFeeds.title}  </h3>
                                                             <span className="lg:w-2 lg:h-2  rounded-full" style={{ background: 'rgba(0, 174, 189, 1)' }}></span> 10min ago
                                                         </div>
 

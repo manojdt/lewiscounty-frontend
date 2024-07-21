@@ -140,6 +140,37 @@ input[type="range"]::-ms-thumb {
   grid-column: span 4 / span 4;
 }
 
+.skills-set {
+  border: 1px solid rgba(180, 205, 245, 1);
+  margin-bottom: 40px;
+}
+
+.skills-set .skills-title {
+  background: rgba(217, 228, 242, 1);
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.skills-set .skills-title img{
+  height: 18px;
+}
+
+.skills-set .skills-list{
+  font-size: 14px;
+  padding: 30px 20px;
+}
+
+.skills-set .action-btn{
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.skills-set .action-btn button{
+  width: 170px;
+}
+
 
 @media only screen and (min-device-width: 481px) and (max-device-width: 1440px) {
 
@@ -202,7 +233,8 @@ input[type="number"] {
     margin-bottom: 20px;
   }
 
-  .login-content , .signup-content{
+  .login-content,
+  .signup-content {
     margin-bottom: 90px;
   }
 
@@ -332,7 +364,7 @@ input[type="number"] {
 
 
   /* Dashboard */
-  .dashboard-content{
+  .dashboard-content {
     margin-top: 10px;
     padding: 10px;
   }
@@ -341,7 +373,8 @@ input[type="number"] {
     display: none;
   }
 
-  .dashboard-content .programs-list, .mentor-task .programs-list {
+  .dashboard-content .programs-list,
+  .mentor-task .programs-list {
     display: flex;
     flex-direction: column;
     padding-bottom: 410px;
@@ -354,17 +387,17 @@ input[type="number"] {
     padding: 2px;
   }
 
-  .dashboard-content .programs-list .program-time-info{
+  .dashboard-content .programs-list .program-time-info {
     font-size: 10px;
     gap: 8px;
   }
 
-  .dashboard-content .programs-list .root-layer .track-info{
+  .dashboard-content .programs-list .root-layer .track-info {
     position: absolute;
     bottom: 30px;
   }
 
-  .dashboard-content .programs-list .posted-time{
+  .dashboard-content .programs-list .posted-time {
     font-size: 10px;
   }
 
@@ -391,24 +424,24 @@ input[type="number"] {
     width: 75%;
   }
 
-  .dashboard-content .media-post{
+  .dashboard-content .media-post {
     margin-top: 1rem;
   }
 
-  .dashboard-content .layer-second{
+  .dashboard-content .layer-second {
     gap: 1rem;
   }
 
-  .dashboard-content .program-feeds .program-feed-root{
+  .dashboard-content .program-feeds .program-feed-root {
     margin: 18px;
   }
 
-  .dashboard-content .program-feeds .program-feed-root .tags{
+  .dashboard-content .program-feeds .program-feed-root .tags {
     padding: 8px 15px;
     font-size: 12px;
   }
 
-  .dashboard-content .program-feeds .program-user-image{
+  .dashboard-content .program-feeds .program-user-image {
     width: 26%;
     height: 70px !important;
   }
@@ -421,33 +454,65 @@ input[type="number"] {
     font-size: 12px;
   }
 
-  .recent-activities .program-status .timeline{
+  .recent-activities .program-status .timeline {
     right: -220px;
   }
 
 
   /* Forgot Password */
-  .forgot-password-logo{
+  .forgot-password-logo {
     margin-top: 15px;
   }
 
   /* Verify logo */
-  .verify-otp{
+  .verify-otp {
     margin-top: 15px;
   }
 
-  .verify-otp .otp-root{
+  .verify-otp .otp-root {
     width: 90%;
   }
 
-  .verify-otp .otp-input{
+  .verify-otp .otp-input {
     width: 35px;
     height: 40px;
   }
 
-  .change-password{
+  .change-password {
     margin-top: 15px;
     margin-bottom: 90px;
   }
 
+  .mentor-mentee-container .user-image {
+    width: 200px;
+  }
+
+}
+
+
+@media screen and (max-width: 1536px) and (min-width: 901px) {
+  .program-feeds .feed-list {
+    margin: 1rem;
+  }
+
+  .program-feeds .program-user-img {
+    width: 90px;
+  }
+
+  .program-feeds .program-title {
+    gap: 10px;
+  }
+
+  .program-feeds .program-name {
+    font-size: 16px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 170px;
+    white-space: nowrap;
+  }
+
+  .dashboard-content .program-feeds .program-user-image {
+    width: 26%;
+    object-fit: cover;
+  }
 }
