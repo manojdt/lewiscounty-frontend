@@ -32,6 +32,8 @@ import { Mentors } from "./component/Mentors";
 import { Tasks } from "./component/Tasks";
 import { TaskDetails } from "./component/Tasks/TaskDetails";
 import  MentorTask  from "./component/Mentor/Task";
+import MentorTaskDetails from "./component/Mentor/Task/TaskDetails";
+import PreviewTaskDetails from "./component/Tasks/PreviewTaskDetails";
 
 function App() {
  
@@ -56,8 +58,6 @@ function App() {
 
   return (
     
-      
-    
     <Routes>
       <Route element={<PubicRoutes />}>
         <Route path="/" element={<Navigate to="/login" />} />
@@ -79,6 +79,7 @@ function App() {
           <Route path="/assign-task/:id" element={<AssignTask />} />
           <Route path="/assign-mentees/:id" element={<AssignMentees />} />
           <Route path="/start-program/:id" element={<AssignTask />} />
+          <Route path="/submit-task-program/:id" element={<TaskDetails />} />
           <Route path="/program-completion/:id" element={<ProgramCompletion />} />
 
 
@@ -90,11 +91,13 @@ function App() {
           <Route path="/mentors" element={<Mentors />} />
           <Route path="/mentor-details/:id" element={<MentorDetails />} />
           <Route path="/mentor-tasks" element={<MentorTask />} />
+          <Route path="/mentor-tasks-details/:id" element={<MentorTaskDetails /> } />
 
           <Route path="/mentees" element={<Mentees />} />
           <Route path="/mentee-details/:id" element={<MentorDetails />} />
           <Route path="/mentee-tasks" element={<Tasks />} />
           <Route path="/mentee-tasks-details/:id" element={<TaskDetails />} />
+          <Route path="/preview-mentee-tasks-details/:id" element={<PreviewTaskDetails />} />
         </Route>
       </Route>
 

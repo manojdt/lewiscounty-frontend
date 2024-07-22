@@ -14,6 +14,7 @@ import DeleteIcon from "../../../assets/images/delete_1x.png"
 
 
 import "primereact/resources/themes/lara-light-cyan/theme.css";
+import Tooltip from '../../../shared/Tooltip';
 
 
 const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousStep, currentStepData, stepData, handleAction, totalSteps, fetchCategoryData }) => {
@@ -103,8 +104,8 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
 
 
     const handleDeleteImage = () => {
-       setValue('image','')
-       setLogoImage('')
+        setValue('image', '')
+        setLogoImage('')
     }
     // console.log('stepData steps', stepData)
 
@@ -147,7 +148,12 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
 
                                                     {
                                                         field.icon && field.icon === 'add' &&
-                                                        <img className='absolute top-4 right-4 cursor-pointer' onClick={() => handleAction(field.name)} src={PlusIcon} alt="PlusIcon" />
+
+                                                        <Tooltip title={field.placeholder}>
+                                                            <img className='absolute cursor-pointer top-4 right-4' onClick={() => handleAction(field.name)}
+                                                                src={PlusIcon} alt="PlusIcon" />
+                                                        </Tooltip>
+
                                                     }
 
                                                     {errors[field.name] && (
@@ -214,7 +220,10 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                         />
                                                         {
                                                             field.icon && field.icon === 'add' &&
-                                                            <img className='absolute top-4 right-4 cursor-pointer' onClick={() => handleAction(field.name)} src={PlusIcon} alt="PlusIcon" />
+                                                            <Tooltip title={field.placeholder}>
+                                                                <img className='absolute top-4 right-4 cursor-pointer' 
+                                                                    onClick={() => handleAction(field.name)} src={PlusIcon} alt="PlusIcon" />
+                                                            </Tooltip>
                                                         }
 
 
@@ -296,7 +305,7 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                                     <div className='relative'>
                                                                         {/* <Calendar value={date} onChange={(e) => setDate(e.value)} showTime hourFormat="12" /> */}
                                                                         <Calendar
-                                                                            className='calendar-control'
+                                                                            className='calendar-control input-bg'
                                                                             {...dateField}
                                                                             value={dateFormat[field.name]}
                                                                             onChange={(e) => {
@@ -379,7 +388,7 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                                                     <>
                                                                                         <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Image</div>
 
-                                                                                        <div className='flex justify-between items-center w-[30%] mt-5 px-4 py-4' 
+                                                                                        <div className='flex justify-between items-center w-[30%] mt-5 px-4 py-4'
                                                                                             style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }}>
                                                                                             <div className='flex w-[80%] gap-3 items-center'>
                                                                                                 <img src={UploadIcon} alt="altlogo" />

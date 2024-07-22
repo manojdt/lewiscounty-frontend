@@ -172,6 +172,7 @@ export const programActionStatus = {
   inprogress: 'inprogress',
   completed: 'completed',
   cancelled: 'cancelled',
+  learning: 'learning',
   bookmark: 'bookmarked'
 }
 
@@ -197,6 +198,7 @@ export const programFilterUrls = {
   inprogress: `?type=${programActionStatus.inprogress}`,
   completed: `?type=${programActionStatus.completed}`,
   cancelled: `?type=${programActionStatus.cancelled}`,
+  learning: `?type=${programActionStatus.learning}`,
   bookmark: '?is_bookmark=true',
 }
 
@@ -206,37 +208,57 @@ export const programMenus = (page = 'dashboard') => {
       name: "All Programs",
       count: 0,
       page: pipeUrls.programs,
+      for: ['mentor', 'mentee'],
       status: 'all'
     },
     {
       name: "Recent Join Programs",
       count: 0,
       page: `${pipeUrl}${programFilterUrls.yettostart}`,
+      for: ['mentor'],
       status: programActionStatus.yettostart
     },
     {
       name: "Curated Programs",
       count: 0,
       page: `${pipeUrl}${programFilterUrls.yettojoin}`,
+      for: ['mentor', 'mentee'],
       status: programActionStatus.yettojoin
+    },
+    {
+      name: "My Learning Programs",
+      count: 0,
+      page: `${pipeUrl}${programFilterUrls.learning}`,
+      for: ['mentee'],
+      status: programActionStatus.learning
     },
     {
       name: "Ongoing Programs",
       count: 0,
       page: `${pipeUrl}${programFilterUrls.inprogress}`,
+      for: ['mentor'],
       status: programActionStatus.inprogress
     },
     {
       name: "Bookmarked Programs",
       count: 0,
       page: `${pipeUrl}${programFilterUrls.bookmark}`,
+      for: ['mentor', 'mentee'],
       status: programActionStatus.bookmark
     },
     {
       name: "Completed Programs",
       count: 0,
       page: `${pipeUrl}${programFilterUrls.completed}`,
+      for: ['mentor', 'mentee'],
       status: programActionStatus.completed
+    },
+    {
+      name: "Aborts Programs",
+      count: 0,
+      page: `${pipeUrl}${programFilterUrls.cancelled}`,
+      for: ['mentee'],
+      status: programActionStatus.cancelled
     }
   ]
 }

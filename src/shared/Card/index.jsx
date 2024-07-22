@@ -25,7 +25,7 @@ export default function Card({ cardTitle, cardContent, cardFilter = [], cardCoun
                     null
                 }
             </div>
-            <ul className="flex flex-col gap-1 p-4 md:p-0 mt-4 font-medium">
+            <ul className="flex flex-col gap-4 p-4 md:p-0 mt-4 font-medium">
                 {
                     cardContent.map((menu, index) => <li className="" key={index}>
                         <div onClick={() => navigate(menu.page)} className={`flex justify-between py-2 px-6 rounded cursor-pointer menu-content 

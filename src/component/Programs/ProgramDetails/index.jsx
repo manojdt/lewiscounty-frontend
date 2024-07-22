@@ -1,4 +1,16 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate, useSearchParams, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { Backdrop, CircularProgress } from '@mui/material';
+
+import './program-details.css'
+import Carousel from '../../../shared/Carousel';
+import { curatedPrograms } from '../../../utils/mock';
+
+import { pipeUrls, programActionStatus, programStatus } from '../../../utils/constant';
+import { updateNewPrograms, updateProgramDetails } from '../../../services/programInfo';
+import { getProgramDetails } from '../../../services/userprograms';
+
 import UserImage from "../../../assets/images/user.jpg";
 import LocationIcon from '../../../assets/images/Location1x.png';
 import CalendarIcon from '../../../assets/images/calender_1x.png';
@@ -7,21 +19,13 @@ import RatingsIcon from '../../../assets/images/ratings1x.png';
 import SponsorIcon from '../../../assets/images/program_logo1x.png';
 import CertificateIcon from '../../../assets/images/certficate1x.png';
 import QuoteIcon from '../../../assets/images/quotes1x.png';
-
-
-import './program-details.css'
-import Carousel from '../../../shared/Carousel';
-import { curatedPrograms } from '../../../utils/mock';
-import { useNavigate, useSearchParams, useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { pipeUrls, programActionStatus, programStatus } from '../../../utils/constant';
-import { updateNewPrograms, updateProgramDetails } from '../../../services/programInfo';
-import { Backdrop, CircularProgress } from '@mui/material';
-import { getProgramDetails } from '../../../services/userprograms';
+import MuiModal from '../../../shared/Modal';
+import SuccessTik from '../../../assets/images/blue_tik1x.png';
 
 
 export default function ProgramDetails() {
     const [loading, setLoading] = useState({ initial: true, join: false })
+    const [taskJoined, setTaskJoined] = useState(false)
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const params = useParams();
@@ -30,6 +34,7 @@ export default function ProgramDetails() {
     const [certificateActiveTab, setCertificateActiveTab] = useState('participated')
     const userdetails = useSelector(state => state.userInfo)
     const { programdetails, loading: programLoading, error } = useSelector(state => state.userPrograms)
+    const role = userdetails.data.role || ''
     const tabs = [
         {
             name: 'About Program',
@@ -71,18 +76,13 @@ export default function ProgramDetails() {
     useEffect(() => {
         if (Object.keys(programdetails).length) {
             console.log('programdetails.status', programdetails.status)
-            if (programdetails.status === programActionStatus.yettostart){
+            if (programdetails.status === programActionStatus.yettostart) {
                 navigate(`${pipeUrls.assigntask}/${programdetails.id}`)
             }
 
-            else if(programdetails.status === programActionStatus.inprogress){
+            else if (programdetails.status === programActionStatus.inprogress) {
                 navigate(`${pipeUrls.startprogram}/${programdetails.id}`)
             }
-                
-                
-                
-                
-                // || programdetails.status === programActionStatus.inprogress) navigate(pipeUrls.programs)
             else setLoading({ ...loading, initial: false })
         }
     }, [programdetails])
@@ -101,12 +101,6 @@ export default function ProgramDetails() {
 
     }, [params.id])
 
-
-    useEffect(() => {
-
-    }, [error])
-
-
     const handleJoinProgram = (programId) => {
         // let updatedProgramDetails = {}
         // const updatedPrograms = allPrograms.map(allprogram => {
@@ -123,25 +117,23 @@ export default function ProgramDetails() {
     }
 
     useEffect(() => {
+        if (taskJoined) {
+            setTimeout(() => {
+                navigate(`${pipeUrls.assigntask}/${programdetails.id}`)
+            }, [3000])
+
+        }
+    }, [taskJoined])
+
+    useEffect(() => {
         if (loading.join) {
             setTimeout(() => {
                 setLoading({ ...loading, join: false })
-                navigate(`${pipeUrls.programtask}/${programdetails.id}`)
+                if (role === 'mentor') navigate(`${pipeUrls.programtask}/${programdetails.id}`)
+                if (role === 'mentee') setTaskJoined(true)
             }, [3000])
         }
     }, [loading.join])
-
-    // useEffect(() => {
-    //     if (programDetails && Object.keys(programDetails).length && programDetails.status === programStatus.planned) {
-    //         setTimeout(() => {
-    //             setLoading(false)
-    //             navigate(`/program-task/${programDetails.id}`)
-    //         }, [3000])
-
-    //     }
-    // }, [programDetails])
-
-
 
     return (
         <div className="px-9 my-6 grid">
@@ -153,6 +145,17 @@ export default function ProgramDetails() {
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
+
+            <MuiModal modalOpen={taskJoined} modalClose={() => setTaskJoined(false)} noheader>
+                <div className='px-5 py-1 flex justify-center items-center'>
+                    <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
+                        style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
+                        <img src={SuccessTik} alt="SuccessTik" />
+                        <p className='text-white text-[12px]'>Successfully Joined in a program</p>
+                    </div>
+
+                </div>
+            </MuiModal>
             {
                 Object.keys(programdetails).length ?
 
@@ -216,7 +219,7 @@ export default function ProgramDetails() {
                                             <div className='flex gap-3 items-center'>
                                                 <img src={CalendarIcon} alt="CalendarIcon" />
                                                 <span className='text-[12px]'>
-                                                    
+
                                                     Begins Jun 5th and 6:00Pm
                                                 </span>
                                             </div>
@@ -316,7 +319,7 @@ export default function ProgramDetails() {
                                             <div className='sponsor pt-8'>
                                                 <div className='font-semibold pb-5'>Sponsored by </div>
                                                 <ul className='flex gap-5'>
-                                                <img style={{width:'100px', height:'100px'}} src={programdetails.image} alt="SponsorIcon" />
+                                                    <img style={{ width: '100px', height: '100px' }} src={programdetails.image} alt="SponsorIcon" />
                                                 </ul>
                                             </div>
 
@@ -388,7 +391,7 @@ export default function ProgramDetails() {
                                                         <img src={QuoteIcon} className='absolute top-[-16px]' alt="QuoteIcon" />
                                                         <div className='relative'>
                                                             <p className='pb-7'>
-                                                              {programdetails.testimonial_types}
+                                                                {programdetails.testimonial_types}
                                                             </p>
                                                             <hr className='absolute' style={{ width: '496px', left: '-15px' }} />
                                                         </div>

@@ -3,7 +3,10 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import DashboardCard from '../../../shared/Card/DashboardCard';
 import { pipeUrls, programActionStatus } from '../../../utils/constant';
-
+import { Button } from '../../../shared';
+import DataTable from '../../../shared/DataGrid';
+import { mentorTaskColumns, mentorTaskRows } from '../../../mock';
+import ViewIcon from '../../../assets/images/view1x.png'
 
 
 const MentorTask = () => {
@@ -362,6 +365,52 @@ const MentorTask = () => {
     ]
 
 
+    const mentorTaskColumn = [
+        ...mentorTaskColumns,
+        {
+            field: 'action',
+            headerName: 'Action',
+            width: 100,
+            id: 4,
+            renderCell: (params) => {
+                console.log('params', params)
+                return <>
+                    <div className='cursor-pointer flex items-center h-full' onClick={() => navigate('/mentor-tasks-details/1')}>
+                        <img src={ViewIcon} alt='ViewIcon' />
+                    </div>
+
+                </>
+            }
+
+
+        },
+    ]
+
+    const alltaskList = [
+        {
+            name: 'All Task',
+            key: 'all-task'
+        },
+        {
+            name: 'New Task',
+            key: 'new-task'
+        },
+        {
+            name: 'Pending Task',
+            key: 'pending-task'
+        },
+        {
+            name: 'Rejected Task',
+            key: 'rejected-task'
+        },
+        {
+            name: 'Completed Task',
+            key: 'completed-task'
+        },
+    ]
+
+
+
     return (
         <div className="mentor-task px-9 py-9">
             <div className='px-3 py-5' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
@@ -422,29 +471,55 @@ const MentorTask = () => {
                         </div>
 
                         <div className='flex relative flex-col col-span-4'>
-                            <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700 mb-10">
-                                <ul className="flex flex-wrap -mb-px">
-                                    {
-                                        tabs.map(participatedTab =>
+                            {
+                                activeTaskMenu === 'my-task' ?
 
-                                            <li className="me-2" key={participatedTab.key}>
-                                                <p className={`inline-block p-4 border-b-2 cursor-pointer rounded-t-lg ${activeTab === participatedTab.key ? 'active  text-blue-600 border-blue-500' : ''} `}
-                                                    onClick={() => handleTab(participatedTab.key)}
-                                                >{participatedTab.name}</p>
-                                            </li>
+                                    <>
+                                        <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700 mb-10">
+                                            <ul className="flex flex-wrap -mb-px">
+                                                {
+                                                    tabs.map(participatedTab =>
 
-                                        )
-                                    }
+                                                        <li className="me-2" key={participatedTab.key}>
+                                                            <p className={`inline-block p-4 border-b-2 cursor-pointer rounded-t-lg ${activeTab === participatedTab.key ? 'active  text-blue-600 border-blue-500' : ''} `}
+                                                                onClick={() => handleTab(participatedTab.key)}
+                                                            >{participatedTab.name}</p>
+                                                        </li>
 
-                                </ul>
-                            </div>
-                            <DashboardCard
-                                title="All Programs"
-                                viewpage="/programs?type=yettostart"
-                                handleNavigateDetails={handleNavigateDetails}
-                                handleBookmark={handleBookmark}
-                                programs={programs}
-                            />
+                                                    )
+                                                }
+
+                                            </ul>
+                                        </div>
+                                        <DashboardCard
+                                            title="All Programs"
+                                            viewpage="/programs?type=yettostart"
+                                            handleNavigateDetails={handleNavigateDetails}
+                                            handleBookmark={handleBookmark}
+                                            programs={programs}
+                                        />
+                                    </>
+
+                                    : <>
+                                        <div className='flex justify-between'>
+                                            <div>
+                                                <select style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '3px' }}
+                                                    className='px-4 py-4 w-[250px] text-[14px]'
+                                                >
+                                                    {
+                                                        alltaskList.map(task => <option value={task.key}>{task.name}</option>)
+                                                    }
+                                                </select>
+                                            </div>
+                                            <Button btnType="button" btnCls="w-[150px]" btnName={'Create Task'} btnCategory="primary" />
+                                        </div>
+
+                                        <div className='task-list py-10'>
+                                            <DataTable rows={mentorTaskRows} columns={mentorTaskColumn} hideCheckbox />
+                                        </div>
+                                    </>
+                            }
+
                         </div>
                     </div>
 
