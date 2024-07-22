@@ -207,7 +207,8 @@ function TablePaginationActions(props) {
 }
 
 
-export default function DataTable({ rows, columns, footerAction, footerComponent, selectedAllRows = [], hideCheckbox = false, hideFooter = false }) {
+export default function DataTable({ rows, columns, footerAction, footerComponent, selectedAllRows = [], 
+        hideCheckbox = false, hideFooter = false, handleSelectedRow = undefined }) {
     console.log('rows', rows)
     const [selectedRows, setSelectedRows] = useState([])
     const [selectedIds, setSelectedIds] = useState([])
@@ -223,6 +224,7 @@ export default function DataTable({ rows, columns, footerAction, footerComponent
         console.log('se', selected)
         setSelectedIds(ids)
         setSelectedRows(selected)
+        if(handleSelectedRow) handleSelectedRow(selected)
     }
 
     useEffect(() => {

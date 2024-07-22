@@ -914,38 +914,38 @@ export const MenteeMentoringRelationshipFields = [{
 ];
 
 export const MenteeLongTermFields = [{
-  type: "input",
-  name: "aspirations",
-  fieldtype: "text",
-  label: "What are your long-term personal and professional aspirations?",
-  placeholder: "Your long-term personal and professional aspirations",
-  inputRules: {
-    required: "This field is required",
+    type: "input",
+    name: "aspirations",
+    fieldtype: "text",
+    label: "What are your long-term personal and professional aspirations?",
+    placeholder: "Your long-term personal and professional aspirations",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
   },
-  size: true,
-},
-{
-  type: "input",
-  name: "community",
-  fieldtype: "text",
-  label: "How do you plan to give back to your community or field in the future?",
-  placeholder: "You plan to give back to your community or field in the future",
-  inputRules: {
-    required: "This field is required",
+  {
+    type: "input",
+    name: "community",
+    fieldtype: "text",
+    label: "How do you plan to give back to your community or field in the future?",
+    placeholder: "You plan to give back to your community or field in the future",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
   },
-  size: true,
-},
-{
-  type: "input",
-  name: "legacy",
-  fieldtype: "text",
-  label: "What legacy do you want to leave behind in your career or personal life?",
-  placeholder: "legacy do you want to leave behind in your career or personal life",
-  inputRules: {
-    required: "This field is required",
-  },
-  size: false,
-}
+  {
+    type: "input",
+    name: "legacy",
+    fieldtype: "text",
+    label: "What legacy do you want to leave behind in your career or personal life?",
+    placeholder: "legacy do you want to leave behind in your career or personal life",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: false,
+  }
 ];
 
 export const MenteeStepFormFields = [
@@ -1411,4 +1411,150 @@ export const AssignMenteesFields = [{
     width: 'w-full',
   },
 
+];
+
+
+
+export const ReportFields = [{
+    type: "dropdown",
+    name: "category",
+    label: "Category",
+    placeholder: "Select Category",
+    inputRules: {
+      required: "This field is required",
+    },
+    options: [{
+        id: "yes",
+        name: "Category 1"
+      },
+      {
+        id: "no",
+        name: "Category 2"
+      },
+    ],
+    width: 'width-32',
+  },
+  {
+    type: "dropdown",
+    name: "program_name",
+    label: "Program Name",
+    placeholder: "Select Program Name",
+    inputRules: {
+      required: "This field is required",
+    },
+    options: [{
+        id: "program1",
+        name: "Program 1"
+      },
+      {
+        id: "program2",
+        name: "Program 2"
+      },
+      {
+        id: "program3",
+        name: "Program 3"
+      },
+    ],
+    width: 'width-32',
+  },
+  {
+    type: "dropdown",
+    name: "mentor_manager",
+    label: "Mentor Manager",
+    placeholder: "Select Mentor Manager",
+    inputRules: {
+      required: "This field is required",
+    },
+    options: [{
+        id: "program1",
+        name: "Mentor 1"
+      },
+      {
+        id: "program2",
+        name: "Mentor 2"
+      },
+      {
+        id: "program3",
+        name: "Mentor 3"
+      },
+    ],
+    width: 'width-32',
+  },
+  {
+    type: "dropdown",
+    name: "mentor_name",
+    label: "Mentor Name",
+    placeholder: "Select Mentor Name",
+    inputRules: {
+      required: "This field is required",
+    },
+    options: [{
+        id: "program1",
+        name: "Mentor 1"
+      },
+      {
+        id: "program2",
+        name: "Mentor 2"
+      },
+      {
+        id: "program3",
+        name: "Mentor 3"
+      },
+    ],
+    width: 'width-32',
+  },
+  {
+    type: "date",
+    name: "start_date",
+    label: "Program Start Date and Time",
+    placeholder: "Select Program Start Date and Time",
+    inputRules: {
+      required: "This field is required",
+    },
+    width: 'width-32',
+  },
+  {
+    type: "date",
+    name: "end_date",
+    label: "Program End Date and Time",
+    placeholder: "Select Program End Date and Time",
+    inputRules: {
+      required: "This field is required",
+    },
+    width: 'width-32',
+  },
+  {
+    type: "dropdown",
+    name: "mentees",
+    label: "Participated Mentees",
+    placeholder: "Select Meneteed",
+    inputRules: {
+      required: "This field is required",
+    },
+    options: [{
+        id: "program1",
+        name: "Mentee 1"
+      },
+      {
+        id: "program2",
+        name: "Mentee 2"
+      },
+      {
+        id: "program3",
+        name: "Mentee 3"
+      },
+    ],
+    width: 'w-full',
+  },
+  {
+    type: "editor",
+    name: "task_details",
+    fieldtype: "text",
+    label: "Descriptions",
+    placeholder: "Description",
+    inputRules: {
+      required: "This field is required",
+    },
+    width: 'w-full',
+  }
 ];

@@ -1,10 +1,10 @@
 import React from 'react'
 
 export const Button = (props) => {
-    const { btnType = 'button', btnCategory = 'primary', btnName, btnCls = '', ...rest } = props;
-    let customStyle = { background: 'transparent', border: '1px solid rgba(24, 40, 61, 0.5)' }
+    const { btnType = 'button', btnCategory = 'primary', btnName, btnCls = '', btnStyle = {}, ...rest } = props;
+    let customStyle = { background: 'transparent', border: '1px solid rgba(24, 40, 61, 0.5)', ...btnStyle }
     if (btnCategory === 'primary') {
-        customStyle = { background: 'linear-gradient(to right, #00AEBD, #1D5BBF)', border: 'none' }
+        customStyle = { background: 'linear-gradient(to right, #00AEBD, #1D5BBF)', border: 'none', ...btnStyle }
     }
     return (
         <button

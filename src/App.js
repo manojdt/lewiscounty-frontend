@@ -34,6 +34,10 @@ import { TaskDetails } from "./component/Tasks/TaskDetails";
 import  MentorTask  from "./component/Mentor/Task";
 import MentorTaskDetails from "./component/Mentor/Task/TaskDetails";
 import PreviewTaskDetails from "./component/Tasks/PreviewTaskDetails";
+import Reports from "./component/Reports";
+import CreateReport from "./component/Reports/CreateReport";
+import ViewReport from "./component/Reports/ViewReport";
+import EditReport from "./component/Reports/EditReport";
 
 function App() {
  
@@ -98,6 +102,12 @@ function App() {
           <Route path="/mentee-tasks" element={<Tasks />} />
           <Route path="/mentee-tasks-details/:id" element={<TaskDetails />} />
           <Route path="/preview-mentee-tasks-details/:id" element={<PreviewTaskDetails />} />
+
+          <Route path="/reports" element={<Reports />} />
+          <Route path="/create-report" element={<CreateReport />} />
+          <Route path="/edit-report/:id" element={<EditReport />} />
+          <Route path="/view-report/:id" element={<ViewReport />} />
+
         </Route>
       </Route>
 
