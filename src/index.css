@@ -171,6 +171,11 @@ input[type="range"]::-ms-thumb {
   width: 170px;
 }
 
+.reports .reports-table-container {
+  border: 1px solid rgba(217, 228, 242, 1);
+  padding: 40px 30px;
+}
+
 
 @media only screen and (min-device-width: 481px) and (max-device-width: 1440px) {
 

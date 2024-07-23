@@ -83,7 +83,7 @@ export const menteeColumns = [{
     headerName: 'Last Attend Program',
     width: 250,
     id: 1,
-}
+},
 ];
 
 function menteesListData(id, name, professional, contact, email, location, attn_program, last_attn_program) {
