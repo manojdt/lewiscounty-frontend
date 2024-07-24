@@ -7,10 +7,10 @@ import { useNavigate } from "react-router-dom";
 import SuccessTik from '../../assets/images/blue_tik1x.png';
 import { Navbar, Stepper } from '../../shared';
 import { MenteeStepsList, StepsList, userStatus } from '../../utils/constant';
-import { StepFormFields, Stepname, MenteeStepFormFields } from "../../utils/formFields";
+import { StepFormFields, Stepname, MenteeStepname, MenteeStepFormFields } from "../../utils/formFields";
 import StepComponenRender from "./StepComponentRender";
 
-import { updateInfo, updateQuestions } from "../../services/loginInfo";
+import { updateInfo, updateMenteeQuestions, updateQuestions } from "../../services/loginInfo";
 import SuccessIcon from "../../assets/images/Success_tic1x.png"
 import MuiModal from "../../shared/Modal";
 
@@ -24,22 +24,35 @@ export const Questions = () => {
   const [stepData, setStepData] = useState({})
   const [btnTypeAction, setBtnTypeAction] = useState({ back: false, next: false })
   const [loading, setLoading] = useState(false)
+  const [stepName, setStepName] = useState([])
 
   const role = userInfo.data.role || ''
 
   const handleNextStep = (data) => {
     const activeSteps = allStepList.map(step => {
-      if (step.key === Stepname[currentStep - 1]) return { ...step, status: 'Completed' }
-      if (step.key === Stepname[currentStep]) return { ...step, status: 'In-Progress' }
+      if (step.key === stepName[currentStep - 1]) return { ...step, status: 'Completed' }
+      if (step.key === stepName[currentStep]) return { ...step, status: 'In-Progress' }
       return step
     })
     const fieldData = { ...stepData, ...data }
+    console.log('fieldData', fieldData)
     setStepData(fieldData)
     setAllStepList(activeSteps)
     if (formFields.length === currentStep) {
       const { first_name, email, ...apiData } = { ...fieldData, prev_mentorship: stepData.prev_mentorship === "true" }
       console.log('Submit', apiData)
-      if (role === 'mentee') { console.log(apiData) }
+      if (role === 'mentee') { 
+        console.log('lll', new Date(apiData.dob).toISOString())
+        const menteeApiData =  { 
+          ...apiData, 
+          gender: apiData.gender[0],
+          dob: new Date(apiData.dob).toISOString().split('T')[0],
+          phone_number : parseInt(apiData.phone_number)
+
+        }
+        console.log(menteeApiData); 
+        dispatch(updateMenteeQuestions(menteeApiData)) 
+      }
       else { dispatch(updateQuestions(apiData)) }
     }
     else setCurrentStep(currentStep + 1)
@@ -58,7 +71,7 @@ export const Questions = () => {
 
   useEffect(() => {
     if (userInfo && userInfo.data && Object.keys(userInfo.data).length && currentStep === 1) {
-      setStepData({ ...stepData, first_name: userInfo.data.first_name, email: userInfo.data.email })
+      setStepData({ ...stepData, full_name: userInfo.data.first_name, email: userInfo.data.email })
     }
 
     if (!userInfo.loading && Object.keys(userInfo.data).length && userInfo.data.is_registered && userInfo.status === userStatus.questions) {
@@ -68,10 +81,10 @@ export const Questions = () => {
 
 
   const handlePreviousStep = (data) => {
-    console.log('Stepname', Stepname, currentStep)
+    console.log('stepName', stepName, currentStep)
     const activeSteps = allStepList.map(step => {
-      if (step.key === Stepname[currentStep - 1]) return { ...step, status: '' }
-      if (step.key === Stepname[currentStep - 2]) return { ...step, status: 'In-Progress' }
+      if (step.key === stepName[currentStep - 1]) return { ...step, status: '' }
+      if (step.key === stepName[currentStep - 2]) return { ...step, status: 'In-Progress' }
       return step
     })
     // setAllStepList(activeSteps)
@@ -81,19 +94,21 @@ export const Questions = () => {
   }
 
   useEffect(() => {
-    if (userInfo && userInfo.data.is_registered) {
-      navigate('/dashboard')
-    }
+    // if (userInfo && userInfo.data.is_registered) {
+    //   navigate('/dashboard')
+    // }
   }, [userInfo])
 
   useEffect(() => {
     if (role === 'mentee') {
       setAllStepList(MenteeStepsList)
       setFormFields(MenteeStepFormFields)
+      setStepName(MenteeStepname)
     }
     else {
       setAllStepList(StepsList)
       setFormFields(StepFormFields)
+      setStepName(Stepname)
     }
   }, [role])
 
@@ -141,7 +156,7 @@ export const Questions = () => {
           {
             formFields.length ? <StepComponenRender
               stepData={stepData}
-              stepName={Stepname[currentStep - 1]}
+              stepName={stepName[currentStep - 1]}
               stepFields={formFields[currentStep - 1]}
               currentStep={currentStep}
               handleNextStep={handleNextStep}

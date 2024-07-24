@@ -298,7 +298,7 @@ const ageField = () => {
 
 export const MenteePersonalInformationFields = [{
     type: "input",
-    name: "first_name",
+    name: "full_name",
     fieldtype: "text",
     label: "First Name",
     placeholder: "Enter First Name",
@@ -336,11 +336,10 @@ export const MenteePersonalInformationFields = [{
     size: true,
   },
   {
-    type: "dropdown",
-    name: "age",
-    label: "Age",
-    placeholder: "",
-    options: ageField(),
+    type: "date",
+    name: "dob",
+    label: "DOB",
+    placeholder: "Select Program Start Date and Time",
     inputRules: {
       required: "This field is required",
     },
@@ -382,16 +381,28 @@ export const MenteePersonalInformationFields = [{
   },
   {
     type: "dropdown",
-    name: "education_level",
+    name: "current_education",
     label: "Current Education level",
     placeholder: "",
     options: [{
-        key: "be",
-        value: "B.E"
+        key: "UG",
+        value: "Under Graduate"
       },
       {
-        key: "bcom",
-        value: "B.Com"
+        key: "HSC",
+        value: "Higher Secondary"
+      },
+      {
+        key: "PG",
+        value: "Post Graduate"
+      },
+      {
+        key: "PHD",
+        value: "Doctorate/Ph.D"
+      },
+      {
+        key: "HSC",
+        value: "Higher Secondary"
       },
     ],
     inputRules: {
@@ -404,7 +415,7 @@ export const MenteePersonalInformationFields = [{
 
 export const MenteeCareerInformationFields = [{
     type: "input",
-    name: "goals",
+    name: "career_goals",
     fieldtype: "text",
     label: "What are your current academic or career goals?",
     placeholder: "Enter career goals",
@@ -415,7 +426,7 @@ export const MenteeCareerInformationFields = [{
   },
   {
     type: "input",
-    name: "skills",
+    name: "gain_skills",
     fieldtype: "text",
     label: "What specific skills or knowledge do you hope to gain from a mentor?",
     placeholder: "Enter skills or knowledge",
@@ -426,7 +437,7 @@ export const MenteeCareerInformationFields = [{
   },
   {
     type: "input",
-    name: "field_industry",
+    name: "fields_of_interest",
     fieldtype: "text",
     label: "What field or industry are you interested in?",
     placeholder: "Enter field or industry ",
@@ -437,7 +448,7 @@ export const MenteeCareerInformationFields = [{
   },
   {
     type: "dropdown",
-    name: "future_yourself",
+    name: "expectations_of_future",
     label: "Where do you see yourself in 5 years?",
     placeholder: "",
     options: [{
@@ -462,7 +473,7 @@ export const MenteeCareerInformationFields = [{
 
 export const MenteeCurrentStatusFields = [{
     type: "input",
-    name: "current_major",
+    name: "specialization_study",
     fieldtype: "text",
     label: "What is your current major or field of study (if applicable)?",
     placeholder: "Enter current major or field",
@@ -484,7 +495,7 @@ export const MenteeCurrentStatusFields = [{
   },
   {
     type: "input",
-    name: "extracurricular",
+    name: "extra_curricular_activities",
     fieldtype: "text",
     label: "Are you currently involved in any extracurricular activities, clubs, or organizations?",
     placeholder: "Enter extracurricular activities",
@@ -498,7 +509,7 @@ export const MenteeCurrentStatusFields = [{
 
 export const MenteeMentoringPreferenceFields = [{
     type: "dropdown",
-    name: "type_of_mentoring",
+    name: "mentoring_expectations",
     label: "What type of mentoring are you looking for? ",
     placeholder: "",
     options: [{
@@ -512,7 +523,7 @@ export const MenteeMentoringPreferenceFields = [{
   },
   {
     type: "dropdown",
-    name: "meet_mentor",
+    name: "mentor_meet_frequency",
     label: "How often would you like to meet with your mentor?",
     placeholder: "",
     options: [{
@@ -526,7 +537,7 @@ export const MenteeMentoringPreferenceFields = [{
   },
   {
     type: "dropdown",
-    name: "method_communication",
+    name: "mentor_communication_method",
     label: "What is your preferred method of communication with your mentor?",
     placeholder: "",
     options: [{
@@ -554,7 +565,7 @@ export const MenteeSkillsFields = [{
   },
   {
     type: "input",
-    name: "improvement",
+    name: "areas_of_improvement",
     fieldtype: "text",
     label: "What areas do you feel you need the most improvement in?",
     placeholder: "You need the most improvement in",
@@ -565,7 +576,7 @@ export const MenteeSkillsFields = [{
   },
   {
     type: "input",
-    name: "outside_of_academics",
+    name: "related_hobbies_interests",
     fieldtype: "text",
     label: "What are your hobbies or interests outside of academics or work?",
     placeholder: "Your hobbies or interests outside of academics or work?",
@@ -579,7 +590,7 @@ export const MenteeSkillsFields = [{
 
 export const MenteeExpectationGoalsFields = [{
     type: "input",
-    name: "expectations_relationship",
+    name: "expectations_mentoring_relationship",
     fieldtype: "text",
     label: "What are your expectations from your mentoring relationship?",
     placeholder: "Your expectations from your mentoring relationship",
@@ -590,7 +601,7 @@ export const MenteeExpectationGoalsFields = [{
   },
   {
     type: "input",
-    name: "achieve_mentorship",
+    name: "goals_from_mentorship",
     fieldtype: "text",
     label: "Do you have any specific goals you want to achieve through this mentorship?",
     placeholder: "you have any specific goals you want to achieve through this mentorship",
@@ -601,7 +612,7 @@ export const MenteeExpectationGoalsFields = [{
   },
   {
     type: "input",
-    name: "specific_mentor",
+    name: "mentee_thoughts_mentor",
     fieldtype: "text",
     label: "Is there anything specific you would like your mentor to know about you?",
     placeholder: "Is there anything specific you would like your mentor to know about you",
@@ -615,7 +626,7 @@ export const MenteeExpectationGoalsFields = [{
 
 export const MenteeAvailabilitysFields = [{
     type: "input",
-    name: "meetings",
+    name: "days_times_for_meetings",
     fieldtype: "text",
     label: "What days and times are you typically available for meetings?",
     placeholder: "Days and times are you typically available for meetings",
@@ -626,7 +637,7 @@ export const MenteeAvailabilitysFields = [{
   },
   {
     type: "input",
-    name: "virtual_meetings",
+    name: "available_for_virtual_meeting",
     fieldtype: "text",
     label: "Are you open to virtual meetings if in-person meetings are not possible?",
     placeholder: "Are you open to virtual meetings if in-person meetings are not possible?",
@@ -640,7 +651,7 @@ export const MenteeAvailabilitysFields = [{
 
 export const MenteeDetailedCareerFields = [{
     type: "input",
-    name: "pursue",
+    name: "inspiration_for_current_field",
     fieldtype: "text",
     label: "What inspired you to pursue your current field or major?",
     placeholder: "inspired you to pursue your current field or major",
@@ -651,7 +662,7 @@ export const MenteeDetailedCareerFields = [{
   },
   {
     type: "input",
-    name: "research",
+    name: "projects_research_topics",
     fieldtype: "text",
     label: "Are there any specific projects or research topics you are passionate about?",
     placeholder: "Are there any specific projects or research topics you are passionate about?",
@@ -662,7 +673,7 @@ export const MenteeDetailedCareerFields = [{
   },
   {
     type: "input",
-    name: "career_path",
+    name: "dreams_career_path",
     fieldtype: "text",
     label: "What is your dream job or career path?",
     placeholder: "Your dream job or career path",
@@ -673,7 +684,7 @@ export const MenteeDetailedCareerFields = [{
   },
   {
     type: "input",
-    name: "companies",
+    name: "preferred_companies_to_work",
     fieldtype: "text",
     label: "Have you identified any specific companies or organizations you would like to work for in the future?",
     placeholder: "Have you identified any specific companies or organizations you would like to work for in the future?",
@@ -686,7 +697,7 @@ export const MenteeDetailedCareerFields = [{
 
 export const MenteeChallengesFields = [{
     type: "input",
-    name: "biggest_challenges",
+    name: "current_challenges_faced",
     fieldtype: "text",
     label: "What are the biggest challenges you are currently facing in your academic or career journey?",
     placeholder: "The biggest challenges you are currently facing in your academic or career journey",
@@ -697,7 +708,7 @@ export const MenteeChallengesFields = [{
   },
   {
     type: "input",
-    name: "obstacles",
+    name: "obstacles_encountered",
     fieldtype: "text",
     label: "Have you encountered any obstacles that have hindered your progress?",
     placeholder: "Have you encountered any obstacles that have hindered your progress?",
@@ -708,7 +719,7 @@ export const MenteeChallengesFields = [{
   },
   {
     type: "input",
-    name: "setbacks",
+    name: "handle_setbacks",
     fieldtype: "text",
     label: "How do you typically handle setbacks or failures?",
     placeholder: "You typically handle setbacks or failures",
@@ -721,7 +732,7 @@ export const MenteeChallengesFields = [{
 
 export const MenteeMentoringExperienceFields = [{
     type: "input",
-    name: "mentor_exp",
+    name: "past_mentoring_exp",
     fieldtype: "text",
     label: "Have you had a mentor before? If so, what was your experience like?",
     placeholder: "Have you had a mentor before? If so, what was your experience like",
@@ -732,7 +743,7 @@ export const MenteeMentoringExperienceFields = [{
   },
   {
     type: "input",
-    name: "previous_experience",
+    name: "values_from_past_mentoring_exp",
     fieldtype: "text",
     label: "What did you find most valuable about your previous mentoring experience?",
     placeholder: "You find most valuable about your previous mentoring experience",
@@ -743,7 +754,7 @@ export const MenteeMentoringExperienceFields = [{
   },
   {
     type: "input",
-    name: "mentoring_relationship",
+    name: "mentoring_relationship_expectations",
     fieldtype: "text",
     label: "What would you like to be different in this mentoring relationship compared to previous ones?",
     placeholder: "Would you like to be different in this mentoring relationship compared to previous ones",
@@ -756,7 +767,7 @@ export const MenteeMentoringExperienceFields = [{
 
 export const MenteeLearningFields = [{
     type: "dropdown",
-    name: "guidance",
+    name: "feedback_preference",
     label: "How do you prefer to receive feedback and guidance?",
     placeholder: "",
     options: [{
@@ -775,7 +786,7 @@ export const MenteeLearningFields = [{
   }, ,
   {
     type: "input",
-    name: "learning",
+    name: "learning_style_preference",
     fieldtype: "text",
     label: "What is your preferred learning style?",
     placeholder: "Your preferred learning style",
@@ -786,7 +797,7 @@ export const MenteeLearningFields = [{
   },
   {
     type: "input",
-    name: "structured",
+    name: "structured_sessions_preference",
     fieldtype: "text",
     label: "Do you prefer structured sessions with specific topics, or more informal, flexible discussions?",
     placeholder: "You prefer structured sessions with specific topics, or more informal, flexible discussions",
@@ -799,7 +810,7 @@ export const MenteeLearningFields = [{
 
 export const MenteeNetworkingFields = [{
     type: "input",
-    name: "opportunities",
+    name: "networking_opportunities_prefs",
     fieldtype: "text",
     label: "Are you interested in networking opportunities through your mentor?",
     placeholder: "Are you interested in networking opportunities through your mentor?",
@@ -810,7 +821,7 @@ export const MenteeNetworkingFields = [{
   },
   {
     type: "input",
-    name: "strategies",
+    name: "assistance_req",
     fieldtype: "text",
     label: "Do you need assistance with resume writing, interview preparation, or job search strategies?",
     placeholder: "Your preferred learning style",
@@ -821,7 +832,7 @@ export const MenteeNetworkingFields = [{
   },
   {
     type: "input",
-    name: "workshops",
+    name: "professional_resources_prefs",
     fieldtype: "text",
     label: "Would you like to learn about professional development resources such as workshops, seminars, or conferences?",
     placeholder: "Would you like to learn about professional development resources such as workshops, seminars, or conferences",
@@ -834,7 +845,7 @@ export const MenteeNetworkingFields = [{
 
 export const MenteePersonalDevelopmentFields = [{
     type: "input",
-    name: "qualities",
+    name: "develop_skills_quality_prefs",
     fieldtype: "text",
     label: "What personal qualities or skills would you like to develop further?",
     placeholder: "Personal qualities or skills would you like to develop further?",
@@ -845,7 +856,7 @@ export const MenteePersonalDevelopmentFields = [{
   },
   {
     type: "input",
-    name: "challenges",
+    name: "personal_challenges_overcoming",
     fieldtype: "text",
     label: "Are there any specific personal challenges you are working on overcoming?",
     placeholder: "Are there any specific personal challenges you are working on overcoming?",
@@ -856,7 +867,7 @@ export const MenteePersonalDevelopmentFields = [{
   },
   {
     type: "input",
-    name: "healthy",
+    name: "stress_management_methods",
     fieldtype: "text",
     label: "How do you manage stress and maintain a healthy work-life balance?",
     placeholder: "Would you like to learn about professional development resources such as workshops, seminars, or conferences",
@@ -869,7 +880,7 @@ export const MenteePersonalDevelopmentFields = [{
 
 export const MenteeMentoringRelationshipFields = [{
     type: "input",
-    name: "qualities",
+    name: "mentor_qualities",
     fieldtype: "text",
     label: "What qualities are you looking for in a mentor?",
     placeholder: "What qualities are you looking for in a mentor??",
@@ -880,7 +891,7 @@ export const MenteeMentoringRelationshipFields = [{
   },
   {
     type: "input",
-    name: "activities",
+    name: "interested_mentoring_activities",
     fieldtype: "text",
     label: "Are there any specific mentoring activities or exercises you are interested in?",
     placeholder: "Are there any specific mentoring activities or exercises you are interested in?",
@@ -891,7 +902,7 @@ export const MenteeMentoringRelationshipFields = [{
   },
   {
     type: "input",
-    name: "relationship",
+    name: "measures_mentoring_relationship",
     fieldtype: "text",
     label: "How do you measure success in a mentoring relationship?",
     placeholder: "You measure success in a mentoring relationship",
@@ -902,7 +913,7 @@ export const MenteeMentoringRelationshipFields = [{
   },
   {
     type: "input",
-    name: "distance",
+    name: "mentor_guidance_from_distance",
     fieldtype: "text",
     label: "Do you prefer a mentor who takes a hands-on approach or one who offers guidance from a distance?",
     placeholder: "You prefer a mentor who takes a hands-on approach or one who offers guidance from a distance",
@@ -915,7 +926,7 @@ export const MenteeMentoringRelationshipFields = [{
 
 export const MenteeLongTermFields = [{
     type: "input",
-    name: "aspirations",
+    name: "long_term_aspirations",
     fieldtype: "text",
     label: "What are your long-term personal and professional aspirations?",
     placeholder: "Your long-term personal and professional aspirations",
@@ -926,7 +937,7 @@ export const MenteeLongTermFields = [{
   },
   {
     type: "input",
-    name: "community",
+    name: "plans_giveback_community",
     fieldtype: "text",
     label: "How do you plan to give back to your community or field in the future?",
     placeholder: "You plan to give back to your community or field in the future",
@@ -937,7 +948,7 @@ export const MenteeLongTermFields = [{
   },
   {
     type: "input",
-    name: "legacy",
+    name: "legacy_from_life",
     fieldtype: "text",
     label: "What legacy do you want to leave behind in your career or personal life?",
     placeholder: "legacy do you want to leave behind in your career or personal life",
@@ -946,6 +957,30 @@ export const MenteeLongTermFields = [{
     },
     size: false,
   }
+];
+
+export const MenteeAdditionalFields = [{
+  type: "input",
+  name: "additional_information",
+  fieldtype: "text",
+  label: "Is there any additional information you would like to share that could help in matching you with a mentor?",
+  placeholder: "Is there any additional information you would like to share that could help in matching you with a mentor",
+  inputRules: {
+    required: "This field is required",
+  },
+  size: false,
+},
+{
+  type: "input",
+  name: "request_need_mentor_to_know",
+  fieldtype: "text",
+  label: "How do you plan to give back to your community or field in the future?",
+  placeholder: "You plan to give back to your community or field in the future",
+  inputRules: {
+    required: "This field is required",
+  },
+  size: false,
+}
 ];
 
 export const MenteeStepFormFields = [
@@ -963,7 +998,8 @@ export const MenteeStepFormFields = [
   MenteeNetworkingFields,
   MenteePersonalDevelopmentFields,
   MenteeMentoringRelationshipFields,
-  MenteeLongTermFields
+  MenteeLongTermFields,
+  MenteeAdditionalFields
 ];
 
 export const Stepname = [
@@ -976,6 +1012,25 @@ export const Stepname = [
   "goals_expectations",
   "availability_commitment",
   "additional_information",
+];
+
+export const MenteeStepname = [
+  "personal_information",
+  "career_goals",
+  "current_status",
+  "mentoring_preference",
+  "skills_and_interests",
+  "expectations_goals",
+  "availability",
+  "detailed_career",
+  "challenges_obstacles",
+  "mentoring_experience",
+  "learning_style_preference",
+  "network_preference",
+  "personal_development",
+  "mentoring_relationship",
+  "long_term_vision",
+  "additional_information"
 ];
 
 export const ProgramTabs = [{

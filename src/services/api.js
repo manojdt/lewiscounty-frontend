@@ -47,7 +47,7 @@ api.interceptors.response.use(
       error.message = error.response.data?.error || error.response.data?.message
     }
     if (error.code && error.code === "ERR_BAD_REQUEST" && error.response.status === 400) {
-      error.message = "Something went wrong. Please try again later"
+      error.message = error.response.data?.error || error.response.data?.message || error.response.data?.email[0]
     }
     if (!reasons.includes(error.code) && error.response.status === 401 && !refresh) {
       refresh = true;
