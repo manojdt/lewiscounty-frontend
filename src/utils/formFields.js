@@ -1351,7 +1351,7 @@ export const ProgramFields = [
 
 export const AssignMenteesFields = [{
     type: "dropdown",
-    name: "category",
+    name: "category_id",
     label: "Category",
     placeholder: "Select Category",
     inputRules: {
@@ -1371,7 +1371,7 @@ export const AssignMenteesFields = [{
   },
   {
     type: "input",
-    name: "program_name",
+    name: "program_id",
     fieldtype: "text",
     label: "Program Name",
     placeholder: "Enter Program Name",
@@ -1383,7 +1383,7 @@ export const AssignMenteesFields = [{
   },
   {
     type: "input",
-    name: "mentor_name",
+    name: "mentor",
     fieldtype: "text",
     label: "Mentor Name",
     placeholder: "Enter Program Name",

@@ -20,8 +20,8 @@ import SuccessTik from '../../../assets/images/blue_tik1x.png';
 import { getAllCategories } from '../../../services/programInfo';
 import './program.css'
 
-import { getMentees, getProgramDetails, updateProgram } from '../../../services/userprograms';
-import { pipeUrls, programActionStatus } from '../../../utils/constant';
+import { assignProgramTask, getMentees, getProgramDetails, getProgramMentees, updateProgram } from '../../../services/userprograms';
+import { pipeUrls, programActionStatus, programStatus } from '../../../utils/constant';
 
 
 
@@ -34,7 +34,7 @@ export default function AssignMentees() {
     const params = useParams();
 
     const dispatch = useDispatch()
-    const { programdetails, loading: programLoading, error, status, menteeList } = useSelector(state => state.userPrograms)
+    const { programdetails, loading: programLoading, error, status, menteeList, programMenteeList } = useSelector(state => state.userPrograms)
     const { category, loading: apiLoading } = useSelector(state => state.programInfo)
     const [menteeFields, setMenteeFields] = useState(AssignMenteesFields)
     const [dateFormat, setDateFormat] = useState({})
@@ -54,9 +54,19 @@ export default function AssignMentees() {
     } = useForm();
 
     const onSubmit = (data) => {
-        console.log(data)
-        dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.assigned }))
-        reset()
+        
+        const apiData = {
+            ...data,
+            program_id: programdetails.id,
+            start_date: new Date(data.start_date).toISOString(),
+            end_date: new Date(data.end_date).toISOString(),
+            mentor: 2,
+            due_date: new Date(data.due_date).toISOString()
+        }
+        console.log('submit', apiData)
+        dispatch(assignProgramTask(apiData))
+        // dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.assigned }))
+        // reset()
         // setLoading(true)
         // setTaskSuccess(true)
     }
@@ -68,33 +78,38 @@ export default function AssignMentees() {
                 navigate(`${pipeUrls.startprogram}/${programdetails.id}`)
             }, [3000])
         }
+
+        if(status === programStatus.taskassigned){
+            dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.assigned }))
+        }
     }, [status])
 
     const handleAddMentee = () => {
         setMentalModal(true)
 
         const updateMemberColumns = [...MemberColumns].map(mcol => {
-            // if (mcol.field === 'action') {
-            //     return {
-            //         ...mcol,
-            //         renderCell: (params) => {
-            //             return <button style={{
-            //                 background: 'rgb(29, 91, 191)',
-            //                 color: 'rgb(255, 255, 255)',
-            //                 padding: '2px 20px',
-            //                 height: '32px',
-            //                 margin: '9px 0px',
-            //                 display: 'flex',
-            //                 justifyContent: 'center',
-            //                 alignItems: 'center',
-            //                 borderRadius: '3px'
-            //             }}
-            //                 onClick={() => {
-            //                     console.log(params);
-            //                 }}>View Details</button>;
-            //         }
-            //     }
-            // }
+            if (mcol.field === 'action') {
+                return {
+                    ...mcol,
+                    renderCell: (params) => {
+                        return <button style={{
+                            background: 'rgb(29, 91, 191)',
+                            color: 'rgb(255, 255, 255)',
+                            padding: '2px 20px',
+                            height: '32px',
+                            margin: '9px 0px',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            borderRadius: '3px'
+                        }}
+                            onClick={() => {
+                                console.log(params);
+                                navigate(`/mentee-details/${params.id}`)
+                            }}>View Details</button>;
+                    }
+                }
+            }
             return mcol
         })
 
@@ -118,7 +133,7 @@ export default function AssignMentees() {
 
     useEffect(() => {
         const fields = [...menteeFields].map(field => {
-            if (field.name === 'category') {
+            if (field.name === 'category_id') {
                 return {
                     ...field,
                     options: category
@@ -143,13 +158,13 @@ export default function AssignMentees() {
         if (Object.keys(programdetails).length) {
             console.log('tarttt', new Date(programdetails.start_date))
             let fieldValue = {
-                category: programdetails.categories.length ? programdetails.categories[0].id : '',
-                program_name: programdetails.program_name,
-                mentor_name: programdetails.mentor_name,
+                category_id: programdetails.categories.length ? programdetails.categories[0].id : '',
+                program_id: programdetails.program_name,
+                mentor: programdetails.mentor_name,
                 start_date: new Date(programdetails.start_date),
-                end_date: programdetails.end_date,
+                end_date: new Date(programdetails.end_date),
                 duration: programdetails.duration,
-                mentees_list: [],
+                mentees_list: '',
                 task_details: '',
                 due_date: ''
             }
@@ -164,7 +179,7 @@ export default function AssignMentees() {
         if (!category.length) {
             dispatch(getAllCategories())
         }
-        dispatch(getMentees())
+        dispatch(getProgramMentees())
 
     }, [])
 
@@ -190,7 +205,7 @@ export default function AssignMentees() {
 
     console.log('addMenteeModal', addMenteeModal)
 
-    console.log('getValues', getValues('category'))
+    console.log('getValues', getValues('category_id'))
     console.log('getValues mentees_list', getValues('mentees_list'))
 
     return (
@@ -210,17 +225,17 @@ export default function AssignMentees() {
                             <nav className="flex px-7 pt-6 pb-5 mx-2 border-b-2 justify-between" aria-label="Breadcrumb">
                                 <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
                                     <li className="inline-flex items-center">
-                                        <a href="#" className="inline-flex items-center text-sm font-medium" style={{ color: 'rgba(89, 117, 162, 1)' }}>
+                                        <span className="inline-flex items-center text-sm font-medium cursor-pointer" style={{ color: 'rgba(89, 117, 162, 1)' }}>
                                             Program
-                                        </a>
+                                        </span>
                                         <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
                                         </svg>
                                     </li>
                                     <li>
                                         <div className="flex items-center">
-                                            <a href="#" className="ms-1 text-sm font-medium" style={{ color: 'rgba(89, 117, 162, 1)' }}>
-                                                Planned Program </a>
+                                            <span className="ms-1 text-sm font-medium cursor-pointer" style={{ color: 'rgba(89, 117, 162, 1)' }}>
+                                                Planned Program </span>
                                             <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
                                             </svg>
@@ -228,8 +243,8 @@ export default function AssignMentees() {
                                     </li>
                                     <li>
                                         <div className="flex items-center">
-                                            <a href="#" className="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">
-                                                Assign Task to Mentees </a>
+                                            <span className="ms-1 text-sm font-medium cursor-pointer text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">
+                                                Assign Task to Mentees </span>
                                         </div>
                                     </li>
                                 </ol>
@@ -254,7 +269,7 @@ export default function AssignMentees() {
                                                                         type={field.fieldtype}
                                                                         className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none 
                                                                     focus-visible:outline-none text-[14px] h-[60px]"
-                                                                        placeholder={field.placeholder}
+                                                                        // placeholder={field.placeholder}
                                                                         style={{
                                                                             color: "#232323",
                                                                             borderRadius: '3px'
@@ -336,37 +351,40 @@ export default function AssignMentees() {
                                                                             </div>
                                                                             :
                                                                             field.type === 'date' ?
+                                                                                <>
+                                                                                    <div className='relative input-bg'>
+                                                                                        <Calendar
+                                                                                            className='calendar-control w-full'
+                                                                                            {...dateField}
+                                                                                            {...register(field.name, field.inputRules)}
+                                                                                            value={field.disabled ? new Date(programdetails[field.name]) : dateFormat[field.name]}
+                                                                                            onChange={(e) => {
+                                                                                                dateField.onChange(e)
+                                                                                                setDateFormat({ ...dateFormat, [field.name]: e.value })
+                                                                                            }}
+                                                                                            disabled={field.disabled}
+                                                                                            showTime
+                                                                                            hourFormat="12"
+                                                                                            dateFormat="dd/mm/yy"
+                                                                                            style={{ width: '30%' }}
+                                                                                        />
+                                                                                        <img className='absolute top-5 right-2' src={CalendarIcon} alt="CalendarIcon" />
 
-                                                                                <div className='relative input-bg'>
-                                                                                    <Calendar
-                                                                                        className='calendar-control'
-                                                                                        // {...dateField}
-                                                                                        {...register(field.name, field.inputRules)}
-                                                                                        value={field.value}
-                                                                                        // onChange={(e) => {
-                                                                                        //     dateField.onChange(e)
-                                                                                        //     setDateFormat({ ...dateFormat, [field.name]: e.value })
-                                                                                        // }}
-                                                                                        disabled={field.disabled}
-                                                                                        showTime
-                                                                                        hourFormat="12"
-                                                                                        dateFormat="dd/mm/yy"
-                                                                                        style={{width: '30%'}}
-                                                                                    />
-                                                                                    <img className='absolute top-5 right-2' src={CalendarIcon} alt="CalendarIcon" />
+                                                                                    </div>
                                                                                     {errors[field.name] && (
                                                                                         <p className="error" role="alert">
                                                                                             {errors[field.name].message}
                                                                                         </p>
                                                                                     )}
-                                                                                </div>
+
+                                                                                </>
 
                                                                                 :
                                                                                 field.type === 'text' ?
                                                                                     <>
                                                                                         <div className='flex justify-between'>
                                                                                             <div className='input-bg h-[60px] w-[86%] mt-2 flex items-center 
-                                                                                         text-[12px] gap-2 cursor-pointer px-6'
+                                                                                                text-[12px] gap-2 cursor-pointer px-6'
                                                                                                 style={{ borderRadius: '3px' }}>
 
                                                                                                 {
@@ -382,7 +400,7 @@ export default function AssignMentees() {
                                                                                                                     {
 
 
-                                                                                                                        `${popupfield.first_name} ${popupfield.last_name}`
+                                                                                                                        `${popupfield.full_name}`
                                                                                                                     }
                                                                                                                 </p>
                                                                                                             </>
@@ -404,6 +422,17 @@ export default function AssignMentees() {
 
 
                                                                                             </div>
+                                                                                            <input {...register(field.name, field.inputRules)}
+                                                                                                type={field.fieldtype}
+                                                                                                className="w-full hidden border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none 
+                                                                                                focus-visible:outline-none text-[14px] h-[60px]"
+                                                                                                placeholder={field.placeholder}
+                                                                                                style={{
+                                                                                                    color: "#232323",
+                                                                                                    borderRadius: '3px'
+                                                                                                }}
+                                                                                                aria-invalid={!!errors[field.name]}
+                                                                                            />
                                                                                             <button type='button' className='h-[60px] mt-2 w-[13%] text-[14px]'
                                                                                                 style={{ border: '1px dotted rgba(29, 91, 191, 1)', color: 'rgba(29, 91, 191, 1)' }}
                                                                                                 onClick={handleAddMentee}>
@@ -500,7 +529,7 @@ export default function AssignMentees() {
                                     </div>
                                 </form>
                                 <MuiModal modalSize='lg' modalOpen={addMenteeModal} title="Select Mentees" modalClose={() => setMentalModal(false)}>
-                                    <DataTable rows={menteeList} columns={updatedMemberColumn} footerAction={footerAction} footerComponent={CustomFooterStatusComponent}
+                                    <DataTable rows={programMenteeList} columns={updatedMemberColumn} footerAction={footerAction} footerComponent={CustomFooterStatusComponent}
                                         selectedAllRows={menteeAllList} />
                                 </MuiModal>
 
