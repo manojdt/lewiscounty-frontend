@@ -100,7 +100,7 @@ export const MenteeStepsList = [{
   {
     name: "Learning Style & Preference",
     status: "",
-    key: 'challenges_obstacles'
+    key: 'learning_style_preference'
   },
   {
     name: "Network & Preference",
@@ -121,6 +121,11 @@ export const MenteeStepsList = [{
     name: "Long-term Vision",
     status: "",
     key: 'long_term_vision'
+  },
+  {
+    name: "Additional Information",
+    status: "",
+    key: 'additional_information'
   },
 ];
 

@@ -19,6 +19,11 @@ export const userAccountCreate = createAsyncThunk(
       console.log('Create Token', decoded)
       return decoded;
     }
+
+    if(userCreate.status === 400){
+      console.log('kkkk', userCreate)
+      // return userCreate.error.message = 
+    }
     return userCreate;
   }
 );
@@ -140,7 +145,7 @@ export const updatePassword = createAsyncThunk(
 
 // Update Questions
 export const updateQuestions = createAsyncThunk(
-  "userUpdateQuestions",
+  "userUpdateMenteeQuestions",
   async (data) => {
     const updateQuestion = await api.put("user_info_update", data);
     if (updateQuestion.status === 200) {
@@ -152,3 +157,21 @@ export const updateQuestions = createAsyncThunk(
     return updateQuestion;
   }
 );
+
+
+// Update Mentee Questions
+export const updateMenteeQuestions = createAsyncThunk(
+  "userUpdateQuestions",
+  async (data) => {
+    const updateQuestion = await api.post("mentee_info_update", data);
+    if (updateQuestion.status === 200) {
+      localStorage.setItem("access_token", updateQuestion.data.access);
+      localStorage.setItem("refresh_token", updateQuestion.data.refresh);
+      let decoded = jwtDecode(updateQuestion.data.access);
+      return decoded;
+    }
+    return updateQuestion;
+  }
+);
+
+

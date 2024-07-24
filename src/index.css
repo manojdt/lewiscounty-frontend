@@ -176,6 +176,50 @@ input[type="range"]::-ms-thumb {
   padding: 40px 30px;
 }
 
+.goals .goals-container {
+  border: 1px solid rgba(217, 228, 242, 1);
+}
+
+.goals .goals-container .title-container{
+  padding: 15px 30px;
+  border-bottom : 1px solid rgba(198, 198, 198, 1);
+}
+
+.goals .goals-info {
+  padding: 30px 40px;
+}
+
+.goals .goals-info .goal-counts-container{
+  background: rgba(238, 245, 255, 1);
+  width: 200px;
+  text-align: center;
+  color : rgba(24, 40, 61, 1);
+  padding: 30px; 
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.goals .goals-info .create-goal{
+  width: 220px;
+  text-align: center;
+  color : rgba(29, 91, 191, 1);
+  height: 160px; 
+  cursor: pointer;
+  border-radius: 6px;
+  font-weight: 600;
+  border: 1px dotted rgba(29, 91, 191, 1);
+}
+
+.goals .goals-info .goal-counts-container.active{
+  background: rgba(29, 91, 191, 1);
+  color: #fff;
+}
+
+.goals .goals-info .goal-counts-container .goal-count{
+  font-size: 48px;
+}
+
+
 
 @media only screen and (min-device-width: 481px) and (max-device-width: 1440px) {
 

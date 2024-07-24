@@ -1,7 +1,9 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from "react-router-dom";
+import { Calendar } from 'primereact/calendar';
 import { Button } from '../../shared';
 import { useForm } from "react-hook-form";
+import CalendarIcon from '../../assets/images/calender_1x.png'
 
 const StepComponenRender = ({ stepFields, currentStep, handleNextStep, handlePreviousStep, stepData, stepName, totalSteps }) => {
     const navigate = useNavigate();
@@ -12,6 +14,9 @@ const StepComponenRender = ({ stepFields, currentStep, handleNextStep, handlePre
         reset,
         getValues,
     } = useForm();
+
+    const [dateFormat, setDateFormat] = useState({})
+    const [checkBoxValue, setCheckBoxValue] = useState('')
 
     const onSubmit = (data) => {
         // console.log('Next Submit', data)
@@ -37,6 +42,7 @@ const StepComponenRender = ({ stepFields, currentStep, handleNextStep, handlePre
                 required: false,
             })
         }
+        setCheckBoxValue(e.target.value)
     }
 
 
@@ -60,6 +66,7 @@ const StepComponenRender = ({ stepFields, currentStep, handleNextStep, handlePre
                         {
                             stepFields.map((field, index) => {
                                 const checkbox = field.type === 'checkbox' ? register(field.name, field.inputRules) : undefined
+                                const dateField = field.type === 'date' ? register(field.name, field.inputRules) : undefined
                                 return (
                                     <div className={`relative mb-6 ${field.size ? 'width-49' : 'w-full'}`} key={index}>
                                         <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor={field.label}>
@@ -110,79 +117,108 @@ const StepComponenRender = ({ stepFields, currentStep, handleNextStep, handlePre
                                                             </p>
                                                         )}
                                                     </>
+
                                                     :
+                                                    field.type === 'date' ?
 
-                                                    field.type === 'textbox' ?
-                                                        <textarea id="message" rows="4" className="block p-2.5 input-bg w-full text-sm text-gray-900  rounded-lg border
-                                                                   focus:visible:outline-none focus:visible:border-none" placeholder="Write your thoughts here..."
-                                                            {...register(field.name, field.inputRules)}></textarea>
+                                                        <div className='relative'>
+                                                            {/* <Calendar value={date} onChange={(e) => setDate(e.value)} showTime hourFormat="12" /> */}
+                                                            <Calendar
+                                                                className='calendar-control input-bg'
+                                                                {...dateField}
+                                                                value={dateFormat[field.name]}
+                                                                onChange={(e) => {
+                                                                    // console.log('dateField123', dateField)
+                                                                    dateField.onChange(e)
+                                                                    setDateFormat({ ...dateFormat, [field.name]: e.value })
+                                                                }}
+                                                                
+                                                                hourFormat="12"
+                                                                dateFormat="dd/mm/yy"
+                                                            />
+                                                            <img className='absolute top-5 right-2' src={CalendarIcon} alt="CalendarIcon" />
+                                                            {errors[field.name] && (
+                                                                <p className="error" role="alert">
+                                                                    {errors[field.name].message}
+                                                                </p>
+                                                            )}
+                                                        </div>
                                                         :
-                                                        field.type === 'radio' ?
-                                                            <div className="flex items-center me-4">
-                                                                {
-                                                                    // const firstName = register('firstName', { required: true })
-                                                                    field.options.map((option, index) => {
-                                                                        return (
-                                                                            <div className="flex items-center me-4" key={index}>
-                                                                                <input type="radio" className="w-4 h-4 text-blue-600 bg-gray-100
-                                                                                    border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 
-                                                                                    dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700
-                                                                                    dark:border-gray-600"
-                                                                                    {...checkbox}
-                                                                                    onChange={e => {
-                                                                                        checkbox.onChange(e);
-                                                                                        handleCheckbox(e);
-                                                                                    }}
-                                                                                    value={option.key}
-                                                                                // {...register(field.name, field.inputRules)}
-                                                                                />
-                                                                                <label className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{option.value}</label>
-                                                                            </div>
-                                                                        )
-                                                                    }
-                                                                    )
-                                                                }
 
-
-                                                            </div>
+                                                        field.type === 'textbox' ?
+                                                            <textarea id="message" rows="4" className="block p-2.5 input-bg w-full text-sm text-gray-900  rounded-lg border
+                                                                   focus:visible:outline-none focus:visible:border-none" placeholder="Write your thoughts here..."
+                                                                {...register(field.name, field.inputRules)}></textarea>
                                                             :
-                                                            field.type === 'checkbox' ?
-                                                                <>
-                                                                    <div className="flex items-center me-4">
-                                                                        {
-                                                                            // const firstName = register('firstName', { required: true })
-                                                                            field.options.map((option, index) => {
-                                                                                return (
-                                                                                    <div className="flex items-center me-4" key={index}>
-                                                                                        <input type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100
+                                                            field.type === 'radio' ?
+                                                                <div className="flex items-center me-4">
+                                                                    {
+                                                                        // const firstName = register('firstName', { required: true })
+                                                                        field.options.map((option, index) => {
+                                                                            return (
+                                                                                <div className="flex items-center me-4" key={index}>
+                                                                                    <input type="radio" className="w-4 h-4 text-blue-600 bg-gray-100
                                                                                     border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 
                                                                                     dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700
                                                                                     dark:border-gray-600"
-                                                                                            {...checkbox}
-                                                                                            onChange={e => {
-                                                                                                checkbox.onChange(e);
-                                                                                                handleCheckbox(e);
-                                                                                            }}
-                                                                                            value={option.key}
-                                                                                        // {...register(field.name, field.inputRules)}
-                                                                                        />
-                                                                                        <label className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{option.value}</label>
-                                                                                    </div>
-                                                                                )
-                                                                            }
+                                                                                        {...checkbox}
+                                                                                        // name="gender"
+                                                                                        onChange={e => {
+                                                                                            checkbox.onChange(e);
+                                                                                            handleCheckbox(e);
+                                                                                        }}
+                                                                                        value={option.key}
+                                                                                    // {...register(field.name, field.inputRules)}
+                                                                                    />
+                                                                                    <label className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{option.value}</label>
+                                                                                </div>
                                                                             )
                                                                         }
+                                                                        )
+                                                                    }
 
-                                                                       
-                                                                    </div>
-                                                                    {errors[field.name] && (
+
+                                                                </div>
+                                                                :
+                                                                field.type === 'checkbox' ?
+                                                                    <>
+                                                                        <div className="flex items-center me-4">
+                                                                            {
+                                                                                // const firstName = register('firstName', { required: true })
+                                                                                field.options.map((option, index) => {
+                                                                                    console.log('checkbox', checkbox)
+                                                                                    return (
+                                                                                        <div className="flex items-center me-4" key={index}>
+                                                                                            <input type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100
+                                                                                    border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 
+                                                                                    dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700
+                                                                                    dark:border-gray-600"
+                                                                                                {...checkbox}
+                                                                                                onChange={e => {
+                                                                                                    checkbox.onChange(e);
+                                                                                                    handleCheckbox(e);
+                                                                                                }}
+                                                                                                value={option.key}
+                                                                                                checked={checkBoxValue === option.key}
+                                                                                            // {...register(field.name, field.inputRules)}
+                                                                                            />
+                                                                                            <label className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{option.value}</label>
+                                                                                        </div>
+                                                                                    )
+                                                                                }
+                                                                                )
+                                                                            }
+
+
+                                                                        </div>
+                                                                        {errors[field.name] && (
                                                                             <p className="error" role="alert">
                                                                                 {errors[field.name].message}
                                                                             </p>
                                                                         )}
-                                                                </>
-                                                                :
-                                                                null
+                                                                    </>
+                                                                    :
+                                                                    null
                                         }
                                     </div>
                                 )

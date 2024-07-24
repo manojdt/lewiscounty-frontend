@@ -102,7 +102,7 @@ function menteesListData(id, name, professional, contact, email, location, attn_
 
 const menteeRowData = () => {
     const data = []
-    for (let a = 1; a <= 30; a++) {
+    for (let a = 1; a <= 100000; a++) {
         data.push(menteesListData(a, `Name ${a}`, `Student `, '1234567890', 'John Doe@gmail.com', 'Lorem ipsum dolor sit amet..','Teaching program','Teaching program'))
     }
     return data
@@ -677,3 +677,48 @@ export const mentorTaskColumns = [{
     id: 2,
 }
 ];
+
+
+
+
+
+export const goalsColumns = [{
+    field: 'goal_name',
+    headerName: 'Goals Name',
+    width: 200,
+    id: 0,
+},
+{
+    field: 'start_date',
+    headerName: 'Start Date',
+    width: 200,
+    id: 1,
+},
+{
+    field: 'period',
+    headerName: 'Period',
+    width: 150,
+    id: 2,
+}
+];
+
+
+function goalsListData(id, goal_name, start_date, period) {
+    return {
+        id,
+        goal_name,
+        start_date,
+        period,
+    };
+}
+
+
+const goalsRowData = () => {
+    const data = []
+    for (let a = 1; a <= 30; a++) {
+        data.push(goalsListData(a, `Name ${a}`, `Student `, '03/24/2024', '3 Months'))
+    }
+    return data
+}
+
+export const goalsRow = goalsRowData();
