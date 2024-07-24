@@ -47,8 +47,7 @@ export const Questions = () => {
           ...apiData, 
           gender: apiData.gender[0],
           dob: new Date(apiData.dob).toISOString().split('T')[0],
-          phone_number : parseInt(apiData.phone_number)
-
+          phone_number : apiData.phone_number
         }
         console.log(menteeApiData); 
         dispatch(updateMenteeQuestions(menteeApiData)) 
