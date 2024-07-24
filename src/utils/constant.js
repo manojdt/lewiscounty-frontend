@@ -139,6 +139,7 @@ export const userStatus = {
   otpSuccess: 'otpVerified',
   changePassword: 'passwordUpdated',
   questions: 'questionsUpdated',
+  categoryPrograms: 'categoryprogramloaded'
 }
 
 export const programStatus = {
@@ -154,7 +155,8 @@ export const programStatus = {
   inProgress: 'inprogress',
   start: 'start',
   paused: 'paused',
-  completed: 'completed'
+  completed: 'completed',
+  taskassigned: 'taskassigned'
 }
 
 export const PasswordRulesSet = {

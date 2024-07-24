@@ -271,41 +271,35 @@ export const MaterialColumns = [{
 
 
 export const MemberColumns = [{
-        field: 'first_name',
-        headerName: 'First Name',
+        field: 'full_name',
+        headerName: 'Full Name',
         width: 400,
         id: 0,
     },
     {
-        field: 'last_name',
-        headerName: 'Last Name',
+        field: 'email',
+        headerName: 'Email',
         width: 250,
         id: 1,
     },
     {
-        field: 'email',
-        headerName: 'Email',
+        field: 'dob',
+        headerName: 'DOB',
         width: 200,
         id: 2,
     },
-    // {
-    //     field: 'action',
-    //     headerName: 'Action',
-    //     width: 200,
-    //     id: 3,
-    //     renderCell: (params) => {
-    //         return <button style={{    background: 'rgb(29, 91, 191)',
-    //             color: 'rgb(255, 255, 255)',
-    //             padding: '2px 20px',
-    //             height: '32px',
-    //             margin: '9px 0px',
-    //             display: 'flex',
-    //             justifyContent: 'center',
-    //             alignItems: 'center',
-    //             borderRadius: '3px'}} 
-    //             onClick={() => console.log('click')}>View Details</button>;
-    //     }
-    // },
+    {
+        field: 'gender',
+        headerName: 'Gender',
+        width: 200,
+        id: 3,
+    },
+    {
+        field: 'action',
+        headerName: 'Action',
+        width: 200,
+        id: 4,
+    },
 ];
 
 

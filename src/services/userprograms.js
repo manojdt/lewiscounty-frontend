@@ -85,3 +85,38 @@ export const getMentees = createAsyncThunk(
         return getMenteesList;
     }
 );
+
+
+export const getProgramMentees = createAsyncThunk(
+    "getProgramMentees",
+    async () => {
+        const allMentees = await api.get('program_task_assign/list_mentee');
+        if (allMentees.status === 200 && allMentees.data) {
+            return allMentees.data;
+        }
+        return allMentees;
+    }
+);
+
+export const assignProgramTask = createAsyncThunk(
+    "assignProgramTask",
+    async (data) => {
+        const programTaskAssign = await api.post('program_task_assign/create_task?status=assign', data);
+        if (programTaskAssign.status === 201 && programTaskAssign.data) {
+            return programTaskAssign.data;
+        }
+        return programTaskAssign;
+    }
+);
+
+
+export const getMenteeDetails = createAsyncThunk(
+    "getMenteeDetails",
+    async (menteeId) => {
+        const menteeDetails = await api.post(`program_task_assign/list_mentee?id=${menteeId}`);
+        if (menteeDetails.status === 200 && menteeDetails.data) {
+            return menteeDetails.data;
+        }
+        return menteeDetails;
+    }
+);
