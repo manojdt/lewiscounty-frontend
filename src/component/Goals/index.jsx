@@ -17,6 +17,10 @@ import CancelIcon from '../../assets/images/cancel1x.png'
 import AddGoalIcon from '../../assets/icons/addGoal.svg'
 import { goalsColumns, goalsRow, menteeColumns, menteeRow } from '../../mock';
 import { Button } from '../../shared';
+import RecentActivities from '../Dashboard/RecentActivities';
+import MuiModal from '../../shared/Modal';
+import { Calendar } from 'primereact/calendar';
+import CreateGoal from './CreateGoal';
 
 
 
@@ -28,7 +32,8 @@ const Goals = () => {
     const [deleteModal, setDeleteModal] = useState(false)
     const [requestTab, setRequestTab] = useState('mentor-goals')
     const [activeGoalList, setActiveGoalList] = useState('total_goal')
-
+    const [actionModal, setActionModal] = useState(false)
+    const [dateFormat, setDateFormat] = useState({})
 
     const requestBtns = [
         {
@@ -82,7 +87,7 @@ const Goals = () => {
         {
             field: 'action',
             headerName: 'Action',
-            width: 100,
+            width: 200,
             id: 4,
             renderCell: (params) => {
                 console.log('params', params)
@@ -115,7 +120,7 @@ const Goals = () => {
         },
     ]
 
-    const title = requestBtns.find(option => option.key === requestTab)?.name || ''
+    const title = goalsList.find(option => option.key === activeGoalList)?.name || ''
 
     const handleTab = (key) => setRequestTab(key)
 
@@ -126,6 +131,10 @@ const Goals = () => {
 
     const handleDeleteSelectedRows = () => {
         setDeleteModal(true)
+    }
+
+    const handleCloseModal = () => {
+        setActionModal(false)
     }
 
 
@@ -191,24 +200,27 @@ const Goals = () => {
                                     )
                                 }
                                 <div className="create-goal flex justify-center items-center flex-col gap-4"
+                                    onClick={() => setActionModal(true)}
                                 >
                                     <p>Create New Goal</p>
                                     <img src={AddGoalIcon} alt="AddGoalIcon" />
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-4 gap-7">
-                                <div className="col-span-2">
-                                    <div style={{ border: '1px solid rgba(29, 91, 191, 1)' }}>
+
+
+                            <div className="grid grid-cols-4 gap-7 py-5">
+                                <div className="col-span-3">
+                                    <div style={{ border: '1px solid rgba(29, 91, 191, 1)', padding: '10px 30px 20px' }}>
                                         <div className='px-2 py-5'>
-                                            Active Goals
+                                            {title}
                                         </div>
                                         <DataTable rows={goalsRow} columns={goalColumn} handleSelectedRow={handleSelectedRow} />
                                     </div>
                                 </div>
 
                                 <div>
-
+                                    <RecentActivities />
                                 </div>
 
                             </div>
@@ -217,9 +229,11 @@ const Goals = () => {
 
 
                     </div>
-
+                    
+                    <CreateGoal open={actionModal} handleCloseModal={handleCloseModal}/>
                 </div>
             </div>
+
         </div>
     )
 }
