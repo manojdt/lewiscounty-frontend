@@ -679,21 +679,16 @@ export const mentorTaskColumns = [{
 export const goalsColumns = [{
     field: 'goal_name',
     headerName: 'Goals Name',
-    width: 400,
+    width: 300,
     id: 0,
 },
 {
     field: 'start_date',
     headerName: 'Start Date',
-    width: 300,
+    width: 350,
     id: 1,
 },
-{
-    field: 'period',
-    headerName: 'Period',
-    width: 250,
-    id: 2,
-}
+
 ];
 
 

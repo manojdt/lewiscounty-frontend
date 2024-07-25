@@ -162,8 +162,42 @@ export const programStatus = {
 export const goalStatus = {
   load: 'loaded',
   create: 'created',
+  statusupdate: 'statusupdate',
+  active: 'active',
+  start: 'start',
+  abort: 'abort',
   update: 'updated',
   delete: 'deleted',
+}
+
+
+export const goalPeriods = [
+  {
+    name: '1 Month',
+    value: 1
+  },
+  {
+    name: '3 Months',
+    value: 3
+  },
+  {
+    name: '6 Months',
+    value: 6
+  },
+  {
+    name: '12 Months',
+    value: 12
+  },
+
+]
+
+
+export const goalDataStatus = {
+  inactive: 'Not Active Goal',
+  active: 'Active Goal',
+  ongoing: 'Goal in Progress',
+  completed: 'Completed Goal',
+  aborted: 'Cancel Goal',
 }
 
 export const PasswordRulesSet = {
@@ -200,7 +234,7 @@ export const pipeUrls = {
   programdetails: '/program-details',
   programtask: '/program-task',
   assigntask: '/assign-task',
-  assignmentess : '/assign-mentees',
+  assignmentess: '/assign-mentees',
   createprogram: '/create-program',
   startprogram: '/start-program'
 }

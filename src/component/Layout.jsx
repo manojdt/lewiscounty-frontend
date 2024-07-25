@@ -27,6 +27,10 @@ export default function Layout() {
       label: 'Task',
       command: () => navigate(role === 'mentee' ? '/mentee-tasks' : '/mentor-tasks')
     },
+    {
+      label: 'Goals',
+      command: () => navigate('/goals')
+    },
   ];
 
   return (
