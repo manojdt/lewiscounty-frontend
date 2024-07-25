@@ -159,6 +159,13 @@ export const programStatus = {
   taskassigned: 'taskassigned'
 }
 
+export const goalStatus = {
+  load: 'loaded',
+  create: 'created',
+  update: 'updated',
+  delete: 'deleted',
+}
+
 export const PasswordRulesSet = {
   character: 'character',
   upperlowercase: 'upperlowercase',

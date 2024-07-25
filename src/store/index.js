@@ -5,12 +5,14 @@ import {
 import userReducer from "../features/user/userSlice";
 import programReducer from "../features/program/programSlice";
 import userProgramReducer from "../features/userprograms/userProgramSlice";
+import goalsReducer from "../features/goals/goalsSlice";
 
 
 const combinedReducer = combineReducers({
   userInfo: userReducer,
   programInfo: programReducer,
-  userPrograms: userProgramReducer
+  userPrograms: userProgramReducer,
+  goals: goalsReducer
 });
 
 const rootReducer = (state, action) => {

@@ -5,9 +5,14 @@ import MuiModal from '../../shared/Modal';
 import { useForm } from 'react-hook-form';
 import { Calendar } from 'primereact/calendar';
 import { Button } from '../../shared';
+import { useDispatch, useSelector } from 'react-redux';
+import { createGoal } from '../../services/goalsInfo';
+
 
 export default function CreateGoal({ open, handleCloseModal }) {
     const [dateFormat, setDateFormat] = useState({})
+    const dispatch = useDispatch()
+
 
     const {
         register,
@@ -17,13 +22,24 @@ export default function CreateGoal({ open, handleCloseModal }) {
     } = useForm();
 
     const onSubmit = (data) => {
-        console.log(data)
+        console.log(data)   
+        const apiData = {
+            ...data,
+            start_date :  new Date(data.start_date).toISOString().split('T')[0],
+            period : parseInt(data.period)
+        }
+        console.log('ap', apiData)
+        dispatch(createGoal(data))
         // reset()
     }
 
     const handleClose = () => {
         handleCloseModal()
     }
+
+    useEffect(() => {
+
+    },[])
 
 
     console.log('errors', errors)
@@ -32,7 +48,6 @@ export default function CreateGoal({ open, handleCloseModal }) {
     const dateField = register('start_date', { required: "This field is required" })
     return (
         <div>
-
 
             <MuiModal modalSize='lg' modalOpen={open} modalClose={handleClose} noheader>
                 <div className='px-5 py-5'>
@@ -104,13 +119,13 @@ export default function CreateGoal({ open, handleCloseModal }) {
                                     <div className='relative'>
                                         <Calendar
                                             className='calendar-control input-bg'
-                                            // {...dateField}
-                                            // value={dateFormat['start_date']}
-                                            // onChange={(e) => {
-                                            //     // console.log('dateField123', dateField)
-                                            //     dateField.onChange(e)
-                                            //     setDateFormat({ ...dateFormat, start_date: e.value })
-                                            // }}
+                                            {...dateField}
+                                            value={dateFormat['start_date']}
+                                            onChange={(e) => {
+                                                // console.log('dateField123', dateField)
+                                                dateField.onChange(e)
+                                                setDateFormat({ ...dateFormat, start_date: e.value })
+                                            }}
 
                                             hourFormat="12"
                                             dateFormat="dd/mm/yy"

@@ -1,27 +1,22 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Menu from '@mui/material/Menu';
-import { Backdrop } from '@mui/material';
+import { Backdrop, CircularProgress } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import { useNavigate } from 'react-router-dom';
 
 import DataTable from '../../shared/DataGrid';
 import MoreIcon from '../../assets/icons/moreIcon.svg'
 import ViewIcon from '../../assets/images/view1x.png'
-import SearchIcon from '../../assets/images/search1x.png'
 import CalenderIcon from '../../assets/icons/CalenderIcon.svg'
-import EditIcon from '../../assets/images/Edit1x.png'
-import DownloadIcon from '../../assets/images/download1x.png'
 import DeleteIcon from '../../assets/images/delete1x.png'
-import OverDeleteIcon from '../../assets/images/delete_1x.png'
-import CancelIcon from '../../assets/images/cancel1x.png'
 import AddGoalIcon from '../../assets/icons/addGoal.svg'
-import { goalsColumns, goalsRow, menteeColumns, menteeRow } from '../../mock';
-import { Button } from '../../shared';
+import { goalsColumns, goalsRow } from '../../mock';
 import RecentActivities from '../Dashboard/RecentActivities';
-import MuiModal from '../../shared/Modal';
-import { Calendar } from 'primereact/calendar';
 import CreateGoal from './CreateGoal';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllGoals } from '../../services/goalsInfo';
+import './goal.css'
+import { goalStatus } from '../../utils/constant';
 
 
 const Goals = () => {
@@ -34,6 +29,11 @@ const Goals = () => {
     const [activeGoalList, setActiveGoalList] = useState('total_goal')
     const [actionModal, setActionModal] = useState(false)
     const [dateFormat, setDateFormat] = useState({})
+    const [goals, setGoals] = useState([])
+
+    const { goalsList, loading, status, error } = useSelector(state => state.goals)
+
+    const dispatch = useDispatch()
 
     const requestBtns = [
         {
@@ -46,7 +46,7 @@ const Goals = () => {
         }
     ]
 
-    const goalsList = [
+    const goalsListMenu = [
         {
             name: 'Total Goals',
             key: 'total_goal',
@@ -120,7 +120,7 @@ const Goals = () => {
         },
     ]
 
-    const title = goalsList.find(option => option.key === activeGoalList)?.name || ''
+    const title = goalsListMenu.find(option => option.key === activeGoalList)?.name || ''
 
     const handleTab = (key) => setRequestTab(key)
 
@@ -137,11 +137,33 @@ const Goals = () => {
         setActionModal(false)
     }
 
+    useEffect(() => {
+        if (!goalsList.length) {
+            dispatch(getAllGoals())
+        }
+    }, [])
+
+    useEffect(() => {
+        if(status === goalStatus.create){
+            setActionModal(false);
+            dispatch(getAllGoals())
+        }
+    },[status])
+
+    useEffect(() => {
+        setGoals(goalsList)
+    },[goalsList])
+
 
     return (
         <div className="goals px-9 py-9">
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={loading}
+            >
+                <CircularProgress color="inherit" />
 
-
+            </Backdrop>
 
             <div className='px-3 py-5' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
                 <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
@@ -190,7 +212,7 @@ const Goals = () => {
                         <div className='goals-info'>
                             <div className='goals-list flex items-center gap-4'>
                                 {
-                                    goalsList.map(goal =>
+                                    goalsListMenu.map(goal =>
                                         <div className={`goal-counts-container ${activeGoalList === goal.key ? 'active' : ''}`} key={goal.key}
                                             onClick={() => setActiveGoalList(goal.key)}
                                         >
@@ -215,7 +237,7 @@ const Goals = () => {
                                         <div className='px-2 py-5'>
                                             {title}
                                         </div>
-                                        <DataTable rows={goalsRow} columns={goalColumn} handleSelectedRow={handleSelectedRow} />
+                                        <DataTable rows={goals} columns={goalColumn} handleSelectedRow={handleSelectedRow} />
                                     </div>
                                 </div>
 
@@ -229,8 +251,8 @@ const Goals = () => {
 
 
                     </div>
-                    
-                    <CreateGoal open={actionModal} handleCloseModal={handleCloseModal}/>
+
+                    <CreateGoal open={actionModal} handleCloseModal={handleCloseModal} />
                 </div>
             </div>
 
