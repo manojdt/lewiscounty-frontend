@@ -84,7 +84,7 @@ const ViewReport = () => {
 
                 <div className='px-4'>
                     <div className="relative flex gap-6 justify-between">
-                        <table className="w-[700px] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                        <table className="w-[50%] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                             <tbody style={{ border: '1px solid rgba(0, 174, 189, 1)' }}>
                                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                     <th scope="row" style={{ border: '1px solid rgba(0, 174, 189, 1)' }} className="px-6 py-4 font-medium whitespace-nowrap ">
@@ -122,7 +122,7 @@ const ViewReport = () => {
                             </tbody>
                         </table>
 
-                        <table className="w-[700px] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                        <table className="w-[50%] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                             <tbody style={{ border: '1px solid rgba(29, 91, 191, 1)' }}>
                                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                     <th scope="row" style={{ border: '1px solid rgba(29, 91, 191, 1)' }} className="px-6 py-4 font-medium whitespace-nowrap ">
