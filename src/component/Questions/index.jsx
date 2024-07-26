@@ -70,7 +70,9 @@ export const Questions = () => {
 
   useEffect(() => {
     if (userInfo && userInfo.data && Object.keys(userInfo.data).length && currentStep === 1) {
-      setStepData({ ...stepData, full_name: userInfo.data.first_name, email: userInfo.data.email })
+      setStepData({ ...stepData, 
+        [role === 'mentee' ? 'full_name' : 'first_name']: userInfo.data.first_name, 
+        email: userInfo.data.email })
     }
 
     if (!userInfo.loading && Object.keys(userInfo.data).length && userInfo.data.is_registered && userInfo.status === userStatus.questions) {
@@ -111,8 +113,6 @@ export const Questions = () => {
     }
   }, [role])
 
-
-  console.log('formFields', formFields)
 
   return (
     <>
