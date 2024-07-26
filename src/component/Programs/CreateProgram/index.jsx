@@ -409,6 +409,9 @@ export default function CreatePrograms() {
 
     console.log('viewDetailsInfo', viewDetailsInfo)
 
+
+    console.log('formDetails.members', formDetails.members)
+
     return (
         <div className="dashboard-content px-8 mt-10">
             <div style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }}>

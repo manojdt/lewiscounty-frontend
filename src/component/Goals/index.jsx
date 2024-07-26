@@ -131,6 +131,15 @@ const Goals = () => {
                 setPopupModal('')
             }, [3000])
         }
+
+        if (status === goalStatus.update) {
+            setActionModal(false)
+            setPopupModal('Updated')
+            dispatch(getAllGoals())
+            setTimeout(() => {
+                setPopupModal('')
+            }, [3000])
+        }
     }, [status])
 
     const goalColumn = [

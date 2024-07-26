@@ -34,6 +34,8 @@ export default function CreateGoal({ open, handleCloseModal, seletedItem, editMo
         if (editMode) {
             apiData = {
                 ...apiData,
+                start_date: new Date(data.start_date).toISOString().split('T')[0],
+                period: parseInt(data.period),
                 id: seletedItem.id
             }
             dispatch(updateGoal(apiData))

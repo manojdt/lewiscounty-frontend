@@ -167,7 +167,9 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                     <div className='relative'>
                                                         <div className='input-bg h-[60px] w-full mt-2 flex items-center 
                                                                                          text-[12px] gap-2 cursor-pointer px-6'
-                                                            style={{ borderRadius: '3px' }}>
+                                                            style={{ borderRadius: '3px' }}
+                                                            onClick={() => handleAction(field.name)}
+                                                            >
 
                                                             {
                                                                 field?.value && field.value.slice(0, 6).map((popupfield, index) => {
@@ -183,6 +185,9 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                                                     popupfield.name ||
 
                                                                                     `${popupfield.first_name} ${popupfield.last_name}`
+                                                                                    ||
+
+                                                                                     `${popupfield.full_name}`
                                                                                 }
                                                                             </p>
 

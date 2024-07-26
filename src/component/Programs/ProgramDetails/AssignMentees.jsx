@@ -14,7 +14,7 @@ import TextIcon from "../../../assets/images/text1x.png";
 import { Button } from '../../../shared';
 import MuiModal from '../../../shared/Modal';
 import MuiTable from '../../../shared/Table';
-import { assignMenteeColumns, assignMenteeRows, MemberColumns } from '../../../mock';
+import { assignMenteeColumns, assignMenteeRows, MenteeAssignColumns } from '../../../mock';
 import DataTable from '../../../shared/DataGrid';
 import SuccessTik from '../../../assets/images/blue_tik1x.png';
 import { getAllCategories } from '../../../services/programInfo';
@@ -42,7 +42,7 @@ export default function AssignMentees() {
 
     const [loading, setLoading] = useState(false)
 
-    const [updatedMemberColumn, setUpdatedMemberColumn] = useState(MemberColumns)
+    const [updatedMemberColumn, setUpdatedMemberColumn] = useState(MenteeAssignColumns)
 
     const {
         register,
@@ -87,7 +87,7 @@ export default function AssignMentees() {
     const handleAddMentee = () => {
         setMentalModal(true)
 
-        const updateMemberColumns = [...MemberColumns].map(mcol => {
+        const updateMemberColumns = [...MenteeAssignColumns].map(mcol => {
             if (mcol.field === 'action') {
                 return {
                     ...mcol,
