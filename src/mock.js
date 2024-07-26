@@ -563,13 +563,13 @@ export const taskRows = taskData();
 export const taskColumns = [{
         field: 'assigned_date',
         headerName: 'Assigned Date',
-        width: 150,
+        width: 200,
         id: 0,
     },
     {
         field: 'task_name',
         headerName: 'Task Name',
-        width: 150,
+        width: 200,
         id: 1,
     },
     {
@@ -586,25 +586,25 @@ export const taskColumns = [{
     {
         field: 'start_date',
         headerName: 'Start Date',
-        width: 150,
+        width: 200,
         id: 2,
     },
     {
         field: 'completed_date',
         headerName: 'Completed  Date',
-        width: 150,
+        width: 180,
         id: 2,
     },
     {
         field: 'task_sent',
         headerName: 'Task Sent by',
-        width: 150,
+        width: 180,
         id: 2,
     },
     {
         field: 'status',
         headerName: 'Status',
-        width: 100,
+        width: 150,
         id: 2,
     },
     {
