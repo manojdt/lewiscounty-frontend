@@ -570,4 +570,12 @@ input[type="number"] {
   .recent-activities .timeline{
     right: -330px;
   }
+
+  .mentor-mentee-container .user-image{
+    width: 160px;
+  }
+
+  .program-feeds .feed-list .program-user-img{
+    width: 100px;
+  }
 }
