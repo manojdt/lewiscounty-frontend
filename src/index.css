@@ -207,7 +207,7 @@ input[type="range"]::-ms-thumb {
   cursor: pointer;
   border-radius: 6px;
   font-weight: 600;
-  border: 1px dotted rgba(29, 91, 191, 1);
+  border: 4px dotted rgba(29, 91, 191, 1);
 }
 
 .goals .goals-info .goal-counts-container.active{
@@ -562,5 +562,12 @@ input[type="number"] {
   .dashboard-content .program-feeds .program-user-image {
     width: 26%;
     object-fit: cover;
+  }
+}
+
+
+@media (min-width: 1920px) {
+  .recent-activities .timeline{
+    right: -330px;
   }
 }
