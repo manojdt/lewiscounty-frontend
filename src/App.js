@@ -39,6 +39,7 @@ import CreateReport from "./component/Reports/CreateReport";
 import ViewReport from "./component/Reports/ViewReport";
 import EditReport from "./component/Reports/EditReport";
 import Goals from "./component/Goals";
+import ViewGoal from "./component/Goals/ViewGoal";
 
 function App() {
  
@@ -105,6 +106,8 @@ function App() {
           <Route path="/preview-mentee-tasks-details/:id" element={<PreviewTaskDetails />} />
 
           <Route path="/goals" element={<Goals />} />
+          <Route path="/view-goal/:id" element={<ViewGoal />} />
+
           <Route path="/reports" element={<Reports />} />
           <Route path="/create-report" element={<CreateReport />} />
           <Route path="/edit-report/:id" element={<EditReport />} />

@@ -1,39 +1,47 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Menu from '@mui/material/Menu';
-import { Backdrop } from '@mui/material';
+import { Backdrop, CircularProgress } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import DataTable from '../../shared/DataGrid';
 import MoreIcon from '../../assets/icons/moreIcon.svg'
 import ViewIcon from '../../assets/images/view1x.png'
-import SearchIcon from '../../assets/images/search1x.png'
 import CalenderIcon from '../../assets/icons/CalenderIcon.svg'
-import EditIcon from '../../assets/images/Edit1x.png'
-import DownloadIcon from '../../assets/images/download1x.png'
 import DeleteIcon from '../../assets/images/delete1x.png'
+import AddGoalIcon from '../../assets/icons/addGoal.svg'
+import SuccessTik from '../../assets/images/blue_tik1x.png';
 import OverDeleteIcon from '../../assets/images/delete_1x.png'
 import CancelIcon from '../../assets/images/cancel1x.png'
-import AddGoalIcon from '../../assets/icons/addGoal.svg'
-import { goalsColumns, goalsRow, menteeColumns, menteeRow } from '../../mock';
-import { Button } from '../../shared';
+import EditIcon from '../../assets/images/Edit1x.png'
+import { goalsColumns, goalsRow } from '../../mock';
 import RecentActivities from '../Dashboard/RecentActivities';
-import MuiModal from '../../shared/Modal';
-import { Calendar } from 'primereact/calendar';
 import CreateGoal from './CreateGoal';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteGoalInfo, getAllGoals, getGoalInfo, getGoalsCount, updateGoalStatus } from '../../services/goalsInfo';
+import './goal.css'
+import { goalPeriods, goalStatus } from '../../utils/constant';
+import MuiModal from '../../shared/Modal';
 
 
 const Goals = () => {
     const navigate = useNavigate()
+    const [searchParams] = useSearchParams();
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const [selectedRows, setSelectedRows] = useState([])
     const [deleteModal, setDeleteModal] = useState(false)
     const [requestTab, setRequestTab] = useState('mentor-goals')
-    const [activeGoalList, setActiveGoalList] = useState('total_goal')
+    const [activeGoalList, setActiveGoalList] = useState('total_goals')
     const [actionModal, setActionModal] = useState(false)
     const [dateFormat, setDateFormat] = useState({})
+    const [goals, setGoals] = useState([])
+    const [seletedItem, setSelectedItem] = useState({})
+    const [popupModal, setPopupModal] = useState('')
+
+    const { goalsList, loading, status, error, createdGoal, goalsCount } = useSelector(state => state.goals)
+
+    const dispatch = useDispatch()
 
     const requestBtns = [
         {
@@ -46,31 +54,26 @@ const Goals = () => {
         }
     ]
 
-    const goalsList = [
+    const goalsListMenu = [
         {
             name: 'Total Goals',
-            key: 'total_goal',
-            count: 39
+            key: 'total_goals',
         },
         {
             name: 'Active Goals',
-            key: 'active_goal',
-            count: 23
+            key: 'active',
         },
         {
             name: 'Goals in Progress',
-            key: 'inprogress_goal',
-            count: '04'
+            key: 'ongoing',
         },
         {
             name: 'Completed Goals',
-            key: 'completed_goal',
-            count: '09'
+            key: 'completed',
         },
         {
             name: 'Cancel Goals',
-            key: 'cancel_goal',
-            count: '02'
+            key: 'aborted',
         }
     ]
 
@@ -78,21 +81,78 @@ const Goals = () => {
         setAnchorEl(null);
     };
 
-    const handleClick = (event) => {
+    const handleClick = (event, data) => {
+        console.log('ggggggg', data)
+        setSelectedItem(data)
         setAnchorEl(event.currentTarget);
     };
+
+    const handleDeleteGoal = () => {
+        dispatch(deleteGoalInfo(seletedItem.id))
+    }
+
+    const handleDelete = () => {
+        handleClose()
+        setDeleteModal(true)
+    }
+
+    const handlEditGoal = () => {
+        setActionModal(true)
+    }
+
+    useEffect(() => {
+        dispatch(getGoalsCount())
+        navigate('/goals?type=active')
+    }, [])
+
+
+    useEffect(() => {
+        console.log('searchParams', searchParams)
+        const filterType = searchParams.get("type");
+
+        let query = ''
+
+        if (filterType && filterType !== '') {
+            query = filterType
+        }
+
+
+        dispatch(getAllGoals(query));
+
+
+    }, [searchParams])
+
+    useEffect(() => {
+        if (status === goalStatus.delete) {
+            setPopupModal('Deleted')
+            setDeleteModal(false)
+            dispatch(getAllGoals())
+            setTimeout(() => {
+                setPopupModal('')
+            }, [3000])
+        }
+    }, [status])
 
     const goalColumn = [
         ...goalsColumns,
         {
+            field: 'period',
+            headerName: 'Period',
+            width: 330,
+            id: 2,
+            renderCell: (params) => {
+                return <div>{goalPeriods.find(goalPeriod => parseInt(goalPeriod.value) === parseInt(params.row.period))?.name}</div>
+            }
+        },
+        {
             field: 'action',
             headerName: 'Action',
-            width: 200,
+            width: 350,
             id: 4,
             renderCell: (params) => {
                 console.log('params', params)
                 return <>
-                    <div className='cursor-pointer flex items-center h-full' onClick={handleClick}>
+                    <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleClick(e, params.row)}>
                         <img src={MoreIcon} alt='MoreIcon' />
                     </div>
                     <Menu
@@ -104,14 +164,31 @@ const Goals = () => {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
-                        <MenuItem onClick={() => navigate('/view-report/1')} className='!text-[12px]'>
-                            <img src={ViewIcon} alt="ViewIcon" className='pr-3 w-[30px]' />
+                        {
+                            params.row.goal_status === 'active' &&
+                            <MenuItem onClick={handlEditGoal} className='!text-[12px]'>
+                                <img src={EditIcon} alt="EditIcon" className='pr-3 w-[27px]' />
+                                Edit
+                            </MenuItem>
+                        }
+
+                        <MenuItem onClick={(e) => {
+                            navigate(`/view-goal/${seletedItem.id}`);
+                        }
+                        } className='!text-[12px]'>
+                            <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
                             View
                         </MenuItem>
-                        <MenuItem onClick={() => console.log('delete', params)} className='!text-[12px]'>
-                            <img src={DeleteIcon} alt="DeleteIcon" className='pr-3 w-[27px]' />
-                            Delete
-                        </MenuItem>
+
+                        {
+                            params.row.goal_status !== 'completed' &&
+                            <MenuItem onClick={handleDelete} className='!text-[12px]'>
+                                <img src={DeleteIcon} alt="DeleteIcon" className='pr-3 w-[27px]' />
+                                Delete
+                            </MenuItem>
+                        }
+
+
                     </Menu>
                 </>
             }
@@ -120,17 +197,15 @@ const Goals = () => {
         },
     ]
 
-    const title = goalsList.find(option => option.key === activeGoalList)?.name || ''
+    const title = goalsListMenu.find(option => option.key === searchParams.get("type"))?.name || ''
 
-    const handleTab = (key) => setRequestTab(key)
+    const handleTab = (key) => {
+        setRequestTab(key)
+    }
 
     const handleSelectedRow = (row) => {
         setSelectedRows(row)
         console.log('selected', row)
-    }
-
-    const handleDeleteSelectedRows = () => {
-        setDeleteModal(true)
     }
 
     const handleCloseModal = () => {
@@ -138,10 +213,91 @@ const Goals = () => {
     }
 
 
+    useEffect(() => {
+        if (Object.keys(createdGoal).length && status === goalStatus.create) {
+            dispatch(updateGoalStatus({ id: parseInt(createdGoal.goal_id), action: 'active' }))
+        }
+
+        if (Object.keys(createdGoal).length && status === goalStatus.statusupdate) {
+            setActionModal(false);
+            setPopupModal('Created')
+            setTimeout(() => {
+                setPopupModal('')
+            }, [3000])
+            dispatch(getAllGoals())
+        }
+
+    }, [status])
+
+
+    useEffect(() => {
+        setGoals(goalsList)
+    }, [goalsList])
+
+
     return (
         <div className="goals px-9 py-9">
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={loading}
+            >
+                <CircularProgress color="inherit" />
+
+            </Backdrop>
+
+            <MuiModal modalOpen={popupModal !== ''} modalClose={() => setPopupModal('')} noheader>
+                <div className='px-5 py-1 flex justify-center items-center'>
+                    <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
+                        style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
+                        <img src={SuccessTik} alt="SuccessTik" />
+                        <p className='text-white text-[12px]'>Goal {popupModal} Successfully</p>
+                    </div>
+
+                </div>
+            </MuiModal>
+
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={deleteModal}
+            >
+                <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
+
+                    <div style={{ border: '1px solid rgba(229, 0, 39, 1)', borderRadius: '15px' }} className='relative flex flex-col gap-2 justify-center 
+                        items-center py-14 px-16'>
+
+                        <img className='absolute top-2 right-3 cursor-pointer' onClick={() => setDeleteModal(false)}
+                            src={CancelIcon} alt="CancelIcon" />
+
+                        <img className='w-[50px]' src={OverDeleteIcon} alt="OverDeleteIcon" />
 
 
+                        <div className='py-5 mb-3'>
+                            <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 600, fontSize: '18px' }}>
+                                Are you sure want to delete this goal?</p>
+                        </div>
+                        <div className='flex justify-center'>
+                            <div className="flex gap-6 justify-center align-middle">
+                                <button style={{
+                                    background: 'rgba(229, 0, 39, 1)', color: '#fff', borderRadius: '3px',
+                                    width: '130px', padding: '13px'
+                                }}
+                                    onClick={() => setDeleteModal(false)} >
+                                    No
+                                </button>
+                                <button style={{
+                                    border: '1px solid rgba(229, 0, 39, 1)', color: 'rgba(229, 0, 39, 1)', borderRadius: '3px',
+                                    width: '130px', padding: '13px'
+                                }}
+                                    onClick={handleDeleteGoal} >
+                                    Yes
+                                </button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </Backdrop>
 
             <div className='px-3 py-5' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
                 <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
@@ -190,12 +346,12 @@ const Goals = () => {
                         <div className='goals-info'>
                             <div className='goals-list flex items-center gap-4'>
                                 {
-                                    goalsList.map(goal =>
-                                        <div className={`goal-counts-container ${activeGoalList === goal.key ? 'active' : ''}`} key={goal.key}
-                                            onClick={() => setActiveGoalList(goal.key)}
+                                    goalsListMenu.map(goal =>
+                                        <div className={`goal-counts-container ${searchParams.get("type") === goal.key ? 'active' : ''}`} key={goal.key}
+                                            onClick={() => { navigate('/goals?type=' + goal.key) }}
                                         >
                                             <p>{goal.name}</p>
-                                            <p className='goal-count'>{goal.count}</p>
+                                            <p className='goal-count'>{goalsCount[goal.key]}</p>
                                         </div>
                                     )
                                 }
@@ -208,14 +364,13 @@ const Goals = () => {
                             </div>
 
 
-
                             <div className="grid grid-cols-4 gap-7 py-5">
                                 <div className="col-span-3">
                                     <div style={{ border: '1px solid rgba(29, 91, 191, 1)', padding: '10px 30px 20px' }}>
                                         <div className='px-2 py-5'>
                                             {title}
                                         </div>
-                                        <DataTable rows={goalsRow} columns={goalColumn} handleSelectedRow={handleSelectedRow} />
+                                        <DataTable rows={goals} columns={goalColumn} handleSelectedRow={handleSelectedRow} />
                                     </div>
                                 </div>
 
@@ -225,12 +380,9 @@ const Goals = () => {
 
                             </div>
                         </div>
-
-
-
                     </div>
-                    
-                    <CreateGoal open={actionModal} handleCloseModal={handleCloseModal}/>
+
+                    <CreateGoal open={actionModal} handleCloseModal={handleCloseModal} editMode={Object.keys(seletedItem).length} seletedItem={seletedItem} />
                 </div>
             </div>
 

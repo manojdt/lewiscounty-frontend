@@ -102,7 +102,7 @@ function Pagination(props) {
 }
 
 function CustomPagination(props) {
-    console.log('nn', props)
+    // console.log('nn', props)
     // return <div className='custom-pagination w-full relative'> <GridPagination ActionsComponent={TablePaginationActions} {...props} /></div>;
     return <div className='flex h-[90px] mx-2 custom-pagination w-full relative'> <TablePaginationActions {...props} /></div>;
 }
@@ -111,7 +111,7 @@ function TablePaginationActions(props) {
     const theme = useTheme();
     const { onPageChange } = props;
 
-    console.log('propsuu', props)
+    // console.log('propsuu', props)
 
     const apiRef = useGridApiContext();
     // const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
@@ -123,9 +123,9 @@ function TablePaginationActions(props) {
 
 
 
-    console.log('apiRef', apiRef)
-    console.log('sss', paginationDetails)
-    console.log('meta', meta)
+    // console.log('apiRef', apiRef)
+    // console.log('sss', paginationDetails)
+    // console.log('meta', meta)
 
 
     const handleBackButtonClick = (
@@ -143,7 +143,7 @@ function TablePaginationActions(props) {
     };
 
     const handlePerPage = (event) => {
-        console.log(event.target.value)
+        // console.log(event.target.value)
         apiRef.current.setPageSize(event.target.value)
     }
 
@@ -209,7 +209,7 @@ function TablePaginationActions(props) {
 
 export default function DataTable({ rows, columns, footerAction, footerComponent, selectedAllRows = [], 
         hideCheckbox = false, hideFooter = false, handleSelectedRow = undefined }) {
-    console.log('rows', rows)
+    // console.log('rows', rows)
     const [selectedRows, setSelectedRows] = useState([])
     const [selectedIds, setSelectedIds] = useState([])
 
@@ -221,17 +221,17 @@ export default function DataTable({ rows, columns, footerAction, footerComponent
 
     const handleRowSelection = (ids) => {
         const selected = [...rows].filter(row => ids.includes(row.id))
-        console.log('se', selected)
+        // console.log('se', selected)
         setSelectedIds(ids)
         setSelectedRows(selected)
         if(handleSelectedRow) handleSelectedRow(selected)
     }
 
     useEffect(() => {
-        console.log('selectedAllRowsselectedAllRows', selectedAllRows)
+        // console.log('selectedAllRowsselectedAllRows', selectedAllRows)
         const ids = []
         selectedAllRows.forEach(row => ids.push(row.id))
-        console.log('idsids', ids)
+        // console.log('idsids', ids)
         setSelectedIds(ids)
     }, [])
 

@@ -5,9 +5,16 @@ import MuiModal from '../../shared/Modal';
 import { useForm } from 'react-hook-form';
 import { Calendar } from 'primereact/calendar';
 import { Button } from '../../shared';
+import { useDispatch, useSelector } from 'react-redux';
+import { createGoal, updateGoal } from '../../services/goalsInfo';
+import { Backdrop, CircularProgress } from '@mui/material';
+import { goalPeriods } from '../../utils/constant';
 
-export default function CreateGoal({ open, handleCloseModal }) {
+
+export default function CreateGoal({ open, handleCloseModal, seletedItem, editMode }) {
     const [dateFormat, setDateFormat] = useState({})
+    const dispatch = useDispatch()
+    const { loading, error } = useSelector(state => state.goals)
 
     const {
         register,
@@ -18,12 +25,40 @@ export default function CreateGoal({ open, handleCloseModal }) {
 
     const onSubmit = (data) => {
         console.log(data)
-        // reset()
+        let apiData = {
+            ...data,
+            start_date: new Date(data.start_date).toISOString().split('T')[0],
+            period: parseInt(data.period)
+        }
+        console.log('ap', apiData)
+        if (editMode) {
+            apiData = {
+                ...apiData,
+                id: seletedItem.id
+            }
+            dispatch(updateGoal(apiData))
+        } else {
+            dispatch(createGoal(apiData))
+        }
+        reset()
+        setDateFormat({})
     }
 
     const handleClose = () => {
         handleCloseModal()
     }
+
+    useEffect(() => {
+        reset()
+        setDateFormat({})
+    }, [])
+
+    useEffect(() => {
+        if (editMode) {
+            reset(seletedItem)
+            // setDateFormat(new Date(seletedItem.start_date))
+        }
+    }, [seletedItem, editMode])
 
 
     console.log('errors', errors)
@@ -33,21 +68,32 @@ export default function CreateGoal({ open, handleCloseModal }) {
     return (
         <div>
 
-
             <MuiModal modalSize='lg' modalOpen={open} modalClose={handleClose} noheader>
+                <Backdrop
+                    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                    open={loading}
+                >
+                    <CircularProgress color="inherit" />
+
+                </Backdrop>
                 <div className='px-5 py-5'>
                     <div className='flex justify-center flex-col gap-5  mt-4 mb-4'
                         style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '10px', }}>
                         <div className='flex justify-between px-3 py-4 items-center' style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
-                            <p className='text-[18px]' style={{ color: 'rgba(0, 0, 0, 1)' }}>Create Goal </p>
+                            <p className='text-[18px]' style={{ color: 'rgba(0, 0, 0, 1)' }}>{editMode ? 'Edit ' : 'Create'} Goal </p>
                             <img className='cursor-pointer' onClick={handleClose} src={CancelIcon} alt="CancelIcon" />
                         </div>
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <div className='px-5'>
+                                {
+                                    error !== '' ? <p className="error" role="alert">{error}</p> : null
+                                }
                                 <div className='relative pb-8'>
                                     <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
-                                        Create New Goal
+                                        {editMode ? 'Edit ' : 'Create New '} Goal
                                     </label>
+
+
 
                                     <div className='relative'>
                                         <input
@@ -104,13 +150,13 @@ export default function CreateGoal({ open, handleCloseModal }) {
                                     <div className='relative'>
                                         <Calendar
                                             className='calendar-control input-bg'
-                                            // {...dateField}
-                                            // value={dateFormat['start_date']}
-                                            // onChange={(e) => {
-                                            //     // console.log('dateField123', dateField)
-                                            //     dateField.onChange(e)
-                                            //     setDateFormat({ ...dateFormat, start_date: e.value })
-                                            // }}
+                                            {...dateField}
+                                            value={dateFormat['start_date'] || new Date(seletedItem.start_date)}
+                                            onChange={(e) => {
+                                                // console.log('dateField123', dateField)
+                                                dateField.onChange(e)
+                                                setDateFormat({ ...dateFormat, start_date: e.value })
+                                            }}
 
                                             hourFormat="12"
                                             dateFormat="dd/mm/yy"
@@ -143,8 +189,10 @@ export default function CreateGoal({ open, handleCloseModal }) {
                                                 }}
                                             >
                                                 <option value="">Select</option>
-                                                <option value="1">Period 1</option>
-                                                <option value="2">Period 2</option>
+                                                {
+                                                    goalPeriods.map(goalPeriod => <option value={goalPeriod.value}>{goalPeriod.name}</option>)
+                                                }
+
 
                                             </select>
                                             {errors['period'] && (
@@ -164,14 +212,14 @@ export default function CreateGoal({ open, handleCloseModal }) {
                                     </label>
 
                                     <div className='relative'>
-                                        <textarea {...register('goals_desc', { required: "This field is required" })}
+                                        <textarea {...register('goal_description', { required: "This field is required" })}
                                             id="message" rows="4" className={`block p-2.5 input-bg w-full text-sm text-gray-900  border
                                                                    focus-visible:outline-none focus-visible:border-none`}
                                             placeholder={''}
                                         ></textarea>
-                                        {errors['goals_desc'] && (
+                                        {errors['goal_description'] && (
                                             <p className="error" role="alert">
-                                                {errors['goals_desc'].message}
+                                                {errors['goal_description'].message}
                                             </p>
                                         )}
                                     </div>
@@ -182,7 +230,9 @@ export default function CreateGoal({ open, handleCloseModal }) {
                                     <button
                                         type='submit'
                                         className='text-white py-3 px-7 w-[18%]'
-                                        style={{ background: 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)', borderRadius: '3px' }}>Create</button>
+                                        style={{ background: 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)', borderRadius: '3px' }}>
+                                        {editMode ? 'Update ' : 'Create'}
+                                    </button>
                                 </div>
 
                             </div>
