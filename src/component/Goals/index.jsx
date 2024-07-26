@@ -20,7 +20,7 @@ import CreateGoal from './CreateGoal';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteGoalInfo, getAllGoals, getGoalInfo, getGoalsCount, updateGoalStatus } from '../../services/goalsInfo';
 import './goal.css'
-import { goalPeriods, goalStatus } from '../../utils/constant';
+import { goalDataStatus, goalPeriods, goalStatus } from '../../utils/constant';
 import MuiModal from '../../shared/Modal';
 
 
@@ -113,7 +113,7 @@ const Goals = () => {
         let query = ''
 
         if (filterType && filterType !== '') {
-            query = filterType
+            query = filterType === 'total_goals' ? '' : filterType
         }
 
 
@@ -154,6 +154,18 @@ const Goals = () => {
             }
         },
         {
+            ...searchParams.get("type") !== 'total_goals'  &&
+            {
+                field: 'goal_status',
+                headerName: 'Status',
+                width: 330,
+                id: 2,
+                renderCell: (params) => {
+                    return <div>{goalDataStatus[params.row.goal_status]}</div>
+                }
+            }
+        },
+        {
             field: 'action',
             headerName: 'Action',
             width: 350,
@@ -190,7 +202,7 @@ const Goals = () => {
                         </MenuItem>
 
                         {
-                            params.row.goal_status !== 'completed' &&
+                            params.row.goal_status === 'inactive' &&
                             <MenuItem onClick={handleDelete} className='!text-[12px]'>
                                 <img src={DeleteIcon} alt="DeleteIcon" className='pr-3 w-[27px]' />
                                 Delete
