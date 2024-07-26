@@ -97,6 +97,7 @@ const Goals = () => {
     }
 
     const handlEditGoal = () => {
+        setAnchorEl(null);
         setActionModal(true)
     }
 
@@ -126,7 +127,12 @@ const Goals = () => {
         if (status === goalStatus.delete) {
             setPopupModal('Deleted')
             setDeleteModal(false)
-            dispatch(getAllGoals())
+            const filterType = searchParams.get("type");
+            let query = ''
+            if (filterType && filterType !== '') {
+                query = filterType === 'total_goals' ? '' : filterType
+            }
+            dispatch(getAllGoals(query))
             setTimeout(() => {
                 setPopupModal('')
             }, [3000])
@@ -135,7 +141,12 @@ const Goals = () => {
         if (status === goalStatus.update) {
             setActionModal(false)
             setPopupModal('Updated')
-            dispatch(getAllGoals())
+            const filterType = searchParams.get("type");
+            let query = ''
+            if (filterType && filterType !== '') {
+                query = filterType === 'total_goals' ? '' : filterType
+            }
+            dispatch(getAllGoals(query))
             setTimeout(() => {
                 setPopupModal('')
             }, [3000])
@@ -245,7 +256,13 @@ const Goals = () => {
             setTimeout(() => {
                 setPopupModal('')
             }, [3000])
-            dispatch(getAllGoals())
+
+            const filterType = searchParams.get("type");
+            let query = ''
+            if (filterType && filterType !== '') {
+                query = filterType === 'total_goals' ? '' : filterType
+            }
+            dispatch(getAllGoals(query))
         }
 
     }, [status])
