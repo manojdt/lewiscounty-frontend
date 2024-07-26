@@ -228,25 +228,25 @@ export const createMaterialsRows = createMaterialRow()
 export const MaterialColumns = [{
         field: 'name',
         headerName: 'Material Name',
-        width: 400,
+        width: 300,
         id: 0,
     },
     {
         field: 'material_type',
         headerName: 'Material Type',
-        width: 250,
+        width: 300,
         id: 1,
     },
     {
         field: 'material_size',
         headerName: 'Material Size',
-        width: 200,
+        width: 250,
         id: 2,
     },
     {
         field: 'action',
         headerName: 'Action',
-        width: 200,
+        width: 300,
         id: 3,
         renderCell: (params) => {
             return <button style = {
@@ -271,35 +271,56 @@ export const MaterialColumns = [{
 
 
 export const MemberColumns = [{
-        field: 'full_name',
+        field: 'first_name',
         headerName: 'Full Name',
-        width: 400,
+        width: 600,
         id: 0,
     },
     {
         field: 'email',
         headerName: 'Email',
-        width: 250,
+        width: 500,
         id: 1,
     },
-    {
-        field: 'dob',
-        headerName: 'DOB',
-        width: 200,
-        id: 2,
-    },
-    {
-        field: 'gender',
-        headerName: 'Gender',
-        width: 200,
-        id: 3,
-    },
-    {
-        field: 'action',
-        headerName: 'Action',
-        width: 200,
-        id: 4,
-    },
+    // {
+    //     field: 'action',
+    //     headerName: 'Action',
+    //     width: 200,
+    //     id: 4,
+    // },
+];
+
+
+export const MenteeAssignColumns = [{
+    field: 'full_name',
+    headerName: 'Full Name',
+    width: 400,
+    id: 0,
+},
+{
+    field: 'email',
+    headerName: 'Email',
+    width: 250,
+    id: 1,
+},
+{
+    field: 'dob',
+    headerName: 'DOB',
+    width: 200,
+    id: 2,
+},
+{
+    field: 'gender',
+    headerName: 'Gender',
+    width: 200,
+    id: 3,
+},
+{
+    field: 'action',
+    headerName: 'Action',
+    width: 200,
+    id: 4,
+},
 ];
 
 
@@ -339,7 +360,7 @@ export const SkillsColumns = [{
     {
         field: 'action',
         headerName: 'Action',
-        width: 200,
+        width: 350,
         id: 3,
         renderCell: (params) => {
             return <button style = {
@@ -385,13 +406,13 @@ export const certificateRows = certificateRow()
 export const CertificateColumns = [{
         field: 'name',
         headerName: 'Certificate Name',
-        width: 600,
+        width: 700,
         id: 0,
     },
     {
         field: 'action',
         headerName: 'Action',
-        width: 200,
+        width: 430,
         id: 3,
         renderCell: (params) => {
             return <button style = {

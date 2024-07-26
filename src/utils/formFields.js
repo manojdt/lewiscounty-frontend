@@ -1090,12 +1090,28 @@ export const ProgramInformationFields = [{
       required: "This field is required",
     },
     options: [{
+        key: 1,
+        value: 1
+      },
+      {
+        key: 5,
+        value: 5
+      },
+      {
         key: 10,
         value: 10
       },
       {
+        key: 15,
+        value: 15
+      },
+      {
         key: 20,
         value: 20
+      },
+      {
+        key: 25,
+        value: 25
       },
       {
         key: 30,
