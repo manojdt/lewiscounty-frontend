@@ -105,6 +105,8 @@ function App() {
           <Route path="/mentee-tasks-details/:id" element={<TaskDetails />} />
           <Route path="/preview-mentee-tasks-details/:id" element={<PreviewTaskDetails />} />
 
+
+
           <Route path="/goals" element={<Goals />} />
           <Route path="/view-goal/:id" element={<ViewGoal />} />
 

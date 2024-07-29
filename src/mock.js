@@ -732,3 +732,184 @@ const goalsRowData = () => {
 }
 
 export const goalsRow = goalsRowData();
+
+
+
+
+const goalsRequestRowData = () => {
+    const data = []
+    for (let a = 1; a <= 30; a++) {
+        data.push({
+            id: a,
+            goal_name: `Goal ${a}`,
+            goals_designation : `Designation ${a}`,
+            goals_desc: 'Desc',
+            request_date : '03/24/2024',
+            approved_date : '03/24/2024',
+            status : 'Accept',
+        })
+    }
+    return data
+}
+
+export const goalsRequestRow = goalsRequestRowData();
+
+
+export const goalsRequestColumn = [{
+    field: 'goal_name',
+    headerName: 'Goals Name',
+    width: 300,
+    id: 0,
+},
+{
+    field: 'goals_designation',
+    headerName: 'Goals Designation',
+    width: 350,
+    id: 1,
+},
+{
+    field: 'goals_desc',
+    headerName: 'Goals Description',
+    width: 350,
+    id: 1,
+},
+{
+    field: 'request_date',
+    headerName: 'Request Date',
+    width: 350,
+    id: 1,
+},
+{
+    field: 'approved_date',
+    headerName: 'Approved Date',
+    width: 350,
+    id: 1,
+},
+{
+    field: 'status',
+    headerName: 'Status',
+    width: 350,
+    id: 1,
+},
+
+];
+
+
+
+
+
+export const menteeGoalsRequestColumn = [{
+    field: 'mentee_name',
+    headerName: 'Mentee Name',
+    width: 300,
+    id: 0,
+},
+{
+    field: 'goal_name',
+    headerName: 'Goals Name',
+    width: 300,
+    id: 0,
+},
+{
+    field: 'start_date',
+    headerName: 'Start Date',
+    width: 250,
+    id: 1,
+},
+{
+    field: 'completed_date',
+    headerName: 'Completed Date',
+    width: 250,
+    id: 1,
+},
+{
+    field: 'period_time',
+    headerName: 'Period Time',
+    width: 250,
+    id: 1,
+},
+];
+
+
+const menteeGoalsRequestRowData = () => {
+    const data = []
+    for (let a = 1; a <= 30; a++) {
+        data.push({
+            id: a,
+            mentee_name: `Mentee ${a}`,
+            goal_name: `Goal ${a}`,
+            start_date : '03/24/2024',
+            completed_date : '03/24/2024',
+            period_time : '3 Months',
+            performance: `${a}%`,
+            goal_status: 'Completed'
+        })
+    }
+    return data
+}
+
+export const menteeGoalsRequestRow = menteeGoalsRequestRowData();
+
+
+
+const discussionRowData = () => {
+    const data = []
+    for (let a = 1; a <= 30; a++) {
+        data.push({
+            id: a,
+            program_name: `Mentee ${a}`,
+            Description: 'testfsdfd',
+            date : '03/24/2024',
+            task : `Task ${a}`,
+            users : a,
+            comments: `${a}`,
+            last_updated_by: 'John'
+        })
+    }
+    return data
+}
+
+export const discussionRow = discussionRowData();
+
+
+export const discussionColumns = [{
+    field: 'program_name',
+    headerName: 'Program Name',
+    width: 200,
+    id: 0,
+},
+{
+    field: 'description',
+    headerName: 'Description',
+    width: 200,
+    id: 1,
+},
+{
+    field: 'date',
+    headerName: 'Date',
+    width: 150,
+    id: 2,
+}, {
+    field: 'task',
+    headerName: 'Tasks',
+    width: 250,
+    id: 1,
+},
+{
+    field: 'users',
+    headerName: 'Users',
+    width: 400,
+    id: 2,
+},
+{
+    field: 'comments',
+    headerName: 'Comments',
+    width: 250,
+    id: 2,
+}, {
+    field: 'last_updated_by',
+    headerName: 'Last update by',
+    width: 250,
+    id: 1,
+},
+];

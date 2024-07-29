@@ -15,6 +15,7 @@ import CancelGoalIcon from '../../assets/images/cancel-goals.png';
 import ConnectIcon from '../../assets/images/Connectpop1x.png'
 import OverDeleteIcon from '../../assets/images/delete_1x.png'
 import CancelModalIcon from '../../assets/images/cancel1x.png'
+import BatchIcon from '../../assets/icons/GoalBatch.svg'
 import { Button } from '../../shared'
 import { useNavigate, useParams } from 'react-router-dom'
 import MuiModal from '../../shared/Modal';
@@ -248,10 +249,14 @@ const ViewGoal = () => {
                                 <div className='col-span-2'>
                                     <img className='w-full' src={imageIcon} alt="ActiveGoalIcon" />
                                 </div>
-                                <div className='col-span-3'>
+                                <div className='col-span-3 relative'>
                                     <h3 className='text-[28px]' style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 700 }}>
                                         {goalInfo.goal_name}
                                     </h3>
+                                    {
+                                        goalInfo.goal_status === 'completed' && <img className='absolute top-0 right-0' src={BatchIcon} alt="BatchIcon" />
+                                    }
+                                    
                                     <div className='py-7'>
                                         <table className="w-[700px] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                             <tbody>
