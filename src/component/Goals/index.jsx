@@ -250,7 +250,7 @@ const Goals = () => {
             dispatch(updateGoalStatus({ id: parseInt(createdGoal.goal_id), action: 'active' }))
         }
 
-        if (Object.keys(createdGoal).length && status === goalStatus.statusupdate) {
+        if (Object.keys(createdGoal).length && status === goalStatus.active) {
             setActionModal(false);
             setPopupModal('Created')
             setTimeout(() => {
