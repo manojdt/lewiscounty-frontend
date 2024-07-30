@@ -36,7 +36,7 @@ export const Mentor = () => {
 
     const role = userInfo.data.role
 
-    console.log('status', status)
+    console.log('status mentor', status)
 
     const list = {
         allPrograms: allPrograms,
@@ -49,7 +49,9 @@ export const Mentor = () => {
 
 
     useEffect(() => {
-        const programMenu = [...programMenus('dashboard')].map(menu => {
+        const programMenu = [...programMenus('dashboard')].filter(men => men.for.includes(role)).map(menu => {
+           
+
             if (menu.status === 'all') {
                 return { ...menu, count: userpragrams.totalPrograms }
             }

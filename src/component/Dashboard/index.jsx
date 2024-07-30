@@ -10,11 +10,17 @@ export const Dashboard = () => {
 
   const role = userInfo.data.role
 
+  if (role === '') return <></>
+
   return (
     <div>
       {
-        role === 'mentee' ? <Mentee /> : <Mentor />
+        role === 'mentee' && <Mentee />
       }
-   </div>
+
+      {
+        role === 'mentor' && <Mentor />
+      }
+    </div>
   );
 };
