@@ -61,12 +61,12 @@ export default function DashboardCard({ title, viewpage, handleNavigateDetails, 
                                         <div key={index} className="curated-programs program-container flex gap-0 items-center py-8 px-5 w-2/5">
 
                                             <div className="w-full" style={{ boxShadow: '4px 4px 15px 0px rgba(0, 0, 0, 0.1)', borderRadius: '10px' }}>
-                                                <div className="flex py-6 px-7 border-b-2 relative">
+                                                <div className="flex py-6 px-7 border-b-2 relative gap-3">
                                                     <div className="w-6/12 h-full">
                                                         <img className="object-cover w-full h-[150px]" src={curatedProgram.image} alt="Program Logo" />
                                                     </div>
                                                     <div className="flex flex-col gap-3 w-[80%]">
-                                                        <p className="py-1 px-1 text-[12px] text-center rounded-3xl w-[90px]" style={{ border: '1px solid rgba(238, 238, 238, 1)' }}>{curatedProgram.category}</p>
+                                                        <p className="py-1 px-1 text-[12px] text-center rounded-3xl w-[90px]" style={{ border: '1px solid rgba(238, 238, 238, 1)' }}>{curatedProgram.categories[0].name}</p>
                                                         <h4 className="text-[16px]">{curatedProgram.program_name}</h4>
                                                         <span className="text-[12px] line-clamp-2 h-[38px]">{curatedProgram.decription}</span>
                                                         <button className="text-white text-[12px] py-2 w-[90px]" style={{ background: 'rgba(29, 91, 191, 1)', borderRadius: '5px' }}

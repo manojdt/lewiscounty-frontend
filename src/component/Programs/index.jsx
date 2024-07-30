@@ -15,7 +15,7 @@ import ProgramImage from "../../assets/images/logo_image.jpg";
 
 import { getAllCategories, getAllCertificates, getAllMaterials, getAllMembers, getAllSkills, loadAllPrograms } from '../../services/programInfo';
 import { pipeUrls, programActionStatus, programMenus, programStatus, statusAction } from '../../utils/constant';
-import { getProgramCounts, getProgramDetails, getUserPrograms, updateProgram } from '../../services/userprograms';
+import { getMenteePrograms, getProgramCounts, getProgramDetails, getUserPrograms, updateProgram } from '../../services/userprograms';
 
 
 export default function Programs() {
@@ -107,14 +107,14 @@ export default function Programs() {
 
         console.log('tttttt', Object.keys(searchParams));
 
-        if (Object.keys(query).length) {
-            dispatch(getUserPrograms(query));
+        if (Object.keys(query).length && role !== '') {
+           role === 'mentee' ? dispatch(getMenteePrograms(query)) :  dispatch(getUserPrograms(query));
         }
 
         if (searchParams.size === 0) {
-            dispatch(getUserPrograms())
+            dispatch(getMenteePrograms({}))
         }
-    }, [searchParams])
+    }, [searchParams, role])
 
 
 
@@ -133,9 +133,9 @@ export default function Programs() {
             }
 
             if (Object.keys(query).length) {
-                dispatch(getUserPrograms(query));
+                dispatch(getMenteePrograms(query));
             } else {
-                dispatch(getUserPrograms());
+                dispatch(getMenteePrograms());
             }
         }
     }, [userprograms.status])
@@ -164,7 +164,7 @@ export default function Programs() {
 
     useEffect(() => {
         if (filterType === null && isBookmark === null) {
-            dispatch(getUserPrograms());
+            dispatch(getMenteePrograms());
         }
         dispatch(getProgramCounts())
     }, [])
