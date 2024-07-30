@@ -283,6 +283,19 @@ input[type="range"]::-ms-thumb {
   border-radius: 30px 30px 0px 0px;
 }
 
+
+.calendar-container .action-btn {
+  border: 1px solid rgba(217, 217, 217, 1);
+  width: 370px;
+  font-size: 14px;
+  padding: 10px;
+}
+
+.calendar-container .action-btn.active {
+  background: rgba(220, 231, 250, 1);
+  color: rgba(29, 91, 191, 1)
+}
+
 @media only screen and (min-device-width: 481px) and (max-device-width: 1440px) {
 
   /* For landscape layouts only */
@@ -639,6 +652,7 @@ input[type="number"] {
   .goals .goals-info .create-goal {
     height: 150px;
   }
+
 }
 
 

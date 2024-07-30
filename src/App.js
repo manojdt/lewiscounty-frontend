@@ -90,7 +90,7 @@ function App() {
 
 
           <Route path="/create-programs" element={<CreatePrograms />} />
-          <Route path="/calendar" element={<Calendar />} />
+          <Route path="/calendar1" element={<Calendar />} />
           <Route path="/discussions" element={<Discussions />} />
           
          
@@ -104,7 +104,6 @@ function App() {
           <Route path="/mentee-tasks" element={<Tasks />} />
           <Route path="/mentee-tasks-details/:id" element={<TaskDetails />} />
           <Route path="/preview-mentee-tasks-details/:id" element={<PreviewTaskDetails />} />
-
 
 
           <Route path="/goals" element={<Goals />} />
