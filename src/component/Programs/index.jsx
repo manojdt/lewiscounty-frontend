@@ -108,7 +108,8 @@ export default function Programs() {
         console.log('tttttt', Object.keys(searchParams));
 
         // if (Object.keys(query).length && role !== '') {
-           role === 'mentee' ? dispatch(getMenteePrograms(query)) :  dispatch(getUserPrograms(query));
+        if (role === 'mentee') dispatch(getMenteePrograms(query))
+        if (role === 'mentor') dispatch(getUserPrograms(query));
         // }
 
         // if (searchParams.size === 0) {
@@ -132,11 +133,14 @@ export default function Programs() {
                 query = { type: 'is_bookmark', value: isBookmark }
             }
 
-            if (Object.keys(query).length) {
-                role === 'mentee' ? dispatch(getMenteePrograms(query)) :  dispatch(getUserPrograms(query));
-            } else {
-                role === 'mentee' ? dispatch(getMenteePrograms()) :  dispatch(getUserPrograms());
-            }
+            if (role === 'mentee') dispatch(getMenteePrograms(query))
+            if (role === 'mentor') dispatch(getUserPrograms(query))
+
+            // if (Object.keys(query).length) {
+            //     role === 'mentee' ? dispatch(getMenteePrograms(query)) : dispatch(getUserPrograms(query));
+            // } else {
+            //     role === 'mentee' ? dispatch(getMenteePrograms()) : dispatch(getUserPrograms());
+            // }
         }
     }, [userprograms.status])
 
@@ -163,9 +167,10 @@ export default function Programs() {
     }, [userprograms])
 
     useEffect(() => {
-        if (filterType === null && isBookmark === null) {
-            role === 'mentee' ? dispatch(getMenteePrograms()) :  dispatch(getUserPrograms());
-        }
+        // if (filterType === null && isBookmark === null) {
+        //     if (role === 'mentee') dispatch(getMenteePrograms())
+        //     if (role === 'mentor') dispatch(getUserPrograms())
+        // }
         dispatch(getProgramCounts())
     }, [])
 
