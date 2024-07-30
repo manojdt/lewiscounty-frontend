@@ -42,6 +42,8 @@ export default function CreatePrograms() {
 
     const resetViewInfo = { material: false, skills: false, certificate: false }
 
+    const role = userInfo.data.role || ''
+
     const handleTab = (key) => {
         const tabIndex = ProgramTabs.findIndex(tab => tab.key === key)
         console.log('tabIndex', tabIndex, stepWiseData)
@@ -115,15 +117,10 @@ export default function CreatePrograms() {
         }
     }
 
-    // console.log('stepData', stepData)
-
-    // console.log('stepData[actionTab]', actionTab, stepData[ProgramTabs[currentStep - 1].key])
-
     const handlePreviousStep = () => setCurrentStep(currentStep - 1)
 
     const handleAction = (key) => {
         setActionModal(key)
-
     }
 
     const updateFormFields = (key, value, currentStep) => {
@@ -241,6 +238,10 @@ export default function CreatePrograms() {
         //     dispatch(getAllMembers())
         // }
     }, [])
+
+    useEffect(() => {
+        if(role === 'mentee') navigate('/programs')
+    },[role])
 
 
     const handleModalSearch = (field) => {

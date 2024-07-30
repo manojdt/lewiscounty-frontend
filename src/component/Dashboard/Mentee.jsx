@@ -76,7 +76,7 @@ export const Mentee = () => {
     const handleNavigateDetails = (program) => {
         let baseUrl = pipeUrls.programdetails
         if (Object.keys(program).length) {
-            if (program.status === programActionStatus.yettostart) baseUrl = pipeUrls.assigntask
+            if (program.status === programActionStatus.yettostart && role === 'mentor') baseUrl = pipeUrls.assigntask
             if (program.status === programActionStatus.assigned) baseUrl = pipeUrls.startprogram
             if (program.status === programActionStatus.inprogress) baseUrl = pipeUrls.startprogram
             navigate(`${baseUrl}/${program.id}`)

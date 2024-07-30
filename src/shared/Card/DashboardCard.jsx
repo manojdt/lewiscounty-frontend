@@ -71,7 +71,7 @@ export default function DashboardCard({ title, viewpage, handleNavigateDetails, 
                                                         <span className="text-[12px] line-clamp-2 h-[38px]">{curatedProgram.decription}</span>
                                                         <button className="text-white text-[12px] py-2 w-[90px]" style={{ background: 'rgba(29, 91, 191, 1)', borderRadius: '5px' }}
 
-                                                            onClick={() => handleNavigateDetails(curatedProgram.id)}
+                                                            onClick={() => handleNavigateDetails(curatedProgram)}
                                                         >View Details</button>
                                                     </div>
                                                     <img className="absolute top-4 right-4 cursor-pointer" onClick={() => handleBookmark(curatedProgram)} src={curatedProgram.bookmark ? BookmarkedColorIcon : BookmarkedIcon} alt="BookmarkedIcon" />

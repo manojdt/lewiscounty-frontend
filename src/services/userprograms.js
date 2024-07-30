@@ -152,3 +152,29 @@ export const getMenteePrograms = createAsyncThunk(
         return getUserProgram;
     }
 );
+
+
+
+export const getMenteeJoinedInProgram = createAsyncThunk(
+    "getMenteeJoinedInProgram",
+    async (data) => {
+        const menteeJoinedProgram = await api.post('mentee_program/enroll_check', data);
+        console.log('menteeJoinedProgram', menteeJoinedProgram)
+        if (menteeJoinedProgram.status === 200 && menteeJoinedProgram.data) {
+            return menteeJoinedProgram.data;
+        }
+        return menteeJoinedProgram;
+    }
+);
+
+export const menteeJoinProgram = createAsyncThunk(
+    "menteeJoinProgram",
+    async (data) => {
+        const menteeJoinProgram = await api.post('mentee_program/join_program', data);
+        console.log('menteeJoinProgram', menteeJoinProgram)
+        if (menteeJoinProgram.status === 200 && menteeJoinProgram.data) {
+            return menteeJoinProgram.data;
+        }
+        return menteeJoinProgram;
+    }
+);

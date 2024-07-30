@@ -4,6 +4,7 @@ import {
 
 import {
   assignProgramTask,
+  getMenteeJoinedInProgram,
   getMenteePrograms,
   getMentees,
   getProgramCounts,
@@ -42,6 +43,7 @@ const initialState = {
   programdetails: {},
   menteeList: [],
   programMenteeList: [],
+  menteeJoined : true,
   status: "",
   loading: false,
   error: "",
@@ -220,7 +222,6 @@ export const userProgramSlice = createSlice({
       .addCase(getProgramCounts.pending, (state) => {
         return {
           ...state,
-          loading: true,
         };
       })
       .addCase(getProgramCounts.fulfilled, (state, action) => {
@@ -232,7 +233,6 @@ export const userProgramSlice = createSlice({
           ...state,
           statusCounts: status_counts,
           totalPrograms: total_programs,
-          loading: false,
         };
       })
       .addCase(getProgramCounts.rejected, (state, action) => {
@@ -303,6 +303,31 @@ export const userProgramSlice = createSlice({
           error: action.error.message,
         };
       });
+
+
+      builder
+      .addCase(getMenteeJoinedInProgram.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(getMenteeJoinedInProgram.fulfilled, (state, action) => {
+        console.log('cccccc', action)
+        return {
+          ...state,
+          menteeJoined: action.payload.enroll,
+          loading: false,
+        };
+      })
+      .addCase(getMenteeJoinedInProgram.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
+
   },
 });
 
