@@ -107,13 +107,13 @@ export default function Programs() {
 
         console.log('tttttt', Object.keys(searchParams));
 
-        if (Object.keys(query).length && role !== '') {
+        // if (Object.keys(query).length && role !== '') {
            role === 'mentee' ? dispatch(getMenteePrograms(query)) :  dispatch(getUserPrograms(query));
-        }
+        // }
 
-        if (searchParams.size === 0) {
-            role === 'mentee' ? dispatch(getMenteePrograms(query)) :  dispatch(getUserPrograms(query));
-        }
+        // if (searchParams.size === 0) {
+        //     role === 'mentee' ? dispatch(getMenteePrograms(query)) :  dispatch(getUserPrograms(query));
+        // }
     }, [searchParams, role])
 
 
@@ -133,9 +133,9 @@ export default function Programs() {
             }
 
             if (Object.keys(query).length) {
-                dispatch(getMenteePrograms(query));
+                role === 'mentee' ? dispatch(getMenteePrograms(query)) :  dispatch(getUserPrograms(query));
             } else {
-                dispatch(getMenteePrograms());
+                role === 'mentee' ? dispatch(getMenteePrograms()) :  dispatch(getUserPrograms());
             }
         }
     }, [userprograms.status])
@@ -164,7 +164,7 @@ export default function Programs() {
 
     useEffect(() => {
         if (filterType === null && isBookmark === null) {
-            dispatch(getMenteePrograms());
+            role === 'mentee' ? dispatch(getMenteePrograms()) :  dispatch(getUserPrograms());
         }
         dispatch(getProgramCounts())
     }, [])

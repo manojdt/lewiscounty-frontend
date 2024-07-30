@@ -28,7 +28,8 @@ export const Mentee = () => {
 
 
     useEffect(() => {
-        const programMenu = [...programMenus('dashboard')].map(menu => {
+        const programMenu = [...programMenus('dashboard')].filter(men => men.for.includes(role)).map(menu => {
+
             if (menu.status === 'all') {
                 return { ...menu, count: userpragrams.totalPrograms }
             }
