@@ -112,7 +112,7 @@ export default function Programs() {
         }
 
         if (searchParams.size === 0) {
-            dispatch(getMenteePrograms({}))
+            role === 'mentee' ? dispatch(getMenteePrograms(query)) :  dispatch(getUserPrograms(query));
         }
     }, [searchParams, role])
 
