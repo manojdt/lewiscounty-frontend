@@ -8,7 +8,7 @@ import Topmentors from "./Topmentors";
 import Programs from "./Programs";
 import { pipeUrls, programMenus } from '../../utils/constant';
 import { programActionStatus, programStatus, statusAction } from "../../utils/constant";
-import { getProgramCounts, getUserPrograms, updateProgram } from "../../services/userprograms";
+import { getMenteePrograms, getProgramCounts, updateProgram } from "../../services/userprograms";
 
 import './dashboard.css';
 import UserImage from "../../assets/images/user.jpg";
@@ -57,7 +57,7 @@ export const Mentee = () => {
         }
 
         if (Object.keys(query).length) {
-            dispatch(getUserPrograms(query));
+            dispatch(getMenteePrograms(query));
         }
 
     }, [searchParams])
@@ -67,7 +67,7 @@ export const Mentee = () => {
         const isBookmark = searchParams.get("is_bookmark");
         dispatch(getProgramCounts())
         if (filterType === null && isBookmark === null) {
-            dispatch(getUserPrograms({ type: 'status', value: 'yettojoin' }));
+            dispatch(getMenteePrograms({ type: 'status', value: 'yettojoin' }));
         }
     }, [])
 
@@ -102,9 +102,9 @@ export const Mentee = () => {
             }
 
             if (Object.keys(query).length) {
-                dispatch(getUserPrograms(query));
+                dispatch(getMenteePrograms(query));
             } else {
-                dispatch(getUserPrograms({ type: 'status', value: 'yettojoin' }));
+                dispatch(getMenteePrograms({ type: 'status', value: 'yettojoin' }));
             }
         }
     }, [userpragrams.status])
