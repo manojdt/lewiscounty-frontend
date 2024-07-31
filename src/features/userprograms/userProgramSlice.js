@@ -291,7 +291,7 @@ export const userProgramSlice = createSlice({
           }
 
           if (filterValue === 'learning') {
-            updateState['learning'] = [];
+            updateState['learning'] = programs;
           }
 
         }
