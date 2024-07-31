@@ -162,7 +162,9 @@ export const Mentee = () => {
 
                             </ul>
                             <div className="flex justify-center mt-2 mb-2">
-                                <button className="text-white flex justify-center items-center gap-3 px-4 py-3 text-[12px]" style={{ borderRadius: '3px', background: 'linear-gradient(97.32deg, #1D5BBF -32.84%, #00AEBD 128.72%)' }}>
+                                <button className="text-white flex justify-center items-center gap-3 px-4 py-3 text-[12px]" style={{ borderRadius: '3px', background: 'linear-gradient(97.32deg, #1D5BBF -32.84%, #00AEBD 128.72%)' }}
+                                    onClick={() => navigate('/programs')}
+                                >
                                     <span>View All</span>
                                     <img src={RightArrow} alt={'RightArrow'} />
                                 </button>
@@ -210,7 +212,7 @@ export const Mentee = () => {
                             searchParams.get("type") === 'learning' &&
                             <DashboardCard
                                 title="Learning Programs"
-                                viewpage="/programs?type=inprogress"
+                                viewpage="/programs?type=learning"
                                 handleNavigateDetails={handleNavigateDetails}
                                 handleBookmark={handleBookmark}
                                 programs={userpragrams.learning}
