@@ -290,6 +290,10 @@ export const userProgramSlice = createSlice({
             updateState['completed'] = programs;
           }
 
+          if (filterValue === 'learning') {
+            updateState['learning'] = [];
+          }
+
         }
 
         console.log("action.payload", action.payload);

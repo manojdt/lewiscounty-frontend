@@ -138,7 +138,7 @@ export const Mentee = () => {
                             <div className="flex flex-col items-center pb-10 pt-14 border-b-2">
                                 <img className="w-24 h-24 mb-3 rounded-full shadow-lg object-cover" src={UserImage} alt="User logo" />
                                 <h5 className="mb-1 text-xl font-medium text-gray-900 ">{userInfo?.data?.first_name} {userInfo?.data?.last_name}</h5>
-                                <span className="text-sm text-gray-500 " style={{ textTransform: 'capitalize' }}>{userInfo.data.role} | Teaching Proffessional</span>
+                                <span className="text-sm text-gray-500 " style={{ textTransform: 'capitalize' }}>{userInfo.data.role} | Teaching Professional</span>
                             </div>
 
                             <ul className="flex flex-col gap-2 p-4 md:p-0 mt-4 font-medium">
@@ -203,6 +203,17 @@ export const Mentee = () => {
                                 handleNavigateDetails={handleNavigateDetails}
                                 handleBookmark={handleBookmark}
                                 programs={userpragrams.inprogress}
+                            />
+                        }
+
+{
+                            searchParams.get("type") === 'learning' &&
+                            <DashboardCard
+                                title="Learning Programs"
+                                viewpage="/programs?type=inprogress"
+                                handleNavigateDetails={handleNavigateDetails}
+                                handleBookmark={handleBookmark}
+                                programs={userpragrams.learning}
                             />
                         }
 
