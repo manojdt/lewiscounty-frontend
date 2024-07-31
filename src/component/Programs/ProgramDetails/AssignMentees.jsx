@@ -525,7 +525,7 @@ export default function AssignMentees() {
                                     </div>
                                     <div className="flex gap-6 justify-center align-middle py-16">
                                         <Button btnName='Cancel' btnCls="w-[13%]" btnCategory="secondary" onClick={() => navigate('/assign-task/1')} />
-                                        <Button btnType="submit" btnName='Create Task from Mentees' btnCategory="primary" />
+                                        <Button btnType="submit" btnName='Create Task for Mentees' btnCategory="primary" />
                                     </div>
                                 </form>
                                 <MuiModal modalSize='lg' modalOpen={addMenteeModal} title="Select Mentees" modalClose={() => setMentalModal(false)}>
@@ -538,7 +538,7 @@ export default function AssignMentees() {
                                         <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
                                             style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
                                             <img src={SuccessTik} alt="SuccessTik" />
-                                            <p className='text-white text-[12px]'>Successfully Assign to task from Mentees</p>
+                                            <p className='text-white text-[12px]'>Successfully task assigned to Mentees</p>
                                         </div>
 
                                     </div>

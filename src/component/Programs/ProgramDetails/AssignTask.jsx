@@ -329,7 +329,7 @@ export default function AssignTask() {
                                             <>
                                                 <MenuItem onClick={() => handleMenu('create-taskk')} className='!text-[12px]'>
                                                     <img src={CreateTaskIcon} alt="CreateTaskIcon" className='pr-3 w-[25px]' />
-                                                    Create Task from Mentees</MenuItem>
+                                                    Create Task for Mentees</MenuItem>
                                                 <MenuItem onClick={() => handleMenu('sharee')} className='!text-[12px]'>
                                                     <img src={ShareIcon} alt="ShareIcon" className='pr-3 w-[25px]' />
                                                     Share
