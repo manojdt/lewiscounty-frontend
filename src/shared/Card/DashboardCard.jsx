@@ -66,7 +66,7 @@ export default function DashboardCard({ title, viewpage, handleNavigateDetails, 
                                                         <img className="object-cover w-full h-[150px]" src={curatedProgram.image} alt="Program Logo" />
                                                     </div>
                                                     <div className="flex flex-col gap-3 w-[80%]">
-                                                        <p className="py-1 px-1 text-[12px] text-center rounded-3xl w-[90px]" style={{ border: '1px solid rgba(238, 238, 238, 1)' }}>{curatedProgram.categories[0].name}</p>
+                                                        <p className="py-1 px-1 text-[12px] text-center rounded-3xl w-[90px]" style={{ border: '1px solid rgba(238, 238, 238, 1)' }}>{curatedProgram?.categories[0]?.name}</p>
                                                         <h4 className="text-[16px]">{curatedProgram.program_name}</h4>
                                                         <span className="text-[12px] line-clamp-2 h-[38px]">{curatedProgram.decription}</span>
                                                         <button className="text-white text-[12px] py-2 w-[90px]" style={{ background: 'rgba(29, 91, 191, 1)', borderRadius: '5px' }}
@@ -124,7 +124,7 @@ export default function DashboardCard({ title, viewpage, handleNavigateDetails, 
                                                             {
                                                                 currentProgram.categories.length &&
                                                                 <p className="py-1 px-1 text-[12px] text-center rounded-3xl w-[90px]"
-                                                                    style={{ border: '1px solid rgba(238, 238, 238, 1)' }}>{currentProgram.categories[0].name}</p>
+                                                                    style={{ border: '1px solid rgba(238, 238, 238, 1)' }}>{currentProgram?.categories[0]?.name}</p>
                                                             }
 
                                                             <h4 className="text-[16px]">{currentProgram.program_name}</h4>
