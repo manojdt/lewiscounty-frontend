@@ -4,6 +4,7 @@ import { Backdrop, CircularProgress } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
+
 import DataTable from '../../shared/DataGrid';
 import MoreIcon from '../../assets/icons/moreIcon.svg'
 import ViewIcon from '../../assets/images/view1x.png'
@@ -14,14 +15,16 @@ import SuccessTik from '../../assets/images/blue_tik1x.png';
 import OverDeleteIcon from '../../assets/images/delete_1x.png'
 import CancelIcon from '../../assets/images/cancel1x.png'
 import EditIcon from '../../assets/images/Edit1x.png'
-import { goalsColumns, goalsRow } from '../../mock';
+import { goalsColumns, goalsHistoryColumn, goalsRequestColumn, goalsRequestRow, goalsRow, menteeGoalsRequestColumn, menteeGoalsRequestRow } from '../../mock';
 import RecentActivities from '../Dashboard/RecentActivities';
 import CreateGoal from './CreateGoal';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteGoalInfo, getAllGoals, getGoalInfo, getGoalsCount, updateGoalStatus } from '../../services/goalsInfo';
+import { deleteGoalInfo, getAllGoals, getGoalInfo, getGoalsCount, getGoalsHistory, getGoalsOverAllData, getGoalsProgressData, getGoalsRequest, getRecentGoalActivity, updateGoalStatus } from '../../services/goalsInfo';
 import './goal.css'
-import { goalDataStatus, goalPeriods, goalStatus } from '../../utils/constant';
+import { goalDataStatus, goalPeriods, goalStatus, goalStatusColor } from '../../utils/constant';
 import MuiModal from '../../shared/Modal';
+import GoalProgress from './GoalProgress';
+import GoalPerformance from './GoalPerformance';
 
 
 const Goals = () => {
@@ -39,7 +42,11 @@ const Goals = () => {
     const [seletedItem, setSelectedItem] = useState({})
     const [popupModal, setPopupModal] = useState('')
 
-    const { goalsList, loading, status, error, createdGoal, goalsCount } = useSelector(state => state.goals)
+    const userInfo = useSelector(state => state.userInfo)
+
+    const role = userInfo.data.role
+
+    const { goalsList, loading, status, error, createdGoal, goalsCount, goalOverAll, goalProgress, goalRequest, goalActivity, goalHistory } = useSelector(state => state.goals)
 
     const dispatch = useDispatch()
 
@@ -103,7 +110,11 @@ const Goals = () => {
 
     useEffect(() => {
         dispatch(getGoalsCount())
-        navigate('/goals?type=active')
+        dispatch(getGoalsOverAllData('start_year=2022&end_year=2024'))
+        dispatch(getGoalsProgressData())
+        dispatch(getGoalsRequest())
+        dispatch(getGoalsHistory())
+        dispatch(getRecentGoalActivity())
     }, [])
 
 
@@ -112,16 +123,12 @@ const Goals = () => {
         const filterType = searchParams.get("type");
 
         let query = ''
-
         if (filterType && filterType !== '') {
             query = filterType === 'total_goals' ? '' : filterType
+            dispatch(getAllGoals(query));
         }
-
-
-        dispatch(getAllGoals(query));
-
-
     }, [searchParams])
+
 
     useEffect(() => {
         if (status === goalStatus.delete) {
@@ -165,7 +172,7 @@ const Goals = () => {
             }
         },
         {
-            ...searchParams.get("type") !== 'total_goals'  &&
+            ...searchParams.get("type") !== 'total_goals' &&
             {
                 field: 'goal_status',
                 headerName: 'Status',
@@ -229,7 +236,181 @@ const Goals = () => {
         },
     ]
 
-    const title = goalsListMenu.find(option => option.key === searchParams.get("type"))?.name || ''
+    const menteeGoalsColumn = [
+        ...menteeGoalsRequestColumn,
+        {
+            field: 'performance',
+            headerName: 'Performance',
+            width: 250,
+            id: 2,
+            renderCell: (params) => {
+                return <>
+                    <div className='relative' style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', height: '100%', width: '70%' }}>
+                        <div style={{
+                            background: '#FFD41B', width: '67%', borderRadius: '30px', height: '30px', top: '20%',
+                            position: 'absolute'
+                        }}>
+
+                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', color: '#18283D', height: '30px' }}>50%</div>
+                        </div>
+                        <div style={{
+                            background: 'rgba(217, 217, 217, 1)', width: '100%', borderRadius: '30px', height: '30px'
+                        }}></div>
+                    </div>
+                    {/* <div className='cursor-pointer flex items-center h-full relative'>
+                        <span className='w-[80px] flex justify-center h-[30px] px-3'
+                            style={{ background: '#FFD41B', lineHeight: '30px', borderRadius: '3px' }}> {params.row.performance}</span>
+                    </div> */}
+                </>
+            }
+        },
+        {
+            field: 'goal_status',
+            headerName: 'Status',
+            width: 250,
+            id: 2,
+            renderCell: (params) => {
+                return <>
+                    <div className='cursor-pointer flex items-center h-full relative'>
+                        <span className='w-[80px] flex justify-center h-[30px] px-7'
+                            style={{ background: '#FFF7D8', lineHeight: '30px', borderRadius: '3px', width: '110px', height: '34px' }}> {params.row.goal_status}</span>
+                    </div>
+                </>
+            }
+        },
+        {
+            field: 'action',
+            headerName: 'Action',
+            width: 150,
+            id: 4,
+            renderCell: (params) => {
+                console.log('params', params)
+                return <>
+                    <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleClick(e, params.row)}>
+                        <img src={MoreIcon} alt='MoreIcon' />
+                    </div>
+                    <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                        MenuListProps={{
+                            'aria-labelledby': 'basic-button',
+                        }}
+                    >
+
+
+
+                    </Menu>
+                </>
+            }
+
+
+        },
+    ]
+
+    const goalHistoryColumn = [
+        ...goalsHistoryColumn,
+        {
+            field: 'goal_status',
+            headerName: 'Status',
+            width: 250,
+            id: 2,
+            renderCell: (params) => {
+                return <>
+                    <div className='cursor-pointer flex items-center h-full relative'>
+                        <span className='w-[80px] flex justify-center h-[30px] px-7'
+                            style={{
+                                background: goalStatusColor[params.row.goal_status].bg, lineHeight: '30px',
+                                borderRadius: '3px', width: '110px', height: '34px', color: goalStatusColor[params.row.goal_status].color
+                            }}>
+                            {goalDataStatus[params.row.goal_status]}
+                        </span>
+                    </div>
+                </>
+            }
+        },
+
+        {
+            field: 'action',
+            headerName: 'Action',
+            width: 150,
+            id: 4,
+            renderCell: (params) => {
+                console.log('params', params)
+                return <>
+                    <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleClick(e, params.row)}>
+                        <img src={MoreIcon} alt='MoreIcon' />
+                    </div>
+                    <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                        MenuListProps={{
+                            'aria-labelledby': 'basic-button',
+                        }}
+                    >
+
+
+
+                    </Menu>
+                </>
+            }
+
+
+        },
+    ]
+
+    const goalRequestColumn = [
+        ...goalsRequestColumn,
+        {
+            field: 'goal_status',
+            headerName: 'Status',
+            width: 250,
+            id: 2,
+            renderCell: (params) => {
+                return <>
+                    <div className='cursor-pointer flex items-center h-full relative'>
+                        <span className='w-[80px] flex justify-center h-[30px] px-7'
+                            style={{ background: '#FFF7D8', lineHeight: '30px', borderRadius: '3px', width: '110px', height: '34px' }}> {params.row.goal_status}</span>
+                    </div>
+                </>
+            }
+        },
+
+        {
+            field: 'action',
+            headerName: 'Action',
+            width: 150,
+            id: 4,
+            renderCell: (params) => {
+                console.log('params', params)
+                return <>
+                    <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleClick(e, params.row)}>
+                        <img src={MoreIcon} alt='MoreIcon' />
+                    </div>
+                    <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                        MenuListProps={{
+                            'aria-labelledby': 'basic-button',
+                        }}
+                    >
+
+
+
+                    </Menu>
+                </>
+            }
+
+
+        },
+    ]
+
+    const title = goalsListMenu.find(option => option.key === searchParams.get("type"))?.name || (role === 'mentee' ? 'Mentee Goals' : 'Mentor Goals')
 
     const handleTab = (key) => {
         setRequestTab(key)
@@ -244,6 +425,10 @@ const Goals = () => {
         setActionModal(false)
     }
 
+    const handleGoalsClick = (goal) => {
+        if (goal.key === 'total_goals') navigate('/goals')
+        else navigate('/goals?type=' + goal.key)
+    }
 
     useEffect(() => {
         if (Object.keys(createdGoal).length && status === goalStatus.create) {
@@ -272,7 +457,6 @@ const Goals = () => {
     useEffect(() => {
         setGoals(goalsList)
     }, [goalsList])
-
 
     return (
         <div className="goals px-9 py-9">
@@ -343,83 +527,191 @@ const Goals = () => {
                     <div className='flex gap-5 items-center'>
                         <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 700 }}>Goals</p>
                     </div>
-
                 </div>
 
                 <div className='mx-5'>
+                    {
+                        role === 'mentor' &&
 
-                    <div className='flex gap-7 mb-9 py-5'>
-                        {
-                            requestBtns.map((actionBtn, index) =>
-                                <button key={index} className='px-5 py-4 text-[14px]' style={{
-                                    background: requestTab === actionBtn.key ? 'linear-gradient(97.86deg, #005DC6 -15.07%, #00B1C0 112.47%)' :
-                                        '#fff',
-                                    border: requestTab !== actionBtn.key ? '1px solid rgba(136, 178, 232, 1)' : 'none',
-                                    color: requestTab === actionBtn.key ? '#fff' : '#000',
-                                    borderRadius: '30px',
-                                    width: '180px'
-                                }}
-                                    onClick={() => handleTab(actionBtn.key)}
-                                >{actionBtn.name}</button>
-                            )
-                        }
-                    </div>
-
-                    <div className='goals-container'>
-                        <div className='title-container flex justify-between items-center'>
-                            <div className='flex gap-5 items-center '>
-                                <p className='text-[18px] font-semibold'>{title}</p>
-                            </div>
-                            <div className='flex gap-8 items-center'>
-                                <div className="relative flex gap-3 py-3 px-3" style={{ border: '1px solid rgba(24, 40, 61, 0.25)' }}>
-                                    <img src={CalenderIcon} alt="CalenderIcon" />
-                                    <select className='focus:outline-none'>
-                                        <option>Month</option>
-                                        <option>Week</option>
-                                        <option>Day</option>
-                                    </select>
-                                </div>
-                            </div>
+                        <div className='flex gap-7 mb-6 '>
+                            {
+                                requestBtns.map((actionBtn, index) =>
+                                    <button key={index} className='px-5 py-4 text-[14px]' style={{
+                                        background: requestTab === actionBtn.key ? 'linear-gradient(97.86deg, #005DC6 -15.07%, #00B1C0 112.47%)' :
+                                            '#fff',
+                                        border: requestTab !== actionBtn.key ? '1px solid rgba(136, 178, 232, 1)' : 'none',
+                                        color: requestTab === actionBtn.key ? '#fff' : '#000',
+                                        borderRadius: '30px',
+                                        width: '180px'
+                                    }}
+                                        onClick={() => handleTab(actionBtn.key)}
+                                    >{actionBtn.name}</button>
+                                )
+                            }
                         </div>
+                    }
 
-                        <div className='goals-info'>
-                            <div className='goals-list flex items-center gap-4'>
-                                {
-                                    goalsListMenu.map(goal =>
-                                        <div className={`goal-counts-container ${searchParams.get("type") === goal.key ? 'active' : ''}`} key={goal.key}
-                                            onClick={() => { navigate('/goals?type=' + goal.key) }}
-                                        >
-                                            <p>{goal.name}</p>
-                                            <p className='goal-count'>{goalsCount[goal.key]}</p>
-                                        </div>
-                                    )
-                                }
-                                <div className="create-goal flex justify-center items-center flex-col gap-4"
-                                    onClick={() => setActionModal(true)}
-                                >
-                                    <p>Create New Goal</p>
-                                    <img src={AddGoalIcon} alt="AddGoalIcon" />
+
+                    {
+                        requestTab === 'mentor-goals' &&
+
+                        <div className='goals-container'>
+                            <div className='title-container flex justify-between items-center'>
+                                <div className='flex gap-5 items-center '>
+                                    <p className='text-[18px] font-semibold'>{title}</p>
+                                </div>
+                                <div className='flex gap-8 items-center'>
+                                    <div className="relative flex gap-3 py-3 px-3"
+                                        style={{ border: '1px solid rgba(24, 40, 61, 0.25)', background: 'rgba(238, 245, 255, 1)', borderRadius: '3px' }}>
+                                        <img src={CalenderIcon} alt="CalenderIcon" />
+                                        <select className='focus:outline-none' style={{ background: 'rgba(238, 245, 255, 1)' }}>
+                                            <option>Month</option>
+                                            <option>Week</option>
+                                            <option>Day</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
 
-
-                            <div className="grid grid-cols-4 gap-7 py-5">
-                                <div className="col-span-3">
-                                    <div style={{ border: '1px solid rgba(29, 91, 191, 1)', padding: '10px 30px 20px' }}>
-                                        <div className='px-2 py-5'>
-                                            {title}
-                                        </div>
-                                        <DataTable rows={goals} columns={goalColumn} handleSelectedRow={handleSelectedRow} />
+                            <div className='goals-info'>
+                                <div className='goals-list flex items-center gap-4'>
+                                    {
+                                        goalsListMenu.map(goal =>
+                                            <div
+                                                className={`goal-counts-container 
+                                                ${searchParams.get("type") === goal.key ||
+                                                        (searchParams.get("type") === null && goal.key === 'total_goals') ? 'active' : ''}
+                                            `} key={goal.key}
+                                                onClick={() => handleGoalsClick(goal)}
+                                            >
+                                                <p>{goal.name}</p>
+                                                <p className='goal-count'>{goalsCount[goal.key]}</p>
+                                            </div>
+                                        )
+                                    }
+                                    <div className="create-goal flex justify-center items-center flex-col gap-4"
+                                        onClick={() => setActionModal(true)}
+                                    >
+                                        <p>{role === 'mentee' ? 'New Goal Request' : 'Create New Goal'}</p>
+                                        <img src={AddGoalIcon} alt="AddGoalIcon" />
                                     </div>
                                 </div>
 
-                                <div>
-                                    <RecentActivities />
+
+                                <div className="grid grid-cols-4 gap-7 py-5">
+                                    <div className="col-span-3">
+                                        {
+                                            searchParams.get('type') === null ?
+                                                <div>
+                                                    <GoalPerformance />
+
+                                                    <div style={{ border: '1px solid rgba(29, 91, 191, 1)', padding: '10px', borderRadius: '10px', margin: '60px 0' }}>
+                                                        <div className='goal-title-container flex justify-between items-center mb-10'>
+                                                            <div className='flex gap-5 items-center '>
+                                                                <p className='text-[18px] font-semibold'>Goals Request</p>
+                                                            </div>
+                                                            <div className='flex gap-8 items-center'>
+                                                                <div className="relative flex gap-3 py-3 px-3"
+                                                                    style={{ border: '1px solid rgba(24, 40, 61, 0.25)', background: 'rgba(238, 245, 255, 1)', borderRadius: '3px' }}>
+                                                                    <img src={CalenderIcon} alt="CalenderIcon" />
+                                                                    <select className='focus:outline-none' style={{ background: 'rgba(238, 245, 255, 1)' }}>
+                                                                        <option>Month</option>
+                                                                        <option>Week</option>
+                                                                        <option>Day</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <DataTable rows={goalsRequestRow} columns={goalsRequestColumn} handleSelectedRow={handleSelectedRow} />
+                                                    </div>
+
+
+
+                                                    <div style={{ border: '1px solid rgba(29, 91, 191, 1)', padding: '10px', borderRadius: '10px', margin: '60px 0' }}>
+                                                        <div className='goal-title-container flex justify-between items-center mb-20'>
+                                                            <div className='flex gap-5 items-center '>
+                                                                <p className='text-[18px] font-semibold'>Goals History</p>
+                                                            </div>
+                                                            <div className='flex gap-8 items-center'>
+                                                                <div className="relative flex gap-3 py-3 px-3"
+                                                                    style={{ border: '1px solid rgba(24, 40, 61, 0.25)', background: 'rgba(238, 245, 255, 1)', borderRadius: '3px' }}>
+                                                                    <img src={CalenderIcon} alt="CalenderIcon" />
+                                                                    <select className='focus:outline-none' style={{ background: 'rgba(238, 245, 255, 1)' }}>
+                                                                        <option>Month</option>
+                                                                        <option>Week</option>
+                                                                        <option>Day</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <DataTable rows={goalHistory} columns={goalHistoryColumn} handleSelectedRow={handleSelectedRow} />
+                                                    </div>
+
+
+
+
+
+                                                </div>
+                                                :
+
+                                                <div style={{ border: '1px solid rgba(29, 91, 191, 1)', padding: '10px 30px 20px', borderRadius: '10px' }}>
+                                                    <div className='px-2 py-5'>
+                                                        {title}
+                                                    </div>
+                                                    <DataTable rows={goals} columns={goalColumn} handleSelectedRow={handleSelectedRow} />
+                                                </div>
+                                        }
+
+                                    </div>
+
+                                    <div>
+                                        {
+                                            searchParams.get('type') === null && <GoalProgress />
+                                        }
+
+                                        <RecentActivities />
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    {
+                        requestTab === 'mentee-goals' &&
+
+                        <div className='goals-container'>
+                            <div className='title-container flex justify-between items-center'>
+                                <div className='flex gap-5 items-center '>
+                                    <p className='text-[18px] font-semibold'>Mentee Goals</p>
+                                </div>
+                                <div className='flex gap-8 items-center'>
+                                    <div className="relative flex gap-3 py-3 px-4"
+                                        style={{ border: '1px solid rgba(24, 40, 61, 0.25)', background: 'rgba(238, 245, 255, 1)', borderRadius: '3px' }}>
+                                        <img src={CalenderIcon} alt="CalenderIcon" />
+                                        <select className='focus:outline-none' style={{ background: 'rgba(238, 245, 255, 1)' }}>
+                                            <option>Month</option>
+                                            <option>Week</option>
+                                            <option>Day</option>
+                                        </select>
+                                    </div>
+                                    <select className='table-select'>
+                                        <option>Total Goals</option>
+                                        <option>Active Goals</option>
+                                        <option>Goals in progress</option>
+                                        <option>Completed Goals</option>
+                                    </select>
                                 </div>
 
                             </div>
+                            <div className='py-8 px-6'>
+                                <DataTable rows={menteeGoalsRequestRow} columns={menteeGoalsColumn} handleSelectedRow={handleSelectedRow} />
+                            </div>
+
                         </div>
-                    </div>
+                    }
+
 
                     <CreateGoal open={actionModal} handleCloseModal={handleCloseModal} editMode={Object.keys(seletedItem).length} seletedItem={seletedItem} />
                 </div>

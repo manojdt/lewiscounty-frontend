@@ -147,7 +147,6 @@ function TablePaginationActions(props) {
         apiRef.current.setPageSize(event.target.value)
     }
 
-
     return (
 
         <div className='w-full flex items-center justify-between'>
@@ -164,18 +163,32 @@ function TablePaginationActions(props) {
                     </select>
                     <span>Entries</span>
                 </div>
-                <div>
-                    <button onClick={handleNextButtonClick}
-                        disabled={paginationDetails.paginationModel.page
-                            >= Math.ceil(paginationDetails.rowCount / paginationDetails.paginationModel.pageSize) - 1}
-                        className='text-white py-3 px-6 col-span-1'
-                        style={{ background: 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)', borderRadius: '3px' }}>Next Page</button>
+                <div className='flex gap-4'>
+                    {
+                        paginationDetails.paginationModel.page >= 1 &&
+
+                        <button onClick={handleBackButtonClick}
+                            disabled={paginationDetails.paginationModel.page
+                                >= Math.ceil(paginationDetails.rowCount / paginationDetails.paginationModel.pageSize) - 1}
+                            className='text-white py-3 px-6 col-span-1'
+                            style={{ background: 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)', borderRadius: '3px', width: '150px' }}>Previous Page</button>
+                    }
+                    {
+                        paginationDetails.paginationModel.pageSize < paginationDetails.rowCount &&
+
+                        <button onClick={handleNextButtonClick}
+                            disabled={paginationDetails.paginationModel.page
+                                >= Math.ceil(paginationDetails.rowCount / paginationDetails.paginationModel.pageSize) - 1}
+                            className='text-white py-3 px-6 col-span-1'
+                            style={{ background: 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)', borderRadius: '3px', width: '150px' }}>Next Page</button>
+                    }
+
                 </div>
             </div>
             <div className='flex items-center'>
                 <div>
                     <span style={{ border: '1px solid rgba(9, 19, 22, 1)' }} className='py-2 px-3 mr-1'>
-                        {paginationDetails.paginationModel.page + 1}</span> of 
+                        {paginationDetails.paginationModel.page + 1}</span> of
                     <span className='pl-1'>{Math.ceil(paginationDetails.rowCount / paginationDetails.paginationModel.pageSize)}</span></div>
                 <IconButton
                     onClick={handleBackButtonClick}
@@ -207,8 +220,8 @@ function TablePaginationActions(props) {
 }
 
 
-export default function DataTable({ rows, columns, footerAction, footerComponent, selectedAllRows = [], 
-        hideCheckbox = false, hideFooter = false, handleSelectedRow = undefined }) {
+export default function DataTable({ rows, columns, footerAction, footerComponent, selectedAllRows = [],
+    hideCheckbox = false, hideFooter = false, handleSelectedRow = undefined }) {
     // console.log('rows', rows)
     const [selectedRows, setSelectedRows] = useState([])
     const [selectedIds, setSelectedIds] = useState([])
@@ -224,7 +237,7 @@ export default function DataTable({ rows, columns, footerAction, footerComponent
         // console.log('se', selected)
         setSelectedIds(ids)
         setSelectedRows(selected)
-        if(handleSelectedRow) handleSelectedRow(selected)
+        if (handleSelectedRow) handleSelectedRow(selected)
     }
 
     useEffect(() => {

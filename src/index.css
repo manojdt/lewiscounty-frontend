@@ -152,22 +152,22 @@ input[type="range"]::-ms-thumb {
   padding: 10px;
 }
 
-.skills-set .skills-title img{
+.skills-set .skills-title img {
   height: 18px;
 }
 
-.skills-set .skills-list{
+.skills-set .skills-list {
   font-size: 14px;
   padding: 30px 20px;
 }
 
-.skills-set .action-btn{
+.skills-set .action-btn {
   display: flex;
   justify-content: center;
   padding: 20px;
 }
 
-.skills-set .action-btn button{
+.skills-set .action-btn button {
   width: 170px;
 }
 
@@ -180,45 +180,121 @@ input[type="range"]::-ms-thumb {
   border: 1px solid rgba(217, 228, 242, 1);
 }
 
-.goals .goals-container .title-container{
+.goals .goals-container .title-container {
   padding: 15px 30px;
-  border-bottom : 1px solid rgba(198, 198, 198, 1);
+  border-bottom: 1px solid rgba(198, 198, 198, 1);
 }
 
 .goals .goals-info {
   padding: 30px 40px;
 }
 
-.goals .goals-info .goal-counts-container{
+.goals .goals-info .goal-counts-container {
   background: rgba(238, 245, 255, 1);
   width: 200px;
   text-align: center;
-  color : rgba(24, 40, 61, 1);
-  padding: 30px; 
+  color: rgba(24, 40, 61, 1);
+  padding: 30px;
   cursor: pointer;
   border-radius: 6px;
 }
 
-.goals .goals-info .create-goal{
+.goals .goals-info .create-goal {
   width: 220px;
   text-align: center;
-  color : rgba(29, 91, 191, 1);
-  height: 160px; 
+  color: rgba(29, 91, 191, 1);
+  height: 160px;
   cursor: pointer;
   border-radius: 6px;
   font-weight: 600;
   border: 4px dotted rgba(29, 91, 191, 1);
 }
 
-.goals .goals-info .goal-counts-container.active{
+.goals .goals-info .goal-counts-container.active {
   background: rgba(29, 91, 191, 1);
   color: #fff;
 }
 
-.goals .goals-info .goal-counts-container .goal-count{
+.goals .goals-info .goal-counts-container .goal-count {
   font-size: 48px;
 }
 
+.goal-progress .element-block {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.goal-progress .element-block .item-highlight {
+  width: 20px;
+  height: 20px;
+}
+
+.goal-progress .element-block .progress-title {
+  font-size: 14px;
+}
+
+.goals .goals-container .goal-title-container {
+  padding: 15px 30px;
+  border-bottom: 1px solid rgba(29, 91, 191, 1);
+  margin: 10px 10px 26px;
+}
+
+.table-select {
+  padding: 12px;
+  width: 160px;
+  border: 1px solid rgb(29, 91, 191);
+}
+
+.root-container {
+  padding: 2.25rem;
+}
+
+.discussion-container .discussion-table {
+  background: #fff;
+}
+
+.discussion-container .discussion-table .tab-list {
+  display: flex;
+  gap: 40px;
+}
+
+.discussion-container .discussion-table .tab-list li {
+  cursor: pointer;
+  font-size: 14px;
+  padding: 10px 10px 29px;
+}
+
+.discussion-container .discussion-table .tab-list li.active {
+  color: rgba(29, 91, 191, 1);
+  font-weight: 600;
+}
+
+.discussion-container .discussion-table .tab-list li.active span {
+  background: linear-gradient(134.63deg, #1D5BBF 0.94%, #00AEBD 98.69%);
+  display: inline-block;
+  width: 100%;
+  height: 6px;
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  border-radius: 30px 30px 0px 0px;
+}
+
+
+.calendar-container .action-btn {
+  border: 1px solid rgba(217, 217, 217, 1);
+  width: 370px;
+  font-size: 14px;
+  padding: 10px;
+}
+
+.calendar-container .action-btn.active {
+  background: rgba(220, 231, 250, 1);
+  color: rgba(29, 91, 191, 1)
+}
 
 @media only screen and (min-device-width: 481px) and (max-device-width: 1440px) {
 
@@ -563,19 +639,33 @@ input[type="number"] {
     width: 26%;
     object-fit: cover;
   }
+
+
+  .goals-container .goals-info .goal-counts-container p {
+    font-size: 14px;
+  }
+
+  .goals-container .goals-info .goal-counts-container p.goal-count {
+    font-size: 42;
+  }
+
+  .goals .goals-info .create-goal {
+    height: 150px;
+  }
+
 }
 
 
 @media (min-width: 1920px) {
-  .recent-activities .timeline{
+  .recent-activities .timeline {
     right: -330px;
   }
 
-  .mentor-mentee-container .user-image{
+  .mentor-mentee-container .user-image {
     width: 160px;
   }
 
-  .program-feeds .feed-list .program-user-img{
+  .program-feeds .feed-list .program-user-img {
     width: 100px;
   }
 }
