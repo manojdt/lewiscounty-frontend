@@ -19,6 +19,7 @@ import {
   userStatus
 } from '../../utils/constant'
 
+
 const initialState = {
   data: {},
   loading: false,
@@ -257,7 +258,6 @@ export const userSlice = createSlice({
 
         };
       })
-
   },
 });
 

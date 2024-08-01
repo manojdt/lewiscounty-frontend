@@ -6,9 +6,9 @@ import { Backdrop, CircularProgress } from "@mui/material";
 import DashboardCard from "../../shared/Card/DashboardCard";
 import Topmentors from "./Topmentors";
 import Programs from "./Programs";
-import { pipeUrls, programMenus } from '../../utils/constant';
+import { menteeCountStatus, pipeUrls, programMenus } from '../../utils/constant';
 import { programActionStatus, programStatus, statusAction } from "../../utils/constant";
-import { getMenteePrograms, getProgramCounts, updateProgram } from "../../services/userprograms";
+import { getMenteeProgramCount, getMenteePrograms, updateProgram } from "../../services/userprograms";
 
 import './dashboard.css';
 import UserImage from "../../assets/images/user.jpg";
@@ -28,17 +28,22 @@ export const Mentee = () => {
 
 
     useEffect(() => {
-        const programMenu = [...programMenus('dashboard')].filter(men => men.for.includes(role)).map(menu => {
+        if (Object.keys(userpragrams.programsCounts).length) {
+            const programMenu = [...programMenus('dashboard')].filter(men => men.for.includes(role)).map(menu => {
 
-            if (menu.status === 'all') {
-                return { ...menu, count: userpragrams.totalPrograms }
-            }
-            if (statusAction.includes(menu.status)) {
-                return { ...menu, count: userpragrams.statusCounts[menu.status] }
-            }
-            return menu
-        })
-        setProgramMenusList(programMenu)
+                // if(menu.status)
+                // if (menu.status === 'all') {
+                //     return { ...menu, count: userpragrams.totalPrograms }
+                // }
+                // if (statusAction.includes(menu.status)) {
+                //     return { ...menu, count: userpragrams.statusCounts[menu.status] }
+                // }
+                // return menu
+                return { ...menu, count: userpragrams.programsCounts[menteeCountStatus[menu.status]] }
+            })
+            setProgramMenusList(programMenu)
+        }
+
     }, [userpragrams])
 
 
@@ -66,7 +71,7 @@ export const Mentee = () => {
     useEffect(() => {
         const filterType = searchParams.get("type");
         const isBookmark = searchParams.get("is_bookmark");
-        dispatch(getProgramCounts())
+        dispatch(getMenteeProgramCount())
         if (filterType === null && isBookmark === null) {
             dispatch(getMenteePrograms({ type: 'status', value: 'yettojoin' }));
         }
@@ -110,11 +115,8 @@ export const Mentee = () => {
         }
     }, [userpragrams.status])
 
-
-
     return (
         <>
-
             <div className="dashboard-content px-8 mt-10">
 
                 <Backdrop
@@ -138,7 +140,7 @@ export const Mentee = () => {
                             <div className="flex flex-col items-center pb-10 pt-14 border-b-2">
                                 <img className="w-24 h-24 mb-3 rounded-full shadow-lg object-cover" src={UserImage} alt="User logo" />
                                 <h5 className="mb-1 text-xl font-medium text-gray-900 ">{userInfo?.data?.first_name} {userInfo?.data?.last_name}</h5>
-                                <span className="text-sm text-gray-500 " style={{ textTransform: 'capitalize' }}>{userInfo.data.role} | Teaching Proffessional</span>
+                                <span className="text-sm text-gray-500 " style={{ textTransform: 'capitalize' }}>{userInfo.data.role} | Teaching Professional</span>
                             </div>
 
                             <ul className="flex flex-col gap-2 p-4 md:p-0 mt-4 font-medium">
@@ -162,7 +164,9 @@ export const Mentee = () => {
 
                             </ul>
                             <div className="flex justify-center mt-2 mb-2">
-                                <button className="text-white flex justify-center items-center gap-3 px-4 py-3 text-[12px]" style={{ borderRadius: '3px', background: 'linear-gradient(97.32deg, #1D5BBF -32.84%, #00AEBD 128.72%)' }}>
+                                <button className="text-white flex justify-center items-center gap-3 px-4 py-3 text-[12px]" style={{ borderRadius: '3px', background: 'linear-gradient(97.32deg, #1D5BBF -32.84%, #00AEBD 128.72%)' }}
+                                    onClick={() => navigate('/programs')}
+                                >
                                     <span>View All</span>
                                     <img src={RightArrow} alt={'RightArrow'} />
                                 </button>
@@ -203,6 +207,17 @@ export const Mentee = () => {
                                 handleNavigateDetails={handleNavigateDetails}
                                 handleBookmark={handleBookmark}
                                 programs={userpragrams.inprogress}
+                            />
+                        }
+
+                        {
+                            searchParams.get("type") === 'learning' &&
+                            <DashboardCard
+                                title="Learning Programs"
+                                viewpage="/programs?type=learning"
+                                handleNavigateDetails={handleNavigateDetails}
+                                handleBookmark={handleBookmark}
+                                programs={userpragrams.learning}
                             />
                         }
 

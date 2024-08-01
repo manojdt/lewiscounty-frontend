@@ -166,7 +166,7 @@ export const Mentor = () => {
                                 }}>{userInfo?.data?.userinfo?.current_employer}</span>
 
 
-                                <span className="text-sm text-gray-500 " style={{ textTransform: 'capitalize' }}>{userInfo.data.role} | Teaching Proffessional</span>
+                                <span className="text-sm text-gray-500 " style={{ textTransform: 'capitalize' }}>{userInfo.data.role} | Teaching Professional</span>
                             </div>
 
                             <ul className="flex flex-col gap-2 p-4 md:p-0 mt-4 font-medium">
