@@ -263,6 +263,7 @@ const Goals = () => {
                 query = filterType === 'total_goals' ? '' : filterType
             }
             dispatch(getAllGoals(query))
+            dispatch(getGoalsCount())
         }
 
     }, [status])
