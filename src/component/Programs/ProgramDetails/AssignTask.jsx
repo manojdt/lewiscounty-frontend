@@ -128,18 +128,6 @@ export default function AssignTask() {
     }
 
 
-    useEffect(() => {
-        if (status === programActionStatus.inprogress) {
-
-        }
-
-
-    }, [status])
-
-    // useEffect(() => {
-    //     if(status === programActionStatus.)
-    // },[status])
-
     const handleActionPage = () => {
         if (programdetails.status === programActionStatus.yettostart) {
             // let details = {}
@@ -280,6 +268,10 @@ export default function AssignTask() {
                 console.log('loading')
                 timerData.loadTime(0, 20, 0)
             }
+
+            if (programdetails.status === programActionStatus.completed) {
+                navigate('/programs')
+            }
         }
     }, [programdetails])
 
@@ -292,13 +284,13 @@ export default function AssignTask() {
 
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={loading.initial || loading.join}
+                open={loading.initial || loading.join || programLoading}
 
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
             {
-                Object.keys(programdetails).length ?
+                Object.keys(programdetails).length && !programLoading ?
                     <div className='grid mb-10' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)', borderRadius: '5px' }}>
                         <div className='breadcrum'>
                             <nav className="flex px-7 pt-6 pb-5 mx-2 border-b-2 justify-between" aria-label="Breadcrumb">
@@ -523,6 +515,7 @@ export default function AssignTask() {
                                             {
                                                 programdetails.status !== programActionStatus.inprogress && programdetails.status !== programActionStatus.paused &&
                                                 programdetails.status !== programActionStatus.yettojoin && programdetails.status !== programActionStatus.assigned &&
+                                                role !== 'mentee' &&
 
                                                 <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
                                                     background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",

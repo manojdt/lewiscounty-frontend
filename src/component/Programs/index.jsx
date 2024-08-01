@@ -15,7 +15,7 @@ import ProgramImage from "../../assets/images/logo_image.jpg";
 
 import { getAllCategories, getAllCertificates, getAllMaterials, getAllMembers, getAllSkills, loadAllPrograms } from '../../services/programInfo';
 import { pipeUrls, programActionStatus, programMenus, programStatus, statusAction } from '../../utils/constant';
-import { getProgramCounts, getProgramDetails, getUserPrograms, updateProgram } from '../../services/userprograms';
+import { getMenteePrograms, getProgramCounts, getProgramDetails, getUserPrograms, updateProgram } from '../../services/userprograms';
 
 
 export default function Programs() {
@@ -107,14 +107,15 @@ export default function Programs() {
 
         console.log('tttttt', Object.keys(searchParams));
 
-        if (Object.keys(query).length) {
-            dispatch(getUserPrograms(query));
-        }
+        // if (Object.keys(query).length && role !== '') {
+        if (role === 'mentee') dispatch(getMenteePrograms(query))
+        if (role === 'mentor') dispatch(getUserPrograms(query));
+        // }
 
-        if (searchParams.size === 0) {
-            dispatch(getUserPrograms())
-        }
-    }, [searchParams])
+        // if (searchParams.size === 0) {
+        //     role === 'mentee' ? dispatch(getMenteePrograms(query)) :  dispatch(getUserPrograms(query));
+        // }
+    }, [searchParams, role])
 
 
 
@@ -132,11 +133,14 @@ export default function Programs() {
                 query = { type: 'is_bookmark', value: isBookmark }
             }
 
-            if (Object.keys(query).length) {
-                dispatch(getUserPrograms(query));
-            } else {
-                dispatch(getUserPrograms());
-            }
+            if (role === 'mentee') dispatch(getMenteePrograms(query))
+            if (role === 'mentor') dispatch(getUserPrograms(query))
+
+            // if (Object.keys(query).length) {
+            //     role === 'mentee' ? dispatch(getMenteePrograms(query)) : dispatch(getUserPrograms(query));
+            // } else {
+            //     role === 'mentee' ? dispatch(getMenteePrograms()) : dispatch(getUserPrograms());
+            // }
         }
     }, [userprograms.status])
 
@@ -163,9 +167,10 @@ export default function Programs() {
     }, [userprograms])
 
     useEffect(() => {
-        if (filterType === null && isBookmark === null) {
-            dispatch(getUserPrograms());
-        }
+        // if (filterType === null && isBookmark === null) {
+        //     if (role === 'mentee') dispatch(getMenteePrograms())
+        //     if (role === 'mentor') dispatch(getUserPrograms())
+        // }
         dispatch(getProgramCounts())
     }, [])
 

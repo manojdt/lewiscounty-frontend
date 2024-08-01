@@ -9,18 +9,18 @@ import { curatedPrograms } from '../../../utils/mock';
 
 import { pipeUrls, programActionStatus, programStatus } from '../../../utils/constant';
 import { updateNewPrograms, updateProgramDetails } from '../../../services/programInfo';
-import { getProgramDetails } from '../../../services/userprograms';
+import { getMenteeJoinedInProgram, getProgramDetails } from '../../../services/userprograms';
 
 import UserImage from "../../../assets/images/user.jpg";
 import LocationIcon from '../../../assets/images/Location1x.png';
 import CalendarIcon from '../../../assets/images/calender_1x.png';
 import DoubleArrowIcon from '../../../assets/images/double_arrow 1x.png';
 import RatingsIcon from '../../../assets/images/ratings1x.png';
-import SponsorIcon from '../../../assets/images/program_logo1x.png';
 import CertificateIcon from '../../../assets/images/certficate1x.png';
 import QuoteIcon from '../../../assets/images/quotes1x.png';
 import MuiModal from '../../../shared/Modal';
 import SuccessTik from '../../../assets/images/blue_tik1x.png';
+import api from '../../../services/api';
 
 
 export default function ProgramDetails() {
@@ -33,7 +33,7 @@ export default function ProgramDetails() {
     const [activeTab, setActiveTab] = useState('about_program')
     const [certificateActiveTab, setCertificateActiveTab] = useState('participated')
     const userdetails = useSelector(state => state.userInfo)
-    const { programdetails, loading: programLoading, error } = useSelector(state => state.userPrograms)
+    const { programdetails, loading: programLoading, error, menteeJoined } = useSelector(state => state.userPrograms)
     const role = userdetails.data.role || ''
     const tabs = [
         {
@@ -77,49 +77,50 @@ export default function ProgramDetails() {
         if (Object.keys(programdetails).length) {
             console.log('programdetails.status', programdetails.status)
             if (programdetails.status === programActionStatus.yettostart) {
-                navigate(`${pipeUrls.assigntask}/${programdetails.id}`)
+                if(role === 'mentor') navigate(`${pipeUrls.assigntask}/${programdetails.id}`)
+                if(role === 'mentee' && menteeJoined) navigate(`${pipeUrls.startprogram}/${programdetails.id}`)
             }
 
-            else if (programdetails.status === programActionStatus.inprogress) {
+            else if (programdetails.status === programActionStatus.inprogress || programdetails.status === programActionStatus.assigned) {
                 navigate(`${pipeUrls.startprogram}/${programdetails.id}`)
             }
-            else setLoading({ ...loading, initial: false })
+
+
+            setLoading({ ...loading, initial: false })
         }
     }, [programdetails])
+
 
     useEffect(() => {
         console.log('searchParams', searchParams)
         const programId = params.id;
 
-        // if (programId === null) {
-        //   navigate(pipeUrls.programs)
-        // }
 
         if (programId && programId !== '') {
             dispatch(getProgramDetails(programId))
+            if (role === 'mentee') { dispatch(getMenteeJoinedInProgram({ id: programId })); }
         }
 
-    }, [params.id])
+    }, [params.id, role])
 
-    const handleJoinProgram = (programId) => {
-        // let updatedProgramDetails = {}
-        // const updatedPrograms = allPrograms.map(allprogram => {
-        //     if (allprogram.id === programId) {
-        //         updatedProgramDetails = { ...allprogram, status: programStatus.planned }
-        //         return updatedProgramDetails
-        //     }
-        //     return allprogram
-        // })
-        setLoading({ initial: false, join: true })
-        // dispatch(updateNewPrograms({ allPrograms: updatedPrograms, status: '' }))
-        // dispatch(updateProgramDetails(updatedProgramDetails))
+    const handleJoinProgram = async (programId) => {
+  
+        if (role === 'mentee') {
+            const menteeJoinProgram = await api.post('mentee_program/join_program', { id: programId });
+            if (menteeJoinProgram.status === 200 && menteeJoinProgram.data) {
+                console.log('mssss', menteeJoinProgram)
+                setLoading({ initial: false, join: true })
+            }
+        }
+        if (role === 'mentor') setLoading({ initial: false, join: true })
 
     }
 
     useEffect(() => {
         if (taskJoined) {
             setTimeout(() => {
-                navigate(`${pipeUrls.assigntask}/${programdetails.id}`)
+                if (role === 'mentor')  navigate(`${pipeUrls.assigntask}/${programdetails.id}`)
+                if (role === 'mentee')  navigate(`${pipeUrls.startprogram}/${programdetails.id}`)
             }, [3000])
 
         }
@@ -140,7 +141,7 @@ export default function ProgramDetails() {
 
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={loading.initial || loading.join}
+                open={loading.initial || loading.join || programLoading}
 
             >
                 <CircularProgress color="inherit" />
@@ -231,16 +232,21 @@ export default function ProgramDetails() {
                                             <span>{userdetails.data.first_name}{' '} {userdetails.data.last_name}</span>
                                         </div>
 
-                                        <div className='py-9'>
-                                            <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
-                                                borderRadius: '5px'
-                                            }}
-                                                onClick={() => handleJoinProgram(programdetails.id)}
-                                            >Join Program
-                                                <span className='pl-8 pt-1'><img style={{ width: '15px', height: '13px' }} src={DoubleArrowIcon} alt="DoubleArrowIcon" /></span>
-                                            </button>
-                                        </div>
+                                        {
+                                            role === 'mentor' || (role === 'mentee' && !menteeJoined) &&
+
+                                            <div className='py-9'>
+                                                <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                    background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
+                                                    borderRadius: '5px'
+                                                }}
+                                                    onClick={() => handleJoinProgram(programdetails.id)}
+                                                >Join Program
+                                                    <span className='pl-8 pt-1'><img style={{ width: '15px', height: '13px' }} src={DoubleArrowIcon} alt="DoubleArrowIcon" /></span>
+                                                </button>
+                                            </div>
+                                        }
+
 
                                     </div>
 

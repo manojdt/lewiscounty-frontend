@@ -8,7 +8,7 @@ import Topmentors from "./Topmentors";
 import Programs from "./Programs";
 import { pipeUrls, programMenus } from '../../utils/constant';
 import { programActionStatus, programStatus, statusAction } from "../../utils/constant";
-import { getProgramCounts, getUserPrograms, updateProgram } from "../../services/userprograms";
+import { getMenteePrograms, getProgramCounts, updateProgram } from "../../services/userprograms";
 
 import './dashboard.css';
 import UserImage from "../../assets/images/user.jpg";
@@ -28,7 +28,8 @@ export const Mentee = () => {
 
 
     useEffect(() => {
-        const programMenu = [...programMenus('dashboard')].map(menu => {
+        const programMenu = [...programMenus('dashboard')].filter(men => men.for.includes(role)).map(menu => {
+
             if (menu.status === 'all') {
                 return { ...menu, count: userpragrams.totalPrograms }
             }
@@ -57,7 +58,7 @@ export const Mentee = () => {
         }
 
         if (Object.keys(query).length) {
-            dispatch(getUserPrograms(query));
+            dispatch(getMenteePrograms(query));
         }
 
     }, [searchParams])
@@ -67,7 +68,7 @@ export const Mentee = () => {
         const isBookmark = searchParams.get("is_bookmark");
         dispatch(getProgramCounts())
         if (filterType === null && isBookmark === null) {
-            dispatch(getUserPrograms({ type: 'status', value: 'yettojoin' }));
+            dispatch(getMenteePrograms({ type: 'status', value: 'yettojoin' }));
         }
     }, [])
 
@@ -75,7 +76,7 @@ export const Mentee = () => {
     const handleNavigateDetails = (program) => {
         let baseUrl = pipeUrls.programdetails
         if (Object.keys(program).length) {
-            if (program.status === programActionStatus.yettostart) baseUrl = pipeUrls.assigntask
+            if (program.status === programActionStatus.yettostart && role === 'mentor') baseUrl = pipeUrls.assigntask
             if (program.status === programActionStatus.assigned) baseUrl = pipeUrls.startprogram
             if (program.status === programActionStatus.inprogress) baseUrl = pipeUrls.startprogram
             navigate(`${baseUrl}/${program.id}`)
@@ -102,9 +103,9 @@ export const Mentee = () => {
             }
 
             if (Object.keys(query).length) {
-                dispatch(getUserPrograms(query));
+                dispatch(getMenteePrograms(query));
             } else {
-                dispatch(getUserPrograms({ type: 'status', value: 'yettojoin' }));
+                dispatch(getMenteePrograms({ type: 'status', value: 'yettojoin' }));
             }
         }
     }, [userpragrams.status])

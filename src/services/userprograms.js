@@ -120,3 +120,61 @@ export const getMenteeDetails = createAsyncThunk(
         return menteeDetails;
     }
 );
+
+
+
+export const getMenteePrograms = createAsyncThunk(
+    "getMenteePrograms",
+    async (query) => {
+
+        let queryString = query
+        if (queryString.value === 'yettojoin') {
+            queryString.value = 'curated';
+        }
+
+        if (queryString.value === 'inprogress') {
+            queryString.value = 'ongoing';
+        }
+
+
+        const queryParams = queryString && Object.keys(queryString).length ? `?${queryString.type}=${queryString.value}` : ''
+        const getUserProgram = await api.get(`mentee_program/all${queryParams}`);
+        console.log('getMenteePrograms', getUserProgram)
+        if (getUserProgram.status === 200 && getUserProgram.data) {
+            const response = {
+                ...getUserProgram.data,
+                filterType: queryString?.type || '',
+                filterValue: queryString?.value || ''
+            }
+            console.log('response', response)
+            return response;
+        }
+        return getUserProgram;
+    }
+);
+
+
+
+export const getMenteeJoinedInProgram = createAsyncThunk(
+    "getMenteeJoinedInProgram",
+    async (data) => {
+        const menteeJoinedProgram = await api.post('mentee_program/enroll_check', data);
+        console.log('menteeJoinedProgram', menteeJoinedProgram)
+        if (menteeJoinedProgram.status === 200 && menteeJoinedProgram.data) {
+            return menteeJoinedProgram.data;
+        }
+        return menteeJoinedProgram;
+    }
+);
+
+export const menteeJoinProgram = createAsyncThunk(
+    "menteeJoinProgram",
+    async (data) => {
+        const menteeJoinProgram = await api.post('mentee_program/join_program', data);
+        console.log('menteeJoinProgram', menteeJoinProgram)
+        if (menteeJoinProgram.status === 200 && menteeJoinProgram.data) {
+            return menteeJoinProgram.data;
+        }
+        return menteeJoinProgram;
+    }
+);
