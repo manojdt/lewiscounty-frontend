@@ -25,12 +25,16 @@ export default function CreateGoal({ open, handleCloseModal, seletedItem, editMo
 
     const onSubmit = (data) => {
         console.log(data)
+        let date = new Date(data.start_date), mnth = ("0" + (date.getMonth() + 1)).slice(-2), day = ("0" + date.getDate()).slice(-2);
+        date = [date.getFullYear(), mnth, day].join("-")
+
         let apiData = {
             ...data,
-            start_date: new Date(data.start_date).toISOString().split('T')[0],
+            start_date: date,
             period: parseInt(data.period)
         }
         console.log('ap', apiData)
+        console.log('date', data.start_date, date)
         if (editMode) {
             apiData = {
                 ...apiData,
