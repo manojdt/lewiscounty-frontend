@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import SearchIcon from '../../assets/images/search1x.png'
 import { discussionColumns, discussionRow } from '../../mock'
 
-export default function Discussions() {
+export default function ProgramsData() {
   const [actionTab, setActiveTab] = useState('new')
   const allDiscussions = [
     {

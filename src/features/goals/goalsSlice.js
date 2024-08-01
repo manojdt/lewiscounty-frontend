@@ -7,6 +7,11 @@ import {
     getAllGoals,
     getGoalInfo,
     getGoalsCount,
+    getGoalsHistory,
+    getGoalsOverAllData,
+    getGoalsProgressData,
+    getGoalsRequest,
+    getRecentGoalActivity,
     updateGoal,
     updateGoalStatus,
 } from "../../services/goalsInfo";
@@ -19,6 +24,11 @@ const initialState = {
     createdGoal: {},
     goalsCount: {},
     goalInfo: {},
+    goalOverAll: [],
+    goalProgress: [],
+    goalRequest: [],
+    goalActivity: [],
+    goalHistory: [],
     loading: false,
     status: "",
     error: "",
@@ -68,6 +78,28 @@ export const goalsSlice = createSlice({
                 };
             })
             .addCase(createGoal.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+        builder
+            .addCase(getGoalsOverAllData.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(getGoalsOverAllData.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    status: '',
+                    goalOverAll: action.payload,
+                    loading: false,
+                };
+            })
+            .addCase(getGoalsOverAllData.rejected, (state, action) => {
                 return {
                     ...state,
                     loading: false,
@@ -175,6 +207,95 @@ export const goalsSlice = createSlice({
                 };
             })
             .addCase(deleteGoalInfo.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
+
+        builder
+            .addCase(getGoalsRequest.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(getGoalsRequest.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    goalRequest: action.payload,
+                    loading: false,
+                };
+            })
+            .addCase(getGoalsRequest.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
+        builder
+            .addCase(getGoalsHistory.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(getGoalsHistory.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    goalHistory: action.payload,
+                    loading: false,
+                };
+            })
+            .addCase(getGoalsHistory.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
+        builder
+            .addCase(getGoalsProgressData.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(getGoalsProgressData.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    goalProgress: action.payload,
+                    loading: false,
+                };
+            })
+            .addCase(getGoalsProgressData.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
+        builder
+            .addCase(getRecentGoalActivity.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(getRecentGoalActivity.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    goalActivity: action.payload,
+                    loading: false,
+                };
+            })
+            .addCase(getRecentGoalActivity.rejected, (state, action) => {
                 return {
                     ...state,
                     loading: false,

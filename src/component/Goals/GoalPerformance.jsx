@@ -39,7 +39,7 @@ export default function GoalPerformance() {
             </div>
 
             <LineChart
-                width={1100}
+                width={900}
                 height={500}
                 series={[{ data: uData, label: 'uv', area: true, showMark: false, color: '#1D5BBF', }]}
                 xAxis={[{ scaleType: 'point', data: xLabels }]}

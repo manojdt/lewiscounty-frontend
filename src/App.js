@@ -15,8 +15,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { updateInfo } from "./services/loginInfo";
 import { useEffect } from "react";
 import Programs from "./component/Programs";
-import Calendar from "./component/Calendar";
-import Discussions from "./component/Discussions";
+import ProgramData from "./component/ProgramData";
+import ProgramsData from "./component/ProgramsData";
 import CreatePrograms from "./component/Programs/CreateProgram";
 import UserGuard from "./component/UserGuard";
 import ProgramDetails from "./component/Programs/ProgramDetails";
@@ -90,8 +90,8 @@ function App() {
 
 
           <Route path="/create-programs" element={<CreatePrograms />} />
-          <Route path="/calendar1" element={<Calendar />} />
-          <Route path="/discussions" element={<Discussions />} />
+          <Route path="/program" element={<ProgramData />} />
+          <Route path="/program-data" element={<ProgramsData />} />
           
          
           <Route path="/mentors" element={<Mentors />} />

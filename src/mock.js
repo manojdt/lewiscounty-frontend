@@ -742,8 +742,8 @@ const goalsRequestRowData = () => {
         data.push({
             id: a,
             goal_name: `Goal ${a}`,
-            goals_designation : `Designation ${a}`,
-            goals_desc: 'Desc',
+            goal_designation : `Designation ${a}`,
+            goal_description: 'Desc',
             request_date : '03/24/2024',
             approved_date : '03/24/2024',
             status : 'Accept',
@@ -762,13 +762,13 @@ export const goalsRequestColumn = [{
     id: 0,
 },
 {
-    field: 'goals_designation',
+    field: 'goal_designation',
     headerName: 'Goals Designation',
     width: 350,
     id: 1,
 },
 {
-    field: 'goals_desc',
+    field: 'goal_description',
     headerName: 'Goals Description',
     width: 350,
     id: 1,
@@ -913,3 +913,32 @@ export const discussionColumns = [{
     id: 1,
 },
 ];
+
+
+export const goalsHistoryColumn = [
+    {
+        field: 'goal_name',
+        headerName: 'Goals Name',
+        width: 200,
+        id: 0,
+    },
+    {
+        field: 'start_date',
+        headerName: 'Start Date',
+        width: 200,
+        id: 1,
+    },
+    {
+        field: 'period',
+        headerName: 'Period',
+        width: 200,
+        id: 1,
+    },
+    {
+        field: 'end_date',
+        headerName: 'End Date',
+        width: 200,
+        id: 1,
+    },
+];
+

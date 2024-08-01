@@ -192,12 +192,21 @@ export const goalPeriods = [
 ]
 
 
+
 export const goalDataStatus = {
   inactive: 'Not Active Goal',
   active: 'Active Goal',
   ongoing: 'Goal in Progress',
   completed: 'Completed Goal',
   aborted: 'Cancel Goal',
+}
+
+export const goalStatusColor = {
+  inactive : { color: '#000', bg: '#fff'},
+  active : { color: 'rgba(255, 212, 27, 1)', bg: 'rgba(255, 247, 216, 1)'},
+  ongoing : { color: 'rgba(255, 118, 0, 1)', bg: 'rgba(255, 242, 231, 1)'},
+  completed : { color: 'rgba(47, 147, 132, 1)', bg: 'rgba(218, 252, 231, 1)'},
+  aborted : { color: 'rgba(224, 56, 45, 1)', bg: 'rgba(255, 231, 231, 1)'},
 }
 
 export const PasswordRulesSet = {

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import InlineCalendar from '../../shared/Calendar/InlineCalendar'
 import './calendar.css'
 
-export default function Calendar() {
+export default function ProgramData() {
   const [actionActionBtn, setActionActionBtn] = useState('upcoming_schedule')
   const calendarEvents = [
     {

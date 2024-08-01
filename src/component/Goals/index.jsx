@@ -15,13 +15,13 @@ import SuccessTik from '../../assets/images/blue_tik1x.png';
 import OverDeleteIcon from '../../assets/images/delete_1x.png'
 import CancelIcon from '../../assets/images/cancel1x.png'
 import EditIcon from '../../assets/images/Edit1x.png'
-import { goalsColumns, goalsRequestColumn, goalsRequestRow, goalsRow, menteeGoalsRequestColumn, menteeGoalsRequestRow } from '../../mock';
+import { goalsColumns, goalsHistoryColumn, goalsRequestColumn, goalsRequestRow, goalsRow, menteeGoalsRequestColumn, menteeGoalsRequestRow } from '../../mock';
 import RecentActivities from '../Dashboard/RecentActivities';
 import CreateGoal from './CreateGoal';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteGoalInfo, getAllGoals, getGoalInfo, getGoalsCount, updateGoalStatus } from '../../services/goalsInfo';
+import { deleteGoalInfo, getAllGoals, getGoalInfo, getGoalsCount, getGoalsHistory, getGoalsOverAllData, getGoalsProgressData, getGoalsRequest, getRecentGoalActivity, updateGoalStatus } from '../../services/goalsInfo';
 import './goal.css'
-import { goalDataStatus, goalPeriods, goalStatus } from '../../utils/constant';
+import { goalDataStatus, goalPeriods, goalStatus, goalStatusColor } from '../../utils/constant';
 import MuiModal from '../../shared/Modal';
 import GoalProgress from './GoalProgress';
 import GoalPerformance from './GoalPerformance';
@@ -42,7 +42,11 @@ const Goals = () => {
     const [seletedItem, setSelectedItem] = useState({})
     const [popupModal, setPopupModal] = useState('')
 
-    const { goalsList, loading, status, error, createdGoal, goalsCount } = useSelector(state => state.goals)
+    const userInfo = useSelector(state => state.userInfo)
+
+    const role = userInfo.data.role
+
+    const { goalsList, loading, status, error, createdGoal, goalsCount, goalOverAll, goalProgress, goalRequest, goalActivity, goalHistory } = useSelector(state => state.goals)
 
     const dispatch = useDispatch()
 
@@ -106,7 +110,13 @@ const Goals = () => {
 
     useEffect(() => {
         dispatch(getGoalsCount())
+        dispatch(getGoalsOverAllData('start_year=2022&end_year=2024'))
+        dispatch(getGoalsProgressData())
+        dispatch(getGoalsRequest())
+        dispatch(getGoalsHistory())
+        dispatch(getRecentGoalActivity())
     }, [])
+
 
     useEffect(() => {
         console.log('searchParams', searchParams)
@@ -118,6 +128,7 @@ const Goals = () => {
             dispatch(getAllGoals(query));
         }
     }, [searchParams])
+
 
     useEffect(() => {
         if (status === goalStatus.delete) {
@@ -234,13 +245,13 @@ const Goals = () => {
             id: 2,
             renderCell: (params) => {
                 return <>
-                    <div className='relative' style={{display: 'flex', alignItems: 'center', justifyContent: 'flex-start',  height: '100%', width: '70%'}}>
+                    <div className='relative' style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', height: '100%', width: '70%' }}>
                         <div style={{
-                            background: '#FFD41B', width: '67%', borderRadius: '30px', height: '30px',top: '20%',
+                            background: '#FFD41B', width: '67%', borderRadius: '30px', height: '30px', top: '20%',
                             position: 'absolute'
                         }}>
 
-                            <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', color:'#18283D', height:'30px'}}>50%</div>
+                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', color: '#18283D', height: '30px' }}>50%</div>
                         </div>
                         <div style={{
                             background: 'rgba(217, 217, 217, 1)', width: '100%', borderRadius: '30px', height: '30px'
@@ -287,8 +298,8 @@ const Goals = () => {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
-                       
- 
+
+
 
                     </Menu>
                 </>
@@ -298,7 +309,108 @@ const Goals = () => {
         },
     ]
 
-    const title = goalsListMenu.find(option => option.key === searchParams.get("type"))?.name || 'Mentor Goal'
+    const goalHistoryColumn = [
+        ...goalsHistoryColumn,
+        {
+            field: 'goal_status',
+            headerName: 'Status',
+            width: 250,
+            id: 2,
+            renderCell: (params) => {
+                return <>
+                    <div className='cursor-pointer flex items-center h-full relative'>
+                        <span className='w-[80px] flex justify-center h-[30px] px-7'
+                            style={{
+                                background: goalStatusColor[params.row.goal_status].bg, lineHeight: '30px',
+                                borderRadius: '3px', width: '110px', height: '34px', color: goalStatusColor[params.row.goal_status].color
+                            }}>
+                            {goalDataStatus[params.row.goal_status]}
+                        </span>
+                    </div>
+                </>
+            }
+        },
+
+        {
+            field: 'action',
+            headerName: 'Action',
+            width: 150,
+            id: 4,
+            renderCell: (params) => {
+                console.log('params', params)
+                return <>
+                    <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleClick(e, params.row)}>
+                        <img src={MoreIcon} alt='MoreIcon' />
+                    </div>
+                    <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                        MenuListProps={{
+                            'aria-labelledby': 'basic-button',
+                        }}
+                    >
+
+
+
+                    </Menu>
+                </>
+            }
+
+
+        },
+    ]
+
+    const goalRequestColumn = [
+        ...goalsRequestColumn,
+        {
+            field: 'goal_status',
+            headerName: 'Status',
+            width: 250,
+            id: 2,
+            renderCell: (params) => {
+                return <>
+                    <div className='cursor-pointer flex items-center h-full relative'>
+                        <span className='w-[80px] flex justify-center h-[30px] px-7'
+                            style={{ background: '#FFF7D8', lineHeight: '30px', borderRadius: '3px', width: '110px', height: '34px' }}> {params.row.goal_status}</span>
+                    </div>
+                </>
+            }
+        },
+
+        {
+            field: 'action',
+            headerName: 'Action',
+            width: 150,
+            id: 4,
+            renderCell: (params) => {
+                console.log('params', params)
+                return <>
+                    <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleClick(e, params.row)}>
+                        <img src={MoreIcon} alt='MoreIcon' />
+                    </div>
+                    <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                        MenuListProps={{
+                            'aria-labelledby': 'basic-button',
+                        }}
+                    >
+
+
+
+                    </Menu>
+                </>
+            }
+
+
+        },
+    ]
+
+    const title = goalsListMenu.find(option => option.key === searchParams.get("type"))?.name || (role === 'mentee' ? 'Mentee Goals' : 'Mentor Goals')
 
     const handleTab = (key) => {
         setRequestTab(key)
@@ -346,10 +458,6 @@ const Goals = () => {
         setGoals(goalsList)
     }, [goalsList])
 
-
-
-
-    console.log('ppppp', searchParams.get("type"))
     return (
         <div className="goals px-9 py-9">
             <Backdrop
@@ -419,27 +527,30 @@ const Goals = () => {
                     <div className='flex gap-5 items-center'>
                         <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 700 }}>Goals</p>
                     </div>
-
                 </div>
 
                 <div className='mx-5'>
+                    {
+                        role === 'mentor' &&
 
-                    <div className='flex gap-7 mb-6 '>
-                        {
-                            requestBtns.map((actionBtn, index) =>
-                                <button key={index} className='px-5 py-4 text-[14px]' style={{
-                                    background: requestTab === actionBtn.key ? 'linear-gradient(97.86deg, #005DC6 -15.07%, #00B1C0 112.47%)' :
-                                        '#fff',
-                                    border: requestTab !== actionBtn.key ? '1px solid rgba(136, 178, 232, 1)' : 'none',
-                                    color: requestTab === actionBtn.key ? '#fff' : '#000',
-                                    borderRadius: '30px',
-                                    width: '180px'
-                                }}
-                                    onClick={() => handleTab(actionBtn.key)}
-                                >{actionBtn.name}</button>
-                            )
-                        }
-                    </div>
+                        <div className='flex gap-7 mb-6 '>
+                            {
+                                requestBtns.map((actionBtn, index) =>
+                                    <button key={index} className='px-5 py-4 text-[14px]' style={{
+                                        background: requestTab === actionBtn.key ? 'linear-gradient(97.86deg, #005DC6 -15.07%, #00B1C0 112.47%)' :
+                                            '#fff',
+                                        border: requestTab !== actionBtn.key ? '1px solid rgba(136, 178, 232, 1)' : 'none',
+                                        color: requestTab === actionBtn.key ? '#fff' : '#000',
+                                        borderRadius: '30px',
+                                        width: '180px'
+                                    }}
+                                        onClick={() => handleTab(actionBtn.key)}
+                                    >{actionBtn.name}</button>
+                                )
+                            }
+                        </div>
+                    }
+
 
                     {
                         requestTab === 'mentor-goals' &&
@@ -481,7 +592,7 @@ const Goals = () => {
                                     <div className="create-goal flex justify-center items-center flex-col gap-4"
                                         onClick={() => setActionModal(true)}
                                     >
-                                        <p>Create New Goal</p>
+                                        <p>{role === 'mentee' ? 'New Goal Request' : 'Create New Goal'}</p>
                                         <img src={AddGoalIcon} alt="AddGoalIcon" />
                                     </div>
                                 </div>
@@ -493,9 +604,6 @@ const Goals = () => {
                                             searchParams.get('type') === null ?
                                                 <div>
                                                     <GoalPerformance />
-
-
-
 
                                                     <div style={{ border: '1px solid rgba(29, 91, 191, 1)', padding: '10px', borderRadius: '10px', margin: '60px 0' }}>
                                                         <div className='goal-title-container flex justify-between items-center mb-10'>
@@ -537,7 +645,7 @@ const Goals = () => {
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <DataTable rows={goalsRequestRow} columns={goalsRequestColumn} handleSelectedRow={handleSelectedRow} />
+                                                        <DataTable rows={goalHistory} columns={goalHistoryColumn} handleSelectedRow={handleSelectedRow} />
                                                     </div>
 
 
