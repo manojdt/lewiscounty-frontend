@@ -31,6 +31,7 @@ import CancelIcon from '../../../assets/images/cancel-colour1x.png';
 import PauseIcon from '../../../assets/images/pause1x.png';
 import ResumeIcon from '../../../assets/images/resume1x.png';
 import CompleteIcon from '../../../assets/images/completed1x.png'
+import PlusCircle from '../../../assets/icons/Pluscircle.svg'
 
 
 import './program-details.css'
@@ -342,20 +343,24 @@ export default function AssignTask() {
                                             :
                                             currentPage === 'startprogram' ?
                                                 <>
+
+                                                    <MenuItem onClick={handleClose} className='!text-[12px]'>
+                                                        <img src={ResumeIcon} alt="ResumeIcon" className='pr-3 w-[25px]' />
+                                                        Resume</MenuItem>
+                                                    <MenuItem onClick={handleClose} className='!text-[12px]'>
+                                                        <img src={AbortIcon} alt="AbortIcon" className='pr-3 w-[25px]' />
+                                                        Abort</MenuItem>
+                                                    <MenuItem onClick={handleClose} className='!text-[12px]'>
+                                                        <img src={RescheduleIcon} alt="RescheduleIcon" className='pr-3 w-[25px]' />
+                                                        Reschedule
+                                                    </MenuItem>
+                                                    <MenuItem onClick={handleClose} className='!text-[12px]'>
+                                                        <img src={ShareIcon} alt="ShareIcon" className='pr-3 w-[25px]' /> Share</MenuItem>
                                                     <MenuItem onClick={() => handleComplete(programDetails.id)} className='!text-[12px]'>
                                                         <img src={CompleteIcon} alt="AbortIcon" className='pr-3 w-[25px]' />
                                                         Complete</MenuItem>
-                                                    {/* <MenuItem onClick={handleClose} className='!text-[12px]'>
-                                                <img src={AbortIcon} alt="AbortIcon" className='pr-3 w-[25px]' />
-                                                Abort</MenuItem>
-                                            <MenuItem onClick={handleClose} className='!text-[12px]'>
-                                                <img src={RescheduleIcon} alt="RescheduleIcon" className='pr-3 w-[25px]' />
-                                                Reschedule
-                                            </MenuItem>
-                                            <MenuItem onClick={handleClose} className='!text-[12px]'>
-                                                <img src={ShareIcon} alt="ShareIcon" className='pr-3 w-[25px]' /> Share</MenuItem>
-                                            <MenuItem onClick={handleClose} className='!text-[12px]'>
-                                                <img src={DiscussionsIcon} alt="DiscussionsIcon" className='pr-3 w-[25px]' />Discussions</MenuItem> */}
+                                                    <MenuItem onClick={handleClose} className='!text-[12px]'>
+                                                        <img src={PlusCircle} alt="PlusCircle" className='pr-3 w-[25px]' />Assign Task to Mentees</MenuItem>
                                                 </>
                                                 : null
                                     }
@@ -575,7 +580,7 @@ export default function AssignTask() {
                                     role === 'mentee' && (programdetails.status === programActionStatus.inprogress || programdetails.status === programActionStatus.paused ||
                                         programdetails.status === programActionStatus.assigned) && <SkillsSet />
                                 }
-                                
+
 
                                 {/* Detail Section */}
                                 <div className='details-section px-6 py-11 mb-10' style={{ background: 'rgba(249, 249, 249, 1)', borderRadius: '10px' }}>

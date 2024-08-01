@@ -178,3 +178,16 @@ export const menteeJoinProgram = createAsyncThunk(
         return menteeJoinProgram;
     }
 );
+
+
+export const getMenteeProgramCount = createAsyncThunk(
+    "getMenteeProgramCount",
+    async () => {
+        const menteeProgramCount = await api.get('mentee_program/count_program');
+        console.log('menteeProgramCount', menteeProgramCount)
+        if (menteeProgramCount.status === 200 && menteeProgramCount.data) {
+            return menteeProgramCount.data;
+        }
+        return menteeProgramCount;
+    }
+);

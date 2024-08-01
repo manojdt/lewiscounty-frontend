@@ -250,6 +250,15 @@ export const programFilterUrls = {
   bookmark: '?is_bookmark=true',
 }
 
+export const menteeCountStatus = {
+  all: 'allprogram',
+  [programActionStatus.inprogress]: 'ongoing',
+  [programActionStatus.completed]: 'completed',
+  [programActionStatus.yettojoin]: 'curated',
+  [programActionStatus.learning]: 'mylearning',
+  [programActionStatus.bookmark]: 'bookmark',
+}
+
 export const programMenus = (page = 'dashboard') => {
   const pipeUrl = page === 'program' ? pipeUrls.programs : pipeUrls.dashboard
   return [{

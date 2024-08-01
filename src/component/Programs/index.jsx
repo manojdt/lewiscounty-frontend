@@ -14,8 +14,8 @@ import ProgramImage from "../../assets/images/logo_image.jpg";
 
 
 import { getAllCategories, getAllCertificates, getAllMaterials, getAllMembers, getAllSkills, loadAllPrograms } from '../../services/programInfo';
-import { pipeUrls, programActionStatus, programMenus, programStatus, statusAction } from '../../utils/constant';
-import { getMenteePrograms, getProgramCounts, getProgramDetails, getUserPrograms, updateProgram } from '../../services/userprograms';
+import { menteeCountStatus, pipeUrls, programActionStatus, programMenus, programStatus, statusAction } from '../../utils/constant';
+import { getMenteeProgramCount, getMenteePrograms, getProgramCounts, getProgramDetails, getUserPrograms, updateProgram } from '../../services/userprograms';
 
 
 export default function Programs() {
@@ -75,20 +75,28 @@ export default function Programs() {
         const listPrograms = programMenus('program').filter(programs => programs.for.includes(role));
 
         const programMenu = [...listPrograms].map(menu => {
-            if (menu.status === 'all') {
-                return { ...menu, count: userprograms.totalPrograms }
+
+            if (role === 'mentor') {
+                if (menu.status === 'all') {
+                    return { ...menu, count: userprograms.totalPrograms }
+                }
+                if (statusAction.includes(menu.status)) {
+                    console.log('userprograms.statusCounts', userprograms.statusCounts, menu.status)
+                    return { ...menu, count: userprograms.statusCounts[menu.status] }
+                }
             }
-            if (statusAction.includes(menu.status)) {
-                console.log('userprograms.statusCounts', userprograms.statusCounts, menu.status)
-                return { ...menu, count: userprograms.statusCounts[menu.status] }
+
+            if(role === 'mentee'){
+                return { ...menu, count: userprograms.programsCounts[menteeCountStatus[menu.status]] || 0 }
             }
+
             return menu
         })
         console.log('programMenu', programMenu)
         setProgramMenusList(programMenu)
 
         // setProgramsList(programInfo.allPrograms)
-    }, [userprograms.statusCounts])
+    }, [userprograms.statusCounts, userprograms.programsCounts])
 
     useEffect(() => {
         console.log('searchParamsssss', searchParams, searchParams.size)
@@ -108,7 +116,9 @@ export default function Programs() {
         console.log('tttttt', Object.keys(searchParams));
 
         // if (Object.keys(query).length && role !== '') {
-        if (role === 'mentee') dispatch(getMenteePrograms(query))
+        if (role === 'mentee') {
+            dispatch(getMenteePrograms(query))
+        }
         if (role === 'mentor') dispatch(getUserPrograms(query));
         // }
 
@@ -167,11 +177,16 @@ export default function Programs() {
     }, [userprograms])
 
     useEffect(() => {
+        if (role === 'mentor') dispatch(getProgramCounts())
+        if (role === 'mentee') dispatch(getMenteeProgramCount())
+    }, [role])
+
+    useEffect(() => {
         // if (filterType === null && isBookmark === null) {
         //     if (role === 'mentee') dispatch(getMenteePrograms())
         //     if (role === 'mentor') dispatch(getUserPrograms())
         // }
-        dispatch(getProgramCounts())
+
     }, [])
 
 

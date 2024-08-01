@@ -5,6 +5,7 @@ import {
 import {
   assignProgramTask,
   getMenteeJoinedInProgram,
+  getMenteeProgramCount,
   getMenteePrograms,
   getMentees,
   getProgramCounts,
@@ -331,6 +332,30 @@ export const userProgramSlice = createSlice({
           error: action.error.message,
         };
       });
+
+
+      builder
+      .addCase(getMenteeProgramCount.pending, (state) => {
+        return {
+          ...state,
+          loading: true
+        };
+      })
+      .addCase(getMenteeProgramCount.fulfilled, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          programsCounts: action.payload,
+        };
+      })
+      .addCase(getMenteeProgramCount.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+
+        };
+      })
 
   },
 });
