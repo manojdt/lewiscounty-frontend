@@ -6,9 +6,9 @@ import { Backdrop, CircularProgress } from "@mui/material";
 import DashboardCard from "../../shared/Card/DashboardCard";
 import Topmentors from "./Topmentors";
 import Programs from "./Programs";
-import { pipeUrls, programMenus } from '../../utils/constant';
+import { menteeCountStatus, pipeUrls, programMenus } from '../../utils/constant';
 import { programActionStatus, programStatus, statusAction } from "../../utils/constant";
-import { getMenteePrograms, getProgramCounts, updateProgram } from "../../services/userprograms";
+import { getMenteeProgramCount, getMenteePrograms, updateProgram } from "../../services/userprograms";
 
 import './dashboard.css';
 import UserImage from "../../assets/images/user.jpg";
@@ -28,17 +28,22 @@ export const Mentee = () => {
 
 
     useEffect(() => {
-        const programMenu = [...programMenus('dashboard')].filter(men => men.for.includes(role)).map(menu => {
+        if (Object.keys(userpragrams.programsCounts).length) {
+            const programMenu = [...programMenus('dashboard')].filter(men => men.for.includes(role)).map(menu => {
 
-            if (menu.status === 'all') {
-                return { ...menu, count: userpragrams.totalPrograms }
-            }
-            if (statusAction.includes(menu.status)) {
-                return { ...menu, count: userpragrams.statusCounts[menu.status] }
-            }
-            return menu
-        })
-        setProgramMenusList(programMenu)
+                // if(menu.status)
+                // if (menu.status === 'all') {
+                //     return { ...menu, count: userpragrams.totalPrograms }
+                // }
+                // if (statusAction.includes(menu.status)) {
+                //     return { ...menu, count: userpragrams.statusCounts[menu.status] }
+                // }
+                // return menu
+                return { ...menu, count: userpragrams.programsCounts[menteeCountStatus[menu.status]] }
+            })
+            setProgramMenusList(programMenu)
+        }
+
     }, [userpragrams])
 
 
@@ -66,7 +71,7 @@ export const Mentee = () => {
     useEffect(() => {
         const filterType = searchParams.get("type");
         const isBookmark = searchParams.get("is_bookmark");
-        dispatch(getProgramCounts())
+        dispatch(getMenteeProgramCount())
         if (filterType === null && isBookmark === null) {
             dispatch(getMenteePrograms({ type: 'status', value: 'yettojoin' }));
         }
@@ -110,11 +115,8 @@ export const Mentee = () => {
         }
     }, [userpragrams.status])
 
-
-
     return (
         <>
-
             <div className="dashboard-content px-8 mt-10">
 
                 <Backdrop
@@ -208,7 +210,7 @@ export const Mentee = () => {
                             />
                         }
 
-{
+                        {
                             searchParams.get("type") === 'learning' &&
                             <DashboardCard
                                 title="Learning Programs"
