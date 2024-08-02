@@ -1,6 +1,7 @@
-.goal .p-datepicker.p-component{
+.p-datepicker.p-component{
     z-index: 9999 !important;
     width: 100px !important;
     min-width: 500px !important;
+    left: 235px !important;
   }
   

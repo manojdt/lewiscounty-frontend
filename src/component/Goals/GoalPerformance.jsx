@@ -20,7 +20,7 @@ export default function GoalPerformance() {
         'Dec',
     ];
     return (
-        <div style={{ border: '1px solid rgba(29, 91, 191, 1)', padding: '10px', borderRadius: '10px' }}>
+        <div style={{ border: '1px solid rgba(29, 91, 191, 1)', padding: '20px', borderRadius: '10px' }}>
             <div className='goal-title-container flex justify-between items-center'>
                 <div className='flex gap-5 items-center '>
                     <p className='text-[18px] font-semibold'>Goals Overall Performance</p>

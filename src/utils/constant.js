@@ -171,8 +171,7 @@ export const goalStatus = {
 }
 
 
-export const goalPeriods = [
-  {
+export const goalPeriods = [{
     name: '1 Month',
     value: 1
   },
@@ -192,6 +191,16 @@ export const goalPeriods = [
 ]
 
 
+export const goalActivityStatus = {
+  create: 'rgba(29, 91, 191, 1)',
+  active: 'rgba(18, 179, 71, 1)',
+  delete: 'rgba(224, 56, 45, 1)',
+  complete: 'rgba(0, 174, 189, 1)',
+  ongoing: 'rgba(255, 212, 27, 1)',
+  abort: 'rgba(255, 0, 215, 1)',
+  update: 'rgba(255, 118, 0, 1)'
+}
+
 
 export const goalDataStatus = {
   inactive: 'Not Active Goal',
@@ -202,11 +211,26 @@ export const goalDataStatus = {
 }
 
 export const goalStatusColor = {
-  inactive : { color: '#000', bg: '#fff'},
-  active : { color: 'rgba(255, 212, 27, 1)', bg: 'rgba(255, 247, 216, 1)'},
-  ongoing : { color: 'rgba(255, 118, 0, 1)', bg: 'rgba(255, 242, 231, 1)'},
-  completed : { color: 'rgba(47, 147, 132, 1)', bg: 'rgba(218, 252, 231, 1)'},
-  aborted : { color: 'rgba(224, 56, 45, 1)', bg: 'rgba(255, 231, 231, 1)'},
+  inactive: {
+    color: '#000',
+    bg: '#fff'
+  },
+  active: {
+    color: 'rgba(255, 212, 27, 1)',
+    bg: 'rgba(255, 247, 216, 1)'
+  },
+  ongoing: {
+    color: 'rgba(255, 118, 0, 1)',
+    bg: 'rgba(255, 242, 231, 1)'
+  },
+  completed: {
+    color: 'rgba(47, 147, 132, 1)',
+    bg: 'rgba(218, 252, 231, 1)'
+  },
+  aborted: {
+    color: 'rgba(224, 56, 45, 1)',
+    bg: 'rgba(255, 231, 231, 1)'
+  },
 }
 
 export const PasswordRulesSet = {

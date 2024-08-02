@@ -64,7 +64,7 @@ const Reports = () => {
         {
             field: 'action',
             headerName: 'Action',
-            width: 100,
+            flex: 1,
             id: 4,
             renderCell: (params) => {
                 console.log('params', params)

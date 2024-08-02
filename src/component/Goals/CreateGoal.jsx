@@ -38,7 +38,7 @@ export default function CreateGoal({ open, handleCloseModal, seletedItem, editMo
         if (editMode) {
             apiData = {
                 ...apiData,
-                start_date: new Date(data.start_date).toISOString().split('T')[0],
+                start_date: date,
                 period: parseInt(data.period),
                 id: seletedItem.id
             }
@@ -155,7 +155,7 @@ export default function CreateGoal({ open, handleCloseModal, seletedItem, editMo
                                     </label>
                                     <div className='relative'>
                                         <Calendar
-                                            className='calendar-control input-bg'
+                                            className='calendar-control input-bg demo-cc'
                                             {...dateField}
                                             value={dateFormat['start_date'] || new Date(seletedItem.start_date)}
                                             onChange={(e) => {
@@ -163,7 +163,7 @@ export default function CreateGoal({ open, handleCloseModal, seletedItem, editMo
                                                 dateField.onChange(e)
                                                 setDateFormat({ ...dateFormat, start_date: e.value })
                                             }}
-
+                                            minDate={new Date()}
                                             hourFormat="12"
                                             dateFormat="dd/mm/yy"
                                         />

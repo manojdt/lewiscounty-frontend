@@ -47,41 +47,41 @@ export const menteeRows = [
 export const menteeColumns = [{
     field: 'name',
     headerName: 'Name',
-    width: 200,
+    flex: 1,
     id: 0,
 },
 {
     field: 'professional',
     headerName: 'Professional',
-    width: 200,
+    flex: 1,
     id: 1,
 },
 {
     field: 'contact',
     headerName: 'Contact',
-    width: 150,
+    flex: 1,
     id: 2,
 }, {
     field: 'email',
     headerName: 'Email',
-    width: 250,
+    flex: 1,
     id: 1,
 },
 {
     field: 'location',
     headerName: 'Location',
-    width: 400,
+    flex: 1,
     id: 2,
 },
 {
     field: 'attn_program',
     headerName: 'Attended Programs',
-    width: 250,
+    flex: 1,
     id: 2,
 }, {
     field: 'last_attn_program',
     headerName: 'Last Attend Program',
-    width: 250,
+    flex: 1,
     id: 1,
 },
 ];
@@ -487,31 +487,31 @@ export const programActivityRows = programActivityRow()
 export const mentorColumns = [{
         field: 'name',
         headerName: 'Name',
-        width: 250,
+        flex: 1,
         id: 0,
     },
     {
         field: 'designation',
         headerName: 'Designation',
-        width: 250,
+        flex: 1,
         id: 1,
     },
     {
         field: 'skills',
         headerName: 'Skills',
-        width: 250,
+        flex: 1,
         id: 2,
     }, {
         field: 'email',
         headerName: 'Email',
-        width: 250,
-        id: 1,
+        flex: 1,
+        id: 3,
     },
     {
         field: 'location',
         headerName: 'Location',
-        width: 400,
-        id: 2,
+        flex: 1,
+        id: 4,
     }
 ];
 
@@ -563,60 +563,60 @@ export const taskRows = taskData();
 export const taskColumns = [{
         field: 'assigned_date',
         headerName: 'Assigned Date',
-        width: 200,
+        flex: 1,
         id: 0,
     },
     {
         field: 'task_name',
         headerName: 'Task Name',
-        width: 200,
+       flex: 1,
         id: 1,
     },
     {
         field: 'program_name',
         headerName: 'Program Name',
-        width: 200,
+       flex: 1,
         id: 2,
     }, {
         field: 'task_description',
         headerName: 'Task Description',
-        width: 200,
+       flex: 1,
         id: 1,
     },
     {
         field: 'start_date',
         headerName: 'Start Date',
-        width: 200,
+       flex: 1,
         id: 2,
     },
     {
         field: 'completed_date',
         headerName: 'Completed  Date',
-        width: 180,
+       flex: 1,
         id: 2,
     },
     {
         field: 'task_sent',
         headerName: 'Task Sent by',
-        width: 180,
+       flex: 1,
         id: 2,
     },
     {
         field: 'status',
         headerName: 'Status',
-        width: 150,
+        flex: 1,
         id: 2,
     },
     {
         field: 'file_size',
         headerName: 'File Size',
-        width: 100,
+        flex: 1,
         id: 2,
     },
     {
         field: 'mark',
         headerName: 'Mark',
-        width: 100,
+        flex: 1,
         id: 2,
     }
 ];
@@ -646,49 +646,49 @@ export const mentorTaskRows = mentorTaskData();
 export const mentorTaskColumns = [{
     field: 'program_name',
     headerName: 'Program Name',
-    width: 250,
+    flex: 1,
     id: 0,
 },
 {
     field: 'mentee_name',
     headerName: 'Mentee Name',
-    width: 200,
+    flex: 1,
     id: 1,
 },
 {
     field: 'task_description',
     headerName: 'Task description',
-    width: 250,
+    flex: 1,
     id: 2,
 },
 {
     field: 'create_date',
     headerName: 'Create Date',
-    width: 150,
+    flex: 1,
     id: 2,
 },
 {
     field: 'sub_date',
     headerName: 'Sub. Date',
-    width: 150,
+    flex: 1,
     id: 2,
 },
 {
     field: 'task_status',
     headerName: 'Task Status',
-    width: 150,
+    flex: 1,
     id: 2,
 },
 {
     field: 'mark',
     headerName: 'Mark',
-    width: 100,
+   flex: 1,
     id: 2,
 },
 {
     field: 'file_by',
     headerName: 'File by',
-    width: 100,
+   flex: 1,
     id: 2,
 }
 ];
@@ -700,14 +700,14 @@ export const mentorTaskColumns = [{
 export const goalsColumns = [{
     field: 'goal_name',
     headerName: 'Goals Name',
-    width: 300,
     id: 0,
+    flex: 1
 },
 {
     field: 'start_date',
     headerName: 'Start Date',
-    width: 350,
     id: 1,
+    flex: 1
 },
 
 ];
@@ -758,37 +758,37 @@ export const goalsRequestRow = goalsRequestRowData();
 export const goalsRequestColumn = [{
     field: 'goal_name',
     headerName: 'Goals Name',
-    width: 300,
     id: 0,
+    flex: 1
 },
 {
     field: 'goal_designation',
     headerName: 'Goals Designation',
-    width: 350,
+    flex: 1,
     id: 1,
 },
 {
     field: 'goal_description',
     headerName: 'Goals Description',
-    width: 350,
+    flex: 1,
     id: 1,
 },
 {
     field: 'request_date',
     headerName: 'Request Date',
-    width: 350,
+    flex: 1,
     id: 1,
 },
 {
     field: 'approved_date',
     headerName: 'Approved Date',
-    width: 350,
+    flex: 1,
     id: 1,
 },
 {
     field: 'status',
     headerName: 'Status',
-    width: 350,
+    flex: 1,
     id: 1,
 },
 
@@ -801,32 +801,32 @@ export const goalsRequestColumn = [{
 export const menteeGoalsRequestColumn = [{
     field: 'mentee_name',
     headerName: 'Mentee Name',
-    width: 300,
     id: 0,
+    flex: 1,
 },
 {
     field: 'goal_name',
     headerName: 'Goals Name',
-    width: 300,
     id: 0,
+    flex: 1,
 },
 {
     field: 'start_date',
     headerName: 'Start Date',
-    width: 250,
     id: 1,
+    flex: 1,
 },
 {
     field: 'completed_date',
     headerName: 'Completed Date',
-    width: 250,
     id: 1,
+    flex: 1,
 },
 {
     field: 'period_time',
     headerName: 'Period Time',
-    width: 250,
     id: 1,
+    flex: 1,
 },
 ];
 
@@ -919,25 +919,25 @@ export const goalsHistoryColumn = [
     {
         field: 'goal_name',
         headerName: 'Goals Name',
-        width: 200,
+        flex: 1,
         id: 0,
     },
     {
         field: 'start_date',
         headerName: 'Start Date',
-        width: 200,
+        flex: 1,
         id: 1,
     },
     {
         field: 'period',
         headerName: 'Period',
-        width: 200,
+        flex: 1,
         id: 1,
     },
     {
         field: 'end_date',
         headerName: 'End Date',
-        width: 200,
+        flex: 1,
         id: 1,
     },
 ];

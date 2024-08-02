@@ -19,7 +19,7 @@ import { goalsColumns, goalsHistoryColumn, goalsRequestColumn, goalsRequestRow, 
 import RecentActivities from '../Dashboard/RecentActivities';
 import CreateGoal from './CreateGoal';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteGoalInfo, getAllGoals, getGoalInfo, getGoalsCount, getGoalsHistory, getGoalsOverAllData, getGoalsProgressData, getGoalsRequest, getRecentGoalActivity, updateGoalStatus } from '../../services/goalsInfo';
+import { deleteGoalInfo, getAllGoals, getGoalInfo, getGoalsCount, getGoalsHistory, getGoalsOverAllData, getGoalsProgressData, getGoalsRequest, getRecentGoalActivity, updateGoalStatus, updateLocalGoalInfo } from '../../services/goalsInfo';
 import './goal.css'
 import { goalDataStatus, goalPeriods, goalStatus, goalStatusColor } from '../../utils/constant';
 import MuiModal from '../../shared/Modal';
@@ -46,7 +46,7 @@ const Goals = () => {
 
     const role = userInfo.data.role
 
-    const { goalsList, loading, status, error, createdGoal, goalsCount, goalOverAll, goalProgress, goalRequest, goalActivity, goalHistory } = useSelector(state => state.goals)
+    const { goalsList, loading, status, error, createdGoal, goalsCount, goalOverAll, goalRequest, goalHistory } = useSelector(state => state.goals)
 
     const dispatch = useDispatch()
 
@@ -104,6 +104,7 @@ const Goals = () => {
     }
 
     const handlEditGoal = () => {
+        dispatch(updateLocalGoalInfo({error: ''}))
         setAnchorEl(null);
         setActionModal(true)
     }
@@ -111,10 +112,8 @@ const Goals = () => {
     useEffect(() => {
         dispatch(getGoalsCount())
         dispatch(getGoalsOverAllData('start_year=2022&end_year=2024'))
-        dispatch(getGoalsProgressData())
         dispatch(getGoalsRequest())
         dispatch(getGoalsHistory())
-        dispatch(getRecentGoalActivity())
     }, [])
 
 
@@ -165,8 +164,8 @@ const Goals = () => {
         {
             field: 'period',
             headerName: 'Period',
-            width: 330,
             id: 2,
+            flex: 1,
             renderCell: (params) => {
                 return <div>{goalPeriods.find(goalPeriod => parseInt(goalPeriod.value) === parseInt(params.row.period))?.name}</div>
             }
@@ -176,8 +175,8 @@ const Goals = () => {
             {
                 field: 'goal_status',
                 headerName: 'Status',
-                width: 330,
                 id: 2,
+                flex: 1,
                 renderCell: (params) => {
                     return <div>{goalDataStatus[params.row.goal_status]}</div>
                 }
@@ -186,8 +185,8 @@ const Goals = () => {
         {
             field: 'action',
             headerName: 'Action',
-            width: 350,
             id: 4,
+            flex: 1,
             renderCell: (params) => {
                 console.log('params', params)
                 return <>
@@ -241,8 +240,8 @@ const Goals = () => {
         {
             field: 'performance',
             headerName: 'Performance',
-            width: 250,
             id: 2,
+            flex: 1,
             renderCell: (params) => {
                 return <>
                     <div className='relative' style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', height: '100%', width: '70%' }}>
@@ -267,8 +266,8 @@ const Goals = () => {
         {
             field: 'goal_status',
             headerName: 'Status',
-            width: 250,
             id: 2,
+            flex: 1,
             renderCell: (params) => {
                 return <>
                     <div className='cursor-pointer flex items-center h-full relative'>
@@ -281,7 +280,7 @@ const Goals = () => {
         {
             field: 'action',
             headerName: 'Action',
-            width: 150,
+            flex: 1,
             id: 4,
             renderCell: (params) => {
                 console.log('params', params)
@@ -314,7 +313,7 @@ const Goals = () => {
         {
             field: 'goal_status',
             headerName: 'Status',
-            width: 250,
+            flex: 1,
             id: 2,
             renderCell: (params) => {
                 return <>
@@ -334,7 +333,7 @@ const Goals = () => {
         {
             field: 'action',
             headerName: 'Action',
-            width: 150,
+            flex: 1,
             id: 4,
             renderCell: (params) => {
                 console.log('params', params)
@@ -428,6 +427,11 @@ const Goals = () => {
     const handleGoalsClick = (goal) => {
         if (goal.key === 'total_goals') navigate('/goals')
         else navigate('/goals?type=' + goal.key)
+    }
+
+    const handleOpenCreateGoalModal = () => {
+        dispatch(updateLocalGoalInfo({error: ''}))
+        setActionModal(true)
     }
 
     useEffect(() => {
@@ -590,7 +594,7 @@ const Goals = () => {
                                         )
                                     }
                                     <div className="create-goal flex justify-center items-center flex-col gap-4"
-                                        onClick={() => setActionModal(true)}
+                                        onClick={handleOpenCreateGoalModal}
                                     >
                                         <p>{role === 'mentee' ? 'New Goal Request' : 'Create New Goal'}</p>
                                         <img src={AddGoalIcon} alt="AddGoalIcon" />
@@ -605,7 +609,7 @@ const Goals = () => {
                                                 <div>
                                                     <GoalPerformance />
 
-                                                    <div style={{ border: '1px solid rgba(29, 91, 191, 1)', padding: '10px', borderRadius: '10px', margin: '60px 0' }}>
+                                                    <div style={{ border: '1px solid rgba(29, 91, 191, 1)', padding: '20px', borderRadius: '10px', margin: '60px 0' }}>
                                                         <div className='goal-title-container flex justify-between items-center mb-10'>
                                                             <div className='flex gap-5 items-center '>
                                                                 <p className='text-[18px] font-semibold'>Goals Request</p>
@@ -623,13 +627,13 @@ const Goals = () => {
                                                             </div>
                                                         </div>
 
-                                                        <DataTable rows={goalsRequestRow} columns={goalsRequestColumn} handleSelectedRow={handleSelectedRow} />
+                                                        <DataTable rows={goalRequest} columns={goalsRequestColumn} handleSelectedRow={handleSelectedRow} hideFooter height={350} />
                                                     </div>
 
 
 
-                                                    <div style={{ border: '1px solid rgba(29, 91, 191, 1)', padding: '10px', borderRadius: '10px', margin: '60px 0' }}>
-                                                        <div className='goal-title-container flex justify-between items-center mb-20'>
+                                                    <div style={{ border: '1px solid rgba(29, 91, 191, 1)', padding: '20px', borderRadius: '10px', margin: '60px 0' }}>
+                                                        <div className='goal-title-container flex justify-between items-center mb-10'>
                                                             <div className='flex gap-5 items-center '>
                                                                 <p className='text-[18px] font-semibold'>Goals History</p>
                                                             </div>
@@ -645,7 +649,7 @@ const Goals = () => {
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <DataTable rows={goalHistory} columns={goalHistoryColumn} handleSelectedRow={handleSelectedRow} />
+                                                        <DataTable rows={goalHistory} columns={goalHistoryColumn} handleSelectedRow={handleSelectedRow} hideFooter height={350} />
                                                     </div>
 
 
@@ -659,7 +663,9 @@ const Goals = () => {
                                                     <div className='px-2 py-5'>
                                                         {title}
                                                     </div>
-                                                    <DataTable rows={goals} columns={goalColumn} handleSelectedRow={handleSelectedRow} />
+                                                    <DataTable rows={goals} columns={goalColumn} handleSelectedRow={handleSelectedRow}
+                                                        hideFooter={goals.length>5}
+                                                    />
                                                 </div>
                                         }
 
