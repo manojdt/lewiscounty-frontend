@@ -7,7 +7,7 @@ import MuiModal from '../../shared/Modal'
 import { useNavigate } from 'react-router-dom'
 import { Backdrop, CircularProgress } from '@mui/material'
 
-export default function SkillsSet() {
+export default function SkillsSet({ programdetails }) {
     const navigate = useNavigate()
     const [activeTask, setActiveTask] = useState(0)
     const [loading, setLoading] = useState(false)
@@ -80,7 +80,7 @@ export default function SkillsSet() {
                 <img src={ArrowRightIcon} className='cursor-pointer' disabled={activeTask === skills.length - 1} alt="ArrowRightIcon" onClick={() => handleTaskNavigation('next')} />
             </div>
             {
-                skills.map((skil, index) => <div className={`skills-list ${index === activeTask ? 'show' : 'hidden'}`} key={index}>{skil.skill}</div>)
+                programdetails.task.map((skil, index) => <div className={`skills-list ${index === activeTask ? 'show' : 'hidden'}`} key={index}>{skil.task_details}</div>)
             }
             <div className='action-btn'>
                 {
