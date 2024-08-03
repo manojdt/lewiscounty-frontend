@@ -367,7 +367,10 @@ export default function AssignTask() {
                                                             <MenuItem onClick={handleClose} className='!text-[12px]'>
                                                                 <img src={ShareIcon} alt="ShareIcon" className='pr-3 w-[25px]' /> Share</MenuItem>
                                                             {
-                                                                programdetails.status === programActionStatus.inprogress &&
+                                                                (programdetails.status === programActionStatus.inprogress
+                                                                || programdetails.status === programActionStatus.assigned
+
+                                                                )  &&
                                                                 <>
                                                                     <MenuItem onClick={() => handleComplete(programDetails.id)} className='!text-[12px]'>
                                                                         <img src={CompleteIcon} alt="AbortIcon" className='pr-3 w-[25px]' />

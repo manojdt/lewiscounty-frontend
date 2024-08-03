@@ -231,7 +231,7 @@ export default function ProgramDetails() {
                                         <div className='flex items-center gap-3 text-[12px]' >
                                             <img src={UserImage} style={{ borderRadius: '50%', width: '35px', height: '35px' }} alt="UserImage" />
                                             <span>Instructor :</span>
-                                            <span>{userdetails.data.first_name}{' '} {userdetails.data.last_name}</span>
+                                            <span>{programdetails?.mentor_info?.first_name}{' '} {programdetails?.mentor_info?.last_name}</span>
                                         </div>
 
                                         {
