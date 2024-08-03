@@ -69,8 +69,8 @@ export const Mentors = () => {
         {
             field: 'ratings',
             headerName: 'Ratings',
-            width: 300,
-            id: 3,
+            flex: 1,
+            id: 5,
             renderCell: (params) => {
                 return <div className='flex gap-2 items-center'> <img src={StarIcon} alt="StarIcon" /> 4.5</div>
             }
@@ -78,8 +78,8 @@ export const Mentors = () => {
         {
             field: 'action',
             headerName: 'Action',
-            width: 100,
-            id: 4,
+            flex: 1,
+            id: 6,
             renderCell: (params) => {
                 console.log('params', params)
                 return <>

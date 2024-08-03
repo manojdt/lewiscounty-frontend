@@ -22,7 +22,25 @@
   transform: translateY(-50%);
 }
 
-.menu-content:hover, .menu-content.active{
-    background: rgba(246, 250, 255, 1);
-    color: rgba(29, 91, 191, 1);
+.menu-content:hover,
+.menu-content.active {
+  background: rgba(246, 250, 255, 1);
+  color: rgba(29, 91, 191, 1);
+}
+
+
+.program-status .activity-name {
+  cursor: pointer;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 120px;
+  white-space: nowrap;
+}
+
+.program-status .activity-msg{
+  cursor: pointer;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 120px;
+  white-space: nowrap;
 }

@@ -14,6 +14,7 @@ import {
     getRecentGoalActivity,
     updateGoal,
     updateGoalStatus,
+    updateLocalGoalInfo,
 } from "../../services/goalsInfo";
 import {
     goalStatus
@@ -302,6 +303,15 @@ export const goalsSlice = createSlice({
                     error: action.error.message,
                 };
             });
+
+
+
+            builder.addCase(updateLocalGoalInfo, (state, action) => {
+                return {
+                  ...state,
+                  ...action.payload
+                }
+              })
 
     },
 });

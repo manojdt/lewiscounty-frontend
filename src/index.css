@@ -236,10 +236,14 @@ input[type="range"]::-ms-thumb {
   font-size: 14px;
 }
 
+.goal-progress .progress-container{
+  padding: 15px 20px;
+  margin: 0 12px
+}
+
 .goals .goals-container .goal-title-container {
-  padding: 15px 30px;
+  padding-bottom: 20px;
   border-bottom: 1px solid rgba(29, 91, 191, 1);
-  margin: 10px 10px 26px;
 }
 
 .table-select {

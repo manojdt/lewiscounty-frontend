@@ -27,25 +27,25 @@ export default function Topmentors() {
     const TopMentorColumns = [{
         field: 'name',
         headerName: 'Name',
-        width: 250,
+        flex: 1,
         id: 0,
     },
     {
         field: 'designation',
         headerName: 'Designation',
-        width: 250,
+        flex: 1,
         id: 1,
     },
     {
         field: 'skills',
         headerName: 'Skills',
-        width: 300,
+        flex: 1,
         id: 2,
     },
     {
         field: 'ratings',
         headerName: 'Ratings',
-        width: 200,
+        flex: 1,
         id: 3,
         renderCell: (params) => {
             return <div className='flex gap-2 items-center'> <img src={StarIcon} alt="StarIcon" /> 4.5</div>
@@ -54,7 +54,7 @@ export default function Topmentors() {
     {
         field: 'action',
         headerName: 'Action',
-        width: 200,
+        flex: 1,
         id: 4,
         renderCell: (params) => {
             console.log('params', params)

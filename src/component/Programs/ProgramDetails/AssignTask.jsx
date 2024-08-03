@@ -578,7 +578,7 @@ export default function AssignTask() {
 
                                 {
                                     role === 'mentee' && (programdetails.status === programActionStatus.inprogress || programdetails.status === programActionStatus.paused ||
-                                        programdetails.status === programActionStatus.assigned) && <SkillsSet />
+                                        programdetails.status === programActionStatus.assigned) && <SkillsSet programdetails={programdetails} />
                                 }
 
 

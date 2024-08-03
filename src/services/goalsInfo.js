@@ -18,6 +18,8 @@ export const getAllGoals = createAsyncThunk(
     }
 );
 
+export const updateLocalGoalInfo = createAction('update/updateLocalGoalInfo')
+
 
 export const createGoal = createAsyncThunk(
     "createGoal",
