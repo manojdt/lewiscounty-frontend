@@ -72,16 +72,16 @@ export default function AssignMentees() {
     }
 
     useEffect(() => {
-        if (status === programActionStatus.assigned) {
+        if (status === programActionStatus.assigned || status === programStatus.taskassigned) {
             setTaskSuccess(true)
             setTimeout(() => {
                 navigate(`${pipeUrls.startprogram}/${programdetails.id}`)
             }, [3000])
         }
 
-        if(status === programStatus.taskassigned){
-            dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.assigned }))
-        }
+        // if(status === programStatus.taskassigned){
+        //     dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.assigned }))
+        // }
     }, [status])
 
     const handleAddMentee = () => {
