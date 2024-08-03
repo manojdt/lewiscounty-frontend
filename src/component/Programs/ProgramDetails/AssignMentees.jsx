@@ -60,7 +60,7 @@ export default function AssignMentees() {
             program_id: programdetails.id,
             start_date: new Date(data.start_date).toISOString(),
             end_date: new Date(data.end_date).toISOString(),
-            mentor: 2,
+            mentor: programdetails?.mentor_info?.id,
             due_date: new Date(data.due_date).toISOString()
         }
         console.log('submit', apiData)
@@ -160,7 +160,7 @@ export default function AssignMentees() {
             let fieldValue = {
                 category_id: programdetails.categories.length ? programdetails.categories[0].id : '',
                 program_id: programdetails.program_name,
-                mentor: programdetails.mentor_name,
+                mentor: `${programdetails?.mentor_info?.first_name} ${programdetails?.mentor_info?.last_name}`,
                 start_date: new Date(programdetails.start_date),
                 end_date: new Date(programdetails.end_date),
                 duration: programdetails.duration,
