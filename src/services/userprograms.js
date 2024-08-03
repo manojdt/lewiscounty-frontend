@@ -68,8 +68,8 @@ export const getProgramDetails = createAsyncThunk(
     "getProgramDetails",
     async (id) => {
         const getDetailsofProgram = await api.get(`fetch_program_detail/${id}`);
-        if (getDetailsofProgram.status === 200 && getDetailsofProgram.data) {
-            return getDetailsofProgram.data;
+        if (getDetailsofProgram.status === 200 && getDetailsofProgram.data && getDetailsofProgram.data.program) {
+            return getDetailsofProgram.data.program;
         }
         return getDetailsofProgram;
     }
