@@ -160,28 +160,12 @@ export default function AssignTask() {
         // setStartProgramModal({ ...startProgramModal, loading: true })
         // }
 
-        if (programdetails.status === programStatus.inProgress) {
-            // let details = {}
-            // const programs = [...allPrograms].map(program => {
-            //     if (program.id === programdetails.id) {
-            //         details = { ...program, status: programStatus.paused }
-            //         return details
-            //     }
-            //     return program
-            // })
-            // dispatch(updateNewPrograms({ allPrograms: programs, programdetails: details, status: '' }))
+        if (programdetails.status === programActionStatus.inprogress) {
+            dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.paused }))
         }
 
         if (programdetails.status === programStatus.paused) {
-            //     let details = {}
-            //     const programs = [...allPrograms].map(program => {
-            //         if (program.id === programdetails.id) {
-            //             details = { ...program, status: programStatus.inProgress }
-            //             return details
-            //         }
-            //         return program
-            //     })
-            //     dispatch(updateNewPrograms({ allPrograms: programs, programdetails: details, status: '' }))
+            dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.inprogress }))
         }
     }
 
@@ -265,9 +249,18 @@ export default function AssignTask() {
             setLoading({ ...loading, initial: false })
 
             console.log('statusstatus23', programdetails.status)
-            if (programdetails.status === programActionStatus.assigned) {
+            if (window.location.href.includes('start-program') && programdetails.status === programActionStatus.yettostart && role === 'mentor') {
+                navigate(`/assign-task/${programdetails.id}`)
+            }
+
+            if (programdetails.status === programActionStatus.paused) {
                 console.log('loading')
-                timerData.loadTime(0, 20, 0)
+                timerData.stopTimer()
+            }
+
+            if (programdetails.status === programActionStatus.inprogress) {
+                console.log('loading')
+                timerData.startTimer(0, 20, 0)
             }
 
             if (programdetails.status === programActionStatus.completed) {
@@ -368,9 +361,9 @@ export default function AssignTask() {
                                                                 <img src={ShareIcon} alt="ShareIcon" className='pr-3 w-[25px]' /> Share</MenuItem>
                                                             {
                                                                 (programdetails.status === programActionStatus.inprogress
-                                                                || programdetails.status === programActionStatus.assigned
+                                                                    || programdetails.status === programActionStatus.assigned
 
-                                                                )  &&
+                                                                ) &&
                                                                 <>
                                                                     <MenuItem onClick={() => handleComplete(programDetails.id)} className='!text-[12px]'>
                                                                         <img src={CompleteIcon} alt="AbortIcon" className='pr-3 w-[25px]' />
@@ -487,62 +480,100 @@ export default function AssignTask() {
 
                                         <div className='py-9'>
                                             {
-                                                programdetails.status === programActionStatus.inprogress || programdetails.status === programActionStatus.paused ||
-                                                    programdetails.status === programActionStatus.assigned
+                                                programdetails.status === programActionStatus.inprogress || programdetails.status === programActionStatus.paused
+
                                                     ?
+
                                                     <div className='flex gap-9'>
+
                                                         <div className='flex gap-6 items-center justify-center'>
                                                             <p className="flex flex-col gap-2 items-center justify-center">
-                                                                <span className='px-2 py-1 text-[20px]'
+                                                                <span className='px-2 py-1 text-[20px] w-[40px] flex justify-center items-center'
                                                                     style={{ background: 'rgba(231, 241, 242, 1)', color: 'rgba(0, 174, 189, 1)', borderRadius: '5px', fontWeight: 700 }}>{timerData.hours}</span>
                                                                 <span className="text-[12px]" style={{ color: 'rgba(118, 118, 118, 1)' }}>Hrs</span>
                                                             </p>
                                                             <p className="flex flex-col gap-2 items-center justify-center">
-                                                                <span className='px-2 py-1 text-[20px]'
+                                                                <span className='px-2 py-1 text-[20px] w-[40px] flex justify-center items-center' 
                                                                     style={{ background: 'rgba(231, 241, 242, 1)', color: 'rgba(0, 174, 189, 1)', borderRadius: '5px', fontWeight: 700 }}>{timerData.minutes}</span>
                                                                 <span className="text-[12px]" style={{ color: 'rgba(118, 118, 118, 1)' }}>Mins</span>
                                                             </p>
                                                             <p className="flex flex-col gap-2 items-center justify-center">
-                                                                <span className='px-2 py-1 text-[20px]'
+                                                                <span className='px-2 py-1 text-[20px] w-[40px] flex justify-center items-center'
                                                                     style={{ background: 'rgba(231, 241, 242, 1)', color: 'rgba(0, 174, 189, 1)', borderRadius: '5px', fontWeight: 700 }}>{timerData.seconds}</span>
                                                                 <span className="text-[12px]" style={{ color: 'rgba(118, 118, 118, 1)' }}>Secs</span>
                                                             </p>
                                                         </div>
-                                                        {
-                                                            role === 'mentor' &&
-                                                            <button className='py-3 px-10 text-white text-[14px] flex items-center' title="Pause" style={{
-                                                                color: programdetails.status !== programActionStatus.paused && programdetails.status !== programActionStatus.assigned ? 'rgba(29, 91, 191, 1)' : '#fff',
-                                                                borderRadius: '5px',
-                                                                border: '1px solid rgba(29, 91, 191, 1)',
-                                                                background: programdetails.status === programActionStatus.paused || programdetails.status === programActionStatus.assigned ? 'linear-gradient(97.32deg, #1D5BBF -32.84%, #00AEBD 128.72%)' : 'transparent'
-                                                            }}
-                                                                onClick={handleActionPage}
-                                                            >
-                                                                <img src={programdetails.status !== programActionStatus.inprogress ? ResumeIcon : PauseIcon} alt={programdetails.status !== programActionStatus.inprogress ? 'ResumeIcon' : 'PauseIcon'} className='pr-4' />
-                                                                {programdetails.status === programActionStatus.inprogress ? 'Pause' : 'Start'}</button>
-                                                        }
 
-                                                        {
-                                                            role === 'mentee' &&
-                                                            <div>
-                                                                <p className="flex flex-col  items-center justify-center">
-                                                                    <span className='px-2 py-1 text-[16px]'
-                                                                        style={{
-                                                                            color: 'background: rgba(0, 0, 0, 1)',
-                                                                            borderRadius: '5px', fontWeight: 700
-                                                                        }}>EST. TIME LEFT</span>
-                                                                    <span className="text-[16px]" style={{ color: 'rgba(255, 67, 0, 1)' }}>2 Hours 30 mins</span>
-                                                                </p>
-                                                            </div>
-                                                        }
+                                                        <>
+                                                            {
+                                                                role === 'mentor' &&
+                                                                <button className='py-3 px-10 text-white text-[14px] flex items-center w-[200px] justify-center' title="Pause" style={{
+                                                                    color: programdetails.status !== programActionStatus.paused && programdetails.status !== programActionStatus.assigned ? 'rgba(29, 91, 191, 1)' : '#fff',
+                                                                    borderRadius: '5px',
+                                                                    border: '1px solid rgba(29, 91, 191, 1)',
+                                                                    background: programdetails.status === programActionStatus.paused || programdetails.status === programActionStatus.assigned ? 'linear-gradient(97.32deg, #1D5BBF -32.84%, #00AEBD 128.72%)' : 'transparent'
+                                                                }}
+                                                                    onClick={handleActionPage}
+                                                                >
+                                                                    <img src={programdetails.status !== programActionStatus.inprogress ? ResumeIcon : PauseIcon} alt={programdetails.status !== programActionStatus.inprogress ? 'ResumeIcon' : 'PauseIcon'} className='pr-4' />
+                                                                    {programdetails.status === programActionStatus.inprogress ? 'Pause' : 'Start'}</button>
+                                                            }
+
+                                                            {
+                                                                role === 'mentee' &&
+                                                                <div>
+                                                                    <p className="flex flex-col  items-center justify-center">
+                                                                        <span className='px-2 py-1 text-[16px]'
+                                                                            style={{
+                                                                                color: 'background: rgba(0, 0, 0, 1)',
+                                                                                borderRadius: '5px', fontWeight: 700
+                                                                            }}>EST. TIME LEFT</span>
+                                                                        <span className="text-[16px]" style={{ color: 'rgba(255, 67, 0, 1)' }}>2 Hours 30 mins</span>
+                                                                    </p>
+                                                                </div>
+                                                            }
+
+
+                                                        </>
 
                                                     </div>
                                                     : null
-
                                             }
+
                                             {
+                                                programdetails.status === programActionStatus.yettostart &&
+
+                                                <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                    background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
+                                                    borderRadius: '5px'
+                                                }}
+                                                    onClick={handleActionPage}
+                                                >
+                                                    Assign Task To Mentees
+
+                                                </button>
+                                            }
+
+                                            {
+                                                programdetails.status === programActionStatus.assigned &&
+
+                                                <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                    background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
+                                                    borderRadius: '5px'
+                                                }}
+                                                    onClick={handleActionPage}
+                                                >
+                                                    Start Program Request
+
+                                                </button>
+                                            }
+
+
+
+                                            {/* {
                                                 programdetails.status !== programActionStatus.inprogress && programdetails.status !== programActionStatus.paused &&
                                                 programdetails.status !== programActionStatus.yettojoin && programdetails.status !== programActionStatus.assigned &&
+                                                programdetails.status !== programActionStatus.yettostart &&
                                                 role !== 'mentee' &&
 
                                                 <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
@@ -551,12 +582,16 @@ export default function AssignTask() {
                                                 }}
                                                     onClick={handleActionPage}
                                                 >{
-                                                        programdetails.status === programActionStatus.yettostart ? 'Assign Task To  Mentees'
-                                                            : programdetails.status === programActionStatus.assigned ? 'Start Program Request' :
+                                                        (programdetails.status === programActionStatus.yettostart && !programdetails.task.length) ? 'Assign Task To  Mentees'
+                                                            : (
+                                                                programdetails.status === programActionStatus.assigned
+                                                                || programdetails.status === programActionStatus.yettostart && programdetails.task.length
+                                                            )
+                                                                ? 'Start Program Request' :
                                                                 'Join Program'}
 
                                                 </button>
-                                            }
+                                            } */}
 
                                         </div>
 
@@ -600,8 +635,8 @@ export default function AssignTask() {
 
 
                                 {
-                                    role === 'mentee' && (programdetails.status === programActionStatus.inprogress || programdetails.status === programActionStatus.paused ||
-                                        programdetails.status === programActionStatus.assigned) && <SkillsSet programdetails={programdetails} />
+                                    role === 'mentee' && (programdetails.status === programActionStatus.inprogress || programdetails.status === programActionStatus.paused) && 
+                                        <SkillsSet programdetails={programdetails} />
                                 }
 
 
@@ -917,7 +952,8 @@ export default function AssignTask() {
                             </MuiModal>
                         </div>
                     </div>
-                    : null}
+                    : null
+            }
         </div >
     )
 

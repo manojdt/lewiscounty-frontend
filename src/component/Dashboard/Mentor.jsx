@@ -50,7 +50,7 @@ export const Mentor = () => {
 
     useEffect(() => {
         const programMenu = [...programMenus('dashboard')].filter(men => men.for.includes(role)).map(menu => {
-           
+
 
             if (menu.status === 'all') {
                 return { ...menu, count: userpragrams.totalPrograms }
@@ -98,9 +98,12 @@ export const Mentor = () => {
     const handleNavigateDetails = (program) => {
         let baseUrl = pipeUrls.programdetails
         if (Object.keys(program).length) {
-            if (program.status === programActionStatus.yettostart) baseUrl = pipeUrls.assigntask
-            if (program.status === programActionStatus.assigned) baseUrl = pipeUrls.startprogram
-            if (program.status === programActionStatus.inprogress) baseUrl = pipeUrls.startprogram
+            if (role === 'mentor') {
+                if (program.status === programActionStatus.yettostart) baseUrl = pipeUrls.assigntask
+                if (program.status === programActionStatus.assigned) baseUrl = pipeUrls.startprogram
+                if (program.status === programActionStatus.inprogress) baseUrl = pipeUrls.startprogram
+            }
+
             navigate(`${baseUrl}/${program.id}`)
         }
     }
@@ -153,7 +156,7 @@ export const Mentor = () => {
 
                 <div className="main-grid grid grid-cols-5 gap-3">
                     <div className="left-bar row-span-3 flex flex-col gap-8">
-                    {/* <div className="row-span-3 flex flex-col gap-8"> */}
+                        {/* <div className="row-span-3 flex flex-col gap-8"> */}
 
                         <div className="pb-3 w-full max-w-sm bg-white rounded-lg" style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', background: 'rgba(255, 255, 255, 1)' }}>
                             <div className="flex flex-col items-center pb-10 pt-14 border-b-2">
@@ -203,7 +206,7 @@ export const Mentor = () => {
                     </div>
 
                     <div className="programs-list">
-                    {/* <div className="col-span-4"> */}
+                        {/* <div className="col-span-4"> */}
 
                         {
                             (searchParams.get("type") === 'yettojoin' || (searchParams.get("type") === null && searchParams.get("is_bookmark") === null)) &&

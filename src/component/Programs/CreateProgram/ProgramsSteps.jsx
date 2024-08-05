@@ -318,6 +318,8 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                                                 dateField.onChange(e)
                                                                                 setDateFormat({ ...dateFormat, [field.name]: e.value })
                                                                             }}
+                                                                            {...field.name === 'start_date' ? { minDate : new Date()} : {}}
+                                                                            {...field.name === 'end_date' ? { minDate : getValues('start_date')} : {}}
                                                                             showTime
                                                                             hourFormat="12"
                                                                             dateFormat="dd/mm/yy"

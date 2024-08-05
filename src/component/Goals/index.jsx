@@ -21,7 +21,7 @@ import CreateGoal from './CreateGoal';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteGoalInfo, getAllGoals, getGoalInfo, getGoalsCount, getGoalsHistory, getGoalsOverAllData, getGoalsProgressData, getGoalsRequest, getRecentGoalActivity, updateGoalStatus, updateLocalGoalInfo } from '../../services/goalsInfo';
 import './goal.css'
-import { goalDataStatus, goalPeriods, goalStatus, goalStatusColor } from '../../utils/constant';
+import { goalDataStatus, goalPeriods, goalRequestColor, goalRequestStatus, goalStatus, goalStatusColor } from '../../utils/constant';
 import MuiModal from '../../shared/Modal';
 import GoalProgress from './GoalProgress';
 import GoalPerformance from './GoalPerformance';
@@ -31,7 +31,9 @@ const Goals = () => {
     const navigate = useNavigate()
     const [searchParams] = useSearchParams();
     const [anchorEl, setAnchorEl] = useState(null);
+    const [requestEl, setRequestEl] = useState(null);
     const open = Boolean(anchorEl);
+    const requestOpen = Boolean(requestEl);
     const [selectedRows, setSelectedRows] = useState([])
     const [deleteModal, setDeleteModal] = useState(false)
     const [requestTab, setRequestTab] = useState('mentor-goals')
@@ -94,6 +96,11 @@ const Goals = () => {
         setAnchorEl(event.currentTarget);
     };
 
+    const handleRequest = (event, data) => {
+        setSelectedItem(data);
+        setRequestEl(event.currentTarget)
+    }
+
     const handleDeleteGoal = () => {
         dispatch(deleteGoalInfo(seletedItem.id))
     }
@@ -104,7 +111,7 @@ const Goals = () => {
     }
 
     const handlEditGoal = () => {
-        dispatch(updateLocalGoalInfo({error: ''}))
+        dispatch(updateLocalGoalInfo({ error: '' }))
         setAnchorEl(null);
         setActionModal(true)
     }
@@ -321,7 +328,8 @@ const Goals = () => {
                         <span className='w-[80px] flex justify-center h-[30px] px-7'
                             style={{
                                 background: goalStatusColor[params.row.goal_status].bg, lineHeight: '30px',
-                                borderRadius: '3px', width: '110px', height: '34px', color: goalStatusColor[params.row.goal_status].color
+                                borderRadius: '3px', width: '110px', height: '34px', color: goalStatusColor[params.row.goal_status].color,
+                                fontSize: '12px'
                             }}>
                             {goalDataStatus[params.row.goal_status]}
                         </span>
@@ -350,7 +358,13 @@ const Goals = () => {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
-
+                        <MenuItem onClick={(e) => {
+                            navigate(`/view-goal/${seletedItem.id}`);
+                        }
+                        } className='!text-[12px]'>
+                            <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
+                            View
+                        </MenuItem>
 
 
                     </Menu>
@@ -364,40 +378,71 @@ const Goals = () => {
     const goalRequestColumn = [
         ...goalsRequestColumn,
         {
-            field: 'goal_status',
+            field: 'status',
             headerName: 'Status',
-            width: 250,
-            id: 2,
+            flex: 1,
+            id: 5,
             renderCell: (params) => {
                 return <>
                     <div className='cursor-pointer flex items-center h-full relative'>
+
                         <span className='w-[80px] flex justify-center h-[30px] px-7'
-                            style={{ background: '#FFF7D8', lineHeight: '30px', borderRadius: '3px', width: '110px', height: '34px' }}> {params.row.goal_status}</span>
+                            style={{
+                                background: goalRequestColor[params.row.status].bg, lineHeight: '30px',
+                                borderRadius: '3px', width: '110px', height: '34px', color: goalRequestColor[params.row.status].color
+                            }}>
+                            {goalRequestStatus[params.row.status]}
+                        </span>
                     </div>
                 </>
             }
         },
-
         {
             field: 'action',
             headerName: 'Action',
-            width: 150,
+            flex: 1,
             id: 4,
             renderCell: (params) => {
                 console.log('params', params)
                 return <>
-                    <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleClick(e, params.row)}>
+                    <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleRequest(e, params.row)}>
                         <img src={MoreIcon} alt='MoreIcon' />
                     </div>
                     <Menu
                         id="basic-menu"
-                        anchorEl={anchorEl}
-                        open={open}
-                        onClose={handleClose}
+                        anchorEl={requestEl}
+                        open={requestOpen}
+                        onClose={() => setRequestEl(null)}
                         MenuListProps={{
                             'aria-labelledby': 'basic-button',
                         }}
                     >
+
+
+                        {/* {
+                            params.row.goal_status === 'active' &&
+                            <MenuItem onClick={handlEditGoal} className='!text-[12px]'>
+                                <img src={EditIcon} alt="EditIcon" className='pr-3 w-[27px]' />
+                                Edit
+                            </MenuItem>
+                        } */}
+
+                        <MenuItem onClick={(e) => {
+                            navigate(`/view-goal/${seletedItem.id}`);
+                        }
+                        } className='!text-[12px]'>
+                            <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
+                            View
+                        </MenuItem>
+
+                        {
+                            params.row.goal_status === 'inactive' &&
+                            <MenuItem onClick={handleDelete} className='!text-[12px]'>
+                                <img src={DeleteIcon} alt="DeleteIcon" className='pr-3 w-[27px]' />
+                                Delete
+                            </MenuItem>
+                        }
+
 
 
 
@@ -408,6 +453,8 @@ const Goals = () => {
 
         },
     ]
+
+
 
     const title = goalsListMenu.find(option => option.key === searchParams.get("type"))?.name || (role === 'mentee' ? 'Mentee Goals' : 'Mentor Goals')
 
@@ -430,7 +477,7 @@ const Goals = () => {
     }
 
     const handleOpenCreateGoalModal = () => {
-        dispatch(updateLocalGoalInfo({error: ''}))
+        dispatch(updateLocalGoalInfo({ error: '' }))
         setActionModal(true)
     }
 
@@ -627,7 +674,7 @@ const Goals = () => {
                                                             </div>
                                                         </div>
 
-                                                        <DataTable rows={goalRequest} columns={goalsRequestColumn} handleSelectedRow={handleSelectedRow} hideFooter height={350} />
+                                                        <DataTable rows={goalRequest} columns={goalRequestColumn} handleSelectedRow={handleSelectedRow} hideFooter height={350} />
                                                     </div>
 
 
@@ -664,7 +711,7 @@ const Goals = () => {
                                                         {title}
                                                     </div>
                                                     <DataTable rows={goals} columns={goalColumn} handleSelectedRow={handleSelectedRow}
-                                                        hideFooter={goals.length>5}
+                                                        hideFooter={goals.length > 5}
                                                     />
                                                 </div>
                                         }

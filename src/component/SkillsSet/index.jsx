@@ -12,23 +12,10 @@ export default function SkillsSet({ programdetails }) {
     const [activeTask, setActiveTask] = useState(0)
     const [loading, setLoading] = useState(false)
     const [startProgramModal, setProgramModal] = useState(false)
-    const skills = [
-        {
-            skill: 'Skills 1'
-        },
-        {
-            skill: 'Skills 2'
-        },
-        {
-            skill: 'Skills 3'
-        },
-        {
-            skill: 'Skills 4'
-        },
-    ]
+    const [allTask, setAllTask] = useState([])
 
     const handleTaskNavigation = (key) => {
-        if (key === 'next' && activeTask !== skills.length - 1) {
+        if (key === 'next' && activeTask !== allTask.length - 1) {
             setActiveTask(activeTask + 1)
         }
 
@@ -45,6 +32,12 @@ export default function SkillsSet({ programdetails }) {
         setLoading(true)
 
     }
+
+    useEffect(() => {
+        if (programdetails.task && programdetails.task.length) {
+            setAllTask(programdetails.task)
+        }
+    }, [programdetails])
 
     useEffect(() => {
         if (loading) {
@@ -67,28 +60,33 @@ export default function SkillsSet({ programdetails }) {
                 <div className='px-5 py-1 flex justify-center items-center'>
                     <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-3 mb-20'
                     >
-                        <h3 style={{ color: 'rgba(24, 40, 61, 1)', fontSize: '18px', fontWeight: 600 }}>Hey! Your Teaching Program Started</h3>
+                        <h3 style={{ color: 'rgba(24, 40, 61, 1)', fontSize: '18px', fontWeight: 600 }}>Hey! Your {programdetails.program_name} is Started</h3>
                         <img src={ProgramStartIcon} className='py-5 mb-10' alt="ProgramStartIcon" />
                         <Button btnName="Attend this program" onClick={handleAttendProgram} />
                     </div>
 
                 </div>
             </MuiModal>
-            <div className='skills-title'>
-                <img src={ArrowLeftIcon} className='cursor-pointer' disabled={activeTask === 0} alt="ArrowLeftIcon" onClick={() => handleTaskNavigation('prev')} />
+            <div className='skills-title' style={{ justifyContent: allTask.length === 1 ? 'center' : 'space-between' }}>
+                {
+                    allTask.length > 1 &&
+                    <img src={ArrowLeftIcon} className='cursor-pointer' disabled={activeTask === 0} alt="ArrowLeftIcon" onClick={() => handleTaskNavigation('prev')} />
+                }
+
                 <p>Skill Task</p>
-                <img src={ArrowRightIcon} className='cursor-pointer' disabled={activeTask === skills.length - 1} alt="ArrowRightIcon" onClick={() => handleTaskNavigation('next')} />
+                {
+                    allTask.length > 1 &&
+
+                    <img src={ArrowRightIcon} className='cursor-pointer' disabled={activeTask === allTask.length - 1} alt="ArrowRightIcon" onClick={() => handleTaskNavigation('next')} />
+                }
+
             </div>
             {
-                programdetails.task.map((skil, index) => <div className={`skills-list ${index === activeTask ? 'show' : 'hidden'}`} key={index}>{skil.task_details}</div>)
+                allTask.map((skil, index) => <div className={`skills-list ${index === activeTask ? 'show' : 'hidden'}`} key={index}>{skil.task_details}</div>)
             }
             <div className='action-btn'>
-                {
-                    activeTask === 1 ? <Button btnName="Submit skill Task" onClick={handleSubmitTask} />
 
-                        : <Button btnName="Start Task" onClick={() => setProgramModal(true)} />
-
-                }
+                <Button btnName="Start Task" onClick={() => setProgramModal(true)} />
 
 
             </div>
