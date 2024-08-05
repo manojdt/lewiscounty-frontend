@@ -54,7 +54,7 @@ export default function AssignMentees() {
     } = useForm();
 
     const onSubmit = (data) => {
-        
+
         const apiData = {
             ...data,
             program_id: programdetails.id,
@@ -64,8 +64,11 @@ export default function AssignMentees() {
             due_date: new Date(data.due_date).toISOString()
         }
         console.log('submit', apiData)
+        if (programdetails.status === programActionStatus.yettostart) {
+            dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.assigned }))
+        }
         dispatch(assignProgramTask(apiData))
-        // dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.assigned }))
+       
         // reset()
         // setLoading(true)
         // setTaskSuccess(true)

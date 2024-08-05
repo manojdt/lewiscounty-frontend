@@ -76,21 +76,20 @@ export default function ProgramDetails() {
     useEffect(() => {
         if (Object.keys(programdetails).length) {
             console.log('programdetails.status', programdetails.status)
-            if(role === 'mentee' && menteeJoined) navigate(`${pipeUrls.startprogram}/${programdetails.id}`)
-                
-            if (programdetails.status === programActionStatus.yettostart) {
-                if(role === 'mentor') navigate(`${pipeUrls.assigntask}/${programdetails.id}`)
-                if(role === 'mentee' && menteeJoined) navigate(`${pipeUrls.startprogram}/${programdetails.id}`)
-            }
+            if (role === 'mentee' && menteeJoined) navigate(`${pipeUrls.startprogram}/${programdetails.id}`)
 
-            else if (programdetails.status === programActionStatus.inprogress || programdetails.status === programActionStatus.assigned) {
-                navigate(`${pipeUrls.startprogram}/${programdetails.id}`)
+            if (role === 'mentor') {
+                if (programdetails.status === programActionStatus.yettostart) {
+                    navigate(`${pipeUrls.assigntask}/${programdetails.id}`)
+                }
+                else if ((programdetails.status === programActionStatus.inprogress || programdetails.status === programActionStatus.assigned)) {
+                    navigate(`${pipeUrls.startprogram}/${programdetails.id}`)
+                }
             }
-
 
             setLoading({ ...loading, initial: false })
         }
-    }, [programdetails])
+    }, [programdetails, menteeJoined])
 
 
     useEffect(() => {
@@ -106,8 +105,9 @@ export default function ProgramDetails() {
     }, [params.id, role])
 
     const handleJoinProgram = async (programId) => {
-  
+
         if (role === 'mentee') {
+            setLoading({ initial: true, join: false })
             const menteeJoinProgram = await api.post('mentee_program/join_program', { id: programId });
             if (menteeJoinProgram.status === 200 && menteeJoinProgram.data) {
                 console.log('mssss', menteeJoinProgram)
@@ -121,8 +121,8 @@ export default function ProgramDetails() {
     useEffect(() => {
         if (taskJoined) {
             setTimeout(() => {
-                if (role === 'mentor')  navigate(`${pipeUrls.assigntask}/${programdetails.id}`)
-                if (role === 'mentee')  navigate(`${pipeUrls.startprogram}/${programdetails.id}`)
+                if (role === 'mentor') navigate(`${pipeUrls.assigntask}/${programdetails.id}`)
+                if (role === 'mentee') navigate(`${pipeUrls.startprogram}/${programdetails.id}`)
             }, [3000])
 
         }
@@ -235,7 +235,7 @@ export default function ProgramDetails() {
                                         </div>
 
                                         {
-                                            role === 'mentor' || (role === 'mentee' && !menteeJoined) &&
+                                            (role === 'mentor' || (role === 'mentee' && !menteeJoined)) &&
 
                                             <div className='py-9'>
                                                 <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{

@@ -771,25 +771,19 @@ export const goalsRequestColumn = [{
     field: 'goal_description',
     headerName: 'Goals Description',
     flex: 1,
-    id: 1,
+    id: 2,
 },
 {
     field: 'request_date',
     headerName: 'Request Date',
     flex: 1,
-    id: 1,
+    id: 3,
 },
 {
     field: 'approved_date',
     headerName: 'Approved Date',
     flex: 1,
-    id: 1,
-},
-{
-    field: 'status',
-    headerName: 'Status',
-    flex: 1,
-    id: 1,
+    id: 4,
 },
 
 ];
@@ -942,3 +936,169 @@ export const goalsHistoryColumn = [
     },
 ];
 
+
+
+export const RecentDiscussion = [
+    {
+        id: 1,
+        name: 'John',
+        message: 'Hi, Maria, What is the?',
+        posted: '10Min ago'
+    },
+    {
+        id: 2,
+        name: 'John',
+        message: 'Hi, Maria, What is the?',
+        posted: '10Min ago'
+    },
+    {
+        id: 3,
+        name: 'John',
+        message: 'Hi, Maria, What is the?',
+        posted: '10Min ago'
+    },
+    {
+        id: 4,
+        name: 'John',
+        message: 'Hi, Maria, What is the?',
+        posted: '10Min ago'
+    },
+    {
+        id: 5,
+        name: 'John',
+        message: 'Hi, Maria, What is the?',
+        posted: '10Min ago'
+    },
+    {
+        id: 6,
+        name: 'John',
+        message: 'Hi, Maria, What is the?',
+        posted: '10Min ago'
+    },
+]
+
+export const PostList = [
+    {
+        name: 'Program name1 posts',
+        type: 'Mentor',
+        message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat',
+        likeCount: 20,
+        commentCount: 30,
+        shareCount: 20,
+        replyCount :10,
+        posted: 'Oct13 at 10m ago'
+    },
+    {
+        name: 'Program name2 posts',
+        type: 'Mentee',
+        message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat',
+        likeCount: 20,
+        commentCount: 30,
+        shareCount: 20,
+        replyCount :10,
+        posted: 'Oct13 at 10m ago'
+    },
+    {
+        name: 'Program name3 posts',
+        type: 'Mentor',
+        message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat',
+        likeCount: 20,
+        commentCount: 30,
+        shareCount: 20,
+        replyCount :10,
+        posted: 'Oct13 at 10m ago'
+    },
+    {
+        name: 'Program name4 posts',
+        type: 'Mentee',
+        message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat',
+        likeCount: 20,
+        commentCount: 30,
+        shareCount: 20,
+        replyCount :10,
+        posted: 'Oct13 at 10m ago'
+    },
+    {
+        name: 'Program name5 posts',
+        type: 'Mentor',
+        message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
+        likeCount: 20,
+        commentCount: 30,
+        shareCount: 20,
+        replyCount :10,
+        posted: 'Oct13 at 10m ago'
+    },
+    {
+        name: 'Program name6 posts',
+        type: 'Mentee',
+        message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
+        likeCount: 20,
+        commentCount: 30,
+        shareCount: 20,
+        replyCount :10,
+        posted: 'Oct13 at 10m ago'
+    },
+
+]
+
+
+
+
+export const listCertificateColumn = [
+    {
+        field: 'program_name',
+        headerName: 'Program Name',
+        flex: 1,
+        id: 0,
+    },
+    {
+        field: 'program_desc',
+        headerName: 'Program Description',
+        flex: 1,
+        id: 0,
+    },
+    {
+        field: 'start_date',
+        headerName: 'Start Date',
+        flex: 1,
+        id: 1,
+    },
+    {
+        field: 'end_date',
+        headerName: 'End Date',
+        flex: 1,
+        id: 1,
+    },
+    {
+        field: 'program_admin',
+        headerName: 'Program Admin',
+        flex: 1,
+        id: 1,
+    },
+    {
+        field: 'program_location',
+        headerName: 'Program Location',
+        flex: 1,
+        id: 1,
+    },
+]
+
+const certificatesRow = () => {
+    const data = []
+    for (let a = 1; a <= 50; a++) {
+        data.push(
+            {
+                id: a,
+                program_name: `Program Name ${a}`,
+                program_desc: 'Lorem ipsum dolor sitsdfsdf sdfsdfsd sdsd',
+                start_date: '04/23/2024',
+                end_date: '04/23/2024',
+                program_admin: `Admin ${a}`,
+                program_location: 'USA',
+                status: 'completed',
+            })
+    }
+    return data
+}
+
+export const listCertificateRow = certificatesRow()

@@ -44,7 +44,7 @@ const useTimer = () => {
 
   console.log('fff');
 
-  const startTimer = (hours, minutes, seconds) => {
+  const startTimer = (hours = timer.hours, minutes = timer.minutes, seconds = timer.seconds) => {
     setStartTime(true)
     setTimer({hours, minutes, seconds})
   }

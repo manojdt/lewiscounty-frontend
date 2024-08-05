@@ -233,6 +233,33 @@ export const goalStatusColor = {
   },
 }
 
+export const goalRequestStatus = {
+  new: 'New',
+  pending: 'Pending',
+  accept: 'Accept',
+  decline: 'Decline'
+}
+
+export const goalRequestColor = {
+  new: {
+    color: 'rgba(29, 91, 191, 1)',
+    bg: 'rgba(238, 245, 255, 1)'
+  },
+  accept: {
+    color: 'rgba(22, 182, 129, 1)',
+    bg: 'rgba(235, 255, 243, 1)'
+  },
+  pending: {
+    color: 'rgba(255, 213, 0, 1)',
+    bg: 'rgba(255, 251, 233, 1)'
+  },
+  decline: {
+    color: 'rgba(224, 56, 45, 1)',
+    bg: 'rgba(255, 231, 231, 1)'
+  }
+
+}
+
 export const PasswordRulesSet = {
   character: 'character',
   upperlowercase: 'upperlowercase',

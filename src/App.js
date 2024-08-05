@@ -40,6 +40,9 @@ import ViewReport from "./component/Reports/ViewReport";
 import EditReport from "./component/Reports/EditReport";
 import Goals from "./component/Goals";
 import ViewGoal from "./component/Goals/ViewGoal";
+import Feedback from "./component/Feedback";
+import Certificate from "./component/Certificate";
+import CertificateDetails from "./component/Certificate/CertificateDetails";
 
 function App() {
  
@@ -92,6 +95,9 @@ function App() {
           <Route path="/create-programs" element={<CreatePrograms />} />
           <Route path="/program" element={<ProgramData />} />
           <Route path="/program-data" element={<ProgramsData />} />
+          <Route path="/feedback" element={<Feedback />} />
+          <Route path="/certificates" element={<Certificate />} />
+          <Route path="/certificate-view/:id" element={<CertificateDetails />} />
           
          
           <Route path="/mentors" element={<Mentors />} />
