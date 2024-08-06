@@ -59,15 +59,14 @@ export default function Programs() {
         dispatch(updateProgram({ id: program.id, is_bookmark: !program.is_bookmark }))
     }
 
-    const handleNavigation = (programid) => {
+    const handleNavigation = (programdetails) => {
         let baseUrl = pipeUrls.programdetails
-        const filterProgram = programsList.find(program => program.id === programid)
-        if (Object.keys(filterProgram).length) {
+        if (Object.keys(programdetails).length) {
             if (role === 'mentor') {
-                if (filterProgram.status === programActionStatus.yettostart) baseUrl = pipeUrls.assigntask
-                if (filterProgram.status === programActionStatus.inprogress) baseUrl = pipeUrls.startprogram
+                if (programdetails.status === programActionStatus.yettostart) baseUrl = pipeUrls.assigntask
+                if (programdetails.status === programActionStatus.inprogress) baseUrl = pipeUrls.startprogram
             }
-            navigate(`${baseUrl}/${programid}`)
+            navigate(`${baseUrl}/${programdetails.id}`)
         }
 
     }
@@ -272,7 +271,7 @@ export default function Programs() {
                                                         <h4 className="text-[16px]">{program.program_name}</h4>
                                                         <span className="text-[12px] line-clamp-2 h-[38px]">{program.description}</span>
                                                         <button className="text-white text-[12px] py-2 w-[90px]"
-                                                            onClick={() => handleNavigation(program.id)}
+                                                            onClick={() => handleNavigation(program)}
                                                             style={{ background: 'rgba(29, 91, 191, 1)', borderRadius: '5px' }}>View Details</button>
                                                     </div>
                                                     <img onClick={() => handleBookmark(program)} className="absolute top-4 right-4 cursor-pointer" src={program.is_bookmark ? BookmarkedColorIcon : BookmarkedIcon} alt="BookmarkedIcon" />

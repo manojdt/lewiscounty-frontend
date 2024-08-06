@@ -131,34 +131,12 @@ export default function AssignTask() {
 
     const handleActionPage = () => {
         if (programdetails.status === programActionStatus.yettostart) {
-            // let details = {}
-            // const programs = [...allPrograms].map(program => {
-            //     if (program.id === programdetails.id) {
-            //         details = { ...program, status: programStatus.assigned }
-            //         return details
-            //     }
-            //     return program
-            // })
-            // dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.yettostart }))
             navigate(`${pipeUrls.assignmentess}/${programdetails.id}`)
         }
 
         if (programdetails.status === programActionStatus.assigned) {
             dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.inprogress }))
         }
-
-        // if (programdetails.status === programStatus.assigned) {
-        // let details = {}
-        // const programs = [...allPrograms].map(program => {
-        //     if (program.id === programdetails.id) {
-        //         details = { ...program, status: programStatus.inProgress }
-        //         return details
-        //     }
-        //     return program
-        // })
-        // dispatch(updateNewPrograms({ allPrograms: programs, programdetails: details, status: '' }))
-        // setStartProgramModal({ ...startProgramModal, loading: true })
-        // }
 
         if (programdetails.status === programActionStatus.inprogress) {
             dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.paused }))
@@ -196,14 +174,6 @@ export default function AssignTask() {
     }
 
     const handleComplete = (programId) => {
-        // let details = {}
-        // const programs = [...allPrograms].map(program => {
-        //     if (program.id === programDetails.id) {
-        //         details = { ...program, status: programStatus.completed }
-        //         return details
-        //     }
-        //     return program
-        // })
         handleClose()
         dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.completed }))
         navigate(`/program-completion/${programId}`)
@@ -271,7 +241,7 @@ export default function AssignTask() {
                 navigate('/programs')
             }
         }
-    }, [programdetails])
+    }, [programdetails, role])
 
 
 
