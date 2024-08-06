@@ -154,3 +154,15 @@ export const getRecentGoalActivity = createAsyncThunk(
     }
 );
 
+
+export const getMenteeGoals = createAsyncThunk(
+    "getMenteeGoals",
+    async (queryString = '') => {
+        const query = queryString !== '' ? `?status=${queryString}`: ''
+        const menteeGoals = await api.get(`goals/mentee-goals${query}`);
+        if (menteeGoals.status === 200 && menteeGoals.data) {
+            return menteeGoals.data;
+        }
+        return menteeGoals
+    }
+);

@@ -248,8 +248,12 @@ export default function AssignTask() {
         if (Object.keys(programdetails).length) {
             setLoading({ ...loading, initial: false })
 
+            if(role === 'mentee' && window.location.href.includes('assign-task')){
+                navigate(`/start-program/${programdetails.id}`)
+            }
+
             console.log('statusstatus23', programdetails.status)
-            if (window.location.href.includes('start-program') && programdetails.status === programActionStatus.yettostart && role === 'mentor') {
+            if (role === 'mentor' && window.location.href.includes('start-program') && programdetails.status === programActionStatus.yettostart) {
                 navigate(`/assign-task/${programdetails.id}`)
             }
 
@@ -541,7 +545,7 @@ export default function AssignTask() {
                                             }
 
                                             {
-                                                programdetails.status === programActionStatus.yettostart &&
+                                                (programdetails.status === programActionStatus.yettostart && role === 'mentor') &&
 
                                                 <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
                                                     background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
@@ -555,7 +559,7 @@ export default function AssignTask() {
                                             }
 
                                             {
-                                                programdetails.status === programActionStatus.assigned &&
+                                                (programdetails.status === programActionStatus.assigned && role === 'mentor') &&
 
                                                 <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
                                                     background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",

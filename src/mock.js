@@ -825,6 +825,40 @@ export const menteeGoalsRequestColumn = [{
 ];
 
 
+
+export const mentorMenteeGoalsColumn = [{
+    field: 'mentee_name',
+    headerName: 'Mentee Name',
+    id: 0,
+    flex: 1,
+},
+{
+    field: 'goal_name',
+    headerName: 'Goals Name',
+    id: 0,
+    flex: 1,
+},
+{
+    field: 'start_date',
+    headerName: 'Start Date',
+    id: 1,
+    flex: 1,
+},
+{
+    field: 'completed_date',
+    headerName: 'Completed Date',
+    id: 1,
+    flex: 1,
+},
+{
+    field: 'period',
+    headerName: 'Period Time',
+    id: 1,
+    flex: 1,
+},
+];
+
+
 const menteeGoalsRequestRowData = () => {
     const data = []
     for (let a = 1; a <= 30; a++) {

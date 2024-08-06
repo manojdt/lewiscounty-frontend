@@ -101,7 +101,8 @@ export const getProgramMentees = createAsyncThunk(
 export const assignProgramTask = createAsyncThunk(
     "assignProgramTask",
     async (data) => {
-        const programTaskAssign = await api.post('program_task_assign/create_task?status=assign', data);
+        const query = "?status=assign"
+        const programTaskAssign = await api.post(`program_task_assign/create_task${query}`, data);
         if (programTaskAssign.status === 201 && programTaskAssign.data) {
             return programTaskAssign.data;
         }
