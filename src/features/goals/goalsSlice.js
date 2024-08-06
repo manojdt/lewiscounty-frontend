@@ -11,6 +11,7 @@ import {
     getGoalsOverAllData,
     getGoalsProgressData,
     getGoalsRequest,
+    getMenteeGoals,
     getRecentGoalActivity,
     updateGoal,
     updateGoalStatus,
@@ -30,6 +31,7 @@ const initialState = {
     goalRequest: [],
     goalActivity: [],
     goalHistory: [],
+    goalMenteeList: [],
     loading: false,
     status: "",
     error: "",
@@ -306,12 +308,37 @@ export const goalsSlice = createSlice({
 
 
 
-            builder.addCase(updateLocalGoalInfo, (state, action) => {
+        builder.addCase(updateLocalGoalInfo, (state, action) => {
+            return {
+                ...state,
+                ...action.payload
+            }
+        })
+
+
+
+
+        builder
+            .addCase(getMenteeGoals.pending, (state) => {
                 return {
-                  ...state,
-                  ...action.payload
-                }
-              })
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(getMenteeGoals.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    goalMenteeList: action.payload,
+                    loading: false,
+                };
+            })
+            .addCase(getMenteeGoals.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
 
     },
 });

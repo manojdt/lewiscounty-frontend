@@ -43,6 +43,7 @@ import ViewGoal from "./component/Goals/ViewGoal";
 import Feedback from "./component/Feedback";
 import Certificate from "./component/Certificate";
 import CertificateDetails from "./component/Certificate/CertificateDetails";
+import MentorViewMenteeGoal from "./component/Goals/MentorViewMenteeGoal";
 
 function App() {
  
@@ -113,6 +114,7 @@ function App() {
 
 
           <Route path="/goals" element={<Goals />} />
+          <Route path="/mentor-view-mentee-goal/:id" element={<MentorViewMenteeGoal />} />
           <Route path="/view-goal/:id" element={<ViewGoal />} />
 
           <Route path="/reports" element={<Reports />} />

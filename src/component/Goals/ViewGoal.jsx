@@ -25,7 +25,7 @@ import { getGoalInfo, updateGoalStatus } from '../../services/goalsInfo'
 import { goalDataStatus, goalPeriods, goalStatus } from '../../utils/constant'
 
 
-const ViewGoal = () => {
+const ViewGoal = ({ type = '' }) => {
     const navigate = useNavigate()
     const [pageloading, setPageLoading] = useState(false)
     const params = useParams();
@@ -256,7 +256,7 @@ const ViewGoal = () => {
                                     {
                                         goalInfo.goal_status === 'completed' && <img className='absolute top-0 right-0' src={BatchIcon} alt="BatchIcon" />
                                     }
-                                    
+
                                     <div className='py-7'>
                                         <table className="w-[700px] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                             <tbody>
@@ -295,7 +295,7 @@ const ViewGoal = () => {
 
                                     <div className='flex items-center py-9 gap-4'>
                                         {
-                                            goalInfo.goal_status === 'completed' &&
+                                            (goalInfo.goal_status === 'completed' || type === 'mentor') &&
                                             <>
                                                 <Button
                                                     onClick={() => navigate('/goals')}
@@ -304,46 +304,55 @@ const ViewGoal = () => {
                                             </>
                                         }
 
-
                                         {
-                                            goalInfo.goal_status === 'ongoing' &&
+                                            type === '' &&
+
                                             <>
-                                                <Button btnName="Cancel" style={{ border: '1px solid rgba(0, 0, 0, 1)', borderRadius: '27px', width: '180px', color: 'rgba(24, 40, 61, 1)' }}
-                                                    onClick={handleCancelGoal}
-                                                />
-                                                <Button
-                                                    onClick={() => navigate('/goals')}
-                                                    btnName={'Close'} btnCatergory="primary"
-                                                    style={{ background: 'linear-gradient(to right, #00AEBD, #1D5BBF)', borderRadius: '27px', width: '180px' }} />
+                                                {
+                                                    goalInfo.goal_status === 'ongoing' &&
+                                                    <>
+                                                        <Button btnName="Cancel" style={{ border: '1px solid rgba(0, 0, 0, 1)', borderRadius: '27px', width: '180px', color: 'rgba(24, 40, 61, 1)' }}
+                                                            onClick={handleCancelGoal}
+                                                        />
+                                                        <Button
+                                                            onClick={() => navigate('/goals')}
+                                                            btnName={'Close'} btnCatergory="primary"
+                                                            style={{ background: 'linear-gradient(to right, #00AEBD, #1D5BBF)', borderRadius: '27px', width: '180px' }} />
+                                                    </>
+                                                }
+
+                                                {
+                                                    goalInfo.goal_status === 'active' &&
+                                                    <>
+                                                        <Button btnName="Back" style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '27px', width: '180px', color: 'rgba(29, 91, 191, 1)' }}
+                                                            onClick={() => navigate('/goals')}
+                                                        />
+
+                                                        <Button
+                                                            onClick={handleActionBtn}
+                                                            btnName={'Start'} btnCatergory="primary" style={{ background: 'linear-gradient(to right, #00AEBD, #1D5BBF)', borderRadius: '27px', width: '180px' }} />
+                                                    </>
+                                                }
+
+
+                                                {
+                                                    goalInfo.goal_status === 'aborted' &&
+                                                    <>
+                                                        <Button btnName="Back" style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '27px', width: '180px', color: 'rgba(29, 91, 191, 1)' }}
+                                                            onClick={() => navigate('/goals')}
+                                                        />
+
+                                                        <Button
+                                                            onClick={() => console.log('re create')}
+                                                            btnName={'Re create Goals'} btnCatergory="primary" style={{ background: 'linear-gradient(to right, #00AEBD, #1D5BBF)', borderRadius: '27px', width: '180px' }} />
+                                                    </>
+                                                }
+
                                             </>
                                         }
 
-                                        {
-                                            goalInfo.goal_status === 'active' &&
-                                            <>
-                                                <Button btnName="Back" style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '27px', width: '180px', color: 'rgba(29, 91, 191, 1)' }}
-                                                    onClick={() => navigate('/goals')}
-                                                />
-
-                                                <Button
-                                                    onClick={handleActionBtn}
-                                                    btnName={'Start'} btnCatergory="primary" style={{ background: 'linear-gradient(to right, #00AEBD, #1D5BBF)', borderRadius: '27px', width: '180px' }} />
-                                            </>
-                                        }
 
 
-                                        {
-                                            goalInfo.goal_status === 'aborted' &&
-                                            <>
-                                                <Button btnName="Back" style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '27px', width: '180px', color: 'rgba(29, 91, 191, 1)' }}
-                                                    onClick={() => navigate('/goals')}
-                                                />
-
-                                                <Button
-                                                    onClick={() => console.log('re create')}
-                                                    btnName={'Re create Goals'} btnCatergory="primary" style={{ background: 'linear-gradient(to right, #00AEBD, #1D5BBF)', borderRadius: '27px', width: '180px' }} />
-                                            </>
-                                        }
 
                                     </div>
                                 </div>

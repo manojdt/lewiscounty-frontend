@@ -204,10 +204,10 @@ export const goalActivityStatus = {
 
 export const goalDataStatus = {
   inactive: 'Not Active Goal',
-  active: 'Active Goal',
-  ongoing: 'Goal in Progress',
-  completed: 'Completed Goal',
-  aborted: 'Cancel Goal',
+  active: 'Active',
+  ongoing: 'Ongoing',
+  completed: 'Completed',
+  aborted: 'Aborted',
 }
 
 export const goalStatusColor = {

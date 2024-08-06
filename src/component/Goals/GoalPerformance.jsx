@@ -31,8 +31,7 @@ export default function GoalPerformance() {
                         <img src={CalenderIcon} alt="CalenderIcon" />
                         <select className='focus:outline-none' style={{ background: 'rgba(238, 245, 255, 1)' }}>
                             <option>Month</option>
-                            <option>Week</option>
-                            <option>Day</option>
+                            <option>Year</option>
                         </select>
                     </div>
                 </div>

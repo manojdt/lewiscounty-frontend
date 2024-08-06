@@ -64,10 +64,12 @@ export default function AssignMentees() {
             due_date: new Date(data.due_date).toISOString()
         }
         console.log('submit', apiData)
+      
+        dispatch(assignProgramTask(apiData))
+
         if (programdetails.status === programActionStatus.yettostart) {
             dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.assigned }))
         }
-        dispatch(assignProgramTask(apiData))
        
         // reset()
         // setLoading(true)
@@ -75,7 +77,7 @@ export default function AssignMentees() {
     }
 
     useEffect(() => {
-        if (status === programActionStatus.assigned || status === programStatus.taskassigned) {
+        if (status === programStatus.taskassigned) {
             setTaskSuccess(true)
             setTimeout(() => {
                 navigate(`${pipeUrls.startprogram}/${programdetails.id}`)

@@ -25,6 +25,7 @@ import { goalDataStatus, goalPeriods, goalRequestColor, goalRequestStatus, goalS
 import MuiModal from '../../shared/Modal';
 import GoalProgress from './GoalProgress';
 import GoalPerformance from './GoalPerformance';
+import MenteeGoals from './MenteeGoals';
 
 
 const Goals = () => {
@@ -734,35 +735,7 @@ const Goals = () => {
                     {
                         requestTab === 'mentee-goals' &&
 
-                        <div className='goals-container'>
-                            <div className='title-container flex justify-between items-center'>
-                                <div className='flex gap-5 items-center '>
-                                    <p className='text-[18px] font-semibold'>Mentee Goals</p>
-                                </div>
-                                <div className='flex gap-8 items-center'>
-                                    <div className="relative flex gap-3 py-3 px-4"
-                                        style={{ border: '1px solid rgba(24, 40, 61, 0.25)', background: 'rgba(238, 245, 255, 1)', borderRadius: '3px' }}>
-                                        <img src={CalenderIcon} alt="CalenderIcon" />
-                                        <select className='focus:outline-none' style={{ background: 'rgba(238, 245, 255, 1)' }}>
-                                            <option>Month</option>
-                                            <option>Week</option>
-                                            <option>Day</option>
-                                        </select>
-                                    </div>
-                                    <select className='table-select'>
-                                        <option>Total Goals</option>
-                                        <option>Active Goals</option>
-                                        <option>Goals in progress</option>
-                                        <option>Completed Goals</option>
-                                    </select>
-                                </div>
-
-                            </div>
-                            <div className='py-8 px-6'>
-                                <DataTable rows={menteeGoalsRequestRow} columns={menteeGoalsColumn} handleSelectedRow={handleSelectedRow} />
-                            </div>
-
-                        </div>
+                       <MenteeGoals />
                     }
 
 

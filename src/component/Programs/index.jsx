@@ -63,8 +63,10 @@ export default function Programs() {
         let baseUrl = pipeUrls.programdetails
         const filterProgram = programsList.find(program => program.id === programid)
         if (Object.keys(filterProgram).length) {
-            if (filterProgram.status === programActionStatus.yettostart) baseUrl = pipeUrls.assigntask
-            if (filterProgram.status === programActionStatus.inprogress) baseUrl = pipeUrls.startprogram
+            if (role === 'mentor') {
+                if (filterProgram.status === programActionStatus.yettostart) baseUrl = pipeUrls.assigntask
+                if (filterProgram.status === programActionStatus.inprogress) baseUrl = pipeUrls.startprogram
+            }
             navigate(`${baseUrl}/${programid}`)
         }
 
@@ -86,7 +88,7 @@ export default function Programs() {
                 }
             }
 
-            if(role === 'mentee'){
+            if (role === 'mentee') {
                 return { ...menu, count: userprograms.programsCounts[menteeCountStatus[menu.status]] || 0 }
             }
 
