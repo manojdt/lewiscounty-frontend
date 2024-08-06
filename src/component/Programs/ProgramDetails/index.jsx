@@ -76,7 +76,7 @@ export default function ProgramDetails() {
     useEffect(() => {
         if (Object.keys(programdetails).length) {
             console.log('programdetails.status', programdetails.status)
-            if (role === 'mentee' && menteeJoined) {
+            if (role === 'mentee' && menteeJoined === true) {
                 navigate(`${pipeUrls.startprogram}/${programdetails.id}`)
             }
 

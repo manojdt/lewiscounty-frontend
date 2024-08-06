@@ -368,7 +368,14 @@ export default function AssignMentees() {
                                                                                                 setDateFormat({ ...dateFormat, [field.name]: e.value })
                                                                                             }}
                                                                                             disabled={field.disabled}
-                                                                                            showTime
+                                                                                            {...field.name === 'due_date'? 
+                                                                                                {
+                                                                                                    minDate: getValues('start_date'),
+                                                                                                    maxDate: getValues('end_date')
+                                                                                                }
+                                                                                                : {}
+                                                                                            }
+                                                                                            showTime={field.name !== 'due_date'}
                                                                                             hourFormat="12"
                                                                                             dateFormat="dd/mm/yy"
                                                                                             style={{ width: '30%' }}
