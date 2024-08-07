@@ -8,9 +8,16 @@ import SettingsIcon from "../../assets/images/setting1x.png";
 import UserImage from "../../assets/images/user.jpg";
 import SearchIcon from "../../assets/images/search1x.png";
 import SearchNavIcon from '../../assets/icons/search.svg';
+import HelpIcon from '../../assets/icons/Help.svg';
+import ProfileIcon from '../../assets/icons/Profile.svg';
+import LogoutIcon from '../../assets/icons/Logout.svg';
+import LogoutColorIcon from '../../assets/icons/Logoutpop.svg'
+import { Backdrop } from '@mui/material';
+import { Button } from '../Button';
 
 export const Navbar = () => {
     const navigate = useNavigate();
+    const [isLogout, setIsLogout] = useState(false)
     const userInfo = useSelector(state => state.userInfo)
     const location = useLocation();
     const dispatch = useDispatch();
@@ -25,11 +32,19 @@ export const Navbar = () => {
     };
     const handleClose = () => {
         setAnchorEl(null);
+    };
+
+    const handleLogout = () => {
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
         dispatch({ type: "logout" })
         navigate("/login");
-    };
+    }
+
+    const handleProfile = () => {
+        handleClose();
+        navigate('/my-profile');
+    }
 
     function getWindowDimensions() {
         const { innerWidth: width, innerHeight: height } = window;
@@ -56,11 +71,11 @@ export const Navbar = () => {
         leftElement.style.width = "300px";
         leftElement.style.display = 'block';
         document.getElementById("left-content").appendChild(leftBar)
-    
+
         console.log('left', leftBar)
     }
 
-    
+
     function closeLeftNav() {
         document.getElementById("leftSideNav").style.width = "0";
         document.getElementById("leftSideNav").style.display = 'none';
@@ -69,6 +84,30 @@ export const Navbar = () => {
 
     return (
         <div className="navbar-content px-4" style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
+
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={isLogout}
+            >
+                <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
+                    <img src={LogoutColorIcon} alt="LogoutColorIcon" />
+                    <span style={{ color: '#232323', fontWeight: 600, fontSize: '24px' }}>Log out</span>
+
+                    <div className='py-5'>
+                        <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 600, fontSize: '18px' }}>Are You sure want  to log out?</p>
+                    </div>
+                    <div className='flex justify-center'>
+                        <div className="flex gap-6 justify-center align-middle">
+                            <Button btnName='Cancel' btnCategory="secondary" onClick={() =>  setIsLogout(false)} />
+                            <Button btnType="button" btnCls="w-[110px]" btnName={'Logout'} btnCategory="primary"
+                                onClick={handleLogout}
+                            />
+                        </div>
+                    </div>
+                </div>
+
+            </Backdrop>
+
             <nav className="bg-white border-gray-200">
                 <div className='flex justify-between'>
                     <div className="contain flex justify-between w-3/12 p-4">
@@ -138,7 +177,15 @@ export const Navbar = () => {
                                     'aria-labelledby': 'basic-button',
                                 }}
                             >
-                                <MenuItem onClick={handleClose}>Logout</MenuItem>
+                                <MenuItem onClick={handleClose}>
+                                    <img src={HelpIcon} alt="HelpIcon" className='pr-3 w-[30px]' />
+                                    Help</MenuItem>
+                                <MenuItem onClick={handleProfile}>
+                                    <img src={ProfileIcon} alt="ProfileIcon" className='pr-3 w-[30px]' />
+                                    Profile</MenuItem>
+                                <MenuItem onClick={() => { handleClose(); setIsLogout(true)}}>
+                                    <img src={LogoutIcon} alt="LogoutIcon" className='pr-3 w-[30px]' />
+                                    Log out</MenuItem>
                             </Menu>
 
                         </div>
@@ -213,7 +260,7 @@ export const Navbar = () => {
                             <a href="#" className="closebtn" onClick={() => closeLeftNav()}>&times;</a>
 
                             <div id='left-content' className="px-3"></div>
-                            
+
                         </div>
                     </div>
                 </div>

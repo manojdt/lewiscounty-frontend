@@ -415,6 +415,189 @@ input[type="range"]::-ms-thumb {
   color: rgba(29, 91, 191, 1)
 }
 
+.text-color {
+  color: 'rgba(0, 0, 0, 1)'
+}
+
+/* Profile */
+
+.profile-container {
+  margin-top: 10px;
+  padding: 30px 40px;
+}
+
+.profile-container .profile-info {
+  border: 1px solid rgba(219, 224, 229, 1);
+  /* padding: 30px 30px 20px; */
+  border-radius: 6px;
+}
+
+.profile-container .profile-info .professional-bio,
+.profile-container .profile-info .contact-information {
+  border-bottom: 1px solid rgba(219, 224, 229, 1);
+}
+
+.profile-container .profile-info .social-media {
+  padding: 16px 0;
+}
+
+.profile-container .user-information {
+  border-bottom: 1px solid rgba(219, 224, 229, 1);
+}
+
+.profile-container .user-information .user-image {
+  width: 100px;
+}
+
+.profile-container .user-information .user-image img {
+  border-radius: 50%;
+  height: 100px;
+  width: 100%;
+  object-fit: cover;
+}
+
+.profile-container .profile-details {
+  border: 1px solid rgba(219, 224, 229, 1);
+  border-radius: 6px;
+}
+
+.profile-container .profile-details .detail-tab .tab-list {
+  display: flex;
+  gap: 40px;
+}
+
+.profile-container .profile-details .detail-tab .tab-list li {
+  cursor: pointer;
+  font-size: 14px;
+  padding: 10px 10px 29px;
+}
+
+.profile-container .profile-details .detail-tab .tab-list li.active {
+  color: rgba(29, 91, 191, 1);
+  font-weight: 600;
+}
+
+.profile-container .profile-details .detail-tab .tab-list li.active span {
+  background: rgba(29, 91, 191, 1);
+  display: inline-block;
+  width: 100%;
+  height: 6px;
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  border-radius: 30px 30px 0px 0px;
+}
+
+.profile-container .profile-details .detail-tab .detail-content {
+  padding: 15px 22px;
+}
+
+.profile-container .profile-details .detail-tab .activity-details {
+  margin-bottom: 60px;
+  position: relative;
+}
+
+.profile-container .profile-details .detail-tab .activity-details .progress {
+  position: absolute;
+  border: 1px dotted rgba(29, 91, 191, 1);
+  width: 1px;
+  height: 193px;
+  top: 44px;
+  left: 21px;
+}
+
+.profile-container .profile-details .detail-tab .activity-details .batch-container {
+  background: rgb(174, 241, 246);
+  color: rgb(0, 174, 189);
+  height: 45px;
+  width: 45px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.profile-container .profile-details .detail-tab .activity-details .user-image {
+  width: 50px;
+}
+
+.profile-container .profile-details .detail-tab .activity-details .user-image img {
+  border-radius: 50%;
+  width: 100%;
+  object-fit: cover;
+  height: 46px;
+}
+
+
+.profile-container .profile-details .detail-tab .post-tab .user-image {
+  width: 50px;
+}
+
+.profile-container .profile-details .detail-tab .post-tab .user-image img {
+  border-radius: 50%;
+  width: 100%;
+  object-fit: cover;
+  height: 46px;
+}
+
+
+.profile-container .profile-details .detail-tab .post-tab .post-details img {
+  border-radius: 6px;
+  height: 534px;
+  width: 100%;
+  object-fit: fill;
+  margin: 28px 0;
+}
+
+
+.profile-container .profile-details .detail-tab .detail-content .collegue-tab .collegue-list {
+  box-shadow: 4px 4px 25px 0px rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+  padding: 20px 30px;
+}
+
+.profile-container .profile-details .detail-tab .detail-content .collegue-tab .collegue-list .user-image {
+  border-radius: 50%;
+  width: 70px;
+  object-fit: cover;
+  height: 70px;
+}
+
+.profile-container .profile-details .detail-tab .detail-content .testimonials-tab .testimonial-list {
+  border: 1px solid rgba(219, 224, 229, 1);
+  padding: 30px 30px 20px;
+  border-radius: 6px;
+  position: relative;
+  margin-bottom: 50px;
+}
+
+.profile-container .profile-details .detail-tab .detail-content .testimonials-tab .testimonial-list .user-image {
+  border-radius: 50%;
+  width: 70px;
+  object-fit: cover;
+  height: 70px;
+}
+
+.edit-profile-container .edit-profile-content {
+  border: 1px solid #DBE0E5;
+  border-radius: 6px;
+  background: #fff;
+  margin: 30px 0;
+  padding: 40px 66px;
+}
+
+.edit-profile-container .edit-profile-content .upload-profile {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+}
+
+
+
 @media only screen and (min-device-width: 481px) and (max-device-width: 1440px) {
 
   /* For landscape layouts only */

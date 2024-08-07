@@ -71,7 +71,6 @@ export default function Programs() {
 
     }
 
-
     useEffect(() => {
         const listPrograms = programMenus('program').filter(programs => programs.for.includes(role));
 
@@ -116,19 +115,15 @@ export default function Programs() {
 
         console.log('tttttt', Object.keys(searchParams));
 
-        // if (Object.keys(query).length && role !== '') {
+
         if (role === 'mentee') {
             dispatch(getMenteePrograms(query))
         }
         if (role === 'mentor') dispatch(getUserPrograms(query));
         // }
 
-        // if (searchParams.size === 0) {
-        //     role === 'mentee' ? dispatch(getMenteePrograms(query)) :  dispatch(getUserPrograms(query));
-        // }
+
     }, [searchParams, role])
-
-
 
     useEffect(() => {
         if (userprograms.status === programStatus.bookmarked) {
@@ -146,12 +141,6 @@ export default function Programs() {
 
             if (role === 'mentee') dispatch(getMenteePrograms(query))
             if (role === 'mentor') dispatch(getUserPrograms(query))
-
-            // if (Object.keys(query).length) {
-            //     role === 'mentee' ? dispatch(getMenteePrograms(query)) : dispatch(getUserPrograms(query));
-            // } else {
-            //     role === 'mentee' ? dispatch(getMenteePrograms()) : dispatch(getUserPrograms());
-            // }
         }
     }, [userprograms.status])
 
