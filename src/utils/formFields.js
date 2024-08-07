@@ -1461,6 +1461,17 @@ export const AssignMenteesFields = [{
     disabled: true
   },
   {
+    type: "input",
+    name: "task_name",
+    fieldtype: "text",
+    label: "Task Name",
+    placeholder: "Enter Task Name",
+    inputRules: {
+      required: "This field is required",
+    },
+    width: 'w-full',
+  },
+  {
     type: "editor",
     name: "task_details",
     fieldtype: "text",
