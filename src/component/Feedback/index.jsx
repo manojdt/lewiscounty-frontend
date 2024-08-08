@@ -144,7 +144,7 @@ export default function Feedback() {
 
                                             <div className='post-details'>
                                                 <img className='user-img' src={ChatImage} alt="Userimage" />
-                                                <div>
+                                                <div style={{width: 'calc(100% - 50px)'}}>
                                                     <div className='flex justify-between py-1'>
                                                         <p className='text-[14px]'><span style={{ fontWeight: 700 }}>Johnson</span> ({activePostInfo.type})</p>
                                                         <p className='text-[10px]'>{activePostInfo.posted}</p>
