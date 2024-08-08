@@ -412,7 +412,7 @@ export default function AssignMentees() {
                                                                                                                     {
 
 
-                                                                                                                        `${popupfield.full_name}`
+                                                                                                                        `${popupfield.first_name}`
                                                                                                                     }
                                                                                                                 </p>
                                                                                                             </>

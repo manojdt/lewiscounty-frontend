@@ -86,7 +86,7 @@ export default function SkillsSet({ programdetails }) {
 
                         </div>
                         {
-                            allTask.map((skil, index) => <div className={`skills-list ${index === activeTask ? 'show' : 'hidden'}`} key={index}>{skil.task_details}</div>)
+                            allTask.map((skil, index) => <div className={`skills-list ${index === activeTask ? 'show' : 'hidden'}`} key={index}>{skil.task_name}</div>)
                         }
                         <div className='action-btn'>
 
