@@ -292,7 +292,7 @@ export const MemberColumns = [{
 
 
 export const MenteeAssignColumns = [{
-    field: 'full_name',
+    field: 'first_name',
     headerName: 'Full Name',
     width: 400,
     id: 0,
