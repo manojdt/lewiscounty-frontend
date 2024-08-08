@@ -1640,3 +1640,108 @@ export const ReportFields = [{
     width: 'w-full',
   }
 ];
+
+
+export const EditProfileFields = [
+{
+  type: "input",
+  name: "name",
+  fieldtype: "text",
+  label: "Name",
+  placeholder: "Enter Name",
+  inputRules: {
+    required: "This field is required",
+  },
+  width: 'width-49',
+},
+{
+  type: "input",
+  name: "position",
+  fieldtype: "text",
+  label: "Postion",
+  placeholder: "Enter Postion",
+  inputRules: {
+    required: "This field is required",
+  },
+  width: 'width-49',
+},
+{
+  type: "textbox",
+  name: "about_bio",
+  label: "Professional Bio",
+  placeholder: "Enter Professional Bio",
+  inputRules: {
+    required: "This field is required",
+  },
+  width: 'w-full',
+},
+{
+  type: "input",
+  name: "link",
+  fieldtype: "text",
+  label: "Link",
+  placeholder: "Enter Link",
+  inputRules: {
+    required: "This field is required",
+  },
+  width: 'width-49',
+},
+{
+  type: "input",
+  name: "email",
+  fieldtype: "text",
+  label: "Email",
+  placeholder: "Enter Email",
+  inputRules: {
+    required: "This field is required",
+  },
+  width: 'width-49',
+},
+{
+  type: "input",
+  name: "phone_number",
+  fieldtype: "number",
+  label: "Phone Number",
+  placeholder: "Enter Phone Number",
+  inputRules: {
+    required: "This field is required",
+  },
+  width: 'width-49',
+},
+{
+  type: "input",
+  name: "location",
+  fieldtype: "text",
+  label: "Location",
+  placeholder: "Enter Location",
+  inputRules: {
+    required: "This field is required",
+  },
+  width: 'width-49',
+  icon: 'location'
+},
+{
+  type: "input",
+  name: "address",
+  fieldtype: "text",
+  label: "Address",
+  placeholder: "Enter Address",
+  inputRules: {
+    required: "This field is required",
+  },
+  width: 'w-full',
+},
+{
+  type: "logo",
+  name: "logo",
+  fieldtype: "text",
+  label: "Social Media",
+  placeholder: "Enter Address",
+  inputRules: {
+    required: "This field is required",
+  },
+  width: 'w-full',
+}
+
+
+];

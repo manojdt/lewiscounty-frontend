@@ -44,6 +44,8 @@ import Feedback from "./component/Feedback";
 import Certificate from "./component/Certificate";
 import CertificateDetails from "./component/Certificate/CertificateDetails";
 import MentorViewMenteeGoal from "./component/Goals/MentorViewMenteeGoal";
+import Profile from "./component/Profile";
+import EditProfile from "./component/Profile/EditProfile";
 
 function App() {
  
@@ -95,8 +97,10 @@ function App() {
 
           <Route path="/create-programs" element={<CreatePrograms />} />
           <Route path="/program" element={<ProgramData />} />
+          <Route path="/edit-profile" element={<EditProfile />} />
           <Route path="/program-data" element={<ProgramsData />} />
           <Route path="/feedback" element={<Feedback />} />
+          <Route path="/my-profile" element={<Profile />} />
           <Route path="/certificates" element={<Certificate />} />
           <Route path="/certificate-view/:id" element={<CertificateDetails />} />
           
