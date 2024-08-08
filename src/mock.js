@@ -1136,3 +1136,63 @@ const certificatesRow = () => {
 }
 
 export const listCertificateRow = certificatesRow()
+
+
+
+export const programRequestColumns = [
+    {
+        field: 'program_name',
+        headerName: 'Program Name',
+        flex: 1,
+        id: 0,
+    },
+    {
+        field: 'reason_request',
+        headerName: 'Reason for Request',
+        flex: 1,
+        id: 1,
+    },
+    {
+        field: 'to_request',
+        headerName: 'To Request',
+        flex: 1,
+        id: 2,
+    }, {
+        field: 'request_date',
+        headerName: 'Request Date',
+        flex: 1,
+        id: 3,
+    },
+    {
+        field: 'aborted_date',
+        headerName: 'Aborted Date',
+        flex: 1,
+        id: 4,
+    },
+    {
+        field: 'aborted_by',
+        headerName: 'Aborted By',
+        flex: 1,
+        id: 4,
+    }
+];
+
+
+const programRequestList = () => {
+    const data = []
+    for (let a = 1; a <= 50; a++) {
+        data.push(
+            {
+                id: a,
+                program_name: `Program Name ${a}`,
+                reason_request: 'Aborted',
+                to_request: 'Cameron Green',
+                request_date: '3/7/2024',
+                aborted_date: `3/7/2024`,
+                aborted_by: 'Cameron Green',
+            })
+    }
+    return data
+}
+
+export const programRequestData = programRequestList()

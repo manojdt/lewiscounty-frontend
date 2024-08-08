@@ -598,6 +598,51 @@ input[type="range"]::-ms-thumb {
 
 
 
+
+.program-request .program-info .tab-list {
+  display: flex;
+  gap: 40px;
+}
+
+.program-request .program-info .tab-list li {
+  cursor: pointer;
+  font-size: 14px;
+  padding: 10px 10px 20px;
+  width: 170px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.program-request .program-info .tab-list li.active {
+  color: rgba(29, 91, 191, 1);
+  font-weight: 600;
+}
+
+.program-request .program-info .tab-list li.active span {
+  background: rgba(29, 91, 191, 1);
+  display: inline-block;
+  width: 100%;
+  height: 6px;
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  border-radius: 30px 30px 0px 0px;
+}
+
+.program-request .program-info .tab-list .total-proram-count {
+  background: #D6D6D6;
+  border-radius: 4px;
+  padding: 3px 6px;
+}
+
+.program-request .program-info .tab-list .total-proram-count.active {
+  background: #EEF5FF;
+  color: #1D5BBF;
+}
+
+
 @media only screen and (min-device-width: 481px) and (max-device-width: 1440px) {
 
   /* For landscape layouts only */

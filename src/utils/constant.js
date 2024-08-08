@@ -379,3 +379,33 @@ export const programMenus = (page = 'dashboard') => {
     }
   ]
 }
+
+
+
+
+export const requestOverview = [{
+    name: "Program Request",
+    count: 0,
+    status: 'all'
+  },
+  {
+    name: "Resource Access Requests",
+    count: 0,
+    status: programActionStatus.yettostart
+  },
+  {
+    name: "Technical Support Requests",
+    count: 0,
+    status: programActionStatus.yettojoin
+  },
+  {
+    name: "New Goals Requests",
+    count: 0,
+    status: programActionStatus.learning
+  },
+  {
+    name: "Request Testimonials",
+    count: 0,
+    status: programActionStatus.inprogress
+  }
+]
