@@ -59,7 +59,7 @@ export default function Profile() {
                     Profile
                 </div>
                 <div>
-                    <Button onClick={() => console.log('Edit')} btnName="Edit" btnCls={'w-[140px]'} />
+                    <Button onClick={() => navigate('/edit-profile')} btnName="Edit" btnCls={'w-[140px]'} />
                 </div>
             </div>
 
