@@ -39,6 +39,14 @@ export default function Layout() {
       label: 'Reports',
       command: () => navigate('/reports')
     },
+    {
+      label: 'Feedback',
+      command: () => navigate('/feedback')
+    },
+    {
+      label: 'Certificates',
+      command: () => navigate('/certificates')
+    },
   ];
 
   return (
