@@ -69,6 +69,17 @@ export default function CreateGoal({ open, handleCloseModal, seletedItem, editMo
 
     console.log('errors', errors)
 
+    const handleDateClick = () => {
+        console.log('Click')
+        document.querySelector('.p-datepicker')?.classList.add('goals-date')
+    }
+
+    useEffect(() => {
+        return(
+            document.querySelector('.p-datepicker')?.classList.remove('goals-date')
+        )
+    },[])
+
 
     const dateField = register('start_date', { required: "This field is required" })
     return (
@@ -163,6 +174,7 @@ export default function CreateGoal({ open, handleCloseModal, seletedItem, editMo
                                                 dateField.onChange(e)
                                                 setDateFormat({ ...dateFormat, start_date: e.value })
                                             }}
+                                            onClick={handleDateClick}
                                             minDate={new Date()}
                                             hourFormat="12"
                                             dateFormat="dd/mm/yy"
