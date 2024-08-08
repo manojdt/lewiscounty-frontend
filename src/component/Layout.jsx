@@ -47,6 +47,12 @@ export default function Layout() {
       label: 'Certificates',
       command: () => navigate('/certificates')
     },
+    {
+      label: 'Program Request',
+      command: () => navigate('/program-request')
+    },
+
+    
   ];
 
   return (
