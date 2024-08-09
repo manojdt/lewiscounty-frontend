@@ -23,11 +23,11 @@ export default function EditProfile() {
         if (Object.keys(data).length) {
             reset({
                 name: `${data.first_name} ${data.last_name}` || '',
-                position: data.userinfo.job_title || '',
+                position: '',
                 about_bio: '',
                 link: '',
                 email: data.email || '',
-                phone_number: parseInt(data.userinfo.phone_number) || '',
+                phone_number: '',
                 location: '',
                 address: '',
                 logo: ''
