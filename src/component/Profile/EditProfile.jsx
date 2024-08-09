@@ -22,12 +22,12 @@ export default function EditProfile() {
     useEffect(() => {
         if (Object.keys(data).length) {
             reset({
-                name: `${data.first_name} ${data.last_name}`,
-                position: data.userinfo.job_title,
+                name: `${data.first_name} ${data.last_name}` || '',
+                position: data.userinfo.job_title || '',
                 about_bio: '',
                 link: '',
-                email: data.email,
-                phone_number: parseInt(data.userinfo.phone_number),
+                email: data.email || '',
+                phone_number: parseInt(data.userinfo.phone_number) || '',
                 location: '',
                 address: '',
                 logo: ''
