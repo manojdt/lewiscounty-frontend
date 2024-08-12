@@ -30,13 +30,22 @@ const ViewGoal = ({ type = '' }) => {
     const [pageloading, setPageLoading] = useState(false)
     const params = useParams();
     const dispatch = useDispatch()
-    const [actionModal, setActionModal] = useState({ start: false, started: false, cancel: false })
+    const [actionModal, setActionModal] = useState({ start: false, started: false, cancel: false, complete: false, completed:false })
     const { goalInfo, loading, status } = useSelector(state => state.goals)
 
     let imageIcon = ActiveGoalIcon
 
     const handleActionBtn = () => {
         setActionModal({ ...actionModal, started: false, start: true })
+    }
+
+    const handleActionCompleteBtn = () => {
+        setActionModal({ ...actionModal, complete: true })
+    }
+
+    const handleSubmitGoal = () => {
+        dispatch(updateGoalStatus({ id: parseInt(goalInfo.id), action: 'complete' }))
+        resetActionModal()
     }
 
     const handleStartGoal = () => {
@@ -47,6 +56,14 @@ const ViewGoal = ({ type = '' }) => {
     useEffect(() => {
         if (status === goalStatus.start) {
             setActionModal({ started: true, start: false, cancel: false, cancelled: false });
+            setTimeout(() => {
+                resetActionModal()
+                navigate('/goals')
+            }, [2000])
+        }
+
+        if (status === goalStatus.complete) {
+            setActionModal({ started: false, start: false, cancel: false, completed: true });
             setTimeout(() => {
                 resetActionModal()
                 navigate('/goals')
@@ -65,7 +82,7 @@ const ViewGoal = ({ type = '' }) => {
     }, [status])
 
     const resetActionModal = () => {
-        setActionModal({ start: false, started: false, cancel: false, cancelled: false })
+        setActionModal({ start: false, started: false, cancel: false, cancelled: false, complete: false })
     }
 
 
@@ -118,12 +135,12 @@ const ViewGoal = ({ type = '' }) => {
     console.log('paaa', params)
     return (
         <div className="px-9 py-9">
-            <MuiModal modalOpen={actionModal.started || actionModal.cancelled} modalClose={resetActionModal} noheader>
+            <MuiModal modalOpen={actionModal.started || actionModal.cancelled || actionModal.completed} modalClose={resetActionModal} noheader>
                 <div className='px-5 py-1 flex justify-center items-center'>
                     <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
                         style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
                         <img src={SuccessTik} alt="SuccessTik" />
-                        <p className='text-white text-[12px]'>{actionModal.cancelled ? 'Cancel ' : 'Start '} goal is Successfully</p>
+                        <p className='text-white text-[12px]'>Goal is {actionModal.cancelled ? 'Cancelled ' : actionModal.completed ? 'Completed ' : 'Stared '} Successfully</p>
                     </div>
 
                 </div>
@@ -153,6 +170,28 @@ const ViewGoal = ({ type = '' }) => {
                             <Button btnCls="w-[130px]" btnName='Cancel' btnCategory="secondary" onClick={resetActionModal} />
                             <Button btnCls="w-[130px]" btnType="button" btnName='Start goal' btnCategory="primary"
                                 onClick={handleStartGoal}
+                            />
+                        </div>
+                    </div>
+                </div>
+
+            </Backdrop>
+
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={actionModal.complete}
+            >
+                <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
+                    <img src={ConnectIcon} alt="ConnectIcon" />
+
+                    <div className='py-5'>
+                        <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 600, fontSize: '18px' }}>Are you sure you want to Complete the goal?</p>
+                    </div>
+                    <div className='flex justify-center'>
+                        <div className="flex gap-6 justify-center align-middle">
+                            <Button btnCls="w-[170px]" btnName='Cancel' btnCategory="secondary" onClick={resetActionModal} />
+                            <Button btnCls="w-[170px]" btnType="button" btnName='Complete goal' btnCategory="primary"
+                                onClick={handleSubmitGoal}
                             />
                         </div>
                     </div>
@@ -311,13 +350,17 @@ const ViewGoal = ({ type = '' }) => {
                                                 {
                                                     goalInfo.goal_status === 'ongoing' &&
                                                     <>
-                                                        <Button btnName="Cancel" style={{ border: '1px solid rgba(0, 0, 0, 1)', borderRadius: '27px', width: '180px', color: 'rgba(24, 40, 61, 1)' }}
+                                                        <Button btnName="Cancel Goal" style={{ border: '1px solid rgba(0, 0, 0, 1)', borderRadius: '27px', width: '180px', color: 'rgba(24, 40, 61, 1)' }}
                                                             onClick={handleCancelGoal}
                                                         />
                                                         <Button
+                                                            onClick={handleActionCompleteBtn}
+                                                            btnName={'Complete Goal'} btnCatergory="primary"
+                                                            style={{ background: 'linear-gradient(to right, #00AEBD, #1D5BBF)', borderRadius: '27px', width: '180px' }} />
+                                                        {/* <Button
                                                             onClick={() => navigate('/goals')}
                                                             btnName={'Close'} btnCatergory="primary"
-                                                            style={{ background: 'linear-gradient(to right, #00AEBD, #1D5BBF)', borderRadius: '27px', width: '180px' }} />
+                                                            style={{ background: 'linear-gradient(to right, #00AEBD, #1D5BBF)', borderRadius: '27px', width: '180px' }} /> */}
                                                     </>
                                                 }
 

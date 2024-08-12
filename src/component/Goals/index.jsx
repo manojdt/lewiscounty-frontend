@@ -470,6 +470,7 @@ const Goals = () => {
 
     const handleCloseModal = () => {
         setActionModal(false)
+        setSelectedItem({})
     }
 
     const handleGoalsClick = (goal) => {
@@ -479,6 +480,7 @@ const Goals = () => {
 
     const handleOpenCreateGoalModal = () => {
         dispatch(updateLocalGoalInfo({ error: '' }))
+        setSelectedItem({})
         setActionModal(true)
     }
 
