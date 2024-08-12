@@ -14,7 +14,7 @@ import MuiModal from '../../shared/Modal';
 export const TaskDetails = () => {
     const navigate = useNavigate()
     const [loading, setLoading] = useState(false)
-    const [startTask, setStartTask] = useState(false)
+    const [startTask, setStartTask] = useState(true)
     const params = useParams();
 
     const handleSubmitTask = () => {
@@ -58,11 +58,11 @@ export const TaskDetails = () => {
             <div className='px-3 py-5' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
                 <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
                     <div className='flex gap-5 items-center text-[20px]'>
-                        <p>{params.id === '3' ? 'View  Cancel Task Details' : 'View Task Details'}</p>
+                        <p>{params.id === '3' ? 'Task Details' : 'Task Details'}</p>
                         {
                             params.id === '2' && !startTask &&
                             <div className="inset-y-0 end-0 flex items-center pe-3 cursor-pointer"
-                                onClick={() => navigate('/mentee-tasks')}
+                                onClick={() => navigate('/programs')}
                             >
                                 <img src={EditIcon} alt='EditIcon' />
                             </div>
@@ -72,9 +72,9 @@ export const TaskDetails = () => {
                     <div className='flex gap-8 items-center'>
                         <div className="relative">
                             <div className="inset-y-0 end-0 flex items-center pe-3 cursor-pointer"
-                                onClick={() => navigate('/mentee-tasks')}
+                                onClick={() => navigate('/programs')}
                             >
-                                <img src={CancelIcon} alt='SearchIcon' />
+                                <img src={CancelIcon} alt='CancelIcon' />
                             </div>
                         </div>
                     </div>
@@ -266,7 +266,7 @@ export const TaskDetails = () => {
                             <>
                                 <div className='relative'>
                                     <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2" >
-                                        Description
+                                        Task Solution
                                     </label>
                                     <textarea id="message" rows="4"
                                         className="block p-2.5 input-bg w-full h-[170px] text-sm text-gray-900  rounded-lg border
@@ -369,7 +369,7 @@ export const TaskDetails = () => {
 
                     <div className='close-btn flex justify-center gap-7 pb-5'>
                         {
-                            params.id === '2' || params.id === '5' ?
+                            params.id !== '' || params.id === '5' ?
 
                                 <>
                                     <Button btnName='Cancel' btnCls="w-[12%]" btnCategory="secondary" onClick={() => navigate('/mentee-tasks')} />
