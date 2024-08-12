@@ -7,6 +7,7 @@ import MuiModal from '../../shared/Modal'
 import { useNavigate } from 'react-router-dom'
 import { Backdrop, CircularProgress } from '@mui/material'
 
+
 export default function SkillsSet({ programdetails }) {
     const navigate = useNavigate()
     const [activeTask, setActiveTask] = useState(0)
@@ -14,12 +15,16 @@ export default function SkillsSet({ programdetails }) {
     const [startProgramModal, setProgramModal] = useState(false)
     const [allTask, setAllTask] = useState([])
 
+    const [activeTaskDetails, setActiveTaskDetails] = useState({})
+
     const handleTaskNavigation = (key) => {
         if (key === 'next' && activeTask !== allTask.length - 1) {
+            setActiveTaskDetails(allTask[activeTask + 1])
             setActiveTask(activeTask + 1)
         }
 
         if (key === 'prev' && activeTask > 0) {
+            setActiveTaskDetails(allTask[activeTask - 1])
             setActiveTask(activeTask - 1)
         }
     }
@@ -35,6 +40,7 @@ export default function SkillsSet({ programdetails }) {
 
     useEffect(() => {
         if (programdetails.task && programdetails.task.length) {
+            setActiveTaskDetails(programdetails.task[0])
             setAllTask(programdetails.task)
         }
     }, [programdetails])
@@ -74,23 +80,23 @@ export default function SkillsSet({ programdetails }) {
                         <div className='skills-title' style={{ justifyContent: allTask.length === 1 ? 'center' : 'space-between' }}>
                             {
                                 allTask.length > 1 &&
-                                <img src={ArrowLeftIcon} className='cursor-pointer' disabled={activeTask === 0} alt="ArrowLeftIcon" onClick={() => handleTaskNavigation('prev')} />
+                                <img src={ArrowLeftIcon} className='cursor-pointer' style={{visibility: activeTask === 0 ? 'hidden' : 'visible' }} disabled={activeTask === 0} alt="ArrowLeftIcon" onClick={() => handleTaskNavigation('prev')} />
                             }
 
-                            <p>Skill Task</p>
+                            <p>{activeTaskDetails.task_name}</p>
                             {
                                 allTask.length > 1 &&
 
-                                <img src={ArrowRightIcon} className='cursor-pointer' disabled={activeTask === allTask.length - 1} alt="ArrowRightIcon" onClick={() => handleTaskNavigation('next')} />
+                                <img src={ArrowRightIcon} className='cursor-pointer' style={{visibility: activeTask === allTask.length - 1 ? 'hidden' : 'visible' }} disabled={activeTask === allTask.length - 1} alt="ArrowRightIcon" onClick={() => handleTaskNavigation('next')} />
                             }
 
                         </div>
-                        {
-                            allTask.map((skil, index) => <div className={`skills-list ${index === activeTask ? 'show' : 'hidden'}`} key={index}>{skil.task_name}</div>)
-                        }
+                       
+                            <div className={`skills-list`}>{activeTaskDetails.task_name}</div>
+                       
                         <div className='action-btn'>
 
-                            <Button btnName="Start Task" onClick={() => setProgramModal(true)} />
+                            <Button btnName="Start Task" onClick={() => navigate(`/submit-task-program/${activeTaskDetails.id}`)} />
 
 
                         </div>

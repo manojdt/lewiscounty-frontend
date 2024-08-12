@@ -86,7 +86,7 @@ export const TaskDetails = () => {
                         <table className="w-[50%] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                             <tbody style={{ border: '1px solid rgba(0, 174, 189, 1)' }}>
                                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" style={{ border: '1px solid rgba(0, 174, 189, 1)' }} className="px-6 py-4 font-medium whitespace-nowrap ">
+                                    <th scope="row" style={{ border: '1px solid rgba(0, 174, 189, 1)', background:'#fff' }} className="px-6 py-4 font-medium whitespace-nowrap ">
                                         Assigned Date
                                     </th>
                                     <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
@@ -94,7 +94,7 @@ export const TaskDetails = () => {
                                     </td>
                                 </tr>
                                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th style={{ border: '1px solid rgba(0, 174, 189, 1)' }} scope="row" className="px-6 py-4 font-medium  whitespace-nowrap ">
+                                    <th style={{ border: '1px solid rgba(0, 174, 189, 1)', background:'#fff' }} scope="row" className="px-6 py-4 font-medium  whitespace-nowrap ">
                                         Task Name
                                     </th>
                                     <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
@@ -102,7 +102,7 @@ export const TaskDetails = () => {
                                     </td>
                                 </tr>
                                 <tr className="bg-white border-b dark:bg-gray-800 ">
-                                    <th style={{ border: '1px solid rgba(0, 174, 189, 1)' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
+                                    <th style={{ border: '1px solid rgba(0, 174, 189, 1)', background:'#fff' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
                                         Program Name
                                     </th>
                                     <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
@@ -110,8 +110,8 @@ export const TaskDetails = () => {
                                     </td>
                                 </tr>
                                 <tr className="bg-white border-b  dark:bg-gray-800">
-                                    <th style={{ border: '1px solid rgba(0, 174, 189, 1)' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
-                                        Assigned  Date
+                                    <th style={{ border: '1px solid rgba(0, 174, 189, 1)', background:'#fff' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
+                                        Due  Date
                                     </th>
                                     <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
                                         04/23/2024
@@ -124,7 +124,7 @@ export const TaskDetails = () => {
                         <table className="w-[50%] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                             <tbody style={{ border: '1px solid rgba(29, 91, 191, 1)' }}>
                                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" style={{ border: '1px solid rgba(29, 91, 191, 1)' }} className="px-6 py-4 font-medium whitespace-nowrap ">
+                                    <th scope="row" style={{ border: '1px solid rgba(29, 91, 191, 1)', background:'#fff' }} className="px-6 py-4 font-medium whitespace-nowrap ">
                                         Completed  Date
                                     </th>
                                     <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
@@ -132,7 +132,7 @@ export const TaskDetails = () => {
                                     </td>
                                 </tr>
                                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th style={{ border: '1px solid rgba(29, 91, 191, 1)' }} scope="row" className="px-6 py-4 font-medium  whitespace-nowrap ">
+                                    <th style={{ border: '1px solid rgba(29, 91, 191, 1)', background:'#fff' }} scope="row" className="px-6 py-4 font-medium  whitespace-nowrap ">
                                         Task assigned by
                                     </th>
                                     <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
@@ -140,15 +140,15 @@ export const TaskDetails = () => {
                                     </td>
                                 </tr>
                                 <tr className="bg-white border-b dark:bg-gray-800 ">
-                                    <th style={{ border: '1px solid rgba(29, 91, 191, 1)' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
+                                    <th style={{ border: '1px solid rgba(29, 91, 191, 1)', background:'#fff' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
                                         File Type
                                     </th>
                                     <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
-                                        Video, Jpg, PDF
+                                        {true ? '-': 'Video, Jpg, PDF'}
                                     </td>
                                 </tr>
                                 <tr className="bg-white border-b  dark:bg-gray-800">
-                                    <th style={{ border: '1px solid rgba(29, 91, 191, 1)' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
+                                    <th style={{ border: '1px solid rgba(29, 91, 191, 1)', background:'#fff' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
                                         Status
                                     </th>
                                     <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>

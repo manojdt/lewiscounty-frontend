@@ -142,6 +142,7 @@ export const userProgramSlice = createSlice({
         return {
           ...state,
           programdetails: action.payload,
+          status: '',
           loading: false,
         };
       })
