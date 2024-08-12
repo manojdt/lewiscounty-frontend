@@ -192,3 +192,19 @@ export const getMenteeProgramCount = createAsyncThunk(
         return menteeProgramCount;
     }
 );
+
+
+export const startProgramTask = createAsyncThunk(
+    "startProgramTask",
+    async (data) => {
+        const startTask = await api.patch('program_task_assign/task_start', data);
+        if (startTask.status === 200 && startTask.data) {
+            return startTask.data;
+        }
+        return startTask;
+    }
+);
+
+
+
+export const updateUserProgramInfo = createAction('update/userProgramInfo')

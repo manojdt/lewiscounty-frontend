@@ -11,7 +11,9 @@ import {
   getProgramCounts,
   getProgramMentees,
   getUserPrograms,
+  startProgramTask,
   updateProgram,
+  updateUserProgramInfo,
 } from "../../services/userprograms";
 import {
   programStatus
@@ -142,6 +144,7 @@ export const userProgramSlice = createSlice({
         return {
           ...state,
           programdetails: action.payload,
+          status: '',
           loading: false,
         };
       })
@@ -356,6 +359,43 @@ export const userProgramSlice = createSlice({
 
         };
       })
+
+
+
+
+
+      builder
+      .addCase(startProgramTask.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(startProgramTask.fulfilled, (state, action) => {
+        return {
+          ...state,
+          status: programStatus.taskstarted,
+          loading: false,
+        };
+      })
+      .addCase(startProgramTask.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
+
+
+
+      builder.addCase(updateUserProgramInfo, (state, action) => {
+        return {
+          ...state,
+          ...action.payload
+        }
+      })
+
+     
 
   },
 });

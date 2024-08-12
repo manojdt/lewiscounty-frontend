@@ -156,7 +156,8 @@ export const programStatus = {
   start: 'start',
   paused: 'paused',
   completed: 'completed',
-  taskassigned: 'taskassigned'
+  taskassigned: 'taskassigned',
+  taskstarted: 'taskstarted'
 }
 
 export const goalStatus = {

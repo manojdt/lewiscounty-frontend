@@ -117,11 +117,15 @@ const Goals = () => {
         setActionModal(true)
     }
 
-    useEffect(() => {
+    const getAllGoalData = () => {
         dispatch(getGoalsCount())
         dispatch(getGoalsOverAllData('start_year=2022&end_year=2024'))
         dispatch(getGoalsRequest())
         dispatch(getGoalsHistory())
+    }
+
+    useEffect(() => {
+       getAllGoalData()
     }, [])
 
 
@@ -147,6 +151,7 @@ const Goals = () => {
                 query = filterType === 'total_goals' ? '' : filterType
             }
             dispatch(getAllGoals(query))
+            getAllGoalData()
             setTimeout(() => {
                 setPopupModal('')
             }, [3000])
@@ -161,6 +166,7 @@ const Goals = () => {
                 query = filterType === 'total_goals' ? '' : filterType
             }
             dispatch(getAllGoals(query))
+            getAllGoalData()
             setTimeout(() => {
                 setPopupModal('')
             }, [3000])
@@ -502,7 +508,7 @@ const Goals = () => {
                 query = filterType === 'total_goals' ? '' : filterType
             }
             dispatch(getAllGoals(query))
-            dispatch(getGoalsCount())
+            getAllGoalData()
         }
 
     }, [status])

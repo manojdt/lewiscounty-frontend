@@ -77,13 +77,13 @@ export default function Layout() {
       command: () => navigate('/program-request')
     },
 
-    // {
-    //   label: <div className='flex gap-4 items-center'>
-    //     <img src={FeedIcon} alt="FeedIcon" />
-    //     <p>Feed</p>
-    //   </div>,
-    //   command: () => navigate('/program-request')
-    // },
+    {
+      label: <div className='flex gap-4 items-center'>
+        <img src={FeedIcon} alt="FeedIcon" />
+        <p>Feed</p>
+      </div>,
+      command: () => navigate('/feeds')
+    },
 
 
   ];
