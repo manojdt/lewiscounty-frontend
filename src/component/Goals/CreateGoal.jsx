@@ -52,10 +52,11 @@ export default function CreateGoal({ open, handleCloseModal, seletedItem, editMo
 
     const handleClose = () => {
         handleCloseModal()
+        reset()
     }
 
     useEffect(() => {
-        reset()
+        reset({})
         setDateFormat({})
     }, [])
 
@@ -63,6 +64,8 @@ export default function CreateGoal({ open, handleCloseModal, seletedItem, editMo
         if (editMode) {
             reset(seletedItem)
             // setDateFormat(new Date(seletedItem.start_date))
+        }else{
+            reset({})
         }
     }, [seletedItem, editMode])
 

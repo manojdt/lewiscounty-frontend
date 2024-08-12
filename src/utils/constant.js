@@ -166,6 +166,7 @@ export const goalStatus = {
   active: 'active',
   start: 'start',
   abort: 'abort',
+  complete: 'complete',
   update: 'updated',
   delete: 'deleted',
 }
