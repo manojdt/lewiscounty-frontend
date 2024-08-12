@@ -275,6 +275,7 @@ input[type="range"]::-ms-thumb {
   color: rgba(29, 91, 191, 1);
   font-size: 11px;
   padding: 10px;
+  border-radius: 4px;
 }
 
 .feedback .post-program-detail .post-details .user-img {
@@ -642,6 +643,168 @@ input[type="range"]::-ms-thumb {
   color: #1D5BBF;
 }
 
+.notification-container .title {
+  border-bottom: 1px solid #D9D9D9;
+  color: #18283D;
+  padding-bottom: 15px;
+  font-weight: 600;
+}
+
+.notification-container ul {
+  margin-top: 20px;
+}
+
+.notification-container .notification-list {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 10px 12px;
+  border-bottom: 1px solid #D9D9D9;
+  color: #18283D;
+}
+
+.notification-container .notification-list .notification-message {
+  width: 250px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.notification-container .notification-list img {
+  border-radius: 50%;
+  ;
+}
+
+
+
+.notification-content {
+  padding: 0 30px;
+}
+
+.nofification .nofification-action {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+}
+
+
+.notification-container ul li {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  border-left: 10px solid rgba(29, 91, 191, 0.5);
+  box-shadow: 4px 4px 15px 0px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 30px;
+}
+
+.notification-container ul li img {
+  border-radius: 50%;
+}
+
+.feed-container {
+  padding-bottom: 50px;
+}
+
+.feed-container .feeds-list .feed-card .feed-image {
+  border-radius: 10px;
+}
+
+.feed-container .feeds-list .feed-card .feed-content .user-image {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid rgba(29, 91, 191, 1);
+}
+
+.feed-details .feed-info {
+  padding: 0px 40px;
+}
+
+.feed-details .feed-info .feed-detail-image {
+  border-radius: 10px;
+}
+
+.feed-details .feed-info .feed-action-info {
+  display: flex;
+  gap: 50px;
+  align-items: center;
+  padding: 25px 0;
+  font-size: 12px;
+  border-bottom: 1px solid rgba(230, 230, 230, 1);
+}
+
+.feed-details .feed-info .feed-action-info .list-item {
+  display: flex;
+  gap: 10px;
+}
+
+.feed-details .program-feeds .program-user-image{
+  width: 100px;
+}
+
+.feed-details .feed-info .post-details {
+  padding: 25px 0;
+  margin-bottom: 20px;
+}
+
+.feed-details .feed-info .post-comments .add-comments{
+  display: flex;
+  gap: 30px;
+  margin: 30px 0 50px;
+}
+
+.feed-details .feed-info .post-comments .add-comments img{
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.feed-details .feed-info .post-comments .add-comments .comment-input{
+  border-bottom: 1px solid rgba(234, 236, 235, 1);
+  width: 100%;
+}
+
+.feed-details .feed-info .post-comments .add-comments .comment-input:focus, .feed-details .feed-info .post-comments .add-comments .comment-input:focus-visible{
+  border-bottom: 1px solid rgba(234, 236, 235, 1);
+  outline: none;
+}
+
+.feed-details .feed-info .post-comments h3 {
+  color: 'rgba(0, 0, 0, 1)';
+  font-weight: 600;
+}
+
+.feed-details .feed-info .post-comments .post-list-comments {
+  padding: 15px 0;
+  display: flex;
+  gap: 10px;
+}
+
+
+.feed-details .feed-info .post-comments .post-list-comments .count-content {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  background: rgba(213, 228, 252, 1);
+  color: rgba(29, 91, 191, 1);
+  font-size: 11px;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.feed-details .feed-info .post-comments .post-list-comments .user-img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
 
 @media only screen and (min-device-width: 481px) and (max-device-width: 1440px) {
 

@@ -47,6 +47,11 @@ import MentorViewMenteeGoal from "./component/Goals/MentorViewMenteeGoal";
 import Profile from "./component/Profile";
 import EditProfile from "./component/Profile/EditProfile";
 import ProgramRequest from "./component/Programs/ProgramRequest";
+import Help from "./component/Help";
+import Notification from "./component/Notification";
+import NotificationMenu from "./component/Notification/NotificationMenu";
+import Feeds from "./component/Feeds";
+import FeedDetails from "./component/Feeds/FeedDetails";
 
 function App() {
  
@@ -102,6 +107,10 @@ function App() {
           <Route path="/edit-profile" element={<EditProfile />} />
           <Route path="/program-data" element={<ProgramsData />} />
           <Route path="/feedback" element={<Feedback />} />
+          <Route path="/help" element={<Help />} />
+          <Route path="/notification" element={<NotificationMenu />} />
+          <Route path="/feeds" element={<Feeds />} />
+          <Route path="/feed-details/:id" element={<FeedDetails />} />
           <Route path="/my-profile" element={<Profile />} />
           <Route path="/certificates" element={<Certificate />} />
           <Route path="/certificate-view/:id" element={<CertificateDetails />} />

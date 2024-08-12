@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+
+import { Menu as PrimeMenuComponent } from 'primereact/menu';
 import { useDispatch, useSelector } from "react-redux";
 import NotificationIcon from "../../assets/images/message1x.png";
 import SettingsIcon from "../../assets/images/setting1x.png";
@@ -15,8 +17,15 @@ import LogoutColorIcon from '../../assets/icons/Logoutpop.svg'
 import { Backdrop } from '@mui/material';
 import { Button } from '../Button';
 
+import { OverlayPanel } from 'primereact/overlaypanel';
+import NotificationMenu from '../../component/Notification/NotificationMenu';
+import Notification from '../../component/Notification';
+
 export const Navbar = () => {
     const navigate = useNavigate();
+    const moreMenu = useRef(null);
+    const op = useRef(null);
+    const [showNotification, setShowNotification] = useState(false)
     const [isLogout, setIsLogout] = useState(false)
     const userInfo = useSelector(state => state.userInfo)
     const location = useLocation();
@@ -45,6 +54,7 @@ export const Navbar = () => {
         handleClose();
         navigate('/my-profile');
     }
+
 
     function getWindowDimensions() {
         const { innerWidth: width, innerHeight: height } = window;
@@ -82,6 +92,10 @@ export const Navbar = () => {
 
     }
 
+    const handleCloseNotification = () => {
+      document.getElementsByClassName('notification-image')[0].click()
+    }
+
     return (
         <div className="navbar-content px-4" style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
 
@@ -98,7 +112,7 @@ export const Navbar = () => {
                     </div>
                     <div className='flex justify-center'>
                         <div className="flex gap-6 justify-center align-middle">
-                            <Button btnName='Cancel' btnCategory="secondary" onClick={() =>  setIsLogout(false)} />
+                            <Button btnName='Cancel' btnCategory="secondary" onClick={() => setIsLogout(false)} />
                             <Button btnType="button" btnCls="w-[110px]" btnName={'Logout'} btnCategory="primary"
                                 onClick={handleLogout}
                             />
@@ -160,7 +174,12 @@ export const Navbar = () => {
                             </div>
                         </div>
                         <img className='search-icon hidden' src={SearchIcon} alt="SearchIcon" />
-                        <img src={NotificationIcon} alt="NotificationIcon" />
+                        <img src={NotificationIcon} className='cursor-pointer notification-image' alt="NotificationIcon"  />
+
+                        <OverlayPanel ref={op} id="overlay_panel" style={{ width: '450px' }} className="overlaypanel-demo">
+                            <Notification handleClose={handleCloseNotification} />
+                        </OverlayPanel>
+
                         <img src={SettingsIcon} alt="SettingsIcon" />
 
                         <span className='more-icon-menu cursor-pointer hidden text-[25px]' onClick={() => openNav()}>&#9776;</span>
@@ -177,13 +196,16 @@ export const Navbar = () => {
                                     'aria-labelledby': 'basic-button',
                                 }}
                             >
-                                <MenuItem onClick={handleClose}>
+                                <MenuItem onClick={() => {
+                                     handleClose();
+                                     navigate('/help');
+                                }}>
                                     <img src={HelpIcon} alt="HelpIcon" className='pr-3 w-[30px]' />
                                     Help</MenuItem>
                                 <MenuItem onClick={handleProfile}>
                                     <img src={ProfileIcon} alt="ProfileIcon" className='pr-3 w-[30px]' />
                                     Profile</MenuItem>
-                                <MenuItem onClick={() => { handleClose(); setIsLogout(true)}}>
+                                <MenuItem onClick={() => { handleClose(); setIsLogout(true) }}>
                                     <img src={LogoutIcon} alt="LogoutIcon" className='pr-3 w-[30px]' />
                                     Log out</MenuItem>
                             </Menu>

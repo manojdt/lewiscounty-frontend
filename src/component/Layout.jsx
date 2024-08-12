@@ -4,6 +4,13 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Navbar } from '../shared'
 import { useSelector } from 'react-redux';
 import { Menu } from 'primereact/menu';
+import ReportIcon from '../assets/icons/Reports.svg'
+import FeedbackIcon from '../assets/icons/FeedbackMenu.svg'
+import CertificateIcon from '../assets/icons/Certificates.svg'
+import ProgramRequestIcon from '../assets/icons/ProgramRequest.svg'
+import FeedIcon from '../assets/icons/Feed.svg'
+import TaskIcon from '../assets/icons/TaskMenu.svg'
+import GoalIcon from '../assets/icons/GoalMenu.svg'
 
 export default function Layout() {
   const navigate = useNavigate();
@@ -25,34 +32,60 @@ export default function Layout() {
 
   const items = [
     {
-      label: 'Tasks',
+      label: <div className='flex gap-4 items-center'>
+        <img src={TaskIcon} alt="TaskIcon" />
+        <p>Task</p>
+      </div>,
       command: () => navigate(role === 'mentee' ? '/mentee-tasks' : '/mentor-tasks')
     },
     {
-      label: 'Goals',
+      label: <div className='flex gap-4 items-center'>
+        <img src={GoalIcon} alt="GoalIcon" />
+        <p>Goal</p>
+      </div>,
       command: () => navigate('/goals')
     },
   ];
 
   const moreitems = [
     {
-      label: 'Reports',
+      label: <div className='flex gap-4 items-center'>
+        <img src={ReportIcon} alt="ReportIcon" />
+        <p>Reports</p>
+      </div>,
       command: () => navigate('/reports')
     },
     {
-      label: 'Feedback',
+      label: <div className='flex gap-4 items-center'>
+        <img src={FeedbackIcon} alt="FeedbackIcon" />
+        <p>Feedback</p>
+      </div>,
       command: () => navigate('/feedback')
     },
     {
-      label: 'Certificates',
+      label: <div className='flex gap-4 items-center'>
+        <img src={CertificateIcon} alt="CertificateIcon" />
+        <p>Certificate</p>
+      </div>,
       command: () => navigate('/certificates')
     },
     {
-      label: 'Program Request',
+      label: <div className='flex gap-4 items-center'>
+        <img src={ProgramRequestIcon} alt="ProgramRequestIcon" />
+        <p>Program Request</p>
+      </div>,
       command: () => navigate('/program-request')
     },
 
-    
+    // {
+    //   label: <div className='flex gap-4 items-center'>
+    //     <img src={FeedIcon} alt="FeedIcon" />
+    //     <p>Feed</p>
+    //   </div>,
+    //   command: () => navigate('/program-request')
+    // },
+
+
   ];
 
   return (
@@ -116,7 +149,7 @@ export default function Layout() {
                     <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
                   </svg>
                 </button>
-                <Menu model={moreitems} popup ref={moreMenu} popupAlignment="right" />
+                <Menu className='custom-menu w-[220px]' model={moreitems} popup ref={moreMenu} popupAlignment="right" />
               </div>
             </div>
           </li>
