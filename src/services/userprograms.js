@@ -206,5 +206,19 @@ export const startProgramTask = createAsyncThunk(
 );
 
 
+export const getProgramTaskDetails = createAsyncThunk(
+    "getProgramTaskDetails",
+    async (taskId) => {
+        const queryString = taskId !== '' ? `?task_id=${taskId}` : ''
+        const taskdetails = await api.get(`program_task_assign/task_submission${queryString}`);
+        if (taskdetails.status === 200 && taskdetails.data) {
+            return taskdetails.data;
+        }
+        return taskdetails;
+    }
+);
+
+
+
 
 export const updateUserProgramInfo = createAction('update/userProgramInfo')

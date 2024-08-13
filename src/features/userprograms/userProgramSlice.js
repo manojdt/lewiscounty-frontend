@@ -10,6 +10,7 @@ import {
   getMentees,
   getProgramCounts,
   getProgramMentees,
+  getProgramTaskDetails,
   getUserPrograms,
   startProgramTask,
   updateProgram,
@@ -44,6 +45,7 @@ const initialState = {
   },
   totalPrograms: 0,
   programdetails: {},
+  taskdetails:{},
   menteeList: [],
   programMenteeList: [],
   menteeJoined : true,
@@ -379,6 +381,30 @@ export const userProgramSlice = createSlice({
         };
       })
       .addCase(startProgramTask.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
+
+
+
+      builder
+      .addCase(getProgramTaskDetails.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(getProgramTaskDetails.fulfilled, (state, action) => {
+        return {
+          ...state,
+          taskdetails: action.payload,
+          loading: false,
+        };
+      })
+      .addCase(getProgramTaskDetails.rejected, (state, action) => {
         return {
           ...state,
           loading: false,

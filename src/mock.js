@@ -102,7 +102,7 @@ function menteesListData(id, name, professional, contact, email, location, attn_
 
 const menteeRowData = () => {
     const data = []
-    for (let a = 1; a <= 100000; a++) {
+    for (let a = 1; a <= 1000000; a++) {
         data.push(menteesListData(a, `Name ${a}`, `Student `, '1234567890', 'John Doe@gmail.com', 'Lorem ipsum dolor sit amet..','Teaching program','Teaching program'))
     }
     return data
