@@ -133,6 +133,7 @@ function TablePaginationActions(props) {
     ) => {
         // onPageChange(event, paginationDetails.paginationModel.page - 1);
         apiRef.current.setPage(paginationDetails.paginationModel.page - 1);
+        apiRef.current.setPageSize(paginationDetails.paginationModel.pageSize)
     };
 
     const handleNextButtonClick = (
@@ -140,10 +141,13 @@ function TablePaginationActions(props) {
     ) => {
         // onPageChange(event, paginationDetails.paginationModel.page + 1);
         apiRef.current.setPage(paginationDetails.paginationModel.page + 1);
+        apiRef.current.setPageSize(paginationDetails.paginationModel.pageSize)
+        
     };
 
     const handlePerPage = (event) => {
         // console.log(event.target.value)
+        console.log('page',event.target.value)
         apiRef.current.setPageSize(event.target.value)
     }
 
@@ -173,7 +177,7 @@ function TablePaginationActions(props) {
                             // disabled={paginationDetails.paginationModel.page
                             //     <= Math.ceil(paginationDetails.rowCount / paginationDetails.paginationModel.pageSize) - 1}
                             className='text-white py-3 px-6 col-span-1'
-                            style={{ background: 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)', borderRadius: '3px', width: '150px' }}>Previous Page</button>
+                            style={{ border: '1px solid rgba(0, 0, 0, 1)', borderRadius: '3px', width: '150px', color: 'rgba(0, 0, 0, 1)' }}>Previous Page</button>
                     }
                     {
                         paginationDetails.paginationModel.pageSize < paginationDetails.rowCount &&

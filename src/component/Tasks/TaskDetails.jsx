@@ -9,10 +9,13 @@ import SuccessTik from '../../assets/images/blue_tik1x.png';
 import { Button } from '../../shared'
 import { useNavigate, useParams } from 'react-router-dom'
 import MuiModal from '../../shared/Modal';
+import { useDispatch } from 'react-redux'
+import { getProgramTaskDetails } from '../../services/userprograms'
 
 
 export const TaskDetails = () => {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const [loading, setLoading] = useState(false)
     const [startTask, setStartTask] = useState(true)
     const params = useParams();
@@ -40,6 +43,10 @@ export const TaskDetails = () => {
             }, 3000)
         }
     }, [loading])
+
+    useEffect(() => {
+        dispatch(getProgramTaskDetails(params.id))
+    },[])
 
     console.log('paaa', params)
     return (
