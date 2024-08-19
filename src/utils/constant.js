@@ -157,7 +157,8 @@ export const programStatus = {
   paused: 'paused',
   completed: 'completed',
   taskassigned: 'taskassigned',
-  taskstarted: 'taskstarted'
+  taskstarted: 'taskstarted',
+  tasksubmitted: 'tasksubmitted'
 }
 
 export const goalStatus = {
@@ -170,6 +171,11 @@ export const goalStatus = {
   complete: 'complete',
   update: 'updated',
   delete: 'deleted',
+}
+
+
+export const reportsStatus = {
+  load: 'loaded',
 }
 
 
@@ -298,7 +304,8 @@ export const pipeUrls = {
   assigntask: '/assign-task',
   assignmentess: '/assign-mentees',
   createprogram: '/create-program',
-  startprogram: '/start-program'
+  startprogram: '/start-program',
+  reports: '/reports'
 }
 
 export const programFilterUrls = {
@@ -411,3 +418,23 @@ export const requestOverview = [{
     status: programActionStatus.inprogress
   }
 ]
+
+export const allowedImagesTypes = ['png', 'jpeg', 'jpg'];
+
+export const allowedDocTypes = ['pdf', 'doc','docx']
+
+export const allowedVideoTypes = ['avi','mp4','mov']
+
+
+export const TaskFileTypes =  [...allowedImagesTypes, ...allowedDocTypes, ...allowedVideoTypes]
+
+export const TaskAllStatus = {
+  yettostart: 'yettostart',
+  start: 'start',
+  submitted: 'submitted',
+  completed: 'completed'
+}
+
+export const TaskStatus = {
+  start: 'In-Progress',
+}

@@ -10,6 +10,7 @@ import { Backdrop, CircularProgress } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateUserProgramInfo } from '../../services/userprograms'
 import api from '../../services/api';
+import { TaskAllStatus } from '../../utils/constant';
 
 
 export default function SkillsSet({ programdetails }) {
@@ -47,11 +48,7 @@ export default function SkillsSet({ programdetails }) {
 
 
     const handleTaskAction = async () => {
-        if (activeTaskDetails.status === 'submit') {
-            navigate(`/submit-task-program/${activeTaskDetails.assign_task.id}`)
-            return
-        }
-        else {
+        if (activeTaskDetails.status === TaskAllStatus.yettostart) {
             setSuccessModal({ loading: true, success: false })
             const startTask = await api.patch('program_task_assign/task_start', { task_id: activeTaskDetails.assign_task.id });
             if (startTask.status === 200 && startTask.data) {
@@ -63,8 +60,9 @@ export default function SkillsSet({ programdetails }) {
                 }, [2000])
             }
         }
-
-
+        else {
+            navigate(`/submit-task-program/${activeTaskDetails.assign_task.id}`)
+        }
     }
 
     useEffect(() => {
@@ -138,7 +136,8 @@ export default function SkillsSet({ programdetails }) {
 
                         <div className='action-btn'>
 
-                            <Button btnName={activeTaskDetails.status === 'submit' ? 'Submit Task' : 'Start Task'} onClick={handleTaskAction} />
+                            <Button btnName={activeTaskDetails.status === TaskAllStatus.start ? 'Submit Task' :
+                                activeTaskDetails.status === TaskAllStatus.yettostart ? 'Start Task' : 'View Task'} onClick={handleTaskAction} />
 
 
                         </div>

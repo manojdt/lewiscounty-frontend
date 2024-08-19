@@ -13,6 +13,7 @@ import {
   getProgramTaskDetails,
   getUserPrograms,
   startProgramTask,
+  submitProgramTaskDetails,
   updateProgram,
   updateUserProgramInfo,
 } from "../../services/userprograms";
@@ -422,6 +423,27 @@ export const userProgramSlice = createSlice({
       })
 
      
+      builder
+      .addCase(submitProgramTaskDetails.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(submitProgramTaskDetails.fulfilled, (state, action) => {
+        return {
+          ...state,
+          status: programStatus.tasksubmitted,
+          loading: false,
+        };
+      })
+      .addCase(submitProgramTaskDetails.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
 
   },
 });

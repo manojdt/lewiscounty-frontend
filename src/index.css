@@ -742,7 +742,7 @@ input[type="range"]::-ms-thumb {
   gap: 10px;
 }
 
-.feed-details .program-feeds .program-user-image{
+.feed-details .program-feeds .program-user-image {
   width: 100px;
 }
 
@@ -751,25 +751,26 @@ input[type="range"]::-ms-thumb {
   margin-bottom: 20px;
 }
 
-.feed-details .feed-info .post-comments .add-comments{
+.feed-details .feed-info .post-comments .add-comments {
   display: flex;
   gap: 30px;
   margin: 30px 0 50px;
 }
 
-.feed-details .feed-info .post-comments .add-comments img{
+.feed-details .feed-info .post-comments .add-comments img {
   width: 50px;
   height: 50px;
   border-radius: 50%;
   object-fit: cover;
 }
 
-.feed-details .feed-info .post-comments .add-comments .comment-input{
+.feed-details .feed-info .post-comments .add-comments .comment-input {
   border-bottom: 1px solid rgba(234, 236, 235, 1);
   width: 100%;
 }
 
-.feed-details .feed-info .post-comments .add-comments .comment-input:focus, .feed-details .feed-info .post-comments .add-comments .comment-input:focus-visible{
+.feed-details .feed-info .post-comments .add-comments .comment-input:focus,
+.feed-details .feed-info .post-comments .add-comments .comment-input:focus-visible {
   border-bottom: 1px solid rgba(234, 236, 235, 1);
   outline: none;
 }
@@ -805,6 +806,33 @@ input[type="range"]::-ms-thumb {
   border-radius: 50%;
   object-fit: cover;
 }
+
+
+.task-uploaded-images-container .task-image-list .image-name {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 250px;
+  white-space: nowrap;
+}
+
+.help-desk-details {
+  padding: 10px 20px;
+}
+
+.help-question-list .toggle-data-list .toggle-data{
+  padding: 10px 0px 10px 20px;
+}
+
+.help-question-list .toggle-data-list .toggle-data .child-question{
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.help-question-list .toggle-data-list .toggle-data .child-answer{
+  font-size: 12px;
+  padding: 10px 0;
+}
+
 
 @media only screen and (min-device-width: 481px) and (max-device-width: 1440px) {
 

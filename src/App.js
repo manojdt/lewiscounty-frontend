@@ -47,11 +47,11 @@ import MentorViewMenteeGoal from "./component/Goals/MentorViewMenteeGoal";
 import Profile from "./component/Profile";
 import EditProfile from "./component/Profile/EditProfile";
 import ProgramRequest from "./component/Programs/ProgramRequest";
-import Help from "./component/Help";
-import Notification from "./component/Notification";
 import NotificationMenu from "./component/Notification/NotificationMenu";
 import Feeds from "./component/Feeds";
 import FeedDetails from "./component/Feeds/FeedDetails";
+import HelpPage from "./component/Help/Help";
+// import CalendarMain from './component/Calendar/CalendarMain';
 
 function App() {
  
@@ -91,6 +91,7 @@ function App() {
         <Route path="/questions" element={<Questions />} />
         <Route element={<Layout />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          {/* <Route path="/calendar" element={<CalendarMain />} /> */}
           <Route path="/programs" element={<Programs />} />
           <Route path="/program-details/:id" element={<ProgramDetails />} />
           <Route path="/program-task/:id" element={<ProgramTask />} />
@@ -107,7 +108,7 @@ function App() {
           <Route path="/edit-profile" element={<EditProfile />} />
           <Route path="/program-data" element={<ProgramsData />} />
           <Route path="/feedback" element={<Feedback />} />
-          <Route path="/help" element={<Help />} />
+          <Route path="/help" element={<HelpPage />} />
           <Route path="/notification" element={<NotificationMenu />} />
           <Route path="/feeds" element={<Feeds />} />
           <Route path="/feed-details/:id" element={<FeedDetails />} />
