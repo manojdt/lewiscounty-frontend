@@ -5,15 +5,14 @@ import { useForm } from 'react-hook-form';
 import { Backdrop, CircularProgress } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { AssignMenteesFields, ReportFields } from '../../utils/formFields'
+import { ReportFields } from '../../utils/formFields'
 import CalendarIcon from '../../assets/images/calender_1x.png'
 import HTMLIcon from '../../assets/images/html1x.png'
 import TextIcon from "../../assets/images/text1x.png";
 
 
 import { Button } from '../../shared';
-import MuiModal from '../../shared/Modal';
-import MuiTable from '../../shared/Table';
+
 import { assignMenteeColumns, assignMenteeRows, MenteeAssignColumns } from '../../mock';
 import DataTable from '../../shared/DataGrid';
 import SuccessTik from '../../assets/images/blue_tik1x.png';
@@ -22,24 +21,27 @@ import { getAllCategories } from '../../services/programInfo';
 
 import { getMentees, getProgramDetails, updateProgram } from '../../services/userprograms';
 import { pipeUrls, programActionStatus } from '../../utils/constant';
-import { Tooltip } from 'primereact/tooltip';
+import { getProgramsByCategoryId } from '../../services/reportsInfo';
+import ToastNotification from '../../shared/Toast';
+
 
 
 
 
 export default function CreateReport() {
     const navigate = useNavigate()
-    const [addMenteeModal, setMentalModal] = useState(false)
-    const [taskSuccess, setTaskSuccess] = useState(false)
+
 
     const params = useParams();
 
     const dispatch = useDispatch()
     const { programdetails, loading: programLoading, error, status, menteeList } = useSelector(state => state.userPrograms)
     const { category, loading: apiLoading } = useSelector(state => state.programInfo)
+    const { categoryPrograms, loading: reportsLoading } = useSelector(state => state.reports)
     const [reportFields, setReportFields] = useState(ReportFields)
     const [dateFormat, setDateFormat] = useState({})
     const [menteeAllList, setAllMenteeList] = useState([])
+    const [notification, setNotification] = useState({ program: false })
 
     const [loading, setLoading] = useState(false)
 
@@ -56,34 +58,16 @@ export default function CreateReport() {
 
     const onSubmit = (data) => {
         console.log(data)
-        dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.assigned }))
+        // dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.assigned }))
         reset()
-        // setLoading(true)
-        // setTaskSuccess(true)
     }
 
-    useEffect(() => {
-        if (status === programActionStatus.assigned) {
-            setTaskSuccess(true)
-            setTimeout(() => {
-                navigate(`${pipeUrls.startprogram}/${programdetails.id}`)
-            }, [3000])
-        }
-    }, [status])
-
-    const handleAddMentee = () => {
-        setMentalModal(true)
-
-        const updateMemberColumns = [...MenteeAssignColumns].map(mcol => {
-            return mcol
-        })
-
-        setUpdatedMemberColumn(updateMemberColumns)
-
+    const getProgramInfo = (categoryId) => {
+        dispatch(getProgramsByCategoryId(categoryId))
     }
 
-    const footerAction = (key) => {
-        setMentalModal(false)
+    const handleClose = () => {
+        setNotification({ program: false })
     }
 
     useEffect(() => {
@@ -101,62 +85,29 @@ export default function CreateReport() {
 
 
     useEffect(() => {
-        if (!Object.keys(programdetails).length) {
-            const programId = params.id;
-            if (programId && programId !== '') {
-                dispatch(getProgramDetails(programId))
-            }
+        if (categoryPrograms.length) {
+            const fields = [...reportFields].map(field => {
+                if (field.name === 'program_name') {
+                    return {
+                        ...field,
+                        options: categoryPrograms
+                    }
+                }
+                return field
+            })
+            setReportFields(fields)
         }
-    }, [params.id])
+
+        if (!categoryPrograms.length && getValues('category') !== '') {
+            setNotification({ program: true })
+        }
+    }, [categoryPrograms])
+
+
 
     useEffect(() => {
-        if (Object.keys(programdetails).length) {
-            console.log('tarttt', new Date(programdetails.start_date))
-            let fieldValue = {
-                category: programdetails.categories.length ? programdetails.categories[0].id : '',
-                program_name: programdetails.program_name,
-                mentor_name: programdetails.mentor_name,
-                start_date: new Date(programdetails.start_date),
-                end_date: programdetails.end_date,
-                duration: programdetails.duration,
-                mentees_list: [],
-                task_details: '',
-                due_date: ''
-            }
-
-            console.log('rest', fieldValue, programdetails)
-
-            reset(fieldValue)
-        }
-    }, [programdetails])
-
-    useEffect(() => {
-        if (!category.length) {
-            dispatch(getAllCategories())
-        }
-        dispatch(getMentees())
-
+        dispatch(getAllCategories())
     }, [])
-
-    const handleAddPopupData = (value) => {
-        if (value.length) {
-            setValue('mentees_list', value)
-            setMentalModal(false)
-            setAllMenteeList(value)
-        }
-    }
-
-    const CustomFooterStatusComponent = (props) => {
-        return (
-            <div className='flex gap-6 justify-center items-center py-4'>
-                <button onClick={() => setMentalModal(false)} className='py-3 px-6 w-[16%]'
-                    style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '3px', color: 'rgba(29, 91, 191, 1)' }}>Cancel</button>
-                <button onClick={() => handleAddPopupData(props.selectedRows)}
-                    className='text-white py-3 px-6 w-[16%]'
-                    style={{ background: 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)', borderRadius: '3px' }}>Add Mentees</button>
-            </div>
-        );
-    }
 
 
     return (
@@ -164,10 +115,12 @@ export default function CreateReport() {
 
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={programLoading || apiLoading || loading}
+                open={reportsLoading || apiLoading}
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
+
+            <ToastNotification openToaster={notification.program} message={'There is no programs found for this category'} handleClose={handleClose} toastType={'error'} />
 
 
             <div className='grid mb-10' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)', borderRadius: '5px' }}>
@@ -192,6 +145,7 @@ export default function CreateReport() {
                                 {
                                     reportFields.map((field, index) => {
                                         const dateField = field.type === 'date' ? register(field.name, field.inputRules) : undefined
+                                        const dropdownField = field.type === 'dropdown' ? register(field.name, field.inputRules) : undefined
                                         return (
                                             <div className={`relative mb-6 ${field.width}`} key={index}>
                                                 <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor={field.label}>
@@ -232,6 +186,11 @@ export default function CreateReport() {
                                                                         borderRadius: '3px'
                                                                     }}
                                                                     disabled={field.disabled}
+                                                                    onChange={(e) => {
+                                                                        // console.log('dateField123', dateField)
+                                                                        dropdownField.onChange(e)
+                                                                        if (field.name === 'category') getProgramInfo(e.target.value)
+                                                                    }}
                                                                 >
                                                                     <option value="">Select</option>
                                                                     {
@@ -287,121 +246,68 @@ export default function CreateReport() {
                                                                     :
                                                                     field.type === 'date' ?
                                                                         <>
-                                                                        <div className='relative input-bg'>
-                                                                            <Calendar
-                                                                                className='calendar-control'
-                                                                                // {...dateField}
-                                                                                {...register(field.name, field.inputRules)}
-                                                                                value={field.value}
-                                                                                // onChange={(e) => {
-                                                                                //     dateField.onChange(e)
-                                                                                //     setDateFormat({ ...dateFormat, [field.name]: e.value })
-                                                                                // }}
-                                                                                disabled={field.disabled}
-                                                                                showTime
-                                                                                hourFormat="12"
-                                                                                dateFormat="dd/mm/yy"
-                                                                                style={{ width: '30%' }}
-                                                                            />
-                                                                            <img className='absolute top-5 right-2' src={CalendarIcon} alt="CalendarIcon" />
-                                                                            
-                                                                        </div>
-                                                                        {errors[field.name] && (
-                                                                            <p className="error" role="alert">
-                                                                                {errors[field.name].message}
-                                                                            </p>
-                                                                        )}
+                                                                            <div className='relative input-bg'>
+                                                                                <Calendar
+                                                                                    className='calendar-control'
+                                                                                    // {...dateField}
+                                                                                    {...register(field.name, field.inputRules)}
+                                                                                    value={field.value}
+                                                                                    // onChange={(e) => {
+                                                                                    //     dateField.onChange(e)
+                                                                                    //     setDateFormat({ ...dateFormat, [field.name]: e.value })
+                                                                                    // }}
+                                                                                    disabled={field.disabled}
+                                                                                    showTime
+                                                                                    hourFormat="12"
+                                                                                    dateFormat="dd/mm/yy"
+                                                                                    style={{ width: '30%' }}
+                                                                                />
+                                                                                <img className='absolute top-5 right-2' src={CalendarIcon} alt="CalendarIcon" />
+
+                                                                            </div>
+                                                                            {errors[field.name] && (
+                                                                                <p className="error" role="alert">
+                                                                                    {errors[field.name].message}
+                                                                                </p>
+                                                                            )}
                                                                         </>
 
                                                                         :
-                                                                        field.type === 'text' ?
-                                                                            <>
-                                                                                <div className='flex justify-between'>
-                                                                                    <div className='input-bg h-[60px] w-[86%] mt-2 flex items-center 
-                                                                                         text-[12px] gap-2 cursor-pointer px-6'
-                                                                                        style={{ borderRadius: '3px' }}>
-
-                                                                                        {
-                                                                                            menteeAllList && menteeAllList.slice(0, 6).map((popupfield, index) => {
-                                                                                                console.log('popupfield', popupfield)
-                                                                                                return (
-                                                                                                    <>
-                                                                                                        <p className='flex items-center gap-1'>
-                                                                                                            <p className='flex items-center px-3 py-3' style={{
-                                                                                                                background: 'rgba(223, 237, 255, 1)', borderRadius: '50%',
-
-                                                                                                            }}></p>
-                                                                                                            {
 
 
-                                                                                                                `${popupfield.first_name} ${popupfield.last_name}`
-                                                                                                            }
-                                                                                                        </p>
-                                                                                                    </>
-                                                                                                )
-                                                                                            })
-                                                                                        }
 
-                                                                                        {
-                                                                                            menteeAllList && menteeAllList?.length > 6 &&
+                                                                        field.type === 'link' ?
 
-                                                                                            <p className='flex items-center gap-1'>
-                                                                                                <p className='text-white flex items-center px-2 py-1' style={{
-                                                                                                    background: 'rgb(29, 91, 191)', borderRadius: '50%',
-
-                                                                                                }}>{menteeAllList.length - 6}</p>
-                                                                                                Others</p>
-
-                                                                                        }
-
-
-                                                                                    </div>
-                                                                                    <button type='button' className='h-[60px] mt-2 w-[13%] text-[14px]'
-                                                                                        style={{ border: '1px dotted rgba(29, 91, 191, 1)', color: 'rgba(29, 91, 191, 1)' }}
-                                                                                        onClick={handleAddMentee}>
-                                                                                        Add Mentees
-                                                                                    </button>
-                                                                                </div>
-                                                                                {errors[field.name] && (
-                                                                                    <p className="error" role="alert">
-                                                                                        {errors[field.name].message}
-                                                                                    </p>
-                                                                                )}
-                                                                            </>
-                                                                            :
-
-                                                                            field.type === 'link' ?
-
-                                                                                <div className='flex justify-between'>
-                                                                                    <div className='input-bg h-[60px] w-full mt-2 flex items-center 
+                                                                            <div className='flex justify-between'>
+                                                                                <div className='input-bg h-[60px] w-full mt-2 flex items-center 
                                                                                                              text-[12px] gap-2 cursor-pointer px-6'
-                                                                                        style={{ borderRadius: '3px' }}>
+                                                                                    style={{ borderRadius: '3px' }}>
 
-                                                                                        {
-                                                                                            programdetails.certifications && programdetails.certifications.map((certification, index) => {
-                                                                                                return (
-                                                                                                    <p className='underline'>
-                                                                                                        {
-                                                                                                            certification.name
-                                                                                                        }
-                                                                                                    </p>
-                                                                                                )
-                                                                                            })
-                                                                                        }
+                                                                                    {
+                                                                                        programdetails.certifications && programdetails.certifications.map((certification, index) => {
+                                                                                            return (
+                                                                                                <p className='underline'>
+                                                                                                    {
+                                                                                                        certification.name
+                                                                                                    }
+                                                                                                </p>
+                                                                                            )
+                                                                                        })
+                                                                                    }
 
-                                                                                        {
-                                                                                            programdetails.learning_materials && programdetails.learning_materials.map((certification, index) => {
-                                                                                                return (
-                                                                                                    <p className='underline'>
-                                                                                                        {
-                                                                                                            certification.name
-                                                                                                        }
-                                                                                                    </p>
-                                                                                                )
-                                                                                            })
-                                                                                        }
+                                                                                    {
+                                                                                        programdetails.learning_materials && programdetails.learning_materials.map((certification, index) => {
+                                                                                            return (
+                                                                                                <p className='underline'>
+                                                                                                    {
+                                                                                                        certification.name
+                                                                                                    }
+                                                                                                </p>
+                                                                                            )
+                                                                                        })
+                                                                                    }
 
-                                                                                        {/* {
+                                                                                    {/* {
                                                                                                     menteeAllList && menteeAllList?.length > 6 &&
 
                                                                                                     <p className='flex items-center gap-1'>
@@ -414,32 +320,32 @@ export default function CreateReport() {
                                                                                                 } */}
 
 
-                                                                                    </div>
-
                                                                                 </div>
+
+                                                                            </div>
+                                                                            :
+
+                                                                            field.type === 'editor' ?
+                                                                                <>
+                                                                                    <div className='flex gap-3'>
+                                                                                        <textarea id="message" rows="4" className={`block p-2.5 input-bg w-[95%] h-[200px] text-sm text-gray-900  rounded-lg border
+                                                                                            focus:visible:outline-none focus:visible:border-none ${field.width === 'width-82' ? 'h-[282px]' : ''}`}
+                                                                                            placeholder={field.placeholder}
+                                                                                            {...register(field.name, field.inputRules)}></textarea>
+                                                                                        <div className='flex flex-col gap-6 items-center justify-center input-bg w-[4%]' style={{ borderRadius: '3px' }}>
+                                                                                            <img src={TextIcon} alt="TextIcon" />
+                                                                                            <img src={HTMLIcon} alt="HTMLIcon" />
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    {errors[field.name] && (
+                                                                                        <p className="error" role="alert">
+                                                                                            {errors[field.name].message}
+                                                                                        </p>
+                                                                                    )}
+                                                                                </>
                                                                                 :
 
-                                                                                field.type === 'editor' ?
-                                                                                    <>
-                                                                                        <div className='flex gap-3'>
-                                                                                            <textarea id="message" rows="4" className={`block p-2.5 input-bg w-[95%] h-[200px] text-sm text-gray-900  rounded-lg border
-                                                                                            focus:visible:outline-none focus:visible:border-none ${field.width === 'width-82' ? 'h-[282px]' : ''}`}
-                                                                                                placeholder={field.placeholder}
-                                                                                                {...register(field.name, field.inputRules)}></textarea>
-                                                                                            <div className='flex flex-col gap-6 items-center justify-center input-bg w-[4%]' style={{ borderRadius: '3px' }}>
-                                                                                                <img src={TextIcon} alt="TextIcon" />
-                                                                                                <img src={HTMLIcon} alt="HTMLIcon" />
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        {errors[field.name] && (
-                                                                                            <p className="error" role="alert">
-                                                                                                {errors[field.name].message}
-                                                                                            </p>
-                                                                                        )}
-                                                                                    </>
-                                                                                    :
-
-                                                                                    null
+                                                                                null
                                                 }
                                             </div>
                                         )
@@ -449,14 +355,14 @@ export default function CreateReport() {
                             <div className="flex gap-6 justify-center align-middle py-16">
                                 <Button btnName='Cancel' btnCls="w-[13%]" btnCategory="secondary" onClick={() => navigate('/reports')} />
                                 <Button btnName='Save To Draft'
-                                    style={{background: 'rgba(29, 91, 191, 1)', color: '#fff'}}
-                                btnCls="w-[13%]" btnCategory="secondary" onClick={() => navigate('/reports')} />
+                                    style={{ background: 'rgba(29, 91, 191, 1)', color: '#fff' }}
+                                    btnCls="w-[13%]" btnCategory="secondary" onClick={() => navigate('/reports')} />
                                 <Button btnType="submit" btnCls="w-[13%]" btnName='Submit' btnCategory="primary" />
                             </div>
                         </form>
 
 
-                        
+
                     </div>
                 </div>
             </div>

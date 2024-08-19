@@ -4,7 +4,9 @@ import {
 } from "@reduxjs/toolkit";
 
 import api from "./api";
-import { programActionStatus } from "../utils/constant";
+import {
+    programActionStatus
+} from "../utils/constant";
 
 // Get All Programs
 export const getUserPrograms = createAsyncThunk(
@@ -32,7 +34,7 @@ export const getUserPrograms = createAsyncThunk(
 export const updateProgram = createAsyncThunk(
     "updateProgram",
     async (data) => {
-        console.log('data',data)
+        console.log('data', data)
         const updateUserProgram = await api.post("update_program", data);
         if (updateUserProgram.status === 200 && updateUserProgram.data) {
             console.log('updateUserProgram', updateUserProgram)
@@ -45,7 +47,7 @@ export const updateProgram = createAsyncThunk(
             }
             return {
                 programdetails: updateUserProgram.data,
-                status 
+                status
             };
         }
         return updateUserProgram;
@@ -144,8 +146,8 @@ export const getMenteePrograms = createAsyncThunk(
         if (getUserProgram.status === 200 && getUserProgram.data) {
             const response = {
                 ...getUserProgram.data,
-                filterType: queryString?.type || '',
-                filterValue: queryString?.value || ''
+                filterType: queryString ?.type || '',
+                filterValue: queryString ?.value || ''
             }
             console.log('response', response)
             return response;
@@ -217,6 +219,25 @@ export const getProgramTaskDetails = createAsyncThunk(
         return taskdetails;
     }
 );
+
+
+export const submitProgramTaskDetails = createAsyncThunk(
+    "submitProgramTaskDetails",
+    async (data) => {
+
+        api.interceptors.request.use(function (config) {
+            config.headers["Content-Type"] = "multipart/form-data";
+            return config;
+        });
+       
+        const submitTask = await api.post("program_task_assign/task_submission", data);
+        if (submitTask.status === 201 && submitTask.data) {
+            return submitTask.data;
+        }
+        return submitTask;
+    }
+);
+
 
 
 

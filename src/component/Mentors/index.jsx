@@ -1,6 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+
 import DataTable from '../../shared/DataGrid';
 import FilterIcon from '../../assets/icons/Filter.svg';
 import StarIcon from '../../assets/icons/filledStar.svg'
@@ -12,14 +15,21 @@ import FollowIcon from '../../assets/images/connect1x.png'
 
 import Dropdown from '../../shared/Dropdown';
 import { mentorColumns, mentorRows } from '../../mock';
-import { useNavigate } from 'react-router-dom';
+import { getMyMentors } from '../../services/userList';
+import { myMentorColumns } from '../../utils/formFields';
+import { Backdrop, CircularProgress } from '@mui/material';
+
 
 export const Mentors = () => {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const [anchorEl, setAnchorEl] = useState(null);
+
+    const { mentorList, loading } = useSelector(state => state.userList)
 
     const [mentorType, setMentorType] = useState('mymentor')
     const [requestTab, setRequestTab] = useState('all-request')
+    const [selectedItem, setSelectedItem] = useState({})
 
     const mentorOption = [
         {
@@ -60,12 +70,22 @@ export const Mentors = () => {
         setAnchorEl(null);
     };
 
-    const handleClick = (event) => {
+    const handleClick = (event, row) => {
+        setSelectedItem(row)
         setAnchorEl(event.currentTarget);
     };
 
     const mentorColumn = [
-        ...mentorColumns,
+        {
+            field: 'name',
+            headerName: 'Name',
+            flex: 1,
+            id: 0,
+            renderCell: (params) => {
+                return <div className='flex gap-2 items-center'>{params.row.first_name}{' '} {params.row.last_name}</div>
+            }
+        },
+        ...myMentorColumns,
         {
             field: 'ratings',
             headerName: 'Ratings',
@@ -83,7 +103,7 @@ export const Mentors = () => {
             renderCell: (params) => {
                 console.log('params', params)
                 return <>
-                    <div className='cursor-pointer flex items-center h-full' onClick={handleClick}>
+                    <div className='cursor-pointer flex items-center h-full' onClick={(event) => handleClick(event, params.row)}>
                         <img src={MoreIcon} alt='MoreIcon' />
                     </div>
                     <Menu
@@ -95,7 +115,7 @@ export const Mentors = () => {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
-                        <MenuItem onClick={() => navigate('/mentor-details/1')} className='!text-[12px]'>
+                        <MenuItem onClick={() => navigate(`/mentor-details/${selectedItem.id}`)} className='!text-[12px]'>
                             <img src={ViewIcon} alt="ViewIcon" className='pr-3 w-[30px]' />
                             View
                         </MenuItem>
@@ -115,8 +135,18 @@ export const Mentors = () => {
 
     const handleTab = (key) => setRequestTab(key)
 
+    useEffect(() => {
+        dispatch(getMyMentors())
+    }, [])
+
     return (
         <div className="px-9 py-9">
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={loading}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
             <div className='px-3 py-5' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
                 <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
                     <div className='flex gap-5 items-center '>
@@ -162,7 +192,7 @@ export const Mentors = () => {
                         </div>
                     }
 
-                    <DataTable rows={mentorRows} columns={mentorColumn} hideCheckbox />
+                    <DataTable rows={mentorList} columns={mentorColumn} hideCheckbox />
 
                 </div>
             </div>

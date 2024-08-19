@@ -6,13 +6,19 @@ import userReducer from "../features/user/userSlice";
 import programReducer from "../features/program/programSlice";
 import userProgramReducer from "../features/userprograms/userProgramSlice";
 import goalsReducer from "../features/goals/goalsSlice";
+import reportsReducer from "../features/reports/reportsSlice";
+import helpReducer from "../features/help/helpSlice";
+import userListReducer from "../features/userList/userListSlice";
 
 
 const combinedReducer = combineReducers({
   userInfo: userReducer,
   programInfo: programReducer,
   userPrograms: userProgramReducer,
-  goals: goalsReducer
+  goals: goalsReducer,
+  reports: reportsReducer,
+  help: helpReducer,
+  userList: userListReducer
 });
 
 const rootReducer = (state, action) => {

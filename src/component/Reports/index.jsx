@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Menu from '@mui/material/Menu';
-import { Backdrop } from '@mui/material';
+import { Backdrop, CircularProgress } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import DataTable from '../../shared/DataGrid';
 import MoreIcon from '../../assets/icons/moreIcon.svg'
@@ -16,34 +16,40 @@ import OverDeleteIcon from '../../assets/images/delete_1x.png'
 import CancelIcon from '../../assets/images/cancel1x.png'
 import { menteeColumns, menteeRow } from '../../mock';
 import { Button } from '../../shared';
+import { getAllReports } from '../../services/reportsInfo';
+import { useDispatch, useSelector } from 'react-redux';
+import { goalDataStatus, goalStatusColor, pipeUrls } from '../../utils/constant';
+import { reportColumns } from '../../utils/formFields';
 
 
 
 const Reports = () => {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const { allreports, loading } = useSelector(state => state.reports)
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const [selectedRows, setSelectedRows] = useState([])
     const [deleteModal, setDeleteModal] = useState(false)
-    const [requestTab, setRequestTab] = useState('all-reports')
-
+    const [requestTab, setRequestTab] = useState('all')
+    const [searchParams] = useSearchParams();
 
     const requestBtns = [
         {
             name: 'All Reports',
-            key: 'all-reports'
+            key: 'all'
         },
         {
             name: 'Pending Reports',
-            key: 'pending-reports'
+            key: 'pending'
         },
         {
             name: 'Completed',
-            key: 'completed'
+            key: 'accept'
         },
         {
             name: 'Rejected',
-            key: 'rejected'
+            key: 'cancel'
         },
         {
             name: 'Draft',
@@ -59,13 +65,29 @@ const Reports = () => {
         setAnchorEl(event.currentTarget);
     };
 
-    const menteeColumn = [
-        ...menteeColumns,
+    const reportColumn = [
+        ...reportColumns,
+        {
+            field: 'status',
+            headerName: 'Status',
+            flex: 1,
+            id: 8,
+            renderCell: (params) => {
+                return <>
+                    <div className='cursor-pointer flex items-center h-full relative'>
+                        <span className='w-[80px] flex justify-center h-[30px] px-7'
+                           >
+                            {params.row.goal_status}
+                        </span>
+                    </div>
+                </>
+            }
+        },
         {
             field: 'action',
             headerName: 'Action',
             flex: 1,
-            id: 4,
+            id: 9,
             renderCell: (params) => {
                 console.log('params', params)
                 return <>
@@ -107,7 +129,14 @@ const Reports = () => {
 
     const title = requestBtns.find(option => option.key === requestTab)?.name || ''
 
-    const handleTab = (key) => setRequestTab(key)
+    const handleTab = (key) => {
+        let typeString = `?type=${key}`
+        if(key === 'all'){
+            typeString = ''
+        }
+        navigate(`${pipeUrls.reports}${typeString}`)
+        setRequestTab(key)
+    }
 
     const handleSelectedRow = (row) => {
         setSelectedRows(row)
@@ -118,47 +147,70 @@ const Reports = () => {
         setDeleteModal(true)
     }
 
+    useEffect(() => {
+        console.log('searchParams', searchParams)
+        const filterType = searchParams.get("type");
+
+        let query = ''
+        if (filterType && filterType !== '') {
+            query = filterType
+        }
+        dispatch(getAllReports(query));
+    }, [searchParams])
+
+
     return (
         <div className="reports px-9 py-9">
 
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={deleteModal}
+                open={deleteModal || loading}
             >
-                <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
+                {
+                    deleteModal &&
 
-                    <div style={{ border: '1px solid rgba(229, 0, 39, 1)', borderRadius: '15px' }} className='relative flex flex-col gap-2 justify-center 
+                    <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
+
+                        <div style={{ border: '1px solid rgba(229, 0, 39, 1)', borderRadius: '15px' }} className='relative flex flex-col gap-2 justify-center 
                         items-center py-14 px-16'>
-                            
-                        <img className='absolute top-2 right-3 cursor-pointer' onClick={() => setDeleteModal(false)}
-                        src={CancelIcon} alt="CancelIcon" />
 
-                        <img className='w-[50px]' src={OverDeleteIcon} alt="OverDeleteIcon" />
+                            <img className='absolute top-2 right-3 cursor-pointer' onClick={() => setDeleteModal(false)}
+                                src={CancelIcon} alt="CancelIcon" />
+
+                            <img className='w-[50px]' src={OverDeleteIcon} alt="OverDeleteIcon" />
 
 
-                        <div className='py-5 mb-3'>
-                            <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 600, fontSize: '18px' }}>
-                                Are you sure want to delete this?</p>
-                        </div>
-                        <div className='flex justify-center'>
-                            <div className="flex gap-6 justify-center align-middle">
-                                <button style={{ background: 'rgba(229, 0, 39, 1)', color: '#fff', borderRadius : '3px',
-                                    width: '130px', padding: '13px'
-                                 }} 
-                                    onClick={() => setDeleteModal(false)} >
-                                    No
-                                </button>
-                                <button style={{ border: '1px solid rgba(229, 0, 39, 1)', color: 'rgba(229, 0, 39, 1)', borderRadius : '3px',
-                                     width: '130px', padding: '13px'
-                                 }} 
-                                    onClick={() => setDeleteModal(false)} >
-                                    Yes
-                                </button>
+                            <div className='py-5 mb-3'>
+                                <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 600, fontSize: '18px' }}>
+                                    Are you sure want to delete this?</p>
+                            </div>
+                            <div className='flex justify-center'>
+                                <div className="flex gap-6 justify-center align-middle">
+                                    <button style={{
+                                        background: 'rgba(229, 0, 39, 1)', color: '#fff', borderRadius: '3px',
+                                        width: '130px', padding: '13px'
+                                    }}
+                                        onClick={() => setDeleteModal(false)} >
+                                        No
+                                    </button>
+                                    <button style={{
+                                        border: '1px solid rgba(229, 0, 39, 1)', color: 'rgba(229, 0, 39, 1)', borderRadius: '3px',
+                                        width: '130px', padding: '13px'
+                                    }}
+                                        onClick={() => setDeleteModal(false)} >
+                                        Yes
+                                    </button>
 
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                }
+
+                {
+                    loading && <CircularProgress color="inherit" />
+                }
+
 
             </Backdrop>
 
@@ -223,7 +275,7 @@ const Reports = () => {
                                 </div>
                             </div>
                         </div>
-                        <DataTable rows={menteeRow} columns={menteeColumn} handleSelectedRow={handleSelectedRow} />
+                        <DataTable rows={allreports} columns={reportColumn} handleSelectedRow={handleSelectedRow} />
                     </div>
 
                 </div>

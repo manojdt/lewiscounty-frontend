@@ -960,27 +960,27 @@ export const MenteeLongTermFields = [{
 ];
 
 export const MenteeAdditionalFields = [{
-  type: "input",
-  name: "additional_information",
-  fieldtype: "text",
-  label: "Is there any additional information you would like to share that could help in matching you with a mentor?",
-  placeholder: "Is there any additional information you would like to share that could help in matching you with a mentor",
-  inputRules: {
-    required: "This field is required",
+    type: "input",
+    name: "additional_information",
+    fieldtype: "text",
+    label: "Is there any additional information you would like to share that could help in matching you with a mentor?",
+    placeholder: "Is there any additional information you would like to share that could help in matching you with a mentor",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: false,
   },
-  size: false,
-},
-{
-  type: "input",
-  name: "request_need_mentor_to_know",
-  fieldtype: "text",
-  label: "How do you plan to give back to your community or field in the future?",
-  placeholder: "You plan to give back to your community or field in the future",
-  inputRules: {
-    required: "This field is required",
-  },
-  size: false,
-}
+  {
+    type: "input",
+    name: "request_need_mentor_to_know",
+    fieldtype: "text",
+    label: "How do you plan to give back to your community or field in the future?",
+    placeholder: "You plan to give back to your community or field in the future",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: false,
+  }
 ];
 
 export const MenteeStepFormFields = [
@@ -1453,13 +1453,18 @@ export const AssignMenteesFields = [{
     },
   },
   {
-    type: "link",
-    name: "reference_link",
+    type: "input",
+    name: "reference_links",
     fieldtype: "text",
-    label: "Reference Link",
+    label: "Reference Links",
+    placeholder: "Enter Reference link with comma(,) seperators",
+    inputRules: {
+      required: "This field is required",
+    },
     width: 'w-full',
-    disabled: true
   },
+
+
   {
     type: "input",
     name: "task_name",
@@ -1505,15 +1510,7 @@ export const ReportFields = [{
     inputRules: {
       required: "This field is required",
     },
-    options: [{
-        id: "yes",
-        name: "Category 1"
-      },
-      {
-        id: "no",
-        name: "Category 2"
-      },
-    ],
+    options: [],
     width: 'width-32',
   },
   {
@@ -1524,19 +1521,7 @@ export const ReportFields = [{
     inputRules: {
       required: "This field is required",
     },
-    options: [{
-        id: "program1",
-        name: "Program 1"
-      },
-      {
-        id: "program2",
-        name: "Program 2"
-      },
-      {
-        id: "program3",
-        name: "Program 3"
-      },
-    ],
+    options: [],
     width: 'width-32',
   },
   {
@@ -1547,19 +1532,7 @@ export const ReportFields = [{
     inputRules: {
       required: "This field is required",
     },
-    options: [{
-        id: "program1",
-        name: "Mentor 1"
-      },
-      {
-        id: "program2",
-        name: "Mentor 2"
-      },
-      {
-        id: "program3",
-        name: "Mentor 3"
-      },
-    ],
+    options: [],
     width: 'width-32',
   },
   {
@@ -1570,19 +1543,7 @@ export const ReportFields = [{
     inputRules: {
       required: "This field is required",
     },
-    options: [{
-        id: "program1",
-        name: "Mentor 1"
-      },
-      {
-        id: "program2",
-        name: "Mentor 2"
-      },
-      {
-        id: "program3",
-        name: "Mentor 3"
-      },
-    ],
+    options: [],
     width: 'width-32',
   },
   {
@@ -1613,19 +1574,18 @@ export const ReportFields = [{
     inputRules: {
       required: "This field is required",
     },
-    options: [{
-        id: "program1",
-        name: "Mentee 1"
-      },
-      {
-        id: "program2",
-        name: "Mentee 2"
-      },
-      {
-        id: "program3",
-        name: "Mentee 3"
-      },
-    ],
+    options: [],
+    width: 'w-full',
+  },
+  {
+    type: "input",
+    name: "task_name",
+    fieldtype: "text",
+    label: "Report Name",
+    placeholder: "Report Name",
+    inputRules: {
+      required: "This field is required",
+    },
     width: 'w-full',
   },
   {
@@ -1642,106 +1602,198 @@ export const ReportFields = [{
 ];
 
 
-export const EditProfileFields = [
-{
-  type: "input",
-  name: "name",
-  fieldtype: "text",
-  label: "Name",
-  placeholder: "Enter Name",
-  inputRules: {
-    required: "This field is required",
+export const EditProfileFields = [{
+    type: "input",
+    name: "name",
+    fieldtype: "text",
+    label: "Name",
+    placeholder: "Enter Name",
+    inputRules: {
+      required: "This field is required",
+    },
+    width: 'width-49',
   },
-  width: 'width-49',
+  {
+    type: "input",
+    name: "position",
+    fieldtype: "text",
+    label: "Postion",
+    placeholder: "Enter Postion",
+    inputRules: {
+      required: "This field is required",
+    },
+    width: 'width-49',
+  },
+  {
+    type: "textbox",
+    name: "about_bio",
+    label: "Professional Bio",
+    placeholder: "Enter Professional Bio",
+    inputRules: {
+      required: "This field is required",
+    },
+    width: 'w-full',
+  },
+  {
+    type: "input",
+    name: "link",
+    fieldtype: "text",
+    label: "Link",
+    placeholder: "Enter Link",
+    inputRules: {
+      required: "This field is required",
+    },
+    width: 'width-49',
+  },
+  {
+    type: "input",
+    name: "email",
+    fieldtype: "text",
+    label: "Email",
+    placeholder: "Enter Email",
+    inputRules: {
+      required: "This field is required",
+    },
+    width: 'width-49',
+  },
+  {
+    type: "input",
+    name: "phone_number",
+    fieldtype: "number",
+    label: "Phone Number",
+    placeholder: "Enter Phone Number",
+    inputRules: {
+      required: "This field is required",
+    },
+    width: 'width-49',
+  },
+  {
+    type: "input",
+    name: "location",
+    fieldtype: "text",
+    label: "Location",
+    placeholder: "Enter Location",
+    inputRules: {
+      required: "This field is required",
+    },
+    width: 'width-49',
+    icon: 'location'
+  },
+  {
+    type: "input",
+    name: "address",
+    fieldtype: "text",
+    label: "Address",
+    placeholder: "Enter Address",
+    inputRules: {
+      required: "This field is required",
+    },
+    width: 'w-full',
+  },
+  {
+    type: "logo",
+    name: "logo",
+    fieldtype: "text",
+    label: "Social Media",
+    placeholder: "Enter Address",
+    inputRules: {
+      required: "This field is required",
+    },
+    width: 'w-full',
+  }
+
+
+];
+
+
+
+
+
+export const reportColumns = [{
+    field: 'category_name',
+    headerName: 'Category',
+    flex: 1,
+    id: 0,
+  },
+  {
+    field: 'program_name',
+    headerName: 'Program Name',
+    flex: 1,
+    id: 1,
+  },
+  {
+    field: 'participated_mentees_count',
+    headerName: 'Mentees',
+    flex: 1,
+    id: 2,
+  }, {
+    field: 'report_name',
+    headerName: 'Report',
+    flex: 1,
+    id: 3,
+  },
+  {
+    field: 'created_at',
+    headerName: 'Create Time/ Date',
+    flex: 1,
+    id: 4,
+  }, 
+  {
+    field: 'approved_date',
+    headerName: 'Approved Time/ Date',
+    flex: 1,
+    id: 5,
+  },
+  {
+    field: 'approver',
+    headerName: 'Approved by',
+    flex: 1,
+    id: 6,
+  },
+  {
+    field: 'approved_date',
+    headerName: 'Rejected Time/ Date',
+    flex: 1,
+    id: 5,
+  },
+  {
+    field: 'rejecter',
+    headerName: 'Rejected by',
+    flex: 1,
+    id: 6,
+  },
+  {
+    field: 'file',
+    headerName: 'File',
+    flex: 1,
+    id: 7,
+  },
+];
+
+
+
+export const myMentorColumns = [
+{
+  field: 'designation',
+  headerName: 'Designation',
+  flex: 1,
+  id: 1,
 },
 {
-  type: "input",
-  name: "position",
-  fieldtype: "text",
-  label: "Postion",
-  placeholder: "Enter Postion",
-  inputRules: {
-    required: "This field is required",
-  },
-  width: 'width-49',
+  field: 'skills',
+  headerName: 'Skills',
+  flex: 1,
+  id: 2,
+}, {
+  field: 'email',
+  headerName: 'Email',
+  flex: 1,
+  id: 3,
 },
 {
-  type: "textbox",
-  name: "about_bio",
-  label: "Professional Bio",
-  placeholder: "Enter Professional Bio",
-  inputRules: {
-    required: "This field is required",
-  },
-  width: 'w-full',
-},
-{
-  type: "input",
-  name: "link",
-  fieldtype: "text",
-  label: "Link",
-  placeholder: "Enter Link",
-  inputRules: {
-    required: "This field is required",
-  },
-  width: 'width-49',
-},
-{
-  type: "input",
-  name: "email",
-  fieldtype: "text",
-  label: "Email",
-  placeholder: "Enter Email",
-  inputRules: {
-    required: "This field is required",
-  },
-  width: 'width-49',
-},
-{
-  type: "input",
-  name: "phone_number",
-  fieldtype: "number",
-  label: "Phone Number",
-  placeholder: "Enter Phone Number",
-  inputRules: {
-    required: "This field is required",
-  },
-  width: 'width-49',
-},
-{
-  type: "input",
-  name: "location",
-  fieldtype: "text",
-  label: "Location",
-  placeholder: "Enter Location",
-  inputRules: {
-    required: "This field is required",
-  },
-  width: 'width-49',
-  icon: 'location'
-},
-{
-  type: "input",
-  name: "address",
-  fieldtype: "text",
-  label: "Address",
-  placeholder: "Enter Address",
-  inputRules: {
-    required: "This field is required",
-  },
-  width: 'w-full',
-},
-{
-  type: "logo",
-  name: "logo",
-  fieldtype: "text",
-  label: "Social Media",
-  placeholder: "Enter Address",
-  inputRules: {
-    required: "This field is required",
-  },
-  width: 'w-full',
+  field: 'location',
+  headerName: 'Location',
+  flex: 1,
+  id: 4,
 }
-
-
 ];

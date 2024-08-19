@@ -275,7 +275,7 @@ export default function AssignMentees() {
                                                                         type={field.fieldtype}
                                                                         className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none 
                                                                     focus-visible:outline-none text-[14px] h-[60px]"
-                                                                        // placeholder={field.placeholder}
+                                                                        placeholder={field.placeholder}
                                                                         style={{
                                                                             color: "#232323",
                                                                             borderRadius: '3px'
