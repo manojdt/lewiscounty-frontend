@@ -9,7 +9,7 @@ import api from "./api";
 export const getHelpFAQ = createAsyncThunk(
     "getHelpFAQ",
     async () => {
-        const helpFAQData = await api.get('/profile/help_desk_faq');
+        const helpFAQData = await api.get('/profile/help_desk_faq/');
         if (helpFAQData.status === 200 && helpFAQData.data) {
             return helpFAQData.data;
         }
@@ -20,7 +20,7 @@ export const getHelpFAQ = createAsyncThunk(
 export const getHelpContact = createAsyncThunk(
     "getHelpContact",
     async () => {
-        const helpContactData = await api.get('/profile/help_desk_contact');
+        const helpContactData = await api.get('/profile/help_desk_contact/');
         if (helpContactData.status === 200 && helpContactData.data) {
             return helpContactData.data;
         }

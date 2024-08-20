@@ -115,12 +115,12 @@ export default function HelpPage() {
                                                 {
                                                     activeQuestion === 'contacts' &&
 
-                                                    contactChildrensData.map((contactChildrenData, index) =>
-                                                        <div className='toggle-data' key={index} style={{ borderBottom: childrensData.length === (parseInt(index) + 1) ? 'none' : '1px solid rgba(188, 188, 188, 1)' }}>
+                                                    helpContact.map((contactChildrenData, index) =>
+                                                        <div className='toggle-data' key={index} style={{ borderBottom: helpContact.length === (parseInt(index) + 1) ? 'none' : '1px solid rgba(188, 188, 188, 1)' }}>
                                                             <div className='flex justify-between items-center pt-4 pb-2'>
                                                                 <div className='child-question'>
-                                                                    {contactChildrenData.text1}
-                                                                    <span className='cursor-pointer underline'>{contactChildrenData.text2}</span>
+                                                                    {contactChildrenData.title}
+                                                                    <span className='cursor-pointer underline'><a href={`mailto:${contactChildrenData.email}`} className='pl-1'>{contactChildrenData.display_content}</a></span>
                                                                 </div>
 
                                                             </div>
@@ -131,17 +131,17 @@ export default function HelpPage() {
                                                 {
 
                                                     activeQuestion === 'faq' &&
-                                                    childrensData.map((childrenData, index) =>
-                                                        <div className='toggle-data' key={index} style={{ borderBottom: childrensData.length === (parseInt(index) + 1) ? 'none' : '1px solid rgba(188, 188, 188, 1)' }}>
+                                                    helpFAQ.map((childrenData, index) =>
+                                                        <div className='toggle-data' key={index} style={{ borderBottom: helpFAQ.length === (parseInt(index) + 1) ? 'none' : '1px solid rgba(188, 188, 188, 1)' }}>
                                                             <div className='flex justify-between items-center pt-4 pb-2'>
-                                                                <div className='child-question'>{childrenData.question}</div>
-                                                                <img className='w-[20px] cursor-pointer' src={childrenData.key !== activeChildren ? ArrowDownIcon : ArrowUpIcon} alt="Icon" onClick={() => handleChildrenData(childrenData.key)} />
+                                                                <div className='child-question'>{childrenData.title}</div>
+                                                                <img className='w-[20px] cursor-pointer' src={childrenData.id !== activeChildren ? ArrowDownIcon : ArrowUpIcon} alt="Icon" onClick={() => handleChildrenData(childrenData.id)} />
                                                             </div>
                                                             {
-                                                                childrenData.key === activeChildren &&
+                                                                childrenData.id === activeChildren &&
 
                                                                 <div className='text-[12px] child-answer'>
-                                                                    {childrenData.answer}
+                                                                    {childrenData.description}
                                                                 </div>
                                                             }
 
