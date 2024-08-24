@@ -147,35 +147,7 @@ export default function Months({
                   </div>
                 </a>
               </div>
-              {/* {showDetailModal === index && (
-                <AppointmentDetail_Modal
-                  showPreview={showDetailModal === index}
-                  toggleModal={() => toggleDetailModal(null)}
-                  event={event}
-                  toggleEdit={() => {
-                    setEditEvent(index);
-                    setViewEvent(null);
-                  }}
-                  toggleView={() => {
-                    setEditEvent(null);
-                    setViewEvent(index);
-                  }}
-                  deleteAppointment={handleDeleteAppointment}
-                />
-              )} */}
-              {/* <AddAppointment
-                show={showAppointment}
-                toggleModal={() => {
-                  setViewEvent(null);
-                  setEditEvent(null);
-                }}
-                setShowAlert={null}
-                fetchEvents={fetchEvents}
-                appointmentDetail={event}
-                appointmentId={event.id}
-                isUpdate={editEvent === index}
-                isView={viewEvent === index}
-              /> */}
+            
             </>
           );
         })}

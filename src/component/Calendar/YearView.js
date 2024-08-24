@@ -7,6 +7,7 @@ export default function YearView({
   savedEvents,
   fetchEvents,
   deleteAppointment,
+  newData
 }) {
   const monthsOfYear = getYearMonths(currentDate);
   return (
@@ -20,6 +21,7 @@ export default function YearView({
               savedEvents={savedEvents}
               fetchEvents={fetchEvents}
               deleteAppointment={deleteAppointment}
+              newData={newData}
             />
           </>
         );

@@ -8,6 +8,7 @@ export default function Week({
   savedEvents,
   fetchEvents,
   deleteAppointment,
+  newData
 }) {
   const week = getWeek(currentDate);
 
@@ -29,6 +30,7 @@ export default function Week({
               savedEvents={savedEvents}
               deleteAppointment={deleteAppointment}
               isWeek
+              newData={newData}
             />
           ))}
         </React.Fragment>

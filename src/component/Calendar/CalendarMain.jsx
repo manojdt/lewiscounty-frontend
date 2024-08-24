@@ -11,24 +11,22 @@ import BackArrowIcon from "../../assets/icons/back-arrow.svg";
 // } from "../utils";
 import Month from "./month";
 import CalendarHeader from "./calendarheader";
-// import AddAppointment from "./addappointment";
-// import AlertSuccess from "../common/AlertSuccess";
-// import apiURL from "../.././apiConfig";
+
 import Week from "./week";
 import YearView from "./YearView";
 import TodayView from "./TodayView";
 import useAppointments from "../../hooks/useAppointments";
-// import { PageHeader } from "../ClientDirectory";
+
 import {
   Link,
   useNavigate,
   useLocation,
   useSearchParams,
 } from "react-router-dom";
-// import { Tooltip } from "react-bootstrap";
 
-const CalendarMain = ({title = 'Calendar', addSection =  true, events }) => {
-  // console.table(getMonth(3));
+
+const CalendarMain = ({ title = 'Calendar', addSection = true, events }) => {
+
   const navigate = useNavigate();
 
   const CALENDAR_VIEWS = ["Today", "Week", "Month", "Year", "day"];
@@ -164,7 +162,7 @@ const CalendarMain = ({title = 'Calendar', addSection =  true, events }) => {
       "start_time": "2024-08-05T09:34:00+05:30",
       "duration": "00:00:30",
       "description": "test",
-      "linked_encounter_notes": [ ],
+      "linked_encounter_notes": [],
       "google_calendar_event_id": null,
       "created_at": "2024-08-11T21:04:18.566006+05:30",
       "changed_at": "2024-08-11T21:04:18.566026+05:30",
@@ -178,33 +176,33 @@ const CalendarMain = ({title = 'Calendar', addSection =  true, events }) => {
         615
       ]
     },
-   
+
   ]
 
 
 
   const NewData = [
     {
-        "id": 2,
-        "title": "Interview title 1",
-        "date": "2024-08-05",
-        "date_category": "do_not_repeat",
-        "start": "16:00:00",
-        "end": "18:00:00",
-        "notification_time": 10,
-        "notification_type": "minutes",
-        "guests": [
-            "guest_1@gmail.com",
-            "guest_2@gmail.com",
-            "guest_3@gmail.com",
-            "rohit0@dataterrain.com"
-        ],
-        "attendees": [
-            "mentee_1@gmail.com",
-            "mentee_2@gmail.com",
-            "mentee_3@gmail.com"
-        ],
-        "meet": "https://meet.google.com/gsx-jgva-uus"
+      "id": 2,
+      "title": "Interview title 1",
+      "date": "2024-08-05",
+      "date_category": "do_not_repeat",
+      "start": "16:00:00",
+      "end": "18:00:00",
+      "notification_time": 10,
+      "notification_type": "minutes",
+      "guests": [
+        "guest_1@gmail.com",
+        "guest_2@gmail.com",
+        "guest_3@gmail.com",
+        "rohit0@dataterrain.com"
+      ],
+      "attendees": [
+        "mentee_1@gmail.com",
+        "mentee_2@gmail.com",
+        "mentee_3@gmail.com"
+      ],
+      "meet": "https://meet.google.com/gsx-jgva-uus"
     },
     {
       "id": 2,
@@ -216,41 +214,41 @@ const CalendarMain = ({title = 'Calendar', addSection =  true, events }) => {
       "notification_time": 10,
       "notification_type": "minutes",
       "guests": [
-          "guest_1@gmail.com",
-          "guest_2@gmail.com",
-          "guest_3@gmail.com",
-          "rohit0@dataterrain.com"
-      ],
-      "attendees": [
-          "mentee_1@gmail.com",
-          "mentee_2@gmail.com",
-          "mentee_3@gmail.com"
-      ],
-      "meet": "https://meet.google.com/gsx-jgva-uus"
-  },
-  {
-    "id": 3,
-    "title": "Interview title 3",
-    "date": "2024-08-27",
-    "date_category": "do_not_repeat",
-    "start": "16:00:00",
-    "end": "18:00:00",
-    "notification_time": 10,
-    "notification_type": "minutes",
-    "guests": [
         "guest_1@gmail.com",
         "guest_2@gmail.com",
         "guest_3@gmail.com",
         "rohit0@dataterrain.com"
-    ],
-    "attendees": [
+      ],
+      "attendees": [
         "mentee_1@gmail.com",
         "mentee_2@gmail.com",
         "mentee_3@gmail.com"
-    ],
-    "meet": "https://meet.google.com/gsx-jgva-uus"
-}
-]
+      ],
+      "meet": "https://meet.google.com/gsx-jgva-uus"
+    },
+    {
+      "id": 3,
+      "title": "Interview title 3",
+      "date": "2024-08-27",
+      "date_category": "do_not_repeat",
+      "start": "16:00:00",
+      "end": "18:00:00",
+      "notification_time": 10,
+      "notification_type": "minutes",
+      "guests": [
+        "guest_1@gmail.com",
+        "guest_2@gmail.com",
+        "guest_3@gmail.com",
+        "rohit0@dataterrain.com"
+      ],
+      "attendees": [
+        "mentee_1@gmail.com",
+        "mentee_2@gmail.com",
+        "mentee_3@gmail.com"
+      ],
+      "meet": "https://meet.google.com/gsx-jgva-uus"
+    }
+  ]
 
   const renderCalendar = () => {
 
@@ -263,6 +261,7 @@ const CalendarMain = ({title = 'Calendar', addSection =  true, events }) => {
             savedEvents={Data}
             fetchEvents={fetchAppointments}
             deleteAppointment={deleteAppointment}
+            newData={events}
           />
         );
       case "Week":
@@ -272,13 +271,14 @@ const CalendarMain = ({title = 'Calendar', addSection =  true, events }) => {
             savedEvents={Data}
             fetchEvents={fetchAppointments}
             deleteAppointment={deleteAppointment}
+            newData={events}
           />
         );
       case "Month":
         return (
           <Month
             currentDate={currentDate}
-            savedEvents={Data}
+            savedEvents={events}
             fetchEvents={fetchAppointments}
             deleteAppointment={deleteAppointment}
             newData={events}
@@ -291,6 +291,7 @@ const CalendarMain = ({title = 'Calendar', addSection =  true, events }) => {
             savedEvents={appointmentsList}
             fetchEvents={fetchAppointments}
             deleteAppointment={deleteAppointment}
+            newData={events}
           />
         );
       // new changes for redirect from dashboard calendar to appointment calendar
@@ -301,6 +302,7 @@ const CalendarMain = ({title = 'Calendar', addSection =  true, events }) => {
             savedEvents={appointmentsList}
             fetchEvents={fetchAppointments}
             deleteAppointment={deleteAppointment}
+            newData={events}
           />
         );
       //--------------------------------------------------------
@@ -311,44 +313,39 @@ const CalendarMain = ({title = 'Calendar', addSection =  true, events }) => {
 
   return (
     <div className="">
-      {/* {showAlert && (
-        <AlertSuccess
-          message="New Appointment Created"
-          handleClose={closeAlert}
-        />
-      )} */}
+
       <div className={`space-y-5 m-5 ${showModal ? "opacity-50" : ""}`}>
         <div className="flex justify-between items-center w-full">
           <div className="text-gray-900 text-2xl font-medium" id="calendarPage">
             {title}
           </div>
           {
-            addSection && 
+            addSection &&
             <div className="flex item-center justify-center gap-3">
-            <button
-              className="bg-[#43B09C] rounded text-xs text-white p-3"
-              onClick={toggleModal}
-            >
-              Add new appointment
-            </button>
-            <Link
-              className="p-3 bg-[#EAECEB]"
-              onClick={(e) => {
-                e.preventDefault();
-                navigate(-1);
-              }}
-            >
-              <img
-                src={BackArrowIcon}
-                alt="back arrow"
-                className="h-[15px] w-[100%]"
-              />
-            </Link>
-          </div>
+              <button
+                className="bg-[#43B09C] rounded text-xs text-white p-3"
+                onClick={toggleModal}
+              >
+                Add new appointment
+              </button>
+              <Link
+                className="p-3 bg-[#EAECEB]"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate(-1);
+                }}
+              >
+                <img
+                  src={BackArrowIcon}
+                  alt="back arrow"
+                  className="h-[15px] w-[100%]"
+                />
+              </Link>
+            </div>
           }
-         
+
         </div>
-        <div className="flex flex-col bg-white border-1 border-teal-400 rounded-md p-10 space-y-3" style={{ background:'#FAFBFC'}}>
+        <div className="flex flex-col bg-white border-1 border-teal-400 rounded-md p-10 space-y-3" style={{ background: '#FAFBFC' }}>
           <CalendarHeader
             //  viewList={CALENDAR_VIEWS}
             viewList={CALENDAR_VIEWS.filter((ele) => ele != "day" && ele !== 'Today')} // new changes for redirect from dashboard calendar to appointment calendar
@@ -378,30 +375,11 @@ const CalendarMain = ({title = 'Calendar', addSection =  true, events }) => {
             }}
             currentDate={currentDate}
           />
-          { renderCalendar()}
+          {renderCalendar()}
         </div>
       </div>
 
-      {/* <AddAppointment
-        show={showModal}
-        toggleModal={toggleModal}
-        handleSubmit={submitAppointment}
-        setShowAlert={setShowAlert}
-        fetchEvents={fetchAppointments}
-        appointmentId={appointmentId}
-        isUpdate={mode == "edit"}
-        isView={mode == "view"}
-      // isNew={isNew}
-      /> */}
-      {/* <AddAppointment
-                      show={editEvent === index}
-                      toggleModal={() => setEditEvent(null)}
-                      setShowAlert={null}
-                      fetchEvents={fetchEvents}
-                      appointmentDetail={event}
-                      appointmentId={event.id}
-                      isUpdate
-                    /> */}
+
     </div>
   );
 };
