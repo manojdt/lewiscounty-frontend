@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import dayjs from "dayjs";
-import { getTodayTime } from "../utils";
+import { getTodayTime } from "../../utils";
 import GoogleIcon from "../../assets/icons/google_icon.svg";
 import TrashIcon from "../../assets/images/delete.png";
 import CalendarIcon from "../../assets/icons/calendar-boxed.svg";
 import InternalCalendarIcon from "../../assets/icons/internal-meeting.svg";
-import { AppointmentDetail_Modal } from "../Appointment/AppointmentDetail";
-import AddAppointment from "./addappointment";
+// import { AppointmentDetail_Modal } from "../Appointment/AppointmentDetail";
+// import AddAppointment from "./addappointment";
 import EventModal from "./EventsModal";
-import PrivateComponent from "../PrivateComponent";
+// import PrivateComponent from "../PrivateComponent";
 
 export default function TodayView({
   currentDate,
@@ -18,6 +18,7 @@ export default function TodayView({
   isWeek,
   rowIdx,
   colIdx,
+  newData
 }) {
   const todayTimes = getTodayTime(currentDate);
 
@@ -35,6 +36,7 @@ export default function TodayView({
               savedEvents={savedEvents}
               fetchEvents={fetchEvents}
               deleteAppointment={deleteAppointment}
+              newData={newData}
             />
           );
         })}
@@ -51,6 +53,7 @@ function TimeBlock({
   savedEvents,
   fetchEvents,
   deleteAppointment,
+  newData
 }) {
   const startTime = time.format("h:mm A"); // Format the start time
   const endTime = time.add(1, "hour").format("h:mm A"); // Add 1 hour to get the end time
@@ -111,6 +114,17 @@ function TimeBlock({
     return eventTime.hour() === time.hour() && eventTime.date() === time.date();
   });
 
+  console.log('newData', newData )
+
+  const eventsForHour1 = newData.filter((event) => {
+    const eventTime = dayjs(new Date(event.date).toDateString());
+    console.log('eventTime', eventTime)
+    return eventTime.hour() === time.hour() && eventTime.date() === time.date();
+  });
+
+
+  
+
   const [showDetailModal, setShowDetailModal] = useState(null);
   const toggleDetailModal = (index) => {
     setShowDetailModal(index);
@@ -136,6 +150,8 @@ function TimeBlock({
     setShowModal(!showModal);
   };
 
+  console.log('showTimeBlock', showTimeBlock, isWeek, showEvent, eventsForHour1)
+
   return (
     <div
       className={`flex-1 grid grid-cols-9 gap-2 m-0 opacity-75 ${
@@ -159,9 +175,9 @@ function TimeBlock({
       )}
       {showEvent && (
         <div className={`${showEvent && isWeek ? "col-span-9" : "col-span-8"}`}>
-          {eventsForHour.map((event, index) => {
-            const startTime = dayjs(event.start.dateTime).format("hh:mm A");
-            const endTime = dayjs(event.end.dateTime).format("hh:mm A");
+          {eventsForHour1.map((event, index) => {
+            const startTime = dayjs(event.start).format("hh:mm A");
+            const endTime = dayjs(event.end).format("hh:mm A");
 
             let showAppointment = editEvent === index;
             if (viewEvent === index) {
@@ -169,10 +185,10 @@ function TimeBlock({
             }
 
             let eventTitleDisplay =
-              startTime + "-" + endTime + " | " + event.summary;
+              startTime + "-" + endTime + " | " + event.title;
 
             if (isWeek) {
-              eventTitleDisplay = event.summary;
+              eventTitleDisplay = event.title;
             }
 
             // Display only one event for week and rest in modal
@@ -201,10 +217,10 @@ function TimeBlock({
                       <div className="flex items-center gap-1">
                         <img
                           src={
-                            event.isExternal ? GoogleIcon : InternalCalendarIcon
+                            event?.isExternal ? GoogleIcon : InternalCalendarIcon
                           }
                           className={
-                            event.isExternal
+                            event?.isExternal
                               ? "h-[16px] w-[16px] ms-1 bg-white rounded-full"
                               : "h-[20px] w-[20px] ms-1"
                           }
@@ -215,7 +231,7 @@ function TimeBlock({
                         </div>
                       </div>
 
-                      <PrivateComponent permission="delete_appointments_in_my_calendar">
+                      {/* <PrivateComponent permission="delete_appointments_in_my_calendar">
                         <div className="absolute inset-y-0 right-0 bg-slate-50 px-1 m-1 rounded flex items-center justify-end pe-1">
                           <button
                             onClick={(e) => {
@@ -227,11 +243,11 @@ function TimeBlock({
                             <img className="h-3.5 w-auto" src={TrashIcon} />
                           </button>
                         </div>
-                      </PrivateComponent>
+                      </PrivateComponent> */}
                     </div>
                   </a>
                 </div>
-                {showDetailModal === index && (
+                {/* {showDetailModal === index && (
                   <AppointmentDetail_Modal
                     showPreview={showDetailModal === index}
                     toggleModal={() => toggleDetailModal(null)}
@@ -246,8 +262,8 @@ function TimeBlock({
                     }}
                     deleteAppointment={handleDeleteAppointment}
                   />
-                )}
-                <AddAppointment
+                )} */}
+                {/* <AddAppointment
                   show={showAppointment}
                   toggleModal={() => {
                     setViewEvent(null);
@@ -259,7 +275,7 @@ function TimeBlock({
                   appointmentId={event.id}
                   isUpdate={editEvent === index}
                   isView={viewEvent === index}
-                />
+                /> */}
               </>
             );
           })}

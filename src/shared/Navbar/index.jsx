@@ -108,7 +108,7 @@ export const Navbar = () => {
                     <span style={{ color: '#232323', fontWeight: 600, fontSize: '24px' }}>Log out</span>
 
                     <div className='py-5'>
-                        <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 600, fontSize: '18px' }}>Are You sure want  to log out?</p>
+                        <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 600, fontSize: '18px' }}>Are You sure want to log out?</p>
                     </div>
                     <div className='flex justify-center'>
                         <div className="flex gap-6 justify-center align-middle">
@@ -253,7 +253,7 @@ export const Navbar = () => {
                                     </div>
                                 </li>
                                 <li className={`${pathname === '/calendar' ? 'dashboard-menu-active' : ''}`}>
-                                    <span onClick={() => navigate('/dashboard')} className="block py-2 px-3 text-black rounded md:hover:bg-transparent md:p-0 cursor-pointer">Calendar</span>
+                                    <span onClick={() => navigate('/calendar')} className="block py-2 px-3 text-black rounded md:hover:bg-transparent md:p-0 cursor-pointer">Calendar</span>
                                 </li>
                                 <li className={`${pathname === '/discussions' ? 'dashboard-menu-active' : ''}`}>
                                     <span onClick={() => navigate('/dashboard')} className="block py-2 px-3 text-black rounded md:hover:bg-transparent md:p-0 cursor-pointer">Discussions</span>

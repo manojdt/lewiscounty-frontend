@@ -9,6 +9,7 @@ import goalsReducer from "../features/goals/goalsSlice";
 import reportsReducer from "../features/reports/reportsSlice";
 import helpReducer from "../features/help/helpSlice";
 import userListReducer from "../features/userList/userListSlice";
+import scheduleReducer from "../features/schedule/scheduleSlice";
 
 
 const combinedReducer = combineReducers({
@@ -18,7 +19,8 @@ const combinedReducer = combineReducers({
   goals: goalsReducer,
   reports: reportsReducer,
   help: helpReducer,
-  userList: userListReducer
+  userList: userListReducer,
+  events: scheduleReducer
 });
 
 const rootReducer = (state, action) => {

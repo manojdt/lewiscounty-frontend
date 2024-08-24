@@ -1,4 +1,7 @@
 import dayjs from "dayjs";
+import ArrowLeftIcon from '../../assets/icons/arroLeft.svg'
+import ArrowRightIcon from '../../assets/icons/arroRight.svg'
+import { Button } from "../../shared";
 
 const CalendarHeader = ({
   viewList,
@@ -55,26 +58,16 @@ const CalendarHeader = ({
   };
 
   return (
-    <div className="flex flex-row bg-white justify-between items-start">
-      <div className="flex flex-row p-2 space-x-5">
-        {viewList.map((view, idx) => {
-          return (
-            <p
-              key={view + idx}
-              onClick={() => handleCalendarView(view)}
-              className={`${view === currentCalendarView
-                ? "border-b-2 border-teal-600 text-teal-600 text-xs"
-                : "text-xs"
-                }
-                   cursor-pointer`}
-            >
-              {view}
-            </p>
-          );
-        })}
+    <div className="flex flex-row  justify-between items-start mb-4" >
+      <div className="flex gap-6">
+        <div className="flex">
+          <div style={{border: '1px solid rgba(62, 62, 62, 0.5)', padding: '10px 20px', cursor: 'pointer'}} onClick={onDecrement}><img src={ArrowLeftIcon} alt="ArrowLeftIcon" /></div>
+          <div style={{border: '1px solid rgba(62, 62, 62, 0.5)', padding: '10px 20px', cursor: 'pointer'}} onClick={onIncrement}><img src={ArrowRightIcon} alt="ArrowRightIcon" /></div>
+        </div>
+        <Button btnName="Today"/>
       </div>
-      {/* {currentCalendarView !== "Today" && ( */}
-      <div className="flex flex-row items-center space-x-3 p-2 rounded shadow-sm w-fit">
+     
+       {/* <div className="flex flex-row items-center space-x-3 p-2 rounded shadow-sm w-fit" style={{border: '1px solid rgba(62, 62, 62, 0.5)'}}>
         <button
           onClick={onDecrement}
           className="text-teal-600 hover:bg-teal-600 hover:text-white p-1 py-0 rounded-md"
@@ -86,7 +79,27 @@ const CalendarHeader = ({
           onClick={onIncrement}
           className="text-teal-600 hover:bg-teal-600 hover:text-white p-1 py-0 rounded-md"
         >{`>`}</button>
+      </div> */}
+      <div className="flex flex-row p-2 space-x-5">
+        {viewList.map((view, idx) => {
+          return (
+            <p
+              key={view + idx}
+              onClick={() => handleCalendarView(view)}
+              style={{ color: `${view === currentCalendarView ? 'rgba(29, 91, 191, 1)' : 'rgba(24, 40, 61, 1)'}` }}
+              className={`${view === currentCalendarView
+                ? "border-b-2 border-teal-600  text-xs"
+                : "text-xs"
+                }
+                   cursor-pointer`}
+            >
+              {view}
+            </p>
+          );
+        })}
       </div>
+      {/* {currentCalendarView !== "Today" && ( */}
+     
       {/* )} */}
     </div>
   );

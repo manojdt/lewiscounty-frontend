@@ -1,6 +1,6 @@
 import React from "react";
 import Day from "./day";
-import { getWeek } from "../utils";
+import { getWeek } from "../../utils";
 import dayjs from "dayjs";
 
 export default function Week({
@@ -8,6 +8,7 @@ export default function Week({
   savedEvents,
   fetchEvents,
   deleteAppointment,
+  newData
 }) {
   const week = getWeek(currentDate);
 
@@ -29,6 +30,7 @@ export default function Week({
               savedEvents={savedEvents}
               deleteAppointment={deleteAppointment}
               isWeek
+              newData={newData}
             />
           ))}
         </React.Fragment>

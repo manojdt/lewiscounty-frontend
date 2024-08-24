@@ -51,7 +51,10 @@ import NotificationMenu from "./component/Notification/NotificationMenu";
 import Feeds from "./component/Feeds";
 import FeedDetails from "./component/Feeds/FeedDetails";
 import HelpPage from "./component/Help/Help";
-// import CalendarMain from './component/Calendar/CalendarMain';
+import CalendarMain from './component/Calendar/CalendarMain';
+import CreateMeeting from "./component/Calendar/CreateMeeting";
+import { Calendar } from "primereact/calendar";
+import Scheduler from "./component/Calendar";
 
 function App() {
  
@@ -91,7 +94,7 @@ function App() {
         <Route path="/questions" element={<Questions />} />
         <Route element={<Layout />}>
           <Route path="/dashboard" element={<Dashboard />} />
-          {/* <Route path="/calendar" element={<CalendarMain />} /> */}
+          
           <Route path="/programs" element={<Programs />} />
           <Route path="/program-details/:id" element={<ProgramDetails />} />
           <Route path="/program-task/:id" element={<ProgramTask />} />
@@ -105,6 +108,12 @@ function App() {
           <Route path="/create-programs" element={<CreatePrograms />} />
           <Route path="/program-request" element={<ProgramRequest />} />
           <Route path="/program" element={<ProgramData />} />
+
+
+          <Route path="/calendar" element={<Scheduler />} />
+          <Route path="/create-meeting" element={<CreateMeeting />} />
+
+
           <Route path="/edit-profile" element={<EditProfile />} />
           <Route path="/program-data" element={<ProgramsData />} />
           <Route path="/feedback" element={<Feedback />} />
