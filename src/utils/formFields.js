@@ -37,6 +37,51 @@ export const PersonalInformationFields = [{
     },
     size: true,
   },
+  {
+    type: "input",
+    name: "linkedin",
+    fieldtype: "text",
+    label: "LinkedIn Profile Link",
+    placeholder: "Enter LinkedIn Profile Link",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+  },
+  {
+    type: "checkbox",
+    name: "gender",
+    label: "Gender",
+    placeholder: "",
+    options: [{
+        key: 'male',
+        value: 'Male'
+      },
+      {
+        key: 'female',
+        value: 'Female'
+      },
+      {
+        key: 'others',
+        value: 'Others'
+      }
+    ],
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+  },
+  {
+    type: "input",
+    name: "location",
+    fieldtype: "text",
+    label: "Location",
+    placeholder: "Enter Location",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+  },
 ];
 
 export const ProfessionalBackgroundFields = [{
@@ -153,6 +198,16 @@ export const AreaOfExpertiseFields = [{
 ];
 
 export const MentorShipExperienceFields = [{
+    type: "input",
+    name: "years_of_experience",
+    fieldtype: "number",
+    label: "How Many years of experience?",
+    placeholder: "Enter year of experience",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: false,
+  }, {
     type: "radio",
     name: "prev_mentorship",
     label: "Have you previously mentored someone?",
@@ -170,6 +225,7 @@ export const MentorShipExperienceFields = [{
     },
     size: false,
   },
+
   {
     type: "input",
     name: "mentor_exp_desc",
@@ -1737,7 +1793,7 @@ export const reportColumns = [{
     headerName: 'Create Time/ Date',
     flex: 1,
     id: 4,
-  }, 
+  },
   {
     field: 'approved_date',
     headerName: 'Approved Time/ Date',
@@ -1772,28 +1828,176 @@ export const reportColumns = [{
 
 
 
-export const myMentorColumns = [
-{
-  field: 'designation',
-  headerName: 'Designation',
-  flex: 1,
-  id: 1,
-},
-{
-  field: 'skills',
-  headerName: 'Skills',
-  flex: 1,
-  id: 2,
-}, {
-  field: 'email',
-  headerName: 'Email',
-  flex: 1,
-  id: 3,
-},
-{
-  field: 'location',
-  headerName: 'Location',
-  flex: 1,
-  id: 4,
-}
+export const myMentorColumns = [{
+    field: 'designation',
+    headerName: 'Designation',
+    flex: 1,
+    id: 1,
+  },
+  {
+    field: 'skills',
+    headerName: 'Skills',
+    flex: 1,
+    id: 2,
+  }, {
+    field: 'email',
+    headerName: 'Email',
+    flex: 1,
+    id: 3,
+  },
+  {
+    field: 'location',
+    headerName: 'Location',
+    flex: 1,
+    id: 4,
+  }
+];
+
+
+
+
+
+
+
+export const CreateMeetingFields = [{
+    type: "input",
+    name: "title",
+    fieldtype: "text",
+    label: "Add Title",
+    placeholder: "Enter Title",
+    inputRules: {
+      required: "This field is required",
+    },
+    width: 'w-full',
+  },
+  {
+    type: "dropdown",
+    name: "date_category",
+    label: "Date",
+    placeholder: "Select Date",
+    inputRules: {
+      required: "This field is required",
+    },
+    options: [{
+        key: "do_not_repeat",
+        value: "Does Not repeat"
+      },
+      {
+        key: "daily",
+        value: "Daily"
+      },
+      {
+        key: "every_week",
+        value: "Every weekday(Monday to Friday)"
+      },
+      {
+        key: "weekly",
+        value: "Weekly On  Thursday"
+      },
+      {
+        key: "custom",
+        value: "Custom"
+      },
+    ],
+    width: 'width-32',
+  },
+  {
+    type: "time",
+    name: "start",
+    fieldtype: "time",
+    label: "Start Time",
+    placeholder: "Start Time",
+    inputRules: {
+      required: "This field is required",
+    },
+    width: 'width-32',
+  },
+  {
+    type: "time",
+    name: "end",
+    fieldtype: "time",
+    label: "End Time",
+    placeholder: "End Time",
+    inputRules: {
+      required: "This field is required",
+    },
+    width: 'width-32',
+  },
+  {
+    type: "dropdown",
+    name: "notification_time",
+    label: "Add Notification",
+    placeholder: "Select Date",
+    inputRules: {
+      required: "This field is required",
+    },
+    options: [{
+        key: "5",
+        value: "5"
+      },
+      {
+        key: "10",
+        value: "10"
+      },
+      {
+        key: "15",
+        value: "15"
+      },
+      {
+        key: "20",
+        value: "20"
+      },
+      {
+        key: "25",
+        value: "25"
+      },
+      {
+        key: "30",
+        value: "30"
+      },
+    ],
+    width: 'w-[10%]',
+  },
+
+  {
+    type: "dropdown",
+    name: "notification_type",
+    label: "",
+    placeholder: "Minutes",
+    inputRules: {
+      required: "This field is required",
+    },
+    options: [{
+        key: "minutes",
+        value: "Minutes"
+      },
+      {
+        key: "hours",
+        value: "Hours"
+      },
+    ],
+    width: 'w-[21.5%]',
+  },
+  {
+    type: "input",
+    name: "guests",
+    fieldtype: "text",
+    label: "Add Guest(Optional)",
+    placeholder: "Enter Guests",
+    inputRules: {},
+    width: 'w-[66%]',
+  },
+  {
+    type: "popup-input",
+    name: "attendees",
+    label: "Add Mentees",
+    fieldtype: "text",
+    placeholder: "Select Mentees",
+    inputRules: {
+      required: "This field is required",
+    },
+    width: 'w-full',
+    icon: 'add'
+  },
+
 ];

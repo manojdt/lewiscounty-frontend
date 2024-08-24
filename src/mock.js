@@ -325,6 +325,10 @@ export const MenteeAssignColumns = [{
 
 
 
+
+
+
+
 function skillData(name, skills_desc, action) {
     return {
         name,
@@ -1196,3 +1200,20 @@ const programRequestList = () => {
 }
 
 export const programRequestData = programRequestList()
+
+
+
+
+export const CalendarMentee = [{
+    field: 'first_name',
+    headerName: 'Full Name',
+    flex: 1,
+    id: 0,
+},
+{
+    field: 'email',
+    headerName: 'Email',
+    flex: 1,
+    id: 1,
+},
+];

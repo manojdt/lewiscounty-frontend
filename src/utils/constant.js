@@ -178,6 +178,11 @@ export const reportsStatus = {
   load: 'loaded',
 }
 
+export const calendarStatus = {
+  load: 'loaded',
+  create: 'created',
+}
+
 
 export const goalPeriods = [{
     name: '1 Month',

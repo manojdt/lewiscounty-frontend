@@ -1,6 +1,6 @@
 import React from "react";
 import Day from "./day";
-import { getWeek } from "../utils";
+import { getWeek } from "../../utils";
 import dayjs from "dayjs";
 
 export default function Week({

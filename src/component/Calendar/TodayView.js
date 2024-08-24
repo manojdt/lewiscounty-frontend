@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import dayjs from "dayjs";
-import { getTodayTime } from "../utils";
+import { getTodayTime } from "../../utils";
 import GoogleIcon from "../../assets/icons/google_icon.svg";
 import TrashIcon from "../../assets/images/delete.png";
 import CalendarIcon from "../../assets/icons/calendar-boxed.svg";
 import InternalCalendarIcon from "../../assets/icons/internal-meeting.svg";
-import { AppointmentDetail_Modal } from "../Appointment/AppointmentDetail";
-import AddAppointment from "./addappointment";
+// import { AppointmentDetail_Modal } from "../Appointment/AppointmentDetail";
+// import AddAppointment from "./addappointment";
 import EventModal from "./EventsModal";
-import PrivateComponent from "../PrivateComponent";
+// import PrivateComponent from "../PrivateComponent";
 
 export default function TodayView({
   currentDate,
@@ -215,7 +215,7 @@ function TimeBlock({
                         </div>
                       </div>
 
-                      <PrivateComponent permission="delete_appointments_in_my_calendar">
+                      {/* <PrivateComponent permission="delete_appointments_in_my_calendar">
                         <div className="absolute inset-y-0 right-0 bg-slate-50 px-1 m-1 rounded flex items-center justify-end pe-1">
                           <button
                             onClick={(e) => {
@@ -227,11 +227,11 @@ function TimeBlock({
                             <img className="h-3.5 w-auto" src={TrashIcon} />
                           </button>
                         </div>
-                      </PrivateComponent>
+                      </PrivateComponent> */}
                     </div>
                   </a>
                 </div>
-                {showDetailModal === index && (
+                {/* {showDetailModal === index && (
                   <AppointmentDetail_Modal
                     showPreview={showDetailModal === index}
                     toggleModal={() => toggleDetailModal(null)}
@@ -246,8 +246,8 @@ function TimeBlock({
                     }}
                     deleteAppointment={handleDeleteAppointment}
                   />
-                )}
-                <AddAppointment
+                )} */}
+                {/* <AddAppointment
                   show={showAppointment}
                   toggleModal={() => {
                     setViewEvent(null);
@@ -259,7 +259,7 @@ function TimeBlock({
                   appointmentId={event.id}
                   isUpdate={editEvent === index}
                   isView={viewEvent === index}
-                />
+                /> */}
               </>
             );
           })}

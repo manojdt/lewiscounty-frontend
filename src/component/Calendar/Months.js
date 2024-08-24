@@ -7,9 +7,9 @@ import CalendarIcon from "../../assets/icons/calendar-boxed.svg";
 import InternalCalendarIcon from "../../assets/icons/internal-meeting.svg";
 
 import EventModal from "./EventsModal";
-import { AppointmentDetail_Modal } from "../Appointment/AppointmentDetail";
-import AddAppointment from "./addappointment";
-import PrivateComponent from "../PrivateComponent";
+// import { AppointmentDetail_Modal } from "../Appointment/AppointmentDetail";
+// import AddAppointment from "./addappointment";
+// import PrivateComponent from "../PrivateComponent";
 
 export default function Months({
   month,
@@ -131,7 +131,7 @@ export default function Months({
                       </div>
                     </div>
 
-                    <PrivateComponent permission="delete_appointments_in_my_calendar">
+                    {/* <PrivateComponent permission="delete_appointments_in_my_calendar">
                       <div className="absolute inset-y-0 right-0 bg-slate-50 px-1 m-1 rounded flex items-center justify-end pe-1">
                         <button
                           onClick={(e) => {
@@ -143,11 +143,11 @@ export default function Months({
                           <img className="h-3.5 w-auto" src={TrashIcon} />
                         </button>
                       </div>
-                    </PrivateComponent>
+                    </PrivateComponent> */}
                   </div>
                 </a>
               </div>
-              {showDetailModal === index && (
+              {/* {showDetailModal === index && (
                 <AppointmentDetail_Modal
                   showPreview={showDetailModal === index}
                   toggleModal={() => toggleDetailModal(null)}
@@ -162,8 +162,8 @@ export default function Months({
                   }}
                   deleteAppointment={handleDeleteAppointment}
                 />
-              )}
-              <AddAppointment
+              )} */}
+              {/* <AddAppointment
                 show={showAppointment}
                 toggleModal={() => {
                   setViewEvent(null);
@@ -175,7 +175,7 @@ export default function Months({
                 appointmentId={event.id}
                 isUpdate={editEvent === index}
                 isView={viewEvent === index}
-              />
+              /> */}
             </>
           );
         })}

@@ -405,15 +405,17 @@ input[type="range"]::-ms-thumb {
 
 
 .calendar-container .action-btn {
-  border: 1px solid rgba(217, 217, 217, 1);
-  width: 370px;
+  border: 0.5px solid rgba(29, 91, 191, 1);
+  width: 100%;
   font-size: 14px;
   padding: 10px;
+  border-radius: 3px;
 }
 
 .calendar-container .action-btn.active {
   background: rgba(220, 231, 250, 1);
-  color: rgba(29, 91, 191, 1)
+  color: rgba(24, 40, 61, 1);
+  font-weight: 700;
 }
 
 .text-color {
@@ -1189,6 +1191,30 @@ input[type="number"] {
 
   .goals .goals-info .create-goal {
     height: 150px;
+  }
+
+
+  .calendar-event-conatiner .meeting-details .meeting-scheduler{
+    font-size: 13px;
+    text-overflow: ellipsis;
+    overflow: hidden; 
+    width: 110px; 
+    white-space: nowrap;
+  }
+
+  .calendar-event-conatiner .event-title{
+    font-size: 13px;
+    text-overflow: ellipsis;
+    overflow: hidden; 
+    white-space: nowrap;
+  }
+
+  .calendar-event-conatiner .meeting-details{
+    /* padding-bottom: 3px; */
+  }
+
+  .calendar-event-conatiner .meeting-details .meeting-time{
+    font-size: 10px;
   }
 
 }

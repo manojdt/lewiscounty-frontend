@@ -11,7 +11,7 @@ import BackArrowIcon from "../../assets/icons/back-arrow.svg";
 // } from "../utils";
 import Month from "./month";
 import CalendarHeader from "./calendarheader";
-import AddAppointment from "./addappointment";
+// import AddAppointment from "./addappointment";
 // import AlertSuccess from "../common/AlertSuccess";
 // import apiURL from "../.././apiConfig";
 import Week from "./week";
@@ -27,7 +27,7 @@ import {
 } from "react-router-dom";
 // import { Tooltip } from "react-bootstrap";
 
-const CalendarMain = () => {
+const CalendarMain = ({title = 'Calendar', addSection =  true, events }) => {
   // console.table(getMonth(3));
   const navigate = useNavigate();
 
@@ -137,13 +137,130 @@ const CalendarMain = () => {
     }
   }, [currentCalendarView, location]);
 
+  const Data = [
+    {
+      "id": 167,
+      "type": "Test 1",
+      "meeting_title": "vinothmeeting_updated_ram",
+      "start_time": "2024-08-27T10:26:00+05:30",
+      "duration": "00:30:00",
+      "description": "test",
+      "linked_encounter_notes": [],
+      "google_calendar_event_id": null,
+      "created_at": "2024-08-28T10:26:31.460768+05:30",
+      "changed_at": "2024-08-28T14:09:25.369873+05:30",
+      "staff": 7,
+      "facility": 2,
+      "program": 4,
+      "activity": 5,
+      "created_by": null,
+      "changed_by": null,
+      "clients": []
+    },
+    {
+      "id": 97,
+      "type": "Test 2",
+      "meeting_title": "test",
+      "start_time": "2024-08-05T09:34:00+05:30",
+      "duration": "00:00:30",
+      "description": "test",
+      "linked_encounter_notes": [ ],
+      "google_calendar_event_id": null,
+      "created_at": "2024-08-11T21:04:18.566006+05:30",
+      "changed_at": "2024-08-11T21:04:18.566026+05:30",
+      "staff": 71,
+      "facility": 2,
+      "program": 12,
+      "activity": 3,
+      "created_by": null,
+      "changed_by": null,
+      "clients": [
+        615
+      ]
+    },
+   
+  ]
+
+
+
+  const NewData = [
+    {
+        "id": 2,
+        "title": "Interview title 1",
+        "date": "2024-08-05",
+        "date_category": "do_not_repeat",
+        "start": "16:00:00",
+        "end": "18:00:00",
+        "notification_time": 10,
+        "notification_type": "minutes",
+        "guests": [
+            "guest_1@gmail.com",
+            "guest_2@gmail.com",
+            "guest_3@gmail.com",
+            "rohit0@dataterrain.com"
+        ],
+        "attendees": [
+            "mentee_1@gmail.com",
+            "mentee_2@gmail.com",
+            "mentee_3@gmail.com"
+        ],
+        "meet": "https://meet.google.com/gsx-jgva-uus"
+    },
+    {
+      "id": 2,
+      "title": "Interview title 2",
+      "date": "2024-08-09",
+      "date_category": "do_not_repeat",
+      "start": "16:00:00",
+      "end": "18:00:00",
+      "notification_time": 10,
+      "notification_type": "minutes",
+      "guests": [
+          "guest_1@gmail.com",
+          "guest_2@gmail.com",
+          "guest_3@gmail.com",
+          "rohit0@dataterrain.com"
+      ],
+      "attendees": [
+          "mentee_1@gmail.com",
+          "mentee_2@gmail.com",
+          "mentee_3@gmail.com"
+      ],
+      "meet": "https://meet.google.com/gsx-jgva-uus"
+  },
+  {
+    "id": 3,
+    "title": "Interview title 3",
+    "date": "2024-08-27",
+    "date_category": "do_not_repeat",
+    "start": "16:00:00",
+    "end": "18:00:00",
+    "notification_time": 10,
+    "notification_type": "minutes",
+    "guests": [
+        "guest_1@gmail.com",
+        "guest_2@gmail.com",
+        "guest_3@gmail.com",
+        "rohit0@dataterrain.com"
+    ],
+    "attendees": [
+        "mentee_1@gmail.com",
+        "mentee_2@gmail.com",
+        "mentee_3@gmail.com"
+    ],
+    "meet": "https://meet.google.com/gsx-jgva-uus"
+}
+]
+
   const renderCalendar = () => {
+
+    console.log('currentCalendarView', currentCalendarView)
     switch (currentCalendarView) {
       case "Today":
         return (
           <TodayView
             currentDate={currentDate}
-            savedEvents={appointmentsList}
+            savedEvents={Data}
             fetchEvents={fetchAppointments}
             deleteAppointment={deleteAppointment}
           />
@@ -152,7 +269,7 @@ const CalendarMain = () => {
         return (
           <Week
             currentDate={currentDate}
-            savedEvents={appointmentsList}
+            savedEvents={Data}
             fetchEvents={fetchAppointments}
             deleteAppointment={deleteAppointment}
           />
@@ -161,9 +278,10 @@ const CalendarMain = () => {
         return (
           <Month
             currentDate={currentDate}
-            savedEvents={appointmentsList}
+            savedEvents={Data}
             fetchEvents={fetchAppointments}
             deleteAppointment={deleteAppointment}
+            newData={events}
           />
         );
       case "Year":
@@ -202,9 +320,11 @@ const CalendarMain = () => {
       <div className={`space-y-5 m-5 ${showModal ? "opacity-50" : ""}`}>
         <div className="flex justify-between items-center w-full">
           <div className="text-gray-900 text-2xl font-medium" id="calendarPage">
-            Calendar
+            {title}
           </div>
-          <div className="flex item-center justify-center gap-3">
+          {
+            addSection && 
+            <div className="flex item-center justify-center gap-3">
             <button
               className="bg-[#43B09C] rounded text-xs text-white p-3"
               onClick={toggleModal}
@@ -225,11 +345,13 @@ const CalendarMain = () => {
               />
             </Link>
           </div>
+          }
+         
         </div>
-        <div className="flex flex-col bg-white border-1 border-teal-400 rounded-md p-10 space-y-3">
+        <div className="flex flex-col bg-white border-1 border-teal-400 rounded-md p-10 space-y-3" style={{ background:'#FAFBFC'}}>
           <CalendarHeader
             //  viewList={CALENDAR_VIEWS}
-            viewList={CALENDAR_VIEWS.filter((ele) => ele != "day")} // new changes for redirect from dashboard calendar to appointment calendar
+            viewList={CALENDAR_VIEWS.filter((ele) => ele != "day" && ele !== 'Today')} // new changes for redirect from dashboard calendar to appointment calendar
             currentCalendarView={currentCalendarView}
             handleCalendarView={(view) => {
               setCurrentCalendarView(view);
@@ -256,11 +378,11 @@ const CalendarMain = () => {
             }}
             currentDate={currentDate}
           />
-          {!appointmentsLoading && renderCalendar()}
+          { renderCalendar()}
         </div>
       </div>
 
-      <AddAppointment
+      {/* <AddAppointment
         show={showModal}
         toggleModal={toggleModal}
         handleSubmit={submitAppointment}
@@ -270,7 +392,7 @@ const CalendarMain = () => {
         isUpdate={mode == "edit"}
         isView={mode == "view"}
       // isNew={isNew}
-      />
+      /> */}
       {/* <AddAppointment
                       show={editEvent === index}
                       toggleModal={() => setEditEvent(null)}
