@@ -93,7 +93,7 @@ export default function Day({
                   style={{ boxShadow: '4px 4px 15px 2px rgba(0, 0, 0, 0.1)', borderRadius: '3px', background: '#fff', }}
                   onClick={() => {
                     console.log('click')
-                    // openEvent(renderData[0])
+                    openEvent(renderData[0])
                   }}
                 >
                   {
