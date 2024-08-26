@@ -58,14 +58,24 @@ export default function CreateMeeting() {
     }
 
 
+   
     const todayDate = () => {
-        const today = new Date();
-        const year = today.getFullYear();
-        const month = String(today.getMonth() + 1).padStart(2, '0'); 
-        const day = String(today.getDate()).padStart(2, '0');
+        // console.log('customSelect', customSelect)
 
-        const formattedDate = `${year}-${month}-${day}`;
-        return formattedDate
+        const date = new Date(customSelect.date);
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1; // Months are zero-based
+        const day = date.getDate();
+
+        // Format the year as YY
+        const shortYear = year.toString().slice(-2);
+
+        // Format month and day with leading zeros if necessary
+        const formattedMonth = month.toString().padStart(2, '0');
+        const formattedDay = day.toString().padStart(2, '0');
+
+        // Combine into YY-mm-dd format
+        return `${shortYear}-${formattedMonth}-${formattedDay}`;
     }
 
     const onSubmit = (data) => {
@@ -140,8 +150,11 @@ export default function CreateMeeting() {
         setCustomSelect({ type: '', date: '', repeat_time: '', repeat_type: '', never: false })
     }
 
+    console.log('pppp', customSelect)
+
     const handleDate = (value) => {
-        resetSelectedDate()
+        // resetSelectedDate()
+        setCustomSelect({ type: '', date: new Date(), repeat_time: '', repeat_type: '', never: false })
         setDateError({ date: '', repeat: '' })
         if (value === 'do_not_repeat' || value === 'custom') {
             setDatepopup({ type: value, show: true, title: value === 'do_not_repeat' ? 'Does Not repeat' : 'Custom' })
@@ -249,7 +262,7 @@ export default function CreateMeeting() {
                                                 className='calendar-control input-bg'
                                                 value={customSelect.date}
                                                 onChange={(e) => {
-                                                    setCustomSelect({ ...dateFormat, type: datePopup.type, date: e.value })
+                                                    setCustomSelect({ ...customSelect, type: datePopup.type, date: e.value })
                                                 }}
                                                 minDate={new Date()}
                                                 onClick={handleDateClick}
@@ -266,7 +279,7 @@ export default function CreateMeeting() {
                                     </div>
 
                                     {
-                                        datePopup.type === 'custom' &&
+                                        datePopup.type === 'custom1' &&
 
                                         <>
                                             <div className='relative flex items-center mt-7 gap-2'>
@@ -494,7 +507,7 @@ export default function CreateMeeting() {
                                                                     }}
                                                                     onChange={(e) => {
                                                                         dropdownimageField.onChange(e)
-                                                                        // handleDate(e.target.value)
+                                                                        if(field.name === 'date_category') handleDate(e.target.value);
                                                                     }}
                                                                 >
                                                                     <option value="">Select</option>
