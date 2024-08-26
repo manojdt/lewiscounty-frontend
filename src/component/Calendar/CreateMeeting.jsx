@@ -68,7 +68,7 @@ export default function CreateMeeting() {
         const day = date.getDate();
 
         // Format the year as YY
-        const shortYear = year.toString().slice(-2);
+        const shortYear = year.toString().padStart(2, '0');
 
         // Format month and day with leading zeros if necessary
         const formattedMonth = month.toString().padStart(2, '0');
