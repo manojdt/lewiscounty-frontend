@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
@@ -16,15 +16,23 @@ import { taskColumns, taskRows } from '../../mock';
 import { useNavigate } from 'react-router-dom';
 import MuiModal from '../../shared/Modal';
 import { Button } from '../../shared';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllTasks } from '../../services/task';
+import { Backdrop, CircularProgress } from '@mui/material';
+import { taskStatusColor, taskStatusText } from '../../utils/constant';
 
 export const Tasks = () => {
     const [requestTab, setRequestTab] = useState('all-task')
     const [anchorEl, setAnchorEl] = useState(null);
-    const [requestTask, setRequestTask] = useState(false)
-    const navigate = useNavigate();
     const open = Boolean(anchorEl);
+    const [requestTask, setRequestTask] = useState(false)
+    const [seletedItem, setSelectedItem] = useState({})
+    const navigate = useNavigate();
+    const dispatch = useDispatch()
+    const { taskList, loading } = useSelector(state => state.tasks)
 
-    const taskList = [
+
+    const taskMenuList = [
         {
             name: 'All Task',
             key: 'all-task'
@@ -60,7 +68,12 @@ export const Tasks = () => {
                     return <>
                         <div className='cursor-pointer flex items-center h-full relative'>
                             <span className='w-[80px] flex justify-center h-[30px] px-3'
-                                style={{ background: 'rgba(235, 255, 243, 1)', lineHeight: '30px', borderRadius: '3px' }}> {params.row.status}</span>
+                                style={{
+                                    background: taskStatusColor[params.row.status]?.bg || '', lineHeight: '30px',
+                                    borderRadius: '3px', width: '110px', height: '34px', color: taskStatusColor[params.row.status]?.color || '',
+                                    fontSize: '12px'
+                                }}
+                            > {taskStatusText[params.row.status]}</span>
                         </div>
                     </>
                 }
@@ -80,7 +93,7 @@ export const Tasks = () => {
             renderCell: (params) => {
                 console.log('paramsmmmmm', params)
                 return <>
-                    <div className='cursor-pointer flex items-center h-full' onClick={handleClick}>
+                    <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleClick(e, params.row)}>
                         <img src={MoreIcon} alt='MoreIcon' />
                     </div>
                     <Menu
@@ -92,11 +105,11 @@ export const Tasks = () => {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
-                        <MenuItem onClick={() => navigate(`/mentee-tasks-details/1`)} className='!text-[12px]'>
+                        <MenuItem onClick={() => navigate(`/mentee-tasks-details/${seletedItem.id}`)} className='!text-[12px]'>
                             <img src={ViewIcon} alt="ViewIcon" className='pr-3 w-[30px]' />
                             View
                         </MenuItem>
-                        <MenuItem onClick={() => { console.log('report', params);  setAnchorEl(null); setRequestTask(true) }} className='!text-[12px]'>
+                        <MenuItem onClick={() => { console.log('report', params); setAnchorEl(null); setRequestTask(true) }} className='!text-[12px]'>
                             <img src={RequestIcon} alt="RequestIcon" className='pr-3 w-[27px]' />
                             Request Task
                         </MenuItem>
@@ -110,11 +123,19 @@ export const Tasks = () => {
         setAnchorEl(null);
     };
 
-    const handleClick = (event) => {
+    const handleClick = (event, data) => {
+        setSelectedItem(data)
         setAnchorEl(event.currentTarget);
     };
 
     const handleTab = (key) => setRequestTab(key)
+
+    useEffect(() => {
+        dispatch(getAllTasks())
+    }, [])
+
+
+    console.log('taskList', taskList)
 
     return (
         <div className="px-9 py-9">
@@ -175,45 +196,57 @@ export const Tasks = () => {
                 </div>
             </MuiModal>
 
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={loading}
+            >
+                <CircularProgress color="inherit" />
 
-            <div className='px-3 py-5' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
-                <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
-                    <div className='flex gap-5 items-center text-[20px]'>
-                        <p>Task</p>
-                    </div>
-                    <div className='flex gap-8 items-center'>
-                        <div className="relative">
-                            <input type="text" id="search-navbar" className="block w-full p-2 text-sm text-gray-900 border-none"
-                                placeholder="Search here..." style={{
-                                    border: '1px solid rgba(29, 91, 191, 1)',
-                                    height: '41px',
-                                    width: '345px'
-                                }} />
-                            <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
-                                <img src={SearchIcon} alt='SearchIcon' />
+            </Backdrop>
+
+            {
+                !loading &&
+
+                <div className='px-3 py-5' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
+                    <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
+                        <div className='flex gap-5 items-center text-[20px]'>
+                            <p>Task</p>
+                        </div>
+                        <div className='flex gap-8 items-center'>
+                            <div className="relative">
+                                <input type="text" id="search-navbar" className="block w-full p-2 text-sm text-gray-900 border-none"
+                                    placeholder="Search here..." style={{
+                                        border: '1px solid rgba(29, 91, 191, 1)',
+                                        height: '41px',
+                                        width: '345px'
+                                    }} />
+                                <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
+                                    <img src={SearchIcon} alt='SearchIcon' />
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div className='mx-5'>
-                    <div className='flex gap-3 mb-6'>
-                        {
-                            taskList.map((actionBtn, index) =>
-                                <button key={index} className='px-5 py-4 text-[14px]' style={{
-                                    background: requestTab === actionBtn.key ? 'linear-gradient(97.86deg, #005DC6 -15.07%, #00B1C0 112.47%)' :
-                                        'rgba(249, 249, 249, 1)',
-                                    color: requestTab === actionBtn.key ? '#fff' : '#000',
-                                    borderRadius: '3px'
-                                }}
-                                    onClick={() => handleTab(actionBtn.key)}
-                                >{actionBtn.name}</button>
-                            )
-                        }
-                    </div>
+                    <div className='mx-5'>
+                        <div className='flex gap-3 mb-6'>
+                            {
+                                taskMenuList.map((actionBtn, index) =>
+                                    <button key={index} className='px-5 py-4 text-[14px]' style={{
+                                        background: requestTab === actionBtn.key ? 'linear-gradient(97.86deg, #005DC6 -15.07%, #00B1C0 112.47%)' :
+                                            'rgba(249, 249, 249, 1)',
+                                        color: requestTab === actionBtn.key ? '#fff' : '#000',
+                                        borderRadius: '3px'
+                                    }}
+                                        onClick={() => handleTab(actionBtn.key)}
+                                    >{actionBtn.name}</button>
+                                )
+                            }
+                        </div>
 
-                    <DataTable rows={taskRows} columns={mentorColumn} hideCheckbox />
+                        <DataTable rows={taskList} columns={mentorColumn} hideCheckbox />
+                    </div>
                 </div>
-            </div>
+
+            }
         </div>
     )
 }

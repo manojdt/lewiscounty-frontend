@@ -1,28 +1,22 @@
-import React, { useState } from 'react'
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { Backdrop, CircularProgress } from '@mui/material';
 
-import ViewIcon from '../../assets/images/view1x.png'
+import { listCertificateColumn } from '../../mock'
+import DataTable from '../../shared/DataGrid';
+import { certificateColor, certificateText } from '../../utils/constant';
+import { getCertificates } from '../../services/certificate';
+
 import FeedbackIcon from '../../assets/icons/feedback.svg'
 import SearchIcon from '../../assets/icons/SearchColor.svg'
-import MoreIcon from '../../assets/icons/moreIcon.svg'
 import ActionIcon from '../../assets/images/certficate_action.png'
 
-import { listCertificateColumn, listCertificateRow, PostList } from '../../mock'
-import DataTable from '../../shared/DataGrid';
-import { goalDataStatus, goalStatusColor } from '../../utils/constant';
 
 export default function Certificate() {
     const [anchorEl, setAnchorEl] = useState(null);
-    const [activePost, setActivePost] = useState(0)
-    const [activePostInfo, setActivePostInfo] = useState(PostList[0])
 
-    const open = Boolean(anchorEl);
-
-    const handlePostClick = (list, index) => {
-        setActivePost(index)
-        setActivePostInfo(list)
-    }
+    const dispatch = useDispatch()
+    const { certificates, loading } = useSelector(state => state.certificates)
 
 
     const handleClick = (event) => {
@@ -46,17 +40,16 @@ export default function Certificate() {
                     <div className='cursor-pointer flex items-center h-full relative'>
                         <span className='w-[80px] flex justify-center h-[30px] px-7'
                             style={{
-                                background: goalStatusColor[params.row.status].bg, lineHeight: '30px',
-                                borderRadius: '3px', width: '110px', height: '34px', color: goalStatusColor[params.row.status].color,
+                                background: certificateColor[params.row.status]?.bg || '', lineHeight: '30px',
+                                borderRadius: '3px', width: '110px', height: '34px', color: certificateColor[params.row.status]?.color || '',
                                 fontSize: '12px'
                             }}>
-                            {params.row.status}
+                            {certificateText[params.row.status] || ''}
                         </span>
                     </div>
                 </>
             }
         },
-
         {
             field: 'action',
             headerName: 'Action',
@@ -68,13 +61,19 @@ export default function Certificate() {
                     <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleClick(e, params.row)}>
                         <img src={ActionIcon} alt='ActionIcon' />
                     </div>
-                    
                 </>
             }
-
-
         },
     ]
+
+    const handleCertificateSearch = (value) => {
+        
+        dispatch(getCertificates({search: value}))
+    }
+
+    useEffect(() => {
+        dispatch(getCertificates())
+    }, [])
 
     return (
         <div className="certificate px-9 py-9">
@@ -85,10 +84,17 @@ export default function Certificate() {
                         <img className='cursor-pointer' src={FeedbackIcon} alt={'FeedbackIcon'} />
                     </div>
                 </div>
+                <Backdrop
+                    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                    open={loading}
+                >
+                    <CircularProgress color="inherit" />
+                </Backdrop>
                 <div className='certificate-content'>
                     <div className='certificate-action'>
                         <div className="relative">
                             <input type="text" className="block w-full p-2 text-sm text-gray-900 border-none"
+                                onChange={(e) => handleCertificateSearch(e.target.value)}
                                 placeholder="Search Certificate" style={{
                                     background: 'rgba(238, 245, 255, 1)',
                                     height: '55px',
@@ -102,7 +108,7 @@ export default function Certificate() {
                     </div>
 
                     <div className='certificate-table py-9'>
-                        <DataTable rows={listCertificateRow} columns={listCertificatesColumn} hideCheckbox />
+                        <DataTable rows={certificates} columns={listCertificatesColumn} hideCheckbox />
                     </div>
                 </div>
             </div>

@@ -1,3 +1,5 @@
+import { dateFormat } from "./utils";
+
 export const loginUser = [{
         email: 'tsubramaniyan2@gmail.com',
         password: '12345'
@@ -565,10 +567,13 @@ const taskData = () => {
 export const taskRows = taskData();
 
 export const taskColumns = [{
-        field: 'assigned_date',
+        field: 'created_at',
         headerName: 'Assigned Date',
         flex: 1,
         id: 0,
+        renderCell: (params) => {
+            return <div>{dateFormat(params.row.created_at)}</div>
+        }
     },
     {
         field: 'task_name',
@@ -592,15 +597,21 @@ export const taskColumns = [{
         headerName: 'Start Date',
        flex: 1,
         id: 2,
+        renderCell: (params) => {
+            return <div>{dateFormat(params.row.start_date)}</div>
+        }
     },
     {
-        field: 'completed_date',
+        field: 'submited_date',
         headerName: 'Completed  Date',
        flex: 1,
         id: 2,
+        renderCell: (params) => {
+            return <div>{dateFormat(params.row.submited_date)}</div>
+        }
     },
     {
-        field: 'task_sent',
+        field: 'mentor_name',
         headerName: 'Task Sent by',
        flex: 1,
         id: 2,
@@ -1090,7 +1101,7 @@ export const listCertificateColumn = [
         id: 0,
     },
     {
-        field: 'program_desc',
+        field: 'description',
         headerName: 'Program Description',
         flex: 1,
         id: 0,
@@ -1100,12 +1111,18 @@ export const listCertificateColumn = [
         headerName: 'Start Date',
         flex: 1,
         id: 1,
+        renderCell: (params) => {
+            return <div>{dateFormat(params.row.start_date)}</div>
+        }
     },
     {
         field: 'end_date',
         headerName: 'End Date',
         flex: 1,
         id: 1,
+        renderCell: (params) => {
+            return <div>{dateFormat(params.row.end_date)}</div>
+        }
     },
     {
         field: 'program_admin',
@@ -1114,7 +1131,7 @@ export const listCertificateColumn = [
         id: 1,
     },
     {
-        field: 'program_location',
+        field: 'venue',
         headerName: 'Program Location',
         flex: 1,
         id: 1,

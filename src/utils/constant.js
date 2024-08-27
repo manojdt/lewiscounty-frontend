@@ -273,6 +273,87 @@ export const goalRequestColor = {
 
 }
 
+export const certificateText = {
+  inprogress: 'In-Progress',
+  yettoapprove: 'Yet to Approve',
+  yettojoin: 'Yet to Join',
+  yettostart: 'Yet to Start',
+  assigned: 'Assigned',
+  paused: 'Paused',
+  completed: 'Completed',
+  cancelled: 'Cancelled',
+}
+
+
+export const certificateColor = {
+  yettoapprove: {
+    color: '#000',
+    bg: '#fff'
+  },
+  yettostart: {
+    color: '#000',
+    bg: '#fff'
+  },
+  assigned: {
+    color: '#000',
+    bg: '#fff'
+  },
+  yettojoin: {
+    color: 'rgba(255, 212, 27, 1)',
+    bg: 'rgba(255, 247, 216, 1)'
+  },
+  inprogress: {
+    color: 'rgba(255, 118, 0, 1)',
+    bg: 'rgba(255, 242, 231, 1)'
+  },
+  completed: {
+    color: 'rgba(47, 147, 132, 1)',
+    bg: 'rgba(218, 252, 231, 1)'
+  },
+  paused: {
+    color: 'rgba(224, 56, 45, 1)',
+    bg: 'rgba(255, 231, 231, 1)'
+  },
+  cancelled: {
+    color: 'rgba(224, 56, 45, 1)',
+    bg: 'rgba(255, 231, 231, 1)'
+  },
+}
+
+export const taskStatusText = {
+  draft: 'Draft',
+  rejected: 'Cancel',
+  pending: 'Pending',
+  newtask: 'New',
+  completed: 'Completed',
+}
+
+export const taskStatusColor = {
+  draft: {
+    color: 'rgba(255, 212, 27, 1)',
+    bg: 'rgba(255, 247, 216, 1)'
+  },
+  rejected: {
+    color: 'rgba(224, 56, 45, 1)',
+    bg: 'rgba(255, 231, 231, 1)'
+  },
+  pending: {
+    color: 'rgba(255, 213, 0, 1)',
+    bg: 'rgba(255, 251, 233, 1)'
+  },
+  newtask: {
+    color: 'rgba(29, 91, 191, 1)',
+    bg: 'rgba(207, 225, 255, 1)'
+  },
+  completed: {
+    color: 'rgba(22, 182, 129, 1)',
+    bg: 'rgba(235, 255, 243, 1)'
+  },
+}
+
+
+
+
 export const PasswordRulesSet = {
   character: 'character',
   upperlowercase: 'upperlowercase',

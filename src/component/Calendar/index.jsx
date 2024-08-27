@@ -6,11 +6,14 @@ import CalendarMain from '../Calendar/CalendarMain'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { getCalendarEvents } from '../../services/scheduler'
+import { Backdrop, CircularProgress } from '@mui/material'
 
 export default function Scheduler() {
     const navigate = useNavigate()
     const dispatch = useDispatch();
     const { events, loading } = useSelector(state => state.events)
+    const { data: userInfo } = useSelector(state => state.userInfo)
+    const [eventsFilter, setEventsFilter] = useState([])
     const [actionActionBtn, setActionActionBtn] = useState('upcoming_schedule')
     const eventColors = {
         all_meetings: 'rgba(0, 174, 189, 1)',
@@ -21,42 +24,57 @@ export default function Scheduler() {
         draft_meetings: 'rgba(183, 183, 183, 1)'
     }
 
-    const calendarEvents = [
+    let calendarEvents = [
         {
             name: 'All Meetings',
             key: 'all_meetings',
-            total: 10
+            total: 10,
+            view: ['mentor', 'mentee']
         },
         {
             name: 'Upcoming Meetings',
             key: 'upcoming_meetings',
-            total: 10
+            total: 10,
+            view: ['mentor', 'mentee']
         },
         {
-            name: 'Reschedule  Meetings',
+            name: 'Reschedule Meetings',
             key: 'reschedule_meetings',
-            total: 10
+            total: 10,
+            view: ['mentor']
         },
         {
             name: 'Completed Meetings',
             key: 'completed_meetings',
-            total: 10
+            total: 10,
+            view: ['mentor', 'mentee']
         },
         {
             name: 'Cancelled Meetings',
             key: 'cancelled_meetings',
-            total: 10
+            total: 10,
+            view: ['mentor', 'mentee']
         },
         {
             name: 'Draft Meetings',
             key: 'draft_meetings',
-            total: 10
+            total: 10,
+            view: ['mentor']
         },
     ]
 
     useEffect(() => {
+        setEventsFilter(calendarEvents)
         dispatch(getCalendarEvents())
     }, [])
+
+    useEffect(() => {
+        if(userInfo && Object.keys(userInfo).length){
+            const events = calendarEvents.filter(event => event.view.includes(userInfo.role))
+            console.log('eventsevents', events)
+            setEventsFilter(events)
+        }
+    },[userInfo])
     return (
         <div className="calendar-container px-9 py-9">
             <div className='px-3 py-5' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
@@ -70,6 +88,14 @@ export default function Scheduler() {
                     </ol>
                 </nav>
 
+                <Backdrop
+                    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                    open={loading}
+                >
+                    <CircularProgress color="inherit" />
+                </Backdrop>
+
+
 
                 <div className="grid grid-cols-5 gap-7 py-5">
                     <div className='left-container col-span-1'>
@@ -79,15 +105,20 @@ export default function Scheduler() {
                                 <h4 className="text-base font-semibold" style={{ color: 'rgba(24, 40, 61, 1)' }}>My program list</h4>
                             </div>
                             <div className='flex gap-5 flex-col justify-center items-center pb-5'>
-                                <button className='flex gap-3 justify-center py-3 w-full text-[13px]'
-                                    style={{ background: 'rgba(29, 91, 191, 1)', color: '#fff', borderRadius: '3px' }}
-                                    onClick={() => navigate('/create-meeting')}
-                                >
-                                    <img src={PlusWhiteIcon} alt="PlusWhiteIcon" />
-                                    Add New Meeting
-                                </button>
                                 {
-                                    calendarEvents.map((calendarevent, index) =>
+                                    userInfo.role === 'mentor' &&
+
+                                    <button className='flex gap-3 justify-center py-3 w-full text-[13px]'
+                                        style={{ background: 'rgba(29, 91, 191, 1)', color: '#fff', borderRadius: '3px' }}
+                                        onClick={() => navigate('/create-meeting')}
+                                    >
+                                        <img src={PlusWhiteIcon} alt="PlusWhiteIcon" />
+                                        Add New Meeting
+                                    </button>
+                                }
+
+                                {
+                                    eventsFilter.map((calendarevent, index) =>
                                         <div key={index} className={`action-btn flex justify-between cursor-pointer ${actionActionBtn === calendarevent.key ? 'active' : ''}`} onClick={() => setActionActionBtn(calendarevent.key)}>
                                             <div className='flex gap-2 items-center'>
                                                 <div style={{ background: `${eventColors[calendarevent.key]}`, height: '10px', width: '10px' }}></div>

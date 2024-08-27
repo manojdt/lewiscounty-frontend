@@ -123,7 +123,7 @@ function App() {
           <Route path="/feed-details/:id" element={<FeedDetails />} />
           <Route path="/my-profile" element={<Profile />} />
           <Route path="/certificates" element={<Certificate />} />
-          <Route path="/certificate-view/:id" element={<CertificateDetails />} />
+          <Route path="/certificate-view" element={<CertificateDetails />} />
           
          
           <Route path="/mentors" element={<Mentors />} />

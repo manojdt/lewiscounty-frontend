@@ -21,9 +21,11 @@ import ToastNotification from '../../shared/Toast';
 export const TaskDetails = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const { taskdetails: { task, program, task_status, task_assigned_by }, loading, status } = useSelector(state => state.userPrograms)
+    const { taskdetails: { task, program, task_status, task_assigned_by, task_submission = {} }, loading, status } = useSelector(state => state.userPrograms)
     const [startTask, setStartTask] = useState(true)
+    const [taskStatus, setTaskStatus] = useState('')
     const params = useParams();
+
 
     const [taskImages, setTaskImages] = useState([])
     const [imageError, setImageError] = useState({ error: false, errorMessage: '' })
@@ -58,17 +60,6 @@ export const TaskDetails = () => {
             const fileExtensionName = fileNameSplit.pop().toLowerCase()
             const fileExtension = TaskFileTypes.includes(fileExtensionName)
 
-            // const docs = { ...taskSolutionDocs }
-            // if (allowedImagesTypes.includes(fileExtensionName)) {
-            //     docs.img = [...docs.img, e.target.files]
-            // }
-            // if (allowedDocTypes.includes(fileExtensionName)) {
-            //     docs.doc = [...docs.doc, e.target.files]
-            // }
-            // if (allowedVideoTypes.includes(fileExtensionName)) {
-            //     docs.video = [...docs.video, e.target.files]
-            // }
-            // console.log(e.target.files[0].type)
             if (fileExtension) {
                 // setError('file', { required: false })
                 // setTaskSolutionDocs(docs)
@@ -77,14 +68,7 @@ export const TaskDetails = () => {
             } else {
                 // setImageError({ error: true, message: 'Invalid file format. Only JPEG,PNG,PDF,DOC,AVI,MOV,MP4 files are allowed' })
             }
-            // else {
-            //     console.log('Else')
-
-            //     setTimeout(() => {
-            //         setError('file', { type: 'filetype', message: 'Invalid file type' })
-            //     }, [500])
-
-            // }
+         
         }
     }
 
@@ -126,11 +110,6 @@ export const TaskDetails = () => {
 
     }
 
-    useEffect(() => {
-        if (params.id === '5') {
-            setStartTask(true)
-        }
-    }, [params])
 
     useEffect(() => {
         if (status === programStatus.tasksubmitted) {
@@ -140,15 +119,6 @@ export const TaskDetails = () => {
         }
     }, [status])
 
-    // useEffect(() => {
-    //     if (loading) {
-    //         setTimeout(() => {
-    //             setLoading(false)
-    //             if(params.id === '5') navigate('/dashboard')
-    //             else navigate('/mentee-tasks')
-    //         }, 3000)
-    //     }
-    // }, [loading])
 
     useEffect(() => {
         let allTaskDocuments = { img: [], video: [], doc: [] }
@@ -178,6 +148,15 @@ export const TaskDetails = () => {
     useEffect(() => {
         dispatch(getProgramTaskDetails(params.id))
     }, [])
+
+
+    useEffect(() => {
+        if(task_submission && Object.keys(task_submission).length){
+            reset({
+                task_solution : task_submission?.task_solution || '',
+            })
+        }
+    },[task_submission])
 
     // console.log('paaa', params)
 
@@ -241,7 +220,7 @@ export const TaskDetails = () => {
                     <div className='flex gap-8 items-center'>
                         <div className="relative">
                             <div className="inset-y-0 end-0 flex items-center pe-3 cursor-pointer"
-                                onClick={() => navigate('/programs')}
+                                onClick={() => navigate('/mentee-tasks')}
                             >
                                 <img src={CancelIcon} alt='CancelIcon' />
                             </div>

@@ -1,12 +1,36 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { Backdrop, CircularProgress } from '@mui/material'
 import CancelIcon from '../../assets/images/cancel-colour1x.png'
-import SampleCertificate from '../../assets/images/sample-certificate.png'
 import Tooltip from '../../shared/Tooltip'
-import { useNavigate } from 'react-router-dom'
+import api from '../../services/api'
 
 
 export default function CertificateDetails() {
     const navigate = useNavigate()
+    const [searchParams] = useSearchParams();
+    const [certificateDetails, setCertificateDetails] = useState(<></>)
+    const [loading, setLoading] = useState(true)
+
+    const programId = searchParams.get("program_id");
+    const certificateId = searchParams.get("certificate_id");
+
+    const getCertificateDetails = async () => {
+        const query = `?program_id=${programId}&certificate_id=${certificateId}&action=view`;
+        const certificateAction = await api.get(`/mentee_program/certifications/download/${query}`);
+        if (certificateAction.status === 200 && certificateAction.data) {
+            setCertificateDetails(certificateAction.data)
+        }
+        setLoading(false)
+    }
+
+    useEffect(() => {
+        if (programId && programId !== '' && certificateId && certificateId !== '') {
+            getCertificateDetails();
+        }
+    }, [programId])
+
+
     return (
         <div className="dashboard-content px-8 mt-10 mb-7">
             <div style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }}>
@@ -21,27 +45,18 @@ export default function CertificateDetails() {
                     </div>
                 </div>
 
+
+                <Backdrop
+                    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                    open={loading}
+                >
+                    <CircularProgress color="inherit" />
+                </Backdrop>
+
+
                 <div className='flex flex-col gap-3 items-center py-10 px-40'>
-                    <div className='w-full'>
-                        <img src={SampleCertificate} className='w-full' alt="SampleCertificate" />
-                    </div>
-                    <div className='text-[14px]'>
-                        <p className='py-6'>
 
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-                            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-
-                        </p>
-
-                        <p>
-
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-                            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-
-                        </p>
-                    </div>
+                    <div dangerouslySetInnerHTML={{ __html: certificateDetails }}></div>
 
                     <div className='mb-5'>
                         <button style={{
@@ -52,8 +67,6 @@ export default function CertificateDetails() {
                         </button>
                     </div>
                 </div>
-
-
 
             </div>
         </div>
