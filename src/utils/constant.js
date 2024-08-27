@@ -176,6 +176,7 @@ export const goalStatus = {
 
 export const reportsStatus = {
   load: 'loaded',
+  create: 'created'
 }
 
 export const calendarStatus = {
@@ -349,6 +350,33 @@ export const taskStatusColor = {
     color: 'rgba(22, 182, 129, 1)',
     bg: 'rgba(235, 255, 243, 1)'
   },
+}
+
+
+export const reportStatusColor = {
+  draft: {
+    color: 'rgba(224, 56, 45, 1)',
+    bg: '#fff'
+  },
+  pending: {
+    color: 'rgba(255, 213, 0, 1)',
+    bg: 'rgba(255, 251, 233, 1)'
+  },
+  accept: {
+    color: 'rgba(22, 182, 129, 1)',
+    bg: 'rgba(235, 255, 243, 1)'
+  },
+  cancel: {
+    color: 'rgba(224, 56, 45, 1)',
+    bg: 'rgba(255, 231, 231, 1)'
+  },
+}
+
+export const reportStatus = {
+  pending: 'Pending',
+  accept: 'Accept',
+  cancel: 'Cancel',
+  draft: 'Draft',
 }
 
 

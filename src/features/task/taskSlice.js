@@ -3,7 +3,8 @@ import {
 } from "@reduxjs/toolkit";
 
 import {
-    getAllTasks
+    getAllTasks,
+    getSpecificTask
 } from "../../services/task";
 
 const initialState = {
@@ -40,6 +41,29 @@ export const taskSlice = createSlice({
                     error: action.error.message,
                 };
             });
+
+        builder
+            .addCase(getSpecificTask.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(getSpecificTask.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    task: action.payload,
+                    loading: false,
+                };
+            })
+            .addCase(getSpecificTask.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
 
     },
 });

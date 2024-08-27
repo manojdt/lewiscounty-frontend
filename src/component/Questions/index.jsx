@@ -52,7 +52,14 @@ export const Questions = () => {
         console.log(menteeApiData); 
         dispatch(updateMenteeQuestions(menteeApiData)) 
       }
-      else { dispatch(updateQuestions(apiData)) }
+      else { 
+        
+        const mentorApiData =  { 
+          ...apiData, 
+          gender: apiData.gender[0],
+          phone_number : apiData.phone_number
+        }
+        dispatch(updateQuestions(mentorApiData)) }
     }
     else setCurrentStep(currentStep + 1)
     setBtnTypeAction({ back: false, next: true })

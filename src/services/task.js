@@ -25,3 +25,14 @@ export const getAllTasks = createAsyncThunk(
     }
 );
 
+export const getSpecificTask = createAsyncThunk(
+    "getSpecificTask",
+    async (task_id) => {
+        const getSpecificTaskData = await api.get(`/program_task_assign/fetch_task_id?task_id=${task_id}`);
+        if (getSpecificTaskData.status === 200 && getSpecificTaskData.data) {
+            return getSpecificTaskData.data;
+        }
+        return getSpecificTaskData
+    }
+);
+
