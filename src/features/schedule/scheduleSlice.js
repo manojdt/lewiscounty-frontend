@@ -48,6 +48,7 @@ export const schedulerSlice = createSlice({
             })
             .addCase(createCalendarEvent.fulfilled, (state, action) => {
                 return {
+                    ...state,
                     status: calendarStatus.create,
                     loading: false,
                 };
