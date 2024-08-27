@@ -380,6 +380,14 @@ export const reportStatus = {
 }
 
 
+export const reportAllStatus = {
+  pending: 'pending',
+  accept: 'accept',
+  cancel: 'cancel',
+  draft: 'draft',
+}
+
+
 
 
 export const PasswordRulesSet = {
@@ -545,10 +553,23 @@ export const TaskFileTypes =  [...allowedImagesTypes, ...allowedDocTypes, ...all
 export const TaskAllStatus = {
   yettostart: 'yettostart',
   start: 'start',
+  pending: 'pending',
   submitted: 'submitted',
-  completed: 'completed'
+  completed: 'completed',
+  rejected: 'rejected',
+  draft: 'draft',
+  newtask: 'newtask'
 }
 
 export const TaskStatus = {
+  newtask : 'New',
+  yettostart: 'Start',
+  rejected: 'Cancelled',
   start: 'In-Progress',
+  inprogress: 'In-Progress',
+  pending: 'Pending',
+  completed: 'Completed',
+  submitted: 'Submitted',
+  cancelled: 'Cancelled',
+  draft: 'Draft'
 }

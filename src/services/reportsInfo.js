@@ -52,3 +52,15 @@ export const createReport = createAsyncThunk(
         return createRept
     }
 );
+
+
+export const getReportDetails = createAsyncThunk(
+    "getReportDetails",
+    async (reportId) => {
+        const reportDetails = await api.get(`reports/report/${reportId}`);
+        if (reportDetails.status === 200 && reportDetails.data) {
+            return reportDetails.data;
+        }
+        return reportDetails
+    }
+);
