@@ -11,6 +11,11 @@ import ReportVideoIcon from '../../assets/images/report1.png'
 import { Button } from '../../shared'
 import { useNavigate, useParams } from 'react-router-dom'
 import MuiModal from '../../shared/Modal';
+import { useDispatch, useSelector } from 'react-redux'
+import { Backdrop, CircularProgress } from '@mui/material'
+import { getReportDetails } from '../../services/reportsInfo'
+import { dateTimeFormat } from '../../utils'
+import { reportAllStatus } from '../../utils/constant'
 
 
 const ViewReport = () => {
@@ -18,6 +23,8 @@ const ViewReport = () => {
     const [loading, setLoading] = useState(false)
     const [startTask, setStartTask] = useState(false)
     const params = useParams();
+    const dispatch = useDispatch()
+    const { reportDetails, loading: reportsLoading } = useSelector(state => state.reports)
 
     const handleSubmitTask = () => {
         if (!startTask) {
@@ -30,6 +37,10 @@ const ViewReport = () => {
     useEffect(() => {
         if (params.id === '5') {
             setStartTask(true)
+        }
+
+        if (params && params.id !== '') {
+            dispatch(getReportDetails(params.id))
         }
     }, [params])
 
@@ -56,165 +67,195 @@ const ViewReport = () => {
 
                 </div>
             </MuiModal>
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={reportsLoading}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
+            {
+                (!reportsLoading && Object.keys(reportDetails).length) &&
 
-            <div className='px-3 py-5' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
-                <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
-                    <div className='flex gap-5 items-center text-[20px]'>
-                        <p>View Teaching Program Report </p>
 
-                        <div className="inset-y-0 end-0 flex items-center pe-3 cursor-pointer"
-                            onClick={() => navigate('/edit-report/1')}
-                        >
-                            <img src={EditIcon} alt='EditIcon' />
+                <div className='px-3 py-5' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
+                    <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
+                        <div className='flex gap-5 items-center text-[20px]'>
+                            <p>View {reportDetails?.report_name} </p>
+
+                            {
+                                reportDetails?.report_status === 'pending' &&
+
+                                <div className="inset-y-0 end-0 flex items-center pe-3 cursor-pointer"
+                                    onClick={() => navigate(`/edit-report/${reportDetails.id}`)}
+                                >
+                                    <img src={EditIcon} alt='EditIcon' />
+                                </div>
+                            }
+
+
                         </div>
 
-                    </div>
-
-                    <div className='flex gap-8 items-center'>
-                        <div className="relative">
-                            <div className="inset-y-0 end-0 flex items-center pe-3 cursor-pointer"
-                                onClick={() => navigate('/mentee-tasks')}
-                            >
-                                <img src={CancelIcon} alt='CancelIcon' />
+                        <div className='flex gap-8 items-center'>
+                            <div className="relative">
+                                <div className="inset-y-0 end-0 flex items-center pe-3 cursor-pointer"
+                                    onClick={() => navigate('/reports')}
+                                >
+                                    <img src={CancelIcon} alt='CancelIcon' />
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
 
-                <div className='px-4'>
-                    <div className="relative flex gap-6 justify-between">
-                        <table className="w-[50%] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                            <tbody style={{ border: '1px solid rgba(0, 174, 189, 1)' }}>
-                                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" style={{ border: '1px solid rgba(0, 174, 189, 1)' }} className="px-6 py-4 font-medium whitespace-nowrap ">
-                                        Category
-                                    </th>
-                                    <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
-                                        Category
-                                    </td>
-                                </tr>
-                                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th style={{ border: '1px solid rgba(0, 174, 189, 1)' }} scope="row" className="px-6 py-4 font-medium  whitespace-nowrap ">
-                                        Program Name
-                                    </th>
-                                    <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
-                                        Teaching Program
-                                    </td>
-                                </tr>
-                                <tr className="bg-white border-b dark:bg-gray-800 ">
-                                    <th style={{ border: '1px solid rgba(0, 174, 189, 1)' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
-                                        Program Creator
-                                    </th>
-                                    <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
-                                        Admin
-                                    </td>
-                                </tr>
-                                <tr className="bg-white border-b  dark:bg-gray-800">
-                                    <th style={{ border: '1px solid rgba(0, 174, 189, 1)' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
-                                        Mentor Name
-                                    </th>
-                                    <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
-                                        John Doe
-                                    </td>
-                                </tr>
+                    <div className='px-4'>
+                        <div className="relative flex gap-6 justify-between">
+                            <table className="w-[50%] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                <tbody style={{ border: '1px solid rgba(0, 174, 189, 1)' }}>
+                                    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                        <th scope="row" style={{ border: '1px solid rgba(0, 174, 189, 1)' }} className="px-6 py-4 font-medium whitespace-nowrap ">
+                                            Category
+                                        </th>
+                                        <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
+                                            {reportDetails.category_name}
+                                        </td>
+                                    </tr>
+                                    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                        <th style={{ border: '1px solid rgba(0, 174, 189, 1)' }} scope="row" className="px-6 py-4 font-medium  whitespace-nowrap ">
+                                            Program Name
+                                        </th>
+                                        <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
+                                            {reportDetails.program_name}
+                                        </td>
+                                    </tr>
+                                    <tr className="bg-white border-b dark:bg-gray-800 ">
+                                        <th style={{ border: '1px solid rgba(0, 174, 189, 1)' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
+                                            Program Creator
+                                        </th>
+                                        <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
+                                            Admin
+                                        </td>
+                                    </tr>
+                                    <tr className="bg-white border-b  dark:bg-gray-800">
+                                        <th style={{ border: '1px solid rgba(0, 174, 189, 1)' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
+                                            Mentor Name
+                                        </th>
+                                        <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
+                                            {reportDetails.mentor_name}
+                                        </td>
+                                    </tr>
 
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
 
-                        <table className="w-[50%] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                            <tbody style={{ border: '1px solid rgba(29, 91, 191, 1)' }}>
-                                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" style={{ border: '1px solid rgba(29, 91, 191, 1)' }} className="px-6 py-4 font-medium whitespace-nowrap ">
-                                        Program Start Date and Time
-                                    </th>
-                                    <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
-                                        04/23/2024 | 04/23/2024
-                                    </td>
-                                </tr>
-                                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th style={{ border: '1px solid rgba(29, 91, 191, 1)' }} scope="row" className="px-6 py-4 font-medium  whitespace-nowrap ">
-                                        Program End Date and Time
-                                    </th>
-                                    <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
-                                        04/23/2024 | 04/23/2024
-                                    </td>
-                                </tr>
-                                <tr className="bg-white border-b dark:bg-gray-800 ">
-                                    <th style={{ border: '1px solid rgba(29, 91, 191, 1)' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
-                                        Participated Mentees
-                                    </th>
-                                    <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
-                                        20 Member
-                                    </td>
-                                </tr>
+                            <table className="w-[50%] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                <tbody style={{ border: '1px solid rgba(29, 91, 191, 1)' }}>
+                                    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                        <th scope="row" style={{ border: '1px solid rgba(29, 91, 191, 1)' }} className="px-6 py-4 font-medium whitespace-nowrap ">
+                                            Program Start Date and Time
+                                        </th>
+                                        <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
+                                            {dateTimeFormat(reportDetails.program_start_date_and_time)}
+                                        </td>
+                                    </tr>
+                                    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                        <th style={{ border: '1px solid rgba(29, 91, 191, 1)' }} scope="row" className="px-6 py-4 font-medium  whitespace-nowrap ">
+                                            Program End Date and Time
+                                        </th>
+                                        <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
+                                            {dateTimeFormat(reportDetails.program_end_date_and_time)}
+                                        </td>
+                                    </tr>
+                                    <tr className="bg-white border-b dark:bg-gray-800 ">
+                                        <th style={{ border: '1px solid rgba(29, 91, 191, 1)' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
+                                            Participated Mentees
+                                        </th>
+                                        <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
+                                            {reportDetails.participated_mentees.length} Member
+                                        </td>
+                                    </tr>
 
 
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div className='task-desc  mt-5 px-5 py-6' style={{ border: '1px solid rgba(29, 91, 191, 0.5)' }}>
+                            <div className='flex items-center hidden' style={{ background: 'rgba(248, 249, 250, 1)' }}>
+                                <p className='text-[20px] w-[50%] px-20 leading-10'>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                                    incididunt ut labore et dolore magna aliqua. </p>
+                                <img style={{ width: '50%' }} src={ReportUserIcon} alt="ReportUserIcon" />
+                            </div>
+
+                            <div className='leading-10 py-6 hidden'>
+                                any organizations rely on PL/SQL for data integration, but Informatica ETL offers a more efficient approach. This
+                                migration unlocks significant benefits, including streamlined workflows, improved scalability, and easier maintenance.
+                                Let's explore why migrating to Informatica ETL can be the key to unlocking your data's full potential.
+                            </div>
+
+                            <img className='w-full hidden' src={ReportVideoIcon} alt="ReportVideoIcon" />
+
+                            <div className='py-8 leading-9 hidden'>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
+                                dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+                                non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur
+                                adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+                                reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur
+                                adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+                                nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit
+                                in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+                                culpa qui officia deserunt mollit anim id est laborum."
+                            </div>
+
+                            <div className='flex flex-col gap-3 mb-10'>
+                                <div>
+                                    Report Name : {reportDetails.report_name}
+                                </div>
+
+                                <div>
+                                    Report Description : {reportDetails.description}
+                                </div>
+                            </div>
+
+
+
+                            <div className='close-btn flex justify-center gap-7 pb-5'>
+
+                                <Button btnType="button" btnCls="w-[14%]"
+                                    onClick={() => { navigate('/reports') }} btnName='Cancel'
+                                    btnCategory="secondary"
+                                />
+
+                                {
+                                    reportDetails.report_status === reportAllStatus.pending &&
+
+                                    <Button btnType="button" btnCls="w-[14%]"
+                                        onClick={() => { navigate(`/edit-report/${reportDetails.id}`) }} btnName='Edit'
+
+                                        btnStyle={{ background: 'rgba(0, 174, 189, 1)' }} />
+                                }
+
+
+                                <Button btnType="button" btnCls="w-[14%]"
+                                    onClick={() => { navigate('/reports') }} btnName='Close'
+                                    btnStyle={{ background: 'rgba(29, 91, 191, 1)' }}
+                                />
+                            </div>
+                        </div>
+
+
+
+
+
+
                     </div>
 
-                    <div className='task-desc  mt-5 px-5 py-6' style={{ border: '1px solid rgba(29, 91, 191, 0.5)' }}>
-                        <div className='flex items-center' style={{ background: 'rgba(248, 249, 250, 1)' }}>
-                            <p className='text-[20px] w-[50%] px-20 leading-10'>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                                incididunt ut labore et dolore magna aliqua. </p>
-                            <img style={{ width: '50%' }} src={ReportUserIcon} alt="ReportUserIcon" />
-                        </div>
-
-                        <div className='leading-10 py-6'>
-                            any organizations rely on PL/SQL for data integration, but Informatica ETL offers a more efficient approach. This
-                            migration unlocks significant benefits, including streamlined workflows, improved scalability, and easier maintenance.
-                            Let's explore why migrating to Informatica ETL can be the key to unlocking your data's full potential.
-                        </div>
-
-                        <img className='w-full' src={ReportVideoIcon} alt="ReportVideoIcon" />
-
-                        <div className='py-8 leading-9'>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-                            dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
-                            non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur
-                            adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-                            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur
-                            adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-                            nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit
-                            in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                            culpa qui officia deserunt mollit anim id est laborum."
-                        </div>
-
-
-
-                        <div className='close-btn flex justify-center gap-7 pb-5'>
-
-                            <Button btnType="button" btnCls="w-[14%]"
-                                onClick={() => { navigate('/reports') }} btnName='Cancel'
-                                btnCategory="secondary"
-                                 />
-
-
-                            <Button btnType="button" btnCls="w-[14%]"
-                                onClick={() => { navigate('/edit-report/1') }} btnName='Edit'
-
-                                btnStyle={{ background: 'rgba(0, 174, 189, 1)' }} />
-
-                            <Button btnType="button" btnCls="w-[14%]"
-                                onClick={() => { navigate('/reports') }} btnName='Close'
-                                btnStyle={{ background: 'rgba(29, 91, 191, 1)' }}
-                            />
-                        </div>
-                    </div>
-
-
-
-
-
 
                 </div>
 
-
-            </div>
+            }
         </div>
     )
 }

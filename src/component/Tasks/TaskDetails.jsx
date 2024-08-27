@@ -22,8 +22,8 @@ import { getSpecificTask } from '../../services/task';
 export const TaskDetails = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const { taskdetails: { task, program, task_status, task_assigned_by, task_submission = {} }, loading, status } = useSelector(state => state.userPrograms)
-    const { task: taskData } = useSelector(state => state.tasks)
+    const { taskdetails: { task, program, task_status, task_assigned_by, task_submission = {} }, status } = useSelector(state => state.userPrograms)
+    const { task: taskData, loading } = useSelector(state => state.tasks)
     const [startTask, setStartTask] = useState(true)
     const [taskStatus, setTaskStatus] = useState('')
     const params = useParams();
@@ -42,7 +42,7 @@ export const TaskDetails = () => {
         setValue
     } = useForm();
 
-    const referenceView = task?.reference_links || ''
+    const referenceView = taskData?.reference_link || ''
 
     const docs = referenceView !== '' ? referenceView?.split(',') || [] : []
 
@@ -70,7 +70,7 @@ export const TaskDetails = () => {
             } else {
                 // setImageError({ error: true, message: 'Invalid file format. Only JPEG,PNG,PDF,DOC,AVI,MOV,MP4 files are allowed' })
             }
-         
+
         }
     }
 
@@ -102,6 +102,7 @@ export const TaskDetails = () => {
             const payload = {
                 task_solution: data.task_solution,
                 task_id: parseInt(params.id),
+                status: 'completed',
                 ...files
             }
             console.log('Submit Task', data, payload)
@@ -154,12 +155,12 @@ export const TaskDetails = () => {
 
 
     useEffect(() => {
-        if(task_submission && Object.keys(task_submission).length){
+        if (task_submission && Object.keys(task_submission).length) {
             reset({
-                task_solution : task_submission?.task_solution || '',
+                task_solution: task_submission?.task_solution || '',
             })
         }
-    },[task_submission])
+    }, [task_submission])
 
     // console.log('paaa', params)
 
@@ -231,106 +232,108 @@ export const TaskDetails = () => {
                     </div>
                 </div>
 
+                {
+                    (!loading && Object.keys(taskData).length) &&
 
-                <div className='px-4'>
-                    <div className="relative flex gap-6 justify-between">
-                        <table className="w-[50%] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                            <tbody style={{ border: '1px solid rgba(0, 174, 189, 1)' }}>
-                                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" style={{ border: '1px solid rgba(0, 174, 189, 1)', background: '#fff' }} className="px-6 py-4 font-medium whitespace-nowrap ">
-                                        Assigned Date
-                                    </th>
-                                    <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
-                                        {task?.assign_task_created_at?.split('T')[0]}
-                                    </td>
-                                </tr>
-                                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th style={{ border: '1px solid rgba(0, 174, 189, 1)', background: '#fff' }} scope="row" className="px-6 py-4 font-medium  whitespace-nowrap ">
-                                        Task Name
-                                    </th>
-                                    <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
-                                        {task?.task_name}
-                                    </td>
-                                </tr>
-                                <tr className="bg-white border-b dark:bg-gray-800 ">
-                                    <th style={{ border: '1px solid rgba(0, 174, 189, 1)', background: '#fff' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
-                                        Program Name
-                                    </th>
-                                    <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
-                                        {task?.prgrame_name}
-                                    </td>
-                                </tr>
-                                <tr className="bg-white border-b  dark:bg-gray-800">
-                                    <th style={{ border: '1px solid rgba(0, 174, 189, 1)', background: '#fff' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
-                                        Due  Date
-                                    </th>
-                                    <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
-                                        {task?.due_date?.split('T')[0]}
-                                    </td>
-                                </tr>
+                    <div className='px-4'>
+                        <div className="relative flex gap-6 justify-between">
+                            <table className="w-[50%] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                <tbody style={{ border: '1px solid rgba(0, 174, 189, 1)' }}>
+                                    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                        <th scope="row" style={{ border: '1px solid rgba(0, 174, 189, 1)', background: '#fff' }} className="px-6 py-4 font-medium whitespace-nowrap ">
+                                            Assigned Date
+                                        </th>
+                                        <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
+                                            {taskData?.created_at?.split('T')[0]}
+                                        </td>
+                                    </tr>
+                                    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                        <th style={{ border: '1px solid rgba(0, 174, 189, 1)', background: '#fff' }} scope="row" className="px-6 py-4 font-medium  whitespace-nowrap ">
+                                            Task Name
+                                        </th>
+                                        <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
+                                            {taskData?.task_name}
+                                        </td>
+                                    </tr>
+                                    <tr className="bg-white border-b dark:bg-gray-800 ">
+                                        <th style={{ border: '1px solid rgba(0, 174, 189, 1)', background: '#fff' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
+                                            Program Name
+                                        </th>
+                                        <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
+                                            {taskData?.program_name}
+                                        </td>
+                                    </tr>
+                                    <tr className="bg-white border-b  dark:bg-gray-800">
+                                        <th style={{ border: '1px solid rgba(0, 174, 189, 1)', background: '#fff' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
+                                            Due  Date
+                                        </th>
+                                        <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
+                                            {taskData['due-date']?.split('T')[0]}
+                                        </td>
+                                    </tr>
 
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
 
-                        <table className="w-[50%] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                            <tbody style={{ border: '1px solid rgba(29, 91, 191, 1)' }}>
-                                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" style={{ border: '1px solid rgba(29, 91, 191, 1)', background: '#fff' }} className="px-6 py-4 font-medium whitespace-nowrap ">
-                                        Completed  Date
-                                    </th>
-                                    <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
-                                        -
-                                    </td>
-                                </tr>
-                                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th style={{ border: '1px solid rgba(29, 91, 191, 1)', background: '#fff' }} scope="row" className="px-6 py-4 font-medium  whitespace-nowrap ">
-                                        Task assigned by
-                                    </th>
-                                    <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
-                                        {task_assigned_by}
-                                    </td>
-                                </tr>
-                                <tr className="bg-white border-b dark:bg-gray-800 ">
-                                    <th style={{ border: '1px solid rgba(29, 91, 191, 1)', background: '#fff' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
-                                        File Type
-                                    </th>
-                                    <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
-                                        {true ? '-' : 'Video, Jpg, PDF'}
-                                    </td>
-                                </tr>
-                                <tr className="bg-white border-b  dark:bg-gray-800">
-                                    <th style={{ border: '1px solid rgba(29, 91, 191, 1)', background: '#fff' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
-                                        Status
-                                    </th>
-                                    <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
-                                        {TaskStatus[task_status]}
-                                    </td>
-                                </tr>
+                            <table className="w-[50%] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                <tbody style={{ border: '1px solid rgba(29, 91, 191, 1)' }}>
+                                    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                        <th scope="row" style={{ border: '1px solid rgba(29, 91, 191, 1)', background: '#fff' }} className="px-6 py-4 font-medium whitespace-nowrap ">
+                                            Completed  Date
+                                        </th>
+                                        <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
+                                            {taskData?.submited_date?.split('T')[0] || '-'}
+                                        </td>
+                                    </tr>
+                                    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                        <th style={{ border: '1px solid rgba(29, 91, 191, 1)', background: '#fff' }} scope="row" className="px-6 py-4 font-medium  whitespace-nowrap ">
+                                            Task assigned by
+                                        </th>
+                                        <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
+                                            {taskData?.mentor_name}
+                                        </td>
+                                    </tr>
+                                    <tr className="bg-white border-b dark:bg-gray-800 ">
+                                        <th style={{ border: '1px solid rgba(29, 91, 191, 1)', background: '#fff' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
+                                            File Type
+                                        </th>
+                                        <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
+                                            {true ? '-' : 'Video, Jpg, PDF'}
+                                        </td>
+                                    </tr>
+                                    <tr className="bg-white border-b  dark:bg-gray-800">
+                                        <th style={{ border: '1px solid rgba(29, 91, 191, 1)', background: '#fff' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
+                                            Status
+                                        </th>
+                                        <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
+                                            {TaskStatus[taskData?.status] || ''}
+                                        </td>
+                                    </tr>
 
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <form onSubmit={handleSubmit(onSubmit)}>
-
-                        <div className='task-desc flex mt-5 px-5 py-6' style={{ border: '1px solid rgba(29, 91, 191, 0.5)' }}>
-                            <p className='w-[30%]'>Task Description : </p>
-                            <p className='text-[14px]'>{task?.task_details}</p>
+                                </tbody>
+                            </table>
                         </div>
 
-                        <div className='py-6 mb-16'>
-                            <div className='reference-link flex justify-between mb-8'>
-                                <div className='reference-view'>
-                                    <p className='py-4'>Reference View</p>
-                                    <ul className='leading-10'>
-                                        {
-                                            docs.map((doc, index) => <li key={index}>{index + 1}. <span className='underline'>{doc}</span></li>)
-                                        }
+                        <form onSubmit={handleSubmit(onSubmit)}>
+
+                            <div className='task-desc flex mt-5 px-5 py-6' style={{ border: '1px solid rgba(29, 91, 191, 0.5)' }}>
+                                <p className='w-[30%]'>Task Description : </p>
+                                <p className='text-[14px]'>{taskData?.task_description}</p>
+                            </div>
+
+                            <div className='py-6 mb-16'>
+                                <div className='reference-link flex justify-between mb-8'>
+                                    <div className='reference-view'>
+                                        <p className='py-4'>Reference View</p>
+                                        <ul className='leading-10'>
+                                            {
+                                                docs?.map((doc, index) => <li key={index}>{index + 1}. <span className='underline'>{doc}</span></li>)
+                                            }
 
 
-                                    </ul>
-                                </div>
-                                {/* {
+                                        </ul>
+                                    </div>
+                                    {/* {
                                 !startTask &&
 
                                 <div style={{ background: 'rgba(26, 153, 92, 1)' }}
@@ -339,9 +342,9 @@ export const TaskDetails = () => {
                                 </div>
                             } */}
 
-                            </div>
+                                </div>
 
-                            {/* {
+                                {/* {
                             params.id === '1' &&
 
                             <>
@@ -413,200 +416,216 @@ export const TaskDetails = () => {
                             </>
                         } */}
 
-                            <div className='relative'>
-                                <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2" >
-                                    Task Solution
-                                </label>
-                                <textarea id="message" rows="4"
-                                    className={`block p-2.5 input-bg w-full h-[170px] text-sm text-gray-900  rounded-lg border
-                                    focus-visible:outline-none focus:visible:border-none`} style={{ border: errors['task_solution'] ? '2px solid red' : 'none' }} placeholder=""
-                                    {...register('task_solution', {
-                                        required: "This field is required",
-                                    })}
-                                ></textarea>
-                                {errors['task_solution'] && (
-                                    <p className="error" role="alert">
-                                        {errors['task_solution'].message}
-                                    </p>
-                                )}
-                            </div>
-
-                            <div className='relative mt-12'>
-
-                                <div className="flex items-center justify-center w-full">
-                                    <label htmlFor="dropzone-file"
-                                        className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed cursor-pointer
-                                                     bg-gray-50 dark:hover:bg-bray-800 dark:border-gray-600"
-                                        style={{ background: 'rgba(243, 247, 252, 1)', border: imageError.error || errors['file'] ? '2px dashed red' : 'none' }} >
-                                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                            <img src={FileIcon} alt="FileIcon" />
-                                            <p className="mb-2 mt-3 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">
-                                                Drop your Image ,video,  document or browse</span>
-                                            </p>
-                                            <p className="text-xs text-gray-500 dark:text-gray-400">
-                                                supports: JPG,PNG,PDF,DOC
-                                            </p>
-                                        </div>
-                                        <input id="dropzone-file" type="file"
-                                            name="file"
-
-                                            {...imageField}
-
-                                            onChange={(e) => {
-                                                console.log(e)
-                                                imageField.onChange(e)
-                                                handleImageUpload(e)
-
-                                                // if (e.target.files && e.target.files[0]) {
-                                                //     const fileName = e.target.files[0].name;
-                                                //     const fileNameSplit = fileName.split('.')
-                                                //     const fileExtension = TaskFileTypes.includes(fileNameSplit.pop().toLowerCase())
-                                                //     console.log(e.target.files[0].type)
-                                                //     if (fileExtension) {
-                                                //         setTaskImages([...taskImages, e.target.files]);
-                                                //     } else {
-                                                //         // setError([field.name], 'Invalid file type')
-                                                //     }
-                                                // }
-
-                                            }}
-
-                                            className="hidden" />
+                                <div className='relative'>
+                                    <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2" >
+                                        Task Solution
                                     </label>
+                                    <textarea id="message" rows="4"
+                                        className={`block p-2.5 input-bg w-full h-[170px] text-sm text-gray-900  rounded-lg border
+                                    focus-visible:outline-none focus:visible:border-none`} style={{ border: errors['task_solution'] ? '2px solid red' : 'none',
 
+                                        cursor : taskData.status === TaskAllStatus.rejected ? 'not-allowed' : 'inherit'
+                                     }} 
+                                    placeholder=""
+                                        {...register('task_solution', {
+                                            required: "This field is required",
+                                        })}
+
+                                        
+
+                                        disabled={taskData.status === TaskAllStatus.rejected || taskData.status === TaskAllStatus.completed}
+                                    ></textarea>
+                                    {errors['task_solution'] && (
+                                        <p className="error" role="alert">
+                                            {errors['task_solution'].message}
+                                        </p>
+                                    )}
                                 </div>
-                                {(imageError.error || errors['file']) && (
-                                    <p className="error" role="alert">
-                                        {errors['file']?.message}
-                                    </p>
-                                )}
-                            </div>
 
-                            <div className='flex justify-between task-uploaded-images-container'>
-                                {
-                                    taskSolutionDocs.img.length ?
+                                <div className='relative mt-12'>
 
-                                        <div>
-                                            <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Image</div>
-                                            {
-                                                taskSolutionDocs.img.map((imges, index) =>
+                                    <div className="flex items-center justify-center w-full">
+                                        <label htmlFor="dropzone-file"
+                                            className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed cursor-pointer
+                                                     bg-gray-50 dark:hover:bg-bray-800 dark:border-gray-600"
+                                            style={{ background: 'rgba(243, 247, 252, 1)', border: imageError.error || errors['file'] ? '2px dashed red' : 'none',
 
-                                                    <div className='uploaded-images task-image-list' key={index}>
-                                                        <div className='flex gap-3 w-[400px] justify-between items-center mt-5 px-4 py-4'
-                                                            style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }}>
+                                                cursor : (taskData.status === TaskAllStatus.rejected || taskData.status === TaskAllStatus.completed) ? 'not-allowed' : 'pointer'
+                                             }} >
+                                            <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                                                <img src={FileIcon} alt="FileIcon" />
+                                                <p className="mb-2 mt-3 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">
+                                                    Drop your Image ,video,  document or browse</span>
+                                                </p>
+                                                <p className="text-xs text-gray-500 dark:text-gray-400">
+                                                    supports: JPG,PNG,PDF,DOC
+                                                </p>
+                                            </div>
+                                            <input id="dropzone-file" type="file"
+                                                name="file"
+
+                                                {...imageField}
+
+                                                onChange={(e) => {
+                                                    console.log(e)
+                                                    imageField.onChange(e)
+                                                    handleImageUpload(e)
+
+                                                    // if (e.target.files && e.target.files[0]) {
+                                                    //     const fileName = e.target.files[0].name;
+                                                    //     const fileNameSplit = fileName.split('.')
+                                                    //     const fileExtension = TaskFileTypes.includes(fileNameSplit.pop().toLowerCase())
+                                                    //     console.log(e.target.files[0].type)
+                                                    //     if (fileExtension) {
+                                                    //         setTaskImages([...taskImages, e.target.files]);
+                                                    //     } else {
+                                                    //         // setError([field.name], 'Invalid file type')
+                                                    //     }
+                                                    // }
+
+                                                }}
+
+                                                disabled={taskData.status === TaskAllStatus.rejected || taskData.status === TaskAllStatus.completed}
+
+                                                className="hidden" />
+                                        </label>
+
+                                    </div>
+                                    {(imageError.error || errors['file']) && (
+                                        <p className="error" role="alert">
+                                            {errors['file']?.message}
+                                        </p>
+                                    )}
+                                </div>
+
+                                <div className='flex justify-between task-uploaded-images-container'>
+                                    {
+                                        taskSolutionDocs.img.length ?
+
+                                            <div>
+                                                <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Image</div>
+                                                {
+                                                    taskSolutionDocs.img.map((imges, index) =>
+
+                                                        <div className='uploaded-images task-image-list' key={index}>
+                                                            <div className='flex gap-3 w-[400px] justify-between items-center mt-5 px-4 py-4'
+                                                                style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }}>
+                                                                <div className='flex gap-3 items-center'>
+                                                                    <img src={UploadIcon} alt="altlogo" />
+                                                                    <span className='text-[12px] image-name'>{imges[0].name}</span>
+                                                                </div>
+                                                                <img className='w-[30px] cursor-pointer' onClick={() => handleDelete(imges.id)} src={DeleteIcon} alt="DeleteIcon" />
+                                                            </div>
+                                                        </div>
+                                                    )
+                                                }
+                                            </div>
+
+                                            : null
+                                    }
+
+
+                                    {
+                                        taskSolutionDocs.video.length ?
+
+                                            <div>
+                                                <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Video</div>
+
+                                                {
+                                                    taskSolutionDocs.video.map((imges, index) =>
+                                                        <div className='task-image-list flex gap-3 w-[400px] justify-between items-center mt-5 px-4 py-4'
+                                                            style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }} key={index}>
                                                             <div className='flex gap-3 items-center'>
                                                                 <img src={UploadIcon} alt="altlogo" />
                                                                 <span className='text-[12px] image-name'>{imges[0].name}</span>
                                                             </div>
                                                             <img className='w-[30px] cursor-pointer' onClick={() => handleDelete(imges.id)} src={DeleteIcon} alt="DeleteIcon" />
                                                         </div>
-                                                    </div>
-                                                )
-                                            }
-                                        </div>
-
-                                        : null
-                                }
+                                                    )
+                                                }
+                                            </div>
 
 
-                                {
-                                    taskSolutionDocs.video.length ?
+                                            :
 
-                                        <div>
-                                            <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Video</div>
+                                            null
 
-                                            {
-                                                taskSolutionDocs.video.map((imges, index) =>
-                                                    <div className='task-image-list flex gap-3 w-[400px] justify-between items-center mt-5 px-4 py-4'
-                                                        style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }} key={index}>
-                                                        <div className='flex gap-3 items-center'>
-                                                            <img src={UploadIcon} alt="altlogo" />
-                                                            <span className='text-[12px] image-name'>{imges[0].name}</span>
+                                    }
+
+
+
+                                    {
+                                        taskSolutionDocs.doc.length ?
+
+                                            <div>
+                                                <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Files</div>
+
+                                                {
+                                                    taskSolutionDocs.doc.map((imges, index) =>
+                                                        <div className='task-image-list flex gap-3 w-[400px] justify-between items-center mt-5 px-4 py-4'
+                                                            style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }} key={index}>
+                                                            <div className='flex gap-3 items-center'>
+                                                                <img src={UploadIcon} alt="altlogo" />
+                                                                <span className='text-[12px] image-name'>{imges[0].name}</span>
+                                                            </div>
+                                                            <img className='w-[30px] cursor-pointer' onClick={() => handleDelete(imges.id)} src={DeleteIcon} alt="DeleteIcon" />
                                                         </div>
-                                                        <img className='w-[30px] cursor-pointer' onClick={() => handleDelete(imges.id)} src={DeleteIcon} alt="DeleteIcon" />
-                                                    </div>
-                                                )
-                                            }
-                                        </div>
+                                                    )
+                                                }
+                                            </div>
 
+                                            : null
+                                    }
 
-                                        :
-
-                                        null
-
-                                }
-
-
-
-                                {
-                                    taskSolutionDocs.doc.length ?
-
-                                        <div>
-                                            <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Files</div>
-
-                                            {
-                                                taskSolutionDocs.doc.map((imges, index) =>
-                                                    <div className='task-image-list flex gap-3 w-[400px] justify-between items-center mt-5 px-4 py-4'
-                                                        style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }} key={index}>
-                                                        <div className='flex gap-3 items-center'>
-                                                            <img src={UploadIcon} alt="altlogo" />
-                                                            <span className='text-[12px] image-name'>{imges[0].name}</span>
-                                                        </div>
-                                                        <img className='w-[30px] cursor-pointer' onClick={() => handleDelete(imges.id)} src={DeleteIcon} alt="DeleteIcon" />
-                                                    </div>
-                                                )
-                                            }
-                                        </div>
-
-                                        : null
-                                }
+                                </div>
 
                             </div>
 
-                        </div>
+                            <div className='close-btn flex justify-center gap-7 pb-5'>
+                                <Button btnName='Cancel' btnCls="w-[12%]" btnCategory="secondary" onClick={() => navigate('/mentee-tasks')} />
+                                {
+                                    (taskData.status === TaskAllStatus.start || taskData.status === TaskAllStatus.pending
+                                            || taskData.status === TaskAllStatus.draft
 
-                        <div className='close-btn flex justify-center gap-7 pb-5'>
-                            <Button btnName='Cancel' btnCls="w-[12%]" btnCategory="secondary" onClick={() => navigate('/mentee-tasks')} />
-                            {
-                                task_status === TaskAllStatus.start &&
-                                <>
-                                    <Button btnType="button" btnCls={`${startTask ? 'w-[14%]' : 'w-[12%]'}`}
-                                        onClick={handleReset} btnName='Reset'
-                                        style={{
-                                            background: 'rgba(217, 228, 242, 1)',
-                                            color: 'rgba(29, 91, 191, 1)'
-                                        }}
-                                    />
-                                    <Button btnType="button" btnCls={`${startTask ? 'w-[14%]' : 'w-[12%]'}`}
-                                        onClick={() => navigate(`/preview-mentee-tasks-details/${params.id}`)} btnName='Preview'
-                                        style={{
-                                            background: 'rgba(167, 181, 202, 1)',
-                                            color: 'rgba(24, 40, 61, 1)'
-                                        }}
-                                    />
-                                    <Button btnType="submit" btnCls={`${startTask ? 'w-[14%]' : 'w-[12%]'}`}
-                                        btnName='Submit to Mentor' btnCategory="primary" />
-                                </>
-                            }
-                            {
-                                task_status === TaskAllStatus.yettostart &&
+                                    ) &&
+                                    <>
+                                        <Button btnType="button" btnCls={`${startTask ? 'w-[14%]' : 'w-[12%]'}`}
+                                            onClick={handleReset} btnName='Reset'
+                                            style={{
+                                                background: 'rgba(217, 228, 242, 1)',
+                                                color: 'rgba(29, 91, 191, 1)'
+                                            }}
+                                        />
+                                        <Button btnType="button" btnCls={`${startTask ? 'w-[14%]' : 'w-[12%]'}`}
+                                            onClick={() => navigate(`/preview-mentee-tasks-details/${params.id}`)} btnName='Preview'
+                                            style={{
+                                                background: 'rgba(167, 181, 202, 1)',
+                                                color: 'rgba(24, 40, 61, 1)'
+                                            }}
+                                        />
+                                        <Button btnType="submit" btnCls={`${startTask ? 'w-[14%]' : 'w-[12%]'}`}
+                                            btnName='Submit to Mentor' btnCategory="primary" />
+                                    </>
+                                }
+                                {
+                                    taskData?.status === TaskAllStatus.yettostart &&
 
-                                <Button btnType="button" btnCls={`${startTask ? 'w-[14%]' : 'w-[12%]'}`} onClick={() => setStartTask(true)} btnName='Start Task' btnCategory="primary" />
-                            }
+                                    <Button btnType="button" btnCls={`${startTask ? 'w-[14%]' : 'w-[12%]'}`} onClick={() => setStartTask(true)} btnName='Start Task' btnCategory="primary" />
+                                }
 
-                            {
-                                task_status === TaskAllStatus.submitted &&
+                                {
+                                    task_status === TaskAllStatus.submitted &&
 
-                                <Button btnType="button" btnCls="w-[10%]"
-                                    onClick={() => { navigate('/mentee-tasks') }} btnName='Close' btnCategory="primary" />
-                            }
-                        </div>
+                                    <Button btnType="button" btnCls="w-[10%]"
+                                        onClick={() => { navigate('/mentee-tasks') }} btnName='Close' btnCategory="primary" />
+                                }
+                            </div>
 
-                    </form>
+                        </form>
 
 
 
-                    {/* <div className='close-btn flex justify-center gap-7 pb-5'>
+                        {/* <div className='close-btn flex justify-center gap-7 pb-5'>
                         {
                             params.id !== '' || params.id === '5' ?
 
@@ -653,8 +672,8 @@ export const TaskDetails = () => {
                         }
 
                     </div> */}
-                </div>
-
+                    </div>
+                }
 
             </div>
         </div>
