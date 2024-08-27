@@ -1,0 +1,71 @@
+import {
+    createSlice
+} from "@reduxjs/toolkit";
+import {
+    getCertificates,
+    triggerCertificateAction
+} from "../../services/certificate";
+
+const initialState = {
+    certificates: [],
+    certificate: {},
+    loading: false,
+    status: "",
+    error: "",
+};
+
+export const certificateSlice = createSlice({
+    name: "certificates",
+    initialState,
+    reducers: {},
+    extraReducers: (builder) => {
+        builder
+            .addCase(getCertificates.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(getCertificates.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    certificates: action.payload,
+                    loading: false,
+                };
+            })
+            .addCase(getCertificates.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+        builder
+            .addCase(triggerCertificateAction.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(triggerCertificateAction.fulfilled, (state, action) => {
+                let response = {
+                    ...state,
+                    loading: false
+                }
+                if (action.payload.action_type === 'view') {
+                    response.certificate = action.payload
+                }
+                return response;
+            })
+            .addCase(triggerCertificateAction.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
+    },
+});
+
+export default certificateSlice.reducer;

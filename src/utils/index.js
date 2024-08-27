@@ -146,8 +146,22 @@ export const formatTime = (timeString) => {
   const ampm = formattedHours >= 12 ? 'PM' : 'AM';
   formattedHours = formattedHours % 12;
   formattedHours = formattedHours ? formattedHours : 12;
-  
+
   const formattedMinutes = date.getMinutes().toString().padStart(2, '0');
   return `${formattedHours}:${formattedMinutes} ${ampm}`;
 }
 
+
+
+export const dateFormat = data => {
+  if (data && data !== '') {
+    const timestamp = data;
+    const date = new Date(timestamp);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const formattedDate = `${year}-${month}-${day}`;
+    return formattedDate
+  }
+  return ''
+}
