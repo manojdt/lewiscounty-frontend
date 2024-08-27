@@ -18,7 +18,7 @@ import { menteeColumns, menteeRow } from '../../mock';
 import { Button } from '../../shared';
 import { getAllReports } from '../../services/reportsInfo';
 import { useDispatch, useSelector } from 'react-redux';
-import { goalDataStatus, goalStatusColor, pipeUrls } from '../../utils/constant';
+import { goalDataStatus, goalStatusColor, pipeUrls, reportStatus, reportStatusColor } from '../../utils/constant';
 import { reportColumns } from '../../utils/formFields';
 
 
@@ -31,6 +31,7 @@ const Reports = () => {
     const open = Boolean(anchorEl);
     const [selectedRows, setSelectedRows] = useState([])
     const [deleteModal, setDeleteModal] = useState(false)
+    const [seletedItem, setSelectedItem] = useState({})
     const [requestTab, setRequestTab] = useState('all')
     const [searchParams] = useSearchParams();
 
@@ -61,23 +62,29 @@ const Reports = () => {
         setAnchorEl(null);
     };
 
-    const handleClick = (event) => {
+    const handleClick = (event, data) => {
+        setSelectedItem(data)
         setAnchorEl(event.currentTarget);
     };
 
     const reportColumn = [
         ...reportColumns,
         {
-            field: 'status',
+            field: 'report_status',
             headerName: 'Status',
             flex: 1,
-            id: 8,
+            id: 10,
             renderCell: (params) => {
                 return <>
                     <div className='cursor-pointer flex items-center h-full relative'>
                         <span className='w-[80px] flex justify-center h-[30px] px-7'
+                             style={{
+                                background: reportStatusColor[params.row.report_status]?.bg || '', lineHeight: '30px',
+                                borderRadius: '3px',  height: '34px', color: reportStatusColor[params.row.report_status]?.color || '',
+                                fontSize: '12px'
+                            }}
                            >
-                            {params.row.goal_status}
+                            {reportStatus[params.row.report_status]}
                         </span>
                     </div>
                 </>
@@ -87,11 +94,11 @@ const Reports = () => {
             field: 'action',
             headerName: 'Action',
             flex: 1,
-            id: 9,
+            id: 11,
             renderCell: (params) => {
                 console.log('params', params)
                 return <>
-                    <div className='cursor-pointer flex items-center h-full' onClick={handleClick}>
+                    <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleClick(e, params.row)}>
                         <img src={MoreIcon} alt='MoreIcon' />
                     </div>
                     <Menu
@@ -103,11 +110,11 @@ const Reports = () => {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
-                        <MenuItem onClick={() => navigate('/edit-report/1')} className='!text-[12px]'>
+                        <MenuItem onClick={() => navigate(`/edit-report/${seletedItem.id}`)} className='!text-[12px]'>
                             <img src={EditIcon} alt="EditIcon" className='pr-3 w-[30px]' />
                             Edit
                         </MenuItem>
-                        <MenuItem onClick={() => navigate('/view-report/1')} className='!text-[12px]'>
+                        <MenuItem onClick={() => navigate(`/view-report/${seletedItem.id}`)} className='!text-[12px]'>
                             <img src={ViewIcon} alt="ViewIcon" className='pr-3 w-[30px]' />
                             View
                         </MenuItem>

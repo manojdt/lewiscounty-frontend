@@ -16,12 +16,14 @@ import { Backdrop, CircularProgress } from '@mui/material'
 import { allowedDocTypes, allowedImagesTypes, allowedVideoTypes, programStatus, TaskAllStatus, TaskFileTypes, TaskStatus } from '../../utils/constant'
 import { useForm } from 'react-hook-form'
 import ToastNotification from '../../shared/Toast';
+import { getSpecificTask } from '../../services/task';
 
 
 export const TaskDetails = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const { taskdetails: { task, program, task_status, task_assigned_by, task_submission = {} }, loading, status } = useSelector(state => state.userPrograms)
+    const { task: taskData } = useSelector(state => state.tasks)
     const [startTask, setStartTask] = useState(true)
     const [taskStatus, setTaskStatus] = useState('')
     const params = useParams();
@@ -147,6 +149,7 @@ export const TaskDetails = () => {
 
     useEffect(() => {
         dispatch(getProgramTaskDetails(params.id))
+        dispatch(getSpecificTask(params.id))
     }, [])
 
 

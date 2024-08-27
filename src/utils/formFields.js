@@ -44,7 +44,7 @@ export const PersonalInformationFields = [{
     label: "LinkedIn Profile Link",
     placeholder: "Enter LinkedIn Profile Link",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     size: true,
   },
@@ -117,25 +117,25 @@ export const ProfessionalBackgroundFields = [{
     },
     size: true,
   },
-  {
-    type: "dropdown",
-    name: "linked_in",
-    label: "LinkedIn Profile (if available)",
-    placeholder: "",
-    options: [{
-        key: "yes",
-        value: "Yes"
-      },
-      {
-        key: "no",
-        value: "No"
-      },
-    ],
-    inputRules: {
-      required: "This field is required",
-    },
-    size: true,
-  },
+  // {
+  //   type: "dropdown",
+  //   name: "linked_in",
+  //   label: "LinkedIn Profile (if available)",
+  //   placeholder: "",
+  //   options: [{
+  //       key: "yes",
+  //       value: "Yes"
+  //     },
+  //     {
+  //       key: "no",
+  //       value: "No"
+  //     },
+  //   ],
+  //   inputRules: {
+  //     required: "This field is required",
+  //   },
+  //   size: true,
+  // },
 ];
 
 export const EducationalBackgroundFields = [{
@@ -1571,7 +1571,7 @@ export const ReportFields = [{
   },
   {
     type: "dropdown",
-    name: "program_name",
+    name: "program",
     label: "Program Name",
     placeholder: "Select Program Name",
     inputRules: {
@@ -1580,27 +1580,29 @@ export const ReportFields = [{
     options: [],
     width: 'width-32',
   },
+  
   {
     type: "dropdown",
     name: "mentor_manager",
     label: "Mentor Manager",
     placeholder: "Select Mentor Manager",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     options: [],
     width: 'width-32',
   },
   {
-    type: "dropdown",
+    type: "input",
     name: "mentor_name",
+    fieldtype: "text",
     label: "Mentor Name",
-    placeholder: "Select Mentor Name",
+    placeholder: "Mentor Name",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
-    options: [],
     width: 'width-32',
+    disabled: true
   },
   {
     type: "date",
@@ -1608,7 +1610,7 @@ export const ReportFields = [{
     label: "Program Start Date and Time",
     placeholder: "Select Program Start Date and Time",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     width: 'width-32',
   },
@@ -1618,24 +1620,24 @@ export const ReportFields = [{
     label: "Program End Date and Time",
     placeholder: "Select Program End Date and Time",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     width: 'width-32',
   },
   {
-    type: "dropdown",
-    name: "mentees",
+    type: "popup-input",
+    name: "participated_mentees",
     label: "Participated Mentees",
     placeholder: "Select Meneteed",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     options: [],
     width: 'w-full',
   },
   {
     type: "input",
-    name: "task_name",
+    name: "report_name",
     fieldtype: "text",
     label: "Report Name",
     placeholder: "Report Name",
@@ -1646,7 +1648,7 @@ export const ReportFields = [{
   },
   {
     type: "editor",
-    name: "task_details",
+    name: "description",
     fieldtype: "text",
     label: "Descriptions",
     placeholder: "Description",
@@ -1807,22 +1809,22 @@ export const reportColumns = [{
     id: 6,
   },
   {
-    field: 'approved_date',
+    field: 'rejected_date',
     headerName: 'Rejected Time/ Date',
     flex: 1,
-    id: 5,
+    id: 7,
   },
   {
     field: 'rejecter',
     headerName: 'Rejected by',
     flex: 1,
-    id: 6,
+    id: 8,
   },
   {
     field: 'file',
     headerName: 'File',
     flex: 1,
-    id: 7,
+    id: 9,
   },
 ];
 

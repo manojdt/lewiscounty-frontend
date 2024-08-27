@@ -6,13 +6,16 @@ import {
     reportsStatus
 } from "../../utils/constant";
 import {
+    createReport,
     getAllReports,
-    getProgramsByCategoryId
+    getProgramsByCategoryId,
+    getReportProgramDetails
 } from "../../services/reportsInfo";
 
 const initialState = {
     allreports: [],
     categoryPrograms: [],
+    programDetails: {},
     loading: false,
     status: "",
     error: "",
@@ -62,6 +65,51 @@ export const reportsSlice = createSlice({
                 };
             })
             .addCase(getProgramsByCategoryId.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
+        builder
+            .addCase(getReportProgramDetails.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(getReportProgramDetails.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    programDetails: action.payload,
+                    status: reportsStatus.load,
+                    loading: false,
+                };
+            })
+            .addCase(getReportProgramDetails.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
+        builder
+            .addCase(createReport.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(createReport.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    status: reportsStatus.create,
+                    loading: false,
+                };
+            })
+            .addCase(createReport.rejected, (state, action) => {
                 return {
                     ...state,
                     loading: false,

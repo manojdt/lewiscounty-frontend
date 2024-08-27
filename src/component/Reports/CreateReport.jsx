@@ -20,9 +20,11 @@ import CancelIcon from '../../assets/images/cancel1x.png'
 import { getAllCategories } from '../../services/programInfo';
 
 import { getMentees, getProgramDetails, updateProgram } from '../../services/userprograms';
-import { pipeUrls, programActionStatus } from '../../utils/constant';
-import { getProgramsByCategoryId } from '../../services/reportsInfo';
+import { pipeUrls, programActionStatus, reportsStatus } from '../../utils/constant';
+import { createReport, getProgramsByCategoryId, getReportProgramDetails } from '../../services/reportsInfo';
 import ToastNotification from '../../shared/Toast';
+import { dateTimeFormat } from '../../utils';
+import MuiModal from '../../shared/Modal';
 
 
 
@@ -35,9 +37,9 @@ export default function CreateReport() {
     const params = useParams();
 
     const dispatch = useDispatch()
-    const { programdetails, loading: programLoading, error, status, menteeList } = useSelector(state => state.userPrograms)
+    const { programdetails, loading: programLoading, error, menteeList } = useSelector(state => state.userPrograms)
     const { category, loading: apiLoading } = useSelector(state => state.programInfo)
-    const { categoryPrograms, loading: reportsLoading } = useSelector(state => state.reports)
+    const { categoryPrograms, loading: reportsLoading, programDetails, status } = useSelector(state => state.reports)
     const [reportFields, setReportFields] = useState(ReportFields)
     const [dateFormat, setDateFormat] = useState({})
     const [menteeAllList, setAllMenteeList] = useState([])
@@ -57,9 +59,20 @@ export default function CreateReport() {
     } = useForm();
 
     const onSubmit = (data) => {
-        console.log(data)
+        console.log('Submit11', data)
+
+        const apiData = {
+            "category": parseInt(data.category),
+            "program": parseInt(data.program),
+            "report_name": data.report_name,
+            "participated_mentees": data.participated_mentees,
+            "description": data.description,
+            "action": "submit"
+        }
+
+        dispatch(createReport(apiData))
         // dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.assigned }))
-        reset()
+        // reset()
     }
 
     const getProgramInfo = (categoryId) => {
@@ -69,6 +82,30 @@ export default function CreateReport() {
     const handleClose = () => {
         setNotification({ program: false })
     }
+
+    const handleProgramData = (programId) => {
+        dispatch(getReportProgramDetails(programId))
+    }
+
+    useEffect(() => {
+        if (status === reportsStatus.create) {
+            setTimeout(() => {
+                navigate('/reports')
+            },3000)
+        }
+    }, [status])
+
+    useEffect(() => {
+        if (programDetails && Object.keys(programDetails).length) {
+            console.log('sssssssssss')
+            reset({
+                mentor_name: programDetails.mentor_full_name,
+                start_date: dateTimeFormat(programDetails.start_date),
+                end_date: dateTimeFormat(programDetails.end_date),
+                participated_mentees: programDetails.participated_mentees
+            })
+        }
+    }, [programDetails])
 
     useEffect(() => {
         const fields = [...reportFields].map(field => {
@@ -83,11 +120,19 @@ export default function CreateReport() {
         setReportFields(fields)
     }, [category])
 
+    useEffect(() => {
+        if (notification.program) {
+            setTimeout(() => {
+                setNotification({ program: false })
+            }, [2000])
+        }
+    }, [notification.program])
+
 
     useEffect(() => {
         if (categoryPrograms.length) {
             const fields = [...reportFields].map(field => {
-                if (field.name === 'program_name') {
+                if (field.name === 'program') {
                     return {
                         ...field,
                         options: categoryPrograms
@@ -99,6 +144,7 @@ export default function CreateReport() {
         }
 
         if (!categoryPrograms.length && getValues('category') !== '') {
+            console.log('category', getValues('category'))
             setNotification({ program: true })
         }
     }, [categoryPrograms])
@@ -110,6 +156,9 @@ export default function CreateReport() {
     }, [])
 
 
+
+    console.log('Valmm', getValues('participated_mentees'))
+
     return (
         <div className="px-9 my-6 grid">
 
@@ -120,7 +169,23 @@ export default function CreateReport() {
                 <CircularProgress color="inherit" />
             </Backdrop>
 
-            <ToastNotification openToaster={notification.program} message={'There is no programs found for this category'} handleClose={handleClose} toastType={'error'} />
+            <MuiModal modalOpen={status === reportsStatus.create} modalClose={() => setLoading(false)} noheader>
+                <div className='px-5 py-1 flex justify-center items-center'>
+                    <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
+                        style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
+                        <img src={SuccessTik} alt="SuccessTik" />
+                        <p className='text-white text-[12px]'>Report created Successfully</p>
+                    </div>
+
+                </div>
+            </MuiModal>
+
+            {
+                notification.program &&
+
+                <ToastNotification openToaster={notification.program} message={'There is no programs found for this category'} handleClose={handleClose} toastType={'error'} />
+
+            }
 
 
             <div className='grid mb-10' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)', borderRadius: '5px' }}>
@@ -190,18 +255,25 @@ export default function CreateReport() {
                                                                         // console.log('dateField123', dateField)
                                                                         dropdownField.onChange(e)
                                                                         if (field.name === 'category') getProgramInfo(e.target.value)
+                                                                        if (field.name === 'program') handleProgramData(e.target.value)
                                                                     }}
                                                                 >
                                                                     <option value="">Select</option>
                                                                     {
-                                                                        field.options.map((option, index) =>
-                                                                            <option
-                                                                                value={option.id}
-                                                                                key={index}
-                                                                                selected={getValues(field.name) === option.id}
-                                                                            >
-                                                                                {option.name}
-                                                                            </option>)
+                                                                        field.options.map((option, index) => {
+                                                                            let opt = { name: option.name || '' }
+                                                                            if (field.name === 'program') {
+                                                                                opt = { name: option.program_name }
+                                                                            }
+                                                                            return (
+                                                                                <option
+                                                                                    value={option.id}
+                                                                                    key={index}
+                                                                                    selected={getValues(field.name) === option.id}
+                                                                                >
+                                                                                    {opt.name}
+                                                                                </option>)
+                                                                        })
                                                                     }
                                                                 </select>
                                                                 {errors[field.name] && (
@@ -247,24 +319,21 @@ export default function CreateReport() {
                                                                     field.type === 'date' ?
                                                                         <>
                                                                             <div className='relative input-bg'>
-                                                                                <Calendar
-                                                                                    className='calendar-control'
-                                                                                    // {...dateField}
-                                                                                    {...register(field.name, field.inputRules)}
-                                                                                    value={field.value}
-                                                                                    // onChange={(e) => {
-                                                                                    //     dateField.onChange(e)
-                                                                                    //     setDateFormat({ ...dateFormat, [field.name]: e.value })
-                                                                                    // }}
+                                                                                <input {...register(field.name, field.inputRules)}
+                                                                                    type={field.fieldtype}
+                                                                                    className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none 
+                                                                                    focus-visible:outline-none text-[14px] h-[60px]"
+                                                                                    placeholder={field.placeholder}
+                                                                                    style={{
+                                                                                        color: "#232323",
+                                                                                        borderRadius: '3px'
+                                                                                    }}
                                                                                     disabled={field.disabled}
-                                                                                    showTime
-                                                                                    hourFormat="12"
-                                                                                    dateFormat="dd/mm/yy"
-                                                                                    style={{ width: '30%' }}
+                                                                                    aria-invalid={!!errors[field.name]}
                                                                                 />
                                                                                 <img className='absolute top-5 right-2' src={CalendarIcon} alt="CalendarIcon" />
-
                                                                             </div>
+
                                                                             {errors[field.name] && (
                                                                                 <p className="error" role="alert">
                                                                                     {errors[field.name].message}
@@ -273,55 +342,44 @@ export default function CreateReport() {
                                                                         </>
 
                                                                         :
+                                                                        field.type === 'popup-input' ?
 
-
-
-                                                                        field.type === 'link' ?
-
-                                                                            <div className='flex justify-between'>
+                                                                            <div className='relative'>
                                                                                 <div className='input-bg h-[60px] w-full mt-2 flex items-center 
-                                                                                                             text-[12px] gap-2 cursor-pointer px-6'
-                                                                                    style={{ borderRadius: '3px' }}>
-
+                                                                                                         text-[12px] gap-2 cursor-pointer px-6'
+                                                                                    style={{ borderRadius: '3px' }}
+                                                                                >
                                                                                     {
-                                                                                        programdetails.certifications && programdetails.certifications.map((certification, index) => {
+                                                                                        getValues(field.name) && getValues(field.name).slice(0, 6).map((popupfield, index) => {
+                                                                                            console.log('kkkkkkkkkkkk')
                                                                                             return (
-                                                                                                <p className='underline'>
-                                                                                                    {
-                                                                                                        certification.name
-                                                                                                    }
-                                                                                                </p>
-                                                                                            )
-                                                                                        })
-                                                                                    }
-
-                                                                                    {
-                                                                                        programdetails.learning_materials && programdetails.learning_materials.map((certification, index) => {
-                                                                                            return (
-                                                                                                <p className='underline'>
-                                                                                                    {
-                                                                                                        certification.name
-                                                                                                    }
-                                                                                                </p>
-                                                                                            )
-                                                                                        })
-                                                                                    }
-
-                                                                                    {/* {
-                                                                                                    menteeAllList && menteeAllList?.length > 6 &&
-
+                                                                                                <>
                                                                                                     <p className='flex items-center gap-1'>
-                                                                                                        <p className='text-white flex items-center px-2 py-1' style={{
-                                                                                                            background: 'rgb(29, 91, 191)', borderRadius: '50%',
+                                                                                                        <p className='flex items-center px-3 py-3' style={{
+                                                                                                            background: 'rgba(223, 237, 255, 1)', borderRadius: '50%',
 
-                                                                                                        }}>{menteeAllList.length - 6}</p>
-                                                                                                        Others</p>
+                                                                                                        }}></p>
+                                                                                                        {
+                                                                                                            popupfield.mentee_name
+                                                                                                        }
+                                                                                                    </p>
+                                                                                                </>
+                                                                                            )
+                                                                                        })
+                                                                                    }
 
-                                                                                                } */}
+                                                                                    {
 
+                                                                                        field?.value && field?.value?.length > 6 &&
 
+                                                                                        <p className='flex items-center gap-1'>
+                                                                                            <p className='text-white flex items-center px-2 py-1' style={{
+                                                                                                background: 'rgb(29, 91, 191)', borderRadius: '50%',
+
+                                                                                            }}>{field?.value?.length - 6}</p>
+                                                                                            Others</p>
+                                                                                    }
                                                                                 </div>
-
                                                                             </div>
                                                                             :
 
@@ -344,7 +402,6 @@ export default function CreateReport() {
                                                                                     )}
                                                                                 </>
                                                                                 :
-
                                                                                 null
                                                 }
                                             </div>
