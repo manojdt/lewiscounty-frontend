@@ -268,7 +268,7 @@ const CalendarMain = ({ title = 'Calendar', addSection = true, events }) => {
         return (
           <Week
             currentDate={currentDate}
-            savedEvents={Data}
+            savedEvents={events}
             fetchEvents={fetchAppointments}
             deleteAppointment={deleteAppointment}
             newData={events}
@@ -288,7 +288,7 @@ const CalendarMain = ({ title = 'Calendar', addSection = true, events }) => {
         return (
           <YearView
             currentDate={currentDate}
-            savedEvents={appointmentsList}
+            savedEvents={events}
             fetchEvents={fetchAppointments}
             deleteAppointment={deleteAppointment}
             newData={events}
@@ -299,7 +299,7 @@ const CalendarMain = ({ title = 'Calendar', addSection = true, events }) => {
         return (
           <TodayView
             currentDate={currentDate}
-            savedEvents={appointmentsList}
+            savedEvents={events}
             fetchEvents={fetchAppointments}
             deleteAppointment={deleteAppointment}
             newData={events}
