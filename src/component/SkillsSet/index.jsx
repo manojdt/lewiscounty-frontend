@@ -48,7 +48,10 @@ export default function SkillsSet({ programdetails }) {
 
 
     const handleTaskAction = async () => {
-        if (activeTaskDetails.status === TaskAllStatus.yettostart) {
+        if (activeTaskDetails.status === TaskAllStatus.yettostart || activeTaskDetails.status === TaskAllStatus.newtask ||
+
+            activeTaskDetails.status === TaskAllStatus.pending
+        ) {
             setSuccessModal({ loading: true, success: false })
             const startTask = await api.patch('program_task_assign/task_start', { task_id: activeTaskDetails.assign_task.id });
             if (startTask.status === 200 && startTask.data) {
@@ -137,7 +140,9 @@ export default function SkillsSet({ programdetails }) {
                         <div className='action-btn'>
 
                             <Button btnName={activeTaskDetails.status === TaskAllStatus.start ? 'Submit Task' :
-                                activeTaskDetails.status === TaskAllStatus.yettostart ? 'Start Task' : 'View Task'} onClick={handleTaskAction} />
+                                (activeTaskDetails.status === TaskAllStatus.yettostart || activeTaskDetails.status === TaskAllStatus.newtask
+                                    || activeTaskDetails.status === TaskAllStatus.pending
+                                ) ? 'Start Task' : 'View Task'} onClick={handleTaskAction} />
 
 
                         </div>
