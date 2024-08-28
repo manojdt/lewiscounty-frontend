@@ -268,7 +268,7 @@ export const TaskDetails = () => {
                                             Due  Date
                                         </th>
                                         <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
-                                            {taskData['due-date']?.split('T')[0]}
+                                            {taskData['due_date']?.split('T')[0]}
                                         </td>
                                     </tr>
 
@@ -585,7 +585,8 @@ export const TaskDetails = () => {
                                 <Button btnName='Cancel' btnCls="w-[12%]" btnCategory="secondary" onClick={() => navigate('/mentee-tasks')} />
                                 {
                                     (taskData.status === TaskAllStatus.start || taskData.status === TaskAllStatus.pending
-                                            || taskData.status === TaskAllStatus.draft
+                                            || taskData.status === TaskAllStatus.draft || taskData?.status === TaskAllStatus.yettostart ||
+                                        taskData.status === TaskAllStatus.inprogress
 
                                     ) &&
                                     <>

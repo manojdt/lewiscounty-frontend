@@ -559,7 +559,8 @@ export const TaskAllStatus = {
   completed: 'completed',
   rejected: 'rejected',
   draft: 'draft',
-  newtask: 'newtask'
+  newtask: 'newtask',
+  inprogress: 'inprogress'
 }
 
 export const TaskStatus = {
