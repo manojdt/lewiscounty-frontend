@@ -176,7 +176,8 @@ export const goalStatus = {
 
 export const reportsStatus = {
   load: 'loaded',
-  create: 'created'
+  create: 'created',
+  update: 'updated'
 }
 
 export const calendarStatus = {

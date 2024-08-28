@@ -64,3 +64,18 @@ export const getReportDetails = createAsyncThunk(
         return reportDetails
     }
 );
+
+
+export const updateReportDetails = createAsyncThunk(
+    "updateReportDetails",
+    async (data) => {
+        const reportUpdate = await api.put(`reports/update-report`, data);
+        if (reportUpdate.status === 200 && reportUpdate.data) {
+            return reportUpdate.data;
+        }
+        return reportUpdate
+    }
+);
+
+
+
