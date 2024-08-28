@@ -428,7 +428,8 @@ export const pipeUrls = {
   assignmentess: '/assign-mentees',
   createprogram: '/create-program',
   startprogram: '/start-program',
-  reports: '/reports'
+  reports: '/reports',
+  menteetask: '/mentee-tasks'
 }
 
 export const programFilterUrls = {
