@@ -60,12 +60,13 @@ export default function EditReport() {
 
     const onSubmit = (data) => {
         const apiData = {
-            "id" : params.id,
+            "id": params.id,
             "category": parseInt(data.category),
             "program": parseInt(data.program),
             "report_name": data.report_name,
             "participated_mentees": data.participated_mentees,
             "description": data.description,
+            "action": data?.action || "submit"
         }
         dispatch(updateReportDetails(apiData))
     }
@@ -84,7 +85,7 @@ export default function EditReport() {
         if (status === reportsStatus.update) {
             setTimeout(() => {
                 navigate('/reports')
-            },3000)
+            }, 3000)
         }
     }, [status])
 
@@ -572,7 +573,7 @@ export default function EditReport() {
                                     <Button btnName='Cancel' btnCls="w-[13%]" btnCategory="secondary" onClick={() => navigate('/reports')} />
                                     <Button btnName='Save To Draft'
                                         style={{ background: 'rgba(29, 91, 191, 1)', color: '#fff' }}
-                                        btnCls="w-[13%]" btnCategory="secondary" onClick={handleSubmit((d) => onSubmit({...d, action: 'draft'}))} />
+                                        btnCls="w-[13%]" btnCategory="secondary" onClick={handleSubmit((d) => onSubmit({ ...d, action: 'draft' }))} />
                                     <Button btnType="submit" btnCls="w-[13%]" btnName='Submit' btnCategory="primary" />
                                 </div>
                             </form>
