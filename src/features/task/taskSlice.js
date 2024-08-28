@@ -4,12 +4,18 @@ import {
 
 import {
     getAllTasks,
-    getSpecificTask
+    getMenteeTaskfromMentor,
+    getSpecificTask,
+    updateTaskMark
 } from "../../services/task";
+import {
+    TaskApiStatus
+} from "../../utils/constant";
 
 const initialState = {
     taskList: [],
     task: {},
+    menteeTask: [],
     loading: false,
     status: "",
     error: "",
@@ -31,6 +37,7 @@ export const taskSlice = createSlice({
                 return {
                     ...state,
                     taskList: action.payload,
+                    status: TaskApiStatus.load,
                     loading: false,
                 };
             })
@@ -53,6 +60,7 @@ export const taskSlice = createSlice({
                 return {
                     ...state,
                     task: action.payload,
+                    status: TaskApiStatus.load,
                     loading: false,
                 };
             })
@@ -64,6 +72,52 @@ export const taskSlice = createSlice({
                 };
             });
 
+        builder
+            .addCase(getMenteeTaskfromMentor.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(getMenteeTaskfromMentor.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    status: TaskApiStatus.load,
+                    menteeTask: action.payload,
+                    loading: false,
+                };
+            })
+            .addCase(getMenteeTaskfromMentor.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
+
+
+        builder
+            .addCase(updateTaskMark.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(updateTaskMark.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    status: TaskApiStatus.updatemark,
+                    loading: false,
+                };
+            })
+            .addCase(updateTaskMark.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
 
     },
 });

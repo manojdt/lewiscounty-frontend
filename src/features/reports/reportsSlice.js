@@ -7,6 +7,7 @@ import {
 } from "../../utils/constant";
 import {
     createReport,
+    deleteReports,
     getAllReports,
     getProgramsByCategoryId,
     getReportDetails,
@@ -158,6 +159,28 @@ export const reportsSlice = createSlice({
                 };
             })
             .addCase(updateReportDetails.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
+        builder
+            .addCase(deleteReports.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(deleteReports.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    status: reportsStatus.delete,
+                    loading: false,
+                };
+            })
+            .addCase(deleteReports.rejected, (state, action) => {
                 return {
                     ...state,
                     loading: false,

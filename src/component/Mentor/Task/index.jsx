@@ -1,20 +1,25 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import DashboardCard from '../../../shared/Card/DashboardCard';
 import { pipeUrls, programActionStatus } from '../../../utils/constant';
 import { Button } from '../../../shared';
 import DataTable from '../../../shared/DataGrid';
 import { mentorTaskColumns, mentorTaskRows } from '../../../mock';
 import ViewIcon from '../../../assets/images/view1x.png'
+import { useDispatch, useSelector } from 'react-redux';
+import { getMenteeTaskfromMentor } from '../../../services/task';
+import { Backdrop, CircularProgress } from '@mui/material';
 
 
 const MentorTask = () => {
     const [activeTaskMenu, setActiveTaskMenu] = useState('my-task')
     const [activeCategoryMenu, setActiveCategoryMenu] = useState('')
     const [activeTab, setActiveTab] = useState('all_programs')
+    const dispatch = useDispatch();
+    const [searchParams] = useSearchParams()
+    const { menteeTask, loading: menteeTaskLoading, status } = useSelector(state => state.tasks)
     const navigate = useNavigate();
-
 
     const taskList = [
         {
@@ -26,7 +31,6 @@ const MentorTask = () => {
             key: 'mentee-task'
         },
     ]
-
 
     const Category = [
         {
@@ -364,7 +368,6 @@ const MentorTask = () => {
         }
     ]
 
-
     const mentorTaskColumn = [
         ...mentorTaskColumns,
         {
@@ -375,7 +378,7 @@ const MentorTask = () => {
             renderCell: (params) => {
                 console.log('params', params)
                 return <>
-                    <div className='cursor-pointer flex items-center h-full' onClick={() => navigate('/mentor-tasks-details/1')}>
+                    <div className='cursor-pointer flex items-center h-full' onClick={() => navigate(`/mentor-tasks-details/${params.row.id}?mentee_id=${params.row.mentee_id}`)}>
                         <img src={ViewIcon} alt='ViewIcon' />
                     </div>
 
@@ -389,25 +392,58 @@ const MentorTask = () => {
     const alltaskList = [
         {
             name: 'All Task',
-            key: 'all-task'
+            key: 'all'
         },
         {
             name: 'New Task',
-            key: 'new-task'
+            key: 'newtask'
         },
         {
             name: 'Pending Task',
-            key: 'pending-task'
+            key: 'pending'
         },
         {
             name: 'Rejected Task',
-            key: 'rejected-task'
+            key: 'rejected'
         },
         {
             name: 'Completed Task',
-            key: 'completed-task'
+            key: 'completed'
         },
     ]
+
+    const handleTaskMenu = (key) => {
+        setActiveTaskMenu(key)
+        if (key === 'mentee-task') {
+            navigate(`${pipeUrls.mentortask}?type=menteetask`)
+            
+        }
+    }
+
+    const handleMenteeTaskFilterTab = (value) => {
+        let queryString = `?status=${value}`
+        if(searchParams.get("type") === 'menteetask') {
+            queryString += `&type=${searchParams.get("type")}`
+        }
+        navigate(`${pipeUrls.mentortask}${queryString}`)
+    }
+
+    useEffect(() => {
+
+        if(searchParams && searchParams.get("type")){
+            
+        }
+
+        if (searchParams && searchParams.get("type") && searchParams.get("type") === 'menteetask' && !searchParams.get("status") ) {
+            dispatch(getMenteeTaskfromMentor());
+            setActiveTaskMenu('mentee-task')
+        }
+
+        if (searchParams && searchParams.get("type") && searchParams.get("type") === 'menteetask' && searchParams.get("status") && searchParams.get("status") !== '' ) {
+            dispatch(getMenteeTaskfromMentor({status: searchParams.get("status")}));
+            setActiveTaskMenu('mentee-task')
+        }
+    }, [searchParams])
 
 
 
@@ -420,6 +456,14 @@ const MentorTask = () => {
                     </div>
 
                 </div>
+
+                <Backdrop
+                    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                    open={menteeTaskLoading}
+                >
+                    <CircularProgress color="inherit" />
+
+                </Backdrop>
                 <div className='mx-5'>
 
                     <div className="main-grid grid grid-cols-5 gap-3">
@@ -435,7 +479,7 @@ const MentorTask = () => {
                                                 <li className="" key={index}>
                                                     <div className={`flex justify-between py-2 px-6 rounded cursor-pointer menu-content ${activeTaskMenu === menu.key ? 'active' : ''}
                                                         `} aria-current="page"
-                                                        onClick={() => setActiveTaskMenu(menu.key)}>
+                                                        onClick={() => handleTaskMenu(menu.key)}>
                                                         <span className="text-sm">{menu.name}</span>
                                                     </div>
                                                 </li>
@@ -505,9 +549,10 @@ const MentorTask = () => {
                                             <div>
                                                 <select style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '3px' }}
                                                     className='px-4 py-4 w-[250px] text-[14px]'
+                                                    onChange={(e) => handleMenteeTaskFilterTab(e.target.value)}
                                                 >
                                                     {
-                                                        alltaskList.map(task => <option value={task.key}>{task.name}</option>)
+                                                        alltaskList.map(task => <option value={task.key} selected={searchParams.get('status') === task.key}>{task.name}</option>)
                                                     }
                                                 </select>
                                             </div>
@@ -515,7 +560,7 @@ const MentorTask = () => {
                                         </div>
 
                                         <div className='task-list py-10'>
-                                            <DataTable rows={mentorTaskRows} columns={mentorTaskColumn} hideCheckbox />
+                                            <DataTable rows={menteeTask} columns={mentorTaskColumn} hideCheckbox />
                                         </div>
                                     </>
                             }

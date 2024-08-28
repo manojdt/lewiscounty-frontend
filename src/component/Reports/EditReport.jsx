@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Calendar } from 'primereact/calendar';
 import { useForm } from 'react-hook-form';
 import { Backdrop, CircularProgress } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { AssignMenteesFields, ReportFields } from '../../utils/formFields'
+import { ReportFields } from '../../utils/formFields'
 import CalendarIcon from '../../assets/images/calender_1x.png'
 import HTMLIcon from '../../assets/images/html1x.png'
 import TextIcon from "../../assets/images/text1x.png";
@@ -15,8 +14,7 @@ import DeleteIcon from "../../assets/images/delete_1x.png"
 
 import { Button } from '../../shared';
 import MuiModal from '../../shared/Modal';
-import MuiTable from '../../shared/Table';
-import { assignMenteeColumns, assignMenteeRows, MenteeAssignColumns } from '../../mock';
+import { MenteeAssignColumns } from '../../mock';
 import DataTable from '../../shared/DataGrid';
 import SuccessTik from '../../assets/images/blue_tik1x.png';
 import CancelIcon from '../../assets/images/cancel1x.png'
@@ -24,7 +22,6 @@ import { getAllCategories } from '../../services/programInfo';
 
 import { getMentees, getProgramDetails, updateProgram } from '../../services/userprograms';
 import { pipeUrls, programActionStatus, reportAllStatus, reportsStatus } from '../../utils/constant';
-import { Tooltip } from 'primereact/tooltip';
 import { getProgramsByCategoryId, getReportDetails, getReportProgramDetails, updateReportDetails } from '../../services/reportsInfo';
 import { dateTimeFormat } from '../../utils';
 import ToastNotification from '../../shared/Toast';
@@ -62,9 +59,6 @@ export default function EditReport() {
     } = useForm();
 
     const onSubmit = (data) => {
-        console.log('Edit Submit', data)
-
-
         const apiData = {
             "id" : params.id,
             "category": parseInt(data.category),
@@ -73,37 +67,16 @@ export default function EditReport() {
             "participated_mentees": data.participated_mentees,
             "description": data.description,
         }
-
-
         dispatch(updateReportDetails(apiData))
-        // dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.assigned }))
-        // reset()
-        // setLoading(true)
-        // setTaskSuccess(true)
     }
 
-    useEffect(() => {
-        if (status === programActionStatus.assigned) {
-            setTaskSuccess(true)
-            setTimeout(() => {
-                // navigate(`${pipeUrls.startprogram}/${programdetails.id}`)
-            }, [3000])
-        }
-    }, [status])
 
     const handleAddMentee = () => {
         setMentalModal(true)
-
         const updateMemberColumns = [...MenteeAssignColumns].map(mcol => {
             return mcol
         })
-
         setUpdatedMemberColumn(updateMemberColumns)
-
-    }
-
-    const footerAction = (key) => {
-        setMentalModal(false)
     }
 
 
@@ -127,7 +100,6 @@ export default function EditReport() {
                 report_name: reportDetails.report_name,
                 description: reportDetails.description
             }
-            console.log('updateFormValues', updateFormValues)
             reset(updateFormValues)
         }
     }, [programDetails])
@@ -155,7 +127,6 @@ export default function EditReport() {
         }
 
         if (!categoryPrograms.length && getValues('category') && getValues('category') !== '') {
-            console.log('category', getValues('category'))
             const fields = [...reportFields].map(field => {
                 if (field.name === 'program') {
                     return {
@@ -235,18 +206,6 @@ export default function EditReport() {
             setMentalModal(false)
             setAllMenteeList(value)
         }
-    }
-
-    const CustomFooterStatusComponent = (props) => {
-        return (
-            <div className='flex gap-6 justify-center items-center py-4'>
-                <button onClick={() => setMentalModal(false)} className='py-3 px-6 w-[16%]'
-                    style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '3px', color: 'rgba(29, 91, 191, 1)' }}>Cancel</button>
-                <button onClick={() => handleAddPopupData(props.selectedRows)}
-                    className='text-white py-3 px-6 w-[16%]'
-                    style={{ background: 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)', borderRadius: '3px' }}>Add Mentees</button>
-            </div>
-        );
     }
 
 
@@ -611,15 +570,12 @@ export default function EditReport() {
                                 </div>
                                 <div className="flex gap-6 justify-center align-middle py-16">
                                     <Button btnName='Cancel' btnCls="w-[13%]" btnCategory="secondary" onClick={() => navigate('/reports')} />
-                                    {/* <Button btnName='Save To Draft'
+                                    <Button btnName='Save To Draft'
                                         style={{ background: 'rgba(29, 91, 191, 1)', color: '#fff' }}
-                                        btnCls="w-[13%]" btnCategory="secondary" onClick={handleSubmit((d) => onSubmit({...d, action: 'draft'}))} /> */}
+                                        btnCls="w-[13%]" btnCategory="secondary" onClick={handleSubmit((d) => onSubmit({...d, action: 'draft'}))} />
                                     <Button btnType="submit" btnCls="w-[13%]" btnName='Submit' btnCategory="primary" />
                                 </div>
                             </form>
-
-
-
                         </div>
                     </div>
                 </div>

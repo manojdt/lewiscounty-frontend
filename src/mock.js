@@ -1,4 +1,5 @@
 import { dateFormat } from "./utils";
+import { reportStatus, reportStatusColor, taskStatusColor, taskStatusText } from "./utils/constant";
 
 export const loginUser = [{
         email: 'tsubramaniyan2@gmail.com',
@@ -677,33 +678,53 @@ export const mentorTaskColumns = [{
     id: 2,
 },
 {
-    field: 'create_date',
+    field: 'created_at',
     headerName: 'Create Date',
     flex: 1,
     id: 2,
+    renderCell: (params) => {
+        return <div>{dateFormat(params.row.created_at)}</div>
+    }
 },
 {
-    field: 'sub_date',
-    headerName: 'Sub. Date',
+    field: 'submited_date',
+    headerName: 'Submited Date',
     flex: 1,
     id: 2,
+    renderCell: (params) => {
+        return <div>{dateFormat(params.row.submited_date)}</div>
+    }
 },
 {
-    field: 'task_status',
+    field: 'status',
     headerName: 'Task Status',
     flex: 1,
     id: 2,
+    renderCell: (params) => {
+        console.log('paramsppppp', params)
+        return <>
+            <div className='cursor-pointer flex items-center h-full relative'>
+                <span className='w-[80px] flex justify-center h-[30px] px-3'
+                    style={{
+                        background: taskStatusColor[params.row.status]?.bg || '', lineHeight: '30px',
+                        borderRadius: '3px', width: '110px', height: '34px', color: taskStatusColor[params.row.status]?.color || '',
+                        fontSize: '12px'
+                    }}
+                > {taskStatusText[params.row.status]}</span>
+            </div>
+        </>
+    }
 },
 {
     field: 'mark',
     headerName: 'Mark',
-   flex: 1,
+    flex: 1,
     id: 2,
 },
 {
     field: 'file_by',
     headerName: 'File by',
-   flex: 1,
+    flex: 1,
     id: 2,
 }
 ];
