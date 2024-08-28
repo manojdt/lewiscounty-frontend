@@ -177,7 +177,8 @@ export const goalStatus = {
 export const reportsStatus = {
   load: 'loaded',
   create: 'created',
-  update: 'updated'
+  update: 'updated',
+  delete: 'deleted'
 }
 
 export const calendarStatus = {
@@ -429,7 +430,8 @@ export const pipeUrls = {
   createprogram: '/create-program',
   startprogram: '/start-program',
   reports: '/reports',
-  menteetask: '/mentee-tasks'
+  menteetask: '/mentee-tasks',
+  mentortask: '/mentor-tasks'
 }
 
 export const programFilterUrls = {
@@ -561,7 +563,7 @@ export const TaskAllStatus = {
   rejected: 'rejected',
   draft: 'draft',
   newtask: 'newtask',
-  inprogress: 'inprogress'
+  inprogress: 'inprogress',
 }
 
 export const TaskStatus = {
@@ -575,4 +577,12 @@ export const TaskStatus = {
   submitted: 'Submitted',
   cancelled: 'Cancelled',
   draft: 'Draft'
+}
+
+
+export const TaskApiStatus = {
+  update: 'update',
+  create: 'create',
+  load: 'loaded',
+  updatemark: 'updatemark'
 }

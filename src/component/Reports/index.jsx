@@ -16,24 +16,24 @@ import OverDeleteIcon from '../../assets/images/delete_1x.png'
 import CancelIcon from '../../assets/images/cancel1x.png'
 import { menteeColumns, menteeRow } from '../../mock';
 import { Button } from '../../shared';
-import { getAllReports } from '../../services/reportsInfo';
+import { deleteReports, getAllReports } from '../../services/reportsInfo';
 import { useDispatch, useSelector } from 'react-redux';
-import { goalDataStatus, goalStatusColor, pipeUrls, reportStatus, reportStatusColor } from '../../utils/constant';
+import { goalDataStatus, goalStatusColor, pipeUrls, reportAllStatus, reportsStatus, reportStatus, reportStatusColor } from '../../utils/constant';
 import { reportColumns } from '../../utils/formFields';
+import api from '../../services/api';
 
 
 
 const Reports = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const { allreports, loading } = useSelector(state => state.reports)
+    const { allreports, loading, status } = useSelector(state => state.reports)
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
-    const [selectedRows, setSelectedRows] = useState([])
     const [deleteModal, setDeleteModal] = useState(false)
-    const [seletedItem, setSelectedItem] = useState({})
     const [requestTab, setRequestTab] = useState('all')
     const [searchParams] = useSearchParams();
+    const [reportData, setReportData] = useState({action: '', selectedItem: []})
 
     const requestBtns = [
         {
@@ -63,9 +63,21 @@ const Reports = () => {
     };
 
     const handleClick = (event, data) => {
-        setSelectedItem(data)
+        setReportData({action: 'single', selectedItem: data})
+        // setSelectedItem(data)
         setAnchorEl(event.currentTarget);
     };
+
+    const handleDeleteReport = async () => {
+        console.log('Sele', reportData)
+        const ids = []
+        reportData.selectedItem.forEach(rows => ids.push(rows.id))
+        console.log('ids', ids)
+        const reportId = { ids: ids }
+        dispatch(deleteReports(reportId))
+    }
+
+  
 
     const reportColumn = [
         ...reportColumns,
@@ -78,12 +90,12 @@ const Reports = () => {
                 return <>
                     <div className='cursor-pointer flex items-center h-full relative'>
                         <span className='w-[80px] flex justify-center h-[30px] px-7'
-                             style={{
+                            style={{
                                 background: reportStatusColor[params.row.report_status]?.bg || '', lineHeight: '30px',
-                                borderRadius: '3px',  height: '34px', color: reportStatusColor[params.row.report_status]?.color || '',
+                                borderRadius: '3px', height: '34px', color: reportStatusColor[params.row.report_status]?.color || '',
                                 fontSize: '12px'
                             }}
-                           >
+                        >
                             {reportStatus[params.row.report_status]}
                         </span>
                     </div>
@@ -98,7 +110,7 @@ const Reports = () => {
             renderCell: (params) => {
                 console.log('params', params)
                 return <>
-                    <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleClick(e, params.row)}>
+                    <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleClick(e, [params.row])}>
                         <img src={MoreIcon} alt='MoreIcon' />
                     </div>
                     <Menu
@@ -110,19 +122,25 @@ const Reports = () => {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
-                        <MenuItem onClick={() => navigate(`/edit-report/${seletedItem.id}`)} className='!text-[12px]'>
+                        <MenuItem onClick={() => navigate(`/edit-report/${reportData.selectedItem[0].id}`)} className='!text-[12px]'>
                             <img src={EditIcon} alt="EditIcon" className='pr-3 w-[30px]' />
                             Edit
                         </MenuItem>
-                        <MenuItem onClick={() => navigate(`/view-report/${seletedItem.id}`)} className='!text-[12px]'>
+                        <MenuItem onClick={() => navigate(`/view-report/${reportData.selectedItem[0].id}`)} className='!text-[12px]'>
                             <img src={ViewIcon} alt="ViewIcon" className='pr-3 w-[30px]' />
                             View
                         </MenuItem>
-                        <MenuItem onClick={() => console.log('download', params)} className='!text-[12px]'>
-                            <img src={DownloadIcon} alt="DownloadIcon" className='pr-3 w-[30px]' />
-                            Download
-                        </MenuItem>
-                        <MenuItem onClick={() => console.log('delete', params)} className='!text-[12px]'>
+                        {
+                            params.row.report_status === reportAllStatus.accept
+                            &&
+
+                            <MenuItem onClick={() => console.log('download', params)} className='!text-[12px]'>
+                                <img src={DownloadIcon} alt="DownloadIcon" className='pr-3 w-[30px]' />
+                                Download
+                            </MenuItem>
+                        }
+
+                        <MenuItem onClick={handleDeleteSelectedRows} className='!text-[12px]'>
                             <img src={DeleteIcon} alt="DeleteIcon" className='pr-3 w-[27px]' />
                             Delete
                         </MenuItem>
@@ -138,7 +156,7 @@ const Reports = () => {
 
     const handleTab = (key) => {
         let typeString = `?type=${key}`
-        if(key === 'all'){
+        if (key === 'all') {
             typeString = ''
         }
         navigate(`${pipeUrls.reports}${typeString}`)
@@ -146,16 +164,18 @@ const Reports = () => {
     }
 
     const handleSelectedRow = (row) => {
-        setSelectedRows(row)
-        console.log('selected', row)
+        setReportData({action: 'multiple', selectedItem: row})
+        // setSelectedRows(row)
+        // console.log('selected', row)
     }
 
     const handleDeleteSelectedRows = () => {
         setDeleteModal(true)
+        handleClose()
     }
 
-    useEffect(() => {
-        console.log('searchParams', searchParams)
+
+    const getReports = () => {
         const filterType = searchParams.get("type");
 
         let query = ''
@@ -163,7 +183,29 @@ const Reports = () => {
             query = filterType
         }
         dispatch(getAllReports(query));
+    }
+
+    const handleCancelDelete = () => {
+        setDeleteModal(false);
+        setReportData({action: '', selectedItem: []})
+    }
+
+    useEffect(() => {
+        console.log('searchParams', searchParams)
+        getReports()
     }, [searchParams])
+
+
+    useEffect(() => {
+        if(status === reportsStatus.delete){
+            setDeleteModal(false)
+            getReports()
+        }
+    },[status])
+
+
+
+  
 
 
     return (
@@ -197,14 +239,14 @@ const Reports = () => {
                                         background: 'rgba(229, 0, 39, 1)', color: '#fff', borderRadius: '3px',
                                         width: '130px', padding: '13px'
                                     }}
-                                        onClick={() => setDeleteModal(false)} >
+                                        onClick={handleCancelDelete} >
                                         No
                                     </button>
                                     <button style={{
                                         border: '1px solid rgba(229, 0, 39, 1)', color: 'rgba(229, 0, 39, 1)', borderRadius: '3px',
                                         width: '130px', padding: '13px'
                                     }}
-                                        onClick={() => setDeleteModal(false)} >
+                                        onClick={() => handleDeleteReport()} >
                                         Yes
                                     </button>
 
@@ -229,7 +271,7 @@ const Reports = () => {
                     </div>
                     <div className='flex gap-8 items-center'>
                         {
-                            selectedRows.length ? <img className='cursor-pointer' onClick={handleDeleteSelectedRows} src={OverDeleteIcon} alt="OverDeleteIcon" /> : null
+                          (reportData.action === 'multiple' && reportData.selectedItem.length) ? <img className='cursor-pointer' onClick={handleDeleteSelectedRows} src={OverDeleteIcon} alt="OverDeleteIcon" /> : null
                         }
 
                         <div className="relative flex gap-3 py-3 px-3" style={{ border: '1px solid rgba(24, 40, 61, 0.25)' }}>

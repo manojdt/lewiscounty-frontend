@@ -27,12 +27,58 @@ export const getAllTasks = createAsyncThunk(
 
 export const getSpecificTask = createAsyncThunk(
     "getSpecificTask",
-    async (task_id) => {
-        const getSpecificTaskData = await api.get(`/program_task_assign/fetch_task_id?task_id=${task_id}`);
+    async (query) => {
+        let queryString = ''
+        if (Object.keys(query).length) {
+            const total = Object.keys(query).length
+            queryString += '?'
+            let m = 0;
+            for (let a in query) {
+                m++
+                queryString += `${a}=${query[a]}${m===total? '':'&'}`
+                
+            }
+        }
+
+        const getSpecificTaskData = await api.get(`/program_task_assign/fetch_task_id${queryString}`);
         if (getSpecificTaskData.status === 200 && getSpecificTaskData.data) {
             return getSpecificTaskData.data;
         }
         return getSpecificTaskData
     }
 );
+
+
+export const getMenteeTaskfromMentor = createAsyncThunk(
+    "getMenteeTaskfromMentor",
+    async (query = {}) => {
+        let queryString = ''
+        if (Object.keys(query).length) {
+            queryString += '?'
+            for (let a in query) {
+                queryString += `${a}=${query[a]}`
+            }
+        }
+        const getAllTask = await api.get(`/program_task_assign/task_list_mentor${queryString}`);
+        if (getAllTask.status === 200 && getAllTask.data) {
+            return getAllTask.data;
+        }
+        return getAllTask
+    }
+);
+
+
+export const updateTaskMark = createAsyncThunk(
+    "updateTaskMark",
+    async (data) => {
+        const updateMark = await api.patch(`/program_task_assign/fetch_task_id`, data);
+        if (updateMark.status === 200 && updateMark.data) {
+            return updateMark.data;
+        }
+        return updateMark
+    }
+);
+
+
+
 

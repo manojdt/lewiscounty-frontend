@@ -150,7 +150,7 @@ export const TaskDetails = () => {
 
     useEffect(() => {
         dispatch(getProgramTaskDetails(params.id))
-        dispatch(getSpecificTask(params.id))
+        dispatch(getSpecificTask({task_id: params.id}))
     }, [])
 
 
