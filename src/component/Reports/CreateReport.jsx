@@ -44,6 +44,7 @@ export default function CreateReport() {
     const [dateFormat, setDateFormat] = useState({})
     const [menteeAllList, setAllMenteeList] = useState([])
     const [notification, setNotification] = useState({ program: false })
+    const [actionType, setActionType] = useState('')
 
     const [loading, setLoading] = useState(false)
 
@@ -67,7 +68,7 @@ export default function CreateReport() {
             "report_name": data.report_name,
             "participated_mentees": data.participated_mentees,
             "description": data.description,
-            "action": "submit"
+            "action": data?.action || "submit"
         }
 
         dispatch(createReport(apiData))
@@ -86,6 +87,17 @@ export default function CreateReport() {
     const handleProgramData = (programId) => {
         dispatch(getReportProgramDetails(programId))
     }
+
+
+    const handleDraft = () => {
+        setActionType('draft')
+    }
+
+    useEffect(() => {
+        if(actionType === 'draft'){
+            document.getElementById('create-report').submit()
+        }
+    },[actionType])
 
     useEffect(() => {
         if (status === reportsStatus.create) {
@@ -149,8 +161,6 @@ export default function CreateReport() {
         }
     }, [categoryPrograms])
 
-
-
     useEffect(() => {
         dispatch(getAllCategories())
     }, [])
@@ -174,7 +184,7 @@ export default function CreateReport() {
                     <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
                         style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
                         <img src={SuccessTik} alt="SuccessTik" />
-                        <p className='text-white text-[12px]'>Report created Successfully</p>
+                        <p className='text-white text-[12px]'>Report action successfully performed</p>
                     </div>
 
                 </div>
@@ -205,7 +215,7 @@ export default function CreateReport() {
                 </div>
                 <div className='content px-8'>
                     <div className="py-9">
-                        <form onSubmit={handleSubmit(onSubmit)}>
+                        <form id="create-report" onSubmit={handleSubmit(onSubmit)}>
                             <div className="flex flex-wrap gap-4">
                                 {
                                     reportFields.map((field, index) => {
@@ -413,7 +423,7 @@ export default function CreateReport() {
                                 <Button btnName='Cancel' btnCls="w-[13%]" btnCategory="secondary" onClick={() => navigate('/reports')} />
                                 <Button btnName='Save To Draft'
                                     style={{ background: 'rgba(29, 91, 191, 1)', color: '#fff' }}
-                                    btnCls="w-[13%]" btnCategory="secondary" onClick={() => navigate('/reports')} />
+                                    btnCls="w-[13%]" btnCategory="secondary" onClick={handleSubmit((d) => onSubmit({...d, action: 'draft'}))} />
                                 <Button btnType="submit" btnCls="w-[13%]" btnName='Submit' btnCategory="primary" />
                             </div>
                         </form>

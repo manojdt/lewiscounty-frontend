@@ -10,7 +10,8 @@ import {
     getAllReports,
     getProgramsByCategoryId,
     getReportDetails,
-    getReportProgramDetails
+    getReportProgramDetails,
+    updateReportDetails
 } from "../../services/reportsInfo";
 
 const initialState = {
@@ -136,6 +137,27 @@ export const reportsSlice = createSlice({
                 };
             })
             .addCase(getReportDetails.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+        builder
+            .addCase(updateReportDetails.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(updateReportDetails.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    status: reportsStatus.update,
+                    loading: false,
+                };
+            })
+            .addCase(updateReportDetails.rejected, (state, action) => {
                 return {
                     ...state,
                     loading: false,

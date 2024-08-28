@@ -176,7 +176,8 @@ export const goalStatus = {
 
 export const reportsStatus = {
   load: 'loaded',
-  create: 'created'
+  create: 'created',
+  update: 'updated'
 }
 
 export const calendarStatus = {
@@ -558,7 +559,8 @@ export const TaskAllStatus = {
   completed: 'completed',
   rejected: 'rejected',
   draft: 'draft',
-  newtask: 'newtask'
+  newtask: 'newtask',
+  inprogress: 'inprogress'
 }
 
 export const TaskStatus = {

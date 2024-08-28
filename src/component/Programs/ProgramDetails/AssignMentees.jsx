@@ -67,9 +67,7 @@ export default function AssignMentees() {
       
         dispatch(assignProgramTask(apiData))
 
-        if (programdetails.status === programActionStatus.yettostart) {
-            dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.assigned }))
-        }
+       
        
         // reset()
         // setLoading(true)
@@ -78,6 +76,9 @@ export default function AssignMentees() {
 
     useEffect(() => {
         if (status === programStatus.taskassigned) {
+            if (programdetails.status === programActionStatus.yettostart) {
+                dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.assigned }))
+            }
             setTaskSuccess(true)
             setTimeout(() => {
                 navigate(`${pipeUrls.startprogram}/${programdetails.id}`)
