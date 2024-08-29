@@ -88,6 +88,7 @@ export const userProgramSlice = createSlice({
           completed: [],
           cancelled: [],
           bookmarked: [],
+          programdetails: {}
         };
 
         console.log("action123", action.payload);
@@ -277,6 +278,7 @@ export const userProgramSlice = createSlice({
           completed: [],
           cancelled: [],
           bookmarked: [],
+          programdetails: {}
         };
 
         console.log("action123", action.payload);

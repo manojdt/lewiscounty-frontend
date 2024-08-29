@@ -74,18 +74,22 @@ export default function ProgramDetails() {
     }
 
     useEffect(() => {
-        if (Object.keys(programdetails).length) {
+        if (Object.keys(programdetails).length && !programLoading) {
             console.log('programdetails.status', programdetails.status)
-            if (role === 'mentee' && menteeJoined === true) {
-                navigate(`${pipeUrls.startprogram}/${programdetails.id}`)
-            }
 
-            if (role === 'mentor') {
-                if (programdetails.status === programActionStatus.yettostart) {
-                    navigate(`${pipeUrls.assigntask}/${programdetails.id}`)
+            if (programdetails.status !== 'completed') {
+                console.log('programdetails---', programdetails)
+                if (role === 'mentee' && menteeJoined === true) {
+                    navigate(`${pipeUrls.startprogram}/${params.id}`)
                 }
-                else if ((programdetails.status === programActionStatus.inprogress || programdetails.status === programActionStatus.assigned)) {
-                    navigate(`${pipeUrls.startprogram}/${programdetails.id}`)
+
+                if (role === 'mentor') {
+                    if (programdetails.status === programActionStatus.yettostart) {
+                        navigate(`${pipeUrls.assigntask}/${params.id}`)
+                    }
+                    else if ((programdetails.status === programActionStatus.inprogress || programdetails.status === programActionStatus.assigned)) {
+                        navigate(`${pipeUrls.startprogram}/${params.id}`)
+                    }
                 }
             }
 
@@ -162,7 +166,7 @@ export default function ProgramDetails() {
                 </div>
             </MuiModal>
             {
-                Object.keys(programdetails).length ?
+                (!programLoading && Object.keys(programdetails).length) ?
 
 
                     <div className='grid mb-10' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)', borderRadius: '5px' }}>
@@ -195,15 +199,16 @@ export default function ProgramDetails() {
                                         <div className='flex items-center gap-6 pb-6'>
                                             <h3 className='font-semibold text-[18px]' style={{ color: 'rgba(29, 91, 191, 1)' }}>{programdetails.program_name}</h3>
                                             {
-                                                programdetails.categories.length &&
+                                                programdetails.categories.length ?
 
-                                                <div className='text-[10px] px-3 py-2' style={{
-                                                    background: 'rgba(238, 240, 244, 1)',
-                                                    color: 'rgba(253, 0, 58, 1)',
-                                                    borderRadius: '5px'
-                                                }}>
-                                                    {programdetails.categories[0].name}
-                                                </div>
+                                                    <div className='text-[10px] px-3 py-2' style={{
+                                                        background: 'rgba(238, 240, 244, 1)',
+                                                        color: 'rgba(253, 0, 58, 1)',
+                                                        borderRadius: '5px'
+                                                    }}>
+                                                        {programdetails.categories[0].name}
+                                                    </div>
+                                                    : null
                                             }
 
                                         </div>
@@ -237,18 +242,31 @@ export default function ProgramDetails() {
                                         </div>
 
                                         {
-                                            (role === 'mentor' || (role === 'mentee' && !menteeJoined)) &&
 
-                                            <div className='py-9'>
-                                                <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                    background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
-                                                    borderRadius: '5px'
-                                                }}
-                                                    onClick={() => handleJoinProgram(programdetails.id)}
-                                                >Join Program
-                                                    <span className='pl-8 pt-1'><img style={{ width: '15px', height: '13px' }} src={DoubleArrowIcon} alt="DoubleArrowIcon" /></span>
-                                                </button>
-                                            </div>
+                                            programdetails.status === 'completed' ?
+
+                                                <div className='py-9'>
+                                                    <div className='py-3 px-16 text-white text-[14px] flex justify-center items-center' style={{
+                                                        background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
+                                                        borderRadius: '5px',
+                                                        width: '30%'
+                                                    }}>Program Completed</div>
+                                                </div>
+
+                                                : (role === 'mentor' || (role === 'mentee' && !menteeJoined)) ?
+
+                                                    <div className='py-9'>
+                                                        <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                            background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
+                                                            borderRadius: '5px'
+                                                        }}
+                                                            onClick={() => handleJoinProgram(programdetails.id)}
+                                                        >Join Program
+                                                            <span className='pl-8 pt-1'><img style={{ width: '15px', height: '13px' }} src={DoubleArrowIcon} alt="DoubleArrowIcon" /></span>
+                                                        </button>
+                                                    </div>
+
+                                                    : null
                                         }
 
 

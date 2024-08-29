@@ -62,7 +62,7 @@ export default function Programs() {
     const handleNavigation = (programdetails) => {
         let baseUrl = pipeUrls.programdetails
         if (Object.keys(programdetails).length) {
-            if (role === 'mentor') {
+            if (role === 'mentor' && programdetails.status !== 'completed') {
                 if (programdetails.status === programActionStatus.yettostart) baseUrl = pipeUrls.assigntask
                 if (programdetails.status === programActionStatus.inprogress) baseUrl = pipeUrls.startprogram
             }
