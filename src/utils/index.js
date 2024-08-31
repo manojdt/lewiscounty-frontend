@@ -181,3 +181,20 @@ export const dateTimeFormat = data => {
   }
   return ''
 }
+
+
+export const getTimeFromDate = data => {
+  if (data && data !== '') {
+    const date = new Date(data);
+    date.setHours(3);
+    date.setMinutes(20);
+    date.setSeconds(0);
+    const formattedTime = date.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
+    return formattedTime
+  }
+  return ''
+}

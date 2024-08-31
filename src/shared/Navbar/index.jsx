@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -20,6 +20,7 @@ import { Button } from '../Button';
 import { OverlayPanel } from 'primereact/overlaypanel';
 import NotificationMenu from '../../component/Notification/NotificationMenu';
 import Notification from '../../component/Notification';
+import { userActivities } from '../../services/activities';
 
 export const Navbar = () => {
     const navigate = useNavigate();
@@ -93,8 +94,13 @@ export const Navbar = () => {
     }
 
     const handleCloseNotification = () => {
-      document.getElementsByClassName('notification-image')[0].click()
+        document.getElementsByClassName('notification-image')[0].click()
     }
+
+
+    useEffect(() => {
+        dispatch(userActivities())
+    }, [])
 
     return (
         <div className="navbar-content px-4" style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
@@ -174,11 +180,13 @@ export const Navbar = () => {
                             </div>
                         </div>
                         <img className='search-icon hidden' src={SearchIcon} alt="SearchIcon" />
-                        <img src={NotificationIcon} className='cursor-pointer notification-image' alt="NotificationIcon"  />
+                        <div className='relative notitification-group'>
+                            <img src={NotificationIcon} className='cursor-pointer notification-image' onClick={(e) => op.current.toggle(e)} alt="NotificationIcon" />
 
-                        <OverlayPanel ref={op} id="overlay_panel" style={{ width: '450px' }} className="overlaypanel-demo">
-                            <Notification handleClose={handleCloseNotification} />
-                        </OverlayPanel>
+                            <OverlayPanel ref={op} id="overlay_panel" style={{ width: '450px' }} className="notification-container">
+                                <Notification handleClose={handleCloseNotification} />
+                            </OverlayPanel>
+                        </div>
 
                         <img src={SettingsIcon} alt="SettingsIcon" />
 
@@ -197,8 +205,8 @@ export const Navbar = () => {
                                 }}
                             >
                                 <MenuItem onClick={() => {
-                                     handleClose();
-                                     navigate('/help');
+                                    handleClose();
+                                    navigate('/help');
                                 }}>
                                     <img src={HelpIcon} alt="HelpIcon" className='pr-3 w-[30px]' />
                                     Help</MenuItem>
