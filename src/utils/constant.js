@@ -130,6 +130,7 @@ export const MenteeStepsList = [{
 ];
 
 export const userStatus = {
+  load: 'loaded',
   create: 'created',
   login: 'loggedin',
   token: 'tokenfetched',

@@ -1,36 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import SearchIcon from '../../assets/icons/SearchColor.svg'
 import MaleIcon from '../../assets/images/male-profile1x.png'
 import FemaleIcon from '../../assets/images/female-profile1x.png'
+import { useDispatch, useSelector } from 'react-redux';
+import { userActivities } from '../../services/activities';
+import { getTimeFromDate } from '../../utils';
 
 export default function NotificationMenu() {
 
-    const list = [
-        {
-            message: 'A new mentor joined Program 1 A new mentor joined Program 1',
-            time: '3.20am'
-        },
-        {
-            message: 'A new mentor joined Program 1 A new mentor joined Program 1',
-            time: '3.20am'
-        },
-        {
-            message: 'A new mentor joined Program 1 A new mentor joined Program 1',
-            time: '3.20am'
-        },
-        {
-            message: 'A new mentor joined Program 1 A new mentor joined Program 1',
-            time: '3.20am'
-        },
-        {
-            message: 'A new mentor joined Program 1 A new mentor joined Program 1',
-            time: '3.20am'
-        },
-        {
-            message: 'A new mentor joined Program 1 A new mentor joined Program 1',
-            time: '3.20am'
-        },
-    ]
+    const dispatch = useDispatch()
+    const { activity } = useSelector(state => state.activity)
+
+    useEffect(() => {
+        dispatch(userActivities())
+    }, [])
+
 
     return (
         <div className="nofification px-9 py-9">
@@ -42,48 +26,56 @@ export default function NotificationMenu() {
                 </div>
 
                 <div className='notification-content'>
-                    <div className='nofification-action'>
-                        <div className="relative">
-                            <input type="text" className="block w-full p-2 text-sm text-gray-900 border-none"
-                                placeholder="Search notification" style={{
-                                    background: 'rgba(238, 245, 255, 1)',
-                                    height: '55px',
-                                    width: '400px',
-                                    borderRadius: '6px'
-                                }} />
-                            <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
-                                <img src={SearchIcon} alt='SearchIcon' />
-                            </div>
-                        </div>
+                    {
+                        activity.length ?
 
-                    </div>
+                            <div className='nofification-action'>
+                                <div className="relative">
+                                    <input type="text" className="block w-full p-2 text-sm text-gray-900 border-none"
+                                        placeholder="Search notification" style={{
+                                            background: 'rgba(238, 245, 255, 1)',
+                                            height: '55px',
+                                            width: '400px',
+                                            borderRadius: '6px'
+                                        }} />
+                                    <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
+                                        <img src={SearchIcon} alt='SearchIcon' />
+                                    </div>
+                                </div>
+
+                            </div>
+                            : null
+                    }
 
 
                     <div className='notification-container'>
-                        <ul>
-                            {
-                                list.map((list, index) =>
+                        {
+                            activity.length ?
 
-                                    <li key={index}>
-                                        <img src={index % 2 === 0 ? MaleIcon : FemaleIcon} alt="MaleIcon" />
-                                        <div className='flex justify-between w-full'>
-                                            <p className='notification-message'>
-                                                <p className='font-semibold'>{list.message}</p>
-                                                <p className='text-[14px] pt-4 leading-6'>
-                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut 
-                                                    labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris 
-                                                    nisi ut aliquip ex ea commodo consequat.
+                                <ul>
+                                    {activity.map((list, index) =>
+                                        <li key={index}>
+                                            <img src={index % 2 === 0 ? MaleIcon : FemaleIcon} alt="MaleIcon" />
+                                            <div className='flex justify-between w-full'>
+                                                <p className='notification-message'>
+                                                    <p className='font-semibold'>{list.content}</p>
+                                                    <p className='text-[14px] pt-4 leading-6'>
+                                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                                                        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                                                        nisi ut aliquip ex ea commodo consequat.
+                                                    </p>
                                                 </p>
-                                            </p>
-                                            <p className='text-[14px]'>{list.time}</p>
-                                        </div>
+                                                <p className='text-[14px]'>{getTimeFromDate(list.created_at)}</p>
+                                            </div>
+                                        </li>
+                                    )
+                                    }
+                                </ul>
+                                : null
+                        }
 
-                                    </li>
-                                )
-                            }
-                        </ul>
                         <div>
-
+                                No activies found
                         </div>
                     </div>
                 </div>

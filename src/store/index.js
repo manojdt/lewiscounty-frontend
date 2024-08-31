@@ -12,6 +12,7 @@ import userListReducer from "../features/userList/userListSlice";
 import scheduleReducer from "../features/schedule/scheduleSlice";
 import taskReducer from "../features/task/taskSlice";
 import certificateReducer from "../features/certificates/certificateSlice";
+import activityReducer from "../features/activities/activitySlice";
 
 
 const combinedReducer = combineReducers({
@@ -24,7 +25,9 @@ const combinedReducer = combineReducers({
   userList: userListReducer,
   events: scheduleReducer,
   certificates: certificateReducer,
-  tasks: taskReducer
+  tasks: taskReducer,
+  activity: activityReducer
+
 });
 
 const rootReducer = (state, action) => {

@@ -836,6 +836,18 @@ input[type="range"]::-ms-thumb {
 }
 
 
+
+.notification-container {
+  top:50px  !important;
+}
+
+.notification-container ul {
+  max-height: 500px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+
 @media only screen and (min-device-width: 481px) and (max-device-width: 1440px) {
 
   /* For landscape layouts only */
