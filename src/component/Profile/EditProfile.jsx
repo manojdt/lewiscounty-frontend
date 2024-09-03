@@ -38,7 +38,7 @@ export default function EditProfile() {
                 phone_number: profile.phone_no,
                 location: profile.location,
                 address: profile.address,
-                logo: ''
+                social_media: profile.social_media
             })
         }
     }, [profile])
