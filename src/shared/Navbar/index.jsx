@@ -82,8 +82,6 @@ export const Navbar = () => {
         leftElement.style.width = "300px";
         leftElement.style.display = 'block';
         document.getElementById("left-content").appendChild(leftBar)
-
-        console.log('left', leftBar)
     }
 
 
