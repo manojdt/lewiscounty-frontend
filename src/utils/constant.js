@@ -187,6 +187,13 @@ export const calendarStatus = {
   create: 'created',
 }
 
+export const profileStatus = {
+  load: 'loaded',
+  update: 'updated',
+  image: 'imageupdated',
+}
+
+
 
 export const goalPeriods = [{
     name: '1 Month',

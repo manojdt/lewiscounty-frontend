@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from '../../shared'
 import UserImage from "../../assets/images/chatimage.png";
 import LocationIcon from '../../assets/images/Location1x.png';
@@ -13,9 +13,14 @@ import ShareBlackIcon from '../../assets/icons/ShareBlack.svg'
 import RightArrowColor from '../../assets/icons/RightArrowColor.svg'
 import DeleteIcon from '../../assets/icons/DeleteRed.svg'
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUserProfile } from '../../services/profile';
+import { Backdrop, CircularProgress } from '@mui/material';
 
 export default function Profile() {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const { profile, loading } = useSelector(state => state.profileInfo)
     const [actionTab, setActiveTab] = useState('activity')
     const allProfileDetailTab = [
         {
@@ -52,8 +57,20 @@ export default function Profile() {
 
     const allCollegues = collegueList()
 
+    useEffect(() => {
+        dispatch(getUserProfile())
+    }, [])
+
     return (
         <div className="profile-container">
+
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={loading}
+            >
+                <CircularProgress color="inherit" />
+
+            </Backdrop>
             <div className='flex justify-between items-center mb-8'>
                 <div className='text-color font-medium' >
                     Profile
@@ -75,7 +92,7 @@ export default function Profile() {
 
                                     <div className='w-[70%]'>
                                         <div className='leading-7'>
-                                            <p className='text-[14px] font-semibold'>John Doe</p>
+                                            <p className='text-[14px] font-semibold'>{profile?.name}</p>
                                             <p className='text-[12px]'>Software Engineer( Java)</p>
                                             <p className='flex gap-2'>
                                                 <img src={LocationIcon} alt="LocationIcon" />
@@ -108,14 +125,23 @@ export default function Profile() {
                                         Professional Bio :
                                     </div>
                                     <p style={{ color: 'rgba(118, 119, 120, 1)', fontSize: '12px' }}>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed  elit, sed doaliqua. Ut enim ad minim veniam,..
+                                        {profile?.professional_bio}
                                     </p>
-                                    <div className='text-[14px] font-semibold pt-5 pb-3'>
-                                        Link :
-                                    </div>
-                                    <p>
-                                        <a href="#" style={{ color: 'rgba(29, 91, 191, 1)', fontSize: '12px', fontWeight: 600 }}>https://git.drupalcode.org</a>
-                                    </p>
+                                    {
+                                        profile.link && profile.link !== null && profile.link !== '' &&
+
+                                        <>
+                                            <div className='text-[14px] font-semibold pt-5 pb-3'>
+                                                Link :
+                                            </div>
+
+
+                                            <p>
+                                                <a href="#" style={{ color: 'rgba(29, 91, 191, 1)', fontSize: '12px', fontWeight: 600 }}>{profile?.link}</a>
+                                            </p>
+
+                                        </>
+                                    }
                                 </div>
                             </div>
 
@@ -127,15 +153,15 @@ export default function Profile() {
                                     <div className='leading-7'>
                                         <div className='flex justify-between text-[13px]'>
                                             <div>Email</div>
-                                            <div>Johnson@gmail.com</div>
+                                            <div>{profile?.email}</div>
                                         </div>
                                         <div className='flex justify-between text-[13px]'>
                                             <div>Phone No</div>
-                                            <div>(+99) 9999 999 999</div>
+                                            <div>{profile?.phone_no}</div>
                                         </div>
                                         <div className='flex justify-between text-[13px]'>
                                             <div>Location</div>
-                                            <div>San Francisco</div>
+                                            <div>{profile?.location}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -508,7 +534,7 @@ export default function Profile() {
                                                     <div className='flex gap-3'>
                                                         <img className='user-image' src={UserImage} alt="UserImage" />
                                                         <div>
-                                                            <p style={{color: 'rgba(29, 91, 191, 1)', fontWeight: 600}}>John Doe</p>
+                                                            <p style={{ color: 'rgba(29, 91, 191, 1)', fontWeight: 600 }}>John Doe</p>
                                                             <p className='py-3 text-[14px] leading-6'>
                                                                 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
                                                                 standard dummy text ever since the 1500s, ook.standard dummy text ever since the 1500s, ook.
@@ -525,7 +551,7 @@ export default function Profile() {
                                                     <div className='flex gap-3'>
                                                         <img className='user-image' src={UserImage} alt="UserImage" />
                                                         <div>
-                                                            <p style={{color: 'rgba(29, 91, 191, 1)', fontWeight: 600}}>John Doe</p>
+                                                            <p style={{ color: 'rgba(29, 91, 191, 1)', fontWeight: 600 }}>John Doe</p>
                                                             <p className='py-3 text-[14px] leading-6'>
                                                                 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
                                                                 standard dummy text ever since the 1500s, ook.standard dummy text ever since the 1500s, ook.
@@ -542,7 +568,7 @@ export default function Profile() {
                                                     <div className='flex gap-3'>
                                                         <img className='user-image' src={UserImage} alt="UserImage" />
                                                         <div>
-                                                            <p style={{color: 'rgba(29, 91, 191, 1)', fontWeight: 600}}>John Doe</p>
+                                                            <p style={{ color: 'rgba(29, 91, 191, 1)', fontWeight: 600 }}>John Doe</p>
                                                             <p className='py-3 text-[14px] leading-6'>
                                                                 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
                                                                 standard dummy text ever since the 1500s, ook.standard dummy text ever since the 1500s, ook.

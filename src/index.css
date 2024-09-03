@@ -666,7 +666,7 @@ input[type="range"]::-ms-thumb {
 }
 
 .notification-container .notification-list .notification-message {
-  width: 250px;
+  width: 190px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

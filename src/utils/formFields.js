@@ -1670,6 +1670,7 @@ export const EditProfileFields = [{
       required: "This field is required",
     },
     width: 'width-49',
+    disabled: true
   },
   {
     type: "input",
@@ -1684,13 +1685,14 @@ export const EditProfileFields = [{
   },
   {
     type: "textbox",
-    name: "about_bio",
+    name: "professional_bio",
     label: "Professional Bio",
     placeholder: "Enter Professional Bio",
     inputRules: {
       required: "This field is required",
     },
     width: 'w-full',
+    disabled: true
   },
   {
     type: "input",
@@ -1713,6 +1715,7 @@ export const EditProfileFields = [{
       required: "This field is required",
     },
     width: 'width-49',
+    disabled: true
   },
   {
     type: "input",
@@ -1749,16 +1752,27 @@ export const EditProfileFields = [{
     width: 'w-full',
   },
   {
-    type: "logo",
-    name: "logo",
+    type: "input",
+    name: "social_media",
     fieldtype: "text",
     label: "Social Media",
-    placeholder: "Enter Address",
+    placeholder: "Social Media",
     inputRules: {
       required: "This field is required",
     },
     width: 'w-full',
-  }
+  },
+  // {
+  //   type: "logo",
+  //   name: "logo",
+  //   fieldtype: "text",
+  //   label: "Social Media",
+  //   placeholder: "Enter Address",
+  //   inputRules: {
+  //     required: "This field is required",
+  //   },
+  //   width: 'w-full',
+  // }
 
 
 ];

@@ -1,14 +1,21 @@
 import React, { useEffect } from 'react'
 import UserIcon from '../../assets/icons/MyProfileUser.svg'
 import LocationIcon from '../../assets/images/Location1x.png'
+import SuccessTik from '../../assets/images/blue_tik1x.png';
 import { Button } from '../../shared'
 import { useForm } from 'react-hook-form';
 import { EditProfileFields } from '../../utils/formFields';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUserProfile, updateProfile, updateProfileImage } from '../../services/profile';
+import { Backdrop, CircularProgress } from '@mui/material';
+import MuiModal from '../../shared/Modal';
+import { profileStatus } from '../../utils/constant';
 
 export default function EditProfile() {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const { profile, loading, status } = useSelector(state => state.profileInfo)
     const { data } = useSelector(state => state.userInfo)
     const {
         register,
@@ -19,36 +26,92 @@ export default function EditProfile() {
         setValue
     } = useForm();
 
+
     useEffect(() => {
-        if (Object.keys(data).length) {
+        if (Object.keys(profile).length) {
             reset({
-                name: `${data.first_name} ${data.last_name}` || '',
-                position: '',
-                about_bio: '',
-                link: '',
-                email: data.email || '',
-                phone_number: '',
-                location: '',
-                address: '',
+                name: `${profile.name}` || '',
+                position: profile.position,
+                professional_bio: profile.professional_bio,
+                link: profile.link,
+                email: profile.email || '',
+                phone_number: profile.phone_no,
+                location: profile.location,
+                address: profile.address,
                 logo: ''
             })
         }
-    }, [data])
+    }, [profile])
+
+
+    useEffect(() => {
+        dispatch(getUserProfile())
+    }, [])
 
     const onSubmit = (data) => {
+        const apiPayload = {
+            phone_number: data.phone_number,
+            location: data.location,
+            link: data.link,
+            professional_bio: data.professional_bio,
+            address: data.address,
+            social_media: data.social_media
+        }
+        dispatch(updateProfile(apiPayload))
         console.log('Submit', data)
     }
+
+    const uploadUserImage = (e) => {
+        if (e.target.files && e.target.files[0]) {
+            dispatch(updateProfileImage({profile_image : e.target.files}))
+            console.log(e.target.files)
+        }
+    }
+
+    useEffect(() => {
+        if (status === profileStatus.update || status === profileStatus.image) {
+            setTimeout(() => {
+                navigate('/my-profile')
+            }, 2000)
+        }
+    }, [status])
+
+
     return (
         <div className='edit-profile-container px-9 py-9'>
             <div>
                 Edit Profile
             </div>
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={loading}
+            >
+                <CircularProgress color="inherit" />
+
+            </Backdrop>
+
+            <MuiModal modalOpen={status === profileStatus.update || status === profileStatus.image} modalClose={() => undefined} noheader>
+                <div className='px-5 py-1 flex justify-center items-center'>
+                    <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
+                        style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
+                        <img src={SuccessTik} alt="SuccessTik" />
+                        <p className='text-white text-[12px]'>Profile updated Successfully</p>
+                    </div>
+
+                </div>
+            </MuiModal>
+
             <div className='edit-profile-content'>
                 <div className="grid grid-cols-8 gap-3">
                     <div className='col-span-2'>
                         <div className='upload-profile'>
                             <img src={UserIcon} alt="UserIcon" />
-                            <Button btnName="Upload Profile" btnCls="w-[60%]" />
+                            <label className="w-[40%] flex items-center justify-center pb-3 
+                             rounded-lg text-white text-[14px] cursor-pointer" style={{ background: 'linear-gradient(to right, rgb(0, 174, 189), rgb(29, 91, 191))',
+                                border: 'none'}}>
+                                <span class="mt-2  leading-normal">Upload Profile</span>
+                                <input type='file' class="hidden" onChange={uploadUserImage} />
+                            </label>
                         </div>
                     </div>
 

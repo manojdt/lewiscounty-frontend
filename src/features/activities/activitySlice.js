@@ -27,7 +27,7 @@ export const activitySlice = createSlice({
             .addCase(userActivities.fulfilled, (state, action) => {
                 return {
                     ...state,
-                    certificates: action.payload,
+                    activity: action.payload,
                     loading: false,
                 };
             })

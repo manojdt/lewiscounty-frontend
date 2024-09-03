@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import SearchIcon from '../../assets/icons/SearchColor.svg'
 import MaleIcon from '../../assets/images/male-profile1x.png'
 import FemaleIcon from '../../assets/images/female-profile1x.png'
@@ -9,7 +9,14 @@ import { getTimeFromDate } from '../../utils';
 export default function NotificationMenu() {
 
     const dispatch = useDispatch()
+    const [searchKey, setSearchKey] = useState('')
     const { activity } = useSelector(state => state.activity)
+
+    const handleSearch = (e) => {
+        setSearchKey(e.target.value)
+        dispatch(userActivities({ search: e.target.value }))
+    }
+
 
     useEffect(() => {
         dispatch(userActivities())
@@ -27,7 +34,7 @@ export default function NotificationMenu() {
 
                 <div className='notification-content'>
                     {
-                        activity.length ?
+                        activity.length || searchKey !== '' ?
 
                             <div className='nofification-action'>
                                 <div className="relative">
@@ -37,7 +44,9 @@ export default function NotificationMenu() {
                                             height: '55px',
                                             width: '400px',
                                             borderRadius: '6px'
-                                        }} />
+                                        }}
+                                        onChange={handleSearch}
+                                    />
                                     <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
                                         <img src={SearchIcon} alt='SearchIcon' />
                                     </div>
@@ -71,12 +80,12 @@ export default function NotificationMenu() {
                                     )
                                     }
                                 </ul>
-                                : null
+                                : <div>
+                                    No activies found
+                                </div>
                         }
 
-                        <div>
-                                No activies found
-                        </div>
+
                     </div>
                 </div>
 

@@ -11,6 +11,7 @@ import helpReducer from "../features/help/helpSlice";
 import userListReducer from "../features/userList/userListSlice";
 import scheduleReducer from "../features/schedule/scheduleSlice";
 import taskReducer from "../features/task/taskSlice";
+import profileReducer from "../features/profile/profileSlice";
 import certificateReducer from "../features/certificates/certificateSlice";
 import activityReducer from "../features/activities/activitySlice";
 
@@ -18,6 +19,7 @@ import activityReducer from "../features/activities/activitySlice";
 const combinedReducer = combineReducers({
   userInfo: userReducer,
   programInfo: programReducer,
+  profileInfo: profileReducer,
   userPrograms: userProgramReducer,
   goals: goalsReducer,
   reports: reportsReducer,
