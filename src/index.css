@@ -714,7 +714,7 @@ input[type="range"]::-ms-thumb {
   border-radius: 10px;
 }
 
-.feed-container .feeds-list .feed-card .feed-content .user-image {
+.feed-container .feeds-list .feed-card .feed-content .user-image, .create-post .user-image {
   width: 45px;
   height: 45px;
   border-radius: 50%;

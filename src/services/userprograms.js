@@ -69,6 +69,10 @@ export const getProgramCounts = createAsyncThunk(
 export const getProgramDetails = createAsyncThunk(
     "getProgramDetails",
     async (id) => {
+        api.interceptors.request.use(function (config) {
+            config.headers["Content-Type"] = "application/json";
+            return config;
+        });
         const getDetailsofProgram = await api.get(`fetch_program_detail/${id}`);
         if (getDetailsofProgram.status === 200 && getDetailsofProgram.data && getDetailsofProgram.data.program) {
             return getDetailsofProgram.data.program;

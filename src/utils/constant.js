@@ -174,6 +174,13 @@ export const goalStatus = {
   delete: 'deleted',
 }
 
+export const feedStatus = {
+  load: 'loaded',
+  create: 'created',
+  update: 'updated',
+  delete: 'deleted',
+}
+
 
 export const reportsStatus = {
   load: 'loaded',
