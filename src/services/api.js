@@ -4,7 +4,9 @@ let refresh = false;
 
 // const baseUrl = "http://52.88.78.226:8000/api";
 
-const baseUrl = "https://mentor-backend.dataterrain-dev.net/api/"
+// const baseUrl = "https://mentor-backend.dataterrain-dev.net/api/"
+
+const baseUrl = "https://mentor-backend.dataterrain-test.net/api/"
 
 const api = axios.create({
   baseURL: baseUrl,
