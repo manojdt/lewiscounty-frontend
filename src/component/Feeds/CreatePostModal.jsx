@@ -5,7 +5,7 @@ import UserIcon from '../../assets/images/user.jpg'
 import CancelIcon from '../../assets/images/cancel-colour1x.png'
 import { useForm } from 'react-hook-form'
 
-export default function CreatePostModal({ open, handleClose, handleVisibilty, handlePostData }) {
+export default function CreatePostModal({ formData, open, handleClose, handleVisibilty, handlePostData }) {
     const {
         register,
         formState: { errors },
@@ -22,14 +22,15 @@ export default function CreatePostModal({ open, handleClose, handleVisibilty, ha
         console.log('Submit', data)
     }
 
+
     return (
         <MuiModal modalOpen={open} modalClose={handleClose} noheader>
             <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
-                <div className="flex gap-4 create-post" onClick={handleVisibilty}>
+                <div className="flex gap-4 create-post cursor-pointer" onClick={handleVisibilty}>
                     <img className='user-image' src={UserIcon} alt="UserIcon" />
                     <div>
                         <p>John Doe</p>
-                        <p className='text-[12px]'>Anyone</p>
+                        <p className='text-[12px]'>{formData.visibility === 'anyone' ? 'Anyone' : formData.visibility === 'connections' ? 'Connection' : ''} </p>
                     </div>
                 </div>
                 <div className="flex gap-20 items-center">

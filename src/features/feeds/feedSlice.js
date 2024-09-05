@@ -6,7 +6,8 @@ import {
 } from "../../services/activities";
 import {
     createPost,
-    getPost
+    getPost,
+    getPostDetails
 } from "../../services/feeds";
 import {
     feedStatus
@@ -14,6 +15,7 @@ import {
 
 const initialState = {
     feeds: [],
+    feedDetails: {},
     loading: false,
     status: "",
     error: "",
@@ -34,6 +36,7 @@ export const feedSlice = createSlice({
             .addCase(getPost.fulfilled, (state, action) => {
                 return {
                     ...state,
+                    feeds: action.payload,
                     status: feedStatus.load,
                     loading: false,
                 };
@@ -45,6 +48,32 @@ export const feedSlice = createSlice({
                     error: action.error.message,
                 };
             });
+
+
+        builder
+            .addCase(getPostDetails.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(getPostDetails.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    feedDetails: action.payload,
+                    status: feedStatus.load,
+                    loading: false,
+                };
+            })
+            .addCase(getPostDetails.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
+
         builder
             .addCase(createPost.pending, (state) => {
                 return {

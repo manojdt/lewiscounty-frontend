@@ -9,7 +9,7 @@ import ControlNoOneIcon from '../../assets/icons/ControlNoOne.svg'
 import { Button } from '../../shared'
 import { useForm } from 'react-hook-form'
 
-export default function SettingsModal({ open, handleSettingsBack, handlePostData }) {
+export default function SettingsModal({ formData, open, handleSettingsBack, handlePostData }) {
 
     const [modalMode, setModalMode] = useState('settings')
 
@@ -18,7 +18,7 @@ export default function SettingsModal({ open, handleSettingsBack, handlePostData
         formState: { errors },
         handleSubmit,
         reset,
-
+        getValues
     } = useForm({
         defaultValues: {
             visibility: 'anyone',
@@ -55,7 +55,11 @@ export default function SettingsModal({ open, handleSettingsBack, handlePostData
     }
 
     useEffect(() => {
-        reset()
+        reset({
+            visibility: formData.visibility,
+            brand_partnership : formData.brand_partnership,
+            comment_control : formData.comment_control
+        })
     },[])
 
     return (
@@ -98,7 +102,7 @@ export default function SettingsModal({ open, handleSettingsBack, handlePostData
                                         <p className='text-[14px]'>Connections Only</p>
 
                                     </div>
-                                    <input {...register('visibility')} id="default-radio-1" type="radio" value="connetion"
+                                    <input {...register('visibility')} id="default-radio-1" type="radio" value="connections"
                                         className="w-8 h-8 ml-auto" />
                                 </div>
 
@@ -106,7 +110,10 @@ export default function SettingsModal({ open, handleSettingsBack, handlePostData
                             <div className='flex justify-between pt-8'>
                                 <div>
                                     <p className='text-[14px]'>Comment Control</p>
-                                    <p className='text-[12px]'>Any One</p>
+                                    <p className='text-[12px]'>{getValues('comment_control') === 'anyone' ? 'Anyone' : 
+                                        getValues('comment_control') === 'connection' ? 'Connection' :
+                                        getValues('comment_control') === 'no-one' ? 'No One' : ''
+                                        }</p>
                                 </div>
                                 <div className='cursor-pointer w-[20px]' onClick={() => setModalMode('control')}>
                                     <img className='h-[18px]' src={RightSmallIcon} alt="RightSmallIcon" />
@@ -116,7 +123,7 @@ export default function SettingsModal({ open, handleSettingsBack, handlePostData
                             <div className='flex justify-between pt-8'>
                                 <div>
                                     <p className='text-[14px]'>Brand Partnership</p>
-                                    <p className='text-[12px]'>Off</p>
+                                    <p className='text-[12px]'>{getValues('brand_partnership') === 'true' || getValues('brand_partnership') === true ? 'On' : 'Off'}</p>
                                 </div>
                                 <div >
                                     <label className="inline-flex items-center mb-5 cursor-pointer">
@@ -172,7 +179,7 @@ export default function SettingsModal({ open, handleSettingsBack, handlePostData
                                         <p className='text-[14px]'>Connections Only</p>
 
                                     </div>
-                                    <input {...register('comment_control')} type="radio" value="connetion"
+                                    <input {...register('comment_control')} type="radio" value="connections"
                                         className="w-8 h-8 ml-auto" />
                                 </div>
 
