@@ -108,6 +108,10 @@ export const assignProgramTask = createAsyncThunk(
     "assignProgramTask",
     async (data) => {
         // const query = "?status=assign"
+        api.interceptors.request.use(function (config) {
+            config.headers["Content-Type"] = "application/json";
+            return config;
+        });
         const query = ""
         const programTaskAssign = await api.post(`program_task_assign/create_task${query}`, data);
         if (programTaskAssign.status === 201 && programTaskAssign.data) {
@@ -230,10 +234,7 @@ export const submitProgramTaskDetails = createAsyncThunk(
     "submitProgramTaskDetails",
     async (data) => {
 
-        api.interceptors.request.use(function (config) {
-            config.headers["Content-Type"] = "multipart/form-data";
-            return config;
-        });
+       
        
         const submitTask = await api.post("program_task_assign/task_submission", data);
         if (submitTask.status === 201 && submitTask.data) {

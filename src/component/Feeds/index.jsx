@@ -20,9 +20,9 @@ import { feedStatus } from '../../utils/constant'
 
 export default function Feeds() {
     const defaultState = { create: false, settings: false, control: false, visibility: false }
-    const defaultForm = { visibility: ['anyone'], comment_control: ["anyone", "connections"], brand_partnership: false, is_published: false }
+    const defaultForm = { visibility: 'anyone', comment_control: "anyone", brand_partnership: false, is_published: true }
     const [postModal, setPostModal] = useState({ create: false, settings: false, control: false, visibility: false });
-    const [formData, setFormData] = useState({ visibility: ['anyone'], comment_control: ["anyone", "connections"], brand_partnership: false, is_published: false })
+    const [formData, setFormData] = useState({ visibility: 'anyone', comment_control: 'anyone', brand_partnership: false, is_published: true })
     const navigate = useNavigate();
     const dispatch = useDispatch()
     const { feeds, loading, status } = useSelector(state => state.feeds)
@@ -88,7 +88,6 @@ export default function Feeds() {
     }
 
     const handleCreatePostPopup = () => {
-        return
         setPostModal({ create: true, visibility: false })
     }
 
@@ -100,6 +99,10 @@ export default function Feeds() {
             },2000)
         }
     }, [status])
+
+    useEffect(() => {
+        dispatch(getPost())
+    },[])
 
     return (
         <div className="feed-container px-9 py-9">
@@ -134,29 +137,29 @@ export default function Feeds() {
                 </MuiModal>
 
                 {
-                    postModal.create && <CreatePostModal open={postModal.create} handleClose={handleClose} handleVisibilty={handleVisibilty} handlePostData={handlePostData} />
+                    postModal.create && <CreatePostModal formData={formData} open={postModal.create} handleClose={handleClose} handleVisibilty={handleVisibilty} handlePostData={handlePostData} />
                 }
 
 
                 {
-                    postModal.settings && <SettingsModal open={postModal.settings} handleClose={handleClose} handleSettingsBack={handleSettingsBack} handlePostData={handleSettingsData} />
+                    postModal.settings && <SettingsModal formData={formData} open={postModal.settings} handleClose={handleClose} handleSettingsBack={handleSettingsBack} handlePostData={handleSettingsData} />
                 }
 
 
                 <div className='feeds-list'>
                     <div className="grid grid-cols-3 gap-7">
                         {
-                            feedList.map((feed, index) =>
-                                <div className='feed-card cursor-pointer' key={index} onClick={() => navigate('/feed-details/1')}>
+                            feeds.map((feed, index) =>
+                                <div className='feed-card cursor-pointer' key={index} onClick={() => navigate(`/feed-details/${feed.id}`)}>
                                     <img className='feed-image' src={FeedImage} alt="FeedImage" />
                                     <div className='feed-content flex justify-between pt-5'>
                                         <div className='flex gap-4 items-center'>
                                             <img className='user-image' src={UserIcon} alt="UserIcon" />
                                             <div>
                                                 <p className='text-[14px]'>
-                                                    {feed.name}
+                                                    {feed.content}
                                                 </p>
-                                                <p className='text-[12px]'>{feed.comment}</p>
+                                                {/* <p className='text-[12px]'>{feed.comment}</p> */}
                                             </div>
                                         </div>
                                         <img src={MoreIcon} className='cursor-pointer' alt="MoreIcon" />
