@@ -69,10 +69,7 @@ export const getProgramCounts = createAsyncThunk(
 export const getProgramDetails = createAsyncThunk(
     "getProgramDetails",
     async (id) => {
-        api.interceptors.request.use(function (config) {
-            config.headers["Content-Type"] = "application/json";
-            return config;
-        });
+
         const getDetailsofProgram = await api.get(`fetch_program_detail/${id}`);
         if (getDetailsofProgram.status === 200 && getDetailsofProgram.data && getDetailsofProgram.data.program) {
             return getDetailsofProgram.data.program;
@@ -108,12 +105,17 @@ export const assignProgramTask = createAsyncThunk(
     "assignProgramTask",
     async (data) => {
         // const query = "?status=assign"
-        api.interceptors.request.use(function (config) {
-            config.headers["Content-Type"] = "application/json";
-            return config;
+        // api.interceptors.request.use(function (config) {
+        //     config.headers["Content-Type"] = "application/json";
+        //     return config;
+        // });
+
+        const headers = {
+            'Content-Type': 'application/json',
+        }
+        const programTaskAssign = await api.post('program_task_assign/create_task', data, {
+            headers: headers
         });
-        const query = ""
-        const programTaskAssign = await api.post(`program_task_assign/create_task${query}`, data);
         if (programTaskAssign.status === 201 && programTaskAssign.data) {
             return programTaskAssign.data;
         }
@@ -155,8 +157,8 @@ export const getMenteePrograms = createAsyncThunk(
         if (getUserProgram.status === 200 && getUserProgram.data) {
             const response = {
                 ...getUserProgram.data,
-                filterType: queryString ?.type || '',
-                filterValue: queryString ?.value || ''
+                filterType: queryString?.type || '',
+                filterValue: queryString?.value || ''
             }
             console.log('response', response)
             return response;
@@ -234,8 +236,8 @@ export const submitProgramTaskDetails = createAsyncThunk(
     "submitProgramTaskDetails",
     async (data) => {
 
-       
-       
+
+
         const submitTask = await api.post("program_task_assign/task_submission", data);
         if (submitTask.status === 201 && submitTask.data) {
             return submitTask.data;

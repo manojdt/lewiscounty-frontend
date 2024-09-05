@@ -1,4 +1,7 @@
-import { createAsyncThunk, createAction } from "@reduxjs/toolkit";
+import {
+  createAsyncThunk,
+  createAction
+} from "@reduxjs/toolkit";
 
 import api from "./api";
 
@@ -38,11 +41,16 @@ export const createProgram = createAsyncThunk("createProgram", async (data) => {
 export const createNewPrograms = createAsyncThunk(
   "createNewPrograms",
   async (data) => {
-    api.interceptors.request.use(function (config) {
-      config.headers["Content-Type"] = "multipart/form-data";
-      return config;
+    // api.interceptors.request.use(function (config) {
+    //   config.headers["Content-Type"] = "multipart/form-data";
+    //   return config;
+    // });
+    const headers = {
+      'Content-Type': 'multipart/form-data',
+    }
+    const createProgram = await api.post("programs", data, {
+      headers: headers
     });
-    const createProgram = await api.post("programs", data);
     // const createProgram = { status : 201}
     console.log("createProgram", createProgram);
     if (createProgram.status === 201) {
