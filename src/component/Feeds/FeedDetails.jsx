@@ -15,13 +15,14 @@ import ReplyFeedbackIcon from '../../assets/icons/ReplyFeedback.svg'
 import Programs from '../Dashboard/Programs'
 import { useDispatch, useSelector } from 'react-redux'
 import { Backdrop, CircularProgress } from '@mui/material'
-import { getPostDetails } from '../../services/feeds'
+import { getPostDetails, getRecentPosts, updateFeedTrack } from '../../services/feeds'
+import ProgramFeeds from '../../shared/ProgramFeeds'
 
 export default function FeedDetails() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const params = useParams();
-    const { feedDetails, loading } = useSelector(state => state.feeds)
+    const { feedDetails, recentPosts, loading } = useSelector(state => state.feeds)
 
     const postComments = [
         {
@@ -46,19 +47,18 @@ export default function FeedDetails() {
     useEffect(() => {
         if (params.id !== '') {
             dispatch(getPostDetails(params.id))
+            dispatch(getRecentPosts())
+            dispatch(updateFeedTrack({id: params.id}))
         }
     }, [params])
 
     return (
-
         <>
-
             <Backdrop
                 sx={{ color: '#fff', zIndex: 99999 }}
                 open={loading}
             >
                 <CircularProgress color="inherit" />
-
             </Backdrop>
             {
                 (!loading && Object.keys(feedDetails).length) &&
@@ -76,8 +76,6 @@ export default function FeedDetails() {
                                 </Tooltip>
                             </div>
                         </div>
-
-
 
 
                         <div className='feed-details'>
@@ -170,7 +168,7 @@ export default function FeedDetails() {
                                 </div>
 
                                 <div className='col-span-2'>
-                                    <Programs />
+                                    <ProgramFeeds feedsList={recentPosts} />
                                 </div>
                             </div>
                         </div>

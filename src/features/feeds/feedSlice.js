@@ -1,13 +1,13 @@
 import {
     createSlice
 } from "@reduxjs/toolkit";
-import {
-    userActivities
-} from "../../services/activities";
+
 import {
     createPost,
     getPost,
-    getPostDetails
+    getPostDetails,
+    getRecentPosts,
+    updateFeedTrack
 } from "../../services/feeds";
 import {
     feedStatus
@@ -16,6 +16,7 @@ import {
 const initialState = {
     feeds: [],
     feedDetails: {},
+    recentPosts: [],
     loading: false,
     status: "",
     error: "",
@@ -96,6 +97,52 @@ export const feedSlice = createSlice({
                 };
             });
 
+
+        builder
+            .addCase(getRecentPosts.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(getRecentPosts.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    recentPosts: action.payload,
+                    status: feedStatus.load,
+                    loading: false,
+                };
+            })
+            .addCase(getRecentPosts.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
+
+        builder
+            .addCase(updateFeedTrack.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(updateFeedTrack.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    status: feedStatus.load,
+                    loading: false,
+                };
+            })
+            .addCase(updateFeedTrack.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
 
     },
 });

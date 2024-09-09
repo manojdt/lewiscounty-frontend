@@ -122,7 +122,6 @@ export default function Feeds() {
                     open={loading}
                 >
                     <CircularProgress color="inherit" />
-
                 </Backdrop>
 
                 <MuiModal modalOpen={status === feedStatus.create} modalClose={() => undefined} noheader>
@@ -159,7 +158,7 @@ export default function Feeds() {
                                                 <p className='text-[14px]'>
                                                     {feed.content}
                                                 </p>
-                                                {/* <p className='text-[12px]'>{feed.comment}</p> */}
+                                                <p className='text-[12px]'>{feed.post_view_count} {' . '} {feed.time_since_action}</p>
                                             </div>
                                         </div>
                                         <img src={MoreIcon} className='cursor-pointer' alt="MoreIcon" />

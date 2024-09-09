@@ -5,6 +5,7 @@ import {
 import api from "./api";
 
 
+
 export const createPost = createAsyncThunk(
     "createPost",
     async (data) => {
@@ -39,3 +40,26 @@ export const getPostDetails = createAsyncThunk(
     }
 );
 
+export const getRecentPosts = createAsyncThunk(
+    "getRecentPosts",
+    async () => {
+        const getRecentPostDetail = await api.get('post/recent-posts');
+        if (getRecentPostDetail.status === 200 && getRecentPostDetail.data) {
+            return getRecentPostDetail.data;
+        }
+        return getRecentPostDetail;
+    }
+);
+
+
+
+export const updateFeedTrack = createAsyncThunk(
+    "updateFeedTrack",
+    async (data) => {
+        const updateFeedTrackInfo = await api.post('post/track-post', data);
+        if (updateFeedTrackInfo.status === 200 && updateFeedTrackInfo.data) {
+            return updateFeedTrackInfo.data;
+        }
+        return updateFeedTrackInfo;
+    }
+);
