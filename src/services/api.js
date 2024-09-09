@@ -6,7 +6,7 @@ let refresh = false;
 
 const baseUrl = "https://mentor-backend.dataterrain-dev.net/api/"
 
-// const baseUrl = "https://mentor-backend.dataterrain-test.net/api/."
+// const baseUrl = "https://mentor-backend.dataterrain-test.net/api/"
 
 const api = axios.create({
   baseURL: baseUrl,
