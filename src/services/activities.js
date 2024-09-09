@@ -1,6 +1,5 @@
 import {
     createAsyncThunk,
-    createAction
 } from "@reduxjs/toolkit";
 import api from "./api";
 
