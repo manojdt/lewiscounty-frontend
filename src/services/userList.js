@@ -40,13 +40,39 @@ export const getMentorProgramActivity = createAsyncThunk(
     }
 );
 
-// export const getMyMentees = createAsyncThunk(
-//     "getMyMentees",
-//     async () => {
-//         const helpContactData = await api.get('/profile/help_desk_contact');
-//         if (helpContactData.status === 200 && helpContactData.data) {
-//             return helpContactData.data;
-//         }
-//         return helpContactData
-//     }
-// );
+export const getMyMentees = createAsyncThunk(
+    "getMyMentees",
+    async () => {
+        const myMenteeList = await api.get('/mentee/my_mentee');
+        if (myMenteeList.status === 200 && myMenteeList.data) {
+            return myMenteeList.data;
+        }
+        return myMenteeList
+    }
+);
+
+
+export const getMyMenteeInfo = createAsyncThunk(
+    "getMyMenteeInfo",
+    async (id) => {
+        const myMentee = await api.get(`/mentee/${id}`);
+        if (myMentee.status === 200 && myMentee.data) {
+            return myMentee.data.mentor || myMentee.data;
+        }
+        return myMentee
+    }
+);
+
+
+export const getMenteeProgramActivity = createAsyncThunk(
+    "getMenteeProgramActivity",
+    async (id) => {
+        const myMenteeProgramActivity = await api.get(`/programs_activity_list/${id}`);
+        if (myMenteeProgramActivity.status === 200 && myMenteeProgramActivity.data) {
+            return myMenteeProgramActivity.data.mentor || myMenteeProgramActivity.data;
+        }
+        return myMenteeProgramActivity
+    }
+);
+
+
