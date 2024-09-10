@@ -16,11 +16,13 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserProfile } from '../../services/profile';
 import { Backdrop, CircularProgress } from '@mui/material';
+import { getUserPost } from '../../services/feeds';
 
 export default function Profile() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const { profile, loading } = useSelector(state => state.profileInfo)
+    const { userPost, loading: postLoading } = useSelector(state => state.feeds)
     const [actionTab, setActiveTab] = useState('activity')
     const allProfileDetailTab = [
         {
@@ -57,6 +59,11 @@ export default function Profile() {
 
     const allCollegues = collegueList()
 
+    const handleTabAction = (key) => {
+        if (key === 'post') dispatch(getUserPost())
+        setActiveTab(key)
+    }
+
     useEffect(() => {
         dispatch(getUserProfile())
     }, [])
@@ -66,7 +73,7 @@ export default function Profile() {
 
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={loading}
+                open={loading || postLoading}
             >
                 <CircularProgress color="inherit" />
 
@@ -255,7 +262,7 @@ export default function Profile() {
                                             {
                                                 allProfileDetailTab.map((discussion, index) =>
                                                     <li className={`${actionTab === discussion.key ? 'active' : ''} relative`} key={index}
-                                                        onClick={() => setActiveTab(discussion.key)}
+                                                        onClick={() => handleTabAction(discussion.key)}
                                                     >
                                                         {`${discussion.name}`}
                                                         {actionTab === discussion.key && <span></span>}
@@ -362,7 +369,7 @@ export default function Profile() {
 
                                         <div className={`post-tab ${actionTab === 'post' ? 'show' : 'hidden'}`}>
                                             <div>
-                                                <div style={{ border: '1px solid rgba(217, 228, 242, 1)', padding: '20px', borderRadius: '3px' }}>
+                                                {/* <div style={{ border: '1px solid rgba(217, 228, 242, 1)', padding: '20px', borderRadius: '3px' }}>
                                                     <div className='flex gap-4 items-center'>
                                                         <div className='user-image'>
                                                             <img src={UserImage} alt="UserImage" />
@@ -422,71 +429,80 @@ export default function Profile() {
                                                             <p>Share</p>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                </div> */}
 
 
-                                                <div style={{ border: '1px solid rgba(217, 228, 242, 1)', padding: '20px', borderRadius: '3px', marginTop: '40px' }}>
-                                                    <div className='flex gap-4 items-center'>
-                                                        <div className='user-image'>
-                                                            <img src={UserImage} alt="UserImage" />
-                                                        </div>
-
-                                                        <div className='flex justify-between items-center w-full text-[13px] '>
-                                                            <div className='leading-5'>
-                                                                <p className='flex gap-2 font-semibold'>
-                                                                    <span>Jhon Doe</span>
-                                                                    <span className='flex gap-2 items-center font-normal'>
-                                                                        <div
-                                                                            className="w-[6px] h-[6px]  mx-[-1px]  flex items-center justify-center">
-                                                                            <span className="w-[6px] h-[6px]  rounded-full"
-                                                                                style={{ background: 'rgba(24, 40, 61, 1)' }}></span>
-                                                                        </div>
-                                                                        <span >2days ago</span>
-                                                                    </span>
-                                                                </p>
-                                                                <p>Developer</p>
-                                                            </div>
-                                                            <p className='text-[12px]'>
-
-                                                                <div className='cursor-pointer h-full flex items-center'>
-                                                                    <img src={MoreIcon} alt='MoreIcon' />
+                                                {
+                                                    userPost.map(post =>
+                                                        <div style={{ border: '1px solid rgba(217, 228, 242, 1)', padding: '20px', borderRadius: '3px', marginTop: '40px' }} key={post.id}>
+                                                            <div className='flex gap-4 items-center'>
+                                                                <div className='user-image'>
+                                                                    <img src={UserImage} alt="UserImage" />
                                                                 </div>
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                    <div className='post-details'>
 
-                                                        <div style={{ borderBottom: '1px solid rgba(217, 228, 242, 1)', paddingBottom: '25px' }}>
-                                                            <div className='text-color font-semibold pb-5 pt-8'>
-                                                                Lorem ipsum dolor sit amet
+                                                                <div className='flex justify-between items-center w-full text-[13px] '>
+                                                                    <div className='leading-5'>
+                                                                        <p className='flex gap-2 font-semibold'>
+                                                                            <span>{post?.user_name}</span>
+                                                                            <span className='flex gap-2 items-center font-normal'>
+                                                                                <div
+                                                                                    className="w-[6px] h-[6px]  mx-[-1px]  flex items-center justify-center">
+                                                                                    <span className="w-[6px] h-[6px]  rounded-full"
+                                                                                        style={{ background: 'rgba(24, 40, 61, 1)' }}></span>
+                                                                                </div>
+                                                                                <span >{post?.time_since_action}</span>
+                                                                            </span>
+                                                                        </p>
+                                                                        <p>Developer</p>
+                                                                    </div>
+                                                                    <p className='text-[12px]'>
+
+                                                                        <div className='cursor-pointer h-full flex items-center'>
+                                                                            <img src={MoreIcon} alt='MoreIcon' />
+                                                                        </div>
+                                                                    </p>
+                                                                </div>
                                                             </div>
-                                                            <p className='text-[12px]'>
-                                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                                                Ut enim ad minim veniam, quis nostrud exercitation
-                                                                ullamco laboris nisi ut aliquip ex ea  voluptate velit esse cillum dolore eu fugiat nulla pariatur
-                                                                <span style={{ color: 'rgba(29, 91, 191, 1)', fontWeight: 600, paddingLeft: '4px', cursor: 'pointer' }}>Show More......</span>
-                                                            </p>
-                                                        </div>
-                                                    </div>
+                                                            <div className='post-details'>
 
-                                                    <div className='action-item flex gap-16 items-center pt-5 text-[12px]'>
-                                                        <div className='flex gap-2'>
-                                                            <img src={LikeBlackIcon} alt="LikeBlackIcon" />
-                                                            <p>Like(20)</p>
+                                                                <div style={{ borderBottom: '1px solid rgba(217, 228, 242, 1)', paddingBottom: '25px' }}>
+                                                                    <div className='text-color font-semibold pb-5 pt-8'>
+                                                                        {post?.content}
+                                                                    </div>
+                                                                    {/* <p className='text-[12px]'>
+                                                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                                                        Ut enim ad minim veniam, quis nostrud exercitation
+                                                                        ullamco laboris nisi ut aliquip ex ea  voluptate velit esse cillum dolore eu fugiat nulla pariatur
+                                                                        <span style={{ color: 'rgba(29, 91, 191, 1)', fontWeight: 600, paddingLeft: '4px', cursor: 'pointer' }}>Show More......</span>
+                                                                    </p> */}
+                                                                </div>
+                                                            </div>
+
+                                                            <div className='action-item flex gap-16 items-center pt-5 text-[12px]'>
+                                                                <div className='flex gap-2'>
+                                                                    <img src={LikeBlackIcon} alt="LikeBlackIcon" />
+                                                                    <p>Like(20)</p>
+                                                                </div>
+                                                                <div className='flex gap-2'>
+                                                                    <img src={CommentBlackIcon} alt="CommentBlackIcon" />
+                                                                    <p>Comment(19)</p>
+                                                                </div>
+                                                                <div className='flex gap-2'>
+                                                                    <img src={ShareBlackIcon} alt="ShareBlackIcon" />
+                                                                    <p>Share</p>
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <div className='flex gap-2'>
-                                                            <img src={CommentBlackIcon} alt="CommentBlackIcon" />
-                                                            <p>Comment(19)</p>
-                                                        </div>
-                                                        <div className='flex gap-2'>
-                                                            <img src={ShareBlackIcon} alt="ShareBlackIcon" />
-                                                            <p>Share</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
+
+
+                                                    )
+                                                }
+                                               
 
                                                 <div style={{ border: '1px solid rgba(217, 228, 242, 1)', margin: '44px 0px 10px', width: '100%' }}></div>
-                                                <div className='flex justify-center items-center cursor-pointer font-semibold pt-3' style={{ color: 'rgba(29, 91, 191, 1)' }}>
+                                                <div className='flex justify-center items-center cursor-pointer font-semibold pt-3' style={{ color: 'rgba(29, 91, 191, 1)' }} 
+                                                onClick={() => navigate('/feeds')}
+                                                >
                                                     Show all  Posts
                                                     <img className='pl-3' src={RightArrowColor} alt="RightArrowColor" />
                                                 </div>

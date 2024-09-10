@@ -55,6 +55,8 @@ import CalendarMain from './component/Calendar/CalendarMain';
 import CreateMeeting from "./component/Calendar/CreateMeeting";
 import { Calendar } from "primereact/calendar";
 import Scheduler from "./component/Calendar";
+import Discussions from "./component/Discussions";
+import DiscussionDetails from "./component/Discussions/DiscussionDetails";
 
 function App() {
  
@@ -112,6 +114,10 @@ function App() {
 
           <Route path="/calendar" element={<Scheduler />} />
           <Route path="/create-meeting" element={<CreateMeeting />} />
+
+          <Route path="/discussionss" element={<Discussions />} />
+          <Route path="/discussion/:id" element={<DiscussionDetails />} />
+
 
 
           <Route path="/edit-profile" element={<EditProfile />} />
