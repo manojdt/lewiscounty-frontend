@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { useNavigate } from 'react-router-dom';
@@ -11,6 +11,10 @@ import SearchIcon from '../../assets/images/search1x.png'
 import ReportIcon from '../../assets/icons/report.svg'
 import Dropdown from '../../shared/Dropdown';
 import { menteeColumns, menteeRow } from '../../mock';
+import { useDispatch, useSelector } from 'react-redux';
+import { Backdrop, CircularProgress } from '@mui/material';
+import { getMyMentees } from '../../services/userList';
+import { myMenteeColumns } from '../../utils/tableFields';
 
 
 export const Mentees = () => {
@@ -19,8 +23,13 @@ export const Mentees = () => {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
 
+    const dispatch = useDispatch()
+    const { menteeList, loading } = useSelector(state => state.userList)
+
+
     const [mentorType, setMentorType] = useState('my-mentee')
     const [requestTab, setRequestTab] = useState('all-request')
+    const [selectedMentee, setSelectedMentee] = useState({})
 
     const menteeOption = [
         {
@@ -56,12 +65,13 @@ export const Mentees = () => {
         setAnchorEl(null);
     };
 
-    const handleClick = (event) => {
+    const handleClick = (event, data) => {
         setAnchorEl(event.currentTarget);
+        setSelectedMentee(data)
     };
 
-    const menteeColumn = [
-        ...menteeColumns,
+    const myMenteeColumn = [
+        ...myMenteeColumns,
         {
             field: 'action',
             headerName: 'Action',
@@ -70,7 +80,7 @@ export const Mentees = () => {
             renderCell: (params) => {
                 console.log('params', params)
                 return <>
-                    <div className='cursor-pointer flex items-center h-full' onClick={handleClick}>
+                    <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleClick(e, params.row)}>
                         <img src={MoreIcon} alt='MoreIcon' />
                     </div>
                     <Menu
@@ -82,7 +92,7 @@ export const Mentees = () => {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
-                        <MenuItem onClick={() => navigate('/mentee-details/1')} className='!text-[12px]'>
+                        <MenuItem onClick={() => navigate(`/mentee-details/${selectedMentee.id}`)} className='!text-[12px]'>
                             <img src={ViewIcon} alt="ViewIcon" className='pr-3 w-[30px]' />
                             View
                         </MenuItem>
@@ -102,8 +112,18 @@ export const Mentees = () => {
 
     const handleTab = (key) => setRequestTab(key)
 
+    useEffect(() => {
+        dispatch(getMyMentees())
+    }, [])
+
     return (
         <div className="px-9 py-9">
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={loading}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
             <div className='px-3 py-5' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
                 <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
                     <div className='flex gap-5 items-center '>
@@ -149,7 +169,7 @@ export const Mentees = () => {
                         </div>
                     }
 
-                    <DataTable rows={menteeRow} columns={menteeColumn} hideCheckbox />
+                    <DataTable rows={menteeList} columns={myMenteeColumn} hideCheckbox />
 
                 </div>
             </div>

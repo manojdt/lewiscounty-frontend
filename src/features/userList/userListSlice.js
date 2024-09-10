@@ -4,7 +4,10 @@ import {
 import {
     getMyMentors,
     getMyMentorInfo,
-    getMentorProgramActivity
+    getMentorProgramActivity,
+    getMyMentees,
+    getMyMenteeInfo,
+    getMenteeProgramActivity
 } from "../../services/userList";
 
 const initialState = {
@@ -12,6 +15,7 @@ const initialState = {
     mentorDetails: {},
     programActivity: [],
     menteeList: [],
+    menteeDetails: {},
     loading: false,
     status: "",
     error: "",
@@ -55,6 +59,7 @@ export const userListSlice = createSlice({
                 return {
                     ...state,
                     mentorDetails: action.payload,
+                    menteeDetails: {},
                     loading: false,
                 };
             })
@@ -82,6 +87,75 @@ export const userListSlice = createSlice({
                 };
             })
             .addCase(getMentorProgramActivity.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
+
+        builder
+            .addCase(getMyMentees.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(getMyMentees.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    menteeList: action.payload,
+                    loading: false,
+                };
+            })
+            .addCase(getMyMentees.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
+
+        builder
+            .addCase(getMyMenteeInfo.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(getMyMenteeInfo.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    menteeDetails: action.payload,
+                    mentorDetails: [],
+                    loading: false,
+                };
+            })
+            .addCase(getMyMenteeInfo.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
+        builder
+            .addCase(getMenteeProgramActivity.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(getMenteeProgramActivity.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    programActivity: action.payload,
+                    loading: false,
+                };
+            })
+            .addCase(getMenteeProgramActivity.rejected, (state, action) => {
                 return {
                     ...state,
                     loading: false,
