@@ -17,13 +17,9 @@ export const userAccountCreate = createAsyncThunk(
       localStorage.setItem("refresh_token", userCreate.data.refresh);
       let decoded = jwtDecode(userCreate.data.access);
       console.log('Create Token', decoded)
-      return decoded;
+      return { status: userCreate.status, userResponse: decoded };
     }
 
-    if(userCreate.status === 400){
-      console.log('kkkk', userCreate)
-      // return userCreate.error.message = 
-    }
     return userCreate;
   }
 );
