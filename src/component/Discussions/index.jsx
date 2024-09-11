@@ -34,7 +34,7 @@ export default function Discussions() {
 
     const handleClick = (event, data) => {
         console.log(event)
-        navigate('/discussion/1')
+        // navigate('/discussion/1')
     };
 
 
