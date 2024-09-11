@@ -115,7 +115,7 @@ function App() {
           <Route path="/calendar" element={<Scheduler />} />
           <Route path="/create-meeting" element={<CreateMeeting />} />
 
-          <Route path="/discussionss" element={<Discussions />} />
+          <Route path="/discussions" element={<Discussions />} />
           <Route path="/discussion/:id" element={<DiscussionDetails />} />
 
 
