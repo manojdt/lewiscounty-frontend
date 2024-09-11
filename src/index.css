@@ -714,7 +714,8 @@ input[type="range"]::-ms-thumb {
   border-radius: 10px;
 }
 
-.feed-container .feeds-list .feed-card .feed-content .user-image, .create-post .user-image {
+.feed-container .feeds-list .feed-card .feed-content .user-image,
+.create-post .user-image {
   width: 45px;
   height: 45px;
   border-radius: 50%;
@@ -821,16 +822,16 @@ input[type="range"]::-ms-thumb {
   padding: 10px 20px;
 }
 
-.help-question-list .toggle-data-list .toggle-data{
+.help-question-list .toggle-data-list .toggle-data {
   padding: 10px 0px 10px 20px;
 }
 
-.help-question-list .toggle-data-list .toggle-data .child-question{
+.help-question-list .toggle-data-list .toggle-data .child-question {
   font-size: 14px;
   font-weight: 500;
 }
 
-.help-question-list .toggle-data-list .toggle-data .child-answer{
+.help-question-list .toggle-data-list .toggle-data .child-answer {
   font-size: 12px;
   padding: 10px 0;
 }
@@ -838,7 +839,7 @@ input[type="range"]::-ms-thumb {
 
 
 .notification-container {
-  top:50px  !important;
+  top: 50px !important;
 }
 
 .notification-container ul {
@@ -846,6 +847,48 @@ input[type="range"]::-ms-thumb {
   overflow-x: hidden;
   overflow-y: scroll;
 }
+
+
+.chat-messages {
+  /* max-height: 800px;
+  overflow-y: scroll; */
+}
+
+.chat-message-right {
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  align-items: end;
+}
+
+.right-bg {
+  background-color: rgba(29, 91, 191, 1);
+  color: #fff;
+  border-radius: 10px 10px 0px 10px;
+  max-width: 50%;
+}
+
+.left-bg {
+  background-color: #fff;
+  color: rgba(24, 40, 61, 1);
+  border-radius: 10px 10px 10px 0px;
+  border: 1px solid rgba(239, 239, 239, 1);
+  max-width: 50%;
+}
+
+.bg-light {
+  background-color: #f8f9fa !important;
+}
+
+.chat-message-left {
+  margin-right: auto;
+}
+
+/* .chat-message-left, .chat-message-right {
+  display: flex;
+  flex-shrink: 0;
+} */
 
 
 @media only screen and (min-device-width: 481px) and (max-device-width: 1440px) {
@@ -1206,26 +1249,26 @@ input[type="number"] {
   }
 
 
-  .calendar-event-conatiner .meeting-details .meeting-scheduler{
+  .calendar-event-conatiner .meeting-details .meeting-scheduler {
     font-size: 13px;
     text-overflow: ellipsis;
-    overflow: hidden; 
-    width: 110px; 
+    overflow: hidden;
+    width: 110px;
     white-space: nowrap;
   }
 
-  .calendar-event-conatiner .event-title{
+  .calendar-event-conatiner .event-title {
     font-size: 13px;
     text-overflow: ellipsis;
-    overflow: hidden; 
+    overflow: hidden;
     white-space: nowrap;
   }
 
-  .calendar-event-conatiner .meeting-details{
+  .calendar-event-conatiner .meeting-details {
     /* padding-bottom: 3px; */
   }
 
-  .calendar-event-conatiner .meeting-details .meeting-time{
+  .calendar-event-conatiner .meeting-details .meeting-time {
     font-size: 10px;
   }
 

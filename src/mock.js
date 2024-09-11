@@ -1240,6 +1240,28 @@ const programRequestList = () => {
 export const programRequestData = programRequestList()
 
 
+const discussionList = () => {
+    const data = []
+    for (let a = 1; a <= 50; a++) {
+        data.push(
+            {
+                id: a,
+                program_name: `Program Name ${a}`,
+                description: `Desc ${a}`,
+                date: '3/7/2024',
+                task: `Task ${a}`,
+                users: `User ${a}`,
+                comments: 'Test Comment',
+                last_update_by: `Uset ${a}`
+            })
+    }
+    return data
+}
+
+
+export const discussionData = discussionList()
+
+
 
 
 export const CalendarMentee = [{

@@ -3,9 +3,12 @@ import MuiModal from '../../shared/Modal'
 import Tooltip from '../../shared/Tooltip'
 import UserIcon from '../../assets/images/user.jpg'
 import CancelIcon from '../../assets/images/cancel-colour1x.png'
+import ArrowDown from '../../assets/icons/arrowDownDark.svg'
 import { useForm } from 'react-hook-form'
+import { useSelector } from 'react-redux'
 
 export default function CreatePostModal({ formData, open, handleClose, handleVisibilty, handlePostData }) {
+    const { data } = useSelector(state => state.userInfo)
     const {
         register,
         formState: { errors },
@@ -15,7 +18,7 @@ export default function CreatePostModal({ formData, open, handleClose, handleVis
 
     useEffect(() => {
         reset()
-    },[])
+    }, [])
 
     const onSubmit = (data) => {
         handlePostData(data)
@@ -29,7 +32,10 @@ export default function CreatePostModal({ formData, open, handleClose, handleVis
                 <div className="flex gap-4 create-post cursor-pointer" onClick={handleVisibilty}>
                     <img className='user-image' src={UserIcon} alt="UserIcon" />
                     <div>
-                        <p>John Doe</p>
+                        <div className='flex gap-3 items-center'>
+                            <p>{data?.first_name}{' '}{data?.last_name}</p>
+                            <img className='pt-1' src={ArrowDown} alt="ArrowDown" />
+                        </div>
                         <p className='text-[12px]'>{formData.visibility === 'anyone' ? 'Anyone' : formData.visibility === 'connections' ? 'Connection' : ''} </p>
                     </div>
                 </div>

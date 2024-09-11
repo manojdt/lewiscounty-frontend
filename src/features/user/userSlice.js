@@ -43,10 +43,13 @@ export const userSlice = createSlice({
         };
       })
       .addCase(userAccountCreate.fulfilled, (state, action) => {
+        console.log('action', action)
+        const status = action.payload.status || 200
         return {
           ...state,
           data: action.payload,
-          status: userStatus.create,
+          status: status !== 200 ? userStatus.create : '',
+          error: status === 200 ? (action.payload.data.error || '' ) : '',
           loading: false
         };
       })

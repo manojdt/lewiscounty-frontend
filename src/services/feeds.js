@@ -63,3 +63,15 @@ export const updateFeedTrack = createAsyncThunk(
         return updateFeedTrackInfo;
     }
 );
+
+
+export const getUserPost = createAsyncThunk(
+    "getUserPost",
+    async () => {
+        const userPost = await api.get('post/user-posts');
+        if (userPost.status === 200 && userPost.data) {
+            return userPost.data;
+        }
+        return userPost;
+    }
+);
