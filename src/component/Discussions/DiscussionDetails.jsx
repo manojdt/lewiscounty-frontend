@@ -13,8 +13,8 @@ export default function DiscussionDetails() {
             <div className='mb-5'>
                 Discussions
             </div>
-            <div className="grid grid-cols-7 gap-3 mb-10 hidden">
-                <div className="col-span-2 flex flex-col gap-8 hidden">
+            <div className="grid grid-cols-7 gap-3 mb-10">
+                <div className="col-span-2 flex flex-col gap-8">
                     <div style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px', height: '880px' }}>
                         <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
                             <div className="flex w-full gap-4 justify-between">
@@ -72,7 +72,7 @@ export default function DiscussionDetails() {
                 </div>
 
 
-                <div className="col-span-5 hidden">
+                <div className="col-span-5">
                     <div style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px', height: '880px', marginBottom: '20px' }}>
 
                         <div style={{ border: '1px solid rgba(219, 224, 229, 1)' }} className='py-5 px-8'>
