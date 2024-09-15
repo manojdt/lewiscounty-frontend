@@ -85,3 +85,25 @@ export const discussionColumns = [
         id: 7,
     }
 ];
+
+
+export const memberRequestColumns = [
+    {
+        field: 'name',
+        headerName: 'Name',
+        flex: 1,
+        id: 1,
+    },
+    {
+        field: 'reason',
+        headerName: 'Reason',
+        flex: 1,
+        id: 2,
+    },
+    {
+        field: 'location',
+        headerName: 'Location',
+        flex: 1,
+        id: 3,
+    }
+];

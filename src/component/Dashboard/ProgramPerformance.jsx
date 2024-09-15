@@ -2,15 +2,8 @@ import React, { useState } from 'react'
 import { PieChart } from 'react-minimal-pie-chart';
 import ExpandeIcon from '../../assets/icons/Expand.svg';
 
-export default function ProgramPerformance() {
+export default function ProgramPerformance({ data, total = '48,650', handleFilter, handleDetails, height }) {
     const [hovered, setHovered] = useState(undefined);
-
-    const data =
-        [
-            { title: 'Ongoing Programs', value: 40, color: '#1D5BBF' },
-            { title: 'Completed', value: 25, color: '#00AEBD' },
-            { title: 'Abort Programs', value: 35, color: '#FEA7BB' }
-        ];
 
     const updateddata = data.map((entry, i) => {
         if (hovered === i) {
@@ -22,13 +15,21 @@ export default function ProgramPerformance() {
         return entry;
     });
 
+    const handleDropdown = () => {
+        handleFilter && handleFilter()
+    }
+
+    const handleOpenDetails = () => {
+        handleDetails && handleDetails()
+    }
+
     function getWindowDimensions() {
         const { innerWidth: width, innerHeight: height } = window;
         return {
-          width,
-          height
+            width,
+            height
         };
-      }
+    }
 
     return (
         <div className='program-performance' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }}>
@@ -36,12 +37,12 @@ export default function ProgramPerformance() {
                 <div className="flex gap-4">
                     <div className="card-dash" style={{ background: 'linear-gradient(180deg, #00B1C0 0%, #005DC6 100%)' }} ></div>
                     <h4>Program Performance</h4>
-                    <img className='cursor-pointer statistic-icon' src={ExpandeIcon} alt="statistics" />
+                    <img className='cursor-pointer statistic-icon' onClick={handleOpenDetails} src={ExpandeIcon} alt="statistics" />
                 </div>
                 <p className="text-[12px] py-2 px-2 cursor-pointer" style={{
                     background: 'rgba(217, 228, 242, 1)', color: 'rgba(29, 91, 191, 1)', borderRadius: '3px'
                 }}>
-                    <select className='focus:outline-none' style={{ background: 'rgba(217, 228, 242, 1)', border: 'none' }}>
+                    <select className='focus:outline-none' style={{ background: 'rgba(217, 228, 242, 1)', border: 'none' }} onChange={handleDropdown}>
                         <option>Day</option>
                         <option>Month</option>
                     </select>
@@ -50,7 +51,7 @@ export default function ProgramPerformance() {
 
 
             </div>
-            <div style={{ height : getWindowDimensions().width <=1536 ? '370px' : '450px' }} className="chart-view py-9 relative flex justify-center">
+            <div style={{ height: getWindowDimensions().width <= 1536 && !height ? '370px' : height ? height : '450px' }} className="chart-view py-9 relative flex justify-center">
                 {/* <div className='relative'> */}
                 <PieChart
                     data={updateddata}
@@ -83,9 +84,9 @@ export default function ProgramPerformance() {
                             dx="1" dy="1"
                             text-anchor="middle"
                             // style="font-weight: 700;font-size: 6px;fill: #fff"
-                            style={{fontWeight: 700, fontSize: '6px' ,fill: '#000'}}
+                            style={{ fontWeight: 700, fontSize: '6px', fill: '#000' }}
                         >
-                            48,650
+                            {total}
                         </text>
                     }
                     startAngle={100}

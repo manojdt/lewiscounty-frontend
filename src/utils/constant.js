@@ -222,7 +222,7 @@ export const goalPeriods = [{
 ]
 
 
-export const goalActivityStatus = {
+export const activityStatusColor = {
   create: 'rgba(29, 91, 191, 1)',
   active: 'rgba(18, 179, 71, 1)',
   delete: 'rgba(224, 56, 45, 1)',
@@ -428,7 +428,8 @@ export const programActionStatus = {
   completed: 'completed',
   cancelled: 'cancelled',
   learning: 'learning',
-  bookmark: 'bookmarked'
+  bookmark: 'bookmarked',
+  planned: 'planned'
 }
 
 
@@ -452,6 +453,7 @@ export const pipeUrls = {
 export const programFilterUrls = {
   yettoapprove: `?type=${programActionStatus.yettoapprove}`,
   yettojoin: `?type=${programActionStatus.yettojoin}`,
+  planned: `?type=${programActionStatus.planned}`,
   yettostart: `?type=${programActionStatus.yettostart}`,
   inprogress: `?type=${programActionStatus.inprogress}`,
   completed: `?type=${programActionStatus.completed}`,
@@ -467,6 +469,7 @@ export const menteeCountStatus = {
   [programActionStatus.yettojoin]: 'curated',
   [programActionStatus.learning]: 'mylearning',
   [programActionStatus.bookmark]: 'bookmark',
+  [programActionStatus.planned]: 'planned',
 }
 
 export const programMenus = (page = 'dashboard') => {
@@ -475,14 +478,21 @@ export const programMenus = (page = 'dashboard') => {
       name: "All Programs",
       count: 0,
       page: pipeUrls.programs,
-      for: ['mentor', 'mentee'],
+      for: ['mentor', 'mentee', 'admin'],
       status: 'all'
+    },
+    {
+      name: "Planned Programs",
+      count: 0,
+      page: `${pipeUrl}${programFilterUrls.planned}`,
+      for: ['admin'],
+      status: programActionStatus.planned
     },
     {
       name: "Recent Join Programs",
       count: 0,
       page: `${pipeUrl}${programFilterUrls.yettostart}`,
-      for: ['mentor'],
+      for: ['mentor', 'admin'],
       status: programActionStatus.yettostart
     },
     {
@@ -503,7 +513,7 @@ export const programMenus = (page = 'dashboard') => {
       name: "Ongoing Programs",
       count: 0,
       page: `${pipeUrl}${programFilterUrls.inprogress}`,
-      for: ['mentor'],
+      for: ['mentor', 'admin'],
       status: programActionStatus.inprogress
     },
     {
@@ -530,44 +540,142 @@ export const programMenus = (page = 'dashboard') => {
   ]
 }
 
+export const RequestStatusArray = [{
+    key: 'program_request',
+    name: 'Program Request'
+  },
+  {
+    key: 'member_join_request',
+    name: 'Member Join Requests'
+  },
+  {
+    key: 'goal_request',
+    name: 'Goals Requests'
+  },
+  {
+    key: 'resource_access_request',
+    name: 'Resource Access Requests'
+  },
+  {
+    key: 'technical_support_request',
+    name: 'Technical Support Requests'
+  },
+  {
+    key: 'testimonial_request',
+    name: 'Testimonials Requests'
+  },
+  {
+    key: 'certificate_request',
+    name: 'Certificate Requests'
+  },
+  {
+    key: 'report_request',
+    name: 'Report Requests'
+  },
+]
 
+export const RequestStatus = {
+  programRequest: {
+    key: 'program_request',
+    name: 'Program Request'
+  },
+  memberJoinRequest: {
+    key: 'member_join_request',
+    name: 'Member Join Requests'
+  },
+  goalRequest: {
+    key: 'goal_request',
+    name: 'Goals Requests'
+  },
+  resourceAccessRequest: {
+    key: 'resource_access_request',
+    name: 'Resource Access Requests'
+  },
+  technicalSupportRequest: {
+    key: 'technical_support_request',
+    name: 'Technical Support Requests'
+  },
+  testimonicalRequest: {
+    key: 'testimonial_request',
+    name: 'Testimonials Requests'
+  },
+  certificateRequest: {
+    key: 'certificate_request',
+    name: 'Certificate Requests'
+  },
+  reportRequest: {
+    key: 'report_request',
+    name: 'Report Requests'
+  },
+}
 
 
 export const requestOverview = [{
     name: "Program Request",
+    key: RequestStatus.programRequest.key,
     count: 0,
-    status: 'all'
+    status: RequestStatus.programRequest.key,
+    for: ['admin', 'mentor', 'mentee']
+  },
+  {
+    name: "Member Join Requests",
+    key: RequestStatus.memberJoinRequest,
+    count: 0,
+    status: RequestStatus.memberJoinRequest.key,
+    for: ['admin']
+  },
+  {
+    name: "Goals Requests",
+    key: RequestStatus.goalRequest,
+    count: 0,
+    status: RequestStatus.goalRequest.key,
+    for: ['admin']
   },
   {
     name: "Resource Access Requests",
+    key: RequestStatus.resourceAccessRequest,
     count: 0,
-    status: programActionStatus.yettostart
+    status: RequestStatus.resourceAccessRequest.key,
+    for: ['admin', 'mentor']
   },
   {
     name: "Technical Support Requests",
+    key: RequestStatus.technicalSupportRequest,
     count: 0,
-    status: programActionStatus.yettojoin
+    status: RequestStatus.technicalSupportRequest.key,
+    for: ['admin', 'mentor']
   },
   {
-    name: "New Goals Requests",
+    name: "Testimonials Requests",
+    key: RequestStatus.testimonicalRequest,
     count: 0,
-    status: programActionStatus.learning
+    status: RequestStatus.testimonicalRequest.key,
+    for: ['admin', 'mentor']
   },
   {
-    name: "Request Testimonials",
+    name: "Certificate Requests",
+    key: RequestStatus.certificateRequest,
     count: 0,
-    status: programActionStatus.inprogress
+    status: RequestStatus.certificateRequest.key,
+    for: ['admin', 'mentor']
+  },
+  {
+    name: "Report Requests",
+    key: RequestStatus.reportRequest,
+    count: 0,
+    status: RequestStatus.reportRequest.key,
+    for: ['admin', 'mentor']
   }
 ]
 
 export const allowedImagesTypes = ['png', 'jpeg', 'jpg'];
 
-export const allowedDocTypes = ['pdf', 'doc','docx']
+export const allowedDocTypes = ['pdf', 'doc', 'docx']
 
-export const allowedVideoTypes = ['avi','mp4','mov']
+export const allowedVideoTypes = ['avi', 'mp4', 'mov']
 
 
-export const TaskFileTypes =  [...allowedImagesTypes, ...allowedDocTypes, ...allowedVideoTypes]
+export const TaskFileTypes = [...allowedImagesTypes, ...allowedDocTypes, ...allowedVideoTypes]
 
 export const TaskAllStatus = {
   yettostart: 'yettostart',
@@ -582,7 +690,7 @@ export const TaskAllStatus = {
 }
 
 export const TaskStatus = {
-  newtask : 'New',
+  newtask: 'New',
   yettostart: 'Start',
   rejected: 'Cancelled',
   start: 'In-Progress',
