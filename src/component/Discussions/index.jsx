@@ -6,7 +6,7 @@ import CalendarIcon from '../../assets/images/calender_1x.png';
 import MoreIcon from '../../assets/icons/moreIcon.svg'
 import ViewIcon from '../../assets/images/view1x.png'
 import DataTable from '../../shared/DataGrid';
-import { discussionData, programRequestColumns, programRequestData } from '../../mock';
+import { discussionData, programRequestData } from '../../mock';
 import { discussionColumns } from '../../utils/tableFields';
 import { useNavigate } from 'react-router-dom';
 

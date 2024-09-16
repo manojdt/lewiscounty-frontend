@@ -1,16 +1,22 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import { useSelector } from 'react-redux';
 
 import Carousel from "../../shared/Carousel";
 import FilterIcon from '../../assets/icons/Filter.svg';
+import MoreIcon from '../../assets/icons/moreIcon.svg'
 import ProgramImage from "../../assets/images/logo_image.jpg";
 import BookmarkedIcon from '../../assets/icons/Bookmarked.svg'
 import BookmarkedColorIcon from '../../assets/images/bookmarked-colour1x.png'
 import CalenderIcon from '../../assets/icons/Calender.svg';
-import { useSelector } from 'react-redux';
 
-export default function DashboardCard({ title, viewpage, handleNavigateDetails, handleBookmark, programs }) {
+
+export default function DashboardCard({ title, viewpage, handleNavigateDetails, handleBookmark, programs, height, action =[] }) {
     const navigate = useNavigate()
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
     const userInfo = useSelector(state => state.userInfo)
     const role = userInfo.data.role
     function getWindowDimensions() {
@@ -21,9 +27,17 @@ export default function DashboardCard({ title, viewpage, handleNavigateDetails, 
         };
     }
 
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
     return (
 
-        <div className='main-program' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px', height: role === 'mentee'? '528px' : 'auto'}}>
+        <div className='main-program' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px', height: role === 'mentee' && !height ? '528px' : height ? height : 'auto' }}>
             <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
                 <div className="flex gap-4">
                     <div className="card-dash" style={{ background: 'linear-gradient(180deg, #00B1C0 0%, #005DC6 100%)' }} ></div>
@@ -40,6 +54,37 @@ export default function DashboardCard({ title, viewpage, handleNavigateDetails, 
                         >View All</p>
 
                         : null
+                }
+
+                {
+                    action && action.length ?
+                        <>
+                            <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleClick(e)}>
+                                <img src={MoreIcon} alt='MoreIcon' />
+                            </div>
+                            <Menu
+                                id="basic-menu"
+                                anchorEl={anchorEl}
+                                open={open}
+                                onClose={handleClose}
+                                MenuListProps={{
+                                    'aria-labelledby': 'basic-button',
+                                }}
+                            >
+
+                                {
+                                    action.map((act, i) =>
+                                        <MenuItem key={i} onClick={() => navigate(act.url)} className='!text-[12px]'>
+                                            {act.icon && <img src={act.icon} alt="Icon" className='pr-3 w-[30px]' />}
+                                            {act.name}
+                                        </MenuItem>
+                                    )
+                                }
+                            </Menu>
+                        </>
+
+                        : null
+
                 }
 
             </div>

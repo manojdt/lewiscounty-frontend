@@ -425,6 +425,7 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                     <div className="flex gap-6 justify-center align-middle">
                         {currentStep === 1 && <Button btnName='Cancel' btnCategory="secondary" onClick={() => navigate('/programs')} />}
                         {currentStep > 1 && <Button btnName='Back' btnCategory="secondary" onClick={handlePreviousStep} />}
+                        <Button btnType="button" btnStyle={{background:'rgba(197, 197, 197, 1)', color: '#000'}} btnCls="w-[150px]" btnName={'Save as Draft'} btnCategory="primary" />
                         <Button btnType="submit" btnCls="w-[100px]" btnName={currentStep === totalSteps ? 'Submit' : 'Next'} btnCategory="primary" />
                     </div>
                 </form>

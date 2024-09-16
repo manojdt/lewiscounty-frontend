@@ -48,6 +48,23 @@ export const Mentor = () => {
     }
 
 
+    const data =
+    [
+        { title: 'Ongoing Programs', value: 40, color: '#1D5BBF' },
+        { title: 'Completed', value: 25, color: '#00AEBD' },
+        { title: 'Abort Programs', value: 35, color: '#FEA7BB' }
+    ];
+
+
+    const handlePerformanceFilter = () => {
+        console.log('handlePerformanceFilter')
+    }
+
+    const handleDetails = () => {
+        console.log('handleDetails')
+    }
+
+
     useEffect(() => {
         const programMenu = [...programMenus('dashboard')].filter(men => men.for.includes(role)).map(menu => {
 
@@ -267,7 +284,7 @@ export const Mentor = () => {
                         {/* <div className="root-layer lg:gap-8 pt-6"> */}
                         <div className="root-layer grid grid-cols-2 gap-8 pt-6">
                             <div className="layer-first flex flex-col sm:gap-6 gap-4">
-                                <ProgramPerformance />
+                                <ProgramPerformance data={data} total={1500} handleFilter={handlePerformanceFilter} handleDetails={handleDetails}/>
                                 <RecentRequests />
                                 <TrackInfo />
                             </div>

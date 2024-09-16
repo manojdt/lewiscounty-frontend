@@ -30,7 +30,14 @@ export default function Layout() {
   const menuRight = useRef(null);
   const moreMenu = useRef(null);
 
-  const items = [
+  let items = [
+    {
+      label: <div className='flex gap-4 items-center'>
+        <img src={ProgramRequestIcon} alt="ProgramRequestIcon" />
+        <p>{role === 'admin' ? 'All ' : 'My '}Request</p>
+      </div>,
+      command: () => navigate('/all-request')
+    },
     {
       label: <div className='flex gap-4 items-center'>
         <img src={TaskIcon} alt="TaskIcon" />
@@ -69,14 +76,6 @@ export default function Layout() {
       </div>,
       command: () => navigate('/certificates')
     },
-    {
-      label: <div className='flex gap-4 items-center'>
-        <img src={ProgramRequestIcon} alt="ProgramRequestIcon" />
-        <p>Program Request</p>
-      </div>,
-      command: () => navigate('/program-request')
-    },
-
     {
       label: <div className='flex gap-4 items-center'>
         <img src={FeedIcon} alt="FeedIcon" />

@@ -46,7 +46,6 @@ import CertificateDetails from "./component/Certificate/CertificateDetails";
 import MentorViewMenteeGoal from "./component/Goals/MentorViewMenteeGoal";
 import Profile from "./component/Profile";
 import EditProfile from "./component/Profile/EditProfile";
-import ProgramRequest from "./component/Programs/ProgramRequest";
 import NotificationMenu from "./component/Notification/NotificationMenu";
 import Feeds from "./component/Feeds";
 import FeedDetails from "./component/Feeds/FeedDetails";
@@ -57,6 +56,7 @@ import { Calendar } from "primereact/calendar";
 import Scheduler from "./component/Calendar";
 import Discussions from "./component/Discussions";
 import DiscussionDetails from "./component/Discussions/DiscussionDetails";
+import AllRequest from "./component/Programs/AllRequest";
 
 function App() {
  
@@ -108,7 +108,7 @@ function App() {
 
 
           <Route path="/create-programs" element={<CreatePrograms />} />
-          <Route path="/program-request" element={<ProgramRequest />} />
+          <Route path="/all-request" element={<AllRequest />} />
           <Route path="/program" element={<ProgramData />} />
 
 

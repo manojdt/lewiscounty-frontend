@@ -197,7 +197,7 @@ export default function Programs() {
                     {programMenusList.find(menu => menu.status === searchParams.get("type"))?.name || (searchParams.get("is_bookmark") ? 'Bookmarked Programs' : 'All Programs')}
                 </div>
                 {
-                    userInfo && userInfo.data && userInfo.data.role === 'mentor' &&
+                    userInfo && userInfo.data && (userInfo.data.role === 'mentor'  || userInfo.data.role === 'admin') &&
                     <div>
                         <button onClick={() => navigate('/create-programs')} className='text-[12px] px-3 py-4'
                             style={{ background: '#1D5BBF', color: '#fff', borderRadius: '6px' }}>Create New Program Request</button>
