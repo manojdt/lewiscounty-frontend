@@ -24,7 +24,7 @@ export const getResourceRequest = createAsyncThunk(
     async (query = '') => {
         let queryString = new URLSearchParams(query).toString()
 
-        const resourceRequests = await api.get(`metrial-request/?${queryString}`);
+        const resourceRequests = await api.get(`resource-request/?${queryString}`);
         if (resourceRequests.status === 200 && resourceRequests.data) {
             return resourceRequests.data;
         }

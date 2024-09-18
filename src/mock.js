@@ -1468,42 +1468,42 @@ export const resourceAccessRequestColumns = [
         for: ['admin','mentor']
     },
     {
-        field: 'reason',
+        field: 'program_name',
         headerName: 'Program Name',
         flex: 1,
         id: 1,
         for: ['admin','mentor']
     },
     {
-        field: 'dob',
+        field: 'created_at',
         headerName: 'Request Date',
         flex: 1,
         id: 2,
         for: ['admin']
     },
     {
-        field: 'phone',
+        field: 'created_by',
         headerName: 'Requested By',
         flex: 1,
         id: 3,
         for: ['admin']
     },
     {
-        field: 'email',
+        field: 'updated_at',
         headerName: 'Last Updated Date',
         flex: 1,
         id: 4,
         for: ['mentor']
     },
     {
-        field: 'last_updated_by',
+        field: 'updated_by',
         headerName: 'Last Updated By',
         flex: 1,
         id: 5,
         for: ['admin','mentor']
     },
     {
-        field: 'last_updated_by',
+        field: 'file',
         headerName: 'File MB',
         flex: 1,
         id: 5,
