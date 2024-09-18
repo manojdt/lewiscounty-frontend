@@ -146,42 +146,45 @@ export default function AllRequest() {
             }
         },
         {
-            field: 'action',
-            headerName: 'Action',
-            flex: 1,
-            id: 4,
-            renderCell: (params) => {
-                console.log('params', params)
-                return <>
-                    <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleMoreClick(e, params.row)}>
-                        <img src={MoreIcon} alt='MoreIcon' />
-                    </div>
-                    <Menu
-                        id="basic-menu"
-                        anchorEl={anchorEl}
-                        open={open}
-                        onClose={handleClose}
-                        MenuListProps={{
-                            'aria-labelledby': 'basic-button',
-                        }}
-                    >
-                        <MenuItem onClick={(e) => { console.log('View'); handleClose() }} className='!text-[12px]'>
-                            <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
-                            View
-                        </MenuItem>
+            ...role === 'admin' &&
+            {
+                field: 'action',
+                headerName: 'Action',
+                flex: 1,
+                id: 4,
+                renderCell: (params) => {
+                    console.log('params', params)
+                    return <>
+                        <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleMoreClick(e, params.row)}>
+                            <img src={MoreIcon} alt='MoreIcon' />
+                        </div>
+                        <Menu
+                            id="basic-menu"
+                            anchorEl={anchorEl}
+                            open={open}
+                            onClose={handleClose}
+                            MenuListProps={{
+                                'aria-labelledby': 'basic-button',
+                            }}
+                        >
+                            <MenuItem onClick={(e) => { console.log('View'); handleClose() }} className='!text-[12px]'>
+                                <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
+                                View
+                            </MenuItem>
 
-                        <MenuItem onClick={handleAcceptProgramRequest} className='!text-[12px]'>
-                            <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
-                            Accept
-                        </MenuItem>
-                        <MenuItem onClick={handleCancelProgramRequest} className='!text-[12px]'>
-                            <img src={CloseCircle} alt="CancelIcon" className='pr-3 w-[27px]' />
-                            Cancel
-                        </MenuItem>
+                            <MenuItem onClick={handleAcceptProgramRequest} className='!text-[12px]'>
+                                <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
+                                Accept
+                            </MenuItem>
+                            <MenuItem onClick={handleCancelProgramRequest} className='!text-[12px]'>
+                                <img src={CloseCircle} alt="CancelIcon" className='pr-3 w-[27px]' />
+                                Cancel
+                            </MenuItem>
 
 
-                    </Menu>
-                </>
+                        </Menu>
+                    </>
+                }
             }
         },
     ]
@@ -247,19 +250,24 @@ export default function AllRequest() {
             // }
         },
         {
-            field: 'action',
-            headerName: 'Action',
-            flex: 1,
-            id: 4,
-            // renderCell: (params) => {
-            //     console.log('params', params)
-            //     return <>
-            //         <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleClick(e, params.row)}>
-            //             <img src={ActionIcon} alt='ActionIcon' />
-            //         </div>
-            //     </>
-            // }
-        },
+            ...role === 'admin' &&
+
+            {
+                field: 'action',
+                headerName: 'Action',
+                flex: 1,
+                id: 4,
+                renderCell: (params) => {
+                    console.log('params', params)
+                    return <>
+                        <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleMoreClick(e, params.row)}>
+                            <img src={MoreIcon} alt='MoreIcon' />
+                        </div>
+                    </>
+                }
+            },
+        }
+
     ]
 
     const techinicalColums = [
@@ -423,8 +431,8 @@ export default function AllRequest() {
         if (status === requestStatus.programupdate) {
             getProgramRequest()
             setTimeout(() => {
-                dispatch(updateLocalRequest({status: ''}))
-            },[2000])
+                dispatch(updateLocalRequest({ status: '' }))
+            }, [2000])
         }
     }, [status])
 
@@ -445,7 +453,7 @@ export default function AllRequest() {
         }
 
         if (searchParams.get('type') === 'resource_access_request') {
-            dispatch(getprogramRequest({
+            dispatch(getResourceRequest({
                 status: filterStatus,
                 created_at: actionTab,
                 filter_by: 'day'
