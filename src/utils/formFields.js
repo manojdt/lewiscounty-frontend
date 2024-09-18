@@ -1125,6 +1125,7 @@ export const ProgramInformationFields = [{
       },
     ],
     width: 'width-32',
+    for: ['admin','mentor']
   },
   {
     type: "input",
@@ -1136,6 +1137,7 @@ export const ProgramInformationFields = [{
       required: "This field is required",
     },
     width: 'width-32',
+    for: ['admin','mentor']
   },
   {
     type: "dropdown",
@@ -1175,6 +1177,18 @@ export const ProgramInformationFields = [{
       },
     ],
     width: 'width-32',
+    for: ['admin','mentor']
+  },
+  {
+    type: "textbox",
+    name: "session_details",
+    label: "Session Details",
+    placeholder: "",
+    inputRules: {
+      required: "This field is required",
+    },
+    width: 'w-full',
+    for: ['admin','mentor']
   },
   {
     type: "textbox",
@@ -1185,6 +1199,7 @@ export const ProgramInformationFields = [{
       required: "This field is required",
     },
     width: 'w-full',
+    for: ['admin','mentor']
   },
   {
     type: "dropdown",
@@ -1208,6 +1223,7 @@ export const ProgramInformationFields = [{
       },
     ],
     width: 'width-32',
+    for: ['admin','mentor']
   },
   {
     type: "date",
@@ -1218,6 +1234,7 @@ export const ProgramInformationFields = [{
       required: "This field is required",
     },
     width: 'width-32',
+    for: ['admin','mentor']
   },
   {
     type: "date",
@@ -1228,6 +1245,7 @@ export const ProgramInformationFields = [{
       required: "This field is required",
     },
     width: 'width-32',
+    for: ['admin','mentor']
   },
   {
     type: "popup-input",
@@ -1239,7 +1257,20 @@ export const ProgramInformationFields = [{
       required: "This field is required",
     },
     width: 'w-full',
-    icon: 'add'
+    icon: 'add',
+    for: ['admin','mentor']
+  },
+  {
+    type: "input",
+    name: "max_mentor_count",
+    label: "Maximum Mentor Limits",
+    fieldtype: "number",
+    placeholder: "Select Mentor Limits",
+    inputRules: {
+      required: "This field is required",
+    },
+    width: 'width-32',
+    for: ['admin']
   },
   {
     type: "input",
@@ -1251,6 +1282,7 @@ export const ProgramInformationFields = [{
       required: "This field is required",
     },
     width: 'width-32',
+    for: ['admin','mentor']
   },
   {
     type: "dropdown",
@@ -1270,6 +1302,7 @@ export const ProgramInformationFields = [{
       },
     ],
     width: 'width-32',
+    for: ['admin','mentor']
   },
   {
     type: "dropdown",
@@ -1289,6 +1322,27 @@ export const ProgramInformationFields = [{
       },
     ],
     width: 'width-32',
+    for: ['admin','mentor']
+  },
+  {
+    type: "dropdown",
+    name: "auto_approval",
+    label: "Auto Approval",
+    placeholder: "Select",
+    inputRules: {
+      required: false,
+    },
+    options: [{
+        key: true,
+        value: "Yes"
+      },
+      {
+        key: false,
+        value: "No"
+      },
+    ],
+    width: 'width-49',
+    for: ['admin']
   },
   {
     type: "input",
@@ -1300,7 +1354,8 @@ export const ProgramInformationFields = [{
       required: "This field is required",
     },
     width: 'w-full',
-    icon: 'location'
+    icon: 'location',
+    for: ['admin','mentor']
   },
 ];
 
@@ -1313,12 +1368,14 @@ export const AboutProgramFields = [{
       required: "This field is required",
     },
     width: 'width-82',
+    for: ['admin','mentor']
   },
   {
     type: "htmlbuilder",
     name: "html_builder",
     text: "Use HTML Builder",
     width: 'width-17',
+    for: ['admin','mentor']
   },
 
   {
@@ -1331,18 +1388,32 @@ export const AboutProgramFields = [{
       required: "This field is required",
     },
     width: 'w-full',
-    icon: 'add'
+    icon: 'add',
+    for: ['admin','mentor']
   },
   {
     type: "file",
-    name: "image",
-    label: "Add Sponsor Logo/Program Related Image",
+    name: "program_image",
+    label: "Program Related Image",
     fieldtype: "text",
     placeholder: "Multiple Skills added",
     inputRules: {
       required: "This field is required",
     },
     width: 'w-full',
+    for: ['admin','mentor']
+  },
+  {
+    type: "file",
+    name: "image",
+    label: "Add Sponsor Logo (Optional)",
+    fieldtype: "text",
+    placeholder: "Multiple Skills added",
+    inputRules: {
+      required: false,
+    },
+    width: 'w-full',
+    for: ['admin','mentor']
   },
 ]
 
@@ -1355,12 +1426,14 @@ export const ProgramOutcomesFields = [{
       required: "This field is required",
     },
     width: 'width-82',
+    for: ['admin','mentor']
   },
   {
     type: "htmlbuilder",
     name: "html_builder",
     text: "Use HTML Builder",
     width: 'width-17',
+    for: ['admin','mentor']
   },
 
   {
@@ -1373,7 +1446,8 @@ export const ProgramOutcomesFields = [{
       required: "This field is required",
     },
     width: 'w-full',
-    icon: 'add'
+    icon: 'add',
+    for: ['admin','mentor']
   },
 ]
 
@@ -1387,7 +1461,8 @@ export const ProgramTestimonialsFields = [{
       required: "This field is required",
     },
     width: 'w-full',
-    icon: 'add'
+    icon: 'add',
+    for: ['admin','mentor']
   },
   {
     type: "dropdown",
@@ -1411,6 +1486,7 @@ export const ProgramTestimonialsFields = [{
       },
     ],
     width: 'w-full',
+    for: ['admin','mentor']
   },
 ]
 

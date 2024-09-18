@@ -21,7 +21,7 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
     const navigate = useNavigate();
     const [dateFormat, setDateFormat] = useState({})
     const [formData, setFormData] = useState({})
-    const [logoImage, setLogoImage] = useState('')
+    const [logoImage, setLogoImage] = useState({})
     const {
         register,
         formState: { errors },
@@ -98,16 +98,14 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
         };
     }
 
-    // console.log('currentStepData', currentStepData)
 
-    // console.log('stepFields', stepFields)
+    const handleDeleteImage = (key) => {
+        let image = { ...logoImage }
+        delete image[key]
+        setValue(key, '')
 
-
-    const handleDeleteImage = () => {
-        setValue('image', '')
-        setLogoImage('')
+        setLogoImage(image)
     }
-    // console.log('stepData steps', stepData)
 
     console.log('Images', getValues('image'))
 
@@ -119,7 +117,7 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                         {
                             stepFields.map((field, index) => {
                                 const dateField = field.type === 'date' ? register(field.name, field.inputRules) : undefined
-                                const imageField = field.type === 'file' ? register(field.name, field.inputRules) : undefined
+                                var imageField = field.type === 'file' ? register(field.name, field.inputRules) : undefined
                                 const dropdownimageField = field.type === 'dropdown' ? register(field.name, field.inputRules) : undefined
                                 // console.log('dateField', dateField)
                                 return (
@@ -169,7 +167,7 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                                                          text-[12px] gap-2 cursor-pointer px-6'
                                                             style={{ borderRadius: '3px' }}
                                                             onClick={() => handleAction(field.name)}
-                                                            >
+                                                        >
 
                                                             {
                                                                 field?.value && field.value.slice(0, 6).map((popupfield, index) => {
@@ -187,7 +185,7 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                                                     `${popupfield.first_name} ${popupfield.last_name}`
                                                                                     ||
 
-                                                                                     `${popupfield.full_name}`
+                                                                                    `${popupfield.full_name}`
                                                                                 }
                                                                             </p>
 
@@ -226,7 +224,7 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                         {
                                                             field.icon && field.icon === 'add' &&
                                                             <Tooltip title={field.placeholder}>
-                                                                <img className='absolute top-4 right-4 cursor-pointer' 
+                                                                <img className='absolute top-4 right-4 cursor-pointer'
                                                                     onClick={() => handleAction(field.name)} src={PlusIcon} alt="PlusIcon" />
                                                             </Tooltip>
                                                         }
@@ -318,8 +316,8 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                                                 dateField.onChange(e)
                                                                                 setDateFormat({ ...dateFormat, [field.name]: e.value })
                                                                             }}
-                                                                            {...field.name === 'start_date' ? { minDate : new Date()} : {}}
-                                                                            {...field.name === 'end_date' ? { minDate : getValues('start_date')} : {}}
+                                                                            {...field.name === 'start_date' ? { minDate: new Date() } : {}}
+                                                                            {...field.name === 'end_date' ? { minDate: getValues('start_date') } : {}}
                                                                             showTime
                                                                             hourFormat="12"
                                                                             dateFormat="dd/mm/yy"
@@ -355,7 +353,7 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                                         field.type === 'file' ?
                                                                             <>
                                                                                 <div className="flex items-center justify-center w-full">
-                                                                                    <label htmlFor="dropzone-file"
+                                                                                    <label htmlFor={imageField.name}
                                                                                         className="flex flex-col items-center justify-center w-full h-64 border-2
                                                                                  border-gray-300 border-dashed cursor-pointer
                                                                                   bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100
@@ -371,17 +369,18 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                                                                 (200*200 Pixels)
                                                                                             </p>
                                                                                         </div>
-                                                                                        <input id="dropzone-file" type="file" {...imageField}
+                                                                                        <input id={imageField.name} type="file" {...imageField}
 
                                                                                             onChange={(e) => {
                                                                                                 imageField.onChange(e);
                                                                                                 console.log(e)
                                                                                                 if (e.target.files && e.target.files[0]) {
-                                                                                                    console.log(e.target.files[0])
+                                                                                                    console.log(e.target.files[0], field, imageField)
                                                                                                     let types = ['image/png', 'image/jpeg']
                                                                                                     console.log(e.target.files[0].type)
+                                                                                                    console.log('field.name', field.name, imageField.name)
                                                                                                     if (types.includes(e.target.files[0].type)) {
-                                                                                                        setLogoImage(URL.createObjectURL(e.target.files[0]));
+                                                                                                        setLogoImage({ ...logoImage, [field.name]: URL.createObjectURL(e.target.files[0]) });
                                                                                                     } else {
                                                                                                         setError([field.name], 'Invalid file type')
                                                                                                     }
@@ -391,17 +390,17 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                                                     </label>
 
                                                                                 </div>
-                                                                                {logoImage !== '' &&
+                                                                                {getValues(field.name)?.length > 0 &&
                                                                                     <>
-                                                                                        <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Image</div>
+                                                                                        <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Image {field.name}</div>
 
                                                                                         <div className='flex justify-between items-center w-[30%] mt-5 px-4 py-4'
                                                                                             style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }}>
                                                                                             <div className='flex w-[80%] gap-3 items-center'>
                                                                                                 <img src={UploadIcon} alt="altlogo" />
-                                                                                                <span className='text-[12px]'> {getValues('image') && getValues('image')[0]?.name}</span>
+                                                                                                <span className='text-[12px]'> {getValues(imageField.name) && getValues(imageField.name)[0]?.name}</span>
                                                                                             </div>
-                                                                                            <img className='w-[30px] cursor-pointer' onClick={handleDeleteImage} src={DeleteIcon} alt="DeleteIcon" />
+                                                                                            <img className='w-[30px] cursor-pointer' onClick={() => handleDeleteImage(field.name)} src={DeleteIcon} alt="DeleteIcon" />
                                                                                         </div>
 
                                                                                         {/* <img src={logoImage} alt="altlogo" /> */}
@@ -425,7 +424,7 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                     <div className="flex gap-6 justify-center align-middle">
                         {currentStep === 1 && <Button btnName='Cancel' btnCategory="secondary" onClick={() => navigate('/programs')} />}
                         {currentStep > 1 && <Button btnName='Back' btnCategory="secondary" onClick={handlePreviousStep} />}
-                        <Button btnType="button" btnStyle={{background:'rgba(197, 197, 197, 1)', color: '#000'}} btnCls="w-[150px]" btnName={'Save as Draft'} btnCategory="primary" />
+                        <Button btnType="button" btnStyle={{ background: 'rgba(197, 197, 197, 1)', color: '#000' }} btnCls="w-[150px]" btnName={'Save as Draft'} btnCategory="primary" />
                         <Button btnType="submit" btnCls="w-[100px]" btnName={currentStep === totalSteps ? 'Submit' : 'Next'} btnCategory="primary" />
                     </div>
                 </form>
