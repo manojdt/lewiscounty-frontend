@@ -1326,7 +1326,7 @@ export const ProgramInformationFields = [{
   },
   {
     type: "dropdown",
-    name: "auto_approval",
+    name: "program_auto_approval",
     label: "Auto Approval",
     placeholder: "Select",
     inputRules: {
