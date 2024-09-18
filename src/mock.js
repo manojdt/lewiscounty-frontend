@@ -1183,7 +1183,7 @@ export const listCertificateRow = certificatesRow()
 
 export const programRequestColumns = [
     {
-        field: 'category',
+        field: 'category_name',
         headerName: 'Category',
         flex: 1,
         id: 0,
@@ -1197,7 +1197,7 @@ export const programRequestColumns = [
         for: ['admin','mentor']
     },
     {
-        field: 'requested_by',
+        field: 'requested_by_name',
         headerName: 'Requested By',
         flex: 1,
         id: 2,
@@ -1218,28 +1218,28 @@ export const programRequestColumns = [
         for: ['mentor']
     },
     {
-        field: 'request_date_time',
+        field: 'requested_date_and_time',
         headerName: 'Request Date & Time',
         flex: 1,
         id: 5,
         for: ['admin','mentor']
     },
     {
-        field: 'cancel_reason',
+        field: 'cancelled_reason',
         headerName: 'Cancel Reason',
         flex: 1,
         id: 6,
         for: ['mentor']
     },
     {
-        field: 'laste_updated',
+        field: 'last_updated_date',
         headerName: 'Last Updated Date',
         flex: 1,
         id: 7,
         for: ['admin']
     },
     {
-        field: 'last_update_by',
+        field: 'last_updated_by',
         headerName: 'Last Updated By',
         flex: 1,
         id: 8,

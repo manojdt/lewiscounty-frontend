@@ -194,6 +194,11 @@ export const calendarStatus = {
   create: 'created',
 }
 
+export const requestStatus = {
+  load: 'loaded',
+  programupdate: 'programupdated'
+}
+
 export const profileStatus = {
   load: 'loaded',
   update: 'updated',
@@ -336,6 +341,32 @@ export const certificateColor = {
     color: 'rgba(224, 56, 45, 1)',
     bg: 'rgba(255, 231, 231, 1)'
   },
+}
+
+export const programRequestStatusText = {
+  new: 'New',
+  pending: 'Pending',
+  accept: 'Accept',
+  cancel: 'Cancel'
+}
+
+export const programRequestStatusColor = {
+  new: {
+    bgColor: 'rgba(238, 245, 255, 1)',
+    color: 'rgba(29, 91, 191, 1)'
+  },
+  pending: {
+    bgColor: 'rgba(255, 251, 233, 1)',
+    color: 'rgba(255, 213, 0, 1)'
+  },
+  accept: {
+    bgColor: 'rgba(235, 255, 243, 1)',
+    color: 'rgba(22, 182, 129, 1)'
+  },
+  cancel: {
+    bgColor: 'rgba(255, 231, 231, 1)',
+    color: 'rgba(224, 56, 45, 1)'
+  }
 }
 
 export const taskStatusText = {

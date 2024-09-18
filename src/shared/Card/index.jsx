@@ -2,7 +2,7 @@ import React from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { programActionStatus } from '../../utils/constant';
 
-export default function Card({ cardTitle, cardContent, cardFilter = [], cardCountColor = '#000', handleClick }) {
+export default function Card({ cardTitle, cardContent, cardFilter = [], cardCountColor = '#000', handleClick, activeItem = '' }) {
     console.log('filter', cardFilter)
     const navigate = useNavigate()
     const [searchParams] = useSearchParams();
@@ -29,7 +29,7 @@ export default function Card({ cardTitle, cardContent, cardFilter = [], cardCoun
                 {
                     cardContent.map((menu, index) => <li className="" key={index}>
                         <div onClick={() => menu.page ? navigate(menu.page) : handleClick ? handleClick(menu) : undefined} className={`flex justify-between py-2 px-6 rounded cursor-pointer menu-content 
-                        ${searchParams.get("type") === menu.status || searchParams.get("type") === menu?.key || (searchParams.get("is_bookmark") !== null && menu.status === programActionStatus.bookmark) ||  
+                        ${searchParams.get("type") === menu.status || activeItem === menu.status || searchParams.get("type") === menu?.key || (searchParams.get("is_bookmark") !== null && menu.status === programActionStatus.bookmark) ||  
                         (searchParams.get("type") === null && searchParams.get("is_bookmark") === null && menu.status === 'all') ? 'active' : ''}`} aria-current="page">
                             <span className="text-sm">{menu.name}</span>
                             <span className="text-base" style={{ color: cardCountColor }}>{menu.count}</span>

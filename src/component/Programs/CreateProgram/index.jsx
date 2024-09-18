@@ -56,31 +56,14 @@ export default function CreatePrograms() {
     }
 
     const handleNextStep = (data, stData) => {
-        // setStepData({ ...stepData, [ProgramTabs[currentStep - 1].key]: data })
         setStepWiseData(stData)
         console.log('Next step', stepData, data)
         let u = { ...data }
-        // for(let b in u){
-        //     if(u[b] === '') u[b] = stepData[b]
-        // }
-
-        // console.log('Updated Values', u)
-
-
-
-
         let fieldData = {
             ...stepData, ...data,
         }
-
-        // console.log('fieldData', new Date(fieldData.start_date).toISOString())
-        // console.log('fieldData', fieldData.end_date)
-
         setStepData(fieldData)
         if (ProgramFields.length === currentStep) {
-
-
-
 
             let bodyFormData = new FormData();
 
@@ -88,31 +71,24 @@ export default function CreatePrograms() {
             fieldData.group_chat_requirement = fieldData.group_chat_requirement === 'true'
             fieldData.individual_chat_requirement = fieldData.individual_chat_requirement === 'true'
             for (let a in fieldData) {
-                if (a === 'image') { console.log(logo); bodyFormData.append(a, logo); }
+                if (a === 'program_image' && logo.program_image) { console.log(logo); bodyFormData.append(a, logo.program_image); }
+                if (a === 'image' && logo.image) { console.log(logo); bodyFormData.append(a, logo.image); }
                 if (a === 'start_date' || a === 'end_date') { console.log(logo); bodyFormData.append(a, new Date(fieldData[a]).toISOString()); }
                 else if (fiel.includes(a)) { bodyFormData.append(a, JSON.stringify(fieldData[a])) }
                 else bodyFormData.append(a, fieldData[a]);
             }
 
-            console.log('fieldData', fieldData)
-
-
-            for (const pair of bodyFormData.entries()) {
-                console.log('--------------')
-                console.log(pair[0] + ': ' + pair[1]);
-            }
+            // console.log('bodyFormData', bodyFormData, fieldData)
             dispatch(createNewPrograms(bodyFormData))
-            // dispatch(createNewPrograms({}))
         }
         else {
-
             if (data.hasOwnProperty('image') && data.image.length) {
-                // console.log('Logo', data.image)
-                // console.log('Logo', data.image[0])
-                setLogo(data.image[0])
+                setLogo({...logo, image: data.image[0]})
+            }
+            if (data.hasOwnProperty('program_image') && data.program_image.length) {
+                setLogo({...logo, program_image: data.program_image[0]})
             }
             setCurrentStep(currentStep + 1)
-            // console.log('llll', ProgramTabs[currentStep])
             setActiveTab(ProgramTabs[currentStep].key)
         }
     }
@@ -134,7 +110,7 @@ export default function CreatePrograms() {
             }
             return field
         })
-        // console.log('updatedFields', updatedFields)
+
 
         const updateProgramFields = programAllFields.map((field, index) => {
             if (index === currentStep) {
@@ -142,13 +118,10 @@ export default function CreatePrograms() {
             }
             return field
         })
-
-        // console.log('mmmmmmmmmm', updateProgramFields)
         setProgramAllFields(updateProgramFields)
     }
 
     const handleAddPopupData = (key, value) => {
-        console.log('handleAddPopupData', key, value, stepData)
         if (value.length) {
             setStepData({ ...stepData, [key]: value })
             updateFormFields(key, value, currentStep - 1)
@@ -225,23 +198,11 @@ export default function CreatePrograms() {
         if (!category.length) {
             dispatch(getAllCategories())
         }
-        // if (!materials.length) {
-        //     dispatch(getAllMaterials())
-        // }
-        // if (!certificate.length) {
-        //     dispatch(getAllCertificates())
-        // }
-        // if (!skills.length) {
-        //     dispatch(getAllSkills())
-        // }
-        // if (!members.length) {
-        //     dispatch(getAllMembers())
-        // }
     }, [])
 
     useEffect(() => {
-        if(role === 'mentee') navigate('/programs')
-    },[role])
+        if (role === 'mentee') navigate('/programs')
+    }, [role])
 
 
     const handleModalSearch = (field) => {
@@ -271,7 +232,6 @@ export default function CreatePrograms() {
 
 
     useEffect(() => {
-        // console.log('Current', currentStep)
         if (currentStep === 1) {
             const currentStepFields = programAllFields[currentStep - 1]
             const updatedFields = currentStepFields.map(field => {
@@ -283,7 +243,6 @@ export default function CreatePrograms() {
                 }
                 return field
             })
-            // console.log('updatedFields', updatedFields)
 
             const updateProgramFields = programAllFields.map((field, index) => {
                 if (index === currentStep - 1) {
@@ -294,20 +253,11 @@ export default function CreatePrograms() {
 
             setProgramAllFields(updateProgramFields)
         }
-        // const updateData =  { category, materials}
-        // setStepData(updateData)
         setFormDetails({ category: category, materials: materials, certificate: certificate, skills: skills, members: members })
     }, [category, materials, certificate, skills, members])
 
 
-    // console.log('Parent StepData --------------', stepData)
-
-    // console.log('actionModal', actionModal)
-
-    // console.log('formDetails', formDetails)
-
     const fetchCategoryData = (categoryId) => {
-        // console.log('pp', categoryId)
         dispatch(getAllMaterials(categoryId))
         dispatch(getAllCertificates(categoryId))
         dispatch(getAllSkills(categoryId))
@@ -396,6 +346,41 @@ export default function CreatePrograms() {
     })
 
     useEffect(() => {
+        if (role !== '') {
+            const widthAdjustMentField1 = ['max_mentor_count', 'max_mentee_count', 'group_chat_requirement', 'individual_chat_requirement']
+            const widthAdjustMentField2 = ['auto_approval', 'venue']
+            const currentStepField = programAllFields[currentStep - 1].filter(curfields => curfields.for.includes(role))
+            let updateField = currentStepField
+            if (role === 'admin') {
+                updateField = currentStepField.map(programfield => {
+                    if (widthAdjustMentField1.includes(programfield.name)) {
+                        return {
+                            ...programfield,
+                            width: 'w-[24%]'
+                        }
+                    }
+                    if (widthAdjustMentField2.includes(programfield.name)) {
+                        return {
+                            ...programfield,
+                            width: 'w-[49%]'
+                        }
+                    }
+                    return programfield
+                })
+            }
+          
+            const fields = programAllFields.map((field, i) => {
+                if (i === currentStep - 1) {
+                    return updateField
+                }
+                return field
+            })
+            console.log('updateField', updateField, currentStepField)
+            setProgramAllFields(fields)
+        }
+    }, [currentStep, role])
+
+    useEffect(() => {
         console.log('statusstatus', status)
         if (status === programStatus.create || status === programStatus.exist || status === programStatus.error) {
             setTimeout(() => {
@@ -404,14 +389,6 @@ export default function CreatePrograms() {
             }, [3000])
         }
     }, [status])
-
-
-    // console.log('updatedMaterialColumn', updatedMaterialColumn)
-
-    console.log('viewDetailsInfo', viewDetailsInfo)
-
-
-    console.log('formDetails.members', formDetails.members)
 
     return (
         <div className="dashboard-content px-8 mt-10">
