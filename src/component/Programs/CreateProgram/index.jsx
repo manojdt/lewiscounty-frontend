@@ -195,9 +195,9 @@ export default function CreatePrograms() {
     }, [allPrograms])
 
     useEffect(() => {
-        if (!category.length) {
+        // if (!category.length) {
             dispatch(getAllCategories())
-        }
+        // }
     }, [])
 
     useEffect(() => {
