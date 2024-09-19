@@ -36,6 +36,7 @@ export default function CreatePrograms() {
     const [formDetails, setFormDetails] = useState({ category: [], materials: [], skills: [], certificate: [], members: [] })
     const [logo, setLogo] = useState()
     const [stepWiseData, setStepWiseData] = useState({})
+    const [programApiStatus, setProgramApiStatus] = useState('')
 
     const [viewDetails, setViewDetails] = useState({ material: false, skills: false, certificate: false })
     const [viewDetailsInfo, setViewDetailsInfo] = useState({ material: {}, skills: {}, certificate: {} })
@@ -78,15 +79,22 @@ export default function CreatePrograms() {
                 else bodyFormData.append(a, fieldData[a]);
             }
 
+            let status = ''
+
+            if (fieldData.hasOwnProperty('status') && fieldData.status === 'draft') {
+                status = 'draft'
+            }
+            setProgramApiStatus(status)
+
             // console.log('bodyFormData', bodyFormData, fieldData)
             dispatch(createNewPrograms(bodyFormData))
         }
         else {
             if (data.hasOwnProperty('image') && data.image.length) {
-                setLogo({...logo, image: data.image[0]})
+                setLogo({ ...logo, image: data.image[0] })
             }
             if (data.hasOwnProperty('program_image') && data.program_image.length) {
-                setLogo({...logo, program_image: data.program_image[0]})
+                setLogo({ ...logo, program_image: data.program_image[0] })
             }
             setCurrentStep(currentStep + 1)
             setActiveTab(ProgramTabs[currentStep].key)
@@ -196,7 +204,7 @@ export default function CreatePrograms() {
 
     useEffect(() => {
         // if (!category.length) {
-            dispatch(getAllCategories())
+        dispatch(getAllCategories())
         // }
     }, [])
 
@@ -368,7 +376,7 @@ export default function CreatePrograms() {
                     return programfield
                 })
             }
-          
+
             const fields = programAllFields.map((field, i) => {
                 if (i === currentStep - 1) {
                     return updateField
@@ -421,7 +429,8 @@ export default function CreatePrograms() {
                             <div className="w-2/6 bg-white flex flex-col gap-4 h-[330px] justify-center items-center">
                                 <img src={status === programStatus.exist ? FailedIcon : status === programStatus.create ? SuccessIcon : FailedIcon} alt="VerifyIcon" />
                                 <span style={{ color: '#232323', fontWeight: 600 }}>
-                                    {status === programStatus.exist ? 'Program already exist' : status === programStatus.error ? 'There is a Server Error. Please try again later' : 'Program Created Successfully!'}
+                                    {status === programStatus.exist ? 'Program already exist' : status === programStatus.error ? 'There is a Server Error. Please try again later' : 
+                                        `Program ${programApiStatus ==='draft' ? 'Drafed' : 'Created'} Successfully!`}
                                 </span>
                             </div>
                             : null

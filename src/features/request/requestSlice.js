@@ -7,6 +7,7 @@ import {
 import {
     getprogramRequest,
     getResourceRequest,
+    goalsRequest,
     updateLocalRequest,
     updateProgramRequest
 } from "../../services/request";
@@ -99,12 +100,38 @@ export const requestSlice = createSlice({
 
 
 
-            builder.addCase(updateLocalRequest, (state, action) => {
+        builder.addCase(updateLocalRequest, (state, action) => {
+            return {
+                ...state,
+                ...action.payload
+            }
+        })
+
+
+
+        builder
+            .addCase(goalsRequest.pending, (state) => {
                 return {
                     ...state,
-                    ...action.payload
-                }
+                    loading: true,
+                };
             })
+            .addCase(goalsRequest.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    goalsRequest: action.payload,
+                    status: requestStatus.load,
+                    loading: false,
+                };
+            })
+            .addCase(goalsRequest.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
 
     },
 });

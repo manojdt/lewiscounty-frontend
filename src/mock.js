@@ -1414,7 +1414,7 @@ export const memberMenteeRequestColumns = [
 
 export const goalsRequestColumns = [
     {
-        field: 'name',
+        field: 'goal_name',
         headerName: 'Goal Name',
         flex: 1,
         id: 0,
@@ -1428,21 +1428,21 @@ export const goalsRequestColumns = [
         for: ['admin','mentor']
     },
     {
-        field: 'dob',
+        field: 'request_date',
         headerName: 'Request Date',
         flex: 1,
         id: 2,
         for: ['admin']
     },
     {
-        field: 'phone',
+        field: 'created_by',
         headerName: 'Requested By',
         flex: 1,
         id: 3,
         for: ['admin']
     },
     {
-        field: 'email',
+        field: 'updated_at',
         headerName: 'Last Updated Date',
         flex: 1,
         id: 4,
