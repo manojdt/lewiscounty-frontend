@@ -286,7 +286,7 @@ const Goals = () => {
                 return <>
                     <div className='cursor-pointer flex items-center h-full relative'>
                         <span className='w-[80px] flex justify-center h-[30px] px-7'
-                            style={{ background: '#FFF7D8', lineHeight: '30px', borderRadius: '3px', width: '110px', height: '34px' }}> {params.row.goal_status} hhhh</span>
+                            style={{ background: '#FFF7D8', lineHeight: '30px', borderRadius: '3px', width: '110px', height: '34px' }}> {params.row.goal_status}</span>
                     </div>
                 </>
             }
