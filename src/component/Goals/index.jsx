@@ -491,13 +491,14 @@ const Goals = () => {
     }
 
     useEffect(() => {
-        if (Object.keys(createdGoal).length && status === goalStatus.create) {
-            dispatch(updateGoalStatus({ id: parseInt(createdGoal.goal_id), action: 'active' }))
-        }
+        // if (Object.keys(createdGoal).length && status === goalStatus.create) {
+            // dispatch(updateGoalStatus({ id: parseInt(createdGoal.goal_id), action: 'active' }))
+        // }
 
-        if (Object.keys(createdGoal).length && status === goalStatus.active) {
+        // if (Object.keys(createdGoal).length && status === goalStatus.active) {
+        if (Object.keys(createdGoal).length && status === goalStatus.create) {
             setActionModal(false);
-            setPopupModal('Created')
+            setPopupModal('Requested')
             setTimeout(() => {
                 setPopupModal('')
             }, [3000])

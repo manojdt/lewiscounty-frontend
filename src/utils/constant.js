@@ -164,6 +164,7 @@ export const programStatus = {
 
 export const goalStatus = {
   load: 'loaded',
+  request: 'request',
   create: 'created',
   statusupdate: 'statusupdate',
   active: 'active',
@@ -240,6 +241,8 @@ export const activityStatusColor = {
 
 export const goalDataStatus = {
   inactive: 'Not Active Goal',
+  create: 'Waiting for Approval',
+  pending: 'Waiting for Approval',
   active: 'Active',
   ongoing: 'Ongoing',
   completed: 'Completed',
@@ -248,8 +251,16 @@ export const goalDataStatus = {
 
 export const goalStatusColor = {
   inactive: {
-    color: '#000',
-    bg: '#fff'
+   color: 'rgba(255, 118, 0, 1)',
+    bg: 'rgba(255, 242, 231, 1)'
+  },
+  create: {
+    color: 'rgba(255, 118, 0, 1)',
+    bg: 'rgba(255, 242, 231, 1)'
+  },
+  pending: {
+    color: 'rgba(255, 118, 0, 1)',
+    bg: 'rgba(255, 242, 231, 1)'
   },
   active: {
     color: 'rgba(255, 212, 27, 1)',
@@ -270,6 +281,7 @@ export const goalStatusColor = {
 }
 
 export const goalRequestStatus = {
+  inactive: 'Inactive',
   new: 'New',
   pending: 'Pending',
   accept: 'Accept',
@@ -277,7 +289,15 @@ export const goalRequestStatus = {
 }
 
 export const goalRequestColor = {
+  inactive: {
+   color: 'rgba(224, 56, 45, 1)',
+    bg: 'rgba(255, 231, 231, 1)'
+  },
   new: {
+    color: 'rgba(29, 91, 191, 1)',
+    bg: 'rgba(238, 245, 255, 1)'
+  },
+  create: {
     color: 'rgba(29, 91, 191, 1)',
     bg: 'rgba(238, 245, 255, 1)'
   },
