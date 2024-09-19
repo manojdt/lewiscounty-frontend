@@ -343,14 +343,14 @@ export const certificateColor = {
   },
 }
 
-export const programRequestStatusText = {
+export const requestStatusText = {
   new: 'New',
   pending: 'Pending',
   accept: 'Accept',
   cancel: 'Cancel'
 }
 
-export const programRequestStatusColor = {
+export const requestStatusColor = {
   new: {
     bgColor: 'rgba(238, 245, 255, 1)',
     color: 'rgba(29, 91, 191, 1)'

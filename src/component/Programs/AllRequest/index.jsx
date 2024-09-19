@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Card from '../../../shared/Card'
-import { programRequestStatusColor, programRequestStatusText, requestOverview, requestStatus, RequestStatus, RequestStatusArray } from '../../../utils/constant'
+import { programRequestStatusColor, programRequestStatusText, requestOverview, requestStatus, RequestStatus, RequestStatusArray, requestStatusColor, requestStatusText } from '../../../utils/constant'
 import SearchIcon from '../../../assets/icons/search.svg';
 import CalendarIcon from '../../../assets/images/calender_1x.png';
 import ArrowRightIcon from '../../../assets/icons/arrowRightColor.svg';
@@ -17,7 +17,7 @@ import { certificateRequestColumns, goalsRequestColumns, memberMentorRequestColu
 
 import './request.css';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { getprogramRequest, getResourceRequest, updateLocalRequest, updateProgramRequest } from '../../../services/request';
+import { getprogramRequest, getResourceRequest, goalsRequest, updateLocalRequest, updateProgramRequest } from '../../../services/request';
 import { Backdrop, CircularProgress } from '@mui/material';
 import ToastNotification from '../../../shared/Toast';
 
@@ -25,7 +25,7 @@ export default function AllRequest() {
     const navigate = useNavigate()
     const [searchParams] = useSearchParams();
     const dispatch = useDispatch();
-    const { programRequest: programTableInfo, resourceRequest, loading, status } = useSelector(state => state.requestList);
+    const { programRequest: programTableInfo, resourceRequest, goalsRequest: goalsRequestInfo, loading, status } = useSelector(state => state.requestList);
     const [currentRequestTab, setCurrentRequestTab] = useState(RequestStatus.programRequest)
     const [filterStatus, setFilterStatus] = useState('new')
     const [anchorEl, setAnchorEl] = useState(null);
@@ -74,11 +74,11 @@ export default function AllRequest() {
     const goalsRequestTab = [
         {
             name: 'Mentor Goals',
-            key: 'mentor_goals'
+            key: 'mentor'
         },
         {
             name: 'Mentee goals',
-            key: 'mentee_goals'
+            key: 'mentee'
         }
     ]
 
@@ -111,6 +111,14 @@ export default function AllRequest() {
         handleClose();
     }
 
+    const handleAcceptGoalRequest = () => {
+        console.log('Accept')
+    }
+
+    const handleCancelGoalRequest = () => {
+        console.log('cancel')
+    }
+
     const handleCancelProgramRequest = () => {
         handleClose()
     }
@@ -135,11 +143,11 @@ export default function AllRequest() {
                     <div className='cursor-pointer flex items-center h-full relative'>
                         <span className='w-[80px] flex justify-center h-[30px] px-7'
                             style={{
-                                background: programRequestStatusColor[params.row.status]?.bgColor || '', lineHeight: '30px',
-                                borderRadius: '3px', width: '110px', height: '34px', color: programRequestStatusColor[params.row.status]?.color || '',
+                                background: requestStatusColor[params.row.status]?.bgColor || '', lineHeight: '30px',
+                                borderRadius: '3px', width: '110px', height: '34px', color: requestStatusColor[params.row.status]?.color || '',
                                 fontSize: '12px'
                             }}>
-                            {programRequestStatusText[params.row.status] || ''}
+                            {requestStatusText[params.row.status] || ''}
                         </span>
                     </div>
                 </>
@@ -196,34 +204,62 @@ export default function AllRequest() {
             headerName: 'Status',
             flex: 1,
             id: 2,
-            // renderCell: (params) => {
-            //     return <>
-            //         <div className='cursor-pointer flex items-center h-full relative'>
-            //             <span className='w-[80px] flex justify-center h-[30px] px-7'
-            //                 style={{
-            //                     background: certificateColor[params.row.status]?.bg || '', lineHeight: '30px',
-            //                     borderRadius: '3px', width: '110px', height: '34px', color: certificateColor[params.row.status]?.color || '',
-            //                     fontSize: '12px'
-            //                 }}>
-            //                 {certificateText[params.row.status] || ''}
-            //             </span>
-            //         </div>
-            //     </>
-            // }
+            renderCell: (params) => {
+                return <>
+                    <div className='cursor-pointer flex items-center h-full relative'>
+                        <span className='w-[80px] flex justify-center h-[30px] px-7'
+                            style={{
+                                background: requestStatusColor[params.row.status]?.bgColor || '', lineHeight: '30px',
+                                borderRadius: '3px', width: '110px', height: '34px', color: requestStatusColor[params.row.status]?.color || '',
+                                fontSize: '12px'
+                            }}>
+                            {requestStatusText[params.row.status] || ''}
+                        </span>
+                    </div>
+                </>
+            }
         },
         {
-            field: 'action',
-            headerName: 'Action',
-            flex: 1,
-            id: 4,
-            // renderCell: (params) => {
-            //     console.log('params', params)
-            //     return <>
-            //         <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleClick(e, params.row)}>
-            //             <img src={ActionIcon} alt='ActionIcon' />
-            //         </div>
-            //     </>
-            // }
+            ...role === 'admin' &&
+            {
+                field: 'action',
+                headerName: 'Action',
+                flex: 1,
+                id: 4,
+                renderCell: (params) => {
+                    console.log('params', params)
+                    return <>
+                        <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleMoreClick(e, params.row)}>
+                            <img src={MoreIcon} alt='MoreIcon' />
+                        </div>
+                        <Menu
+                            id="basic-menu"
+                            anchorEl={anchorEl}
+                            open={open}
+                            onClose={handleClose}
+                            MenuListProps={{
+                                'aria-labelledby': 'basic-button',
+                            }}
+                        >
+                            <MenuItem onClick={(e) => { console.log('View'); handleClose() }} className='!text-[12px]'>
+                                <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
+                                View
+                            </MenuItem>
+
+                            <MenuItem onClick={handleAcceptGoalRequest} className='!text-[12px]'>
+                                <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
+                                Accept
+                            </MenuItem>
+                            <MenuItem onClick={handleCancelGoalRequest} className='!text-[12px]'>
+                                <img src={CloseCircle} alt="CancelIcon" className='pr-3 w-[27px]' />
+                                Cancel
+                            </MenuItem>
+
+
+                        </Menu>
+                    </>
+                }
+            }
         },
     ]
 
@@ -385,7 +421,7 @@ export default function AllRequest() {
                 case RequestStatus.goalRequest.key:
                     tableDetails = { column: goalColumns, data: [] }
                     actionFilter = goalsRequestTab
-                    activeTabName = 'mentor_goals'
+                    activeTabName = 'mentor'
                     break;
                 case RequestStatus.resourceAccessRequest.key:
                     tableDetails = { column: resourceColumns, data: [] }
@@ -444,6 +480,11 @@ export default function AllRequest() {
         if (searchParams.get('type') === 'resource_access_request') {
             setActiveTableDetails({ column: resourceColumns, data: resourceRequest })
         }
+
+        if (searchParams.get('type') === 'goal_request') {
+            setActiveTableDetails({ column: goalColumns, data: goalsRequestInfo })
+        }
+
     }, [programTableInfo, resourceRequest, anchorEl])
 
 
@@ -454,6 +495,14 @@ export default function AllRequest() {
 
         if (searchParams.get('type') === 'resource_access_request') {
             dispatch(getResourceRequest({
+                status: filterStatus,
+                created_at: actionTab,
+                filter_by: 'day'
+            }))
+        }
+
+        if (searchParams.get('type') === 'goal_request') {
+            dispatch(goalsRequest({
                 status: filterStatus,
                 created_at: actionTab,
                 filter_by: 'day'
