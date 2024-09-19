@@ -45,8 +45,6 @@ export default function Programs() {
     const filterType = searchParams.get("type");
     const isBookmark = searchParams.get("is_bookmark");
 
-
-
     function getWindowDimensions() {
         const { innerWidth: width, innerHeight: height } = window;
         return {
@@ -92,14 +90,10 @@ export default function Programs() {
 
             return menu
         })
-        console.log('programMenu', programMenu)
         setProgramMenusList(programMenu)
-
-        // setProgramsList(programInfo.allPrograms)
     }, [userprograms.statusCounts, userprograms.programsCounts])
 
     useEffect(() => {
-        console.log('searchParamsssss', searchParams, searchParams.size)
         const filterType = searchParams.get("type");
         const isBookmark = searchParams.get("is_bookmark");
 
@@ -113,15 +107,10 @@ export default function Programs() {
             query = { type: 'is_bookmark', value: isBookmark }
         }
 
-        console.log('tttttt', Object.keys(searchParams));
-
-
         if (role === 'mentee') {
             dispatch(getMenteePrograms(query))
         }
         if (role === 'mentor') dispatch(getUserPrograms(query));
-        // }
-
 
     }, [searchParams, role])
 
@@ -148,7 +137,6 @@ export default function Programs() {
     useEffect(() => {
         if (userprograms.status === programStatus.load) {
             let loadProgram = []
-            console.log('filterType', filterType, isBookmark)
             if (filterType === null && isBookmark === null) {
                 loadProgram = userprograms.allprograms
             }
@@ -160,8 +148,6 @@ export default function Programs() {
             if (filterType !== null && filterType !== '') {
                 loadProgram = userprograms[filterType]
             }
-
-            console.log('loadProgram', loadProgram)
             setProgramsList(loadProgram)
         }
     }, [userprograms])
@@ -170,14 +156,6 @@ export default function Programs() {
         if (role === 'mentor') dispatch(getProgramCounts())
         if (role === 'mentee') dispatch(getMenteeProgramCount())
     }, [role])
-
-    useEffect(() => {
-        // if (filterType === null && isBookmark === null) {
-        //     if (role === 'mentee') dispatch(getMenteePrograms())
-        //     if (role === 'mentor') dispatch(getUserPrograms())
-        // }
-
-    }, [])
 
 
     return (
@@ -240,7 +218,7 @@ export default function Programs() {
                                         startDate = new Date(program.start_date).toISOString().substring(0, 10).split("-")
                                     }
                                     const actualStartDate = startDate.length ? `${startDate[2]}/${startDate[1]}/${startDate[0]}` : ''
-                                    // console.log('curatedProgram', curatedProgram)
+
                                     return (
                                         <div key={index} className={`curated-programs flex gap-4 items-center py-8 px-9 
                                             ${getWindowDimensions().width <= 1536 ? 'w-[49%]' : 'w-1/3'}`}>

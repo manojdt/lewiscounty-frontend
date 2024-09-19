@@ -112,15 +112,15 @@ export default function ProgramDetails() {
 
     const handleJoinProgram = async (programId) => {
 
-        if (role === 'mentee') {
+        // if (role === 'mentee') {
             setLoading({ initial: true, join: false })
-            const menteeJoinProgram = await api.post('mentee_program/join_program', { id: programId });
-            if (menteeJoinProgram.status === 200 && menteeJoinProgram.data) {
-                console.log('mssss', menteeJoinProgram)
+            const joinProgramAction = await api.post('join_program', { id: programId });
+            if (joinProgramAction.status === 200 && joinProgramAction.data) {
+                console.log('mssss', joinProgramAction)
                 setLoading({ initial: false, join: true })
             }
-        }
-        if (role === 'mentor') setLoading({ initial: false, join: true })
+        // }
+        // if (role === 'mentor') setLoading({ initial: false, join: true })
 
     }
 
