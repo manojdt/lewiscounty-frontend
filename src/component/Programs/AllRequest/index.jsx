@@ -33,7 +33,7 @@ export default function AllRequest() {
     const navigate = useNavigate()
     const [searchParams] = useSearchParams();
     const dispatch = useDispatch();
-    const { programRequest: programTableInfo, memberRequest, resourceRequest, categoryList, goalsRequest: goalsRequestInfo, 
+    const { programRequest: programTableInfo, memberRequest, resourceRequest, categoryList, goalsRequest: goalsRequestInfo,
         loading, status, error } = useSelector(state => state.requestList);
     const [currentRequestTab, setCurrentRequestTab] = useState(RequestStatus.programRequest)
     const [filterStatus, setFilterStatus] = useState('new')
@@ -175,8 +175,8 @@ export default function AllRequest() {
         }))
     }
 
-     // Cancel Member Request Api Call
-     const handleCancelMemberApiRequest = () => {
+    // Cancel Member Request Api Call
+    const handleCancelMemberApiRequest = () => {
         dispatch(cancelMemberRequest({
             member_id: seletedItem.id
         }))
@@ -230,9 +230,9 @@ export default function AllRequest() {
         handleClose();
     }
 
-     // Member Drodown Cancel
+    // Member Drodown Cancel
     const handleMemberCancelRequest = () => {
-        handleOpenConfirmPopup(`${actionTab === 'mentor' ? 'Mentor ': 'Mentee '} Request`, currentRequestTab.key, actionTab, 'cancel')
+        handleOpenConfirmPopup(`${actionTab === 'mentor' ? 'Mentor ' : 'Mentee '} Request`, currentRequestTab.key, actionTab, 'cancel')
         handleClose()
     }
 
@@ -277,7 +277,7 @@ export default function AllRequest() {
         }
 
 
-        if(categoryPopup.page === 'member_join_request'){
+        if (categoryPopup.page === 'member_join_request') {
             const categoryId = []
             data.selectedItem.forEach((selected) => categoryId.push(selected.categories_id))
             const payload = {
@@ -324,8 +324,7 @@ export default function AllRequest() {
                 flex: 1,
                 id: 4,
                 renderCell: (params) => {
-                    if (params.row.status !== 'new' && params.row.status !== 'pending') return <></>
-                    else return <>
+                    return <>
 
                         <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleMoreClick(e, params.row)}>
                             <img src={MoreIcon} alt='MoreIcon' />
@@ -343,17 +342,19 @@ export default function AllRequest() {
                                 <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
                                 View
                             </MenuItem>
-
-                            <MenuItem onClick={handleAcceptProgramRequest} className='!text-[12px]'>
-                                <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
-                                Accept
-                            </MenuItem>
-                            <MenuItem onClick={handleCancelProgramRequest} className='!text-[12px]'>
-                                <img src={CloseCircle} alt="CancelIcon" className='pr-3 w-[27px]' />
-                                Cancel
-                            </MenuItem>
-
-
+                            {
+                                (params.row.status !== 'new' && params.row.status !== 'pending') &&
+                                <>
+                                    <MenuItem onClick={handleAcceptProgramRequest} className='!text-[12px]'>
+                                        <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
+                                        Accept
+                                    </MenuItem>
+                                    <MenuItem onClick={handleCancelProgramRequest} className='!text-[12px]'>
+                                        <img src={CloseCircle} alt="CancelIcon" className='pr-3 w-[27px]' />
+                                        Cancel
+                                    </MenuItem>
+                                </>
+                            }
                         </Menu>
                     </>
                 }
@@ -616,7 +617,6 @@ export default function AllRequest() {
     ]
 
     const handleClick = (menu) => {
-        console.log('Menu',menu)
         navigate(`/all-request?type=${menu.status}`)
     }
 
@@ -661,7 +661,6 @@ export default function AllRequest() {
         if (searchParams.get("type")) {
             const tab = searchParams.get("type")
             const requestTabDetails = RequestStatusArray.find(request => request.key === tab)
-            console.log('requestTabDetails', requestTabDetails)
             let tableDetails = { ...activeTableDetails }
             let actionFilter = []
             let activeTabName = ''
@@ -703,7 +702,6 @@ export default function AllRequest() {
                     actionFilter = []
                     break;
             }
-            console.log('Column', tableDetails)
             setActiveTableDetails(tableDetails)
             setCurrentRequestTab(requestTabDetails)
             setActionTabFilter(actionFilter)
@@ -743,8 +741,8 @@ export default function AllRequest() {
         }
 
 
-         // Member update action
-         if (status === requestStatus.memberupdate || status === requestStatus.membercancel) {
+        // Member update action
+        if (status === requestStatus.memberupdate || status === requestStatus.membercancel) {
             if (confirmPopup.show) resetConfirmPopup()
             if (categoryPopup.show) handleCloseCategoryPopup()
             getMembersRequestApi()
@@ -777,7 +775,7 @@ export default function AllRequest() {
         }
 
         if (searchParams.get('type') === 'member_join_request') {
-            setActiveTableDetails({ column: actionTab === 'mentor' ? [...memberMentorRequestColumns, ...membersColumns ] : [...memberMenteeRequestColumns, ...membersColumns ], data: memberRequest })
+            setActiveTableDetails({ column: actionTab === 'mentor' ? [...memberMentorRequestColumns, ...membersColumns] : [...memberMenteeRequestColumns, ...membersColumns], data: memberRequest })
         }
 
         if (searchParams.get('type') === 'goal_request') {
