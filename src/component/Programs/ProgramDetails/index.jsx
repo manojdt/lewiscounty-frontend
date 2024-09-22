@@ -105,7 +105,10 @@ export default function ProgramDetails() {
                     if (programdetails.status === programActionStatus.yettostart) {
                         navigate(`${pipeUrls.assigntask}/${params.id}`)
                     }
-                    else if ((programdetails.status === programActionStatus.inprogress || programdetails.status === programActionStatus.assigned)) {
+                    else if ((programdetails.status === programActionStatus.inprogress || programdetails.status === programActionStatus.assigned ||
+                        programdetails.status === programActionStatus.paused
+
+                    )) {
                         navigate(`${pipeUrls.startprogram}/${params.id}`)
                     }
                 }
