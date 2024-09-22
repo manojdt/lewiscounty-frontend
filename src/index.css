@@ -141,6 +141,44 @@ input[type="range"]::-ms-thumb {
   grid-column: span 4 / span 4;
 }
 
+
+.action-set {
+  margin-bottom: 40px;
+  border-radius: 4px;
+}
+
+.action_rescheduled {
+  border: 1px solid #FF7600;
+  background: #FFF2E7;
+}
+
+.action_rescheduled .reason-title {
+  border-bottom: 1px solid #FF7600;
+  padding: 15px 30px;
+  color: #FF7600;
+  font-weight: 700;
+}
+
+
+.action_cancelled {
+  border: 1px solid #E50027;
+  background: #FFE7E7;
+}
+
+.action_cancelled .reason-title {
+  border-bottom: 1px solid #E50027;
+  padding: 15px 30px;
+  color: #E50027;
+  font-weight: 700;
+}
+
+.reason-content {
+  font-size: 13px;
+  padding: 15px 30px;
+  line-height: 25px;
+}
+
+
 .skills-set {
   border: 1px solid rgba(180, 205, 245, 1);
   margin-bottom: 40px;
