@@ -11,6 +11,7 @@ import BookmarkedIcon from '../../assets/icons/Bookmarked.svg';
 import CalendarIcon from '../../assets/images/calender_1x.png';
 import BookmarkedColorIcon from '../../assets/images/bookmarked-colour1x.png'
 import ProgramImage from "../../assets/images/logo_image.jpg";
+import StarColorIcon from '../../assets/icons/starColor.svg';
 
 
 import { getAllCategories, getAllCertificates, getAllMaterials, getAllMembers, getAllSkills, loadAllPrograms } from '../../services/programInfo';
@@ -69,7 +70,7 @@ export default function Programs() {
 
     }
 
-    const statusNotShow = ['yettoapprove', 'yettojoin', 'yettostart','draft']
+    const statusNotShow = ['yettoapprove', 'yettojoin', 'yettostart', 'draft']
 
     useEffect(() => {
         const listPrograms = programMenus('program').filter(programs => programs.for.includes(role));
@@ -237,7 +238,14 @@ export default function Programs() {
                                                         }
 
                                                         <h4 className="text-[16px]">{program.program_name}</h4>
-                                                        <span className="text-[12px] line-clamp-2 h-[38px]">{program.description}</span>
+                                                        <span className="text-[12px] line-clamp-2 ">{program.description}</span>
+
+                                                        <div className='flex gap-2 text-[12px]'>
+                                                            <img src={StarColorIcon} alt="StarColorIcon" />
+                                                            <span>4.6</span>
+                                                            <span style={{ borderRight: '1px solid #18283D' }}></span>
+                                                            <span>Instructor : {program?.mentor_name}</span>
+                                                        </div>
 
                                                         {
                                                             program.status === 'yettoapprove' || program.status === 'draft' ?
@@ -281,8 +289,10 @@ export default function Programs() {
                                                     {
                                                         !statusNotShow.includes(program.status) ?
 
-                                                            <div className="text-[12px] px-2 py-2" style={{ background: `${ProgramStatusInCard[program.status]?.bg}`, 
-                                                                color:  `${ProgramStatusInCard[program.status]?.color}`, borderRadius: '3px' }}>
+                                                            <div className="text-[12px] px-2 py-2" style={{
+                                                                background: `${ProgramStatusInCard[program.status]?.bg}`,
+                                                                color: `${ProgramStatusInCard[program.status]?.color}`, borderRadius: '3px'
+                                                            }}>
                                                                 {ProgramStatusInCard[program.status]?.text}
                                                             </div>
 

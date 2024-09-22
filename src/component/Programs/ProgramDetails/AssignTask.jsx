@@ -149,7 +149,7 @@ export default function AssignTask() {
             if (startProgramRequest.status === 201 && startProgramRequest.data) {
                 console.log('mssss', startProgramRequest)
                 setLoading({ initial: false, task: false })
-                // dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.inprogress }))
+                dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.inprogress }))
             }
 
         }
@@ -321,18 +321,18 @@ export default function AssignTask() {
     }, [programdetails, role])
 
     const handleDateClick = () => {
-        document.querySelector('.p-datepicker')?.classList.add('program-date')
+        document.querySelector('.p-datepicker')?.classList.add('program-date-picker')
     }
 
     const handleTimeClick = () => {
-        document.querySelector('.p-datepicker')?.classList.add('program-time')
+        document.querySelector('.p-datepicker')?.classList.add('program-time-picker')
     }
 
 
     useEffect(() => {
         return () => {
-            document.querySelector('.p-datepicker')?.classList.remove('program-date')
-            document.querySelector('.p-datepicker')?.classList.remove('program-time')
+            document.querySelector('.p-datepicker')?.classList.remove('program-date-picker')
+            document.querySelector('.p-datepicker')?.classList.remove('program-time-picker')
         }
     }, [])
 
