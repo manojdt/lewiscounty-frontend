@@ -11,9 +11,10 @@ import ProgramImage from "../../assets/images/logo_image.jpg";
 import BookmarkedIcon from '../../assets/icons/Bookmarked.svg'
 import BookmarkedColorIcon from '../../assets/images/bookmarked-colour1x.png'
 import CalenderIcon from '../../assets/icons/Calender.svg';
+import StarColorIcon from '../../assets/icons/starColor.svg';
 
 
-export default function DashboardCard({ title, viewpage, handleNavigateDetails, handleBookmark, programs, height, action =[] }) {
+export default function DashboardCard({ title, viewpage, handleNavigateDetails, handleBookmark, programs, height, action = [] }) {
     const navigate = useNavigate()
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -113,7 +114,16 @@ export default function DashboardCard({ title, viewpage, handleNavigateDetails, 
                                                     <div className="flex flex-col gap-3 w-[80%]">
                                                         <p className="py-1 px-1 text-[12px] text-center rounded-3xl w-[90px]" style={{ border: '1px solid rgba(238, 238, 238, 1)' }}>{curatedProgram?.categories[0]?.name}</p>
                                                         <h4 className="text-[16px]">{curatedProgram.program_name}</h4>
-                                                        <span className="text-[12px] line-clamp-2 h-[38px]">{curatedProgram.decription}</span>
+                                                        <span className="text-[12px] line-clamp-2">{curatedProgram.description}</span>
+
+                                                        <div className='flex gap-2 text-[12px]'>
+                                                            <img src={StarColorIcon} alt="StarColorIcon" />
+                                                            <span>4.6</span>
+                                                            <span style={{ borderRight: '1px solid #18283D' }}></span>
+                                                            <span>Instructor : {curatedProgram?.mentor_name}</span>
+                                                        </div>
+
+
                                                         <button className="text-white text-[12px] py-2 w-[90px]" style={{ background: 'rgba(29, 91, 191, 1)', borderRadius: '5px' }}
 
                                                             onClick={() => handleNavigateDetails(curatedProgram)}
@@ -173,7 +183,13 @@ export default function DashboardCard({ title, viewpage, handleNavigateDetails, 
                                                             }
 
                                                             <h4 className="text-[16px]">{currentProgram.program_name}</h4>
-                                                            <span className="text-[12px] line-clamp-2 h-[38px]">{currentProgram.description}</span>
+                                                            <span className="text-[12px] line-clamp-2 ">{currentProgram.description}</span>
+                                                            <div className='flex gap-2 text-[12px]'>
+                                                                <img src={StarColorIcon} alt="StarColorIcon" />
+                                                                <span>4.6</span>
+                                                                <span style={{ borderRight: '1px solid #18283D' }}></span>
+                                                                <span>Instructor : {currentProgram?.mentor_name}</span>
+                                                            </div>
                                                             <button className="text-white text-[12px] py-2 w-[90px]"
                                                                 onClick={() => handleNavigateDetails(currentProgram)}
                                                                 style={{ background: 'rgba(29, 91, 191, 1)', borderRadius: '5px' }}>View Details</button>
