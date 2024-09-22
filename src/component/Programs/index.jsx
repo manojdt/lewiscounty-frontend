@@ -14,7 +14,7 @@ import ProgramImage from "../../assets/images/logo_image.jpg";
 
 
 import { getAllCategories, getAllCertificates, getAllMaterials, getAllMembers, getAllSkills, loadAllPrograms } from '../../services/programInfo';
-import { menteeCountStatus, pipeUrls, programActionStatus, programMenus, programStatus, statusAction } from '../../utils/constant';
+import { menteeCountStatus, pipeUrls, programActionStatus, programMenus, programStatus, ProgramStatusInCard, statusAction } from '../../utils/constant';
 import { getMenteeProgramCount, getMenteePrograms, getProgramCounts, getProgramDetails, getUserPrograms, updateProgram } from '../../services/userprograms';
 
 
@@ -68,6 +68,8 @@ export default function Programs() {
         }
 
     }
+
+    const statusNotShow = ['yettoapprove', 'yettojoin', 'yettostart','draft']
 
     useEffect(() => {
         const listPrograms = programMenus('program').filter(programs => programs.for.includes(role));
@@ -276,8 +278,21 @@ export default function Programs() {
 
                                                         <span>{'10 A.M (GMT + 7)'}</span>
                                                     </div>
+                                                    {
+                                                        !statusNotShow.includes(program.status) ?
 
-                                                    <div className="text-[12px] px-2 py-2" style={{ background: 'rgba(241, 241, 241, 1)', borderRadius: '3px' }}>{'10 Mins ago'}</div>
+                                                            <div className="text-[12px] px-2 py-2" style={{ background: `${ProgramStatusInCard[program.status]?.bg}`, 
+                                                                color:  `${ProgramStatusInCard[program.status]?.color}`, borderRadius: '3px' }}>
+                                                                {ProgramStatusInCard[program.status]?.text}
+                                                            </div>
+
+                                                            :
+
+                                                            <div className="text-[12px] px-2 py-2" style={{ background: 'rgba(241, 241, 241, 1)', borderRadius: '3px' }}>{'10 Mins ago'}</div>
+
+
+                                                    }
+
                                                 </div>
                                             </div>
                                         </div>
