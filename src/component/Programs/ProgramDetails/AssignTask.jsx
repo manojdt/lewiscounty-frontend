@@ -149,7 +149,7 @@ export default function AssignTask() {
             if (startProgramRequest.status === 201 && startProgramRequest.data) {
                 console.log('mssss', startProgramRequest)
                 setLoading({ initial: false, task: false })
-                dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.inprogress }))
+                // dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.inprogress }))
             }
 
         }
