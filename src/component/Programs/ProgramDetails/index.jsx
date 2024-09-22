@@ -7,7 +7,7 @@ import './program-details.css'
 import Carousel from '../../../shared/Carousel';
 import { curatedPrograms } from '../../../utils/mock';
 
-import { pipeUrls, programActionStatus, programStatus } from '../../../utils/constant';
+import { pipeUrls, programActionStatus, programStatus, requestStatus } from '../../../utils/constant';
 import { updateNewPrograms, updateProgramDetails } from '../../../services/programInfo';
 import { getMenteeJoinedInProgram, getProgramDetails } from '../../../services/userprograms';
 
@@ -20,7 +20,13 @@ import CertificateIcon from '../../../assets/images/certficate1x.png';
 import QuoteIcon from '../../../assets/images/quotes1x.png';
 import MuiModal from '../../../shared/Modal';
 import SuccessTik from '../../../assets/images/blue_tik1x.png';
+import TickColorIcon from '../../../assets/icons/tickColorLatest.svg'
+import CancelIcon from '../../../assets/images/cancel1x.png'
+import CancelColorIcon from '../../../assets/icons/cancelCircle.svg'
 import api from '../../../services/api';
+import { Button } from '../../../shared';
+import { updateLocalRequest, updateProgramRequest } from '../../../services/request';
+import { useForm } from 'react-hook-form';
 
 
 export default function ProgramDetails() {
@@ -32,8 +38,10 @@ export default function ProgramDetails() {
     const [searchParams] = useSearchParams();
     const [activeTab, setActiveTab] = useState('about_program')
     const [certificateActiveTab, setCertificateActiveTab] = useState('participated')
+    const [confirmPopup, setConfirmPopup] = useState({ accept: false, cancel: false, programId: '' })
     const userdetails = useSelector(state => state.userInfo)
     const { programdetails, loading: programLoading, error, menteeJoined } = useSelector(state => state.userPrograms)
+    const { loading: requestLoading, status: requestProgramStatus, error: requestError } = useSelector(state => state.requestList);
     const role = userdetails.data.role || ''
     const tabs = [
         {
@@ -49,6 +57,14 @@ export default function ProgramDetails() {
             key: 'program_testimonials'
         },
     ]
+
+
+    const {
+        register,
+        formState: { errors },
+        handleSubmit,
+        reset,
+    } = useForm();
 
     const participatedTabs = [
         {
@@ -73,13 +89,15 @@ export default function ProgramDetails() {
         setCertificateActiveTab(key)
     }
 
+    const programNotReady = ['yettoapprove','draft']
+
     useEffect(() => {
         if (Object.keys(programdetails).length && !programLoading) {
             console.log('programdetails.status', programdetails.status)
+            const notAllowedCond = ['completed','yettoapprove','draft']
 
-            if (programdetails.status !== 'completed') {
-                console.log('programdetails---', programdetails)
-                if (role === 'mentee' && menteeJoined === true) {
+            if (!notAllowedCond.includes(programdetails.status)) {
+                if (role === 'mentee'  && menteeJoined === true) {
                     navigate(`${pipeUrls.startprogram}/${params.id}`)
                 }
 
@@ -113,16 +131,59 @@ export default function ProgramDetails() {
     const handleJoinProgram = async (programId) => {
 
         // if (role === 'mentee') {
-            setLoading({ initial: true, join: false })
-            const joinProgramAction = await api.post('join_program', { id: programId });
-            if (joinProgramAction.status === 200 && joinProgramAction.data) {
-                console.log('mssss', joinProgramAction)
-                setLoading({ initial: false, join: true })
-            }
+        setLoading({ initial: true, join: false })
+        const joinProgramAction = await api.post('join_program', { id: programId });
+        if (joinProgramAction.status === 200 && joinProgramAction.data) {
+            console.log('mssss', joinProgramAction)
+            setLoading({ initial: false, join: true })
+        }
         // }
         // if (role === 'mentor') setLoading({ initial: false, join: true })
 
     }
+
+
+    // Handle Accept Program Popup
+    const handleConfirmPopup = () => {
+        dispatch(updateProgramRequest({
+            "id": parseInt(params.id),
+            "action": "accept"
+        }))
+    }
+
+    // Handle Submit Cancel Program Popup
+    const handleCancelReasonPopupSubmit = (data) => {
+        if (data.cancel_reason !== '') {
+            if (confirmPopup.cancel) {
+                dispatch(updateProgramRequest({
+                    id: parseInt(params.id),
+                    action: "cancel",
+                    cancelled_reason: data.cancel_reason
+                }))
+            }
+        }
+    }
+
+    // Accept / Cancel Program Request
+    const handleAcceptCancelProgramRequest = (action, programid) => {
+        let popup = { ...confirmPopup, programId: programid }
+        if (action === 'accept') { setConfirmPopup({ ...popup, accept: true }); }
+        if (action === 'cancel') { setConfirmPopup({ ...popup, cancel: true }) }
+    }
+
+    // Handle Close Accept / Cancel Popup
+    const resetAcceptCancelPopup = () => {
+        setConfirmPopup({ accept: false, cancel: false, programId: '' });
+    }
+
+    useEffect(() => {
+        if (requestProgramStatus === requestStatus.programupdate) {
+            setTimeout(() => {
+                dispatch(getProgramDetails(params.id))
+                dispatch(updateLocalRequest({ status: '' }))
+            }, [2000])
+        }
+    }, [requestStatus])
 
     useEffect(() => {
         if (taskJoined) {
@@ -149,11 +210,111 @@ export default function ProgramDetails() {
 
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={loading.initial || loading.join || programLoading}
-
+                open={loading.initial || loading.join || programLoading || requestLoading}
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
+
+
+            {/* Program Request Updated Popup */}
+            <MuiModal modalOpen={requestProgramStatus === requestStatus.programupdate} modalClose={() => undefined} noheader>
+                <div className='px-5 py-1 flex justify-center items-center'>
+                    <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
+                        style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
+                        <img src={SuccessTik} alt="SuccessTik" />
+                        <p className='text-white text-[12px]'>Program Request updated successfully</p>
+                    </div>
+
+                </div>
+            </MuiModal>
+
+            {/* Program Accept Popup */}
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={confirmPopup.accept}
+            >
+                <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
+                    <img src={TickColorIcon} alt="TickColorIcon" />
+                    <span style={{ color: '#232323', fontWeight: 600, fontSize: '24px' }}>
+                        Accept
+                    </span>
+                    <div className='py-5'>
+                        <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 600, fontSize: '18px' }}>
+                            Are you sure want to accept Program Request?
+                        </p>
+                    </div>
+                    <div className='flex justify-center'>
+                        <div className="flex gap-6 justify-center align-middle">
+                            <Button btnCls="w-[110px]" btnName={'Cancel'} btnCategory="secondary" onClick={resetAcceptCancelPopup} />
+                            <Button btnType="button" btnCls="w-[110px]" btnName={'Accept'}
+                                style={{ background: '#16B681' }} btnCategory="primary"
+                                onClick={handleConfirmPopup}
+                            />
+                        </div>
+                    </div>
+                </div>
+            </Backdrop>
+
+
+            {/* Program Cancel Popup */}
+            <MuiModal modalSize='md' modalOpen={confirmPopup.cancel} modalClose={resetAcceptCancelPopup} noheader>
+
+                <div className='px-5 py-5'>
+                    <div className='flex justify-center flex-col gap-5  mt-4 mb-4'
+                        style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '10px', }}>
+                        <div className='flex justify-between px-3 py-4 items-center' style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
+                            <p className='text-[18px]' style={{ color: 'rgba(0, 0, 0, 1)' }}>Cancel Program Request Reason </p>
+                            <img className='cursor-pointer' onClick={resetAcceptCancelPopup} src={CancelIcon} alt="CancelIcon" />
+                        </div>
+
+                        <div className='px-5'>
+                            {
+                                requestError !== '' ? <p className="error" role="alert">{requestError}</p> : null
+                            }
+
+
+                            <form onSubmit={handleSubmit(handleCancelReasonPopupSubmit)}>
+                                <div className='relative pb-8'>
+                                    <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
+                                        Cancel Reason
+                                    </label>
+
+                                    <div className='relative'>
+                                        <textarea
+                                            {...register('cancel_reason', {
+                                                required: "This field is required",
+                                            })}
+                                            id="message" rows="4" className={`block p-2.5 input-bg w-full text-sm text-gray-900  border
+                                               focus-visible:outline-none focus-visible:border-none`}
+                                            style={{ border: '2px solid rgba(229, 0, 39, 1)' }}
+                                            placeholder={''}
+                                        ></textarea>
+                                        {errors['cancel_reason'] && (
+                                            <p className="error" role="alert">
+                                                {errors['cancel_reason'].message}
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div className='flex justify-center gap-5 items-center pt-5 pb-10'>
+                                    <Button btnName='Cancel' btnCls="w-[18%]" btnCategory="secondary" onClick={resetAcceptCancelPopup} />
+                                    <button
+                                        type='submit'
+                                        className='text-white py-3 px-7 w-[18%]'
+                                        style={{ background: 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)', borderRadius: '3px' }}>
+                                        Submit
+                                    </button>
+                                </div>
+                            </form>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </MuiModal>
 
             <MuiModal modalOpen={taskJoined} modalClose={() => setTaskJoined(false)} noheader>
                 <div className='px-5 py-1 flex justify-center items-center'>
@@ -241,8 +402,8 @@ export default function ProgramDetails() {
                                             <span>{programdetails?.mentor_info?.first_name}{' '} {programdetails?.mentor_info?.last_name}</span>
                                         </div>
 
-                                        {
 
+                                        {
                                             programdetails.status === 'completed' ?
 
                                                 <div className='py-9'>
@@ -253,28 +414,130 @@ export default function ProgramDetails() {
                                                     }}>Program Completed</div>
                                                 </div>
 
-                                                : (role === 'mentor' || (role === 'mentee' && !menteeJoined)) ?
+                                                // :
 
-                                                    <div className='py-9'>
-                                                        <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                            background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
-                                                            borderRadius: '5px'
-                                                        }}
-                                                            onClick={() => handleJoinProgram(programdetails.id)}
-                                                        >Join Program
-                                                            <span className='pl-8 pt-1'><img style={{ width: '15px', height: '13px' }} src={DoubleArrowIcon} alt="DoubleArrowIcon" /></span>
-                                                        </button>
-                                                    </div>
+                                                // ((role === 'mentor' || (role === 'mentee' && !menteeJoined)) && programdetails.status !== 'cancelled' &&
+                                                //     programdetails.status !== 'yettoapprove') ?
 
-                                                    : null
+                                                //     <div className='py-9'>
+                                                //         <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                //             background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
+                                                //             borderRadius: '5px'
+                                                //         }}
+                                                //             onClick={() => handleJoinProgram(programdetails.id)}
+                                                //         >Join Program
+                                                //             <span className='pl-8 pt-1'><img style={{ width: '15px', height: '13px' }} src={DoubleArrowIcon} alt="DoubleArrowIcon" /></span>
+                                                //         </button>
+                                                //     </div>
+
+                                                : null
+                                        }
+
+                                        {
+                                            role === 'mentor' ?
+                                                <>
+                                                    {programdetails.status === 'yettoapprove' ?
+                                                        <div className='flex gap-4 pt-10' >
+                                                            <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                                border: "1px solid #E0382D",
+                                                                borderRadius: '5px',
+                                                                color: '#E0382D',
+                                                                cursor: 'not-allowed'
+                                                            }}
+                                                                onClick={() => undefined}
+                                                            >Waiting for admin approval
+                                                            </button>
+                                                        </div>
+                                                        :
+                                                        programdetails.status === 'draft' ?
+                                                            <div className='py-9'>
+                                                                <div className='py-3 px-16 text-white text-[14px] flex justify-center items-center' style={{
+                                                                    background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
+                                                                    borderRadius: '5px',
+                                                                    width: '30%'
+                                                                }}>Drafted</div>
+                                                            </div>
+                                                            :
+                                                            programdetails.status === 'yettojoin' ?
+
+                                                                <div className='py-9'>
+                                                                    <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                                        background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
+                                                                        borderRadius: '5px'
+                                                                    }}
+                                                                        onClick={() => handleJoinProgram(programdetails.id)}
+                                                                    >Join Program
+                                                                        <span className='pl-8 pt-1'><img style={{ width: '15px', height: '13px' }} src={DoubleArrowIcon} alt="DoubleArrowIcon" /></span>
+                                                                    </button>
+                                                                </div>
+                                                                : null
+                                                    }
+                                                </>
+                                                : null
+
+                                        }
+
+                                        {
+                                            (role === 'mentee' && !menteeJoined && !programNotReady.includes(programdetails.status)) &&
+
+                                            <div className='py-9'>
+                                                <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                    background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
+                                                    borderRadius: '5px'
+                                                }}
+                                                    onClick={() => handleJoinProgram(programdetails.id)}
+                                                >Join Program
+                                                    <span className='pl-8 pt-1'><img style={{ width: '15px', height: '13px' }} src={DoubleArrowIcon} alt="DoubleArrowIcon" /></span>
+                                                </button>
+                                            </div>
+
+
                                         }
 
 
+                                        {
+                                            role === 'admin' ?
+                                                <>
+                                                    {
+                                                        programdetails.status === 'yettoapprove' &&
+
+                                                        <div className='flex gap-4 pt-10' >
+                                                            <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                                border: "1px solid #E0382D",
+                                                                borderRadius: '5px',
+                                                                color: '#E0382D'
+                                                            }}
+                                                                onClick={() => handleAcceptCancelProgramRequest('cancel', programdetails.id)}
+                                                            >Cancel Request
+                                                            </button>
+                                                            <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                                background: "#16B681",
+                                                                borderRadius: '5px'
+                                                            }}
+                                                                onClick={() => handleAcceptCancelProgramRequest('accept', programdetails.id)}
+                                                            >Accept Request
+                                                            </button>
+                                                        </div>
+                                                    }
+                                                </>
+                                                : null
+                                        }
+
+                                        {
+                                            programdetails.status === 'cancelled' && role !== 'mentee' &&
+                                            <div className='flex gap-4 pt-10' >
+                                                <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                    border: "1px solid #E0382D",
+                                                    borderRadius: '5px',
+                                                    color: '#E0382D',
+                                                    cursor: 'not-allowed'
+                                                }}
+                                                    onClick={() => undefined}
+                                                >Cancelled Request
+                                                </button>
+                                            </div>
+                                        }
                                     </div>
-
-
-
-
 
                                     {/* Right Side Content */}
                                     <div className='right-side-content'>

@@ -79,7 +79,6 @@ export default function Programs() {
                     return { ...menu, count: userprograms.totalPrograms }
                 }
                 if (statusAction.includes(menu.status)) {
-                    console.log('userprograms.statusCounts', userprograms.statusCounts, menu.status)
                     return { ...menu, count: userprograms.statusCounts[menu.status] }
                 }
             }
@@ -175,7 +174,7 @@ export default function Programs() {
                     {programMenusList.find(menu => menu.status === searchParams.get("type"))?.name || (searchParams.get("is_bookmark") ? 'Bookmarked Programs' : 'All Programs')}
                 </div>
                 {
-                    userInfo && userInfo.data && (userInfo.data.role === 'mentor'  || userInfo.data.role === 'admin') &&
+                    userInfo && userInfo.data && (userInfo.data.role === 'mentor' || userInfo.data.role === 'admin') &&
                     <div>
                         <button onClick={() => navigate('/create-programs')} className='text-[12px] px-3 py-4'
                             style={{ background: '#1D5BBF', color: '#fff', borderRadius: '6px' }}>Create New Program Request</button>
@@ -221,7 +220,7 @@ export default function Programs() {
 
                                     return (
                                         <div key={index} className={`curated-programs flex gap-4 items-center py-8 px-9 
-                                            ${getWindowDimensions().width <= 1536 ? 'w-[49%]' : 'w-1/3'}`}>
+                                            ${getWindowDimensions().width <= 1536 ? 'w-[49%]' : 'w-1/3'}`} style={{ opacity: `${program.status === 'yettoapprove' ? '0.5' : 1}` }}>
                                             <div className="w-full" style={{ boxShadow: '4px 4px 15px 0px rgba(0, 0, 0, 0.1)', borderRadius: '10px' }}>
                                                 <div className="flex py-6 px-7 gap-4 border-b-2 relative">
                                                     <div className="w-6/12 h-full">
@@ -237,11 +236,32 @@ export default function Programs() {
 
                                                         <h4 className="text-[16px]">{program.program_name}</h4>
                                                         <span className="text-[12px] line-clamp-2 h-[38px]">{program.description}</span>
-                                                        <button className="text-white text-[12px] py-2 w-[90px]"
-                                                            onClick={() => handleNavigation(program)}
-                                                            style={{ background: 'rgba(29, 91, 191, 1)', borderRadius: '5px' }}>View Details</button>
+
+                                                        {
+                                                            program.status === 'yettoapprove' || program.status === 'draft' ?
+
+                                                                <button className={`text-white text-[12px] py-2 ${program.status === 'draft' ? 'w-[110px]' : 'w-[170px]'}`}
+                                                                    onClick={undefined}
+                                                                    style={{ background: program.status === 'yettoapprove' ? '#76818E' : 'rgba(29, 91, 191, 1)', borderRadius: '5px' }}>
+                                                                    {program.status === 'draft' ? 'Continue' : 'Waiting for approval'}
+
+                                                                </button>
+                                                                :
+
+                                                                <button className="text-white text-[12px] py-2 w-[90px]"
+                                                                    onClick={() => handleNavigation(program)}
+                                                                    style={{ background: 'rgba(29, 91, 191, 1)', borderRadius: '5px' }}>View Details</button>
+                                                        }
+
                                                     </div>
-                                                    <img onClick={() => handleBookmark(program)} className="absolute top-4 right-4 cursor-pointer" src={program.is_bookmark ? BookmarkedColorIcon : BookmarkedIcon} alt="BookmarkedIcon" />
+                                                    {
+                                                        program.status !== 'yettoapprove' && program.status !== 'draft' ?
+
+                                                            <img onClick={() => handleBookmark(program)} className="absolute top-4 right-4 cursor-pointer"
+                                                                src={program.is_bookmark ? BookmarkedColorIcon : BookmarkedIcon} alt="BookmarkedIcon" />
+                                                            : null
+                                                    }
+
                                                 </div>
 
 
@@ -256,6 +276,7 @@ export default function Programs() {
 
                                                         <span>{'10 A.M (GMT + 7)'}</span>
                                                     </div>
+
                                                     <div className="text-[12px] px-2 py-2" style={{ background: 'rgba(241, 241, 241, 1)', borderRadius: '3px' }}>{'10 Mins ago'}</div>
                                                 </div>
                                             </div>

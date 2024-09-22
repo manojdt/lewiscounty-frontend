@@ -1316,7 +1316,7 @@ export const memberMentorRequestColumns = [
         for: ['admin']
     },
     {
-        field: 'phone',
+        field: 'phone_number',
         headerName: 'Phone Number',
         flex: 1,
         id: 3,
@@ -1330,14 +1330,14 @@ export const memberMentorRequestColumns = [
         for: ['mentor']
     },
     {
-        field: 'location',
+        field: 'address',
         headerName: 'Location',
         flex: 1,
         id: 5,
         for: ['admin','mentor']
     },
     {
-        field: 'mentoring_experience',
+        field: 'mentor_exp_desc',
         headerName: 'Mentoring Experience',
         flex: 1,
         id: 6,
@@ -1368,7 +1368,7 @@ export const memberMenteeRequestColumns = [
         for: ['admin']
     },
     {
-        field: 'phone',
+        field: 'phone_number',
         headerName: 'Phone Number',
         flex: 1,
         id: 3,
@@ -1382,14 +1382,14 @@ export const memberMenteeRequestColumns = [
         for: ['mentor']
     },
     {
-        field: 'location',
+        field: 'address',
         headerName: 'Location',
         flex: 1,
         id: 5,
         for: ['admin','mentor']
     },
     {
-        field: 'major',
+        field: 'major_field_of_study',
         headerName: 'Major Field Studies',
         flex: 1,
         id: 6,
@@ -1403,7 +1403,7 @@ export const memberMenteeRequestColumns = [
         for: ['mentor']
     },
     {
-        field: 'date',
+        field: 'requested_date',
         headerName: 'Request Date',
         flex: 1,
         id: 6,
@@ -1421,21 +1421,21 @@ export const goalsRequestColumns = [
         for: ['admin','mentor']
     },
     {
-        field: 'reason',
+        field: 'reason_request',
         headerName: 'Reason Request',
         flex: 1,
         id: 1,
         for: ['admin','mentor']
     },
     {
-        field: 'request_date',
+        field: 'requested_date',
         headerName: 'Request Date',
         flex: 1,
         id: 2,
         for: ['admin']
     },
     {
-        field: 'created_by',
+        field: 'requested_by',
         headerName: 'Requested By',
         flex: 1,
         id: 3,
@@ -1449,7 +1449,7 @@ export const goalsRequestColumns = [
         for: ['mentor']
     },
     {
-        field: 'last_updated_by',
+        field: 'updated_by',
         headerName: 'Last Updated By',
         flex: 1,
         id: 5,
@@ -1708,6 +1708,27 @@ export const reportRequestColumns = [
     }
 
 ];
+
+
+
+export const categoryColumns = [
+    {
+        field: 'name',
+        headerName: 'Category Name',
+        flex: 1,
+        id: 0,
+        for: ['admin','mentor']
+    },
+    {
+        field: 'count_members',
+        headerName: 'Count',
+        flex: 1,
+        id: 1,
+        for: ['admin','mentor']
+    }
+
+];
+
 
 const programRequestList = () => {
     const data = []
