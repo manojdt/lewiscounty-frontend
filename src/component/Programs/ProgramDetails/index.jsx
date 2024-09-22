@@ -89,15 +89,15 @@ export default function ProgramDetails() {
         setCertificateActiveTab(key)
     }
 
-    const programNotReady = ['yettoapprove','draft']
+    const programNotReady = ['yettoapprove', 'draft']
 
     useEffect(() => {
         if (Object.keys(programdetails).length && !programLoading) {
             console.log('programdetails.status', programdetails.status)
-            const notAllowedCond = ['completed','yettoapprove','draft']
+            const notAllowedCond = ['completed', 'yettoapprove', 'draft']
 
             if (!notAllowedCond.includes(programdetails.status)) {
-                if (role === 'mentee'  && menteeJoined === true) {
+                if (role === 'mentee' && menteeJoined === true) {
                     navigate(`${pipeUrls.startprogram}/${params.id}`)
                 }
 
@@ -536,7 +536,7 @@ export default function ProgramDetails() {
                                                     cursor: 'not-allowed'
                                                 }}
                                                     onClick={() => undefined}
-                                                >Cancelled Request
+                                                >Cancelled
                                                 </button>
                                             </div>
                                         }
@@ -574,6 +574,24 @@ export default function ProgramDetails() {
                                     </div>
 
                                 </div>
+
+
+                                {
+                                    role !== 'mentee' && (programdetails.status === programActionStatus.cancelled) &&
+                                    <div className={`action-set action_${programdetails.status}`}>
+                                        <div className='reason-title'>
+                                            {programdetails.status === programActionStatus.cancelled ? 'Cancelled ' : ''} Reason
+                                        </div>
+                                        <div className='reason-content'>
+                                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever
+                                            since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.It has survived not only five
+                                            centuries, but also the leap into electronic typesetting,
+                                            remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages,
+                                            and more recently with desktop.
+                                        </div>
+
+                                    </div>
+                                }
 
                                 {/* Detail Section */}
                                 <div className='details-section px-6 py-11 mb-10' style={{ background: 'rgba(249, 249, 249, 1)', borderRadius: '10px' }}>
