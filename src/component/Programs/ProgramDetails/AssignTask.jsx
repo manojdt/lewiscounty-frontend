@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-
+import { Calendar } from 'primereact/calendar';
 
 import UserImage from "../../../assets/images/user.jpg";
 import LocationIcon from '../../../assets/images/Location1x.png';
@@ -50,6 +50,7 @@ import useTimer from '../../../hooks/useTimer';
 import SkillsSet from '../../SkillsSet';
 import api from '../../../services/api';
 import { programCancelRequest, programRescheduleRequest, updateLocalRequest } from '../../../services/request';
+import './details.css'
 
 
 export default function AssignTask() {
@@ -73,6 +74,7 @@ export default function AssignTask() {
     const [startProgramModal, setStartProgramModal] = useState({ loading: false, success: false })
     const [moreMenuModal, setMoreMenuModal] = useState({ share: false, reschedule: false })
     const [timer, setTimer] = useState({ hrs: 0, min: 20, sec: 0, })
+    const [dateFormat, setDateFormat] = useState({})
     const role = userdetails.data.role || ''
 
     const open = Boolean(anchorEl);
@@ -90,7 +92,8 @@ export default function AssignTask() {
         reset
     } = useForm();
 
-    console.log('location', location, location.pathname.split('/'))
+
+
 
 
     const tabs = [
@@ -190,12 +193,32 @@ export default function AssignTask() {
         console.log('test', data)
 
         if (moreMenuModal.reschedule) {
-            dispatch(programRescheduleRequest({
-                reschedule_date: "2024-09-28",
+
+            const timeFormat = (utcTimestamp) => {
+                console.log('utcTimestamp  --', utcTimestamp)
+                let timeString = ''
+                const t = utcTimestamp.toString().split(' ')
+                if (t.length > 4) {
+                    let time = t[4].split(':')
+                    timeString = `${time[0]}:${time[1]}`
+                }
+                return timeString
+            }
+
+            const date = new Date(data.reschedule_date);
+
+            // Format the date to "YYYY-MM-DD"
+            const formattedDate = date.toISOString().split('T')[0];
+
+            const payload = {
+                reschedule_date: formattedDate,
                 program_id: params.id,
-                reschedule_time: "12:00",
-                reason: "test"
-            }))
+                reschedule_time: timeFormat(data.reschedule_time),
+                reason: data.reason
+            }
+
+
+            dispatch(programRescheduleRequest(payload))
         }
 
         if (moreMenuModal.cancel) {
@@ -223,6 +246,8 @@ export default function AssignTask() {
     useEffect(() => {
         if (requestStatusInfo === requestStatus.reschedule || requestStatusInfo === requestStatus.cancel) {
             setMoreMenuModal({ share: false, reschedule: false })
+            reset()
+            setDateFormat({})
             setTimeout(() => {
                 dispatch(getProgramDetails(parseInt(params.id)))
                 dispatch(updateLocalRequest({ status: '' }))
@@ -266,8 +291,6 @@ export default function AssignTask() {
 
     }, [params.id])
 
-    console.log('error', errors)
-
     useEffect(() => {
         if (Object.keys(programdetails).length) {
             setLoading({ ...loading, initial: false })
@@ -297,15 +320,32 @@ export default function AssignTask() {
         }
     }, [programdetails, role])
 
+    const handleDateClick = () => {
+        document.querySelector('.p-datepicker')?.classList.add('program-date')
+    }
 
+    const handleTimeClick = () => {
+        document.querySelector('.p-datepicker')?.classList.add('program-time')
+    }
+
+
+    useEffect(() => {
+        return () => {
+            document.querySelector('.p-datepicker')?.classList.remove('program-date')
+            document.querySelector('.p-datepicker')?.classList.remove('program-time')
+        }
+    }, [])
+
+
+    const dateField = register('reschedule_date', { required: "This field is required" })
+    const timeField = register('reschedule_time', { required: "This field is required" })
 
     return (
         <div className="px-9 my-6 grid">
 
             <Backdrop
-                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                sx={{ color: '#fff', zIndex: 9999999}}
                 open={loading.initial || loading.join || programLoading || requestLoading}
-
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
@@ -862,9 +902,9 @@ export default function AssignTask() {
                                     <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
                                         style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
                                         <img src={SuccessTik} alt="SuccessTik" />
-                                        <p className='text-white text-[12px]'>Program {requestStatusInfo === requestStatus.reschedule ? 'Rescheduled ' : 
+                                        <p className='text-white text-[12px]'>Program {requestStatusInfo === requestStatus.reschedule ? 'Rescheduled ' :
                                             requestStatusInfo === requestStatus.cancel ? 'Cancelled ' : ''
-                                            } Successfully</p>
+                                        } Successfully</p>
                                     </div>
 
                                 </div>
@@ -922,18 +962,25 @@ export default function AssignTask() {
                                                             Reschedule Date
                                                         </label>
 
-                                                        <div className='relative'>
-                                                            <input
-                                                                {...register('reschedule_date', { required: "This field is required" })}
-                                                                type={'text'}
-                                                                className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg 
-                                                                                focus:border-none focus-visible:border-none 
-                                                                                focus-visible:outline-none text-[14px] h-[60px]"
-                                                                placeholder={''}
-                                                                style={{
-                                                                    color: "#232323",
-                                                                    borderRadius: '3px'
-                                                                }} />
+                                                        <div className='relative input-bg'>
+                                                            <Calendar
+                                                                className='calendar-control w-full'
+                                                                {...dateField}
+                                                                value={dateFormat['reschedule_date']}
+                                                                onChange={(e) => {
+                                                                    dateField.onChange(e)
+                                                                    setDateFormat({ ...dateFormat, ['reschedule_date']: e.value })
+                                                                }}
+                                                                onClick={handleDateClick}
+                                                                disabled={false}
+                                                                minDate={new Date(programdetails.start_date)}
+                                                                maxDate={new Date(programdetails.end_date)}
+                                                                showTime={false}
+                                                                hourFormat="12"
+                                                                dateFormat="dd/mm/yy"
+                                                                style={{ width: '60%' }}
+                                                            />
+
                                                             <img className='absolute top-5 right-2' src={CalendarIcon} alt="CalendarIcon" />
                                                         </div>
                                                         {errors['reschedule_date'] && (
@@ -950,17 +997,22 @@ export default function AssignTask() {
                                                         </label>
 
                                                         <div className='relative'>
-                                                            <input
-                                                                {...register('reschedule_time', { required: "This field is required" })}
-                                                                type={'text'}
-                                                                className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg 
-                                                                                focus:border-none focus-visible:border-none 
-                                                                                focus-visible:outline-none text-[14px] h-[60px]"
-                                                                placeholder={''}
-                                                                style={{
-                                                                    color: "#232323",
-                                                                    borderRadius: '3px'
-                                                                }} />
+
+                                                            <Calendar
+                                                                className='calendar-control input-bg'
+                                                                {...timeField}
+                                                                value={dateFormat['reschedule_time']}
+                                                                onChange={(e) => {
+                                                                    timeField.onChange(e)
+                                                                    setDateFormat({ ...dateFormat, ['reschedule_time']: e.value })
+                                                                }}
+                                                                onClick={handleTimeClick}
+                                                                timeOnly
+                                                                time
+                                                            />
+
+
+
                                                             <img className='absolute top-5 right-2' src={CalendarIcon} alt="CalendarIcon" />
                                                         </div>
                                                         {errors['reschedule_time'] && (
