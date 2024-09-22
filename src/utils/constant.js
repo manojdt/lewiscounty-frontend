@@ -197,7 +197,14 @@ export const calendarStatus = {
 
 export const requestStatus = {
   load: 'loaded',
-  programupdate: 'programupdated'
+  programupdate: 'programupdated',
+  goalupdate: 'goalupdated',
+  categoryload: 'categoryloaded',
+  memberload: 'memberloaded',
+  memberupdate: 'memberupdated',
+  membercancel: 'membercancelled',
+  reschedule: 'rescheduled',
+  cancel: 'cancelled'
 }
 
 export const profileStatus = {
@@ -466,7 +473,7 @@ export const PasswordRulesSet = {
   common: 'common',
 }
 
-export const statusAction = ['yettoapprove', 'yettojoin', 'yettostart', 'inprogress', 'completed', 'cancelled', 'bookmarked']
+export const statusAction = ['yettoapprove', 'yettojoin', 'yettostart', 'inprogress', 'completed', 'cancelled', 'bookmarked','draft']
 
 export const programActionStatus = {
   all: 'all',
@@ -480,7 +487,9 @@ export const programActionStatus = {
   cancelled: 'cancelled',
   learning: 'learning',
   bookmark: 'bookmarked',
-  planned: 'planned'
+  planned: 'planned',
+  draft: 'draft',
+  reschedule: 'reschedule' 
 }
 
 
@@ -508,9 +517,11 @@ export const programFilterUrls = {
   yettostart: `?type=${programActionStatus.yettostart}`,
   inprogress: `?type=${programActionStatus.inprogress}`,
   completed: `?type=${programActionStatus.completed}`,
+  reschedule: `?type=${programActionStatus.reschedule}`,
   cancelled: `?type=${programActionStatus.cancelled}`,
   learning: `?type=${programActionStatus.learning}`,
   bookmark: '?is_bookmark=true',
+  draft: `?type=${programActionStatus.draft}`
 }
 
 export const menteeCountStatus = {
@@ -554,6 +565,13 @@ export const programMenus = (page = 'dashboard') => {
       status: programActionStatus.yettojoin
     },
     {
+      name: "Draft Programs",
+      count: 0,
+      page: `${pipeUrl}${programFilterUrls.draft}`,
+      for: ['mentor'],
+      status: programActionStatus.draft
+    },
+    {
       name: "My Learning Programs",
       count: 0,
       page: `${pipeUrl}${programFilterUrls.learning}`,
@@ -575,6 +593,13 @@ export const programMenus = (page = 'dashboard') => {
       status: programActionStatus.bookmark
     },
     {
+      name: "Reschdule Programs",
+      count: 0,
+      page: `${pipeUrl}${programFilterUrls.reschedule}`,
+      for: ['mentor'],
+      status: programActionStatus.reschedule
+    },
+    {
       name: "Completed Programs",
       count: 0,
       page: `${pipeUrl}${programFilterUrls.completed}`,
@@ -582,10 +607,10 @@ export const programMenus = (page = 'dashboard') => {
       status: programActionStatus.completed
     },
     {
-      name: "Aborts Programs",
+      name: "Cancelled Programs",
       count: 0,
       page: `${pipeUrl}${programFilterUrls.cancelled}`,
-      for: ['mentee'],
+      for: ['mentee', 'mentor'],
       status: programActionStatus.cancelled
     }
   ]

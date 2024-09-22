@@ -31,9 +31,11 @@ const initialState = {
   yettostart: [],
   inprogress: [],
   completed: [],
+  draft: [],
   learning: [],
   cancelled: [],
   bookmarked: [],
+  reschedule: [],
   programsCounts: {},
   statusCounts: {
     yettoapprove: 0,

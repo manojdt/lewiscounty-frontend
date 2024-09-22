@@ -42,12 +42,14 @@ import MuiModal from '../../../shared/Modal';
 import { Button } from '../../../shared';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { pipeUrls, programActionStatus, programStatus } from '../../../utils/constant';
+import { pipeUrls, programActionStatus, programStatus, requestStatus } from '../../../utils/constant';
 import { updateNewPrograms } from '../../../services/programInfo';
 import { getProgramDetails, updateProgram } from '../../../services/userprograms';
 import { Backdrop, CircularProgress } from '@mui/material';
 import useTimer from '../../../hooks/useTimer';
 import SkillsSet from '../../SkillsSet';
+import api from '../../../services/api';
+import { programCancelRequest, programRescheduleRequest, updateLocalRequest } from '../../../services/request';
 
 
 export default function AssignTask() {
@@ -61,6 +63,7 @@ export default function AssignTask() {
     const userdetails = useSelector(state => state.userInfo)
     const { programdetails, loading: programLoading, error, status } = useSelector(state => state.userPrograms)
 
+    const { loading: requestLoading, status: requestStatusInfo, error: requestError } = useSelector(state => state.requestList);
     const [currentPage, setCurrentPage] = useState('')
     const location = useLocation()
     const [anchorEl, setAnchorEl] = useState(null);
@@ -129,13 +132,23 @@ export default function AssignTask() {
     }
 
 
-    const handleActionPage = () => {
+    const handleActionPage = async () => {
+
+
+
         if (programdetails.status === programActionStatus.yettostart) {
             navigate(`${pipeUrls.assignmentess}/${programdetails.id}`)
         }
 
         if (programdetails.status === programActionStatus.assigned) {
-            dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.inprogress }))
+            setLoading({ initial: true, task: false })
+            const startProgramRequest = await api.post('start_program', { id: parseInt(params.id) });
+            if (startProgramRequest.status === 201 && startProgramRequest.data) {
+                console.log('mssss', startProgramRequest)
+                setLoading({ initial: false, task: false })
+                dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.inprogress }))
+            }
+
         }
 
         if (programdetails.status === programActionStatus.inprogress) {
@@ -161,6 +174,11 @@ export default function AssignTask() {
                 setMoreMenuModal({ ...moreMenuModal, reschedule: true })
                 handleClose()
                 break;
+
+            case 'cancel':
+                setMoreMenuModal({ ...moreMenuModal, reschedule: false, cancel: true })
+                handleClose()
+                break;
             case 'discussion':
                 break;
             default:
@@ -169,7 +187,24 @@ export default function AssignTask() {
     }
 
     const onSubmit = (data) => {
-        console.log(data)
+        console.log('test', data)
+
+        if (moreMenuModal.reschedule) {
+            dispatch(programRescheduleRequest({
+                reschedule_date: "2024-09-28",
+                program_id: params.id,
+                reschedule_time: "12:00",
+                reason: "test"
+            }))
+        }
+
+        if (moreMenuModal.cancel) {
+            dispatch(programCancelRequest({
+                program_id: params.id,
+                reason: data.cancel_reason
+            }))
+        }
+        console.log('moreMenuModal', moreMenuModal)
         // reset()
     }
 
@@ -178,6 +213,23 @@ export default function AssignTask() {
         dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.completed }))
         navigate(`/program-completion/${programId}`)
     }
+
+    const handleMoreMenuClosePopup = () => {
+        setMoreMenuModal({ share: false, reschedule: false, cancel: false })
+        reset()
+    }
+
+
+    useEffect(() => {
+        if (requestStatusInfo === requestStatus.reschedule || requestStatusInfo === requestStatus.cancel) {
+            setMoreMenuModal({ share: false, reschedule: false })
+            setTimeout(() => {
+                dispatch(getProgramDetails(parseInt(params.id)))
+                dispatch(updateLocalRequest({ status: '' }))
+
+            }, 3000)
+        }
+    }, [requestStatusInfo])
 
     useEffect(() => {
         const pathname = location.pathname.split('/')
@@ -214,11 +266,13 @@ export default function AssignTask() {
 
     }, [params.id])
 
+    console.log('error', errors)
+
     useEffect(() => {
         if (Object.keys(programdetails).length) {
             setLoading({ ...loading, initial: false })
 
-            if(role === 'mentee' && window.location.href.includes('assign-task')){
+            if (role === 'mentee' && window.location.href.includes('assign-task')) {
                 navigate(`/start-program/${programdetails.id}`)
             }
 
@@ -250,7 +304,7 @@ export default function AssignTask() {
 
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={loading.initial || loading.join || programLoading}
+                open={loading.initial || loading.join || programLoading || requestLoading}
 
             >
                 <CircularProgress color="inherit" />
@@ -298,16 +352,16 @@ export default function AssignTask() {
                                             {
                                                 currentPage === 'assigntask1' ?
                                                     <>
-                                                        <MenuItem onClick={() => handleMenu('create-taskk')} className='!text-[12px]'>
+                                                        <MenuItem onClick={() => handleMenu('create-task')} className='!text-[12px]'>
                                                             <img src={CreateTaskIcon} alt="CreateTaskIcon" className='pr-3 w-[25px]' />
                                                             Create Task for Mentees</MenuItem>
-                                                        <MenuItem onClick={() => handleMenu('sharee')} className='!text-[12px]'>
+                                                        <MenuItem onClick={() => handleMenu('share')} className='!text-[12px]'>
                                                             <img src={ShareIcon} alt="ShareIcon" className='pr-3 w-[25px]' />
                                                             Share
                                                         </MenuItem>
-                                                        <MenuItem onClick={() => handleMenu('reschedulee')} className='!text-[12px]'>
+                                                        <MenuItem onClick={() => handleMenu('reschedule')} className='!text-[12px]'>
                                                             <img src={RescheduleIcon} alt="RescheduleIcon" className='pr-3 w-[25px]' /> Reschedule</MenuItem>
-                                                        <MenuItem onClick={() => handleMenu('discussionn')} className='!text-[12px]'>
+                                                        <MenuItem onClick={() => handleMenu('discussion')} className='!text-[12px]'>
                                                             <img src={DiscussionsIcon} alt="DiscussionsIcon" className='pr-3 w-[25px]' />Discussions</MenuItem>
                                                     </>
                                                     :
@@ -322,12 +376,12 @@ export default function AssignTask() {
                                                             }
 
                                                             {
-                                                                programdetails.status === programActionStatus.inprogress &&
-                                                                <MenuItem onClick={handleClose} className='!text-[12px]'>
+                                                                programdetails.status !== programActionStatus.inprogress &&
+                                                                <MenuItem onClick={() => handleMenu('cancel')} className='!text-[12px]'>
                                                                     <img src={AbortIcon} alt="AbortIcon" className='pr-3 w-[25px]' />
                                                                     Abort</MenuItem>
                                                             }
-                                                            <MenuItem onClick={handleClose} className='!text-[12px]'>
+                                                            <MenuItem onClick={() => handleMenu('reschedule')} className='!text-[12px]'>
                                                                 <img src={RescheduleIcon} alt="RescheduleIcon" className='pr-3 w-[25px]' />
                                                                 Reschedule
                                                             </MenuItem>
@@ -467,7 +521,7 @@ export default function AssignTask() {
                                                                 <span className="text-[12px]" style={{ color: 'rgba(118, 118, 118, 1)' }}>Hrs</span>
                                                             </p>
                                                             <p className="flex flex-col gap-2 items-center justify-center">
-                                                                <span className='px-2 py-1 text-[20px] w-[40px] flex justify-center items-center' 
+                                                                <span className='px-2 py-1 text-[20px] w-[40px] flex justify-center items-center'
                                                                     style={{ background: 'rgba(231, 241, 242, 1)', color: 'rgba(0, 174, 189, 1)', borderRadius: '5px', fontWeight: 700 }}>{timerData.minutes}</span>
                                                                 <span className="text-[12px]" style={{ color: 'rgba(118, 118, 118, 1)' }}>Mins</span>
                                                             </p>
@@ -609,8 +663,8 @@ export default function AssignTask() {
 
 
                                 {
-                                    role === 'mentee' && (programdetails.status === programActionStatus.inprogress || programdetails.status === programActionStatus.paused) && 
-                                        <SkillsSet programdetails={programdetails} />
+                                    role === 'mentee' && (programdetails.status === programActionStatus.inprogress || programdetails.status === programActionStatus.paused) &&
+                                    <SkillsSet programdetails={programdetails} />
                                 }
 
 
@@ -803,6 +857,19 @@ export default function AssignTask() {
                                 </div>
                             </MuiModal>
 
+                            <MuiModal modalOpen={requestStatusInfo === requestStatus.reschedule || requestStatusInfo === requestStatus.cancel} modalClose={() => undefined} noheader>
+                                <div className='px-5 py-1 flex justify-center items-center'>
+                                    <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
+                                        style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
+                                        <img src={SuccessTik} alt="SuccessTik" />
+                                        <p className='text-white text-[12px]'>Program {requestStatusInfo === requestStatus.reschedule ? 'Rescheduled ' : 
+                                            requestStatusInfo === requestStatus.cancel ? 'Cancelled ' : ''
+                                            } Successfully</p>
+                                    </div>
+
+                                </div>
+                            </MuiModal>
+
                             <MuiModal modalOpen={startProgramModal.success} modalClose={() => setStartProgramModal({ loading: false, success: false })} noheader>
                                 <div className='px-5 py-1 flex justify-center items-center'>
                                     <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
@@ -814,7 +881,7 @@ export default function AssignTask() {
                                 </div>
                             </MuiModal>
 
-                            <MuiModal modalOpen={moreMenuModal.share} modalClose={() => setMoreMenuModal({ share: false, reschedule: false })} noheader>
+                            <MuiModal modalOpen={moreMenuModal.share} modalClose={handleMoreMenuClosePopup} noheader>
                                 <div className='px-5 py-1 flex justify-center items-center' style={{ border: '1px solid rgba(29, 91, 191, 1)' }}>
                                     <div className='flex justify-center items-center flex-col gap-8 py-10 px-20 mt-5'
                                     >
@@ -829,89 +896,180 @@ export default function AssignTask() {
                                         </div>
 
                                         <div className="flex  justify-center align-middle pt-4">
-                                            <Button btnType="button" onClick={() => setMoreMenuModal({ share: false, reschedule: false })} btnName='Close' btnCategory="primary" />
+                                            <Button btnType="button" onClick={handleMoreMenuClosePopup} btnName='Close' btnCategory="primary" />
                                         </div>
                                     </div>
 
                                 </div>
                             </MuiModal>
 
+                            {
+                                moreMenuModal.reschedule &&
 
-                            <MuiModal modalOpen={moreMenuModal.reschedule} modalClose={() => setMoreMenuModal({ share: false, reschedule: false })} noheader>
-                                <div style={{ border: '1px solid rgba(29, 91, 191, 1)' }}>
-                                    <div className='flex justify-between items-center px-3 py-4 mx-1' style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
-                                        <div>Reschedule Teaching Program</div>
-                                        <img className='cursor-pointer' onClick={() => setMoreMenuModal({ share: false, reschedule: false })} src={CancelIcon} alt="CancelIcon" />
-                                    </div>
-                                    <div className='px-4 py-7'>
+                                <MuiModal modalOpen={moreMenuModal.reschedule} modalClose={handleMoreMenuClosePopup} noheader>
+                                    <div style={{ border: '1px solid rgba(29, 91, 191, 1)' }}>
+                                        <div className='flex justify-between items-center px-3 py-4 mx-1' style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
+                                            <div>Reschedule Teaching Program</div>
+                                            <img className='cursor-pointer' onClick={() => setMoreMenuModal({ share: false, reschedule: false })} src={CancelIcon} alt="CancelIcon" />
+                                        </div>
                                         <form onSubmit={handleSubmit(onSubmit)}>
-                                            <div className="flex flex-wrap gap-4">
+                                            <div className='px-4 py-7'>
 
-                                                <div className={`relative mb-6 w-[48%]`} >
-                                                    <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor={'Reschedule Date'}>
-                                                        Reschedule Date
-                                                    </label>
+                                                <div className="flex flex-wrap gap-4">
 
-                                                    <div className='relative'>
-                                                        <input
-                                                            {...register('date', {})}
-                                                            type={'text'}
-                                                            className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg 
+                                                    <div className={`relative mb-6 w-[48%]`} >
+                                                        <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor={'Reschedule Date'}>
+                                                            Reschedule Date
+                                                        </label>
+
+                                                        <div className='relative'>
+                                                            <input
+                                                                {...register('reschedule_date', { required: "This field is required" })}
+                                                                type={'text'}
+                                                                className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg 
                                                                                 focus:border-none focus-visible:border-none 
                                                                                 focus-visible:outline-none text-[14px] h-[60px]"
-                                                            placeholder={''}
-                                                            style={{
-                                                                color: "#232323",
-                                                                borderRadius: '3px'
-                                                            }} />
-                                                        <img className='absolute top-5 right-2' src={CalendarIcon} alt="CalendarIcon" />
+                                                                placeholder={''}
+                                                                style={{
+                                                                    color: "#232323",
+                                                                    borderRadius: '3px'
+                                                                }} />
+                                                            <img className='absolute top-5 right-2' src={CalendarIcon} alt="CalendarIcon" />
+                                                        </div>
+                                                        {errors['reschedule_date'] && (
+                                                            <p className="error" role="alert">
+                                                                {errors['reschedule_date'].message}
+                                                            </p>
+                                                        )}
+
                                                     </div>
-                                                </div>
 
-                                                <div className={`relative mb-6 w-[48%]`} >
-                                                    <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor={'Reschedule Date'}>
-                                                        Reschedule Time
-                                                    </label>
+                                                    <div className={`relative mb-6 w-[48%]`} >
+                                                        <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor={'Reschedule Date'}>
+                                                            Reschedule Time
+                                                        </label>
 
-                                                    <div className='relative'>
-                                                        <input
-                                                            {...register('time', {})}
-                                                            type={'text'}
-                                                            className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg 
+                                                        <div className='relative'>
+                                                            <input
+                                                                {...register('reschedule_time', { required: "This field is required" })}
+                                                                type={'text'}
+                                                                className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg 
                                                                                 focus:border-none focus-visible:border-none 
                                                                                 focus-visible:outline-none text-[14px] h-[60px]"
-                                                            placeholder={''}
-                                                            style={{
-                                                                color: "#232323",
-                                                                borderRadius: '3px'
-                                                            }} />
-                                                        <img className='absolute top-5 right-2' src={CalendarIcon} alt="CalendarIcon" />
-                                                    </div>
-                                                </div>
+                                                                placeholder={''}
+                                                                style={{
+                                                                    color: "#232323",
+                                                                    borderRadius: '3px'
+                                                                }} />
+                                                            <img className='absolute top-5 right-2' src={CalendarIcon} alt="CalendarIcon" />
+                                                        </div>
+                                                        {errors['reschedule_time'] && (
+                                                            <p className="error" role="alert">
+                                                                {errors['reschedule_time'].message}
+                                                            </p>
+                                                        )}
 
-                                                <div className={`relative mb-6 w-full`} >
-                                                    <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor={'Comments'}>
-                                                        Comments
-                                                    </label>
-                                                    <textarea id="message" rows="4" className={`block p-2.5 input-bg w-full text-sm text-gray-900  rounded-lg border
+                                                    </div>
+
+                                                    <div className={`relative mb-6 w-full`} >
+                                                        <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor={'Comments'}>
+                                                            Comments
+                                                        </label>
+                                                        <textarea id="message" rows="4" className={`block p-2.5 input-bg w-full text-sm text-gray-900  rounded-lg border
                                                                    focus:visible:outline-none focus:visible:border-none}`}
-                                                        placeholder={''}
-                                                        {...register('comments', {})}></textarea>
+                                                            placeholder={''}
+                                                            {...register('reason', { required: "This field is required" })}></textarea>
+
+                                                        {errors['reason'] && (
+                                                            <p className="error" role="alert">
+                                                                {errors['reason'].message}
+                                                            </p>
+                                                        )}
+                                                    </div>
+
                                                 </div>
+
+                                            </div>
+
+
+                                            <div className="flex gap-6 justify-center align-middle py-5">
+                                                <Button btnName='Cancel' btnCategory="secondary" onClick={() => setMoreMenuModal({ share: false, reschedule: false })} />
+                                                {/* <Button btnType="submit" btnCls="w-[170px]" btnName={'Submit'} btnCategory="primary" /> */}
+                                                <Button btnType="submit"
+                                                    // onClick={() => {
+                                                    //     setMoreMenuModal({ share: false, reschedule: false });
+                                                    //     setStartProgramModal({ loading: false, success: true })
+                                                    // }} 
+
+                                                    btnName='Submit' btnCategory="primary" />
                                             </div>
                                         </form>
                                     </div>
+                                </MuiModal>
+
+                            }
+
+                            {
+                                moreMenuModal.cancel &&
+
+                                <MuiModal modalSize='md' modalOpen={moreMenuModal.cancel} modalClose={handleMoreMenuClosePopup} noheader>
+
+                                    <div className='px-5 py-5'>
+                                        <div className='flex justify-center flex-col gap-5  mt-4 mb-4'
+                                            style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '10px', }}>
+                                            <div className='flex justify-between px-3 py-4 items-center' style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
+                                                <p className='text-[18px]' style={{ color: 'rgba(0, 0, 0, 1)' }}>Cancel Request Reason </p>
+                                                <img className='cursor-pointer' onClick={handleMoreMenuClosePopup} src={CancelIcon} alt="CancelIcon" />
+                                            </div>
+
+                                            <div className='px-5'>
+                                                {
+                                                    requestError !== '' ? <p className="error" role="alert">{requestError}</p> : null
+                                                }
+
+                                                <form onSubmit={handleSubmit(onSubmit)}>
+                                                    <div className='relative pb-8'>
+                                                        <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
+                                                            Cancel Reason
+                                                        </label>
+
+                                                        <div className='relative'>
+                                                            <textarea
+                                                                {...register('cancel_reason', {
+                                                                    required: "This field is required",
+                                                                })}
+                                                                id="message" rows="4" className={`block p-2.5 input-bg w-full text-sm text-gray-900  border
+                                                                focus-visible:outline-none focus-visible:border-none`}
+                                                                style={{ border: '2px solid rgba(229, 0, 39, 1)' }}
+                                                                placeholder={''}
+                                                            ></textarea>
+                                                            {errors['cancel_reason'] && (
+                                                                <p className="error" role="alert">
+                                                                    {errors['cancel_reason'].message}
+                                                                </p>
+                                                            )}
+                                                        </div>
+                                                    </div>
+
+                                                    <div className='flex justify-center gap-5 items-center pt-5 pb-10'>
+                                                        <Button btnName='Cancel' btnCls="w-[18%]" btnCategory="secondary" onClick={handleMoreMenuClosePopup} />
+                                                        <button
+                                                            type='submit'
+                                                            className='text-white py-3 px-7 w-[18%]'
+                                                            style={{ background: 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)', borderRadius: '3px' }}>
+                                                            Submit
+                                                        </button>
+                                                    </div>
+                                                </form>
+
+                                            </div>
 
 
-                                    <div className="flex gap-6 justify-center align-middle py-5">
-                                        <Button btnName='Cancel' btnCategory="secondary" onClick={() => setMoreMenuModal({ share: false, reschedule: false })} />
-                                        <Button btnType="button" onClick={() => {
-                                            setMoreMenuModal({ share: false, reschedule: false });
-                                            setStartProgramModal({ loading: false, success: true })
-                                        }} btnName='Submit' btnCategory="primary" />
+                                        </div>
+
                                     </div>
-                                </div>
-                            </MuiModal>
+                                </MuiModal>
+                            }
 
 
                             <MuiModal modalOpen={startProgramModal.success} modalClose={() => setStartProgramModal({ loading: false, success: false })} noheader>

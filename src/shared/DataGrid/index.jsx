@@ -243,7 +243,7 @@ export default function DataTable({ rows, columns, footerAction, footerComponent
     });
 
     const handleRowSelection = (ids) => {
-        const selected = [...rows].filter(row => ids.includes(row.id))
+        const selected = [...rows].filter(row => ids.includes(row.id || row.categories_id))
         // console.log('se', selected)
         setSelectedIds(ids)
         setSelectedRows(selected)
@@ -264,7 +264,7 @@ export default function DataTable({ rows, columns, footerAction, footerComponent
                 rows={rows}
                 columns={columns}
                 hideFooterPagination={hideFooter}
-                getRowId={(row) => row.id || row.first_name}
+                getRowId={(row) => row.id || row.first_name || row.categories_id}
                 checkboxSelection={!hideCheckbox}
                 onPageChange={(e) => console.log('change', e)}
                 {
