@@ -785,3 +785,12 @@ export const TaskApiStatus = {
   load: 'loaded',
   updatemark: 'updatemark'
 }
+
+export const ProgramStatusInCard = {
+  inprogress: { text: 'Ongoing', color: '#FF8A00', bg: '#FFE3C2'},
+  yettostart: { text: 'Ongoing', color: '#FF8A00', bg: '#FFE3C2'},
+  assigned:{ text: 'Ongoing', color: '#FF8A00', bg: '#FFE3C2'},
+  paused: { text: 'Ongoing', color: '#FF8A00', bg: '#FFE3C2'},
+  completed: { text: 'Completed', color: 'rgb(22, 182, 129)', bg: 'rgb(235, 255, 243)'},
+  cancelled: { text: 'Cancelled', color: 'rgb(224, 56, 45)', bg: 'rgb(255, 231, 231)'}
+}
