@@ -91,6 +91,14 @@ export default function ProgramDetails() {
 
     const programNotReady = ['yettoapprove', 'draft']
 
+    const programApprovalStage = {
+        yettoapprove: {status: 'yettoapprove', text: 'Waiting for admin approval'},
+        join_request_submitted: {status: 'join_request_submitted', text: 'Waiting for admin approval'},
+        start_request_submitted: {status: 'start_request_submitted', text: 'Waiting for admin approval'},
+        schedule_request_submitted: {status: 'schedule_request_submitted', text: 'Waiting for admin approval'},
+        cancel_request_submitted: {status: 'cancel_request_submitted', text: 'Waiting for admin approval'},
+    }
+
     useEffect(() => {
         if (Object.keys(programdetails).length && !programLoading) {
             console.log('programdetails.status', programdetails.status)
@@ -439,7 +447,7 @@ export default function ProgramDetails() {
                                         {
                                             role === 'mentor' ?
                                                 <>
-                                                    {programdetails.status === 'yettoapprove' ?
+                                                    { programApprovalStage[programdetails.status] ?
                                                         <div className='flex gap-4 pt-10' >
                                                             <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
                                                                 border: "1px solid #E0382D",
@@ -448,11 +456,11 @@ export default function ProgramDetails() {
                                                                 cursor: 'not-allowed'
                                                             }}
                                                                 onClick={() => undefined}
-                                                            >Waiting for admin approval
+                                                            >{programApprovalStage[programdetails.status]?.text}
                                                             </button>
                                                         </div>
                                                         :
-                                                        programdetails.status === 'draft' ?
+                                                            programdetails.status === 'draft'  ?
                                                             <div className='py-9'>
                                                                 <div className='py-3 px-16 text-white text-[14px] flex justify-center items-center' style={{
                                                                     background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",

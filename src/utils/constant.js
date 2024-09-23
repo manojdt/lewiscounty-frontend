@@ -484,6 +484,7 @@ export const programActionStatus = {
   paused: 'paused',
   inprogress: 'inprogress',
   completed: 'completed',
+  started: 'started',
   cancelled: 'cancelled',
   learning: 'learning',
   bookmark: 'bookmarked',

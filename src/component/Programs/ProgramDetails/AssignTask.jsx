@@ -149,9 +149,13 @@ export default function AssignTask() {
             if (startProgramRequest.status === 201 && startProgramRequest.data) {
                 console.log('mssss', startProgramRequest)
                 setLoading({ initial: false, task: false })
-                dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.inprogress }))
+                dispatch(getProgramDetails(parseInt(params.id)))
+                // dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.inprogress }))
             }
+        }
 
+        if(programdetails.status === programActionStatus.started){
+            dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.inprogress }))
         }
 
         if (programdetails.status === programActionStatus.inprogress) {
@@ -337,6 +341,14 @@ export default function AssignTask() {
     }, [])
 
 
+    const programApprovalStage = {
+        yettoapprove: { status: 'yettoapprove', text: 'Waiting for admin approval' },
+        join_request_submitted: { status: 'join_request_submitted', text: 'Waiting for admin approval' },
+        start_request_submitted: { status: 'start_request_submitted', text: 'Waiting for admin approval' },
+        schedule_request_submitted: { status: 'schedule_request_submitted', text: 'Waiting for admin approval' },
+        cancel_request_submitted: { status: 'cancel_request_submitted', text: 'Waiting for admin approval' },
+    }
+
     const dateField = register('reschedule_date', { required: "This field is required" })
     const timeField = register('reschedule_time', { required: "This field is required" })
 
@@ -344,7 +356,7 @@ export default function AssignTask() {
         <div className="px-9 my-6 grid">
 
             <Backdrop
-                sx={{ color: '#fff', zIndex: 9999999}}
+                sx={{ color: '#fff', zIndex: 9999999 }}
                 open={loading.initial || loading.join || programLoading || requestLoading}
             >
                 <CircularProgress color="inherit" />
@@ -548,7 +560,40 @@ export default function AssignTask() {
 
                                         <div className='py-9'>
                                             {
+                                                role === 'mentor' ?
+                                                    <>
+                                                        {programApprovalStage[programdetails.status] ?
+                                                            <div className='flex gap-4 pt-10' >
+                                                                <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                                    border: "1px solid #E0382D",
+                                                                    borderRadius: '5px',
+                                                                    color: '#E0382D',
+                                                                    cursor: 'not-allowed'
+                                                                }}
+                                                                    onClick={() => undefined}
+                                                                >{programApprovalStage[programdetails.status]?.text}
+                                                                </button>
+                                                            </div>
+                                                            :
+                                                            programdetails.status === 'draft' ?
+                                                                <div className='py-9'>
+                                                                    <div className='py-3 px-16 text-white text-[14px] flex justify-center items-center' style={{
+                                                                        background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
+                                                                        borderRadius: '5px',
+                                                                        width: '30%'
+                                                                    }}>Drafted</div>
+                                                                </div>
+                                                                :
+
+                                                                null
+                                                        }
+                                                    </>
+                                                    : null
+
+                                            }
+                                            {
                                                 programdetails.status === programActionStatus.inprogress || programdetails.status === programActionStatus.paused
+                                                || programdetails.status === programActionStatus.started
 
                                                     ?
 
