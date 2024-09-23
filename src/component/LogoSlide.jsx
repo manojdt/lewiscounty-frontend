@@ -10,7 +10,7 @@ const LogoSlide = () => {
       >
         <div className="px-4 py-6 text-white md:mx-6 md:p-12">
           <h1 className="mb-6 text-2xl">Welcome</h1>
-          <h1 className="mb-6 text-5xl">logo.com</h1>
+          <h1 className="mb-6 text-5xl">Mentoring Management Application</h1>
           <p className="text-sm">
             Lorem ipsum dolor sit amet, consectetur adipisicing elit,
             sed do eiusmod tempor incididunt ut labore et dolore magna

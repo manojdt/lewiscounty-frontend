@@ -70,7 +70,7 @@ export const Questions = () => {
       setTimeout(() => {
         dispatch(updateInfo())
         setLoading(false)
-        navigate("/dashboard");
+        // navigate("/dashboard");
       }, [3000])
     }
   }, [loading])
@@ -150,7 +150,7 @@ export const Questions = () => {
             <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
               style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
               <img src={SuccessTik} alt="SuccessTik" />
-              <p className='text-white text-[12px]'>Questions submitted Successfully</p>
+              <p className='text-white text-[12px]'>Questions submitted Successfully. Please wait for admin approval</p>
             </div>
 
           </div>
