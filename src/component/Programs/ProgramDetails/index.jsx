@@ -94,7 +94,9 @@ export default function ProgramDetails() {
     const programApprovalStage = {
         yettoapprove: {status: 'yettoapprove', text: 'Waiting for admin approval'},
         join_request_submitted: {status: 'join_request_submitted', text: 'Waiting for admin approval'},
+        join_request_rejected: {status: 'join_request_rejected', text: 'Join request rejected by admin'},
         start_request_submitted: {status: 'start_request_submitted', text: 'Waiting for admin approval'},
+        start_request_rejected: {status: 'start_request_rejected', text: 'Start request rejected by admin'},
         schedule_request_submitted: {status: 'schedule_request_submitted', text: 'Waiting for admin approval'},
         cancel_request_submitted: {status: 'cancel_request_submitted', text: 'Waiting for admin approval'},
     }
