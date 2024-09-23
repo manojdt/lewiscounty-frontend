@@ -235,6 +235,9 @@ export default function AssignTask() {
         // reset()
     }
 
+
+    console.log('errro', errors)
+
     const handleComplete = (programId) => {
         handleClose()
         dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.completed }))
@@ -349,8 +352,8 @@ export default function AssignTask() {
         cancel_request_submitted: { status: 'cancel_request_submitted', text: 'Waiting for admin approval' },
     }
 
-    const dateField = register('reschedule_date', { required: "This field is required" })
-    const timeField = register('reschedule_time', { required: "This field is required" })
+    const dateField = moreMenuModal.reschedule ? register('reschedule_date', { required: "This field is required" }) : undefined
+    const timeField = moreMenuModal.reschedule ? register('reschedule_time', { required: "This field is required" }) : undefined
 
     return (
         <div className="px-9 my-6 grid">
