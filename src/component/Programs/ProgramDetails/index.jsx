@@ -9,7 +9,7 @@ import { curatedPrograms } from '../../../utils/mock';
 
 import { pipeUrls, programActionStatus, programStatus, requestStatus } from '../../../utils/constant';
 import { updateNewPrograms, updateProgramDetails } from '../../../services/programInfo';
-import { getMenteeJoinedInProgram, getProgramDetails } from '../../../services/userprograms';
+import { getMenteeJoinedInProgram, getProgramDetails, updateProgram } from '../../../services/userprograms';
 
 import UserImage from "../../../assets/images/user.jpg";
 import LocationIcon from '../../../assets/images/Location1x.png';
@@ -114,7 +114,7 @@ export default function ProgramDetails() {
                         navigate(`${pipeUrls.assigntask}/${params.id}`)
                     }
                     else if ((programdetails.status === programActionStatus.inprogress || programdetails.status === programActionStatus.assigned ||
-                        programdetails.status === programActionStatus.paused
+                        programdetails.status === programActionStatus.paused || programdetails.status === programActionStatus.started
 
                     )) {
                         navigate(`${pipeUrls.startprogram}/${params.id}`)
@@ -135,6 +135,7 @@ export default function ProgramDetails() {
         if (programId && programId !== '') {
             dispatch(getProgramDetails(programId))
             if (role === 'mentee') { dispatch(getMenteeJoinedInProgram({ id: programId })); }
+            // dispatch(updateProgram({ id: programId, status: programActionStatus.yettojoin }))
         }
 
     }, [params.id, role])
@@ -182,6 +183,7 @@ export default function ProgramDetails() {
         if (action === 'cancel') { setConfirmPopup({ ...popup, cancel: true }) }
     }
 
+
     // Handle Close Accept / Cancel Popup
     const resetAcceptCancelPopup = () => {
         setConfirmPopup({ accept: false, cancel: false, programId: '' });
@@ -210,7 +212,8 @@ export default function ProgramDetails() {
         if (loading.join) {
             setTimeout(() => {
                 setLoading({ ...loading, join: false })
-                if (role === 'mentor') navigate(`${pipeUrls.programtask}/${programdetails.id}`)
+                dispatch(getProgramDetails(params.id))
+                // if (role === 'mentor') navigate(`${pipeUrls.programtask}/${programdetails.id}`)
                 if (role === 'mentee') setTaskJoined(true)
             }, [3000])
         }
