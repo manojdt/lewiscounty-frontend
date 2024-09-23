@@ -132,6 +132,7 @@ export const MenteeStepsList = [{
 export const userStatus = {
   load: 'loaded',
   create: 'created',
+  pending: 'pending',
   login: 'loggedin',
   token: 'tokenfetched',
   getToken: 'getToken',

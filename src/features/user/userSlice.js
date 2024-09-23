@@ -72,7 +72,7 @@ export const userSlice = createSlice({
         return {
           ...state,
           data: action.payload,
-          status: userStatus.login,
+          status: !Object.keys(action.payload).length ? userStatus.pending :  userStatus.login,
           loading: false
         };
       })

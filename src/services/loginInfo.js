@@ -45,9 +45,14 @@ export const userAccountLogin = createAsyncThunk("userLogin", async (data) => {
   const userlogin = await api.post("login", data);
   if (userlogin.status) {
     if (userlogin.status === 200) {
+      let decoded = jwtDecode(userlogin.data.access);
+      if(decoded?.userinfo?.approve_status === 'new'){
+        return {}
+      }
+
       localStorage.setItem("access_token", userlogin.data.access);
       localStorage.setItem("refresh_token", userlogin.data.refresh);
-      let decoded = jwtDecode(userlogin.data.access);
+    
       console.log('Login Token', decoded)
       return decoded;
     }
@@ -145,9 +150,14 @@ export const updateQuestions = createAsyncThunk(
   async (data) => {
     const updateQuestion = await api.put("user_info_update", data);
     if (updateQuestion.status === 200) {
+
+      let decoded = jwtDecode(updateQuestion.data.access);
+      if(decoded?.userinfo?.approve_status === 'new'){
+        return {}
+      }
+
       localStorage.setItem("access_token", updateQuestion.data.access);
       localStorage.setItem("refresh_token", updateQuestion.data.refresh);
-      let decoded = jwtDecode(updateQuestion.data.access);
       return decoded;
     }
     return updateQuestion;
@@ -161,9 +171,13 @@ export const updateMenteeQuestions = createAsyncThunk(
   async (data) => {
     const updateQuestion = await api.post("mentee_info_update", data);
     if (updateQuestion.status === 201) {
+      let decoded = jwtDecode(updateQuestion.data.access);
+      if(decoded?.userinfo?.approve_status === 'new'){
+        return {}
+      }
+
       localStorage.setItem("access_token", updateQuestion.data.access);
       localStorage.setItem("refresh_token", updateQuestion.data.refresh);
-      let decoded = jwtDecode(updateQuestion.data.access);
       return decoded;
     }
     return updateQuestion;
