@@ -428,7 +428,7 @@ export default function AssignTask() {
                                                             }
 
                                                             {
-                                                                programdetails.status !== programActionStatus.inprogress &&
+                                                            
                                                                 <MenuItem onClick={() => handleMenu('cancel')} className='!text-[12px]'>
                                                                     <img src={AbortIcon} alt="AbortIcon" className='pr-3 w-[25px]' />
                                                                     Abort</MenuItem>
