@@ -595,7 +595,7 @@ export const programMenus = (page = 'dashboard') => {
       status: programActionStatus.bookmark
     },
     {
-      name: "Reschdule Programs",
+      name: "Reschedule Programs",
       count: 0,
       page: `${pipeUrl}${programFilterUrls.reschedule}`,
       for: ['mentor'],
