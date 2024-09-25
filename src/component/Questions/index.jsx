@@ -25,6 +25,7 @@ export const Questions = () => {
   const [btnTypeAction, setBtnTypeAction] = useState({ back: false, next: false })
   const [loading, setLoading] = useState(false)
   const [stepName, setStepName] = useState([])
+  const [redirect, setRedirect] = useState(false)
 
   const role = userInfo.data.role || ''
 
@@ -41,25 +42,26 @@ export const Questions = () => {
     if (formFields.length === currentStep) {
       const { first_name, email, ...apiData } = { ...fieldData, prev_mentorship: stepData.prev_mentorship === "true" }
       console.log('Submit', apiData)
-      if (role === 'mentee') { 
+      if (role === 'mentee') {
         console.log('lll', new Date(apiData.dob).toISOString())
-        const menteeApiData =  { 
-          ...apiData, 
+        const menteeApiData = {
+          ...apiData,
           gender: apiData.gender[0],
           dob: new Date(apiData.dob).toISOString().split('T')[0],
-          phone_number : apiData.phone_number
+          phone_number: apiData.phone_number
         }
-        console.log(menteeApiData); 
-        dispatch(updateMenteeQuestions(menteeApiData)) 
+        console.log(menteeApiData);
+        dispatch(updateMenteeQuestions(menteeApiData))
       }
-      else { 
-        
-        const mentorApiData =  { 
-          ...apiData, 
+      else {
+
+        const mentorApiData = {
+          ...apiData,
           gender: apiData.gender[0],
-          phone_number : apiData.phone_number
+          phone_number: apiData.phone_number
         }
-        dispatch(updateQuestions(mentorApiData)) }
+        dispatch(updateQuestions(mentorApiData))
+      }
     }
     else setCurrentStep(currentStep + 1)
     setBtnTypeAction({ back: false, next: true })
@@ -77,15 +79,33 @@ export const Questions = () => {
 
   useEffect(() => {
     if (userInfo && userInfo.data && Object.keys(userInfo.data).length && currentStep === 1) {
-      setStepData({ ...stepData, 
-        [role === 'mentee' ? 'full_name' : 'first_name']: userInfo.data.first_name, 
-        email: userInfo.data.email })
+      setStepData({
+        ...stepData,
+        [role === 'mentee' ? 'full_name' : 'first_name']: userInfo.data.first_name,
+        email: userInfo.data.email
+      })
     }
 
     if (!userInfo.loading && Object.keys(userInfo.data).length && userInfo.data.is_registered && userInfo.status === userStatus.questions) {
       setLoading(true)
     }
+
+    if (userInfo.status === userStatus.pending) {
+      setTimeout(() => {
+        setRedirect(true)
+      }, [3000])
+    }
+
+
   }, [userInfo])
+
+  useEffect(() => {
+    if (redirect) {
+      setTimeout(() => {
+        navigate('/logout')
+      }, [3000])
+    }
+  }, [redirect])
 
 
   const handlePreviousStep = (data) => {
@@ -145,12 +165,12 @@ export const Questions = () => {
 
         </Backdrop>
 
-        <MuiModal modalOpen={loading} modalClose={() => setLoading(false)} noheader>
+        <MuiModal modalOpen={loading || userInfo.status === userStatus.pending} modalClose={() => setLoading(false)} noheader>
           <div className='px-5 py-1 flex justify-center items-center'>
             <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
               style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
               <img src={SuccessTik} alt="SuccessTik" />
-              <p className='text-white text-[12px]'>Questions submitted Successfully. Please wait for admin approval</p>
+              <p className='text-white text-[12px]'>{redirect ? 'We are redirecting to login page' : 'Questions submitted Successfully. Please wait for admin approval'}</p>
             </div>
 
           </div>

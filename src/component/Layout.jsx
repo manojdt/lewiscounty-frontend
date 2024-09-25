@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Outlet } from "react-router-dom";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Navbar } from '../shared'
@@ -89,6 +89,15 @@ export default function Layout() {
 
 
   ];
+
+
+  useEffect(() => {
+    if(userInfo?.data?.userinfo?.approve_status === 'new'){
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
+      navigate('/logout');
+    }
+  },[userInfo])
 
   return (
     <div>

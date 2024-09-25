@@ -14,13 +14,13 @@ export const Dashboard = () => {
 
   const role = userInfo.data.role
 
-  useEffect(() => {
-    if(userInfo?.data?.userinfo?.approve_status === 'new'){
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('refresh_token');
-      dispatch({ type: "logout" })
-    }
-  },[userInfo])
+  // useEffect(() => {
+  //   if(userInfo?.data?.userinfo?.approve_status === 'new'){
+  //     localStorage.removeItem('access_token');
+  //     localStorage.removeItem('refresh_token');
+  //     navigate('/logout');
+  //   }
+  // },[userInfo])
 
   if (role === '') return <></>
 
