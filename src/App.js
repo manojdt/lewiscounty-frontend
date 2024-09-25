@@ -57,6 +57,8 @@ import Scheduler from "./component/Calendar";
 import Discussions from "./component/Discussions";
 import DiscussionDetails from "./component/Discussions/DiscussionDetails";
 import AllRequest from "./component/Programs/AllRequest";
+import Members from "./component/Members";
+import LaunchProgram from "./component/Programs/LaunchProgram";
 
 function App() {
  
@@ -106,7 +108,6 @@ function App() {
           <Route path="/submit-task-program/:id" element={<TaskDetails />} />
           <Route path="/program-completion/:id" element={<ProgramCompletion />} />
 
-
           <Route path="/create-programs" element={<CreatePrograms />} />
           <Route path="/all-request" element={<AllRequest />} />
           <Route path="/program" element={<ProgramData />} />
@@ -114,11 +115,11 @@ function App() {
 
           <Route path="/calendar" element={<Scheduler />} />
           <Route path="/create-meeting" element={<CreateMeeting />} />
+          <Route path="/members" element={<Members />} />
+
 
           <Route path="/discussions" element={<Discussions />} />
           <Route path="/discussion/:id" element={<DiscussionDetails />} />
-
-
 
           <Route path="/edit-profile" element={<EditProfile />} />
           <Route path="/program-data" element={<ProgramsData />} />
@@ -144,6 +145,7 @@ function App() {
           <Route path="/preview-mentee-tasks-details/:id" element={<PreviewTaskDetails />} />
 
 
+          <Route path="/launch-program" element={<LaunchProgram />} />
           <Route path="/goals" element={<Goals />} />
           <Route path="/mentor-view-mentee-goal/:id" element={<MentorViewMenteeGoal />} />
           <Route path="/view-goal/:id" element={<ViewGoal />} />

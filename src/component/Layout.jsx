@@ -33,13 +33,6 @@ export default function Layout() {
   let items = [
     {
       label: <div className='flex gap-4 items-center'>
-        <img src={ProgramRequestIcon} alt="ProgramRequestIcon" />
-        <p>{role === 'admin' ? 'All ' : 'My '}Request</p>
-      </div>,
-      command: () => navigate('/all-request')
-    },
-    {
-      label: <div className='flex gap-4 items-center'>
         <img src={TaskIcon} alt="TaskIcon" />
         <p>Task</p>
       </div>,
@@ -53,6 +46,16 @@ export default function Layout() {
       command: () => navigate('/goals')
     },
   ];
+
+  if (role === 'admin') {
+    items.unshift({
+      label: <div className='flex gap-4 items-center'>
+        <img src={TaskIcon} alt="TaskIcon" />
+        <p>Launch Program</p>
+      </div>,
+      command: () => navigate('/launch-program')
+    })
+  }
 
   const moreitems = [
     {
@@ -112,6 +115,20 @@ export default function Layout() {
             </li>
           }
 
+
+          {/* {
+            role === 'admin' &&
+            <li className={`${pathname === '/members' ? 'dashboard-menu-active' : ''}`}>
+              <span onClick={() => navigate('/members')} className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer">Members</span>
+            </li>
+          } */}
+
+
+          <li className={`${pathname === '/all-request' ? 'dashboard-menu-active' : ''}`}>
+            <span onClick={() => navigate('/all-request')} className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer">Request</span>
+          </li>
+
+
           <li>
 
             <div className="relative inline-block text-left">
@@ -131,6 +148,9 @@ export default function Layout() {
 
             </div>
           </li>
+
+
+
           <li className={`${pathname === '/calendar' ? 'dashboard-menu-active' : ''}`}>
             <span onClick={() => navigate('/calendar')} className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer">Calendar</span>
           </li>

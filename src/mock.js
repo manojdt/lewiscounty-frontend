@@ -1245,7 +1245,13 @@ export const programRequestColumns = [
         id: 8,
         for: ['admin']
     },
-
+    {
+        field: 'auto_approval',
+        headerName: 'Auto Approval',
+        flex: 1,
+        id: 8,
+        for: ['admin']
+    },
     {
         field: 'approved_date_time',
         headerName: 'Approved Date & Time',
