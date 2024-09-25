@@ -406,7 +406,7 @@ export default function AllRequest() {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
-                        <MenuItem onClick={(e) => { console.log('View'); handleClose() }} className='!text-[12px]'>
+                        <MenuItem onClick={(e) => { navigate(`/view-goal/${seletedItem.id}`)}} className='!text-[12px]'>
                             <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
                             View
                         </MenuItem>
@@ -831,8 +831,6 @@ export default function AllRequest() {
                     style={{ background: 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)', borderRadius: '3px' }}>Submit</button>
             </div>)
     }
-
-    console.log('tableDetails', activeTableDetails)
 
     return (
         <div className="program-request px-8 mt-10">
