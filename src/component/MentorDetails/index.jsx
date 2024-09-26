@@ -171,15 +171,15 @@ export default function MentorDetails() {
 
     useEffect(() => {
         if (params.id !== '') {
-            // if (role === 'mentor') {
-            //     dispatch(getMyMentorInfo(params.id))
-            //     dispatch(getMentorProgramActivity(params.id))
-            // }
+            if (role === 'mentor') {
+                // dispatch(getMyMentorInfo(params.id))
+                dispatch(getMentorProgramActivity(params.id))
+            }
 
-            // if (role === 'mentee') {
-            //     dispatch(getMyMenteeInfo(params.id))
-            //     dispatch(getMenteeProgramActivity(params.id))
-            // }
+            if (role === 'mentee') {
+                // dispatch(getMyMenteeInfo(params.id))
+                dispatch(getMenteeProgramActivity(params.id))
+            }
 
             dispatch(getProfileInfo(params.id))
         }
