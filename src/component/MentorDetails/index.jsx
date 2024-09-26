@@ -11,6 +11,7 @@ import PhoneIcon from '../../assets/icons/phone.svg';
 import SearchIcon from '../../assets/icons/search.svg';
 import MaleProfileIcon from '../../assets/images/male-profile1x.png'
 import FemaleProfileIcon from '../../assets/images/female-profile1x.png'
+import SuccessTik from '../../assets/images/blue_tik1x.png';
 
 import CalendarIcon from '../../assets/images/Birthdaydate1x.png'
 import MobileIcon from '../../assets/images/Mobilenumber1x.png'
@@ -20,6 +21,8 @@ import ConnectIcon from '../../assets/images/Connectpop1x.png'
 import EmailIcon from '../../assets/icons/EmailColor.svg'
 
 import StarIcon from '../../assets/icons/filledYellowStar.svg'
+import TickColorIcon from '../../assets/icons/tickColorLatest.svg'
+import CancelColorIcon from '../../assets/icons/cancelCircle.svg'
 
 import Programs from '../Dashboard/Programs';
 
@@ -28,18 +31,24 @@ import { recentRequest, programFeeds } from '../../utils/mock'
 import { Backdrop, CircularProgress } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import MediaPost from '../Dashboard/MediaPost';
-import { getMenteeProgramActivity, getMentorProgramActivity, getMyMenteeInfo, getMyMentorInfo } from '../../services/userList';
+import { getMenteeProgramActivity, getMentorProgramActivity, getMyMenteeInfo, getMyMentorInfo, getProfileInfo } from '../../services/userList';
 import { dateFormat } from '../../utils';
+import { cancelMemberRequest, updateLocalRequest } from '../../services/request';
+import { requestStatus } from '../../utils/constant';
+import MuiModal from '../../shared/Modal';
 
 export default function MentorDetails() {
     const dispatch = useDispatch()
     const params = useParams();
     const [activity, setActivity] = useState({ modal: false, following: false })
     const [userDetails, setUserDetails] = useState({})
+    const [confirmPopup, setConfirmPopup] = useState({ accept: false, cancel: false, programId: '' })
 
     const userInfo = useSelector(state => state.userInfo)
 
-    const { mentorDetails, menteeDetails, loading, programActivity } = useSelector(state => state.userList)
+    const { mentorDetails, menteeDetails, loading, programActivity, userDetails: profileInfo } = useSelector(state => state.userList)
+
+    const { loading: requestLoading, status: requestStatusInfo, error: requestStatusError } = useSelector(state => state.requestList);
 
     const role = userInfo.data.role || ''
 
@@ -62,8 +71,8 @@ export default function MentorDetails() {
         id: 2,
         renderCell: (params) => {
             return <div className='flex items-center gap-2'>
-                    {dateFormat(params.row.start_date)}
-                </div>
+                {dateFormat(params.row.start_date)}
+            </div>
         }
     },
     {
@@ -73,8 +82,8 @@ export default function MentorDetails() {
         id: 3,
         renderCell: (params) => {
             return <div className='flex items-center gap-2'>
-                    {dateFormat(params.row.end_date)}
-                </div>
+                {dateFormat(params.row.end_date)}
+            </div>
         }
     },
     {
@@ -126,39 +135,118 @@ export default function MentorDetails() {
         setActivity({ ...activity, modal: true })
     }
 
+
+    const handleAcceptCancelProgramRequest = (action, programid) => {
+        let popup = { ...confirmPopup, programId: programid }
+        if (action === 'approve') { setConfirmPopup({ ...popup, approve: true }); }
+        if (action === 'reject') { setConfirmPopup({ ...popup, reject: true }) }
+    }
+
+    const handleConfirmPopup = () => {
+        dispatch(cancelMemberRequest({
+            member_id: params.id
+        }))
+    }
+
+    const resetConfirmPopup = () => {
+        setConfirmPopup({ accept: false, cancel: false, programId: '' })
+    }
+
+    const handleCancelPopup = () => {
+        resetConfirmPopup()
+    }
+
+
+
+
+    useEffect(() => {
+        if (requestStatusInfo === requestStatus.memberupdate || requestStatusInfo === requestStatus.membercancel) {
+            resetConfirmPopup()
+            setTimeout(() => {
+                dispatch(getProfileInfo(params.id))
+                dispatch(updateLocalRequest({ status: '' }))
+            }, 3000)
+        }
+    }, [requestStatusInfo])
+
     useEffect(() => {
         if (params.id !== '') {
-            if (role === 'mentor') {
-                dispatch(getMyMentorInfo(params.id))
-                dispatch(getMentorProgramActivity(params.id))
-            }
+            // if (role === 'mentor') {
+            //     dispatch(getMyMentorInfo(params.id))
+            //     dispatch(getMentorProgramActivity(params.id))
+            // }
 
-            if (role === 'mentee') {
-                dispatch(getMyMenteeInfo(params.id))
-                dispatch(getMenteeProgramActivity(params.id))
-            }
+            // if (role === 'mentee') {
+            //     dispatch(getMyMenteeInfo(params.id))
+            //     dispatch(getMenteeProgramActivity(params.id))
+            // }
+
+            dispatch(getProfileInfo(params.id))
         }
     }, [params.id, role])
 
     useEffect(() => {
-        if(role === 'mentee'){
-            setUserDetails(menteeDetails)
-        }
-        if(role === 'mentor'){
-            setUserDetails(mentorDetails)
-        }
-    },[mentorDetails, menteeDetails])
+        // if(role === 'mentee'){
+        //     setUserDetails(menteeDetails)
+        // }
+        // if(role === 'mentor'){
+        //     setUserDetails(mentorDetails)
+        // }
 
-    console.log('role', role)
+        setUserDetails(profileInfo)
+
+    }, [mentorDetails, menteeDetails, profileInfo])
+
+
 
     return (
         <div className="px-9 my-6 grid">
             <Backdrop
-                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                sx={{ color: '#fff', zIndex: (theme) => 999999999 }}
                 open={loading}
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
+
+
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={confirmPopup.approve || confirmPopup.reject}
+            >
+                <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
+                    <img src={confirmPopup.approve ? TickColorIcon : confirmPopup.reject ? CancelColorIcon : ''} alt="TickColorIcon" />
+                    <span style={{ color: '#232323', fontWeight: 600, fontSize: '24px' }}>
+                        {confirmPopup.approve ? 'Approve' : confirmPopup.reject ? 'Reject' : ''}
+                    </span>
+                    <div className='py-5'>
+                        <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 600, fontSize: '18px' }}>
+                            Are you sure want to {confirmPopup.approve ? 'approve ' : 'reject '} {userDetails?.role === 'mentor' ? 'Mentor ' : 'Mentee '} Request?
+                        </p>
+                    </div>
+                    <div className='flex justify-center'>
+                        <div className="flex gap-6 justify-center align-middle">
+                            <Button btnCls="w-[110px]" btnName={confirmPopup.approve ? 'Cancel' : confirmPopup.reject ? 'No' : ''} btnCategory="secondary" onClick={handleCancelPopup} />
+                            <Button btnType="button" btnCls="w-[110px]" btnName={confirmPopup.approve ? 'Approve' : confirmPopup.reject === 'reject' ? 'Yes' : ''}
+                                style={{ background: confirmPopup.approve ? '#16B681' : '#E0382D' }} btnCategory="primary"
+                                onClick={handleConfirmPopup}
+                            />
+                        </div>
+                    </div>
+                </div>
+
+            </Backdrop>
+
+            <MuiModal modalOpen={requestStatusInfo === requestStatus.memberupdate || requestStatusInfo === requestStatus.membercancel} modalClose={resetConfirmPopup} noheader>
+                <div className='px-5 py-1 flex justify-center items-center'>
+                    <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
+                        style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
+                        <img src={SuccessTik} alt="SuccessTik" />
+                        <p className='text-white text-[12px]'>Member request is updated Successfully</p>
+                    </div>
+
+                </div>
+            </MuiModal>
+
             {
                 Object.keys(userDetails).length ?
 
@@ -422,14 +510,77 @@ export default function MentorDetails() {
 
                                                 <div className='flex justify-center pt-6 gap-5'>
 
+                                                    {
+                                                        role === 'admin' ?
 
-                                                    <button onClick={handleShowPopup} style={{ background: 'rgba(29, 91, 191, 1)', color: '#fff', borderRadius: '6px' }}
-                                                        className='py-3 px-4 text-[14px] w-[20%]'>{activity.following ? 'Unfollow' : 'Follow'}</button>
+                                                            <>
+                                                                {
+                                                                    (userDetails?.approve_status === 'new' || userDetails?.approve_status === 'pending') ?
+
+                                                                        <>
+                                                                            <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                                                border: "1px solid #E0382D",
+                                                                                borderRadius: '5px',
+                                                                                color: '#E0382D'
+                                                                            }}
+                                                                                onClick={() => handleAcceptCancelProgramRequest('reject', params.id)}
+                                                                            >Reject
+                                                                            </button>
+                                                                            <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                                                background: "#16B681",
+                                                                                borderRadius: '5px'
+                                                                            }}
+                                                                                onClick={() => handleAcceptCancelProgramRequest('approve', params.id)}
+                                                                            >Approve
+                                                                            </button>
+
+                                                                        </>
+                                                                        :
+
+                                                                        userDetails?.approve_status === 'accept' ?
+
+                                                                            <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                                                background: "#16B681",
+                                                                                borderRadius: '5px',
+                                                                                cursor: 'not-allowed'
+                                                                            }}
+                                                                                onClick={undefined}
+                                                                            >Approved
+                                                                            </button>
+                                                                            :
+                                                                            userDetails?.approve_status === 'cancel' ?
+                                                                                <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                                                    border: "1px solid #E0382D",
+                                                                                    borderRadius: '5px',
+                                                                                    color: '#E0382D',
+                                                                                    cursor: 'not-allowed'
+                                                                                }}
+                                                                                    onClick={undefined}
+                                                                                >Rejected
+                                                                                </button>
+                                                                                :
+                                                                                null
+
+                                                                }
+                                                            </>
+
+                                                            : null
+                                                    }
 
 
+                                                    {
+                                                        role !== 'admin' &&
 
 
-                                                    <button style={{ background: 'rgba(0, 174, 189, 1)', color: '#fff', borderRadius: '6px' }} className='py-3 px-4 text-[14px] w-[20%]'>Chat</button>
+                                                        <>
+                                                            <button onClick={handleShowPopup} style={{ background: 'rgba(29, 91, 191, 1)', color: '#fff', borderRadius: '6px' }}
+                                                                className='py-3 px-4 text-[14px] w-[20%]'>{activity.following ? 'Unfollow' : 'Follow'}</button>
+
+                                                            <button style={{ background: 'rgba(0, 174, 189, 1)', color: '#fff', borderRadius: '6px' }} className='py-3 px-4 text-[14px] w-[20%]'>Chat</button>
+
+
+                                                        </>
+                                                    }
                                                 </div>
 
 

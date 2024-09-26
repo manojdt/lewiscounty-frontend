@@ -475,7 +475,7 @@ export default function AllRequest() {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
-                        <MenuItem onClick={(e) => { console.log('View'); handleClose() }} className='!text-[12px]'>
+                        <MenuItem onClick={(e) => { handleClose(); navigate(`/mentor-details/${seletedItem.id}`) }} className='!text-[12px]'>
                             <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
                             View Profile
                         </MenuItem>

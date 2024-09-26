@@ -7,7 +7,8 @@ import {
     getMentorProgramActivity,
     getMyMentees,
     getMyMenteeInfo,
-    getMenteeProgramActivity
+    getMenteeProgramActivity,
+    getProfileInfo
 } from "../../services/userList";
 
 const initialState = {
@@ -16,6 +17,7 @@ const initialState = {
     programActivity: [],
     menteeList: [],
     menteeDetails: {},
+    userDetails: {},
     loading: false,
     status: "",
     error: "",
@@ -64,6 +66,31 @@ export const userListSlice = createSlice({
                 };
             })
             .addCase(getMyMentorInfo.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
+
+        builder
+            .addCase(getProfileInfo.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(getProfileInfo.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    mentorDetails: {},
+                    menteeDetails: {},
+                    userDetails: action.payload,
+                    loading: false,
+                };
+            })
+            .addCase(getProfileInfo.rejected, (state, action) => {
                 return {
                     ...state,
                     loading: false,

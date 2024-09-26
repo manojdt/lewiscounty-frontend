@@ -28,6 +28,17 @@ export const getMyMentorInfo = createAsyncThunk(
     }
 );
 
+export const getProfileInfo = createAsyncThunk(
+    "getProfileInfo",
+    async (id) => {
+        const myProfile = await api.get(`/user/${id}`);
+        if (myProfile.status === 200 && myProfile.data) {
+            return myProfile.data.mentor || myProfile.data;
+        }
+        return myProfile
+    }
+);
+
 
 export const getMentorProgramActivity = createAsyncThunk(
     "getMentorProgramActivity",
