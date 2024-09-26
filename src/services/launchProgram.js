@@ -11,7 +11,7 @@ export const getLaunchPrograms = createAsyncThunk(
         if(queryString !== ''){
             queryString = `?${queryString}`
         }
-        const getLaunchProgramsInfo = await api.get(`mentee_program/launched-programs${queryString}`);
+        const getLaunchProgramsInfo = await api.get(`mentors/launched-programs${queryString}`);
         if (getLaunchProgramsInfo.status === 200 && getLaunchProgramsInfo.data) {
             return getLaunchProgramsInfo.data;
         }
