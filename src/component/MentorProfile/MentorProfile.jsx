@@ -149,7 +149,7 @@ function MentorProfile() {
         setShowToast({ show: false, message: "" });
         navigate("/all-request?type=member_join_request");
       }, 2000);
-    });
+    })
   };
   const footerComponent = (props) => {
     return (
