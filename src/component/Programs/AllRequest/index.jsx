@@ -31,10 +31,12 @@ import { Button } from '../../../shared';
 
 export default function AllRequest() {
     const navigate = useNavigate()
-    const [searchParams] = useSearchParams();
+    const [searchParams,setSearchParams] = useSearchParams();
+
     const dispatch = useDispatch();
     const { programRequest: programTableInfo, memberRequest, resourceRequest, categoryList, goalsRequest: goalsRequestInfo,
         loading, status, error } = useSelector(state => state.requestList);
+        console.log(status,"st")
     const [currentRequestTab, setCurrentRequestTab] = useState(RequestStatus.programRequest)
     const [filterStatus, setFilterStatus] = useState('new')
     const [anchorEl, setAnchorEl] = useState(null);
@@ -114,6 +116,18 @@ export default function AllRequest() {
     ]
 
     const handleClose = () => {
+        setAnchorEl(null);
+    };
+    const updateSearchParams = (key, value) => {
+        searchParams.set(key, value);  // Set the search parameter
+        setSearchParams(searchParams); // Update the URL without reloading
+      };
+    
+    const handleOpenProfile = (row) => {
+        console.log(row,"row")
+        if(actionTab==="mentor"){
+            navigate(`/mentor-profile/${row?.id}`)
+        }
         setAnchorEl(null);
     };
 
@@ -256,7 +270,9 @@ export default function AllRequest() {
         setCategoryPopup({ show: false, selectedItem: [], page: '', tab: '' })
     }
 
-
+const handelPorfilePage = (row) =>{
+        navigate(`/mentor-profile/${row?.id}`)
+}
     // Handle Selected Items for Category 
     const handleSelectedItems = (selectedInfo) => {
 
@@ -475,7 +491,7 @@ export default function AllRequest() {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
-                        <MenuItem onClick={(e) => { handleClose(); navigate(`/mentor-details/${seletedItem.id}`) }} className='!text-[12px]'>
+                        <MenuItem onClick={(e) => { handleClose(); navigate(`/mentor-profile/${params?.row?.id}`) }} className='!text-[12px]'>
                             <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
                             View Profile
                         </MenuItem>
@@ -649,7 +665,9 @@ export default function AllRequest() {
         dispatch(getMemberRequest({
             status: filterStatus,
             user: actionTab,
-        }))
+        })).then(() => {
+            updateSearchParams("status","")
+          });
     }
 
     const getResourceRequestApi = () => {
@@ -785,6 +803,7 @@ export default function AllRequest() {
         if (searchParams.get('type') === 'member_join_request') {
             setActiveTableDetails({ column: actionTab === 'mentor' ? [...memberMentorRequestColumns, ...membersColumns] : [...memberMenteeRequestColumns, ...membersColumns], data: memberRequest })
         }
+      
 
         if (searchParams.get('type') === 'goal_request') {
             setActiveTableDetails({ column: goalColumns, data: goalsRequestInfo })
@@ -807,7 +826,16 @@ export default function AllRequest() {
         if (searchParams.get('type') === 'member_join_request') {
             getMembersRequestApi()
         }
-
+        // if (searchParams.get('type') === 'member_join_request'&&searchParams.get('status') === 'cancel') {
+        //     setFilterStatus("cancel")
+        //     getMembersRequestApi()
+            
+        //  }
+        // if (searchParams.get('type') === 'member_join_request'&&searchParams.get('status') === 'accept') {
+        //     setFilterStatus("accept")
+        //     getMembersRequestApi()
+          
+        //  }
         if (searchParams.get('type') === 'resource_access_request') {
             getResourceRequestApi()
         }
@@ -1005,7 +1033,7 @@ export default function AllRequest() {
                                         </p>
 
                                         <p className="text-[12px] py-2 pl-5 pr-4 flex gap-4" style={{ background: 'rgba(29, 91, 191, 1)', borderRadius: '5px', height: '40px' }}>
-                                            <select className='focus:outline-none' style={{ background: 'rgba(29, 91, 191, 1)', border: 'none', color: '#fff' }} onChange={handleStatus}>
+                                            <select className='focus:outline-none' style={{ background: 'rgba(29, 91, 191, 1)', border: 'none', color: '#fff' }} onChange={handleStatus} value={filterStatus}>
                                                 <option value="new">New</option>
                                                 <option value="pending">Pending</option>
                                                 <option value="accept">Approved</option>

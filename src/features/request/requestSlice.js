@@ -37,7 +37,11 @@ const initialState = {
 export const requestSlice = createSlice({
     name: "requestInfo",
     initialState,
-    reducers: {},
+    reducers: {
+        updateStatus: (state, action) => {
+            state.status = action.payload;
+          },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(getprogramRequest.pending, (state) => {
@@ -308,5 +312,5 @@ export const requestSlice = createSlice({
 
     },
 });
-
+export const { updateStatus } = requestSlice.actions;
 export default requestSlice.reducer;

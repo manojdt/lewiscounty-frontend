@@ -15,6 +15,16 @@ export const getUserProfile = createAsyncThunk(
         return userProfile
     }
 );
+export const getMentorProfile = createAsyncThunk(
+    "getMentorProfile",
+    async (id) => {
+        const userProfile = await api.get(`profile/profile_info`);
+        if (getMentorProfile.status === 200 && getMentorProfile.data) {
+            return userProfile.data;
+        }
+        return userProfile
+    }
+);
 
 
 export const updateProfile = createAsyncThunk(
