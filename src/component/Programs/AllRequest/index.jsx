@@ -62,10 +62,10 @@ export default function AllRequest() {
             name: 'New Program Request',
             key: 'new_program_request'
         },
-        {
-            name: 'Joining Request',
-            key: 'joining_request'
-        },
+        // {
+        //     name: 'Joining Request',
+        //     key: 'joining_request'
+        // },
         {
             name: 'Program Start',
             key: 'program_start'
@@ -129,7 +129,7 @@ export default function AllRequest() {
     }
 
     // Open Confirm Popup
-    const handleOpenConfirmPopup = (title, pageType, request, type = 'accept') => {
+    const handleOpenConfirmPopup = (title, pageType, request, type = 'approve') => {
         setConfirmPopup({ show: true, title: title, requestType: pageType, type: type, action: request })
     }
 
@@ -139,13 +139,13 @@ export default function AllRequest() {
             handleAcceptProgramApiRequest()
         }
         if (confirmPopup.requestType === 'goal_request') {
-            if (confirmPopup.type === 'cancel') {
+            if (confirmPopup.type === 'reject') {
                 handleCancelGoalApiRequest()
             }
         }
 
         if (confirmPopup.requestType === 'member_join_request') {
-            if (confirmPopup.type === 'cancel') {
+            if (confirmPopup.type === 'reject') {
                 handleCancelMemberApiRequest()
             }
         }
@@ -212,7 +212,7 @@ export default function AllRequest() {
 
     // Program Dropwdowm Accept
     const handleAcceptProgramRequest = () => {
-        handleOpenConfirmPopup('Program Request', currentRequestTab.key, actionTab, 'accept')
+        handleOpenConfirmPopup('Program Request', currentRequestTab.key, actionTab, 'approve')
         handleClose();
     }
 
@@ -232,7 +232,7 @@ export default function AllRequest() {
 
     // Member Drodown Cancel
     const handleMemberCancelRequest = () => {
-        handleOpenConfirmPopup(`${actionTab === 'mentor' ? 'Mentor ' : 'Mentee '} Request`, currentRequestTab.key, actionTab, 'cancel')
+        handleOpenConfirmPopup(`${actionTab === 'mentor' ? 'Mentor ' : 'Mentee '} Request`, currentRequestTab.key, actionTab, 'reject')
         handleClose()
     }
 
@@ -247,7 +247,7 @@ export default function AllRequest() {
 
     // Goal Dropdown Cancel
     const handleCancelGoalRequest = () => {
-        handleOpenConfirmPopup('Goal Request', currentRequestTab.key, actionTab, 'cancel')
+        handleOpenConfirmPopup('Goal Request', currentRequestTab.key, actionTab, 'reject')
         handleClose()
     }
 
@@ -288,11 +288,13 @@ export default function AllRequest() {
         }
     }
 
-
-
     const requestList = requestOverview.filter(request => request.for.includes(role))
 
     let programRequestColumn = programRequestColumns.filter(request => request.for.includes(role))
+
+    if(actionTab !== 'program_start') {
+        programRequestColumn = programRequestColumn.filter(column => column.field !== 'auto_approval')
+    }
 
     programRequestColumn = [
         ...programRequestColumn,
@@ -317,49 +319,47 @@ export default function AllRequest() {
             }
         },
         {
-            ...role === 'admin' &&
-            {
-                field: 'action',
-                headerName: 'Action',
-                flex: 1,
-                id: 4,
-                renderCell: (params) => {
-                    return <>
+            field: 'action',
+            headerName: 'Action',
+            flex: 1,
+            id: 4,
+            renderCell: (params) => {
+                return <>
 
-                        <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleMoreClick(e, params.row)}>
-                            <img src={MoreIcon} alt='MoreIcon' />
-                        </div>
-                        <Menu
-                            id="basic-menu"
-                            anchorEl={anchorEl}
-                            open={open}
-                            onClose={handleClose}
-                            MenuListProps={{
-                                'aria-labelledby': 'basic-button',
-                            }}
-                        >
-                            <MenuItem onClick={(e) => navigate(`/program-details/${seletedItem.program}`)} className='!text-[12px]'>
-                                <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
-                                View
-                            </MenuItem>
-                            {
-                                (params.row.status === 'new' || params.row.status === 'pending') &&
-                                <>
-                                    <MenuItem onClick={handleAcceptProgramRequest} className='!text-[12px]'>
-                                        <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
-                                        Accept
-                                    </MenuItem>
-                                    <MenuItem onClick={handleCancelProgramRequest} className='!text-[12px]'>
-                                        <img src={CloseCircle} alt="CancelIcon" className='pr-3 w-[27px]' />
-                                        Cancel
-                                    </MenuItem>
-                                </>
-                            }
-                        </Menu>
-                    </>
-                }
+                    <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleMoreClick(e, params.row)}>
+                        <img src={MoreIcon} alt='MoreIcon' />
+                    </div>
+                    <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                        MenuListProps={{
+                            'aria-labelledby': 'basic-button',
+                        }}
+                    >
+                        <MenuItem onClick={(e) => navigate(`/program-details/${seletedItem.program}?request_id=${seletedItem.id}`)} className='!text-[12px]'>
+                            <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
+                            View
+                        </MenuItem>
+                        {
+                            (role === 'admin' && (params.row.status === 'new' || params.row.status === 'pending')) &&
+                            <>
+                                <MenuItem onClick={handleAcceptProgramRequest} className='!text-[12px]'>
+                                    <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
+                                    Approve
+                                </MenuItem>
+                                <MenuItem onClick={handleCancelProgramRequest} className='!text-[12px]'>
+                                    <img src={CloseCircle} alt="CancelIcon" className='pr-3 w-[27px]' />
+                                    Reject
+                                </MenuItem>
+                            </>
+                        }
+                    </Menu>
+                </>
             }
-        },
+        }
+
     ]
 
     const goalColumns = [
@@ -385,46 +385,49 @@ export default function AllRequest() {
             }
         },
         {
-            ...role === 'admin' &&
-            {
-                field: 'action',
-                headerName: 'Action',
-                flex: 1,
-                id: 4,
-                renderCell: (params) => {
-                    if (params.row.status !== 'new' && params.row.status !== 'pending') return <></>
-                    return <>
-                        <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleMoreClick(e, params.row)}>
-                            <img src={MoreIcon} alt='MoreIcon' />
-                        </div>
-                        <Menu
-                            id="basic-menu"
-                            anchorEl={anchorEl}
-                            open={open}
-                            onClose={handleClose}
-                            MenuListProps={{
-                                'aria-labelledby': 'basic-button',
-                            }}
-                        >
-                            <MenuItem onClick={(e) => { console.log('View'); handleClose() }} className='!text-[12px]'>
-                                <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
-                                View
-                            </MenuItem>
-
-                            <MenuItem onClick={handleAcceptGoalRequest} className='!text-[12px]'>
-                                <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
-                                Accept
-                            </MenuItem>
-                            <MenuItem onClick={handleCancelGoalRequest} className='!text-[12px]'>
-                                <img src={CloseCircle} alt="CancelIcon" className='pr-3 w-[27px]' />
-                                Cancel
-                            </MenuItem>
 
 
-                        </Menu>
-                    </>
-                }
+            field: 'action',
+            headerName: 'Action',
+            flex: 1,
+            id: 4,
+            renderCell: (params) => {
+                if (params.row.status !== 'new' && params.row.status !== 'pending') return <></>
+                return <>
+                    <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleMoreClick(e, params.row)}>
+                        <img src={MoreIcon} alt='MoreIcon' />
+                    </div>
+                    <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                        MenuListProps={{
+                            'aria-labelledby': 'basic-button',
+                        }}
+                    >
+                        <MenuItem onClick={(e) => { navigate(`/view-goal/${seletedItem.id}`)}} className='!text-[12px]'>
+                            <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
+                            View
+                        </MenuItem>
+
+                        {
+                            role === 'admin' &&
+                            <>
+                                <MenuItem onClick={handleAcceptGoalRequest} className='!text-[12px]'>
+                                    <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
+                                    Approve
+                                </MenuItem>
+                                <MenuItem onClick={handleCancelGoalRequest} className='!text-[12px]'>
+                                    <img src={CloseCircle} alt="CancelIcon" className='pr-3 w-[27px]' />
+                                    Reject
+                                </MenuItem>
+                            </>
+                        }
+                    </Menu>
+                </>
             }
+
         },
     ]
 
@@ -450,50 +453,57 @@ export default function AllRequest() {
             }
         },
         {
-            ...role === 'admin' &&
-            {
-                field: 'action',
-                headerName: 'Action',
-                flex: 1,
-                id: 4,
-                renderCell: (params) => {
-                    console.log('ssss', params)
-                    // if (params.row.status !== 'new' && params.row.status !== 'pending') return <></>
-                    return <>
-                        <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleMoreClick(e, params.row)}>
-                            <img src={MoreIcon} alt='MoreIcon' />
-                        </div>
-                        <Menu
-                            id="basic-menu"
-                            anchorEl={anchorEl}
-                            open={open}
-                            onClose={handleClose}
-                            MenuListProps={{
-                                'aria-labelledby': 'basic-button',
-                            }}
-                        >
-                            <MenuItem onClick={(e) => { console.log('View'); handleClose() }} className='!text-[12px]'>
-                                <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
-                                View Profile
-                            </MenuItem>
 
-                            <MenuItem onClick={handleMemberAcceptRequest} className='!text-[12px]'>
-                                <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
-                                Accept
-                            </MenuItem>
-                            <MenuItem onClick={handleMemberCancelRequest} className='!text-[12px]'>
-                                <img src={CloseCircle} alt="CancelIcon" className='pr-3 w-[27px]' />
-                                Cancel
-                            </MenuItem>
-                            <MenuItem onClick={() => undefined} className='!text-[12px]'>
-                                <img src={ShareIcon} alt="ShareIcon" className='pr-3 w-[27px]' />
-                                Share
-                            </MenuItem>
 
-                        </Menu>
-                    </>
-                }
+            field: 'action',
+            headerName: 'Action',
+            flex: 1,
+            id: 4,
+            renderCell: (params) => {
+                console.log('ssss', params)
+                // if (params.row.status !== 'new' && params.row.status !== 'pending') return <></>
+                return <>
+                    <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleMoreClick(e, params.row)}>
+                        <img src={MoreIcon} alt='MoreIcon' />
+                    </div>
+                    <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                        MenuListProps={{
+                            'aria-labelledby': 'basic-button',
+                        }}
+                    >
+                        <MenuItem onClick={(e) => { console.log('View'); handleClose() }} className='!text-[12px]'>
+                            <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
+                            View Profile
+                        </MenuItem>
+
+                        {
+                            role === 'admin' &&
+
+                            <>
+                                <MenuItem onClick={handleMemberAcceptRequest} className='!text-[12px]'>
+                                    <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
+                                    Approve
+                                </MenuItem>
+                                <MenuItem onClick={handleMemberCancelRequest} className='!text-[12px]'>
+                                    <img src={CloseCircle} alt="CancelIcon" className='pr-3 w-[27px]' />
+                                    Reject
+                                </MenuItem>
+                                <MenuItem onClick={() => undefined} className='!text-[12px]'>
+                                    <img src={ShareIcon} alt="ShareIcon" className='pr-3 w-[27px]' />
+                                    Share
+                                </MenuItem>
+                            </>
+                        }
+
+
+                    </Menu>
+                </>
             }
+
         },
     ]
 
@@ -520,22 +530,20 @@ export default function AllRequest() {
             // }
         },
         {
-            ...role === 'admin' &&
 
-            {
-                field: 'action',
-                headerName: 'Action',
-                flex: 1,
-                id: 4,
-                renderCell: (params) => {
-                    console.log('params', params)
-                    return <>
-                        <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleMoreClick(e, params.row)}>
-                            <img src={MoreIcon} alt='MoreIcon' />
-                        </div>
-                    </>
-                }
-            },
+            field: 'action',
+            headerName: 'Action',
+            flex: 1,
+            id: 4,
+            renderCell: (params) => {
+                console.log('params', params)
+                return <>
+                    <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleMoreClick(e, params.row)}>
+                        <img src={MoreIcon} alt='MoreIcon' />
+                    </div>
+                </>
+            }
+
         }
 
     ]
@@ -824,16 +832,14 @@ export default function AllRequest() {
             </div>)
     }
 
-    console.log('tableDetails', activeTableDetails)
-
     return (
         <div className="program-request px-8 mt-10">
             <div className='px-3 py-5' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
                 <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
                     <div className='flex gap-5 items-center text-[14px]'>
-                        <p style={{ color: 'rgba(89, 117, 162, 1)', fontWeight: 500 }}>Objectives</p>
-                        <img src={ArrowRightIcon} alt="ArrowRightIcon" />
-                        <p>All Request</p>
+                        {/* <p style={{ color: 'rgba(89, 117, 162, 1)', fontWeight: 500 }}>Objectives</p>
+                        <img src={ArrowRightIcon} alt="ArrowRightIcon" /> */}
+                        <p>{role === 'admin' ? 'All ' : 'My '} Request</p>
                     </div>
 
                 </div>
@@ -848,9 +854,9 @@ export default function AllRequest() {
                     open={confirmPopup.show}
                 >
                     <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
-                        <img src={confirmPopup.type === 'accept' ? TickColorIcon : confirmPopup.type === 'cancel' ? CancelColorIcon : ''} alt="TickColorIcon" />
+                        <img src={confirmPopup.type === 'approve' ? TickColorIcon : confirmPopup.type === 'reject' ? CancelColorIcon : ''} alt="TickColorIcon" />
                         <span style={{ color: '#232323', fontWeight: 600, fontSize: '24px' }}>
-                            {confirmPopup.type === 'accept' ? 'Accept' : confirmPopup.type === 'cancel' ? 'Cancel' : ''}
+                            {confirmPopup.type === 'approve' ? 'Approve' : confirmPopup.type === 'reject' ? 'Reject' : ''}
                         </span>
                         <div className='py-5'>
                             <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 600, fontSize: '18px' }}>
@@ -859,9 +865,9 @@ export default function AllRequest() {
                         </div>
                         <div className='flex justify-center'>
                             <div className="flex gap-6 justify-center align-middle">
-                                <Button btnCls="w-[110px]" btnName={confirmPopup.type === 'accept' ? 'Cancel' : confirmPopup.type === 'cancel' ? 'No' : ''} btnCategory="secondary" onClick={handleCancelConfirmPopup} />
-                                <Button btnType="button" btnCls="w-[110px]" btnName={confirmPopup.type === 'accept' ? 'Accept' : confirmPopup.type === 'cancel' ? 'Yes' : ''}
-                                    style={{ background: confirmPopup.type === 'accept' ? '#16B681' : '#E0382D' }} btnCategory="primary"
+                                <Button btnCls="w-[110px]" btnName={confirmPopup.type === 'approve' ? 'Cancel' : confirmPopup.type === 'reject' ? 'No' : ''} btnCategory="secondary" onClick={handleCancelConfirmPopup} />
+                                <Button btnType="button" btnCls="w-[110px]" btnName={confirmPopup.type === 'approve' ? 'Approve' : confirmPopup.type === 'reject' ? 'Yes' : ''}
+                                    style={{ background: confirmPopup.type === 'approve' ? '#16B681' : '#E0382D' }} btnCategory="primary"
                                     onClick={handleConfirmPopup}
                                 />
                             </div>
@@ -877,7 +883,7 @@ export default function AllRequest() {
                         <div className='flex justify-center flex-col gap-5  mt-4 mb-4'
                             style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '10px', }}>
                             <div className='flex justify-between px-3 py-4 items-center' style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
-                                <p className='text-[18px]' style={{ color: 'rgba(0, 0, 0, 1)' }}>Cancel Request Reason </p>
+                                <p className='text-[18px]' style={{ color: 'rgba(0, 0, 0, 1)' }}>Reject Request Reason </p>
                                 <img className='cursor-pointer' onClick={handleCloseCancelReasonPopup} src={CancelIcon} alt="CancelIcon" />
                             </div>
 
@@ -890,7 +896,7 @@ export default function AllRequest() {
                                 <form onSubmit={handleSubmit(handleCancelReasonPopupSubmit)}>
                                     <div className='relative pb-8'>
                                         <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
-                                            Cancel Reason
+                                            Reject Reason
                                         </label>
 
                                         <div className='relative'>
@@ -1002,8 +1008,8 @@ export default function AllRequest() {
                                             <select className='focus:outline-none' style={{ background: 'rgba(29, 91, 191, 1)', border: 'none', color: '#fff' }} onChange={handleStatus}>
                                                 <option value="new">New</option>
                                                 <option value="pending">Pending</option>
-                                                <option value="accept">Accept</option>
-                                                <option value="cancel">Cancel</option>
+                                                <option value="accept">Approved</option>
+                                                <option value="cancel">Rejected</option>
                                             </select>
                                         </p>
                                     </div>
@@ -1020,7 +1026,7 @@ export default function AllRequest() {
                                                             <li className={`${actionTab === discussion.key ? 'active' : ''} relative`} key={index}
                                                                 onClick={() => setActiveTab(discussion.key)}
                                                             >
-                                                                <div className='flex justify-center pb-3'>
+                                                                <div className='flex justify-center pb-1'>
                                                                     <div className={`total-proram-count relative ${actionTab === discussion.key ? 'active' : ''}`}>10
 
                                                                         <p className='notify-icon'></p>

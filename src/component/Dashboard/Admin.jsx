@@ -215,7 +215,7 @@ export default function Admin() {
 
             </div>
 
-            <div className="grid grid-cols-8 gap-7 mt-10">
+            <div className="grid grid-cols-8 gap-7 mt-4">
                 <div className='col-span-3'>
                     <ProgramPerformance data={data} total={2000} handleFilter={handlePerformanceFilter} handleDetails={handleDetails} height={'440px'} />
                 </div>
@@ -228,7 +228,7 @@ export default function Admin() {
             </div>
 
 
-            <div className="grid grid-cols-10 gap-7 mt-10">
+            <div className="grid grid-cols-10 gap-7 mt-4">
                 <div className='col-span-2'>
                     <CardWrapper title="Recent Activities" viewAll >
                         <div style={{ height: '750px'}}>

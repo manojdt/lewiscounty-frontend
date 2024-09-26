@@ -7,7 +7,7 @@ import './program-details.css'
 import Carousel from '../../../shared/Carousel';
 import { curatedPrograms } from '../../../utils/mock';
 
-import { pipeUrls, programActionStatus, programStatus, requestStatus } from '../../../utils/constant';
+import { pipeUrls, programActionStatus, programApprovalStage, programCompleted, programInProgress, programNotLaunched, programNotReady, programNotStarted, programRequestApproval, programStatus, programWaitingActiveApproval, requestStatus } from '../../../utils/constant';
 import { updateNewPrograms, updateProgramDetails } from '../../../services/programInfo';
 import { getMenteeJoinedInProgram, getProgramDetails, updateProgram } from '../../../services/userprograms';
 
@@ -40,7 +40,7 @@ export default function ProgramDetails() {
     const [certificateActiveTab, setCertificateActiveTab] = useState('participated')
     const [confirmPopup, setConfirmPopup] = useState({ accept: false, cancel: false, programId: '' })
     const userdetails = useSelector(state => state.userInfo)
-    const { programdetails, loading: programLoading, error, menteeJoined } = useSelector(state => state.userPrograms)
+    const { programdetails, loading: programLoading, error, menteeJoined, status } = useSelector(state => state.userPrograms)
     const { loading: requestLoading, status: requestProgramStatus, error: requestError } = useSelector(state => state.requestList);
     const role = userdetails.data.role || ''
     const tabs = [
@@ -58,6 +58,8 @@ export default function ProgramDetails() {
         },
     ]
 
+
+    const requestId = searchParams.get("request_id") || '';
 
     const {
         register,
@@ -89,17 +91,8 @@ export default function ProgramDetails() {
         setCertificateActiveTab(key)
     }
 
-    const programNotReady = ['yettoapprove', 'draft']
 
-    const programApprovalStage = {
-        yettoapprove: {status: 'yettoapprove', text: 'Waiting for admin approval'},
-        join_request_submitted: {status: 'join_request_submitted', text: 'Waiting for admin approval'},
-        join_request_rejected: {status: 'join_request_rejected', text: 'Join request rejected by admin'},
-        start_request_submitted: {status: 'start_request_submitted', text: 'Waiting for admin approval'},
-        start_request_rejected: {status: 'start_request_rejected', text: 'Start request rejected by admin'},
-        schedule_request_submitted: {status: 'schedule_request_submitted', text: 'Waiting for admin approval'},
-        cancel_request_submitted: {status: 'cancel_request_submitted', text: 'Waiting for admin approval'},
-    }
+    const commonApproval = ['completed', 'cancelled']
 
     useEffect(() => {
         if (Object.keys(programdetails).length && !programLoading) {
@@ -144,13 +137,14 @@ export default function ProgramDetails() {
 
     const handleJoinProgram = async (programId) => {
 
+        dispatch(updateProgram({ id: programId, status: programActionStatus.yettostart }))
         // if (role === 'mentee') {
-        setLoading({ initial: true, join: false })
-        const joinProgramAction = await api.post('join_program', { id: programId });
-        if (joinProgramAction.status === 200 && joinProgramAction.data) {
-            console.log('mssss', joinProgramAction)
-            setLoading({ initial: false, join: true })
-        }
+        // setLoading({ initial: true, join: false })
+        // const joinProgramAction = await api.post('join_program', { id: programId });
+        // if (joinProgramAction.status === 200 && joinProgramAction.data) {
+        //     console.log('mssss', joinProgramAction)
+        //     setLoading({ initial: false, join: true })
+        // }
         // }
         // if (role === 'mentor') setLoading({ initial: false, join: true })
 
@@ -160,7 +154,7 @@ export default function ProgramDetails() {
     // Handle Accept Program Popup
     const handleConfirmPopup = () => {
         dispatch(updateProgramRequest({
-            "id": parseInt(params.id),
+            "id": parseInt(requestId),
             "action": "accept"
         }))
     }
@@ -170,7 +164,7 @@ export default function ProgramDetails() {
         if (data.cancel_reason !== '') {
             if (confirmPopup.cancel) {
                 dispatch(updateProgramRequest({
-                    id: parseInt(params.id),
+                    id: parseInt(requestId),
                     action: "cancel",
                     cancelled_reason: data.cancel_reason
                 }))
@@ -192,13 +186,20 @@ export default function ProgramDetails() {
     }
 
     useEffect(() => {
+        if (status === programActionStatus.yettostart) {
+            setLoading({ initial: false, join: true })
+        }
+    }, [status])
+
+    useEffect(() => {
         if (requestProgramStatus === requestStatus.programupdate) {
             setTimeout(() => {
+                setConfirmPopup({ accept: false, cancel: false, programId: '' })
                 dispatch(getProgramDetails(params.id))
                 dispatch(updateLocalRequest({ status: '' }))
             }, [2000])
         }
-    }, [requestStatus])
+    }, [requestProgramStatus])
 
     useEffect(() => {
         if (taskJoined) {
@@ -256,7 +257,7 @@ export default function ProgramDetails() {
                     </span>
                     <div className='py-5'>
                         <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 600, fontSize: '18px' }}>
-                            Are you sure want to accept Program Request?
+                            Are you sure want to approve Program Request?
                         </p>
                     </div>
                     <div className='flex justify-center'>
@@ -279,7 +280,7 @@ export default function ProgramDetails() {
                     <div className='flex justify-center flex-col gap-5  mt-4 mb-4'
                         style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '10px', }}>
                         <div className='flex justify-between px-3 py-4 items-center' style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
-                            <p className='text-[18px]' style={{ color: 'rgba(0, 0, 0, 1)' }}>Cancel Program Request Reason </p>
+                            <p className='text-[18px]' style={{ color: 'rgba(0, 0, 0, 1)' }}>Reject Program Request Reason </p>
                             <img className='cursor-pointer' onClick={resetAcceptCancelPopup} src={CancelIcon} alt="CancelIcon" />
                         </div>
 
@@ -292,7 +293,7 @@ export default function ProgramDetails() {
                             <form onSubmit={handleSubmit(handleCancelReasonPopupSubmit)}>
                                 <div className='relative pb-8'>
                                     <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
-                                        Cancel Reason
+                                        Reject Request Reason
                                     </label>
 
                                     <div className='relative'>
@@ -327,6 +328,17 @@ export default function ProgramDetails() {
                         </div>
 
 
+                    </div>
+
+                </div>
+            </MuiModal>
+
+            <MuiModal modalOpen={loading.join} modalClose={() => setLoading({ ...loading, join: false })} noheader>
+                <div className='px-5 py-1 flex justify-center items-center'>
+                    <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
+                        style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
+                        <img src={SuccessTik} alt="SuccessTik" />
+                        <p className='text-white text-[12px]'>Successfully Launched a program</p>
                     </div>
 
                 </div>
@@ -420,7 +432,7 @@ export default function ProgramDetails() {
 
 
                                         {
-                                            programdetails.status === 'completed' ?
+                                            programCompleted.includes(programdetails.status) ?
 
                                                 <div className='py-9'>
                                                     <div className='py-3 px-16 text-white text-[14px] flex justify-center items-center' style={{
@@ -429,30 +441,13 @@ export default function ProgramDetails() {
                                                         width: '30%'
                                                     }}>Program Completed</div>
                                                 </div>
-
-                                                // :
-
-                                                // ((role === 'mentor' || (role === 'mentee' && !menteeJoined)) && programdetails.status !== 'cancelled' &&
-                                                //     programdetails.status !== 'yettoapprove') ?
-
-                                                //     <div className='py-9'>
-                                                //         <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                //             background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
-                                                //             borderRadius: '5px'
-                                                //         }}
-                                                //             onClick={() => handleJoinProgram(programdetails.id)}
-                                                //         >Join Program
-                                                //             <span className='pl-8 pt-1'><img style={{ width: '15px', height: '13px' }} src={DoubleArrowIcon} alt="DoubleArrowIcon" /></span>
-                                                //         </button>
-                                                //     </div>
-
                                                 : null
                                         }
 
                                         {
                                             role === 'mentor' ?
                                                 <>
-                                                    { programApprovalStage[programdetails.status] ?
+                                                    {programApprovalStage[programdetails.status] ?
                                                         <div className='flex gap-4 pt-10' >
                                                             <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
                                                                 border: "1px solid #E0382D",
@@ -465,7 +460,7 @@ export default function ProgramDetails() {
                                                             </button>
                                                         </div>
                                                         :
-                                                            programdetails.status === 'draft'  ?
+                                                        programdetails.status === 'draft' ?
                                                             <div className='py-9'>
                                                                 <div className='py-3 px-16 text-white text-[14px] flex justify-center items-center' style={{
                                                                     background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
@@ -482,7 +477,7 @@ export default function ProgramDetails() {
                                                                         borderRadius: '5px'
                                                                     }}
                                                                         onClick={() => handleJoinProgram(programdetails.id)}
-                                                                    >Join Program
+                                                                    >Launch
                                                                         <span className='pl-8 pt-1'><img style={{ width: '15px', height: '13px' }} src={DoubleArrowIcon} alt="DoubleArrowIcon" /></span>
                                                                     </button>
                                                                 </div>
@@ -515,26 +510,86 @@ export default function ProgramDetails() {
                                             role === 'admin' ?
                                                 <>
                                                     {
-                                                        programdetails.status === 'yettoapprove' &&
-
                                                         <div className='flex gap-4 pt-10' >
-                                                            <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                                border: "1px solid #E0382D",
-                                                                borderRadius: '5px',
-                                                                color: '#E0382D'
-                                                            }}
-                                                                onClick={() => handleAcceptCancelProgramRequest('cancel', programdetails.id)}
-                                                            >Cancel Request
-                                                            </button>
-                                                            <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                                background: "#16B681",
-                                                                borderRadius: '5px'
-                                                            }}
-                                                                onClick={() => handleAcceptCancelProgramRequest('accept', programdetails.id)}
-                                                            >Accept Request
-                                                            </button>
+                                                            {
+                                                                (requestId !== '' && (programRequestApproval.includes(programdetails.status) ||
+                                                                    programWaitingActiveApproval.includes(programdetails.status))
+                                                                ) ?
+
+                                                                    <>
+                                                                        <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                                            border: "1px solid #E0382D",
+                                                                            borderRadius: '5px',
+                                                                            color: '#E0382D'
+                                                                        }}
+                                                                            onClick={() => handleAcceptCancelProgramRequest('cancel', programdetails.id)}
+                                                                        >Reject Request
+                                                                        </button>
+                                                                        <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                                            background: "#16B681",
+                                                                            borderRadius: '5px'
+                                                                        }}
+                                                                            onClick={() => handleAcceptCancelProgramRequest('accept', programdetails.id)}
+                                                                        >Approve Request
+                                                                        </button>
+                                                                    </>
+
+                                                                    :
+
+                                                                    programInProgress.includes(programdetails.status) ?
+                                                                        <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                                            background: "#16B681",
+                                                                            borderRadius: '5px',
+                                                                            cursor: 'not-allowed'
+                                                                        }}
+                                                                            onClick={undefined}
+                                                                        >In-Progress
+                                                                        </button>
+
+                                                                        :
+
+                                                                        programNotLaunched.includes(programdetails.status)
+                                                                            ?
+                                                                            <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                                                background: "#16B681",
+                                                                                borderRadius: '5px',
+                                                                                cursor: 'not-allowed'
+                                                                            }}
+                                                                                onClick={undefined}
+                                                                            >Mentor yet to launch
+                                                                            </button>
+
+                                                                            :
+
+
+                                                                            programNotStarted.includes(programdetails.status) ?
+                                                                                <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                                                    background: "#16B681",
+                                                                                    borderRadius: '5px',
+                                                                                    cursor: 'not-allowed'
+                                                                                }}
+                                                                                    onClick={undefined}
+                                                                                >Mentor yet to start
+                                                                                </button>
+
+                                                                                :
+
+                                                                                (!programRequestApproval.includes(programdetails.status) && !commonApproval.includes(programdetails.status)) &&
+
+                                                                                <>
+                                                                                    <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                                                        background: "#16B681",
+                                                                                        borderRadius: '5px',
+                                                                                        cursor: 'not-allowed'
+                                                                                    }}
+                                                                                        onClick={undefined}
+                                                                                    >Approved
+                                                                                    </button>
+                                                                                </>
+                                                            }
                                                         </div>
                                                     }
+
                                                 </>
                                                 : null
                                         }
@@ -596,11 +651,7 @@ export default function ProgramDetails() {
                                             {programdetails.status === programActionStatus.cancelled ? 'Cancelled ' : ''} Reason
                                         </div>
                                         <div className='reason-content'>
-                                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever
-                                            since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.It has survived not only five
-                                            centuries, but also the leap into electronic typesetting,
-                                            remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages,
-                                            and more recently with desktop.
+                                            {programdetails?.cancel_reason?.cancelled_reason}
                                         </div>
 
                                     </div>

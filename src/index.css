@@ -649,7 +649,7 @@ input[type="range"]::-ms-thumb {
 .program-request .program-info .tab-list li {
   cursor: pointer;
   font-size: 14px;
-  padding: 10px 10px 20px;
+  padding: 10px 10px 10px;
   width: 170px;
   display: flex;
   flex-direction: column;

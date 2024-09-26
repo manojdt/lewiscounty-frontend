@@ -16,6 +16,7 @@ import feedReducer from "../features/feeds/feedSlice";
 import certificateReducer from "../features/certificates/certificateSlice";
 import activityReducer from "../features/activities/activitySlice";
 import requestReducer from "../features/request/requestSlice";
+import launchProgramReducer from "../features/launchProgram/launchProgramSlice";
 
 
 const combinedReducer = combineReducers({
@@ -32,7 +33,8 @@ const combinedReducer = combineReducers({
   certificates: certificateReducer,
   requestList: requestReducer,
   tasks: taskReducer,
-  activity: activityReducer
+  activity: activityReducer,
+  launchProgram: launchProgramReducer
 
 });
 

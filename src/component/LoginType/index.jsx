@@ -22,20 +22,20 @@ export const LoginType = () => {
         }
     };
 
-    useEffect(() => {
-        if(userInfo.data.role !== 'fresher'){
-            if(userInfo.data.is_registered) navigate('/dashboard')
-                else navigate('/questions')
-        }
-    }, [])
 
     useEffect(() => {
         if (!userInfo.loading && userInfo.status === userStatus.role) {
             navigate("/questions")
         }
+
+        if (userInfo?.data?.role  && userInfo?.data?.role !== 'fresher') {
+            console.log('pp', userInfo.data.role)
+            if (userInfo.data.is_registered) { navigate('/dashboard') }
+            else navigate('/questions')
+        }
     }, [userInfo])
 
-    console.log('loginType', loginType, error)
+    console.log('loginType', loginType, error, userInfo)
 
     return (
         <div className="h-full">
