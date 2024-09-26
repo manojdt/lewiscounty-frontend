@@ -292,7 +292,7 @@ export default function AllRequest() {
 
     let programRequestColumn = programRequestColumns.filter(request => request.for.includes(role))
 
-    if(actionTab !== 'program_start') {
+    if (actionTab !== 'program_start') {
         programRequestColumn = programRequestColumn.filter(column => column.field !== 'auto_approval')
     }
 
@@ -406,7 +406,7 @@ export default function AllRequest() {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
-                        <MenuItem onClick={(e) => { navigate(`/view-goal/${seletedItem.id}`)}} className='!text-[12px]'>
+                        <MenuItem onClick={(e) => { navigate(`/view-goal/${seletedItem.id}`) }} className='!text-[12px]'>
                             <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
                             View
                         </MenuItem>
@@ -484,14 +484,22 @@ export default function AllRequest() {
                             role === 'admin' &&
 
                             <>
-                                <MenuItem onClick={handleMemberAcceptRequest} className='!text-[12px]'>
-                                    <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
-                                    Approve
-                                </MenuItem>
-                                <MenuItem onClick={handleMemberCancelRequest} className='!text-[12px]'>
-                                    <img src={CloseCircle} alt="CancelIcon" className='pr-3 w-[27px]' />
-                                    Reject
-                                </MenuItem>
+                                {
+                                    (params.row.status === 'new' || params.row.status === 'pending') &&
+
+                                    <>
+
+                                        <MenuItem onClick={handleMemberAcceptRequest} className='!text-[12px]'>
+                                            <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
+                                            Approve
+                                        </MenuItem>
+                                        <MenuItem onClick={handleMemberCancelRequest} className='!text-[12px]'>
+                                            <img src={CloseCircle} alt="CancelIcon" className='pr-3 w-[27px]' />
+                                            Reject
+                                        </MenuItem>
+                                    </>
+                                }
+
                                 <MenuItem onClick={() => undefined} className='!text-[12px]'>
                                     <img src={ShareIcon} alt="ShareIcon" className='pr-3 w-[27px]' />
                                     Share

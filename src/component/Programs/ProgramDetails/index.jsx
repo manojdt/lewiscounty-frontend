@@ -7,7 +7,7 @@ import './program-details.css'
 import Carousel from '../../../shared/Carousel';
 import { curatedPrograms } from '../../../utils/mock';
 
-import { pipeUrls, programActionStatus, programApprovalStage, programCompleted, programInProgress, programNotLaunched, programNotReady, programNotStarted, programRequestApproval, programStatus, programWaitingActiveApproval, requestStatus } from '../../../utils/constant';
+import { pipeUrls, programActionStatus, programAdminRejected, programApprovalStage, programCompleted, programInProgress, programNotLaunched, programNotReady, programNotStarted, programRequestApproval, programStatus, programWaitingActiveApproval, requestStatus } from '../../../utils/constant';
 import { updateNewPrograms, updateProgramDetails } from '../../../services/programInfo';
 import { getMenteeJoinedInProgram, getProgramDetails, updateProgram } from '../../../services/userprograms';
 
@@ -137,17 +137,16 @@ export default function ProgramDetails() {
 
     const handleJoinProgram = async (programId) => {
 
-       
+
         if (role === 'mentee') {
             setLoading({ initial: true, join: false })
             const joinProgramAction = await api.post('join_program', { id: programId });
             if (joinProgramAction.status === 200 && joinProgramAction.data) {
-                console.log('mssss', joinProgramAction)
                 setLoading({ initial: false, join: true })
             }
         }
 
-        if(role === 'mentor'){
+        if (role === 'mentor') {
             dispatch(updateProgram({ id: programId, status: programActionStatus.yettostart }))
         }
         // if (role === 'mentor') setLoading({ initial: false, join: true })
@@ -436,16 +435,16 @@ export default function ProgramDetails() {
 
 
                                         {
-                                            programCompleted.includes(programdetails.status) ?
+                                            programCompleted.includes(programdetails.status) &&
 
-                                                <div className='py-9'>
-                                                    <div className='py-3 px-16 text-white text-[14px] flex justify-center items-center' style={{
-                                                        background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
-                                                        borderRadius: '5px',
-                                                        width: '30%'
-                                                    }}>Program Completed</div>
-                                                </div>
-                                                : null
+                                            <div className='py-9'>
+                                                <div className='py-3 px-16 text-white text-[14px] flex justify-center items-center' style={{
+                                                    background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
+                                                    borderRadius: '5px',
+                                                    width: '30%'
+                                                }}>Program Completed</div>
+                                            </div>
+
                                         }
 
                                         {
@@ -540,56 +539,70 @@ export default function ProgramDetails() {
 
                                                                     :
 
-                                                                    programInProgress.includes(programdetails.status) ?
+                                                                    programAdminRejected.includes(programdetails.status) ?
+
                                                                         <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                                            background: "#16B681",
+                                                                            border: "1px solid #E0382D",
                                                                             borderRadius: '5px',
+                                                                            color: '#E0382D',
                                                                             cursor: 'not-allowed'
                                                                         }}
                                                                             onClick={undefined}
-                                                                        >In-Progress
+                                                                        >Rejected
                                                                         </button>
 
                                                                         :
 
-                                                                        programNotLaunched.includes(programdetails.status)
-                                                                            ?
+                                                                        programInProgress.includes(programdetails.status) ?
                                                                             <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
                                                                                 background: "#16B681",
                                                                                 borderRadius: '5px',
                                                                                 cursor: 'not-allowed'
                                                                             }}
                                                                                 onClick={undefined}
-                                                                            >Mentor yet to launch
+                                                                            >In-Progress
                                                                             </button>
 
                                                                             :
 
-
-                                                                            programNotStarted.includes(programdetails.status) ?
+                                                                            programNotLaunched.includes(programdetails.status)
+                                                                                ?
                                                                                 <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
                                                                                     background: "#16B681",
                                                                                     borderRadius: '5px',
                                                                                     cursor: 'not-allowed'
                                                                                 }}
                                                                                     onClick={undefined}
-                                                                                >Mentor yet to start
+                                                                                >Mentor yet to launch
                                                                                 </button>
 
                                                                                 :
 
-                                                                                (!programRequestApproval.includes(programdetails.status) && !commonApproval.includes(programdetails.status)) &&
 
-                                                                                <>
+                                                                                programNotStarted.includes(programdetails.status) ?
                                                                                     <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
                                                                                         background: "#16B681",
                                                                                         borderRadius: '5px',
                                                                                         cursor: 'not-allowed'
                                                                                     }}
                                                                                         onClick={undefined}
-                                                                                    >Approved
+                                                                                    >Mentor yet to start
                                                                                     </button>
-                                                                                </>
+
+                                                                                    :
+
+                                                                                    (!programRequestApproval.includes(programdetails.status) && !commonApproval.includes(programdetails.status)) &&
+
+                                                                                    <>
+                                                                                        <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                                                            background: "#16B681",
+                                                                                            borderRadius: '5px',
+                                                                                            cursor: 'not-allowed'
+                                                                                        }}
+                                                                                            onClick={undefined}
+                                                                                        >Approved
+                                                                                        </button>
+                                                                                    </>
                                                             }
                                                         </div>
                                                     }
