@@ -137,15 +137,19 @@ export default function ProgramDetails() {
 
     const handleJoinProgram = async (programId) => {
 
-        dispatch(updateProgram({ id: programId, status: programActionStatus.yettostart }))
-        // if (role === 'mentee') {
-        // setLoading({ initial: true, join: false })
-        // const joinProgramAction = await api.post('join_program', { id: programId });
-        // if (joinProgramAction.status === 200 && joinProgramAction.data) {
-        //     console.log('mssss', joinProgramAction)
-        //     setLoading({ initial: false, join: true })
-        // }
-        // }
+       
+        if (role === 'mentee') {
+            setLoading({ initial: true, join: false })
+            const joinProgramAction = await api.post('join_program', { id: programId });
+            if (joinProgramAction.status === 200 && joinProgramAction.data) {
+                console.log('mssss', joinProgramAction)
+                setLoading({ initial: false, join: true })
+            }
+        }
+
+        if(role === 'mentor'){
+            dispatch(updateProgram({ id: programId, status: programActionStatus.yettostart }))
+        }
         // if (role === 'mentor') setLoading({ initial: false, join: true })
 
     }
