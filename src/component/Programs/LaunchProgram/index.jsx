@@ -98,7 +98,6 @@ export default function LaunchProgram() {
 
     const handleSearch = (search) => {
         setFilter({ ...filter, search })
-
     }
 
     useEffect(() => {

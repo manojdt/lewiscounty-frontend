@@ -16,6 +16,7 @@ import {
     updateGoalRequest,
     updateLocalRequest,
     updateMemberRequest,
+    updateMentorAutoApproval,
     updateProgramRequest
 } from "../../services/request";
 
@@ -37,11 +38,6 @@ const initialState = {
 export const requestSlice = createSlice({
     name: "requestInfo",
     initialState,
-    reducers: {
-        updateStatus: (state, action) => {
-            state.status = action.payload;
-          },
-    },
     extraReducers: (builder) => {
         builder
             .addCase(getprogramRequest.pending, (state) => {
@@ -310,7 +306,32 @@ export const requestSlice = createSlice({
             });
 
 
+
+
+            builder
+            .addCase(updateMentorAutoApproval.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(updateMentorAutoApproval.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    status: requestStatus.autoapproval,
+                    loading: false,
+                };
+            })
+            .addCase(updateMentorAutoApproval.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
+
     },
 });
-export const { updateStatus } = requestSlice.actions;
+
 export default requestSlice.reducer;

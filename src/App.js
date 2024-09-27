@@ -60,7 +60,7 @@ import AllRequest from "./component/Programs/AllRequest";
 import Members from "./component/Members";
 import LaunchProgram from "./component/Programs/LaunchProgram";
 import MentorProfile from "./component/MentorProfile/MentorProfile";
-
+import CreateCertificate from "./component/Certificate/CreateCertificate";
 
 function App() {
   const PrivateRoute = () => {
@@ -129,8 +129,11 @@ function App() {
           <Route path="/feeds" element={<Feeds />} />
           <Route path="/feed-details/:id" element={<FeedDetails />} />
           <Route path="/my-profile" element={<Profile />} />
+
           <Route path="/certificates" element={<Certificate />} />
+          <Route path="/create-certificate" element={<CreateCertificate />} />
           <Route path="/certificate-view" element={<CertificateDetails />} />
+          
 
           <Route path="/mentors" element={<Mentors />} />
           <Route path="/mentor-details/:id" element={<MentorDetails />} />

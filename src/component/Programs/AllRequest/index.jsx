@@ -31,12 +31,11 @@ import { Button } from '../../../shared';
 
 export default function AllRequest() {
     const navigate = useNavigate()
-    const [searchParams,setSearchParams] = useSearchParams();
+    const [searchParams] = useSearchParams();
 
     const dispatch = useDispatch();
     const { programRequest: programTableInfo, memberRequest, resourceRequest, categoryList, goalsRequest: goalsRequestInfo,
         loading, status, error } = useSelector(state => state.requestList);
-        console.log(status,"st")
     const [currentRequestTab, setCurrentRequestTab] = useState(RequestStatus.programRequest)
     const [filterStatus, setFilterStatus] = useState('new')
     const [anchorEl, setAnchorEl] = useState(null);
@@ -118,18 +117,9 @@ export default function AllRequest() {
     const handleClose = () => {
         setAnchorEl(null);
     };
-    const updateSearchParams = (key, value) => {
-        searchParams.set(key, value);  // Set the search parameter
-        setSearchParams(searchParams); // Update the URL without reloading
-      };
+  
     
-    const handleOpenProfile = (row) => {
-        console.log(row,"row")
-        if(actionTab==="mentor"){
-            navigate(`/mentor-profile/${row?.id}`)
-        }
-        setAnchorEl(null);
-    };
+
 
     const handleMoreClick = (event, data) => {
         console.log('more')
@@ -270,9 +260,7 @@ export default function AllRequest() {
         setCategoryPopup({ show: false, selectedItem: [], page: '', tab: '' })
     }
 
-const handelPorfilePage = (row) =>{
-        navigate(`/mentor-profile/${row?.id}`)
-}
+
     // Handle Selected Items for Category 
     const handleSelectedItems = (selectedInfo) => {
 
@@ -308,7 +296,7 @@ const handelPorfilePage = (row) =>{
 
     let programRequestColumn = programRequestColumns.filter(request => request.for.includes(role))
 
-    if(actionTab !== 'program_start') {
+    if (actionTab !== 'program_start') {
         programRequestColumn = programRequestColumn.filter(column => column.field !== 'auto_approval')
     }
 
@@ -422,7 +410,7 @@ const handelPorfilePage = (row) =>{
                             'aria-labelledby': 'basic-button',
                         }}
                     >
-                        <MenuItem onClick={(e) => { navigate(`/view-goal/${seletedItem.id}`)}} className='!text-[12px]'>
+                        <MenuItem onClick={(e) => { navigate(`/view-goal/${seletedItem.id}`) }} className='!text-[12px]'>
                             <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
                             View
                         </MenuItem>
@@ -500,14 +488,22 @@ const handelPorfilePage = (row) =>{
                             role === 'admin' &&
 
                             <>
-                                <MenuItem onClick={handleMemberAcceptRequest} className='!text-[12px]'>
-                                    <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
-                                    Approve
-                                </MenuItem>
-                                <MenuItem onClick={handleMemberCancelRequest} className='!text-[12px]'>
-                                    <img src={CloseCircle} alt="CancelIcon" className='pr-3 w-[27px]' />
-                                    Reject
-                                </MenuItem>
+                                {
+                                    (params.row.status === 'new' || params.row.status === 'pending') &&
+
+                                    <>
+
+                                        <MenuItem onClick={handleMemberAcceptRequest} className='!text-[12px]'>
+                                            <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
+                                            Approve
+                                        </MenuItem>
+                                        <MenuItem onClick={handleMemberCancelRequest} className='!text-[12px]'>
+                                            <img src={CloseCircle} alt="CancelIcon" className='pr-3 w-[27px]' />
+                                            Reject
+                                        </MenuItem>
+                                    </>
+                                }
+
                                 <MenuItem onClick={() => undefined} className='!text-[12px]'>
                                     <img src={ShareIcon} alt="ShareIcon" className='pr-3 w-[27px]' />
                                     Share
@@ -665,9 +661,7 @@ const handelPorfilePage = (row) =>{
         dispatch(getMemberRequest({
             status: filterStatus,
             user: actionTab,
-        })).then(() => {
-            updateSearchParams("status","")
-          });
+        }));
     }
 
     const getResourceRequestApi = () => {
@@ -826,16 +820,7 @@ const handelPorfilePage = (row) =>{
         if (searchParams.get('type') === 'member_join_request') {
             getMembersRequestApi()
         }
-        // if (searchParams.get('type') === 'member_join_request'&&searchParams.get('status') === 'cancel') {
-        //     setFilterStatus("cancel")
-        //     getMembersRequestApi()
-            
-        //  }
-        // if (searchParams.get('type') === 'member_join_request'&&searchParams.get('status') === 'accept') {
-        //     setFilterStatus("accept")
-        //     getMembersRequestApi()
-          
-        //  }
+      
         if (searchParams.get('type') === 'resource_access_request') {
             getResourceRequestApi()
         }
@@ -864,12 +849,9 @@ const handelPorfilePage = (row) =>{
         <div className="program-request px-8 mt-10">
             <div className='px-3 py-5' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
                 <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
-                    <div className='flex gap-5 items-center text-[14px]'>
-                        {/* <p style={{ color: 'rgba(89, 117, 162, 1)', fontWeight: 500 }}>Objectives</p>
-                        <img src={ArrowRightIcon} alt="ArrowRightIcon" /> */}
+                    <div className='flex gap-5 items-center text-[18px] font-semibold'>
                         <p>{role === 'admin' ? 'All ' : 'My '} Request</p>
                     </div>
-
                 </div>
 
                 {
@@ -1033,7 +1015,7 @@ const handelPorfilePage = (row) =>{
                                         </p>
 
                                         <p className="text-[12px] py-2 pl-5 pr-4 flex gap-4" style={{ background: 'rgba(29, 91, 191, 1)', borderRadius: '5px', height: '40px' }}>
-                                            <select className='focus:outline-none' style={{ background: 'rgba(29, 91, 191, 1)', border: 'none', color: '#fff' }} onChange={handleStatus} value={filterStatus}>
+                                            <select className='focus:outline-none' style={{ background: 'rgba(29, 91, 191, 1)', border: 'none', color: '#fff' }} onChange={handleStatus}>
                                                 <option value="new">New</option>
                                                 <option value="pending">Pending</option>
                                                 <option value="accept">Approved</option>

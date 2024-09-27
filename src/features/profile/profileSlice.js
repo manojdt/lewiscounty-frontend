@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
-    getMentorProfile,
   getUserProfile,
   updateProfile,
   updateProfileImage,
@@ -9,7 +8,6 @@ import { profileStatus } from "../../utils/constant";
 
 const initialState = {
   profile: {},
-  mentorProfile: {},
   loading: false,
   status: "",
   error: "",
@@ -42,29 +40,7 @@ export const profileSlice = createSlice({
           error: action.error.message,
         };
       });
-    builder
-      .addCase(getMentorProfile.pending, (state) => {
-        return {
-          ...state,
-          loading: true,
-        };
-      })
-      .addCase(getMentorProfile.fulfilled, (state, action) => {
-        return {
-          ...state,
-          status: profileStatus.load,
-          mentorProfile: action.payload,
-          loading: false,
-        };
-      })
-      .addCase(getMentorProfile.rejected, (state, action) => {
-        return {
-          ...state,
-          loading: false,
-          error: action.error.message,
-        };
-      });
-
+  
     builder
       .addCase(updateProfile.pending, (state) => {
         return {

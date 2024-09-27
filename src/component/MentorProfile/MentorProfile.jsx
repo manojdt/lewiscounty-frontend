@@ -24,7 +24,7 @@ import "./MentorProfile.css";
 import { Button } from "../../shared";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { getMentorProfile } from "../../services/profile";
+
 import MuiModal from "../../shared/Modal";
 import {
   cancelMemberRequest,
@@ -33,12 +33,13 @@ import {
 } from "../../services/request";
 import DataTable from "../../shared/DataGrid";
 import { categoryColumns } from "../../mock";
-import { updateStatus } from "../../features/request/requestSlice";
+
 import { getProfileInfo } from "../../services/userList";
 import moment from "moment/moment";
 import Programs from "../Dashboard/Programs";
 import { programFeeds, recentRequest } from "../../utils/mock";
 import ToastNotification from "../../shared/Toast";
+import { dateFormat } from "../../utils";
 
 function MentorProfile() {
   const { mentorProfile, loading, status } = useSelector(
@@ -111,9 +112,7 @@ function MentorProfile() {
     setCategoryPopup({ show: false, selectedItem: [] });
   };
   const handleMemberAcceptRequest = () => {
-    dispatch(getCategoryList()).then(() => {
-      dispatch(updateStatus("status")); // Dynamically update status
-    });
+    dispatch(getCategoryList())
     setCategoryPopup({ show: true, selectedItem: [] });
   };
   useEffect(() => {
@@ -269,7 +268,7 @@ function MentorProfile() {
                           <div className="contact-info flex gap-3 items-center pt-2">
                             <img src={CalendarIcon} alt="CalendarIcon" />
                             <span className="text-[12px]">
-                              {moment(userDetails?.dob).format("DD/MM/YYYY")}
+                              {dateFormat(userDetails?.dob)}
                             </span>
                           </div>
                         </div>
