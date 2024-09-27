@@ -102,15 +102,9 @@ function MentorProfile() {
         member_id: +id,
       })
     ).then(() => {
-      handleCancelConfirmPopup()
-      setShowToast({
-        show: true,
-        message: "Member Request updated successfully",
-      });
-      setTimeout(() => {
-        setShowToast({ show: false, message: "" });
-        navigate("/all-request?type=member_join_request");
-      }, 2000);
+      handleCancelConfirmPopup();
+
+      navigate("/all-request?type=member_join_request");
     });
   };
   const handleCloseCategoryPopup = () => {
@@ -141,15 +135,9 @@ function MentorProfile() {
     };
     dispatch(updateMemberRequest(payload)).then(() => {
       setCategoryPopup({ show: false, selectedItem: [] });
-      setShowToast({
-        show: true,
-        message: "Member Request updated successfully",
-      });
-      setTimeout(() => {
-        setShowToast({ show: false, message: "" });
-        navigate("/all-request?type=member_join_request");
-      }, 2000);
-    })
+
+      navigate("/all-request?type=member_join_request");
+    });
   };
   const footerComponent = (props) => {
     return (
