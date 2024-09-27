@@ -62,7 +62,7 @@ export default function MentorDetails() {
         console.log(event.target.checked)
         setChecked(event.target.checked);
         dispatch(updateMentorAutoApproval({
-            id: 279,
+            id: params.id,
             start_auto_approval_status: event.target.checked
         }))
     };
