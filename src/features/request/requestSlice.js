@@ -16,6 +16,7 @@ import {
     updateGoalRequest,
     updateLocalRequest,
     updateMemberRequest,
+    updateMentorAutoApproval,
     updateProgramRequest
 } from "../../services/request";
 
@@ -298,6 +299,31 @@ export const requestSlice = createSlice({
                 };
             })
             .addCase(programCancelRequest.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
+
+
+
+            builder
+            .addCase(updateMentorAutoApproval.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(updateMentorAutoApproval.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    status: requestStatus.autoapproval,
+                    loading: false,
+                };
+            })
+            .addCase(updateMentorAutoApproval.rejected, (state, action) => {
                 return {
                     ...state,
                     loading: false,

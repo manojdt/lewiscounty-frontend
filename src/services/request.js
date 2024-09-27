@@ -145,3 +145,15 @@ export const programCancelRequest = createAsyncThunk(
         return programCancelRequestInfo;
     }
 );
+
+
+export const updateMentorAutoApproval = createAsyncThunk(
+    "updateMentorAutoApproval",
+    async (data) => {
+        const updateAutoApproval = await api.put('program_request/update_start_auto_approval_status', data);
+        if (updateAutoApproval.status === 200 && updateAutoApproval.data) {
+            return updateAutoApproval.data;
+        }
+        return updateAutoApproval;
+    }
+);

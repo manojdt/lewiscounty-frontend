@@ -205,7 +205,8 @@ export const requestStatus = {
   memberupdate: 'memberupdated',
   membercancel: 'membercancelled',
   reschedule: 'rescheduled',
-  cancel: 'cancelled'
+  cancel: 'cancelled',
+  autoapproval: 'autoapproval',
 }
 
 export const profileStatus = {
@@ -807,6 +808,7 @@ export const ProgramStatusInCard = {
 
 export const programApprovalStage = {
   yettoapprove: { status: 'yettoapprove', text: 'Waiting for admin approval' },
+  new_program_request_rejected: { status: 'new_program_request_rejected', text: 'Program request rejected by admin' },
   join_request_submitted: { status: 'join_request_submitted', text: 'Waiting for join request admin approval' },
   join_request_rejected: { status: 'join_request_rejected', text: 'Join request rejected by admin' },
   start_request_submitted: { status: 'start_request_submitted', text: 'Waiting for start request admin approval' },
@@ -816,6 +818,8 @@ export const programApprovalStage = {
 }
 
 export const programWaitingActiveApproval = ['yettoapprove']
+
+export const programAdminRejected = ['new_program_request_rejected','join_request_rejected','start_request_rejected']
 
 export const programNotLaunched = ['yettojoin']
 

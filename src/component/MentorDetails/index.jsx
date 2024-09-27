@@ -28,12 +28,12 @@ import Programs from '../Dashboard/Programs';
 
 import { programActivityRows } from '../../mock';
 import { recentRequest, programFeeds } from '../../utils/mock'
-import { Backdrop, CircularProgress } from '@mui/material';
+import { Backdrop, CircularProgress, Switch } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import MediaPost from '../Dashboard/MediaPost';
 import { getMenteeProgramActivity, getMentorProgramActivity, getMyMenteeInfo, getMyMentorInfo, getProfileInfo } from '../../services/userList';
 import { dateFormat } from '../../utils';
-import { cancelMemberRequest, updateLocalRequest } from '../../services/request';
+import { cancelMemberRequest, updateLocalRequest, updateMentorAutoApproval } from '../../services/request';
 import { requestStatus } from '../../utils/constant';
 import MuiModal from '../../shared/Modal';
 
@@ -44,6 +44,12 @@ export default function MentorDetails() {
     const [userDetails, setUserDetails] = useState({})
     const [confirmPopup, setConfirmPopup] = useState({ accept: false, cancel: false, programId: '' })
 
+    const options = ['Off', 'On'];
+    const [value, setValue] = useState(options[0]);
+
+    const [checked, setChecked] = useState(false);
+
+
     const userInfo = useSelector(state => state.userInfo)
 
     const { mentorDetails, menteeDetails, loading, programActivity, userDetails: profileInfo } = useSelector(state => state.userList)
@@ -51,6 +57,15 @@ export default function MentorDetails() {
     const { loading: requestLoading, status: requestStatusInfo, error: requestStatusError } = useSelector(state => state.requestList);
 
     const role = userInfo.data.role || ''
+
+    const handleChange = (event) => {
+        console.log(event.target.checked)
+        setChecked(event.target.checked);
+        dispatch(updateMentorAutoApproval({
+            id: 279,
+            start_auto_approval_status: event.target.checked
+        }))
+    };
 
     const programActivityColumns = [{
         field: 'program_name',
@@ -156,9 +171,6 @@ export default function MentorDetails() {
         resetConfirmPopup()
     }
 
-
-
-
     useEffect(() => {
         if (requestStatusInfo === requestStatus.memberupdate || requestStatusInfo === requestStatus.membercancel) {
             resetConfirmPopup()
@@ -166,6 +178,14 @@ export default function MentorDetails() {
                 dispatch(getProfileInfo(params.id))
                 dispatch(updateLocalRequest({ status: '' }))
             }, 3000)
+        }
+
+        if (requestStatusInfo === requestStatus.autoapproval) {
+            setTimeout(() => {
+                dispatch(getProfileInfo(params.id))
+                dispatch(updateLocalRequest({ status: '' }))
+            }, 3000)
+         
         }
     }, [requestStatusInfo])
 
@@ -194,6 +214,7 @@ export default function MentorDetails() {
         // }
 
         setUserDetails(profileInfo)
+        setChecked(profileInfo.start_auto_approval_status)
 
     }, [mentorDetails, menteeDetails, profileInfo])
 
@@ -203,7 +224,7 @@ export default function MentorDetails() {
         <div className="px-9 my-6 grid">
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => 999999999 }}
-                open={loading}
+                open={loading || requestLoading}
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
@@ -246,6 +267,21 @@ export default function MentorDetails() {
 
                 </div>
             </MuiModal>
+
+
+            <MuiModal modalOpen={requestStatusInfo === requestStatus.autoapproval} modalClose={resetConfirmPopup} noheader>
+                <div className='px-5 py-1 flex justify-center items-center'>
+                    <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
+                        style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
+                        <img src={SuccessTik} alt="SuccessTik" />
+                        <p className='text-white text-[12px]'>Auto Approval {checked ? 'enabled ' : 'disabled '} successfully</p>
+                    </div>
+
+                </div>
+            </MuiModal>
+
+
+
 
             {
                 Object.keys(userDetails).length ?
@@ -488,10 +524,9 @@ export default function MentorDetails() {
                                             }
                                         </div>
                                     </div>
+
                                     <div>
-
                                         <div style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }}>
-
                                             <div className='py-4 px-6'>
                                                 <div className='flex justify-around'>
                                                     <div className='text-center'>
@@ -588,6 +623,23 @@ export default function MentorDetails() {
                                         </div>
 
                                         {
+                                            role === 'admin' &&
+                                            <div className='mt-8' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }}>
+                                                <div className='flex justify-between items-center px-6 py-4'>
+                                                    <p style={{ color: '#1D5BBF' }}>Auto Approval</p>
+                                                    <div>
+                                                        <Switch
+                                                            checked={checked}
+                                                            onChange={handleChange}
+                                                            inputProps={{ 'aria-label': 'controlled' }}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        }
+
+                                        {
                                             role === 'mentor' &&
                                             <div className='mt-8'>
                                                 <MediaPost />
@@ -629,7 +681,6 @@ export default function MentorDetails() {
                                                 )
                                             }
                                         </div>
-
 
                                     </div>
                                 </div>

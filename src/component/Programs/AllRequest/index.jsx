@@ -292,7 +292,7 @@ export default function AllRequest() {
 
     let programRequestColumn = programRequestColumns.filter(request => request.for.includes(role))
 
-    if(actionTab !== 'program_start') {
+    if (actionTab !== 'program_start') {
         programRequestColumn = programRequestColumn.filter(column => column.field !== 'auto_approval')
     }
 
@@ -406,7 +406,7 @@ export default function AllRequest() {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
-                        <MenuItem onClick={(e) => { navigate(`/view-goal/${seletedItem.id}`)}} className='!text-[12px]'>
+                        <MenuItem onClick={(e) => { navigate(`/view-goal/${seletedItem.id}`) }} className='!text-[12px]'>
                             <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
                             View
                         </MenuItem>
@@ -484,14 +484,22 @@ export default function AllRequest() {
                             role === 'admin' &&
 
                             <>
-                                <MenuItem onClick={handleMemberAcceptRequest} className='!text-[12px]'>
-                                    <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
-                                    Approve
-                                </MenuItem>
-                                <MenuItem onClick={handleMemberCancelRequest} className='!text-[12px]'>
-                                    <img src={CloseCircle} alt="CancelIcon" className='pr-3 w-[27px]' />
-                                    Reject
-                                </MenuItem>
+                                {
+                                    (params.row.status === 'new' || params.row.status === 'pending') &&
+
+                                    <>
+
+                                        <MenuItem onClick={handleMemberAcceptRequest} className='!text-[12px]'>
+                                            <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
+                                            Approve
+                                        </MenuItem>
+                                        <MenuItem onClick={handleMemberCancelRequest} className='!text-[12px]'>
+                                            <img src={CloseCircle} alt="CancelIcon" className='pr-3 w-[27px]' />
+                                            Reject
+                                        </MenuItem>
+                                    </>
+                                }
+
                                 <MenuItem onClick={() => undefined} className='!text-[12px]'>
                                     <img src={ShareIcon} alt="ShareIcon" className='pr-3 w-[27px]' />
                                     Share
@@ -836,12 +844,9 @@ export default function AllRequest() {
         <div className="program-request px-8 mt-10">
             <div className='px-3 py-5' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
                 <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
-                    <div className='flex gap-5 items-center text-[14px]'>
-                        {/* <p style={{ color: 'rgba(89, 117, 162, 1)', fontWeight: 500 }}>Objectives</p>
-                        <img src={ArrowRightIcon} alt="ArrowRightIcon" /> */}
+                    <div className='flex gap-5 items-center text-[18px] font-semibold'>
                         <p>{role === 'admin' ? 'All ' : 'My '} Request</p>
                     </div>
-
                 </div>
 
                 {
