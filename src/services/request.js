@@ -75,6 +75,7 @@ export const updateGoalRequest = createAsyncThunk(
 export const getCategoryList = createAsyncThunk(
     "getCategoryList",
     async () => {
+       
         const getCategoryInfo = await api.get('user/accept_member');
         if (getCategoryInfo.status === 200 && getCategoryInfo.data) {
             return getCategoryInfo.data;

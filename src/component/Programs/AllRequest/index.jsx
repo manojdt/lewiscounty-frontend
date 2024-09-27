@@ -32,6 +32,7 @@ import { Button } from '../../../shared';
 export default function AllRequest() {
     const navigate = useNavigate()
     const [searchParams] = useSearchParams();
+
     const dispatch = useDispatch();
     const { programRequest: programTableInfo, memberRequest, resourceRequest, categoryList, goalsRequest: goalsRequestInfo,
         loading, status, error } = useSelector(state => state.requestList);
@@ -116,6 +117,9 @@ export default function AllRequest() {
     const handleClose = () => {
         setAnchorEl(null);
     };
+  
+    
+
 
     const handleMoreClick = (event, data) => {
         console.log('more')
@@ -475,7 +479,7 @@ export default function AllRequest() {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
-                        <MenuItem onClick={(e) => { handleClose(); navigate(`/mentor-details/${seletedItem.id}`) }} className='!text-[12px]'>
+                        <MenuItem onClick={(e) => { handleClose(); navigate(`/mentor-profile/${params?.row?.id}`) }} className='!text-[12px]'>
                             <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
                             View Profile
                         </MenuItem>
@@ -657,7 +661,7 @@ export default function AllRequest() {
         dispatch(getMemberRequest({
             status: filterStatus,
             user: actionTab,
-        }))
+        }));
     }
 
     const getResourceRequestApi = () => {
@@ -793,6 +797,7 @@ export default function AllRequest() {
         if (searchParams.get('type') === 'member_join_request') {
             setActiveTableDetails({ column: actionTab === 'mentor' ? [...memberMentorRequestColumns, ...membersColumns] : [...memberMenteeRequestColumns, ...membersColumns], data: memberRequest })
         }
+      
 
         if (searchParams.get('type') === 'goal_request') {
             setActiveTableDetails({ column: goalColumns, data: goalsRequestInfo })
@@ -815,7 +820,7 @@ export default function AllRequest() {
         if (searchParams.get('type') === 'member_join_request') {
             getMembersRequestApi()
         }
-
+      
         if (searchParams.get('type') === 'resource_access_request') {
             getResourceRequestApi()
         }

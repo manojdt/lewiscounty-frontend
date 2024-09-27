@@ -38,7 +38,6 @@ const initialState = {
 export const requestSlice = createSlice({
     name: "requestInfo",
     initialState,
-    reducers: {},
     extraReducers: (builder) => {
         builder
             .addCase(getprogramRequest.pending, (state) => {

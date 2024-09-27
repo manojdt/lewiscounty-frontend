@@ -8,7 +8,7 @@ import {
   LoginType,
   Signup,
   VerifyOTP,
-  Mentees
+  Mentees,
 } from "./component";
 import Layout from "./component/Layout";
 import { useSelector, useDispatch } from "react-redux";
@@ -31,7 +31,7 @@ import { Mentor } from "./component/Dashboard/Mentor";
 import { Mentors } from "./component/Mentors";
 import { Tasks } from "./component/Tasks";
 import { TaskDetails } from "./component/Tasks/TaskDetails";
-import  MentorTask  from "./component/Mentor/Task";
+import MentorTask from "./component/Mentor/Task";
 import MentorTaskDetails from "./component/Mentor/Task/TaskDetails";
 import PreviewTaskDetails from "./component/Tasks/PreviewTaskDetails";
 import Reports from "./component/Reports";
@@ -50,7 +50,7 @@ import NotificationMenu from "./component/Notification/NotificationMenu";
 import Feeds from "./component/Feeds";
 import FeedDetails from "./component/Feeds/FeedDetails";
 import HelpPage from "./component/Help/Help";
-import CalendarMain from './component/Calendar/CalendarMain';
+import CalendarMain from "./component/Calendar/CalendarMain";
 import CreateMeeting from "./component/Calendar/CreateMeeting";
 import { Calendar } from "primereact/calendar";
 import Scheduler from "./component/Calendar";
@@ -59,19 +59,19 @@ import DiscussionDetails from "./component/Discussions/DiscussionDetails";
 import AllRequest from "./component/Programs/AllRequest";
 import Members from "./component/Members";
 import LaunchProgram from "./component/Programs/LaunchProgram";
+import MentorProfile from "./component/MentorProfile/MentorProfile";
 import CreateCertificate from "./component/Certificate/CreateCertificate";
 
 function App() {
- 
   const PrivateRoute = () => {
-    const dispatch = useDispatch()
-    const userData = useSelector(state => state.userInfo)
+    const dispatch = useDispatch();
+    const userData = useSelector((state) => state.userInfo);
     const loggedIn = localStorage.getItem("access_token");
     useEffect(() => {
-      if(userData.data && !Object.keys(userData.data).length){
-        dispatch(updateInfo())
+      if (userData.data && !Object.keys(userData.data).length) {
+        dispatch(updateInfo());
       }
-    },[])
+    }, []);
     // return <Outlet />
     return loggedIn ? <Outlet /> : <Navigate to="/login" />;
   };
@@ -81,9 +81,7 @@ function App() {
     return loggedIn ? <Outlet /> : <Navigate to="/dashboard" />;
   };
 
-
   return (
-    
     <Routes>
       <Route element={<PubicRoutes />}>
         <Route path="/" element={<Navigate to="/login" />} />
@@ -99,7 +97,7 @@ function App() {
         <Route path="/questions" element={<Questions />} />
         <Route element={<Layout />}>
           <Route path="/dashboard" element={<Dashboard />} />
-          
+
           <Route path="/programs" element={<Programs />} />
           <Route path="/program-details/:id" element={<ProgramDetails />} />
           <Route path="/program-task/:id" element={<ProgramTask />} />
@@ -113,7 +111,6 @@ function App() {
           <Route path="/all-request" element={<AllRequest />} />
           <Route path="/program" element={<ProgramData />} />
 
-
           <Route path="/calendar" element={<Scheduler />} />
           <Route path="/create-meeting" element={<CreateMeeting />} />
           <Route path="/members" element={<Members />} />
@@ -121,6 +118,8 @@ function App() {
 
           <Route path="/discussions" element={<Discussions />} />
           <Route path="/discussion/:id" element={<DiscussionDetails />} />
+
+          <Route path="/mentor-profile/:id" element={<MentorProfile />} />
 
           <Route path="/edit-profile" element={<EditProfile />} />
           <Route path="/program-data" element={<ProgramsData />} />
@@ -139,7 +138,10 @@ function App() {
           <Route path="/mentors" element={<Mentors />} />
           <Route path="/mentor-details/:id" element={<MentorDetails />} />
           <Route path="/mentor-tasks" element={<MentorTask />} />
-          <Route path="/mentor-tasks-details/:id" element={<MentorTaskDetails /> } />
+          <Route
+            path="/mentor-tasks-details/:id"
+            element={<MentorTaskDetails />}
+          />
 
           <Route path="/mentees" element={<Mentees />} />
           <Route path="/mentee-details/:id" element={<MentorDetails />} />
@@ -150,20 +152,21 @@ function App() {
 
           <Route path="/launch-program" element={<LaunchProgram />} />
           <Route path="/goals" element={<Goals />} />
-          <Route path="/mentor-view-mentee-goal/:id" element={<MentorViewMenteeGoal />} />
+          <Route
+            path="/mentor-view-mentee-goal/:id"
+            element={<MentorViewMenteeGoal />}
+          />
           <Route path="/view-goal/:id" element={<ViewGoal />} />
 
           <Route path="/reports" element={<Reports />} />
           <Route path="/create-report" element={<CreateReport />} />
           <Route path="/edit-report/:id" element={<EditReport />} />
           <Route path="/view-report/:id" element={<ViewReport />} />
-
         </Route>
       </Route>
 
       <Route path="/logout" element={<Logout />} />
     </Routes>
-    
   );
 }
 
