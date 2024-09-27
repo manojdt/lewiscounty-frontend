@@ -844,12 +844,9 @@ export default function AllRequest() {
         <div className="program-request px-8 mt-10">
             <div className='px-3 py-5' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
                 <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
-                    <div className='flex gap-5 items-center text-[14px]'>
-                        {/* <p style={{ color: 'rgba(89, 117, 162, 1)', fontWeight: 500 }}>Objectives</p>
-                        <img src={ArrowRightIcon} alt="ArrowRightIcon" /> */}
+                    <div className='flex gap-5 items-center text-[18px] font-semibold'>
                         <p>{role === 'admin' ? 'All ' : 'My '} Request</p>
                     </div>
-
                 </div>
 
                 {

@@ -107,11 +107,6 @@ export const memberRequestColumns = [{
 ];
 
 
-
-
-
-
-
 export const launchProgramColumns = [{
         field: 'categories',
         headerName: 'Category',
@@ -135,4 +130,54 @@ export const launchProgramColumns = [{
         flex: 1,
         id: 1,
     },
+];
+
+
+export const certificateColumns = [{
+        field: 'categories',
+        headerName: 'Category',
+        flex: 1,
+        id: 0,
+    },
+    {
+        field: 'program_name',
+        headerName: 'Program Name',
+        flex: 1,
+        id: 1,
+    },
+    {
+        field: 'mentees',
+        headerName: 'Mentees',
+        flex: 1,
+        id: 2,
+    }, {
+        field: 'pass',
+        headerName: 'Pass',
+        flex: 1,
+        id: 1,
+    },
+    {
+        field: 'fail',
+        headerName: 'Fail',
+        flex: 1,
+        id: 1,
+    },
+    {
+        field: 'request_date',
+        headerName: 'Request Date',
+        flex: 1,
+        id: 1,
+    },
+    {
+        field: 'last_update_date',
+        headerName: 'Last updated Date',
+        flex: 1,
+        id: 1,
+    },
+    {
+        field: 'last_update_by',
+        headerName: 'Last updated by',
+        flex: 1,
+        id: 1,
+    }
 ];

@@ -1107,6 +1107,20 @@ export const ProgramTabs = [{
   },
 ]
 
+export const CourseLevelOptions = [{
+  key: "beginner",
+  value: "Beginner"
+},
+{
+  key: "intermediate",
+  value: "Intermediate"
+},
+{
+  key: "expert",
+  value: "Expert"
+},
+]
+
 export const ProgramInformationFields = [{
     type: "dropdown",
     name: "category",
@@ -1125,7 +1139,7 @@ export const ProgramInformationFields = [{
       },
     ],
     width: 'width-32',
-    for: ['admin','mentor']
+    for: ['admin', 'mentor']
   },
   {
     type: "input",
@@ -1137,7 +1151,7 @@ export const ProgramInformationFields = [{
       required: "This field is required",
     },
     width: 'width-32',
-    for: ['admin','mentor']
+    for: ['admin', 'mentor']
   },
   {
     type: "dropdown",
@@ -1177,7 +1191,7 @@ export const ProgramInformationFields = [{
       },
     ],
     width: 'width-32',
-    for: ['admin','mentor']
+    for: ['admin', 'mentor']
   },
   {
     type: "textbox",
@@ -1188,7 +1202,7 @@ export const ProgramInformationFields = [{
       required: "This field is required",
     },
     width: 'w-full',
-    for: ['admin','mentor']
+    for: ['admin', 'mentor']
   },
   {
     type: "textbox",
@@ -1199,7 +1213,7 @@ export const ProgramInformationFields = [{
       required: "This field is required",
     },
     width: 'w-full',
-    for: ['admin','mentor']
+    for: ['admin', 'mentor']
   },
   {
     type: "dropdown",
@@ -1209,21 +1223,9 @@ export const ProgramInformationFields = [{
     inputRules: {
       required: "This field is required",
     },
-    options: [{
-        key: "beginner",
-        value: "Beginner"
-      },
-      {
-        key: "intermediate",
-        value: "Intermediate"
-      },
-      {
-        key: "expert",
-        value: "Expert"
-      },
-    ],
+    options: CourseLevelOptions,
     width: 'width-32',
-    for: ['admin','mentor']
+    for: ['admin', 'mentor']
   },
   {
     type: "date",
@@ -1234,7 +1236,7 @@ export const ProgramInformationFields = [{
       required: "This field is required",
     },
     width: 'width-32',
-    for: ['admin','mentor']
+    for: ['admin', 'mentor']
   },
   {
     type: "date",
@@ -1245,7 +1247,7 @@ export const ProgramInformationFields = [{
       required: "This field is required",
     },
     width: 'width-32',
-    for: ['admin','mentor']
+    for: ['admin', 'mentor']
   },
   {
     type: "popup-input",
@@ -1258,7 +1260,7 @@ export const ProgramInformationFields = [{
     },
     width: 'w-full',
     icon: 'add',
-    for: ['admin','mentor']
+    for: ['admin', 'mentor']
   },
   {
     type: "input",
@@ -1282,7 +1284,7 @@ export const ProgramInformationFields = [{
       required: "This field is required",
     },
     width: 'width-32',
-    for: ['admin','mentor']
+    for: ['admin', 'mentor']
   },
   {
     type: "dropdown",
@@ -1302,7 +1304,7 @@ export const ProgramInformationFields = [{
       },
     ],
     width: 'width-32',
-    for: ['admin','mentor']
+    for: ['admin', 'mentor']
   },
   {
     type: "dropdown",
@@ -1322,7 +1324,7 @@ export const ProgramInformationFields = [{
       },
     ],
     width: 'width-32',
-    for: ['admin','mentor']
+    for: ['admin', 'mentor']
   },
   {
     type: "dropdown",
@@ -1355,7 +1357,7 @@ export const ProgramInformationFields = [{
     },
     width: 'w-full',
     icon: 'location',
-    for: ['admin','mentor']
+    for: ['admin', 'mentor']
   },
 ];
 
@@ -1368,14 +1370,14 @@ export const AboutProgramFields = [{
       required: "This field is required",
     },
     width: 'width-82',
-    for: ['admin','mentor']
+    for: ['admin', 'mentor']
   },
   {
     type: "htmlbuilder",
     name: "html_builder",
     text: "Use HTML Builder",
     width: 'width-17',
-    for: ['admin','mentor']
+    for: ['admin', 'mentor']
   },
 
   {
@@ -1389,7 +1391,7 @@ export const AboutProgramFields = [{
     },
     width: 'w-full',
     icon: 'add',
-    for: ['admin','mentor']
+    for: ['admin', 'mentor']
   },
   {
     type: "file",
@@ -1401,7 +1403,7 @@ export const AboutProgramFields = [{
       required: "This field is required",
     },
     width: 'w-full',
-    for: ['admin','mentor']
+    for: ['admin', 'mentor']
   },
   {
     type: "file",
@@ -1413,7 +1415,7 @@ export const AboutProgramFields = [{
       required: false,
     },
     width: 'w-full',
-    for: ['admin','mentor']
+    for: ['admin', 'mentor']
   },
 ]
 
@@ -1426,14 +1428,14 @@ export const ProgramOutcomesFields = [{
       required: "This field is required",
     },
     width: 'width-82',
-    for: ['admin','mentor']
+    for: ['admin', 'mentor']
   },
   {
     type: "htmlbuilder",
     name: "html_builder",
     text: "Use HTML Builder",
     width: 'width-17',
-    for: ['admin','mentor']
+    for: ['admin', 'mentor']
   },
 
   {
@@ -1447,7 +1449,7 @@ export const ProgramOutcomesFields = [{
     },
     width: 'w-full',
     icon: 'add',
-    for: ['admin','mentor']
+    for: ['admin', 'mentor']
   },
 ]
 
@@ -1462,7 +1464,7 @@ export const ProgramTestimonialsFields = [{
     },
     width: 'w-full',
     icon: 'add',
-    for: ['admin','mentor']
+    for: ['admin', 'mentor']
   },
   {
     type: "dropdown",
@@ -1486,7 +1488,7 @@ export const ProgramTestimonialsFields = [{
       },
     ],
     width: 'w-full',
-    for: ['admin','mentor']
+    for: ['admin', 'mentor']
   },
 ]
 
@@ -1656,7 +1658,7 @@ export const ReportFields = [{
     options: [],
     width: 'width-32',
   },
-  
+
   {
     type: "dropdown",
     name: "mentor_manager",
@@ -1854,9 +1856,6 @@ export const EditProfileFields = [{
 ];
 
 
-
-
-
 export const reportColumns = [{
     field: 'category_name',
     headerName: 'Category',
@@ -1919,7 +1918,6 @@ export const reportColumns = [{
 ];
 
 
-
 export const myMentorColumns = [{
     field: 'designation',
     headerName: 'Designation',
@@ -1944,12 +1942,6 @@ export const myMentorColumns = [{
     id: 4,
   }
 ];
-
-
-
-
-
-
 
 export const CreateMeetingFields = [{
     type: "input",
@@ -2092,4 +2084,111 @@ export const CreateMeetingFields = [{
     icon: 'add'
   },
 
+];
+
+
+export const CreateCertificateFields = [{
+    type: "dropdown",
+    name: "category",
+    label: "Category",
+    placeholder: "Select Category",
+    inputRules: {
+      required: "This field is required",
+    },
+    options: [],
+    width: 'width-32',
+  },
+  {
+    type: "dropdown",
+    name: "program",
+    label: "Program Name",
+    placeholder: "Select Program Name",
+    inputRules: {
+      required: "This field is required",
+    },
+    options: [],
+    width: 'width-32',
+  },
+  {
+    type: "input",
+    name: "mentor_name",
+    fieldtype: "text",
+    label: "Mentor Name",
+    placeholder: "Mentor Name",
+    inputRules: {
+    },
+    width: 'width-32',
+    disabled: true
+  },
+  {
+    type: "input",
+    name: "course_level",
+    fieldtype: "text",
+    label: "Course Level",
+    placeholder: "Course Level",
+    inputRules: {
+    },
+    width: 'width-32',
+    disabled: true
+  },
+  {
+    type: "date",
+    name: "start_date",
+    label: "Program Start Date and Time",
+    placeholder: "Select Program Start Date and Time",
+    inputRules: {
+    },
+    width: 'width-32',
+    disabled: true
+  },
+  {
+    type: "date",
+    name: "end_date",
+    label: "Program End Date and Time",
+    placeholder: "Select Program End Date and Time",
+    inputRules: {
+    },
+    width: 'width-32',
+    disabled: true
+  },
+  {
+    type: "input",
+    name: "duration",
+    label: "Duration",
+    placeholder: "Duration",
+    inputRules: {
+    },
+    width: 'w-[49%]',
+    disabled: true
+  },
+  {
+    type: "popup-input",
+    name: "participated_mentees",
+    label: "Participated Mentees",
+    placeholder: "Select Meneteed",
+    inputRules: {
+    },
+    options: [],
+    width: 'w-[49%]',
+  },
+  {
+    type: "popup-input",
+    name: "pass_mentees",
+    label: "Pass Mentees",
+    placeholder: "Select Meneteed",
+    inputRules: {
+    },
+    options: [],
+    width: 'w-[49%]',
+  },
+  {
+    type: "popup-input",
+    name: "fail_mentees",
+    label: "Fail  Mentees",
+    placeholder: "Select Meneteed",
+    inputRules: {
+    },
+    options: [],
+    width: 'w-[49%]',
+  },
 ];
