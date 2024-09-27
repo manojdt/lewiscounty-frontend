@@ -57,14 +57,7 @@ export default function Layout() {
     })
   }
 
-  const moreitems = [
-    {
-      label: <div className='flex gap-4 items-center'>
-        <img src={ReportIcon} alt="ReportIcon" />
-        <p>Reports</p>
-      </div>,
-      command: () => navigate('/reports')
-    },
+  let moreitems = [
     {
       label: <div className='flex gap-4 items-center'>
         <img src={FeedbackIcon} alt="FeedbackIcon" />
@@ -90,14 +83,25 @@ export default function Layout() {
 
   ];
 
+  if (role !== 'mentee') {
+    moreitems.unshift({
+
+      label: <div className='flex gap-4 items-center'>
+        <img src={ReportIcon} alt="ReportIcon" />
+        <p>Reports</p>
+      </div>,
+      command: () => navigate('/reports')
+    },
+    )
+  }
 
   useEffect(() => {
-    if(userInfo?.data?.userinfo?.approve_status === 'new'){
+    if (userInfo?.data?.userinfo?.approve_status === 'new') {
       localStorage.removeItem('access_token');
       localStorage.removeItem('refresh_token');
       navigate('/logout');
     }
-  },[userInfo])
+  }, [userInfo])
 
   return (
     <div>
@@ -125,12 +129,12 @@ export default function Layout() {
           }
 
 
-          {/* {
+          {
             role === 'admin' &&
             <li className={`${pathname === '/members' ? 'dashboard-menu-active' : ''}`}>
               <span onClick={() => navigate('/members')} className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer">Members</span>
             </li>
-          } */}
+          }
 
 
           <li className={`${pathname === '/all-request' ? 'dashboard-menu-active' : ''}`}>
