@@ -403,6 +403,10 @@ const MentorTask = () => {
             key: 'pending'
         },
         {
+            name: 'Waiting Task',
+            key: 'waiting_for_approval'
+        },
+        {
             name: 'Rejected Task',
             key: 'rejected'
         },

@@ -22,7 +22,7 @@ const MentorTaskDetails = () => {
     const [searchParams] = useSearchParams()
     const dispatch = useDispatch()
     const { task: taskDetails, loading: taskDetailsLoading, status } = useSelector(state => state.tasks)
-
+    
     const {
         register,
         formState: { errors },
@@ -92,8 +92,8 @@ const MentorTaskDetails = () => {
                 <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
                     <div className='flex gap-5 items-center text-[20px]'>
                         <p>Task - {taskDetails.task_name}</p>
-                        {/* {
-                            (taskDetails.status !== 'completed' && !editTask) &&
+                        {
+                            (taskDetails.status === 'waiting_for_approval' && !editTask) &&
 
 
                             <div className="inset-y-0 end-0 flex items-center pe-3 cursor-pointer"
@@ -101,7 +101,7 @@ const MentorTaskDetails = () => {
                             >
                                 <img src={EditIcon} alt='EditIcon' />
                             </div>
-                        } */}
+                        }
                     </div>
 
                     <div className='flex gap-8 items-center'>
