@@ -7,7 +7,7 @@ import './program-details.css'
 import Carousel from '../../../shared/Carousel';
 import { curatedPrograms } from '../../../utils/mock';
 
-import { pipeUrls, programActionStatus, programAdminRejected, programApprovalStage, programCompleted, programInProgress, programNotLaunched, programNotReady, programNotStarted, programRequestApproval, programStatus, programWaitingActiveApproval, requestStatus } from '../../../utils/constant';
+import { menteeNotJoinCondition, menteeProgramStatus, pipeUrls, programActionStatus, programAdminRejected, programApprovalStage, programCancelled, programCompleted, programInProgress, programNotLaunched, programNotReady, programNotStarted, programRequestApproval, programStatus, programWaitingActiveApproval, requestStatus } from '../../../utils/constant';
 import { updateNewPrograms, updateProgramDetails } from '../../../services/programInfo';
 import { getMenteeJoinedInProgram, getProgramDetails, updateProgram } from '../../../services/userprograms';
 
@@ -32,6 +32,7 @@ import { useForm } from 'react-hook-form';
 export default function ProgramDetails() {
     const [loading, setLoading] = useState({ initial: true, join: false })
     const [taskJoined, setTaskJoined] = useState(false)
+    const [taskJoinedRequest, setTaskJoinedRequest] = useState(false)
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const params = useParams();
@@ -100,8 +101,8 @@ export default function ProgramDetails() {
             const notAllowedCond = ['completed', 'yettoapprove', 'draft']
 
             if (!notAllowedCond.includes(programdetails.status)) {
-                if (role === 'mentee' && menteeJoined === true) {
-                    navigate(`${pipeUrls.startprogram}/${params.id}`)
+                if (role === 'mentee' && programdetails.status !== 'yettojoin' && programdetails.mentee_join_status !== 'program_join_request_submitted' && programdetails.mentee_join_status !== 'program_join_request_rejected') {
+                    // navigate(`${pipeUrls.startprogram}/${params.id}`)
                 }
 
                 if (role === 'mentor') {
@@ -220,7 +221,7 @@ export default function ProgramDetails() {
                 setLoading({ ...loading, join: false })
                 dispatch(getProgramDetails(params.id))
                 // if (role === 'mentor') navigate(`${pipeUrls.programtask}/${programdetails.id}`)
-                if (role === 'mentee') setTaskJoined(true)
+                if (role === 'mentee') setTaskJoinedRequest(true)
             }, [3000])
         }
     }, [loading.join])
@@ -336,7 +337,7 @@ export default function ProgramDetails() {
                 </div>
             </MuiModal>
 
-            <MuiModal modalOpen={loading.join} modalClose={() => setLoading({ ...loading, join: false })} noheader>
+            <MuiModal modalOpen={loading.join && role === 'mentor'} modalClose={() => setLoading({ ...loading, join: false })} noheader>
                 <div className='px-5 py-1 flex justify-center items-center'>
                     <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
                         style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
@@ -347,12 +348,12 @@ export default function ProgramDetails() {
                 </div>
             </MuiModal>
 
-            <MuiModal modalOpen={taskJoined} modalClose={() => setTaskJoined(false)} noheader>
+            <MuiModal modalOpen={taskJoinedRequest} modalClose={() => setTaskJoinedRequest(false)} noheader>
                 <div className='px-5 py-1 flex justify-center items-center'>
                     <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
                         style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
                         <img src={SuccessTik} alt="SuccessTik" />
-                        <p className='text-white text-[12px]'>Successfully Joined in a program</p>
+                        <p className='text-white text-[12px]'>Program join request submitted successfully to Mentor</p>
                     </div>
 
                 </div>
@@ -492,20 +493,43 @@ export default function ProgramDetails() {
                                         }
 
                                         {
-                                            (role === 'mentee' && !menteeJoined && !programNotReady.includes(programdetails.status)) &&
+                                            role === 'mentee' ?
+                                                <div className='py-9'>
+                                                    {
+                                                        menteeProgramStatus[programdetails.mentee_join_status] ?
+                                                            <>
+                                                                <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                                    border: "1px solid #E0382D",
+                                                                    borderRadius: '5px',
+                                                                    color: '#E0382D',
+                                                                    cursor: 'not-allowed'
+                                                                }}
+                                                                    onClick={() => undefined}
+                                                                >{menteeProgramStatus[programdetails.mentee_join_status]?.text}
+                                                                </button>
+                                                            </>
+                                                            :
+                                                            !menteeNotJoinCondition.includes(programdetails.status) ?
+                                                                <>
+                                                                    <div className='py-9'>
+                                                                        <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                                            background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
+                                                                            borderRadius: '5px'
+                                                                        }}
+                                                                            onClick={() => handleJoinProgram(programdetails.id)}
+                                                                        >Join Program
+                                                                            <span className='pl-8 pt-1'><img style={{ width: '15px', height: '13px' }} src={DoubleArrowIcon} alt="DoubleArrowIcon" /></span>
+                                                                        </button>
+                                                                    </div>
+                                                                </>
 
-                                            <div className='py-9'>
-                                                <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                    background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
-                                                    borderRadius: '5px'
-                                                }}
-                                                    onClick={() => handleJoinProgram(programdetails.id)}
-                                                >Join Program
-                                                    <span className='pl-8 pt-1'><img style={{ width: '15px', height: '13px' }} src={DoubleArrowIcon} alt="DoubleArrowIcon" /></span>
-                                                </button>
-                                            </div>
+                                                                :
+                                                                null
 
+                                                    }
+                                                </div>
 
+                                                : null
                                         }
 
 
@@ -612,7 +636,7 @@ export default function ProgramDetails() {
                                         }
 
                                         {
-                                            programdetails.status === 'cancelled' && role !== 'mentee' &&
+                                            programdetails.status === 'cancelled' &&
                                             <div className='flex gap-4 pt-10' >
                                                 <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
                                                     border: "1px solid #E0382D",

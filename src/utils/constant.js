@@ -205,6 +205,7 @@ export const requestStatus = {
   memberupdate: 'memberupdated',
   membercancel: 'membercancelled',
   reschedule: 'rescheduled',
+  reportupdate: 'reportupdated',
   cancel: 'cancelled',
   autoapproval: 'autoapproval',
 }
@@ -836,6 +837,13 @@ export const programCompleted = ['completed']
 export const programCancelled = ['cancelled']
 
 export const programNotReady = ['yettoapprove', 'draft']
+
+export const menteeNotJoinCondition = [...programNotReady,...programCancelled,...programCompleted]
+
+export const menteeProgramStatus = {
+  program_join_request_submitted: { status: 'program_join_request_submitted', text: 'Waiting for mentor approval' },
+  program_join_request_rejected: { status: 'program_join_request_rejected', text: 'Join request rejected by Mentor' },
+}
 
 
 
