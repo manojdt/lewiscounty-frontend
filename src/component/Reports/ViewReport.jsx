@@ -74,7 +74,7 @@ const ViewReport = () => {
                 <CircularProgress color="inherit" />
             </Backdrop>
             {
-                (!reportsLoading && Object.keys(reportDetails).length) &&
+                (!reportsLoading && Object.keys(reportDetails).length > 0) &&
 
 
                 <div className='px-3 py-5' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>

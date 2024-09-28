@@ -22,7 +22,7 @@ import { categoryColumns, certificateRequestColumns, goalsRequestColumns, member
 
 import './request.css';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { cancelMemberRequest, getCategoryList, getMemberRequest, getprogramRequest, getResourceRequest, goalsRequest, updateGoalRequest, updateLocalRequest, updateMemberRequest, updateProgramRequest } from '../../../services/request';
+import { cancelMemberRequest, getCategoryList, getMemberRequest, getprogramRequest, getReportRequest, getResourceRequest, goalsRequest, updateGoalRequest, updateLocalRequest, updateMemberRequest, updateProgramMenteeRequest, updateProgramRequest, updateReportRequest } from '../../../services/request';
 import { Backdrop, CircularProgress } from '@mui/material';
 import ToastNotification from '../../../shared/Toast';
 import MuiModal from '../../../shared/Modal';
@@ -34,7 +34,7 @@ export default function AllRequest() {
     const [searchParams] = useSearchParams();
 
     const dispatch = useDispatch();
-    const { programRequest: programTableInfo, memberRequest, resourceRequest, categoryList, goalsRequest: goalsRequestInfo,
+    const { programRequest: programTableInfo, memberRequest, resourceRequest, categoryList, goalsRequest: goalsRequestInfo, reportsRequest: reportsRequestInfo,
         loading, status, error } = useSelector(state => state.requestList);
     const [currentRequestTab, setCurrentRequestTab] = useState(RequestStatus.programRequest)
     const [filterStatus, setFilterStatus] = useState('new')
@@ -45,7 +45,7 @@ export default function AllRequest() {
     const [activeTableDetails, setActiveTableDetails] = useState({ column: [], data: [] })
     const [seletedItem, setSelectedItem] = useState({})
     const [confirmPopup, setConfirmPopup] = useState({ show: false, title: '', type: '', action: '' })
-    const [cancelPopup, setCancelPopup] = useState({ show: false })
+    const [cancelPopup, setCancelPopup] = useState({ show: false, page: '' })
     const [showToast, setShowToast] = useState({ show: false, message: '' })
     const [categoryPopup, setCategoryPopup] = useState({ show: false, selectedItem: [], page: '', tab: '' })
     const userInfo = useSelector(state => state.userInfo)
@@ -58,15 +58,12 @@ export default function AllRequest() {
     } = useForm();
 
     const role = userInfo.data.role
-    const programRequestTab = [
+
+    let programRequestTab = [
         {
             name: 'New Program Request',
             key: 'new_program_request'
         },
-        // {
-        //     name: 'Joining Request',
-        //     key: 'joining_request'
-        // },
         {
             name: 'Program Start',
             key: 'program_start'
@@ -80,6 +77,14 @@ export default function AllRequest() {
             key: 'program_cancel'
         }
     ]
+
+    if (role === 'mentor') {
+        programRequestTab = [{
+            name: 'Joining Request',
+            key: 'joining_request'
+        }
+        ]
+    }
 
     const memberJoinRequestTab = [
         {
@@ -117,8 +122,6 @@ export default function AllRequest() {
     const handleClose = () => {
         setAnchorEl(null);
     };
-  
-    
 
 
     const handleMoreClick = (event, data) => {
@@ -153,6 +156,12 @@ export default function AllRequest() {
                 handleCancelMemberApiRequest()
             }
         }
+
+        if (confirmPopup.requestType === 'report_request') {
+            if (confirmPopup.type === 'approve') {
+                handleAcceptReportApiRequest()
+            }
+        }
     }
 
     // Cancel Accept Popup
@@ -165,9 +174,29 @@ export default function AllRequest() {
 
     // Accepting Program Request Api Call 
     const handleAcceptProgramApiRequest = () => {
-        dispatch(updateProgramRequest({
+
+        if (role === 'admin') {
+            dispatch(updateProgramRequest({
+                "id": seletedItem.id,
+                "action": "accept"
+            }))
+        }
+
+        if (role === 'mentor') {
+            dispatch(updateProgramMenteeRequest(
+                {
+                    "id": seletedItem.id,
+                    "action": "accept"
+                }
+            ))
+        }
+    }
+
+    // Accepting Report Request Api Call 
+    const handleAcceptReportApiRequest = () => {
+        dispatch(updateReportRequest({
             "id": seletedItem.id,
-            "action": "accept"
+            "report_status": "accept"
         }))
     }
 
@@ -186,6 +215,8 @@ export default function AllRequest() {
         }))
     }
 
+
+
     // Close Cancel Reason Popup
     const handleCloseCancelReasonPopup = () => {
         resetCancelReasonPopup()
@@ -194,19 +225,43 @@ export default function AllRequest() {
 
     // Reset Cancel Popup
     const resetCancelReasonPopup = () => {
-        setCancelPopup({ show: false })
+        setCancelPopup({ show: false, page: '' })
     }
 
     // Cancel Reason Popup Submit
     const handleCancelReasonPopupSubmit = (data) => {
         if (data.cancel_reason !== '') {
-            console.log('seletedItem', seletedItem, confirmPopup)
+            console.log('seletedItem', seletedItem, cancelPopup)
             if (cancelPopup.show) {
-                dispatch(updateProgramRequest({
-                    id: seletedItem.id,
-                    action: "cancel",
-                    cancelled_reason: data.cancel_reason
-                }))
+
+                if (cancelPopup.page === 'program_request') {
+
+                    if (role === 'admin') {
+                        dispatch(updateProgramRequest({
+                            id: seletedItem.id,
+                            action: "cancel",
+                            cancelled_reason: data.cancel_reason
+                        }))
+                    }
+
+                    if (role === 'mentor') {
+                        dispatch(updateProgramMenteeRequest({
+                            id: seletedItem.id,
+                            action: "cancel",
+                            cancelled_reason: data.cancel_reason
+                        }))
+                    }
+
+                }
+
+                if (cancelPopup.page === 'report_request') {
+                    dispatch(updateReportRequest({
+                        id: seletedItem.id,
+                        report_status: "cancel",
+                        report_comment: data.cancel_reason
+                    }))
+                }
+
             }
         }
     }
@@ -222,7 +277,7 @@ export default function AllRequest() {
 
     // Program Dropdown Cancel
     const handleCancelProgramRequest = () => {
-        setCancelPopup({ show: true })
+        setCancelPopup({ show: true, page: currentRequestTab.key })
         handleClose()
     }
 
@@ -237,6 +292,20 @@ export default function AllRequest() {
     // Member Drodown Cancel
     const handleMemberCancelRequest = () => {
         handleOpenConfirmPopup(`${actionTab === 'mentor' ? 'Mentor ' : 'Mentee '} Request`, currentRequestTab.key, actionTab, 'reject')
+        handleClose()
+    }
+
+
+    // REPORTS
+    const handleAcceptReportsRequest = () => {
+        handleOpenConfirmPopup('Report Request', currentRequestTab.key, actionTab, 'approve')
+        handleClose();
+    }
+
+
+    // Program Dropdown Cancel
+    const handleCancelReportRequest = () => {
+        setCancelPopup({ show: true, page: currentRequestTab.key })
         handleClose()
     }
 
@@ -347,7 +416,7 @@ export default function AllRequest() {
                             View
                         </MenuItem>
                         {
-                            (role === 'admin' && (params.row.status === 'new' || params.row.status === 'pending')) &&
+                            (params.row.status === 'new' || params.row.status === 'pending') &&
                             <>
                                 <MenuItem onClick={handleAcceptProgramRequest} className='!text-[12px]'>
                                     <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
@@ -479,7 +548,7 @@ export default function AllRequest() {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
-                        <MenuItem onClick={(e) => { handleClose(); navigate(`/mentor-profile/${params?.row?.id}`) }} className='!text-[12px]'>
+                        <MenuItem onClick={(e) => { handleClose(); navigate(`/mentor-profile/${seletedItem.id}`) }} className='!text-[12px]'>
                             <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
                             View Profile
                         </MenuItem>
@@ -553,6 +622,84 @@ export default function AllRequest() {
                     <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleMoreClick(e, params.row)}>
                         <img src={MoreIcon} alt='MoreIcon' />
                     </div>
+                </>
+            }
+
+        }
+
+    ]
+
+    const reportRequestColumn = [
+        ...reportRequestColumns,
+        {
+            field: 'status',
+            headerName: 'Status',
+            flex: 1,
+            id: 2,
+            renderCell: (params) => {
+                return <>
+                    <div className='cursor-pointer flex items-center h-full relative'>
+                        <span className='w-[80px] flex justify-center h-[30px] px-7'
+                            style={{
+                                background: requestStatusColor[params.row.status]?.bg || '', lineHeight: '30px',
+                                borderRadius: '3px', width: '110px', height: '34px', color: requestStatusColor[params.row.status]?.color || '',
+                                fontSize: '12px'
+                            }}>
+                            {requestStatusText[params.row.status] || ''}
+                        </span>
+                    </div>
+                </>
+            }
+        },
+        {
+
+            field: 'action',
+            headerName: 'Action',
+            flex: 1,
+            id: 4,
+            renderCell: (params) => {
+                console.log('params', params)
+                return <>
+                    <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleMoreClick(e, params.row)}>
+                        <img src={MoreIcon} alt='MoreIcon' />
+                    </div>
+                    <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                        MenuListProps={{
+                            'aria-labelledby': 'basic-button',
+                        }}
+                    >
+
+                        {
+                            role === 'admin' &&
+
+                            <>
+                                <MenuItem onClick={() => navigate(`/view-report/${seletedItem.id}`)} className='!text-[12px]'>
+                                    <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
+                                    View
+                                </MenuItem>
+                                {
+                                    (params.row.status === 'new' || params.row.status === 'pending') &&
+
+                                    <>
+
+                                        <MenuItem onClick={handleAcceptReportsRequest} className='!text-[12px]'>
+                                            <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
+                                            Approve
+                                        </MenuItem>
+                                        <MenuItem onClick={handleCancelReportRequest} className='!text-[12px]'>
+                                            <img src={CloseCircle} alt="CancelIcon" className='pr-3 w-[27px]' />
+                                            Reject
+                                        </MenuItem>
+                                    </>
+                                }
+
+                            </>
+                        }
+                    </Menu>
                 </>
             }
 
@@ -641,9 +788,14 @@ export default function AllRequest() {
     }
 
     const getProgramRequestApi = () => {
-        const payload = {
+        let payload = {
             request_type: actionTab,
             status: filterStatus
+        }
+
+        if (role === 'mentor') {
+            payload.created_at = 'mentee'
+            payload.request_type = 'joining_request'
         }
         dispatch(getprogramRequest(payload))
     }
@@ -656,6 +808,11 @@ export default function AllRequest() {
         }))
     }
 
+    const getReportsRequestApi = () => {
+        dispatch(getReportRequest({
+            rep_status: filterStatus,
+        }))
+    }
 
     const getMembersRequestApi = () => {
         dispatch(getMemberRequest({
@@ -678,7 +835,7 @@ export default function AllRequest() {
 
 
     useEffect(() => {
-        if (searchParams.get("type")) {
+        if (searchParams.get("type") && role !== '') {
             const tab = searchParams.get("type")
             const requestTabDetails = RequestStatusArray.find(request => request.key === tab)
             let tableDetails = { ...activeTableDetails }
@@ -688,7 +845,7 @@ export default function AllRequest() {
                 case RequestStatus.programRequest.key:
                     tableDetails = { column: programRequestColumn, data: [] }
                     actionFilter = programRequestTab
-                    activeTabName = 'new_program_request'
+                    activeTabName = role === 'mentor' ? 'joining_program_request' : 'new_program_request'
                     break;
                 case RequestStatus.memberJoinRequest.key:
                     tableDetails = { column: memberMentorRequestColumns, data: [] }
@@ -732,9 +889,9 @@ export default function AllRequest() {
             setActiveTab('new_program_request')
         }
 
-        if (searchParams.get('type') === 'program_request') {
-            getProgramRequestApi()
-        }
+        // if (searchParams.get('type') === 'program_request') {
+        //     getProgramRequestApi()
+        // }
 
     }, [searchParams])
 
@@ -786,10 +943,23 @@ export default function AllRequest() {
         }
 
 
+        // Report update action
+        if (status === requestStatus.reportupdate) {
+            if (confirmPopup.show) resetConfirmPopup()
+            if (cancelPopup.show) resetCancelReasonPopup()
+            getReportsRequestApi()
+            setShowToast({ show: true, message: 'Reports Request updated successfully' })
+            setTimeout(() => {
+                setShowToast({ show: false, message: '' })
+                dispatch(updateLocalRequest({ status: '' }))
+            }, 3000)
+        }
+
+
     }, [status])
 
     useEffect(() => {
-        console.log('Menu 1')
+
         if (searchParams.get('type') === 'program_request' || !searchParams.get('type')) {
             setActiveTableDetails({ column: programRequestColumn, data: programTableInfo })
         }
@@ -797,7 +967,7 @@ export default function AllRequest() {
         if (searchParams.get('type') === 'member_join_request') {
             setActiveTableDetails({ column: actionTab === 'mentor' ? [...memberMentorRequestColumns, ...membersColumns] : [...memberMenteeRequestColumns, ...membersColumns], data: memberRequest })
         }
-      
+
 
         if (searchParams.get('type') === 'goal_request') {
             setActiveTableDetails({ column: goalColumns, data: goalsRequestInfo })
@@ -807,31 +977,41 @@ export default function AllRequest() {
             setActiveTableDetails({ column: resourceColumns, data: resourceRequest })
         }
 
+        if (searchParams.get('type') === 'report_request') {
+            setActiveTableDetails({ column: reportRequestColumn, data: reportsRequestInfo })
+        }
 
-
-    }, [programTableInfo, memberRequest, resourceRequest, goalsRequestInfo, anchorEl])
+    }, [programTableInfo, memberRequest, resourceRequest, goalsRequestInfo, reportsRequestInfo, anchorEl])
 
 
     useEffect(() => {
-        if (!searchParams.get('type') || searchParams.get('type') === 'program_request') {
-            getProgramRequestApi()
+
+        if (role !== '') {
+            if (!searchParams.get('type') || searchParams.get('type') === 'program_request') {
+                getProgramRequestApi()
+            }
+
+            if (searchParams.get('type') === 'member_join_request') {
+                getMembersRequestApi()
+            }
+
+            if (searchParams.get('type') === 'resource_access_request') {
+                getResourceRequestApi()
+            }
+
+            if (searchParams.get('type') === 'goal_request') {
+                getGoalsRequestApi()
+            }
+
+
+            if (searchParams.get('type') === 'report_request') {
+                getReportsRequestApi()
+            }
+
+
         }
 
-        if (searchParams.get('type') === 'member_join_request') {
-            getMembersRequestApi()
-        }
-      
-        if (searchParams.get('type') === 'resource_access_request') {
-            getResourceRequestApi()
-        }
-
-        if (searchParams.get('type') === 'goal_request') {
-            getGoalsRequestApi()
-        }
-
-
-
-    }, [actionTab, searchParams, filterStatus])
+    }, [actionTab, searchParams, filterStatus, role])
 
 
     const footerComponent = (props) => {
@@ -860,7 +1040,7 @@ export default function AllRequest() {
                 }
 
                 <Backdrop
-                    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                    sx={{ color: '#fff', zIndex: (theme) => 9999999 }}
                     open={confirmPopup.show}
                 >
                     <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">

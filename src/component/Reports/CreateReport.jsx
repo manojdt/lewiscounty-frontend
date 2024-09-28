@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { Calendar } from 'primereact/calendar';
 import { useForm } from 'react-hook-form';
 import { Backdrop, CircularProgress } from '@mui/material';
@@ -32,7 +32,7 @@ import MuiModal from '../../shared/Modal';
 
 export default function CreateReport() {
     const navigate = useNavigate()
-
+    const [searchParams] = useSearchParams();
 
     const params = useParams();
 
@@ -45,7 +45,8 @@ export default function CreateReport() {
     const [menteeAllList, setAllMenteeList] = useState([])
     const [notification, setNotification] = useState({ program: false })
     const [actionType, setActionType] = useState('')
-
+    const [commonLoading, setCommonLoading] = useState(false)
+    const [disableField, setDisabledField] = useState(false)
     const [loading, setLoading] = useState(false)
 
     const [updatedMemberColumn, setUpdatedMemberColumn] = useState(MenteeAssignColumns)
@@ -94,16 +95,16 @@ export default function CreateReport() {
     }
 
     useEffect(() => {
-        if(actionType === 'draft'){
+        if (actionType === 'draft') {
             document.getElementById('create-report').submit()
         }
-    },[actionType])
+    }, [actionType])
 
     useEffect(() => {
         if (status === reportsStatus.create) {
             setTimeout(() => {
                 navigate('/reports')
-            },3000)
+            }, 3000)
         }
     }, [status])
 
@@ -114,8 +115,14 @@ export default function CreateReport() {
                 mentor_name: programDetails.mentor_full_name,
                 start_date: dateTimeFormat(programDetails.start_date),
                 end_date: dateTimeFormat(programDetails.end_date),
-                participated_mentees: programDetails.participated_mentees
+                participated_mentees: programDetails.participated_mentees,
+                category: searchParams.get('cat_id') || '',
+                program: searchParams.get('program_id') || ''
             })
+        }
+
+        if(searchParams.get('cat_id') !== '' && searchParams.get('program_id') !== ''){
+            setCommonLoading(false)
         }
     }, [programDetails])
 
@@ -130,6 +137,11 @@ export default function CreateReport() {
             return field
         })
         setReportFields(fields)
+
+        if(searchParams.has('cat_id') && searchParams.get('cat_id') !== ''){
+            getProgramInfo(searchParams.get('cat_id'))
+        }
+
     }, [category])
 
     useEffect(() => {
@@ -153,10 +165,13 @@ export default function CreateReport() {
                 return field
             })
             setReportFields(fields)
+
+            if(searchParams.has('program_id') && searchParams.get('program_id') !== ''){
+                handleProgramData(searchParams.get('program_id'))
+            }
         }
 
-        if (!categoryPrograms.length && getValues('category') !== '') {
-            console.log('category', getValues('category'))
+        if (!categoryPrograms.length && getValues('category') !== '' && searchParams.get('program_id') === '') {
             setNotification({ program: true })
         }
     }, [categoryPrograms])
@@ -165,16 +180,21 @@ export default function CreateReport() {
         dispatch(getAllCategories())
     }, [])
 
+    useEffect(() => {
+        if (searchParams.has('cat_id') && searchParams.has('program_id') && searchParams.get('cat_id') !== '' && searchParams.get('program_id') !== '') {
+            setCommonLoading(true)
+        }
+    }, [searchParams])
 
 
-    console.log('Valmm', getValues('participated_mentees'))
+    console.log('Values', getValues())
 
     return (
         <div className="px-9 my-6 grid">
 
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={reportsLoading || apiLoading}
+                open={reportsLoading || apiLoading || commonLoading}
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
@@ -423,7 +443,7 @@ export default function CreateReport() {
                                 <Button btnName='Cancel' btnCls="w-[13%]" btnCategory="secondary" onClick={() => navigate('/reports')} />
                                 <Button btnName='Save To Draft'
                                     style={{ background: 'rgba(29, 91, 191, 1)', color: '#fff' }}
-                                    btnCls="w-[13%]" btnCategory="secondary" onClick={handleSubmit((d) => onSubmit({...d, action: 'draft'}))} />
+                                    btnCls="w-[13%]" btnCategory="secondary" onClick={handleSubmit((d) => onSubmit({ ...d, action: 'draft' }))} />
                                 <Button btnType="submit" btnCls="w-[13%]" btnName='Submit' btnCategory="primary" />
                             </div>
                         </form>

@@ -1664,49 +1664,49 @@ export const certificateRequestColumns = [
 
 export const reportRequestColumns = [
     {
-        field: 'name',
+        field: 'report_name',
         headerName: 'Report Name',
         flex: 1,
         id: 0,
         for: ['admin','mentor']
     },
     {
-        field: 'reason',
+        field: 'mentor_name',
         headerName: 'Mentor Name',
         flex: 1,
         id: 1,
         for: ['admin','mentor']
     },
     {
-        field: 'dob',
+        field: 'category',
         headerName: 'Category',
         flex: 1,
         id: 2,
         for: ['admin']
     },
     {
-        field: 'dob',
+        field: 'program_name',
         headerName: 'Program Name',
         flex: 1,
         id: 2,
         for: ['admin']
     },
     {
-        field: 'dob',
+        field: 'mentees',
         headerName: 'Mentees',
         flex: 1,
         id: 2,
         for: ['admin']
     },
     {
-        field: 'phone',
+        field: 'updated_date',
         headerName: 'Last Updated Date',
         flex: 1,
         id: 3,
         for: ['admin']
     },
     {
-        field: 'phone',
+        field: 'updated_by',
         headerName: 'Last Updated By',
         flex: 1,
         id: 3,

@@ -47,6 +47,19 @@ export const updateProgramRequest = createAsyncThunk(
 );
 
 
+export const updateProgramMenteeRequest = createAsyncThunk(
+    "updateProgramMenteeRequest",
+    async (data) => {
+        const updateProgramMenteeReq = await api.post('program_request/program-request-mentee', data);
+        if (updateProgramMenteeReq.status === 200 && updateProgramMenteeReq.data) {
+            return updateProgramMenteeReq.data;
+        }
+        return updateProgramMenteeReq;
+    }
+);
+
+
+
 export const goalsRequest = createAsyncThunk(
     "goalsRequest",
     async (query) => {
@@ -156,5 +169,30 @@ export const updateMentorAutoApproval = createAsyncThunk(
             return updateAutoApproval.data;
         }
         return updateAutoApproval;
+    }
+);
+
+
+export const getReportRequest = createAsyncThunk(
+    "getReportRequest",
+    async (query='') => {
+        let queryString = new URLSearchParams(query).toString()
+        const getReportRequestInfo = await api.get(`program_request/report_request?${queryString}`);
+        if (getReportRequestInfo.status === 200 && getReportRequestInfo.data) {
+            return getReportRequestInfo.data;
+        }
+        return getReportRequestInfo;
+    }
+);
+
+
+export const updateReportRequest = createAsyncThunk(
+    "updateReportRequest",
+    async (data) => {
+        const updateReportRequestInfo = await api.put(`program_request/update_report_request`, data);
+        if (updateReportRequestInfo.status === 200 && updateReportRequestInfo.data) {
+            return updateReportRequestInfo.data;
+        }
+        return updateReportRequestInfo;
     }
 );

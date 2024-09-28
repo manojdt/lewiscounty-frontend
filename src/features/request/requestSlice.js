@@ -9,6 +9,7 @@ import {
     getCategoryList,
     getMemberRequest,
     getprogramRequest,
+    getReportRequest,
     getResourceRequest,
     goalsRequest,
     programCancelRequest,
@@ -17,7 +18,9 @@ import {
     updateLocalRequest,
     updateMemberRequest,
     updateMentorAutoApproval,
-    updateProgramRequest
+    updateProgramMenteeRequest,
+    updateProgramRequest,
+    updateReportRequest
 } from "../../services/request";
 
 const initialState = {
@@ -30,6 +33,7 @@ const initialState = {
     certificateRequest: [],
     reportRequest: [],
     categoryList: [],
+    reportsRequest: [],
     loading: false,
     status: "",
     error: "",
@@ -108,14 +112,39 @@ export const requestSlice = createSlice({
 
 
 
+
+
+        builder
+            .addCase(updateProgramMenteeRequest.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(updateProgramMenteeRequest.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    status: requestStatus.programupdate,
+                    loading: false,
+                };
+            })
+            .addCase(updateProgramMenteeRequest.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
+
+
+
         builder.addCase(updateLocalRequest, (state, action) => {
             return {
                 ...state,
                 ...action.payload
             }
         })
-
-
 
         builder
             .addCase(goalsRequest.pending, (state) => {
@@ -185,8 +214,6 @@ export const requestSlice = createSlice({
                 };
             });
 
-
-
         builder
             .addCase(getMemberRequest.pending, (state) => {
                 return {
@@ -210,8 +237,6 @@ export const requestSlice = createSlice({
                 };
             });
 
-
-
         builder
             .addCase(updateMemberRequest.pending, (state) => {
                 return {
@@ -233,8 +258,6 @@ export const requestSlice = createSlice({
                     error: action.error.message,
                 };
             });
-
-
 
         builder
             .addCase(cancelMemberRequest.pending, (state) => {
@@ -281,8 +304,6 @@ export const requestSlice = createSlice({
                 };
             });
 
-
-
         builder
             .addCase(programCancelRequest.pending, (state) => {
                 return {
@@ -305,10 +326,7 @@ export const requestSlice = createSlice({
                 };
             });
 
-
-
-
-            builder
+        builder
             .addCase(updateMentorAutoApproval.pending, (state) => {
                 return {
                     ...state,
@@ -330,6 +348,56 @@ export const requestSlice = createSlice({
                 };
             });
 
+
+
+        builder
+            .addCase(getReportRequest.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(getReportRequest.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    reportsRequest: action.payload,
+                    status: requestStatus.load,
+                    loading: false,
+                };
+            })
+            .addCase(getReportRequest.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
+
+
+
+        builder
+            .addCase(updateReportRequest.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(updateReportRequest.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    reportsRequest: action.payload,
+                    status: requestStatus.reportupdate,
+                    loading: false,
+                };
+            })
+            .addCase(updateReportRequest.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
 
     },
 });

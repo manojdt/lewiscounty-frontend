@@ -205,6 +205,7 @@ export const requestStatus = {
   memberupdate: 'memberupdated',
   membercancel: 'membercancelled',
   reschedule: 'rescheduled',
+  reportupdate: 'reportupdated',
   cancel: 'cancelled',
   autoapproval: 'autoapproval',
 }
@@ -260,7 +261,7 @@ export const goalDataStatus = {
 
 export const goalStatusColor = {
   inactive: {
-   color: 'rgba(255, 118, 0, 1)',
+    color: 'rgba(255, 118, 0, 1)',
     bg: 'rgba(255, 242, 231, 1)'
   },
   create: {
@@ -299,7 +300,7 @@ export const goalRequestStatus = {
 
 export const goalRequestColor = {
   inactive: {
-   color: 'rgba(224, 56, 45, 1)',
+    color: 'rgba(224, 56, 45, 1)',
     bg: 'rgba(255, 231, 231, 1)'
   },
   new: {
@@ -408,7 +409,7 @@ export const taskStatusText = {
   rejected: 'Cancel',
   pending: 'Pending',
   newtask: 'New',
-  waiting_for_approval:"Waiting",
+  waiting_for_approval: "Waiting",
   completed: 'Completed',
 }
 
@@ -485,7 +486,7 @@ export const PasswordRulesSet = {
   common: 'common',
 }
 
-export const statusAction = ['yettoapprove', 'yettojoin', 'yettostart', 'inprogress', 'completed', 'cancelled', 'bookmarked','draft']
+export const statusAction = ['yettoapprove', 'yettojoin', 'yettostart', 'inprogress', 'completed', 'cancelled', 'bookmarked', 'draft']
 
 export const programActionStatus = {
   all: 'all',
@@ -503,7 +504,7 @@ export const programActionStatus = {
   bookmark: 'bookmarked',
   planned: 'planned',
   draft: 'draft',
-  reschedule: 'reschedule' 
+  reschedule: 'reschedule'
 }
 
 
@@ -801,36 +802,84 @@ export const TaskApiStatus = {
 }
 
 export const ProgramStatusInCard = {
-  inprogress: { text: 'Ongoing', color: '#FF8A00', bg: '#FFE3C2'},
-  yettostart: { text: 'Ongoing', color: '#FF8A00', bg: '#FFE3C2'},
-  assigned:{ text: 'Ongoing', color: '#FF8A00', bg: '#FFE3C2'},
-  paused: { text: 'Ongoing', color: '#FF8A00', bg: '#FFE3C2'},
-  completed: { text: 'Completed', color: 'rgb(22, 182, 129)', bg: 'rgb(235, 255, 243)'},
-  cancelled: { text: 'Cancelled', color: 'rgb(224, 56, 45)', bg: 'rgb(255, 231, 231)'}
+  inprogress: {
+    text: 'Ongoing',
+    color: '#FF8A00',
+    bg: '#FFE3C2'
+  },
+  yettostart: {
+    text: 'Ongoing',
+    color: '#FF8A00',
+    bg: '#FFE3C2'
+  },
+  assigned: {
+    text: 'Ongoing',
+    color: '#FF8A00',
+    bg: '#FFE3C2'
+  },
+  paused: {
+    text: 'Ongoing',
+    color: '#FF8A00',
+    bg: '#FFE3C2'
+  },
+  completed: {
+    text: 'Completed',
+    color: 'rgb(22, 182, 129)',
+    bg: 'rgb(235, 255, 243)'
+  },
+  cancelled: {
+    text: 'Cancelled',
+    color: 'rgb(224, 56, 45)',
+    bg: 'rgb(255, 231, 231)'
+  }
 }
 
 
 
 export const programApprovalStage = {
-  yettoapprove: { status: 'yettoapprove', text: 'Waiting for admin approval' },
-  new_program_request_rejected: { status: 'new_program_request_rejected', text: 'Program request rejected by admin' },
-  join_request_submitted: { status: 'join_request_submitted', text: 'Waiting for join request admin approval' },
-  join_request_rejected: { status: 'join_request_rejected', text: 'Join request rejected by admin' },
-  start_request_submitted: { status: 'start_request_submitted', text: 'Waiting for start request admin approval' },
-  start_request_rejected: { status: 'start_request_rejected', text: 'Start request rejected by admin' },
-  schedule_request_submitted: { status: 'schedule_request_submitted', text: 'Waiting for schedule request admin approval' },
-  cancel_request_submitted: { status: 'cancel_request_submitted', text: 'Waiting for cancel request admin approval' },
+  yettoapprove: {
+    status: 'yettoapprove',
+    text: 'Waiting for admin approval'
+  },
+  new_program_request_rejected: {
+    status: 'new_program_request_rejected',
+    text: 'Program request rejected by admin'
+  },
+  join_request_submitted: {
+    status: 'join_request_submitted',
+    text: 'Waiting for join request admin approval'
+  },
+  join_request_rejected: {
+    status: 'join_request_rejected',
+    text: 'Join request rejected by admin'
+  },
+  start_request_submitted: {
+    status: 'start_request_submitted',
+    text: 'Waiting for start request admin approval'
+  },
+  start_request_rejected: {
+    status: 'start_request_rejected',
+    text: 'Start request rejected by admin'
+  },
+  schedule_request_submitted: {
+    status: 'schedule_request_submitted',
+    text: 'Waiting for schedule request admin approval'
+  },
+  cancel_request_submitted: {
+    status: 'cancel_request_submitted',
+    text: 'Waiting for cancel request admin approval'
+  },
 }
 
 export const programWaitingActiveApproval = ['yettoapprove']
 
-export const programAdminRejected = ['new_program_request_rejected','join_request_rejected','start_request_rejected']
+export const programAdminRejected = ['new_program_request_rejected', 'join_request_rejected', 'start_request_rejected']
 
 export const programNotLaunched = ['yettojoin']
 
 export const programRequestApproval = ['join_request_submitted', 'start_request_submitted', 'schedule_request_submitted', 'cancel_request_submitted']
 
-export const programNotStarted = ['yettoassigned','assigned','yettostart','started','start']
+export const programNotStarted = ['yettoassigned', 'assigned', 'yettostart', 'started', 'start']
 
 export const programInProgress = ['inprogress']
 
@@ -842,5 +891,19 @@ export const programCancelled = ['cancelled']
 
 export const programNotReady = ['yettoapprove', 'draft']
 
+export const menteeNotJoinCondition = [...programNotReady, ...programCancelled, ...programCompleted, 'program_join_request_submitted', 'program_join_request_rejected']
 
-
+export const menteeProgramStatus = {
+  program_join_request_submitted: {
+    status: 'program_join_request_submitted',
+    text: 'Waiting for mentor approval'
+  },
+  program_join_request_rejected: {
+    status: 'program_join_request_rejected',
+    text: 'Join request rejected by Mentor'
+  },
+  program_join_request_accepted: {
+    status: 'program_join_request_accepted',
+    text: 'Join request accepted by Mentor'
+  },
+}
