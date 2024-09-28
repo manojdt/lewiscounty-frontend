@@ -893,17 +893,21 @@ export const programNotReady = ['yettoapprove', 'draft']
 
 export const menteeNotJoinCondition = [...programNotReady, ...programCancelled, ...programCompleted, 'program_join_request_submitted', 'program_join_request_rejected']
 
+
 export const menteeProgramStatus = {
   program_join_request_submitted: {
     status: 'program_join_request_submitted',
-    text: 'Waiting for mentor approval'
+    text: 'Waiting for mentor approval',
+    type: 'waiting',
   },
   program_join_request_rejected: {
     status: 'program_join_request_rejected',
-    text: 'Join request rejected by Mentor'
+    text: 'Join request rejected by Mentor',
+    type: 'reject',
   },
   program_join_request_accepted: {
     status: 'program_join_request_accepted',
-    text: 'Join request accepted by Mentor'
+    text: 'Join request accepted by Mentor',
+    type: 'success',
   },
 }
