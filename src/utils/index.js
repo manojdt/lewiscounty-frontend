@@ -165,7 +165,7 @@ export const dateFormat = data => {
   }
   return ''
 }
-
+export const formatDateFunToAll = dateFormat;
 export const dateTimeFormat = data => {
   if (data && data !== '') {
     const originalDateString = data;
