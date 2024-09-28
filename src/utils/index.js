@@ -182,6 +182,17 @@ export const dateTimeFormat = data => {
   return ''
 }
 
+export const formatDateTimeISO = (isoString) => {
+  const date = new Date(isoString);
+  const options = { month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true };
+  const [monthDay, time] = date.toLocaleString('en-US', options).split(', ');
+  
+  const suffixes = ['th', 'st', 'nd', 'rd'];
+  const day = date.getDate();
+  const suffix = suffixes[(day % 10)] || 'th';
+  
+  return `Begins ${monthDay}${suffix} at ${time}`;
+};
 
 export const getTimeFromDate = data => {
   if (data && data !== '') {

@@ -409,6 +409,7 @@ export const taskStatusText = {
   rejected: 'Cancel',
   pending: 'Pending',
   newtask: 'New',
+  waiting_for_approval:"Waiting",
   completed: 'Completed',
 }
 
@@ -422,6 +423,10 @@ export const taskStatusColor = {
     bg: 'rgba(255, 231, 231, 1)'
   },
   pending: {
+    color: 'rgba(255, 213, 0, 1)',
+    bg: 'rgba(255, 251, 233, 1)'
+  },
+  waiting_for_approval: {
     color: 'rgba(255, 213, 0, 1)',
     bg: 'rgba(255, 251, 233, 1)'
   },

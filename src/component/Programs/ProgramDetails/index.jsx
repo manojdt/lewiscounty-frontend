@@ -27,6 +27,7 @@ import api from '../../../services/api';
 import { Button } from '../../../shared';
 import { updateLocalRequest, updateProgramRequest } from '../../../services/request';
 import { useForm } from 'react-hook-form';
+import { dateFormat, dateTimeFormat, formatDateTimeISO, formatTime, getTimeFromDate } from '../../../utils';
 
 
 export default function ProgramDetails() {
@@ -423,7 +424,7 @@ export default function ProgramDetails() {
                                                 <img src={CalendarIcon} alt="CalendarIcon" />
                                                 <span className='text-[12px]'>
 
-                                                    Begins Jun 5th and 6:00Pm
+                                                   {formatDateTimeISO(programdetails?.start_date)} 
                                                 </span>
                                             </div>
                                         </div>
@@ -667,7 +668,7 @@ export default function ProgramDetails() {
                                                     <span>{programdetails.course_level}</span>
                                                 </li>
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>Date</span>
-                                                    <span>06/5/2024</span>
+                                                    <span>{ `${dateFormat(programdetails?.start_date)}  &  ${dateFormat(programdetails?.end_date)} `}</span>
                                                 </li>
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>Duration</span>
                                                     <span>{programdetails.duration}</span>
