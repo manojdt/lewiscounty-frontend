@@ -150,7 +150,6 @@ export const updateQuestions = createAsyncThunk(
   async (data) => {
     const updateQuestion = await api.put("user_info_update", data);
     if (updateQuestion.status === 200) {
-
       let decoded = jwtDecode(updateQuestion.data.access);
       if(decoded?.userinfo?.approve_status === 'new'){
         return {}

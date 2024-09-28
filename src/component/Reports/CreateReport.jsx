@@ -115,7 +115,9 @@ export default function CreateReport() {
                 mentor_name: programDetails.mentor_full_name,
                 start_date: dateTimeFormat(programDetails.start_date),
                 end_date: dateTimeFormat(programDetails.end_date),
-                participated_mentees: programDetails.participated_mentees
+                participated_mentees: programDetails.participated_mentees,
+                category: searchParams.get('cat_id') || '',
+                program: searchParams.get('program_id') || ''
             })
         }
 
@@ -135,6 +137,10 @@ export default function CreateReport() {
             return field
         })
         setReportFields(fields)
+
+        if(searchParams.has('cat_id') && searchParams.get('cat_id') !== ''){
+            getProgramInfo(searchParams.get('cat_id'))
+        }
 
     }, [category])
 
@@ -159,6 +165,10 @@ export default function CreateReport() {
                 return field
             })
             setReportFields(fields)
+
+            if(searchParams.has('program_id') && searchParams.get('program_id') !== ''){
+                handleProgramData(searchParams.get('program_id'))
+            }
         }
 
         if (!categoryPrograms.length && getValues('category') !== '' && searchParams.get('program_id') === '') {

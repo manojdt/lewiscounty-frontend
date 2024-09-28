@@ -50,7 +50,7 @@ export const updateProgramRequest = createAsyncThunk(
 export const updateProgramMenteeRequest = createAsyncThunk(
     "updateProgramMenteeRequest",
     async (data) => {
-        const updateProgramMenteeReq = await api.put('program_request/program-request-mentee', data);
+        const updateProgramMenteeReq = await api.post('program_request/program-request-mentee', data);
         if (updateProgramMenteeReq.status === 200 && updateProgramMenteeReq.data) {
             return updateProgramMenteeReq.data;
         }

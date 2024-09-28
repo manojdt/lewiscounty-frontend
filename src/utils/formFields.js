@@ -456,10 +456,6 @@ export const MenteePersonalInformationFields = [{
         key: "PHD",
         value: "Doctorate/Ph.D"
       },
-      {
-        key: "HSC",
-        value: "Higher Secondary"
-      },
     ],
     inputRules: {
       required: "This field is required",

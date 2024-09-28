@@ -121,12 +121,7 @@ export const Questions = () => {
     setBtnTypeAction({ back: true, next: false })
   }
 
-  useEffect(() => {
-    // if (userInfo && userInfo.data.is_registered) {
-    //   navigate('/dashboard')
-    // }
-  }, [userInfo])
-
+  
   useEffect(() => {
     if (role === 'mentee') {
       setAllStepList(MenteeStepsList)
@@ -180,7 +175,7 @@ export const Questions = () => {
             <Stepper steps={allStepList} currentStep={currentStep} btnTypeAction={btnTypeAction} />
           </div>
           {
-            formFields.length ? <StepComponenRender
+            (formFields.length && formFields[currentStep - 1]) ? <StepComponenRender
               stepData={stepData}
               stepName={stepName[currentStep - 1]}
               stepFields={formFields[currentStep - 1]}

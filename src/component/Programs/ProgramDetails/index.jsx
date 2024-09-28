@@ -102,8 +102,8 @@ export default function ProgramDetails() {
             const notAllowedCond = ['completed', 'yettoapprove', 'draft']
 
             if (!notAllowedCond.includes(programdetails.status)) {
-                if (role === 'mentee' && programdetails.status !== 'yettojoin' && programdetails.mentee_join_status !== 'program_join_request_submitted' && programdetails.mentee_join_status !== 'program_join_request_rejected') {
-                    // navigate(`${pipeUrls.startprogram}/${params.id}`)
+                if (role === 'mentee' && programdetails.status !== 'yettojoin' && programdetails.mentee_join_status === 'program_join_request_accepted') {
+                    navigate(`${pipeUrls.startprogram}/${params.id}`)
                 }
 
                 if (role === 'mentor') {
@@ -218,11 +218,12 @@ export default function ProgramDetails() {
 
     useEffect(() => {
         if (loading.join) {
+            if (role === 'mentee') setTaskJoinedRequest(true)
             setTimeout(() => {
                 setLoading({ ...loading, join: false })
                 dispatch(getProgramDetails(params.id))
                 // if (role === 'mentor') navigate(`${pipeUrls.programtask}/${programdetails.id}`)
-                if (role === 'mentee') setTaskJoinedRequest(true)
+                if (role === 'mentee') setTaskJoinedRequest(false)
             }, [3000])
         }
     }, [loading.join])
