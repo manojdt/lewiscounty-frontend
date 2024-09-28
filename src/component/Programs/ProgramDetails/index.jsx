@@ -451,7 +451,7 @@ export default function ProgramDetails() {
                                         }
 
                                         {
-                                            (role === 'mentor' && !programCompleted.includes(programdetails.status) && !programCancelled.includes(programdetails.status))  ?
+                                            (role === 'mentor' && !programCompleted.includes(programdetails.status) && !programCancelled.includes(programdetails.status)) ?
                                                 <>
                                                     {programApprovalStage[programdetails.status] ?
                                                         <div className='flex gap-4 pt-10' >
@@ -462,7 +462,10 @@ export default function ProgramDetails() {
                                                                 cursor: 'not-allowed'
                                                             }}
                                                                 onClick={() => undefined}
-                                                            >{programApprovalStage[programdetails.status]?.text}
+                                                            >
+                                                                {programApprovalStage[programdetails.status].type === 'waiting' && <i className="pi pi-clock" style={{ color: 'red' }}></i>}
+                                                                {programApprovalStage[programdetails.status].type === 'reject' && <i className="pi pi-ban" style={{ color: 'red' }}></i>}
+                                                                <span className='pl-3'>{programApprovalStage[programdetails.status]?.text}</span>
                                                             </button>
                                                         </div>
                                                         :
@@ -508,9 +511,9 @@ export default function ProgramDetails() {
                                                                 }}
                                                                     onClick={() => undefined}
                                                                 >
-                                                                    {menteeProgramStatus[programdetails.mentee_join_status].type === 'wait' && <i className="pi pi-clock" style={{ color: 'slateblue' }}></i> }
-                                                                    {menteeProgramStatus[programdetails.mentee_join_status].type === 'reject' && <i className="pi pi-info-circle" style={{ color: 'red' }}></i> }
-                                                                    {menteeProgramStatus[programdetails.mentee_join_status]?.text}
+                                                                    {menteeProgramStatus[programdetails.mentee_join_status].type === 'waiting' && <i className="pi pi-clock" style={{ color: 'red' }}></i>}
+                                                                    {menteeProgramStatus[programdetails.mentee_join_status].type === 'reject' && <i className="pi pi-ban" style={{ color: 'red' }}></i>}
+                                                                    <span className='pl-3'>{menteeProgramStatus[programdetails.mentee_join_status]?.text}</span>
                                                                 </button>
                                                             </>
                                                             :

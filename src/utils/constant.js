@@ -839,35 +839,43 @@ export const ProgramStatusInCard = {
 export const programApprovalStage = {
   yettoapprove: {
     status: 'yettoapprove',
-    text: 'Waiting for admin approval'
+    text: 'Waiting for admin approval',
+    type: 'waiting',
   },
   new_program_request_rejected: {
     status: 'new_program_request_rejected',
-    text: 'Program request rejected by admin'
+    text: 'Program request rejected by admin',
+    type: 'reject',
   },
   join_request_submitted: {
     status: 'join_request_submitted',
-    text: 'Waiting for join request admin approval'
+    text: 'Waiting for join request admin approval',
+    type: 'waiting',
   },
   join_request_rejected: {
     status: 'join_request_rejected',
-    text: 'Join request rejected by admin'
+    text: 'Join request rejected by admin',
+    type: 'reject',
   },
   start_request_submitted: {
     status: 'start_request_submitted',
-    text: 'Waiting for start request admin approval'
+    text: 'Waiting for start request admin approval',
+    type: 'waiting',
   },
   start_request_rejected: {
     status: 'start_request_rejected',
-    text: 'Start request rejected by admin'
+    text: 'Start request rejected by admin',
+    type: 'reject',
   },
   schedule_request_submitted: {
     status: 'schedule_request_submitted',
-    text: 'Waiting for schedule request admin approval'
+    text: 'Waiting for schedule request admin approval',
+    type: 'waiting',
   },
   cancel_request_submitted: {
     status: 'cancel_request_submitted',
-    text: 'Waiting for cancel request admin approval'
+    text: 'Waiting for cancel request admin approval',
+    type: 'waiting',
   },
 }
 

@@ -574,7 +574,9 @@ export default function AssignTask() {
                                                                     cursor: 'not-allowed'
                                                                 }}
                                                                     onClick={() => undefined}
-                                                                >{programApprovalStage[programdetails.status]?.text}
+                                                                >
+                                                                    <i className="pi pi-clock" style={{ color: 'red' }}></i>
+                                                                    <span className='pl-3'>{programApprovalStage[programdetails.status]?.text}</span>
                                                                 </button>
                                                             </div>
                                                             :
