@@ -50,6 +50,8 @@ export default function AllRequest() {
     const [categoryPopup, setCategoryPopup] = useState({ show: false, selectedItem: [], page: '', tab: '' })
     const userInfo = useSelector(state => state.userInfo)
 
+    const [programTab, setProgramTab] = useState([])
+
     const {
         register,
         formState: { errors },
@@ -835,7 +837,7 @@ export default function AllRequest() {
 
 
     useEffect(() => {
-        if (searchParams.get("type") && role !== '') {
+        if (searchParams.get("type") && role !== '' && !userInfo.loading) {
             const tab = searchParams.get("type")
             const requestTabDetails = RequestStatusArray.find(request => request.key === tab)
             let tableDetails = { ...activeTableDetails }
@@ -843,9 +845,19 @@ export default function AllRequest() {
             let activeTabName = ''
             switch (tab) {
                 case RequestStatus.programRequest.key:
+                    let programInfoTab = programRequestTab
+                    if (role === 'mentor') {
+                        programInfoTab = [{
+                            name: 'Joining Request',
+                            key: 'joining_request'
+                        }
+                        ]
+                    }
                     tableDetails = { column: programRequestColumn, data: [] }
-                    actionFilter = programRequestTab
-                    activeTabName = role === 'mentor' ? 'joining_program_request' : 'new_program_request'
+                    actionFilter = programInfoTab
+                    activeTabName = role === 'mentor' ? 'joining_request' : 'new_program_request'
+
+                    console.log('activeTabName', activeTabName)
                     break;
                 case RequestStatus.memberJoinRequest.key:
                     tableDetails = { column: memberMentorRequestColumns, data: [] }
@@ -884,16 +896,13 @@ export default function AllRequest() {
             setActionTabFilter(actionFilter)
             setActiveTab(activeTabName)
         } else {
-            // setActiveTableDetails({ column: programRequestColumn, data: [] })
             setActionTabFilter(programRequestTab)
             setActiveTab('new_program_request')
         }
 
-        // if (searchParams.get('type') === 'program_request') {
-        //     getProgramRequestApi()
-        // }
 
-    }, [searchParams])
+
+    }, [searchParams, role])
 
 
     useEffect(() => {
@@ -957,6 +966,18 @@ export default function AllRequest() {
 
 
     }, [status])
+
+    useEffect(() => {
+        // if(role === 'mentor' && searchParams.get('type') === 'program_request'){
+        //     let programRequestTab = [{
+        //         name: 'Joining Request',
+        //         key: 'joining_request'
+        //     }
+        //     ]
+        //     setActiveTableDetails(programRequestTab)
+        //     setActiveTab('joining_request')
+        // }
+    }, [role])
 
     useEffect(() => {
 
@@ -1040,7 +1061,7 @@ export default function AllRequest() {
                 }
 
                 <Backdrop
-                    sx={{ color: '#fff', zIndex: (theme) => 9999999 }}
+                    sx={{ color: '#fff', zIndex: (theme) => 1 }}
                     open={confirmPopup.show}
                 >
                     <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
@@ -1233,7 +1254,7 @@ export default function AllRequest() {
                                     }
 
                                     <Backdrop
-                                        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                                        sx={{ zIndex: (theme) => 999999999 }}
                                         open={loading}
                                     >
                                         <CircularProgress color="inherit" />

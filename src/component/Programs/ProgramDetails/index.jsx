@@ -425,7 +425,7 @@ export default function ProgramDetails() {
                                                 <img src={CalendarIcon} alt="CalendarIcon" />
                                                 <span className='text-[12px]'>
 
-                                                   {formatDateTimeISO(programdetails?.start_date)} 
+                                                    {formatDateTimeISO(programdetails?.start_date)}
                                                 </span>
                                             </div>
                                         </div>
@@ -451,7 +451,7 @@ export default function ProgramDetails() {
                                         }
 
                                         {
-                                            role === 'mentor' ?
+                                            (role === 'mentor' && !programCompleted.includes(programdetails.status) && !programCancelled.includes(programdetails.status)) ?
                                                 <>
                                                     {programApprovalStage[programdetails.status] ?
                                                         <div className='flex gap-4 pt-10' >
@@ -462,7 +462,10 @@ export default function ProgramDetails() {
                                                                 cursor: 'not-allowed'
                                                             }}
                                                                 onClick={() => undefined}
-                                                            >{programApprovalStage[programdetails.status]?.text}
+                                                            >
+                                                                {programApprovalStage[programdetails.status].type === 'waiting' && <i className="pi pi-clock" style={{ color: 'red' }}></i>}
+                                                                {programApprovalStage[programdetails.status].type === 'reject' && <i className="pi pi-ban" style={{ color: 'red' }}></i>}
+                                                                <span className='pl-3'>{programApprovalStage[programdetails.status]?.text}</span>
                                                             </button>
                                                         </div>
                                                         :
@@ -495,10 +498,10 @@ export default function ProgramDetails() {
                                         }
 
                                         {
-                                            role === 'mentee' ?
+                                            (role === 'mentee' && !programCompleted.includes(programdetails.status) && !programCancelled.includes(programdetails.status)) ?
                                                 <div className='py-9'>
                                                     {
-                                                        menteeProgramStatus[programdetails.mentee_join_status] ?
+                                                        (menteeProgramStatus[programdetails.mentee_join_status]) ?
                                                             <>
                                                                 <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
                                                                     border: "1px solid #E0382D",
@@ -507,7 +510,10 @@ export default function ProgramDetails() {
                                                                     cursor: 'not-allowed'
                                                                 }}
                                                                     onClick={() => undefined}
-                                                                >{menteeProgramStatus[programdetails.mentee_join_status]?.text}
+                                                                >
+                                                                    {menteeProgramStatus[programdetails.mentee_join_status].type === 'waiting' && <i className="pi pi-clock" style={{ color: 'red' }}></i>}
+                                                                    {menteeProgramStatus[programdetails.mentee_join_status].type === 'reject' && <i className="pi pi-ban" style={{ color: 'red' }}></i>}
+                                                                    <span className='pl-3'>{menteeProgramStatus[programdetails.mentee_join_status]?.text}</span>
                                                                 </button>
                                                             </>
                                                             :
@@ -669,7 +675,7 @@ export default function ProgramDetails() {
                                                     <span>{programdetails.course_level}</span>
                                                 </li>
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>Date</span>
-                                                    <span>{ `${dateFormat(programdetails?.start_date)}  &  ${dateFormat(programdetails?.end_date)} `}</span>
+                                                    <span>{`${dateFormat(programdetails?.start_date)}  &  ${dateFormat(programdetails?.end_date)} `}</span>
                                                 </li>
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>Duration</span>
                                                     <span>{programdetails.duration}</span>

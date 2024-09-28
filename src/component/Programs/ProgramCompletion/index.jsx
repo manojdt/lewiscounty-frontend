@@ -157,7 +157,7 @@ export default function ProgramCompletion() {
                                                     Attended Mentees
                                                 </th>
                                                 <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
-                                                    30 Mentees
+                                                    {completedProgram?.participated_mentees?.lenght}
                                                 </td>
                                             </tr>
                                             <tr className="bg-white border-b  dark:bg-gray-800">

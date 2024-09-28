@@ -6,6 +6,7 @@ import { BrowserRouter } from "react-router-dom";
 
 import "./assets/fonts/fonts.css";
 import "./index.css";
+import 'primeicons/primeicons.css';
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { createTheme, ThemeProvider  } from "@mui/material/styles";
