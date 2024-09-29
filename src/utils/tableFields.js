@@ -181,3 +181,24 @@ export const certificateColumns = [{
         id: 1,
     }
 ];
+export const certificateMenberColumns = [
+    {
+        field: 'program_name',
+        headerName: 'Program Name',
+        flex: 1,
+        id: 1,
+    },
+    {
+        field: 'mentees',
+        headerName: 'Mentees',
+        flex: 1,
+        id: 2,
+    },
+    {
+        field: 'mark',
+        headerName: 'Total Over All Mark',
+        flex: 1,
+        id: 1,
+    },
+  
+];

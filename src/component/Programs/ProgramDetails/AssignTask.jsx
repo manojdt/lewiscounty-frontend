@@ -51,6 +51,7 @@ import SkillsSet from '../../SkillsSet';
 import api from '../../../services/api';
 import { programCancelRequest, programRescheduleRequest, updateLocalRequest } from '../../../services/request';
 import './details.css'
+import { formatDateFunToAll ,formatDateTimeISO} from '../../../utils';
 
 
 export default function AssignTask() {
@@ -504,7 +505,7 @@ export default function AssignTask() {
                                             <div className='flex gap-3 items-center'>
                                                 <img src={CalendarIcon} alt="CalendarIcon" />
                                                 <span className='text-[12px]'>
-                                                    Begins Jun 5th and 6:00Pm
+                                                {formatDateTimeISO(programdetails?.start_date)} 
                                                 </span>
                                             </div>
 
@@ -734,7 +735,7 @@ export default function AssignTask() {
                                                     <span>{programdetails.course_level}</span>
                                                 </li>
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>Date</span>
-                                                    <span>06/5/2024</span>
+                                                <span>{ `${formatDateFunToAll(programdetails?.start_date)}  &  ${formatDateFunToAll(programdetails?.end_date)} `}</span>
                                                 </li>
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>Duration</span>
                                                     <span>{programdetails.duration}</span>

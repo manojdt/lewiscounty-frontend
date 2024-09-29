@@ -337,7 +337,19 @@ export const certificateText = {
   cancelled: 'Cancelled',
 }
 
-
+export const resultText={
+  pass:"Pass",
+  fail:"fail"
+}
+export const resultColor = {
+  pass: {
+      color: 'rgba(47, 147, 132, 1)',
+    bg: 'rgba(218, 252, 231, 1)'
+  },
+  fail: {
+    color: 'rgba(224, 56, 45, 1)',
+    bg: 'rgba(255, 231, 231, 1)'
+  },}
 export const certificateColor = {
   yettoapprove: {
     color: '#000',
