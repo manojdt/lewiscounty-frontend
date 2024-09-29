@@ -1,34 +1,52 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { Backdrop, CircularProgress } from '@mui/material'
 import CancelIcon from '../../assets/images/cancel-colour1x.png'
 import Tooltip from '../../shared/Tooltip'
 import api from '../../services/api'
+import { Button } from '../../shared'
 
 
 export default function CertificateDetails() {
     const navigate = useNavigate()
-    const [searchParams] = useSearchParams();
+    const { id } = useParams();
+    console.log(id, "location");
     const [certificateDetails, setCertificateDetails] = useState(<></>)
     const [loading, setLoading] = useState(true)
 
-    const programId = searchParams.get("program_id");
-    const certificateId = searchParams.get("certificate_id");
 
+    // const certificateId = searchParams.get("certificate_id");
+console.log(id)
     const getCertificateDetails = async () => {
-        const query = `?program_id=${programId}&certificate_id=${certificateId}&action=view`;
-        const certificateAction = await api.get(`/mentee_program/certifications/download/${query}`);
+        // const query = `?program_id=${programId}&certificate_id=${id}&action=view`;
+        const certificateAction = await api.get(`mentee_program/certifications/download?id=${id}&action=view`);
         if (certificateAction.status === 200 && certificateAction.data) {
+            console.log(certificateAction,"cerficate")
             setCertificateDetails(certificateAction.data)
         }
         setLoading(false)
     }
+    const downloadAsPDF = () => {
+        // Create a blob from the HTML content
+        const blob = new Blob([certificateDetails], { type: 'application/pdf' });
+
+        // Create a link element, use it to trigger the download, then remove it
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'certificate.pdf';
+
+        // Append the link, trigger the click and remove the link from the DOM
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
 
     useEffect(() => {
-        if (programId && programId !== '' && certificateId && certificateId !== '') {
+        if (id) {
+            
             getCertificateDetails();
         }
-    }, [programId])
+    }, [])
 
 
     return (
@@ -58,13 +76,10 @@ export default function CertificateDetails() {
 
                     <div dangerouslySetInnerHTML={{ __html: certificateDetails }}></div>
 
-                    <div className='mb-5'>
-                        <button style={{
-                            background: 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)', padding: '10px 30px', color: '#fff', width: '150px',
-                            borderRadius: '3px'
-                        }} onClick={() => navigate('/certificates')} >
-                            Close
-                        </button>
+                    <div className='flex gap-4 mb-3 mt-3'>
+                        <Button btnType="button" btnCls="w-[100px]"  onClick={() => navigate('/certificates')} btnName='Close' btnCategory="secondary" />
+                        
+                        <Button btnType="button" btnCls="w-[130px]" onClick={()=>downloadAsPDF()} btnName='Download' btnCategory="primary" />
                     </div>
                 </div>
 

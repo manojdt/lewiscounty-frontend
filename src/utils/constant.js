@@ -194,6 +194,7 @@ export const certificateStatus = {
   load: 'loaded',
   create: 'created',
   update: 'updated',
+  download: 'download',
   delete: 'deleted'
 }
 

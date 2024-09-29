@@ -5,7 +5,8 @@ import {
     getCertificates,
     createCertificate,
     getCertificateList,
-    triggerCertificateAction
+    triggerCertificateAction,
+    certificateDownload
 } from "../../services/certificate";
 import { certificateStatus } from "../../utils/constant";
 
@@ -13,6 +14,7 @@ const initialState = {
     certificates: [],
     certificatesList: [],
     certificate: {},
+    certificateHTML:{},
     loading: false,
     status: "",
     error: "",
@@ -59,6 +61,28 @@ export const certificateSlice = createSlice({
                 };
             })
             .addCase(createCertificate.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+            builder
+            .addCase(certificateDownload.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(certificateDownload.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    status: certificateStatus.download,
+                    certificateHTML:action.payload,
+                    loading: false,
+                };
+            })
+            .addCase(certificateDownload.rejected, (state, action) => {
                 return {
                     ...state,
                     loading: false,

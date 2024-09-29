@@ -6,12 +6,13 @@ import SearchIcon from '../../assets/icons/search.svg';
 import DownloadIcon from '../../assets/icons/Document.svg';
 import { Button } from '../../shared';
 import DataTable from '../../shared/DataGrid';
+import TickCircle from '../../assets/icons/tickCircle.svg'
 import ViewIcon from '../../assets/images/view1x.png'
 import MoreIcon from '../../assets/icons/moreIcon.svg'
 
 import { certificateColumns } from '../../utils/tableFields';
 import { useNavigate } from 'react-router-dom';
-import { getCertificateList, getCertificates } from '../../services/certificate';
+import { certificateDownload, getCertificateList, getCertificates } from '../../services/certificate';
 import { certificateColor, certificateText, requestStatusColor, requestStatusText } from '../../utils/constant';
 
 
@@ -20,11 +21,11 @@ export default function Certificate() {
     const [actionTab, setActiveTab] = useState('waiting')
     const [requestTab, setRequestTab] = useState('all')
     const userInfo = useSelector(state => state.userInfo)
-    const { certificatesList, loading } = useSelector(state => state.certificates)
+    const { certificatesList,certificateHTML, loading } = useSelector(state => state.certificates)
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const [seletedItem, setSelectedItem] = useState({})
-    console.log(certificatesList, "cer")
+    console.log(certificatesList,certificateHTML, "cer")
     const role = userInfo.data.role
     const dispatch = useDispatch()
     const handleSearch = (value) => {
@@ -34,7 +35,8 @@ export default function Certificate() {
         setAnchorEl(null);
     };
     const handleCeritificateDownload = () => {
-
+dispatch(certificateDownload(seletedItem.id))
+handleClose()
     }
     const handleMoreClick = (event, data) => {
         console.log('more')
@@ -99,16 +101,16 @@ export default function Certificate() {
                         }}
                     >
 
-                        {/* <MenuItem onClick={() => navigate(`/view-report/${seletedItem.id}`)} className='!text-[12px]'>
+                        <MenuItem onClick={() => navigate(`/certificate-view/${seletedItem.id}`)} className='!text-[12px]'>
                                 <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
                                 View
-                            </MenuItem> */}
+                            </MenuItem>
 
 
-                        <MenuItem onClick={handleCeritificateDownload} className='!text-[12px]'>
+                        {/* <MenuItem onClick={handleCeritificateDownload} className='!text-[12px]'>
                             <img src={DownloadIcon} alt="AcceptIcon" className='pr-3 w-[27px]' />
-                            Download
-                        </MenuItem>
+                            
+                        </MenuItem> */}
 
 
 
@@ -142,7 +144,7 @@ export default function Certificate() {
 
 
     useEffect(() => {
-        dispatch(getCertificateList(role === "admin" ? requestTab : role === "mentor" ? actionTab : "generate"))
+        dispatch(getCertificateList(role === "admin" ? `?status${requestTab}` : role === "mentor" ? `?status${actionTab}` : ""))
         // dispatch(getCertificates({search: role === "admin" ? requestTab : actionTab}))
     }, [requestTab, actionTab])
     return (
