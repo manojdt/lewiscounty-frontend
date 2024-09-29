@@ -23,17 +23,18 @@ import EmailIcon from '../../assets/icons/EmailColor.svg'
 import StarIcon from '../../assets/icons/filledYellowStar.svg'
 import TickColorIcon from '../../assets/icons/tickColorLatest.svg'
 import CancelColorIcon from '../../assets/icons/cancelCircle.svg'
+import CancelIcon from '../../assets/images/cancel1x.png'
 
 import Programs from '../Dashboard/Programs';
 
-import { programActivityRows } from '../../mock';
+import { categoryColumns, programActivityRows } from '../../mock';
 import { recentRequest, programFeeds } from '../../utils/mock'
 import { Backdrop, CircularProgress, Switch } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import MediaPost from '../Dashboard/MediaPost';
 import { getMenteeProgramActivity, getMentorProgramActivity, getMyMenteeInfo, getMyMentorInfo, getProfileInfo } from '../../services/userList';
 import { dateFormat } from '../../utils';
-import { cancelMemberRequest, updateLocalRequest, updateMentorAutoApproval } from '../../services/request';
+import { cancelMemberRequest, getCategoryList, updateLocalRequest, updateMemberRequest, updateMentorAutoApproval } from '../../services/request';
 import { requestStatus } from '../../utils/constant';
 import MuiModal from '../../shared/Modal';
 
@@ -48,13 +49,14 @@ export default function MentorDetails() {
     const [value, setValue] = useState(options[0]);
 
     const [checked, setChecked] = useState(false);
+    const [categoryPopup, setCategoryPopup] = useState({ show: false, selectedItem: [] })
 
 
     const userInfo = useSelector(state => state.userInfo)
 
     const { mentorDetails, menteeDetails, loading, programActivity, userDetails: profileInfo } = useSelector(state => state.userList)
 
-    const { loading: requestLoading, status: requestStatusInfo, error: requestStatusError } = useSelector(state => state.requestList);
+    const { loading: requestLoading, status: requestStatusInfo, error: requestStatusError, categoryList } = useSelector(state => state.requestList);
 
     const role = userInfo.data.role || ''
 
@@ -153,7 +155,10 @@ export default function MentorDetails() {
 
     const handleAcceptCancelProgramRequest = (action, programid) => {
         let popup = { ...confirmPopup, programId: programid }
-        if (action === 'approve') { setConfirmPopup({ ...popup, approve: true }); }
+        if (action === 'approve') {
+            dispatch(getCategoryList())
+            // setConfirmPopup({ ...popup, approve: true });
+        }
         if (action === 'reject') { setConfirmPopup({ ...popup, reject: true }) }
     }
 
@@ -171,9 +176,43 @@ export default function MentorDetails() {
         resetConfirmPopup()
     }
 
+    // Category Popup Close
+    const handleCloseCategoryPopup = () => {
+        setCategoryPopup({ show: false, selectedItem: [] })
+    }
+
+    // Handle Selected Items for Category 
+    const handleSelectedItems = (selectedInfo) => {
+
+        let data = { ...categoryPopup }
+        if (selectedInfo.length) {
+            data = { ...data, selectedItem: selectedInfo }
+        }
+        const categoryId = []
+        data.selectedItem.forEach((selected) => categoryId.push(selected.categories_id))
+        const payload = {
+            member_id: params.id,
+            categories_id: categoryId
+        }
+        dispatch(updateMemberRequest(payload))
+
+    }
+
+    const footerComponent = (props) => {
+        return (
+            <div className='flex gap-6 justify-center items-center py-4'>
+                <button onClick={() => setCategoryPopup({ show: false, selectedItem: [] })} className='py-3 px-6 w-[16%]'
+                    style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '3px', color: 'rgba(29, 91, 191, 1)' }}>Cancel</button>
+                <button onClick={() => { console.log(props); handleSelectedItems(props.selectedRows) }}
+                    className='text-white py-3 px-6 w-[16%]'
+                    style={{ background: 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)', borderRadius: '3px' }}>Submit</button>
+            </div>)
+    }
+
     useEffect(() => {
         if (requestStatusInfo === requestStatus.memberupdate || requestStatusInfo === requestStatus.membercancel) {
             resetConfirmPopup()
+            setCategoryPopup({ show: false, selectedItem: [] })
             setTimeout(() => {
                 dispatch(getProfileInfo(params.id))
                 dispatch(updateLocalRequest({ status: '' }))
@@ -185,7 +224,14 @@ export default function MentorDetails() {
                 dispatch(getProfileInfo(params.id))
                 dispatch(updateLocalRequest({ status: '' }))
             }, 3000)
-         
+
+        }
+
+        if (requestStatusInfo === requestStatus.categoryload) {
+            setCategoryPopup({ show: true, selectedItem: [] })
+            setTimeout(() => {
+                dispatch(updateLocalRequest({ status: '' }))
+            }, 2000)
         }
     }, [requestStatusInfo])
 
@@ -220,6 +266,8 @@ export default function MentorDetails() {
 
 
 
+    console.log('confirmPopup', confirmPopup)
+
     return (
         <div className="px-9 my-6 grid">
             <Backdrop
@@ -228,6 +276,45 @@ export default function MentorDetails() {
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
+
+
+            {/* { 'Select Categort Popup'} */}
+            <MuiModal modalSize='md' modalOpen={categoryPopup.show} modalClose={handleCloseCategoryPopup} noheader>
+                <div className='px-5 py-5'>
+                    <div className='flex justify-center flex-col gap-5 px-5 pb-5 mt-4 mb-4'
+                        style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '10px', }}>
+                        <div className='flex justify-between px-3 py-4 items-center' style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
+                            <p className='text-[18px]' style={{ color: 'rgba(0, 0, 0, 1)' }}>Select Category</p>
+                            <img className='cursor-pointer' onClick={handleCloseCategoryPopup} src={CancelIcon} alt="CancelIcon" />
+                        </div>
+                        <div className='flex justify-between px-3 mb-4'>
+                            <div className="relative w-full">
+                                <input type="text" id="search-navbar" className="block w-full p-2 text-sm text-gray-900 border-none"
+                                    placeholder="Search here..." style={{
+                                        border: '1px solid rgba(29, 91, 191, 1)',
+                                        borderRadius: '50px',
+                                        height: '60px',
+                                        width: '100%'
+                                    }} />
+                                <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
+                                    <img src={SearchIcon} alt='SearchIcon' />
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <DataTable
+                            rows={categoryList}
+                            columns={categoryColumns}
+                            height={'460px'}
+                            footerComponent={footerComponent}
+                            selectedAllRows={categoryPopup.selectedItem}
+                        />
+
+                    </div>
+                </div>
+
+            </MuiModal>
 
 
             <Backdrop
@@ -247,7 +334,7 @@ export default function MentorDetails() {
                     <div className='flex justify-center'>
                         <div className="flex gap-6 justify-center align-middle">
                             <Button btnCls="w-[110px]" btnName={confirmPopup.approve ? 'Cancel' : confirmPopup.reject ? 'No' : ''} btnCategory="secondary" onClick={handleCancelPopup} />
-                            <Button btnType="button" btnCls="w-[110px]" btnName={confirmPopup.approve ? 'Approve' : confirmPopup.reject === 'reject' ? 'Yes' : ''}
+                            <Button btnType="button" btnCls="w-[110px]" btnName={confirmPopup.approve ? 'Approve' : confirmPopup.reject ? 'Yes' : ''}
                                 style={{ background: confirmPopup.approve ? '#16B681' : '#E0382D' }} btnCategory="primary"
                                 onClick={handleConfirmPopup}
                             />
