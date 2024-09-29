@@ -3,12 +3,18 @@ import {
 } from "@reduxjs/toolkit";
 import {
     getCertificates,
-    triggerCertificateAction
+    createCertificate,
+    getCertificateList,
+    triggerCertificateAction,
+    certificateDownload
 } from "../../services/certificate";
+import { certificateStatus } from "../../utils/constant";
 
 const initialState = {
     certificates: [],
+    certificatesList: [],
     certificate: {},
+    certificateHTML:{},
     loading: false,
     status: "",
     error: "",
@@ -40,6 +46,72 @@ export const certificateSlice = createSlice({
                     error: action.error.message,
                 };
             });
+            builder
+            .addCase(createCertificate.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(createCertificate.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    status: certificateStatus.create,
+                    loading: false,
+                };
+            })
+            .addCase(createCertificate.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+            builder
+            .addCase(certificateDownload.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(certificateDownload.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    status: certificateStatus.download,
+                    certificateHTML:action.payload,
+                    loading: false,
+                };
+            })
+            .addCase(certificateDownload.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+            builder
+            .addCase(getCertificateList.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(getCertificateList.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    certificatesList:action.payload,
+                    status: certificateStatus.load,
+                    loading: false,
+                };
+            })
+            .addCase(getCertificateList.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
         builder
             .addCase(triggerCertificateAction.pending, (state) => {
                 return {

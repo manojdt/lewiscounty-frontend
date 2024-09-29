@@ -45,6 +45,26 @@ export const updateProgramRequest = createAsyncThunk(
         return updateProgramReq;
     }
 );
+export const certificateRequest = createAsyncThunk(
+    "certificateRequest",
+    async (queryString) => {
+        const certificateReq = await api.get(`certificate/certificate_request?status=${queryString}`);
+        if (certificateReq.status === 200 && certificateReq.data) {
+            return certificateReq.data;
+        }
+        return certificateReq;
+    }
+);
+export const updateCertificateRequest = createAsyncThunk(
+    "updateCertificateRequest",
+    async (queryString) => {
+        const updateCertificateReq = await api.put(`certificate/certificate_request`,queryString);
+        if (updateCertificateReq.status === 200 && updateCertificateReq.data) {
+            return updateCertificateReq.data;
+        }
+        return updateCertificateReq;
+    }
+);
 
 
 export const updateProgramMenteeRequest = createAsyncThunk(

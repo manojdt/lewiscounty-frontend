@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Card from '../../../shared/Card'
-import { programRequestStatusColor, programRequestStatusText, requestOverview, requestStatus, RequestStatus, RequestStatusArray, requestStatusColor, requestStatusText } from '../../../utils/constant'
+import { certificateColor, certificateText, programRequestStatusColor, programRequestStatusText, requestOverview, requestStatus, RequestStatus, RequestStatusArray, requestStatusColor, requestStatusText } from '../../../utils/constant'
 import SearchIcon from '../../../assets/icons/search.svg';
 import CalendarIcon from '../../../assets/images/calender_1x.png';
 import ArrowRightIcon from '../../../assets/icons/arrowRightColor.svg';
@@ -22,7 +22,7 @@ import { categoryColumns, certificateRequestColumns, goalsRequestColumns, member
 
 import './request.css';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { cancelMemberRequest, getCategoryList, getMemberRequest, getprogramRequest, getReportRequest, getResourceRequest, goalsRequest, updateGoalRequest, updateLocalRequest, updateMemberRequest, updateProgramMenteeRequest, updateProgramRequest, updateReportRequest } from '../../../services/request';
+import { cancelMemberRequest, certificateRequest, getCategoryList, getMemberRequest, getprogramRequest, getReportRequest, getResourceRequest, goalsRequest, updateCertificateRequest, updateGoalRequest, updateLocalRequest, updateMemberRequest, updateProgramMenteeRequest, updateProgramRequest, updateReportRequest } from '../../../services/request';
 import { Backdrop, CircularProgress } from '@mui/material';
 import ToastNotification from '../../../shared/Toast';
 import MuiModal from '../../../shared/Modal';
@@ -34,7 +34,7 @@ export default function AllRequest() {
     const [searchParams] = useSearchParams();
 
     const dispatch = useDispatch();
-    const { programRequest: programTableInfo, memberRequest, resourceRequest, categoryList, goalsRequest: goalsRequestInfo, reportsRequest: reportsRequestInfo,
+    const { programRequest: programTableInfo, memberRequest, resourceRequest, categoryList, goalsRequest: goalsRequestInfo, certificateRequestList, reportsRequest: reportsRequestInfo,
         loading, status, error } = useSelector(state => state.requestList);
     const [currentRequestTab, setCurrentRequestTab] = useState(RequestStatus.programRequest)
     const [filterStatus, setFilterStatus] = useState('new')
@@ -164,13 +164,34 @@ export default function AllRequest() {
                 handleAcceptReportApiRequest()
             }
         }
+        if (confirmPopup.requestType === 'certificate_request') {
+            if (confirmPopup.type === 'approve') {
+                handleApproveCertificateApiRequest()
+            }
+            if (confirmPopup.type === 'reject') {
+                handleCancelCertificateApiRequest()
+            }
+        }
     }
 
     // Cancel Accept Popup
     const handleCancelConfirmPopup = () => {
         resetConfirmPopup()
     }
+    // Certificate Approve 
+    const handleApproveCertificateApiRequest = () => {
+        dispatch(updateCertificateRequest({
+            "id": seletedItem.id,
+            "status": "accept"
+        }))
+    }
+    const handleCancelCertificateApiRequest = () => {
+        dispatch(updateCertificateRequest({
+            "id": seletedItem.id,
+            "status": "cancel"
+        }))
 
+    }
 
     // ACCEPT API CALLS
 
@@ -303,7 +324,15 @@ export default function AllRequest() {
         handleOpenConfirmPopup('Report Request', currentRequestTab.key, actionTab, 'approve')
         handleClose();
     }
-
+    // Certificate
+    const handleAcceptCeritificateRequest = () => {
+        handleOpenConfirmPopup('Certificate Request', currentRequestTab.key, actionTab, 'approve')
+        handleClose();
+    }
+    const handleCancelCeritificateRequest = () => {
+        handleOpenConfirmPopup('Certificate Request', currentRequestTab.key, actionTab, 'reject')
+        handleClose();
+    }
 
     // Program Dropdown Cancel
     const handleCancelReportRequest = () => {
@@ -754,34 +783,71 @@ export default function AllRequest() {
             headerName: 'Status',
             flex: 1,
             id: 2,
-            // renderCell: (params) => {
-            //     return <>
-            //         <div className='cursor-pointer flex items-center h-full relative'>
-            //             <span className='w-[80px] flex justify-center h-[30px] px-7'
-            //                 style={{
-            //                     background: certificateColor[params.row.status]?.bg || '', lineHeight: '30px',
-            //                     borderRadius: '3px', width: '110px', height: '34px', color: certificateColor[params.row.status]?.color || '',
-            //                     fontSize: '12px'
-            //                 }}>
-            //                 {certificateText[params.row.status] || ''}
-            //             </span>
-            //         </div>
-            //     </>
-            // }
+            renderCell: (params) => {
+                return <>
+                    <div className='cursor-pointer flex items-center h-full relative'>
+                        <span className='w-[80px] flex justify-center h-[30px] px-7'
+                            style={{
+                                background: requestStatusColor[params.row.status]?.bg || '', lineHeight: '30px',
+                                borderRadius: '3px', width: '110px', height: '34px', color: requestStatusColor[params.row.status]?.color || '',
+                                fontSize: '12px'
+                            }}>
+                            {requestStatusText[params.row.status] || ''}
+                        </span>
+                    </div>
+                </>
+            }
         },
         {
             field: 'action',
             headerName: 'Action',
             flex: 1,
             id: 4,
-            // renderCell: (params) => {
-            //     console.log('params', params)
-            //     return <>
-            //         <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleClick(e, params.row)}>
-            //             <img src={ActionIcon} alt='ActionIcon' />
-            //         </div>
-            //     </>
-            // }
+            renderCell: (params) => {
+                console.log('params', params)
+                return <>
+                    <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleMoreClick(e, params.row)}>
+                        <img src={MoreIcon} alt='MoreIcon' />
+                    </div>
+                    <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                        MenuListProps={{
+                            'aria-labelledby': 'basic-button',
+                        }}
+                    >
+
+                        {
+                            role === 'admin' &&
+
+                            <>
+                                {/* <MenuItem onClick={() => navigate(`/view-report/${seletedItem.id}`)} className='!text-[12px]'>
+                                <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
+                                View
+                            </MenuItem> */}
+                                {
+                                    (params.row.status === 'new' || params.row.status === 'pending') &&
+
+                                    <>
+
+                                        <MenuItem onClick={handleAcceptCeritificateRequest} className='!text-[12px]'>
+                                            <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
+                                            Approve
+                                        </MenuItem>
+                                        <MenuItem onClick={handleCancelCeritificateRequest} className='!text-[12px]'>
+                                            <img src={CloseCircle} alt="CancelIcon" className='pr-3 w-[27px]' />
+                                            Reject
+                                        </MenuItem>
+                                    </>
+                                }
+
+                            </>
+                        }
+                    </Menu>
+                </>
+            }
         },
     ]
 
@@ -814,6 +880,11 @@ export default function AllRequest() {
         dispatch(getReportRequest({
             rep_status: filterStatus,
         }))
+    }
+    const getCerificateRequestAPi = () => {
+        dispatch(certificateRequest(
+            filterStatus,
+        ))
     }
 
     const getMembersRequestApi = () => {
@@ -951,6 +1022,18 @@ export default function AllRequest() {
             }, 3000)
         }
 
+        // Certificate update action
+        if (status === requestStatus.certificateupdate) {
+            if (confirmPopup.show) resetConfirmPopup()
+            if (categoryPopup.show) handleCloseCategoryPopup()
+            getCerificateRequestAPi()
+            setShowToast({ show: true, message: 'Certificate Request updated successfully' })
+            setTimeout(() => {
+                setShowToast({ show: false, message: '' })
+                dispatch(updateLocalRequest({ status: '' }))
+            }, 3000)
+        }
+
 
         // Report update action
         if (status === requestStatus.reportupdate) {
@@ -993,6 +1076,9 @@ export default function AllRequest() {
         if (searchParams.get('type') === 'goal_request') {
             setActiveTableDetails({ column: goalColumns, data: goalsRequestInfo })
         }
+        if (searchParams.get('type') === 'certificate_request') {
+            setActiveTableDetails({ column: certificateColumns, data: certificateRequestList })
+        }
 
         if (searchParams.get('type') === 'resource_access_request') {
             setActiveTableDetails({ column: resourceColumns, data: resourceRequest })
@@ -1002,7 +1088,7 @@ export default function AllRequest() {
             setActiveTableDetails({ column: reportRequestColumn, data: reportsRequestInfo })
         }
 
-    }, [programTableInfo, memberRequest, resourceRequest, goalsRequestInfo, reportsRequestInfo, anchorEl])
+    }, [programTableInfo, memberRequest, resourceRequest, goalsRequestInfo, certificateRequestList, reportsRequestInfo, anchorEl])
 
 
     useEffect(() => {
@@ -1025,6 +1111,9 @@ export default function AllRequest() {
             }
 
 
+            if (searchParams.get('type') === 'certificate_request') {
+                getCerificateRequestAPi()
+            }
             if (searchParams.get('type') === 'report_request') {
                 getReportsRequestApi()
             }

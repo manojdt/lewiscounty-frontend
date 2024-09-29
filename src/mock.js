@@ -1609,55 +1609,54 @@ export const testimonialRequestColumns = [
 
 export const certificateRequestColumns = [
     {
-        field: 'name',
+        field: 'category_name',
         headerName: 'Category',
         flex: 1,
         id: 0,
         for: ['admin','mentor']
     },
     {
-        field: 'reason',
+        field: 'program_name',
         headerName: 'Program Name',
         flex: 1,
         id: 1,
         for: ['admin','mentor']
     },
     {
-        field: 'dob',
+        field: 'Mentee_count',
         headerName: 'Mentees',
         flex: 1,
         id: 2,
         for: ['admin']
     },
     {
-        field: 'phone',
+        field: 'requested_by',
         headerName: 'Requested By',
         flex: 1,
         id: 3,
         for: ['admin']
     },
     {
-        field: 'phone',
+        field: 'requested_date',
         headerName: 'Requested Date',
         flex: 1,
         id: 3,
-        for: ['admin']
+        for: ['admin'],
+        renderCell: (params) => {
+            return <div>{dateFormat(params.row.requested_date)}</div>
+        }
     },
    
     {
-        field: 'phone',
+        field: 'updated_at',
         headerName: 'Last Updated Date',
         flex: 1,
         id: 3,
-        for: ['admin']
+        for: ['admin'],
+        renderCell: (params) => {
+            return <div>{dateFormat(params.row.updated_at)}</div>
+        }
     },
-    {
-        field: 'phone',
-        headerName: 'Last Updated By',
-        flex: 1,
-        id: 3,
-        for: ['admin']
-    }
 
 ];
 

@@ -190,6 +190,13 @@ export const reportsStatus = {
   update: 'updated',
   delete: 'deleted'
 }
+export const certificateStatus = {
+  load: 'loaded',
+  create: 'created',
+  update: 'updated',
+  download: 'download',
+  delete: 'deleted'
+}
 
 export const calendarStatus = {
   load: 'loaded',
@@ -199,6 +206,7 @@ export const calendarStatus = {
 export const requestStatus = {
   load: 'loaded',
   programupdate: 'programupdated',
+  certificateupdate: 'certificateupdated',
   goalupdate: 'goalupdated',
   categoryload: 'categoryloaded',
   memberload: 'memberloaded',

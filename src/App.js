@@ -132,7 +132,7 @@ function App() {
 
           <Route path="/certificates" element={<Certificate />} />
           <Route path="/create-certificate" element={<CreateCertificate />} />
-          <Route path="/certificate-view" element={<CertificateDetails />} />
+          <Route path="/certificate-view/:id" element={<CertificateDetails />} />
           
 
           <Route path="/mentors" element={<Mentors />} />

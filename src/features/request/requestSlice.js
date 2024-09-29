@@ -6,6 +6,7 @@ import {
 } from "../../utils/constant";
 import {
     cancelMemberRequest,
+    certificateRequest,
     getCategoryList,
     getMemberRequest,
     getprogramRequest,
@@ -19,6 +20,7 @@ import {
     updateMemberRequest,
     updateMentorAutoApproval,
     updateProgramMenteeRequest,
+    updateCertificateRequest,
     updateProgramRequest,
     updateReportRequest
 } from "../../services/request";
@@ -30,7 +32,7 @@ const initialState = {
     goalsRequest: [],
     testimonialsRequest: [],
     technicalSupportRequest: [],
-    certificateRequest: [],
+    certificateRequestList: [],
     reportRequest: [],
     categoryList: [],
     reportsRequest: [],
@@ -109,6 +111,27 @@ export const requestSlice = createSlice({
                     error: action.error.message,
                 };
             });
+        builder
+            .addCase(updateCertificateRequest.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(updateCertificateRequest.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    status: requestStatus.certificateupdate,
+                    loading: false,
+                };
+            })
+            .addCase(updateCertificateRequest.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
 
 
 
@@ -162,6 +185,28 @@ export const requestSlice = createSlice({
                 };
             })
             .addCase(goalsRequest.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+        builder
+            .addCase(certificateRequest.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(certificateRequest.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    certificateRequestList: action.payload,
+                    status: requestStatus.load,
+                    loading: false,
+                };
+            })
+            .addCase(certificateRequest.rejected, (state, action) => {
                 return {
                     ...state,
                     loading: false,

@@ -24,7 +24,36 @@ export const getCertificates = createAsyncThunk(
     }
 );
 
-
+export const createCertificate = createAsyncThunk(
+    "createCertificate",
+    async (data) => {
+        const createRept = await api.post(`certificate/certificate_request`, data);
+        if (createRept.status === 200 && createRept.data) {
+            return createRept.data;
+        }
+        return createRept
+    }
+);
+export const certificateDownload = createAsyncThunk(
+    "certificateDownload",
+    async (id) => {
+        const createRept = await api.get(`mentee_program/certifications/download?id=${id}&action=view`);
+        if (createRept.status === 200 && createRept.data) {
+            return createRept.data;
+        }
+        return createRept
+    }
+);
+export const getCertificateList = createAsyncThunk(
+    "getCertificateList",
+    async (data) => {
+        const createRept = await api.get(`certificate/certificate_request${data}`);
+        if (createRept.status === 200 && createRept.data) {
+            return createRept.data;
+        }
+        return createRept
+    }
+);
 export const triggerCertificateAction = createAsyncThunk(
     "triggercertificateAction",
     async (queryString) => {
