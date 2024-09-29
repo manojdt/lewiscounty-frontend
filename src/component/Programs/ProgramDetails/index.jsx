@@ -106,7 +106,7 @@ export default function ProgramDetails() {
                     navigate(`${pipeUrls.startprogram}/${params.id}`)
                 }
 
-                if (role === 'mentor') {
+                if (role === 'mentor' && requestId === '' ) {
                     if (programdetails.status === programActionStatus.yettostart) {
                         navigate(`${pipeUrls.assigntask}/${params.id}`)
                     }
