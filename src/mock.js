@@ -1815,3 +1815,96 @@ const membersList = () => {
 
 
 export const membersData = membersList()
+
+
+
+
+
+export const allMembersColumns = [
+    {
+        field: 'name',
+        headerName: 'Name',
+        flex: 1,
+        id: 0,
+        for: ['mentor','mentee']
+    },
+    {
+        field: 'category',
+        headerName: 'Category',
+        flex: 1,
+        id: 1,
+        for: ['mentor','mentee']
+    },
+    {
+        field: 'designation',
+        headerName: 'Designation',
+        flex: 1,
+        id: 2,
+        for: ['mentee','mentee']
+    },
+    {
+        field: 'skills',
+        headerName: 'Skills',
+        flex: 1,
+        id: 3,
+        for: ['mentee','mentee']
+    },
+    {
+        field: 'phone_number',
+        headerName: 'Phone Number',
+        flex: 1,
+        id: 4,
+        for: ['mentor','mentee']
+    },
+    {
+        field: 'email',
+        headerName: 'Email',
+        flex: 1,
+        id: 5,
+        for: ['mentor','mentee']
+    },
+    {
+        field: 'location',
+        headerName: 'Location',
+        flex: 1,
+        id: 5,
+        for: ['mentor','mentee']
+    },
+    {
+        field: 'experience',
+        headerName: 'Experience',
+        flex: 1,
+        id: 5,
+        for: ['mentor','mentee']
+    },
+    {
+        field: 'attended_programs',
+        headerName: 'Attended Programs',
+        flex: 1,
+        id: 5,
+        for: ['mentor','mentee']
+    },
+    {
+        field: 'certificates',
+        headerName: 'Certificates',
+        flex: 1,
+        id: 5,
+        for: ['mentor','mentee']
+    },
+    {
+        field: 'auto_approval',
+        headerName: 'Auto Approval',
+        flex: 1,
+        id: 5,
+        for: ['mentor']
+    },
+    {
+        field: 'ratings',
+        headerName: 'Ratings',
+        flex: 1,
+        id: 5,
+        for: ['mentor','mentee']
+    },
+
+
+];
