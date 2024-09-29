@@ -73,8 +73,6 @@ export default function CreateReport() {
         }
 
         dispatch(createReport(apiData))
-        // dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.assigned }))
-        // reset()
     }
 
     const getProgramInfo = (categoryId) => {
@@ -116,6 +114,8 @@ export default function CreateReport() {
                 end_date: dateTimeFormat(programDetails.end_date),
                 participated_mentees: programDetails.participated_mentees
             }
+
+            console.log('programDetails', programDetails, category, categoryPrograms)
             if (searchParams.has('cat_id') && searchParams.has('program_id')) {
                 payload = {
                     ...payload,
@@ -142,11 +142,9 @@ export default function CreateReport() {
             return field
         })
         setReportFields(fields)
-
         if (searchParams.has('cat_id') && searchParams.get('cat_id') !== '') {
             getProgramInfo(searchParams.get('cat_id'))
         }
-
     }, [category])
 
     useEffect(() => {
@@ -192,8 +190,6 @@ export default function CreateReport() {
     }, [searchParams])
 
 
-    console.log('Values', getValues())
-
     return (
         <div className="px-9 my-6 grid">
 
@@ -217,9 +213,7 @@ export default function CreateReport() {
 
             {
                 notification.program &&
-
                 <ToastNotification openToaster={notification.program} message={'There is no programs found for this category'} handleClose={handleClose} toastType={'error'} />
-
             }
 
 
