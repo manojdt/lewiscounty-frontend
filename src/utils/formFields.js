@@ -2169,7 +2169,7 @@ export const CreateCertificateFields = [{
   },
   {
     type: "popup-input",
-    name: "pass_mentees",
+    name: "pass_mentee_list",
     label: "Pass Mentees",
     placeholder: "Select Meneteed",
     inputRules: {
@@ -2179,7 +2179,7 @@ export const CreateCertificateFields = [{
   },
   {
     type: "popup-input",
-    name: "fail_mentees",
+    name: "fail_mentee_list",
     label: "Fail  Mentees",
     placeholder: "Select Meneteed",
     inputRules: {

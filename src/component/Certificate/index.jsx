@@ -1,12 +1,18 @@
-import React, { useState } from 'react'
-import { useSelector } from 'react-redux';
-import { Backdrop, CircularProgress } from '@mui/material';
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { Backdrop, CircularProgress, Menu, MenuItem } from '@mui/material';
 
 import SearchIcon from '../../assets/icons/search.svg';
+import DownloadIcon from '../../assets/icons/Document.svg';
 import { Button } from '../../shared';
 import DataTable from '../../shared/DataGrid';
+import ViewIcon from '../../assets/images/view1x.png'
+import MoreIcon from '../../assets/icons/moreIcon.svg'
+
 import { certificateColumns } from '../../utils/tableFields';
 import { useNavigate } from 'react-router-dom';
+import { getCertificateList, getCertificates } from '../../services/certificate';
+import { certificateColor, certificateText, requestStatusColor, requestStatusText } from '../../utils/constant';
 
 
 export default function Certificate() {
@@ -14,13 +20,27 @@ export default function Certificate() {
     const [actionTab, setActiveTab] = useState('waiting')
     const [requestTab, setRequestTab] = useState('all')
     const userInfo = useSelector(state => state.userInfo)
-
+    const { certificatesList, loading } = useSelector(state => state.certificates)
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+    const [seletedItem, setSelectedItem] = useState({})
+    console.log(certificatesList, "cer")
     const role = userInfo.data.role
-
-    const handleSearch = (search) => {
-        console.log('Search')
+    const dispatch = useDispatch()
+    const handleSearch = (value) => {
+        dispatch(getCertificateList(value))
     }
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+    const handleCeritificateDownload = () => {
 
+    }
+    const handleMoreClick = (event, data) => {
+        console.log('more')
+        setSelectedItem(data)
+        setAnchorEl(event.currentTarget);
+    };
     const certificateRequestTab = [
         {
             name: 'Waiting For Response',
@@ -44,7 +64,18 @@ export default function Certificate() {
             flex: 1,
             id: 2,
             renderCell: (params) => {
-                return <></>
+                console.log('paramsppppp', params)
+                return <>
+                    <div className='cursor-pointer flex items-center h-full relative'>
+                        <span className='w-[80px] flex justify-center h-[30px] px-3'
+                            style={{
+                                background: requestStatusColor[params.row.status]?.bg || '', lineHeight: '30px',
+                                borderRadius: '3px', width: '110px', height: '34px', color: requestStatusColor[params.row.status]?.color || '',
+                                fontSize: '12px'
+                            }}
+                        > {requestStatusText[params.row.status]}</span>
+                    </div>
+                </>
             }
         },
         {
@@ -53,7 +84,36 @@ export default function Certificate() {
             flex: 1,
             id: 4,
             renderCell: (params) => {
-                return <></>
+                console.log('params', params)
+                return <>
+                    <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleMoreClick(e, params.row)}>
+                        <img src={MoreIcon} alt='MoreIcon' />
+                    </div>
+                    <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                        MenuListProps={{
+                            'aria-labelledby': 'basic-button',
+                        }}
+                    >
+
+                        {/* <MenuItem onClick={() => navigate(`/view-report/${seletedItem.id}`)} className='!text-[12px]'>
+                                <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
+                                View
+                            </MenuItem> */}
+
+
+                        <MenuItem onClick={handleCeritificateDownload} className='!text-[12px]'>
+                            <img src={DownloadIcon} alt="AcceptIcon" className='pr-3 w-[27px]' />
+                            Download
+                        </MenuItem>
+
+
+
+                    </Menu>
+                </>
             }
 
         },
@@ -80,6 +140,11 @@ export default function Certificate() {
         certificateColumn = certificateColumn.filter(column => !mentorFields.includes(column.field))
     }
 
+
+    useEffect(() => {
+        dispatch(getCertificateList(role === "admin" ? requestTab : role === "mentor" ? actionTab : "generate"))
+        // dispatch(getCertificates({search: role === "admin" ? requestTab : actionTab}))
+    }, [requestTab, actionTab])
     return (
         <div className="program-request px-8 mt-10">
 
@@ -179,7 +244,7 @@ export default function Certificate() {
 
 
 
-                        <DataTable rows={[]} columns={certificateColumn} hideFooter />
+                        <DataTable rows={certificatesList || []} columns={certificateColumn} hideFooter />
                     </div>
                 </div>
             </div>

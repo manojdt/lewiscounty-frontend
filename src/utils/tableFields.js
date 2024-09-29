@@ -1,3 +1,5 @@
+import { dateFormat } from ".";
+
 export const myMenteeColumns = [{
         field: 'full_name',
         headerName: 'Name',
@@ -134,7 +136,7 @@ export const launchProgramColumns = [{
 
 
 export const certificateColumns = [{
-        field: 'categories',
+        field: 'category_name',
         headerName: 'Category',
         flex: 1,
         id: 0,
@@ -146,36 +148,42 @@ export const certificateColumns = [{
         id: 1,
     },
     {
-        field: 'mentees',
+        field: 'Mentee_count',
         headerName: 'Mentees',
         flex: 1,
         id: 2,
     }, {
-        field: 'pass',
-        headerName: 'Pass',
+        field: 'pass_mentee_count',
+        headerName: 'Pass Mentee',
         flex: 1,
         id: 1,
     },
     {
-        field: 'fail',
-        headerName: 'Fail',
+        field: 'fail_mentee_count',
+        headerName: 'Fail Mentee',
         flex: 1,
         id: 1,
     },
     {
-        field: 'request_date',
+        field: 'requested_date',
         headerName: 'Request Date',
         flex: 1,
         id: 1,
+        renderCell: (params) => {
+            return <div>{dateFormat(params.row.requested_date)}</div>
+        }
     },
     {
-        field: 'last_update_date',
+        field: 'updated_at',
         headerName: 'Last updated Date',
         flex: 1,
         id: 1,
+        renderCell: (params) => {
+            return <div>{dateFormat(params.row.updated_at)}</div>
+        }
     },
     {
-        field: 'last_update_by',
+        field: 'last_updated_by',
         headerName: 'Last updated by',
         flex: 1,
         id: 1,

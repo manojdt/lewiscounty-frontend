@@ -33,11 +33,17 @@ export const getProgramsByCategoryId = createAsyncThunk(
 export const getReportProgramDetails = createAsyncThunk(
     "getReportProgramDetails",
     async (id) => {
+        if(id){
         const getDetailsofProgram = await api.get(`fetch_program_detail/${id}`);
         if (getDetailsofProgram.status === 200 && getDetailsofProgram.data && getDetailsofProgram.data.program) {
             return getDetailsofProgram.data.program;
         }
-        return getDetailsofProgram;
+        
+        return  getDetailsofProgram;
+    }else{
+        return  {};
+
+    }
     }
 );
 

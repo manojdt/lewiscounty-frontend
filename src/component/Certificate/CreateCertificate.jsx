@@ -16,11 +16,12 @@ import { Button } from '../../shared';
 import { MenteeAssignColumns } from '../../mock';
 import { getAllCategories } from '../../services/programInfo';
 
-import { pipeUrls, programActionStatus, reportsStatus } from '../../utils/constant';
+import { certificateStatus, pipeUrls, programActionStatus, reportsStatus } from '../../utils/constant';
 import { createReport, getProgramsByCategoryId, getReportProgramDetails } from '../../services/reportsInfo';
 import ToastNotification from '../../shared/Toast';
 import { dateTimeFormat } from '../../utils';
 import MuiModal from '../../shared/Modal';
+import { createCertificate } from '../../services/certificate';
 
 export default function CreateCertificate() {
     const navigate = useNavigate()
@@ -29,7 +30,8 @@ export default function CreateCertificate() {
     const dispatch = useDispatch()
     const { programdetails, loading: programLoading, error, menteeList } = useSelector(state => state.userPrograms)
     const { category, loading: apiLoading } = useSelector(state => state.programInfo)
-    const { categoryPrograms, loading: reportsLoading, programDetails, status } = useSelector(state => state.reports)
+    const { categoryPrograms, loading: reportsLoading, programDetails } = useSelector(state => state.reports)
+    const { status } = useSelector(state => state.certificates)
     const [certificateFields, setCertificateFields] = useState(CreateCertificateFields)
     const [dateFormat, setDateFormat] = useState({})
     const [menteeAllList, setAllMenteeList] = useState([])
@@ -50,18 +52,22 @@ export default function CreateCertificate() {
     const onSubmit = (data) => {
         console.log('Submit11', data)
 
-        return 
 
-        const apiData = {
-            "category": parseInt(data.category),
-            "program": parseInt(data.program),
-            "report_name": data.report_name,
-            "participated_mentees": data.participated_mentees,
-            "description": data.description,
-            "action": data?.action || "submit"
+
+        // const apiData = {
+        //     "category": parseInt(data.category),
+        //     "program": parseInt(data.program),
+        //     "report_name": data.report_name,
+        //     "participated_mentees": data.participated_mentees,
+        //     "pass_mentee_list": data.pass_mentee_list,
+        //     "fail_mentee_list": data.fail_mentee_list,
+        //     "description": data.description,
+        //     "action": data?.action || "submit"
+        // }
+        const apiPayload = {
+            id: parseInt(data.program),
         }
-
-        dispatch(createReport(apiData))
+        dispatch(createCertificate(apiPayload))
         // dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.assigned }))
         // reset()
     }
@@ -84,16 +90,18 @@ export default function CreateCertificate() {
     }
 
     useEffect(() => {
-        if(actionType === 'draft'){
+        if (actionType === 'draft') {
             document.getElementById('create-report').submit()
         }
-    },[actionType])
+    }, [actionType])
 
     useEffect(() => {
-        if (status === reportsStatus.create) {
+        if (status === certificateStatus.create) {
             setTimeout(() => {
-                navigate('/reports')
-            },3000)
+                reset()
+                dispatch(getReportProgramDetails())
+                navigate('/certificates')
+            }, 3000)
         }
     }, [status])
 
@@ -101,11 +109,13 @@ export default function CreateCertificate() {
         if (programDetails && Object.keys(programDetails).length) {
             reset({
                 mentor_name: programDetails.mentor_full_name,
-                course_level : CourseLevelOptions.find(level => level.key === programDetails.course_level)?.value ,
+                course_level: CourseLevelOptions.find(level => level.key === programDetails.course_level)?.value,
                 start_date: dateTimeFormat(programDetails.start_date),
                 end_date: dateTimeFormat(programDetails.end_date),
                 duration: programDetails.duration,
-                participated_mentees: programDetails.participated_mentees
+                participated_mentees: programDetails.participated_mentees,
+                pass_mentee_list: programDetails.pass_mentee_list,
+                fail_mentee_list: programDetails.fail_mentee_list
             })
         }
     }, [programDetails])
@@ -168,12 +178,12 @@ export default function CreateCertificate() {
                 <CircularProgress color="inherit" />
             </Backdrop>
 
-            <MuiModal modalOpen={status === reportsStatus.create} modalClose={() => setLoading(false)} noheader>
+            <MuiModal modalOpen={status === certificateStatus.create} modalClose={() => setLoading(false)} noheader>
                 <div className='px-5 py-1 flex justify-center items-center'>
                     <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
                         style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
                         <img src={SuccessTik} alt="SuccessTik" />
-                        <p className='text-white text-[12px]'>Report action successfully performed</p>
+                        <p className='text-white text-[12px]'>Certificate action successfully performed</p>
                     </div>
 
                 </div>
@@ -193,7 +203,11 @@ export default function CreateCertificate() {
                                 <h2>Create New Certificate</h2>
                             </li>
                         </ol>
-                        <img className='cursor-pointer' onClick={() => navigate('/reports')}
+                        <img className='cursor-pointer' onClick={() => {
+                            reset();
+                            dispatch(getReportProgramDetails())
+                            navigate('/certificates')
+                        }}
                             src={CancelIcon} alt="CancelIcon" />
                     </nav>
                 </div>

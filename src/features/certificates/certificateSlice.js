@@ -3,11 +3,15 @@ import {
 } from "@reduxjs/toolkit";
 import {
     getCertificates,
+    createCertificate,
+    getCertificateList,
     triggerCertificateAction
 } from "../../services/certificate";
+import { certificateStatus } from "../../utils/constant";
 
 const initialState = {
     certificates: [],
+    certificatesList: [],
     certificate: {},
     loading: false,
     status: "",
@@ -40,6 +44,50 @@ export const certificateSlice = createSlice({
                     error: action.error.message,
                 };
             });
+            builder
+            .addCase(createCertificate.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(createCertificate.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    status: certificateStatus.create,
+                    loading: false,
+                };
+            })
+            .addCase(createCertificate.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+            builder
+            .addCase(getCertificateList.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(getCertificateList.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    certificatesList:action.payload,
+                    status: certificateStatus.load,
+                    loading: false,
+                };
+            })
+            .addCase(getCertificateList.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
         builder
             .addCase(triggerCertificateAction.pending, (state) => {
                 return {
