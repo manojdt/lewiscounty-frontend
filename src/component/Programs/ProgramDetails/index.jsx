@@ -25,7 +25,7 @@ import CancelIcon from '../../../assets/images/cancel1x.png'
 import CancelColorIcon from '../../../assets/icons/cancelCircle.svg'
 import api from '../../../services/api';
 import { Button } from '../../../shared';
-import { updateLocalRequest, updateProgramRequest } from '../../../services/request';
+import { updateLocalRequest, updateProgramMenteeRequest, updateProgramRequest } from '../../../services/request';
 import { useForm } from 'react-hook-form';
 import { dateFormat, dateTimeFormat, formatDateTimeISO, formatTime, getTimeFromDate } from '../../../utils';
 
@@ -106,7 +106,7 @@ export default function ProgramDetails() {
                     navigate(`${pipeUrls.startprogram}/${params.id}`)
                 }
 
-                if (role === 'mentor') {
+                if (role === 'mentor' && requestId === '') {
                     if (programdetails.status === programActionStatus.yettostart) {
                         navigate(`${pipeUrls.assigntask}/${params.id}`)
                     }
@@ -158,21 +158,42 @@ export default function ProgramDetails() {
 
     // Handle Accept Program Popup
     const handleConfirmPopup = () => {
-        dispatch(updateProgramRequest({
-            "id": parseInt(requestId),
-            "action": "accept"
-        }))
+        if (role === 'admin') {
+            dispatch(updateProgramRequest({
+                "id": parseInt(requestId),
+                "action": "accept"
+            }))
+        }
+        if (role === 'mentor') {
+            dispatch(updateProgramMenteeRequest(
+                {
+                    "id": parseInt(requestId),
+                    "action": "accept"
+                }
+            ))
+        }
     }
 
     // Handle Submit Cancel Program Popup
     const handleCancelReasonPopupSubmit = (data) => {
         if (data.cancel_reason !== '') {
             if (confirmPopup.cancel) {
-                dispatch(updateProgramRequest({
-                    id: parseInt(requestId),
-                    action: "cancel",
-                    cancelled_reason: data.cancel_reason
-                }))
+                if(role === 'admin'){
+                    dispatch(updateProgramRequest({
+                        id: parseInt(requestId),
+                        action: "cancel",
+                        cancelled_reason: data.cancel_reason
+                    }))
+                }
+
+                if(role === 'mentor'){
+                    dispatch(updateProgramMenteeRequest({
+                        id: parseInt(requestId),
+                        action: "cancel",
+                        cancelled_reason: data.cancel_reason
+                    }))
+                }
+               
             }
         }
     }
@@ -188,6 +209,11 @@ export default function ProgramDetails() {
     // Handle Close Accept / Cancel Popup
     const resetAcceptCancelPopup = () => {
         setConfirmPopup({ accept: false, cancel: false, programId: '' });
+    }
+
+    const handleMenteeAcceptCancelRequest = (type, id) => {
+        if (type === 'approve') { setConfirmPopup({ ...confirmPopup, accept: true }); }
+        if (type === 'reject') { setConfirmPopup({ ...confirmPopup, cancel: true }) }
     }
 
     useEffect(() => {
@@ -453,44 +479,66 @@ export default function ProgramDetails() {
                                         {
                                             (role === 'mentor' && !programCompleted.includes(programdetails.status) && !programCancelled.includes(programdetails.status)) ?
                                                 <>
-                                                    {programApprovalStage[programdetails.status] ?
-                                                        <div className='flex gap-4 pt-10' >
-                                                            <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                                border: "1px solid #E0382D",
-                                                                borderRadius: '5px',
-                                                                color: '#E0382D',
-                                                                cursor: 'not-allowed'
-                                                            }}
-                                                                onClick={() => undefined}
-                                                            >
-                                                                {programApprovalStage[programdetails.status].type === 'waiting' && <i className="pi pi-clock" style={{ color: 'red' }}></i>}
-                                                                {programApprovalStage[programdetails.status].type === 'reject' && <i className="pi pi-ban" style={{ color: 'red' }}></i>}
-                                                                <span className='pl-3'>{programApprovalStage[programdetails.status]?.text}</span>
-                                                            </button>
-                                                        </div>
-                                                        :
-                                                        programdetails.status === 'draft' ?
-                                                            <div className='py-9'>
-                                                                <div className='py-3 px-16 text-white text-[14px] flex justify-center items-center' style={{
-                                                                    background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
+
+                                                    {
+                                                        requestId !== '' ?
+                                                            <div className='flex gap-4 pt-10'>
+                                                                <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                                    border: "1px solid #E0382D",
                                                                     borderRadius: '5px',
-                                                                    width: '30%'
-                                                                }}>Drafted</div>
+                                                                    color: '#E0382D'
+                                                                }}
+                                                                    onClick={() => handleMenteeAcceptCancelRequest('reject', requestId)}
+                                                                >Reject Request
+                                                                </button>
+                                                                <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                                    background: "#16B681",
+                                                                    borderRadius: '5px'
+                                                                }}
+                                                                    onClick={() => handleMenteeAcceptCancelRequest('approve', requestId)}
+                                                                >Approve Request
+                                                                </button>
                                                             </div>
                                                             :
-                                                            programdetails.status === 'yettojoin' ?
 
-                                                                <div className='py-9'>
+                                                            programApprovalStage[programdetails.status] ?
+                                                                <div className='flex gap-4 pt-10' >
                                                                     <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                                        background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
-                                                                        borderRadius: '5px'
+                                                                        border: "1px solid #E0382D",
+                                                                        borderRadius: '5px',
+                                                                        color: '#E0382D',
+                                                                        cursor: 'not-allowed'
                                                                     }}
-                                                                        onClick={() => handleJoinProgram(programdetails.id)}
-                                                                    >Launch
-                                                                        <span className='pl-8 pt-1'><img style={{ width: '15px', height: '13px' }} src={DoubleArrowIcon} alt="DoubleArrowIcon" /></span>
+                                                                        onClick={() => undefined}
+                                                                    >
+                                                                        {programApprovalStage[programdetails.status].type === 'waiting' && <i className="pi pi-clock" style={{ color: 'red' }}></i>}
+                                                                        {programApprovalStage[programdetails.status].type === 'reject' && <i className="pi pi-ban" style={{ color: 'red' }}></i>}
+                                                                        <span className='pl-3'>{programApprovalStage[programdetails.status]?.text}</span>
                                                                     </button>
                                                                 </div>
-                                                                : null
+                                                                :
+                                                                programdetails.status === 'draft' ?
+                                                                    <div className='py-9'>
+                                                                        <div className='py-3 px-16 text-white text-[14px] flex justify-center items-center' style={{
+                                                                            background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
+                                                                            borderRadius: '5px',
+                                                                            width: '30%'
+                                                                        }}>Drafted</div>
+                                                                    </div>
+                                                                    :
+                                                                    programdetails.status === 'yettojoin' ?
+
+                                                                        <div className='py-9'>
+                                                                            <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                                                background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
+                                                                                borderRadius: '5px'
+                                                                            }}
+                                                                                onClick={() => handleJoinProgram(programdetails.id)}
+                                                                            >Launch
+                                                                                <span className='pl-8 pt-1'><img style={{ width: '15px', height: '13px' }} src={DoubleArrowIcon} alt="DoubleArrowIcon" /></span>
+                                                                            </button>
+                                                                        </div>
+                                                                        : null
                                                     }
                                                 </>
                                                 : null
