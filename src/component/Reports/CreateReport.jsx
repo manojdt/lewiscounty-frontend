@@ -110,18 +110,23 @@ export default function CreateReport() {
 
     useEffect(() => {
         if (programDetails && Object.keys(programDetails).length) {
-            console.log('sssssssssss')
-            reset({
+            let payload = {
                 mentor_name: programDetails.mentor_full_name,
                 start_date: dateTimeFormat(programDetails.start_date),
                 end_date: dateTimeFormat(programDetails.end_date),
-                participated_mentees: programDetails.participated_mentees,
-                category: searchParams.get('cat_id') || '',
-                program: searchParams.get('program_id') || ''
-            })
+                participated_mentees: programDetails.participated_mentees
+            }
+            if (searchParams.has('cat_id') && searchParams.has('program_id')) {
+                payload = {
+                    ...payload,
+                    category: searchParams.get('cat_id'),
+                    program: searchParams.get('program_id')
+                }
+            }
+            reset(payload)
         }
 
-        if(searchParams.get('cat_id') !== '' && searchParams.get('program_id') !== ''){
+        if (searchParams.get('cat_id') !== '' && searchParams.get('program_id') !== '') {
             setCommonLoading(false)
         }
     }, [programDetails])
@@ -138,7 +143,7 @@ export default function CreateReport() {
         })
         setReportFields(fields)
 
-        if(searchParams.has('cat_id') && searchParams.get('cat_id') !== ''){
+        if (searchParams.has('cat_id') && searchParams.get('cat_id') !== '') {
             getProgramInfo(searchParams.get('cat_id'))
         }
 
@@ -166,7 +171,7 @@ export default function CreateReport() {
             })
             setReportFields(fields)
 
-            if(searchParams.has('program_id') && searchParams.get('program_id') !== ''){
+            if (searchParams.has('program_id') && searchParams.get('program_id') !== '') {
                 handleProgramData(searchParams.get('program_id'))
             }
         }
@@ -381,7 +386,7 @@ export default function CreateReport() {
                                                                                 >
                                                                                     {
                                                                                         getValues(field.name) && getValues(field.name).slice(0, 6).map((popupfield, index) => {
-                                                                                            console.log('kkkkkkkkkkkk')
+
                                                                                             return (
                                                                                                 <>
                                                                                                     <p className='flex items-center gap-1'>
