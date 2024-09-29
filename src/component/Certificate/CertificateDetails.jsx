@@ -27,19 +27,27 @@ console.log(id)
         setLoading(false)
     }
     const downloadAsPDF = () => {
-        // Create a blob from the HTML content
-        const blob = new Blob([certificateDetails], { type: 'application/pdf' });
-
-        // Create a link element, use it to trigger the download, then remove it
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = 'certificate.pdf';
-
-        // Append the link, trigger the click and remove the link from the DOM
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        // Create a hidden iframe
+        const iframe = document.createElement('iframe');
+        iframe.style.position = 'absolute';
+        iframe.style.top = '-10000px';
+        document.body.appendChild(iframe);
+    
+        // Write the certificate HTML to the iframe
+        iframe.contentDocument.open();
+        iframe.contentDocument.write(certificateDetails);
+        iframe.contentDocument.close();
+    
+        // Wait for the content to load, then print the iframe content
+        iframe.onload = () => {
+            iframe.contentWindow.focus();
+            iframe.contentWindow.print();
+    
+            // Clean up the iframe after printing
+            document.body.removeChild(iframe);
+        };
     };
+    
 
     useEffect(() => {
         if (id) {
