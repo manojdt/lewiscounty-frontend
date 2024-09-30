@@ -139,18 +139,24 @@ export default function ProgramDetails() {
 
     const handleJoinProgram = async (programId) => {
 
+        setLoading({ initial: true, join: false })
 
-        if (role === 'mentee') {
-            setLoading({ initial: true, join: false })
-            const joinProgramAction = await api.post('join_program', { id: programId });
-            if (joinProgramAction.status === 200 && joinProgramAction.data) {
-                setLoading({ initial: false, join: true })
-            }
+        // if (role === 'mentee') {
+        //     // setLoading({ initial: true, join: false })
+        //     const joinProgramAction = await api.post('join_program', { id: programId });
+        //     if (joinProgramAction.status === 200 && joinProgramAction.data) {
+        //         setLoading({ initial: false, join: true })
+        //     }
+        // }
+
+        // if (role === 'mentor') {
+        const joinProgramAction = await api.post('join_program', { id: programId });
+        if (joinProgramAction.status === 200 && joinProgramAction.data) {
+            setLoading({ initial: false, join: role === 'mentee' })
+            if (role === 'mentor') { dispatch(updateProgram({ id: programId, status: programActionStatus.yettostart })); }
         }
 
-        if (role === 'mentor') {
-            dispatch(updateProgram({ id: programId, status: programActionStatus.yettostart }))
-        }
+        // }
         // if (role === 'mentor') setLoading({ initial: false, join: true })
 
     }
@@ -178,7 +184,7 @@ export default function ProgramDetails() {
     const handleCancelReasonPopupSubmit = (data) => {
         if (data.cancel_reason !== '') {
             if (confirmPopup.cancel) {
-                if(role === 'admin'){
+                if (role === 'admin') {
                     dispatch(updateProgramRequest({
                         id: parseInt(requestId),
                         action: "cancel",
@@ -186,14 +192,14 @@ export default function ProgramDetails() {
                     }))
                 }
 
-                if(role === 'mentor'){
+                if (role === 'mentor') {
                     dispatch(updateProgramMenteeRequest({
                         id: parseInt(requestId),
                         action: "cancel",
                         cancelled_reason: data.cancel_reason
                     }))
                 }
-               
+
             }
         }
     }
