@@ -77,7 +77,7 @@ export default function MentorDetails() {
     },
     {
         field: 'mentor_name',
-        headerName: 'Mentor Manger',
+        headerName: 'Mentor Manager',
         width: 150,
         id: 1,
     },

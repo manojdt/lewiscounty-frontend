@@ -14,7 +14,7 @@ export const menusList = [{
     page: '/programs?type=curated'
   },
   {
-    name: "Recent Join Programs",
+    name: "Recently Joined Programs",
     count: 12,
     page: '/programs?type=yettoplan'
   },

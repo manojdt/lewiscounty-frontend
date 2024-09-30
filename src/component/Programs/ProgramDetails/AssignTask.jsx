@@ -522,7 +522,7 @@ export default function AssignTask() {
                                         {
                                             programdetails.learning_materials.length ?
                                                 <div>
-                                                    <p className='pb-3'>Our Learning Meterials</p>
+                                                    <p className='pb-3'>Our Learning Materials</p>
                                                     <div className='flex gap-3  items-center'>
                                                         {
                                                             programdetails.learning_materials.map(materials =>
@@ -966,7 +966,7 @@ export default function AssignTask() {
                                     <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
                                         style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
                                         <img src={SuccessTik} alt="SuccessTik" />
-                                        <p className='text-white text-[12px]'>Started Request Approved by Mentor Manger</p>
+                                        <p className='text-white text-[12px]'>Started Request Approved by Mentor Manager</p>
                                     </div>
 
                                 </div>
@@ -1180,7 +1180,7 @@ export default function AssignTask() {
                                     <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
                                         style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
                                         <img src={SuccessTik} alt="SuccessTik" />
-                                        <p className='text-white text-[12px]'>Started Request Approved by Mentor Manger</p>
+                                        <p className='text-white text-[12px]'>Started Request Approved by Mentor Manager</p>
                                     </div>
 
                                 </div>

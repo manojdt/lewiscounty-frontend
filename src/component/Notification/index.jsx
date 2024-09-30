@@ -52,7 +52,7 @@ export default function Notification({ handleClose }) {
                                 </ul>
                                 :
                                 <div className='px-2 py-3'>
-                                    No activies found
+                                    No activities found
                                 </div>
                         }
                         {
