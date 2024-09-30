@@ -18,7 +18,7 @@ import { certificateColor, certificateText, requestStatusColor, requestStatusTex
 
 export default function Certificate() {
     const navigate = useNavigate()
-    const [actionTab, setActiveTab] = useState('waiting')
+    const [actionTab, setActiveTab] = useState('waiting_for_approval')
     const [requestTab, setRequestTab] = useState('all')
     const userInfo = useSelector(state => state.userInfo)
     const { certificatesList, certificateHTML, loading } = useSelector(state => state.certificates)
@@ -46,7 +46,7 @@ export default function Certificate() {
     const certificateRequestTab = [
         {
             name: 'Waiting For Response',
-            key: 'waiting'
+            key: 'waiting_for_approval'
         },
         {
             name: 'Pending Certificates',
@@ -54,7 +54,7 @@ export default function Certificate() {
         },
         {
             name: 'Generate Certificates',
-            key: 'generate'
+            key: 'accept'
         }
     ]
 
@@ -100,7 +100,7 @@ export default function Certificate() {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
-                        {role === 'mentee' ?
+                        {role === 'mentee'&&seletedItem.status==="accept" ?
                             <MenuItem onClick={() => navigate(`/certificate-view/${seletedItem.id}`)} className='!text-[12px]'>
                                 <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
                                 View
@@ -144,9 +144,12 @@ export default function Certificate() {
 
 
     useEffect(() => {
-        dispatch(getCertificateList(role === "admin" ? `?status${requestTab}` : role === "mentor" ? `?status${actionTab}` : ""))
+        if(role){
+
+            dispatch(getCertificateList(role === "admin" ? `?status=${requestTab}` : role === "mentor" ? `?status=${actionTab}` : ""))
+        }
         // dispatch(getCertificates({search: role === "admin" ? requestTab : actionTab}))
-    }, [requestTab, actionTab])
+    }, [requestTab,role, actionTab])
     return (
         <div className="program-request px-8 mt-10">
 
