@@ -224,7 +224,7 @@ export default function CertificateMemberDetails() {
               btnName="Cancel"
               btnCls="w-[13%]"
               btnCategory="secondary"
-              onClick={() => navigate("/certificates")}
+              onClick={() => navigate("/reports")}
             />
             <Button
               btnType="button"

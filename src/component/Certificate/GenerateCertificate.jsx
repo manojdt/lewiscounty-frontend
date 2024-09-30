@@ -17,7 +17,7 @@ export default function GenerateCertificate() {
         <div className="flex justify-end px-5 pb-4 mb-8 items-end">
           <div
             className="cursor-pointer"
-            onClick={() => navigate("/all-request?type=member_join_request")}
+            onClick={() => navigate("/reports")}
           >
             <img src={Cancel} alt="link" className="w-[20px] h[10px]" />
           </div>
