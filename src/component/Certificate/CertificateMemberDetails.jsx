@@ -38,17 +38,17 @@ export default function CertificateMemberDetails() {
     const passMenteeList = programDetails?.pass_mentee_list || [];
     const failMenteeList = programDetails?.fail_mentee_list || [];
     const listMentee = [...passMenteeList, ...failMenteeList];
-    const res = listMentee.length > 0 
+    const res =
+      listMentee.length > 0
         ? listMentee.map((val, i) => ({
             ...val,
             id: i + 1,
             program_name: programDetails?.program_name,
-        }))
+          }))
         : [];
 
     setMenteeList(res);
-};
-
+  };
 
   useEffect(() => {
     if (id) {
@@ -198,15 +198,12 @@ export default function CertificateMemberDetails() {
         </MuiModal>
         <div className="flex justify-between px-5 pb-4 mb-8 items-center border-b-2">
           <div className="flex gap-5 items-center text-[14px]">
-            <p style={{ color: "rgba(89, 117, 162, 1)", fontWeight: 500 }}>
-              Generate Certificates Request
-            </p>
-            <img src={ArrowRightIcon} alt="ArrowRightIcon" />
-            <p>View Member List</p>
+         
+            <p> Member Select</p>
           </div>
           <div
             className="cursor-pointer"
-            onClick={() => navigate("/reports")}
+            onClick={() => navigate(`/generate_certificate/${id}`)}
           >
             <img src={Cancel} alt="link" className="w-[20px] h[10px]" />
           </div>
