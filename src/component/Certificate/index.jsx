@@ -59,14 +59,14 @@ export default function Certificate() {
     ]
 
     let certificateColumn = [
-        ...certificateColumns,
+        ...certificateColumns.filter(col => col.for.includes(role)),
         {
             field: 'status',
             headerName: 'Status',
             flex: 1,
             id: 2,
             renderCell: (params) => {
-                console.log('paramsppppp', params)
+
                 return <>
                     <div className='cursor-pointer flex items-center h-full relative'>
                         <span className='w-[80px] flex justify-center h-[30px] px-3'
@@ -160,7 +160,7 @@ export default function Certificate() {
             <div className='px-3 py-5' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
                 <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
                     <div className='flex gap-5 items-center text-[18px] font-semibold'>
-                        <p>Generate Certificates {role === 'mentor' ? "Request" : ""}</p>
+                        <p>{role !== 'mentee' && 'Generate ' } Certificates {role === 'mentor' ? "Request" : ""}</p>
                     </div>
 
                     <div className='flex gap-5'>
