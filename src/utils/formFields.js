@@ -99,8 +99,8 @@ export const ProfessionalBackgroundFields = [{
     type: "input",
     name: "current_employer",
     fieldtype: "text",
-    label: "Current Employee ",
-    placeholder: "Current Employee ",
+    label: "Current Employer ",
+    placeholder: "Current Employer ",
     inputRules: {
       required: "This field is required",
     },
@@ -177,7 +177,7 @@ export const AreaOfExpertiseFields = [{
     type: "input",
     name: "areas_of_expertise",
     fieldtype: "text",
-    label: "Please list your areas of expertise",
+    label: "List areas of expertise",
     placeholder: "(e.g., project management, software development, marketing)",
     inputRules: {
       required: "This field is required",
@@ -189,7 +189,7 @@ export const AreaOfExpertiseFields = [{
     name: "confident_areas_of_expertise",
     fieldtype: "text",
     label: "What specific skills or knowledge are you most confident in sharing with a mentee?",
-    placeholder: "Skils",
+    placeholder: "Skills",
     inputRules: {
       required: "This field is required",
     },
@@ -201,7 +201,7 @@ export const MentorShipExperienceFields = [{
     type: "input",
     name: "years_of_experience",
     fieldtype: "number",
-    label: "How Many years of experience?",
+    label: "How many years of experience?",
     placeholder: "Enter year of experience",
     inputRules: {
       required: "This field is required",

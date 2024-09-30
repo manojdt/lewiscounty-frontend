@@ -586,7 +586,7 @@ export const programMenus = (page = 'dashboard') => {
       status: programActionStatus.planned
     },
     {
-      name: "Recent Join Programs",
+      name: "Recently Joined Programs",
       count: 0,
       page: `${pipeUrl}${programFilterUrls.yettostart}`,
       for: ['mentor', 'admin'],

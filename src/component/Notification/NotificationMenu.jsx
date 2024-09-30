@@ -81,7 +81,7 @@ export default function NotificationMenu() {
                                     }
                                 </ul>
                                 : <div>
-                                    No activies found
+                                    No activities found
                                 </div>
                         }
 

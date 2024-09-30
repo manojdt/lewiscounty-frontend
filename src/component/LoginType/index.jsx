@@ -126,7 +126,7 @@ export const LoginType = () => {
                                                 }}
                                                 onClick={handleSubmit}
                                             >
-                                                Let get started
+                                               Let's get started
                                             </button>
                                         </div>
                                     </form>
