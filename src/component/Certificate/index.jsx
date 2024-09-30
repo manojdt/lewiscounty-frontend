@@ -21,11 +21,11 @@ export default function Certificate() {
     const [actionTab, setActiveTab] = useState('waiting')
     const [requestTab, setRequestTab] = useState('all')
     const userInfo = useSelector(state => state.userInfo)
-    const { certificatesList,certificateHTML, loading } = useSelector(state => state.certificates)
+    const { certificatesList, certificateHTML, loading } = useSelector(state => state.certificates)
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const [seletedItem, setSelectedItem] = useState({})
-    console.log(certificatesList,certificateHTML, "cer")
+    console.log(certificatesList, certificateHTML, "cer")
     const role = userInfo.data.role
     const dispatch = useDispatch()
     const handleSearch = (value) => {
@@ -35,8 +35,8 @@ export default function Certificate() {
         setAnchorEl(null);
     };
     const handleCeritificateDownload = () => {
-dispatch(certificateDownload(seletedItem.id))
-handleClose()
+        dispatch(certificateDownload(seletedItem.id))
+        handleClose()
     }
     const handleMoreClick = (event, data) => {
         console.log('more')
@@ -100,11 +100,11 @@ handleClose()
                             'aria-labelledby': 'basic-button',
                         }}
                     >
-
-                        <MenuItem onClick={() => navigate(`/certificate-view/${seletedItem.id}`)} className='!text-[12px]'>
+                        {role === 'mentee' ?
+                            <MenuItem onClick={() => navigate(`/certificate-view/${seletedItem.id}`)} className='!text-[12px]'>
                                 <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
                                 View
-                            </MenuItem>
+                            </MenuItem> : null}
 
 
                         {/* <MenuItem onClick={handleCeritificateDownload} className='!text-[12px]'>
@@ -160,7 +160,7 @@ handleClose()
             <div className='px-3 py-5' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
                 <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
                     <div className='flex gap-5 items-center text-[18px] font-semibold'>
-                        <p>Generate Certificates Request</p>
+                        <p>Generate Certificates {role === 'mentor' ? "Request" : ""}</p>
                     </div>
 
                     <div className='flex gap-5'>
@@ -178,8 +178,8 @@ handleClose()
                                 <img src={SearchIcon} alt='SearchIcon' />
                             </div>
                         </div>
-
-                        <Button btnName="Create Certificate" onClick={() => navigate('/create-certificate')} />
+                        {role !== 'mentee' &&
+                            <Button btnName="Create Certificate" onClick={() => navigate('/create-certificate')} />}
                     </div>
 
                 </div>
