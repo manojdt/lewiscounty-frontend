@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { Backdrop, CircularProgress } from '@mui/material'
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 import CancelIcon from '../../assets/images/cancel-colour1x.png'
 import Tooltip from '../../shared/Tooltip'
 import api from '../../services/api'
@@ -10,18 +12,14 @@ import { Button } from '../../shared'
 export default function CertificateDetails() {
     const navigate = useNavigate()
     const { id } = useParams();
-    console.log(id, "location");
     const [certificateDetails, setCertificateDetails] = useState(<></>)
     const [loading, setLoading] = useState(true)
 
 
-    // const certificateId = searchParams.get("certificate_id");
-console.log(id)
     const getCertificateDetails = async () => {
-        // const query = `?program_id=${programId}&certificate_id=${id}&action=view`;
         const certificateAction = await api.get(`mentee_program/certifications/download?id=${id}&action=view`);
         if (certificateAction.status === 200 && certificateAction.data) {
-            console.log(certificateAction,"cerficate")
+            console.log(certificateAction, "cerficate")
             setCertificateDetails(certificateAction.data)
         }
         setLoading(false)
@@ -32,26 +30,54 @@ console.log(id)
         iframe.style.position = 'absolute';
         iframe.style.top = '-10000px';
         document.body.appendChild(iframe);
-    
+
         // Write the certificate HTML to the iframe
         iframe.contentDocument.open();
         iframe.contentDocument.write(certificateDetails);
         iframe.contentDocument.close();
-    
+
         // Wait for the content to load, then print the iframe content
         iframe.onload = () => {
             iframe.contentWindow.focus();
             iframe.contentWindow.print();
-    
+
             // Clean up the iframe after printing
             document.body.removeChild(iframe);
         };
     };
+
+
+    const handleDownload = () => {
+        const input = document.getElementById('certificate-content');
+        setLoading(true)
+        html2canvas(input).then((canvas) => {
+          const imgData = canvas.toDataURL('image/png');
+          const pdf = new jsPDF();
+          const imgWidth = 190; // Set your desired width
+          const pageHeight = pdf.internal.pageSize.height;
+          const imgHeight = (canvas.height * imgWidth) / canvas.width;
+          let heightLeft = imgHeight;
     
+          let position = 0;
+    
+          pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+          heightLeft -= pageHeight;
+    
+          while (heightLeft >= 0) {
+            position = heightLeft - imgHeight;
+            pdf.addPage();
+            pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+          }
+    
+          pdf.save('certificate.pdf');
+          setLoading(false)
+        });
+      };
+
 
     useEffect(() => {
         if (id) {
-            
             getCertificateDetails();
         }
     }, [])
@@ -82,12 +108,12 @@ console.log(id)
 
                 <div className='flex flex-col gap-3 items-center py-10 px-40'>
 
-                    <div dangerouslySetInnerHTML={{ __html: certificateDetails }}></div>
+                    <div id="certificate-content" dangerouslySetInnerHTML={{ __html: certificateDetails }}></div>
 
                     <div className='flex gap-4 mb-3 mt-3'>
-                        <Button btnType="button" btnCls="w-[100px]"  onClick={() => navigate('/certificates')} btnName='Close' btnCategory="secondary" />
-                        
-                        <Button btnType="button" btnCls="w-[130px]" onClick={()=>downloadAsPDF()} btnName='Download' btnCategory="primary" />
+                        <Button btnType="button" btnCls="w-[100px]" onClick={() => navigate('/certificates')} btnName='Close' btnCategory="secondary" />
+
+                        <Button btnType="button" btnCls="w-[130px]" onClick={() => handleDownload()} btnName='Download' btnCategory="primary" />
                     </div>
                 </div>
 

@@ -140,44 +140,128 @@ export const certificateColumns = [{
         headerName: 'Category',
         flex: 1,
         id: 0,
+        for: ['mentor', 'mentee','admin']
     },
     {
         field: 'program_name',
         headerName: 'Program Name',
         flex: 1,
         id: 1,
+        for: ['mentor', 'mentee','admin']
     },
+    {
+        field: 'location',
+        headerName: 'Location',
+        flex: 1,
+        id: 1,
+        for: ['mentee']
+    },
+    {
+        field: 'start_date',
+        headerName: 'Start Date',
+        flex: 1,
+        id: 1,
+        for: ['mentee'],
+        renderCell: (params) => {
+            return <div>{dateFormat(params.row.start_date)}</div>
+        }
+    },
+    {
+        field: 'end_date',
+        headerName: 'End Date',
+        flex: 1,
+        id: 1,
+        for: ['mentee'],
+        renderCell: (params) => {
+            return <div>{dateFormat(params.row.end_date)}</div>
+        }
+    },
+    {
+        field: 'approved_date',
+        headerName: 'Approved Date',
+        flex: 1,
+        id: 1,
+        for: ['mentee'],
+        renderCell: (params) => {
+            return <div>{dateFormat(params.row.end_date)}</div>
+        }
+    },
+    {
+        field: 'approved_by',
+        headerName: 'Approved by',
+        flex: 1,
+        id: 1,
+        for: ['mentee']
+    },
+
+    {
+        field: 'reason',
+        headerName: 'Reason',
+        flex: 1,
+        id: 1,
+        for: ['mentee'],
+    },
+    {
+        field: 'reject_date',
+        headerName: 'Rejected Date',
+        flex: 1,
+        id: 1,
+        for: ['mentee'],
+        renderCell: (params) => {
+            return <div>{dateFormat(params.row.reject_date)}</div>
+        }
+    },
+    {
+        field: 'rejected_by',
+        headerName: 'Rejected by',
+        flex: 1,
+        id: 1,
+        for: ['mentee']
+    },
+
     {
         field: 'Mentee_count',
         headerName: 'Mentees',
         flex: 1,
         id: 2,
+        for: ['mentor','admin']
     }, {
         field: 'pass_mentee_count',
-        headerName: 'Pass Mentee',
+        headerName: 'Pass',
         flex: 1,
         id: 1,
+        for: ['mentor']
     },
     {
         field: 'fail_mentee_count',
-        headerName: 'Fail Mentee',
+        headerName: 'Fail',
         flex: 1,
         id: 1,
+        for: ['mentor']
     },
     {
         field: 'requested_date',
         headerName: 'Request Date',
         flex: 1,
         id: 1,
+        for: ['mentor','admin'],
         renderCell: (params) => {
             return <div>{dateFormat(params.row.requested_date)}</div>
         }
+    },
+    {
+        field: 'request_by',
+        headerName: 'Requested by',
+        flex: 1,
+        id: 1,
+        for: ['admin']
     },
     {
         field: 'updated_at',
         headerName: 'Last updated Date',
         flex: 1,
         id: 1,
+        for: ['mentor','admin'],
         renderCell: (params) => {
             return <div>{dateFormat(params.row.updated_at)}</div>
         }
@@ -187,6 +271,7 @@ export const certificateColumns = [{
         headerName: 'Last updated by',
         flex: 1,
         id: 1,
+        for: ['mentor', 'admin']
     }
 ];
 export const certificateMenberColumns = [
