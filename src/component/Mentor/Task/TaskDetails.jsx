@@ -73,7 +73,7 @@ const MentorTaskDetails = () => {
                     <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
                         style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
                         <img src={SuccessTik} alt="SuccessTik" />
-                        <p className='text-white text-[12px]'>Mark Updated Successfully</p>
+                        <p className='text-white text-[12px]'>Score Updated Successfully</p>
                     </div>
 
                 </div>
@@ -220,7 +220,7 @@ const MentorTaskDetails = () => {
 
                                 <div className='mark flex'>
                                     <div className='mr-96'>
-                                        Mark :
+                                        Score :
                                     </div>
                                     <div style={{ background: 'rgba(235, 255, 243, 1)', padding: '24px 0', width: '240px', textAlign: 'center', fontSize: '40px' }}>
                                         <span style={{ color: 'rgba(22, 182, 129, 1)' }}>{taskDetails.mark}</span>
@@ -233,7 +233,7 @@ const MentorTaskDetails = () => {
                                 <>
                                     <div className='relative py-5'>
                                         <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2" >
-                                            Enter  Mark
+                                            Enter  Score
                                         </label>
                                         <select
                                             className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg 
@@ -247,7 +247,7 @@ const MentorTaskDetails = () => {
                                                 required: "This field is required",
                                             })}
                                         >
-                                            <option value="">Select Mark</option>
+                                            <option value="">Select Score</option>
                                             {
                                                 marks().map((option, index) => <option value={option.key || option.id} key={index}> {option.value || option.name} </option>)
                                             }

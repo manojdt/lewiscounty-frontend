@@ -631,7 +631,7 @@ export const taskColumns = [{
     },
     {
         field: 'mark',
-        headerName: 'Mark',
+        headerName: 'Score',
         flex: 1,
         id: 2,
     }
@@ -717,7 +717,7 @@ export const mentorTaskColumns = [{
 },
 {
     field: 'mark',
-    headerName: 'Mark',
+    headerName: 'Score',
     flex: 1,
     id: 2,
 },
