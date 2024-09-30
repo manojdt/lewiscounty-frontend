@@ -206,7 +206,7 @@ export default function CertificateMemberDetails() {
           </div>
           <div
             className="cursor-pointer"
-            onClick={() => navigate("/all-request?type=member_join_request")}
+            onClick={() => navigate("/reports")}
           >
             <img src={Cancel} alt="link" className="w-[20px] h[10px]" />
           </div>
