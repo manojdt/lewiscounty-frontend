@@ -522,7 +522,7 @@ export default function AssignTask() {
                                         {
                                             programdetails.learning_materials.length ?
                                                 <div>
-                                                    <p className='pb-3'>Our Learning Meterials</p>
+                                                    <p className='pb-3'>Our Learning Materials</p>
                                                     <div className='flex gap-3  items-center'>
                                                         {
                                                             programdetails.learning_materials.map(materials =>
