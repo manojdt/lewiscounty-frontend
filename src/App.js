@@ -63,6 +63,7 @@ import MentorProfile from "./component/MentorProfile/MentorProfile";
 import CreateCertificate from "./component/Certificate/CreateCertificate";
 import GenerateCertificate from "./component/Certificate/GenerateCertificate";
 import CertificateMemberDetails from "./component/Certificate/CertificateMemberDetails";
+import CertificateMenteeList from "./component/Certificate/CertificateMenteeList";
 
 function App() {
   const PrivateRoute = () => {
@@ -137,6 +138,7 @@ function App() {
           <Route path="/certificate-view/:id" element={<CertificateDetails />} />
           <Route path="/generate_certificate/:id" element={<GenerateCertificate />} />
           <Route path="/certificate_members/:id" element={<CertificateMemberDetails />} />
+          <Route path="/certificate_mentees/:id" element={<CertificateMenteeList />} />
           
 
           <Route path="/mentors" element={<Mentors />} />

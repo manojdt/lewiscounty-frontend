@@ -54,6 +54,16 @@ export const getCertificateList = createAsyncThunk(
         return createRept
     }
 );
+export const getCertificateMember = createAsyncThunk(
+    "getCertificateMember",
+    async (data) => {
+        const createRept = await api.get(`certificate/certificate_request${data}`);
+        if (createRept.status === 200 && createRept.data) {
+            return createRept.data;
+        }
+        return createRept
+    }
+);
 export const triggerCertificateAction = createAsyncThunk(
     "triggercertificateAction",
     async (queryString) => {

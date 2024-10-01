@@ -18,7 +18,7 @@ import { certificateColor, certificateText, requestStatusColor, requestStatusTex
 
 export default function Certificate() {
     const navigate = useNavigate()
-    const [actionTab, setActiveTab] = useState('waiting_for_approval')
+    const [actionTab, setActiveTab] = useState('waiting_for_response')
     const [requestTab, setRequestTab] = useState('all')
     const userInfo = useSelector(state => state.userInfo)
     const { certificatesList, certificateHTML, loading } = useSelector(state => state.certificates)
@@ -46,7 +46,7 @@ export default function Certificate() {
     const certificateRequestTab = [
         {
             name: 'Waiting For Response',
-            key: 'waiting_for_approval'
+            key: 'waiting_for_response'
         },
         {
             name: 'Pending Certificates',
@@ -54,7 +54,7 @@ export default function Certificate() {
         },
         {
             name: 'Generate Certificates',
-            key: 'accept'
+            key: 'approved'
         }
     ]
 
@@ -105,13 +105,14 @@ export default function Certificate() {
                                 <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
                                 View
                             </MenuItem> : null}
+                        {role === 'mentor' ?
+                            <MenuItem onClick={() => navigate(`/certificate_mentees/${seletedItem.id}?type=${actionTab}`)} className='!text-[12px]'>
+                                <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
+                                View
+                            </MenuItem> : null}
 
 
-                        {/* <MenuItem onClick={handleCeritificateDownload} className='!text-[12px]'>
-                            <img src={DownloadIcon} alt="AcceptIcon" className='pr-3 w-[27px]' />
-                            
-                        </MenuItem> */}
-
+                       
 
 
                     </Menu>
@@ -132,7 +133,7 @@ export default function Certificate() {
         },
         {
             name: 'Approve Certificates',
-            key: 'pending'
+            key: 'approved'
         }
     ]
 
@@ -145,7 +146,6 @@ export default function Certificate() {
 
     useEffect(() => {
         if(role){
-
             dispatch(getCertificateList(role === "admin" ? `?status=${requestTab}` : role === "mentor" ? `?status=${actionTab}` : ""))
         }
         // dispatch(getCertificates({search: role === "admin" ? requestTab : actionTab}))

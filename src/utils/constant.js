@@ -346,15 +346,15 @@ export const certificateText = {
 }
 
 export const resultText={
-  pass:"Pass",
-  fail:"fail"
+  Pass:"Pass",
+  Fail:"fail"
 }
 export const resultColor = {
-  pass: {
+  Pass: {
       color: 'rgba(47, 147, 132, 1)',
     bg: 'rgba(218, 252, 231, 1)'
   },
-  fail: {
+  Fail: {
     color: 'rgba(224, 56, 45, 1)',
     bg: 'rgba(255, 231, 231, 1)'
   },}
@@ -398,7 +398,8 @@ export const requestStatusText = {
   pending: 'Pending',
   accept: 'Accept',
   launched: 'Launched',
-  cancel: 'Cancel'
+  cancel: 'Cancel',
+  Wating_for_response:"Wating For Response"
 }
 
 export const requestStatusColor = {
@@ -407,6 +408,10 @@ export const requestStatusColor = {
     color: 'rgba(29, 91, 191, 1)'
   },
   pending: {
+    bgColor: 'rgba(255, 251, 233, 1)',
+    color: 'rgba(255, 213, 0, 1)'
+  },
+  Wating_for_response: {
     bgColor: 'rgba(255, 251, 233, 1)',
     color: 'rgba(255, 213, 0, 1)'
   },
