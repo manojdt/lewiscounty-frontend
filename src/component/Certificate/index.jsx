@@ -105,7 +105,7 @@ export default function Certificate() {
                                 <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
                                 View
                             </MenuItem> : null}
-                        {role === 'mentor' ?
+                        {role === 'mentor'&&seletedItem.status!=="pending" ?
                             <MenuItem onClick={() => navigate(`/certificate_mentees/${seletedItem.id}?type=${actionTab}`)} className='!text-[12px]'>
                                 <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
                                 View
