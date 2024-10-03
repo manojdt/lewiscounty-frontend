@@ -119,7 +119,7 @@ const Goals = () => {
 
     const getAllGoalData = () => {
         dispatch(getGoalsCount())
-        dispatch(getGoalsOverAllData('start_year=2022&end_year=2024'))
+        // dispatch(getGoalsOverAllData('start_year=2022&end_year=2024'))
         dispatch(getGoalsRequest())
         dispatch(getGoalsHistory())
     }

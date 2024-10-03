@@ -245,6 +245,19 @@ export const submitProgramTaskDetails = createAsyncThunk(
         return submitTask;
     }
 );
+export const chartProgramList = createAsyncThunk(
+    "chartProgramList",
+    async (data) => {
+
+
+
+        const chartProgram = await api.get(`program-performance?filter_by=${data}`);
+        if (chartProgram.status === 200 && chartProgram.data) {
+            return chartProgram.data;
+        }
+        return chartProgram;
+    }
+);
 
 
 

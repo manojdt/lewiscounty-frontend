@@ -349,6 +349,7 @@ export const resultText={
   Pass:"Pass",
   Fail:"fail"
 }
+export const empty = [{ title: '', value: 100, color: 'rgba(0, 174, 189, 1)' }]
 export const resultColor = {
   Pass: {
       color: 'rgba(47, 147, 132, 1)',

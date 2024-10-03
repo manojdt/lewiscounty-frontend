@@ -193,6 +193,32 @@ export const formatDateTimeISO = (isoString) => {
   
   return `Begins ${monthDay}${suffix} at ${time}`;
 };
+export const getStartAndEndDates = (value) => {
+  const currentDate = new Date();
+
+  const formatDate = (date) => {
+    const year = date.getFullYear();
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // getMonth is zero-based, so we add 1
+    return `${year}-${day}-${month}`;
+  };
+
+  if (value === 'month') {
+    // Get the start and end of the current month
+    const startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+    const endDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+    return { startDate: formatDate(startDate), endDate: formatDate(endDate) };
+  }
+
+  if (value === 'year') {
+    // Get the start and end of the current year
+    const startDate = new Date(currentDate.getFullYear(), 0, 1);
+    const endDate = new Date(currentDate.getFullYear(), 11, 31);
+    return { startDate: formatDate(startDate), endDate: formatDate(endDate) };
+  }
+
+  return null;
+};
 
 export const getTimeFromDate = data => {
   if (data && data !== '') {

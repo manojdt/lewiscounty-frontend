@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import UserImage from "../../assets/images/user.jpg";
-import { activityStatusColor, menteeCountStatus, programActionStatus, programMenus } from '../../utils/constant';
+import { activityStatusColor, empty, menteeCountStatus, programActionStatus, programMenus } from '../../utils/constant';
 
 
 import RightArrow from '../../assets/icons/rightArrow.svg'
@@ -19,6 +19,7 @@ import { programFeeds } from '../../utils/mock';
 import DataTable from '../../shared/DataGrid';
 import { memberRequestColumns } from '../../utils/tableFields';
 import { membersData } from '../../mock';
+import { chartProgramList } from '../../services/userprograms';
 
 export default function Admin() {
     const navigate = useNavigate()
@@ -29,9 +30,9 @@ export default function Admin() {
     const [seletedItem, setSelectedItem] = useState({})
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
-
+    const [chartList, setChartList] = useState([])
     const role = userInfo.data.role
-
+const dispatch = useDispatch()
     const handleViewAllMembers = () => {
         console.log('View all')
     }
@@ -101,10 +102,11 @@ export default function Admin() {
         }
     ]
 
-    const handlePerformanceFilter = () => {
-        console.log('handlePerformanceFilter')
-    }
 
+    const handlePerformanceFilter = (e) => {
+        const res=e?.target?.value||"date"
+         dispatch(chartProgramList(res)) 
+      }
     const handleDetails = () => {
         console.log('handleDetails')
     }
@@ -153,6 +155,26 @@ export default function Admin() {
 
     }, [userpragrams])
 
+    // useEffect(() => {
+   
+    //     handlePerformanceFilter()
+    // }, [])
+    useEffect(() => {
+        chartData()
+    }, [userpragrams.chartProgramDetails])
+
+const chartData = () =>{
+    if(userpragrams?.chartProgramDetails?.data&&
+        userpragrams?.chartProgramDetails?.data?.length>0){
+            const res =userpragrams?.chartProgramDetails?.data.every((val)=>val.value===0)
+            // console.log(res)
+            if(res){
+                return setChartList(empty)
+            }else {
+                return setChartList(userpragrams?.chartProgramDetails?.data)
+            }
+        }
+}
     return (
         <div className="dashboard-content px-8 mt-10 py-5">
             <div className="grid grid-cols-7 gap-7">
@@ -217,7 +239,9 @@ export default function Admin() {
 
             <div className="grid grid-cols-8 gap-7 mt-4">
                 <div className='col-span-3'>
-                    <ProgramPerformance data={data} total={2000} handleFilter={handlePerformanceFilter} handleDetails={handleDetails} height={'440px'} />
+                    <ProgramPerformance data={userpragrams?.chartProgramDetails?.data&&
+                                    userpragrams?.chartProgramDetails?.data?.length>0?
+                                    userpragrams?.chartProgramDetails?.data:data} total={userpragrams?.chartProgramDetails?.total_program_count||10} handleFilter={handlePerformanceFilter} handleDetails={handleDetails} height={'440px'} />
                 </div>
                 <div className='col-span-5'>
                     <ReportsInfo />

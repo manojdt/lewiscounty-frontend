@@ -15,8 +15,8 @@ export default function ProgramPerformance({ data, total = '48,650', handleFilte
         return entry;
     });
 
-    const handleDropdown = () => {
-        handleFilter && handleFilter()
+    const handleDropdown = (e) => {
+        handleFilter && handleFilter(e)
     }
 
     const handleOpenDetails = () => {
@@ -43,8 +43,8 @@ export default function ProgramPerformance({ data, total = '48,650', handleFilte
                     background: 'rgba(217, 228, 242, 1)', color: 'rgba(29, 91, 191, 1)', borderRadius: '3px'
                 }}>
                     <select className='focus:outline-none' style={{ background: 'rgba(217, 228, 242, 1)', border: 'none' }} onChange={handleDropdown}>
-                        <option>Day</option>
-                        <option>Month</option>
+                        <option value={"date"}>Day</option>
+                        <option value={"month"}>Month</option>
                     </select>
 
                 </p>
@@ -66,10 +66,10 @@ export default function ProgramPerformance({ data, total = '48,650', handleFilte
                     labelPosition={70}
                     lineWidth={60}
                     label={({ dataEntry }) => {
-                        // if (dataEntry.title === "Completed") {
-                        //     return "48,560";
-                        // }
+                        if (dataEntry.value>0&&dataEntry.title) {
+                            // return "48,560";
                         return dataEntry.value + "%"
+                        }
                     }}
 
                     onMouseOver={(_, index) => {
