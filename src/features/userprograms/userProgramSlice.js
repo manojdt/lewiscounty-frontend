@@ -4,6 +4,7 @@ import {
 
 import {
   assignProgramTask,
+  chartProgramList,
   getMenteeJoinedInProgram,
   getMenteeProgramCount,
   getMenteePrograms,
@@ -30,6 +31,7 @@ const initialState = {
   yettojoin: [],
   yettostart: [],
   inprogress: [],
+  chartProgramDetails:{},
   completed: [],
   draft: [],
   learning: [],
@@ -386,6 +388,27 @@ export const userProgramSlice = createSlice({
         };
       })
       .addCase(startProgramTask.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
+      builder
+      .addCase(chartProgramList.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(chartProgramList.fulfilled, (state, action) => {
+        return {
+          ...state,
+          chartProgramDetails:action.payload,
+          loading: false,
+        };
+      })
+      .addCase(chartProgramList.rejected, (state, action) => {
         return {
           ...state,
           loading: false,

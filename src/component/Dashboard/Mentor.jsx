@@ -13,9 +13,9 @@ import Programs from "./Programs";
 import MediaPost from "./MediaPost";
 import TrackInfo from "./TrackInfo";
 import { useDispatch, useSelector } from "react-redux";
-import { programActionStatus, programStatus, statusAction } from "../../utils/constant";
+import { empty, programActionStatus, programStatus, statusAction } from "../../utils/constant";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { getProgramCounts, getUserPrograms, updateProgram } from "../../services/userprograms";
+import { chartProgramList, getProgramCounts, getUserPrograms, updateProgram } from "../../services/userprograms";
 import { Backdrop, CircularProgress } from "@mui/material";
 import DashboardCard from "../../shared/Card/DashboardCard";
 import { pipeUrls, programMenus } from '../../utils/constant';
@@ -31,6 +31,7 @@ export const Mentor = () => {
     const userpragrams = useSelector(state => state.userPrograms)
     const userInfo = useSelector(state => state.userInfo)
     const [programMenusList, setProgramMenusList] = useState([])
+    const [chartList, setChartList] = useState([])
     const [currentPrograms, setCurrentPrograms] = useState({ title: '', page: '', programs: [] })
     const [allprogramsList, setAllProgramsList] = useState({ allPrograms: [], yettoplan: [], planned: [], inprogress: [], bookmarked: [], completed: [] })
 
@@ -56,8 +57,9 @@ export const Mentor = () => {
     ];
 
 
-    const handlePerformanceFilter = () => {
-        console.log('handlePerformanceFilter')
+    const handlePerformanceFilter = (e) => {
+      const res=e?.target?.value||"date"
+       dispatch(chartProgramList(res)) 
     }
 
     const handleDetails = () => {
@@ -77,8 +79,14 @@ export const Mentor = () => {
             }
             return menu
         })
+        console.log(userpragrams.chartProgramDetails,"chartProgramDetails")
         setProgramMenusList(programMenu)
     }, [userpragrams])
+    useEffect(() => {
+        handlePerformanceFilter()
+        console.log(userpragrams.chartProgramDetails,"chartProgramDetails")
+
+    }, [])
 
 
     useEffect(() => {
@@ -149,7 +157,22 @@ export const Mentor = () => {
         }
     }, [userpragrams.status])
 
+    useEffect(() => {
+        chartData()
+    }, [userpragrams.chartProgramDetails])
 
+const chartData = () =>{
+    if(userpragrams?.chartProgramDetails?.data&&
+        userpragrams?.chartProgramDetails?.data?.length>0){
+            const res =userpragrams?.chartProgramDetails?.data.every((val)=>val.value===0)
+            // console.log(res)
+            if(res){
+                return setChartList(empty)
+            }else {
+                return setChartList(userpragrams?.chartProgramDetails?.data)
+            }
+        }
+}
     return (
         <>
 
@@ -284,7 +307,7 @@ export const Mentor = () => {
                         {/* <div className="root-layer lg:gap-8 pt-6"> */}
                         <div className="root-layer grid grid-cols-2 gap-8 pt-6">
                             <div className="layer-first flex flex-col sm:gap-6 gap-4">
-                                <ProgramPerformance data={data} total={1500} handleFilter={handlePerformanceFilter} handleDetails={handleDetails}/>
+                                <ProgramPerformance data={chartList} total={userpragrams?.chartProgramDetails?.total_program_count||"0%"} handleFilter={handlePerformanceFilter} handleDetails={handleDetails}/>
                                 <RecentRequests />
                                 <TrackInfo />
                             </div>
