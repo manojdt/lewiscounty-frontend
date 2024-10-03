@@ -6,13 +6,15 @@ import {
     createCertificate,
     getCertificateList,
     triggerCertificateAction,
-    certificateDownload
+    certificateDownload,
+    getCertificateMember
 } from "../../services/certificate";
 import { certificateStatus } from "../../utils/constant";
 
 const initialState = {
     certificates: [],
     certificatesList: [],
+    certificatesMembers: [],
     certificate: {},
     certificateHTML:{},
     loading: false,
@@ -40,6 +42,27 @@ export const certificateSlice = createSlice({
                 };
             })
             .addCase(getCertificates.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+        builder
+            .addCase(getCertificateMember.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(getCertificateMember.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    certificatesMembers: action.payload,
+                    loading: false,
+                };
+            })
+            .addCase(getCertificateMember.rejected, (state, action) => {
                 return {
                     ...state,
                     loading: false,
