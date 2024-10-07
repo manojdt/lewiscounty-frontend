@@ -1,17 +1,16 @@
-import { Backdrop, CircularProgress, Menu, MenuItem } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import SearchIcon from "../../assets/icons/search.svg";
+import { Backdrop, CircularProgress, Menu, MenuItem } from "@mui/material";
 import DataTable from "../../shared/DataGrid";
-import SearchIcon from '../../assets/icons/search.svg';
-import CalenderIcon from '../../assets/icons/CalenderIcon.svg'
-import { allMembersColumns, allMembersolumns } from "../../mock";
+import ArrowRightIcon from "../../assets/icons/arrowRightColor.svg";
+import MaleIcon from "../../assets/images/male.png";
+import {  MentorChangeViewColumns } from "../../mock";
+import Cancel from "../../assets/images/cancel-colour1x.png";
 import MoreIcon from "../../assets/icons/moreIcon.svg";
 import TickCircle from "../../assets/icons/tickCircle.svg";
 import CloseCircle from "../../assets/icons/closeCircle.svg";
 import ViewIcon from "../../assets/images/view1x.png";
-import ShareIcon from "../../assets/icons/Share.svg";
-
-const Members = () => {
-  const [actionTab, setActiveTab] = useState("mentor");
+function MentorChangeRequest() {
   const [activeTableDetails, setActiveTableDetails] = useState({
     column: [],
     data: [],
@@ -32,6 +31,7 @@ const Members = () => {
     console.log(e);
   };
   let col = [
+    ...MentorChangeViewColumns,
     {
       field: "status",
       headerName: "Status",
@@ -108,7 +108,7 @@ const Members = () => {
                   alt="AcceptIcon"
                   className="pr-3 w-[27px]"
                 />
-                Chat
+                Approve
               </MenuItem>
               <MenuItem className="!text-[12px]">
                 <img
@@ -116,25 +116,7 @@ const Members = () => {
                   alt="CancelIcon"
                   className="pr-3 w-[27px]"
                 />
-                Deactive
-              </MenuItem>
-
-              <MenuItem className="!text-[12px]">
-                <img
-                  src={ShareIcon}
-                  alt="ShareIcon"
-                  className="pr-3 w-[27px]"
-                />
-                Share
-              </MenuItem>
-
-              <MenuItem className="!text-[12px]">
-                <img
-                  src={ShareIcon}
-                  alt="ShareIcon"
-                  className="pr-3 w-[27px]"
-                />
-                Assign to Task
+                Reject
               </MenuItem>
             </Menu>
           </>
@@ -142,68 +124,75 @@ const Members = () => {
       },
     },
   ];
-  let membersTab = [
-    {
-      name: "Mentor",
-      key: "mentor",
-    },
-    {
-      name: "Mentee",
-      key: "mentee",
-    },
-  ];
 
-  const handleTab = (key) => {
-    setActiveTab(key);
-  };
-
-  useEffect(() => {
-    const columns = allMembersColumns.filter((col) =>
-      col.for.includes(actionTab)
-    );
-    setActiveTableDetails({ ...activeTableDetails, column: columns });
-  }, [actionTab]);
-
+//   useEffect(() => {
+//     setActiveTableDetails({ ...activeTableDetails, column: col });
+//   }, []);
   return (
-    <div className="program-request px-8 mt-10">
-      <div className="px-6 program-info">
-        {membersTab.length ? (
-          <div className="flex justify-between px-5 mb-4 items-center border-b-2 ">
-            <ul className="tab-list">
-              {membersTab.map((discussion, index) => (
-                <li
-                  className={`${
-                    actionTab === discussion.key ? "active" : ""
-                  } relative`}
-                  key={index}
-                  onClick={() => handleTab(discussion.key)}
-                >
-                  <div className="flex justify-center pb-1">
-                    <div
-                      className={`total-proram-count relative ${
-                        actionTab === discussion.key ? "active" : ""
-                      }`}
-                    >
-                      10
-                      <p className="notify-icon"></p>
-                    </div>
-                  </div>
-                  <div className="text-[13px]"> {`${discussion.name}`}</div>
-                  {actionTab === discussion.key && <span></span>}
-                </li>
-              ))}
-            </ul>
+    <div className="px-8 mt-10">
+      {" "}
+      <div
+        style={{
+          boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.05)",
+          borderRadius: "10px",
+        }}
+      >
+        <div className="title flex justify-between  py-5 border-b-2 px-5 items-center">
+          <div className="flex gap-3 font-[600] text-[14px]">
+            <p style={{ color: "rgba(89, 117, 162, 1)", fontWeight: 500 }}>
+              Mentor Change Request
+            </p>
+            <img src={ArrowRightIcon} alt="ArrowRightIcon" />
+            <p style={{  fontWeight: 500 }}>
+              View Mentor Profile
+            </p>
           </div>
-        ) : null}
-      </div>
-      <div className="col-span-4">
+          <div className="flex gap-5">
+            <div className="cursor-pointer">
+              <img src={Cancel} alt="link" className="w-[20px] h[10px]" />
+            </div>
+          </div>
+        </div>
+
+        <div className="">
+          <div className="flex items-center gap-8 justify-center m-8" style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '6px' }}>
+            <div
+              className="user-image w-[200px] px-5 flex justify-center items-center h-[180px]"
+            >
+              <img
+                style={{
+                  borderRadius: "50%",
+                  height: "137px",
+                  width: "90%",
+                  objectFit: "cover",
+                }}
+                src={MaleIcon}
+                alt="MaleIcon"
+              />
+            </div>
+            <div>
+              <div className="text-[14px] py-3">
+                Nolan (Software
+                Developer)
+              </div>
+              <p className="text-[12px] py-3">
+               <b className="text-red-500">Reason:</b> The purpose of lorem ipsum is to create a natural looking block
+                of text (sentence, paragraph, page, etc.) that doesn't distract
+                from the layout. A practice not without controversy
+              </p>
+            </div>
+          </div>
+        </div>
         <div
+        className="m-8"
           style={{
             boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.05)",
             borderRadius: "10px",
+            
           }}
         >
-          <div className="title flex justify-end py-3 px-4 items-center">
+          <div className="title flex justify-between py-3 border-b-2 px-4 items-center">
+            <div className="flex font-[600] text-black">Current Programs</div>
             <div className="flex gap-5">
               <div className="relative">
                 <input
@@ -223,17 +212,8 @@ const Members = () => {
                   <img src={SearchIcon} alt="SearchIcon" />
                 </div>
               </div>
-              <div className="relative flex gap-3 py-3 px-3" style={{ border: '1px solid rgba(24, 40, 61, 0.25)' }}>
-                            <select className='focus:outline-none'>
-                                <option>All</option>
-                                <option>Top Mentors</option>
-                                <option>Active</option>
-                                <option>Inactive</option>
-                            </select>
-                        </div>
             </div>
           </div>
-
           <div className="px-6 py-7 program-info">
             <Backdrop sx={{ zIndex: (theme) => 999999999 }} open={false}>
               <CircularProgress color="inherit" />
@@ -241,7 +221,7 @@ const Members = () => {
 
             <DataTable
               rows={[]}
-              columns={activeTableDetails.column}
+              columns={col}
               hideFooter
             />
           </div>
@@ -249,6 +229,6 @@ const Members = () => {
       </div>
     </div>
   );
-};
+}
 
-export default Members;
+export default MentorChangeRequest;

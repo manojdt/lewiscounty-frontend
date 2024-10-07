@@ -64,6 +64,8 @@ import CreateCertificate from "./component/Certificate/CreateCertificate";
 import GenerateCertificate from "./component/Certificate/GenerateCertificate";
 import CertificateMemberDetails from "./component/Certificate/CertificateMemberDetails";
 import CertificateMenteeList from "./component/Certificate/CertificateMenteeList";
+import AssignMentor from "./component/Members/AssignMentor";
+import MentorChangeRequest from "./component/MentorDetails/MentorChangeRequest";
 
 function App() {
   const PrivateRoute = () => {
@@ -117,6 +119,7 @@ function App() {
           <Route path="/calendar" element={<Scheduler />} />
           <Route path="/create-meeting" element={<CreateMeeting />} />
           <Route path="/members" element={<Members />} />
+          <Route path="/assignMentor" element={<AssignMentor />} />
 
 
           <Route path="/discussions" element={<Discussions />} />
@@ -148,6 +151,7 @@ function App() {
             path="/mentor-tasks-details/:id"
             element={<MentorTaskDetails />}
           />
+          <Route path="/mentor-change-view" element={<MentorChangeRequest />}/>
 
           <Route path="/mentees" element={<Mentees />} />
           <Route path="/mentee-details/:id" element={<MentorDetails />} />

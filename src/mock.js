@@ -1907,3 +1907,165 @@ export const allMembersColumns = [
 
 
 ];
+export const assignMentorColumns = [
+    {
+        field: 'name',
+        headerName: 'Name',
+        flex: 1,
+        id: 0,
+        for: ['mentor','mentee']
+    },
+    {
+        field: 'category',
+        headerName: 'Category',
+        flex: 1,
+        id: 1,
+        for: ['mentor','mentee']
+    },
+    {
+        field: 'designation',
+        headerName: 'Designation',
+        flex: 1,
+        id: 2,
+        for: ['mentee','mentee']
+    },
+    {
+        field: 'skills',
+        headerName: 'Skills',
+        flex: 1,
+        id: 3,
+        for: ['mentee','mentee']
+    },
+    {
+        field: 'phone_number',
+        headerName: 'Phone Number',
+        flex: 1,
+        id: 4,
+        for: ['mentor','mentee']
+    },
+    {
+        field: 'email',
+        headerName: 'Email',
+        flex: 1,
+        id: 5,
+        for: ['mentor','mentee']
+    },
+    {
+        field: 'location',
+        headerName: 'Location',
+        flex: 1,
+        id: 5,
+        for: ['mentor','mentee']
+    },
+    {
+        field: 'experience',
+        headerName: 'Experience',
+        flex: 1,
+        id: 5,
+        for: ['mentor','mentee']
+    },
+    {
+        field: 'attended_programs',
+        headerName: 'Attended Programs',
+        flex: 1,
+        id: 5,
+        for: ['mentor','mentee']
+    },
+    {
+        field: 'certificates',
+        headerName: 'Certificates',
+        flex: 1,
+        id: 5,
+        for: ['mentor','mentee']
+    },
+    {
+        field: 'auto_approval',
+        headerName: 'Auto Approval',
+        flex: 1,
+        id: 5,
+        for: ['mentor']
+    },
+    {
+        field: 'ratings',
+        headerName: 'Ratings',
+        flex: 1,
+        id: 5,
+        for: ['mentor','mentee']
+    },
+
+
+];
+export const MentorChangeViewColumns = [
+    {
+        field: 'name',
+        headerName: 'Name',
+        flex: 1,
+        id: 0,
+        for: ['mentor','mentee']
+    },
+    {
+        field: 'category',
+        headerName: 'Category',
+        flex: 1,
+        id: 1,
+        for: ['mentor','mentee']
+    },
+    {
+        field: 'designation',
+        headerName: 'Sessions',
+        flex: 1,
+        id: 2,
+        for: ['mentee','mentee']
+    },
+    {
+        field: 'skills',
+        headerName: 'Course Level',
+        flex: 1,
+        id: 3,
+        for: ['mentee','mentee']
+    },
+    {
+        field: 'phone_number',
+        headerName: 'Start & End Date',
+        flex: 1,
+        id: 4,
+        for: ['mentor','mentee']
+    },
+    {
+        field: 'email',
+        headerName: 'Durations',
+        flex: 1,
+        id: 5,
+        for: ['mentor','mentee']
+    },
+    {
+        field: 'location',
+        headerName: 'Mentees',
+        flex: 1,
+        id: 5,
+        for: ['mentor','mentee']
+    },
+    {
+        field: 'experience',
+        headerName: 'Progress graph',
+        flex: 1,
+        id: 5,
+        for: ['mentor','mentee']
+    },
+   
+    {
+        field: 'ratings',
+        headerName: 'Ratings',
+        flex: 1,
+        id: 5,
+        for: ['mentor','mentee']
+    },
+    {
+        field: 'attended_programs',
+        headerName: 'Status',
+        flex: 1,
+        id: 5,
+        for: ['mentor','mentee']
+    },
+
+];
