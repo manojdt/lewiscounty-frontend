@@ -8,6 +8,8 @@ import {
     getPostDetails,
     getRecentPosts,
     getUserPost,
+    postComment,
+    postCommentLike,
     updateFeedTrack
 } from "../../services/feeds";
 import {
@@ -148,7 +150,7 @@ export const feedSlice = createSlice({
 
 
 
-            builder
+        builder
             .addCase(getUserPost.pending, (state) => {
                 return {
                     ...state,
@@ -158,7 +160,7 @@ export const feedSlice = createSlice({
             .addCase(getUserPost.fulfilled, (state, action) => {
                 return {
                     ...state,
-                    userPost : action.payload,
+                    userPost: action.payload,
                     status: feedStatus.load,
                     loading: false,
                 };
@@ -171,6 +173,50 @@ export const feedSlice = createSlice({
                 };
             });
 
+
+        builder
+            .addCase(postComment.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(postComment.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    status: feedStatus.createcomment,
+                    loading: false,
+                };
+            })
+            .addCase(postComment.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
+        builder
+            .addCase(postCommentLike.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(postCommentLike.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    status: feedStatus.postlike,
+                    loading: false,
+                };
+            })
+            .addCase(postCommentLike.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
     },
 });
 

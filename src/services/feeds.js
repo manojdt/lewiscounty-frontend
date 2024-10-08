@@ -52,7 +52,6 @@ export const getRecentPosts = createAsyncThunk(
 );
 
 
-
 export const updateFeedTrack = createAsyncThunk(
     "updateFeedTrack",
     async (data) => {
@@ -73,5 +72,29 @@ export const getUserPost = createAsyncThunk(
             return userPost.data;
         }
         return userPost;
+    }
+);
+
+
+export const postComment = createAsyncThunk(
+    "postComment",
+    async (data) => {
+        const createCommentforPost = await api.post('post/comments/create', data);
+        if (createCommentforPost.status === 200 && createCommentforPost.data) {
+            return createCommentforPost.data;
+        }
+        return createCommentforPost;
+    }
+);
+
+export const postCommentLike = createAsyncThunk(
+    "postCommentLike",
+    async (data) => {
+        const createCommentLike = await api.post('post/like', data);
+        console.log('createCommentLike', createCommentLike)
+        if ((createCommentLike.status === 201 || createCommentLike.status === 200) && createCommentLike.data) {
+            return createCommentLike.data;
+        }
+        return createCommentLike;
     }
 );

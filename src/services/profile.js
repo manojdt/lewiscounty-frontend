@@ -32,11 +32,16 @@ export const updateProfile = createAsyncThunk(
 export const updateProfileImage = createAsyncThunk(
     "updateProfileImage",
     async (data) => {
-        api.interceptors.request.use(function (config) {
-            config.headers["Content-Type"] = "multipart/form-data";
-            return config;
+        // api.interceptors.request.use(function (config) {
+        //     config.headers["Content-Type"] = "multipart/form-data";
+        //     return config;
+        // });
+        const headers = {
+            'Content-Type': 'multipart/form-data',
+        }
+        const userImage = await api.patch('profile/upload_image', data, {
+            headers : headers
         });
-        const userImage = await api.patch('profile/upload_image', data);
         if (userImage.status === 200 && userImage.data) {
             return userImage.data;
         }

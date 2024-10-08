@@ -1828,7 +1828,7 @@ export const allMembersColumns = [
         for: ['mentor','mentee']
     },
     {
-        field: 'category',
+        field: 'category_name',
         headerName: 'Category',
         flex: 1,
         id: 1,
@@ -1870,7 +1870,7 @@ export const allMembersColumns = [
         for: ['mentor','mentee']
     },
     {
-        field: 'experience',
+        field: 'years_of_experience',
         headerName: 'Experience',
         flex: 1,
         id: 5,

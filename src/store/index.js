@@ -17,6 +17,7 @@ import certificateReducer from "../features/certificates/certificateSlice";
 import activityReducer from "../features/activities/activitySlice";
 import requestReducer from "../features/request/requestSlice";
 import launchProgramReducer from "../features/launchProgram/launchProgramSlice";
+import memberReducer from "../features/members/memberSlice";
 
 
 const combinedReducer = combineReducers({
@@ -34,8 +35,8 @@ const combinedReducer = combineReducers({
   requestList: requestReducer,
   tasks: taskReducer,
   activity: activityReducer,
-  launchProgram: launchProgramReducer
-
+  launchProgram: launchProgramReducer,
+  members: memberReducer
 });
 
 const rootReducer = (state, action) => {

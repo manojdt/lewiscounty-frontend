@@ -16,3 +16,16 @@ export const getMembers = createAsyncThunk(
     }
 );
 
+
+export const getMembersList = createAsyncThunk(
+    "getMembersList",
+    async (query='') => {
+        let queryString = new URLSearchParams(query).toString()
+        const getMembersInfo = await api.get(`members/member-list?${queryString}`);
+        if (getMembersInfo.status === 200 && getMembersInfo.data) {
+            return { role: query.role_name, data: getMembersInfo.data };
+        }
+        return getMembersInfo;
+    }
+);
+
