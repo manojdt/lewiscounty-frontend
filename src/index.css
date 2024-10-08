@@ -831,11 +831,9 @@ input[type="range"]::-ms-thumb {
 
 .feed-details .feed-info .post-comments .post-list-comments .count-content {
   display: flex;
-  gap: 10px;
+  gap: 4px;
   align-items: center;
   justify-content: center;
-  width: 120px;
-  background: rgba(213, 228, 252, 1);
   color: rgba(29, 91, 191, 1);
   font-size: 11px;
   padding: 10px;

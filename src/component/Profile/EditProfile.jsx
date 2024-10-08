@@ -63,8 +63,13 @@ export default function EditProfile() {
 
     const uploadUserImage = (e) => {
         if (e.target.files && e.target.files[0]) {
-            dispatch(updateProfileImage({profile_image : e.target.files}))
-            console.log(e.target.files)
+            let bodyFormData = new FormData();
+            const payload = { profile_image : e.target.files }
+            bodyFormData.append('profile_image', e.target.files);
+
+            console.log('bodyFormData', bodyFormData)
+            dispatch(updateProfileImage(bodyFormData))
+            // console.log(e.target.files)
         }
     }
 

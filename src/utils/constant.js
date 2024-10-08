@@ -181,6 +181,8 @@ export const feedStatus = {
   create: 'created',
   update: 'updated',
   delete: 'deleted',
+  createcomment: 'createdcomment',
+  postlike: 'postlike',
 }
 
 

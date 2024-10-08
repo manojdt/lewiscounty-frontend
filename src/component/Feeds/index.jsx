@@ -7,6 +7,8 @@ import FeedImage from '../../assets/images/feed1.png'
 import MoreIcon from '../../assets/icons/moreIcon.svg'
 import UserIcon from '../../assets/images/user.jpg'
 import SuccessTik from '../../assets/images/blue_tik1x.png';
+import MaleIcon from '../../assets/images/male-profile1x.png'
+import FemaleIcon from '../../assets/images/female-profile1x.png'
 
 import { Button } from '../../shared'
 import MuiModal from '../../shared/Modal'
@@ -96,13 +98,13 @@ export default function Feeds() {
             handleClose()
             setTimeout(() => {
                 dispatch(getPost())
-            },2000)
+            }, 2000)
         }
     }, [status])
 
     useEffect(() => {
         dispatch(getPost())
-    },[])
+    }, [])
 
     return (
         <div className="feed-container px-9 py-9">
@@ -148,22 +150,31 @@ export default function Feeds() {
                 <div className='feeds-list'>
                     <div className="grid grid-cols-3 gap-7">
                         {
-                            feeds.map((feed, index) =>
-                                <div className='feed-card cursor-pointer' key={index} onClick={() => navigate(`/feed-details/${feed.id}`)}>
-                                    <img className='feed-image' src={FeedImage} alt="FeedImage" />
-                                    <div className='feed-content flex justify-between pt-5'>
-                                        <div className='flex gap-4 items-center'>
-                                            <img className='user-image' src={UserIcon} alt="UserIcon" />
-                                            <div>
-                                                <p className='text-[14px]'>
-                                                    {feed.content}
-                                                </p>
-                                                <p className='text-[12px]'>{feed.post_view_count} {' . '} {feed.time_since_action}</p>
+                            feeds.map((feed, index) => {
+                                let imageUrl = feed?.image_url || ''
+
+                                if (imageUrl === '') {
+                                    imageUrl = feed.gender === 'male' ? MaleIcon : FemaleIcon
+                                }
+
+                                return (
+                                    <div className='feed-card cursor-pointer' key={index} onClick={() => navigate(`/feed-details/${feed.id}`)}>
+                                        <img className='feed-image' src={FeedImage} alt="FeedImage" />
+                                        <div className='feed-content flex justify-between pt-5'>
+                                            <div className='flex gap-4 items-center'>
+                                                <img className='user-image' src={imageUrl} alt="UserIcon" />
+                                                <div>
+                                                    <p className='text-[14px]'>
+                                                        {feed.content}
+                                                    </p>
+                                                    <p className='text-[12px]'>{feed.post_view_count} {' . '} {feed.time_since_action}</p>
+                                                </div>
                                             </div>
+                                            <img src={MoreIcon} className='cursor-pointer' alt="MoreIcon" />
                                         </div>
-                                        <img src={MoreIcon} className='cursor-pointer' alt="MoreIcon" />
                                     </div>
-                                </div>)
+                                )
+                            })
                         }
 
 
