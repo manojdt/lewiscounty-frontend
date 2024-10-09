@@ -64,12 +64,8 @@ export default function EditProfile() {
     const uploadUserImage = (e) => {
         if (e.target.files && e.target.files[0]) {
             let bodyFormData = new FormData();
-            const payload = { profile_image : e.target.files }
-            bodyFormData.append('profile_image', e.target.files);
-
-            console.log('bodyFormData', bodyFormData)
+            bodyFormData.append('profile_image', e.target.files[0]);
             dispatch(updateProfileImage(bodyFormData))
-            // console.log(e.target.files)
         }
     }
 
@@ -110,7 +106,7 @@ export default function EditProfile() {
                 <div className="grid grid-cols-8 gap-3">
                     <div className='col-span-2'>
                         <div className='upload-profile'>
-                            <img src={UserIcon} alt="UserIcon" />
+                            <img style={{borderRadius:'50%', height:'150px'}} src={profile?.image || UserIcon} alt="UserIcon" />
                             <label className="w-[40%] flex items-center justify-center pb-3 
                              rounded-lg text-white text-[14px] cursor-pointer" style={{ background: 'linear-gradient(to right, rgb(0, 174, 189), rgb(29, 91, 191))',
                                 border: 'none'}}>
