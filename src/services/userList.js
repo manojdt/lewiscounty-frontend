@@ -86,4 +86,36 @@ export const getMenteeProgramActivity = createAsyncThunk(
     }
 );
 
+export const getFollowList = createAsyncThunk(
+    "getFollowList",
+    async (id) => {
+        const followInfo = await api.get(`/post/user-status/${id}`);
+        if (followInfo.status === 200 && followInfo.data) {
+            return followInfo.data;
+        }
+        return followInfo
+    }
+);
 
+
+export const userFollow = createAsyncThunk(
+    "userFollow",
+    async (data) => {
+        const userFollowInfo = await api.post(`/post/follow`, data);
+        if (userFollowInfo.status === 200 && userFollowInfo.data) {
+            return userFollowInfo.data;
+        }
+        return userFollowInfo
+    }
+);
+
+export const userUnFollow = createAsyncThunk(
+    "userUnFollow",
+    async (data) => {
+        const userUnFollowInfo = await api.post(`/post/unfollow`, data);
+        if (userUnFollowInfo.status === 200 && userUnFollowInfo.data) {
+            return userUnFollowInfo.data;
+        }
+        return userUnFollowInfo
+    }
+);

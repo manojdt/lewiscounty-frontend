@@ -8,7 +8,10 @@ import {
     getMyMentees,
     getMyMenteeInfo,
     getMenteeProgramActivity,
-    getProfileInfo
+    getProfileInfo,
+    getFollowList,
+    userFollow,
+    userUnFollow
 } from "../../services/userList";
 
 const initialState = {
@@ -18,6 +21,7 @@ const initialState = {
     menteeList: [],
     menteeDetails: {},
     userDetails: {},
+    followInfo: {},
     loading: false,
     status: "",
     error: "",
@@ -189,6 +193,81 @@ export const userListSlice = createSlice({
                     error: action.error.message,
                 };
             });
+
+        builder
+            .addCase(getFollowList.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(getFollowList.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    followInfo: action.payload,
+                    loading: false,
+                };
+            })
+            .addCase(getFollowList.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
+
+
+
+
+
+
+        builder
+            .addCase(userFollow.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(userFollow.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    status: '',
+                    loading: false,
+                };
+            })
+            .addCase(userFollow.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
+
+
+        builder
+            .addCase(userUnFollow.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(userUnFollow.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    status: '',
+                    loading: false,
+                };
+            })
+            .addCase(userUnFollow.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
 
     },
 });

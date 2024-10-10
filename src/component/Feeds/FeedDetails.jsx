@@ -208,7 +208,7 @@ export default function FeedDetails() {
 
                                                                         <>
                                                                             <div className='add-comments relative'>
-                                                                                <img src={UserIcon} alt="UserIcon" />
+                                                                                <img src={imageUrl} alt="UserIcon" />
                                                                                 <input className='comment-input' type="text" value={replyInfo.msg} placeholder='Add Reply...'
                                                                                     onChange={(e) => setReplyInfo({ ...replyInfo, msg: e.target.value })}
                                                                                 />
@@ -269,7 +269,7 @@ export default function FeedDetails() {
 
                                                                                         <>
                                                                                             <div className='add-comments relative'>
-                                                                                                <img src={UserIcon} alt="UserIcon" />
+                                                                                                <img src={imageUrl} alt="UserIcon" />
                                                                                                 <input className='comment-input' type="text" value={replyInfo.msg} placeholder='Add Reply...'
                                                                                                     onChange={(e) => setReplyInfo({ ...replyInfo, msg: e.target.value })}
                                                                                                 />

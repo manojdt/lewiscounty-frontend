@@ -32,7 +32,7 @@ import { recentRequest, programFeeds } from '../../utils/mock'
 import { Backdrop, CircularProgress, Switch } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import MediaPost from '../Dashboard/MediaPost';
-import { getMenteeProgramActivity, getMentorProgramActivity, getMyMenteeInfo, getMyMentorInfo, getProfileInfo } from '../../services/userList';
+import { getFollowList, getMenteeProgramActivity, getMentorProgramActivity, getMyMenteeInfo, getMyMentorInfo, getProfileInfo, userFollow } from '../../services/userList';
 import { dateFormat } from '../../utils';
 import { cancelMemberRequest, getCategoryList, updateLocalRequest, updateMemberRequest, updateMentorAutoApproval } from '../../services/request';
 import { requestStatus } from '../../utils/constant';
@@ -54,7 +54,7 @@ export default function MentorDetails() {
 
     const userInfo = useSelector(state => state.userInfo)
 
-    const { mentorDetails, menteeDetails, loading, programActivity, userDetails: profileInfo } = useSelector(state => state.userList)
+    const { mentorDetails, menteeDetails, loading, programActivity, userDetails: profileInfo, followInfo } = useSelector(state => state.userList)
 
     const { loading: requestLoading, status: requestStatusInfo, error: requestStatusError, categoryList } = useSelector(state => state.requestList);
 
@@ -145,7 +145,8 @@ export default function MentorDetails() {
     }
 
     const handleFollow = () => {
-        setActivity({ modal: false, following: !activity.following })
+        dispatch(userFollow({ user_id: params.id })).then(() => setActivity({ modal: false, following: !activity.following }))
+
     }
 
     const handleShowPopup = () => {
@@ -248,6 +249,7 @@ export default function MentorDetails() {
             }
 
             dispatch(getProfileInfo(params.id))
+            dispatch(getFollowList(params.id))
         }
     }, [params.id, role])
 
@@ -618,15 +620,15 @@ export default function MentorDetails() {
                                                 <div className='flex justify-around'>
                                                     <div className='text-center'>
                                                         <p className='text-[12px]'>Followers</p>
-                                                        <p className='text-[18px]'>85</p>
+                                                        <p className='text-[18px]'>{followInfo?.follower_count}</p>
                                                     </div>
                                                     <div className='text-center'>
                                                         <p className='text-[12px]'>Following</p>
-                                                        <p className='text-[18px]'>18</p>
+                                                        <p className='text-[18px]'>{followInfo?.following_count}</p>
                                                     </div>
                                                     <div className='text-center'>
                                                         <p className='text-[12px]'>Posts</p>
-                                                        <p className='text-[18px]'>10</p>
+                                                        <p className='text-[18px]'>{followInfo?.post_count}</p>
                                                     </div>
                                                 </div>
 
