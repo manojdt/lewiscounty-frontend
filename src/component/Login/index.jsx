@@ -127,7 +127,7 @@ export const Login = () => {
                 <div className="md:mx-6 md:p-12">
                   <div className="text-left">
                     <div className="flex items-center logo">
-                      <svg
+                      {/* <svg
                         width="59"
                         height="59"
                         viewBox="0 0 59 59"
@@ -143,9 +143,9 @@ export const Login = () => {
                             fill: "#00AEBD;fill:color(display-p3 0.0000 0.6824 0.7412);fill-opacity:1",
                           }}
                         />
-                      </svg>
-                      <h4 className="mt-1 pl-3 pb-1 text-xl font-semibold logoColor">
-                        Logo
+                      </svg> */}
+                      <h4 className="mt-1 pb-1 text-xl font-semibold logoColor">
+                       My Logo
                       </h4>
                     </div>
 
