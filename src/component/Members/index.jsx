@@ -11,8 +11,11 @@ import ViewIcon from "../../assets/images/view1x.png";
 import ShareIcon from "../../assets/icons/Share.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { getMembersList } from "../../services/members";
+import { useNavigate } from "react-router-dom";
+import { requestStatusColor, requestStatusText } from "../../utils/constant";
 
 const Members = () => {
+  const navigate = useNavigate()
   const [actionTab, setActiveTab] = useState("mentor");
   const [activeTableDetails, setActiveTableDetails] = useState({
     column: [],
@@ -26,7 +29,7 @@ const Members = () => {
   const open = Boolean(anchorEl);
 
   const handleMoreClick = (event, data) => {
-    console.log("more");
+    console.log("more", event);
     setSelectedItem(data);
     setAnchorEl(event.currentTarget);
   };
@@ -38,6 +41,9 @@ const Members = () => {
   const handleSearch = (e) => {
     console.log(e);
   };
+
+
+  console.log('open', open)
 
 
   let membersTab = [
@@ -57,7 +63,7 @@ const Members = () => {
 
   const handleStatus = (e) => {
     let payload = { role_name: actionTab }
-    if(e.target.value !== 'all'){
+    if (e.target.value !== 'all') {
       payload = { ...payload, status: e.target.value }
     }
     dispatch(getMembersList(payload))
@@ -78,7 +84,7 @@ const Members = () => {
     );
 
 
-    let col = [
+    const col = [
       ...columns,
       {
         field: "status",
@@ -89,7 +95,7 @@ const Members = () => {
           return (
             <>
               <div className="cursor-pointer flex items-center h-full relative">
-                {/* <span
+                <span
                   className="w-[80px] flex justify-center h-[30px] px-7"
                   style={{
                     background:
@@ -103,7 +109,7 @@ const Members = () => {
                   }}
                 >
                   {requestStatusText[params.row.status] || ""}
-                </span> */}
+                </span>
               </div>
             </>
           );
@@ -116,10 +122,28 @@ const Members = () => {
         id: 4,
         renderCell: (params) => {
           console.log("ssss", params);
-          // if (params.row.status !== 'new' && params.row.status !== 'pending') return <></>
           return (
             <>
-              <div
+
+              <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleMoreClick(e, params.row)}>
+                <img src={MoreIcon} alt='MoreIcon' />
+              </div>
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                  'aria-labelledby': 'basic-button',
+                }}
+              >
+                <MenuItem onClick={(e) => navigate(`/program-details/${seletedItem.program}?request_id=${seletedItem.id}`)} className='!text-[12px]'>
+                  <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
+                  View
+                </MenuItem>
+
+              </Menu>
+              {/* <div
                 className="cursor-pointer flex items-center h-full"
                 onClick={(e) => handleMoreClick(e, params.row)}
               >
@@ -184,7 +208,7 @@ const Members = () => {
                   />
                   Assign to Task
                 </MenuItem>
-              </Menu>
+              </Menu> */}
             </>
           );
         },

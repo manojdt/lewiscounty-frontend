@@ -94,7 +94,7 @@ export default function Certificate() {
                     <Menu
                         id="basic-menu"
                         anchorEl={anchorEl}
-                        open={open}
+                        open={true}
                         onClose={handleClose}
                         MenuListProps={{
                             'aria-labelledby': 'basic-button',
