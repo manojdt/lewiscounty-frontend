@@ -129,8 +129,8 @@ export const Navbar = () => {
             <nav className="bg-white border-gray-200">
                 <div className='flex justify-between'>
                     <div className="contain flex justify-between w-3/12 p-4">
-                        <div className="site-logo cursor-pointer flex items-center space-x-3 rtl:space-x-reverse">
-                            <svg
+                        <div className="site-logo cursor-pointer flex items-center space-x-3 rtl:space-x-reverse" onClick={() => navigate('/dashboard')}>
+                            {/* <svg
                                 width="40"
                                 height="35"
                                 viewBox="0 0 59 59"
@@ -146,8 +146,8 @@ export const Navbar = () => {
                                         fill: "#00AEBD;fill:color(display-p3 0.0000 0.6824 0.7412);fill-opacity:1",
                                     }}
                                 />
-                            </svg>
-                            <span className="self-center text-2xl font-semibold whitespace-nowrap">Logo</span>
+                            </svg> */}
+                            <span className="self-center text-2xl font-semibold whitespace-nowrap">My Logo</span>
                         </div>
                         <div className='navbar-mobile-menu' onClick={handleLeftSidebar}>
                             <div className='user-image'>
