@@ -8,6 +8,8 @@ import { allMembersColumns, allMembersolumns } from "../../mock";
 import MoreIcon from "../../assets/icons/moreIcon.svg";
 import TickCircle from "../../assets/icons/tickCircle.svg";
 import CloseCircle from "../../assets/icons/closeCircle.svg";
+import PowerIcon from "../../assets/icons/PowerIcon.svg";
+import PlusCircle from "../../assets/icons/PlusBorder.svg";
 import ViewIcon from "../../assets/images/view1x.png";
 import ShareIcon from "../../assets/icons/Share.svg";
 import { useDispatch, useSelector } from "react-redux";
@@ -26,7 +28,7 @@ const Members = () => {
     handleSubmit,
     reset,
   } = useForm();
-  const [actionTab, setActiveTab] = useState("mentor");
+  const [actionTab, setActionTab] = useState("mentor");
   const [activeTableDetails, setActiveTableDetails] = useState({
     column: [],
     data: [],
@@ -92,7 +94,7 @@ const Members = () => {
   ];
 
   const handleTab = (key) => {
-    setActiveTab(key);
+    setActionTab(key);
   };
 
   const handleStatus = (e) => {
@@ -101,6 +103,10 @@ const Members = () => {
       payload = { ...payload, status: e.target.value }
     }
     dispatch(getMembersList(payload))
+  }
+
+  const handleAssignProgramOrTask = () => {
+    
   }
 
   useEffect(() => {
@@ -197,6 +203,17 @@ const Members = () => {
                   />
                   Chat
                 </MenuItem>
+
+                {
+                  !seletedItem.member_active && <MenuItem className="!text-[12px]" onClick={undefined}>
+                    <img
+                      src={PowerIcon}
+                      alt="CancelIcon"
+                      className="pr-3 w-[27px]"
+                    />
+                    Activate
+                  </MenuItem>
+                }
                 {
                   seletedItem.member_active && <MenuItem className="!text-[12px]" onClick={handleDeactive}>
                     <img
@@ -218,14 +235,19 @@ const Members = () => {
                   Share
                 </MenuItem>
 
-                <MenuItem className="!text-[12px]">
-                  <img
-                    src={ShareIcon}
-                    alt="ShareIcon"
-                    className="pr-3 w-[27px]"
-                  />
-                  Assign to Task
-                </MenuItem>
+                {
+                  seletedItem.member_active &&
+
+                  <MenuItem className="!text-[12px]" onClick={handleAssignProgramOrTask}>
+                    <img
+                      src={PlusCircle}
+                      alt="ShareIcon"
+                      className="pr-3 w-[27px]"
+                    />
+                    Assign {actionTab === 'mentor' ? 'Mentor Program' : 'to Task'}
+                  </MenuItem>
+                }
+
               </Menu>
             </>
           );
@@ -382,7 +404,6 @@ const Members = () => {
             <DataTable
               rows={activeTableDetails.data || []}
               columns={activeTableDetails.column}
-              hideFooter
             />
           </div>
         </div>
