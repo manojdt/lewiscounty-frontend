@@ -382,7 +382,6 @@ const Members = () => {
             <DataTable
               rows={activeTableDetails.data || []}
               columns={activeTableDetails.column}
-              hideFooter
             />
           </div>
         </div>
