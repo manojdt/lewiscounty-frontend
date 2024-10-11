@@ -11,14 +11,19 @@ import { getAssignMentorProgram, submitAssignProgram } from '../../services/memb
 export default function AssignMentorProgram({ open, handleClose, selectedItem }) {
     const dispatch = useDispatch()
     const { mentor, mentee, loading, error, assignProgramInfo } = useSelector(state => state.members)
+    const categoryList = assignProgramInfo?.category || []
+    const mentorList = assignProgramInfo?.mentor || []
+    const programList = assignProgramInfo?.program || []
     const [selectedCities, setSelectedCities] = useState(null);
     const cities = [
-        { name: 'New York', code: 'NY' },
-        { name: 'Rome', code: 'RM' },
-        { name: 'London', code: 'LDN' },
-        { name: 'Istanbul', code: 'IST' },
-        { name: 'Paris', code: 'PRS' }
+        { name: 'Program 1', code: 'NY' },
+        { name: 'Program 2', code: 'RM' },
+        { name: 'Program 3', code: 'LDN' },
+        { name: 'Program 4', code: 'IST' },
+        { name: 'Program 5', code: 'PRS' }
     ];
+
+    console.log('selectedItem', selectedItem)
     const {
         register,
         formState: { errors },
@@ -28,6 +33,7 @@ export default function AssignMentorProgram({ open, handleClose, selectedItem })
 
     const onSubmit = data => {
         console.log(data)
+        return
         const payload = {
             "program_id": [258],
             "mentor_id": data.mentor_id,
@@ -39,12 +45,21 @@ export default function AssignMentorProgram({ open, handleClose, selectedItem })
         })
     }
 
+    const fetchProgramMentorInfo = (categoryId) => {
+        // dispatch(getAssignMentorProgram({ user_id: 383, category_id: categoryId }))
+        dispatch(getAssignMentorProgram({ user_id: selectedItem.id, category_id: categoryId }))
+    }
+
     useEffect(() => {
+        // dispatch(getAssignMentorProgram({ user_id: 383 }))
         dispatch(getAssignMentorProgram({ user_id: selectedItem.id }))
     }, [])
 
+
+    const categoryField = register('category', { required: 'This field is required' })
+
     return (
-        <MuiModal modalSize='lg' modalOpen={open} modalClose={handleClose} noheader>
+        <MuiModal modalSize='lg' modalOpen={open} modalClose={handleClose} noheader style={{zIndex:999}}>
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => 999999 }}
                 open={loading}
@@ -70,7 +85,8 @@ export default function AssignMentorProgram({ open, handleClose, selectedItem })
 
 
                                 <select
-                                    {...register('category', { required: 'This field is required' })}
+                                    {...categoryField}
+
                                     className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg 
                                                             focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
                                     style={{
@@ -78,8 +94,15 @@ export default function AssignMentorProgram({ open, handleClose, selectedItem })
                                         borderRadius: '3px',
                                         borderRight: '16px solid transparent'
                                     }}
+                                    onChange={(e) => {
+                                        categoryField.onChange(e)
+                                        fetchProgramMentorInfo(e.target.value)
+                                    }}
                                 >
                                     <option value="">Select</option>
+                                    {
+                                        categoryList.map(category => <option value={category.category_id}>{category.category_name}</option>)
+                                    }
 
                                 </select>
                                 {errors['category'] && (
@@ -105,6 +128,9 @@ export default function AssignMentorProgram({ open, handleClose, selectedItem })
                                     }}
                                 >
                                     <option value="">Select</option>
+                                    {
+                                        mentorList.map(mentor => <option value={mentor.user_id}>{mentor.name}</option>)
+                                    }
 
                                 </select>
                                 {errors['mentor_id'] && (
@@ -116,9 +142,14 @@ export default function AssignMentorProgram({ open, handleClose, selectedItem })
 
 
                             <div className='relative pb-8'>
+                                <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
+                                    Program
+                                </label>
                                 <div className="card flex justify-content-center">
-                                    <MultiSelect value={selectedCities} onChange={(e) => setSelectedCities(e.value)} options={cities} optionLabel="name" display="chip"
-                                        placeholder="Select Cities" maxSelectedLabels={3} className="w-full md:w-20rem" />
+                                    <MultiSelect value={selectedCities} onChange={(e) => setSelectedCities(e.value)}
+                                        options={cities} optionLabel="name" display="chip"
+                                        placeholder="Select Programs"
+                                        maxSelectedLabels={5} className="w-full md:w-20rem input-bg " />
                                 </div>
                             </div>
 

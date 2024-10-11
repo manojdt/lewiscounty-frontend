@@ -48,9 +48,9 @@ export const getAssignMentorProgram = createAsyncThunk(
     "getAssignMentorProgram",
     async (query = '') => {
         let queryString = new URLSearchParams(query).toString()
-        const getAssignMentorProgramInfo = await api.post(`members/assign-mentors?${queryString}`);
+        const getAssignMentorProgramInfo = await api.get(`members/assign-mentors?${queryString}`);
         if (getAssignMentorProgramInfo.status === 200 && getAssignMentorProgramInfo.data) {
-            return getAssignMentorProgramInfo.data;
+            return { keys: Object.keys(query), data: getAssignMentorProgramInfo.data };
         }
         return getAssignMentorProgramInfo;
     }

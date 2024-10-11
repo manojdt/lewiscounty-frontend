@@ -89,13 +89,29 @@ export const memberSlice = createSlice({
                 };
             })
             .addCase(getAssignMentorProgram.fulfilled, (state, action) => {
-                const response = action.payload
+                const {
+                    data,
+                    keys
+                } = action.payload
+                let category = []
+                let mentors = []
+                let program = []
+                if (keys.length === 1 && keys.includes('user_id')) {
+                    category = data
+                }
+
+                if (keys.length === 2 && keys.includes('user_id') && keys.includes('category_id')) {
+                    category = state.assignProgramInfo.category;
+                    mentors = data.mentor_details || []
+                    program = data.program_details || []
+                }
+                console.log('KEYSSS', keys)
                 return {
                     ...state,
                     assignProgramInfo: {
-                        category: response.mentor_details || [],
-                        mentor: response.mentor_details || [],
-                        programs: response.program_details || []
+                        category: category,
+                        mentor: mentors,
+                        programs: program
                     },
                     status: feedStatus.load,
                     loading: false,
