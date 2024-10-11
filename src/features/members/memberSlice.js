@@ -8,7 +8,8 @@ import {
 import {
     deactivateUser,
     getAssignMentorProgram,
-    getMembersList
+    getMembersList,
+    submitAssignProgram
 } from "../../services/members";
 
 const initialState = {
@@ -80,7 +81,7 @@ export const memberSlice = createSlice({
             });
 
 
-            builder
+        builder
             .addCase(getAssignMentorProgram.pending, (state) => {
                 return {
                     ...state,
@@ -92,9 +93,9 @@ export const memberSlice = createSlice({
                 return {
                     ...state,
                     assignProgramInfo: {
-                        category: response?.mentor_details || [],
-                        mentor: response?.mentor_details || [],
-                        programs: response?.program_details || []
+                        category: response.mentor_details || [],
+                        mentor: response.mentor_details || [],
+                        programs: response.program_details || []
                     },
                     status: feedStatus.load,
                     loading: false,
@@ -108,6 +109,26 @@ export const memberSlice = createSlice({
                 };
             });
 
+        builder
+            .addCase(submitAssignProgram.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(submitAssignProgram.fulfilled, (state, action) => {
+                return {
+                    status: '',
+                    loading: false,
+                };
+            })
+            .addCase(submitAssignProgram.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
 
 
     },

@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { MultiSelect } from 'primereact/multiselect';
 import { Button } from '../../shared';
-import { getAssignMentorProgram } from '../../services/members';
+import { getAssignMentorProgram, submitAssignProgram } from '../../services/members';
 
 export default function AssignMentorProgram({ open, handleClose, selectedItem }) {
     const dispatch = useDispatch()
@@ -28,6 +28,15 @@ export default function AssignMentorProgram({ open, handleClose, selectedItem })
 
     const onSubmit = data => {
         console.log(data)
+        const payload = {
+            "program_id": [258],
+            "mentor_id": data.mentor_id,
+            "deactivate_user_id": selectedItem.id,
+            "deactivate_request_id": selectedItem.deactivate_request_id
+        }
+        dispatch(submitAssignProgram(payload)).then(() => {
+            handleClose()
+        })
     }
 
     useEffect(() => {

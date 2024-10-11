@@ -55,3 +55,16 @@ export const getAssignMentorProgram = createAsyncThunk(
         return getAssignMentorProgramInfo;
     }
 );
+
+
+export const submitAssignProgram = createAsyncThunk(
+    "submitAssignProgram",
+    async (data) => {
+        const submitAssignProgramInfo = await api.post(`members/assign-mentors`, data);
+        if (submitAssignProgramInfo.status === 200 && submitAssignProgramInfo.data) {
+            return submitAssignProgramInfo.data;
+        }
+        return submitAssignProgramInfo;
+    }
+);
+
