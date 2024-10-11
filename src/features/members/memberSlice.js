@@ -7,12 +7,18 @@ import {
 } from "../../utils/constant";
 import {
     deactivateUser,
+    getAssignMentorProgram,
     getMembersList
 } from "../../services/members";
 
 const initialState = {
     mentor: [],
     mentee: [],
+    assignProgramInfo: {
+        category: [],
+        mentor: [],
+        programs: []
+    },
     loading: false,
     status: "",
     error: "",
@@ -72,6 +78,36 @@ export const memberSlice = createSlice({
                     error: action.error.message,
                 };
             });
+
+
+            builder
+            .addCase(getAssignMentorProgram.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(getAssignMentorProgram.fulfilled, (state, action) => {
+                const response = action.payload
+                return {
+                    ...state,
+                    assignProgramInfo: {
+                        category: response?.mentor_details || [],
+                        mentor: response?.mentor_details || [],
+                        programs: response?.program_details || []
+                    },
+                    status: feedStatus.load,
+                    loading: false,
+                };
+            })
+            .addCase(getAssignMentorProgram.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
 
 
     },

@@ -19,6 +19,7 @@ import { memberStatusColor, requestStatusColor, requestStatusText } from "../../
 import MuiModal from "../../shared/Modal";
 import { useForm } from "react-hook-form";
 import { Button } from "../../shared";
+import AssignMentorProgram from "./AssignMentorProgram";
 
 const Members = () => {
   const navigate = useNavigate()
@@ -36,6 +37,7 @@ const Members = () => {
   const [seletedItem, setSelectedItem] = useState({});
   const [anchorEl, setAnchorEl] = useState(null);
   const [actionColumnInfo, setActionColumnInfo] = useState({ cancelPopup: false })
+  const [assignProgramInfo, setAssignProgramInfo] = useState({ assignPopup: false })
   const dispatch = useDispatch()
   const { mentor, mentee, loading, error } = useSelector(state => state.members)
 
@@ -55,8 +57,6 @@ const Members = () => {
     console.log(e);
   };
 
-
-  console.log('open', open)
 
   const handleDeactive = () => {
     handleClose()
@@ -106,7 +106,11 @@ const Members = () => {
   }
 
   const handleAssignProgramOrTask = () => {
-    
+    setAssignProgramInfo({ assignPopup: true })
+  }
+
+  const handleAssignProgramClose = () => {
+    setAssignProgramInfo({ assignPopup: false })
   }
 
   useEffect(() => {
@@ -358,6 +362,10 @@ const Members = () => {
       </MuiModal>
 
 
+      {
+        assignProgramInfo.assignPopup && <AssignMentorProgram open={assignProgramInfo.assignPopup} handleClose={handleAssignProgramClose} selectedItem={seletedItem} />
+      }
+      
 
       <div className="col-span-4">
         <div

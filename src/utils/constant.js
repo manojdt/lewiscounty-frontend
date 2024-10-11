@@ -302,6 +302,7 @@ export const goalStatusColor = {
 
 export const goalRequestStatus = {
   inactive: 'Inactive',
+  active: 'Active',
   new: 'New',
   pending: 'Pending',
   accept: 'Accept',
@@ -320,6 +321,10 @@ export const goalRequestColor = {
   create: {
     color: 'rgba(29, 91, 191, 1)',
     bg: 'rgba(238, 245, 255, 1)'
+  },
+  active: {
+    color: 'rgba(22, 182, 129, 1)',
+    bg: 'rgba(235, 255, 243, 1)'
   },
   accept: {
     color: 'rgba(22, 182, 129, 1)',

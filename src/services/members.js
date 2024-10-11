@@ -6,7 +6,7 @@ import api from "./api";
 
 export const getMembers = createAsyncThunk(
     "getMembers",
-    async (query='') => {
+    async (query = '') => {
         let queryString = new URLSearchParams(query).toString()
         const getActivities = await api.get(`mentee_program/launched-programs${queryString}`);
         if (getActivities.status === 200 && getActivities.data) {
@@ -19,11 +19,14 @@ export const getMembers = createAsyncThunk(
 
 export const getMembersList = createAsyncThunk(
     "getMembersList",
-    async (query='') => {
+    async (query = '') => {
         let queryString = new URLSearchParams(query).toString()
         const getMembersInfo = await api.get(`members/member-list?${queryString}`);
         if (getMembersInfo.status === 200 && getMembersInfo.data) {
-            return { role: query.role_name, data: getMembersInfo.data };
+            return {
+                role: query.role_name,
+                data: getMembersInfo.data
+            };
         }
         return getMembersInfo;
     }
@@ -40,3 +43,15 @@ export const deactivateUser = createAsyncThunk(
     }
 );
 
+
+export const getAssignMentorProgram = createAsyncThunk(
+    "getAssignMentorProgram",
+    async (query = '') => {
+        let queryString = new URLSearchParams(query).toString()
+        const getAssignMentorProgramInfo = await api.post(`members/assign-mentors?${queryString}`);
+        if (getAssignMentorProgramInfo.status === 200 && getAssignMentorProgramInfo.data) {
+            return getAssignMentorProgramInfo.data;
+        }
+        return getAssignMentorProgramInfo;
+    }
+);
