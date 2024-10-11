@@ -81,13 +81,14 @@ export default function SocialMediaLogin({ view = 'vertical' }) {
                     <>
                         <LoginSocialGoogle
                             ref={googleRef}
-                            client_id={process.env.REACT_APP_GOOGLE_CLIENT_ID || ''}
+                            client_id={process.env.REACT_APP_GOOGLE_CLIENT_ID}
                             onLogoutFailure={onLogoutFailure}
                             onLoginStart={onLoginStart}
                             onLogoutSuccess={onLogoutSuccess}
-                            onResolve={({ provider, data }) => {
-                                console.log(data, "data");
-                                console.log(provider, "provider");
+                            scope="openid profile email"
+                            onResolve={(e) => {
+                                console.log(e)
+                                onLoginSuccess(e.data)
                             }}
                             onReject={(err) => {
                                 console.log("hbhbdhd", err);

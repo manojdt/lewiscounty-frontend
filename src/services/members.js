@@ -29,3 +29,14 @@ export const getMembersList = createAsyncThunk(
     }
 );
 
+export const deactivateUser = createAsyncThunk(
+    "deactivateUser",
+    async (data) => {
+        const deactivateUserInfo = await api.post(`members/members-request`, data);
+        if (deactivateUserInfo.status === 200 && deactivateUserInfo.data) {
+            return deactivateUserInfo.data;
+        }
+        return deactivateUserInfo;
+    }
+);
+

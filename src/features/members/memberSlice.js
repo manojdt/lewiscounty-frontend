@@ -5,7 +5,10 @@ import {
 import {
     feedStatus
 } from "../../utils/constant";
-import { getMembersList } from "../../services/members";
+import {
+    deactivateUser,
+    getMembersList
+} from "../../services/members";
 
 const initialState = {
     mentor: [],
@@ -29,7 +32,10 @@ export const memberSlice = createSlice({
             })
             .addCase(getMembersList.fulfilled, (state, action) => {
                 console.log('action.payload', action.payload)
-                let { role, data } = action.payload
+                let {
+                    role,
+                    data
+                } = action.payload
                 console.log('rrrr', role, data)
                 return {
                     ...state,
@@ -46,8 +52,28 @@ export const memberSlice = createSlice({
                 };
             });
 
+        builder
+            .addCase(deactivateUser.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(deactivateUser.fulfilled, (state, action) => {
+                return {
+                    status: '',
+                    loading: false,
+                };
+            })
+            .addCase(deactivateUser.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
 
-       
+
     },
 });
 

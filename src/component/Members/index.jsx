@@ -2,6 +2,7 @@ import { Backdrop, CircularProgress, Menu, MenuItem } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import DataTable from "../../shared/DataGrid";
 import SearchIcon from '../../assets/icons/search.svg';
+import CancelIcon from '../../assets/images/cancel1x.png'
 import CalenderIcon from '../../assets/icons/CalenderIcon.svg'
 import { allMembersColumns, allMembersolumns } from "../../mock";
 import MoreIcon from "../../assets/icons/moreIcon.svg";
@@ -10,12 +11,21 @@ import CloseCircle from "../../assets/icons/closeCircle.svg";
 import ViewIcon from "../../assets/images/view1x.png";
 import ShareIcon from "../../assets/icons/Share.svg";
 import { useDispatch, useSelector } from "react-redux";
-import { getMembersList } from "../../services/members";
+import { deactivateUser, getMembersList } from "../../services/members";
 import { useNavigate } from "react-router-dom";
-import { requestStatusColor, requestStatusText } from "../../utils/constant";
+import { memberStatusColor, requestStatusColor, requestStatusText } from "../../utils/constant";
+import MuiModal from "../../shared/Modal";
+import { useForm } from "react-hook-form";
+import { Button } from "../../shared";
 
 const Members = () => {
   const navigate = useNavigate()
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    reset,
+  } = useForm();
   const [actionTab, setActiveTab] = useState("mentor");
   const [activeTableDetails, setActiveTableDetails] = useState({
     column: [],
@@ -23,8 +33,9 @@ const Members = () => {
   });
   const [seletedItem, setSelectedItem] = useState({});
   const [anchorEl, setAnchorEl] = useState(null);
+  const [actionColumnInfo, setActionColumnInfo] = useState({ cancelPopup: false })
   const dispatch = useDispatch()
-  const { mentor, mentee, loading } = useSelector(state => state.members)
+  const { mentor, mentee, loading, error } = useSelector(state => state.members)
 
   const open = Boolean(anchorEl);
 
@@ -45,6 +56,28 @@ const Members = () => {
 
   console.log('open', open)
 
+  const handleDeactive = () => {
+    handleClose()
+    setActionColumnInfo({ ...actionColumnInfo, cancelPopup: true })
+  }
+
+  const handleCloseCancelReasonPopup = () => {
+
+    setActionColumnInfo({ cancelPopup: false })
+  }
+
+  const handleCancelReasonPopupSubmit = (data) => {
+    const { reason } = data
+    if (reason !== '') {
+      dispatch(deactivateUser({
+        "reason": reason,
+        "deactivate_user": seletedItem.id
+      })).then(() => {
+        handleCloseCancelReasonPopup()
+        dispatch(getMembersList({ role_name: actionTab }))
+      })
+    }
+  }
 
   let membersTab = [
     {
@@ -84,7 +117,7 @@ const Members = () => {
     );
 
 
-    const col = [
+    const updatedColumns = [
       ...columns,
       {
         field: "status",
@@ -99,16 +132,16 @@ const Members = () => {
                   className="w-[80px] flex justify-center h-[30px] px-7"
                   style={{
                     background:
-                      requestStatusColor[params.row.status]?.bgColor || "",
+                      params.row.member_active ? memberStatusColor.accept.bgColor : memberStatusColor.cancel.bgColor,
                     lineHeight: "30px",
                     borderRadius: "3px",
                     width: "110px",
                     height: "34px",
-                    color: requestStatusColor[params.row.status]?.color || "",
+                    color: params.row.member_active ? memberStatusColor.accept?.color : memberStatusColor.cancel.color,
                     fontSize: "12px",
                   }}
                 >
-                  {requestStatusText[params.row.status] || ""}
+                  {params.row.member_active ? 'Active' : 'Deactive'}
                 </span>
               </div>
             </>
@@ -124,26 +157,7 @@ const Members = () => {
           console.log("ssss", params);
           return (
             <>
-
-              <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleMoreClick(e, params.row)}>
-                <img src={MoreIcon} alt='MoreIcon' />
-              </div>
-              <Menu
-                id="basic-menu"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                MenuListProps={{
-                  'aria-labelledby': 'basic-button',
-                }}
-              >
-                <MenuItem onClick={(e) => navigate(`/program-details/${seletedItem.program}?request_id=${seletedItem.id}`)} className='!text-[12px]'>
-                  <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
-                  View
-                </MenuItem>
-
-              </Menu>
-              {/* <div
+              <div
                 className="cursor-pointer flex items-center h-full"
                 onClick={(e) => handleMoreClick(e, params.row)}
               >
@@ -161,7 +175,7 @@ const Members = () => {
                 <MenuItem
                   onClick={(e) => {
                     handleClose();
-                    //   navigate(`/mentor-details/${seletedItem.id}`);
+                    navigate(`/mentor-details/${seletedItem.id}`);
                   }}
                   className="!text-[12px]"
                 >
@@ -173,7 +187,7 @@ const Members = () => {
                   />
                   View
                 </MenuItem>
-  
+
                 <MenuItem className="!text-[12px]">
                   <img
                     src={TickCircle}
@@ -182,15 +196,18 @@ const Members = () => {
                   />
                   Chat
                 </MenuItem>
-                <MenuItem className="!text-[12px]">
-                  <img
-                    src={CloseCircle}
-                    alt="CancelIcon"
-                    className="pr-3 w-[27px]"
-                  />
-                  Deactive
-                </MenuItem>
-  
+                {
+                  seletedItem.member_active && <MenuItem className="!text-[12px]" onClick={handleDeactive}>
+                    <img
+                      src={CloseCircle}
+                      alt="CancelIcon"
+                      className="pr-3 w-[27px]"
+                    />
+                    Deactive
+                  </MenuItem>
+                }
+
+
                 <MenuItem className="!text-[12px]">
                   <img
                     src={ShareIcon}
@@ -199,7 +216,7 @@ const Members = () => {
                   />
                   Share
                 </MenuItem>
-  
+
                 <MenuItem className="!text-[12px]">
                   <img
                     src={ShareIcon}
@@ -208,15 +225,17 @@ const Members = () => {
                   />
                   Assign to Task
                 </MenuItem>
-              </Menu> */}
+              </Menu>
             </>
           );
         },
       },
     ];
 
-    setActiveTableDetails({ data: tableData, column: col });
-  }, [mentor, mentee])
+    console.log('updatedColumns', updatedColumns)
+
+    setActiveTableDetails({ data: tableData, column: updatedColumns });
+  }, [mentor, mentee, anchorEl])
 
 
   useEffect(() => {
@@ -242,7 +261,7 @@ const Members = () => {
                         }`}
                     >
                       10
-                      <p className="notify-icon"></p>
+                      <p className="notify-icon1"></p>
                     </div>
                   </div>
                   <div className="text-[13px]"> {`${discussion.name}`}</div>
@@ -253,6 +272,70 @@ const Members = () => {
           </div>
         ) : null}
       </div>
+
+
+      {/* {'Cancel Popup'} */}
+      <MuiModal modalSize='md' modalOpen={actionColumnInfo.cancelPopup} modalClose={handleCloseCancelReasonPopup} noheader>
+
+        <div className='px-5 py-5'>
+          <div className='flex justify-center flex-col gap-5  mt-4 mb-4'
+            style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '10px', }}>
+            <div className='flex justify-between px-3 py-4 items-center' style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
+              <p className='text-[18px]' style={{ color: 'rgba(0, 0, 0, 1)' }}>Deactivate Reason </p>
+              <img className='cursor-pointer' onClick={handleCloseCancelReasonPopup} src={CancelIcon} alt="CancelIcon" />
+            </div>
+
+            <div className='px-5'>
+              {
+                error !== '' ? <p className="error" role="alert">{error}</p> : null
+              }
+
+
+              <form onSubmit={handleSubmit(handleCancelReasonPopupSubmit)}>
+                <div className='relative pb-8'>
+                  <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
+                    Reason
+                  </label>
+
+                  <div className='relative'>
+                    <textarea
+                      {...register('reason', {
+                        required: "This field is required",
+                      })}
+                      id="message" rows="4" className={`block p-2.5 input-bg w-full text-sm text-gray-900  border
+                                               focus-visible:outline-none focus-visible:border-none`}
+                      style={{ border: '2px solid rgba(229, 0, 39, 1)' }}
+                      placeholder={''}
+                    ></textarea>
+                    {errors['reason'] && (
+                      <p className="error" role="alert">
+                        {errors['reason'].message}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className='flex justify-center gap-5 items-center pt-5 pb-10'>
+                  <Button btnName='Cancel' btnCls="w-[18%]" btnCategory="secondary" onClick={handleCloseCancelReasonPopup} />
+                  <button
+                    type='submit'
+                    className='text-white py-3 px-7 w-[18%]'
+                    style={{ background: 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)', borderRadius: '3px' }}>
+                    Submit
+                  </button>
+                </div>
+              </form>
+
+            </div>
+
+
+          </div>
+
+        </div>
+      </MuiModal>
+
+
+
       <div className="col-span-4">
         <div
           style={{
@@ -296,7 +379,7 @@ const Members = () => {
             </Backdrop>
 
             <DataTable
-              rows={activeTableDetails.data}
+              rows={activeTableDetails.data || []}
               columns={activeTableDetails.column}
               hideFooter
             />

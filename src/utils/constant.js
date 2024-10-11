@@ -347,20 +347,25 @@ export const certificateText = {
   cancelled: 'Cancelled',
 }
 
-export const resultText={
-  Pass:"Pass",
-  Fail:"fail"
+export const resultText = {
+  Pass: "Pass",
+  Fail: "fail"
 }
-export const empty = [{ title: '', value: 100, color: 'rgba(0, 174, 189, 1)' }]
+export const empty = [{
+  title: '',
+  value: 100,
+  color: 'rgba(0, 174, 189, 1)'
+}]
 export const resultColor = {
   Pass: {
-      color: 'rgba(47, 147, 132, 1)',
+    color: 'rgba(47, 147, 132, 1)',
     bg: 'rgba(218, 252, 231, 1)'
   },
   Fail: {
     color: 'rgba(224, 56, 45, 1)',
     bg: 'rgba(255, 231, 231, 1)'
-  },}
+  },
+}
 export const certificateColor = {
   yettoapprove: {
     color: '#000',
@@ -402,7 +407,7 @@ export const requestStatusText = {
   accept: 'Accept',
   launched: 'Launched',
   cancel: 'Cancel',
-  Wating_for_response:"Wating For Response"
+  Wating_for_response: "Wating For Response"
 }
 
 export const requestStatusColor = {
@@ -423,6 +428,17 @@ export const requestStatusColor = {
     color: 'rgba(22, 182, 129, 1)'
   },
   launched: {
+    bgColor: 'rgba(235, 255, 243, 1)',
+    color: 'rgba(22, 182, 129, 1)'
+  },
+  cancel: {
+    bgColor: 'rgba(255, 231, 231, 1)',
+    color: 'rgba(224, 56, 45, 1)'
+  }
+}
+
+export const memberStatusColor = {
+  accept: {
     bgColor: 'rgba(235, 255, 243, 1)',
     color: 'rgba(22, 182, 129, 1)'
   },
