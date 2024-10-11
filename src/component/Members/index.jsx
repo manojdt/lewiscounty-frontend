@@ -62,13 +62,14 @@ const Members = () => {
   }
 
   const handleCloseCancelReasonPopup = () => {
-
+    reset()
     setActionColumnInfo({ cancelPopup: false })
   }
 
   const handleCancelReasonPopupSubmit = (data) => {
     const { reason } = data
     if (reason !== '') {
+      reset()
       dispatch(deactivateUser({
         "reason": reason,
         "deactivate_user": seletedItem.id
