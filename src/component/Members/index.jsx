@@ -19,6 +19,7 @@ import { memberStatusColor, requestStatusColor, requestStatusText } from "../../
 import MuiModal from "../../shared/Modal";
 import { useForm } from "react-hook-form";
 import { Button } from "../../shared";
+import AssignMentorProgram from "./AssignMentorProgram";
 
 const Members = () => {
   const navigate = useNavigate()
@@ -36,6 +37,8 @@ const Members = () => {
   const [seletedItem, setSelectedItem] = useState({});
   const [anchorEl, setAnchorEl] = useState(null);
   const [actionColumnInfo, setActionColumnInfo] = useState({ cancelPopup: false })
+  const [assignProgramInfo, setAssignProgramInfo] = useState({ assignPopup: false })
+  const [filterInfo, setFilterInfo] = useState({search: '', status: ''})
   const dispatch = useDispatch()
   const { mentor, mentee, loading, error } = useSelector(state => state.members)
 
@@ -51,12 +54,8 @@ const Members = () => {
     setAnchorEl(null);
   };
 
-  const handleSearch = (e) => {
-    console.log(e);
-  };
+ 
 
-
-  console.log('open', open)
 
   const handleDeactive = () => {
     handleClose()
@@ -98,15 +97,20 @@ const Members = () => {
   };
 
   const handleStatus = (e) => {
-    let payload = { role_name: actionTab }
-    if (e.target.value !== 'all') {
-      payload = { ...payload, status: e.target.value }
-    }
-    dispatch(getMembersList(payload))
+    setFilterInfo({...filterInfo, status: e.target.value})
   }
 
+  const handleSearch = (value) => {
+    setFilterInfo({...filterInfo, search: value})
+  };
+
   const handleAssignProgramOrTask = () => {
-    
+    handleClose()
+    setAssignProgramInfo({ assignPopup: true })
+  }
+
+  const handleAssignProgramClose = () => {
+    setAssignProgramInfo({ assignPopup: false })
   }
 
   useEffect(() => {
@@ -260,6 +264,16 @@ const Members = () => {
     setActiveTableDetails({ data: tableData, column: updatedColumns });
   }, [mentor, mentee, anchorEl])
 
+  useEffect(() => {
+    let payload = { role_name: actionTab }
+    if (filterInfo.status !== '' && filterInfo.status !== 'all') {
+      payload = { ...payload, status: filterInfo.status }
+    }
+    if(filterInfo.search !== ''){
+      payload = {...payload, search: filterInfo.search}
+    }
+    dispatch(getMembersList(payload))
+  },[filterInfo])
 
   useEffect(() => {
     dispatch(getMembersList({ role_name: actionTab }))
@@ -358,6 +372,10 @@ const Members = () => {
       </MuiModal>
 
 
+      {
+        assignProgramInfo.assignPopup && <AssignMentorProgram open={assignProgramInfo.assignPopup} handleClose={handleAssignProgramClose} selectedItem={seletedItem} />
+      }
+      
 
       <div className="col-span-4">
         <div

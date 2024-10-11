@@ -7,12 +7,19 @@ import {
 } from "../../utils/constant";
 import {
     deactivateUser,
-    getMembersList
+    getAssignMentorProgram,
+    getMembersList,
+    submitAssignProgram
 } from "../../services/members";
 
 const initialState = {
     mentor: [],
     mentee: [],
+    assignProgramInfo: {
+        category: [],
+        mentor: [],
+        programs: []
+    },
     loading: false,
     status: "",
     error: "",
@@ -66,6 +73,72 @@ export const memberSlice = createSlice({
                 };
             })
             .addCase(deactivateUser.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
+
+        builder
+            .addCase(getAssignMentorProgram.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(getAssignMentorProgram.fulfilled, (state, action) => {
+                const {
+                    data,
+                    keys
+                } = action.payload
+                let category = []
+                let mentors = []
+                let program = []
+                if (keys.length === 1 && keys.includes('user_id')) {
+                    category = data
+                }
+
+                if (keys.length === 2 && keys.includes('user_id') && keys.includes('category_id')) {
+                    category = state.assignProgramInfo.category;
+                    mentors = data.mentor_details || []
+                    program = data.program_details || []
+                }
+                console.log('KEYSSS', keys)
+                return {
+                    ...state,
+                    assignProgramInfo: {
+                        category: category,
+                        mentor: mentors,
+                        programs: program
+                    },
+                    status: feedStatus.load,
+                    loading: false,
+                };
+            })
+            .addCase(getAssignMentorProgram.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
+        builder
+            .addCase(submitAssignProgram.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(submitAssignProgram.fulfilled, (state, action) => {
+                return {
+                    status: '',
+                    loading: false,
+                };
+            })
+            .addCase(submitAssignProgram.rejected, (state, action) => {
                 return {
                     ...state,
                     loading: false,

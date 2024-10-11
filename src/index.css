@@ -873,7 +873,13 @@ input[type="range"]::-ms-thumb {
   padding: 10px 0;
 }
 
+.p-multiselect-panel {
+  z-index: 9999 !important;
+}
 
+.p-multiselect-label.p-placeholder {
+  font-size: 14px;
+}
 
 .notification-container {
   top: 50px !important;
