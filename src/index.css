@@ -879,6 +879,18 @@ input[type="range"]::-ms-thumb {
   top: 50px !important;
 }
 
+.searchbar-container{
+  top: 63px !important;
+}
+
+.notification-container .active-info {
+  background-color: gray;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 13px;
+}
+
 .notification-container ul {
   max-height: 500px;
   overflow-x: hidden;
