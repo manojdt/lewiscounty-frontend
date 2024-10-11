@@ -32,7 +32,7 @@ import { recentRequest, programFeeds } from '../../utils/mock'
 import { Backdrop, CircularProgress, Switch } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import MediaPost from '../Dashboard/MediaPost';
-import { getFollowList, getMenteeProgramActivity, getMentorProgramActivity, getMyMenteeInfo, getMyMentorInfo, getProfileInfo, userFollow } from '../../services/userList';
+import { getFollowList, getMenteeProgramActivity, getMentorProgramActivity, getMyMenteeInfo, getMyMentorInfo, getProfileInfo, userFollow, userUnFollow } from '../../services/userList';
 import { dateFormat } from '../../utils';
 import { cancelMemberRequest, getCategoryList, updateLocalRequest, updateMemberRequest, updateMentorAutoApproval } from '../../services/request';
 import { requestStatus } from '../../utils/constant';
@@ -145,7 +145,20 @@ export default function MentorDetails() {
     }
 
     const handleFollow = () => {
-        dispatch(userFollow({ user_id: params.id })).then(() => setActivity({ modal: false, following: !activity.following }))
+        if (followInfo.is_following) {
+            dispatch(userUnFollow({ user_id: params.id })).then(() => {
+                setActivity({ modal: false, following: !activity.following });
+                dispatch(getFollowList(params.id))
+            }
+            )
+        }
+        if (!followInfo.is_following) {
+            dispatch(userFollow({ user_id: params.id })).then(() => {
+                setActivity({ modal: false, following: !activity.following });
+                dispatch(getFollowList(params.id))
+            }
+            )
+        }
 
     }
 
@@ -266,9 +279,6 @@ export default function MentorDetails() {
 
     }, [mentorDetails, menteeDetails, profileInfo])
 
-
-
-    console.log('confirmPopup', confirmPopup)
 
     return (
         <div className="px-9 my-6 grid">
@@ -407,15 +417,15 @@ export default function MentorDetails() {
                             >
                                 <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
                                     <img src={ConnectIcon} alt="ConnectIcon" />
-                                    <span style={{ color: '#232323', fontWeight: 600, fontSize: '24px' }}>{activity.following ? 'UnFollow' : 'Follow'}</span>
+                                    <span style={{ color: '#232323', fontWeight: 600, fontSize: '24px' }}>{followInfo.is_following ? 'UnFollow' : 'Follow'}</span>
 
                                     <div className='py-5'>
-                                        <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 600, fontSize: '18px' }}>Are you sure you want to {activity.following ? 'Unfollow' : 'Follow'} Mentor?</p>
+                                        <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 600, fontSize: '18px' }}>Are you sure you want to {followInfo.is_following ? 'Unfollow' : 'Follow'} Mentor?</p>
                                     </div>
                                     <div className='flex justify-center'>
                                         <div className="flex gap-6 justify-center align-middle">
                                             <Button btnName='Cancel' btnCategory="secondary" onClick={() => setActivity({ modal: false, following: false })} />
-                                            <Button btnType="button" btnCls="w-[110px]" btnName={activity.following ? 'Unfollow' : 'Follow'} btnCategory="primary"
+                                            <Button btnType="button" btnCls="w-[110px]" btnName={followInfo.is_following ? 'Unfollow' : 'Follow'} btnCategory="primary"
                                                 onClick={handleFollow}
                                             />
                                         </div>
@@ -698,7 +708,7 @@ export default function MentorDetails() {
 
                                                         <>
                                                             <button onClick={handleShowPopup} style={{ background: 'rgba(29, 91, 191, 1)', color: '#fff', borderRadius: '6px' }}
-                                                                className='py-3 px-4 text-[14px] w-[20%]'>{activity.following ? 'Unfollow' : 'Follow'}</button>
+                                                                className='py-3 px-4 text-[14px]'>{followInfo.is_following ? 'Unfollow' : 'Follow'}</button>
 
                                                             <button style={{ background: 'rgba(0, 174, 189, 1)', color: '#fff', borderRadius: '6px' }} className='py-3 px-4 text-[14px] w-[20%]'>Chat</button>
 
