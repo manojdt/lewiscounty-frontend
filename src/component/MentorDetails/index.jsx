@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 import DataTable from '../../shared/DataGrid';
 import { Button } from '../../shared';
@@ -7,7 +7,6 @@ import { Button } from '../../shared';
 import UserImage from "../../assets/images/user.jpg";
 import MoreIcon from '../../assets/images/more1x.png';
 import MaleIcon from '../../assets/images/male.png';
-import PhoneIcon from '../../assets/icons/phone.svg';
 import SearchIcon from '../../assets/icons/search.svg';
 import MaleProfileIcon from '../../assets/images/male-profile1x.png'
 import FemaleProfileIcon from '../../assets/images/female-profile1x.png'
@@ -25,14 +24,12 @@ import TickColorIcon from '../../assets/icons/tickColorLatest.svg'
 import CancelColorIcon from '../../assets/icons/cancelCircle.svg'
 import CancelIcon from '../../assets/images/cancel1x.png'
 
-import Programs from '../Dashboard/Programs';
-
-import { categoryColumns, programActivityRows } from '../../mock';
+import { categoryColumns } from '../../mock';
 import { recentRequest, programFeeds } from '../../utils/mock'
 import { Backdrop, CircularProgress, Switch } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import MediaPost from '../Dashboard/MediaPost';
-import { getFollowList, getMenteeProgramActivity, getMentorProgramActivity, getMyMenteeInfo, getMyMentorInfo, getProfileInfo, userFollow, userUnFollow } from '../../services/userList';
+import { getFollowList, getMenteeProgramActivity, getMentorProgramActivity, getProfileInfo, userFollow, userUnFollow } from '../../services/userList';
 import { dateFormat } from '../../utils';
 import { cancelMemberRequest, getCategoryList, updateLocalRequest, updateMemberRequest, updateMentorAutoApproval } from '../../services/request';
 import { requestStatus } from '../../utils/constant';

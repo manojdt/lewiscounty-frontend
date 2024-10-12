@@ -1874,6 +1874,7 @@ export const allMembersColumns = [
         headerName: 'Experience',
         flex: 1,
         id: 5,
+        align: 'center',
         for: ['mentor','mentee']
     },
     {

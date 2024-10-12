@@ -1,21 +1,21 @@
-import { Backdrop, CircularProgress, Menu, MenuItem } from "@mui/material";
+import { Backdrop, CircularProgress, Menu, MenuItem, Switch } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import DataTable from "../../shared/DataGrid";
 import SearchIcon from '../../assets/icons/search.svg';
 import CancelIcon from '../../assets/images/cancel1x.png'
-import CalenderIcon from '../../assets/icons/CalenderIcon.svg'
-import { allMembersColumns, allMembersolumns } from "../../mock";
+import { allMembersColumns } from "../../mock";
 import MoreIcon from "../../assets/icons/moreIcon.svg";
 import TickCircle from "../../assets/icons/tickCircle.svg";
 import CloseCircle from "../../assets/icons/closeCircle.svg";
 import PowerIcon from "../../assets/icons/PowerIcon.svg";
 import PlusCircle from "../../assets/icons/PlusBorder.svg";
+import TickColorIcon from '../../assets/icons/tickColorLatest.svg'
 import ViewIcon from "../../assets/images/view1x.png";
 import ShareIcon from "../../assets/icons/Share.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { deactivateUser, getMembersList } from "../../services/members";
 import { useNavigate } from "react-router-dom";
-import { memberStatusColor, requestStatusColor, requestStatusText } from "../../utils/constant";
+import { memberStatusColor } from "../../utils/constant";
 import MuiModal from "../../shared/Modal";
 import { useForm } from "react-hook-form";
 import { Button } from "../../shared";
@@ -36,16 +36,15 @@ const Members = () => {
   });
   const [seletedItem, setSelectedItem] = useState({});
   const [anchorEl, setAnchorEl] = useState(null);
-  const [actionColumnInfo, setActionColumnInfo] = useState({ cancelPopup: false })
+  const [actionColumnInfo, setActionColumnInfo] = useState({ cancelPopup: false, menteecancel: false })
   const [assignProgramInfo, setAssignProgramInfo] = useState({ assignPopup: false })
-  const [filterInfo, setFilterInfo] = useState({search: '', status: ''})
+  const [filterInfo, setFilterInfo] = useState({ search: '', status: '' })
   const dispatch = useDispatch()
   const { mentor, mentee, loading, error } = useSelector(state => state.members)
 
   const open = Boolean(anchorEl);
 
   const handleMoreClick = (event, data) => {
-    console.log("more", event);
     setSelectedItem(data);
     setAnchorEl(event.currentTarget);
   };
@@ -54,19 +53,23 @@ const Members = () => {
     setAnchorEl(null);
   };
 
- 
+
 
 
   const handleDeactive = () => {
     handleClose()
-    setActionColumnInfo({ ...actionColumnInfo, cancelPopup: true })
+    setActionColumnInfo({
+      cancelPopup: actionTab === 'mentor',
+      menteecancel: actionTab === 'mentee'
+    })
   }
 
   const handleCloseCancelReasonPopup = () => {
     reset()
-    setActionColumnInfo({ cancelPopup: false })
+    setActionColumnInfo({ cancelPopup: false, menteecancel: false })
   }
 
+  // Mentor Deactivate
   const handleCancelReasonPopupSubmit = (data) => {
     const { reason } = data
     if (reason !== '') {
@@ -79,6 +82,16 @@ const Members = () => {
         dispatch(getMembersList({ role_name: actionTab }))
       })
     }
+  }
+
+  // Mentee Deactivate
+  const handleMenteeConfirmPopup = () => {
+    dispatch(deactivateUser({
+      "deactivate_user": seletedItem.id
+    })).then(() => {
+      handleCloseCancelReasonPopup()
+      dispatch(getMembersList({ role_name: actionTab }))
+    })
   }
 
   let membersTab = [
@@ -97,11 +110,11 @@ const Members = () => {
   };
 
   const handleStatus = (e) => {
-    setFilterInfo({...filterInfo, status: e.target.value})
+    setFilterInfo({ ...filterInfo, status: e.target.value })
   }
 
   const handleSearch = (value) => {
-    setFilterInfo({...filterInfo, search: value})
+    setFilterInfo({ ...filterInfo, search: value })
   };
 
   const handleAssignProgramOrTask = () => {
@@ -111,6 +124,11 @@ const Members = () => {
 
   const handleAssignProgramClose = () => {
     setAssignProgramInfo({ assignPopup: false })
+  }
+
+  // Mentor Auto Approval
+  const handleChange = (row) => {
+    console.log('Approval', row)
   }
 
   useEffect(() => {
@@ -123,9 +141,34 @@ const Members = () => {
       tableData = mentee
     }
 
-    const columns = allMembersColumns.filter((col) =>
+    let columns = allMembersColumns.filter((col) =>
       col.for.includes(actionTab)
     );
+
+
+    if (actionTab === 'mentor') {
+      columns = columns.map(column => {
+        if (column.field === 'auto_approval') {
+          return {
+            ...column,
+            renderCell: (params) => {
+              return (
+                <div>
+                  <Switch
+                    checked={false}
+                    onChange={() => handleChange(params.row)}
+                    inputProps={{ 'aria-label': 'controlled' }}
+                  />
+                </div>
+              )
+            }
+
+          }
+        }
+        return column
+
+      })
+    }
 
 
     const updatedColumns = [
@@ -146,7 +189,7 @@ const Members = () => {
                       params.row.member_active ? memberStatusColor.accept.bgColor : memberStatusColor.cancel.bgColor,
                     lineHeight: "30px",
                     borderRadius: "3px",
-                    width: "110px",
+                    width: params.row.member_active ? "110px" : "92px",
                     height: "34px",
                     color: params.row.member_active ? memberStatusColor.accept?.color : memberStatusColor.cancel.color,
                     fontSize: "12px",
@@ -164,15 +207,15 @@ const Members = () => {
         headerName: "Action",
         flex: 1,
         id: 4,
+        align: 'center',
         renderCell: (params) => {
-          console.log("ssss", params);
           return (
             <>
               <div
                 className="cursor-pointer flex items-center h-full"
                 onClick={(e) => handleMoreClick(e, params.row)}
               >
-                <img src={MoreIcon} alt="MoreIcon" />
+                <img src={MoreIcon} className="pl-4" alt="MoreIcon" />
               </div>
               <Menu
                 id="basic-menu"
@@ -259,7 +302,6 @@ const Members = () => {
       },
     ];
 
-    console.log('updatedColumns', updatedColumns)
 
     setActiveTableDetails({ data: tableData, column: updatedColumns });
   }, [mentor, mentee, anchorEl])
@@ -269,11 +311,11 @@ const Members = () => {
     if (filterInfo.status !== '' && filterInfo.status !== 'all') {
       payload = { ...payload, status: filterInfo.status }
     }
-    if(filterInfo.search !== ''){
-      payload = {...payload, search: filterInfo.search}
+    if (filterInfo.search !== '') {
+      payload = { ...payload, search: filterInfo.search }
     }
     dispatch(getMembersList(payload))
-  },[filterInfo])
+  }, [filterInfo])
 
   useEffect(() => {
     dispatch(getMembersList({ role_name: actionTab }))
@@ -371,11 +413,37 @@ const Members = () => {
         </div>
       </MuiModal>
 
+      {/* Mentee Deactive Popup */}
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => 1 }}
+        open={actionColumnInfo.menteecancel}
+      >
+        <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
+          <img src={TickColorIcon} alt="TickColorIcon" />
+
+          <div className='py-5'>
+            <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 600, fontSize: '18px' }}>
+              Are you sure want to Deactivate ?
+            </p>
+          </div>
+          <div className='flex justify-center'>
+            <div className="flex gap-6 justify-center align-middle">
+              <Button btnCls="w-[150px]" btnName={'Cancel'} btnCategory="secondary" onClick={handleCloseCancelReasonPopup} />
+              <Button btnType="button" btnCls="w-[150px]" btnName={'Deactivate'}
+                style={{ background: '#16B681' }} btnCategory="primary"
+                onClick={handleMenteeConfirmPopup}
+              />
+            </div>
+          </div>
+        </div>
+
+      </Backdrop>
+
 
       {
         assignProgramInfo.assignPopup && <AssignMentorProgram open={assignProgramInfo.assignPopup} handleClose={handleAssignProgramClose} selectedItem={seletedItem} />
       }
-      
+
 
       <div className="col-span-4">
         <div
