@@ -14,7 +14,8 @@ export default function AssignMentorProgram({ open, handleClose, selectedItem })
     const categoryList = assignProgramInfo?.category || []
     const mentorList = assignProgramInfo?.mentor || []
     const programList = assignProgramInfo?.program || []
-    const [selectedCities, setSelectedCities] = useState(null);
+    const [selectedProgramValues, setSelectedProgramValues] = useState(null);
+    const [programOptions, setProgramOptions] = useState([])
     const cities = [
         { name: 'Program 1', code: 'NY' },
         { name: 'Program 2', code: 'RM' },
@@ -33,9 +34,16 @@ export default function AssignMentorProgram({ open, handleClose, selectedItem })
 
     const onSubmit = data => {
         console.log(data)
+        console.log(selectedProgramValues)
+        let programId = []
+        if(selectedProgramValues.length){
+            selectedProgramValues.forEach(sProgram => {
+                programId.push(sProgram.code)
+            })
+        }
         return
         const payload = {
-            "program_id": [258],
+            "program_id": programId,
             "mentor_id": data.mentor_id,
             "deactivate_user_id": selectedItem.id,
             "deactivate_request_id": selectedItem.deactivate_request_id
@@ -55,11 +63,21 @@ export default function AssignMentorProgram({ open, handleClose, selectedItem })
         dispatch(getAssignMentorProgram({ user_id: selectedItem.id }))
     }, [])
 
+    useEffect(() => {
+        if (programList.length) {
+            const programs = []
+            programList.forEach(program => {
+                programs.push({ name: program.name, code: program.id })
+            })
+            setProgramOptions(programs)
+        }
+    }, [programList])
+
 
     const categoryField = register('category', { required: 'This field is required' })
 
     return (
-        <MuiModal modalSize='lg' modalOpen={open} modalClose={handleClose} noheader style={{zIndex:999}}>
+        <MuiModal modalSize='lg' modalOpen={open} modalClose={handleClose} noheader style={{ zIndex: 999 }}>
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => 999999 }}
                 open={loading}
@@ -146,8 +164,8 @@ export default function AssignMentorProgram({ open, handleClose, selectedItem })
                                     Program
                                 </label>
                                 <div className="card flex justify-content-center">
-                                    <MultiSelect value={selectedCities} onChange={(e) => setSelectedCities(e.value)}
-                                        options={cities} optionLabel="name" display="chip"
+                                    <MultiSelect value={selectedProgramValues} onChange={(e) => setSelectedProgramValues(e.value)}
+                                        options={programOptions} optionLabel="name" display="chip"
                                         placeholder="Select Programs"
                                         maxSelectedLabels={5} className="w-full md:w-20rem input-bg " />
                                 </div>
