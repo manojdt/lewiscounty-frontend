@@ -24,7 +24,6 @@ export default function AssignMentorProgram({ open, handleClose, selectedItem })
         { name: 'Program 5', code: 'PRS' }
     ];
 
-    console.log('selectedItem', selectedItem)
     const {
         register,
         formState: { errors },
@@ -33,8 +32,6 @@ export default function AssignMentorProgram({ open, handleClose, selectedItem })
     } = useForm();
 
     const onSubmit = data => {
-        console.log(data)
-        console.log(selectedProgramValues)
         let programId = []
         if(selectedProgramValues.length){
             selectedProgramValues.forEach(sProgram => {
