@@ -95,8 +95,13 @@ export default function Layout() {
     )
   }
 
+
+  const notValidUser = (userInfo) => {
+    if(Object.keys(userInfo?.data).length && !userInfo?.data?.is_registered) return true
+  }
+
   useEffect(() => {
-    if (userInfo?.data?.userinfo?.approve_status === 'new') {
+    if (userInfo?.data?.userinfo?.approve_status === 'new' || notValidUser(userInfo)) {
       localStorage.removeItem('access_token');
       localStorage.removeItem('refresh_token');
       navigate('/logout');

@@ -120,7 +120,10 @@ export default function DashboardCard({ title, viewpage, handleNavigateDetails, 
                                                             <img src={StarColorIcon} alt="StarColorIcon" />
                                                             <span>4.6</span>
                                                             <span style={{ borderRight: '1px solid #18283D' }}></span>
-                                                            <span>Instructor : {curatedProgram?.mentor_name}</span>
+                                                            <span style={{
+                                                                textOverflow: 'ellipsis', overflow: 'hidden',
+                                                                width: '215px', whiteSpace: 'nowrap'
+                                                            }}>Instructor : {curatedProgram?.mentor_name}</span>
                                                         </div>
 
 
@@ -188,7 +191,10 @@ export default function DashboardCard({ title, viewpage, handleNavigateDetails, 
                                                                 <img src={StarColorIcon} alt="StarColorIcon" />
                                                                 <span>4.6</span>
                                                                 <span style={{ borderRight: '1px solid #18283D' }}></span>
-                                                                <span>Instructor : {currentProgram?.mentor_name}</span>
+                                                                <span style={{
+                                                                textOverflow: 'ellipsis', overflow: 'hidden',
+                                                                width: '215px', whiteSpace: 'nowrap'
+                                                            }}>Instructor : {currentProgram?.mentor_name}</span>
                                                             </div>
                                                             <button className="text-white text-[12px] py-2 w-[90px]"
                                                                 onClick={() => handleNavigateDetails(currentProgram)}

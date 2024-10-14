@@ -51,7 +51,6 @@ export const Navbar = () => {
         },
     ]
 
-
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -134,13 +133,13 @@ export const Navbar = () => {
     const searchNavigation = (url) => {
         searchBar.current.toggle(searchProps.current)
         document.getElementById('search-navbar').value = ''
-        setSearchProps({...searchProps, searchData: [], searchType: 'program', current: null})
+        setSearchProps({ ...searchProps, searchData: [], searchType: 'program', current: null })
         navigate(url)
     }
 
     useEffect(() => {
         console.log('Current', searchBar.current)
-    },[searchBar.current])
+    }, [searchBar.current])
 
 
 
@@ -200,51 +199,64 @@ export const Navbar = () => {
                         </div> */}
                     </div>
 
-                    <div className={`navbar-icons flex items-center justify-between ${getWindowDimensions().width <= 1536 ? 'w-3/6' : 'w-2/5'} p-4`}>
-                        <div className="relative mt-1 search-container">
-                            <input type="text" id="search-navbar" className="block w-full p-2 text-sm text-gray-900 border-none rounded-lg"
-                                placeholder="Search..." style={{ backgroundColor: '#F5F9FF', width: '430px', height: '50px', borderRadius: '3px' }}
-                                onClick={(e) => handleOpenSearchBar(e)}
-                                onChange={(e) => handleGlobalChange(e.target.value)}
-                            />
-                            <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
-                                <img src={SearchIcon} alt="SearchIcon" />
-                            </div>
+                    <div className={`navbar-icons flex items-center ${userInfo?.data?.is_registered ? 'justify-between' : 'justify-end' } ${getWindowDimensions().width <= 1536 ? 'w-3/6' : 'w-2/5'} p-4`}>
+                        {
+                            userInfo?.data?.is_registered &&
 
-                            <OverlayPanel ref={searchBar} id="search_overlay_panel" style={{ width: '430px', top: '63px !important' }} 
-                                className="notification-container searchbar-container" onClose={() => console.log('Close')}>
-                                <div className='flex gap-4'>
-                                    {
-                                        filterBtn.map(fBtn =>
-                                            <button key={fBtn.key} onClick={() => handleSelectFilter(fBtn.key)}
-                                                className={`${searchProps.searchType === fBtn.key ? 'active-info' : ''}`}>{fBtn.name}</button>)
-                                    }
+                            <div className="relative mt-1 search-container">
+                                <input type="text" id="search-navbar" className="block w-full p-2 text-sm text-gray-900 border-none rounded-lg"
+                                    placeholder="Search..." style={{ backgroundColor: '#F5F9FF', width: '430px', height: '50px', borderRadius: '3px' }}
+                                    onClick={(e) => handleOpenSearchBar(e)}
+                                    onChange={(e) => handleGlobalChange(e.target.value)}
+                                />
+                                <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
+                                    <img src={SearchIcon} alt="SearchIcon" />
                                 </div>
-                                <div>
-                                    <ul>
+
+                                <OverlayPanel ref={searchBar} id="search_overlay_panel" style={{ width: '430px', top: '63px !important' }}
+                                    className="notification-container searchbar-container" onClose={() => console.log('Close')}>
+                                    <div className='flex gap-4'>
                                         {
-                                            searchProps.searchData.map((sData, i) => {
-                                                let name = searchProps.searchType === 'program' ? sData.program_name : sData.name
-                                                let url = searchProps.searchType === 'program' ? `program-details/${sData.id}` : `mentor-details/${sData.id}`
-                                                return <li key={i} className='cursor-pointer' onClick={() => searchNavigation(url)}>
-                                                    {name}
-                                                </li>
-                                            })
+                                            filterBtn.map(fBtn =>
+                                                <button key={fBtn.key} onClick={() => handleSelectFilter(fBtn.key)}
+                                                    className={`${searchProps.searchType === fBtn.key ? 'active-info' : ''}`}>{fBtn.name}</button>)
                                         }
-                                    </ul>
+                                    </div>
+                                    <div>
+                                        <ul>
+                                            {
+                                                searchProps.searchData.map((sData, i) => {
+                                                    let name = searchProps.searchType === 'program' ? sData.program_name : sData.name
+                                                    let url = searchProps.searchType === 'program' ? `program-details/${sData.id}` : `mentor-details/${sData.id}`
+                                                    return <li key={i} className='cursor-pointer' onClick={() => searchNavigation(url)}>
+                                                        {name}
+                                                    </li>
+                                                })
+                                            }
+                                        </ul>
+                                    </div>
+                                </OverlayPanel>
+                            </div>
+                        }
+
+                        {/* <img className='search-icon hidden' src={SearchIcon} alt="SearchIcon" /> */}
+                        {
+                            userInfo?.data?.is_registered &&
+
+                            <>
+                                <div className='relative notitification-group'>
+                                    <img src={NotificationIcon} className='cursor-pointer notification-image' onClick={(e) => op.current.toggle(e)} alt="NotificationIcon" />
+
+                                    <OverlayPanel ref={op} id="overlay_panel" style={{ width: '450px' }} className="notification-container">
+                                        <Notification handleClose={handleCloseNotification} />
+                                    </OverlayPanel>
                                 </div>
-                            </OverlayPanel>
-                        </div>
-                        <img className='search-icon hidden' src={SearchIcon} alt="SearchIcon" />
-                        <div className='relative notitification-group'>
-                            <img src={NotificationIcon} className='cursor-pointer notification-image' onClick={(e) => op.current.toggle(e)} alt="NotificationIcon" />
+                                <img src={SettingsIcon} alt="SettingsIcon" />
+                            </>
+                        }
 
-                            <OverlayPanel ref={op} id="overlay_panel" style={{ width: '450px' }} className="notification-container">
-                                <Notification handleClose={handleCloseNotification} />
-                            </OverlayPanel>
-                        </div>
 
-                        <img src={SettingsIcon} alt="SettingsIcon" />
+
 
                         <span className='more-icon-menu cursor-pointer hidden text-[25px]' onClick={() => openNav()}>&#9776;</span>
 
@@ -260,15 +272,26 @@ export const Navbar = () => {
                                     'aria-labelledby': 'basic-button',
                                 }}
                             >
-                                <MenuItem onClick={() => {
-                                    handleClose();
-                                    navigate('/help');
-                                }}>
-                                    <img src={HelpIcon} alt="HelpIcon" className='pr-3 w-[30px]' />
-                                    Help</MenuItem>
-                                <MenuItem onClick={handleProfile}>
-                                    <img src={ProfileIcon} alt="ProfileIcon" className='pr-3 w-[30px]' />
-                                    Profile</MenuItem>
+
+                                {
+                                    userInfo?.data?.is_registered &&
+
+                                    <>
+                                        <MenuItem onClick={() => {
+                                            handleClose();
+                                            navigate('/help');
+                                        }}>
+                                            <img src={HelpIcon} alt="HelpIcon" className='pr-3 w-[30px]' />
+                                            Help</MenuItem>
+
+                                        <MenuItem onClick={handleProfile}>
+                                            <img src={ProfileIcon} alt="ProfileIcon" className='pr-3 w-[30px]' />
+                                            Profile</MenuItem>
+                                    </>
+
+
+                                }
+
                                 <MenuItem onClick={() => { handleClose(); setIsLogout(true) }}>
                                     <img src={LogoutIcon} alt="LogoutIcon" className='pr-3 w-[30px]' />
                                     Log out</MenuItem>

@@ -13,7 +13,7 @@ export default function AssignMentorProgram({ open, handleClose, selectedItem })
     const { mentor, mentee, loading, error, assignProgramInfo } = useSelector(state => state.members)
     const categoryList = assignProgramInfo?.category || []
     const mentorList = assignProgramInfo?.mentor || []
-    const programList = assignProgramInfo?.program || []
+    const programList = assignProgramInfo?.programs || []
     const [selectedProgramValues, setSelectedProgramValues] = useState(null);
     const [programOptions, setProgramOptions] = useState([])
     const cities = [
@@ -38,25 +38,24 @@ export default function AssignMentorProgram({ open, handleClose, selectedItem })
                 programId.push(sProgram.code)
             })
         }
-        return
+       
         const payload = {
             "program_id": programId,
             "mentor_id": data.mentor_id,
             "deactivate_user_id": selectedItem.id,
             "deactivate_request_id": selectedItem.deactivate_request_id
         }
+
         dispatch(submitAssignProgram(payload)).then(() => {
-            handleClose()
+            handleClose('taskassigned')
         })
     }
 
     const fetchProgramMentorInfo = (categoryId) => {
-        // dispatch(getAssignMentorProgram({ user_id: 383, category_id: categoryId }))
         dispatch(getAssignMentorProgram({ user_id: selectedItem.id, category_id: categoryId }))
     }
 
     useEffect(() => {
-        // dispatch(getAssignMentorProgram({ user_id: 383 }))
         dispatch(getAssignMentorProgram({ user_id: selectedItem.id }))
     }, [])
 
@@ -64,7 +63,7 @@ export default function AssignMentorProgram({ open, handleClose, selectedItem })
         if (programList.length) {
             const programs = []
             programList.forEach(program => {
-                programs.push({ name: program.name, code: program.id })
+                programs.push({ name: program.program_name, code: program.id })
             })
             setProgramOptions(programs)
         }
