@@ -19,7 +19,6 @@ export const Mentee = () => {
     const dispatch = useDispatch()
     const [searchParams] = useSearchParams();
     const navigate = useNavigate()
-    const { allPrograms, status } = useSelector(state => state.programInfo)
     const userpragrams = useSelector(state => state.userPrograms)
     const userInfo = useSelector(state => state.userInfo)
     const [programMenusList, setProgramMenusList] = useState([])
@@ -31,15 +30,6 @@ export const Mentee = () => {
     useEffect(() => {
         if (Object.keys(userpragrams.programsCounts).length) {
             const programMenu = [...programMenus('dashboard')].filter(men => men.for.includes(role)).map(menu => {
-
-                // if(menu.status)
-                // if (menu.status === 'all') {
-                //     return { ...menu, count: userpragrams.totalPrograms }
-                // }
-                // if (statusAction.includes(menu.status)) {
-                //     return { ...menu, count: userpragrams.statusCounts[menu.status] }
-                // }
-                // return menu
                 return { ...menu, count: userpragrams.programsCounts[menteeCountStatus[menu.status]] }
             })
             setProgramMenusList(programMenu)
@@ -120,15 +110,12 @@ export const Mentee = () => {
                 <Backdrop
                     sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                     open={userpragrams.loading}
-
                 >
                     {
                         userpragrams.loading ?
                             <CircularProgress color="inherit" />
                             : null
                     }
-
-
                 </Backdrop>
 
                 <div className="grid grid-cols-5 gap-7">

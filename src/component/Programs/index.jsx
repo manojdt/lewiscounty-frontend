@@ -17,6 +17,7 @@ import StarColorIcon from '../../assets/icons/starColor.svg';
 import { getAllCategories, getAllCertificates, getAllMaterials, getAllMembers, getAllSkills, loadAllPrograms } from '../../services/programInfo';
 import { menteeCountStatus, pipeUrls, programActionStatus, programMenus, programStatus, ProgramStatusInCard, statusAction } from '../../utils/constant';
 import { getMenteeProgramCount, getMenteePrograms, getProgramCounts, getProgramDetails, getUserPrograms, updateProgram } from '../../services/userprograms';
+import ProgramMetrix from '../Dashboard/ProgramMetrix';
 
 
 export default function Programs() {
@@ -190,6 +191,7 @@ export default function Programs() {
                     <Card cardTitle={'Programs'} cardContent={programMenusList} />
                     {
                         role === 'mentor' &&
+                        // <ProgramMetrix />
                         <Card cardTitle={'Program Performance'} cardContent={menusList} cardFilter={programFilter} />
                     }
 

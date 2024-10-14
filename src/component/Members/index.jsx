@@ -10,6 +10,7 @@ import CloseCircle from "../../assets/icons/closeCircle.svg";
 import PowerIcon from "../../assets/icons/PowerIcon.svg";
 import PlusCircle from "../../assets/icons/PlusBorder.svg";
 import TickColorIcon from '../../assets/icons/tickColorLatest.svg'
+import SuccessTik from '../../assets/images/blue_tik1x.png';
 import ViewIcon from "../../assets/images/view1x.png";
 import ShareIcon from "../../assets/icons/Share.svg";
 import { useDispatch, useSelector } from "react-redux";
@@ -37,7 +38,7 @@ const Members = () => {
   const [seletedItem, setSelectedItem] = useState({});
   const [anchorEl, setAnchorEl] = useState(null);
   const [actionColumnInfo, setActionColumnInfo] = useState({ cancelPopup: false, menteecancel: false })
-  const [assignProgramInfo, setAssignProgramInfo] = useState({ assignPopup: false })
+  const [assignProgramInfo, setAssignProgramInfo] = useState({ assignPopup: false, message: '' })
   const [filterInfo, setFilterInfo] = useState({ search: '', status: '' })
   const dispatch = useDispatch()
   const { mentor, mentee, loading, error } = useSelector(state => state.members)
@@ -119,17 +120,32 @@ const Members = () => {
 
   const handleAssignProgramOrTask = () => {
     handleClose()
-    setAssignProgramInfo({ assignPopup: true })
+    setAssignProgramInfo({ assignPopup: true, message: '' })
   }
 
-  const handleAssignProgramClose = () => {
-    setAssignProgramInfo({ assignPopup: false })
+  const handleAssignProgramClose = (type = '') => {
+    let payload = { assignPopup: false }
+
+    if (type === 'taskassigned') {
+      payload = { ...payload, message: 'Program Assigned to Mentor Successfully'}
+      dispatch(getMembersList({ role_name: actionTab }))
+    }
+    
+    setAssignProgramInfo({ ...assignProgramInfo, ...payload })
   }
 
   // Mentor Auto Approval
   const handleChange = (row) => {
     console.log('Approval', row)
   }
+
+  useEffect(() => {
+    if(assignProgramInfo.message !== ''){
+      setTimeout(() => {
+        setAssignProgramInfo({assignPopup: false, message: ''})
+      },2000)
+    }
+  },[assignProgramInfo])
 
   useEffect(() => {
     let tableData = []
@@ -283,7 +299,7 @@ const Members = () => {
                 </MenuItem>
 
                 {
-                  seletedItem.member_active &&
+                  !seletedItem.member_active &&
 
                   <MenuItem className="!text-[12px]" onClick={handleAssignProgramOrTask}>
                     <img
@@ -351,6 +367,18 @@ const Members = () => {
           </div>
         ) : null}
       </div>
+
+        {/* Success Modal */}
+      <MuiModal modalOpen={assignProgramInfo.message !== ''} modalClose={() => setAssignProgramInfo({ assignPopup: false, message: ''})} noheader>
+        <div className='px-5 py-1 flex justify-center items-center'>
+          <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
+            style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
+            <img src={SuccessTik} alt="SuccessTik" />
+            <p className='text-white text-[12px]'>{assignProgramInfo.message}</p>
+          </div>
+
+        </div>
+      </MuiModal>
 
 
       {/* {'Cancel Popup'} */}

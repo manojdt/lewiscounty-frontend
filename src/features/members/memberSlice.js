@@ -49,6 +49,7 @@ export const memberSlice = createSlice({
                     [role]: data,
                     status: feedStatus.load,
                     loading: false,
+                    error: ''
                 };
             })
             .addCase(getMembersList.rejected, (state, action) => {
@@ -70,6 +71,7 @@ export const memberSlice = createSlice({
                 return {
                     status: '',
                     loading: false,
+                    error: ''
                 };
             })
             .addCase(deactivateUser.rejected, (state, action) => {
@@ -115,6 +117,7 @@ export const memberSlice = createSlice({
                     },
                     status: feedStatus.load,
                     loading: false,
+                    error: ''
                 };
             })
             .addCase(getAssignMentorProgram.rejected, (state, action) => {
@@ -136,6 +139,7 @@ export const memberSlice = createSlice({
                 return {
                     status: '',
                     loading: false,
+                    error: ''
                 };
             })
             .addCase(submitAssignProgram.rejected, (state, action) => {
