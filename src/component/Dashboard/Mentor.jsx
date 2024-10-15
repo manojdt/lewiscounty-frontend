@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
-import UserImage from "../../assets/images/user.jpg";
-import './dashboard.css';
-import RightArrow from '../../assets/icons/rightArrow.svg'
-
-
+import { Backdrop, CircularProgress } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import RecentRequests from "./RecentRequests";
 import TeamGroups from "./TeamGroups";
 import RecentActivities from "./RecentActivities";
@@ -12,15 +10,14 @@ import ProgramPerformance from "./ProgramPerformance";
 import Programs from "./Programs";
 import MediaPost from "./MediaPost";
 import TrackInfo from "./TrackInfo";
-import { useDispatch, useSelector } from "react-redux";
+import Invite from "./Invite";
 import { empty, programActionStatus, programStatus, statusAction } from "../../utils/constant";
-import { useNavigate, useSearchParams } from "react-router-dom";
 import { chartProgramList, getProgramCounts, getUserPrograms, updateProgram } from "../../services/userprograms";
-import { Backdrop, CircularProgress } from "@mui/material";
 import DashboardCard from "../../shared/Card/DashboardCard";
 import { pipeUrls, programMenus } from '../../utils/constant';
-import Invite from "./Invite";
 import { useWindowDimentions } from "../../hooks/windowDimentions";
+import UserImage from "../../assets/images/user.jpg";
+import './dashboard.css';
 
 export const Mentor = () => {
     const dispatch = useDispatch()
@@ -28,6 +25,7 @@ export const Mentor = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate()
     const { allPrograms, status, createdPrograms } = useSelector(state => state.programInfo)
+    const { programRequest } = useSelector(state => state.requestList);
     const userpragrams = useSelector(state => state.userPrograms)
     const userInfo = useSelector(state => state.userInfo)
     const [programMenusList, setProgramMenusList] = useState([])
@@ -50,16 +48,16 @@ export const Mentor = () => {
 
 
     const data =
-    [
-        { title: 'Ongoing Programs', value: 40, color: '#1D5BBF' },
-        { title: 'Completed', value: 25, color: '#00AEBD' },
-        { title: 'Abort Programs', value: 35, color: '#FEA7BB' }
-    ];
+        [
+            { title: 'Ongoing Programs', value: 40, color: '#1D5BBF' },
+            { title: 'Completed', value: 25, color: '#00AEBD' },
+            { title: 'Abort Programs', value: 35, color: '#FEA7BB' }
+        ];
 
 
     const handlePerformanceFilter = (e) => {
-      const res=e?.target?.value||"date"
-       dispatch(chartProgramList(res)) 
+        const res = e?.target?.value || "date"
+        dispatch(chartProgramList(res))
     }
 
     const handleDetails = () => {
@@ -79,13 +77,12 @@ export const Mentor = () => {
             }
             return menu
         })
-        console.log(userpragrams.chartProgramDetails,"chartProgramDetails")
+        console.log(userpragrams.chartProgramDetails, "chartProgramDetails")
         setProgramMenusList(programMenu)
     }, [userpragrams])
     useEffect(() => {
         handlePerformanceFilter()
-        console.log(userpragrams.chartProgramDetails,"chartProgramDetails")
-
+        console.log(userpragrams.chartProgramDetails, "chartProgramDetails")
     }, [])
 
 
@@ -161,18 +158,19 @@ export const Mentor = () => {
         chartData()
     }, [userpragrams.chartProgramDetails])
 
-const chartData = () =>{
-    if(userpragrams?.chartProgramDetails?.data&&
-        userpragrams?.chartProgramDetails?.data?.length>0){
-            const res =userpragrams?.chartProgramDetails?.data.every((val)=>val.value===0)
+    const chartData = () => {
+        if (userpragrams?.chartProgramDetails?.data &&
+            userpragrams?.chartProgramDetails?.data?.length > 0) {
+            const res = userpragrams?.chartProgramDetails?.data.every((val) => val.value === 0)
             // console.log(res)
-            if(res){
+            if (res) {
                 return setChartList(empty)
-            }else {
+            } else {
                 return setChartList(userpragrams?.chartProgramDetails?.data)
             }
         }
-}
+    }
+
     return (
         <>
 
@@ -307,8 +305,8 @@ const chartData = () =>{
                         {/* <div className="root-layer lg:gap-8 pt-6"> */}
                         <div className="root-layer grid grid-cols-2 gap-8 pt-6">
                             <div className="layer-first flex flex-col sm:gap-6 gap-4">
-                                <ProgramPerformance data={chartList} total={userpragrams?.chartProgramDetails?.total_program_count||"0%"} handleFilter={handlePerformanceFilter} handleDetails={handleDetails}/>
-                                <RecentRequests />
+                                <ProgramPerformance data={chartList} total={userpragrams?.chartProgramDetails?.total_program_count || "0%"} handleFilter={handlePerformanceFilter} handleDetails={handleDetails} />
+                                <RecentRequests data={programRequest} />
                                 <TrackInfo />
                             </div>
 

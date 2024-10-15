@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import UserImage from "../../assets/images/user.jpg";
-import { activityStatusColor, empty, menteeCountStatus, programActionStatus, programMenus } from '../../utils/constant';
-
+import { activityStatusColor, empty, programActionStatus, programMenus } from '../../utils/constant';
 
 import RightArrow from '../../assets/icons/rightArrow.svg'
 import BlueStarIcon from '../../assets/icons/bluefilledStar.svg'
@@ -16,23 +15,20 @@ import ProgramPerformance from './ProgramPerformance';
 import ReportsInfo from './Admin/ReportsInfo';
 import Tooltip from '../../shared/Tooltip';
 import { programFeeds } from '../../utils/mock';
-import DataTable from '../../shared/DataGrid';
-import { memberRequestColumns } from '../../utils/tableFields';
-import { membersData } from '../../mock';
 import { chartProgramList } from '../../services/userprograms';
+import MemberRequest from './MemberRequest';
 
 export default function Admin() {
     const navigate = useNavigate()
     const [searchParams] = useSearchParams();
     const userInfo = useSelector(state => state.userInfo)
     const userpragrams = useSelector(state => state.userPrograms)
+
     const [programMenusList, setProgramMenusList] = useState([])
-    const [seletedItem, setSelectedItem] = useState({})
-    const [anchorEl, setAnchorEl] = useState(null);
-    const open = Boolean(anchorEl);
     const [chartList, setChartList] = useState([])
+ 
     const role = userInfo.data.role
-const dispatch = useDispatch()
+    const dispatch = useDispatch()
     const handleViewAllMembers = () => {
         console.log('View all')
     }
@@ -55,7 +51,6 @@ const dispatch = useDispatch()
             count: 40
         },
     ]
-
 
     const data =
         [
@@ -102,21 +97,14 @@ const dispatch = useDispatch()
         }
     ]
 
-
     const handlePerformanceFilter = (e) => {
-        const res=e?.target?.value||"date"
-         dispatch(chartProgramList(res)) 
-      }
+        const res = e?.target?.value || "date"
+        dispatch(chartProgramList(res))
+    }
+
     const handleDetails = () => {
         console.log('handleDetails')
     }
-
-
-    const handleClick = (event, data) => {
-        setSelectedItem(data)
-        setAnchorEl(event.currentTarget);
-    };
-
 
     function getWindowDimensions() {
         const { innerWidth: width, innerHeight: height } = window;
@@ -125,56 +113,32 @@ const dispatch = useDispatch()
             height
         };
     }
-
-    const memberRequestColumn = [
-        ...memberRequestColumns,
-        {
-            field: 'action',
-            headerName: 'Action',
-            flex: 1,
-            id: 0,
-            renderCell: (params) => {
-                console.log('paramsmmmmm', params)
-                return <>
-                    <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleClick(e, params.row)}>
-                        <img src={MoreIcon} alt='MoreIcon' />
-                    </div>
-                </>
-            },
-        },
-    ]
+  
 
     useEffect(() => {
-        // if (Object.keys(userpragrams.programsCounts).length) {
         const programMenu = [...programMenus('dashboard')].filter(men => men.for.includes(role)).map(menu => {
-            // return { ...menu, count: userpragrams.programsCounts[menteeCountStatus[menu.status]] }
             return { ...menu, count: 0 }
         })
         setProgramMenusList(programMenu)
-        // }
-
     }, [userpragrams])
 
-    // useEffect(() => {
-   
-    //     handlePerformanceFilter()
-    // }, [])
     useEffect(() => {
         chartData()
     }, [userpragrams.chartProgramDetails])
 
-const chartData = () =>{
-    if(userpragrams?.chartProgramDetails?.data&&
-        userpragrams?.chartProgramDetails?.data?.length>0){
-            const res =userpragrams?.chartProgramDetails?.data.every((val)=>val.value===0)
+    const chartData = () => {
+        if (userpragrams?.chartProgramDetails?.data &&
+            userpragrams?.chartProgramDetails?.data?.length > 0) {
+            const res = userpragrams?.chartProgramDetails?.data.every((val) => val.value === 0)
             // console.log(res)
-            if(res){
+            if (res) {
                 return setChartList(empty)
-            }else {
+            } else {
                 return setChartList(userpragrams?.chartProgramDetails?.data)
             }
         }
-}
+    }
+
     return (
         <div className="dashboard-content px-8 mt-10 py-5">
             <div className="grid grid-cols-7 gap-7">
@@ -239,14 +203,12 @@ const chartData = () =>{
 
             <div className="grid grid-cols-8 gap-7 mt-4">
                 <div className='col-span-3'>
-                    <ProgramPerformance data={userpragrams?.chartProgramDetails?.data&&
-                                    userpragrams?.chartProgramDetails?.data?.length>0?
-                                    userpragrams?.chartProgramDetails?.data:data} total={userpragrams?.chartProgramDetails?.total_program_count||10} handleFilter={handlePerformanceFilter} handleDetails={handleDetails} height={'440px'} />
+                    <ProgramPerformance data={userpragrams?.chartProgramDetails?.data &&
+                        userpragrams?.chartProgramDetails?.data?.length > 0 ?
+                        userpragrams?.chartProgramDetails?.data : data} total={userpragrams?.chartProgramDetails?.total_program_count || 10} handleFilter={handlePerformanceFilter} handleDetails={handleDetails} height={'440px'} />
                 </div>
                 <div className='col-span-5'>
                     <ReportsInfo />
-
-                   
                 </div>
 
             </div>
@@ -255,7 +217,7 @@ const chartData = () =>{
             <div className="grid grid-cols-10 gap-7 mt-4">
                 <div className='col-span-2'>
                     <CardWrapper title="Recent Activities" viewAll >
-                        <div style={{ height: '750px'}}>
+                        <div style={{ height: '750px' }}>
                             {
                                 activityList.length ?
 
@@ -293,24 +255,20 @@ const chartData = () =>{
                     </CardWrapper>
                 </div>
                 <div className='col-span-4'>
-                    <CardWrapper title='Recent Member Request' viewAll>
-                        <div className='py-6 px-3'>
-                            <DataTable rows={membersData} columns={memberRequestColumn} hideFooter />
-                        </div>
-                    </CardWrapper>
-                    <div style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px', padding:'20px', marginTop:'20px' }} >
+                    <MemberRequest />
+                    <div style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px', padding: '20px', marginTop: '20px' }} >
                         <div className='flex justify-evenly items-center'>
                             <div style={{ background: 'rgba(217, 228, 242, 1)', color: 'rgba(29, 91, 191, 1)', borderRadius: '3px', padding: '10px', fontWeight: 600 }}>
                                 NGO Performance
                             </div>
                             <div className='flex items-center gap-2'>
-                                <span style={{fontWeight:600}}>4.6</span>
+                                <span style={{ fontWeight: 600 }}>4.6</span>
                                 <p>
                                     <img className='h-[24px]' src={BlueStarIcon} alt="BlueStarIcon" />
                                 </p>
                             </div>
                             <div>
-                                (78,293,393 <span style={{color:'rgba(29, 91, 191, 1)', fontWeight:600}}> Views</span>)
+                                (78,293,393 <span style={{ color: 'rgba(29, 91, 191, 1)', fontWeight: 600 }}> Views</span>)
                             </div>
                         </div>
                     </div>
@@ -339,6 +297,10 @@ const chartData = () =>{
                         </div>
                     </CardWrapper>
                 </div>
+
+
+
+               
 
             </div>
 

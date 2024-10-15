@@ -17,13 +17,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getUserProfile } from '../../services/profile';
 import { Backdrop, CircularProgress } from '@mui/material';
 import { getUserPost } from '../../services/feeds';
+import { getFollowList } from '../../services/userList';
 
 export default function Profile() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const userData = useSelector((state) => state.userInfo);
     const { profile, loading } = useSelector(state => state.profileInfo)
     const { userPost, loading: postLoading } = useSelector(state => state.feeds)
+    const { followInfo } = useSelector(state => state.userList)
+
     const [actionTab, setActiveTab] = useState('activity')
+    const userId = userData?.data?.user_id || ''
     const allProfileDetailTab = [
         {
             name: 'Activity',
@@ -66,7 +71,14 @@ export default function Profile() {
 
     useEffect(() => {
         dispatch(getUserProfile())
+
     }, [])
+
+    useEffect(() => {
+        if (userId !== '') {
+            dispatch(getFollowList(userId));
+        }
+    }, [userData])
 
     return (
         <div className="profile-container">
@@ -110,15 +122,15 @@ export default function Profile() {
                                             <div className='flex justify-between'>
                                                 <div className='text-center'>
                                                     <p className='text-[12px]'>Followers</p>
-                                                    <p className='text-[18px] font-semibold'>85</p>
+                                                    <p className='text-[18px] font-semibold'>{followInfo?.follower_count}</p>
                                                 </div>
                                                 <div className='text-center'>
                                                     <p className='text-[12px]'>Following</p>
-                                                    <p className='text-[18px] font-semibold'>18</p>
+                                                    <p className='text-[18px] font-semibold'>{followInfo?.following_count}</p>
                                                 </div>
                                                 <div className='text-center'>
-                                                    <p className='text-[12px]'>Project</p>
-                                                    <p className='text-[18px] font-semibold'>10</p>
+                                                    <p className='text-[12px]'>Post</p>
+                                                    <p className='text-[18px] font-semibold'>{followInfo?.post_count}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -497,11 +509,11 @@ export default function Profile() {
 
                                                     )
                                                 }
-                                               
+
 
                                                 <div style={{ border: '1px solid rgba(217, 228, 242, 1)', margin: '44px 0px 10px', width: '100%' }}></div>
-                                                <div className='flex justify-center items-center cursor-pointer font-semibold pt-3' style={{ color: 'rgba(29, 91, 191, 1)' }} 
-                                                onClick={() => navigate('/feeds')}
+                                                <div className='flex justify-center items-center cursor-pointer font-semibold pt-3' style={{ color: 'rgba(29, 91, 191, 1)' }}
+                                                    onClick={() => navigate('/feeds')}
                                                 >
                                                     Show all  Posts
                                                     <img className='pl-3' src={RightArrowColor} alt="RightArrowColor" />
