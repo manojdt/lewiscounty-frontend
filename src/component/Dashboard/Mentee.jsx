@@ -1,18 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Backdrop, CircularProgress } from "@mui/material";
 
-import DashboardCard from "../../shared/Card/DashboardCard";
-import Topmentors from "./Topmentors";
-import Programs from "./Programs";
-import { menteeCountStatus, pipeUrls, programMenus } from '../../utils/constant';
-import { programActionStatus, programStatus, statusAction } from "../../utils/constant";
+import UserInfoCard from "./UserInfoCard";
+
+import SearchIcon from '../../assets/icons/search.svg';
+import UserImage from "../../assets/images/user.jpg";
+import MaleIcon from '../../assets/images/male-profile1x.png'
+import FemaleIcon from '../../assets/images/female-profile1x.png'
+
+import { pipeUrls } from '../../utils/constant';
+import { programStatus } from "../../utils/constant";
 import { getMenteeProgramCount, getMenteePrograms, updateProgram } from "../../services/userprograms";
 
 import './dashboard.css';
-import UserImage from "../../assets/images/user.jpg";
-import RightArrow from '../../assets/icons/rightArrow.svg'
+import ProgramCard from "../../shared/Card/ProgramCard";
+import { programFeeds } from "../../utils/mock";
 
 
 export const Mentee = () => {
@@ -21,25 +25,19 @@ export const Mentee = () => {
     const navigate = useNavigate()
     const userpragrams = useSelector(state => state.userPrograms)
     const userInfo = useSelector(state => state.userInfo)
-    const [programMenusList, setProgramMenusList] = useState([])
+
+
+    function getWindowDimensions() {
+        const { innerWidth: width, innerHeight: height } = window;
+        return {
+            width,
+            height
+        };
+    }
 
     const role = userInfo.data.role
 
-    
-
     useEffect(() => {
-        if (Object.keys(userpragrams.programsCounts).length) {
-            const programMenu = [...programMenus('dashboard')].filter(men => men.for.includes(role)).map(menu => {
-                return { ...menu, count: userpragrams.programsCounts[menteeCountStatus[menu.status]] }
-            })
-            setProgramMenusList(programMenu)
-        }
-
-    }, [userpragrams])
-
-
-    useEffect(() => {
-        console.log('searchParams', searchParams)
         const filterType = searchParams.get("type");
         const isBookmark = searchParams.get("is_bookmark");
 
@@ -103,6 +101,34 @@ export const Mentee = () => {
         }
     }, [userpragrams.status])
 
+
+    const topMentors = [
+        {
+            name: 'Rhea Ripley',
+            role: 'Mentor',
+            attended: 10,
+            completed: 20
+        },
+        {
+            name: 'Rhea Ripley',
+            role: 'Mentor',
+            attended: 10,
+            completed: 20
+        },
+        {
+            name: 'Rhea Ripley',
+            role: 'Mentor',
+            attended: 10,
+            completed: 20
+        },
+        {
+            name: 'Rhea Ripley',
+            role: 'Mentor',
+            attended: 10,
+            completed: 20
+        }
+    ]
+
     return (
         <>
             <div className="dashboard-content px-8 mt-10">
@@ -119,52 +145,64 @@ export const Mentee = () => {
                 </Backdrop>
 
                 <div className="grid grid-cols-5 gap-7">
-                    <div className="">
+                    <div >
+                        <UserInfoCard />
+                        <div className='recent-request mt-4' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }}>
+                            <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
+                                <div className="flex gap-4">
+                                    <div className="card-dash" style={{ background: 'linear-gradient(180deg, #00B1C0 0%, #005DC6 100%)' }} ></div>
+                                    <h4>Top Mentors</h4>
+                                </div>
+                                <div className="flex justify-center mt-2 mb-2">
 
-                        <div className="pb-3 w-full max-w-sm bg-white rounded-lg" style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', background: 'rgba(255, 255, 255, 1)' }}>
-                            <div className="flex flex-col items-center pb-10 pt-14 border-b-2">
-                                <img className="w-24 h-24 mb-3 rounded-full shadow-lg object-cover" src={UserImage} alt="User logo" />
-                                <h5 className="mb-1 text-xl font-medium text-gray-900 ">{userInfo?.data?.first_name} {userInfo?.data?.last_name}</h5>
-                                <span className="text-sm text-gray-500 " style={{ textTransform: 'capitalize' }}>{userInfo.data.role} | Teaching Professional</span>
+                                    <p className="text-[12px] py-2 px-2 cursor-pointer" style={{
+                                        background: 'rgba(217, 228, 242, 1)', color: 'rgba(29, 91, 191, 1)', borderRadius: '3px'
+                                    }}
+                                        onClick={() => navigate('/mentors')}
+                                    >View All</p>
+                                </div>
                             </div>
 
-                            <ul className="flex flex-col gap-2 p-4 md:p-0 mt-4 font-medium">
+
+                            <div className="content flex flex-col gap-4 py-5 px-5 overflow-x-auto">
                                 {
-                                    programMenusList.map((menu, index) => {
-                                        if (role === 'mentee' && index > 3) return null
-                                        return (
-                                            <li className="" key={index}>
-                                                <div className={`flex justify-between py-2 px-6 rounded cursor-pointer menu-content 
-                                                            ${searchParams.get("type") === menu.status
-                                                        || (searchParams.get("is_bookmark") === 'true' && menu.status === programActionStatus.bookmark)
-                                                        || (searchParams.get("type") === null && searchParams.get("is_bookmark") === null && menu.status === programActionStatus.yettojoin) ? 'active' : ''}`} aria-current="page"
-                                                    onClick={() => navigate(menu.page)}>
-                                                    <span className="text-sm">{menu.name}</span>
-                                                    <span className="text-base">{menu.count}</span>
+                                    topMentors.map((recentReq, index) =>
+                                        <div key={index} className="py-3 px-3" style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '10px' }}>
+                                            <div className="flex gap-2 pb-3" style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
+                                                <div className="w-1/4"> <img src={index % 2 === 0 ? MaleIcon : FemaleIcon} alt="male-icon" /> </div>
+                                                <div className="flex flex-col gap-2">
+                                                    <p className="text-[14px]" style={{ width: '100px', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}
+                                                        title={recentReq.name}
+                                                    >{recentReq.name}</p>
+                                                    <p className="text-[12px]">{recentReq.role}</p>
                                                 </div>
-                                            </li>
-                                        )
-                                    })
-                                }
+                                            </div>
+                                            <div className="flex gap-3 pt-3">
+                                                <div className="flex items-center gap-1">
+                                                    <span className="lg:w-2 lg:h-2  rounded-full" style={{ background: 'rgba(29, 91, 191, 1)' }}></span>
+                                                    <span className="lg:text-[10px]">Attended({recentReq.attended || 0})</span>
+                                                </div>
+                                                <div className="flex items-center gap-1">
+                                                    <span className="lg:w-2 lg:h-2  rounded-full" style={{ background: 'rgba(0, 174, 189, 1)' }}></span>
+                                                    <span className="lg:text-[10px]">Completed({recentReq.completed || 0})</span>
+                                                </div>
+                                            </div>
+                                        </div>
 
-                            </ul>
-                            <div className="flex justify-center mt-2 mb-2">
-                                <button className="text-white flex justify-center items-center gap-3 px-4 py-3 text-[12px]" style={{ borderRadius: '3px', background: 'linear-gradient(97.32deg, #1D5BBF -32.84%, #00AEBD 128.72%)' }}
-                                    onClick={() => navigate('/programs')}
-                                >
-                                    <span>View All</span>
-                                    <img src={RightArrow} alt={'RightArrow'} />
-                                </button>
+                                    )
+                                }
                             </div>
+
                         </div>
                     </div>
+
 
                     <div className="col-span-4">
 
                         {
-                            (searchParams.get("type") === 'yettojoin' || (searchParams.get("type") === null && searchParams.get("is_bookmark") === null)) &&
-                            <DashboardCard
-                                title="Curated  Programs"
+                            (searchParams.get("type") === 'yettojoin' || searchParams.get("type") === 'planned' || (searchParams.get("type") === null && searchParams.get("is_bookmark") === null)) &&
+                            <ProgramCard
+                                title="Planned Programs"
                                 viewpage="/programs?type=yettojoin"
                                 handleNavigateDetails={handleNavigateDetails}
                                 handleBookmark={handleBookmark}
@@ -175,8 +213,8 @@ export const Mentee = () => {
 
                         {
                             searchParams.get("type") === 'yettostart' &&
-                            <DashboardCard
-                                title="Recent  Programs"
+                            <ProgramCard
+                                title="Recent Join Programs"
                                 viewpage="/programs?type=yettostart"
                                 handleNavigateDetails={handleNavigateDetails}
                                 handleBookmark={handleBookmark}
@@ -186,8 +224,8 @@ export const Mentee = () => {
 
                         {
                             searchParams.get("type") === 'inprogress' &&
-                            <DashboardCard
-                                title="Ongoing  Programs"
+                            <ProgramCard
+                                title="Ongoing Programs"
                                 viewpage="/programs?type=inprogress"
                                 handleNavigateDetails={handleNavigateDetails}
                                 handleBookmark={handleBookmark}
@@ -195,62 +233,49 @@ export const Mentee = () => {
                             />
                         }
 
-                        {
-                            searchParams.get("type") === 'learning' &&
-                            <DashboardCard
-                                title="Learning Programs"
-                                viewpage="/programs?type=learning"
-                                handleNavigateDetails={handleNavigateDetails}
-                                handleBookmark={handleBookmark}
-                                programs={userpragrams.learning}
-                            />
-                        }
-
-
-                        {
-                            searchParams.get("is_bookmark") === 'true' &&
-                            <DashboardCard
-                                title="Bookmarked  Programs"
-                                viewpage="/programs?type=bookmarked"
-                                handleNavigateDetails={handleNavigateDetails}
-                                handleBookmark={handleBookmark}
-                                programs={userpragrams.bookmarked}
-                            />
-                        }
-
-                        {
-                            searchParams.get("type") === 'completed' &&
-                            <DashboardCard
-                                title="Completed  Programs"
-                                viewpage="/programs?type=completed"
-                                handleNavigateDetails={handleNavigateDetails}
-                                handleBookmark={handleBookmark}
-                                programs={userpragrams.completed}
-                            />
-                        }
-
-
                     </div>
                 </div>
 
 
-                <div className="grid grid-cols-3 gap-7 mt-10">
-                    <div className="col-span-2">
-                        <Topmentors />
+                <div className="mt-4">
 
+                    <div className='program-feeds' style={{ boxShadow: '4px 4px 15px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }}>
+                        <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
+                            <div className="flex gap-4">
+                                <div className="card-dash" style={{ background: 'linear-gradient(180deg, #00B1C0 0%, #005DC6 100%)' }} ></div>
+                                <h4>Program Feeds</h4>
+                            </div>
+                            <div className="flex gap-4 items-center">
+                                <img src={SearchIcon} alt="statistics" />
+                                <p className="text-[12px] py-2 px-2 cursor-pointer"
+                                    onClick={() => navigate('/feeds')}
+                                style={{ background: 'rgba(223, 237, 255, 1)', borderRadius: '5px' }}>View All</p>
+                            </div>
 
-                        <div className="py-5">
-                            <DashboardCard
-                                title="Related Program "
-                                viewpage="/programs?type=yettojoin"
-                                handleNavigateDetails={handleNavigateDetails}
-                                handleBookmark={handleBookmark}
-                                programs={userpragrams.yettojoin}
-                            />
+                        </div>
+
+                        <div className="content flex overflow-x-auto">
+                            {
+                                programFeeds.map((programFeeds, index) =>
+                                    <div key={index} style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '5px' }} className="program-feed-root mx-7 my-7">
+                                        <div className="flex py-3 px-3 gap-4 w-[340px]">
+                                            <img src={UserImage} className={`program-user-image ${getWindowDimensions().width <= 1536 ? 'w-1/5' : 'w-1/6'} rounded-xl h-[100px]`} style={{ height: getWindowDimensions().width <= 1536 ? '90px' : '100px' }} alt="" />
+                                            <div className="feed-content flex flex-col gap-4">
+                                                <h3 >{programFeeds.title}</h3>
+                                                <h4 className="text-[12px]">{programFeeds.desc}</h4>
+                                                <div className="flex gap-3">
+                                                    <span style={{ background: 'rgba(238, 245, 255, 1)', borderRadius: '30px' }} className="tags py-1 px-4 text-[13px]">Tag</span>
+                                                    <span style={{ background: 'rgba(238, 245, 255, 1)', borderRadius: '30px' }} className="tags py-1 px-4 text-[13px]">Tag</span>
+                                                    <span style={{ background: 'rgba(238, 245, 255, 1)', borderRadius: '30px' }} className="tags py-1 px-4 text-[13px]">Tag</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )
+                            }
                         </div>
 
                     </div>
-                    <div> <Programs /></div>
                 </div>
 
             </div>

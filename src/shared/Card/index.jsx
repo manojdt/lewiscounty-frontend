@@ -28,9 +28,13 @@ export default function Card({ cardTitle, cardContent, cardFilter = [], cardCoun
             <ul className="flex flex-col gap-4 p-4 md:p-0 mt-4 font-medium">
                 {
                     cardContent.map((menu, index) => <li className="" key={index}>
-                        <div onClick={() => menu.page ? navigate(menu.page) : handleClick ? handleClick(menu) : undefined} className={`flex justify-between py-2 px-6 rounded cursor-pointer menu-content 
-                        ${searchParams.get("type") === menu.status || activeItem === menu.status || searchParams.get("type") === menu?.key || (searchParams.get("is_bookmark") !== null && menu.status === programActionStatus.bookmark) ||  
-                        (searchParams.get("type") === null && searchParams.get("is_bookmark") === null && menu.status === 'all') ? 'active' : ''}`} aria-current="page">
+                        <div onClick={() => menu.page ? navigate(menu.page) : handleClick ? handleClick(menu) : undefined} 
+                            className={`flex justify-between py-2 px-6 rounded cursor-pointer menu-content 
+                            ${searchParams.get("type") === menu.status || activeItem === menu.status || searchParams.get("type") === menu?.key || 
+                            (searchParams.get("is_bookmark") !== null && menu.status === programActionStatus.bookmark) || 
+                            (searchParams.get("type") === 'planned' && menu.status === 'yettojoin') ||
+                             
+                            (searchParams.get("type") === null && searchParams.get("is_bookmark") === null && menu.status === 'all') ? 'active' : ''}`} aria-current="page">
                             <span className="text-sm">{menu.name}</span>
                             <span className="text-base" style={{ color: cardCountColor }}>{menu.count}</span>
                         </div>

@@ -18,6 +18,8 @@ import { pipeUrls, programMenus } from '../../utils/constant';
 import { useWindowDimentions } from "../../hooks/windowDimentions";
 import UserImage from "../../assets/images/user.jpg";
 import './dashboard.css';
+import UserInfoCard from "./UserInfoCard";
+import ProgramCard from "../../shared/Card/ProgramCard";
 
 export const Mentor = () => {
     const dispatch = useDispatch()
@@ -46,7 +48,6 @@ export const Mentor = () => {
         completed: allPrograms.filter(program => program.status === programStatus.completed),
     }
 
-
     const data =
         [
             { title: 'Ongoing Programs', value: 40, color: '#1D5BBF' },
@@ -65,29 +66,25 @@ export const Mentor = () => {
     }
 
 
-    useEffect(() => {
-        const programMenu = [...programMenus('dashboard')].filter(men => men.for.includes(role)).map(menu => {
+    // useEffect(() => {
+    //     const programMenu = [...programMenus('dashboard')].filter(men => men.for.includes(role)).map(menu => {
+    //         if (menu.status === 'all') {
+    //             return { ...menu, count: userpragrams.totalPrograms }
+    //         }
+    //         if (statusAction.includes(menu.status)) {
+    //             return { ...menu, count: userpragrams.statusCounts[menu.status] }
+    //         }
+    //         return menu
+    //     })
+    //     setProgramMenusList(programMenu)
+    // }, [userpragrams])
 
-
-            if (menu.status === 'all') {
-                return { ...menu, count: userpragrams.totalPrograms }
-            }
-            if (statusAction.includes(menu.status)) {
-                return { ...menu, count: userpragrams.statusCounts[menu.status] }
-            }
-            return menu
-        })
-        console.log(userpragrams.chartProgramDetails, "chartProgramDetails")
-        setProgramMenusList(programMenu)
-    }, [userpragrams])
     useEffect(() => {
         handlePerformanceFilter()
-        console.log(userpragrams.chartProgramDetails, "chartProgramDetails")
     }, [])
 
 
     useEffect(() => {
-        console.log('searchParams', searchParams)
         const filterType = searchParams.get("type");
         const isBookmark = searchParams.get("is_bookmark");
 
@@ -162,7 +159,6 @@ export const Mentor = () => {
         if (userpragrams?.chartProgramDetails?.data &&
             userpragrams?.chartProgramDetails?.data?.length > 0) {
             const res = userpragrams?.chartProgramDetails?.data.every((val) => val.value === 0)
-            // console.log(res)
             if (res) {
                 return setChartList(empty)
             } else {
@@ -171,69 +167,28 @@ export const Mentor = () => {
         }
     }
 
+    console.log('userpragrams', userpragrams)
+
     return (
         <>
 
             <div className="dashboard-content px-8 mt-10">
-
                 <Backdrop
                     sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                     open={userpragrams.loading}
-
                 >
                     {
                         userpragrams.loading ?
                             <CircularProgress color="inherit" />
                             : null
                     }
-
-
                 </Backdrop>
 
                 <div className="main-grid grid grid-cols-5 gap-3">
                     <div className="left-bar row-span-3 flex flex-col gap-8">
-                        {/* <div className="row-span-3 flex flex-col gap-8"> */}
-
-                        <div className="pb-3 w-full max-w-sm bg-white rounded-lg" style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', background: 'rgba(255, 255, 255, 1)' }}>
-                            <div className="flex flex-col items-center pb-10 pt-14 border-b-2">
-                                <img className="w-24 h-24 mb-3 rounded-full shadow-lg object-cover" src={UserImage} alt="User logo" />
-                                <h5 className="mb-1 text-xl font-medium text-gray-900 ">{userInfo?.data?.first_name} {userInfo?.data?.last_name}</h5>
-
-
-                                <span className="text-sm text-gray-500  pb-5" style={{
-                                    color: 'rgba(35, 35, 35, 1)'
-                                }}>{userInfo?.data?.userinfo?.current_employer}</span>
-
-
-                                <span className="text-sm text-gray-500 " style={{ textTransform: 'capitalize' }}>{userInfo.data.role} | Teaching Professional</span>
-                            </div>
-
-                            <ul className="flex flex-col gap-2 p-4 md:p-0 mt-4 font-medium">
-                                {
-                                    programMenusList.map((menu, index) => {
-
-                                        return (
-                                            <li className="" key={index}>
-                                                <div className={`flex justify-between py-2 px-6 rounded cursor-pointer menu-content 
-                                                        ${searchParams.get("type") === menu.status
-                                                        || (searchParams.get("is_bookmark") === 'true' && menu.status === programActionStatus.bookmark)
-                                                        || (searchParams.get("type") === null && searchParams.get("is_bookmark") === null && menu.status === programActionStatus.yettojoin) ? 'active' : ''}`} aria-current="page"
-                                                    onClick={() => navigate(menu.page)}>
-                                                    <span className="text-sm">{menu.name}</span>
-                                                    <span className="text-base">{menu.count}</span>
-                                                </div>
-                                            </li>
-                                        )
-                                    })
-                                }
-
-                            </ul>
-
-                        </div>
+                        <UserInfoCard />
 
                         <ViewImpression />
-
-                        <TeamGroups />
 
                         <RecentActivities />
 
@@ -245,9 +200,9 @@ export const Mentor = () => {
                         {/* <div className="col-span-4"> */}
 
                         {
-                            (searchParams.get("type") === 'yettojoin' || (searchParams.get("type") === null && searchParams.get("is_bookmark") === null)) &&
-                            <DashboardCard
-                                title="Curated  Programs"
+                            (searchParams.get("type") === 'yettojoin' || searchParams.get("type") === 'planned' || (searchParams.get("type") === null && searchParams.get("is_bookmark") === null)) &&
+                            <ProgramCard
+                                title="Planned Programs"
                                 viewpage="/programs?type=yettojoin"
                                 handleNavigateDetails={handleNavigateDetails}
                                 handleBookmark={handleBookmark}
@@ -258,7 +213,7 @@ export const Mentor = () => {
 
                         {
                             searchParams.get("type") === 'yettostart' &&
-                            <DashboardCard
+                            <ProgramCard
                                 title="Recent  Programs"
                                 viewpage="/programs?type=yettostart"
                                 handleNavigateDetails={handleNavigateDetails}
@@ -269,7 +224,7 @@ export const Mentor = () => {
 
                         {
                             searchParams.get("type") === 'inprogress' &&
-                            <DashboardCard
+                            <ProgramCard
                                 title="Ongoing  Programs"
                                 viewpage="/programs?type=inprogress"
                                 handleNavigateDetails={handleNavigateDetails}
@@ -278,10 +233,21 @@ export const Mentor = () => {
                             />
                         }
 
+{
+                            searchParams.get("type") === 'planned' &&
+                            <ProgramCard
+                                title="PLanned Programs"
+                                viewpage="/programs?type=planned"
+                                handleNavigateDetails={handleNavigateDetails}
+                                handleBookmark={handleBookmark}
+                                programs={userpragrams.planned}
+                            />
+                        }
+
 
                         {
                             searchParams.get("is_bookmark") === 'true' &&
-                            <DashboardCard
+                            <ProgramCard
                                 title="Bookmarked  Programs"
                                 viewpage="/programs?type=bookmarked"
                                 handleNavigateDetails={handleNavigateDetails}
@@ -292,7 +258,7 @@ export const Mentor = () => {
 
                         {
                             searchParams.get("type") === 'completed' &&
-                            <DashboardCard
+                            <ProgramCard
                                 title="Completed  Programs"
                                 viewpage="/programs?type=completed"
                                 handleNavigateDetails={handleNavigateDetails}
@@ -305,13 +271,13 @@ export const Mentor = () => {
                         {/* <div className="root-layer lg:gap-8 pt-6"> */}
                         <div className="root-layer grid grid-cols-2 gap-8 pt-6">
                             <div className="layer-first flex flex-col sm:gap-6 gap-4">
-                                <ProgramPerformance data={chartList} total={userpragrams?.chartProgramDetails?.total_program_count || "0%"} handleFilter={handlePerformanceFilter} handleDetails={handleDetails} />
+                                {/* <ProgramPerformance data={chartList} total={userpragrams?.chartProgramDetails?.total_program_count || "0%"} handleFilter={handlePerformanceFilter} handleDetails={handleDetails} /> */}
                                 <RecentRequests data={programRequest} />
-                                <TrackInfo />
+                                {/* <TrackInfo /> */}
                             </div>
 
                             <div className="layer-second flex flex-col gap-8">
-                                <MediaPost />
+                                {/* <MediaPost /> */}
                                 <Programs />
                             </div>
                         </div>

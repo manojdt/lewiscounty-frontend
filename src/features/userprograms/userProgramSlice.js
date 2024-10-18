@@ -291,7 +291,7 @@ export const userProgramSlice = createSlice({
         }
         if (filterType !== '') {
 
-          if (filterValue === 'curated') {
+          if (filterValue === 'planned') {
             updateState['yettojoin'] = programs;
           }
 
