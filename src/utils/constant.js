@@ -605,55 +605,70 @@ export const programMenus = (page = 'dashboard') => {
       count: 0,
       page: pipeUrls.programs,
       for: ['mentor', 'mentee', 'admin'],
+      mentorStatus: 'all',
+      menteeStatus: 'allprogram',
       status: 'all'
     },
     {
       name: "Planned Programs",
       count: 0,
       page: `${pipeUrl}${programFilterUrls.planned}`,
-      for: ['admin'],
-      status: programActionStatus.planned
-    },
-    {
-      name: "Recently Joined Programs",
-      count: 0,
-      page: `${pipeUrl}${programFilterUrls.yettostart}`,
-      for: ['mentor', 'admin'],
-      status: programActionStatus.yettostart
-    },
-    {
-      name: "Curated Programs",
-      count: 0,
-      page: `${pipeUrl}${programFilterUrls.yettojoin}`,
-      for: ['mentor', 'mentee'],
+      for: ['admin','mentor','mentee'],
+      mentorStatus: programActionStatus.yettojoin,
+      menteeStatus: 'planned',
       status: programActionStatus.yettojoin
     },
     {
-      name: "Draft Programs",
+      name: "Recent Join Programs",
       count: 0,
-      page: `${pipeUrl}${programFilterUrls.draft}`,
-      for: ['mentor'],
-      status: programActionStatus.draft
-    },
-    {
-      name: "My Learning Programs",
-      count: 0,
-      page: `${pipeUrl}${programFilterUrls.learning}`,
-      for: ['mentee'],
-      status: programActionStatus.learning
+      page: `${pipeUrl}${programFilterUrls.yettostart}`,
+      for: ['mentor', 'admin','mentee'],
+      mentorStatus: programActionStatus.yettostart,
+      menteeStatus: 'recently_joined',
+      status: programActionStatus.yettostart
     },
     {
       name: "Ongoing Programs",
       count: 0,
       page: `${pipeUrl}${programFilterUrls.inprogress}`,
-      for: ['mentor', 'admin'],
+      for: ['mentor', 'admin','mentee'],
+      mentorStatus: programActionStatus.inprogress,
+      menteeStatus: 'ongoing',
       status: programActionStatus.inprogress
     },
+    // {
+    //   name: "Curated Programs",
+    //   count: 0,
+    //   page: `${pipeUrl}${programFilterUrls.yettojoin}`,
+    //   for: ['mentor', 'mentee'],
+    //   status: programActionStatus.yettojoin
+    // },
+    {
+      name: "Draft Programs",
+      count: 0,
+      page: `${pipeUrl}${programFilterUrls.draft}`,
+      for: ['mentor'],
+      mentorStatus: 'draft',
+      menteeStatus: '',
+      status: programActionStatus.draft
+    },
+    // {
+    //   name: "My Learning Programs",
+    //   count: 0,
+    //   page: `${pipeUrl}${programFilterUrls.learning}`,
+    //   for: ['mentee'],
+    //   mentorStatus: '',
+    //   menteeStatus: 'learning',
+    //   status: programActionStatus.learning
+    // },
+   
     {
       name: "Bookmarked Programs",
       count: 0,
       page: `${pipeUrl}${programFilterUrls.bookmark}`,
       for: ['mentor', 'mentee'],
+      mentorStatus: 'bookmarked',
+      menteeStatus: 'bookmark',
       status: programActionStatus.bookmark
     },
     {
@@ -661,6 +676,8 @@ export const programMenus = (page = 'dashboard') => {
       count: 0,
       page: `${pipeUrl}${programFilterUrls.reschedule}`,
       for: ['mentor'],
+      mentorStatus: '',
+      menteeStatus: '',
       status: programActionStatus.reschedule
     },
     {
@@ -668,13 +685,17 @@ export const programMenus = (page = 'dashboard') => {
       count: 0,
       page: `${pipeUrl}${programFilterUrls.completed}`,
       for: ['mentor', 'mentee'],
+      mentorStatus: 'completed',
+      menteeStatus: 'completed',
       status: programActionStatus.completed
     },
     {
-      name: "Cancelled Programs",
+      name: "Cancel Programs",
       count: 0,
       page: `${pipeUrl}${programFilterUrls.cancelled}`,
       for: ['mentee', 'mentor'],
+      mentorStatus: 'cancelled',
+      menteeStatus: 'cancel',
       status: programActionStatus.cancelled
     }
   ]
@@ -856,7 +877,13 @@ export const ProgramStatusInCard = {
     color: '#FF8A00',
     bg: '#FFE3C2'
   },
+  
   yettostart: {
+    text: 'Ongoing',
+    color: '#FF8A00',
+    bg: '#FFE3C2'
+  },
+  started: {
     text: 'Ongoing',
     color: '#FF8A00',
     bg: '#FFE3C2'

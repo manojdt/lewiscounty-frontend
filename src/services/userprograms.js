@@ -12,15 +12,19 @@ import {
 export const getUserPrograms = createAsyncThunk(
     "getUserPrograms",
     async (query) => {
-        const queryParams = query && Object.keys(query).length ? `?${query.type}=${query.value}` : ''
+        let updateQuery = query
+        if(query.value === 'planned'){
+            updateQuery = {...query, value: 'yettojoin'}
+        }
+        const queryParams = updateQuery && Object.keys(updateQuery).length ? `?${updateQuery.type}=${updateQuery.value}&limit=6` : '?limit=6'
         const getUserProgram = await api.get(`fetch_program${queryParams}`);
         console.log('getUserProgram', getUserProgram)
         if (getUserProgram.status === 200 && getUserProgram.data) {
             console.log('iddd')
             const response = {
                 ...getUserProgram.data,
-                filterType: query?.type || '',
-                filterValue: query?.value || ''
+                filterType: updateQuery?.type || '',
+                filterValue: updateQuery?.value || ''
             }
             console.log('response', response)
             return response;
@@ -143,15 +147,25 @@ export const getMenteePrograms = createAsyncThunk(
 
         let queryString = query
         if (queryString.value === 'yettojoin') {
-            queryString.value = 'curated';
+            queryString.value = 'planned';
         }
+
+
+        if (queryString.value === 'yettostart') {
+            queryString.value = 'recently_joined';
+        }
+
+        // if (queryString.value === 'planned') {
+        //     queryString.value = 'yettojoin';
+        // }
+        
 
         if (queryString.value === 'inprogress') {
             queryString.value = 'ongoing';
         }
 
 
-        const queryParams = queryString && Object.keys(queryString).length ? `?${queryString.type}=${queryString.value}` : ''
+        const queryParams = queryString && Object.keys(queryString).length ? `?${queryString.type}=${queryString.value}&limit=9` : '?limit=9'
         const getUserProgram = await api.get(`mentee_program/all${queryParams}`);
         console.log('getMenteePrograms', getUserProgram)
         if (getUserProgram.status === 200 && getUserProgram.data) {
