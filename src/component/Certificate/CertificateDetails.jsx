@@ -22,7 +22,6 @@ export default function CertificateDetails() {
       `mentee_program/certifications/download?id=${id}&action=view${resId}`
     );
     if (certificateAction.status === 200 && certificateAction.data) {
-      console.log(certificateAction, "cerficate");
       setCertificateDetails(certificateAction.data);
     }
     setLoading(false);

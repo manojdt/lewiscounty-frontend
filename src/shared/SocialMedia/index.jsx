@@ -54,7 +54,6 @@ export default function SocialMediaLogin({ view = 'vertical' }) {
                             onLogoutSuccess={onLogoutSuccess}
                             scope="openid profile email"
                             onResolve={(e) => {
-                                console.log(e)
                                 onLoginSuccess(e.data)
                             }}
                             onReject={(err) => {
@@ -87,7 +86,6 @@ export default function SocialMediaLogin({ view = 'vertical' }) {
                             onLogoutSuccess={onLogoutSuccess}
                             scope="openid profile email"
                             onResolve={(e) => {
-                                console.log(e)
                                 onLoginSuccess(e.data)
                             }}
                             onReject={(err) => {

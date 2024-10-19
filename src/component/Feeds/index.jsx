@@ -85,7 +85,6 @@ export default function Feeds() {
             ...data
         }
         dispatch(createPost(apiData));
-        console.log('API', apiData)
         setFormData(defaultForm)
     }
 

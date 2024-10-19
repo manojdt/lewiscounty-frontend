@@ -43,8 +43,6 @@ export const userSlice = createSlice({
         };
       })
       .addCase(userAccountCreate.fulfilled, (state, action) => {
-        console.log('action', action)
-        // const status = action.payload.status || 200
         const { userResponse = {}, status} = action.payload
         return {
           ...state,
@@ -91,7 +89,6 @@ export const userSlice = createSlice({
     })
     builder.addCase(resetUserInfo, (state, action) => initialState)
     builder.addCase(updateInfo.fulfilled, (state, action) => {
-      // console.log('action', action, state)
       return {
         ...state,
         loading: false,
@@ -129,7 +126,6 @@ export const userSlice = createSlice({
         };
       })
       .addCase(updateUserRole.fulfilled, (state, action) => {
-        console.log('update role action', action)
         return {
           ...state,
           loading: false,
@@ -153,7 +149,6 @@ export const userSlice = createSlice({
         };
       })
       .addCase(forgotPassword.fulfilled, (state, action) => {
-        console.log('trigger otp', action)
         return {
           ...state,
           loading: false,
@@ -176,7 +171,6 @@ export const userSlice = createSlice({
         };
       })
       .addCase(validateOTP.fulfilled, (state, action) => {
-        console.log('validate otp', action)
         return {
           ...state,
           loading: false,
@@ -199,7 +193,6 @@ export const userSlice = createSlice({
         };
       })
       .addCase(updatePassword.fulfilled, (state, action) => {
-        console.log('change password', action)
         return {
           ...state,
           loading: false,

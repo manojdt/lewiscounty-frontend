@@ -7,7 +7,7 @@ import { Button } from "../../shared";
 export default function GenerateCertificate() {
   const navigate = useNavigate();
   const { id } = useParams();
-  console.log(id, "id");
+
   return (
     <div className="px-8 mt-10 pb-5">
       <div

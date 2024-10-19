@@ -51,7 +51,6 @@ export default function SettingsModal({ formData, open, handleSettingsBack, hand
                 brand_partnership : data.brand_partnership === 'true' ? true : false
             })
         }
-        console.log('Settings', data)
     }
 
     useEffect(() => {

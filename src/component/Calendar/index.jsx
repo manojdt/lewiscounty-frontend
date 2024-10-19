@@ -71,7 +71,6 @@ export default function Scheduler() {
     useEffect(() => {
         if(userInfo && Object.keys(userInfo).length){
             const events = calendarEvents.filter(event => event.view.includes(userInfo.role))
-            console.log('eventsevents', events)
             setEventsFilter(events)
         }
     },[userInfo])

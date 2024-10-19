@@ -38,12 +38,10 @@ export const memberSlice = createSlice({
                 };
             })
             .addCase(getMembersList.fulfilled, (state, action) => {
-                console.log('action.payload', action.payload)
                 let {
                     role,
                     data
                 } = action.payload
-                console.log('rrrr', role, data)
                 return {
                     ...state,
                     [role]: data,
@@ -107,7 +105,7 @@ export const memberSlice = createSlice({
                     mentors = data.mentor_details || []
                     program = data.program_details || []
                 }
-                console.log('KEYSSS', keys)
+
                 return {
                     ...state,
                     assignProgramInfo: {

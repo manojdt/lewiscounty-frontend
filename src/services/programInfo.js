@@ -1,6 +1,5 @@
 import {
-  createAsyncThunk,
-  createAction
+  createAsyncThunk
 } from "@reduxjs/toolkit";
 
 import api from "./api";
@@ -30,29 +29,18 @@ export const getProgramDetails = createAsyncThunk(
 );
 
 export const createProgram = createAsyncThunk("createProgram", async (data) => {
-  // const validateOTP = await api.post("/validate-otp", data);
-  // if (validateOTP.status === 200) {
-  //     return validateOTP;
-  // }
-  // return validateOTP;
   return data;
 });
 
 export const createNewPrograms = createAsyncThunk(
   "createNewPrograms",
   async (data) => {
-    // api.interceptors.request.use(function (config) {
-    //   config.headers["Content-Type"] = "multipart/form-data";
-    //   return config;
-    // });
     const headers = {
       'Content-Type': 'multipart/form-data',
     }
     const createProgram = await api.post("programs", data, {
       headers: headers
     });
-    // const createProgram = { status : 201}
-    console.log("createProgram", createProgram);
     if (createProgram.status === 201) {
       return createProgram;
     }
@@ -71,11 +59,6 @@ export const fetchProgram = createAsyncThunk("fetchProgram", async (data) => {
 export const updateAllPrograms = createAsyncThunk(
   "updatePrograms",
   async (data) => {
-    // const validateOTP = await api.post("/validate-otp", data);
-    // if (validateOTP.status === 200) {
-    //     return validateOTP;
-    // }
-    // return validateOTP;
     return data;
   }
 );

@@ -29,7 +29,6 @@ export default function LaunchProgram() {
     };
 
     const handleMoreClick = (event, data) => {
-        console.log('more')
         setSelectedItem(data)
         setAnchorEl(event.currentTarget);
     };

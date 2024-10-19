@@ -54,7 +54,6 @@ const ViewReport = () => {
         }
     }, [loading])
 
-    console.log('paaa', params)
     return (
         <div className="px-9 py-9">
             <MuiModal modalOpen={loading} modalClose={() => setLoading(false)} noheader>

@@ -33,20 +33,12 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
         setValue
     } = useForm();
 
-    const fieldState = getValues("planned_start_date")
-
     const onSubmit = (data) => {
-        console.log('Form Submit', data)
         const stData = { ...formData, [currentStep]: { ...formData[currentStep], ...data } }
         setFormData(stData)
         handleNextStep(data, stData)
-        // console.log(data)
         reset()
     }
-
-    // useEffect(() => {
-    //     console.log('State Data', fieldState)
-    // },[fieldState])
 
     useEffect(() => {
         if (currentStepData !== undefined && Object.keys(currentStepData).length) {
@@ -61,30 +53,12 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
         for (const field in stepData) {
             if (fName.includes(field)) f[field] = stepData[field]
         }
-        console.log('f', f)
-        // console.log('fName', fName)
-        // console.log('stepFields', stepFields)
-        // console.log('stepData', stepData)
-        console.log('getvalues', getValues())
-        // console.log('f', f)
-        // if(Object.keys(f).length !== 1) reset(f)
-
         if (currentStep === 1) {
             f.start_date = dateFormat.start_date
             f.end_date = dateFormat.end_date
         }
         const p = { ...getValues(), ...f }
-
-        console.log('TTTTTTT', p)
-        // if (f.hasOwnProperty('learning_materials')) {
-        //     reset(p)
-        // } else {
-
-
-
-
         reset(f)
-        // }
     }, [stepFields])
 
     const handleDraft = () => {
@@ -92,9 +66,6 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
         document.getElementById('program-submit').click()
 
     }
-
-    console.log('formData', formData)
-
 
     function getWindowDimensions() {
         const { innerWidth: width, innerHeight: height } = window;
@@ -104,7 +75,6 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
         };
     }
 
-
     const handleDeleteImage = (key) => {
         let image = { ...logoImage }
         delete image[key]
@@ -112,8 +82,6 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
 
         setLogoImage(image)
     }
-
-    console.log('Images', getValues('image'))
 
     return (
         <>
@@ -125,7 +93,6 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                 const dateField = field.type === 'date' ? register(field.name, field.inputRules) : undefined
                                 var imageField = field.type === 'file' ? register(field.name, field.inputRules) : undefined
                                 const dropdownimageField = field.type === 'dropdown' ? register(field.name, field.inputRules) : undefined
-                                // console.log('dateField', dateField)
                                 return (
                                     <div className={`relative mb-6  ${getWindowDimensions().width <= 1536 && field.width === 'width-82' ? 'w-[81%]' : field.width}`} key={index}>
                                         <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor={field.label}>
@@ -236,7 +203,6 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                         }
 
 
-
                                                         {errors[field.name] && (
                                                             <p className="error" role="alert">
                                                                 {errors[field.name].message}
@@ -247,7 +213,6 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                     field.type === 'dropdown' ?
                                                         <>
                                                             <select
-                                                                // {...register(field.name, field.inputRules)}
                                                                 {...dropdownimageField}
                                                                 className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg 
                                                             focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
@@ -258,7 +223,6 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                                     borderRight: '16px solid transparent'
                                                                 }}
                                                                 onChange={(e) => {
-                                                                    // console.log('dateField123', dateField)
                                                                     dropdownimageField.onChange(e)
                                                                     if (field.name === 'category') fetchCategoryData(e.target.value)
                                                                 }}
@@ -312,13 +276,11 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                                 field.type === 'date' ?
 
                                                                     <div className='relative'>
-                                                                        {/* <Calendar value={date} onChange={(e) => setDate(e.value)} showTime hourFormat="12" /> */}
                                                                         <Calendar
                                                                             className='calendar-control input-bg'
                                                                             {...dateField}
                                                                             value={dateFormat[field.name]}
                                                                             onChange={(e) => {
-                                                                                // console.log('dateField123', dateField)
                                                                                 dateField.onChange(e)
                                                                                 setDateFormat({ ...dateFormat, [field.name]: e.value })
                                                                             }}
@@ -329,20 +291,7 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                                             dateFormat="dd/mm/yy"
                                                                         />
                                                                         <img className='absolute top-5 right-2' src={CalendarIcon} alt="CalendarIcon" />
-                                                                        {/* <div className='relative'>
-                                                                        <input {...register(field.name, field.inputRules)}
-                                                                            type={'text'}
-                                                                            className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg 
-                                                                                focus:border-none focus-visible:border-none 
-                                                                                focus-visible:outline-none text-[14px] h-[60px]"
-                                                                            placeholder={field.placeholder}
-                                                                            style={{
-                                                                                color: "#232323",
-                                                                                borderRadius: '3px'
-                                                                            }}
-                                                                            aria-invalid={!!errors[field.name]} />
-                                                                        <img className='absolute top-5 right-2' src={CalendarIcon} alt="CalendarIcon" />
-                                                                    </div> */}
+
                                                                         {errors[field.name] && (
                                                                             <p className="error" role="alert">
                                                                                 {errors[field.name].message}
@@ -379,12 +328,8 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
 
                                                                                             onChange={(e) => {
                                                                                                 imageField.onChange(e);
-                                                                                                console.log(e)
                                                                                                 if (e.target.files && e.target.files[0]) {
-                                                                                                    console.log(e.target.files[0], field, imageField)
                                                                                                     let types = ['image/png', 'image/jpeg']
-                                                                                                    console.log(e.target.files[0].type)
-                                                                                                    console.log('field.name', field.name, imageField.name)
                                                                                                     if (types.includes(e.target.files[0].type)) {
                                                                                                         setLogoImage({ ...logoImage, [field.name]: URL.createObjectURL(e.target.files[0]) });
                                                                                                     } else {
@@ -409,7 +354,7 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                                                             <img className='w-[30px] cursor-pointer' onClick={() => handleDeleteImage(field.name)} src={DeleteIcon} alt="DeleteIcon" />
                                                                                         </div>
 
-                                                                                        {/* <img src={logoImage} alt="altlogo" /> */}
+
 
                                                                                     </>
                                                                                 }

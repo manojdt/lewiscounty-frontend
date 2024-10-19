@@ -48,9 +48,6 @@ export default function Day({
   })
 
 
-  console.log('+++++', savedEvents, newData)
-  console.log('PPPPP', eventsForDay, renderData)
-
   // const displayedEvents = eventsForDay.slice(0, isWeek ? 10 : 2);
   const displayedEvents = eventsForDay;
 
@@ -58,10 +55,6 @@ export default function Day({
     setShowModal(true)
   }
 
-  // console.log('displayedEvents', displayedEvents)
-  // console.log('renderData', renderData)
-
-  console.log('isWeek', isWeek)
 
   return (
     <>
@@ -92,7 +85,6 @@ export default function Day({
                   className="mt-2 cursor-pointer text-sm mb-4 mx-2 relative calendar-event-conatiner"
                   style={{ boxShadow: '4px 4px 15px 2px rgba(0, 0, 0, 0.1)', borderRadius: '3px', background: '#fff', }}
                   onClick={() => {
-                    console.log('click')
                     openEvent(renderData)
                   }}
                 >

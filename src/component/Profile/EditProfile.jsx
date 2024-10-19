@@ -58,7 +58,6 @@ export default function EditProfile() {
             social_media: data.social_media
         }
         dispatch(updateProfile(apiPayload))
-        console.log('Submit', data)
     }
 
     const uploadUserImage = (e) => {

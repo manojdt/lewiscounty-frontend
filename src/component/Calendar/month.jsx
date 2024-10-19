@@ -10,7 +10,6 @@ export default function Month({
 }) {
   const month = getMonth(currentDate);
 
-  console.log('month111', month)
   return (
     <div className="flex-1 grid grid-cols-7 grid-rows-6 gap-0">
       {month.map((row, i) => (

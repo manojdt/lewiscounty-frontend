@@ -7,7 +7,6 @@ export default function Logout() {
     const navigate = useNavigate()
 
     if (localStorage.getItem('access_token') || localStorage.getItem('refresh_token')) {
-        console.log('logout')
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
         dispatch({ type: "logout" })

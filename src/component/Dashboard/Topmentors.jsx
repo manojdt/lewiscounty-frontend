@@ -57,7 +57,6 @@ export default function Topmentors() {
         flex: 1,
         id: 4,
         renderCell: (params) => {
-            console.log('params', params)
             return <>
                 <div className='cursor-pointer h-full flex items-center' onClick={handleClick}>
                     <img src={MoreIcon} alt='MoreIcon' />

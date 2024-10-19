@@ -252,7 +252,6 @@ const CalendarMain = ({ title = 'Calendar', addSection = true, events }) => {
 
   const renderCalendar = () => {
 
-    console.log('currentCalendarView', currentCalendarView)
     switch (currentCalendarView) {
       case "Today":
         return (

@@ -3,10 +3,8 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { programActionStatus } from '../../utils/constant';
 
 export default function Card({ cardTitle, cardContent, cardFilter = [], cardCountColor = '#000', handleClick, activeItem = '' }) {
-    console.log('filter', cardFilter)
     const navigate = useNavigate()
     const [searchParams] = useSearchParams();
-    console.log('searchParams.get("type")', searchParams.get("type"))
     return (
         <div className="pb-3" style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }}>
             <div className="title flex justify-between py-3 px-4 border-b-2">

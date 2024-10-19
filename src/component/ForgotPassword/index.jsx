@@ -25,7 +25,6 @@ export const ForgotPassword = () => {
     if (data.email !== '') {
       dispatch(forgotPassword({ email: data.email }))
     }
-    console.log(data);
   };
 
   useEffect(() => {
@@ -33,14 +32,7 @@ export const ForgotPassword = () => {
   }, [])
 
   useEffect(() => {
-
     const forgotEmail = getValues('email');
-
-    console.log('forgotEmail', forgotEmail)
-    console.log('userInfo.otp', userInfo.status)
-    console.log('userStatus.otp', userStatus.otp)
-
-
     if (!userInfo.loading && userInfo.status === userStatus.otp && forgotEmail !== '') {
       localStorage.setItem('forgotEmail', forgotEmail);
       navigate('/verify-otp?email=' + forgotEmail)

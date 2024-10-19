@@ -306,7 +306,6 @@ export default function EditReport() {
                                                                         disabled={field.disabled}
 
                                                                         onChange={(e) => {
-                                                                            // console.log('dateField123', dateField)
                                                                             dropdownField.onChange(e)
                                                                             if (field.name === 'category') getCategoryPrograms(e.target.value)
                                                                             if (field.name === 'program') getProgramInfo(e.target.value)
@@ -407,7 +406,6 @@ export default function EditReport() {
                                                                                     >
                                                                                         {
                                                                                             getValues(field.name) && getValues(field.name).slice(0, 6).map((popupfield, index) => {
-                                                                                                console.log('kkkkkkkkkkkk')
                                                                                                 return (
                                                                                                     <>
                                                                                                         <p className='flex items-center gap-1'>
@@ -448,7 +446,6 @@ export default function EditReport() {
 
                                                                                                 {
                                                                                                     menteeAllList && menteeAllList.slice(0, 6).map((popupfield, index) => {
-                                                                                                        console.log('popupfield', popupfield)
                                                                                                         return (
                                                                                                             <>
                                                                                                                 <p className='flex items-center gap-1'>

@@ -30,7 +30,7 @@ export default function CertificateMenteeList() {
   const { status, certificatesMembers } = useSelector(
     (state) => state.certificates
   );
-  console.log(searchParams.get("type"), "type");
+
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -54,7 +54,6 @@ export default function CertificateMenteeList() {
   }, [id]);
 
   const handleMoreClick = (event, data) => {
-    console.log("more");
     setSelectedItem(data);
     setAnchorEl(event.currentTarget);
   };
@@ -82,7 +81,6 @@ export default function CertificateMenteeList() {
       flex: 1,
       id: 2,
       renderCell: (params) => {
-        console.log("paramsppppp", params);
         return (
           <>
             <div className="cursor-pointer flex items-center h-full relative">

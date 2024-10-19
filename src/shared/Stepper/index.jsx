@@ -30,7 +30,6 @@ export const Stepper = ({ steps, currentStep = 0, btnTypeAction }) => {
       height
     };
   }
-  console.log(getWindowDimensions())
 
   useEffect(() => {
     const slider = document.getElementById('slider');

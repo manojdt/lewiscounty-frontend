@@ -20,10 +20,7 @@ export const VerifyOTP = () => {
 
   const handleSubmit = () => {
     const verifyOtp = otp.join("");
-    console.log("OTP", verifyOtp, verifyOtp.length, typeof verifyOtp);
-    console.log('useremail', userEmail, searchParams)
     if(verifyOtp !== '' && verifyOtp.length === 6 && userEmail !== ''){
-      console.log('Submit')
       dispatch(validateOTP({"email" : userEmail, "otp": verifyOtp}))
     }
   };
@@ -61,9 +58,6 @@ export const VerifyOTP = () => {
     if (otp.join("").length > 6 || otp.join("").length < 6) setDisableSubmit(true);
   }
 
-  console.log("otp.le", otp.length, otp);
-
-  console.log("siss", disableSubmit);
 
   return (
     <div className="h-full">

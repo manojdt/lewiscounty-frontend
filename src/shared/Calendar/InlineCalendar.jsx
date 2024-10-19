@@ -11,15 +11,11 @@ export default function InlineCalendar() {
     })
 
     const dateTemplate = (date) => {
-
-        console.log('lllllllllll', date)
         if (date.day > 10 && date.day < 15 && !date.today) {
             return (
                 <strong style={{ textDecoration: 'line-through' }}>{date.day}</strong>
             );
         }
-
-
         return date.day;
     }
 

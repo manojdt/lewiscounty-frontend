@@ -13,17 +13,14 @@ import TextIcon from "../../../assets/images/text1x.png";
 
 import { Button } from '../../../shared';
 import MuiModal from '../../../shared/Modal';
-import MuiTable from '../../../shared/Table';
-import { assignMenteeColumns, assignMenteeRows, MenteeAssignColumns } from '../../../mock';
+import { MenteeAssignColumns } from '../../../mock';
 import DataTable from '../../../shared/DataGrid';
 import SuccessTik from '../../../assets/images/blue_tik1x.png';
 import { getAllCategories } from '../../../services/programInfo';
 import './program.css'
 
-import { assignProgramTask, getMentees, getProgramDetails, getProgramMentees, updateProgram } from '../../../services/userprograms';
+import { assignProgramTask, getProgramDetails, getProgramMentees, updateProgram } from '../../../services/userprograms';
 import { pipeUrls, programActionStatus, programStatus } from '../../../utils/constant';
-
-
 
 
 export default function AssignMentees() {
@@ -32,16 +29,13 @@ export default function AssignMentees() {
     const [taskSuccess, setTaskSuccess] = useState(false)
 
     const params = useParams();
-
     const dispatch = useDispatch()
-    const { programdetails, loading: programLoading, error, status, menteeList, programMenteeList } = useSelector(state => state.userPrograms)
+    const { programdetails, loading: programLoading, error, status, programMenteeList } = useSelector(state => state.userPrograms)
     const { category, loading: apiLoading } = useSelector(state => state.programInfo)
     const [menteeFields, setMenteeFields] = useState(AssignMenteesFields)
     const [dateFormat, setDateFormat] = useState({})
     const [menteeAllList, setAllMenteeList] = useState([])
-
     const [loading, setLoading] = useState(false)
-
     const [updatedMemberColumn, setUpdatedMemberColumn] = useState(MenteeAssignColumns)
 
     const {
@@ -54,7 +48,6 @@ export default function AssignMentees() {
     } = useForm();
 
     const onSubmit = (data) => {
-
         const apiData = {
             ...data,
             program_id: programdetails.id,
@@ -62,16 +55,8 @@ export default function AssignMentees() {
             end_date: new Date(data.end_date).toISOString(),
             mentor: programdetails?.mentor_info?.id,
             due_date: new Date(data.due_date).toISOString()
-        }
-        console.log('submit', apiData)
-      
+        }      
         dispatch(assignProgramTask(apiData))
-
-       
-       
-        // reset()
-        // setLoading(true)
-        // setTaskSuccess(true)
     }
 
     useEffect(() => {
@@ -84,10 +69,6 @@ export default function AssignMentees() {
                 navigate(`${pipeUrls.startprogram}/${programdetails.id}`)
             }, [3000])
         }
-
-        // if(status === programStatus.taskassigned){
-        //     dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.assigned }))
-        // }
     }, [status])
 
 
@@ -111,7 +92,6 @@ export default function AssignMentees() {
                             borderRadius: '3px'
                         }}
                             onClick={() => {
-                                console.log(params);
                                 navigate(`/mentee-details/${params.id}`)
                             }}>View Details</button>;
                     }
@@ -163,7 +143,6 @@ export default function AssignMentees() {
 
     useEffect(() => {
         if (Object.keys(programdetails).length) {
-            console.log('tarttt', new Date(programdetails.start_date))
             let fieldValue = {
                 category_id: programdetails.categories.length ? programdetails.categories[0].id : '',
                 program_id: programdetails.program_name,
@@ -175,9 +154,6 @@ export default function AssignMentees() {
                 task_details: '',
                 due_date: ''
             }
-
-            console.log('rest', fieldValue, programdetails)
-
             reset(fieldValue)
         }
     }, [programdetails])
@@ -210,10 +186,6 @@ export default function AssignMentees() {
         );
     }
 
-    console.log('addMenteeModal', addMenteeModal)
-
-    console.log('getValues', getValues('category_id'))
-    console.log('getValues mentees_list', getValues('mentees_list'))
 
     return (
         <div className="px-9 my-6 grid">
@@ -403,7 +375,6 @@ export default function AssignMentees() {
 
                                                                                                 {
                                                                                                     menteeAllList && menteeAllList.slice(0, 6).map((popupfield, index) => {
-                                                                                                        console.log('popupfield', popupfield)
                                                                                                         return (
                                                                                                             <>
                                                                                                                 <p className='flex items-center gap-1'>

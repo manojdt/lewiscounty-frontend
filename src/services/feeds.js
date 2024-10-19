@@ -91,7 +91,6 @@ export const postCommentLike = createAsyncThunk(
     "postCommentLike",
     async (data) => {
         const createCommentLike = await api.post('post/like', data);
-        console.log('createCommentLike', createCommentLike)
         if ((createCommentLike.status === 201 || createCommentLike.status === 200) && createCommentLike.data) {
             return createCommentLike.data;
         }

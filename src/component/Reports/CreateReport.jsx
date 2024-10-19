@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { Calendar } from 'primereact/calendar';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { Backdrop, CircularProgress } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,46 +9,32 @@ import CalendarIcon from '../../assets/images/calender_1x.png'
 import HTMLIcon from '../../assets/images/html1x.png'
 import TextIcon from "../../assets/images/text1x.png";
 
-
 import { Button } from '../../shared';
 
-import { assignMenteeColumns, assignMenteeRows, MenteeAssignColumns } from '../../mock';
-import DataTable from '../../shared/DataGrid';
 import SuccessTik from '../../assets/images/blue_tik1x.png';
 import CancelIcon from '../../assets/images/cancel1x.png'
 import { getAllCategories } from '../../services/programInfo';
 
-import { getMentees, getProgramDetails, updateProgram } from '../../services/userprograms';
-import { pipeUrls, programActionStatus, reportsStatus } from '../../utils/constant';
+import { reportsStatus } from '../../utils/constant';
 import { createReport, getProgramsByCategoryId, getReportProgramDetails } from '../../services/reportsInfo';
 import ToastNotification from '../../shared/Toast';
 import { dateTimeFormat } from '../../utils';
 import MuiModal from '../../shared/Modal';
 
 
-
-
-
 export default function CreateReport() {
     const navigate = useNavigate()
     const [searchParams] = useSearchParams();
 
-    const params = useParams();
-
     const dispatch = useDispatch()
-    const { programdetails, loading: programLoading, error, menteeList } = useSelector(state => state.userPrograms)
     const { category, loading: apiLoading } = useSelector(state => state.programInfo)
     const { categoryPrograms, loading: reportsLoading, programDetails, status } = useSelector(state => state.reports)
     const [reportFields, setReportFields] = useState(ReportFields)
-    const [dateFormat, setDateFormat] = useState({})
-    const [menteeAllList, setAllMenteeList] = useState([])
     const [notification, setNotification] = useState({ program: false })
     const [actionType, setActionType] = useState('')
     const [commonLoading, setCommonLoading] = useState(false)
-    const [disableField, setDisabledField] = useState(false)
     const [loading, setLoading] = useState(false)
 
-    const [updatedMemberColumn, setUpdatedMemberColumn] = useState(MenteeAssignColumns)
 
     const {
         register,
@@ -61,8 +46,6 @@ export default function CreateReport() {
     } = useForm();
 
     const onSubmit = (data) => {
-        console.log('Submit11', data)
-
         const apiData = {
             "category": parseInt(data.category),
             "program": parseInt(data.program),
@@ -71,7 +54,6 @@ export default function CreateReport() {
             "description": data.description,
             "action": data?.action || "submit"
         }
-
         dispatch(createReport(apiData))
     }
 
@@ -114,8 +96,6 @@ export default function CreateReport() {
                 end_date: dateTimeFormat(programDetails.end_date),
                 participated_mentees: programDetails.participated_mentees
             }
-
-            console.log('programDetails', programDetails, category, categoryPrograms)
             if (searchParams.has('cat_id') && searchParams.has('program_id')) {
                 payload = {
                     ...payload,
@@ -281,7 +261,6 @@ export default function CreateReport() {
                                                                     }}
                                                                     disabled={field.disabled}
                                                                     onChange={(e) => {
-                                                                        // console.log('dateField123', dateField)
                                                                         dropdownField.onChange(e)
                                                                         if (field.name === 'category') getProgramInfo(e.target.value)
                                                                         if (field.name === 'program') handleProgramData(e.target.value)

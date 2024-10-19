@@ -98,7 +98,6 @@ export default function ProgramDetails() {
 
     useEffect(() => {
         if (Object.keys(programdetails).length && !programLoading) {
-            console.log('programdetails.status', programdetails.status)
             const notAllowedCond = ['completed', 'yettoapprove', 'draft']
 
             if (!notAllowedCond.includes(programdetails.status)) {
@@ -125,40 +124,20 @@ export default function ProgramDetails() {
 
 
     useEffect(() => {
-        console.log('searchParams', searchParams)
         const programId = params.id;
-
-
         if (programId && programId !== '') {
             dispatch(getProgramDetails(programId))
             if (role === 'mentee') { dispatch(getMenteeJoinedInProgram({ id: programId })); }
-            // dispatch(updateProgram({ id: programId, status: programActionStatus.yettojoin }))
         }
-
     }, [params.id, role])
 
     const handleJoinProgram = async (programId) => {
-
         setLoading({ initial: true, join: false })
-
-        // if (role === 'mentee') {
-        //     // setLoading({ initial: true, join: false })
-        //     const joinProgramAction = await api.post('join_program', { id: programId });
-        //     if (joinProgramAction.status === 200 && joinProgramAction.data) {
-        //         setLoading({ initial: false, join: true })
-        //     }
-        // }
-
-        // if (role === 'mentor') {
         const joinProgramAction = await api.post('join_program', { id: programId });
         if (joinProgramAction.status === 200 && joinProgramAction.data) {
             setLoading({ initial: false, join: role === 'mentee' })
             if (role === 'mentor') { dispatch(updateProgram({ id: programId, status: programActionStatus.yettostart })); }
         }
-
-        // }
-        // if (role === 'mentor') setLoading({ initial: false, join: true })
-
     }
 
 

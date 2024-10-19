@@ -15,8 +15,8 @@ import FailedIcon from "../../../assets/images/cancel3x.png"
 
 import ProgramSteps from './ProgramsSteps'
 import { ProgramTabs, ProgramFields } from '../../../utils/formFields'
-import { createProgram, updateNewPrograms, createNewProgram, getAllCategories, getAllMaterials, getAllCertificates, getAllSkills, getAllMembers, createNewPrograms } from '../../../services/programInfo'
-import { CertificateColumns, MaterialColumns, MemberColumns, SkillsColumns, assignMenteeColumns, assignMenteeRows, certificateRows, createMaterialsRows, createSkillsRows } from '../../../mock';
+import { updateNewPrograms, getAllCategories, getAllMaterials, getAllCertificates, getAllSkills, getAllMembers, createNewPrograms } from '../../../services/programInfo'
+import { CertificateColumns, MaterialColumns, MemberColumns, SkillsColumns } from '../../../mock';
 import DataTable from '../../../shared/DataGrid';
 import { programStatus } from '../../../utils/constant';
 import MuiModal from '../../../shared/Modal'
@@ -27,7 +27,7 @@ export default function CreatePrograms() {
     const dispatch = useDispatch()
     const userInfo = useSelector(state => state.userInfo)
     const [loading, setLoading] = useState({ create: false, success: false })
-    const { programDetails, allPrograms, createdPrograms, category, materials, certificate, skills, members, loading: apiLoading, status } = useSelector(state => state.programInfo)
+    const { allPrograms, category, materials, certificate, skills, members, loading: apiLoading, status } = useSelector(state => state.programInfo)
     const [actionTab, setActiveTab] = useState('program_information')
     const [currentStep, setCurrentStep] = useState(1)
     const [stepData, setStepData] = useState({})
@@ -47,10 +47,7 @@ export default function CreatePrograms() {
 
     const handleTab = (key) => {
         const tabIndex = ProgramTabs.findIndex(tab => tab.key === key)
-        console.log('tabIndex', tabIndex, stepWiseData)
-        console.log(stepWiseData.hasOwnProperty(tabIndex + 1))
         if (stepWiseData.hasOwnProperty(tabIndex + 1) || stepWiseData.hasOwnProperty(tabIndex)) {
-            console.log(tabIndex)
             setCurrentStep(tabIndex + 1)
             setActiveTab(key)
         }
@@ -58,7 +55,6 @@ export default function CreatePrograms() {
 
     const handleNextStep = (data, stData) => {
         setStepWiseData(stData)
-        console.log('Next step', stepData, data)
         let u = { ...data }
         let fieldData = {
             ...stepData, ...data,
@@ -72,9 +68,9 @@ export default function CreatePrograms() {
             fieldData.group_chat_requirement = fieldData.group_chat_requirement === 'true'
             fieldData.individual_chat_requirement = fieldData.individual_chat_requirement === 'true'
             for (let a in fieldData) {
-                if (a === 'program_image' && logo.program_image) { console.log(logo); bodyFormData.append(a, logo.program_image); }
-                if (a === 'image' && logo.image) { console.log(logo); bodyFormData.append(a, logo.image); }
-                if (a === 'start_date' || a === 'end_date') { console.log(logo); bodyFormData.append(a, new Date(fieldData[a]).toISOString()); }
+                if (a === 'program_image' && logo.program_image) { bodyFormData.append(a, logo.program_image); }
+                if (a === 'image' && logo.image) { bodyFormData.append(a, logo.image); }
+                if (a === 'start_date' || a === 'end_date') { bodyFormData.append(a, new Date(fieldData[a]).toISOString()); }
                 else if (fiel.includes(a)) { bodyFormData.append(a, JSON.stringify(fieldData[a])) }
                 else bodyFormData.append(a, fieldData[a]);
             }
@@ -85,8 +81,6 @@ export default function CreatePrograms() {
                 status = 'draft'
             }
             setProgramApiStatus(status)
-
-            // console.log('bodyFormData', bodyFormData, fieldData)
             dispatch(createNewPrograms(bodyFormData))
         }
         else {
@@ -138,7 +132,6 @@ export default function CreatePrograms() {
     }
 
     const footerComponent = (props) => {
-        // console.log('proppp', props)
         return (
             <div className='flex gap-6 justify-center items-center py-4'>
                 <button onClick={() => setActionModal('')} className='py-3 px-6 w-[16%]'
@@ -203,9 +196,7 @@ export default function CreatePrograms() {
     }, [allPrograms])
 
     useEffect(() => {
-        // if (!category.length) {
         dispatch(getAllCategories())
-        // }
     }, [])
 
     useEffect(() => {
@@ -214,11 +205,9 @@ export default function CreatePrograms() {
 
 
     const handleModalSearch = (field) => {
-        // console.log('value', field.target.value)
         switch (field.target.name) {
             case 'learning_materials':
                 const material = [...materials].filter(material => material.name.toLowerCase().includes(field.target.value))
-                // console.log('filter', material)
                 setFormDetails({ ...formDetails, materials: material });
                 break;
             case 'skills':
@@ -289,7 +278,6 @@ export default function CreatePrograms() {
                         borderRadius: '3px'
                     }}
                         onClick={() => {
-                            console.log(params);
                             setViewDetailsInfo({ ...viewDetailsInfo, material: params.row });
                             setViewDetails({ material: true, skills: false, certificate: false })
                         }}>View Details</button>;
@@ -316,7 +304,6 @@ export default function CreatePrograms() {
                         borderRadius: '3px'
                     }}
                         onClick={() => {
-                            // console.log(params);
                             setViewDetailsInfo({ ...viewDetailsInfo, skills: params.row });
                             setViewDetails({ material: false, skills: true, certificate: false })
                         }}>View Details</button>;
@@ -343,7 +330,6 @@ export default function CreatePrograms() {
                         borderRadius: '3px'
                     }}
                         onClick={() => {
-                            // console.log(params);
                             setViewDetailsInfo({ ...viewDetailsInfo, certificate: params.row });
                             setViewDetails({ material: false, skills: false, certificate: true })
                         }}>View Details</button>;
@@ -383,13 +369,11 @@ export default function CreatePrograms() {
                 }
                 return field
             })
-            console.log('updateField', updateField, currentStepField)
             setProgramAllFields(fields)
         }
     }, [currentStep, role])
 
     useEffect(() => {
-        console.log('statusstatus', status)
         if (status === programStatus.create || status === programStatus.exist || status === programStatus.error) {
             setTimeout(() => {
                 dispatch(updateNewPrograms({ status: '' }))
@@ -470,7 +454,7 @@ export default function CreatePrograms() {
                 </div>
 
 
-                <MuiModal modalSize='lg' modalOpen={viewDetails.material} modalClose={() => { console.log('close'); setViewDetails(resetViewInfo) }} noheader>
+                <MuiModal modalSize='lg' modalOpen={viewDetails.material} modalClose={() => { setViewDetails(resetViewInfo) }} noheader>
                     <div className='px-5 py-5'>
                         <div className='flex justify-center flex-col gap-5  mt-4 mb-4'
                             style={{ border: '1px solid rgba(217, 228, 242, 1)', borderRadius: '10px', }}>

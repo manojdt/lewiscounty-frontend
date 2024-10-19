@@ -14,11 +14,10 @@ import DownloadIcon from '../../assets/images/download1x.png'
 import DeleteIcon from '../../assets/images/delete1x.png'
 import OverDeleteIcon from '../../assets/images/delete_1x.png'
 import CancelIcon from '../../assets/images/cancel1x.png'
-import { menteeColumns, menteeRow } from '../../mock';
 import { Button } from '../../shared';
 import { deleteReports, getAllReports } from '../../services/reportsInfo';
 import { useDispatch, useSelector } from 'react-redux';
-import { goalDataStatus, goalStatusColor, pipeUrls, reportAllStatus, reportsStatus, reportStatus, reportStatusColor } from '../../utils/constant';
+import { pipeUrls, reportAllStatus, reportsStatus, reportStatus, reportStatusColor } from '../../utils/constant';
 import { reportColumns } from '../../utils/formFields';
 import api from '../../services/api';
 
@@ -64,15 +63,12 @@ const Reports = () => {
 
     const handleClick = (event, data) => {
         setReportData({action: 'single', selectedItem: data})
-        // setSelectedItem(data)
         setAnchorEl(event.currentTarget);
     };
 
     const handleDeleteReport = async () => {
-        console.log('Sele', reportData)
         const ids = []
         reportData.selectedItem.forEach(rows => ids.push(rows.id))
-        console.log('ids', ids)
         const reportId = { ids: ids }
         dispatch(deleteReports(reportId))
     }
@@ -108,7 +104,6 @@ const Reports = () => {
             flex: 1,
             id: 11,
             renderCell: (params) => {
-                console.log('params', params)
                 return <>
                     <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleClick(e, [params.row])}>
                         <img src={MoreIcon} alt='MoreIcon' />
@@ -165,8 +160,6 @@ const Reports = () => {
 
     const handleSelectedRow = (row) => {
         setReportData({action: 'multiple', selectedItem: row})
-        // setSelectedRows(row)
-        // console.log('selected', row)
     }
 
     const handleDeleteSelectedRows = () => {
@@ -191,7 +184,6 @@ const Reports = () => {
     }
 
     useEffect(() => {
-        console.log('searchParams', searchParams)
         getReports()
     }, [searchParams])
 
@@ -203,21 +195,14 @@ const Reports = () => {
         }
     },[status])
 
-
-
-  
-
-
     return (
         <div className="reports px-9 py-9">
-
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                 open={deleteModal || loading}
             >
                 {
                     deleteModal &&
-
                     <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
 
                         <div style={{ border: '1px solid rgba(229, 0, 39, 1)', borderRadius: '15px' }} className='relative flex flex-col gap-2 justify-center 
@@ -259,10 +244,7 @@ const Reports = () => {
                 {
                     loading && <CircularProgress color="inherit" />
                 }
-
-
             </Backdrop>
-
 
             <div className='px-3 py-5' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
                 <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
@@ -287,7 +269,6 @@ const Reports = () => {
                 </div>
 
                 <div className='mx-5'>
-
                     <div className='flex gap-7 mb-6'>
                         {
                             requestBtns.map((actionBtn, index) =>

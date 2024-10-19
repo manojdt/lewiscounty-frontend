@@ -47,7 +47,6 @@ export default function CreateMeeting() {
 
 
     const timeFormat = (utcTimestamp) => {
-        console.log('utcTimestamp  --', utcTimestamp)
         let timeString = ''
         const t = utcTimestamp.toString().split(' ')
         if (t.length > 4) {
@@ -60,8 +59,7 @@ export default function CreateMeeting() {
 
    
     const todayDate = () => {
-        // console.log('customSelect', customSelect)
-
+       
         const date = new Date(customSelect.date);
         const year = date.getFullYear();
         const month = date.getMonth() + 1; // Months are zero-based
@@ -79,8 +77,7 @@ export default function CreateMeeting() {
     }
 
     const onSubmit = (data) => {
-        console.log('Form Submit', data)
-
+    
         let attendees = []
         data.attendees.forEach(attendee => {
             attendees.push(attendee.email)
@@ -103,7 +100,6 @@ export default function CreateMeeting() {
             date: todayDate()
         }
 
-        console.log('Apidata', apiData)
         dispatch(createCalendarEvent(apiData))
 
     }
@@ -150,8 +146,7 @@ export default function CreateMeeting() {
         setCustomSelect({ type: '', date: '', repeat_time: '', repeat_type: '', never: false })
     }
 
-    console.log('pppp', customSelect)
-
+ 
     const handleDate = (value) => {
         // resetSelectedDate()
         setCustomSelect({ type: '', date: new Date(), repeat_time: '', repeat_type: '', never: false })
@@ -177,7 +172,6 @@ export default function CreateMeeting() {
     }
 
     const handleDateClick = () => {
-        console.log('Click')
         document.querySelector('.p-datepicker')?.classList.add('calendar-date')
     }
 
@@ -215,7 +209,7 @@ export default function CreateMeeting() {
 
     }, [])
 
-    const handleAction = () => { console.log('Handle'); setMentalModal(true) }
+    const handleAction = () => { setMentalModal(true) }
 
     return (
         <div className="dashboard-content px-8 mt-10">
@@ -432,7 +426,6 @@ export default function CreateMeeting() {
 
                                                                 {
                                                                     menteeAllList && menteeAllList.slice(0, 6).map((popupfield, index) => {
-                                                                        console.log('popupfield', popupfield)
                                                                         return (
                                                                             <>
                                                                                 <p className='flex items-center gap-1'>
@@ -530,7 +523,6 @@ export default function CreateMeeting() {
                                                                         {...dateField}
                                                                         value={dateFormat[field.name]}
                                                                         onChange={(e) => {
-                                                                            console.log('dateField123', e.value)
                                                                             dateField.onChange(e)
                                                                             setDateFormat({ ...dateFormat, [field.name]: e.value })
                                                                         }}

@@ -38,16 +38,11 @@ export function CustomFooterStatusComponent(props) {
 
 
 function Pagination(props) {
-    console.log('Pga', props)
     const { page, onPageChange, className, count, rowsPerPage } = props
     const apiRef = useGridApiContext();
     const pageCount = useGridSelector(apiRef, gridPageCountSelector);
 
     const theme = useTheme();
-
-    console.log('mxxxx', pageCount)
-
-    // const { count, page, rowsPerPage, onPageChange } = props;
 
     const handleFirstPageButtonClick = (
         event
@@ -102,36 +97,19 @@ function Pagination(props) {
 }
 
 function CustomPagination(props) {
-    // console.log('nn', props)
-    // return <div className='custom-pagination w-full relative'> <GridPagination ActionsComponent={TablePaginationActions} {...props} /></div>;
     return <div className='flex h-[90px] mx-2 custom-pagination w-full relative'> <TablePaginationActions {...props} /></div>;
 }
 
 function TablePaginationActions(props) {
     const theme = useTheme();
-    const { onPageChange } = props;
-
-    // console.log('propsuu', props)
-
+    const { onPageChange } = props;  
     const apiRef = useGridApiContext();
-    // const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
-    // const pageCount = useGridSelector(apiRef, gridPageCountSelector);
-    // const pageselect = useGridSelector(apiRef, gridPageSelector);
-    // const pagesize = useGridSelector(apiRef, gridPageSizeSelector);
     const paginationDetails = useGridSelector(apiRef, gridPaginationSelector);
     const meta = useGridSelector(apiRef, gridPaginationMetaSelector);
-
-
-
-    // console.log('apiRef', apiRef)
-    // console.log('sss', paginationDetails)
-    // console.log('meta', meta)
-
 
     const handleBackButtonClick = (
         event
     ) => {
-        // onPageChange(event, paginationDetails.paginationModel.page - 1);
         apiRef.current.setPage(paginationDetails.paginationModel.page - 1);
         apiRef.current.setPageSize(paginationDetails.paginationModel.pageSize)
     };
@@ -139,22 +117,16 @@ function TablePaginationActions(props) {
     const handleNextButtonClick = (
         event
     ) => {
-        // onPageChange(event, paginationDetails.paginationModel.page + 1);
         apiRef.current.setPage(paginationDetails.paginationModel.page + 1);
         apiRef.current.setPageSize(paginationDetails.paginationModel.pageSize)
         
     };
 
     const handlePerPage = (event) => {
-        // console.log(event.target.value)
-        console.log('page',event.target.value)
         apiRef.current.setPageSize(event.target.value)
     }
 
-
     return (
-
-
         <div className='w-full flex items-center justify-between'>
             <div className={`flex ${paginationDetails.paginationModel.page >= 1 ? 'w-[60%]' : 'w-[55%]'} justify-between items-center`}>
                 <div className='flex gap-2'>
@@ -232,7 +204,6 @@ function TablePaginationActions(props) {
 
 export default function DataTable({ rows, columns, footerAction, footerComponent, selectedAllRows = [],
     hideCheckbox = false, hideFooter = false, handleSelectedRow = undefined, height = 600 }) {
-    // console.log('rows', rows)
     const [selectedRows, setSelectedRows] = useState([])
     const [selectedIds, setSelectedIds] = useState([])
 
@@ -244,17 +215,14 @@ export default function DataTable({ rows, columns, footerAction, footerComponent
 
     const handleRowSelection = (ids) => {
         const selected = [...rows].filter(row => ids.includes(row.id || row.categories_id))
-        // console.log('se', selected)
         setSelectedIds(ids)
         setSelectedRows(selected)
         if (handleSelectedRow) handleSelectedRow(selected)
     }
 
     useEffect(() => {
-        // console.log('selectedAllRowsselectedAllRows', selectedAllRows)
         const ids = []
         selectedAllRows.forEach(row => ids.push(row.id))
-        // console.log('idsids', ids)
         setSelectedIds(ids)
     }, [])
 

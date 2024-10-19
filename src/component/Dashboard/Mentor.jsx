@@ -3,20 +3,14 @@ import { Backdrop, CircularProgress } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import RecentRequests from "./RecentRequests";
-import TeamGroups from "./TeamGroups";
 import RecentActivities from "./RecentActivities";
 import ViewImpression from "./ViewImpression";
-import ProgramPerformance from "./ProgramPerformance";
 import Programs from "./Programs";
-import MediaPost from "./MediaPost";
-import TrackInfo from "./TrackInfo";
 import Invite from "./Invite";
-import { empty, programActionStatus, programStatus, statusAction } from "../../utils/constant";
+import { empty, programActionStatus, programStatus } from "../../utils/constant";
 import { chartProgramList, getProgramCounts, getUserPrograms, updateProgram } from "../../services/userprograms";
-import DashboardCard from "../../shared/Card/DashboardCard";
-import { pipeUrls, programMenus } from '../../utils/constant';
+import { pipeUrls } from '../../utils/constant';
 import { useWindowDimentions } from "../../hooks/windowDimentions";
-import UserImage from "../../assets/images/user.jpg";
 import './dashboard.css';
 import UserInfoCard from "./UserInfoCard";
 import ProgramCard from "../../shared/Card/ProgramCard";
@@ -30,54 +24,12 @@ export const Mentor = () => {
     const { programRequest } = useSelector(state => state.requestList);
     const userpragrams = useSelector(state => state.userPrograms)
     const userInfo = useSelector(state => state.userInfo)
-    const [programMenusList, setProgramMenusList] = useState([])
     const [chartList, setChartList] = useState([])
-    const [currentPrograms, setCurrentPrograms] = useState({ title: '', page: '', programs: [] })
-    const [allprogramsList, setAllProgramsList] = useState({ allPrograms: [], yettoplan: [], planned: [], inprogress: [], bookmarked: [], completed: [] })
-
-    const role = userInfo.data.role
-
-    console.log('status mentor', status)
-
-    const list = {
-        allPrograms: allPrograms,
-        yettoplan: allPrograms.filter(program => program.status === programStatus.yetToPlan),
-        planned: allPrograms.filter(program => program.status === programStatus.planned),
-        inprogress: allPrograms.filter(program => program.status === programStatus.inProgress),
-        bookmarked: allPrograms.filter(program => program.status === programStatus.bookmarked),
-        completed: allPrograms.filter(program => program.status === programStatus.completed),
-    }
-
-    const data =
-        [
-            { title: 'Ongoing Programs', value: 40, color: '#1D5BBF' },
-            { title: 'Completed', value: 25, color: '#00AEBD' },
-            { title: 'Abort Programs', value: 35, color: '#FEA7BB' }
-        ];
-
 
     const handlePerformanceFilter = (e) => {
         const res = e?.target?.value || "date"
         dispatch(chartProgramList(res))
     }
-
-    const handleDetails = () => {
-        console.log('handleDetails')
-    }
-
-
-    // useEffect(() => {
-    //     const programMenu = [...programMenus('dashboard')].filter(men => men.for.includes(role)).map(menu => {
-    //         if (menu.status === 'all') {
-    //             return { ...menu, count: userpragrams.totalPrograms }
-    //         }
-    //         if (statusAction.includes(menu.status)) {
-    //             return { ...menu, count: userpragrams.statusCounts[menu.status] }
-    //         }
-    //         return menu
-    //     })
-    //     setProgramMenusList(programMenu)
-    // }, [userpragrams])
 
     useEffect(() => {
         handlePerformanceFilter()
@@ -167,11 +119,8 @@ export const Mentor = () => {
         }
     }
 
-    console.log('userpragrams', userpragrams)
-
     return (
         <>
-
             <div className="dashboard-content px-8 mt-10">
                 <Backdrop
                     sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -197,8 +146,6 @@ export const Mentor = () => {
                     </div>
 
                     <div className="programs-list">
-                        {/* <div className="col-span-4"> */}
-
                         {
                             (searchParams.get("type") === 'yettojoin' || searchParams.get("type") === 'planned' || (searchParams.get("type") === null && searchParams.get("is_bookmark") === null)) &&
                             <ProgramCard
@@ -209,7 +156,6 @@ export const Mentor = () => {
                                 programs={userpragrams.yettojoin}
                             />
                         }
-
 
                         {
                             searchParams.get("type") === 'yettostart' &&
@@ -233,7 +179,7 @@ export const Mentor = () => {
                             />
                         }
 
-{
+                        {
                             searchParams.get("type") === 'planned' &&
                             <ProgramCard
                                 title="PLanned Programs"
@@ -243,7 +189,6 @@ export const Mentor = () => {
                                 programs={userpragrams.planned}
                             />
                         }
-
 
                         {
                             searchParams.get("is_bookmark") === 'true' &&
@@ -268,16 +213,12 @@ export const Mentor = () => {
                         }
 
 
-                        {/* <div className="root-layer lg:gap-8 pt-6"> */}
                         <div className="root-layer grid grid-cols-2 gap-8 pt-6">
                             <div className="layer-first flex flex-col sm:gap-6 gap-4">
-                                {/* <ProgramPerformance data={chartList} total={userpragrams?.chartProgramDetails?.total_program_count || "0%"} handleFilter={handlePerformanceFilter} handleDetails={handleDetails} /> */}
                                 <RecentRequests data={programRequest} />
-                                {/* <TrackInfo /> */}
                             </div>
 
                             <div className="layer-second flex flex-col gap-8">
-                                {/* <MediaPost /> */}
                                 <Programs />
                             </div>
                         </div>

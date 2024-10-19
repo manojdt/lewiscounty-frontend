@@ -221,9 +221,7 @@ const createMaterialRow = () => {
     for (let a = 1; a <= 20; a++) {
         data.push(materialData(`Materials Name ${a}`, 'Video.mp4', '5MB', 3287263))
     }
-
-    // console.log('data', data)
-    return data
+  return data
 }
 
 export const createMaterialsRows = createMaterialRow()
@@ -344,8 +342,6 @@ const createSkillsRow = () => {
     for (let a = 1; a <= 20; a++) {
         data.push(skillData(`Skills Name ${a}`, 'test', 3287263))
     }
-
-    // console.log('data', data)
     return data
 }
 
@@ -701,7 +697,6 @@ export const mentorTaskColumns = [{
     flex: 1,
     id: 2,
     renderCell: (params) => {
-        console.log('paramsppppp', params)
         return <>
             <div className='cursor-pointer flex items-center h-full relative'>
                 <span className='w-[80px] flex justify-center h-[30px] px-3'
