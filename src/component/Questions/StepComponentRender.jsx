@@ -19,15 +19,12 @@ const StepComponenRender = ({ stepFields, currentStep, handleNextStep, handlePre
     const [checkBoxValue, setCheckBoxValue] = useState('')
 
     const onSubmit = (data) => {
-        // console.log('Next Submit', data)
         handleNextStep(data)
-        console.log(data)
         reset()
     }
 
     const previousStep = () => {
         const { first_name, email, ...rest } = getValues()
-        // console.log('getValues', rest)
         handlePreviousStep(rest)
     }
 
@@ -47,9 +44,7 @@ const StepComponenRender = ({ stepFields, currentStep, handleNextStep, handlePre
 
     const handleRadioBox = (e) => {
         const value = e.target.value;
-        console.log('val', typeof value)
         if (value === 'true') {
-            console.log('if')
             register('mentor_exp_desc', {
                 required: "This field is required",
             })
@@ -61,7 +56,6 @@ const StepComponenRender = ({ stepFields, currentStep, handleNextStep, handlePre
         setCheckBoxValue(e.target.value)
     }
 
-
     useEffect(() => {
         const fName = [];
         const f = {}
@@ -71,7 +65,6 @@ const StepComponenRender = ({ stepFields, currentStep, handleNextStep, handlePre
         }
         reset(f)
     }, [stepFields, stepData])
-
 
 
     return (
@@ -139,13 +132,11 @@ const StepComponenRender = ({ stepFields, currentStep, handleNextStep, handlePre
                                                     field.type === 'date' ?
 
                                                         <div className='relative'>
-                                                            {/* <Calendar value={date} onChange={(e) => setDate(e.value)} showTime hourFormat="12" /> */}
                                                             <Calendar
                                                                 className='calendar-control input-bg'
                                                                 {...dateField}
                                                                 value={dateFormat[field.name]}
                                                                 onChange={(e) => {
-                                                                    // console.log('dateField123', dateField)
                                                                     dateField.onChange(e)
                                                                     setDateFormat({ ...dateFormat, [field.name]: e.value })
                                                                 }}
@@ -171,7 +162,6 @@ const StepComponenRender = ({ stepFields, currentStep, handleNextStep, handlePre
                                                                 <>
                                                                     <div className="flex items-center me-4">
                                                                         {
-                                                                            // const firstName = register('firstName', { required: true })
                                                                             field.options.map((option, index) => {
                                                                                 return (
                                                                                     <div className="flex items-center me-4" key={index}>
@@ -185,7 +175,6 @@ const StepComponenRender = ({ stepFields, currentStep, handleNextStep, handlePre
                                                                                                 handleRadioBox(e);
                                                                                             }}
                                                                                             value={option.key}
-                                                                                        // {...register(field.name, field.inputRules)}
                                                                                         />
                                                                                         <label className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{option.value}</label>
                                                                                     </div>
@@ -207,9 +196,7 @@ const StepComponenRender = ({ stepFields, currentStep, handleNextStep, handlePre
                                                                     <>
                                                                         <div className="flex items-center me-4">
                                                                             {
-                                                                                // const firstName = register('firstName', { required: true })
                                                                                 field.options.map((option, index) => {
-                                                                                    console.log('checkbox', checkbox)
                                                                                     return (
                                                                                         <div className="flex items-center me-4" key={index}>
                                                                                             <input type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100
@@ -223,7 +210,6 @@ const StepComponenRender = ({ stepFields, currentStep, handleNextStep, handlePre
                                                                                                 }}
                                                                                                 value={option.key}
                                                                                                 checked={checkBoxValue === option.key}
-                                                                                            // {...register(field.name, field.inputRules)}
                                                                                             />
                                                                                             <label className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{option.value}</label>
                                                                                         </div>

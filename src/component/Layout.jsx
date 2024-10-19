@@ -11,6 +11,7 @@ import ProgramRequestIcon from '../assets/icons/ProgramRequest.svg'
 import FeedIcon from '../assets/icons/Feed.svg'
 import TaskIcon from '../assets/icons/TaskMenu.svg'
 import GoalIcon from '../assets/icons/GoalMenu.svg'
+import DiscussionIcon from '../assets/icons/discussionIcon.svg'
 
 export default function Layout() {
   const navigate = useNavigate();
@@ -19,7 +20,6 @@ export default function Layout() {
 
   const { pathname } = location
   const role = userInfo.data.role || ''
-  // console.log('location', location)
 
   // useEffect(() => {
   //   if (userInfo.data.role === 'fresher') { navigate('/login-type'); }
@@ -60,6 +60,13 @@ export default function Layout() {
   let moreitems = [
     {
       label: <div className='flex gap-4 items-center'>
+        <img src={DiscussionIcon} alt="DiscussionIcon" />
+        <p>Discussions</p>
+      </div>,
+      command: () => navigate('/discussions')
+    },
+    {
+      label: <div className='flex gap-4 items-center'>
         <img src={FeedbackIcon} alt="FeedbackIcon" />
         <p>Feedback</p>
       </div>,
@@ -97,7 +104,7 @@ export default function Layout() {
 
 
   const notValidUser = (userInfo) => {
-    if(Object.keys(userInfo?.data).length && !userInfo?.data?.is_registered) return true
+    if (Object.keys(userInfo?.data).length && !userInfo?.data?.is_registered) return true
   }
 
   useEffect(() => {
@@ -112,7 +119,7 @@ export default function Layout() {
     <div>
       <Navbar />
       <div className="secondary-menu py-8" style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)' }}>
-        <ul style={{ gap:'40px'}} className="flex flex-col justify-center items-center p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 ">
+        <ul style={{ gap: '40px' }} className="flex flex-col justify-center items-center p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 ">
           <li className={`${pathname === '/dashboard' ? 'dashboard-menu-active' : ''}`}>
             <span onClick={() => navigate('/dashboard')} className="block py-2 px-3 rounded md:p-0 cursor-pointer" aria-current="page">Dashboard</span>
           </li>
@@ -143,11 +150,11 @@ export default function Layout() {
 
 
           <li className={`${pathname === '/all-request' ? 'dashboard-menu-active' : ''}`}>
-            <span onClick={() => navigate('/all-request')} className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer">Request</span>
+            <span onClick={() => navigate('/all-request')} className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer">{role !== 'admin' ? 'My ' : 'Service '}Request</span>
           </li>
 
 
-          <li>
+          {/* <li>
 
             <div className="relative inline-block text-left">
               <div className='drodown'>
@@ -165,16 +172,22 @@ export default function Layout() {
               </div>
 
             </div>
+          </li> */}
+
+          <li className={`${pathname === '/mentee-tasks' || pathname === '/mentor-tasks' ? 'dashboard-menu-active' : ''}`}>
+            <span onClick={() => navigate(role === 'mentee' ? '/mentee-tasks' : '/mentor-tasks')} className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer">Task</span>
           </li>
 
-
+          <li className={`${pathname === '/goals' ? 'dashboard-menu-active' : ''}`}>
+            <span onClick={() => navigate('/goals')} className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer">Goals</span>
+          </li>
 
           <li className={`${pathname === '/calendar' ? 'dashboard-menu-active' : ''}`}>
             <span onClick={() => navigate('/calendar')} className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer">Calendar</span>
           </li>
-          <li className={`${pathname === '/discussions' ? 'dashboard-menu-active' : ''}`}>
+          {/* <li className={`${pathname === '/discussions' ? 'dashboard-menu-active' : ''}`}>
             <span onClick={() => navigate('/discussions')} className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer">Discussions</span>
-          </li>
+          </li> */}
           <li>
             <div className="relative inline-block text-left">
               <div>

@@ -42,7 +42,6 @@ const useTimer = () => {
     }
   }, [timer.hours, timer.minutes, timer.seconds]);
 
-  console.log('fff');
 
   const startTimer = (hours = timer.hours, minutes = timer.minutes, seconds = timer.seconds) => {
     setStartTime(true)
@@ -54,7 +53,6 @@ const useTimer = () => {
   }
 
   const loadTime = (hours, minutes, seconds) => {
-    console.log('load', hours, minutes, seconds)
     setTimer({hours, minutes, seconds})
   }
 

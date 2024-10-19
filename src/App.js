@@ -123,7 +123,6 @@ function App() {
 
 
           <Route path="/discussions" element={<Discussions />} />
-          <Route path="/discussion/:id" element={<DiscussionDetails />} />
 
           <Route path="/mentor-profile/:id" element={<MentorProfile />} />
 

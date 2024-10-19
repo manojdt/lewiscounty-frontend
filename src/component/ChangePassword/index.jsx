@@ -28,8 +28,6 @@ export const ChangePassword = () => {
   } = useForm();
 
   const onSubmit = (data) => {
-    console.log(data);
-    console.log('errors', errors)
     const { new_password, confirm_password } = data
     if (new_password !== '' && confirm_password !== '' && new_password !== confirm_password) {
       setError("confirm_password", {
@@ -50,9 +48,6 @@ export const ChangePassword = () => {
       navigate('/')
     }
   }, [userInfo])
-
-
-  console.log('mmm', errors)
 
   return (
     <div className="h-full">

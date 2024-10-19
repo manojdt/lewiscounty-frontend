@@ -56,7 +56,6 @@ export const Login = () => {
 
   const handleRedirect = () => {
     dispatch(updateInfo())
-    console.log('Redirect', userData)
     if (userData.data.role === 'fresher') navigate("/login-type");
     else if (userData.data.is_registered) navigate("/dashboard")
     else navigate("/questions");
@@ -66,7 +65,6 @@ export const Login = () => {
     const rememberme = localStorage.getItem('rememberme')
     const email = localStorage.getItem('useremail')
     const password = localStorage.getItem('userpassword')
-    console.log('rememberme', rememberme, typeof rememberme)
     dispatch(resetUserInfo())
     if (localStorage.getItem('rememberme') === 'true') {
       setRememberPassword(true)

@@ -1379,7 +1379,7 @@ export const AboutProgramFields = [{
   {
     type: "popup-input",
     name: "skills",
-    label: "Skills Gain",
+    label: "Skills Gained",
     fieldtype: "text",
     placeholder: "Multiple Skills added",
     inputRules: {
@@ -1418,7 +1418,7 @@ export const AboutProgramFields = [{
 export const ProgramOutcomesFields = [{
     type: "textbox",
     name: "benefits",
-    label: "Benefits",
+    label: "Outcome",
     placeholder: "Enter this about program details",
     inputRules: {
       required: "This field is required",

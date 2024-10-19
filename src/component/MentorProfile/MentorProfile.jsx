@@ -5,7 +5,6 @@ import Location from "../../assets/images/Locationcolour1x.png";
 import Linked from "../../assets/images/linked-in1x.png";
 import File from "../../assets/images/html1x.png";
 import Cancel from "../../assets/images/cancel-colour1x.png";
-import Search from "../../assets/images/search1x.png";
 import Male from "../../assets/images/male-profile1x.png";
 import SearchIcon from "../../assets/icons/search.svg";
 import CancelIcon from "../../assets/images/cancel1x.png";
@@ -35,8 +34,6 @@ import DataTable from "../../shared/DataGrid";
 import { categoryColumns } from "../../mock";
 
 import { getProfileInfo } from "../../services/userList";
-import moment from "moment/moment";
-import Programs from "../Dashboard/Programs";
 import { programFeeds, recentRequest } from "../../utils/mock";
 import ToastNotification from "../../shared/Toast";
 import { dateFormat } from "../../utils";
@@ -59,12 +56,9 @@ function MentorProfile() {
     selectedItem: [],
   });
   const navigate = useNavigate();
-  console.log(mentorProfile, "profile");
   const { userDetails } = useSelector((state) => state.userList);
-  console.log(userDetails, "userInfo");
   const { categoryList } = useSelector((state) => state.requestList);
   const { id } = useParams();
-  console.log(id, "location");
   const dispatch = useDispatch();
   const fetchMentoProfile = async () => {
     if (id) {
@@ -111,15 +105,17 @@ function MentorProfile() {
   const handleCloseCategoryPopup = () => {
     setCategoryPopup({ show: false, selectedItem: [] });
   };
+
   const handleMemberAcceptRequest = () => {
     dispatch(getCategoryList())
     setCategoryPopup({ show: true, selectedItem: [] });
   };
+
   useEffect(() => {
     fetchMentoProfile();
   }, []);
+
   const handleSelectedItems = (selectedInfo) => {
-    console.log(selectedInfo);
     const categoryId = [];
     let data = { ...categoryPopup };
     if (selectedInfo.length) {
@@ -154,7 +150,6 @@ function MentorProfile() {
         </button>
         <button
           onClick={() => {
-            console.log(props);
             handleSelectedItems(props.selectedRows);
           }}
           className="text-white py-3 px-6 w-[16%]"

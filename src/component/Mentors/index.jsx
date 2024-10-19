@@ -101,7 +101,6 @@ export const Mentors = () => {
             flex: 1,
             id: 6,
             renderCell: (params) => {
-                console.log('params', params)
                 return <>
                     <div className='cursor-pointer flex items-center h-full' onClick={(event) => handleClick(event, params.row)}>
                         <img src={MoreIcon} alt='MoreIcon' />

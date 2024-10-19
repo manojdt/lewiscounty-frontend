@@ -25,7 +25,6 @@ export default function Certificate() {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const [seletedItem, setSelectedItem] = useState({})
-    console.log(certificatesList, certificateHTML, "cer")
     const role = userInfo.data.role
     const dispatch = useDispatch()
     const handleSearch = (value) => {
@@ -39,7 +38,6 @@ export default function Certificate() {
         handleClose()
     }
     const handleMoreClick = (event, data) => {
-        console.log('more')
         setSelectedItem(data)
         setAnchorEl(event.currentTarget);
     };
@@ -86,7 +84,6 @@ export default function Certificate() {
             flex: 1,
             id: 4,
             renderCell: (params) => {
-                console.log('params', params)
                 return <>
                     <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleMoreClick(e, params.row)}>
                         <img src={MoreIcon} alt='MoreIcon' />

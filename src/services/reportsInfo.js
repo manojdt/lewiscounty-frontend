@@ -87,7 +87,6 @@ export const updateReportDetails = createAsyncThunk(
 export const deleteReports = createAsyncThunk(
     "deleteReports",
     async (data) => {
-        console.log('Delete---', data)
         const deleteReport = await api.delete('reports/delete-report', { data: data });
         if (deleteReport.status === 200 && deleteReport.data) {
             return deleteReport.data;

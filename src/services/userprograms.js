@@ -18,15 +18,12 @@ export const getUserPrograms = createAsyncThunk(
         }
         const queryParams = updateQuery && Object.keys(updateQuery).length ? `?${updateQuery.type}=${updateQuery.value}&limit=6` : '?limit=6'
         const getUserProgram = await api.get(`fetch_program${queryParams}`);
-        console.log('getUserProgram', getUserProgram)
         if (getUserProgram.status === 200 && getUserProgram.data) {
-            console.log('iddd')
             const response = {
                 ...getUserProgram.data,
                 filterType: updateQuery?.type || '',
                 filterValue: updateQuery?.value || ''
             }
-            console.log('response', response)
             return response;
         }
         return getUserProgram;
@@ -34,14 +31,11 @@ export const getUserPrograms = createAsyncThunk(
 );
 
 
-
 export const updateProgram = createAsyncThunk(
     "updateProgram",
     async (data) => {
-        console.log('data', data)
         const updateUserProgram = await api.post("update_program", data);
         if (updateUserProgram.status === 200 && updateUserProgram.data) {
-            console.log('updateUserProgram', updateUserProgram)
             let status = ''
             if (data.status && data.status !== '') {
                 status = data.status
@@ -108,12 +102,6 @@ export const getProgramMentees = createAsyncThunk(
 export const assignProgramTask = createAsyncThunk(
     "assignProgramTask",
     async (data) => {
-        // const query = "?status=assign"
-        // api.interceptors.request.use(function (config) {
-        //     config.headers["Content-Type"] = "application/json";
-        //     return config;
-        // });
-
         const headers = {
             'Content-Type': 'application/json',
         }
@@ -140,7 +128,6 @@ export const getMenteeDetails = createAsyncThunk(
 );
 
 
-
 export const getMenteePrograms = createAsyncThunk(
     "getMenteePrograms",
     async (query) => {
@@ -150,31 +137,22 @@ export const getMenteePrograms = createAsyncThunk(
             queryString.value = 'planned';
         }
 
-
         if (queryString.value === 'yettostart') {
             queryString.value = 'recently_joined';
-        }
-
-        // if (queryString.value === 'planned') {
-        //     queryString.value = 'yettojoin';
-        // }
-        
+        }     
 
         if (queryString.value === 'inprogress') {
             queryString.value = 'ongoing';
         }
 
-
         const queryParams = queryString && Object.keys(queryString).length ? `?${queryString.type}=${queryString.value}&limit=9` : '?limit=9'
         const getUserProgram = await api.get(`mentee_program/all${queryParams}`);
-        console.log('getMenteePrograms', getUserProgram)
         if (getUserProgram.status === 200 && getUserProgram.data) {
             const response = {
                 ...getUserProgram.data,
                 filterType: queryString?.type || '',
                 filterValue: queryString?.value || ''
             }
-            console.log('response', response)
             return response;
         }
         return getUserProgram;
@@ -182,12 +160,10 @@ export const getMenteePrograms = createAsyncThunk(
 );
 
 
-
 export const getMenteeJoinedInProgram = createAsyncThunk(
     "getMenteeJoinedInProgram",
     async (data) => {
         const menteeJoinedProgram = await api.post('mentee_program/enroll_check', data);
-        console.log('menteeJoinedProgram', menteeJoinedProgram)
         if (menteeJoinedProgram.status === 200 && menteeJoinedProgram.data) {
             return menteeJoinedProgram.data;
         }
@@ -199,7 +175,6 @@ export const menteeJoinProgram = createAsyncThunk(
     "menteeJoinProgram",
     async (data) => {
         const menteeJoinProgram = await api.post('mentee_program/join_program', data);
-        console.log('menteeJoinProgram', menteeJoinProgram)
         if (menteeJoinProgram.status === 200 && menteeJoinProgram.data) {
             return menteeJoinProgram.data;
         }
@@ -212,7 +187,6 @@ export const getMenteeProgramCount = createAsyncThunk(
     "getMenteeProgramCount",
     async () => {
         const menteeProgramCount = await api.get('mentee_program/count_program');
-        console.log('menteeProgramCount', menteeProgramCount)
         if (menteeProgramCount.status === 200 && menteeProgramCount.data) {
             return menteeProgramCount.data;
         }
@@ -259,12 +233,10 @@ export const submitProgramTaskDetails = createAsyncThunk(
         return submitTask;
     }
 );
+
 export const chartProgramList = createAsyncThunk(
     "chartProgramList",
     async (data) => {
-
-
-
         const chartProgram = await api.get(`program-performance?filter_by=${data}`);
         if (chartProgram.status === 200 && chartProgram.data) {
             return chartProgram.data;
@@ -272,9 +244,6 @@ export const chartProgramList = createAsyncThunk(
         return chartProgram;
     }
 );
-
-
-
 
 
 export const updateUserProgramInfo = createAction('update/userProgramInfo')

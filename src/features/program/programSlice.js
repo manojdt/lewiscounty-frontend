@@ -113,9 +113,7 @@ export const programSlice = createSlice({
         };
       })
       .addCase(createNewPrograms.fulfilled, (state, action) => {
-        console.log("action", action);
         const responseStatus = action.payload.status;
-        console.log("responseStatus", responseStatus, action.payload);
         const status =
           responseStatus === 200
             ? programStatus.exist
@@ -125,7 +123,6 @@ export const programSlice = createSlice({
             ? programStatus.create
             : "";
 
-        console.log("status", status);
         return {
           ...state,
           status: status,

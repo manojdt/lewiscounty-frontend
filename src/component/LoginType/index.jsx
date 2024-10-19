@@ -17,7 +17,6 @@ export const LoginType = () => {
         if (loginType === '') setError(true)
         if (loginType !== '') {
             setError(false)
-            console.log(loginType);
             dispatch(updateUserRole({ role: loginType }))
         }
     };
@@ -29,14 +28,12 @@ export const LoginType = () => {
         }
 
         if (userInfo?.data?.role  && userInfo?.data?.role !== 'fresher') {
-            console.log('pp', userInfo.data.role)
             if (userInfo.data.is_registered) { navigate('/dashboard') }
             else navigate('/questions')
         }
     }, [userInfo])
 
-    console.log('loginType', loginType, error, userInfo)
-
+   
     return (
         <div className="h-full">
             <div className="flex flex-wrap h-full">
@@ -44,7 +41,6 @@ export const LoginType = () => {
                     <Backdrop
                         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                         open={userInfo.loading}
-
                     >
                         <CircularProgress color="inherit" />
                     </Backdrop>

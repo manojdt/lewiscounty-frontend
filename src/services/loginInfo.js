@@ -16,7 +16,6 @@ export const userAccountCreate = createAsyncThunk(
       localStorage.setItem("access_token", userCreate.data.access);
       localStorage.setItem("refresh_token", userCreate.data.refresh);
       let decoded = jwtDecode(userCreate.data.access);
-      console.log('Create Token', decoded)
       return { status: userCreate.status, userResponse: decoded };
     }
 
@@ -49,18 +48,14 @@ export const userAccountLogin = createAsyncThunk("userLogin", async (data) => {
       if(decoded?.userinfo?.approve_status === 'new'){
         return {}
       }
-
       localStorage.setItem("access_token", userlogin.data.access);
       localStorage.setItem("refresh_token", userlogin.data.refresh);
-    
-      console.log('Login Token', decoded)
       return decoded;
     }
     if (userlogin.status === 401) {
       userlogin.error = 'Invalid Credentials'
     }
   }
-  console.log('userlogin', userlogin)
   return userlogin
 });
 
@@ -72,10 +67,8 @@ export const userAccessToken = createAsyncThunk("refreshUserToken", async (data)
     localStorage.setItem("access_token", userToken.data.access);
     localStorage.setItem("refresh_token", userToken.data.refresh);
     let decoded = jwtDecode(userToken.data.access);
-    console.log('decoded', decoded)
     return decoded;
   }
-  console.log('access token', userToken)
   return userToken
 });
 
@@ -99,7 +92,6 @@ export const forgotPassword = createAsyncThunk(
   "userTriggerOtp",
   async (data) => {
     const triggerOtp = await api.post("trigger-otp", data);
-    console.log('triggerOtp', triggerOtp)
     if (triggerOtp.status === 200) {
       return triggerOtp;
     }
@@ -124,7 +116,6 @@ export const validateOTP = createAsyncThunk(
   "userValidateOTP",
   async (data) => {
     const validateOTP = await api.post("validate-otp", data);
-    console.log('validateOTP', validateOTP)
     if (validateOTP.status === 200) {
       return validateOTP;
     }

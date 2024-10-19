@@ -85,7 +85,6 @@ export const TaskDetails = () => {
             setValue('file', '');
         }
         setTaskImages(taskDocs)
-        console.log('Delete')
     }
 
     const onSubmit = (data) => {
@@ -105,14 +104,9 @@ export const TaskDetails = () => {
                 status: 'completed',
                 ...files
             }
-            console.log('Submit Task', data, payload)
-
             dispatch(submitProgramTaskDetails(payload))
         }
-
-
     }
-
 
     useEffect(() => {
         if (status === programStatus.tasksubmitted) {
@@ -126,9 +120,7 @@ export const TaskDetails = () => {
     useEffect(() => {
         let allTaskDocuments = { img: [], video: [], doc: [] }
         if (taskImages.length) {
-            console.log('ppppppppppp')
             taskImages.forEach((img) => {
-                console.log('Images', img)
                 const fileName = img[0]?.name;
                 const fileNameSplit = fileName?.split('.')
                 const fileExtensionName = fileNameSplit?.pop().toLowerCase()
@@ -162,14 +154,7 @@ export const TaskDetails = () => {
         }
     }, [task_submission])
 
-    // console.log('paaa', params)
-
-    console.log('taskImages', taskImages)
-
-    console.log('taskSolutionDocs', taskSolutionDocs)
-
-    console.log('Error', errors)
-
+  
     const imageField = {
         ...register('file', {
             required: "This field is required",
@@ -467,22 +452,8 @@ export const TaskDetails = () => {
                                                 {...imageField}
 
                                                 onChange={(e) => {
-                                                    console.log(e)
                                                     imageField.onChange(e)
                                                     handleImageUpload(e)
-
-                                                    // if (e.target.files && e.target.files[0]) {
-                                                    //     const fileName = e.target.files[0].name;
-                                                    //     const fileNameSplit = fileName.split('.')
-                                                    //     const fileExtension = TaskFileTypes.includes(fileNameSplit.pop().toLowerCase())
-                                                    //     console.log(e.target.files[0].type)
-                                                    //     if (fileExtension) {
-                                                    //         setTaskImages([...taskImages, e.target.files]);
-                                                    //     } else {
-                                                    //         // setError([field.name], 'Invalid file type')
-                                                    //     }
-                                                    // }
-
                                                 }}
 
                                                 disabled={taskData.status === TaskAllStatus.rejected || taskData.status === TaskAllStatus.completed}

@@ -2,14 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-
-import { Menu as PrimeMenuComponent } from 'primereact/menu';
 import { useDispatch, useSelector } from "react-redux";
-import NotificationIcon from "../../assets/images/message1x.png";
+import NotificationIcon from "../../assets/icons/bellIcon.svg";
 import SettingsIcon from "../../assets/images/setting1x.png";
 import UserImage from "../../assets/images/user.jpg";
 import SearchIcon from "../../assets/images/search1x.png";
-import SearchNavIcon from '../../assets/icons/search.svg';
 import HelpIcon from '../../assets/icons/Help.svg';
 import ProfileIcon from '../../assets/icons/Profile.svg';
 import LogoutIcon from '../../assets/icons/Logout.svg';
@@ -137,11 +134,6 @@ export const Navbar = () => {
         navigate(url)
     }
 
-    useEffect(() => {
-        console.log('Current', searchBar.current)
-    }, [searchBar.current])
-
-
 
     useEffect(() => {
         dispatch(userActivities())
@@ -184,22 +176,27 @@ export const Navbar = () => {
                                 <img className="rounded-3xl object-cover h-10 w-10 cursor-pointer" src={UserImage} alt="User logo1" />
                             </div>
                         </div>
-                        {/* <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-search">
-                            <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 ">
-                                <li>
-                                    <a href="/" className="block py-2 px-3 rounded md:p-0" aria-current="page">Learn</a>
-                                </li>
-                                <li>
-                                    <a href="/" className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0">Courses</a>
-                                </li>
-                                <li>
-                                    <a href="/" className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0">Survey</a>
-                                </li>
-                            </ul>
-                        </div> */}
+                        {
+                            role === 'mentee' &&
+
+                            <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-search">
+                                <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 ">
+                                    <li>
+                                        <a href="/" onClick={undefined} className="block py-2 px-3 rounded md:p-0" aria-current="page">Learn</a>
+                                    </li>
+                                    <li>
+                                        <a href="/" className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0">Courses</a>
+                                    </li>
+                                    <li>
+                                        <a href="/" className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0">Survey</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        }
+
                     </div>
 
-                    <div className={`navbar-icons flex items-center ${userInfo?.data?.is_registered ? 'justify-between' : 'justify-end' } ${getWindowDimensions().width <= 1536 ? 'w-3/6' : 'w-2/5'} p-4`}>
+                    <div className={`navbar-icons flex items-center ${userInfo?.data?.is_registered ? 'justify-between' : 'justify-end'} ${getWindowDimensions().width <= 1536 ? 'w-3/6' : 'w-2/5'} p-4`}>
                         {
                             userInfo?.data?.is_registered &&
 
@@ -251,7 +248,7 @@ export const Navbar = () => {
                                         <Notification handleClose={handleCloseNotification} />
                                     </OverlayPanel>
                                 </div>
-                                <img src={SettingsIcon} alt="SettingsIcon" />
+                                {/* <img src={SettingsIcon} alt="SettingsIcon" /> */}
                             </>
                         }
 

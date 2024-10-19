@@ -58,7 +58,6 @@ export default function MemberRequest() {
             member_id: seletedItem.id,
             categories_id: categoryId
         }
-        console.log('pay', payload)
         dispatch(updateMemberRequest(payload)).then(() => {
             handleClosePopup();
             getMemberRequestList();

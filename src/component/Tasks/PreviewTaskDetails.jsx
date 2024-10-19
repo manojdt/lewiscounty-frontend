@@ -3,8 +3,6 @@ import React, { useEffect, useState } from 'react'
 import UploadIcon from "../../assets/images/image_1x.png"
 import DeleteIcon from "../../assets/images/delete_1x.png"
 import CancelIcon from '../../assets/images/cancel-colour1x.png'
-import EditIcon from '../../assets/images/Edit1x.png'
-import FileIcon from '../../assets/icons/linkIcon.svg'
 import SuccessTik from '../../assets/images/blue_tik1x.png';
 import { Button } from '../../shared'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -37,7 +35,6 @@ const PreviewTaskDetails = () => {
         }
     }, [loading])
 
-    console.log('paaa', params)
     return (
         <div className="px-9 py-9">
             <MuiModal modalOpen={loading} modalClose={() => setLoading(false)} noheader>

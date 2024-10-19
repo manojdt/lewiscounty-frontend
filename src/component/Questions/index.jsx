@@ -36,21 +36,17 @@ export const Questions = () => {
       return step
     })
     const fieldData = { ...stepData, ...data }
-    console.log('fieldData', fieldData)
     setStepData(fieldData)
     setAllStepList(activeSteps)
     if (formFields.length === currentStep) {
       const { first_name, email, ...apiData } = { ...fieldData, prev_mentorship: stepData.prev_mentorship === "true" }
-      console.log('Submit', apiData)
       if (role === 'mentee') {
-        console.log('lll', new Date(apiData.dob).toISOString())
         const menteeApiData = {
           ...apiData,
           gender: apiData.gender[0],
           dob: new Date(apiData.dob).toISOString().split('T')[0],
           phone_number: apiData.phone_number
         }
-        console.log(menteeApiData);
         dispatch(updateMenteeQuestions(menteeApiData))
       }
       else {
@@ -72,7 +68,6 @@ export const Questions = () => {
       setTimeout(() => {
         dispatch(updateInfo())
         setLoading(false)
-        // navigate("/dashboard");
       }, [3000])
     }
   }, [loading])
@@ -109,13 +104,11 @@ export const Questions = () => {
 
 
   const handlePreviousStep = (data) => {
-    console.log('stepName', stepName, currentStep)
     const activeSteps = allStepList.map(step => {
       if (step.key === stepName[currentStep - 1]) return { ...step, status: '' }
       if (step.key === stepName[currentStep - 2]) return { ...step, status: 'In-Progress' }
       return step
     })
-    // setAllStepList(activeSteps)
     setStepData({ ...stepData, ...data })
     setCurrentStep(currentStep - 1)
     setBtnTypeAction({ back: true, next: false })

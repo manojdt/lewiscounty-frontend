@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import SearchIcon from "../../assets/icons/search.svg";
 import { Backdrop, CircularProgress, Menu, MenuItem } from "@mui/material";
 import DataTable from "../../shared/DataGrid";
@@ -15,7 +15,6 @@ function AssignMentor() {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleMoreClick = (event, data) => {
-    console.log("more");
     setSelectedItem(data);
     setAnchorEl(event.currentTarget);
   };
@@ -26,6 +25,7 @@ function AssignMentor() {
   const handleSearch = (e) => {
     console.log(e);
   };
+
   let col = [
     ...assignMentorColumns,
     {
@@ -37,21 +37,7 @@ function AssignMentor() {
         return (
           <>
             <div className="cursor-pointer flex items-center h-full relative">
-              {/* <span
-                className="w-[80px] flex justify-center h-[30px] px-7"
-                style={{
-                  background:
-                    requestStatusColor[params.row.status]?.bgColor || "",
-                  lineHeight: "30px",
-                  borderRadius: "3px",
-                  width: "110px",
-                  height: "34px",
-                  color: requestStatusColor[params.row.status]?.color || "",
-                  fontSize: "12px",
-                }}
-              >
-                {requestStatusText[params.row.status] || ""}
-              </span> */}
+             
             </div>
           </>
         );
@@ -63,8 +49,6 @@ function AssignMentor() {
       flex: 1,
       id: 4,
       renderCell: (params) => {
-        console.log("ssss", params);
-        // if (params.row.status !== 'new' && params.row.status !== 'pending') return <></>
         return (
           <>
             <div className="cursor-pointer flex items-center h-full" onClick={(e) => handleMoreClick(e, params.row)}>
@@ -84,9 +68,7 @@ function AssignMentor() {
       },
     },
   ];
-//   useEffect(() => {
-//     setActiveTableDetails({ ...activeTableDetails, column: columns });
-//   }, []);
+
   return (
     <div className="px-8 mt-10">
       {" "}

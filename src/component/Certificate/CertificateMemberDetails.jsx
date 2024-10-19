@@ -24,7 +24,6 @@ export default function CertificateMemberDetails() {
   const { id } = useParams();
   const { programDetails } = useSelector((state) => state.reports);
   const { status } = useSelector((state) => state.certificates);
-  console.log(programDetails);
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -61,7 +60,6 @@ export default function CertificateMemberDetails() {
     }
   }, [programDetails]);
   const handleMoreClick = (event, data) => {
-    console.log("more");
     setSelectedItem(data);
     setAnchorEl(event.currentTarget);
   };
@@ -85,7 +83,6 @@ export default function CertificateMemberDetails() {
       flex: 1,
       id: 2,
       renderCell: (params) => {
-        console.log("paramsppppp", params);
         return (
           <>
             <div className="cursor-pointer flex items-center h-full relative">

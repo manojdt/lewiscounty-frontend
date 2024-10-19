@@ -33,8 +33,7 @@ export default function Discussions() {
     ]
 
     const handleClick = (event, data) => {
-        console.log(event)
-        navigate('/discussion/1')
+        console.log('Chat')
     };
 
 
@@ -45,7 +44,6 @@ export default function Discussions() {
             flex: 1,
             id: 0,
             renderCell: (params) => {
-                console.log('paramsmmmmm', params)
                 return <>
                     <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleClick(e, params.row)}>
                         <img src={ViewIcon} alt='MoreIcon' />
@@ -60,7 +58,6 @@ export default function Discussions() {
             flex: 1,
             id: 8,
             renderCell: (params) => {
-                console.log('paramsmmmmm', params)
                 return <>
                     <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleClick(e, params.row)}>
                         <button style={{

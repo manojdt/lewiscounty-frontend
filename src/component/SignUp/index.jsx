@@ -39,7 +39,6 @@ export const Signup = () => {
   } = useForm();
 
   const onSubmit = (data) => {
-    console.log(data);
     const { first_name, last_name, email, password } = data;
     if (first_name !== "" && last_name !== '' && email !== "" && password !== "") {
       if (!verifyPasswordRule[PasswordRulesSet.character] || !verifyPasswordRule[PasswordRulesSet.upperlowercase] ||
@@ -86,7 +85,6 @@ export const Signup = () => {
 
   const handleRedirect = () => {
     dispatch(updateInfo())
-    console.log('Redirect', userData)
     if (userData.data.role === 'fresher') navigate("/login-type");
     else if (userData.data.is_registered) navigate("/dashboard")
     else navigate("/questions");
@@ -95,7 +93,6 @@ export const Signup = () => {
 
   useEffect(() => {
     if (!userData.loading && Object.keys(userData.data).length && userData.status === userStatus.create) {
-      console.log('userData.data', userData.data)
       setTimeout(() => {
         navigate("/login-type");
       }, 2000)
@@ -113,8 +110,6 @@ export const Signup = () => {
       },3000) 
     }
   }, [userData])
-
-  console.log('Password', getValues('password'))
 
 
   return (

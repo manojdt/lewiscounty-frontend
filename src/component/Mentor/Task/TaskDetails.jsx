@@ -65,7 +65,6 @@ const MentorTaskDetails = () => {
 
     const docs = referenceView !== '' ? referenceView?.split(',') || [] : []
 
-    console.log('paaa', params)
     return (
         <div className="px-9 py-9">
             <MuiModal modalOpen={status === TaskApiStatus.updatemark} modalClose={() => undefined} noheader>

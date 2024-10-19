@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Backdrop, CircularProgress } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Card from '../../../shared/Card'
-import { certificateColor, certificateText, programRequestStatusColor, programRequestStatusText, requestOverview, requestStatus, RequestStatus, RequestStatusArray, requestStatusColor, requestStatusText } from '../../../utils/constant'
+import { requestOverview, requestStatus, RequestStatus, RequestStatusArray, requestStatusColor, requestStatusText } from '../../../utils/constant'
 import SearchIcon from '../../../assets/icons/search.svg';
 import CalendarIcon from '../../../assets/images/calender_1x.png';
-import ArrowRightIcon from '../../../assets/icons/arrowRightColor.svg';
 import MoreIcon from '../../../assets/icons/moreIcon.svg'
 import TickCircle from '../../../assets/icons/tickCircle.svg'
 import CloseCircle from '../../../assets/icons/closeCircle.svg'
@@ -21,9 +22,8 @@ import DataTable from '../../../shared/DataGrid';
 import { categoryColumns, certificateRequestColumns, goalsRequestColumns, memberMenteeRequestColumns, memberMentorRequestColumns, programRequestColumns, programRequestData, reportRequestColumns, resourceAccessRequestColumns, techinicalSupportRequestColumns, testimonialRequestColumns } from '../../../mock';
 
 import './request.css';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+
 import { cancelMemberRequest, certificateRequest, getCategoryList, getMemberRequest, getprogramRequest, getReportRequest, getResourceRequest, goalsRequest, updateCertificateRequest, updateGoalRequest, updateLocalRequest, updateMemberRequest, updateProgramMenteeRequest, updateProgramRequest, updateReportRequest } from '../../../services/request';
-import { Backdrop, CircularProgress } from '@mui/material';
 import ToastNotification from '../../../shared/Toast';
 import MuiModal from '../../../shared/Modal';
 import { useForm } from 'react-hook-form';
@@ -49,8 +49,6 @@ export default function AllRequest() {
     const [showToast, setShowToast] = useState({ show: false, message: '' })
     const [categoryPopup, setCategoryPopup] = useState({ show: false, selectedItem: [], page: '', tab: '' })
     const userInfo = useSelector(state => state.userInfo)
-
-    const [programTab, setProgramTab] = useState([])
 
     const {
         register,
@@ -127,7 +125,6 @@ export default function AllRequest() {
 
 
     const handleMoreClick = (event, data) => {
-        console.log('more')
         setSelectedItem(data)
         setAnchorEl(event.currentTarget);
     };
@@ -254,7 +251,6 @@ export default function AllRequest() {
     // Cancel Reason Popup Submit
     const handleCancelReasonPopupSubmit = (data) => {
         if (data.cancel_reason !== '') {
-            console.log('seletedItem', seletedItem, cancelPopup)
             if (cancelPopup.show) {
 
                 if (cancelPopup.page === 'program_request') {
@@ -363,12 +359,10 @@ export default function AllRequest() {
 
     // Handle Selected Items for Category 
     const handleSelectedItems = (selectedInfo) => {
-
         let data = { ...categoryPopup }
         if (selectedInfo.length) {
             data = { ...data, selectedItem: selectedInfo }
         }
-
         if (categoryPopup.page === 'goal_request') {
             const categoryId = []
             data.selectedItem.forEach((selected) => categoryId.push(selected.categories_id))
@@ -557,15 +551,11 @@ export default function AllRequest() {
             }
         },
         {
-
-
             field: 'action',
             headerName: 'Action',
             flex: 1,
             id: 4,
             renderCell: (params) => {
-                console.log('ssss', params)
-                // if (params.row.status !== 'new' && params.row.status !== 'pending') return <></>
                 return <>
                     <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleMoreClick(e, params.row)}>
                         <img src={MoreIcon} alt='MoreIcon' />
@@ -586,7 +576,6 @@ export default function AllRequest() {
 
                         {
                             role === 'admin' &&
-
                             <>
                                 {
                                     (params.row.status === 'new' || params.row.status === 'pending') &&
@@ -610,8 +599,6 @@ export default function AllRequest() {
                                 </MenuItem>
                             </>
                         }
-
-
                     </Menu>
                 </>
             }
@@ -626,20 +613,6 @@ export default function AllRequest() {
             headerName: 'Status',
             flex: 1,
             id: 2,
-            // renderCell: (params) => {
-            //     return <>
-            //         <div className='cursor-pointer flex items-center h-full relative'>
-            //             <span className='w-[80px] flex justify-center h-[30px] px-7'
-            //                 style={{
-            //                     background: certificateColor[params.row.status]?.bg || '', lineHeight: '30px',
-            //                     borderRadius: '3px', width: '110px', height: '34px', color: certificateColor[params.row.status]?.color || '',
-            //                     fontSize: '12px'
-            //                 }}>
-            //                 {certificateText[params.row.status] || ''}
-            //             </span>
-            //         </div>
-            //     </>
-            // }
         },
         {
 
@@ -648,16 +621,13 @@ export default function AllRequest() {
             flex: 1,
             id: 4,
             renderCell: (params) => {
-                console.log('params', params)
                 return <>
                     <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleMoreClick(e, params.row)}>
                         <img src={MoreIcon} alt='MoreIcon' />
                     </div>
                 </>
             }
-
         }
-
     ]
 
     const reportRequestColumn = [
@@ -683,13 +653,11 @@ export default function AllRequest() {
             }
         },
         {
-
             field: 'action',
             headerName: 'Action',
             flex: 1,
             id: 4,
             renderCell: (params) => {
-                console.log('params', params)
                 return <>
                     <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleMoreClick(e, params.row)}>
                         <img src={MoreIcon} alt='MoreIcon' />
@@ -703,10 +671,8 @@ export default function AllRequest() {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
-
                         {
                             role === 'admin' &&
-
                             <>
                                 <MenuItem onClick={() => navigate(`/view-report/${seletedItem.id}`)} className='!text-[12px]'>
                                     <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
@@ -714,9 +680,7 @@ export default function AllRequest() {
                                 </MenuItem>
                                 {
                                     (params.row.status === 'new' || params.row.status === 'pending') &&
-
                                     <>
-
                                         <MenuItem onClick={handleAcceptReportsRequest} className='!text-[12px]'>
                                             <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
                                             Approve
@@ -727,15 +691,12 @@ export default function AllRequest() {
                                         </MenuItem>
                                     </>
                                 }
-
                             </>
                         }
                     </Menu>
                 </>
             }
-
         }
-
     ]
 
     const techinicalColums = [
@@ -745,34 +706,12 @@ export default function AllRequest() {
             headerName: 'Status',
             flex: 1,
             id: 2,
-            // renderCell: (params) => {
-            //     return <>
-            //         <div className='cursor-pointer flex items-center h-full relative'>
-            //             <span className='w-[80px] flex justify-center h-[30px] px-7'
-            //                 style={{
-            //                     background: certificateColor[params.row.status]?.bg || '', lineHeight: '30px',
-            //                     borderRadius: '3px', width: '110px', height: '34px', color: certificateColor[params.row.status]?.color || '',
-            //                     fontSize: '12px'
-            //                 }}>
-            //                 {certificateText[params.row.status] || ''}
-            //             </span>
-            //         </div>
-            //     </>
-            // }
         },
         {
             field: 'action',
             headerName: 'Action',
             flex: 1,
             id: 4,
-            // renderCell: (params) => {
-            //     console.log('params', params)
-            //     return <>
-            //         <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleClick(e, params.row)}>
-            //             <img src={ActionIcon} alt='ActionIcon' />
-            //         </div>
-            //     </>
-            // }
         },
     ]
 
@@ -804,7 +743,6 @@ export default function AllRequest() {
             flex: 1,
             id: 4,
             renderCell: (params) => {
-                console.log('params', params)
                 return <>
                     <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleMoreClick(e, params.row)}>
                         <img src={MoreIcon} alt='MoreIcon' />
@@ -818,15 +756,10 @@ export default function AllRequest() {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
-
                         {
                             role === 'admin' &&
 
                             <>
-                                {/* <MenuItem onClick={() => navigate(`/view-report/${seletedItem.id}`)} className='!text-[12px]'>
-                                <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
-                                View
-                            </MenuItem> */}
                                 {
                                     (params.row.status === 'new' || params.row.status === 'pending') &&
 
@@ -927,8 +860,6 @@ export default function AllRequest() {
                     tableDetails = { column: programRequestColumn, data: [] }
                     actionFilter = programInfoTab
                     activeTabName = role === 'mentor' ? 'joining_request' : 'new_program_request'
-
-                    console.log('activeTabName', activeTabName)
                     break;
                 case RequestStatus.memberJoinRequest.key:
                     tableDetails = { column: memberMentorRequestColumns, data: [] }
@@ -1050,17 +981,6 @@ export default function AllRequest() {
 
     }, [status])
 
-    useEffect(() => {
-        // if(role === 'mentor' && searchParams.get('type') === 'program_request'){
-        //     let programRequestTab = [{
-        //         name: 'Joining Request',
-        //         key: 'joining_request'
-        //     }
-        //     ]
-        //     setActiveTableDetails(programRequestTab)
-        //     setActiveTab('joining_request')
-        // }
-    }, [role])
 
     useEffect(() => {
 
@@ -1129,7 +1049,7 @@ export default function AllRequest() {
             <div className='flex gap-6 justify-center items-center py-4'>
                 <button onClick={() => setCategoryPopup({ show: false, selectedItem: [] })} className='py-3 px-6 w-[16%]'
                     style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '3px', color: 'rgba(29, 91, 191, 1)' }}>Cancel</button>
-                <button onClick={() => { console.log(props); handleSelectedItems(props.selectedRows) }}
+                <button onClick={() => {  handleSelectedItems(props.selectedRows) }}
                     className='text-white py-3 px-6 w-[16%]'
                     style={{ background: 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)', borderRadius: '3px' }}>Submit</button>
             </div>)
@@ -1258,12 +1178,6 @@ export default function AllRequest() {
                                         <img src={SearchIcon} alt='SearchIcon' />
                                     </div>
                                 </div>
-                                {/* <div>
-                                    <select className='form-control' style={{ border: '1px solid #000', height: '50px', width: '250px', padding: '6px' }}>
-                                        <option value="category">Category</option>
-                                        <option value="general">General Category</option>
-                                    </select>
-                                </div> */}
                             </div>
 
 

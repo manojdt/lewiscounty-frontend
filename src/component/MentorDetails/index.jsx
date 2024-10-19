@@ -58,7 +58,6 @@ export default function MentorDetails() {
     const role = userInfo.data.role || ''
 
     const handleChange = (event) => {
-        console.log(event.target.checked)
         setChecked(event.target.checked);
         dispatch(updateMentorAutoApproval({
             id: params.id,
@@ -112,7 +111,6 @@ export default function MentorDetails() {
         width: 200,
         id: 4,
         renderCell: (params) => {
-            console.log('params', params)
             return <div className='flex items-center gap-2'>
                 <div className='relative w-[50%]'>
                     <div style={{
@@ -134,7 +132,6 @@ export default function MentorDetails() {
 
     function getWindowDimensions() {
         const { innerWidth: width, innerHeight: height } = window;
-        console.log('width', width)
         return {
             width,
             height
@@ -214,7 +211,7 @@ export default function MentorDetails() {
             <div className='flex gap-6 justify-center items-center py-4'>
                 <button onClick={() => setCategoryPopup({ show: false, selectedItem: [] })} className='py-3 px-6 w-[16%]'
                     style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '3px', color: 'rgba(29, 91, 191, 1)' }}>Cancel</button>
-                <button onClick={() => { console.log(props); handleSelectedItems(props.selectedRows) }}
+                <button onClick={() => {  handleSelectedItems(props.selectedRows) }}
                     className='text-white py-3 px-6 w-[16%]'
                     style={{ background: 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)', borderRadius: '3px' }}>Submit</button>
             </div>)

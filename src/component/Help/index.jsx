@@ -163,11 +163,8 @@ export default function Help() {
 
                                                     onChange={(e) => {
                                                         imageField.onChange(e);
-                                                        console.log(e)
                                                         if (e.target.files && e.target.files[0]) {
-                                                            console.log(e.target.files[0])
                                                             let types = ['image/png', 'image/jpeg']
-                                                            console.log(e.target.files[0].type)
                                                             if (types.includes(e.target.files[0].type)) {
                                                                 setLogoImage(URL.createObjectURL(e.target.files[0]));
                                                             } else {

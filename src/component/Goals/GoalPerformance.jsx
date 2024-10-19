@@ -4,13 +4,14 @@ import { Chart } from "primereact/chart";
 import CalenderIcon from "../../assets/icons/CalenderIcon.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { getStartAndEndDates } from "../../utils";
-import { getGoalsOverAllData, getGoleChartDetails } from "../../services/goalsInfo";
+import { getGoalsOverAllData } from "../../services/goalsInfo";
 
 export default function GoalPerformance() {
   const [chartData, setChartData] = useState({});
   const [chartOptions, setChartOptions] = useState({});
   const dispatch = useDispatch();
-  const { status, goalOverAll } = useSelector(state => state.goals)
+  const { goalOverAll } = useSelector(state => state.goals)
+
   useEffect(() => {
     const documentStyle = getComputedStyle(document.documentElement);
     const textColor = documentStyle.getPropertyValue("--text-color");
@@ -18,7 +19,7 @@ export default function GoalPerformance() {
       "--text-color-secondary"
     );
     const surfaceBorder = documentStyle.getPropertyValue("--surface-border");
-   
+
     const options = {
       maintainAspectRatio: false,
       aspectRatio: 0.6,
@@ -48,58 +49,46 @@ export default function GoalPerformance() {
         },
       },
     };
-
-    
     setChartOptions(options);
     handlePerformanceFilter()
   }, []);
-  const getYearsInRange = (startDate, endDate) => {
-    const startYear = new Date(startDate).getFullYear();
-    const endYear = new Date(endDate).getFullYear();
-    const years = [];
-  
-    for (let year = startYear; year <= endYear; year++) {
-      years.push(year);
-    }
-  
-    return years;
-  };
+
   useEffect(() => {
     const processChartData = (year) => {
-        if (goalOverAll[year]) {
-          const yearData = goalOverAll[year];
-          const labels = Object.keys(yearData); // Get the month names as labels
-          const dataValues = Object.values(yearData); // Get the values for each month
-      console.log(labels,"labels")
-          return {
-            labels: labels,
-            datasets: [
-              {
-                label: `${year} Dataset`, // Label the dataset with the year
-                data: dataValues, // Use the extracted values
-                fill: false,
-                tension: 0.4,
-                borderColor: "rgba(254, 137, 37, 1)",
-              },
-            ],
-          };
-        } else {
-          return {
-            labels: [],
-            datasets: [],
-          };
-        }
-      };
-      const chartData = processChartData(new Date().getFullYear());
-      setChartData(chartData);
- console.log(goalOverAll,"goalOverAll")
-}, [goalOverAll]);
+      if (goalOverAll[year]) {
+        const yearData = goalOverAll[year];
+        const labels = Object.keys(yearData); // Get the month names as labels
+        const dataValues = Object.values(yearData); // Get the values for each month
+        return {
+          labels: labels,
+          datasets: [
+            {
+              label: `${year} Dataset`, // Label the dataset with the year
+              data: dataValues, // Use the extracted values
+              fill: false,
+              tension: 0.4,
+              borderColor: "rgba(254, 137, 37, 1)",
+            },
+          ],
+        };
+      } else {
+        return {
+          labels: [],
+          datasets: [],
+        };
+      }
+    };
+    const chartData = processChartData(new Date().getFullYear());
+    setChartData(chartData);
+  }, [goalOverAll]);
+
   const handlePerformanceFilter = (e) => {
     const res = e?.target?.value || "month";
-    const date=getStartAndEndDates(res)
-    const payload=`start=${date?.startDate}&end=${date?.endDate}`
+    const date = getStartAndEndDates(res)
+    const payload = `start=${date?.startDate}&end=${date?.endDate}`
     dispatch(getGoalsOverAllData(payload));
   };
+
   return (
     <div
       style={{

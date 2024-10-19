@@ -56,7 +56,6 @@ export default function Certificate() {
             flex: 1,
             id: 4,
             renderCell: (params) => {
-                console.log('params', params)
                 return <>
                     <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleClick(e, params.row)}>
                         <img src={ActionIcon} alt='ActionIcon' />

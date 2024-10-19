@@ -24,7 +24,6 @@ export default function CreateGoal({ open, handleCloseModal, seletedItem, editMo
     } = useForm();
 
     const onSubmit = (data) => {
-        console.log(data)
         let date = new Date(data.start_date), mnth = ("0" + (date.getMonth() + 1)).slice(-2), day = ("0" + date.getDate()).slice(-2);
         date = [date.getFullYear(), mnth, day].join("-")
 
@@ -33,8 +32,6 @@ export default function CreateGoal({ open, handleCloseModal, seletedItem, editMo
             start_date: date,
             period: parseInt(data.period)
         }
-        console.log('ap', apiData)
-        console.log('date', data.start_date, date)
         if (editMode) {
             apiData = {
                 ...apiData,
@@ -63,17 +60,12 @@ export default function CreateGoal({ open, handleCloseModal, seletedItem, editMo
     useEffect(() => {
         if (editMode) {
             reset(seletedItem)
-            // setDateFormat(new Date(seletedItem.start_date))
         }else{
             reset({})
         }
     }, [seletedItem, editMode])
 
-
-    console.log('errors', errors)
-
     const handleDateClick = () => {
-        console.log('Click')
         document.querySelector('.p-datepicker')?.classList.add('goals-date')
     }
 
@@ -173,7 +165,6 @@ export default function CreateGoal({ open, handleCloseModal, seletedItem, editMo
                                             {...dateField}
                                             value={dateFormat['start_date'] || new Date(seletedItem.start_date)}
                                             onChange={(e) => {
-                                                // console.log('dateField123', dateField)
                                                 dateField.onChange(e)
                                                 setDateFormat({ ...dateFormat, start_date: e.value })
                                             }}

@@ -148,10 +148,8 @@ export default function AssignTask() {
             setLoading({ initial: true, task: false })
             const startProgramRequest = await api.post('start_program', { id: parseInt(params.id) });
             if (startProgramRequest.status === 201 && startProgramRequest.data) {
-                console.log('mssss', startProgramRequest)
                 setLoading({ initial: false, task: false })
                 dispatch(getProgramDetails(parseInt(params.id)))
-                // dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.inprogress }))
             }
         }
 
@@ -195,12 +193,9 @@ export default function AssignTask() {
     }
 
     const onSubmit = (data) => {
-        console.log('test', data)
-
         if (moreMenuModal.reschedule) {
 
             const timeFormat = (utcTimestamp) => {
-                console.log('utcTimestamp  --', utcTimestamp)
                 let timeString = ''
                 const t = utcTimestamp.toString().split(' ')
                 if (t.length > 4) {
@@ -232,12 +227,7 @@ export default function AssignTask() {
                 reason: data.cancel_reason
             }))
         }
-        console.log('moreMenuModal', moreMenuModal)
-        // reset()
     }
-
-
-    console.log('errro', errors)
 
     const handleComplete = (programId) => {
         handleClose()
@@ -249,7 +239,6 @@ export default function AssignTask() {
         setMoreMenuModal({ share: false, reschedule: false, cancel: false })
         reset()
     }
-
 
     useEffect(() => {
         if (requestStatusInfo === requestStatus.reschedule || requestStatusInfo === requestStatus.cancel) {
@@ -290,7 +279,6 @@ export default function AssignTask() {
     }, [startProgramModal])
 
     useEffect(() => {
-        console.log('searchParams', params)
         const programId = params.id;
 
         if (programId && programId !== '') {
@@ -307,18 +295,15 @@ export default function AssignTask() {
                 navigate(`/start-program/${programdetails.id}`)
             }
 
-            console.log('statusstatus23', programdetails.status)
             if (role === 'mentor' && window.location.href.includes('start-program') && programdetails.status === programActionStatus.yettostart) {
                 navigate(`/assign-task/${programdetails.id}`)
             }
 
             if (programdetails.status === programActionStatus.paused) {
-                console.log('loading')
                 timerData.stopTimer()
             }
 
             if (programdetails.status === programActionStatus.inprogress) {
-                console.log('loading')
                 timerData.startTimer(0, 20, 0)
             }
 

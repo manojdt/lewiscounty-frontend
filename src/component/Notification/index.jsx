@@ -20,9 +20,18 @@ export default function Notification({ handleClose }) {
         navigate('/notification')
     }
 
-    const handleVisitActivity = (id) => {
-        dispatch(userActivitiyVisited(id))
-        handleNavigation()
+    const handleVisitActivity = (data) => {
+        dispatch(userActivitiyVisited(data.id))
+        const actionType = data?.notification_type
+        switch (actionType) {
+            case 'program':
+                handleClose && handleClose()
+                navigate(`/program-details/${data.related_data.program_id}?request_id=${data.related_data.program_request_id}`)
+                break;
+            default:
+                handleNavigation()
+                break;
+        }
     }
 
     useEffect(() => {
@@ -40,7 +49,7 @@ export default function Notification({ handleClose }) {
                                 <ul>
                                     {activity.map((list, index) => {
                                         return (
-                                            <li className='notification-list cursor-pointer' onClick={() => handleVisitActivity(list.id)} key={index}>
+                                            <li className='notification-list cursor-pointer' onClick={() => handleVisitActivity(list)} key={index}>
                                                 <img src={index % 2 === 0 ? MaleIcon : FemaleIcon} alt="MaleIcon" />
                                                 <p className='notification-message'>{list.content}</p>
                                                 <p>{getTimeFromDate(list.created_at)}</p>

@@ -10,9 +10,7 @@ import SearchIcon from '../../assets/images/search1x.png'
 import RequestIcon from '../../assets/images/Requesttask1x.png'
 import CancelIcon from '../../assets/images/cancel-colour1x.png'
 
-import ReportIcon from '../../assets/icons/report.svg'
-
-import { taskColumns, taskRows } from '../../mock';
+import { taskColumns } from '../../mock';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import MuiModal from '../../shared/Modal';
 import { Button } from '../../shared';
@@ -70,7 +68,6 @@ export const Tasks = () => {
             return {
                 ...column,
                 renderCell: (params) => {
-                    console.log('paramsppppp', params)
                     return <>
                         <div className='cursor-pointer flex items-center h-full relative'>
                             <span className='w-[80px] flex justify-center h-[30px] px-3'
@@ -97,7 +94,6 @@ export const Tasks = () => {
             flex: 1,
             id: 4,
             renderCell: (params) => {
-                console.log('paramsmmmmm', params)
                 return <>
                     <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleClick(e, params.row)}>
                         <img src={MoreIcon} alt='MoreIcon' />
@@ -115,7 +111,7 @@ export const Tasks = () => {
                             <img src={ViewIcon} alt="ViewIcon" className='pr-3 w-[30px]' />
                             View
                         </MenuItem>
-                        <MenuItem onClick={() => { console.log('report', params); setAnchorEl(null); setRequestTask(true) }} className='!text-[12px]'>
+                        <MenuItem onClick={() => { setAnchorEl(null); setRequestTask(true) }} className='!text-[12px]'>
                             <img src={RequestIcon} alt="RequestIcon" className='pr-3 w-[27px]' />
                             Request Task
                         </MenuItem>
@@ -155,7 +151,6 @@ export const Tasks = () => {
 
 
     useEffect(() => {
-        console.log('searchParams', searchParams)
         const filterType = searchParams.get("type");
 
         let query = {}
@@ -169,7 +164,7 @@ export const Tasks = () => {
     return (
         <div className="px-9 py-9">
 
-            <MuiModal modalSize='lg' modalOpen={requestTask} modalClose={() => { console.log('close'); setRequestTask(false) }} noheader>
+            <MuiModal modalSize='lg' modalOpen={requestTask} modalClose={() => { setRequestTask(false) }} noheader>
                 <div className='px-5 py-5'>
                     <div className='flex justify-center flex-col gap-5  mt-4 mb-4'
                         style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '10px', }}>

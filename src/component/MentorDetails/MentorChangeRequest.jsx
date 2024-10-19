@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import SearchIcon from "../../assets/icons/search.svg";
 import { Backdrop, CircularProgress, Menu, MenuItem } from "@mui/material";
 import DataTable from "../../shared/DataGrid";
@@ -10,16 +10,12 @@ import MoreIcon from "../../assets/icons/moreIcon.svg";
 import TickCircle from "../../assets/icons/tickCircle.svg";
 import CloseCircle from "../../assets/icons/closeCircle.svg";
 import ViewIcon from "../../assets/images/view1x.png";
+
 function MentorChangeRequest() {
-  const [activeTableDetails, setActiveTableDetails] = useState({
-    column: [],
-    data: [],
-  });
   const [seletedItem, setSelectedItem] = useState({});
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleMoreClick = (event, data) => {
-    console.log("more");
     setSelectedItem(data);
     setAnchorEl(event.currentTarget);
   };
@@ -30,6 +26,7 @@ function MentorChangeRequest() {
   const handleSearch = (e) => {
     console.log(e);
   };
+
   let col = [
     ...MentorChangeViewColumns,
     {
@@ -41,21 +38,6 @@ function MentorChangeRequest() {
         return (
           <>
             <div className="cursor-pointer flex items-center h-full relative">
-              {/* <span
-                className="w-[80px] flex justify-center h-[30px] px-7"
-                style={{
-                  background:
-                    requestStatusColor[params.row.status]?.bgColor || "",
-                  lineHeight: "30px",
-                  borderRadius: "3px",
-                  width: "110px",
-                  height: "34px",
-                  color: requestStatusColor[params.row.status]?.color || "",
-                  fontSize: "12px",
-                }}
-              >
-                {requestStatusText[params.row.status] || ""}
-              </span> */}
             </div>
           </>
         );
@@ -67,8 +49,6 @@ function MentorChangeRequest() {
       flex: 1,
       id: 4,
       renderCell: (params) => {
-        console.log("ssss", params);
-        // if (params.row.status !== 'new' && params.row.status !== 'pending') return <></>
         return (
           <>
             <div
@@ -89,7 +69,6 @@ function MentorChangeRequest() {
               <MenuItem
                 onClick={(e) => {
                   handleClose();
-                  //   navigate(`/mentor-details/${seletedItem.id}`);
                 }}
                 className="!text-[12px]"
               >
@@ -125,9 +104,7 @@ function MentorChangeRequest() {
     },
   ];
 
-//   useEffect(() => {
-//     setActiveTableDetails({ ...activeTableDetails, column: col });
-//   }, []);
+
   return (
     <div className="px-8 mt-10">
       {" "}

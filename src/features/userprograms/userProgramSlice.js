@@ -95,7 +95,6 @@ export const userProgramSlice = createSlice({
           programdetails: {}
         };
 
-        console.log("action123", action.payload);
         if (filterType === "") {
           updateState.allprograms = programs;
         }
@@ -105,9 +104,6 @@ export const userProgramSlice = createSlice({
             filterType !== "is_bookmark" ? filterValue : "bookmarked";
           updateState[filtertype] = programs;
         }
-
-        console.log("action.payload", action.payload);
-
         return updateState;
       })
       .addCase(getUserPrograms.rejected, (state, action) => {
@@ -126,7 +122,6 @@ export const userProgramSlice = createSlice({
         };
       })
       .addCase(updateProgram.fulfilled, (state, action) => {
-        console.log("update", action.payload);
         return {
           ...state,
           programdetails: action.payload.programdetails,
@@ -171,7 +166,6 @@ export const userProgramSlice = createSlice({
         };
       })
       .addCase(getMentees.fulfilled, (state, action) => {
-        console.log("getMentees", action.payload);
         return {
           ...state,
           menteeList: action.payload,
@@ -194,7 +188,6 @@ export const userProgramSlice = createSlice({
         };
       })
       .addCase(getProgramMentees.fulfilled, (state, action) => {
-        console.log("getMentees", action.payload);
         return {
           ...state,
           programMenteeList: action.payload,
@@ -237,7 +230,7 @@ export const userProgramSlice = createSlice({
         };
       })
       .addCase(getProgramCounts.fulfilled, (state, action) => {
-        console.log("getProgramCounts", action.payload);
+      
         const {
           status_counts = {}, total_programs = 0
         } = action.payload;
@@ -285,7 +278,6 @@ export const userProgramSlice = createSlice({
           programdetails: {}
         };
 
-        console.log("action123", action.payload);
         if (filterType === "") {
           updateState.allprograms = programs;
         }
@@ -309,8 +301,6 @@ export const userProgramSlice = createSlice({
 
         }
 
-        console.log("action.payload", action.payload);
-
         return updateState;
       })
       .addCase(getMenteePrograms.rejected, (state, action) => {
@@ -330,7 +320,6 @@ export const userProgramSlice = createSlice({
         };
       })
       .addCase(getMenteeJoinedInProgram.fulfilled, (state, action) => {
-        console.log('cccccc', action)
         return {
           ...state,
           menteeJoined: action.payload.enroll,

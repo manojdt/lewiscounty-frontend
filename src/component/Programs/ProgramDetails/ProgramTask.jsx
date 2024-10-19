@@ -4,7 +4,6 @@ import ProgramVideo from '../../../assets/images/video.png';
 import ProgramDoc from '../../../assets/images/book.png';
 import SuccessTik from '../../../assets/images/blue_tik1x.png';
 import CancelIcon from '../../../assets/images/cancel-colour1x.png'
-import UploadIcon from "../../../assets/images/image_1x.png"
 import DeleteIcon from "../../../assets/images/delete_1x.png"
 import FileUploadIcon from "../../../assets/icons/Upload.svg"
 
@@ -17,7 +16,6 @@ import Tooltip from '../../../shared/Tooltip';
 
 export default function ProgramTask() {
     const navigate = useNavigate()
-    const [searchParams] = useSearchParams();
     const dispatch = useDispatch()
     const params = useParams();
     const { programdetails, loading: programLoading, error, status } = useSelector(state => state.userPrograms)
@@ -86,7 +84,6 @@ export default function ProgramTask() {
 
     const handleImageUpload = (e) => {
         const allFiles = fileRef.current.files;
-        console.log('upload', allFiles, e.target.files[0].name)
         setFileNames([...fileNames, e.target.files[0].name])
         readmultifiles(allFiles, function (urls) {
             setLogoImage(urls);
@@ -98,15 +95,8 @@ export default function ProgramTask() {
         fileNames.forEach((file, index) => {
             if (index !== i) removeImage.push(file)
         })
-
-        console.log('fileNames', fileNames, i)
-        console.log('removeImage', removeImage, typeof i)
         setFileNames(removeImage)
     }
-
-    console.log('mmm', logoImage)
-    console.log('bbb', fileNames)
-
 
     return (
         <div className="px-9 my-6 grid">
@@ -327,22 +317,7 @@ export default function ProgramTask() {
                                                             </div>
                                                             <input id="dropzone-file" type="file"
                                                                 ref={fileRef}
-                                                                onChange={handleImageUpload
-
-                                                                    //     (e) => {
-
-                                                                    //     console.log(e)
-                                                                    //     if (e.target.files && e.target.files[0]) {
-                                                                    //         console.log(e.target.files[0])
-                                                                    //         let types = ['image/png', 'image/jpeg']
-                                                                    //         console.log(e.target.files[0].type)
-                                                                    //         if (types.includes(e.target.files[0].type)) {
-                                                                    //             setLogoImage(URL.createObjectURL(e.target.files[0]));
-                                                                    //         }
-                                                                    //     }
-                                                                    // }
-
-                                                                }
+                                                                onChange={handleImageUpload}
                                                                 className="hidden" />
                                                         </label>
 

@@ -34,11 +34,7 @@ export default function ProgramsData() {
       width: 100,
       id: 4,
       renderCell: (params) => {
-        console.log('params', params)
         return <>
-          {/* <div className='cursor-pointer flex items-center h-full' onClick={handleClick}>
-            <img src={MoreIcon} alt='MoreIcon' />
-          </div> */}
 
         </>
       }

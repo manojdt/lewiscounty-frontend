@@ -114,11 +114,9 @@ function TimeBlock({
     return eventTime.hour() === time.hour() && eventTime.date() === time.date();
   });
 
-  console.log('newData', newData )
 
   const eventsForHour1 = newData.filter((event) => {
     const eventTime = dayjs(new Date(event.date).toDateString());
-    console.log('eventTime', eventTime)
     return eventTime.hour() === time.hour() && eventTime.date() === time.date();
   });
 
@@ -149,8 +147,6 @@ function TimeBlock({
   const toggleModal = () => {
     setShowModal(!showModal);
   };
-
-  console.log('showTimeBlock', showTimeBlock, isWeek, showEvent, eventsForHour1)
 
   return (
     <div

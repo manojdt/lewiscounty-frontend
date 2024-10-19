@@ -22,7 +22,6 @@ export default function CreatePostModal({ formData, open, handleClose, handleVis
 
     const onSubmit = (data) => {
         handlePostData(data)
-        console.log('Submit', data)
     }
 
 

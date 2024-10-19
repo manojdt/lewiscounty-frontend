@@ -130,7 +130,6 @@ export default function Admin() {
         if (userpragrams?.chartProgramDetails?.data &&
             userpragrams?.chartProgramDetails?.data?.length > 0) {
             const res = userpragrams?.chartProgramDetails?.data.every((val) => val.value === 0)
-            // console.log(res)
             if (res) {
                 return setChartList(empty)
             } else {
@@ -201,7 +200,7 @@ export default function Admin() {
 
             </div>
 
-            <div className="grid grid-cols-8 gap-7 mt-4">
+            {/* <div className="grid grid-cols-8 gap-7 mt-4">
                 <div className='col-span-3'>
                     <ProgramPerformance data={userpragrams?.chartProgramDetails?.data &&
                         userpragrams?.chartProgramDetails?.data?.length > 0 ?
@@ -211,13 +210,13 @@ export default function Admin() {
                     <ReportsInfo />
                 </div>
 
-            </div>
+            </div> */}
 
 
             <div className="grid grid-cols-10 gap-7 mt-4">
                 <div className='col-span-2'>
                     <CardWrapper title="Recent Activities" viewAll >
-                        <div style={{ height: '750px' }}>
+                        <div style={{ height: '640px' }}>
                             {
                                 activityList.length ?
 
@@ -256,7 +255,7 @@ export default function Admin() {
                 </div>
                 <div className='col-span-4'>
                     <MemberRequest />
-                    <div style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px', padding: '20px', marginTop: '20px' }} >
+                    {/* <div style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px', padding: '20px', marginTop: '20px' }} >
                         <div className='flex justify-evenly items-center'>
                             <div style={{ background: 'rgba(217, 228, 242, 1)', color: 'rgba(29, 91, 191, 1)', borderRadius: '3px', padding: '10px', fontWeight: 600 }}>
                                 NGO Performance
@@ -271,12 +270,12 @@ export default function Admin() {
                                 (78,293,393 <span style={{ color: 'rgba(29, 91, 191, 1)', fontWeight: 600 }}> Views</span>)
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
 
                 <div className='col-span-4'>
                     <CardWrapper title='Program Feeds' viewAll >
-                        <div style={{ height: '750px', overflowY: 'scroll' }}>
+                        <div style={{ height: '640px', overflowY: 'scroll' }}>
                             {
                                 programFeeds.map((programFeeds, index) =>
                                     <div key={index} className="program-feed-root mx-7 my-3">

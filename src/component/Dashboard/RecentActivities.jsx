@@ -13,7 +13,6 @@ export default function RecentActivities() {
         dispatch(getRecentGoalActivity())
     }, [])
 
-    console.log(window.innerWidth);
     return (
         <div className="recent-activities pb-3" style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }}>
             <div className="title flex justify-between py-3 px-4 border-b-2">

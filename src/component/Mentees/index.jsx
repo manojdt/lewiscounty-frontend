@@ -2,17 +2,15 @@ import React, { useEffect, useState } from 'react'
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { Backdrop, CircularProgress } from '@mui/material';
 
 import DataTable from '../../shared/DataGrid';
 import FilterIcon from '../../assets/icons/Filter.svg';
 import MoreIcon from '../../assets/icons/moreIcon.svg'
 import ViewIcon from '../../assets/images/view1x.png'
 import SearchIcon from '../../assets/images/search1x.png'
-import ReportIcon from '../../assets/icons/report.svg'
 import Dropdown from '../../shared/Dropdown';
-import { menteeColumns, menteeRow } from '../../mock';
-import { useDispatch, useSelector } from 'react-redux';
-import { Backdrop, CircularProgress } from '@mui/material';
 import { getMyMentees } from '../../services/userList';
 import { myMenteeColumns } from '../../utils/tableFields';
 
@@ -78,7 +76,6 @@ export const Mentees = () => {
             flex: 1,
             id: 4,
             renderCell: (params) => {
-                console.log('params', params)
                 return <>
                     <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleClick(e, params.row)}>
                         <img src={MoreIcon} alt='MoreIcon' />
@@ -96,15 +93,9 @@ export const Mentees = () => {
                             <img src={ViewIcon} alt="ViewIcon" className='pr-3 w-[30px]' />
                             View
                         </MenuItem>
-                        {/* <MenuItem onClick={() => console.log('report', params)} className='!text-[12px]'>
-                            <img src={ReportIcon} alt="ReportIcon" className='pr-3 w-[27px]' />
-                            Reports
-                        </MenuItem> */}
                     </Menu>
                 </>
             }
-
-
         },
     ]
 

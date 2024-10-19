@@ -5,7 +5,7 @@ import DashboardCard from '../../../shared/Card/DashboardCard';
 import { pipeUrls, programActionStatus } from '../../../utils/constant';
 import { Button } from '../../../shared';
 import DataTable from '../../../shared/DataGrid';
-import { mentorTaskColumns, mentorTaskRows } from '../../../mock';
+import { mentorTaskColumns } from '../../../mock';
 import ViewIcon from '../../../assets/images/view1x.png'
 import { useDispatch, useSelector } from 'react-redux';
 import { getMenteeTaskfromMentor } from '../../../services/task';
@@ -89,7 +89,6 @@ const MentorTask = () => {
     }
 
     const handleBookmark = (program) => {
-        console.log('program bookmark', program)
         // dispatch(updateProgram({ id: program.id, is_bookmark: !program.is_bookmark }))
     }
 
@@ -376,7 +375,6 @@ const MentorTask = () => {
             flex: 1,
             id: 4,
             renderCell: (params) => {
-                console.log('params', params)
                 return <>
                     <div className='cursor-pointer flex items-center h-full' onClick={() => navigate(`/mentor-tasks-details/${params.row.id}?mentee_id=${params.row.mentee_id}`)}>
                         <img src={ViewIcon} alt='ViewIcon' />

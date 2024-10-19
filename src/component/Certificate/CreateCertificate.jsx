@@ -50,20 +50,6 @@ export default function CreateCertificate() {
     } = useForm();
 
     const onSubmit = (data) => {
-        console.log('Submit11', data)
-
-
-
-        // const apiData = {
-        //     "category": parseInt(data.category),
-        //     "program": parseInt(data.program),
-        //     "report_name": data.report_name,
-        //     "participated_mentees": data.participated_mentees,
-        //     "pass_mentee_list": data.pass_mentee_list,
-        //     "fail_mentee_list": data.fail_mentee_list,
-        //     "description": data.description,
-        //     "action": data?.action || "submit"
-        // }
         const apiPayload = {
             id: parseInt(data.program),
         }
@@ -144,7 +130,6 @@ export default function CreateCertificate() {
 
     useEffect(() => {
         if (categoryPrograms.length) {
-            console.log('categoryPrograms', categoryPrograms)
             const fields = [...certificateFields].map(field => {
                 if (field.name === 'program') {
                     return {
@@ -158,7 +143,6 @@ export default function CreateCertificate() {
         }
 
         if (!categoryPrograms.length && getValues('category') !== '') {
-            console.log('category', getValues('category'))
             setNotification({ program: true })
         }
     }, [categoryPrograms])
@@ -261,7 +245,6 @@ export default function CreateCertificate() {
                                                                     }}
                                                                     disabled={field.disabled}
                                                                     onChange={(e) => {
-                                                                        // console.log('dateField123', dateField)
                                                                         dropdownField.onChange(e)
                                                                         if (field.name === 'category') getProgramInfo(e.target.value)
                                                                         if (field.name === 'program') handleProgramData(e.target.value)
@@ -360,7 +343,6 @@ export default function CreateCertificate() {
                                                                                 >
                                                                                     {
                                                                                         getValues(field.name) && getValues(field.name).slice(0, 6).map((popupfield, index) => {
-                                                                                            console.log('kkkkkkkkkkkk')
                                                                                             return (
                                                                                                 <>
                                                                                                     <p className='flex items-center gap-1'>
