@@ -58,7 +58,6 @@ export default function Layout() {
   }
 
   let moreitems = [
-
     {
       label: <div className='flex gap-4 items-center'>
         <img src={DiscussionIcon} alt="DiscussionIcon" />

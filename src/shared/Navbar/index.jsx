@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { useDispatch, useSelector } from "react-redux";
-import NotificationIcon from "../../assets/images/message1x.png";
+import NotificationIcon from "../../assets/icons/bellIcon.svg";
 import SettingsIcon from "../../assets/images/setting1x.png";
 import UserImage from "../../assets/images/user.jpg";
 import SearchIcon from "../../assets/images/search1x.png";
@@ -248,7 +248,7 @@ export const Navbar = () => {
                                         <Notification handleClose={handleCloseNotification} />
                                     </OverlayPanel>
                                 </div>
-                                <img src={SettingsIcon} alt="SettingsIcon" />
+                                {/* <img src={SettingsIcon} alt="SettingsIcon" /> */}
                             </>
                         }
 
