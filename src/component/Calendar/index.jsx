@@ -80,8 +80,8 @@ export default function Scheduler() {
                 <nav className="flex px-7 pt-6 pb-5 mx-2 border-b-2" aria-label="Breadcrumb">
                     <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
                         <li className="inline-flex items-center">
-                            <a href="#" className="inline-flex items-center text-sm font-medium" style={{ color: 'rgba(24, 40, 61, 1)' }}>
-                                Calendar
+                            <a href="#" className="inline-flex items-center text-[26px] font-medium" style={{ color: 'rgba(24, 40, 61, 1)' }}>
+                            Scheduler
                             </a>
                         </li>
                     </ol>
@@ -145,7 +145,7 @@ export default function Scheduler() {
                         <div className="col-span-4">
                             <div style={{ border: '1px solid rgba(219, 224, 229, 1)', boxShadow: 'rgba(0, 0, 0, 0.05) 4px 4px 25px 0px', borderRadius: '10px' }}>
                                 <CalendarMain
-                                    title="Meeting Calendar"
+                                    title="Meeting Scheduler"
                                     addSection={false}
                                     events={events}
                                 />
