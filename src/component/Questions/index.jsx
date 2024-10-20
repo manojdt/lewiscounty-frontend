@@ -29,6 +29,35 @@ export const Questions = () => {
 
   const role = userInfo.data.role || ''
 
+
+  const submitQuestionsData = (apiData) => {
+    if (role === 'mentee') {
+      const menteeApiData = {
+        ...apiData,
+        gender: apiData.gender[0],
+        dob: new Date(apiData.dob).toISOString().split('T')[0],
+        phone_number: apiData.phone_number
+      }
+      console.log('menteeApiData', menteeApiData)
+      dispatch(updateMenteeQuestions(menteeApiData))
+    }
+    else {
+
+      const mentorApiData = {
+        ...apiData,
+        gender: apiData.gender[0],
+        phone_number: apiData.phone_number
+      }
+      console.log('mentorApiData', mentorApiData)
+      dispatch(updateQuestions(mentorApiData))
+    }
+
+  }
+  const handleSkip = () => {
+    const { first_name, email, ...apiData } = { ...stepData, prev_mentorship: stepData.prev_mentorship === "true" }
+    submitQuestionsData(apiData)
+  }
+
   const handleNextStep = (data) => {
     const activeSteps = allStepList.map(step => {
       if (step.key === stepName[currentStep - 1]) return { ...step, status: 'Completed' }
@@ -38,26 +67,30 @@ export const Questions = () => {
     const fieldData = { ...stepData, ...data }
     setStepData(fieldData)
     setAllStepList(activeSteps)
+    console.log('fieldData', fieldData)
     if (formFields.length === currentStep) {
       const { first_name, email, ...apiData } = { ...fieldData, prev_mentorship: stepData.prev_mentorship === "true" }
-      if (role === 'mentee') {
-        const menteeApiData = {
-          ...apiData,
-          gender: apiData.gender[0],
-          dob: new Date(apiData.dob).toISOString().split('T')[0],
-          phone_number: apiData.phone_number
-        }
-        dispatch(updateMenteeQuestions(menteeApiData))
-      }
-      else {
+      submitQuestionsData(apiData)
+      // if (role === 'mentee') {
+      //   const menteeApiData = {
+      //     ...apiData,
+      //     gender: apiData.gender[0],
+      //     dob: new Date(apiData.dob).toISOString().split('T')[0],
+      //     phone_number: apiData.phone_number
+      //   }
+      //   console.log('menteeApiData', menteeApiData)
+      //   // dispatch(updateMenteeQuestions(menteeApiData))
+      // }
+      // else {
 
-        const mentorApiData = {
-          ...apiData,
-          gender: apiData.gender[0],
-          phone_number: apiData.phone_number
-        }
-        dispatch(updateQuestions(mentorApiData))
-      }
+      //   const mentorApiData = {
+      //     ...apiData,
+      //     gender: apiData.gender[0],
+      //     phone_number: apiData.phone_number
+      //   }
+      //   console.log('mentorApiData', mentorApiData)
+      //   // dispatch(updateQuestions(mentorApiData))
+      // }
     }
     else setCurrentStep(currentStep + 1)
     setBtnTypeAction({ back: false, next: true })
@@ -114,7 +147,7 @@ export const Questions = () => {
     setBtnTypeAction({ back: true, next: false })
   }
 
-  
+
   useEffect(() => {
     if (role === 'mentee') {
       setAllStepList(MenteeStepsList)
@@ -133,9 +166,16 @@ export const Questions = () => {
     <>
       <Navbar />
       <div className="px-9">
-        <h2 className="text-xl text-left py-8" style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 500 }}>
-          Fill the Question and Answer
-        </h2>
+        <div className="flex justify-between items-center">
+          <h2 className="text-xl text-left py-8" style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 500 }}>
+            Fill the Question and Answer
+          </h2>
+          {
+            ((role === 'mentor' && currentStep >= 3) || (role === 'mentee' && currentStep > 1)) &&
+            <p style={{color:'#1D5BBF', textDecoration:'underline', fontWeight:'bold', cursor: 'pointer'}} onClick={handleSkip}>Skip</p>
+          }
+          
+        </div>
         <Backdrop
           sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={userInfo.loading || userInfo.status === userStatus.login}
@@ -163,20 +203,22 @@ export const Questions = () => {
 
           </div>
         </MuiModal>
+
         <div style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
           <div className="steps pl-24 pr-28" style={{ boxShadow: '4px 4px 15px 0px rgba(0, 0, 0, 0.1)' }}>
             <Stepper steps={allStepList} currentStep={currentStep} btnTypeAction={btnTypeAction} />
           </div>
           {
-            (formFields.length && formFields[currentStep - 1]) ? <StepComponenRender
-              stepData={stepData}
-              stepName={stepName[currentStep - 1]}
-              stepFields={formFields[currentStep - 1]}
-              currentStep={currentStep}
-              handleNextStep={handleNextStep}
-              handlePreviousStep={handlePreviousStep}
-              totalSteps={formFields.length}
-            />
+            (formFields.length && formFields[currentStep - 1]) ?
+              <StepComponenRender
+                stepData={stepData}
+                stepName={stepName[currentStep - 1]}
+                stepFields={formFields[currentStep - 1]}
+                currentStep={currentStep}
+                handleNextStep={handleNextStep}
+                handlePreviousStep={handlePreviousStep}
+                totalSteps={formFields.length}
+              />
               : null
           }
 

@@ -80,7 +80,7 @@ const StepComponenRender = ({ stepFields, currentStep, handleNextStep, handlePre
                                 return (
                                     <div className={`relative mb-6 ${field.size ? 'width-49' : 'w-full'}`} key={index}>
                                         <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor={field.label}>
-                                            {field.label}
+                                            {field.label} <span style={{color: 'red'}}>{field?.inputRules?.required ? '*' : ''}</span>
                                         </label>
                                         {
                                             field.type === 'input' ?
