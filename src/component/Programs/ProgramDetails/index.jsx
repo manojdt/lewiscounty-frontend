@@ -2,14 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Backdrop, CircularProgress } from '@mui/material';
+import { useForm } from 'react-hook-form';
 
-import './program-details.css'
-import Carousel from '../../../shared/Carousel';
-import { curatedPrograms } from '../../../utils/mock';
-
-import { menteeNotJoinCondition, menteeProgramStatus, pipeUrls, programActionStatus, programAdminRejected, programApprovalStage, programCancelled, programCompleted, programInProgress, programNotLaunched, programNotReady, programNotStarted, programRequestApproval, programStatus, programWaitingActiveApproval, requestStatus } from '../../../utils/constant';
-import { updateNewPrograms, updateProgramDetails } from '../../../services/programInfo';
+import api from '../../../services/api';
+import { menteeNotJoinCondition, menteeProgramStatus, pipeUrls, programActionStatus, programAdminRejected, programApprovalStage, programCancelled, programCompleted, programInProgress, programNotLaunched, programNotStarted, programRequestApproval, programWaitingActiveApproval, requestStatus } from '../../../utils/constant';
 import { getMenteeJoinedInProgram, getProgramDetails, updateProgram } from '../../../services/userprograms';
+import { updateLocalRequest, updateProgramMenteeRequest, updateProgramRequest } from '../../../services/request';
 
 import UserImage from "../../../assets/images/user.jpg";
 import LocationIcon from '../../../assets/images/Location1x.png';
@@ -22,12 +20,10 @@ import MuiModal from '../../../shared/Modal';
 import SuccessTik from '../../../assets/images/blue_tik1x.png';
 import TickColorIcon from '../../../assets/icons/tickColorLatest.svg'
 import CancelIcon from '../../../assets/images/cancel1x.png'
-import CancelColorIcon from '../../../assets/icons/cancelCircle.svg'
-import api from '../../../services/api';
+
 import { Button } from '../../../shared';
-import { updateLocalRequest, updateProgramMenteeRequest, updateProgramRequest } from '../../../services/request';
-import { useForm } from 'react-hook-form';
-import { dateFormat, dateTimeFormat, formatDateTimeISO, formatTime, getTimeFromDate } from '../../../utils';
+import { dateFormat, formatDateTimeISO } from '../../../utils';
+import './program-details.css'
 
 
 export default function ProgramDetails() {
@@ -93,43 +89,7 @@ export default function ProgramDetails() {
         setCertificateActiveTab(key)
     }
 
-
     const commonApproval = ['completed', 'cancelled']
-
-    useEffect(() => {
-        if (Object.keys(programdetails).length && !programLoading) {
-            const notAllowedCond = ['completed', 'yettoapprove', 'draft']
-
-            if (!notAllowedCond.includes(programdetails.status)) {
-                if (role === 'mentee' && programdetails.status !== 'yettojoin' && programdetails.mentee_join_status === 'program_join_request_accepted') {
-                    navigate(`${pipeUrls.startprogram}/${params.id}`)
-                }
-
-                if (role === 'mentor' && requestId === '') {
-                    if (programdetails.status === programActionStatus.yettostart) {
-                        navigate(`${pipeUrls.assigntask}/${params.id}`)
-                    }
-                    else if ((programdetails.status === programActionStatus.inprogress || programdetails.status === programActionStatus.assigned ||
-                        programdetails.status === programActionStatus.paused || programdetails.status === programActionStatus.started
-
-                    )) {
-                        navigate(`${pipeUrls.startprogram}/${params.id}`)
-                    }
-                }
-            }
-
-            setLoading({ ...loading, initial: false })
-        }
-    }, [programdetails, menteeJoined])
-
-
-    useEffect(() => {
-        const programId = params.id;
-        if (programId && programId !== '') {
-            dispatch(getProgramDetails(programId))
-            if (role === 'mentee') { dispatch(getMenteeJoinedInProgram({ id: programId })); }
-        }
-    }, [params.id, role])
 
     const handleJoinProgram = async (programId) => {
         setLoading({ initial: true, join: false })
@@ -139,7 +99,6 @@ export default function ProgramDetails() {
             if (role === 'mentor') { dispatch(updateProgram({ id: programId, status: programActionStatus.yettostart })); }
         }
     }
-
 
     // Handle Accept Program Popup
     const handleConfirmPopup = () => {
@@ -202,6 +161,42 @@ export default function ProgramDetails() {
     }
 
     useEffect(() => {
+        if (Object.keys(programdetails).length && !programLoading) {
+            const notAllowedCond = ['completed', 'yettoapprove', 'draft']
+
+         
+            if (!notAllowedCond.includes(programdetails.status)) {
+                if (role === 'mentee' && programdetails.status !== 'yettojoin' && programdetails.mentee_join_status === 'program_join_request_accepted') {
+                    navigate(`${pipeUrls.startprogram}/${params.id}`)
+                }
+
+                if (role === 'mentor' && requestId === '') {
+                    if (programdetails.status === programActionStatus.yettostart) {
+                        navigate(`${pipeUrls.startprogram}/${params.id}`)
+                    }
+                    else if ((programdetails.status === programActionStatus.inprogress || programdetails.status === programActionStatus.assigned ||
+                        programdetails.status === programActionStatus.paused || programdetails.status === programActionStatus.started
+
+                    )) {
+                        navigate(`${pipeUrls.startprogram}/${params.id}`)
+                    }
+                }
+            }
+
+            setLoading({ ...loading, initial: false })
+        }
+    }, [programdetails, menteeJoined])
+
+    useEffect(() => {
+        const programId = params.id;
+        if (programId && programId !== '') {
+            dispatch(getProgramDetails(programId))
+            if (role === 'mentee') { dispatch(getMenteeJoinedInProgram({ id: programId })); }
+        }
+     
+    }, [params.id, role])
+
+    useEffect(() => {
         if (status === programActionStatus.yettostart) {
             setLoading({ initial: false, join: true })
         }
@@ -220,7 +215,7 @@ export default function ProgramDetails() {
     useEffect(() => {
         if (taskJoined) {
             setTimeout(() => {
-                if (role === 'mentor') navigate(`${pipeUrls.assigntask}/${programdetails.id}`)
+                // if (role === 'mentor') navigate(`${pipeUrls.assigntask}/${programdetails.id}`)
                 if (role === 'mentee') navigate(`${pipeUrls.startprogram}/${programdetails.id}`)
             }, [3000])
 
@@ -371,9 +366,9 @@ export default function ProgramDetails() {
 
                 </div>
             </MuiModal>
+
             {
                 (!programLoading && Object.keys(programdetails).length) ?
-
 
                     <div className='grid mb-10' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)', borderRadius: '5px' }}>
                         <div className='breadcrum'>

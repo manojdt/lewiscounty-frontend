@@ -51,7 +51,7 @@ import SkillsSet from '../../SkillsSet';
 import api from '../../../services/api';
 import { programCancelRequest, programRescheduleRequest, updateLocalRequest } from '../../../services/request';
 import './details.css'
-import { formatDateFunToAll ,formatDateTimeISO} from '../../../utils';
+import { formatDateFunToAll, formatDateTimeISO, todatDateInfo } from '../../../utils';
 
 
 export default function AssignTask() {
@@ -94,7 +94,7 @@ export default function AssignTask() {
     } = useForm();
 
 
-
+    const dateInfo = todatDateInfo()
 
 
     const tabs = [
@@ -139,21 +139,23 @@ export default function AssignTask() {
     const handleActionPage = async () => {
 
 
+        // if (programdetails.status === programActionStatus.yettostart) {
+        //     navigate(`${pipeUrls.assignmentess}/${programdetails.id}`)
+        // }
 
         if (programdetails.status === programActionStatus.yettostart) {
-            navigate(`${pipeUrls.assignmentess}/${programdetails.id}`)
-        }
-
-        if (programdetails.status === programActionStatus.assigned) {
             setLoading({ initial: true, task: false })
             const startProgramRequest = await api.post('start_program', { id: parseInt(params.id) });
-            if (startProgramRequest.status === 201 && startProgramRequest.data) {
+            if ((startProgramRequest.status === 201 || startProgramRequest.status === 200) && startProgramRequest.data) {
                 setLoading({ initial: false, task: false })
-                dispatch(getProgramDetails(parseInt(params.id)))
+                dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.inprogress })).then(() => {
+                    dispatch(getProgramDetails(parseInt(params.id)))
+                })
+
             }
         }
 
-        if(programdetails.status === programActionStatus.started){
+        if (programdetails.status === programActionStatus.started) {
             dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.inprogress }))
         }
 
@@ -295,17 +297,17 @@ export default function AssignTask() {
                 navigate(`/start-program/${programdetails.id}`)
             }
 
-            if (role === 'mentor' && window.location.href.includes('start-program') && programdetails.status === programActionStatus.yettostart) {
-                navigate(`/assign-task/${programdetails.id}`)
-            }
+            // if (role === 'mentor' && window.location.href.includes('start-program') && programdetails.status === programActionStatus.yettostart) {
+            //     navigate(`/assign-task/${programdetails.id}`)
+            // }
 
-            if (programdetails.status === programActionStatus.paused) {
-                timerData.stopTimer()
-            }
+            // if (programdetails.status === programActionStatus.paused) {
+            //     timerData.stopTimer()
+            // }
 
-            if (programdetails.status === programActionStatus.inprogress) {
-                timerData.startTimer(0, 20, 0)
-            }
+            // if (programdetails.status === programActionStatus.inprogress) {
+            //     timerData.startTimer(0, 20, 0)
+            // }
 
             if (programdetails.status === programActionStatus.completed) {
                 navigate('/programs')
@@ -417,7 +419,7 @@ export default function AssignTask() {
                                                             }
 
                                                             {
-                                                            
+
                                                                 <MenuItem onClick={() => handleMenu('cancel')} className='!text-[12px]'>
                                                                     <img src={AbortIcon} alt="AbortIcon" className='pr-3 w-[25px]' />
                                                                     Abort</MenuItem>
@@ -437,8 +439,8 @@ export default function AssignTask() {
                                                                     <MenuItem onClick={() => handleComplete(programDetails.id)} className='!text-[12px]'>
                                                                         <img src={CompleteIcon} alt="AbortIcon" className='pr-3 w-[25px]' />
                                                                         Complete</MenuItem>
-                                                                    <MenuItem onClick={() => navigate(`${pipeUrls.assignmentess}/${programdetails.id}`)} className='!text-[12px]'>
-                                                                        <img src={PlusCircle} alt="PlusCircle" className='pr-3 w-[25px]' />Assign Task to Mentees</MenuItem>
+                                                                    {/* <MenuItem onClick={() => navigate(`${pipeUrls.assignmentess}/${programdetails.id}`)} className='!text-[12px]'>
+                                                                        <img src={PlusCircle} alt="PlusCircle" className='pr-3 w-[25px]' />Assign Task to Mentees</MenuItem> */}
                                                                 </>
                                                             }
 
@@ -490,7 +492,7 @@ export default function AssignTask() {
                                             <div className='flex gap-3 items-center'>
                                                 <img src={CalendarIcon} alt="CalendarIcon" />
                                                 <span className='text-[12px]'>
-                                                {formatDateTimeISO(programdetails?.start_date)} 
+                                                    {formatDateTimeISO(programdetails?.start_date)}
                                                 </span>
                                             </div>
 
@@ -584,13 +586,33 @@ export default function AssignTask() {
                                             }
                                             {
                                                 programdetails.status === programActionStatus.inprogress || programdetails.status === programActionStatus.paused
-                                                || programdetails.status === programActionStatus.started
+                                                    || programdetails.status === programActionStatus.started
 
                                                     ?
 
                                                     <div className='flex gap-9'>
 
-                                                        <div className='flex gap-6 items-center justify-center'>
+                                                        <div className='flex gap-2 items-center justify-center'>
+                                                            <p className="flex flex-col gap-2 items-center justify-center">
+                                                                <span className='px-2 py-1 text-[20px] w-[40px] flex justify-center items-center'
+                                                                    style={{ background: 'rgba(231, 241, 242, 1)', color: 'rgba(0, 174, 189, 1)', borderRadius: '5px', fontWeight: 700 }}>{dateInfo.month}</span>
+                                                                <span className="text-[12px]" style={{ color: 'rgba(118, 118, 118, 1)' }}>Month</span>
+                                                            </p>
+                                                            <p className='flex justify-center items-baseline pt-2 h-full w-full font-bold'>-</p>
+                                                            <p className="flex flex-col gap-2 items-center justify-center">
+                                                                <span className='px-2 py-1 text-[20px] w-[40px] flex justify-center items-center'
+                                                                    style={{ background: 'rgba(231, 241, 242, 1)', color: 'rgba(0, 174, 189, 1)', borderRadius: '5px', fontWeight: 700 }}>{dateInfo.date}</span>
+                                                                <span className="text-[12px]" style={{ color: 'rgba(118, 118, 118, 1)' }}>Day</span>
+                                                            </p>
+                                                            <p className='flex justify-center items-baseline pt-2 h-full w-full font-bold'>-</p>
+                                                            <p className="flex flex-col gap-2 items-center justify-center">
+                                                                <span className='px-2 py-1 text-[20px] w-[70px] flex justify-center items-center'
+                                                                    style={{ background: 'rgba(231, 241, 242, 1)', color: 'rgba(0, 174, 189, 1)', borderRadius: '5px', fontWeight: 700 }}>{dateInfo.year}</span>
+                                                                <span className="text-[12px]" style={{ color: 'rgba(118, 118, 118, 1)' }}>Year</span>
+                                                            </p>
+                                                        </div>
+
+                                                        {/* <div className='flex gap-6 items-center justify-center'>
                                                             <p className="flex flex-col gap-2 items-center justify-center">
                                                                 <span className='px-2 py-1 text-[20px] w-[40px] flex justify-center items-center'
                                                                     style={{ background: 'rgba(231, 241, 242, 1)', color: 'rgba(0, 174, 189, 1)', borderRadius: '5px', fontWeight: 700 }}>{timerData.hours}</span>
@@ -606,7 +628,7 @@ export default function AssignTask() {
                                                                     style={{ background: 'rgba(231, 241, 242, 1)', color: 'rgba(0, 174, 189, 1)', borderRadius: '5px', fontWeight: 700 }}>{timerData.seconds}</span>
                                                                 <span className="text-[12px]" style={{ color: 'rgba(118, 118, 118, 1)' }}>Secs</span>
                                                             </p>
-                                                        </div>
+                                                        </div> */}
 
                                                         <>
                                                             {
@@ -623,7 +645,7 @@ export default function AssignTask() {
                                                                     {programdetails.status === programActionStatus.inprogress ? 'Pause' : 'Start'}</button>
                                                             }
 
-                                                            {
+                                                            {/* {
                                                                 role === 'mentee' &&
                                                                 <div>
                                                                     <p className="flex flex-col  items-center justify-center">
@@ -635,7 +657,7 @@ export default function AssignTask() {
                                                                         <span className="text-[16px]" style={{ color: 'rgba(255, 67, 0, 1)' }}>2 Hours 30 mins</span>
                                                                     </p>
                                                                 </div>
-                                                            }
+                                                            } */}
 
 
                                                         </>
@@ -644,7 +666,7 @@ export default function AssignTask() {
                                                     : null
                                             }
 
-                                            {
+                                            {/* {
                                                 (programdetails.status === programActionStatus.yettostart && role === 'mentor') &&
 
                                                 <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
@@ -656,10 +678,10 @@ export default function AssignTask() {
                                                     Assign Task To Mentees
 
                                                 </button>
-                                            }
+                                            } */}
 
                                             {
-                                                (programdetails.status === programActionStatus.assigned && role === 'mentor') &&
+                                                (programdetails.status === programActionStatus.yettostart && role === 'mentor') &&
 
                                                 <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
                                                     background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
@@ -667,7 +689,7 @@ export default function AssignTask() {
                                                 }}
                                                     onClick={handleActionPage}
                                                 >
-                                                    Start Program Request
+                                                    Start Program
 
                                                 </button>
                                             }
@@ -720,7 +742,7 @@ export default function AssignTask() {
                                                     <span>{programdetails.course_level}</span>
                                                 </li>
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>Date</span>
-                                                <span>{ `${formatDateFunToAll(programdetails?.start_date)}  &  ${formatDateFunToAll(programdetails?.end_date)} `}</span>
+                                                    <span>{`${formatDateFunToAll(programdetails?.start_date)}  &  ${formatDateFunToAll(programdetails?.end_date)} `}</span>
                                                 </li>
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>Duration</span>
                                                     <span>{programdetails.duration}</span>
@@ -729,7 +751,7 @@ export default function AssignTask() {
                                                     <span>Flexible schedule</span>
                                                 </li>
                                                 <li className='flex justify-between text-[12px]' style={{ paddingTop: '14px' }}> <span>Mentees</span>
-                                                    <span>{programdetails.members.length}</span>
+                                                    <span className='underline cursor-pointer'>{programdetails.members.length}</span>
                                                 </li>
                                             </ul>
                                         </div>
@@ -738,10 +760,10 @@ export default function AssignTask() {
                                 </div>
 
 
-                                {
+                                {/* {
                                     role === 'mentee' && (programdetails.status === programActionStatus.inprogress || programdetails.status === programActionStatus.paused) &&
                                     <SkillsSet programdetails={programdetails} />
-                                }
+                                } */}
 
 
                                 {/* Detail Section */}

@@ -7,9 +7,13 @@ import Card from '../../shared/Card';
 import ProgramCard from '../../shared/Card/ProgramCard';
 import SearchIcon from '../../assets/icons/search.svg';
 import CalendarIcon from '../../assets/images/calender_1x.png';
+import GridViewIcon from '../../assets/icons/gridviewIcon.svg';
+import ListViewIcon from '../../assets/icons/listviewIcon.svg';
 
 import { pipeUrls, programActionStatus, programMenus, programStatus, statusAction } from '../../utils/constant';
 import { getMenteeProgramCount, getMenteePrograms, getProgramCounts, getUserPrograms, updateProgram } from '../../services/userprograms';
+import DataTable from '../../shared/DataGrid';
+import { programListColumns } from '../../utils/tableFields';
 
 
 export default function Programs() {
@@ -19,6 +23,7 @@ export default function Programs() {
 
     const [programsList, setProgramsList] = useState([])
     const [programMenusList, setProgramMenusList] = useState([])
+    const [programView, setProgramView] = useState('grid');
 
     const userInfo = useSelector(state => state.userInfo)
     const userprograms = useSelector(state => state.userPrograms)
@@ -36,12 +41,16 @@ export default function Programs() {
         let baseUrl = pipeUrls.programdetails
         if (Object.keys(programdetails).length) {
             if (role === 'mentor' && programdetails.status !== 'completed') {
-                if (programdetails.status === programActionStatus.yettostart) baseUrl = pipeUrls.assigntask
+                if (programdetails.status === programActionStatus.yettostart) baseUrl = pipeUrls.startprogram
                 if (programdetails.status === programActionStatus.inprogress) baseUrl = pipeUrls.startprogram
             }
             navigate(`${baseUrl}/${programdetails.id}`)
         }
 
+    }
+
+    const handleViewChange = () => {
+        setProgramView(programView === 'grid' ? 'list' : 'grid')
     }
 
 
@@ -152,8 +161,7 @@ export default function Programs() {
                     }
                 </Backdrop>
                 <div>
-                    {programMenusList.find(menu => menu.status === searchParams.get("type"))?.name ||
-                        (searchParams.get("is_bookmark") ? 'Bookmarked Programs' : 'All Programs')}
+                    Programs
                 </div>
                 {
                     userInfo && userInfo.data && (userInfo.data.role === 'mentor' || userInfo.data.role === 'admin') &&
@@ -172,9 +180,29 @@ export default function Programs() {
                 <div className="col-span-4">
                     <div style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }}>
                         <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
-                            <div className="flex gap-4"></div>
-                            <div className="flex gap-20 items-center">
-                                <img src={SearchIcon} alt="statistics" />
+                            <div className="flex gap-4">
+                                <div>
+                                    {programMenusList.find(menu => menu.status === searchParams.get("type"))?.name ||
+                                        (searchParams.get("type") === 'planned' && 'Planned Programs') ||
+                                        (searchParams.get("is_bookmark") ? 'Bookmarked Programs' : 'All Programs')}
+                                </div>
+                                <img src={programView === 'grid' ? ListViewIcon : GridViewIcon} className='cursor-pointer' alt="viewicon" onClick={handleViewChange} />
+
+
+                            </div>
+                            <div className="flex gap-8 items-center">
+                                <div className="relative">
+                                    <input type="text" id="search-navbar" className="block w-full p-2 text-sm text-gray-900 border-none"
+                                        placeholder="Search here..." style={{
+                                            border: '1px solid rgba(29, 91, 191, 1)',
+                                            height: '40px',
+                                            width: '345px'
+                                        }} />
+                                    <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
+                                        <img src={SearchIcon} className='w-[15px]' alt='SearchIcon' />
+                                    </div>
+                                </div>
+                                {/* <img src={SearchIcon} alt="statistics" /> */}
 
                                 <p className="text-[12px] py-2 pl-5 pr-4 flex gap-4" style={{ background: 'rgba(223, 237, 255, 1)', borderRadius: '5px' }}>
                                     <img src={CalendarIcon} alt="CalendarIcon" />
@@ -186,16 +214,28 @@ export default function Programs() {
                             </div>
 
                         </div>
-                        <ProgramCard
-                            title="Planned Programs"
-                            viewpage="/programs?type=yettojoin"
-                            handleNavigateDetails={handleNavigation}
-                            handleBookmark={handleBookmark}
-                            programs={programsList}
-                            noTitle
-                        />
+                        {
+                            programView === 'grid' &&
+                            <ProgramCard
+                                title="Planned Programs"
+                                viewpage="/programs?type=yettojoin"
+                                handleNavigateDetails={handleNavigation}
+                                handleBookmark={handleBookmark}
+                                programs={programsList}
+                                noTitle
+                            />
+                        }
 
-                      
+                        {
+                            programView === 'list' &&
+
+                            <div className='py-6 px-6'>
+                                <DataTable rows={programsList} columns={programListColumns} hideFooter={!programsList.length} />
+                            </div>
+                        }
+
+
+
                     </div>
                 </div>
             </div>
