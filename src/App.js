@@ -66,6 +66,7 @@ import CertificateMemberDetails from "./component/Certificate/CertificateMemberD
 import CertificateMenteeList from "./component/Certificate/CertificateMenteeList";
 import AssignMentor from "./component/Members/AssignMentor";
 import MentorChangeRequest from "./component/MentorDetails/MentorChangeRequest";
+import MenteeDocs from "./component/Programs/ProgramDetails/MenteeDocs";
 
 function App() {
   const PrivateRoute = () => {
@@ -103,6 +104,7 @@ function App() {
         <Route element={<Layout />}>
           <Route path="/dashboard" element={<Dashboard />} />
 
+          <Route path="/mentee-document-upload/:id" element={<MenteeDocs />} />
           <Route path="/programs" element={<Programs />} />
           <Route path="/program-details/:id" element={<ProgramDetails />} />
           <Route path="/program-task/:id" element={<ProgramTask />} />
