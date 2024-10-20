@@ -55,7 +55,7 @@ const Goals = () => {
 
     const requestBtns = [
         {
-            name: 'Mentor Goals',
+            name: 'My Goals',
             key: 'mentor-goals'
         },
         {
@@ -429,7 +429,7 @@ const Goals = () => {
         },
     ]
 
-    const title = goalsListMenu.find(option => option.key === searchParams.get("type"))?.name || (role === 'mentee' ? 'Mentee Goals' : 'Mentor Goals')
+    const title = goalsListMenu.find(option => option.key === searchParams.get("type"))?.name || (role === 'mentee' ? 'Mentee Goals' : 'My Goals')
 
     const handleTab = (key) => {
         setRequestTab(key)

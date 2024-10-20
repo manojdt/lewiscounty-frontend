@@ -31,7 +31,7 @@ export const Mentees = () => {
 
     const menteeOption = [
         {
-            name: 'My Mentees',
+            name: 'Mentees',
             value: 'my-mentee'
         },
         {

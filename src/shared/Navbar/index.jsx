@@ -337,7 +337,7 @@ export const Navbar = () => {
                                     </div>
                                 </li>
                                 <li className={`${pathname === '/calendar' ? 'dashboard-menu-active' : ''}`}>
-                                    <span onClick={() => navigate('/calendar')} className="block py-2 px-3 text-black rounded md:hover:bg-transparent md:p-0 cursor-pointer">Calendar</span>
+                                    <span onClick={() => navigate('/calendar')} className="block py-2 px-3 text-black rounded md:hover:bg-transparent md:p-0 cursor-pointer">Scheduler</span>
                                 </li>
                                 <li className={`${pathname === '/discussions' ? 'dashboard-menu-active' : ''}`}>
                                     <span onClick={() => navigate('/dashboard')} className="block py-2 px-3 text-black rounded md:hover:bg-transparent md:p-0 cursor-pointer">Discussions</span>
