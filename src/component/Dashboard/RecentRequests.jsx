@@ -15,6 +15,7 @@ import ViewIcon from '../../assets/images/view1x.png'
 import { getprogramRequest, updateProgramMenteeRequest } from '../../services/request'
 import MuiModal from '../../shared/Modal'
 import { Button } from '../../shared'
+import DataTable from '../../shared/DataGrid'
 
 export default function RecentRequests({ data = [] }) {
     const navigate = useNavigate()
@@ -92,6 +93,62 @@ export default function RecentRequests({ data = [] }) {
         dispatch(getprogramRequest(mentorRecentRequestPayload))
     }
 
+    const recentRequestColumn = [
+        {
+            field: 'program_name',
+            headerName: 'Program Name',
+            flex: 1,
+            id: 0,
+        },
+        {
+            field: 'position',
+            headerName: 'Position',
+            flex: 1,
+            id: 1,
+        },
+        {
+            field: 'action',
+            headerName: 'Action',
+            flex: 1,
+            id: 0,
+            renderCell: (params) => {
+                return <>
+                    <div className="pt-1 cursor-pointer" style={{ marginLeft: 'auto' }}
+                        onClick={(e) => handleMoreClick(e, params.row)}
+                    ><img src={MoreIcon} alt="MoreIcon" />
+                    </div>
+                    <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                        MenuListProps={{
+                            'aria-labelledby': 'basic-button',
+                        }}
+                    >
+                        <MenuItem onClick={(e) => navigate(`/program-details/${seletedItem.program}?request_id=${seletedItem.id}`)} className='!text-[12px]'>
+                            <img src={ViewIcon} alt="ViewIcon" className='pr-3 w-[30px]' />
+                            View
+                        </MenuItem>
+                        {
+                            (seletedItem.status === 'new' || seletedItem.status === 'pending') &&
+                            <>
+                                <MenuItem onClick={handleAcceptProgramRequest} className='!text-[12px]'>
+                                    <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
+                                    Approve
+                                </MenuItem>
+                                <MenuItem onClick={handleCancelProgramRequest} className='!text-[12px]'>
+                                    <img src={CloseCircle} alt="CancelIcon" className='pr-3 w-[27px]' />
+                                    Reject
+                                </MenuItem>
+                            </>
+                        }
+                    </Menu>
+                </>
+            },
+        },
+    ];
+
     useEffect(() => {
         getRecentRequest()
     }, [])
@@ -103,12 +160,17 @@ export default function RecentRequests({ data = [] }) {
                     <div className="card-dash" style={{ background: 'linear-gradient(180deg, #00B1C0 0%, #005DC6 100%)' }} ></div>
                     <h4>Recent Requests</h4>
                 </div>
-                <p className="text-[12px] cursor-pointer"><img src={MoreIcon} alt="MoreIcon" /></p>
             </div>
 
 
             <div className="content flex gap-4 py-5 px-5 overflow-x-auto">
-                {
+
+                <DataTable
+                    rows={programRequest}
+                    columns={recentRequestColumn}
+                    height={'460px'}
+                />
+                {/* {
                     programRequest.map((recentRequest, index) =>
                         <div key={index} className="lg:w-5/12 md:w-1/3 py-3 px-3" style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '10px' }}>
                             <div className="flex gap-2 pb-3" style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
@@ -163,7 +225,7 @@ export default function RecentRequests({ data = [] }) {
                         </div>
 
                     )
-                }
+                } */}
             </div>
 
 
