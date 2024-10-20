@@ -7,7 +7,6 @@ import { Calendar } from 'primereact/calendar';
 import UserImage from "../../../assets/images/user.jpg";
 import LocationIcon from '../../../assets/images/Location1x.png';
 import CalendarIcon from '../../../assets/images/calender_1x.png';
-import DoubleArrowIcon from '../../../assets/images/double_arrow 1x.png';
 import RatingsIcon from '../../../assets/images/ratings1x.png';
 import SponsorIcon from '../../../assets/images/program_logo1x.png';
 import CertificateIcon from '../../../assets/images/certficate1x.png';
@@ -376,8 +375,7 @@ export default function AssignTask() {
                                 </ol>
 
                                 {
-
-                                    role === 'mentor' &&
+                                    role !== 'admin' &&
 
                                     <>
                                         <div className='cursor-pointer' onClick={handleClick}>
@@ -411,38 +409,60 @@ export default function AssignTask() {
                                                     currentPage === 'startprogram' ?
                                                         <>
                                                             {
-                                                                programdetails.status === programActionStatus.paused &&
+                                                                role === 'mentor' &&
 
-                                                                <MenuItem onClick={handleClose} className='!text-[12px]'>
-                                                                    <img src={ResumeIcon} alt="ResumeIcon" className='pr-3 w-[25px]' />
-                                                                    Resume</MenuItem>
-                                                            }
-
-                                                            {
-
-                                                                <MenuItem onClick={() => handleMenu('cancel')} className='!text-[12px]'>
-                                                                    <img src={AbortIcon} alt="AbortIcon" className='pr-3 w-[25px]' />
-                                                                    Abort</MenuItem>
-                                                            }
-                                                            <MenuItem onClick={() => handleMenu('reschedule')} className='!text-[12px]'>
-                                                                <img src={RescheduleIcon} alt="RescheduleIcon" className='pr-3 w-[25px]' />
-                                                                Reschedule
-                                                            </MenuItem>
-                                                            <MenuItem onClick={handleClose} className='!text-[12px]'>
-                                                                <img src={ShareIcon} alt="ShareIcon" className='pr-3 w-[25px]' /> Share</MenuItem>
-                                                            {
-                                                                (programdetails.status === programActionStatus.inprogress
-                                                                    || programdetails.status === programActionStatus.assigned
-
-                                                                ) &&
                                                                 <>
-                                                                    <MenuItem onClick={() => handleComplete(programDetails.id)} className='!text-[12px]'>
-                                                                        <img src={CompleteIcon} alt="AbortIcon" className='pr-3 w-[25px]' />
-                                                                        Complete</MenuItem>
-                                                                    {/* <MenuItem onClick={() => navigate(`${pipeUrls.assignmentess}/${programdetails.id}`)} className='!text-[12px]'>
-                                                                        <img src={PlusCircle} alt="PlusCircle" className='pr-3 w-[25px]' />Assign Task to Mentees</MenuItem> */}
+
+                                                                    {
+                                                                        programdetails.status === programActionStatus.paused &&
+
+                                                                        <MenuItem onClick={handleClose} className='!text-[12px]'>
+                                                                            <img src={ResumeIcon} alt="ResumeIcon" className='pr-3 w-[25px]' />
+                                                                            Resume</MenuItem>
+                                                                    }
+
+                                                                    {
+
+                                                                        <MenuItem onClick={() => handleMenu('cancel')} className='!text-[12px]'>
+                                                                            <img src={AbortIcon} alt="AbortIcon" className='pr-3 w-[25px]' />
+                                                                            Abort</MenuItem>
+                                                                    }
+                                                                    <MenuItem onClick={() => handleMenu('reschedule')} className='!text-[12px]'>
+                                                                        <img src={RescheduleIcon} alt="RescheduleIcon" className='pr-3 w-[25px]' />
+                                                                        Reschedule
+                                                                    </MenuItem>
+                                                                    <MenuItem onClick={handleClose} className='!text-[12px]'>
+                                                                        <img src={ShareIcon} alt="ShareIcon" className='pr-3 w-[25px]' /> Share</MenuItem>
+                                                                    {
+                                                                        (programdetails.status === programActionStatus.inprogress
+                                                                            || programdetails.status === programActionStatus.assigned
+
+                                                                        ) &&
+                                                                        <>
+                                                                            <MenuItem onClick={() => handleComplete(programDetails.id)} className='!text-[12px]'>
+                                                                                <img src={CompleteIcon} alt="AbortIcon" className='pr-3 w-[25px]' />
+                                                                                Complete</MenuItem>
+                                                                            <MenuItem onClick={() => navigate(`${pipeUrls.assignmentess}/${programdetails.id}`)} className='!text-[12px]'>
+                                                                        <img src={PlusCircle} alt="PlusCircle" className='pr-3 w-[25px]' />Assign Task to Mentees</MenuItem>
+                                                                        </>
+                                                                    }
                                                                 </>
                                                             }
+
+                                                            {
+                                                                role === 'mentee' &&
+
+                                                                <>
+                                                                  {
+                                                                        programdetails.status === programActionStatus.inprogress &&
+
+                                                                        <MenuItem onClick={() => handleMenu('cancel')} className='!text-[12px]'>
+                                                                            <img src={AbortIcon} alt="AbortIcon" className='pr-3 w-[25px]' />
+                                                                            Cancel</MenuItem>
+                                                                    }
+                                                                </>
+                                                            }
+
 
 
                                                         </>
