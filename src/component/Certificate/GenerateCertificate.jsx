@@ -8,6 +8,13 @@ export default function GenerateCertificate() {
   const navigate = useNavigate();
   const { id } = useParams();
 
+  useEffect(() => {
+    console.log('id', id)
+    if(id === '' || id === 'null'){
+      navigate('/certificates')
+    }
+  },[id])
+
   return (
     <div className="px-8 mt-10 pb-5">
       <div

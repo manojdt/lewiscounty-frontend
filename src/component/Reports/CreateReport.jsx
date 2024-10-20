@@ -83,7 +83,12 @@ export default function CreateReport() {
     useEffect(() => {
         if (status === reportsStatus.create) {
             setTimeout(() => {
-                navigate(`/generate_certificate/${searchParams.get('program_id')}`)
+                console.log('spppppp', searchParams.get('program_id'))
+                if (searchParams.get('program_id') && searchParams.get('program_id') !== '' && searchParams.get('program_id') !== null) {
+                    navigate(`/generate_certificate/${searchParams.get('program_id')}`)
+                }else{
+                    navigate('/reports')
+                }
             }, 3000)
         }
     }, [status])
