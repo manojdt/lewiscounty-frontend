@@ -169,6 +169,8 @@ export default function RecentRequests({ data = [] }) {
                     rows={programRequest}
                     columns={recentRequestColumn}
                     height={'460px'}
+                    hideCheckbox
+                    hideFooter={!programRequest.length}
                 />
                 {/* {
                     programRequest.map((recentRequest, index) =>
