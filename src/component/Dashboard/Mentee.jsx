@@ -70,7 +70,14 @@ export const Mentee = () => {
     const handleNavigateDetails = (program) => {
         let baseUrl = pipeUrls.programdetails
         if (Object.keys(program).length) {
-            navigate(`${baseUrl}/${program.id}`)
+            const filterType = searchParams.get("type");
+            if (role === 'mentee' && filterType === 'yettostart') {
+                navigate(`/mentee-document-upload/${program.id}`)
+            } else {
+                navigate(`${baseUrl}/${program.id}`)
+            }
+
+            
         }
 
     }

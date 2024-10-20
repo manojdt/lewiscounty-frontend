@@ -780,10 +780,10 @@ export default function AssignTask() {
                                 </div>
 
 
-                                {/* {
+                                {
                                     role === 'mentee' && (programdetails.status === programActionStatus.inprogress || programdetails.status === programActionStatus.paused) &&
                                     <SkillsSet programdetails={programdetails} />
-                                } */}
+                                }
 
 
                                 {/* Detail Section */}
