@@ -293,3 +293,78 @@ export const certificateMenberColumns = [
   },
 
 ];
+
+
+
+
+export const programListColumns = [
+  {
+      field: 'category_name',
+      headerName: 'Category',
+      flex: 1,
+      id: 0,
+      renderCell : (params) => {
+        return <>{params.row.categories && params.row.categories[0]?.name}</>
+      }
+  },
+  {
+      field: 'program_name',
+      headerName: 'Program Name',
+      flex: 1,
+      id: 1
+  },
+  {
+      field: 'session_count',
+      headerName: 'Sessions',
+      flex: 1,
+      id: 2,
+      renderCell: (params) => {
+        return <div className="pl-4">{params.row.session_count}</div>
+      }
+  },
+  {
+      field: 'course_level',
+      headerName: 'Course Level',
+      flex: 1,
+      id: 3
+  },
+  {
+      field: 'to_request',
+      headerName: 'Start date & End Date',
+      flex: 1,
+      id: 4,
+      renderCell: (params) => {
+        return <div>{dateFormat(params.row.start_date)} & {dateFormat(params.row.end_date)}</div>
+    }
+  },
+  {
+      field: 'duration',
+      headerName: 'Durations',
+      flex: 1,
+      id: 5,
+      renderCell: (params) => {
+        return <div className="pl-4">{params.row.duration}</div>
+      }
+  },
+  {
+      field: 'mentor_manager_id',
+      headerName: 'M.M',
+      flex: 1,
+      id: 6
+  },
+  {
+      field: 'members',
+      headerName: 'Mentees',
+      flex: 1,
+      id: 7,
+      renderCell : (params) => {
+          return <div className="pl-4">{params.row.members.length}</div>
+      }
+  },
+  {
+      field: 'ratings',
+      headerName: 'Ratings',
+      flex: 1,
+      id: 8,
+  }
+];

@@ -1182,21 +1182,21 @@ export const programRequestColumns = [
         headerName: 'Category',
         flex: 1,
         id: 0,
-        for: ['admin','mentor']
+        for: ['admin','mentor','mentee']
     },
     {
         field: 'program_name',
         headerName: 'Program Name',
         flex: 1,
         id: 1,
-        for: ['admin','mentor']
+        for: ['admin','mentor','mentee']
     },
     {
         field: 'requested_by_name',
         headerName: 'Requested By',
         flex: 1,
         id: 2,
-        for: ['admin']
+        for: ['admin','mentee']
     },
     {
         field: 'position',
@@ -1217,7 +1217,7 @@ export const programRequestColumns = [
         headerName: 'Request Date & Time',
         flex: 1,
         id: 5,
-        for: ['admin','mentor']
+        for: ['admin','mentor','mentee']
     },
     {
         field: 'cancelled_reason',
@@ -1231,14 +1231,14 @@ export const programRequestColumns = [
         headerName: 'Last Updated Date',
         flex: 1,
         id: 7,
-        for: ['admin']
+        for: ['admin','mentee']
     },
     {
         field: 'last_updated_by',
         headerName: 'Last Updated By',
         flex: 1,
         id: 8,
-        for: ['admin']
+        for: ['admin','mentee']
     },
     {
         field: 'auto_approval',

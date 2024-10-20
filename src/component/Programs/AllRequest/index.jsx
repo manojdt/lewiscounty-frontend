@@ -62,29 +62,39 @@ export default function AllRequest() {
     let programRequestTab = [
         {
             name: 'New Program Request',
-            key: 'new_program_request'
+            key: 'new_program_request',
+            for: ['admin']
         },
+        // {
+        //     name: 'Program Start',
+        //     key: 'program_start'
+        // },
         {
-            name: 'Program Start',
-            key: 'program_start'
+            name: 'Joining Request',
+            key: 'joining_request',
+            for: ['mentee', 'mentor']
         },
         {
             name: 'Program Reschedule',
-            key: 'program_reschedule'
+            key: 'program_reschedule',
+            for: ['mentor','admin']
         },
         {
             name: 'Program Cancel',
-            key: 'program_cancel'
+            key: 'program_cancel',
+            for: ['mentor','mentee', 'admin']
         }
     ]
 
-    if (role === 'mentor') {
-        programRequestTab = [{
-            name: 'Joining Request',
-            key: 'joining_request'
-        }
-        ]
-    }
+    programRequestTab = programRequestTab.filter((tab) => tab.for.includes(role))
+
+    // if (role === 'mentor') {
+    //     programRequestTab = [{
+    //         name: 'Joining Request',
+    //         key: 'joining_request'
+    //     }
+    //     ]
+    // }
 
     const memberJoinRequestTab = [
         {
@@ -182,6 +192,7 @@ export default function AllRequest() {
             "status": "accept"
         }))
     }
+
     const handleCancelCertificateApiRequest = () => {
         dispatch(updateCertificateRequest({
             "id": seletedItem.id,
@@ -394,6 +405,8 @@ export default function AllRequest() {
         programRequestColumn = programRequestColumn.filter(column => column.field !== 'auto_approval')
     }
 
+    console.log('programRequestColumn 1', programRequestColumn)
+
     programRequestColumn = [
         ...programRequestColumn,
         {
@@ -417,48 +430,54 @@ export default function AllRequest() {
             }
         },
         {
-            field: 'action',
-            headerName: 'Action',
-            flex: 1,
-            id: 4,
-            renderCell: (params) => {
-                return <>
-
-                    <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleMoreClick(e, params.row)}>
-                        <img src={MoreIcon} alt='MoreIcon' />
-                    </div>
-                    <Menu
-                        id="basic-menu"
-                        anchorEl={anchorEl}
-                        open={open}
-                        onClose={handleClose}
-                        MenuListProps={{
-                            'aria-labelledby': 'basic-button',
-                        }}
-                    >
-                        <MenuItem onClick={(e) => navigate(`/program-details/${seletedItem.program}?request_id=${seletedItem.id}`)} className='!text-[12px]'>
-                            <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
-                            View
-                        </MenuItem>
-                        {
-                            (params.row.status === 'new' || params.row.status === 'pending') &&
-                            <>
-                                <MenuItem onClick={handleAcceptProgramRequest} className='!text-[12px]'>
-                                    <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
-                                    Approve
-                                </MenuItem>
-                                <MenuItem onClick={handleCancelProgramRequest} className='!text-[12px]'>
-                                    <img src={CloseCircle} alt="CancelIcon" className='pr-3 w-[27px]' />
-                                    Reject
-                                </MenuItem>
-                            </>
-                        }
-                    </Menu>
-                </>
+            ...role !== 'mentee' &&
+            {
+                field: 'action',
+                headerName: 'Action',
+                flex: 1,
+                id: 4,
+                renderCell: (params) => {
+                    return <>
+    
+                        <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleMoreClick(e, params.row)}>
+                            <img src={MoreIcon} alt='MoreIcon' />
+                        </div>
+                        <Menu
+                            id="basic-menu"
+                            anchorEl={anchorEl}
+                            open={open}
+                            onClose={handleClose}
+                            MenuListProps={{
+                                'aria-labelledby': 'basic-button',
+                            }}
+                        >
+                            <MenuItem onClick={(e) => navigate(`/program-details/${seletedItem.program}?request_id=${seletedItem.id}`)} className='!text-[12px]'>
+                                <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
+                                View
+                            </MenuItem>
+                            {
+                                (params.row.status === 'new' || params.row.status === 'pending') &&
+                                <>
+                                    <MenuItem onClick={handleAcceptProgramRequest} className='!text-[12px]'>
+                                        <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
+                                        Approve
+                                    </MenuItem>
+                                    <MenuItem onClick={handleCancelProgramRequest} className='!text-[12px]'>
+                                        <img src={CloseCircle} alt="CancelIcon" className='pr-3 w-[27px]' />
+                                        Reject
+                                    </MenuItem>
+                                </>
+                            }
+                        </Menu>
+                    </>
+                }
             }
         }
+      
 
     ]
+
+    console.log('programRequestColumn 2', programRequestColumn)
 
     const goalColumns = [
         ...goalsRequestColumns,
@@ -814,6 +833,7 @@ export default function AllRequest() {
             rep_status: filterStatus,
         }))
     }
+
     const getCerificateRequestAPi = () => {
         dispatch(certificateRequest(
             filterStatus,
@@ -859,7 +879,7 @@ export default function AllRequest() {
                     }
                     tableDetails = { column: programRequestColumn, data: [] }
                     actionFilter = programInfoTab
-                    activeTabName = role === 'mentor' ? 'joining_request' : 'new_program_request'
+                    activeTabName = role === 'mentee' ? 'joining_request' : 'new_program_request'
                     break;
                 case RequestStatus.memberJoinRequest.key:
                     tableDetails = { column: memberMentorRequestColumns, data: [] }
@@ -899,12 +919,15 @@ export default function AllRequest() {
             setActiveTab(activeTabName)
         } else {
             setActionTabFilter(programRequestTab)
-            setActiveTab('new_program_request')
+            setActiveTab(role !== 'admin' ? 'joining_request' : 'new_program_request')
         }
 
 
 
     }, [searchParams, role])
+
+
+    console.log('Active Tab', actionTab)
 
 
     useEffect(() => {
@@ -981,7 +1004,6 @@ export default function AllRequest() {
 
     }, [status])
 
-
     useEffect(() => {
 
         if (searchParams.get('type') === 'program_request' || !searchParams.get('type')) {
@@ -1009,7 +1031,6 @@ export default function AllRequest() {
         }
 
     }, [programTableInfo, memberRequest, resourceRequest, goalsRequestInfo, certificateRequestList, reportsRequestInfo, anchorEl])
-
 
     useEffect(() => {
 
@@ -1042,7 +1063,6 @@ export default function AllRequest() {
         }
 
     }, [actionTab, searchParams, filterStatus, role])
-
 
     const footerComponent = (props) => {
         return (
@@ -1243,7 +1263,7 @@ export default function AllRequest() {
                                                                 <div className='flex justify-center pb-1'>
                                                                     <div className={`total-proram-count relative ${actionTab === discussion.key ? 'active' : ''}`}>10
 
-                                                                        <p className='notify-icon'></p>
+                                                                        {/* <p className='notify-icon'></p> */}
                                                                     </div>
                                                                 </div>
                                                                 <div className='text-[13px]'> {`${discussion.name}`}</div>

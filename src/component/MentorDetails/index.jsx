@@ -716,8 +716,8 @@ export default function MentorDetails() {
                                         </div>
 
                                         {
-                                            role === 'admin' &&
-                                            <div className='mt-8' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }}>
+                                            role === 'admmin' &&
+                                            <div className='mt-8 hide' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }}>
                                                 <div className='flex justify-between items-center px-6 py-4'>
                                                     <p style={{ color: '#1D5BBF' }}>Auto Approval</p>
                                                     <div>

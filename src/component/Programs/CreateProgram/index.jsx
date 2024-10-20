@@ -5,14 +5,6 @@ import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import ReactPlayer from 'react-player';
 
-import CancelIcon from '../../../assets/images/cancel-colour1x.png'
-import SuccessTik from '../../../assets/images/blue_tik1x.png';
-import SearchIcon from '../../../assets/images/search1x.png';
-import CertificateIcon from '../../../assets/images/dummy_certificate.png';
-import SuccessIcon from "../../../assets/images/Success_tic1x.png"
-import FailedIcon from "../../../assets/images/cancel3x.png"
-
-
 import ProgramSteps from './ProgramsSteps'
 import { ProgramTabs, ProgramFields } from '../../../utils/formFields'
 import { updateNewPrograms, getAllCategories, getAllMaterials, getAllCertificates, getAllSkills, getAllMembers, createNewPrograms } from '../../../services/programInfo'
@@ -21,6 +13,13 @@ import DataTable from '../../../shared/DataGrid';
 import { programStatus } from '../../../utils/constant';
 import MuiModal from '../../../shared/Modal'
 import Tooltip from '../../../shared/Tooltip';
+
+import CancelIcon from '../../../assets/images/cancel-colour1x.png'
+import SuccessTik from '../../../assets/images/blue_tik1x.png';
+import SearchIcon from '../../../assets/images/search1x.png';
+import CertificateIcon from '../../../assets/images/dummy_certificate.png';
+import SuccessIcon from "../../../assets/images/Success_tic1x.png"
+import FailedIcon from "../../../assets/images/cancel3x.png"
 
 export default function CreatePrograms() {
     const navigate = useNavigate()
@@ -175,35 +174,6 @@ export default function CreatePrograms() {
             </div>)
     }
 
-    useEffect(() => {
-        if (loading.success) {
-            setTimeout(() => {
-                setLoading({ create: false, success: false })
-                if (allPrograms && allPrograms.length) {
-                    navigate(`/dashboard?type=${programStatus.yetToPlan}`)
-                }
-            }, [3000])
-
-        }
-    }, [loading])
-
-    useEffect(() => {
-        if (allPrograms && allPrograms.length && loading.create) {
-            setTimeout(() => {
-                setLoading({ create: false, success: true })
-            }, [3000])
-        }
-    }, [allPrograms])
-
-    useEffect(() => {
-        dispatch(getAllCategories())
-    }, [])
-
-    useEffect(() => {
-        if (role === 'mentee') navigate('/programs')
-    }, [role])
-
-
     const handleModalSearch = (field) => {
         switch (field.target.name) {
             case 'learning_materials':
@@ -226,33 +196,6 @@ export default function CreatePrograms() {
                 break;
         }
     }
-
-
-    useEffect(() => {
-        if (currentStep === 1) {
-            const currentStepFields = programAllFields[currentStep - 1]
-            const updatedFields = currentStepFields.map(field => {
-                if (field.name === 'category') {
-                    return {
-                        ...field,
-                        options: category
-                    }
-                }
-                return field
-            })
-
-            const updateProgramFields = programAllFields.map((field, index) => {
-                if (index === currentStep - 1) {
-                    return updatedFields
-                }
-                return field
-            })
-
-            setProgramAllFields(updateProgramFields)
-        }
-        setFormDetails({ category: category, materials: materials, certificate: certificate, skills: skills, members: members })
-    }, [category, materials, certificate, skills, members])
-
 
     const fetchCategoryData = (categoryId) => {
         dispatch(getAllMaterials(categoryId))
@@ -340,6 +283,59 @@ export default function CreatePrograms() {
     })
 
     useEffect(() => {
+        if (currentStep === 1) {
+            const currentStepFields = programAllFields[currentStep - 1]
+            const updatedFields = currentStepFields.map(field => {
+                if (field.name === 'category') {
+                    return {
+                        ...field,
+                        options: category
+                    }
+                }
+                return field
+            })
+
+            const updateProgramFields = programAllFields.map((field, index) => {
+                if (index === currentStep - 1) {
+                    return updatedFields
+                }
+                return field
+            })
+
+            setProgramAllFields(updateProgramFields)
+        }
+        setFormDetails({ category: category, materials: materials, certificate: certificate, skills: skills, members: members })
+    }, [category, materials, certificate, skills, members])
+
+    useEffect(() => {
+        if (loading.success) {
+            setTimeout(() => {
+                setLoading({ create: false, success: false })
+                if (allPrograms && allPrograms.length) {
+                    navigate(`/dashboard?type=${programStatus.yetToPlan}`)
+                }
+            }, [3000])
+
+        }
+    }, [loading])
+
+    useEffect(() => {
+        if (allPrograms && allPrograms.length && loading.create) {
+            setTimeout(() => {
+                setLoading({ create: false, success: true })
+            }, [3000])
+        }
+    }, [allPrograms])
+
+    useEffect(() => {
+        dispatch(getAllCategories())
+    }, [])
+
+    useEffect(() => {
+        if (role === 'mentee') navigate('/programs')
+    }, [role])
+
+    useEffect(() => {
         if (role !== '') {
             const widthAdjustMentField1 = ['max_mentor_count', 'max_mentee_count', 'group_chat_requirement', 'individual_chat_requirement']
             const widthAdjustMentField2 = ['auto_approval', 'venue']
@@ -393,14 +389,12 @@ export default function CreatePrograms() {
                         <Tooltip title="Cancel">
                             <img className='cursor-pointer' onClick={() => navigate('/programs')} src={CancelIcon} alt="CancelIcon" />
                         </Tooltip>
-
                     </div>
                 </div>
 
                 <Backdrop
                     sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                     open={loading.create || apiLoading || status === programStatus.create || status === programStatus.exist || status === programStatus.error}
-
                 >
                     {
                         loading.create || apiLoading ?
@@ -419,7 +413,6 @@ export default function CreatePrograms() {
                             </div>
                             : null
                     }
-
                 </Backdrop>
 
                 <div className='px-8 py-4'>
@@ -450,7 +443,6 @@ export default function CreatePrograms() {
                         totalSteps={programAllFields.length}
                         fetchCategoryData={fetchCategoryData}
                     />
-
                 </div>
 
 

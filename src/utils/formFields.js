@@ -1104,18 +1104,29 @@ export const ProgramTabs = [{
 ]
 
 export const CourseLevelOptions = [{
-  key: "beginner",
-  value: "Beginner"
-},
-{
-  key: "intermediate",
-  value: "Intermediate"
-},
-{
-  key: "expert",
-  value: "Expert"
-},
+    key: "beginner",
+    value: "Beginner"
+  },
+  {
+    key: "intermediate",
+    value: "Intermediate"
+  },
+  {
+    key: "expert",
+    value: "Expert"
+  },
 ]
+
+export const SessionCounts = () => {
+  const sessions = []
+  for (let n = 1; n <= 20; n++) {
+    sessions.push({
+      key: n,
+      value: n
+    })
+  }
+  return sessions;
+}
 
 export const ProgramInformationFields = [{
     type: "dropdown",
@@ -1157,35 +1168,7 @@ export const ProgramInformationFields = [{
     inputRules: {
       required: "This field is required",
     },
-    options: [{
-        key: 1,
-        value: 1
-      },
-      {
-        key: 5,
-        value: 5
-      },
-      {
-        key: 10,
-        value: 10
-      },
-      {
-        key: 15,
-        value: 15
-      },
-      {
-        key: 20,
-        value: 20
-      },
-      {
-        key: 25,
-        value: 25
-      },
-      {
-        key: 30,
-        value: 30
-      },
-    ],
+    options: SessionCounts(),
     width: 'width-32',
     for: ['admin', 'mentor']
   },
@@ -1452,7 +1435,7 @@ export const ProgramOutcomesFields = [{
 export const ProgramTestimonialsFields = [{
     type: "popup-input",
     name: "members",
-    label: "Members",
+    label: "Additional Testimonies",
     placeholder: "Add request for testimonials",
     fieldtype: 'text',
     inputRules: {
@@ -2111,8 +2094,7 @@ export const CreateCertificateFields = [{
     fieldtype: "text",
     label: "Mentor Name",
     placeholder: "Mentor Name",
-    inputRules: {
-    },
+    inputRules: {},
     width: 'width-32',
     disabled: true
   },
@@ -2122,8 +2104,7 @@ export const CreateCertificateFields = [{
     fieldtype: "text",
     label: "Course Level",
     placeholder: "Course Level",
-    inputRules: {
-    },
+    inputRules: {},
     width: 'width-32',
     disabled: true
   },
@@ -2132,8 +2113,7 @@ export const CreateCertificateFields = [{
     name: "start_date",
     label: "Program Start Date and Time",
     placeholder: "Select Program Start Date and Time",
-    inputRules: {
-    },
+    inputRules: {},
     width: 'width-32',
     disabled: true
   },
@@ -2142,8 +2122,7 @@ export const CreateCertificateFields = [{
     name: "end_date",
     label: "Program End Date and Time",
     placeholder: "Select Program End Date and Time",
-    inputRules: {
-    },
+    inputRules: {},
     width: 'width-32',
     disabled: true
   },
@@ -2152,8 +2131,7 @@ export const CreateCertificateFields = [{
     name: "duration",
     label: "Duration",
     placeholder: "Duration",
-    inputRules: {
-    },
+    inputRules: {},
     width: 'w-[49%]',
     disabled: true
   },
@@ -2162,8 +2140,7 @@ export const CreateCertificateFields = [{
     name: "participated_mentees",
     label: "Participated Mentees",
     placeholder: "Select Meneteed",
-    inputRules: {
-    },
+    inputRules: {},
     options: [],
     width: 'w-[49%]',
   },
@@ -2172,8 +2149,7 @@ export const CreateCertificateFields = [{
     name: "pass_mentee_list",
     label: "Pass Mentees",
     placeholder: "Select Meneteed",
-    inputRules: {
-    },
+    inputRules: {},
     options: [],
     width: 'w-[49%]',
   },
@@ -2182,8 +2158,7 @@ export const CreateCertificateFields = [{
     name: "fail_mentee_list",
     label: "Fail  Mentees",
     placeholder: "Select Meneteed",
-    inputRules: {
-    },
+    inputRules: {},
     options: [],
     width: 'w-[49%]',
   },
