@@ -44,9 +44,12 @@ export default function Programs() {
                 if (programdetails.status === programActionStatus.yettostart) baseUrl = pipeUrls.startprogram
                 if (programdetails.status === programActionStatus.inprogress) baseUrl = pipeUrls.startprogram
             }
-            navigate(`${baseUrl}/${programdetails.id}`)
+            if (role === 'mentee' && filterType === 'yettostart') {
+                navigate(`/mentee-document-upload/${programdetails.id}`)
+            } else {
+                navigate(`${baseUrl}/${programdetails.id}`)
+            }
         }
-
     }
 
     const handleViewChange = () => {

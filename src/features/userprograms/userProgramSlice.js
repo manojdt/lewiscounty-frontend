@@ -287,6 +287,10 @@ export const userProgramSlice = createSlice({
             updateState['yettojoin'] = programs;
           }
 
+          if (filterValue === 'recently_joined') {
+            updateState['yettostart'] = programs;
+          }
+
           if (filterValue === 'ongoing') {
             updateState['inprogress'] = programs;
           }
