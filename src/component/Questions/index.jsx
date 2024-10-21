@@ -101,6 +101,11 @@ export const Questions = () => {
       }, [3000])
     }
 
+    if(userInfo.data && Object.keys(userInfo.data).length && userInfo.data.hasOwnProperty('userinfo')){
+      if(userInfo.data.userinfo?.approve_status !== 'accept' || userInfo.data?.is_registered === true){
+        navigate('/dashboard')
+      }
+    }
 
   }, [userInfo])
 
