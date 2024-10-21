@@ -96,7 +96,7 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                 return (
                                     <div className={`relative mb-6  ${getWindowDimensions().width <= 1536 && field.width === 'width-82' ? 'w-[81%]' : field.width}`} key={index}>
                                         <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor={field.label}>
-                                            {field.label}
+                                            {field.label} <span style={{color: 'red'}}>{field?.inputRules?.required ? '*' : ''}</span>
                                         </label>
                                         {
                                             field.type === 'input' ?
@@ -377,7 +377,9 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                         {currentStep > 1 && <Button btnName='Back' btnCategory="secondary" onClick={handlePreviousStep} />}
                         {currentStep === totalSteps ? <Button btnType="button" onClick={handleDraft} btnStyle={{ background: 'rgba(197, 197, 197, 1)', color: '#000' }}
                             btnCls="w-[150px]" btnName={'Save as Draft'} btnCategory="primary" /> : null}
-                        <Button btnType="submit" id={'program-submit'} btnCls="w-[100px]" btnName={currentStep === totalSteps ? 'Submit' : 'Next'} btnCategory="primary" />
+                        <Button btnType="submit" id={'program-submit'} btnCls="w-[100px]"
+                           
+                        btnName={currentStep === totalSteps ? 'Submit' : 'Next'} btnCategory="primary" />
                     </div>
                 </form>
             </div>

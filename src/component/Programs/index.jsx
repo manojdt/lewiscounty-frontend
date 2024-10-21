@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Backdrop, CircularProgress } from '@mui/material';
+import { Backdrop, CircularProgress, Menu, MenuItem } from '@mui/material';
 
 import Card from '../../shared/Card';
 import ProgramCard from '../../shared/Card/ProgramCard';
@@ -9,6 +9,8 @@ import SearchIcon from '../../assets/icons/search.svg';
 import CalendarIcon from '../../assets/images/calender_1x.png';
 import GridViewIcon from '../../assets/icons/gridviewIcon.svg';
 import ListViewIcon from '../../assets/icons/listviewIcon.svg';
+import MoreIcon from '../../assets/icons/moreIcon.svg';
+import ViewIcon from '../../assets/images/view1x.png';
 
 import { pipeUrls, programActionStatus, programMenus, programStatus, statusAction } from '../../utils/constant';
 import { getMenteeProgramCount, getMenteePrograms, getProgramCounts, getUserPrograms, updateProgram } from '../../services/userprograms';
@@ -24,6 +26,9 @@ export default function Programs() {
     const [programsList, setProgramsList] = useState([])
     const [programMenusList, setProgramMenusList] = useState([])
     const [programView, setProgramView] = useState('grid');
+    const [seletedItem, setSelectedItem] = useState({})
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
 
     const userInfo = useSelector(state => state.userInfo)
     const userprograms = useSelector(state => state.userPrograms)
@@ -55,6 +60,49 @@ export default function Programs() {
     const handleViewChange = () => {
         setProgramView(programView === 'grid' ? 'list' : 'grid')
     }
+
+    const handleMoreClick = (event, data) => {
+        setSelectedItem(data)
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const programTableFields = [
+        ...programListColumns,
+        {
+            field: 'action',
+            headerName: 'Action',
+            flex: 1,
+            id: 0,
+            renderCell: (params) => {
+                return <>
+                    <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleMoreClick(e, params.row)}>
+                        <img src={MoreIcon} alt='MoreIcon' />
+                    </div>
+                    <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                        MenuListProps={{
+                            'aria-labelledby': 'basic-button',
+                        }}
+                    >
+                        <MenuItem onClick={(e) => handleNavigation(seletedItem)} className='!text-[12px]'>
+                            <img src={ViewIcon} alt="ViewIcon" className='pr-3 w-[30px]' />
+                            View
+                        </MenuItem>
+                    </Menu>
+                </>
+            },
+        },
+
+    ]
+
+
 
 
     useEffect(() => {
@@ -121,7 +169,6 @@ export default function Programs() {
             if (role === 'mentor') dispatch(getUserPrograms(query))
         }
     }, [userprograms.status])
-
 
     useEffect(() => {
         if (userprograms.status === programStatus.load) {
@@ -233,7 +280,7 @@ export default function Programs() {
                             programView === 'list' &&
 
                             <div className='py-6 px-6'>
-                                <DataTable rows={programsList} columns={programListColumns} hideFooter={!programsList.length} />
+                                <DataTable rows={programsList} columns={programTableFields} hideFooter={!programsList.length} />
                             </div>
                         }
 

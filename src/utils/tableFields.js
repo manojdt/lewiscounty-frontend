@@ -1,4 +1,5 @@
 import { dateFormat } from ".";
+import { CourseLevelOptions } from "./formFields";
 
 export const myMenteeColumns = [
   {
@@ -326,7 +327,10 @@ export const programListColumns = [
       field: 'course_level',
       headerName: 'Course Level',
       flex: 1,
-      id: 3
+      id: 3,
+      renderCell: (params) => {
+        return <div>{CourseLevelOptions.find(course => course.key === params.row.course_level)?.value}</div>
+      }
   },
   {
       field: 'to_request',
