@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import CircularProgress from '@mui/material/CircularProgress';
 import Backdrop from '@mui/material/Backdrop';
@@ -18,6 +18,7 @@ export const Questions = () => {
   const navigate = useNavigate();
   const userInfo = useSelector(state => state.userInfo)
   const dispatch = useDispatch();
+  const formRef = useRef(); 
   const [currentStep, setCurrentStep] = useState(1)
   const [allStepList, setAllStepList] = useState([])
   const [formFields, setFormFields] = useState([])
@@ -32,10 +33,12 @@ export const Questions = () => {
 
   const submitQuestionsData = (apiData) => {
     if (role === 'mentee') {
+      const [day, month, year] =apiData.dob.split('/');
+const formattedDob = new Date(`${year}-${month}-${day}`).toISOString().split('T')[0];
       const menteeApiData = {
         ...apiData,
-        gender: apiData.gender[0],
-        dob: new Date(apiData.dob).toISOString().split('T')[0],
+        gender:  Array.isArray(apiData.gender) ? apiData.gender[0] : apiData.gender,
+        dob: formattedDob,
         phone_number: apiData.phone_number
       }
       dispatch(updateMenteeQuestions(menteeApiData))
@@ -44,7 +47,7 @@ export const Questions = () => {
 
       const mentorApiData = {
         ...apiData,
-        gender: apiData.gender[0],
+        gender:  Array.isArray(apiData.gender) ? apiData.gender[0] : apiData.gender,
         phone_number: apiData.phone_number
       }
       dispatch(updateQuestions(mentorApiData))
@@ -53,10 +56,66 @@ export const Questions = () => {
   }
   const handleSkip = () => {
     const { first_name, email, ...apiData } = { ...stepData, prev_mentorship: stepData.prev_mentorship === "true" }
+    const combinedData = { ...stepData };
+    const res= handleSubmit(combinedData);
+    console.log(res,"res")
+    if(!res){
     submitQuestionsData(apiData)
+    }
   }
+  const validateRequiredFields = (fields, data) => {
+    const missingFields = fields
+        .filter(field => field.inputRules?.required)
+        .filter(field => {
+            const value = data[field.name];
+            return !value || (typeof value === 'string' && value.trim() === ""); // Check if it's missing or empty
+        });
 
+    if (missingFields.length > 0) {
+        return missingFields.map(field => ({
+            name: field.name,
+            message: field.inputRules.required,
+        }));
+    }
+
+    return []; 
+};
+
+  const handleSubmit = (combinedData) => {
+    const allFields = formFields.flat(); // Flatten all fields for validation
+    const errorMessages = validateRequiredFields(allFields, combinedData);
+    console.log("Error Messages:", errorMessages);
+  
+    if (errorMessages.length > 0) {
+      console.error("Missing required fields:", errorMessages);
+      // trigger()
+      // Redirect to the first error field
+      const firstErrorField = errorMessages[0]; // Get the first error field
+      const fieldIndex = allFields.findIndex(field => field.name === firstErrorField?.name); // Find its index
+     console.log(fieldIndex,firstErrorField)
+      if (fieldIndex !== -1) {
+        const currentField = allFields[fieldIndex];
+  
+        // Find the step index for the first error field
+        const stepIndex = formFields.findIndex(step => step.includes(currentField));
+  
+        if (stepIndex !== -1) {
+          // Set the current step to the step containing the first error field
+          setCurrentStep(stepIndex + 1); // Adjust for 0-based index
+        }
+      }
+      return true
+  
+    }
+    return false // Prevent submission if there are errors
+    
+  };
+  
   const handleNextStep = (data) => {
+    console.log(data,"red")
+    const combinedData = { ...stepData, ...data };
+ 
+ 
     const activeSteps = allStepList.map(step => {
       if (step.key === stepName[currentStep - 1]) return { ...step, status: 'Completed' }
       if (step.key === stepName[currentStep]) return { ...step, status: 'In-Progress' }
@@ -67,7 +126,11 @@ export const Questions = () => {
     setAllStepList(activeSteps)
     if (formFields.length === currentStep) {
       const { first_name, email, ...apiData } = { ...fieldData, prev_mentorship: stepData.prev_mentorship === "true" }
-      submitQuestionsData(apiData)
+      const res= handleSubmit(combinedData);
+      console.log(res,"es")
+      if(!res){
+        submitQuestionsData(apiData)
+      }
     }
     else setCurrentStep(currentStep + 1)
     setBtnTypeAction({ back: false, next: true })
@@ -137,7 +200,32 @@ export const Questions = () => {
       setStepName(Stepname)
     }
   }, [role])
-
+  const handleStepClick = (stepNumber) => {
+    // if(formRef.current){
+      const formData = new FormData(formRef.current);
+      const data = Object.fromEntries(formData.entries());
+      console.log(data,"data");
+      const fieldData = { ...stepData, ...data}
+      setStepData(fieldData)
+    //   formRef.current.submit();
+    // }
+    const updatedSteps = allStepList.map((step, index) => {
+      // Set the clicked step to "In-Progress"
+      if (index === stepNumber - 1) {
+        return { ...step, status: 'In-Progress' };
+      }
+      // Retain "Completed" status for steps before the clicked step
+      if (index < stepNumber - 1 && step.status === 'Completed') {
+        return { ...step, status: 'Completed' };
+      }
+      // Set other steps after the clicked step to an empty status
+      return { ...step, status: '' };
+    });
+  
+    setAllStepList(updatedSteps);
+    setCurrentStep(stepNumber);
+    setBtnTypeAction({ back: stepNumber > 1, next: stepNumber < formFields.length });
+  };
 
   return (
     <>
@@ -183,12 +271,13 @@ export const Questions = () => {
 
         <div style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
           <div className="steps pl-24 pr-28" style={{ boxShadow: '4px 4px 15px 0px rgba(0, 0, 0, 0.1)' }}>
-            <Stepper steps={allStepList} currentStep={currentStep} btnTypeAction={btnTypeAction} />
+            <Stepper steps={allStepList} currentStep={currentStep}  handleStepClick={handleStepClick} btnTypeAction={btnTypeAction} />
           </div>
           {
             (formFields.length && formFields[currentStep - 1]) ?
               <StepComponenRender
                 stepData={stepData}
+                refForm={formRef}
                 stepName={stepName[currentStep - 1]}
                 stepFields={formFields[currentStep - 1]}
                 currentStep={currentStep}

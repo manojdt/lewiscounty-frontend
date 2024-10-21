@@ -5,7 +5,7 @@ import { Button } from '../../shared';
 import { useForm } from "react-hook-form";
 import CalendarIcon from '../../assets/images/calender_1x.png'
 
-const StepComponenRender = ({ stepFields, currentStep, handleNextStep, handlePreviousStep, stepData, stepName, totalSteps }) => {
+const StepComponenRender = ({ stepFields, currentStep, handleNextStep, handlePreviousStep, stepData, stepName,refForm, totalSteps }) => {
     const navigate = useNavigate();
     const {
         register,
@@ -70,7 +70,7 @@ const StepComponenRender = ({ stepFields, currentStep, handleNextStep, handlePre
     return (
         <>
             <div className="form-container">
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form ref={refForm} onSubmit={handleSubmit(onSubmit)}>
                     <div className="flex flex-wrap gap-4">
                         {
                             stepFields.map((field, index) => {
