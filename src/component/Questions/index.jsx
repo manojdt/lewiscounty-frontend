@@ -106,7 +106,6 @@ export const Questions = () => {
         navigate('/dashboard')
       }
     }
-
   }, [userInfo])
 
   useEffect(() => {
