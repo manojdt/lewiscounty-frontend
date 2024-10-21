@@ -101,6 +101,12 @@ export default function RecentRequests({ data = [] }) {
             id: 0,
         },
         {
+            field: 'requested_by_name',
+            headerName: 'Requested By',
+            flex: 1,
+            id: 0,
+        },
+        {
             field: 'position',
             headerName: 'Position',
             flex: 1,
