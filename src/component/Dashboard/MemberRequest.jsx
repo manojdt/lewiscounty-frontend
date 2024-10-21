@@ -114,11 +114,11 @@ export default function MemberRequest() {
                         </MenuItem>
                         <MenuItem onClick={handleMemberAcceptRequest} className='!text-[12px]'>
                             <img src={PowerIcon} alt="AcceptIcon" className='pr-3 w-[27px]' />
-                            Activate
+                            Approve
                         </MenuItem>
                         <MenuItem onClick={handleMemberCancelRequest} className='!text-[12px]'>
                             <img src={CloseCircle} alt="CancelIcon" className='pr-3 w-[27px]' />
-                            Deactivate
+                            Reject
                         </MenuItem>
                     </Menu>
                 </>
@@ -153,14 +153,11 @@ export default function MemberRequest() {
 
     return (
         <div>
-
-
             <Backdrop
                 sx={{ zIndex: (theme) => 999999999 }}
                 open={loading}
             >
                 <CircularProgress color="inherit" />
-
             </Backdrop>
             <CardWrapper title='Recent Member Request' viewAll={memberRequest.length > 0}>
                 <div className='py-6 px-3'>
