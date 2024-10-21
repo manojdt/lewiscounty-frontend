@@ -62,7 +62,7 @@ export const Mentee = () => {
         const isBookmark = searchParams.get("is_bookmark");
         dispatch(getMenteeProgramCount())
         if (filterType === null && isBookmark === null) {
-            dispatch(getMenteePrograms({ type: 'status', value: 'yettojoin' }));
+            dispatch(getMenteePrograms({}));
         }
     }, [])
 
@@ -77,7 +77,7 @@ export const Mentee = () => {
                 navigate(`${baseUrl}/${program.id}`)
             }
 
-            
+
         }
 
     }
@@ -207,7 +207,19 @@ export const Mentee = () => {
                     <div className="col-span-4">
 
                         {
-                            (searchParams.get("type") === 'yettojoin' || searchParams.get("type") === 'planned' || (searchParams.get("type") === null && searchParams.get("is_bookmark") === null)) &&
+                            (searchParams.get("type") === null && searchParams.get("is_bookmark") === null) &&
+
+                            <ProgramCard
+                                title="All Programs"
+                                viewpage="/programs"
+                                handleNavigateDetails={handleNavigateDetails}
+                                handleBookmark={handleBookmark}
+                                programs={userpragrams.allprograms}
+                            />
+                        }
+
+                        {
+                            (searchParams.get("type") === 'yettojoin' || searchParams.get("type") === 'planned') &&
                             <ProgramCard
                                 title="Planned Programs"
                                 viewpage="/programs?type=yettojoin"
@@ -256,7 +268,7 @@ export const Mentee = () => {
                                 <img src={SearchIcon} alt="statistics" />
                                 <p className="text-[12px] py-2 px-2 cursor-pointer"
                                     onClick={() => navigate('/feeds')}
-                                style={{ background: 'rgba(223, 237, 255, 1)', borderRadius: '5px' }}>View All</p>
+                                    style={{ background: 'rgba(223, 237, 255, 1)', borderRadius: '5px' }}>View All</p>
                             </div>
 
                         </div>

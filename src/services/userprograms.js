@@ -16,7 +16,18 @@ export const getUserPrograms = createAsyncThunk(
         if(query.value === 'planned'){
             updateQuery = {...query, value: 'yettojoin'}
         }
-        const queryParams = updateQuery && Object.keys(updateQuery).length ? `?${updateQuery.type}=${updateQuery.value}&limit=6` : '?limit=6'
+        let queryParams = ''
+        if(updateQuery && Object.keys(updateQuery).length){         
+            if(updateQuery.hasOwnProperty('type')){
+                queryParams = ( queryParams === '' ? '?' : '&') + `${updateQuery.type}=${updateQuery.value}`
+            }
+
+            if(updateQuery.hasOwnProperty('page')){
+                queryParams =  (queryParams === '' ? '?' : `${queryParams}&`) + `${updateQuery.page}=${updateQuery.number}`
+            }
+        }
+        queryParams = queryParams !== '' ? `${queryParams}&limit=6` : '?limit=6'
+       
         const getUserProgram = await api.get(`fetch_program${queryParams}`);
         if (getUserProgram.status === 200 && getUserProgram.data) {
             const response = {
@@ -145,7 +156,21 @@ export const getMenteePrograms = createAsyncThunk(
             queryString.value = 'ongoing';
         }
 
-        const queryParams = queryString && Object.keys(queryString).length ? `?${queryString.type}=${queryString.value}&limit=9` : '?limit=9'
+
+        let queryParams = ''
+        if(queryString && Object.keys(queryString).length){         
+            if(queryString.hasOwnProperty('type')){
+                queryParams = ( queryParams === '' ? '?' : '&') + `${queryString.type}=${queryString.value}`
+            }
+
+            if(queryString.hasOwnProperty('page')){
+                queryParams =  (queryParams === '' ? '?' : `${queryParams}&`) + `${queryString.page}=${queryString.number}`
+            }
+        }
+        queryParams = queryParams !== '' ? `${queryParams}&limit=6` : '?limit=6'
+
+
+        // const queryParams = queryString && Object.keys(queryString).length ? `?${queryString.type}=${queryString.value}&limit=9` : '?limit=9'
         const getUserProgram = await api.get(`mentee_program/all${queryParams}`);
         if (getUserProgram.status === 200 && getUserProgram.data) {
             const response = {
@@ -223,9 +248,6 @@ export const getProgramTaskDetails = createAsyncThunk(
 export const submitProgramTaskDetails = createAsyncThunk(
     "submitProgramTaskDetails",
     async (data) => {
-
-
-
         const submitTask = await api.post("program_task_assign/task_submission", data);
         if (submitTask.status === 201 && submitTask.data) {
             return submitTask.data;

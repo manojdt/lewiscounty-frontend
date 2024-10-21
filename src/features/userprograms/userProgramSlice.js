@@ -31,7 +31,7 @@ const initialState = {
   yettojoin: [],
   yettostart: [],
   inprogress: [],
-  chartProgramDetails:{},
+  chartProgramDetails: {},
   completed: [],
   draft: [],
   learning: [],
@@ -50,10 +50,10 @@ const initialState = {
   },
   totalPrograms: 0,
   programdetails: {},
-  taskdetails:{},
+  taskdetails: {},
   menteeList: [],
   programMenteeList: [],
-  menteeJoined : true,
+  menteeJoined: true,
   status: "",
   loading: false,
   error: "",
@@ -72,12 +72,15 @@ export const userProgramSlice = createSlice({
         };
       })
       .addCase(getUserPrograms.fulfilled, (state, action) => {
+
+        console.log('action mmm', action)
         const {
           status_counts = {},
             overall_count = 0,
             programs = [],
             filterType,
             filterValue,
+            ...rest
         } = action.payload;
 
         let updateState = {
@@ -92,7 +95,8 @@ export const userProgramSlice = createSlice({
           completed: [],
           cancelled: [],
           bookmarked: [],
-          programdetails: {}
+          programdetails: {},
+          ...rest
         };
 
         if (filterType === "") {
@@ -230,7 +234,7 @@ export const userProgramSlice = createSlice({
         };
       })
       .addCase(getProgramCounts.fulfilled, (state, action) => {
-      
+
         const {
           status_counts = {}, total_programs = 0
         } = action.payload;
@@ -261,6 +265,7 @@ export const userProgramSlice = createSlice({
           programs = [],
             filterType,
             filterValue,
+            ...rest
         } = action.payload;
 
         let updateState = {
@@ -275,7 +280,8 @@ export const userProgramSlice = createSlice({
           completed: [],
           cancelled: [],
           bookmarked: [],
-          programdetails: {}
+          programdetails: {},
+          ...rest
         };
 
         if (filterType === "") {
@@ -303,6 +309,14 @@ export const userProgramSlice = createSlice({
             updateState['learning'] = programs;
           }
 
+          if (filterType === 'is_bookmark') {
+            updateState['bookmarked'] = programs;
+          }
+
+          if (filterValue === 'cancelled') {
+            updateState['cancelled'] = programs;
+          }
+
         }
 
         return updateState;
@@ -316,7 +330,7 @@ export const userProgramSlice = createSlice({
       });
 
 
-      builder
+    builder
       .addCase(getMenteeJoinedInProgram.pending, (state) => {
         return {
           ...state,
@@ -339,7 +353,7 @@ export const userProgramSlice = createSlice({
       });
 
 
-      builder
+    builder
       .addCase(getMenteeProgramCount.pending, (state) => {
         return {
           ...state,
@@ -366,7 +380,7 @@ export const userProgramSlice = createSlice({
 
 
 
-      builder
+    builder
       .addCase(startProgramTask.pending, (state) => {
         return {
           ...state,
@@ -387,7 +401,7 @@ export const userProgramSlice = createSlice({
           error: action.error.message,
         };
       });
-      builder
+    builder
       .addCase(chartProgramList.pending, (state) => {
         return {
           ...state,
@@ -397,7 +411,7 @@ export const userProgramSlice = createSlice({
       .addCase(chartProgramList.fulfilled, (state, action) => {
         return {
           ...state,
-          chartProgramDetails:action.payload,
+          chartProgramDetails: action.payload,
           loading: false,
         };
       })
@@ -411,7 +425,7 @@ export const userProgramSlice = createSlice({
 
 
 
-      builder
+    builder
       .addCase(getProgramTaskDetails.pending, (state) => {
         return {
           ...state,
@@ -435,15 +449,15 @@ export const userProgramSlice = createSlice({
 
 
 
-      builder.addCase(updateUserProgramInfo, (state, action) => {
-        return {
-          ...state,
-          ...action.payload
-        }
-      })
+    builder.addCase(updateUserProgramInfo, (state, action) => {
+      return {
+        ...state,
+        ...action.payload
+      }
+    })
 
-     
-      builder
+
+    builder
       .addCase(submitProgramTaskDetails.pending, (state) => {
         return {
           ...state,
