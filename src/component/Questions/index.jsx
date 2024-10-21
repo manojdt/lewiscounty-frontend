@@ -38,7 +38,6 @@ export const Questions = () => {
         dob: new Date(apiData.dob).toISOString().split('T')[0],
         phone_number: apiData.phone_number
       }
-      console.log('menteeApiData', menteeApiData)
       dispatch(updateMenteeQuestions(menteeApiData))
     }
     else {
@@ -48,7 +47,6 @@ export const Questions = () => {
         gender: apiData.gender[0],
         phone_number: apiData.phone_number
       }
-      console.log('mentorApiData', mentorApiData)
       dispatch(updateQuestions(mentorApiData))
     }
 
@@ -67,30 +65,9 @@ export const Questions = () => {
     const fieldData = { ...stepData, ...data }
     setStepData(fieldData)
     setAllStepList(activeSteps)
-    console.log('fieldData', fieldData)
     if (formFields.length === currentStep) {
       const { first_name, email, ...apiData } = { ...fieldData, prev_mentorship: stepData.prev_mentorship === "true" }
       submitQuestionsData(apiData)
-      // if (role === 'mentee') {
-      //   const menteeApiData = {
-      //     ...apiData,
-      //     gender: apiData.gender[0],
-      //     dob: new Date(apiData.dob).toISOString().split('T')[0],
-      //     phone_number: apiData.phone_number
-      //   }
-      //   console.log('menteeApiData', menteeApiData)
-      //   // dispatch(updateMenteeQuestions(menteeApiData))
-      // }
-      // else {
-
-      //   const mentorApiData = {
-      //     ...apiData,
-      //     gender: apiData.gender[0],
-      //     phone_number: apiData.phone_number
-      //   }
-      //   console.log('mentorApiData', mentorApiData)
-      //   // dispatch(updateQuestions(mentorApiData))
-      // }
     }
     else setCurrentStep(currentStep + 1)
     setBtnTypeAction({ back: false, next: true })

@@ -20,6 +20,7 @@ import SearchIcon from '../../../assets/images/search1x.png';
 import CertificateIcon from '../../../assets/images/dummy_certificate.png';
 import SuccessIcon from "../../../assets/images/Success_tic1x.png"
 import FailedIcon from "../../../assets/images/cancel3x.png"
+import ToastNotification from '../../../shared/Toast';
 
 export default function CreatePrograms() {
     const navigate = useNavigate()
@@ -27,7 +28,6 @@ export default function CreatePrograms() {
     const userInfo = useSelector(state => state.userInfo)
     const [loading, setLoading] = useState({ create: false, success: false })
     const { allPrograms, category, materials, certificate, skills, members, loading: apiLoading, status } = useSelector(state => state.programInfo)
-    const [actionTab, setActiveTab] = useState('program_information')
     const [currentStep, setCurrentStep] = useState(1)
     const [stepData, setStepData] = useState({})
     const [actionModal, setActionModal] = useState('')
@@ -39,6 +39,7 @@ export default function CreatePrograms() {
 
     const [viewDetails, setViewDetails] = useState({ material: false, skills: false, certificate: false })
     const [viewDetailsInfo, setViewDetailsInfo] = useState({ material: {}, skills: {}, certificate: {} })
+    const [tabActionInfo, setTabActionInfo] = useState({ activeTab: 'program_information', error: false })
 
     const resetViewInfo = { material: false, skills: false, certificate: false }
 
@@ -46,10 +47,11 @@ export default function CreatePrograms() {
 
     const handleTab = (key) => {
         const tabIndex = ProgramTabs.findIndex(tab => tab.key === key)
-        if (stepWiseData.hasOwnProperty(tabIndex + 1) || stepWiseData.hasOwnProperty(tabIndex)) {
-            setCurrentStep(tabIndex + 1)
-            setActiveTab(key)
-        }
+        // if (stepWiseData.hasOwnProperty(tabIndex + 1) || stepWiseData.hasOwnProperty(tabIndex)) {
+        const nextIndex = tabIndex + 1
+        setCurrentStep(nextIndex)
+        setTabActionInfo({ ...tabActionInfo, activeTab: key })
+        // }
     }
 
     const handleNextStep = (data, stData) => {
@@ -60,27 +62,31 @@ export default function CreatePrograms() {
         }
         setStepData(fieldData)
         if (ProgramFields.length === currentStep) {
+            const answeredSteps = Object.keys(stepWiseData).length;
+            if ((answeredSteps === currentStep - 1 && !stepWiseData.hasOwnProperty(currentStep)) || answeredSteps === ProgramFields.length) {
+                let bodyFormData = new FormData();
 
-            let bodyFormData = new FormData();
+                const fiel = ['learning_materials', 'skills', 'certificates', 'members']
+                fieldData.group_chat_requirement = fieldData.group_chat_requirement === 'true'
+                fieldData.individual_chat_requirement = fieldData.individual_chat_requirement === 'true'
+                for (let a in fieldData) {
+                    if (a === 'program_image' && logo.program_image) { bodyFormData.append(a, logo.program_image); }
+                    if (a === 'image' && logo.image) { bodyFormData.append(a, logo.image); }
+                    if (a === 'start_date' || a === 'end_date') { bodyFormData.append(a, new Date(fieldData[a]).toISOString()); }
+                    else if (fiel.includes(a)) { bodyFormData.append(a, JSON.stringify(fieldData[a])) }
+                    else bodyFormData.append(a, fieldData[a]);
+                }
 
-            const fiel = ['learning_materials', 'skills', 'certificates', 'members']
-            fieldData.group_chat_requirement = fieldData.group_chat_requirement === 'true'
-            fieldData.individual_chat_requirement = fieldData.individual_chat_requirement === 'true'
-            for (let a in fieldData) {
-                if (a === 'program_image' && logo.program_image) { bodyFormData.append(a, logo.program_image); }
-                if (a === 'image' && logo.image) { bodyFormData.append(a, logo.image); }
-                if (a === 'start_date' || a === 'end_date') { bodyFormData.append(a, new Date(fieldData[a]).toISOString()); }
-                else if (fiel.includes(a)) { bodyFormData.append(a, JSON.stringify(fieldData[a])) }
-                else bodyFormData.append(a, fieldData[a]);
+                let status = ''
+
+                if (fieldData.hasOwnProperty('status') && fieldData.status === 'draft') {
+                    status = 'draft'
+                }
+                setProgramApiStatus(status)
+                dispatch(createNewPrograms(bodyFormData))
+            }else{
+                setTabActionInfo({ ...tabActionInfo, error: true })
             }
-
-            let status = ''
-
-            if (fieldData.hasOwnProperty('status') && fieldData.status === 'draft') {
-                status = 'draft'
-            }
-            setProgramApiStatus(status)
-            dispatch(createNewPrograms(bodyFormData))
         }
         else {
             if (data.hasOwnProperty('image') && data.image.length) {
@@ -90,7 +96,7 @@ export default function CreatePrograms() {
                 setLogo({ ...logo, program_image: data.program_image[0] })
             }
             setCurrentStep(currentStep + 1)
-            setActiveTab(ProgramTabs[currentStep].key)
+            setTabActionInfo({ ...tabActionInfo, activeTab: ProgramTabs[currentStep].key })
         }
     }
 
@@ -282,6 +288,10 @@ export default function CreatePrograms() {
         return mcol
     })
 
+    const handleClose = () => {
+        setTabActionInfo({ ...tabActionInfo, error: false })
+    }
+
     useEffect(() => {
         if (currentStep === 1) {
             const currentStepFields = programAllFields[currentStep - 1]
@@ -378,6 +388,15 @@ export default function CreatePrograms() {
         }
     }, [status])
 
+    useEffect(() => {
+        if (tabActionInfo.error) {
+            setTimeout(() => {
+                setTabActionInfo({ ...tabActionInfo, error: false })
+            }, 3000)
+
+        }
+    }, [tabActionInfo.error])
+
     return (
         <div className="dashboard-content px-8 mt-10">
             <div style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }}>
@@ -392,6 +411,11 @@ export default function CreatePrograms() {
                     </div>
                 </div>
 
+                {
+                    tabActionInfo.error &&
+                    <ToastNotification openToaster={tabActionInfo.error} message={'Please fill all mandatory fields'} handleClose={handleClose} toastType={'error'} />
+
+                }
                 <Backdrop
                     sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                     open={loading.create || apiLoading || status === programStatus.create || status === programStatus.exist || status === programStatus.error}
@@ -407,8 +431,8 @@ export default function CreatePrograms() {
                             <div className="w-2/6 bg-white flex flex-col gap-4 h-[330px] justify-center items-center">
                                 <img src={status === programStatus.exist ? FailedIcon : status === programStatus.create ? SuccessIcon : FailedIcon} alt="VerifyIcon" />
                                 <span style={{ color: '#232323', fontWeight: 600 }}>
-                                    {status === programStatus.exist ? 'Program already exist' : status === programStatus.error ? 'There is a Server Error. Please try again later' : 
-                                        `Program ${programApiStatus ==='draft' ? 'Drafed' : 'Created'} Successfully!`}
+                                    {status === programStatus.exist ? 'Program already exist' : status === programStatus.error ? 'There is a Server Error. Please try again later' :
+                                        `Program ${programApiStatus === 'draft' ? 'Drafed' : 'Created'} Successfully!`}
                                 </span>
                             </div>
                             : null
@@ -421,9 +445,9 @@ export default function CreatePrograms() {
                             ProgramTabs.map((actionBtn, index) =>
                                 <Tooltip title={actionBtn.name}>
                                     <button key={index} className='px-5 py-4 text-[14px]' style={{
-                                        background: actionTab === actionBtn.key ? 'linear-gradient(97.86deg, #005DC6 -15.07%, #00B1C0 112.47%)' :
+                                        background: tabActionInfo.activeTab === actionBtn.key ? 'linear-gradient(97.86deg, #005DC6 -15.07%, #00B1C0 112.47%)' :
                                             'rgba(249, 249, 249, 1)',
-                                        color: actionTab === actionBtn.key ? '#fff' : '#000',
+                                        color: tabActionInfo.activeTab === actionBtn.key ? '#fff' : '#000',
                                         borderRadius: '3px'
                                     }}
                                         onClick={() => handleTab(actionBtn.key)}

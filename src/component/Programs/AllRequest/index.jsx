@@ -405,7 +405,6 @@ export default function AllRequest() {
         programRequestColumn = programRequestColumn.filter(column => column.field !== 'auto_approval')
     }
 
-    console.log('programRequestColumn 1', programRequestColumn)
 
     programRequestColumn = [
         ...programRequestColumn,
@@ -473,11 +472,7 @@ export default function AllRequest() {
                 }
             }
         }
-      
-
     ]
-
-    console.log('programRequestColumn 2', programRequestColumn)
 
     const goalColumns = [
         ...goalsRequestColumns,
@@ -925,9 +920,6 @@ export default function AllRequest() {
 
 
     }, [searchParams, role])
-
-
-    console.log('Active Tab', actionTab)
 
 
     useEffect(() => {

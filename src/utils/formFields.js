@@ -1421,7 +1421,7 @@ export const ProgramOutcomesFields = [{
     type: "textbox",
     name: "benefits",
     label: "Outcome",
-    placeholder: "Enter this about program details",
+    placeholder: "Enter benefits details",
     inputRules: {
       required: "This field is required",
     },
