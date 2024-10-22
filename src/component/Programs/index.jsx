@@ -128,8 +128,6 @@ export default function Programs() {
             dispatch(getMenteePrograms(query))
         }
         if (role === 'mentor') dispatch(getUserPrograms(query));
-
-        // dispatch(getUserPrograms(query))
     }
 
 
