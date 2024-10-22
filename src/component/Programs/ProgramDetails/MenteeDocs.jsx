@@ -184,10 +184,8 @@ export default function MenteeDocs() {
                                                 {...idProofImage}
                                                 onChange={(e) => {
                                                     idProofImage.onChange(e);
-                                                    console.log('File', e.target.files)
                                                     if (e.target.files && e.target.files[0]) {
                                                         let types = ['image/png', 'image/jpeg']
-                                                        console.log(e.target.files[0].type)
                                                         if (types.includes(e.target.files[0].type)) {
                                                             setStepInfo({ ...stepInfo, backBtn: false })
                                                             setIdProof({ ...idProof, ['id_proof']: e.target.files });

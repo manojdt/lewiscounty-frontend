@@ -1,9 +1,13 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useForm } from 'react-hook-form';
 
+import EditIcon from '../../assets/icons/editIcon.svg';
+import SuccessTik from '../../assets/images/blue_tik1x.png';
+import CancelIcon from '../../assets/images/cancel1x.png'
 import FilterIcon from '../../assets/icons/Filter.svg';
 import UserImage from "../../assets/images/user.jpg";
 import MoreIcon from '../../assets/icons/moreIcon.svg'
@@ -11,25 +15,41 @@ import BookmarkedIcon from '../../assets/icons/Bookmarked.svg'
 import BookmarkedColorIcon from '../../assets/images/bookmarked-colour1x.png'
 import CalenderIcon from '../../assets/icons/Calender.svg';
 import StarColorIcon from '../../assets/icons/starColor.svg';
+import UploadIcon from "../../assets/images/image_1x.png"
+import DeleteIcon from "../../assets/images/delete_1x.png"
 import { ProgramStatusInCard } from '../../utils/constant';
+import MuiModal from '../Modal';
+import { Button } from '../Button';
+import { updateProgramImage } from '../../services/userprograms';
+import { Backdrop, CircularProgress } from '@mui/material';
 
 
-export default function ProgramCard({ title, viewpage, handleNavigateDetails, handleBookmark, programs, height, action = [], noTitle = false }) {
+
+export default function ProgramCard({ title, viewpage, handleNavigateDetails, handleBookmark, programs, height, action = [], noTitle = false, loadProgram }) {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const [anchorEl, setAnchorEl] = useState(null);
+    const [programImage, setProgramImage] = useState(null)
+    const [hoverIndex, setHoverIndex] = useState(null)
+    const [programUploadAction, setProgramUploadAction] = useState({ loading: false, imageModal: false, successModal: false, error: '', selectedProgram: {} })
+
+    const {
+        register,
+        formState: { errors },
+        handleSubmit,
+        reset,
+        setError,
+        setValue,
+        getValues
+    } = useForm();
+
     const open = Boolean(anchorEl);
     const userInfo = useSelector(state => state.userInfo)
     const role = userInfo.data.role
 
     const statusNotShow = ['yettoapprove', 'yettojoin', 'yettostart', 'draft', 'new_program_request_rejected', 'start_request_submitted']
 
-    function getWindowDimensions() {
-        const { innerWidth: width, innerHeight: height } = window;
-        return {
-            width,
-            height
-        };
-    }
+    const programImageRestirct = ['yettoapprove', 'draft', 'cancelled', 'completed']
 
     const handleClose = () => {
         setAnchorEl(null);
@@ -38,6 +58,49 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
+
+    const handleCloseModal = () => {
+        setProgramUploadAction({ loading: false, imageModal: false, successModal: false, error: '', selectedProgram: {} })
+    }
+
+    const handleProgramImageUpdate = (programInfo) => {
+        setProgramUploadAction({ ...programUploadAction, imageModal: true, selectedProgram: programInfo })
+    }
+
+    const handleProgramImageSubmit = (data) => {
+        setProgramUploadAction({ ...programUploadAction, loading: true })
+        let bodyFormData = new FormData();
+        bodyFormData.append('program_id', programUploadAction.selectedProgram.id)
+        bodyFormData.append('program_image', programImage[0])
+        dispatch(updateProgramImage(bodyFormData)).then(() => {
+            loadProgram && loadProgram()
+            setProgramUploadAction({ loading: false, imageModal: false, successModal: true, error: '', selectedProgram: {} })
+
+        })
+    }
+
+    const handleDeleteImage = () => {
+        setValue('program_image', '')
+        setProgramImage(null)
+    }
+
+    const onMouseEnter = (index) => {
+        setHoverIndex(index)
+    }
+
+    const onMouseLeave = () => {
+        setHoverIndex(null)
+    }
+
+    const imageField = register('program_image', { required: 'This field is required' })
+
+    useEffect(() => {
+        if (programUploadAction.successModal) {
+            setTimeout(() => {
+                handleCloseModal()
+            }, 3000)
+        }
+    }, [programUploadAction.successModal])
 
     return (
 
@@ -101,7 +164,7 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
             <div className="py-3 px-3 ">
                 <div className="flex flex-wrap">
                     {
-                       programs && programs.length ?
+                        programs && programs.length ?
 
                             programs.map((currentProgram, index) => {
                                 let startDate = ''
@@ -125,16 +188,18 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                                         <div className="w-full" style={{ boxShadow: '4px 4px 15px 0px rgba(0, 0, 0, 0.1)', borderRadius: '10px' }}>
                                             <div className="py-6 px-7 border-b-2 relative">
                                                 <div className="h-full relative" style={{ borderRadius: '10px' }}>
-                                                    <img className="object-cover w-full h-[150px]" src={currentProgram.image} alt="Program Logo" />
-                                                    {/* {
-                                                        currentProgram.program_edit &&
+                                                    <img className="object-cover w-full h-[150px] cursor-pointer" src={currentProgram.image} alt="Program Logo"
+                                                        onMouseEnter={() => onMouseEnter(index)} onMouseLeave={() => onMouseLeave(index)}
+                                                    />
+                                                    {
+                                                        (currentProgram.program_edit && !programImageRestirct.includes(currentProgram.status)) &&
 
-                                                        <div className='absolute top-2 left-0' style={{ background: '#fff', borderRadius: '50%', padding: '14px 17px' }}>
-                                                        <img className="cursor-pointer"
-                                                            onClick={() => handleBookmark(currentProgram)}
-                                                            src={currentProgram.bookmark ? BookmarkedColorIcon : BookmarkedIcon} alt="BookmarkedIcon" />
-                                                    </div>
-                                                    } */}
+                                                        <div className={`absolute top-2 left-3 cursor-pointer  ${hoverIndex === index ? 'show': 'hidden'}`} style={{ background: '#fff', borderRadius: '50%', padding: '13px 15px' }}
+                                                            onClick={() => handleProgramImageUpdate(currentProgram)} onMouseEnter={() => onMouseEnter(index)} onMouseLeave={() => onMouseLeave(index)} 
+                                                        >
+                                                            <img className="h-[25px] w-[22px]" src={EditIcon} alt="EditIcon" />
+                                                        </div>
+                                                    }
                                                     <div className='absolute top-2 right-0' style={{ background: '#fff', borderRadius: '50%', padding: '14px 17px' }}>
                                                         <img className="cursor-pointer"
                                                             onClick={() => handleBookmark(currentProgram)}
@@ -227,8 +292,129 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                     }
 
                 </div>
-
             </div>
+
+
+
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => 999999 }}
+                open={programUploadAction.loading}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
+
+            {/* Image Modal  */}
+            <MuiModal modalSize='md' modalOpen={programUploadAction.imageModal} modalClose={handleCloseModal} noheader>
+
+                <div className='px-5 py-5'>
+                    <div className='flex justify-center flex-col gap-5  mt-4 mb-4'
+                        style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '10px', }}>
+                        <div className='flex justify-between px-3 py-4 items-center' style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
+                            <p className='text-[18px]' style={{ color: 'rgba(0, 0, 0, 1)' }}>Upload Program Image </p>
+                            <img className='cursor-pointer' onClick={handleCloseModal} src={CancelIcon} alt="CancelIcon" />
+                        </div>
+
+                        <div className='px-5'>
+                            {
+                                programUploadAction.error !== '' ? <p className="error" role="alert">{programUploadAction.error}</p> : null
+                            }
+
+                            <form onSubmit={handleSubmit(handleProgramImageSubmit)}>
+                                <div className='relative pb-8'>
+                                    <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
+                                        Attachment
+                                    </label>
+
+                                    <div className='relative'>
+                                        <>
+                                            <div className="flex items-center justify-center w-full">
+                                                <label className="flex flex-col items-center justify-center w-full h-64 border-2
+                                                                                 border-gray-300 border-dashed cursor-pointer
+                                                                                  bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100
+                                                                                   dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                                                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                                                        <svg className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                                                        </svg>
+                                                        <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">
+                                                            Upload Program Logo/Image(jpg,png)</span>
+                                                        </p>
+                                                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                                                            (200*200 Pixels)
+                                                        </p>
+                                                    </div>
+                                                    <input id={'program_image'} type="file"
+                                                        {...imageField}
+
+                                                        onChange={(e) => {
+                                                            imageField.onChange(e);
+                                                            if (e.target.files && e.target.files[0]) {
+                                                                let types = ['image/png', 'image/jpeg']
+                                                                if (types.includes(e.target.files[0].type)) {
+                                                                    setProgramImage(e.target.files);
+                                                                } else {
+                                                                    setError(['progran_image'], 'Invalid file type')
+                                                                }
+                                                            }
+                                                        }}
+                                                        className="hidden" />
+                                                </label>
+
+                                            </div>
+                                            {getValues('program_image')?.length > 0 &&
+                                                <>
+                                                    <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Image</div>
+
+                                                    <div className='flex justify-between items-center w-[30%] mt-5 px-4 py-4'
+                                                        style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }}>
+                                                        <div className='flex w-[80%] gap-3 items-center'>
+                                                            <img src={UploadIcon} alt="altlogo" />
+                                                            <span className='text-[12px]'> {getValues('program_image') && getValues('program_image')[0]?.name}</span>
+                                                        </div>
+                                                        <img className='w-[30px] cursor-pointer' onClick={() => handleDeleteImage()} src={DeleteIcon} alt="DeleteIcon" />
+                                                    </div>
+                                                </>
+                                            }
+                                            {errors['program_image'] && (
+                                                <p className="error" role="alert">
+                                                    {errors['program_image'].message}
+                                                </p>
+                                            )}
+                                        </>
+                                    </div>
+                                </div>
+
+                                <div className='flex justify-center gap-5 items-center pt-5 pb-10'>
+                                    <Button btnName='Cancel' btnCls="w-[18%]" btnCategory="secondary" onClick={handleCloseModal} />
+                                    <button
+                                        type='submit'
+                                        className='text-white py-3 px-7 w-[18%]'
+                                        style={{ background: 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)', borderRadius: '3px' }}>
+                                        Submit
+                                    </button>
+                                </div>
+                            </form>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </MuiModal>
+
+
+            <MuiModal modalOpen={programUploadAction.successModal} modalClose={handleCloseModal} noheader>
+                <div className='px-5 py-1 flex justify-center items-center'>
+                    <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
+                        style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
+                        <img src={SuccessTik} alt="SuccessTik" />
+                        <p className='text-white text-[12px]'>Program Image Updated successfully</p>
+                    </div>
+
+                </div>
+            </MuiModal>
+
         </div>
 
     )

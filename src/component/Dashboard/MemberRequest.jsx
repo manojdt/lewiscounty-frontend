@@ -131,7 +131,7 @@ export default function MemberRequest() {
             <div className='flex gap-6 justify-center items-center py-4'>
                 <button onClick={handleClosePopup} className='py-3 px-6 w-[16%]'
                     style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '3px', color: 'rgba(29, 91, 191, 1)' }}>Cancel</button>
-                <button onClick={() => { console.log(props); handleSelectedItems(props.selectedRows) }}
+                <button onClick={() => {  handleSelectedItems(props.selectedRows) }}
                     className='text-white py-3 px-6 w-[16%]'
                     style={{ background: 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)', borderRadius: '3px' }}>Submit</button>
             </div>)

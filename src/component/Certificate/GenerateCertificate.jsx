@@ -9,7 +9,6 @@ export default function GenerateCertificate() {
   const { id } = useParams();
 
   useEffect(() => {
-    console.log('id', id)
     if(id === '' || id === 'null'){
       navigate('/certificates')
     }

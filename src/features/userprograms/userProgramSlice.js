@@ -16,6 +16,7 @@ import {
   startProgramTask,
   submitProgramTaskDetails,
   updateProgram,
+  updateProgramImage,
   updateUserProgramInfo,
 } from "../../services/userprograms";
 import {
@@ -73,7 +74,6 @@ export const userProgramSlice = createSlice({
       })
       .addCase(getUserPrograms.fulfilled, (state, action) => {
 
-        console.log('action mmm', action)
         const {
           status_counts = {},
             overall_count = 0,
@@ -472,6 +472,28 @@ export const userProgramSlice = createSlice({
         };
       })
       .addCase(submitProgramTaskDetails.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
+
+
+    builder
+      .addCase(updateProgramImage.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(updateProgramImage.fulfilled, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+        };
+      })
+      .addCase(updateProgramImage.rejected, (state, action) => {
         return {
           ...state,
           loading: false,
