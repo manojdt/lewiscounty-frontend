@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Backdrop, CircularProgress, Menu, MenuItem } from '@mui/material';
+import { Backdrop, CircularProgress, IconButton, Menu, MenuItem } from '@mui/material';
+import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
 
 import Card from '../../shared/Card';
 import ProgramCard from '../../shared/Card/ProgramCard';
@@ -102,7 +103,32 @@ export default function Programs() {
 
     ]
 
+    const handlePagination = (action) => {
+        let query = {}
+        const filterType = searchParams.get("type");
+        const isBookmark = searchParams.get("is_bookmark");
+        if (filterType && filterType !== '') {
+            query = { type: 'status', value: filterType }
+        }
 
+        if (isBookmark && isBookmark !== '') {
+            query = { type: 'is_bookmark', value: isBookmark }
+        }
+
+        
+        if (action === 'prev') {
+            query = { ...query, page: 'page', number: userprograms.current_page - 1 }
+        }
+
+        if (action === 'next') {
+            query = { ...query, page: 'page', number: userprograms.current_page + 1 }
+        }
+
+        if (role === 'mentee') {
+            dispatch(getMenteePrograms(query))
+        }
+        if (role === 'mentor') dispatch(getUserPrograms(query));
+    }
 
 
     useEffect(() => {
@@ -210,9 +236,7 @@ export default function Programs() {
                             : null
                     }
                 </Backdrop>
-                <div>
-                    Programs
-                </div>
+                <div> Programs </div>
                 {
                     userInfo && userInfo.data && (userInfo.data.role === 'mentor' || userInfo.data.role === 'admin') &&
                     <div>
@@ -220,8 +244,8 @@ export default function Programs() {
                             style={{ background: '#1D5BBF', color: '#fff', borderRadius: '6px' }}>Create New Program</button>
                     </div>
                 }
-
             </div>
+
             <div className="grid grid-cols-5 gap-3">
                 <div className="row-span-3 flex flex-col gap-8">
                     <Card cardTitle={'Programs'} cardContent={programMenusList} />
@@ -238,7 +262,6 @@ export default function Programs() {
                                 </div>
                                 <img src={programView === 'grid' ? ListViewIcon : GridViewIcon} className='cursor-pointer' alt="viewicon" onClick={handleViewChange} />
 
-
                             </div>
                             <div className="flex gap-8 items-center">
                                 <div className="relative">
@@ -253,7 +276,6 @@ export default function Programs() {
                                     </div>
                                 </div>
                                 {/* <img src={SearchIcon} alt="statistics" /> */}
-
                                 <p className="text-[12px] py-2 pl-5 pr-4 flex gap-4" style={{ background: 'rgba(223, 237, 255, 1)', borderRadius: '5px' }}>
                                     <img src={CalendarIcon} alt="CalendarIcon" />
                                     <select className='focus:outline-none' style={{ background: 'rgba(223, 237, 255, 1)', border: 'none' }}>
@@ -266,26 +288,54 @@ export default function Programs() {
                         </div>
                         {
                             programView === 'grid' &&
-                            <ProgramCard
-                                title="Planned Programs"
-                                viewpage="/programs?type=yettojoin"
-                                handleNavigateDetails={handleNavigation}
-                                handleBookmark={handleBookmark}
-                                programs={programsList}
-                                noTitle
-                            />
-                        }
 
+                            <>
+                                <ProgramCard
+                                    title="Planned Programs"
+                                    viewpage="/programs?type=yettojoin"
+                                    handleNavigateDetails={handleNavigation}
+                                    handleBookmark={handleBookmark}
+                                    programs={programsList}
+                                    noTitle
+                                />
+
+                                {
+                                    userprograms.total_pages > 1 &&
+
+                                    <div className='flex items-center justify-end pb-6 pr-9'>
+
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                            <span
+                                                style={{
+                                                    border: '1px solid rgba(9, 19, 22, 1)', display: 'flex', width: '36px', height: '37px', justifyContent: 'center',
+                                                    alignItems: 'center'
+                                                }}
+                                            >
+                                                {userprograms?.current_page}</span> of <span className='pl-1'>{userprograms?.total_pages}
+                                            </span>
+                                        </div>
+
+                                        <IconButton onClick={() => handlePagination('prev')} disabled={userprograms.current_page === 1}>
+                                            <div style={{ background: '#D9E4F2', padding: '0 7px 4px', borderRadius: '2px' }}>
+                                                <KeyboardArrowLeft />
+                                            </div>
+                                        </IconButton>
+                                        <IconButton onClick={() => handlePagination('next')} disabled={userprograms.current_page === userprograms.total_pages}>
+                                            <div style={{ background: '#D9E4F2', padding: '0 7px 4px', borderRadius: '2px' }}>
+                                                <KeyboardArrowRight />
+                                            </div>
+                                        </IconButton>
+                                    </div>
+                                }
+
+                            </>
+                        }
                         {
                             programView === 'list' &&
-
                             <div className='py-6 px-6'>
                                 <DataTable rows={programsList} columns={programTableFields} hideFooter={!programsList.length} />
                             </div>
                         }
-
-
-
                     </div>
                 </div>
             </div>

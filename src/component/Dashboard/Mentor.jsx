@@ -61,7 +61,7 @@ export const Mentor = () => {
         const isBookmark = searchParams.get("is_bookmark");
         dispatch(getProgramCounts())
         if (filterType === null && isBookmark === null) {
-            dispatch(getUserPrograms({ type: 'status', value: 'yettojoin' }));
+            dispatch(getUserPrograms({}));
         }
     }, [])
 
@@ -119,6 +119,9 @@ export const Mentor = () => {
         }
     }
 
+
+    console.log('userpragrams', userpragrams)
+
     return (
         <>
             <div className="dashboard-content px-8 mt-10">
@@ -147,7 +150,18 @@ export const Mentor = () => {
 
                     <div className="programs-list">
                         {
-                            (searchParams.get("type") === 'yettojoin' || searchParams.get("type") === 'planned' || (searchParams.get("type") === null && searchParams.get("is_bookmark") === null)) &&
+                            (searchParams.get("type") === null && searchParams.get("is_bookmark") === null) &&
+
+                            <ProgramCard
+                                title="All Programs"
+                                viewpage="/programs"
+                                handleNavigateDetails={handleNavigateDetails}
+                                handleBookmark={handleBookmark}
+                                programs={userpragrams.allprograms}
+                            />
+                        }
+                        {
+                            (searchParams.get("type") === 'yettojoin' || searchParams.get("type") === 'planned') &&
                             <ProgramCard
                                 title="Planned Programs"
                                 viewpage="/programs?type=yettojoin"

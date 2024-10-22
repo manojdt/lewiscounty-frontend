@@ -1,7 +1,13 @@
-export const StepsList = [{
+export const StepsList = [
+  {
     name: "Personal Information",
     status: "In-Progress",
     key: 'personal_information'
+  },
+  {
+    name: "Skills and Area of Expertise",
+    status: "",
+    key: 'area_of_expertise'
   },
   {
     name: "Professional Background",
@@ -12,11 +18,6 @@ export const StepsList = [{
     name: "Educational Background",
     status: "",
     key: 'educational_background'
-  },
-  {
-    name: "Area Of Expertise",
-    status: "",
-    key: 'area_of_expertise'
   },
   {
     name: "Mentorship Experience",

@@ -350,9 +350,9 @@ export const AdditionalInformationFields = [{
 
 export const StepFormFields = [
   PersonalInformationFields,
+  AreaOfExpertiseFields,
   ProfessionalBackgroundFields,
   EducationalBackgroundFields,
-  AreaOfExpertiseFields,
   MentorShipExperienceFields,
   MentorshipPreferenceFields,
   GoalsandExperienceFields,
@@ -439,7 +439,7 @@ export const MenteePersonalInformationFields = [{
       }
     ],
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     size: true,
   },
@@ -450,7 +450,7 @@ export const MenteePersonalInformationFields = [{
     label: "Location",
     placeholder: "Enter Location",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     size: true,
   },
@@ -1258,6 +1258,26 @@ export const ProgramInformationFields = [{
     },
     width: 'w-full',
     icon: 'add',
+    for: ['admin', 'mentor']
+  },
+  {
+    type: "checkbox",
+    name: "mentee_upload_certificates",
+    label: "Mentee Upload experience Certficate",
+    placeholder: "",
+    options: [{
+        key: 'true',
+        value: 'Mandatory'
+      },
+      {
+        key: 'false',
+        value: 'Non-Mandatory'
+      }
+    ],
+    inputRules: {
+      required: "This field is required",
+    },
+    width: 'w-full',
     for: ['admin', 'mentor']
   },
   {

@@ -111,8 +111,7 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                                 const actualStartDate = startDate.length ? `${startDate[2]}/${startDate[1]}/${startDate[0]}` : ''
 
                                 return (
-                                    <div key={index} className={`curated-programs program-container flex gap-1 items-center py-5 px-5 
-                                                           w-[33%]`}
+                                    <div key={index} className={`curated-programs program-container flex gap-1 items-center py-5 px-5 w-[33%]`}
                                         style={{
                                             ...currentProgram.status === 'yettoapprove' || currentProgram.status === 'draft' ? {
                                                 opacity: '0.5',
@@ -121,16 +120,21 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                                             }
                                                 :
                                                 {}
-
-
                                         }}
                                     >
-
                                         <div className="w-full" style={{ boxShadow: '4px 4px 15px 0px rgba(0, 0, 0, 0.1)', borderRadius: '10px' }}>
                                             <div className="py-6 px-7 border-b-2 relative">
                                                 <div className="h-full relative" style={{ borderRadius: '10px' }}>
                                                     <img className="object-cover w-full h-[150px]" src={currentProgram.image} alt="Program Logo" />
+                                                    {/* {
+                                                        currentProgram.program_edit &&
 
+                                                        <div className='absolute top-2 left-0' style={{ background: '#fff', borderRadius: '50%', padding: '14px 17px' }}>
+                                                        <img className="cursor-pointer"
+                                                            onClick={() => handleBookmark(currentProgram)}
+                                                            src={currentProgram.bookmark ? BookmarkedColorIcon : BookmarkedIcon} alt="BookmarkedIcon" />
+                                                    </div>
+                                                    } */}
                                                     <div className='absolute top-2 right-0' style={{ background: '#fff', borderRadius: '50%', padding: '14px 17px' }}>
                                                         <img className="cursor-pointer"
                                                             onClick={() => handleBookmark(currentProgram)}

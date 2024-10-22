@@ -69,6 +69,7 @@ export default function CreatePrograms() {
                 const fiel = ['learning_materials', 'skills', 'certificates', 'members']
                 fieldData.group_chat_requirement = fieldData.group_chat_requirement === 'true'
                 fieldData.individual_chat_requirement = fieldData.individual_chat_requirement === 'true'
+                fieldData.mentee_upload_certificates = fieldData.mentee_upload_certificates === 'true'
                 for (let a in fieldData) {
                     if (a === 'program_image' && logo.program_image) { bodyFormData.append(a, logo.program_image); }
                     if (a === 'image' && logo.image) { bodyFormData.append(a, logo.image); }
@@ -82,6 +83,7 @@ export default function CreatePrograms() {
                 if (fieldData.hasOwnProperty('status') && fieldData.status === 'draft') {
                     status = 'draft'
                 }
+
                 setProgramApiStatus(status)
                 dispatch(createNewPrograms(bodyFormData))
             }else{

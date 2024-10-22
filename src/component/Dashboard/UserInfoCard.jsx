@@ -66,7 +66,8 @@ export default function UserInfoCard() {
                                     <div className={`flex justify-between py-2 px-6 rounded cursor-pointer menu-content 
                                             ${searchParams.get("type") === menu.status
                                             || (searchParams.get("is_bookmark") === 'true' && menu.status === programActionStatus.bookmark)
-                                            || (searchParams.get("type") === null && searchParams.get("is_bookmark") === null && menu.status === programActionStatus.yettojoin) ? 'active' : ''}`} aria-current="page"
+                                            || (searchParams.get("type") === programActionStatus.planned && menu.status === programActionStatus.yettojoin)
+                                            || (searchParams.get("type") === null && searchParams.get("is_bookmark") === null && menu.status === programActionStatus.all) ? 'active' : ''}`} aria-current="page"
                                         onClick={() => navigate(menu.page)}>
                                         <span className="text-sm">{menu.name}</span>
                                         <span className="text-base">{menu.count}</span>

@@ -57,13 +57,19 @@ const StepComponenRender = ({ stepFields, currentStep, handleNextStep, handlePre
     }
 
     useEffect(() => {
-        const fName = [];
+        
         const f = {}
-        stepFields.forEach(step => fName.push(step.name))
-        for (const field in stepData) {
-            if (fName.includes(field)) f[field] = stepData[field]
+        if(currentStep===1){
+        const fName = [];
+            stepFields.forEach(step => fName.push(step.name))
+            for (const field in stepData) {
+                if (fName.includes(field)) f[field] = stepData[field]
+            }
+            reset(f)
+        }else{
+    
+                reset(f)
         }
-        reset(f)
     }, [stepFields, stepData])
 
 

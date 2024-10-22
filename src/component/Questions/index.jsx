@@ -13,6 +13,7 @@ import StepComponenRender from "./StepComponentRender";
 import { updateInfo, updateMenteeQuestions, updateQuestions } from "../../services/loginInfo";
 import SuccessIcon from "../../assets/images/Success_tic1x.png"
 import MuiModal from "../../shared/Modal";
+import ToastNotification from "../../shared/Toast";
 
 export const Questions = () => {
   const navigate = useNavigate();
@@ -27,6 +28,7 @@ export const Questions = () => {
   const [loading, setLoading] = useState(false)
   const [stepName, setStepName] = useState([])
   const [redirect, setRedirect] = useState(false)
+  const [errorNot, setErrorNot] = useState(false)
 
   const role = userInfo.data.role || ''
 
@@ -34,10 +36,10 @@ export const Questions = () => {
   const submitQuestionsData = (apiData) => {
     if (role === 'mentee') {
       const [day, month, year] =apiData.dob.split('/');
-const formattedDob = new Date(`${year}-${month}-${day}`).toISOString().split('T')[0];
+      const formattedDob = new Date(`${year}-${month}-${day}`).toISOString().split('T')[0];
       const menteeApiData = {
         ...apiData,
-        gender:  Array.isArray(apiData.gender) ? apiData.gender[0] : apiData.gender,
+        gender: apiData.gender? Array.isArray(apiData.gender) ? apiData.gender[0] : apiData.gender:null,
         dob: formattedDob,
         phone_number: apiData.phone_number
       }
@@ -47,7 +49,7 @@ const formattedDob = new Date(`${year}-${month}-${day}`).toISOString().split('T'
 
       const mentorApiData = {
         ...apiData,
-        gender:  Array.isArray(apiData.gender) ? apiData.gender[0] : apiData.gender,
+        gender: apiData.gender? Array.isArray(apiData.gender) ? apiData.gender[0] : apiData.gender:null,
         phone_number: apiData.phone_number
       }
       dispatch(updateQuestions(mentorApiData))
@@ -85,30 +87,37 @@ const formattedDob = new Date(`${year}-${month}-${day}`).toISOString().split('T'
     const allFields = formFields.flat(); // Flatten all fields for validation
     const errorMessages = validateRequiredFields(allFields, combinedData);
     console.log("Error Messages:", errorMessages);
-  
+    const phoneField = allFields.find(field => field.name === 'phone_number');
+    const phoneNumber = combinedData['phone_number'];
+    
+    if (phoneField && phoneNumber) {
+      const phoneRegex = /^[0-9]{10}$/;
+      if (!phoneRegex.test(phoneNumber)) {
+        errorMessages.push({
+          name: 'phone_number',
+          message: 'Phone number must be exactly 10 digits.',
+        });
+      }
+    }
     if (errorMessages.length > 0) {
       console.error("Missing required fields:", errorMessages);
-      // trigger()
       // Redirect to the first error field
       const firstErrorField = errorMessages[0]; // Get the first error field
       const fieldIndex = allFields.findIndex(field => field.name === firstErrorField?.name); // Find its index
      console.log(fieldIndex,firstErrorField)
       if (fieldIndex !== -1) {
         const currentField = allFields[fieldIndex];
-  
         // Find the step index for the first error field
         const stepIndex = formFields.findIndex(step => step.includes(currentField));
-  
         if (stepIndex !== -1) {
           // Set the current step to the step containing the first error field
           setCurrentStep(stepIndex + 1); // Adjust for 0-based index
         }
       }
+      setErrorNot(true)
       return true
-  
     }
     return false // Prevent submission if there are errors
-    
   };
   
   const handleNextStep = (data) => {
@@ -164,7 +173,11 @@ const formattedDob = new Date(`${year}-${month}-${day}`).toISOString().split('T'
       }, [3000])
     }
 
-
+    if(userInfo.data && Object.keys(userInfo.data).length && userInfo.data.hasOwnProperty('userinfo')){
+      if(userInfo.data.userinfo?.approve_status !== 'accept' || userInfo.data?.is_registered === true){
+        navigate('/dashboard')
+      }
+    }
   }, [userInfo])
 
   useEffect(() => {
@@ -201,14 +214,13 @@ const formattedDob = new Date(`${year}-${month}-${day}`).toISOString().split('T'
     }
   }, [role])
   const handleStepClick = (stepNumber) => {
-    // if(formRef.current){
+    if(formRef.current){
       const formData = new FormData(formRef.current);
       const data = Object.fromEntries(formData.entries());
-      console.log(data,"data");
       const fieldData = { ...stepData, ...data}
       setStepData(fieldData)
-    //   formRef.current.submit();
-    // }
+      // formRef.current.submit();
+    }
     const updatedSteps = allStepList.map((step, index) => {
       // Set the clicked step to "In-Progress"
       if (index === stepNumber - 1) {
@@ -224,9 +236,16 @@ const formattedDob = new Date(`${year}-${month}-${day}`).toISOString().split('T'
   
     setAllStepList(updatedSteps);
     setCurrentStep(stepNumber);
-    setBtnTypeAction({ back: stepNumber > 1, next: stepNumber < formFields.length });
+    // setBtnTypeAction({ back: stepNumber > 1, next: stepNumber < formFields.length });
   };
+  useEffect(() => {
+    if (errorNot) {
+        setTimeout(() => {
+            setErrorNot(false)
+        }, 3000)
 
+    }
+}, [errorNot])
   return (
     <>
       <Navbar />
@@ -241,6 +260,12 @@ const formattedDob = new Date(`${year}-${month}-${day}`).toISOString().split('T'
           }
           
         </div>
+        {
+                errorNot &&
+
+                <ToastNotification openToaster={errorNot} message={'Please fill all mandatory fields'} handleClose={()=>setErrorNot(false)} toastType={'error'} />
+
+            }
         <Backdrop
           sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={userInfo.loading || userInfo.status === userStatus.login}
@@ -277,6 +302,7 @@ const formattedDob = new Date(`${year}-${month}-${day}`).toISOString().split('T'
             (formFields.length && formFields[currentStep - 1]) ?
               <StepComponenRender
                 stepData={stepData}
+                role={role}
                 refForm={formRef}
                 stepName={stepName[currentStep - 1]}
                 stepFields={formFields[currentStep - 1]}
