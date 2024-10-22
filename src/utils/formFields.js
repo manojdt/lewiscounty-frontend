@@ -1261,6 +1261,26 @@ export const ProgramInformationFields = [{
     for: ['admin', 'mentor']
   },
   {
+    type: "checkbox",
+    name: "mentee_upload_certificates",
+    label: "Mentee Upload experience Certficate",
+    placeholder: "",
+    options: [{
+        key: 'true',
+        value: 'Mandatory'
+      },
+      {
+        key: 'false',
+        value: 'Non-Mandatory'
+      }
+    ],
+    inputRules: {
+      required: "This field is required",
+    },
+    width: 'w-full',
+    for: ['admin', 'mentor']
+  },
+  {
     type: "input",
     name: "max_mentor_count",
     label: "Maximum Mentor Limits",
