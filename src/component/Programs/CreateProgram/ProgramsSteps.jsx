@@ -22,6 +22,7 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
     const [dateFormat, setDateFormat] = useState({})
     const [formData, setFormData] = useState({})
     const [logoImage, setLogoImage] = useState({})
+    const [checkBoxValue, setCheckBoxValue] = useState({})
     const {
         register,
         formState: { errors },
@@ -83,6 +84,10 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
         setLogoImage(image)
     }
 
+    const handleCheckbox = (e) => {
+        setCheckBoxValue({...checkBoxValue,  [e.target.name] : e.target.value})
+    }
+
     return (
         <>
             <div className="py-9">
@@ -93,10 +98,11 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                 const dateField = field.type === 'date' ? register(field.name, field.inputRules) : undefined
                                 var imageField = field.type === 'file' ? register(field.name, field.inputRules) : undefined
                                 const dropdownimageField = field.type === 'dropdown' ? register(field.name, field.inputRules) : undefined
+                                const checkbox = field.type === 'checkbox' ? register(field.name, field.inputRules) : undefined
                                 return (
                                     <div className={`relative mb-6  ${getWindowDimensions().width <= 1536 && field.width === 'width-82' ? 'w-[81%]' : field.width}`} key={index}>
                                         <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor={field.label}>
-                                            {field.label} <span style={{color: 'red'}}>{field?.inputRules?.required ? '*' : ''}</span>
+                                            {field.label} <span style={{ color: 'red' }}>{field?.inputRules?.required ? '*' : ''}</span>
                                         </label>
                                         {
                                             field.type === 'input' ?
@@ -260,10 +266,16 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                                         field.options.map((option, index) =>
                                                                             <div className="flex items-center me-4" key={index}>
                                                                                 <input type="radio" className="w-4 h-4 text-blue-600 bg-gray-100
-                                                                                border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 
-                                                                                dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700
-                                                                                dark:border-gray-600"
-                                                                                    {...register(field.name, field.inputRules)}
+                                                                                    border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 
+                                                                                    dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700
+                                                                                    dark:border-gray-600"
+                                                                                    {...checkbox}
+                                                                                    onChange={e => {
+                                                                                        checkbox.onChange(e);
+                                                                                        handleCheckbox(e);
+                                                                                    }}
+                                                                                    value={option.key}
+                                                                                    checked={checkBoxValue[field.name] === option.key}
                                                                                 />
                                                                                 <label className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{option.value}</label>
                                                                             </div>
@@ -378,8 +390,8 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                         {currentStep === totalSteps ? <Button btnType="button" onClick={handleDraft} btnStyle={{ background: 'rgba(197, 197, 197, 1)', color: '#000' }}
                             btnCls="w-[150px]" btnName={'Save as Draft'} btnCategory="primary" /> : null}
                         <Button btnType="submit" id={'program-submit'} btnCls="w-[100px]"
-                           
-                        btnName={currentStep === totalSteps ? 'Submit' : 'Next'} btnCategory="primary" />
+
+                            btnName={currentStep === totalSteps ? 'Submit' : 'Next'} btnCategory="primary" />
                     </div>
                 </form>
             </div>
