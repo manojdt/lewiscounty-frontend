@@ -5,7 +5,7 @@ import { Button } from '../../shared';
 import { useForm } from "react-hook-form";
 import CalendarIcon from '../../assets/images/calender_1x.png'
 
-const StepComponenRender = ({ stepFields, currentStep, handleNextStep, handlePreviousStep, stepData, stepName,refForm, totalSteps }) => {
+const StepComponenRender = ({ stepFields, currentStep, handleNextStep, handlePreviousStep, stepData, stepName, totalSteps }) => {
     const navigate = useNavigate();
     const {
         register,
@@ -57,26 +57,20 @@ const StepComponenRender = ({ stepFields, currentStep, handleNextStep, handlePre
     }
 
     useEffect(() => {
-        
-        const f = {}
-        if(currentStep===1){
         const fName = [];
-            stepFields.forEach(step => fName.push(step.name))
-            for (const field in stepData) {
-                if (fName.includes(field)) f[field] = stepData[field]
-            }
-            reset(f)
-        }else{
-    
-                reset(f)
+        const f = {}
+        stepFields.forEach(step => fName.push(step.name))
+        for (const field in stepData) {
+            if (fName.includes(field)) f[field] = stepData[field]
         }
+        reset(f)
     }, [stepFields, stepData])
 
 
     return (
         <>
             <div className="form-container">
-                <form ref={refForm} onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="flex flex-wrap gap-4">
                         {
                             stepFields.map((field, index) => {

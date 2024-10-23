@@ -19,7 +19,6 @@ export const Questions = () => {
   const navigate = useNavigate();
   const userInfo = useSelector(state => state.userInfo)
   const dispatch = useDispatch();
-  const formRef = useRef(); 
   const [currentStep, setCurrentStep] = useState(1)
   const [allStepList, setAllStepList] = useState([])
   const [formFields, setFormFields] = useState([])
@@ -98,7 +97,6 @@ export const Questions = () => {
       }
     }
     if (errorMessages.length > 0) {
-      console.error("Missing required fields:", errorMessages);
       // Redirect to the first error field
       const firstErrorField = errorMessages[0]; // Get the first error field
       const fieldIndex = allFields.findIndex(field => field.name === firstErrorField?.name); // Find its index
@@ -209,13 +207,13 @@ export const Questions = () => {
     }
   }, [role])
   const handleStepClick = (stepNumber) => {
-    if(formRef.current){
-      const formData = new FormData(formRef.current);
-      const data = Object.fromEntries(formData.entries());
-      const fieldData = { ...stepData, ...data}
-      setStepData(fieldData)
-      // formRef.current.submit();
-    }
+    // if(formRef.current){
+    //   const formData = new FormData(formRef.current);
+    //   const data = Object.fromEntries(formData.entries());
+    //   const fieldData = { ...stepData, ...data}
+    //   setStepData(fieldData)
+    //   // formRef.current.submit();
+    // }
     const updatedSteps = allStepList.map((step, index) => {
       // Set the clicked step to "In-Progress"
       if (index === stepNumber - 1) {
@@ -250,7 +248,7 @@ export const Questions = () => {
             Fill the Question and Answer
           </h2>
           {
-            ((role === 'mentor' && currentStep >= 3) || (role === 'mentee' && currentStep > 1)) &&
+            ((role === 'mentor' && currentStep >= 2) || (role === 'mentee' && currentStep > 1)) &&
             <p style={{color:'#1D5BBF', textDecoration:'underline', fontWeight:'bold', cursor: 'pointer'}} onClick={handleSkip}>Skip</p>
           }
           
@@ -296,9 +294,8 @@ export const Questions = () => {
           {
             (formFields.length && formFields[currentStep - 1]) ?
               <StepComponenRender
+              key={currentStep}
                 stepData={stepData}
-                role={role}
-                refForm={formRef}
                 stepName={stepName[currentStep - 1]}
                 stepFields={formFields[currentStep - 1]}
                 currentStep={currentStep}

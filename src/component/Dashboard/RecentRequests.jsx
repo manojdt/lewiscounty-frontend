@@ -168,7 +168,6 @@ export default function RecentRequests({ data = [] }) {
                 </div>
             </div>
 
-
             <div className="content flex gap-4 py-5 px-5 overflow-x-auto">
 
                 <DataTable
