@@ -238,7 +238,7 @@ export const Questions = () => {
       <div className="px-9">
         <div className="flex justify-between items-center">
           <h2 className="text-xl text-left py-8" style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 500 }}>
-            Fill the Question and Answer
+            {/* Fill the Question and Answer */}
           </h2>
           {
             ((role === 'mentor' && currentStep >= 2) || (role === 'mentee' && currentStep > 1)) &&

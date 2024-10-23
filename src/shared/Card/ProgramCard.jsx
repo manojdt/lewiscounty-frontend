@@ -75,7 +75,8 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
         dispatch(updateProgramImage(bodyFormData)).then(() => {
             loadProgram && loadProgram()
             setProgramUploadAction({ loading: false, imageModal: false, successModal: true, error: '', selectedProgram: {} })
-
+            setProgramImage(null)
+            reset()
         })
     }
 
