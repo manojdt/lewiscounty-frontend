@@ -60,7 +60,6 @@ export const Questions = () => {
     const { first_name, email, ...apiData } = { ...stepData, prev_mentorship: stepData.prev_mentorship === "true" }
     const combinedData = { ...stepData };
     const res= handleSubmit(combinedData);
-    console.log(res,"res")
     if(!res){
     submitQuestionsData(apiData)
     }
@@ -86,7 +85,6 @@ export const Questions = () => {
   const handleSubmit = (combinedData) => {
     const allFields = formFields.flat(); // Flatten all fields for validation
     const errorMessages = validateRequiredFields(allFields, combinedData);
-    console.log("Error Messages:", errorMessages);
     const phoneField = allFields.find(field => field.name === 'phone_number');
     const phoneNumber = combinedData['phone_number'];
     
@@ -104,7 +102,6 @@ export const Questions = () => {
       // Redirect to the first error field
       const firstErrorField = errorMessages[0]; // Get the first error field
       const fieldIndex = allFields.findIndex(field => field.name === firstErrorField?.name); // Find its index
-     console.log(fieldIndex,firstErrorField)
       if (fieldIndex !== -1) {
         const currentField = allFields[fieldIndex];
         // Find the step index for the first error field
@@ -121,7 +118,6 @@ export const Questions = () => {
   };
   
   const handleNextStep = (data) => {
-    console.log(data,"red")
     const combinedData = { ...stepData, ...data };
  
  
@@ -136,7 +132,6 @@ export const Questions = () => {
     if (formFields.length === currentStep) {
       const { first_name, email, ...apiData } = { ...fieldData, prev_mentorship: stepData.prev_mentorship === "true" }
       const res= handleSubmit(combinedData);
-      console.log(res,"es")
       if(!res){
         submitQuestionsData(apiData)
       }
