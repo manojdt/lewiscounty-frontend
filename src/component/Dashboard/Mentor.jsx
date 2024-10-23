@@ -1,47 +1,36 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Backdrop, CircularProgress } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
+
 import RecentRequests from "./RecentRequests";
 import RecentActivities from "./RecentActivities";
 import ViewImpression from "./ViewImpression";
 import Programs from "./Programs";
 import Invite from "./Invite";
-import { empty, programActionStatus, programStatus } from "../../utils/constant";
+import { programActionStatus, programStatus } from "../../utils/constant";
 import { chartProgramList, getProgramCounts, getUserPrograms, updateProgram } from "../../services/userprograms";
 import { pipeUrls } from '../../utils/constant';
-import { useWindowDimentions } from "../../hooks/windowDimentions";
 import './dashboard.css';
 import UserInfoCard from "./UserInfoCard";
 import ProgramCard from "../../shared/Card/ProgramCard";
 
 export const Mentor = () => {
     const dispatch = useDispatch()
-    const { width } = useWindowDimentions()
     const [searchParams] = useSearchParams();
     const navigate = useNavigate()
-    const { allPrograms, status, createdPrograms } = useSelector(state => state.programInfo)
     const { programRequest } = useSelector(state => state.requestList);
     const userpragrams = useSelector(state => state.userPrograms)
-    const userInfo = useSelector(state => state.userInfo)
-    const [chartList, setChartList] = useState([])
-
+ 
     const handlePerformanceFilter = (e) => {
         const res = e?.target?.value || "date"
         dispatch(chartProgramList(res))
     }
 
-    useEffect(() => {
-        handlePerformanceFilter()
-    }, [])
-
-
-    useEffect(() => {
+    const getPrograms = () => {
+        let query = {}
         const filterType = searchParams.get("type");
         const isBookmark = searchParams.get("is_bookmark");
-
-        let query = {}
-
         if (filterType && filterType !== '') {
             query = { type: 'status', value: filterType }
         }
@@ -49,22 +38,8 @@ export const Mentor = () => {
         if (isBookmark && isBookmark !== '') {
             query = { type: 'is_bookmark', value: isBookmark }
         }
-
-        if (Object.keys(query).length) {
-            dispatch(getUserPrograms(query));
-        }
-
-    }, [searchParams])
-
-    useEffect(() => {
-        const filterType = searchParams.get("type");
-        const isBookmark = searchParams.get("is_bookmark");
-        dispatch(getProgramCounts())
-        if (filterType === null && isBookmark === null) {
-            dispatch(getUserPrograms({}));
-        }
-    }, [])
-
+        dispatch(getUserPrograms(query));
+    }
 
     const handleNavigateDetails = (program) => {
         let baseUrl = pipeUrls.programdetails
@@ -82,45 +57,28 @@ export const Mentor = () => {
     }
 
     useEffect(() => {
+        handlePerformanceFilter()
+    }, [])
+
+    useEffect(() => {
+        getPrograms()
+    }, [searchParams])
+
+    useEffect(() => {
+        const filterType = searchParams.get("type");
+        const isBookmark = searchParams.get("is_bookmark");
+        dispatch(getProgramCounts())
+        if (filterType === null && isBookmark === null) {
+            dispatch(getUserPrograms({}));
+        }
+    }, [])
+
+    useEffect(() => {
         if (userpragrams.status === programStatus.bookmarked) {
-
-            let query = {}
-            const filterType = searchParams.get("type");
-            const isBookmark = searchParams.get("is_bookmark");
-            if (filterType && filterType !== '') {
-                query = { type: 'status', value: filterType }
-            }
-
-            if (isBookmark && isBookmark !== '') {
-                query = { type: 'is_bookmark', value: isBookmark }
-            }
-
-            if (Object.keys(query).length) {
-                dispatch(getUserPrograms(query));
-            } else {
-                dispatch(getUserPrograms({ type: 'status', value: 'yettojoin' }));
-            }
+            getPrograms()
         }
     }, [userpragrams.status])
 
-    useEffect(() => {
-        chartData()
-    }, [userpragrams.chartProgramDetails])
-
-    const chartData = () => {
-        if (userpragrams?.chartProgramDetails?.data &&
-            userpragrams?.chartProgramDetails?.data?.length > 0) {
-            const res = userpragrams?.chartProgramDetails?.data.every((val) => val.value === 0)
-            if (res) {
-                return setChartList(empty)
-            } else {
-                return setChartList(userpragrams?.chartProgramDetails?.data)
-            }
-        }
-    }
-
-
-    console.log('userpragrams', userpragrams)
 
     return (
         <>
@@ -139,25 +97,21 @@ export const Mentor = () => {
                 <div className="main-grid grid grid-cols-5 gap-3">
                     <div className="left-bar row-span-3 flex flex-col gap-8">
                         <UserInfoCard />
-
                         <ViewImpression />
-
                         <RecentActivities />
-
                         <Invite />
-
                     </div>
 
                     <div className="programs-list">
                         {
                             (searchParams.get("type") === null && searchParams.get("is_bookmark") === null) &&
-
                             <ProgramCard
                                 title="All Programs"
                                 viewpage="/programs"
                                 handleNavigateDetails={handleNavigateDetails}
                                 handleBookmark={handleBookmark}
                                 programs={userpragrams.allprograms}
+                                loadProgram={getPrograms}
                             />
                         }
                         {
@@ -168,6 +122,7 @@ export const Mentor = () => {
                                 handleNavigateDetails={handleNavigateDetails}
                                 handleBookmark={handleBookmark}
                                 programs={userpragrams.yettojoin}
+                                loadProgram={getPrograms}
                             />
                         }
 
@@ -179,6 +134,7 @@ export const Mentor = () => {
                                 handleNavigateDetails={handleNavigateDetails}
                                 handleBookmark={handleBookmark}
                                 programs={userpragrams.yettostart}
+                                loadProgram={getPrograms}
                             />
                         }
 
@@ -190,10 +146,11 @@ export const Mentor = () => {
                                 handleNavigateDetails={handleNavigateDetails}
                                 handleBookmark={handleBookmark}
                                 programs={userpragrams.inprogress}
+                                loadProgram={getPrograms}
                             />
                         }
 
-                        {
+                        {/* {
                             searchParams.get("type") === 'planned' &&
                             <ProgramCard
                                 title="PLanned Programs"
@@ -201,8 +158,9 @@ export const Mentor = () => {
                                 handleNavigateDetails={handleNavigateDetails}
                                 handleBookmark={handleBookmark}
                                 programs={userpragrams.planned}
+                                loadProgram={getPrograms}
                             />
-                        }
+                        } */}
 
                         {
                             searchParams.get("is_bookmark") === 'true' &&
@@ -212,6 +170,7 @@ export const Mentor = () => {
                                 handleNavigateDetails={handleNavigateDetails}
                                 handleBookmark={handleBookmark}
                                 programs={userpragrams.bookmarked}
+                                loadProgram={getPrograms}
                             />
                         }
 
@@ -223,6 +182,7 @@ export const Mentor = () => {
                                 handleNavigateDetails={handleNavigateDetails}
                                 handleBookmark={handleBookmark}
                                 programs={userpragrams.completed}
+                                loadProgram={getPrograms}
                             />
                         }
 

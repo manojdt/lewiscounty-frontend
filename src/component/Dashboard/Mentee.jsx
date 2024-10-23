@@ -37,7 +37,7 @@ export const Mentee = () => {
 
     const role = userInfo.data.role
 
-    useEffect(() => {
+    const getPrograms = () => {
         const filterType = searchParams.get("type");
         const isBookmark = searchParams.get("is_bookmark");
 
@@ -51,10 +51,11 @@ export const Mentee = () => {
             query = { type: 'is_bookmark', value: isBookmark }
         }
 
-        if (Object.keys(query).length) {
-            dispatch(getMenteePrograms(query));
-        }
+        dispatch(getMenteePrograms(query));
+    }
 
+    useEffect(() => {
+        getPrograms()
     }, [searchParams])
 
     useEffect(() => {
@@ -76,10 +77,7 @@ export const Mentee = () => {
             } else {
                 navigate(`${baseUrl}/${program.id}`)
             }
-
-
         }
-
     }
 
     const handleBookmark = (program) => {
@@ -88,23 +86,7 @@ export const Mentee = () => {
 
     useEffect(() => {
         if (userpragrams.status === programStatus.bookmarked) {
-
-            let query = {}
-            const filterType = searchParams.get("type");
-            const isBookmark = searchParams.get("is_bookmark");
-            if (filterType && filterType !== '') {
-                query = { type: 'status', value: filterType }
-            }
-
-            if (isBookmark && isBookmark !== '') {
-                query = { type: 'is_bookmark', value: isBookmark }
-            }
-
-            if (Object.keys(query).length) {
-                dispatch(getMenteePrograms(query));
-            } else {
-                dispatch(getMenteePrograms({ type: 'status', value: 'yettojoin' }));
-            }
+            getPrograms()
         }
     }, [userpragrams.status])
 
@@ -215,6 +197,7 @@ export const Mentee = () => {
                                 handleNavigateDetails={handleNavigateDetails}
                                 handleBookmark={handleBookmark}
                                 programs={userpragrams.allprograms}
+                                loadProgram={getPrograms}
                             />
                         }
 
@@ -226,6 +209,7 @@ export const Mentee = () => {
                                 handleNavigateDetails={handleNavigateDetails}
                                 handleBookmark={handleBookmark}
                                 programs={userpragrams.yettojoin}
+                                loadProgram={getPrograms}
                             />
                         }
 
@@ -238,6 +222,7 @@ export const Mentee = () => {
                                 handleNavigateDetails={handleNavigateDetails}
                                 handleBookmark={handleBookmark}
                                 programs={userpragrams.yettostart}
+                                loadProgram={getPrograms}
                             />
                         }
 
@@ -249,6 +234,7 @@ export const Mentee = () => {
                                 handleNavigateDetails={handleNavigateDetails}
                                 handleBookmark={handleBookmark}
                                 programs={userpragrams.inprogress}
+                                loadProgram={getPrograms}
                             />
                         }
 

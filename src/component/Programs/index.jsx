@@ -71,6 +71,26 @@ export default function Programs() {
         setAnchorEl(null);
     };
 
+    const getPrograms = () => {
+        const filterType = searchParams.get("type");
+        const isBookmark = searchParams.get("is_bookmark");
+
+        let query = {}
+
+        if (filterType && filterType !== '') {
+            query = { type: 'status', value: filterType }
+        }
+
+        if (isBookmark && isBookmark !== '') {
+            query = { type: 'is_bookmark', value: isBookmark }
+        }
+
+        if (role === 'mentee') {
+            dispatch(getMenteePrograms(query))
+        }
+        if (role === 'mentor') dispatch(getUserPrograms(query));
+    }
+
     const programTableFields = [
         ...programListColumns,
         {
@@ -157,24 +177,7 @@ export default function Programs() {
     }, [userprograms.statusCounts, userprograms.programsCounts])
 
     useEffect(() => {
-        const filterType = searchParams.get("type");
-        const isBookmark = searchParams.get("is_bookmark");
-
-        let query = {}
-
-        if (filterType && filterType !== '') {
-            query = { type: 'status', value: filterType }
-        }
-
-        if (isBookmark && isBookmark !== '') {
-            query = { type: 'is_bookmark', value: isBookmark }
-        }
-
-        if (role === 'mentee') {
-            dispatch(getMenteePrograms(query))
-        }
-        if (role === 'mentor') dispatch(getUserPrograms(query));
-
+       getPrograms()
     }, [searchParams, role])
 
     useEffect(() => {
@@ -297,6 +300,7 @@ export default function Programs() {
                                     handleBookmark={handleBookmark}
                                     programs={programsList}
                                     noTitle
+                                    loadProgram={getPrograms}
                                 />
 
                                 {
