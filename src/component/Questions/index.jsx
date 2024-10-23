@@ -34,12 +34,10 @@ export const Questions = () => {
 
   const submitQuestionsData = (apiData) => {
     if (role === 'mentee') {
-      const [day, month, year] =apiData.dob.split('/');
-      const formattedDob = new Date(`${year}-${month}-${day}`).toISOString().split('T')[0];
       const menteeApiData = {
         ...apiData,
         gender: apiData.gender? Array.isArray(apiData.gender) ? apiData.gender[0] : apiData.gender:null,
-        dob: formattedDob,
+        dob: new Date(apiData.dob).toISOString().split('T')[0],
         phone_number: apiData.phone_number
       }
       dispatch(updateMenteeQuestions(menteeApiData))
