@@ -115,6 +115,7 @@ function App() {
           <Route path="/program-completion/:id" element={<ProgramCompletion />} />
 
           <Route path="/create-programs" element={<CreatePrograms />} />
+          <Route path="/update-program/:id" element={<CreatePrograms />} />
           <Route path="/all-request" element={<AllRequest />} />
           <Route path="/program" element={<ProgramData />} />
 

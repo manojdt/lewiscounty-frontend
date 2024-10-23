@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Calendar } from 'primereact/calendar';
 
@@ -19,6 +19,7 @@ import Tooltip from '../../../shared/Tooltip';
 
 const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousStep, currentStepData, stepData, handleAction, totalSteps, fetchCategoryData }) => {
     const navigate = useNavigate();
+    const params = useParams()
     const [dateFormat, setDateFormat] = useState({})
     const [formData, setFormData] = useState({})
     const [logoImage, setLogoImage] = useState({})
@@ -41,13 +42,8 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
         reset()
     }
 
-    useEffect(() => {
-        if (currentStepData !== undefined && Object.keys(currentStepData).length) {
-            reset(currentStepData)
-        }
-    }, [])
-
-    useEffect(() => {
+    const handleLoadFieldValues = () => {
+        console.log('Update', stepData)
         const fName = [];
         const f = {}
         stepFields.forEach(step => fName.push(step.name))
@@ -60,6 +56,23 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
         }
         const p = { ...getValues(), ...f }
         reset(f)
+    }
+
+    useEffect(() => {
+        if(Object.keys(stepData).length && params.id !== ''){
+            console.log('Ppppppp', stepData)
+            handleLoadFieldValues()
+        }
+    },[stepData])
+
+    useEffect(() => {
+        if (currentStepData !== undefined && Object.keys(currentStepData).length) {
+            reset(currentStepData)
+        }
+    }, [])
+
+    useEffect(() => {
+        handleLoadFieldValues()
     }, [stepFields])
 
     const handleDraft = () => {

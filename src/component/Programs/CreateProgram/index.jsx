@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import CircularProgress from '@mui/material/CircularProgress';
 import Backdrop from '@mui/material/Backdrop';
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import ReactPlayer from 'react-player';
 
@@ -21,13 +21,16 @@ import CertificateIcon from '../../../assets/images/dummy_certificate.png';
 import SuccessIcon from "../../../assets/images/Success_tic1x.png"
 import FailedIcon from "../../../assets/images/cancel3x.png"
 import ToastNotification from '../../../shared/Toast';
+import { getProgramDetails } from '../../../services/userprograms';
 
 export default function CreatePrograms() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const params = useParams()
     const userInfo = useSelector(state => state.userInfo)
     const [loading, setLoading] = useState({ create: false, success: false })
     const { allPrograms, category, materials, certificate, skills, members, loading: apiLoading, status } = useSelector(state => state.programInfo)
+    const { programdetails, loading: programLoading, status:userProgramStatus } = useSelector(state => state.userPrograms)
     const [currentStep, setCurrentStep] = useState(1)
     const [stepData, setStepData] = useState({})
     const [actionModal, setActionModal] = useState('')
@@ -399,6 +402,32 @@ export default function CreatePrograms() {
         }
     }, [tabActionInfo.error])
 
+    useEffect(() => {
+        // if(Object.keys(programdetails).length){
+        //     const stepListData = {}
+        //     const data = {}
+        //     programAllFields.forEach((field, index) => {
+        //         field.forEach((fl,i) => {
+        //             let label = fl.name
+        //             if(label === 'category'){
+        //                 label = programdetails.categories[0].id
+        //             }
+        //             data[label] = 
+        //         })
+        //     })
+        //     console.log('programAllFields', programAllFields, programdetails)
+        //     setStepData(programdetails)
+        // }
+    },[programdetails])
+
+    useEffect(() => {
+        if(params.id){
+            dispatch(getProgramDetails(params.id))
+        }
+    },[params])
+
+    console.log('Steeeee', stepData)
+
     return (
         <div className="dashboard-content px-8 mt-10">
             <div style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }}>
@@ -420,10 +449,12 @@ export default function CreatePrograms() {
                 }
                 <Backdrop
                     sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                    open={loading.create || apiLoading || status === programStatus.create || status === programStatus.exist || status === programStatus.error}
+                    open={loading.create || apiLoading || status === programStatus.create || status === programStatus.exist || status === programStatus.error
+                        || programLoading
+                    }
                 >
                     {
-                        loading.create || apiLoading ?
+                        loading.create || apiLoading || programLoading ?
                             <CircularProgress color="inherit" />
                             : null
                     }
