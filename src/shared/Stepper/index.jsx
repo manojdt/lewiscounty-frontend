@@ -7,7 +7,7 @@ import ArrorwRightIcon from '../../assets/icons/ArrorRight.svg'
 import ArrorwLeftIcon from '../../assets/icons/ArrowLeft.svg'
 import './stepper.css'
 
-export const Stepper = ({ steps, currentStep = 0, btnTypeAction }) => {
+export const Stepper = ({ steps, currentStep = 0, btnTypeAction,handleStepClick  }) => {
   const [iconsVisibility, setIconsVisibility] = useState({ prevIcon: false, nextIcon: true })
   const slideLeft = () => {
     const slider = document.getElementById('slider');
@@ -69,8 +69,12 @@ export const Stepper = ({ steps, currentStep = 0, btnTypeAction }) => {
             steps.map((step, index) => {
               const currentIndex = parseInt(index)
               const fieldView = step.status === 'In-Progress' ? 'opacity-50' : 'opacity-100'
+             
               return (
-                <li className="flex flex-row items-center" style={{ color: `${currentStep >= currentIndex + 1 ? 'rgba(29, 91, 191, 1)' : '#000'}` }} key={index}>
+                <li className="flex flex-row cursor-pointer items-center" style={{ color: `${currentStep >= currentIndex + 1 ? 'rgba(29, 91, 191, 1)' : '#000'}` }} key={index}  
+                onClick={(e) =>   { e.preventDefault()
+                  e.stopPropagation();
+                 handleStepClick(index + 1,e)}} >
                   <span className={`flex items-center justify-center w-5 h-5 me-2 text-sm border rounded-2xl px-4 py-4 ${fieldView}`}
                     style={{
                       background: `${currentStep >= currentIndex + 1 ? 'rgba(29, 91, 191, 1)' : 'rgba(217, 228, 242, 1)'}`,

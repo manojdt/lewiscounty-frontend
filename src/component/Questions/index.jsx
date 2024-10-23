@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import CircularProgress from '@mui/material/CircularProgress';
 import Backdrop from '@mui/material/Backdrop';
@@ -13,6 +13,7 @@ import StepComponenRender from "./StepComponentRender";
 import { updateInfo, updateMenteeQuestions, updateQuestions } from "../../services/loginInfo";
 import SuccessIcon from "../../assets/images/Success_tic1x.png"
 import MuiModal from "../../shared/Modal";
+import ToastNotification from "../../shared/Toast";
 
 export const Questions = () => {
   const navigate = useNavigate();
@@ -26,16 +27,19 @@ export const Questions = () => {
   const [loading, setLoading] = useState(false)
   const [stepName, setStepName] = useState([])
   const [redirect, setRedirect] = useState(false)
+  const [errorNot, setErrorNot] = useState(false)
 
   const role = userInfo.data.role || ''
 
 
   const submitQuestionsData = (apiData) => {
     if (role === 'mentee') {
+      const [day, month, year] =apiData.dob.split('/');
+      const formattedDob = new Date(`${year}-${month}-${day}`).toISOString().split('T')[0];
       const menteeApiData = {
         ...apiData,
-        gender: apiData.gender[0],
-        dob: new Date(apiData.dob).toISOString().split('T')[0],
+        gender: apiData.gender? Array.isArray(apiData.gender) ? apiData.gender[0] : apiData.gender:null,
+        dob: formattedDob,
         phone_number: apiData.phone_number
       }
       dispatch(updateMenteeQuestions(menteeApiData))
@@ -44,7 +48,7 @@ export const Questions = () => {
 
       const mentorApiData = {
         ...apiData,
-        gender: apiData.gender[0],
+        gender: apiData.gender? Array.isArray(apiData.gender) ? apiData.gender[0] : apiData.gender:null,
         phone_number: apiData.phone_number
       }
       dispatch(updateQuestions(mentorApiData))
@@ -53,10 +57,68 @@ export const Questions = () => {
   }
   const handleSkip = () => {
     const { first_name, email, ...apiData } = { ...stepData, prev_mentorship: stepData.prev_mentorship === "true" }
+    const combinedData = { ...stepData };
+    const res= handleSubmit(combinedData);
+    if(!res){
     submitQuestionsData(apiData)
+    }
   }
+  const validateRequiredFields = (fields, data) => {
+    const missingFields = fields
+        .filter(field => field.inputRules?.required)
+        .filter(field => {
+            const value = data[field.name];
+            return !value || (typeof value === 'string' && value.trim() === ""); // Check if it's missing or empty
+        });
 
+    if (missingFields.length > 0) {
+        return missingFields.map(field => ({
+            name: field.name,
+            message: field.inputRules.required,
+        }));
+    }
+
+    return []; 
+};
+
+  const handleSubmit = (combinedData) => {
+    const allFields = formFields.flat(); // Flatten all fields for validation
+    const errorMessages = validateRequiredFields(allFields, combinedData);
+    const phoneField = allFields.find(field => field.name === 'phone_number');
+    const phoneNumber = combinedData['phone_number'];
+    
+    if (phoneField && phoneNumber) {
+      const phoneRegex = /^[0-9]{10}$/;
+      if (!phoneRegex.test(phoneNumber)) {
+        errorMessages.push({
+          name: 'phone_number',
+          message: 'Phone number must be exactly 10 digits.',
+        });
+      }
+    }
+    if (errorMessages.length > 0) {
+      // Redirect to the first error field
+      const firstErrorField = errorMessages[0]; // Get the first error field
+      const fieldIndex = allFields.findIndex(field => field.name === firstErrorField?.name); // Find its index
+      if (fieldIndex !== -1) {
+        const currentField = allFields[fieldIndex];
+        // Find the step index for the first error field
+        const stepIndex = formFields.findIndex(step => step.includes(currentField));
+        if (stepIndex !== -1) {
+          // Set the current step to the step containing the first error field
+          setCurrentStep(stepIndex + 1); // Adjust for 0-based index
+        }
+      }
+      setErrorNot(true)
+      return true
+    }
+    return false // Prevent submission if there are errors
+  };
+  
   const handleNextStep = (data) => {
+    const combinedData = { ...stepData, ...data };
+ 
+ 
     const activeSteps = allStepList.map(step => {
       if (step.key === stepName[currentStep - 1]) return { ...step, status: 'Completed' }
       if (step.key === stepName[currentStep]) return { ...step, status: 'In-Progress' }
@@ -67,7 +129,10 @@ export const Questions = () => {
     setAllStepList(activeSteps)
     if (formFields.length === currentStep) {
       const { first_name, email, ...apiData } = { ...fieldData, prev_mentorship: stepData.prev_mentorship === "true" }
-      submitQuestionsData(apiData)
+      const res= handleSubmit(combinedData);
+      if(!res){
+        submitQuestionsData(apiData)
+      }
     }
     else setCurrentStep(currentStep + 1)
     setBtnTypeAction({ back: false, next: true })
@@ -141,8 +206,32 @@ export const Questions = () => {
       setStepName(Stepname)
     }
   }, [role])
+  const handleStepClick = (stepNumber) => {
+    const updatedSteps = allStepList.map((step, index) => {
+      // Set the clicked step to "In-Progress"
+      if (index === stepNumber - 1) {
+        return { ...step, status: 'In-Progress' };
+      }
+      // Retain "Completed" status for steps before the clicked step
+      if (index < stepNumber - 1 && step.status === 'Completed') {
+        return { ...step, status: 'Completed' };
+      }
+      // Set other steps after the clicked step to an empty status
+      return { ...step, status: '' };
+    });
+  
+    setAllStepList(updatedSteps);
+    setCurrentStep(stepNumber);
+    // setBtnTypeAction({ back: stepNumber > 1, next: stepNumber < formFields.length });
+  };
+  useEffect(() => {
+    if (errorNot) {
+        setTimeout(() => {
+            setErrorNot(false)
+        }, 3000)
 
-
+    }
+}, [errorNot])
   return (
     <>
       <Navbar />
@@ -152,11 +241,17 @@ export const Questions = () => {
             Fill the Question and Answer
           </h2>
           {
-            ((role === 'mentor' && currentStep >= 3) || (role === 'mentee' && currentStep > 1)) &&
+            ((role === 'mentor' && currentStep >= 2) || (role === 'mentee' && currentStep > 1)) &&
             <p style={{color:'#1D5BBF', textDecoration:'underline', fontWeight:'bold', cursor: 'pointer'}} onClick={handleSkip}>Skip</p>
           }
           
         </div>
+        {
+                errorNot &&
+
+                <ToastNotification openToaster={errorNot} message={'Please fill all mandatory fields'} handleClose={()=>setErrorNot(false)} toastType={'error'} />
+
+            }
         <Backdrop
           sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={userInfo.loading || userInfo.status === userStatus.login}
@@ -187,11 +282,12 @@ export const Questions = () => {
 
         <div style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
           <div className="steps pl-24 pr-28" style={{ boxShadow: '4px 4px 15px 0px rgba(0, 0, 0, 0.1)' }}>
-            <Stepper steps={allStepList} currentStep={currentStep} btnTypeAction={btnTypeAction} />
+            <Stepper steps={allStepList} currentStep={currentStep}  handleStepClick={handleStepClick} btnTypeAction={btnTypeAction} />
           </div>
           {
             (formFields.length && formFields[currentStep - 1]) ?
               <StepComponenRender
+              key={currentStep}
                 stepData={stepData}
                 stepName={stepName[currentStep - 1]}
                 stepFields={formFields[currentStep - 1]}

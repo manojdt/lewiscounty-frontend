@@ -86,7 +86,7 @@ export const PersonalInformationFields = [{
       }
     ],
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     size: true,
   },
@@ -97,7 +97,7 @@ export const PersonalInformationFields = [{
     label: "Location",
     placeholder: "Enter Location",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     size: true,
   },
@@ -110,7 +110,7 @@ export const ProfessionalBackgroundFields = [{
     label: "Current Job Title",
     placeholder: "Current Job Title",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     size: true,
   },
@@ -121,7 +121,7 @@ export const ProfessionalBackgroundFields = [{
     label: "Current Employer ",
     placeholder: "Current Employer ",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     size: true,
   },
@@ -132,7 +132,7 @@ export const ProfessionalBackgroundFields = [{
     label: "Industry",
     placeholder: "Industry",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     size: false,
   },
@@ -350,9 +350,9 @@ export const AdditionalInformationFields = [{
 
 export const StepFormFields = [
   PersonalInformationFields,
+  AreaOfExpertiseFields,
   ProfessionalBackgroundFields,
   EducationalBackgroundFields,
-  AreaOfExpertiseFields,
   MentorShipExperienceFields,
   MentorshipPreferenceFields,
   GoalsandExperienceFields,
@@ -439,7 +439,7 @@ export const MenteePersonalInformationFields = [{
       }
     ],
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     size: true,
   },
@@ -450,7 +450,7 @@ export const MenteePersonalInformationFields = [{
     label: "Location",
     placeholder: "Enter Location",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     size: true,
   },
