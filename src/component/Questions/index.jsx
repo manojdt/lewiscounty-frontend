@@ -207,13 +207,6 @@ export const Questions = () => {
     }
   }, [role])
   const handleStepClick = (stepNumber) => {
-    // if(formRef.current){
-    //   const formData = new FormData(formRef.current);
-    //   const data = Object.fromEntries(formData.entries());
-    //   const fieldData = { ...stepData, ...data}
-    //   setStepData(fieldData)
-    //   // formRef.current.submit();
-    // }
     const updatedSteps = allStepList.map((step, index) => {
       // Set the clicked step to "In-Progress"
       if (index === stepNumber - 1) {
