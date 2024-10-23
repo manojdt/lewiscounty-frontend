@@ -11,9 +11,11 @@ import MuiModal from '../../shared/Modal';
 import { useForm } from 'react-hook-form';
 import api from '../../services/api';
 import { Backdrop, CircularProgress } from '@mui/material';
+import ToastNotification from '../../shared/Toast';
 
 export default function Invite() {
     const [inviteModal, setInviteModal] = useState({ open: false, loading: false, success: false })
+    const [message, setMessage] = useState(false);
 
     const handleCloseInviteModal = () => {
         setInviteModal({ open: false, loading: false, success: false })
@@ -25,6 +27,17 @@ export default function Invite() {
         handleSubmit,
         reset
     } = useForm();
+
+    const handleCopy = () => {
+        navigator.clipboard.writeText(process.env.REACT_APP_SITE_URL)
+            .then(() => {
+                setMessage(true);
+            })
+            .catch((err) => {
+                console.error('Error copying text: ', err);
+                setMessage(false);
+            });
+    };
 
     const onSubmit = async (data) => {
         const email = data.recipients.split(',');
@@ -40,6 +53,18 @@ export default function Invite() {
             setInviteModal({ ...inviteModal, open: false, loading: false, success: true })
         }
     }
+
+    const handleClose = () => {
+        setMessage(false)
+    }
+
+    useEffect(() => {
+        if(message){
+            setTimeout(() => {
+                setMessage(false)
+            },3000)
+        }
+    },[message])
 
     useEffect(() => {
         if (inviteModal.success) {
@@ -66,6 +91,11 @@ export default function Invite() {
                 <Button btnCls="!px-12 !py-3" btnName='Invite' btnCategory="primary" onClick={() => setInviteModal({...inviteModal, open: true})} />
             </div>
 
+            {
+                message &&
+                <ToastNotification openToaster={message} message={'Invite URL copied!'} handleClose={handleClose} toastType={'success'} />
+            }
+
             <Backdrop
                 sx={{ zIndex: (theme) => 999999 }}
                 open={inviteModal.loading}
@@ -81,14 +111,14 @@ export default function Invite() {
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <div className="flex flex-wrap gap-4">
 
-                                <div className={`relative mb-6 w-[48%]`} >
+                                <div className={`relative mb-6 w-full`} >
                                     <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
                                         URL
                                     </label>
 
-                                    <div className='relative input-bg'>
-                                        <input className='input-bg text-[12px] h-[60px] w-[396px] px-5' style={{ borderRadius: '27px' }}
-                                            value={process.env.REACT_APP_SITE_URL} />
+                                    <div className='relative input-bg w-full'>
+                                        <input className='input-bg text-[12px] h-[60px] w-full px-5' 
+                                            value={process.env.REACT_APP_SITE_URL} disabled />
                                     </div>
                                 </div>
 
@@ -111,7 +141,7 @@ export default function Invite() {
                             </div>
 
                             <div className='flex gap-7'>
-                                <img className='cursor-pointer' src={LinkIcon} alt="LinkIcon" />
+                                <img className='cursor-pointer' src={LinkIcon} alt="LinkIcon" onClick={handleCopy}/>
                                 <img className='cursor-pointer' src={LinkedInIcon} alt="LinkedInIcon" />
                                 <img className='cursor-pointer' src={InstagramIcon} alt="InstagramIcon" />
                                 <img className='cursor-pointer' src={FacebookOutlineIcon} alt="FacebookOutlineIcon" />
