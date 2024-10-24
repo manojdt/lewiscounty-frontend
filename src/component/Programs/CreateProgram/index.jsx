@@ -462,7 +462,7 @@ export default function CreatePrograms() {
 
             setTimeout(() => {
                 setUpdateProgramInfo(false)
-            },2000)
+            },1000)
             
         }
     }, [programdetails])

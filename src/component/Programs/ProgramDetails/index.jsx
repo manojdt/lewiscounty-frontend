@@ -772,7 +772,7 @@ export default function ProgramDetails() {
                                             <div className='sponsor pt-8'>
                                                 <div className='font-semibold pb-5'>Sponsored by </div>
                                                 <ul className='flex gap-5'>
-                                                    <img style={{ width: '100px', height: '100px' }} src={programdetails.image} alt="SponsorIcon" />
+                                                    <img style={{ width: '100px', height: '100px' }} src={programdetails.program_image} alt="SponsorIcon" />
                                                 </ul>
                                             </div>
 
