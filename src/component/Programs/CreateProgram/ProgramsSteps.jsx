@@ -17,7 +17,7 @@ import "primereact/resources/themes/lara-light-cyan/theme.css";
 import Tooltip from '../../../shared/Tooltip';
 
 
-const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousStep, currentStepData, stepData, handleAction, totalSteps, fetchCategoryData }) => {
+const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousStep, currentStepData, stepData, handleAction, totalSteps, fetchCategoryData, programDetails }) => {
     const navigate = useNavigate();
     const params = useParams()
     const [dateFormat, setDateFormat] = useState({})
@@ -43,27 +43,30 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
     }
 
     const handleLoadFieldValues = () => {
-        console.log('Update', stepData)
         const fName = [];
         const f = {}
-        stepFields.forEach(step => fName.push(step.name))
+        stepFields.forEach(step => {
+            fName.push(step.name);
+        })
         for (const field in stepData) {
             if (fName.includes(field)) f[field] = stepData[field]
         }
         if (currentStep === 1) {
-            f.start_date = dateFormat.start_date
-            f.end_date = dateFormat.end_date
+            f.start_date = dateFormat.start_date || stepData['start_date']
+            f.end_date = dateFormat.end_date || stepData['end_date']
+            if (params.id !== '') {
+                setDateFormat({ start_date: stepData['start_date'], end_date: stepData['end_date'] })
+            }
         }
         const p = { ...getValues(), ...f }
         reset(f)
     }
 
     useEffect(() => {
-        if(Object.keys(stepData).length && params.id !== ''){
-            console.log('Ppppppp', stepData)
+        if (Object.keys(stepData).length && params.id !== '') {
             handleLoadFieldValues()
         }
-    },[stepData])
+    }, [stepData])
 
     useEffect(() => {
         if (currentStepData !== undefined && Object.keys(currentStepData).length) {
@@ -78,7 +81,6 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
     const handleDraft = () => {
         setValue('status', 'draft');
         document.getElementById('program-submit').click()
-
     }
 
     function getWindowDimensions() {
@@ -98,7 +100,7 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
     }
 
     const handleCheckbox = (e) => {
-        setCheckBoxValue({...checkBoxValue,  [e.target.name] : e.target.value})
+        setCheckBoxValue({ ...checkBoxValue, [e.target.name]: e.target.value })
     }
 
     return (
@@ -160,11 +162,9 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                             style={{ borderRadius: '3px' }}
                                                             onClick={() => handleAction(field.name)}
                                                         >
-
                                                             {
                                                                 field?.value && field.value.slice(0, 6).map((popupfield, index) => {
                                                                     return (
-
                                                                         <>
                                                                             <p className='flex items-center gap-1'>
                                                                                 <p className='flex items-center px-3 py-3' style={{
@@ -172,21 +172,30 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
 
                                                                                 }}></p>
                                                                                 {
-                                                                                    popupfield.name ||
-
-                                                                                    `${popupfield.first_name} ${popupfield.last_name}`
-                                                                                    ||
-
-                                                                                    `${popupfield.full_name}`
+                                                                                    popupfield.name || `${popupfield.first_name} ${popupfield.last_name}` || `${popupfield.full_name}`
                                                                                 }
                                                                             </p>
-
-
-
                                                                         </>
                                                                     )
                                                                 })
+                                                            }
 
+                                                            {
+                                                                (!field?.value && stepData[field.name]) && stepData[field.name].slice(0, 6).map((popupfield, index) => {
+                                                                    return (
+                                                                        <>
+                                                                            <p className='flex items-center gap-1'>
+                                                                                <p className='flex items-center px-3 py-3' style={{
+                                                                                    background: 'rgba(223, 237, 255, 1)', borderRadius: '50%',
+
+                                                                                }}></p>
+                                                                                {
+                                                                                    popupfield.name || `${popupfield.first_name} ${popupfield.last_name}` || `${popupfield.full_name}`
+                                                                                }
+                                                                            </p>
+                                                                        </>
+                                                                    )
+                                                                })
                                                             }
 
                                                             {
@@ -248,7 +257,18 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                             >
                                                                 <option value="">Select</option>
                                                                 {
-                                                                    field.options.map((option, index) => <option value={option.key || option.id} key={index}> {option.value || option.name} </option>)
+                                                                    field.options.map((option, index) =>                                                          
+                                                                    {
+                                                                        return(
+                                                                            <option 
+                                                                            value={option.key || option.id} 
+                                                                            key={index}
+                                                                            > 
+                                                                            {option.value || option.name} 
+                                                                        </option>
+                                                                        )
+                                                                    }
+                                                                   )
                                                                 }
                                                             </select>
                                                             {errors[field.name] && (
@@ -400,8 +420,10 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                     <div className="flex gap-6 justify-center align-middle">
                         {currentStep === 1 && <Button btnName='Cancel' btnCategory="secondary" onClick={() => navigate('/programs')} />}
                         {currentStep > 1 && <Button btnName='Back' btnCategory="secondary" onClick={handlePreviousStep} />}
-                        {currentStep === totalSteps ? <Button btnType="button" onClick={handleDraft} btnStyle={{ background: 'rgba(197, 197, 197, 1)', color: '#000' }}
+                        {currentStep === totalSteps && 
+                            (!Object.keys(programDetails).length) ? <Button btnType="button" onClick={handleDraft} btnStyle={{ background: 'rgba(197, 197, 197, 1)', color: '#000' }}
                             btnCls="w-[150px]" btnName={'Save as Draft'} btnCategory="primary" /> : null}
+
                         <Button btnType="submit" id={'program-submit'} btnCls="w-[100px]"
 
                             btnName={currentStep === totalSteps ? 'Submit' : 'Next'} btnCategory="primary" />

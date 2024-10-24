@@ -48,6 +48,22 @@ export const createNewPrograms = createAsyncThunk(
   }
 );
 
+export const editUpdateProgram = createAsyncThunk(
+  "editUpdateProgram",
+  async (data) => {
+    const headers = {
+      'Content-Type': 'multipart/form-data',
+    }
+    const editUpdateProgramInfo = await api.put("programs", data, {
+      headers: headers
+    });
+    if (editUpdateProgramInfo.status === 201 || editUpdateProgramInfo.status === 200) {
+      return editUpdateProgramInfo;
+    }
+    return editUpdateProgramInfo;
+  }
+);
+
 export const fetchProgram = createAsyncThunk("fetchProgram", async (data) => {
   const fetchProgram = await api.get("fetch_program", data);
   if (fetchProgram.status === 200) {

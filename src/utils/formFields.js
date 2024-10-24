@@ -1313,11 +1313,11 @@ export const ProgramInformationFields = [{
       required: "This field is required",
     },
     options: [{
-        key: true,
+        key: "true",
         value: "Yes"
       },
       {
-        key: false,
+        key: "false",
         value: "No"
       },
     ],
@@ -1333,11 +1333,11 @@ export const ProgramInformationFields = [{
       required: "This field is required",
     },
     options: [{
-        key: true,
+        key: "true",
         value: "Yes"
       },
       {
-        key: false,
+        key: "false",
         value: "No"
       },
     ],

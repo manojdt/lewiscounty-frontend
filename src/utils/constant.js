@@ -148,6 +148,7 @@ export const userStatus = {
 export const programStatus = {
   load: 'loaded',
   create: 'programcreated',
+  update: 'programupdated',
   exist: 'alreadyexist',
   error: 'error',
   curated: 'curated',
