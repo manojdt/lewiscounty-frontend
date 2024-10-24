@@ -688,7 +688,7 @@ export default function AllRequest() {
                         {
                             role === 'admin' &&
                             <>
-                                <MenuItem onClick={() => navigate(`/view-report/${seletedItem.id}`)} className='!text-[12px]'>
+                                <MenuItem onClick={() => navigate(`/view-report/${seletedItem.report_id}`)} className='!text-[12px]'>
                                     <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
                                     View
                                 </MenuItem>
