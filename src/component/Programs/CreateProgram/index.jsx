@@ -90,7 +90,7 @@ export default function CreatePrograms() {
 
                 setProgramApiStatus(status)
 
-                if (params.id !== '') {
+                if (params.id) {
                     if (programdetails.status === 'draft') {
                         bodyFormData.append('status', 'create')
                     }
@@ -104,10 +104,10 @@ export default function CreatePrograms() {
             }
         }
         else {
-            if (data.hasOwnProperty('image') && data.image.length) {
+            if (data.hasOwnProperty('image') && data?.image?.length) {
                 setLogo({ ...logo, image: data.image[0] })
             }
-            if (data.hasOwnProperty('program_image') && data.program_image.length) {
+            if (data.hasOwnProperty('program_image') && data?.program_image?.length) {
                 setLogo({ ...logo, program_image: data.program_image[0] })
             }
             setCurrentStep(currentStep + 1)
@@ -449,7 +449,7 @@ export default function CreatePrograms() {
                     }
 
                     if(currentField === 'program_image'){
-                        currentFieldValue = programdetails['image']
+                        currentFieldValue = programdetails['program_image']
                     }
 
                     stepField[currentField] = currentFieldValue
