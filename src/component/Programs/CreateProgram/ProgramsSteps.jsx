@@ -388,13 +388,16 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                                                 </div>
                                                                                 {getValues(field.name)?.length > 0 &&
                                                                                     <>
-                                                                                        <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Image {field.name}</div>
+                                                                                        <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Image </div>
 
                                                                                         <div className='flex justify-between items-center w-[30%] mt-5 px-4 py-4'
                                                                                             style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }}>
                                                                                             <div className='flex w-[80%] gap-3 items-center'>
                                                                                                 <img src={UploadIcon} alt="altlogo" />
-                                                                                                <span className='text-[12px]'> {getValues(imageField.name) && getValues(imageField.name)[0]?.name}</span>
+                                                                                                <span className='text-[12px]'> {getValues(imageField.name) && getValues(imageField.name)[0]?.name}
+
+                                                                                                     
+                                                                                                </span>
                                                                                             </div>
                                                                                             <img className='w-[30px] cursor-pointer' onClick={() => handleDeleteImage(field.name)} src={DeleteIcon} alt="DeleteIcon" />
                                                                                         </div>

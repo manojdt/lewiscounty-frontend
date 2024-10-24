@@ -30,7 +30,7 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
     const dispatch = useDispatch()
     const [anchorEl, setAnchorEl] = useState(null);
     const [programImage, setProgramImage] = useState(null)
-    const [hoverIndex, setHoverIndex] = useState(null)
+    const [hoverIndex, setHoverIndex] = useState({ image: null, desc: null })
     const [programUploadAction, setProgramUploadAction] = useState({ loading: false, imageModal: false, successModal: false, error: '', selectedProgram: {} })
 
     const {
@@ -83,14 +83,6 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
     const handleDeleteImage = () => {
         setValue('program_image', '')
         setProgramImage(null)
-    }
-
-    const onMouseEnter = (index) => {
-        setHoverIndex(index)
-    }
-
-    const onMouseLeave = () => {
-        setHoverIndex(null)
     }
 
     const imageField = register('program_image', { required: 'This field is required' })
@@ -177,7 +169,7 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                                 return (
                                     <div key={index} className={`curated-programs program-container flex gap-1 items-center py-5 px-5 w-[33%]`}
                                         style={{
-                                            ...currentProgram.status === 'yettoapprove'  ? {
+                                            ...currentProgram.status === 'yettoapprove' ? {
                                                 opacity: '0.5',
                                                 pointerEvents: 'none',
                                                 cursor: 'not-allowed',
@@ -189,14 +181,14 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                                         <div className="w-full" style={{ boxShadow: '4px 4px 15px 0px rgba(0, 0, 0, 0.1)', borderRadius: '10px' }}>
                                             <div className="py-6 px-7 border-b-2 relative">
                                                 <div className="h-full relative" style={{ borderRadius: '10px' }}>
-                                                    <img className="object-cover w-full h-[150px] cursor-pointer" src={currentProgram.image} alt="Program Logo"
-                                                        onMouseEnter={() => onMouseEnter(index)} onMouseLeave={() => onMouseLeave(index)}
+                                                    <img className="object-cover w-full h-[150px] cursor-pointer" src={currentProgram.program_image} alt="Program Logo"
+                                                        onMouseEnter={() => setHoverIndex({ ...hoverIndex, image: index })} onMouseLeave={() => setHoverIndex({ ...hoverIndex, image: null })}
                                                     />
                                                     {
                                                         (currentProgram.program_edit && !programImageRestirct.includes(currentProgram.status)) &&
 
-                                                        <div className={`absolute top-2 left-3 cursor-pointer  ${hoverIndex === index ? 'show': 'hidden'}`} style={{ background: '#fff', borderRadius: '50%', padding: '13px 15px' }}
-                                                            onClick={() => handleProgramImageUpdate(currentProgram)} onMouseEnter={() => onMouseEnter(index)} onMouseLeave={() => onMouseLeave(index)} 
+                                                        <div className={`absolute top-2 left-3 cursor-pointer  ${hoverIndex.image === index ? 'show' : 'hidden'}`} style={{ background: '#fff', borderRadius: '50%', padding: '13px 15px' }}
+                                                            onClick={() => handleProgramImageUpdate(currentProgram)} onMouseEnter={() => setHoverIndex({ ...hoverIndex, image: index })} onMouseLeave={() => setHoverIndex({ ...hoverIndex, image: null })}
                                                         >
                                                             <img className="h-[25px] w-[22px]" src={EditIcon} alt="EditIcon" />
                                                         </div>
@@ -218,8 +210,15 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                                                             style={{ border: '1px solid rgba(238, 238, 238, 1)' }}>{currentProgram?.categories[0]?.name}</p>
                                                     }
                                                 </div>
-                                                <div>
+                                                <div className='cursor-pointer flex justify-between'
+                                                    onClick={() => navigate(`/update-program/${currentProgram.id}`)}
+                                                onMouseOver={() => setHoverIndex({ ...hoverIndex, desc: index })} onMouseLeave={() => setHoverIndex({ ...hoverIndex, desc: null })}>
+
                                                     <span className="text-[12px] line-clamp-2 ">{currentProgram.description}</span>
+                                                    {
+                                                        (currentProgram.program_edit && !programImageRestirct.includes(currentProgram.status)) &&
+                                                        <img className={`h-[18px] w-[15px] ${hoverIndex.desc === index ? 'show' : 'hidden'}`} src={EditIcon} alt="EditIcon" />
+                                                    }
                                                 </div>
                                                 <div className='flex gap-2 items-center py-3 text-[12px]'>
                                                     <img src={StarColorIcon} alt="StarColorIcon" />
