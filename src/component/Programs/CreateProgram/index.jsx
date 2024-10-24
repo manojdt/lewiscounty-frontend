@@ -7,7 +7,7 @@ import ReactPlayer from 'react-player';
 
 import ProgramSteps from './ProgramsSteps'
 import { ProgramTabs, ProgramFields } from '../../../utils/formFields'
-import { updateNewPrograms, getAllCategories, getAllMaterials, getAllCertificates, getAllSkills, getAllMembers, createNewPrograms } from '../../../services/programInfo'
+import { updateNewPrograms, getAllCategories, getAllMaterials, getAllCertificates, getAllSkills, getAllMembers, createNewPrograms, editUpdateProgram } from '../../../services/programInfo'
 import { CertificateColumns, MaterialColumns, MemberColumns, SkillsColumns } from '../../../mock';
 import DataTable from '../../../shared/DataGrid';
 import { programStatus } from '../../../utils/constant';
@@ -30,7 +30,7 @@ export default function CreatePrograms() {
     const userInfo = useSelector(state => state.userInfo)
     const [loading, setLoading] = useState({ create: false, success: false })
     const { allPrograms, category, materials, certificate, skills, members, loading: apiLoading, status } = useSelector(state => state.programInfo)
-    const { programdetails, loading: programLoading, status:userProgramStatus } = useSelector(state => state.userPrograms)
+    const { programdetails, loading: programLoading, status: userProgramStatus } = useSelector(state => state.userPrograms)
     const [currentStep, setCurrentStep] = useState(1)
     const [stepData, setStepData] = useState({})
     const [actionModal, setActionModal] = useState('')
@@ -39,6 +39,7 @@ export default function CreatePrograms() {
     const [logo, setLogo] = useState()
     const [stepWiseData, setStepWiseData] = useState({})
     const [programApiStatus, setProgramApiStatus] = useState('')
+    const [updateProgramInfo, setUpdateProgramInfo] = useState(false)
 
     const [viewDetails, setViewDetails] = useState({ material: false, skills: false, certificate: false })
     const [viewDetailsInfo, setViewDetailsInfo] = useState({ material: {}, skills: {}, certificate: {} })
@@ -88,8 +89,17 @@ export default function CreatePrograms() {
                 }
 
                 setProgramApiStatus(status)
-                dispatch(createNewPrograms(bodyFormData))
-            }else{
+
+                if (params.id !== '') {
+                    if (programdetails.status === 'draft') {
+                        bodyFormData.append('status', 'create')
+                    }
+                    bodyFormData.append('program_id', params.id)
+                    dispatch(editUpdateProgram(bodyFormData))
+                } else {
+                    dispatch(createNewPrograms(bodyFormData))
+                }
+            } else {
                 setTabActionInfo({ ...tabActionInfo, error: true })
             }
         }
@@ -105,7 +115,10 @@ export default function CreatePrograms() {
         }
     }
 
-    const handlePreviousStep = () => setCurrentStep(currentStep - 1)
+    const handlePreviousStep = () => {
+        setCurrentStep(currentStep - 1)
+        setTabActionInfo({ ...tabActionInfo, activeTab: ProgramTabs[currentStep-2].key })
+    }
 
     const handleAction = (key) => {
         setActionModal(key)
@@ -130,6 +143,7 @@ export default function CreatePrograms() {
             }
             return field
         })
+
         setProgramAllFields(updateProgramFields)
     }
 
@@ -385,10 +399,10 @@ export default function CreatePrograms() {
     }, [currentStep, role])
 
     useEffect(() => {
-        if (status === programStatus.create || status === programStatus.exist || status === programStatus.error) {
+        if (status === programStatus.create || status === programStatus.exist || status === programStatus.error || status === programStatus.update) {
             setTimeout(() => {
                 dispatch(updateNewPrograms({ status: '' }))
-                if (status === programStatus.create) navigate('/dashboard')
+                if (status === programStatus.create || status === programStatus.update) navigate('/dashboard')
             }, [3000])
         }
     }, [status])
@@ -403,37 +417,69 @@ export default function CreatePrograms() {
     }, [tabActionInfo.error])
 
     useEffect(() => {
-        // if(Object.keys(programdetails).length){
-        //     const stepListData = {}
-        //     const data = {}
-        //     programAllFields.forEach((field, index) => {
-        //         field.forEach((fl,i) => {
-        //             let label = fl.name
-        //             if(label === 'category'){
-        //                 label = programdetails.categories[0].id
-        //             }
-        //             data[label] = 
-        //         })
-        //     })
-        //     console.log('programAllFields', programAllFields, programdetails)
-        //     setStepData(programdetails)
-        // }
-    },[programdetails])
+        if (Object.keys(programdetails).length && params.id !== '') {
+            let stepListData = {}
+            let data = {}
+            
+            programAllFields.forEach((field, index) => {
+                let stepField = {}
+                field.forEach((fl, i) => {
+                    let currentField = fl.name
+                    let currentFieldValue = programdetails[currentField]
+
+                    if (currentField === 'category') {
+                        currentFieldValue = programdetails.categories[0].id
+                        fetchCategoryData(programdetails.categories[0].id)
+                    }
+
+                    if (currentField === 'start_date' || currentField === 'end_date') {
+                        currentFieldValue = new Date(programdetails[currentField])
+                    }
+
+                    if (currentField === 'mentee_upload_certificates' || currentField === 'group_chat_requirement' || currentField === 'individual_chat_requirement') {
+                        currentFieldValue = programdetails[currentField] ? 'true' : 'false'
+                    }
+
+                    if (currentField === 'certificates') {
+                        currentFieldValue = programdetails['certifications']
+                    }
+
+                    if(currentField === 'testimonial_type'){
+                        currentFieldValue = programdetails['testimonial_types']
+                    }
+
+                    if(currentField === 'program_image'){
+                        currentFieldValue = programdetails['image']
+                    }
+
+                    stepField[currentField] = currentFieldValue
+                })
+                stepListData = { ...stepListData, [index]: stepField }
+                data = { ...data, ...stepField }
+            })
+
+            setStepData(data)
+
+            setTimeout(() => {
+                setUpdateProgramInfo(false)
+            },2000)
+            
+        }
+    }, [programdetails])
 
     useEffect(() => {
-        if(params.id){
+        if (params.id) {
+            setUpdateProgramInfo(true)
             dispatch(getProgramDetails(params.id))
         }
-    },[params])
-
-    console.log('Steeeee', stepData)
+    }, [params])
 
     return (
         <div className="dashboard-content px-8 mt-10">
             <div style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }}>
                 <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
                     <div className="flex gap-4">
-                        <h4>Create New Program  Request</h4>
+                        <h4>{params.id !== '' ? 'Update Program' : 'Create New Program  Request'}</h4>
                     </div>
                     <div className="flex gap-20 items-center">
                         <Tooltip title="Cancel">
@@ -450,57 +496,64 @@ export default function CreatePrograms() {
                 <Backdrop
                     sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                     open={loading.create || apiLoading || status === programStatus.create || status === programStatus.exist || status === programStatus.error
-                        || programLoading
+                        || programLoading || updateProgramInfo || status === programStatus.update
                     }
                 >
                     {
-                        loading.create || apiLoading || programLoading ?
+                        loading.create || apiLoading || programLoading || updateProgramInfo ?
                             <CircularProgress color="inherit" />
                             : null
                     }
 
                     {
-                        status === programStatus.create || status === programStatus.exist || status === programStatus.error ?
+                        status === programStatus.create || status === programStatus.exist || status === programStatus.error || status === programStatus.update ?
                             <div className="w-2/6 bg-white flex flex-col gap-4 h-[330px] justify-center items-center">
-                                <img src={status === programStatus.exist ? FailedIcon : status === programStatus.create ? SuccessIcon : FailedIcon} alt="VerifyIcon" />
+                                <img src={status === programStatus.exist ? FailedIcon : (status === programStatus.create || status === programStatus.update) ? SuccessIcon : FailedIcon} alt="VerifyIcon" />
                                 <span style={{ color: '#232323', fontWeight: 600 }}>
                                     {status === programStatus.exist ? 'Program already exist' : status === programStatus.error ? 'There is a Server Error. Please try again later' :
-                                        `Program ${programApiStatus === 'draft' ? 'Drafed' : 'Created'} Successfully!`}
+                                        `Program ${programApiStatus === 'draft' ? 'Drafed' : status === programStatus.update ? 'Updated' : 'Created'} Successfully!`}
                                 </span>
                             </div>
                             : null
                     }
                 </Backdrop>
 
-                <div className='px-8 py-4'>
-                    <div className='flex gap-3'>
-                        {
-                            ProgramTabs.map((actionBtn, index) =>
-                                <Tooltip title={actionBtn.name}>
-                                    <button key={index} className='px-5 py-4 text-[14px]' style={{
-                                        background: tabActionInfo.activeTab === actionBtn.key ? 'linear-gradient(97.86deg, #005DC6 -15.07%, #00B1C0 112.47%)' :
-                                            'rgba(249, 249, 249, 1)',
-                                        color: tabActionInfo.activeTab === actionBtn.key ? '#fff' : '#000',
-                                        borderRadius: '3px'
-                                    }}
-                                        onClick={() => handleTab(actionBtn.key)}
-                                    >{actionBtn.name}</button>
-                                </Tooltip>
-                            )
-                        }
+                {
+                    !updateProgramInfo &&
+
+                    <div className='px-8 py-4'>
+                        <div className='flex gap-3'>
+                            {
+                                ProgramTabs.map((actionBtn, index) =>
+                                    <Tooltip title={actionBtn.name}>
+                                        <button key={index} className='px-5 py-4 text-[14px]' style={{
+                                            background: tabActionInfo.activeTab === actionBtn.key ? 'linear-gradient(97.86deg, #005DC6 -15.07%, #00B1C0 112.47%)' :
+                                                'rgba(249, 249, 249, 1)',
+                                            color: tabActionInfo.activeTab === actionBtn.key ? '#fff' : '#000',
+                                            borderRadius: '3px'
+                                        }}
+                                            onClick={() => handleTab(actionBtn.key)}
+                                        >{actionBtn.name}</button>
+                                    </Tooltip>
+                                )
+                            }
+                        </div>
+                        <ProgramSteps
+                            stepData={stepData}
+                            currentStepData={stepData[ProgramTabs[currentStep - 1].key]}
+                            stepFields={programAllFields[currentStep - 1]}
+                            currentStep={currentStep}
+                            handleNextStep={handleNextStep}
+                            handlePreviousStep={handlePreviousStep}
+                            handleAction={handleAction}
+                            totalSteps={programAllFields.length}
+                            fetchCategoryData={fetchCategoryData}
+                            programDetails={programdetails}
+                        />
                     </div>
-                    <ProgramSteps
-                        stepData={stepData}
-                        currentStepData={stepData[ProgramTabs[currentStep - 1].key]}
-                        stepFields={programAllFields[currentStep - 1]}
-                        currentStep={currentStep}
-                        handleNextStep={handleNextStep}
-                        handlePreviousStep={handlePreviousStep}
-                        handleAction={handleAction}
-                        totalSteps={programAllFields.length}
-                        fetchCategoryData={fetchCategoryData}
-                    />
-                </div>
+                }
+
+
 
 
                 <MuiModal modalSize='lg' modalOpen={viewDetails.material} modalClose={() => { setViewDetails(resetViewInfo) }} noheader>
@@ -517,7 +570,6 @@ export default function CreatePrograms() {
                                 </p>
                                 {
                                     viewDetailsInfo.material.material_type === 'document' ?
-
                                         <a className='underline' href={viewDetailsInfo.material.file} target='_blank' >{viewDetailsInfo.material.name}</a>
                                         : null
 
@@ -563,16 +615,13 @@ export default function CreatePrograms() {
                                 <p className='text-[12px] pb-6'>
                                     {viewDetailsInfo.skills?.desc}
                                 </p>
-
                             </div>
                             <div className='flex justify-center items-center pt-5 pb-10'>
                                 <button onClick={() => setViewDetails(resetViewInfo)}
                                     className='text-white py-3 px-7 w-[25%]'
                                     style={{ background: 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)', borderRadius: '3px' }}>Close</button>
                             </div>
-
                         </div>
-
                     </div>
                 </MuiModal>
 
@@ -600,9 +649,7 @@ export default function CreatePrograms() {
                                     className='text-white py-3 px-7 w-[25%]'
                                     style={{ background: 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)', borderRadius: '3px' }}>Close</button>
                             </div>
-
                         </div>
-
                     </div>
                 </MuiModal>
 
@@ -613,7 +660,6 @@ export default function CreatePrograms() {
                             <img src={SuccessTik} alt="SuccessTik" />
                             <p className='text-white text-[12px]'>Requested Successfully</p>
                         </div>
-
                     </div>
                 </MuiModal>
 

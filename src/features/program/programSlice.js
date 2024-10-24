@@ -3,6 +3,7 @@ import {
   createNewProgram,
   createNewPrograms,
   createProgram,
+  editUpdateProgram,
   getAllCategories,
   getAllCertificates,
   getAllMaterials,
@@ -136,6 +137,43 @@ export const programSlice = createSlice({
           error: action.error.message,
         };
       });
+
+
+
+
+      builder
+      .addCase(editUpdateProgram.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(editUpdateProgram.fulfilled, (state, action) => {
+        const responseStatus = action.payload.status;
+        const status =
+          responseStatus === 200 || responseStatus === 201
+            ? programStatus.update
+            : responseStatus === 500
+            ? programStatus.error
+            : "";
+
+        return {
+          ...state,
+          status: status,
+          loading: false,
+        };
+      })
+      .addCase(editUpdateProgram.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
+
+
+
+
     builder
       .addCase(loadAllPrograms.pending, (state) => {
         return {

@@ -177,7 +177,7 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                                 return (
                                     <div key={index} className={`curated-programs program-container flex gap-1 items-center py-5 px-5 w-[33%]`}
                                         style={{
-                                            ...currentProgram.status === 'yettoapprove' || currentProgram.status === 'draft' ? {
+                                            ...currentProgram.status === 'yettoapprove'  ? {
                                                 opacity: '0.5',
                                                 pointerEvents: 'none',
                                                 cursor: 'not-allowed',
@@ -237,7 +237,7 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                                                         currentProgram.status === 'yettoapprove' || currentProgram.status === 'draft' ?
 
                                                             <button className={`text-white text-[12px] py-3 ${currentProgram.status === 'draft' ? 'w-[110px]' : 'w-[170px]'}`}
-                                                                onClick={undefined}
+                                                                onClick={() => currentProgram.status === 'draft' ? navigate(`/update-program/${currentProgram.id}`) : undefined}
                                                                 style={{ background: currentProgram.status === 'yettoapprove' ? '#76818E' : 'rgba(29, 91, 191, 1)', borderRadius: '5px' }}>
                                                                 {currentProgram.status === 'draft' ? 'Continue' : 'Waiting for approval'}
 
