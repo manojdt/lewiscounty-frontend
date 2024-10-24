@@ -13,6 +13,8 @@ export const LoginType = () => {
     const [loginType, setLoginType] = useState('');
     const [error, setError] = useState(false)
 
+    const role = userInfo.data.role || ''
+
     const handleSubmit = () => {
         if (loginType === '') setError(true)
         if (loginType !== '') {
@@ -23,17 +25,23 @@ export const LoginType = () => {
 
 
     useEffect(() => {
-        if (!userInfo.loading && userInfo.status === userStatus.role) {
-            navigate("/questions")
+        if (role !== 'mentee') {
+            if (!userInfo.loading && userInfo.status === userStatus.role) {
+                navigate("/questions")
+            }
+
+            if (userInfo?.data?.role && userInfo?.data?.role !== 'fresher') {
+                if (userInfo.data.is_registered) { navigate('/dashboard') }
+                else navigate('/questions')
+            }
         }
 
-        if (userInfo?.data?.role  && userInfo?.data?.role !== 'fresher') {
-            if (userInfo.data.is_registered) { navigate('/dashboard') }
-            else navigate('/questions')
+        if(role === 'mentee'){
+            navigate('/programs')   
         }
     }, [userInfo])
 
-   
+
     return (
         <div className="h-full">
             <div className="flex flex-wrap h-full">
@@ -122,7 +130,7 @@ export const LoginType = () => {
                                                 }}
                                                 onClick={handleSubmit}
                                             >
-                                               Let's get started
+                                                Let's get started
                                             </button>
                                         </div>
                                     </form>

@@ -479,7 +479,7 @@ export default function CreatePrograms() {
             <div style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }}>
                 <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
                     <div className="flex gap-4">
-                        <h4>{params.id !== '' ? 'Update Program' : 'Create New Program  Request'}</h4>
+                        <h4>{params.id ? 'Update Program' : 'Create New Program  Request'}</h4>
                     </div>
                     <div className="flex gap-20 items-center">
                         <Tooltip title="Cancel">

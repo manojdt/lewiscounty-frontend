@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import CircularProgress from '@mui/material/CircularProgress';
 import Backdrop from '@mui/material/Backdrop';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 import SuccessTik from '../../assets/images/blue_tik1x.png';
 import { Navbar, Stepper } from '../../shared';
@@ -28,15 +28,15 @@ export const Questions = () => {
   const [stepName, setStepName] = useState([])
   const [redirect, setRedirect] = useState(false)
   const [errorNot, setErrorNot] = useState(false)
+  const [searchParams] = useSearchParams();
 
   const role = userInfo.data.role || ''
-
 
   const submitQuestionsData = (apiData) => {
     if (role === 'mentee') {
       const menteeApiData = {
         ...apiData,
-        gender: apiData.gender? Array.isArray(apiData.gender) ? apiData.gender[0] : apiData.gender:null,
+        gender: apiData.gender ? Array.isArray(apiData.gender) ? apiData.gender[0] : apiData.gender : null,
         dob: new Date(apiData.dob).toISOString().split('T')[0],
         phone_number: apiData.phone_number
       }
@@ -46,7 +46,7 @@ export const Questions = () => {
 
       const mentorApiData = {
         ...apiData,
-        gender: apiData.gender? Array.isArray(apiData.gender) ? apiData.gender[0] : apiData.gender:null,
+        gender: apiData.gender ? Array.isArray(apiData.gender) ? apiData.gender[0] : apiData.gender : null,
         phone_number: apiData.phone_number
       }
       dispatch(updateQuestions(mentorApiData))
@@ -56,35 +56,36 @@ export const Questions = () => {
   const handleSkip = () => {
     const { first_name, email, ...apiData } = { ...stepData, prev_mentorship: stepData.prev_mentorship === "true" }
     const combinedData = { ...stepData };
-    const res= handleSubmit(combinedData);
-    if(!res){
-    submitQuestionsData(apiData)
+    const res = handleSubmit(combinedData);
+    if (!res) {
+      submitQuestionsData(apiData)
     }
   }
   const validateRequiredFields = (fields, data) => {
     const missingFields = fields
-        .filter(field => field.inputRules?.required)
-        .filter(field => {
-            const value = data[field.name];
-            return !value || (typeof value === 'string' && value.trim() === ""); // Check if it's missing or empty
-        });
+      .filter(field => field.inputRules?.required)
+      .filter(field => {
+        const value = data[field.name];
+        return !value || (typeof value === 'string' && value.trim() === ""); // Check if it's missing or empty
+      });
 
     if (missingFields.length > 0) {
-        return missingFields.map(field => ({
-            name: field.name,
-            message: field.inputRules.required,
-        }));
+      return missingFields.map(field => ({
+        name: field.name,
+        message: field.inputRules.required,
+      }));
     }
 
-    return []; 
-};
+    return [];
+  };
 
   const handleSubmit = (combinedData) => {
     const allFields = formFields.flat(); // Flatten all fields for validation
     const errorMessages = validateRequiredFields(allFields, combinedData);
     const phoneField = allFields.find(field => field.name === 'phone_number');
     const phoneNumber = combinedData['phone_number'];
-    
+
+
     if (phoneField && phoneNumber) {
       const phoneRegex = /^[0-9]{10}$/;
       if (!phoneRegex.test(phoneNumber)) {
@@ -112,11 +113,11 @@ export const Questions = () => {
     }
     return false // Prevent submission if there are errors
   };
-  
+
   const handleNextStep = (data) => {
     const combinedData = { ...stepData, ...data };
- 
- 
+
+
     const activeSteps = allStepList.map(step => {
       if (step.key === stepName[currentStep - 1]) return { ...step, status: 'Completed' }
       if (step.key === stepName[currentStep]) return { ...step, status: 'In-Progress' }
@@ -127,8 +128,8 @@ export const Questions = () => {
     setAllStepList(activeSteps)
     if (formFields.length === currentStep) {
       const { first_name, email, ...apiData } = { ...fieldData, prev_mentorship: stepData.prev_mentorship === "true" }
-      const res= handleSubmit(combinedData);
-      if(!res){
+      const res = handleSubmit(combinedData);
+      if (!res) {
         submitQuestionsData(apiData)
       }
     }
@@ -136,12 +137,28 @@ export const Questions = () => {
     setBtnTypeAction({ back: false, next: true })
   }
 
+  const menteeNavigate = () => {
+    let url = searchParams.get("program_id") && searchParams.get("program_id") !== '' ? `/program-details/${searchParams.get("program_id")}` : '/programs'
+    navigate(url)
+  }
+
+  const handleUserRedirect = () => {
+    if(role === 'mentee'){
+      menteeNavigate()
+    }
+
+    if(role === 'mentor'){
+      navigate('/dashboard')
+    }
+  }
+
   useEffect(() => {
     if (loading) {
       setTimeout(() => {
         dispatch(updateInfo())
         setLoading(false)
-      }, [3000])
+        setRedirect(true)
+      }, [2000])
     }
   }, [loading])
 
@@ -154,19 +171,19 @@ export const Questions = () => {
       })
     }
 
-    if (!userInfo.loading && Object.keys(userInfo.data).length && userInfo.data.is_registered && userInfo.status === userStatus.questions) {
-      setLoading(true)
-    }
-
     if (userInfo.status === userStatus.pending) {
       setTimeout(() => {
         setRedirect(true)
       }, [3000])
     }
 
-    if(userInfo.data && Object.keys(userInfo.data).length && userInfo.data.hasOwnProperty('userinfo')){
-      if(userInfo.data.userinfo?.approve_status !== 'accept' || userInfo.data?.is_registered === true){
-        navigate('/dashboard')
+    if (userInfo.data && Object.keys(userInfo.data).length && userInfo.data.hasOwnProperty('userinfo')) {
+      if (userInfo.data.userinfo?.approve_status !== 'accept' || userInfo.data?.is_registered === true) {
+        if(userInfo.status === userStatus.questions){
+          setLoading(true)
+        }else{
+          handleUserRedirect()
+        }
       }
     }
   }, [userInfo])
@@ -174,11 +191,14 @@ export const Questions = () => {
   useEffect(() => {
     if (redirect) {
       setTimeout(() => {
-        navigate('/logout')
+        if (role === 'mentee') {
+          menteeNavigate()
+        } else {
+          navigate('/logout')
+        }
       }, [3000])
     }
   }, [redirect])
-
 
   const handlePreviousStep = (data) => {
     const activeSteps = allStepList.map(step => {
@@ -190,7 +210,6 @@ export const Questions = () => {
     setCurrentStep(currentStep - 1)
     setBtnTypeAction({ back: true, next: false })
   }
-
 
   useEffect(() => {
     if (role === 'mentee') {
@@ -204,6 +223,7 @@ export const Questions = () => {
       setStepName(Stepname)
     }
   }, [role])
+
   const handleStepClick = (stepNumber) => {
     const updatedSteps = allStepList.map((step, index) => {
       // Set the clicked step to "In-Progress"
@@ -217,19 +237,21 @@ export const Questions = () => {
       // Set other steps after the clicked step to an empty status
       return { ...step, status: '' };
     });
-  
+
     setAllStepList(updatedSteps);
     setCurrentStep(stepNumber);
     // setBtnTypeAction({ back: stepNumber > 1, next: stepNumber < formFields.length });
   };
+
   useEffect(() => {
     if (errorNot) {
-        setTimeout(() => {
-            setErrorNot(false)
-        }, 3000)
+      setTimeout(() => {
+        setErrorNot(false)
+      }, 3000)
 
     }
-}, [errorNot])
+  }, [errorNot])
+
   return (
     <>
       <Navbar />
@@ -240,31 +262,21 @@ export const Questions = () => {
           </h2>
           {
             ((role === 'mentor' && currentStep >= 2) || (role === 'mentee' && currentStep > 1)) &&
-            <p style={{color:'#1D5BBF', textDecoration:'underline', fontWeight:'bold', cursor: 'pointer'}} onClick={handleSkip}>Skip</p>
+            <p style={{ color: '#1D5BBF', textDecoration: 'underline', fontWeight: 'bold', cursor: 'pointer' }} onClick={handleSkip}>Skip</p>
           }
-          
+
         </div>
         {
-                errorNot &&
+          errorNot &&
 
-                <ToastNotification openToaster={errorNot} message={'Please fill all mandatory fields'} handleClose={()=>setErrorNot(false)} toastType={'error'} />
+          <ToastNotification openToaster={errorNot} message={'Please fill all mandatory fields'} handleClose={() => setErrorNot(false)} toastType={'error'} />
 
-            }
+        }
         <Backdrop
           sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          open={userInfo.loading || userInfo.status === userStatus.login}
-
+          open={userInfo.loading}
         >
-          {
-            userInfo.status === userStatus.login ?
-              <div className="w-2/6 bg-white flex flex-col gap-4 h-[330px] justify-center items-center">
-                <img src={SuccessIcon} alt="VerifyIcon" />
-                <span style={{ color: '#232323', fontWeight: 600 }}>Login  Successful!</span>
-              </div>
-              :
-              <CircularProgress color="inherit" />
-          }
-
+          <CircularProgress color="inherit" />
         </Backdrop>
 
         <MuiModal modalOpen={loading || userInfo.status === userStatus.pending} modalClose={() => setLoading(false)} noheader>
@@ -272,7 +284,15 @@ export const Questions = () => {
             <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
               style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
               <img src={SuccessTik} alt="SuccessTik" />
-              <p className='text-white text-[12px]'>{redirect ? 'We are redirecting to login page' : 'Questions submitted Successfully. Please wait for admin approval'}</p>
+              <p className='text-white text-[12px]'>
+
+                {role === 'mentee' ?
+
+                  (redirect ? 'We are redirecting to programs page' :
+                    'Questions submitted Successfully')
+
+                  : (redirect ? 'We are redirecting to login page' : 'Questions submitted Successfully. Please wait for admin approval')}
+              </p>
             </div>
 
           </div>
@@ -280,12 +300,12 @@ export const Questions = () => {
 
         <div style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
           <div className="steps pl-24 pr-28" style={{ boxShadow: '4px 4px 15px 0px rgba(0, 0, 0, 0.1)' }}>
-            <Stepper steps={allStepList} currentStep={currentStep}  handleStepClick={handleStepClick} btnTypeAction={btnTypeAction} />
+            <Stepper steps={allStepList} currentStep={currentStep} handleStepClick={handleStepClick} btnTypeAction={btnTypeAction} />
           </div>
           {
             (formFields.length && formFields[currentStep - 1]) ?
               <StepComponenRender
-              key={currentStep}
+                key={currentStep}
                 stepData={stepData}
                 stepName={stepName[currentStep - 1]}
                 stepFields={formFields[currentStep - 1]}
