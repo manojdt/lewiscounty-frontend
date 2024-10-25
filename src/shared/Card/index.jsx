@@ -1,10 +1,13 @@
 import React from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { programActionStatus } from '../../utils/constant';
+import { useSelector } from 'react-redux';
 
 export default function Card({ cardTitle, cardContent, cardFilter = [], cardCountColor = '#000', handleClick, activeItem = '' }) {
     const navigate = useNavigate()
     const [searchParams] = useSearchParams();
+    const userInfo = useSelector(state => state.userInfo)
+    const role = userInfo.data.role || ''
     return (
         <div className="pb-3" style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }}>
             <div className="title flex justify-between py-3 px-4 border-b-2">
@@ -31,8 +34,8 @@ export default function Card({ cardTitle, cardContent, cardFilter = [], cardCoun
                             ${searchParams.get("type") === menu.status || activeItem === menu.status || searchParams.get("type") === menu?.key || 
                             (searchParams.get("is_bookmark") !== null && menu.status === programActionStatus.bookmark) || 
                             (searchParams.get("type") === 'planned' && menu.status === 'yettojoin') ||
-                             
-                            (searchParams.get("type") === null && searchParams.get("is_bookmark") === null && menu.status === programActionStatus.yettojoin) ? 'active' : ''}`} aria-current="page">
+                            (searchParams.get("type") === null && searchParams.get("is_bookmark") === null && menu.status === 'all' && userInfo?.data?.is_registered) ||
+                            (searchParams.get("type") === null && searchParams.get("is_bookmark") === null && menu.status === programActionStatus.yettojoin && role === 'mentee' && !userInfo?.data?.is_registered) ? 'active' : ''}`} aria-current="page">
                             <span className="text-sm">{menu.name}</span>
                             <span className="text-base" style={{ color: cardCountColor }}>{menu.count}</span>
                         </div>

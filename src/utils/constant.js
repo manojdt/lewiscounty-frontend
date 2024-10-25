@@ -612,7 +612,7 @@ export const programMenus = (page = 'dashboard') => {
       status: 'all'
     },
     {
-      name: "Planned Programs",
+      name: "Active Programs",
       count: 0,
       page: `${pipeUrl}${programFilterUrls.planned}`,
       for: ['admin','mentor','mentee'],

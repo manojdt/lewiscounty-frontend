@@ -206,7 +206,7 @@ export const Mentee = () => {
                         {
                             (searchParams.get("type") === 'yettojoin' || searchParams.get("type") === 'planned') &&
                             <ProgramCard
-                                title="Planned Programs"
+                                title="Active Programs"
                                 viewpage="/programs?type=yettojoin"
                                 handleNavigateDetails={handleNavigateDetails}
                                 handleBookmark={handleBookmark}

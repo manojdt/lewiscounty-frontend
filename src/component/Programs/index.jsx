@@ -91,7 +91,7 @@ export default function Programs() {
             query = { type: 'is_bookmark', value: isBookmark }
         }
 
-        if (!filterType) {
+        if (!filterType && role === 'mentee' && !userInfo?.data?.is_registered ) {
             query = { type: 'status', value: 'planned' }
         }
 
@@ -217,12 +217,17 @@ export default function Programs() {
     useEffect(() => {
         if (userprograms.status === programStatus.load) {
             let loadProgram = []
+            const filterType = searchParams.get("type");
             if (filterType === null && isBookmark === null) {
                 loadProgram = userprograms.yettojoin
             }
 
             if (isBookmark !== null && isBookmark !== '') {
                 loadProgram = userprograms.bookmarked
+            }
+
+            if(filterType === null &&  userInfo?.data?.is_registered){
+                loadProgram = userprograms.allprograms
             }
 
             if (filterType !== null && filterType !== '') {
@@ -232,6 +237,8 @@ export default function Programs() {
                     loadProgram = userprograms[filterType]
                 }
             }
+
+            console.log('loadProgram', loadProgram)
             setProgramsList(loadProgram)
         }
     }, [userprograms])
@@ -275,7 +282,7 @@ export default function Programs() {
                             <div className="flex gap-4">
                                 <div>
                                     {programMenusList.find(menu => menu.status === searchParams.get("type"))?.name ||
-                                        ((searchParams.get("type") === 'planned' || searchParams.get("type") === null) && 'Planned Programs') ||
+                                        ((searchParams.get("type") === 'planned' || (searchParams.get("type") === null && role === 'mentee' && !userInfo?.data?.is_registered)) && 'Active Programs') ||
                                         (searchParams.get("is_bookmark") ? 'Bookmarked Programs' : 'All Programs')}
                                 </div>
                                 <img src={programView === 'grid' ? ListViewIcon : GridViewIcon} className='cursor-pointer' alt="viewicon" onClick={handleViewChange} />
@@ -309,7 +316,7 @@ export default function Programs() {
 
                             <>
                                 <ProgramCard
-                                    title="Planned Programs"
+                                    title="Active Programs"
                                     viewpage="/programs?type=yettojoin"
                                     handleNavigateDetails={handleNavigation}
                                     handleBookmark={handleBookmark}
