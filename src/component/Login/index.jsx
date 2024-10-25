@@ -58,6 +58,7 @@ export const Login = () => {
     dispatch(updateInfo())
     if (userData.data.role === 'fresher') navigate("/login-type");
     else if (userData.data.is_registered) navigate("/dashboard")
+    else if(userData.data.role === 'mentee' && !userData.data.is_registered) navigate('/programs')
     else navigate("/questions");
   }
 

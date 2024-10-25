@@ -134,6 +134,14 @@ export const Navbar = () => {
         navigate(url)
     }
 
+    const handleLogoClick = () => {
+        if(role === 'mentee' && !userInfo?.data?.is_registered){
+            navigate('/programs')
+        }else{
+            navigate('/dashboard')
+        }
+    }
+
 
     useEffect(() => {
         dispatch(userActivities())
@@ -168,7 +176,7 @@ export const Navbar = () => {
             <nav className="bg-white border-gray-200">
                 <div className='flex justify-between'>
                     <div className="contain flex justify-between w-3/12 p-4">
-                        <div className="site-logo cursor-pointer flex items-center space-x-3 rtl:space-x-reverse" onClick={() => navigate('/dashboard')}>
+                        <div className="site-logo cursor-pointer flex items-center space-x-3 rtl:space-x-reverse" onClick={handleLogoClick}>
                             <span className="self-center text-2xl font-semibold whitespace-nowrap">My Logo</span>
                         </div>
                         <div className='navbar-mobile-menu' onClick={handleLeftSidebar}>
