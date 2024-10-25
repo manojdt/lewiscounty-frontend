@@ -55,14 +55,16 @@ export const Mentee = () => {
     }
 
     useEffect(() => {
-        getPrograms()
-    }, [searchParams])
+        if (role !== '' && userInfo?.data?.is_registered) {
+            getPrograms()
+        }
+    }, [searchParams, role])
 
     useEffect(() => {
         const filterType = searchParams.get("type");
         const isBookmark = searchParams.get("is_bookmark");
         dispatch(getMenteeProgramCount())
-        if (filterType === null && isBookmark === null) {
+        if (filterType === null && isBookmark === null && userInfo?.data?.is_registered) {
             dispatch(getMenteePrograms({}));
         }
     }, [])
@@ -85,7 +87,7 @@ export const Mentee = () => {
     }
 
     useEffect(() => {
-        if (userpragrams.status === programStatus.bookmarked) {
+        if (userpragrams.status === programStatus.bookmarked && userInfo?.data?.is_registered) {
             getPrograms()
         }
     }, [userpragrams.status])

@@ -32,7 +32,7 @@ export default function Card({ cardTitle, cardContent, cardFilter = [], cardCoun
                             (searchParams.get("is_bookmark") !== null && menu.status === programActionStatus.bookmark) || 
                             (searchParams.get("type") === 'planned' && menu.status === 'yettojoin') ||
                              
-                            (searchParams.get("type") === null && searchParams.get("is_bookmark") === null && menu.status === 'all') ? 'active' : ''}`} aria-current="page">
+                            (searchParams.get("type") === null && searchParams.get("is_bookmark") === null && menu.status === programActionStatus.yettojoin) ? 'active' : ''}`} aria-current="page">
                             <span className="text-sm">{menu.name}</span>
                             <span className="text-base" style={{ color: cardCountColor }}>{menu.count}</span>
                         </div>

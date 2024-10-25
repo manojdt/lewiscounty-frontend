@@ -44,16 +44,22 @@ export default function Programs() {
     }
 
     const handleNavigation = (programdetails) => {
-        let baseUrl = pipeUrls.programdetails
-        if (Object.keys(programdetails).length) {
-            if (role === 'mentor' && programdetails.status !== 'completed') {
-                if (programdetails.status === programActionStatus.yettostart) baseUrl = pipeUrls.startprogram
-                if (programdetails.status === programActionStatus.inprogress) baseUrl = pipeUrls.startprogram
-            }
-            if (role === 'mentee' && filterType === 'yettostart') {
-                navigate(`/mentee-document-upload/${programdetails.id}`)
-            } else {
-                navigate(`${baseUrl}/${programdetails.id}`)
+
+        if (!userInfo?.data?.is_registered) {
+            navigate(`/questions?program_id=${programdetails.id}`)
+        }
+        else {
+            let baseUrl = pipeUrls.programdetails
+            if (Object.keys(programdetails).length) {
+                if (role === 'mentor' && programdetails.status !== 'completed') {
+                    if (programdetails.status === programActionStatus.yettostart) baseUrl = pipeUrls.startprogram
+                    if (programdetails.status === programActionStatus.inprogress) baseUrl = pipeUrls.startprogram
+                }
+                if (role === 'mentee' && filterType === 'yettostart') {
+                    navigate(`/mentee-document-upload/${programdetails.id}`)
+                } else {
+                    navigate(`${baseUrl}/${programdetails.id}`)
+                }
             }
         }
     }
@@ -83,6 +89,10 @@ export default function Programs() {
 
         if (isBookmark && isBookmark !== '') {
             query = { type: 'is_bookmark', value: isBookmark }
+        }
+
+        if (!filterType) {
+            query = { type: 'status', value: 'planned' }
         }
 
         if (role === 'mentee') {
@@ -135,7 +145,7 @@ export default function Programs() {
             query = { type: 'is_bookmark', value: isBookmark }
         }
 
-        
+
         if (action === 'prev') {
             query = { ...query, page: 'page', number: userprograms.current_page - 1 }
         }
@@ -150,11 +160,14 @@ export default function Programs() {
         if (role === 'mentor') dispatch(getUserPrograms(query));
     }
 
-
     useEffect(() => {
-        const listPrograms = programMenus('program').filter(programs => programs.for.includes(role));
+        let listPrograms = programMenus('program').filter(programs => programs.for.includes(role));
 
         const totalCount = role === 'mentor' ? userprograms.statusCounts : userprograms.programsCounts
+
+        if (role === 'mentee' && !userInfo?.data?.is_registered) {
+            listPrograms = listPrograms.filter(list => list.status === programActionStatus.yettojoin)
+        }
 
         const programMenu = [...listPrograms].map(menu => {
 
@@ -177,7 +190,9 @@ export default function Programs() {
     }, [userprograms.statusCounts, userprograms.programsCounts])
 
     useEffect(() => {
-       getPrograms()
+        if (role !== '') {
+            getPrograms()
+        }
     }, [searchParams, role])
 
     useEffect(() => {
@@ -203,7 +218,7 @@ export default function Programs() {
         if (userprograms.status === programStatus.load) {
             let loadProgram = []
             if (filterType === null && isBookmark === null) {
-                loadProgram = userprograms.allprograms
+                loadProgram = userprograms.yettojoin
             }
 
             if (isBookmark !== null && isBookmark !== '') {
@@ -260,7 +275,7 @@ export default function Programs() {
                             <div className="flex gap-4">
                                 <div>
                                     {programMenusList.find(menu => menu.status === searchParams.get("type"))?.name ||
-                                        (searchParams.get("type") === 'planned' && 'Planned Programs') ||
+                                        ((searchParams.get("type") === 'planned' || searchParams.get("type") === null) && 'Planned Programs') ||
                                         (searchParams.get("is_bookmark") ? 'Bookmarked Programs' : 'All Programs')}
                                 </div>
                                 <img src={programView === 'grid' ? ListViewIcon : GridViewIcon} className='cursor-pointer' alt="viewicon" onClick={handleViewChange} />
