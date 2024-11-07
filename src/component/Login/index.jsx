@@ -27,7 +27,7 @@ export const Login = () => {
 
   // Redux
   const dispatch = useDispatch();
-  const userData = useSelector(state => state.userInfo)
+  const userData = useSelector((state) => state.userInfo);
 
   const navigate = useNavigate();
   const {
@@ -52,15 +52,43 @@ export const Login = () => {
   const handleRemeberPassword = () => {
     localStorage.setItem('rememberme', !remeberPassword)
     setRememberPassword(!remeberPassword);
-  }
+  };
+
+  // const handleRedirect = () => {
+  //   dispatch(updateInfo())
+  //   if (userData.data.role === 'fresher') navigate("/login-type");
+  //   else if (userData.data.is_registered) navigate("/dashboard")
+  //   else if(userData.data.role === 'mentee' && !userData.data.is_registered) navigate('/programs')
+  //   else navigate("/questions");
+  // }
 
   const handleRedirect = () => {
-    dispatch(updateInfo())
-    if (userData.data.role === 'fresher') navigate("/login-type");
-    else if (userData.data.is_registered) navigate("/dashboard")
-    else if(userData.data.role === 'mentee' && !userData.data.is_registered) navigate('/programs')
-    else navigate("/questions");
-  }
+    console.log("role:", userData.data.role);
+    console.log("is_registered:", userData.data.is_registered);
+    dispatch(updateInfo());
+    if (
+      userData.data.role === "super_admin" &&
+      userData.data.is_registered === true
+    ) {
+      console.log("Redirecting to /super-members");
+      navigate("/super-members");
+    } else if (userData.data.role === "fresher") {
+      console.log("Redirecting to /login-type");
+      navigate("/login-type");
+    } else if (userData.data.is_registered) {
+      console.log("Redirecting to /dashboard");
+      navigate("/dashboard");
+    } else if (
+      userData.data.role === "mentee" &&
+      !userData.data.is_registered
+    ) {
+      console.log("Redirecting to /programs");
+      navigate("/programs");
+    } else {
+      console.log("Redirecting to /questions");
+      navigate("/questions");
+    }
+  };
 
   useEffect(() => {
     const rememberme = localStorage.getItem('rememberme')
@@ -106,7 +134,7 @@ export const Login = () => {
               >
                 {
                   (userData.status === userStatus.login || userData.status === userStatus.pending) ?
-                    <div className="popup-content w-2/6 bg-white flex flex-col gap-4 h-[330px] justify-center items-center">
+                  <div className="popup-content w-2/6 bg-white flex flex-col gap-4 h-[330px] justify-center items-center">
                       <img src={userData.status === userStatus.pending ? FailedIcon : SuccessIcon} alt="VerifyIcon" />
                       <span style={{ color: '#232323', fontWeight: 600 }}>
                         {
@@ -115,10 +143,10 @@ export const Login = () => {
 
 
 
-                      </span>
-                    </div>
+                    </span>
+                  </div>
                     :
-                    <CircularProgress color="inherit" />
+                  <CircularProgress color="inherit" />
                 }
 
               </Backdrop>
@@ -144,7 +172,7 @@ export const Login = () => {
                         />
                       </svg> */}
                       <h4 className="mt-1 pb-1 text-xl font-semibold logoColor">
-                       My Logo
+                        My Logo
                       </h4>
                     </div>
 
@@ -181,44 +209,44 @@ export const Login = () => {
                     {
                       LoginFields.map((field, index) =>
 
-                        <div className="relative mb-6" key={index}>
-                          <label className="block tracking-wide text-gray-700 text-xs mb-2">
-                            {field.label}
-                          </label>
-                          <input
+                      <div className="relative mb-6" key={index}>
+                        <label className="block tracking-wide text-gray-700 text-xs mb-2">
+                          {field.label}
+                        </label>
+                        <input
                             type={field.fieldtype === 'password' ? (passwordVisibility ? 'text' : field.fieldtype) : field.fieldtype}
                             className={`w-full rounded px-3 py-[0.32rem] text-[14px] leading-[2.15] h-[60px] ${errors[field.name] ? 'focus:border-teal focus:outline-none focus:ring-0' : ''}`}
-                            placeholder={field.placeholder}
-                            style={{
-                              color: "#232323",
+                          placeholder={field.placeholder}
+                          style={{
+                            color: "#232323",
                               border: `1px solid ${errors[field.name] ? 'rgb(239 68 68)' : '#3E3E3E'}`,
-                            }}
-                            {...register(field.name, field.inputRules)}
-                            aria-invalid={errors[field.name] ? "true" : "false"}
-                          />
+                          }}
+                          {...register(field.name, field.inputRules)}
+                          aria-invalid={errors[field.name] ? "true" : "false"}
+                        />
                           {
                             field.fieldtype === 'password' &&
 
-                            <button
-                              type="button"
-                              className="absolute top-8 end-0 p-3.5 rounded-e-md"
-                              onClick={() =>
-                                setPasswordVisibility(!passwordVisibility)
-                              }
-                            >
-                              {passwordVisibility ? (
-                                <EyeOpenIcon />
-                              ) : (
-                                <EyeCloseIcon />
-                              )}
-                            </button>
+                          <button
+                            type="button"
+                            className="absolute top-8 end-0 p-3.5 rounded-e-md"
+                            onClick={() =>
+                              setPasswordVisibility(!passwordVisibility)
+                            }
+                          >
+                            {passwordVisibility ? (
+                              <EyeOpenIcon />
+                            ) : (
+                              <EyeCloseIcon />
+                            )}
+                          </button>
                           }
-                          {errors[field.name] && (
-                            <p className="error" role="alert">
-                              {errors[field.name].message}
-                            </p>
-                          )}
-                        </div>
+                        {errors[field.name] && (
+                          <p className="error" role="alert">
+                            {errors[field.name].message}
+                          </p>
+                        )}
+                      </div>
                       )
                     }
 
