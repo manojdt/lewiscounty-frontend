@@ -67,6 +67,8 @@ import CertificateMenteeList from "./component/Certificate/CertificateMenteeList
 import AssignMentor from "./component/Members/AssignMentor";
 import MentorChangeRequest from "./component/MentorDetails/MentorChangeRequest";
 import MenteeDocs from "./component/Programs/ProgramDetails/MenteeDocs";
+import SuperMembers from "./component/SuperAdmin/Members/SuperMembers";
+import AddSuperMember from "./component/SuperAdmin/Members/AddSuperMember";
 
 function App() {
   const PrivateRoute = () => {
@@ -99,6 +101,11 @@ function App() {
       </Route>
 
       <Route element={<PrivateRoute />}>
+        <Route element={<Layout subheader={true} />}>
+          <Route path="/super-members" element={<SuperMembers />} />
+          <Route path="/super-members/add" element={<AddSuperMember />} />
+        </Route>
+
         <Route path="/login-type" element={<LoginType />} />
         <Route path="/questions" element={<Questions />} />
         <Route element={<Layout />}>
