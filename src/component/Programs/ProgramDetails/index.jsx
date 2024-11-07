@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 
 import api from '../../../services/api';
 import { menteeNotJoinCondition, menteeProgramStatus, pipeUrls, programActionStatus, programAdminRejected, programApprovalStage, programCancelled, programCompleted, programInProgress, programNotLaunched, programNotStarted, programRequestApproval, programWaitingActiveApproval, requestStatus } from '../../../utils/constant';
-import { getMenteeJoinedInProgram, getProgramDetails, updateProgram } from '../../../services/userprograms';
+import { getMenteeJoinedInProgram, getProgramDetails, getSpecificProgramDetails, updateProgram } from '../../../services/userprograms';
 import { updateLocalRequest, updateProgramMenteeRequest, updateProgramRequest } from '../../../services/request';
 
 import UserImage from "../../../assets/images/user.jpg";
@@ -164,7 +164,7 @@ export default function ProgramDetails() {
         if (Object.keys(programdetails).length && !programLoading) {
             const notAllowedCond = ['completed', 'yettoapprove', 'draft']
 
-         
+
             if (!notAllowedCond.includes(programdetails.status)) {
                 if (role === 'mentee' && programdetails.status !== 'yettojoin' && programdetails.mentee_join_status === 'program_join_request_accepted') {
                     navigate(`${pipeUrls.startprogram}/${params.id}`)
@@ -189,11 +189,12 @@ export default function ProgramDetails() {
 
     useEffect(() => {
         const programId = params.id;
+        console.log('programId', programId)
         if (programId && programId !== '') {
-            dispatch(getProgramDetails(programId))
+            dispatch(getSpecificProgramDetails({ id: programId, requestId: requestId }))
             if (role === 'mentee') { dispatch(getMenteeJoinedInProgram({ id: programId })); }
         }
-     
+
     }, [params.id, role])
 
     useEffect(() => {
@@ -206,7 +207,7 @@ export default function ProgramDetails() {
         if (requestProgramStatus === requestStatus.programupdate) {
             setTimeout(() => {
                 setConfirmPopup({ accept: false, cancel: false, programId: '' })
-                dispatch(getProgramDetails(params.id))
+                dispatch(getSpecificProgramDetails({ id: params.id, requestId: requestId }))
                 dispatch(updateLocalRequest({ status: '' }))
             }, [2000])
         }
@@ -461,7 +462,7 @@ export default function ProgramDetails() {
                                                 <>
 
                                                     {
-                                                        requestId !== '' ?
+                                                        requestId !== '' && programdetails.mentor_join_request_status !== 'accept' && programdetails.mentor_join_request_status !== 'cancel' ?
                                                             <div className='flex gap-4 pt-10'>
                                                                 <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
                                                                     border: "1px solid #E0382D",
@@ -481,44 +482,73 @@ export default function ProgramDetails() {
                                                             </div>
                                                             :
 
-                                                            programApprovalStage[programdetails.status] ?
-                                                                <div className='flex gap-4 pt-10' >
-                                                                    <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                                        border: "1px solid #E0382D",
-                                                                        borderRadius: '5px',
-                                                                        color: '#E0382D',
-                                                                        cursor: 'not-allowed'
-                                                                    }}
-                                                                        onClick={() => undefined}
-                                                                    >
-                                                                        {programApprovalStage[programdetails.status].type === 'waiting' && <i className="pi pi-clock" style={{ color: 'red' }}></i>}
-                                                                        {programApprovalStage[programdetails.status].type === 'reject' && <i className="pi pi-ban" style={{ color: 'red' }}></i>}
-                                                                        <span className='pl-3'>{programApprovalStage[programdetails.status]?.text}</span>
-                                                                    </button>
-                                                                </div>
-                                                                :
-                                                                programdetails.status === 'draft' ?
-                                                                    <div className='py-9'>
-                                                                        <div className='py-3 px-16 text-white text-[14px] flex justify-center items-center' style={{
-                                                                            background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
+                                                            requestId !== '' ?
+                                                                <>
+                                                                    {
+                                                                        programdetails.mentor_join_request_status === 'accept' &&
+
+                                                                        <button className='py-3 px-16 mt-7 text-white text-[14px] flex items-center' style={{
+                                                                            background: "#16B681",
+                                                                            borderRadius: '5px'
+                                                                        }}
+                                                                            onClick={() => undefined}
+                                                                        >Approved
+                                                                        </button>
+                                                                    }
+
+                                                                    {
+                                                                        programdetails.mentor_join_request_status === 'cancel' &&
+
+                                                                        <button className='py-3 mt-7 px-16 text-white text-[14px] flex items-center' style={{
+                                                                            border: "1px solid #E0382D",
                                                                             borderRadius: '5px',
-                                                                            width: '30%'
-                                                                        }}>Drafted</div>
+                                                                            color: '#E0382D'
+                                                                        }}
+                                                                            onClick={() => undefined}
+                                                                        >Rejected
+                                                                        </button>
+                                                                    }
+                                                                </>
+                                                                :
+
+                                                                programApprovalStage[programdetails.status] ?
+                                                                    <div className='flex gap-4 pt-10' >
+                                                                        <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                                            border: "1px solid #E0382D",
+                                                                            borderRadius: '5px',
+                                                                            color: '#E0382D',
+                                                                            cursor: 'not-allowed'
+                                                                        }}
+                                                                            onClick={() => undefined}
+                                                                        >
+                                                                            {programApprovalStage[programdetails.status].type === 'waiting' && <i className="pi pi-clock" style={{ color: 'red' }}></i>}
+                                                                            {programApprovalStage[programdetails.status].type === 'reject' && <i className="pi pi-ban" style={{ color: 'red' }}></i>}
+                                                                            <span className='pl-3'>{programApprovalStage[programdetails.status]?.text}</span>
+                                                                        </button>
                                                                     </div>
                                                                     :
-                                                                    programdetails.status === 'yettojoin' ?
-
+                                                                    programdetails.status === 'draft' ?
                                                                         <div className='py-9'>
-                                                                            <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                                            <div className='py-3 px-16 text-white text-[14px] flex justify-center items-center' style={{
                                                                                 background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
-                                                                                borderRadius: '5px'
-                                                                            }}
-                                                                                onClick={() => handleJoinProgram(programdetails.id)}
-                                                                            >Launch
-                                                                                <span className='pl-8 pt-1'><img style={{ width: '15px', height: '13px' }} src={DoubleArrowIcon} alt="DoubleArrowIcon" /></span>
-                                                                            </button>
+                                                                                borderRadius: '5px',
+                                                                                width: '30%'
+                                                                            }}>Drafted</div>
                                                                         </div>
-                                                                        : null
+                                                                        :
+                                                                        programdetails.status === 'yettojoin' ?
+
+                                                                            <div className='py-9'>
+                                                                                <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                                                    background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
+                                                                                    borderRadius: '5px'
+                                                                                }}
+                                                                                    onClick={() => handleJoinProgram(programdetails.id)}
+                                                                                >Launch
+                                                                                    <span className='pl-8 pt-1'><img style={{ width: '15px', height: '13px' }} src={DoubleArrowIcon} alt="DoubleArrowIcon" /></span>
+                                                                                </button>
+                                                                            </div>
+                                                                            : null
                                                     }
                                                 </>
                                                 : null
@@ -702,7 +732,7 @@ export default function ProgramDetails() {
                                                     <span>Course Level</span>
                                                     <span>{programdetails.course_level}</span>
                                                 </li>
-                                                <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>Date</span>
+                                                <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>Start Date & End Date</span>
                                                     <span>{`${dateFormat(programdetails?.start_date)}  &  ${dateFormat(programdetails?.end_date)} `}</span>
                                                 </li>
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>Duration</span>

@@ -87,6 +87,27 @@ export const getProgramDetails = createAsyncThunk(
     }
 );
 
+
+
+export const getSpecificProgramDetails = createAsyncThunk(
+    "getSpecificProgramDetails",
+    async (ids) => {
+        const { id, requestId = '' } = ids
+        let queryString = id
+        if(requestId !== '' && requestId !== null){
+            queryString = queryString+'?request_id='+requestId
+        }
+
+        console.log('queryString', queryString+'?request_id='+requestId)
+
+        const getDetailsofProgram = await api.get(`fetch_program_detail/${queryString}`);
+        if (getDetailsofProgram.status === 200 && getDetailsofProgram.data && getDetailsofProgram.data.program) {
+            return getDetailsofProgram.data.program;
+        }
+        return getDetailsofProgram;
+    }
+);
+
 export const getMentees = createAsyncThunk(
     "getMentees",
     async () => {

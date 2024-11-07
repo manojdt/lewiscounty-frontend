@@ -12,6 +12,7 @@ import {
   getProgramCounts,
   getProgramMentees,
   getProgramTaskDetails,
+  getSpecificProgramDetails,
   getUserPrograms,
   startProgramTask,
   submitProgramTaskDetails,
@@ -162,6 +163,34 @@ export const userProgramSlice = createSlice({
           error: action.error.message,
         };
       });
+
+
+
+
+    builder
+      .addCase(getSpecificProgramDetails.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(getSpecificProgramDetails.fulfilled, (state, action) => {
+        return {
+          ...state,
+          programdetails: action.payload,
+          status: '',
+          loading: false,
+        };
+      })
+      .addCase(getSpecificProgramDetails.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
+
+
     builder
       .addCase(getMentees.pending, (state) => {
         return {
