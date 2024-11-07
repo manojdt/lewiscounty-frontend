@@ -92,12 +92,20 @@ export default function ProgramDetails() {
     const commonApproval = ['completed', 'cancelled']
 
     const handleJoinProgram = async (programId) => {
-        setLoading({ initial: true, join: false })
-        const joinProgramAction = await api.post('join_program', { id: programId });
-        if (joinProgramAction.status === 200 && joinProgramAction.data) {
-            setLoading({ initial: false, join: role === 'mentee' })
-            if (role === 'mentor') { dispatch(updateProgram({ id: programId, status: programActionStatus.yettostart })); }
+
+        if (role === 'mentee' && !userdetails?.data?.is_registered) {
+            navigate(`/questions?program_id=${programdetails.id}`)
+        } else {
+            setLoading({ initial: true, join: false })
+            const joinProgramAction = await api.post('join_program', { id: programId });
+            if (joinProgramAction.status === 200 && joinProgramAction.data) {
+                setLoading({ initial: false, join: role === 'mentee' })
+                if (role === 'mentor') { dispatch(updateProgram({ id: programId, status: programActionStatus.yettostart })); }
+            }
         }
+
+
+
     }
 
     // Handle Accept Program Popup

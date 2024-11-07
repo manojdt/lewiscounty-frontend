@@ -45,10 +45,10 @@ export default function Programs() {
 
     const handleNavigation = (programdetails) => {
 
-        if (!userInfo?.data?.is_registered) {
-            navigate(`/questions?program_id=${programdetails.id}`)
-        }
-        else {
+        // if (!userInfo?.data?.is_registered) {
+        //     navigate(`/questions?program_id=${programdetails.id}`)
+        // }
+        // else {
             let baseUrl = pipeUrls.programdetails
             if (Object.keys(programdetails).length) {
                 if (role === 'mentor' && programdetails.status !== 'completed') {
@@ -61,7 +61,7 @@ export default function Programs() {
                     navigate(`${baseUrl}/${programdetails.id}`)
                 }
             }
-        }
+        // }
     }
 
     const handleViewChange = () => {
