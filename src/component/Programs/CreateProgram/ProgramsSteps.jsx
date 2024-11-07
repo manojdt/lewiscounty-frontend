@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Calendar } from 'primereact/calendar';
@@ -24,6 +24,7 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
     const [formData, setFormData] = useState({})
     const [logoImage, setLogoImage] = useState({})
     const [checkBoxValue, setCheckBoxValue] = useState({})
+    const calendarRef = useRef(null)
     const {
         register,
         formState: { errors },
@@ -258,18 +259,17 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                             >
                                                                 <option value="">Select</option>
                                                                 {
-                                                                    field.options.map((option, index) =>                                                          
-                                                                    {
-                                                                        return(
-                                                                            <option 
-                                                                            value={option.key || option.id} 
-                                                                            key={index}
-                                                                            > 
-                                                                            {option.value || option.name} 
-                                                                        </option>
+                                                                    field.options.map((option, index) => {
+                                                                        return (
+                                                                            <option
+                                                                                value={option.key || option.id}
+                                                                                key={index}
+                                                                            >
+                                                                                {option.value || option.name}
+                                                                            </option>
                                                                         )
                                                                     }
-                                                                   )
+                                                                    )
                                                                 }
                                                             </select>
                                                             {errors[field.name] && (
@@ -323,10 +323,12 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
 
                                                                     <div className='relative'>
                                                                         <Calendar
+                                                                            ref={calendarRef}
                                                                             className='calendar-control input-bg'
                                                                             {...dateField}
                                                                             value={dateFormat[field.name]}
                                                                             onChange={(e) => {
+                                                                                console.log(e)
                                                                                 dateField.onChange(e)
                                                                                 setDateFormat({ ...dateFormat, [field.name]: e.value })
                                                                             }}
@@ -336,7 +338,12 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                                             hourFormat="12"
                                                                             dateFormat="dd/mm/yy"
                                                                         />
-                                                                        <img className='absolute top-5 right-2' src={CalendarIcon} alt="CalendarIcon" />
+                                                                        <img className='absolute top-5 right-2' src={CalendarIcon} alt="CalendarIcon"
+                                                                            onClick={(e) => {
+                                                                                calendarRef.current?.click()
+                                                                               console.log('eee', calendarRef)
+                                                                            }}
+                                                                        />
 
                                                                         {errors[field.name] && (
                                                                             <p className="error" role="alert">
@@ -397,7 +404,7 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                                                                 <img src={UploadIcon} alt="altlogo" />
                                                                                                 <span className='text-[12px]'> {getValues(imageField.name) && getValues(imageField.name)[0]?.name}
 
-                                                                                                     
+
                                                                                                 </span>
                                                                                             </div>
                                                                                             <img className='w-[30px] cursor-pointer' onClick={() => handleDeleteImage(field.name)} src={DeleteIcon} alt="DeleteIcon" />

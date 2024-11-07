@@ -862,7 +862,8 @@ export const TaskStatus = {
   completed: 'Completed',
   submitted: 'Submitted',
   cancelled: 'Cancelled',
-  draft: 'Draft'
+  draft: 'Draft',
+  waiting_for_approval: 'Waiting for Approval'
 }
 
 

@@ -51,6 +51,7 @@ import api from '../../../services/api';
 import { programCancelRequest, programRescheduleRequest, updateLocalRequest } from '../../../services/request';
 import './details.css'
 import { formatDateFunToAll, formatDateTimeISO, todatDateInfo } from '../../../utils';
+import ToastNotification from '../../../shared/Toast';
 
 
 export default function AssignTask() {
@@ -75,7 +76,10 @@ export default function AssignTask() {
     const [moreMenuModal, setMoreMenuModal] = useState({ share: false, reschedule: false })
     const [timer, setTimer] = useState({ hrs: 0, min: 20, sec: 0, })
     const [dateFormat, setDateFormat] = useState({})
+    const [message, setMessage] = useState(false);
     const role = userdetails.data.role || ''
+
+    const url = `${process.env.REACT_APP_SITE_URL}/program-details/${params.id}`
 
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -314,6 +318,31 @@ export default function AssignTask() {
         }
     }, [programdetails, role])
 
+
+    const handleCopy = () => {
+        
+        navigator.clipboard.writeText(url)
+            .then(() => {
+                setMessage(true);
+            })
+            .catch((err) => {
+                console.error('Error copying text: ', err);
+                setMessage(false);
+            });
+    };
+
+    const handleCloseNotify = () => {
+        setMessage(false)
+    }
+
+    useEffect(() => {
+        if (message) {
+            setTimeout(() => {
+                setMessage(false)
+            }, 3000)
+        }
+    }, [message])
+
     const handleDateClick = () => {
         document.querySelector('.p-datepicker')?.classList.add('program-date-picker')
     }
@@ -322,6 +351,14 @@ export default function AssignTask() {
         document.querySelector('.p-datepicker')?.classList.add('program-time-picker')
     }
 
+
+    const handleInstructor = (programdetails) => {
+        const mentorId = programdetails?.mentor_info?.id || ''
+
+        if (mentorId !== '' && mentorId !== userdetails?.data?.user_id) {
+            navigate(`/mentor-profile/${mentorId}`)
+        }
+    }
 
     useEffect(() => {
         return () => {
@@ -351,6 +388,12 @@ export default function AssignTask() {
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
+
+            {
+                message &&
+                <ToastNotification openToaster={message} message={'URL copied!'} handleClose={handleCloseNotify} toastType={'success'} />
+            }
+
             {
                 Object.keys(programdetails).length && !programLoading ?
                     <div className='grid mb-10' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)', borderRadius: '5px' }}>
@@ -431,7 +474,7 @@ export default function AssignTask() {
                                                                         <img src={RescheduleIcon} alt="RescheduleIcon" className='pr-3 w-[25px]' />
                                                                         Reschedule
                                                                     </MenuItem>
-                                                                    <MenuItem onClick={handleClose} className='!text-[12px]'>
+                                                                    <MenuItem onClick={() => handleMenu('share')} className='!text-[12px]'>
                                                                         <img src={ShareIcon} alt="ShareIcon" className='pr-3 w-[25px]' /> Share</MenuItem>
                                                                     {
                                                                         (programdetails.status === programActionStatus.inprogress
@@ -443,7 +486,7 @@ export default function AssignTask() {
                                                                                 <img src={CompleteIcon} alt="AbortIcon" className='pr-3 w-[25px]' />
                                                                                 Complete</MenuItem>
                                                                             <MenuItem onClick={() => navigate(`${pipeUrls.assignmentess}/${programdetails.id}`)} className='!text-[12px]'>
-                                                                        <img src={PlusCircle} alt="PlusCircle" className='pr-3 w-[25px]' />Assign Task to Mentees</MenuItem>
+                                                                                <img src={PlusCircle} alt="PlusCircle" className='pr-3 w-[25px]' />Assign Task to Mentees</MenuItem>
                                                                         </>
                                                                     }
                                                                 </>
@@ -453,7 +496,7 @@ export default function AssignTask() {
                                                                 role === 'mentee' &&
 
                                                                 <>
-                                                                  {
+                                                                    {
                                                                         programdetails.status === programActionStatus.inprogress &&
 
                                                                         <MenuItem onClick={() => handleMenu('cancel')} className='!text-[12px]'>
@@ -521,7 +564,7 @@ export default function AssignTask() {
                                             <div className='flex gap-3 items-center text-[12px]'>
                                                 <img src={UserImage} style={{ borderRadius: '50%', width: '35px', height: '35px' }} alt="UserImage" />
                                                 <span>Instructor :</span>
-                                                <span style={{ color: 'rgba(29, 91, 191, 1)', textDecoration: 'underline', cursor: 'pointer' }}>{programdetails?.mentor_name}</span>
+                                                <span style={{ color: 'rgba(29, 91, 191, 1)', textDecoration: 'underline', cursor: 'pointer' }} onClick={() => handleInstructor(programdetails)}>{programdetails?.mentor_name}</span>
                                             </div>
 
                                         </div>
@@ -905,7 +948,7 @@ export default function AssignTask() {
                                                         <div className='flex gap-3 py-5'>
                                                             <img src={UserImage} alt="user" style={{ borderRadius: '50%', width: '38px', height: '35px' }} />
                                                             <div className='flex flex-col'>
-                                                                <span style={{ color: 'rgba(0, 174, 189, 1)' }}>{userdetails.data.first_name}{' '} {userdetails.data.last_name}</span>
+                                                                <span style={{ color: 'rgba(0, 174, 189, 1)' }}>{programdetails.mentor_full_name}</span>
                                                                 <span>Mentor</span>
                                                             </div>
                                                         </div>
@@ -1004,14 +1047,15 @@ export default function AssignTask() {
                                 <div className='px-5 py-1 flex justify-center items-center' style={{ border: '1px solid rgba(29, 91, 191, 1)' }}>
                                     <div className='flex justify-center items-center flex-col gap-8 py-10 px-20 mt-5'
                                     >
-                                        <div>Teaching Program</div>
-                                        <input className='input-bg text-[12px] h-[60px] w-[396px] px-5' style={{ borderRadius: '27px' }} value="http://www.company.com:81/a/b/c.html?user=Alice&year=2008#p2" />
+                                        <div>{programdetails?.program_name}</div>
+                                        <input className='input-bg text-[12px] h-[60px] w-[396px] px-5' style={{ borderRadius: '27px' }} disabled
+                                            value={url} />
                                         <div className='flex gap-7'>
-                                            <img className='cursor-pointer' src={LinkIcon} alt="LinkIcon" />
-                                            <img className='cursor-pointer' src={LinkedInIcon} alt="LinkedInIcon" />
+                                            <img className='cursor-pointer' src={LinkIcon} alt="LinkIcon" onClick={handleCopy} />
+                                            {/* <img className='cursor-pointer' src={LinkedInIcon} alt="LinkedInIcon" />
                                             <img className='cursor-pointer' src={InstagramIcon} alt="InstagramIcon" />
                                             <img className='cursor-pointer' src={FacebookOutlineIcon} alt="FacebookOutlineIcon" />
-                                            <img className='cursor-pointer' src={TwitterIcon} alt="TwitterIcon" />
+                                            <img className='cursor-pointer' src={TwitterIcon} alt="TwitterIcon" /> */}
                                         </div>
 
                                         <div className="flex  justify-center align-middle pt-4">

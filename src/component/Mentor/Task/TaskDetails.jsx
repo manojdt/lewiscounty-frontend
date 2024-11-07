@@ -15,7 +15,7 @@ import { TaskApiStatus, TaskStatus } from '../../../utils/constant'
 import { useForm } from 'react-hook-form'
 
 
-const MentorTaskDetails = () => {
+const   MentorTaskDetails = () => {
     const navigate = useNavigate()
     const [editTask, setEditTask] = useState(false)
     const params = useParams();
@@ -41,6 +41,7 @@ const MentorTaskDetails = () => {
 
     const onSubmit = (data) => {
         const apiData = { mark: parseInt(data.mark), mentee_id: taskDetails.mentee_id, task_id: taskDetails.id }
+        setEditTask(false)
         dispatch(updateTaskMark(apiData))
     }
 
@@ -51,6 +52,12 @@ const MentorTaskDetails = () => {
             }, [2000])
         }
     }, [status])
+
+    useEffect(() => {
+        if(taskDetails.status === 'waiting_for_approval' && !editTask){
+            setEditTask(true)
+        }
+    },[taskDetails])
 
 
     useEffect(() => {
@@ -64,6 +71,9 @@ const MentorTaskDetails = () => {
     const referenceView = taskDetails?.reference_link || ''
 
     const docs = referenceView !== '' ? referenceView?.split(',') || [] : []
+
+
+    console.log('taskDetails', taskDetails)
 
     return (
         <div className="px-9 py-9">
@@ -120,7 +130,7 @@ const MentorTaskDetails = () => {
                         <table className="w-[50%] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                             <tbody style={{ border: '1px solid rgba(0, 174, 189, 1)' }}>
                                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" style={{ border: '1px solid rgba(0, 174, 189, 1)' }} className="px-6 py-4 font-medium whitespace-nowrap ">
+                                    <th scope="row" style={{ border: '1px solid rgba(0, 174, 189, 1)', background: '#fff', color: '#000' }} className="px-6 py-4 font-medium whitespace-nowrap ">
                                         Category
                                     </th>
                                     <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
@@ -128,7 +138,7 @@ const MentorTaskDetails = () => {
                                     </td>
                                 </tr>
                                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th style={{ border: '1px solid rgba(0, 174, 189, 1)' }} scope="row" className="px-6 py-4 font-medium  whitespace-nowrap ">
+                                    <th style={{ border: '1px solid rgba(0, 174, 189, 1)', background: '#fff', color: '#000' }} scope="row" className="px-6 py-4 font-medium  whitespace-nowrap ">
                                         Program Name
                                     </th>
                                     <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
@@ -136,7 +146,7 @@ const MentorTaskDetails = () => {
                                     </td>
                                 </tr>
                                 <tr className="bg-white border-b dark:bg-gray-800 ">
-                                    <th style={{ border: '1px solid rgba(0, 174, 189, 1)' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
+                                    <th style={{ border: '1px solid rgba(0, 174, 189, 1)', background: '#fff', color: '#000' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
                                         Mentor Name
                                     </th>
                                     <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
@@ -144,7 +154,7 @@ const MentorTaskDetails = () => {
                                     </td>
                                 </tr>
                                 <tr className="bg-white border-b  dark:bg-gray-800">
-                                    <th style={{ border: '1px solid rgba(0, 174, 189, 1)' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
+                                    <th style={{ border: '1px solid rgba(0, 174, 189, 1)', background: '#fff', color: '#000' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
                                         Program Start Date and Time
                                     </th>
                                     <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
@@ -158,7 +168,7 @@ const MentorTaskDetails = () => {
                         <table className="w-[50%] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                             <tbody style={{ border: '1px solid rgba(29, 91, 191, 1)' }}>
                                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" style={{ border: '1px solid rgba(29, 91, 191, 1)' }} className="px-6 py-4 font-medium whitespace-nowrap ">
+                                    <th scope="row" style={{ border: '1px solid rgba(29, 91, 191, 1)', background: '#fff', color: '#000' }} className="px-6 py-4 font-medium whitespace-nowrap ">
                                         Program End Date and Time
                                     </th>
                                     <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
@@ -166,7 +176,7 @@ const MentorTaskDetails = () => {
                                     </td>
                                 </tr>
                                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th style={{ border: '1px solid rgba(29, 91, 191, 1)' }} scope="row" className="px-6 py-4 font-medium  whitespace-nowrap ">
+                                    <th style={{ border: '1px solid rgba(29, 91, 191, 1)', background: '#fff', color: '#000' }} scope="row" className="px-6 py-4 font-medium  whitespace-nowrap ">
                                         Program Duration
                                     </th>
                                     <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
@@ -174,7 +184,7 @@ const MentorTaskDetails = () => {
                                     </td>
                                 </tr>
                                 <tr className="bg-white border-b dark:bg-gray-800 ">
-                                    <th style={{ border: '1px solid rgba(29, 91, 191, 1)' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
+                                    <th style={{ border: '1px solid rgba(29, 91, 191, 1)', background: '#fff', color: '#000' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
                                         Due Date
                                     </th>
                                     <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
@@ -182,7 +192,7 @@ const MentorTaskDetails = () => {
                                     </td>
                                 </tr>
                                 <tr className="bg-white border-b  dark:bg-gray-800">
-                                    <th style={{ border: '1px solid rgba(29, 91, 191, 1)' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
+                                    <th style={{ border: '1px solid rgba(29, 91, 191, 1)', background: '#fff', color: '#000' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
                                         Status
                                     </th>
                                     <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
@@ -206,7 +216,7 @@ const MentorTaskDetails = () => {
                                     <p className='py-4'>Reference Book</p>
                                     <ul className='leading-10'>
                                         {
-                                            docs?.map((doc, index) => <li key={index}>{index + 1}. <span className='underline'>{doc}</span></li>)
+                                            docs?.map((doc, index) => <li key={index}>{index + 1}. <span>{doc}</span></li>)
                                         }
 
                                     </ul>
@@ -215,7 +225,7 @@ const MentorTaskDetails = () => {
 
                             </div>
                             {
-                                (taskDetails.mark !== '' && taskDetails.mark !== '----') &&
+                                (taskDetails.mark !== '' && taskDetails.mark !== null && taskDetails.mark !== '----' ) &&
 
                                 <div className='mark flex'>
                                     <div className='mr-96'>
