@@ -70,7 +70,7 @@ export default function UserInfoCard() {
                                             || (searchParams.get("type") === null && searchParams.get("is_bookmark") === null && menu.status === programActionStatus.all) ? 'active' : ''}`} aria-current="page"
                                         onClick={() => navigate(menu.page)}>
                                         <span className="text-sm">{menu.name}</span>
-                                        <span className="text-base">{menu.count}</span>
+                                        <span className="text-base">{menu.count > 0 ? menu.count: ''}</span>
                                     </div>
                                 </li>
                             )

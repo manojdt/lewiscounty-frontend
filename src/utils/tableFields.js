@@ -1,5 +1,6 @@
 import { dateFormat } from ".";
 import { CourseLevelOptions } from "./formFields";
+import StarColorIcon from '../assets/icons/starColor.svg';
 
 export const myMenteeColumns = [
   {
@@ -350,12 +351,12 @@ export const programListColumns = [
         return <div className="pl-4">{params.row.duration}</div>
       }
   },
-  {
-      field: 'mentor_manager_id',
-      headerName: 'M.M',
-      flex: 1,
-      id: 6
-  },
+  // {
+  //     field: 'mentor_manager_id',
+  //     headerName: 'M.M',
+  //     flex: 1,
+  //     id: 6
+  // },
   {
       field: 'members',
       headerName: 'Mentees',
@@ -370,5 +371,12 @@ export const programListColumns = [
       headerName: 'Ratings',
       flex: 1,
       id: 8,
+      renderCell : (params) => {
+        return <div className='flex gap-2 items-center text-[12px]'>
+        <img src={StarColorIcon} alt="StarColorIcon" />
+        <span>4.6</span>
+  
+    </div>
+    }
   }
 ];
