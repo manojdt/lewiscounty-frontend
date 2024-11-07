@@ -49,10 +49,10 @@ export default function Notification({ handleClose }) {
                                 <ul>
                                     {activity.map((list, index) => {
                                         return (
-                                            <li className='notification-list cursor-pointer' onClick={() => handleVisitActivity(list)} key={index}>
+                                            <li className='notification-list cursor-pointer items-center' onClick={() => handleVisitActivity(list)} key={index}>
                                                 <img src={index % 2 === 0 ? MaleIcon : FemaleIcon} alt="MaleIcon" />
                                                 <p className='notification-message'>{list.content}</p>
-                                                <p>{getTimeFromDate(list.created_at)}</p>
+                                                <p className='text-[12px]'>{list.created_time}</p>
                                             </li>
                                         )
                                     })
