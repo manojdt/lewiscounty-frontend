@@ -623,9 +623,9 @@ const Goals = () => {
                                         {
                                             searchParams.get('type') === null ?
                                                 <div>
-                                                    <GoalPerformance />
+                                                    {/* <GoalPerformance /> */}
 
-                                                    <div style={{ border: '1px solid rgba(29, 91, 191, 1)', padding: '20px', borderRadius: '10px', margin: '60px 0' }}>
+                                                    <div style={{ border: '1px solid rgba(29, 91, 191, 1)', padding: '20px', borderRadius: '10px', margin: '10px 0' }}>
                                                         <div className='goal-title-container flex justify-between items-center mb-10'>
                                                             <div className='flex gap-5 items-center '>
                                                                 <p className='text-[18px] font-semibold'>Goals Request</p>
@@ -687,10 +687,10 @@ const Goals = () => {
 
                                     </div>
 
-                                    <div>
-                                        {
+                                    <div className='pt-2'>
+                                        {/* {
                                             searchParams.get('type') === null && <GoalProgress />
-                                        }
+                                        } */}
 
                                         <RecentActivities />
                                     </div>
