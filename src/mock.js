@@ -716,12 +716,12 @@ export const mentorTaskColumns = [{
     flex: 1,
     id: 2,
 },
-{
-    field: 'file_by',
-    headerName: 'File by',
-    flex: 1,
-    id: 2,
-}
+// {
+//     field: 'file_by',
+//     headerName: 'File by',
+//     flex: 1,
+//     id: 2,
+// }
 ];
 
 
