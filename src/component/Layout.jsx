@@ -122,7 +122,8 @@ export default function Layout() {
     <div>
       <Navbar />
       <div className="secondary-menu py-8" style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)' }}>
-        <ul style={{ gap: '40px' }} className="flex flex-col justify-center items-center p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 ">
+        <ul style={{ gap: '40px' }} className={`flex flex-col ${!userInfo?.data?.is_registered ? 'ml-[150px]' : 'justify-center'} items-center p-4 md:p-0 mt-4 font-medium border border-gray-100 
+          rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0`}>
           {
             userInfo?.data?.is_registered &&
             <li className={`${pathname === '/dashboard' ? 'dashboard-menu-active' : ''}`}>

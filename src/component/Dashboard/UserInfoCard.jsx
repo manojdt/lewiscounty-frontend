@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { programActionStatus, programMenus, statusAction } from '../../utils/constant';
 
-import UserImage from "../../assets/images/user.jpg";
+import UserImage from "../../assets/icons/user-icon.svg";
 import RightArrow from '../../assets/icons/rightArrow.svg'
 
 export default function UserInfoCard() {
