@@ -4,7 +4,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { Calendar } from 'primereact/calendar';
 
-import UserImage from "../../../assets/images/user.jpg";
+import UserImage from "../../../assets/icons/user-icon.svg";
 import LocationIcon from '../../../assets/images/Location1x.png';
 import CalendarIcon from '../../../assets/images/calender_1x.png';
 import RatingsIcon from '../../../assets/images/ratings1x.png';

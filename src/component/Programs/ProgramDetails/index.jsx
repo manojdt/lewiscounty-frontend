@@ -9,7 +9,7 @@ import { menteeNotJoinCondition, menteeProgramStatus, pipeUrls, programActionSta
 import { getMenteeJoinedInProgram, getProgramDetails, getSpecificProgramDetails, updateProgram } from '../../../services/userprograms';
 import { updateLocalRequest, updateProgramMenteeRequest, updateProgramRequest } from '../../../services/request';
 
-import UserImage from "../../../assets/images/user.jpg";
+import UserImage from "../../../assets/icons/user-icon.svg";
 import LocationIcon from '../../../assets/images/Location1x.png';
 import CalendarIcon from '../../../assets/images/calender_1x.png';
 import DoubleArrowIcon from '../../../assets/images/double_arrow 1x.png';

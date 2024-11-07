@@ -9,7 +9,7 @@ import EditIcon from '../../assets/icons/editIcon.svg';
 import SuccessTik from '../../assets/images/blue_tik1x.png';
 import CancelIcon from '../../assets/images/cancel1x.png'
 import FilterIcon from '../../assets/icons/Filter.svg';
-import UserImage from "../../assets/images/user.jpg";
+import UserImage from "../../assets/icons/user-icon.svg";
 import MoreIcon from '../../assets/icons/moreIcon.svg'
 import BookmarkedIcon from '../../assets/icons/Bookmarked.svg'
 import BookmarkedColorIcon from '../../assets/images/bookmarked-colour1x.png'
