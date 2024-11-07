@@ -657,6 +657,7 @@ export default function AssignTask() {
                                                                     color: programdetails.status !== programActionStatus.paused && programdetails.status !== programActionStatus.assigned ? 'rgba(29, 91, 191, 1)' : '#fff',
                                                                     borderRadius: '5px',
                                                                     border: '1px solid rgba(29, 91, 191, 1)',
+                                                                    display: 'none',
                                                                     background: programdetails.status === programActionStatus.paused || programdetails.status === programActionStatus.assigned ? 'linear-gradient(97.32deg, #1D5BBF -32.84%, #00AEBD 128.72%)' : 'transparent'
                                                                 }}
                                                                     onClick={handleActionPage}

@@ -479,7 +479,7 @@ export default function CreatePrograms() {
             <div style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }}>
                 <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
                     <div className="flex gap-4">
-                        <h4>{params.id ? 'Update Program' : 'Create New Program  Request'}</h4>
+                        <h4>{params.id ? 'Update Program' : 'Create New Program'}</h4>
                     </div>
                     <div className="flex gap-20 items-center">
                         <Tooltip title="Cancel">
@@ -666,7 +666,7 @@ export default function CreatePrograms() {
                 <MuiModal modalSize='lg' modalOpen={actionModal !== ''} modalClose={() => setActionModal('')} noheader>
                     <div className='relative'>
                         <input className='input-bg w-full h-[60px] px-5 mb-4 text-[14px]' style={{ borderRadius: '50px', }}
-                            placeholder='Search learning materials name' name={actionModal} onChange={(e) => handleModalSearch(e)} />
+                            placeholder='Search' name={actionModal} onChange={(e) => handleModalSearch(e)} />
                         <img className='absolute top-4 right-7' src={SearchIcon} alt="SearchIcon" />
                     </div>
                     {

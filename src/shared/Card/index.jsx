@@ -37,7 +37,7 @@ export default function Card({ cardTitle, cardContent, cardFilter = [], cardCoun
                             (searchParams.get("type") === null && searchParams.get("is_bookmark") === null && menu.status === 'all' && userInfo?.data?.is_registered) ||
                             (searchParams.get("type") === null && searchParams.get("is_bookmark") === null && menu.status === programActionStatus.yettojoin && role === 'mentee' && !userInfo?.data?.is_registered) ? 'active' : ''}`} aria-current="page">
                             <span className="text-sm">{menu.name}</span>
-                            <span className="text-base" style={{ color: cardCountColor }}>{menu.count}</span>
+                            <span className="text-base" style={{ color: cardCountColor }}>{menu.count > 0 ? menu.count: ''}</span>
                         </div>
                     </li>)
                 }

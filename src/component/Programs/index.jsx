@@ -273,7 +273,7 @@ export default function Programs() {
 
             <div className="grid grid-cols-5 gap-3">
                 <div className="row-span-3 flex flex-col gap-8">
-                    <Card cardTitle={'Programs'} cardContent={programMenusList} />
+                    <Card cardTitle={'Program Types'} cardContent={programMenusList} />
                 </div>
 
                 <div className="col-span-4">

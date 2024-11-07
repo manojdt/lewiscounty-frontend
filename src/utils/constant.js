@@ -621,7 +621,7 @@ export const programMenus = (page = 'dashboard') => {
       status: programActionStatus.yettojoin
     },
     {
-      name: "Recent Join Programs",
+      name: "Recently Joined Programs",
       count: 0,
       page: `${pipeUrl}${programFilterUrls.yettostart}`,
       for: ['mentor', 'admin','mentee'],
@@ -645,15 +645,15 @@ export const programMenus = (page = 'dashboard') => {
     //   for: ['mentor', 'mentee'],
     //   status: programActionStatus.yettojoin
     // },
-    {
-      name: "Draft Programs",
-      count: 0,
-      page: `${pipeUrl}${programFilterUrls.draft}`,
-      for: ['mentor'],
-      mentorStatus: 'draft',
-      menteeStatus: '',
-      status: programActionStatus.draft
-    },
+    // {
+    //   name: "Draft Programs",
+    //   count: 0,
+    //   page: `${pipeUrl}${programFilterUrls.draft}`,
+    //   for: ['mentor'],
+    //   mentorStatus: 'draft',
+    //   menteeStatus: '',
+    //   status: programActionStatus.draft
+    // },
     // {
     //   name: "My Learning Programs",
     //   count: 0,
@@ -692,7 +692,7 @@ export const programMenus = (page = 'dashboard') => {
       status: programActionStatus.completed
     },
     {
-      name: "Cancel Programs",
+      name: "Cancelled Programs",
       count: 0,
       page: `${pipeUrl}${programFilterUrls.cancelled}`,
       for: ['mentee', 'mentor'],

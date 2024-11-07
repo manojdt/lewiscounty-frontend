@@ -568,13 +568,13 @@ export const TaskDetails = () => {
                                                 color: 'rgba(29, 91, 191, 1)'
                                             }}
                                         />
-                                        <Button btnType="button" btnCls={`${startTask ? 'w-[14%]' : 'w-[12%]'}`}
+                                        {/* <Button btnType="button" btnCls={`${startTask ? 'w-[14%]' : 'w-[12%]'}`}
                                             onClick={() => navigate(`/preview-mentee-tasks-details/${params.id}`)} btnName='Preview'
                                             style={{
                                                 background: 'rgba(167, 181, 202, 1)',
                                                 color: 'rgba(24, 40, 61, 1)'
                                             }}
-                                        />
+                                        /> */}
                                         <Button btnType="submit" btnCls={`${startTask ? 'w-[14%]' : 'w-[12%]'}`}
                                             btnName='Submit to Mentor' btnCategory="primary" />
                                     </>

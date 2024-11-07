@@ -544,7 +544,7 @@ export default function ProgramDetails() {
                                                                                     borderRadius: '5px'
                                                                                 }}
                                                                                     onClick={() => handleJoinProgram(programdetails.id)}
-                                                                                >Launch
+                                                                                >Launch Program
                                                                                     <span className='pl-8 pt-1'><img style={{ width: '15px', height: '13px' }} src={DoubleArrowIcon} alt="DoubleArrowIcon" /></span>
                                                                                 </button>
                                                                             </div>

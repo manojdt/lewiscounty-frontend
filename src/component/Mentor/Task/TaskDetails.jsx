@@ -203,7 +203,7 @@ const MentorTaskDetails = () => {
                         <div className='py-6 mb-16'>
                             <div className='reference-link flex justify-between mb-8'>
                                 <div className='reference-view'>
-                                    <p className='py-4'>Reference Link</p>
+                                    <p className='py-4'>Reference Book</p>
                                     <ul className='leading-10'>
                                         {
                                             docs?.map((doc, index) => <li key={index}>{index + 1}. <span className='underline'>{doc}</span></li>)

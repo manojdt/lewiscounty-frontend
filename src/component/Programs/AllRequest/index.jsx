@@ -101,10 +101,10 @@ export default function AllRequest() {
             name: 'Mentor Request',
             key: 'mentor'
         },
-        {
-            name: 'Mentee Request',
-            key: 'mentee'
-        }
+        // {
+        //     name: 'Mentee Request',
+        //     key: 'mentee'
+        // }
     ]
 
     const goalsRequestTab = [
