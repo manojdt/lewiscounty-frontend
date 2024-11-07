@@ -14,6 +14,7 @@ import { updateInfo, updateMenteeQuestions, updateQuestions } from "../../servic
 import SuccessIcon from "../../assets/images/Success_tic1x.png"
 import MuiModal from "../../shared/Modal";
 import ToastNotification from "../../shared/Toast";
+import api from "../../services/api";
 
 export const Questions = () => {
   const navigate = useNavigate();
@@ -29,6 +30,7 @@ export const Questions = () => {
   const [redirect, setRedirect] = useState(false)
   const [errorNot, setErrorNot] = useState(false)
   const [searchParams] = useSearchParams();
+  const [customLoading, setCustomLoading] = useState(false)
 
   const role = userInfo.data.role || ''
 
@@ -137,17 +139,28 @@ export const Questions = () => {
     setBtnTypeAction({ back: false, next: true })
   }
 
-  const menteeNavigate = () => {
+  const menteeNavigate = async () => {
     let url = searchParams.get("program_id") && searchParams.get("program_id") !== '' ? `/program-details/${searchParams.get("program_id")}` : '/programs'
-    navigate(url)
+
+    if (searchParams.get("program_id") && searchParams.get("program_id") !== '' && searchParams.get("program_id") !== null) {
+      setCustomLoading(true)
+      const joinProgramAction = await api.post('join_program', { id: searchParams.get("program_id") });
+      if (joinProgramAction.status === 200 && joinProgramAction.data) {
+        setCustomLoading(false)
+        navigate(url)
+      }
+    } else {
+      navigate(url)
+    }
+
   }
 
   const handleUserRedirect = () => {
-    if(role === 'mentee'){
+    if (role === 'mentee') {
       menteeNavigate()
     }
 
-    if(role === 'mentor'){
+    if (role === 'mentor') {
       navigate('/dashboard')
     }
   }
@@ -179,9 +192,9 @@ export const Questions = () => {
 
     if (userInfo.data && Object.keys(userInfo.data).length && userInfo.data.hasOwnProperty('userinfo')) {
       if (userInfo.data.userinfo?.approve_status !== 'accept' || userInfo.data?.is_registered === true) {
-        if(userInfo.status === userStatus.questions){
+        if (userInfo.status === userStatus.questions) {
           setLoading(true)
-        }else{
+        } else {
           handleUserRedirect()
         }
       }
@@ -274,7 +287,7 @@ export const Questions = () => {
         }
         <Backdrop
           sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          open={userInfo.loading}
+          open={userInfo.loading || customLoading}
         >
           <CircularProgress color="inherit" />
         </Backdrop>
