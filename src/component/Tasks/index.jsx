@@ -111,10 +111,10 @@ export const Tasks = () => {
                             <img src={ViewIcon} alt="ViewIcon" className='pr-3 w-[30px]' />
                             View
                         </MenuItem>
-                        <MenuItem onClick={() => { setAnchorEl(null); setRequestTask(true) }} className='!text-[12px]'>
+                        {/* <MenuItem onClick={() => { setAnchorEl(null); setRequestTask(true) }} className='!text-[12px]'>
                             <img src={RequestIcon} alt="RequestIcon" className='pr-3 w-[27px]' />
                             Request Task
-                        </MenuItem>
+                        </MenuItem> */}
                     </Menu>
                 </>
             }

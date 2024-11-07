@@ -105,7 +105,7 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                     <div className="flex gap-4">
                         <div className="card-dash" style={{ background: 'linear-gradient(180deg, #00B1C0 0%, #005DC6 100%)' }} ></div>
                         <h4>{title}</h4>
-                        <img src={FilterIcon} alt="statistics" />
+                        {/* <img src={FilterIcon} alt="statistics" /> */}
                     </div>
                     {
                         programs && programs.length ?
