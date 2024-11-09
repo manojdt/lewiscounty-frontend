@@ -111,11 +111,16 @@ export const Login = () => {
     if (!userData.loading && userData.status === userStatus.pending) {
       setTimeout(() => {
         dispatch(updateUserInfo({status: ''}))
-      },3000) 
+      }, 3000)
     }
-  }, [userData])
+  }, [userData]);
 
-
+  // Prevent Enter key from triggering forgot password action
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && e.target.name === 'forgot-password') {
+      e.preventDefault();
+    }
+  }
 
   return (
     <div className="h-full">
@@ -135,8 +140,8 @@ export const Login = () => {
                 {
                   (userData.status === userStatus.login || userData.status === userStatus.pending) ?
                   <div className="popup-content w-2/6 bg-white flex flex-col gap-4 h-[330px] justify-center items-center">
-                      <img src={userData.status === userStatus.pending ? FailedIcon : SuccessIcon} alt="VerifyIcon" />
-                      <span style={{ color: '#232323', fontWeight: 600 }}>
+                    <img src={userData.status === userStatus.pending ? FailedIcon : SuccessIcon} alt="VerifyIcon" />
+                    <span style={{ color: '#232323', fontWeight: 600 }}>
                         {
                           userData.status === userStatus.pending ? 'Waiting for admin approval' : ' Login  Successful!'
                         }
@@ -185,7 +190,7 @@ export const Login = () => {
                     </p>
                   </div>
 
-                  <form onSubmit={handleSubmit(onSubmit)}>
+                  <form onSubmit={handleSubmit(onSubmit)} onKeyDown={handleKeyDown}>
                     <SocialMediaLogin />
                     {/* <div className="social-media">
                           <button></button>
@@ -214,12 +219,12 @@ export const Login = () => {
                           {field.label}
                         </label>
                         <input
-                            type={field.fieldtype === 'password' ? (passwordVisibility ? 'text' : field.fieldtype) : field.fieldtype}
-                            className={`w-full rounded px-3 py-[0.32rem] text-[14px] leading-[2.15] h-[60px] ${errors[field.name] ? 'focus:border-teal focus:outline-none focus:ring-0' : ''}`}
+                          type={field.fieldtype === 'password' ? (passwordVisibility ? 'text' : field.fieldtype) : field.fieldtype}
+                          className={`w-full rounded px-3 py-[0.32rem] text-[14px] leading-[2.15] h-[60px] ${errors[field.name] ? 'focus:border-teal focus:outline-none focus:ring-0' : ''}`}
                           placeholder={field.placeholder}
                           style={{
                             color: "#232323",
-                              border: `1px solid ${errors[field.name] ? 'rgb(239 68 68)' : '#3E3E3E'}`,
+                            border: `1px solid ${errors[field.name] ? 'rgb(239 68 68)' : '#3E3E3E'}`,
                           }}
                           {...register(field.name, field.inputRules)}
                           aria-invalid={errors[field.name] ? "true" : "false"}
@@ -264,7 +269,12 @@ export const Login = () => {
                         </label>
                       </div>
 
-                      <button className="text-[12px]" style={{ color: "#00AEBD" }} onClick={() => navigate('/forgot-password')}>
+                      <button
+                        type="button" // Set type to 'button' to prevent it from submitting the form
+                        className="text-[12px]"
+                        style={{ color: "#00AEBD" }}
+                        onClick={() => navigate('/forgot-password')}
+                      >
                         Forgot password?
                       </button>
                     </div>
