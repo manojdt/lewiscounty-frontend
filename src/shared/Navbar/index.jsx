@@ -135,12 +135,16 @@ export const Navbar = () => {
     }
 
     const handleLogoClick = () => {
-        if(role === 'mentee' && !userInfo?.data?.is_registered){
-            navigate('/programs')
-        }else{
-            navigate('/dashboard')
+        if (role === 'mentee' && !userInfo?.data?.is_registered) {
+          navigate('/programs');
+        } else if (
+            userInfo?.data?.role === 'super_admin' &&
+            userInfo?.data?.is_registered === true
+        ) {
+        } else {
+          navigate('/dashboard');
         }
-    }
+      };
 
 
     useEffect(() => {
