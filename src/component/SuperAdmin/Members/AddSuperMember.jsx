@@ -1,31 +1,159 @@
-import { Backdrop, CircularProgress, Tooltip } from "@mui/material";
-import React from "react";
+import { Backdrop, CircularProgress } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CancelIcon from "../../../assets/images/cancel1x.png";
 import { Button } from "../../../shared";
+import protectedApi from "../../../services/api";
+import SuccessTik from "../../../assets/images/blue_tik1x.png";
+import MuiModal from "../../../shared/Modal";
 
 function AddSuperMember() {
+  const [taskSuccess, setTaskSuccess] = useState(false);
+  const [formDetail, setFormDetail] = useState({
+    FirstName: "",
+    LastName: "",
+    UserName: "",
+    PrimaryPhoneNumber: "",
+    SecondaryPhoneNumber: "",
+    EmailId: "",
+    Category: [],
+  });
   const navigate = useNavigate();
+  const [errFields, setErrFields] = useState({});
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    // Fetch categories from API
+    setLoading(true);
+    protectedApi
+      .get("/category")
+      .then((response) => {
+        setCategories(response.data || []);
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value, type } = e.target;
+
+    // Clear error for this field when user changes the value
+    setErrFields((prevErrors) => ({
+      ...prevErrors,
+      [name]: "", // Clear error for the specific field
+    }));
+
+    if (type === "select-one") {
+      // For single select, store the value as an array
+      setFormDetail((prevDetail) => ({
+        ...prevDetail,
+        [name]: [Number(value)], // Store as an array of numbers
+      }));
+    } else {
+      // For other form fields, just store the value as usual
+      setFormDetail((prevDetail) => ({
+        ...prevDetail,
+        [name]: value,
+      }));
+    }
+  };
+
+  const validateForm = () => {
+    let isValid = true;
+    let errors = {};
+
+    let firstInvalidField = null;
+
+    let mandatoryFields = [
+      "FirstName",
+      "LastName",
+      "UserName",
+      "EmailId",
+      "PrimaryPhoneNumber",
+      "Category",
+    ];
+
+    // Check for missing mandatory fields
+    mandatoryFields.forEach((field) => {
+      if (!formDetail[field]) {
+        errors[field] = `${field} is required`;
+        if (!firstInvalidField) {
+          firstInvalidField = field;
+        }
+        isValid = false;
+      }
+    });
+
+    // Set errors if any
+    setErrFields(errors);
+
+    // Focus on the first invalid field, if any
+    if (firstInvalidField) {
+      // Instead of refs, we can use the name attribute directly to focus on the invalid field
+      document.getElementsByName(firstInvalidField)[0]?.focus();
+    }
+
+    return isValid;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Validate form before submitting
+    if (validateForm()) {
+      console.log("Form Submitted", formDetail);
+
+      // Prepare the data to send in the API request
+      const data = {
+        first_name: formDetail.FirstName,
+        last_name: formDetail.LastName,
+        email: formDetail.EmailId,
+        users_name: formDetail.UserName,
+        phone_number: formDetail.PrimaryPhoneNumber,
+        secondary_phone_number: formDetail.SecondaryPhoneNumber,
+        is_staff: true,
+        role: "admin",
+        categories: formDetail.Category, // Make sure this is an array of IDs
+      };
+      setLoading(true); 
+      protectedApi
+        .post("/register", data) 
+        .then((response) => {
+         
+          if (response.status === 200 && response.data?.error) {
+            alert(response.data.error);
+          } else {
+            console.log("Successfully created new org admin:", response.data);
+            setTaskSuccess(true);
+            setTimeout(() => {
+              navigate("/super-members");
+            }, 3000);
+          }
+        })
+        .catch((error) => {
+          console.error("Error creating new org admin:", error);
+          alert("Something went wrong, please try again.");
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  };
+
   return (
     <div className="px-9 my-6 grid">
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        // open={reportsLoading || apiLoading}
-        open={false}
+        open={loading}
       >
         <CircularProgress color="inherit" />
       </Backdrop>
 
-      {/* <MuiModal modalOpen={status === certificateStatus.create} modalClose={() => setLoading(false)} noheader>
-                <div className='px-5 py-1 flex justify-center items-center'>
-                    <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
-                        style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
-                        <img src={SuccessTik} alt="SuccessTik" />
-                        <p className='text-white text-[12px]'>Certificate action successfully performed</p>
-                    </div>
-
-                </div>
-            </MuiModal> */}
       <div
         className="grid mb-10"
         style={{
@@ -34,192 +162,235 @@ function AddSuperMember() {
         }}
       >
         <div className="breadcrum">
-          <div className="breadcrum">
-            <nav
-              className="flex px-7 pt-6 pb-5 mx-2 border-b-2 justify-between"
-              aria-label="Breadcrumb"
-            >
-              <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
-                <li className="inline-flex items-center">
-                  <h2>Add New Org Admin</h2>
-                </li>
-              </ol>
-              <img
-                className="cursor-pointer"
-                onClick={(e) => {
-                  e.preventDefault();
-                  navigate(-1);
-                }}
-                src={CancelIcon}
-                alt="CancelIcon"
-              />
-            </nav>
-          </div>
-          <div className="content px-8">
-            <div className="py-9">
-              <form>
-                {/* <div className="flex flex-wrap gap-4">
-                  <div>asasas</div>
-                </div> */}
-                <div className="grid grid-cols-12 gap-3">
-                  <div className="col-span-6">
-                    <div className={`relative mb-6 `}>
-                      <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
-                        {"First Name"}
-                      </label>
-                      <input
-                        type="text"
-                        className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
-                        id="basic-url1"
-                        aria-describedby="basic-addon1"
-                        style={{
-                          color: "#232323",
-                          borderRadius: "3px",
-                          //   paddingLeft:
-                          //     field.name === "phone_number" ? "76px" : "10px",
-                        }}
-                        placeholder="Enter First Name"
-                      />
-                    </div>
-                  </div>
-                  <div className="col-span-6">
-                    <div className={`relative mb-6 `}>
-                      <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
-                        {"Last Name"}
-                      </label>
-                      <input
-                        type="text"
-                        className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
-                        id="basic-url1"
-                        aria-describedby="basic-addon1"
-                        style={{
-                          color: "#232323",
-                          borderRadius: "3px",
-                          //   paddingLeft:
-                          //     field.name === "phone_number" ? "76px" : "10px",
-                        }}
-                        placeholder="Enter Last Name"
-                      />
-                    </div>
-                  </div>
-                  <div className="col-span-6">
-                    <div className={`relative mb-6 `}>
-                      <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
-                        {"Member ID"}
-                      </label>
-                      <input
-                        type="text"
-                        className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
-                        id="basic-url1"
-                        aria-describedby="basic-addon1"
-                        style={{
-                          color: "#232323",
-                          borderRadius: "3px",
-                          //   paddingLeft:
-                          //     field.name === "phone_number" ? "76px" : "10px",
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-span-6">
-                    <div className={`relative mb-6 `}>
-                      <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
-                        {"User Name"}
-                      </label>
-                      <input
-                        type="text"
-                        className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
-                        id="basic-url1"
-                        aria-describedby="basic-addon1"
-                        style={{
-                          color: "#232323",
-                          borderRadius: "3px",
-                          //   paddingLeft:
-                          //     field.name === "phone_number" ? "76px" : "10px",
-                        }}
-                        placeholder="Enter User name"
-                      />
-                    </div>
-                  </div>
-                  <div className="col-span-6">
-                    <div className={`relative mb-6 `}>
-                      <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
-                        {"Email ID"}
-                      </label>
-                      <input
-                        type="text"
-                        className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
-                        id="basic-url1"
-                        aria-describedby="basic-addon1"
-                        style={{
-                          color: "#232323",
-                          borderRadius: "3px",
-                          //   paddingLeft:
-                          //     field.name === "phone_number" ? "76px" : "10px",
-                        }}
-                        placeholder="Enter Email ID"
-                      />
-                    </div>
-                  </div>
-                  <div className="col-span-6">
-                    <div className={`relative mb-6 `}>
-                      <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
-                        {"Phone Number"}
-                      </label>
-                      <input
-                        type="text"
-                        className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
-                        id="basic-url1"
-                        aria-describedby="basic-addon1"
-                        style={{
-                          color: "#232323",
-                          borderRadius: "3px",
-                          //   paddingLeft:
-                          //     field.name === "phone_number" ? "76px" : "10px",
-                        }}
-                        placeholder="Enter Phone number"
-                      />
-                    </div>
-                  </div>
-                  <div className="col-span-12">
-                    <div className={`relative mb-6 `}>
-                      <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
-                        {"Select Category"}
-                      </label>
-                      <select
-                        className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
-                        placeholder={"Category"}
-                        style={{
-                          color: "#232323",
-                          borderRadius: "3px",
-                        }}
-                        // disabled={field.disabled}
-                      >
-                        <option value="">No Options</option>
-                      </select>
-                    </div>
-                  </div>
+          <nav
+            className="flex px-7 pt-6 pb-5 mx-2 border-b-2 justify-between"
+            aria-label="Breadcrumb"
+          >
+            <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+              <li className="inline-flex items-center">
+                <h2>Add New Org Admin</h2>
+              </li>
+            </ol>
+            <img
+              className="cursor-pointer"
+              onClick={(e) => {
+                e.preventDefault();
+                navigate(-1);
+              }}
+              src={CancelIcon}
+              alt="CancelIcon"
+            />
+          </nav>
+        </div>
+        <div className="content px-8">
+          <div className="py-9">
+            <form onSubmit={handleSubmit}>
+              <div className="grid grid-cols-12 gap-3">
+                <div className="col-span-6">
+                  <FormField label="First Name" required>
+                    <input
+                      name="FirstName"
+                      value={formDetail.FirstName}
+                      onChange={handleInputChange}
+                      type="text"
+                      className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
+                      placeholder="Enter First Name"
+                      //   style={{
+                      //     border: `1px solid ${
+                      //       !errFields.FirstName ? "1d5bbf0d" : "red"
+                      //     }`,
+                      //     fontSize: "14px",
+                      //   }}
+                    />
+                    {errFields.FirstName && (
+                      <p className="mt-1 ms-1 text-xs text-red-400">
+                        {errFields.FirstName}
+                      </p>
+                    )}
+                  </FormField>
                 </div>
-                <div className="flex gap-6 justify-center align-middle py-16">
-                  <Button
-                    btnName="Cancel"
-                    btnCls="w-[18%]"
-                    btnCategory="secondary"
-                    onClick={() => navigate("/certificates")}
-                  />
-                  <Button
-                    btnType="submit"
-                    btnCls="w-[18%]"
-                    btnName="Add New Org admin"
-                    btnCategory="primary"
-                  />
+
+                <div className="col-span-6">
+                  <FormField label="Last Name">
+                    <input
+                      name="LastName"
+                      value={formDetail.LastName}
+                      onChange={handleInputChange}
+                      type="text"
+                      className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
+                      placeholder="Enter Last Name"
+                    />
+                  </FormField>
                 </div>
-              </form>
-            </div>
+
+                <div className="col-span-6">
+                  <FormField label="User Name" required>
+                    <input
+                      name="UserName"
+                      value={formDetail.UserName}
+                      onChange={handleInputChange}
+                      type="text"
+                      className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
+                      placeholder="Enter User Name"
+                      //   style={{
+                      //     border: `1px solid ${
+                      //       !errFields.UserName ? "1d5bbf0d" : "red"
+                      //     }`,
+                      //     fontSize: "14px",
+                      //   }}
+                    />
+                    {errFields.UserName && (
+                      <p className="mt-1 ms-1 text-xs text-red-400">
+                        {errFields.UserName}
+                      </p>
+                    )}
+                  </FormField>
+                </div>
+
+                <div className="col-span-6">
+                  <FormField label="Email ID" required>
+                    <input
+                      name="EmailId"
+                      value={formDetail.EmailId}
+                      onChange={handleInputChange}
+                      type="email"
+                      className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
+                      placeholder="Enter Email ID"
+                      //   style={{
+                      //     border: `1px solid ${
+                      //       !errFields.EmailId ? "1d5bbf0d" : "red"
+                      //     }`,
+                      //     fontSize: "14px",
+                      //   }}
+                    />
+                    {errFields.EmailId && (
+                      <p className="mt-1 ms-1 text-xs text-red-400">
+                        {errFields.EmailId}
+                      </p>
+                    )}
+                  </FormField>
+                </div>
+
+                <div className="col-span-6">
+                  <FormField label="Primary Phone Number" required>
+                    <input
+                      name="PrimaryPhoneNumber"
+                      value={formDetail.PrimaryPhoneNumber}
+                      onInput={handleInputChange} // Handle phone number input
+                      type="number"
+                      inputMode="numeric" // Allows numeric input on mobile devices
+                      pattern="[0-9]*" // Restricts input to numbers only
+                      className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
+                      placeholder="Enter Primary Phone Number"
+                      //   style={{
+                      //     border: `1px solid ${
+                      //       !errFields.PrimaryPhoneNumber ? "1d5bbf0d" : "red"
+                      //     }`,
+                      //     fontSize: "14px",
+                      //   }}
+                    />
+                    {errFields.PrimaryPhoneNumber && (
+                      <p className="mt-1 ms-1 text-xs text-red-400">
+                        {errFields.PrimaryPhoneNumber}
+                      </p>
+                    )}
+                  </FormField>
+                </div>
+
+                <div className="col-span-6">
+                  <FormField label="Secondary Phone Number">
+                    <input
+                      name="SecondaryPhoneNumber"
+                      value={formDetail.SecondaryPhoneNumber}
+                      onInput={handleInputChange} // Handle phone number input
+                      type="number"
+                      inputMode="numeric" // Allows numeric input on mobile devices
+                      pattern="[0-9]*" // Restricts input to numbers only
+                      className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
+                      placeholder="Enter Secondary Phone Number"
+                    />
+                  </FormField>
+                </div>
+
+                <div className="col-span-12">
+                  <FormField label="Select Category" required>
+                    <select
+                      name="Category"
+                      value={formDetail.Category[0] || ""} // Access the first value of the array
+                      onChange={handleInputChange}
+                      className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
+                    >
+                      <option value="">Select Category</option>
+                      {categories.map((category) => (
+                        <option key={category.id} value={category.id}>
+                          {category.name}
+                        </option>
+                      ))}
+                    </select>
+                    {errFields.Category && (
+                      <p className="mt-1 ms-1 text-xs text-red-400">
+                        {errFields.Category}
+                      </p>
+                    )}
+                  </FormField>
+                </div>
+              </div>
+
+              <div className="flex gap-6 justify-center align-middle py-16">
+                <Button
+                  btnName="Cancel"
+                  btnCls="w-[18%]"
+                  btnCategory="secondary"
+                  onClick={() => navigate("/certificates")}
+                />
+                <Button
+                  btnType="submit"
+                  btnCls="w-[18%]"
+                  btnName="Add New Org admin"
+                  btnCategory="primary"
+                />
+              </div>
+            </form>
           </div>
         </div>
       </div>
+      <MuiModal
+        modalOpen={taskSuccess}
+        modalClose={() => setTaskSuccess(false)}
+        noheader
+      >
+        <div className="px-5 py-1 flex justify-center items-center">
+          <div
+            className="flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20"
+            style={{
+              background:
+                "linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)",
+              borderRadius: "10px",
+            }}
+          >
+            <img src={SuccessTik} alt="SuccessTik" />
+            <p className="text-white text-[12px]">
+              New Org Admin successfully created!
+            </p>
+          </div>
+        </div>
+      </MuiModal>
     </div>
+  );
+}
+
+function FormField({ required = false, label = "", error, children }) {
+  return (
+    <>
+      {label && (
+        <p className="block tracking-wide text-gray-700 text-xs font-bold mb-4">
+          <span>{label}</span>
+          {required && <span className="text-red-400">*</span>}
+        </p>
+      )}
+      {children}
+      {error && <p className="mt-1 ms-1 text-xs text-red-400">{error}</p>}
+    </>
   );
 }
 
