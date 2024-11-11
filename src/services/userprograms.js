@@ -25,6 +25,10 @@ export const getUserPrograms = createAsyncThunk(
             if(updateQuery.hasOwnProperty('page')){
                 queryParams =  (queryParams === '' ? '?' : `${queryParams}&`) + `${updateQuery.page}=${updateQuery.number}`
             }
+
+            if(updateQuery.hasOwnProperty('search')){
+                queryParams =  (queryParams === '' ? '?' : `${queryParams}&`) + `${updateQuery.search.search}=${updateQuery.search.value}`
+            }
         }
         queryParams = queryParams !== '' ? `${queryParams}&limit=6` : '?limit=6'
        
@@ -181,11 +185,15 @@ export const getMenteePrograms = createAsyncThunk(
         let queryParams = ''
         if(queryString && Object.keys(queryString).length){         
             if(queryString.hasOwnProperty('type')){
-                queryParams = ( queryParams === '' ? '?' : '&') + `${queryString.type}=${queryString.value}`
+                queryParams = (queryParams === '' ? '?' : '&') + `${queryString.type}=${queryString.value}`
             }
 
             if(queryString.hasOwnProperty('page')){
                 queryParams =  (queryParams === '' ? '?' : `${queryParams}&`) + `${queryString.page}=${queryString.number}`
+            }
+
+            if(queryString.hasOwnProperty('search')){
+                queryParams =  (queryParams === '' ? '?' : `${queryParams}&`) + `${queryString.search}=${queryString.value}`
             }
         }
         queryParams = queryParams !== '' ? `${queryParams}&limit=6` : '?limit=6'

@@ -22,12 +22,13 @@ import { programListColumns } from '../../utils/tableFields';
 export default function Programs() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const [searchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
 
     const [programsList, setProgramsList] = useState([])
     const [programMenusList, setProgramMenusList] = useState([])
     const [programView, setProgramView] = useState('grid');
     const [seletedItem, setSelectedItem] = useState({})
+    const [search, setSearch] = useState('')
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
 
@@ -49,18 +50,18 @@ export default function Programs() {
         //     navigate(`/questions?program_id=${programdetails.id}`)
         // }
         // else {
-            let baseUrl = pipeUrls.programdetails
-            if (Object.keys(programdetails).length) {
-                if (role === 'mentor' && programdetails.status !== 'completed') {
-                    if (programdetails.status === programActionStatus.yettostart) baseUrl = pipeUrls.startprogram
-                    if (programdetails.status === programActionStatus.inprogress) baseUrl = pipeUrls.startprogram
-                }
-                if (role === 'mentee' && filterType === 'yettostart') {
-                    navigate(`/mentee-document-upload/${programdetails.id}`)
-                } else {
-                    navigate(`${baseUrl}/${programdetails.id}`)
-                }
+        let baseUrl = pipeUrls.programdetails
+        if (Object.keys(programdetails).length) {
+            if (role === 'mentor' && programdetails.status !== 'completed') {
+                if (programdetails.status === programActionStatus.yettostart) baseUrl = pipeUrls.startprogram
+                if (programdetails.status === programActionStatus.inprogress) baseUrl = pipeUrls.startprogram
             }
+            if (role === 'mentee' && filterType === 'yettostart') {
+                navigate(`/mentee-document-upload/${programdetails.id}`)
+            } else {
+                navigate(`${baseUrl}/${programdetails.id}`)
+            }
+        }
         // }
     }
 
@@ -79,6 +80,7 @@ export default function Programs() {
 
     const getPrograms = () => {
         const filterType = searchParams.get("type");
+        const filterSearch = searchParams.get("search");
         const isBookmark = searchParams.get("is_bookmark");
 
         let query = {}
@@ -87,11 +89,15 @@ export default function Programs() {
             query = { type: 'status', value: filterType }
         }
 
+        if (filterSearch && filterSearch !== '') {
+            query.search = { search: 'search' , value: filterSearch }
+        }
+
         if (isBookmark && isBookmark !== '') {
             query = { type: 'is_bookmark', value: isBookmark }
         }
 
-        if (!filterType && role === 'mentee' && !userInfo?.data?.is_registered ) {
+        if (!filterType && role === 'mentee' && !userInfo?.data?.is_registered) {
             query = { type: 'status', value: 'planned' }
         }
 
@@ -160,6 +166,24 @@ export default function Programs() {
         if (role === 'mentor') dispatch(getUserPrograms(query));
     }
 
+    const handleProgramSearch = (e) => {
+        setSearch(e.target.value)
+    }
+
+    const menuNavigate = () => {
+        setSearch('')
+    }
+
+    useEffect(() => {
+        const filterType = searchParams.get("type");
+        let query = {}
+        if (filterType && filterType !== '') {
+            query = { type: filterType }
+        }
+        if(search !== '')  query.search = search
+        setSearchParams(query)
+    },[search])
+
     useEffect(() => {
         let listPrograms = programMenus('program').filter(programs => programs.for.includes(role));
 
@@ -226,7 +250,7 @@ export default function Programs() {
                 loadProgram = userprograms.bookmarked
             }
 
-            if(filterType === null &&  userInfo?.data?.is_registered){
+            if (filterType === null && userInfo?.data?.is_registered) {
                 loadProgram = userprograms.allprograms
             }
 
@@ -273,7 +297,7 @@ export default function Programs() {
 
             <div className="grid grid-cols-5 gap-3">
                 <div className="row-span-3 flex flex-col gap-8">
-                    <Card cardTitle={'Program Types'} cardContent={programMenusList} />
+                    <Card cardTitle={'Program Types'} cardContent={programMenusList} menuNavigate={menuNavigate} />
                 </div>
 
                 <div className="col-span-4">
@@ -295,7 +319,10 @@ export default function Programs() {
                                             border: '1px solid rgba(29, 91, 191, 1)',
                                             height: '40px',
                                             width: '345px'
-                                        }} />
+                                        }}
+                                        value={search}
+                                        onChange={handleProgramSearch}
+                                    />
                                     <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
                                         <img src={SearchIcon} className='w-[15px]' alt='SearchIcon' />
                                     </div>
