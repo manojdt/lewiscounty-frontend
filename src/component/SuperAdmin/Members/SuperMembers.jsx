@@ -279,7 +279,7 @@ function SuperMembers() {
                 className="!text-[12px]"
                  onClick={() =>
                   
-                  handleToggleStatus(params.row.id, params.row.is_active)
+                  handleToggleStatus(seletedItem.id, seletedItem.is_active)
                 }
               >
                 <img
