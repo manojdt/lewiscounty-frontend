@@ -711,10 +711,17 @@ export const mentorTaskColumns = [{
     }
 },
 {
-    field: 'mark',
-    headerName: 'Score',
+    field: 'result',
+    headerName: 'Result',
     flex: 1,
     id: 2,
+    renderCell: (params) => {
+        return <>
+            <div style={{ color: params.row.result === 'Pass' ? 'rgba(22, 182, 129, 1)' : 'rgba(224, 56, 45, 1)'}}>
+                {params.row.result}
+            </div>
+        </>
+    }
 },
 // {
 //     field: 'file_by',

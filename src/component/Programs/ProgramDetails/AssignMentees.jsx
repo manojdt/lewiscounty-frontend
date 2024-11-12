@@ -19,7 +19,7 @@ import SuccessTik from '../../../assets/images/blue_tik1x.png';
 import { getAllCategories } from '../../../services/programInfo';
 import './program.css'
 
-import { assignProgramTask, getProgramDetails, getProgramMentees, updateProgram } from '../../../services/userprograms';
+import { assignProgramTask, getProgramDetails, getProgramMentees, getProgramTaskMentees, updateProgram } from '../../../services/userprograms';
 import { pipeUrls, programActionStatus, programStatus } from '../../../utils/constant';
 
 
@@ -162,7 +162,7 @@ export default function AssignMentees() {
         if (!category.length) {
             dispatch(getAllCategories())
         }
-        dispatch(getProgramMentees(params.id))
+        dispatch(getProgramTaskMentees(params.id))
 
     }, [])
 

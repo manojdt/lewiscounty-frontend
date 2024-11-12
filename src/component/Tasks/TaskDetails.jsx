@@ -96,7 +96,7 @@ export const TaskDetails = () => {
         if (taskImages.length) {
             const files = {}
             taskImages.forEach((element, index) => {
-                files[`file_${index + 1}`] = element[0]
+                files[`file_1`] = element[0]
             });
             const payload = {
                 task_solution: data.task_solution,

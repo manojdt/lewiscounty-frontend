@@ -204,6 +204,7 @@ export default function AssignTask() {
             const startDate = new Date(data.reschedule_start_date);
             const endDate = new Date(data.reschedule_end_date);
 
+            // console.log(startDate.toLocaleDateString())
             const formattedStartDate = convertDateFormat(startDate.toLocaleDateString());
             const formattedEndDate = convertDateFormat(endDate.toLocaleDateString());
 

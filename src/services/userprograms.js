@@ -129,12 +129,21 @@ export const getMentees = createAsyncThunk(
     }
 );
 
+export const getProgramTaskMentees = createAsyncThunk(
+    "getProgramTaskMentees",
+    async (id='') => {
+        const allMentees = await api.get(`program/participates?program_id=${id}`);
+        if (allMentees.status === 200 && allMentees.data) {
+            return allMentees.data;
+        }
+        return allMentees;
+    }
+);
 
 export const getProgramMentees = createAsyncThunk(
     "getProgramMentees",
     async (id='') => {
-        // const allMentees = await api.get('program_task_assign/list_mentee');
-        const allMentees = await api.get(`program/participates?program_id=${id}`);
+        const allMentees = await api.get('program_task_assign/list_mentee');
         if (allMentees.status === 200 && allMentees.data) {
             return allMentees.data;
         }

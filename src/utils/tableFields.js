@@ -146,7 +146,8 @@ export const certificateColumns = [{
         headerName: 'Category',
         flex: 1,
         id: 0,
-        for: ['mentor', 'mentee','admin']
+        for: ['mentor', 'mentee','admin'],
+        status: []
     },
     {
         field: 'program_name',

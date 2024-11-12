@@ -161,7 +161,7 @@ export const Questions = () => {
     }
 
     if (role === 'mentor') {
-      navigate('/dashboard')
+      // navigate('/dashboard')
     }
   }
 

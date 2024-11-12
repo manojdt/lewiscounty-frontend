@@ -15,14 +15,14 @@ import { TaskApiStatus, TaskStatus } from '../../../utils/constant'
 import { useForm } from 'react-hook-form'
 
 
-const   MentorTaskDetails = () => {
+const MentorTaskDetails = () => {
     const navigate = useNavigate()
     const [editTask, setEditTask] = useState(false)
     const params = useParams();
     const [searchParams] = useSearchParams()
     const dispatch = useDispatch()
     const { task: taskDetails, loading: taskDetailsLoading, status } = useSelector(state => state.tasks)
-    
+
     const {
         register,
         formState: { errors },
@@ -40,7 +40,7 @@ const   MentorTaskDetails = () => {
     }
 
     const onSubmit = (data) => {
-        const apiData = { mark: parseInt(data.mark), mentee_id: taskDetails.mentee_id, task_id: taskDetails.id }
+        const apiData = { result: data.result === 'true', mentee_id: taskDetails.mentee_id, task_id: taskDetails.id }
         setEditTask(false)
         dispatch(updateTaskMark(apiData))
     }
@@ -54,10 +54,10 @@ const   MentorTaskDetails = () => {
     }, [status])
 
     useEffect(() => {
-        if(taskDetails.status === 'waiting_for_approval' && !editTask){
+        if (taskDetails.status === 'waiting_for_approval' && !editTask) {
             setEditTask(true)
         }
-    },[taskDetails])
+    }, [taskDetails])
 
 
     useEffect(() => {
@@ -72,6 +72,7 @@ const   MentorTaskDetails = () => {
 
     const docs = referenceView !== '' ? referenceView?.split(',') || [] : []
 
+    const radiobox = register('result', { required: 'This field is required' })
 
     console.log('taskDetails', taskDetails)
 
@@ -225,14 +226,14 @@ const   MentorTaskDetails = () => {
 
                             </div>
                             {
-                                (taskDetails.mark !== '' && taskDetails.mark !== null && taskDetails.mark !== '----' ) &&
+                                (taskDetails.result !== '' && taskDetails.result !== null && taskDetails.result !== '----') &&
 
                                 <div className='mark flex'>
                                     <div className='mr-96'>
-                                        Score :
+                                        Result :
                                     </div>
-                                    <div style={{ background: 'rgba(235, 255, 243, 1)', padding: '24px 0', width: '240px', textAlign: 'center', fontSize: '40px' }}>
-                                        <span style={{ color: 'rgba(22, 182, 129, 1)' }}>{taskDetails.mark}</span>
+                                    <div style={{ background: taskDetails.result === 'Pass' ? 'rgba(235, 255, 243, 1)' : 'rgba(255, 231, 231, 1)', padding: '24px 0', width: '240px', textAlign: 'center', fontSize: '40px' }}>
+                                        <span style={{ color: taskDetails.result === 'Pass' ? 'rgba(22, 182, 129, 1)' : 'rgba(224, 56, 45, 1)' }}>{taskDetails.result}</span>
                                     </div>
                                 </div>
                             }
@@ -242,43 +243,55 @@ const   MentorTaskDetails = () => {
                                 <>
                                     <div className='relative py-5'>
                                         <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2" >
-                                            Enter  Score
+                                            Result
                                         </label>
-                                        <select
-                                            className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg 
-                                                            focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
-                                            style={{
-                                                color: "#232323",
-                                                borderRadius: '3px',
-                                                borderRight: '16px solid transparent'
-                                            }}
-                                            {...register('mark', {
-                                                required: "This field is required",
-                                            })}
-                                        >
-                                            <option value="">Select Score</option>
-                                            {
-                                                marks().map((option, index) => <option value={option.key || option.id} key={index}> {option.value || option.name} </option>)
-                                            }
-                                        </select>
+                                        <div className='relative '>
+                                            <div className="flex items-center me-4">
+                                                <div className="flex items-center me-4">
+                                                    <div className="flex items-center me-4">
+                                                        <input type="radio" className="w-4 h-4 text-blue-600 bg-gray-100
+                                                                                    border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 
+                                                                                    dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700
+                                                                                    dark:border-gray-600"
+                                                            {...radiobox}
+                                                            onChange={e => {
+                                                                radiobox.onChange(e);
+                                                            }}
+                                                            value={true}
+                                                        />
+                                                        <label className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{"Pass"}</label>
+                                                    </div>
+
+                                                    <div className="flex items-center me-4">
+                                                        <input type="radio" className="w-4 h-4 text-blue-600 bg-gray-100
+                                                                                    border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 
+                                                                                    dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700
+                                                                                    dark:border-gray-600"
+                                                            {...radiobox}
+                                                            onChange={e => {
+                                                                radiobox.onChange(e);
+                                                            }}
+                                                            value={false}
+                                                        />
+                                                        <label className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{'Fail'}</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
 
-                                    {errors['mark'] && (
+                                    {errors['result'] && (
                                         <p className="error" role="alert">
-                                            {errors['mark'].message}
+                                            {errors['result'].message}
                                         </p>
                                     )}
-
                                 </>
-
                             }
-
                         </div>
 
                         <div className='close-btn flex justify-center gap-7 pb-5'>
                             {
                                 editTask ?
-
                                     <>
                                         <Button btnName='Close' btnCls="w-[12%]" btnCategory="secondary" onClick={() => navigate('/mentor-tasks')} />
                                         <Button btnType="submit" btnCls={`${editTask ? 'w-[14%]' : 'w-[12%]'}`}
