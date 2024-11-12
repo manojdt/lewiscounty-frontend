@@ -211,7 +211,7 @@ function AddSuperMember() {
                 </div>
 
                 <div className="col-span-6">
-                  <FormField label="Last Name">
+                  <FormField label="Last Name" required>
                     <input
                       name="LastName"
                       value={formDetail.LastName}
@@ -220,6 +220,11 @@ function AddSuperMember() {
                       className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
                       placeholder="Enter Last Name"
                     />
+                     {errFields.LastName && (
+                      <p className="mt-1 ms-1 text-xs text-red-400">
+                        {errFields.LastName}
+                      </p>
+                    )}
                   </FormField>
                 </div>
 
