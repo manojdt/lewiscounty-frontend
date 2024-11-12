@@ -224,12 +224,12 @@ export default function Certificate() {
                                                             <li className={`${actionTab === request.key ? 'active' : ''} relative`} key={index}
                                                                 onClick={() => setActiveTab(request.key)}
                                                             >
-                                                                <div className='flex justify-center pb-1'>
+                                                                {/* <div className='flex justify-center pb-1'>
                                                                     <div className={`total-proram-count relative ${actionTab === request.key ? 'active' : ''}`}>10
 
                                                                         <p className='notify-icon'></p>
                                                                     </div>
-                                                                </div>
+                                                                </div> */}
                                                                 <div className='text-[13px]'> {`${request.name}`}</div>
                                                                 {actionTab === request.key && <span></span>}
                                                             </li>)

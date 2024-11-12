@@ -17,6 +17,7 @@ import { pipeUrls, programActionStatus, programMenus, programStatus, statusActio
 import { getMenteeProgramCount, getMenteePrograms, getProgramCounts, getUserPrograms, updateProgram } from '../../services/userprograms';
 import DataTable from '../../shared/DataGrid';
 import { programListColumns } from '../../utils/tableFields';
+import api from '../../services/api';
 
 
 export default function Programs() {
@@ -24,11 +25,13 @@ export default function Programs() {
     const dispatch = useDispatch()
     const [searchParams, setSearchParams] = useSearchParams();
 
+    const [loading, setLoading] = useState(false)
     const [programsList, setProgramsList] = useState([])
     const [programMenusList, setProgramMenusList] = useState([])
     const [programView, setProgramView] = useState('grid');
     const [seletedItem, setSelectedItem] = useState({})
     const [search, setSearch] = useState('')
+    const [programFilter, setProgramFilter] = useState({search: '', datefilter: ''})
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
 
@@ -40,8 +43,20 @@ export default function Programs() {
     const filterType = searchParams.get("type");
     const isBookmark = searchParams.get("is_bookmark");
 
-    const handleBookmark = (program) => {
-        dispatch(updateProgram({ id: program.id, is_bookmark: !program.is_bookmark }))
+    const handleBookmark = async (program) => {
+        const payload = {
+            "program_id":program.id,
+            "marked": !program.is_bookmark
+        }
+        setLoading(true)
+
+        const bookmark = await api.post('bookmark', payload);
+        if (bookmark.status === 201 && bookmark.data) {
+            setLoading(false)
+            getPrograms()
+        }
+       
+        // dispatch(updateProgram({ id: program.id, is_bookmark: !program.is_bookmark }))
     }
 
     const handleNavigation = (programdetails) => {
@@ -81,6 +96,7 @@ export default function Programs() {
     const getPrograms = () => {
         const filterType = searchParams.get("type");
         const filterSearch = searchParams.get("search");
+        const filterDate = searchParams.get("datefilter");
         const isBookmark = searchParams.get("is_bookmark");
 
         let query = {}
@@ -91,6 +107,10 @@ export default function Programs() {
 
         if (filterSearch && filterSearch !== '') {
             query.search = { search: 'search' , value: filterSearch }
+        }
+
+        if (filterDate && filterDate !== '') {
+            query.date = { date: 'filter_by' , value: filterDate }
         }
 
         if (isBookmark && isBookmark !== '') {
@@ -166,8 +186,25 @@ export default function Programs() {
         if (role === 'mentor') dispatch(getUserPrograms(query));
     }
 
+    const getQueryString = () => {
+        const filterType = searchParams.get("type");
+        let query = {}
+        if (filterType && filterType !== '') {
+            query = { type: filterType }
+        }
+        if(programFilter.search !== '')  query.search = programFilter.search
+        if(programFilter.datefilter !== '')  query.datefilter = programFilter.datefilter
+        return query
+    }
+
     const handleProgramSearch = (e) => {
-        setSearch(e.target.value)
+        setProgramFilter({...programFilter, search: e.target.value})
+        // setSearch(e.target.value)
+    }
+
+    const handleDateFilter = (e) => {
+        console.log(e.target.value)
+        setProgramFilter({...programFilter, datefilter: e.target.value})
     }
 
     const menuNavigate = () => {
@@ -175,14 +212,9 @@ export default function Programs() {
     }
 
     useEffect(() => {
-        const filterType = searchParams.get("type");
-        let query = {}
-        if (filterType && filterType !== '') {
-            query = { type: filterType }
-        }
-        if(search !== '')  query.search = search
+        let query = getQueryString()
         setSearchParams(query)
-    },[search])
+    },[programFilter])
 
     useEffect(() => {
         let listPrograms = programMenus('program').filter(programs => programs.for.includes(role));
@@ -277,7 +309,7 @@ export default function Programs() {
             <div className='flex justify-between items-center mb-8'>
                 <Backdrop
                     sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                    open={userprograms.loading}
+                    open={userprograms.loading || loading}
                 >
                     {
                         userprograms.loading ?
@@ -320,19 +352,20 @@ export default function Programs() {
                                             height: '40px',
                                             width: '345px'
                                         }}
-                                        value={search}
+                                        value={programFilter.search}
                                         onChange={handleProgramSearch}
                                     />
                                     <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
                                         <img src={SearchIcon} className='w-[15px]' alt='SearchIcon' />
                                     </div>
                                 </div>
-                                {/* <img src={SearchIcon} alt="statistics" /> */}
                                 <p className="text-[12px] py-2 pl-5 pr-4 flex gap-4" style={{ background: 'rgba(223, 237, 255, 1)', borderRadius: '5px' }}>
                                     <img src={CalendarIcon} alt="CalendarIcon" />
-                                    <select className='focus:outline-none' style={{ background: 'rgba(223, 237, 255, 1)', border: 'none' }}>
-                                        <option>Day</option>
-                                        <option>Month</option>
+                                    <select className='focus:outline-none' style={{ background: 'rgba(223, 237, 255, 1)', border: 'none' }}
+                                    onChange={handleDateFilter}>
+                                        <option value="day">Day</option>
+                                        <option value="month">Month</option>
+                                        <option value="year">Year</option>
                                     </select>
                                 </p>
                             </div>

@@ -124,7 +124,7 @@ export default function Scheduler() {
                                                 <span className='text-[13px]'>{calendarevent.name}</span>
                                             </div>
                                             <div className='font-semibold'>
-                                                {calendarevent.total}
+                                                {/* {calendarevent.total} */}
                                             </div>
 
                                         </div>

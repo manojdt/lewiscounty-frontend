@@ -56,11 +56,11 @@ export const Mentors = () => {
             key: 'pending-request'
         },
         {
-            name: 'Accept Request',
+            name: 'Approve Request',
             key: 'accept-request'
         },
         {
-            name: 'Cancel Request',
+            name: 'Reject Request',
             key: 'cancel-request'
         },
     ]

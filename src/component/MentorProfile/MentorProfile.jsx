@@ -720,9 +720,9 @@ function MentorProfile() {
               style={{ color: "#232323", fontWeight: 600, fontSize: "24px" }}
             >
               {confirmPopup.type === "accept"
-                ? "Accept"
+                ? "Approve"
                 : confirmPopup.type === "cancel"
-                ? "Cancel"
+                ? "Reject"
                 : ""}
             </span>
             <div className="py-5">
@@ -755,7 +755,7 @@ function MentorProfile() {
                   btnCls="w-[110px]"
                   btnName={
                     confirmPopup.type === "accept"
-                      ? "Accept"
+                      ? "Approve"
                       : confirmPopup.type === "cancel"
                       ? "Yes"
                       : ""

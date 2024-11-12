@@ -505,7 +505,7 @@ const MentorTask = () => {
                                                         `} aria-current="page"
                                                         onClick={() => setActiveCategoryMenu(menu.key)}>
                                                         <span className="text-sm">{menu.name}</span>
-                                                        <span className="text-sm">{menu.count}</span>
+                                                        {/* <span className="text-sm">{menu.count}</span> */}
                                                     </div>
                                                 </li>
                                             )

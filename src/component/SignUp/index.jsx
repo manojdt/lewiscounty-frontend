@@ -91,6 +91,14 @@ export const Signup = () => {
   }
 
 
+  const handleKeyDown = (e) => {
+    console.log('KEY', e.key. e?.target?.name)
+    if (e.key === 'Enter') {
+      e.preventDefault();
+    }
+  }
+
+
   useEffect(() => {
     if (!userData.loading && Object.keys(userData.data).length && userData.status === userStatus.create) {
       setTimeout(() => {
@@ -193,7 +201,7 @@ export const Signup = () => {
                     </p>
                   </div>
 
-                  <form onSubmit={handleSubmit(onSubmit)}>
+                  <form onSubmit={handleSubmit(onSubmit)} onKeyDown={handleKeyDown}>
                     <SocialMediaLogin view={'horizontal'} />
 
                     <div className="mb-8 mt-8 flex items-center before:mt-0.5 before:flex-1 before:border-t
@@ -235,6 +243,7 @@ export const Signup = () => {
                                 {...field.fieldtype === 'password' ? { onKeyUp: (e) => handleField(field.fieldtype, e.target.value) } : {}}
                                 // onBlur={(e) => handleField(field.fieldtype, e.target.value)}
                                 aria-invalid={errors[field.name] ? "true" : "false"}
+                                
                               />
                               {
                                 field.fieldtype === 'password' &&

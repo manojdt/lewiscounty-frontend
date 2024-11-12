@@ -19,6 +19,7 @@ import QuoteIcon from '../../../assets/images/quotes1x.png';
 import MuiModal from '../../../shared/Modal';
 import SuccessTik from '../../../assets/images/blue_tik1x.png';
 import TickColorIcon from '../../../assets/icons/tickColorLatest.svg'
+import TimeHistoryIcon from '../../../assets/icons/time-history-icon.svg'
 import CancelIcon from '../../../assets/images/cancel1x.png'
 
 import { Button } from '../../../shared';
@@ -103,9 +104,6 @@ export default function ProgramDetails() {
                 if (role === 'mentor') { dispatch(updateProgram({ id: programId, status: programActionStatus.yettostart })); }
             }
         }
-
-
-
     }
 
     // Handle Accept Program Popup
@@ -157,7 +155,6 @@ export default function ProgramDetails() {
         if (action === 'cancel') { setConfirmPopup({ ...popup, cancel: true }) }
     }
 
-
     // Handle Close Accept / Cancel Popup
     const resetAcceptCancelPopup = () => {
         setConfirmPopup({ accept: false, cancel: false, programId: '' });
@@ -197,7 +194,6 @@ export default function ProgramDetails() {
 
     useEffect(() => {
         const programId = params.id;
-        console.log('programId', programId)
         if (programId && programId !== '') {
             dispatch(getSpecificProgramDetails({ id: programId, requestId: requestId }))
             if (role === 'mentee') { dispatch(getMenteeJoinedInProgram({ id: programId })); }
@@ -253,7 +249,6 @@ export default function ProgramDetails() {
                 <CircularProgress color="inherit" />
             </Backdrop>
 
-
             {/* Program Request Updated Popup */}
             <MuiModal modalOpen={requestProgramStatus === requestStatus.programupdate} modalClose={() => undefined} noheader>
                 <div className='px-5 py-1 flex justify-center items-center'>
@@ -274,7 +269,7 @@ export default function ProgramDetails() {
                 <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
                     <img src={TickColorIcon} alt="TickColorIcon" />
                     <span style={{ color: '#232323', fontWeight: 600, fontSize: '24px' }}>
-                        Accept
+                        Approve
                     </span>
                     <div className='py-5'>
                         <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 600, fontSize: '18px' }}>
@@ -284,7 +279,7 @@ export default function ProgramDetails() {
                     <div className='flex justify-center'>
                         <div className="flex gap-6 justify-center align-middle">
                             <Button btnCls="w-[110px]" btnName={'Cancel'} btnCategory="secondary" onClick={resetAcceptCancelPopup} />
-                            <Button btnType="button" btnCls="w-[110px]" btnName={'Accept'}
+                            <Button btnType="button" btnCls="w-[110px]" btnName={'Approve'}
                                 style={{ background: '#16B681' }} btnCategory="primary"
                                 onClick={handleConfirmPopup}
                             />
@@ -420,6 +415,20 @@ export default function ProgramDetails() {
                                                     </div>
                                                     : null
                                             }
+
+                                            {
+                                                programdetails.reschedule_info !== '' &&
+                                                <div className='flex gap-3'>
+                                                    <span style={{ background: 'rgba(255, 213, 0, 1)', borderRadius: '3px' }}>
+                                                        <img src={TimeHistoryIcon} alt="TimeHistoryIcon" />
+                                                    </span>
+                                                    <p style={{
+                                                        background: 'rgba(255, 249, 216, 1)', color: 'rgba(255, 213, 0, 1)',
+                                                        padding: '10px', borderRadius: '20%'
+                                                    }}>{programdetails.reschedule_info}</p>
+                                                </div>
+                                            }
+
 
                                         </div>
 
@@ -766,7 +775,7 @@ export default function ProgramDetails() {
                                             {programdetails.status === programActionStatus.cancelled ? 'Cancelled ' : ''} Reason
                                         </div>
                                         <div className='reason-content'>
-                                            {programdetails?.cancel_reason?.cancelled_reason}
+                                            {programdetails?.cancel_reason?.cancel_request_reason}
                                         </div>
 
                                     </div>

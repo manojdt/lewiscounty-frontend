@@ -56,7 +56,7 @@ export const Questions = () => {
 
   }
   const handleSkip = () => {
-    const { first_name, email, ...apiData } = { ...stepData, prev_mentorship: stepData.prev_mentorship === "true" }
+    const { first_name, last_name, email, ...apiData } = { ...stepData, prev_mentorship: stepData.prev_mentorship === "true" }
     const combinedData = { ...stepData };
     const res = handleSubmit(combinedData);
     if (!res) {
@@ -129,7 +129,7 @@ export const Questions = () => {
     setStepData(fieldData)
     setAllStepList(activeSteps)
     if (formFields.length === currentStep) {
-      const { first_name, email, ...apiData } = { ...fieldData, prev_mentorship: stepData.prev_mentorship === "true" }
+      const { first_name, last_name, email, ...apiData } = { ...fieldData, prev_mentorship: stepData.prev_mentorship === "true" }
       const res = handleSubmit(combinedData);
       if (!res) {
         submitQuestionsData(apiData)
@@ -180,6 +180,7 @@ export const Questions = () => {
       setStepData({
         ...stepData,
         [role === 'mentee' ? 'full_name' : 'first_name']: userInfo.data.first_name,
+        [role === 'mentee' ? 'last_name' : 'last_name']: userInfo.data.last_name,
         email: userInfo.data.email
       })
     }

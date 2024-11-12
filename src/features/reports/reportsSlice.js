@@ -9,6 +9,7 @@ import {
     createReport,
     deleteReports,
     getAllReports,
+    getCompletedProgramsByCategoryId,
     getProgramsByCategoryId,
     getReportDetails,
     getReportProgramDetails,
@@ -75,6 +76,30 @@ export const reportsSlice = createSlice({
                     error: action.error.message,
                 };
             });
+
+        builder
+            .addCase(getCompletedProgramsByCategoryId.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(getCompletedProgramsByCategoryId.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    status: '',
+                    categoryPrograms: action.payload,
+                    loading: false,
+                };
+            })
+            .addCase(getCompletedProgramsByCategoryId.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
 
         builder
             .addCase(getReportProgramDetails.pending, (state) => {

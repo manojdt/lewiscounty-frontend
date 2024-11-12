@@ -31,6 +31,7 @@ import PauseIcon from '../../../assets/images/pause1x.png';
 import ResumeIcon from '../../../assets/images/resume1x.png';
 import CompleteIcon from '../../../assets/images/completed1x.png'
 import PlusCircle from '../../../assets/icons/Pluscircle.svg'
+import TimeHistoryIcon from '../../../assets/icons/time-history-icon.svg'
 
 
 import './program-details.css'
@@ -50,7 +51,7 @@ import SkillsSet from '../../SkillsSet';
 import api from '../../../services/api';
 import { programCancelRequest, programRescheduleRequest, updateLocalRequest } from '../../../services/request';
 import './details.css'
-import { formatDateFunToAll, formatDateTimeISO, todatDateInfo } from '../../../utils';
+import { convertDateFormat, formatDateFunToAll, formatDateTimeISO, todatDateInfo } from '../../../utils';
 import ToastNotification from '../../../shared/Toast';
 
 
@@ -200,29 +201,18 @@ export default function AssignTask() {
     const onSubmit = (data) => {
         if (moreMenuModal.reschedule) {
 
-            const timeFormat = (utcTimestamp) => {
-                let timeString = ''
-                const t = utcTimestamp.toString().split(' ')
-                if (t.length > 4) {
-                    let time = t[4].split(':')
-                    timeString = `${time[0]}:${time[1]}`
-                }
-                return timeString
-            }
+            const startDate = new Date(data.reschedule_start_date);
+            const endDate = new Date(data.reschedule_end_date);
 
-            const date = new Date(data.reschedule_date);
-
-            // Format the date to "YYYY-MM-DD"
-            const formattedDate = date.toISOString().split('T')[0];
+            const formattedStartDate = convertDateFormat(startDate.toLocaleDateString());
+            const formattedEndDate = convertDateFormat(endDate.toLocaleDateString());
 
             const payload = {
-                reschedule_date: formattedDate,
+                reschedule_start_date: formattedStartDate,
+                reschedule_end_date: formattedEndDate,
                 program_id: params.id,
-                reschedule_time: timeFormat(data.reschedule_time),
                 reason: data.reason
             }
-
-
             dispatch(programRescheduleRequest(payload))
         }
 
@@ -320,7 +310,7 @@ export default function AssignTask() {
 
 
     const handleCopy = () => {
-        
+
         navigator.clipboard.writeText(url)
             .then(() => {
                 setMessage(true);
@@ -376,8 +366,8 @@ export default function AssignTask() {
         cancel_request_submitted: { status: 'cancel_request_submitted', text: 'Waiting for admin approval' },
     }
 
-    const dateField = moreMenuModal.reschedule ? register('reschedule_date', { required: "This field is required" }) : undefined
-    const timeField = moreMenuModal.reschedule ? register('reschedule_time', { required: "This field is required" }) : undefined
+    const dateStartField = moreMenuModal.reschedule ? register('reschedule_start_date', { required: "This field is required" }) : undefined
+    const dateEndField = moreMenuModal.reschedule ? register('reschedule_end_date', { required: "This field is required" }) : undefined
 
     return (
         <div className="px-9 my-6 grid">
@@ -535,6 +525,19 @@ export default function AssignTask() {
                                                         {programdetails.categories[0].name}
                                                     </div>
                                                     : null
+                                            }
+
+{
+                                                programdetails.reschedule_info !== '' &&
+                                                <div className='flex gap-5 items-center'>
+                                                    <span style={{ background: 'rgba(255, 213, 0, 1)', borderRadius: '3px', padding: '10px' }}>
+                                                        <img src={TimeHistoryIcon} alt="TimeHistoryIcon" />
+                                                    </span>
+                                                    <p style={{
+                                                        background: 'rgba(255, 249, 216, 1)', color: 'rgba(255, 213, 0, 1)',
+                                                        padding: '10px', borderRadius: '10px', fontSize: '12px', fontWeight: 500
+                                                    }}>{programdetails.reschedule_info}</p>
+                                                </div>
                                             }
 
                                         </div>
@@ -1082,17 +1085,17 @@ export default function AssignTask() {
 
                                                     <div className={`relative mb-6 w-[48%]`} >
                                                         <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor={'Reschedule Date'}>
-                                                            Reschedule Date
+                                                            Reschedule Start Date
                                                         </label>
 
                                                         <div className='relative input-bg'>
                                                             <Calendar
                                                                 className='calendar-control w-full'
-                                                                {...dateField}
-                                                                value={dateFormat['reschedule_date']}
+                                                                {...dateStartField}
+                                                                value={dateFormat['reschedule_start_date']}
                                                                 onChange={(e) => {
-                                                                    dateField.onChange(e)
-                                                                    setDateFormat({ ...dateFormat, ['reschedule_date']: e.value })
+                                                                    dateStartField.onChange(e)
+                                                                    setDateFormat({ reschedule_end_date: '', reschedule_start_date: e.value })
                                                                 }}
                                                                 onClick={handleDateClick}
                                                                 disabled={false}
@@ -1106,9 +1109,9 @@ export default function AssignTask() {
 
                                                             <img className='absolute top-5 right-2' src={CalendarIcon} alt="CalendarIcon" />
                                                         </div>
-                                                        {errors['reschedule_date'] && (
+                                                        {errors['reschedule_start_date'] && (
                                                             <p className="error" role="alert">
-                                                                {errors['reschedule_date'].message}
+                                                                {errors['reschedule_start_date'].message}
                                                             </p>
                                                         )}
 
@@ -1116,31 +1119,37 @@ export default function AssignTask() {
 
                                                     <div className={`relative mb-6 w-[48%]`} >
                                                         <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor={'Reschedule Date'}>
-                                                            Reschedule Time
+                                                            Reschedule End Date
                                                         </label>
 
-                                                        <div className='relative'>
+                                                        <div className='relative input-bg'>
 
                                                             <Calendar
-                                                                className='calendar-control input-bg'
-                                                                {...timeField}
-                                                                value={dateFormat['reschedule_time']}
+                                                                className='calendar-control w-full'
+                                                                {...dateEndField}
+                                                                value={dateFormat['reschedule_end_date']}
                                                                 onChange={(e) => {
-                                                                    timeField.onChange(e)
-                                                                    setDateFormat({ ...dateFormat, ['reschedule_time']: e.value })
+                                                                    dateEndField.onChange(e)
+                                                                    setDateFormat({ ...dateFormat, ['reschedule_end_date']: e.value })
                                                                 }}
-                                                                onClick={handleTimeClick}
-                                                                timeOnly
-                                                                time
+                                                                onClick={handleDateClick}
+                                                                disabled={false}
+                                                                minDate={new Date(dateFormat.reschedule_start_date)}
+                                                                maxDate={new Date(programdetails.end_date)}
+                                                                showTime={false}
+                                                                hourFormat="12"
+                                                                dateFormat="dd/mm/yy"
+                                                                style={{ width: '60%' }}
                                                             />
+
 
 
 
                                                             <img className='absolute top-5 right-2' src={CalendarIcon} alt="CalendarIcon" />
                                                         </div>
-                                                        {errors['reschedule_time'] && (
+                                                        {errors['reschedule_end_date'] && (
                                                             <p className="error" role="alert">
-                                                                {errors['reschedule_time'].message}
+                                                                {errors['reschedule_end_date'].message}
                                                             </p>
                                                         )}
 

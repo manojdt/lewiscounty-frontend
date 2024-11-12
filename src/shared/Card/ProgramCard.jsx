@@ -166,6 +166,16 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                                 }
                                 const actualStartDate = startDate.length ? `${startDate[2]}/${startDate[1]}/${startDate[0]}` : ''
 
+                                const date = new Date(currentProgram.created_at);
+
+                                const options = {
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    hour12: true, 
+                                  };
+                                  
+                                  const timeInAMPM = date.toLocaleString('en-US', options);
+
                                 return (
                                     <div key={index} className={`curated-programs program-container flex gap-1 items-center py-5 px-5 w-[33%]`}
                                         style={{
@@ -196,7 +206,7 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                                                     <div className='absolute top-2 right-0' style={{ background: '#fff', borderRadius: '50%', padding: '14px 17px' }}>
                                                         <img className="cursor-pointer"
                                                             onClick={() => handleBookmark(currentProgram)}
-                                                            src={currentProgram.bookmark ? BookmarkedColorIcon : BookmarkedIcon} alt="BookmarkedIcon" />
+                                                            src={currentProgram.is_bookmark ? BookmarkedColorIcon : BookmarkedIcon} alt="BookmarkedIcon" />
                                                     </div>
                                                 </div>
 
@@ -261,7 +271,7 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                                                         <span className="w-[6px] h-[6px]  rounded-full" style={{ background: 'rgba(0, 0, 0, 1)' }}></span>
                                                     </div>
 
-                                                    <span className='program-time'>{'10 A.M'}</span>
+                                                    <span className='program-time'>{timeInAMPM}</span>
                                                 </div>
 
                                                 {
@@ -276,7 +286,7 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
 
                                                         :
 
-                                                        <div className="posted-tim text-[12px] px-2 py-2" style={{ background: 'rgba(241, 241, 241, 1)', borderRadius: '3px' }}>{'10 Mins ago'}</div>
+                                                        <div className="posted-tim text-[12px] px-2 py-2" style={{ background: 'rgba(241, 241, 241, 1)', borderRadius: '3px' }}>{currentProgram.created_time}</div>
 
 
                                                 }

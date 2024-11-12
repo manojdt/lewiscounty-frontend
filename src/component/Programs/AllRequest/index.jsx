@@ -810,7 +810,7 @@ export default function AllRequest() {
 
         if (role === 'mentor') {
             payload.created_at = 'mentee'
-            payload.request_type = 'joining_request'
+            // payload.request_type = 'joining_request'
         }
         dispatch(getprogramRequest(payload))
     }
@@ -866,14 +866,15 @@ export default function AllRequest() {
                 case RequestStatus.programRequest.key:
                     let programInfoTab = programRequestTab
                     if (role === 'mentor') {
-                        programInfoTab = [{
-                            name: 'Joining Request',
-                            key: 'joining_request'
-                        }
-                        ]
+                        // programInfoTab = [{
+                        //     name: 'Joining Request',
+                        //     key: 'joining_request'
+                        // }
+                        // ]
                     }
                     tableDetails = { column: programRequestColumn, data: [] }
                     actionFilter = programInfoTab
+                    console.log('actionFilter', actionFilter)
                     activeTabName = role === 'mentee' ? 'joining_request' : 'new_program_request'
                     break;
                 case RequestStatus.memberJoinRequest.key:
@@ -913,6 +914,7 @@ export default function AllRequest() {
             setActionTabFilter(actionFilter)
             setActiveTab(activeTabName)
         } else {
+            console.log('programRequestTab', programRequestTab)
             setActionTabFilter(programRequestTab)
             setActiveTab(role !== 'admin' ? 'joining_request' : 'new_program_request')
         }
@@ -1252,12 +1254,12 @@ export default function AllRequest() {
                                                             <li className={`${actionTab === discussion.key ? 'active' : ''} relative`} key={index}
                                                                 onClick={() => setActiveTab(discussion.key)}
                                                             >
-                                                                <div className='flex justify-center pb-1'>
+                                                                {/* <div className='flex justify-center pb-1'>
                                                                     <div className={`total-proram-count relative ${actionTab === discussion.key ? 'active' : ''}`}>10
 
-                                                                        {/* <p className='notify-icon'></p> */}
+                                                                        <p className='notify-icon'></p>
                                                                     </div>
-                                                                </div>
+                                                                </div> */}
                                                                 <div className='text-[13px]'> {`${discussion.name}`}</div>
                                                                 {actionTab === discussion.key && <span></span>}
                                                             </li>)

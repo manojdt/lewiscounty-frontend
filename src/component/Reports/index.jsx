@@ -32,7 +32,7 @@ const Reports = () => {
     const [deleteModal, setDeleteModal] = useState(false)
     const [requestTab, setRequestTab] = useState('all')
     const [searchParams] = useSearchParams();
-    const [reportData, setReportData] = useState({action: '', selectedItem: []})
+    const [reportData, setReportData] = useState({ action: '', selectedItem: [] })
 
     const requestBtns = [
         {
@@ -40,19 +40,23 @@ const Reports = () => {
             key: 'all'
         },
         {
+            name: 'New Reports',
+            key: 'new'
+        },
+        {
             name: 'Pending Reports',
             key: 'pending'
         },
         {
-            name: 'Completed',
+            name: 'Completed Reports',
             key: 'accept'
         },
         {
-            name: 'Rejected',
+            name: 'Rejected Reports',
             key: 'cancel'
         },
         {
-            name: 'Draft',
+            name: 'Draft Reports',
             key: 'draft'
         }
     ]
@@ -62,7 +66,7 @@ const Reports = () => {
     };
 
     const handleClick = (event, data) => {
-        setReportData({action: 'single', selectedItem: data})
+        setReportData({ action: 'single', selectedItem: data })
         setAnchorEl(event.currentTarget);
     };
 
@@ -73,10 +77,10 @@ const Reports = () => {
         dispatch(deleteReports(reportId))
     }
 
-  
+
 
     const reportColumn = [
-        ...reportColumns,
+        ...reportColumns.filter(rColumn => rColumn.status.includes(requestTab)),
         {
             field: 'report_status',
             headerName: 'Status',
@@ -104,42 +108,50 @@ const Reports = () => {
             flex: 1,
             id: 11,
             renderCell: (params) => {
+                console.log('params', params)
                 return <>
-                    <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleClick(e, [params.row])}>
-                        <img src={MoreIcon} alt='MoreIcon' />
-                    </div>
-                    <Menu
-                        id="basic-menu"
-                        anchorEl={anchorEl}
-                        open={open}
-                        onClose={handleClose}
-                        MenuListProps={{
-                            'aria-labelledby': 'basic-button',
-                        }}
-                    >
-                        <MenuItem onClick={() => navigate(`/edit-report/${reportData.selectedItem[0].id}`)} className='!text-[12px]'>
-                            <img src={EditIcon} alt="EditIcon" className='pr-3 w-[30px]' />
-                            Edit
-                        </MenuItem>
-                        <MenuItem onClick={() => navigate(`/view-report/${reportData.selectedItem[0].id}`)} className='!text-[12px]'>
-                            <img src={ViewIcon} alt="ViewIcon" className='pr-3 w-[30px]' />
-                            View
-                        </MenuItem>
-                        {
-                            params.row.report_status === reportAllStatus.accept
-                            &&
+                    {
+                        (params.row.report_status !== 'accept' && params.row.report_status !== 'cancel') &&
 
-                            <MenuItem onClick={() => console.log('download', params)} className='!text-[12px]'>
-                                <img src={DownloadIcon} alt="DownloadIcon" className='pr-3 w-[30px]' />
-                                Download
-                            </MenuItem>
-                        }
+                        <>
+                            <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleClick(e, [params.row])}>
+                                <img src={MoreIcon} alt='MoreIcon' />
+                            </div>
+                            <Menu
+                                id="basic-menu"
+                                anchorEl={anchorEl}
+                                open={open}
+                                onClose={handleClose}
+                                MenuListProps={{
+                                    'aria-labelledby': 'basic-button',
+                                }}
+                            >
+                                <MenuItem onClick={() => navigate(`/edit-report/${reportData.selectedItem[0].id}`)} className='!text-[12px]'>
+                                    <img src={EditIcon} alt="EditIcon" className='pr-3 w-[30px]' />
+                                    Edit
+                                </MenuItem>
+                                <MenuItem onClick={() => navigate(`/view-report/${reportData.selectedItem[0].id}`)} className='!text-[12px]'>
+                                    <img src={ViewIcon} alt="ViewIcon" className='pr-3 w-[30px]' />
+                                    View
+                                </MenuItem>
+                                {
+                                    params.row.report_status === reportAllStatus.accept
+                                    &&
 
-                        <MenuItem onClick={handleDeleteSelectedRows} className='!text-[12px]'>
-                            <img src={DeleteIcon} alt="DeleteIcon" className='pr-3 w-[27px]' />
-                            Delete
-                        </MenuItem>
-                    </Menu>
+                                    <MenuItem onClick={() => console.log('download', params)} className='!text-[12px]'>
+                                        <img src={DownloadIcon} alt="DownloadIcon" className='pr-3 w-[30px]' />
+                                        Download
+                                    </MenuItem>
+                                }
+
+                                <MenuItem onClick={handleDeleteSelectedRows} className='!text-[12px]'>
+                                    <img src={DeleteIcon} alt="DeleteIcon" className='pr-3 w-[27px]' />
+                                    Delete
+                                </MenuItem>
+                            </Menu>
+                        </>
+                    }
+
                 </>
             }
 
@@ -159,7 +171,7 @@ const Reports = () => {
     }
 
     const handleSelectedRow = (row) => {
-        setReportData({action: 'multiple', selectedItem: row})
+        setReportData({ action: 'multiple', selectedItem: row })
     }
 
     const handleDeleteSelectedRows = () => {
@@ -180,7 +192,7 @@ const Reports = () => {
 
     const handleCancelDelete = () => {
         setDeleteModal(false);
-        setReportData({action: '', selectedItem: []})
+        setReportData({ action: '', selectedItem: [] })
     }
 
     useEffect(() => {
@@ -189,11 +201,11 @@ const Reports = () => {
 
 
     useEffect(() => {
-        if(status === reportsStatus.delete){
+        if (status === reportsStatus.delete) {
             setDeleteModal(false)
             getReports()
         }
-    },[status])
+    }, [status])
 
     return (
         <div className="reports px-9 py-9">
@@ -253,7 +265,7 @@ const Reports = () => {
                     </div>
                     <div className='flex gap-8 items-center'>
                         {
-                          (reportData.action === 'multiple' && reportData.selectedItem.length) ? <img className='cursor-pointer' onClick={handleDeleteSelectedRows} src={OverDeleteIcon} alt="OverDeleteIcon" /> : null
+                            (reportData.action === 'multiple' && reportData.selectedItem.length) ? <img className='cursor-pointer' onClick={handleDeleteSelectedRows} src={OverDeleteIcon} alt="OverDeleteIcon" /> : null
                         }
 
                         <div className="relative flex gap-3 py-3 px-3" style={{ border: '1px solid rgba(24, 40, 61, 0.25)' }}>

@@ -16,6 +16,8 @@ export const getUserPrograms = createAsyncThunk(
         if(query.value === 'planned'){
             updateQuery = {...query, value: 'yettojoin'}
         }
+
+        console.log('updateQuery', updateQuery)
         let queryParams = ''
         if(updateQuery && Object.keys(updateQuery).length){         
             if(updateQuery.hasOwnProperty('type')){
@@ -28,6 +30,10 @@ export const getUserPrograms = createAsyncThunk(
 
             if(updateQuery.hasOwnProperty('search')){
                 queryParams =  (queryParams === '' ? '?' : `${queryParams}&`) + `${updateQuery.search.search}=${updateQuery.search.value}`
+            }
+
+            if(updateQuery.hasOwnProperty('date')){
+                queryParams =  (queryParams === '' ? '?' : `${queryParams}&`) + `${updateQuery.date.date}=${updateQuery.date.value}`
             }
         }
         queryParams = queryParams !== '' ? `${queryParams}&limit=6` : '?limit=6'
@@ -126,8 +132,9 @@ export const getMentees = createAsyncThunk(
 
 export const getProgramMentees = createAsyncThunk(
     "getProgramMentees",
-    async () => {
-        const allMentees = await api.get('program_task_assign/list_mentee');
+    async (id='') => {
+        // const allMentees = await api.get('program_task_assign/list_mentee');
+        const allMentees = await api.get(`program/participates?program_id=${id}`);
         if (allMentees.status === 200 && allMentees.data) {
             return allMentees.data;
         }
@@ -194,6 +201,10 @@ export const getMenteePrograms = createAsyncThunk(
 
             if(queryString.hasOwnProperty('search')){
                 queryParams =  (queryParams === '' ? '?' : `${queryParams}&`) + `${queryString.search}=${queryString.value}`
+            }
+
+            if(queryString.hasOwnProperty('datefilter')){
+                queryParams =  (queryParams === '' ? '?' : `${queryParams}&`) + `${queryString.filter_type}=${queryString.value}`
             }
         }
         queryParams = queryParams !== '' ? `${queryParams}&limit=6` : '?limit=6'

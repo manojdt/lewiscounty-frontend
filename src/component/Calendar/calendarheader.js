@@ -58,13 +58,19 @@ const CalendarHeader = ({
   };
 
   return (
-    <div className="flex flex-row  justify-between items-start mb-4" >
+    <div className="flex flex-row items-center justify-between mb-4" >
       <div className="flex gap-6">
         <div className="flex">
           <div style={{border: '1px solid rgba(62, 62, 62, 0.5)', padding: '10px 20px', cursor: 'pointer'}} onClick={onDecrement}><img src={ArrowLeftIcon} alt="ArrowLeftIcon" /></div>
           <div style={{border: '1px solid rgba(62, 62, 62, 0.5)', padding: '10px 20px', cursor: 'pointer'}} onClick={onIncrement}><img src={ArrowRightIcon} alt="ArrowRightIcon" /></div>
         </div>
         <Button btnName="Today"/>
+      </div>
+      <div>
+
+      <div className="flex items-center justify-center text-[18px]">
+          {calendarLabelDisplay()}
+        </div>
       </div>
      
        {/* <div className="flex flex-row items-center space-x-3 p-2 rounded shadow-sm w-fit" style={{border: '1px solid rgba(62, 62, 62, 0.5)'}}>

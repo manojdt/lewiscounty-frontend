@@ -18,6 +18,16 @@ export const getAllReports = createAsyncThunk(
     }
 );
 
+export const getCompletedProgramsByCategoryId = createAsyncThunk(
+    "getCompletedProgramsByCategoryId",
+    async (categoryId) => {
+        const allPrograms = await api.get(`program/completed-program-list?category_id=${categoryId}`);
+        if (allPrograms.status === 200 && allPrograms.data) {
+            return allPrograms.data;
+        }
+        return allPrograms
+    }
+);
 
 export const getProgramsByCategoryId = createAsyncThunk(
     "getProgramsByCategoryId",

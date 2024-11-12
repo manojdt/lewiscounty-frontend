@@ -16,7 +16,7 @@ import CancelIcon from '../../assets/images/cancel1x.png'
 import { getAllCategories } from '../../services/programInfo';
 
 import { reportsStatus } from '../../utils/constant';
-import { createReport, getProgramsByCategoryId, getReportProgramDetails } from '../../services/reportsInfo';
+import { createReport, getCompletedProgramsByCategoryId, getProgramsByCategoryId, getReportProgramDetails } from '../../services/reportsInfo';
 import ToastNotification from '../../shared/Toast';
 import { dateTimeFormat } from '../../utils';
 import MuiModal from '../../shared/Modal';
@@ -58,7 +58,7 @@ export default function CreateReport() {
     }
 
     const getProgramInfo = (categoryId) => {
-        dispatch(getProgramsByCategoryId(categoryId))
+        dispatch(getCompletedProgramsByCategoryId(categoryId))
     }
 
     const handleClose = () => {
@@ -156,6 +156,17 @@ export default function CreateReport() {
             if (searchParams.has('program_id') && searchParams.get('program_id') !== '') {
                 handleProgramData(searchParams.get('program_id'))
             }
+        }else{
+            const fields = [...reportFields].map(field => {
+                if (field.name === 'program') {
+                    return {
+                        ...field,
+                        options: []
+                    }
+                }
+                return field
+            })
+            setReportFields(fields)
         }
 
         if (!categoryPrograms.length && getValues('category') !== '' && searchParams.get('program_id') === '') {

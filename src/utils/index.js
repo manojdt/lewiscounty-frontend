@@ -260,3 +260,9 @@ export const todatDateInfo = () => {
     date: date
   }
 }
+
+
+export const convertDateFormat = (dateStr) => {
+  const parts = dateStr.split('/');
+  return `${parts[2]}-${parts[1]}-${parts[0]}`;
+}

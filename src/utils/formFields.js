@@ -12,6 +12,18 @@ export const PersonalInformationFields = [{
   },
   {
     type: "input",
+    name: "last_name",
+    fieldtype: "text",
+    label: "Last Name",
+    placeholder: "Enter Last Name",
+    inputRules: {
+      // required: "This field is required",
+    },
+    size: true,
+    disable: true
+  },
+  {
+    type: "input",
     name: "email",
     fieldtype: "email",
     label: "E-mail",
@@ -26,7 +38,7 @@ export const PersonalInformationFields = [{
     type: "input",
     name: "phone_number",
     fieldtype: "number",
-    label: "Phone Number",
+    label: "Primary Contact Number",
     placeholder: "Enter Phone Number",
     inputRules: {
       required: "This field is required",
@@ -385,6 +397,18 @@ export const MenteePersonalInformationFields = [{
   },
   {
     type: "input",
+    name: "last_name",
+    fieldtype: "text",
+    label: "Last Name",
+    placeholder: "Enter Last Name",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+    disable: true
+  },
+  {
+    type: "input",
     name: "email",
     fieldtype: "email",
     label: "E-mail",
@@ -399,8 +423,8 @@ export const MenteePersonalInformationFields = [{
     type: "input",
     name: "phone_number",
     fieldtype: "number",
-    label: "Phone Number",
-    placeholder: "Enter Phone Number",
+    label: "Primary Contact Number",
+    placeholder: "Enter Primary Contact Number",
     inputRules: {
       required: "This field is required",
       pattern: {
@@ -1879,59 +1903,69 @@ export const reportColumns = [{
     headerName: 'Category',
     flex: 1,
     id: 0,
+    status: ['all', 'new', 'pending', 'accept', 'cancel', 'draft']
   },
   {
     field: 'program_name',
     headerName: 'Program Name',
     flex: 1,
     id: 1,
+    status: ['all', 'new', 'pending', 'accept', 'cancel', 'draft']
   },
   {
     field: 'participated_mentees_count',
     headerName: 'Mentees',
     flex: 1,
     id: 2,
+    status: ['all', 'new', 'pending', 'accept', 'cancel', 'draft']
   }, {
     field: 'report_name',
     headerName: 'Report',
     flex: 1,
     id: 3,
+    status: ['all', 'new', 'pending', 'accept', 'cancel', 'draft']
   },
   {
     field: 'created_at',
     headerName: 'Create Time/ Date',
     flex: 1,
     id: 4,
+    status: ['all', 'new', 'pending', 'accept', 'cancel', 'draft']
   },
   {
     field: 'approved_date',
     headerName: 'Approved Time/ Date',
     flex: 1,
     id: 5,
+    status: ['all', 'accept']
   },
   {
     field: 'approver',
     headerName: 'Approved by',
     flex: 1,
     id: 6,
+    status: ['all', 'accept']
   },
   {
     field: 'rejected_date',
     headerName: 'Rejected Time/ Date',
     flex: 1,
     id: 7,
+    status: ['all', 'cancel']
   },
   {
     field: 'rejecter',
     headerName: 'Rejected by',
     flex: 1,
     id: 8,
+    status: ['all', 'cancel']
   },
   {
     field: 'file',
     headerName: 'File',
     flex: 1,
     id: 9,
+    status: ['all', 'new', 'pending', 'accept', 'cancel', 'draft']
   },
 ];
 
@@ -1984,18 +2018,18 @@ export const CreateMeetingFields = [{
         key: "do_not_repeat",
         value: "Does Not repeat"
       },
-      {
-        key: "daily",
-        value: "Daily"
-      },
-      {
-        key: "every_week",
-        value: "Every weekday(Monday to Friday)"
-      },
-      {
-        key: "weekly",
-        value: "Weekly On  Thursday"
-      },
+      // {
+      //   key: "daily",
+      //   value: "Daily"
+      // },
+      // {
+      //   key: "every_week",
+      //   value: "Every weekday(Monday to Friday)"
+      // },
+      // {
+      //   key: "weekly",
+      //   value: "Weekly On  Thursday"
+      // },
       {
         key: "custom",
         value: "Custom"

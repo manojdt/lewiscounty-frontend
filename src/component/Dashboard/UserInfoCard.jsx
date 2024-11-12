@@ -48,7 +48,7 @@ export default function UserInfoCard() {
         <div className="">
             <div className="pb-3 w-full max-w-sm bg-white rounded-lg" style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', background: 'rgba(255, 255, 255, 1)' }}>
                 <div className="flex flex-col items-center pb-10 pt-14 border-b-2">
-                    <img className="w-24 h-24 mb-3 rounded-full shadow-lg object-cover" src={UserImage} alt="User logo" />
+                    <img className="w-24 h-24 mb-3 rounded-full shadow-lg object-cover cursor-pointer" onClick={() => navigate('/my-profile')} src={UserImage} alt="User logo" />
                     <h5 className="mb-1 text-xl font-medium text-gray-900 ">
                         {userInfo?.data?.first_name} {userInfo?.data?.last_name}
                     </h5>

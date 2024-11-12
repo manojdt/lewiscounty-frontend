@@ -162,7 +162,7 @@ export default function AssignMentees() {
         if (!category.length) {
             dispatch(getAllCategories())
         }
-        dispatch(getProgramMentees())
+        dispatch(getProgramMentees(params.id))
 
     }, [])
 
