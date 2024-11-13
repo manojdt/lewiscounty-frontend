@@ -11,7 +11,7 @@ import { Button } from '../../shared'
 import { useNavigate, useParams } from 'react-router-dom'
 import MuiModal from '../../shared/Modal';
 import { useDispatch, useSelector } from 'react-redux'
-import { getProgramTaskDetails, submitProgramTaskDetails } from '../../services/userprograms'
+import { getProgramTaskDetails, submitProgramTaskDetails, updateUserProgramInfo } from '../../services/userprograms'
 import { Backdrop, CircularProgress } from '@mui/material'
 import { allowedDocTypes, allowedImagesTypes, allowedVideoTypes, programStatus, TaskAllStatus, TaskFileTypes, TaskStatus } from '../../utils/constant'
 import { useForm } from 'react-hook-form'
@@ -95,22 +95,31 @@ export const TaskDetails = () => {
 
         if (taskImages.length) {
             const files = {}
+            let bodyFormData = new FormData();
+
             taskImages.forEach((element, index) => {
-                files[`file_1`] = element[0]
+                bodyFormData.append('file_1', element[0])
+                // files[`file_1`] = element[0]
             });
-            const payload = {
-                task_solution: data.task_solution,
-                task_id: parseInt(params.id),
-                status: 'completed',
-                ...files
-            }
-            dispatch(submitProgramTaskDetails(payload))
+
+            bodyFormData.append('task_solution', data.task_solution)
+            bodyFormData.append('task_id', parseInt(params.id))
+            bodyFormData.append('status', 'completed')
+
+            // const payload = {
+            //     task_solution: data.task_solution,
+            //     task_id: parseInt(params.id),
+            //     status: 'completed',
+            //     ...files
+            // }
+            dispatch(submitProgramTaskDetails(bodyFormData))
         }
     }
 
     useEffect(() => {
         if (status === programStatus.tasksubmitted) {
             setTimeout(() => {
+                dispatch(updateUserProgramInfo({ status: '' }))
                 navigate('/mentee-tasks')
             }, [2000])
         }
@@ -142,7 +151,7 @@ export const TaskDetails = () => {
 
     useEffect(() => {
         dispatch(getProgramTaskDetails(params.id))
-        dispatch(getSpecificTask({task_id: params.id}))
+        dispatch(getSpecificTask({ task_id: params.id }))
     }, [])
 
 
@@ -154,7 +163,7 @@ export const TaskDetails = () => {
         }
     }, [task_submission])
 
-  
+
     const imageField = {
         ...register('file', {
             required: "This field is required",
@@ -312,7 +321,7 @@ export const TaskDetails = () => {
                                         <p className='py-4'>Reference View</p>
                                         <ul className='leading-10'>
                                             {
-                                                docs?.map((doc, index) => <li key={index}>{index + 1}. <span className='underline'>{doc}</span></li>)
+                                                docs?.map((doc, index) => <li key={index}>{index + 1}. <span>{doc}</span></li>)
                                             }
 
 
@@ -407,16 +416,17 @@ export const TaskDetails = () => {
                                     </label>
                                     <textarea id="message" rows="4"
                                         className={`block p-2.5 input-bg w-full h-[170px] text-sm text-gray-900  rounded-lg border
-                                    focus-visible:outline-none focus:visible:border-none`} style={{ border: errors['task_solution'] ? '2px solid red' : 'none',
+                                    focus-visible:outline-none focus:visible:border-none`} style={{
+                                            border: errors['task_solution'] ? '2px solid red' : 'none',
 
-                                        cursor : taskData.status === TaskAllStatus.rejected ? 'not-allowed' : 'inherit'
-                                     }} 
-                                    placeholder=""
+                                            cursor: taskData.status === TaskAllStatus.rejected ? 'not-allowed' : 'inherit'
+                                        }}
+                                        placeholder=""
                                         {...register('task_solution', {
                                             required: "This field is required",
                                         })}
 
-                                        
+
 
                                         disabled={taskData.status === TaskAllStatus.rejected || taskData.status === TaskAllStatus.completed}
                                     ></textarea>
@@ -433,10 +443,11 @@ export const TaskDetails = () => {
                                         <label htmlFor="dropzone-file"
                                             className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed cursor-pointer
                                                      bg-gray-50 dark:hover:bg-bray-800 dark:border-gray-600"
-                                            style={{ background: 'rgba(243, 247, 252, 1)', border: imageError.error || errors['file'] ? '2px dashed red' : 'none',
+                                            style={{
+                                                background: 'rgba(243, 247, 252, 1)', border: imageError.error || errors['file'] ? '2px dashed red' : 'none',
 
-                                                cursor : (taskData.status === TaskAllStatus.rejected || taskData.status === TaskAllStatus.completed) ? 'not-allowed' : 'pointer'
-                                             }} >
+                                                cursor: (taskData.status === TaskAllStatus.rejected || taskData.status === TaskAllStatus.completed) ? 'not-allowed' : 'pointer'
+                                            }} >
                                             <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                                 <img src={FileIcon} alt="FileIcon" />
                                                 <p className="mb-2 mt-3 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">
@@ -556,7 +567,7 @@ export const TaskDetails = () => {
                                 <Button btnName='Cancel' btnCls="w-[12%]" btnCategory="secondary" onClick={() => navigate('/mentee-tasks')} />
                                 {
                                     (taskData.status === TaskAllStatus.start || taskData.status === TaskAllStatus.pending
-                                            || taskData.status === TaskAllStatus.draft || taskData?.status === TaskAllStatus.yettostart ||
+                                        || taskData.status === TaskAllStatus.draft || taskData?.status === TaskAllStatus.yettostart ||
                                         taskData.status === TaskAllStatus.inprogress
 
                                     ) &&

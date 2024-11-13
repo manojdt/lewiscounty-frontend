@@ -297,7 +297,10 @@ export const getProgramTaskDetails = createAsyncThunk(
 export const submitProgramTaskDetails = createAsyncThunk(
     "submitProgramTaskDetails",
     async (data) => {
-        const submitTask = await api.post("program_task_assign/task_submission", data);
+        const headers = {
+            'Content-Type': 'multipart/form-data',
+        }
+        const submitTask = await api.post("program_task_assign/task_submission", data,  { headers: headers });
         if (submitTask.status === 201 && submitTask.data) {
             return submitTask.data;
         }

@@ -76,7 +76,7 @@ export default function ProgramDetails() {
             name: 'Completed',
             key: 'completed'
         },
-       
+
     ]
 
     const handleTab = (key) => {
@@ -462,8 +462,10 @@ export default function ProgramDetails() {
                                         <div className='flex items-center gap-3 text-[12px]' >
                                             <img src={UserImage} style={{ borderRadius: '50%', width: '35px', height: '35px' }} alt="UserImage" />
                                             <span>Instructor :</span>
-                                            <span style={{ color: 'rgba(29, 91, 191, 1)', textDecoration: 'underline', cursor: 'pointer' }} onClick={() => handleInstructor(programdetails)}>{programdetails?.mentor_name}</span>
-                                            
+                                            <span style={{ color: 'rgba(29, 91, 191, 1)', textDecoration: 'underline', cursor: 'pointer' }} onClick={() => handleInstructor(programdetails)}>
+                                                {programdetails?.mentor_name}
+                                            </span>
+
                                         </div>
 
 
@@ -847,7 +849,7 @@ export default function ProgramDetails() {
                                                 </ul> */}
                                             </div>
                                             <div className='program-certificate pt-8'>
-                                                <div className='font-semibold pb-3'>Types of Certificates 
+                                                <div className='font-semibold pb-3'>Types of Certificates
                                                     {/* {
                                                         programdetails.certifications.length <= 9 ? ' 0' + programdetails.certifications.length : programdetails.certifications.length} */}
                                                 </div>
@@ -873,10 +875,10 @@ export default function ProgramDetails() {
 
                                                         <div className={`certificate-tab-content flex items-center justify-between relative ${participatedTab.key === certificateActiveTab ? 'block' : 'hidden'}`} key={participatedTab.key}>
                                                             <div className='px-9 py-16 w-4/6 leading-6'>
-                                                            {participatedTab.key === 'participated' && 'The ability for members to earn badges and receive certifications is another essential feature of our Mentoring Management program. It helps in creating engaging and impactful relationships between mentors and mentees.'} 
-                                                          
-                                                            {participatedTab.key === 'completed' && 
-                                                            'All the badges and certifications are secured through a blockchain system to ensure authenticity and traceability. This innovative approach not only enhances motivation but also provides tangible recognition of achievements, encouraging continuous growth and engagement.'} 
+                                                                {participatedTab.key === 'participated' && 'The ability for members to earn badges and receive certifications is another essential feature of our Mentoring Management program. It helps in creating engaging and impactful relationships between mentors and mentees.'}
+
+                                                                {participatedTab.key === 'completed' &&
+                                                                    'All the badges and certifications are secured through a blockchain system to ensure authenticity and traceability. This innovative approach not only enhances motivation but also provides tangible recognition of achievements, encouraging continuous growth and engagement.'}
                                                             </div>
                                                             <img className='absolute right-0' src={CertificateIcon} alt="CertificateIcon" />
                                                         </div>

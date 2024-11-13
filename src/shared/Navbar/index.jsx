@@ -188,7 +188,7 @@ export const Navbar = () => {
                                 <img className="rounded-3xl object-cover h-10 w-10 cursor-pointer" src={UserImage} alt="User logo1" />
                             </div>
                         </div>
-                        {
+                        {/* {
                             role === 'mentee' &&
 
                             <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-search">
@@ -204,7 +204,7 @@ export const Navbar = () => {
                                     </li>
                                 </ul>
                             </div>
-                        }
+                        } */}
 
                     </div>
 

@@ -68,13 +68,13 @@ export default function NotificationMenu() {
                                             <div className='flex justify-between w-full'>
                                                 <p className='notification-message'>
                                                     <p className='font-semibold'>{list.content}</p>
-                                                    <p className='text-[14px] pt-4 leading-6'>
+                                                    {/* <p className='text-[14px] pt-4 leading-6'>
                                                         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
                                                         labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
                                                         nisi ut aliquip ex ea commodo consequat.
-                                                    </p>
+                                                    </p> */}
                                                 </p>
-                                                <p className='text-[14px]'>{getTimeFromDate(list.created_at)}</p>
+                                                <p className='text-[14px]'>{list.created_time}</p>
                                             </div>
                                         </li>
                                     )
