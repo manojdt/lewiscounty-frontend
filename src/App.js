@@ -70,6 +70,7 @@ import MentorChangeRequest from "./component/MentorDetails/MentorChangeRequest";
 import MenteeDocs from "./component/Programs/ProgramDetails/MenteeDocs";
 import SuperMembers from "./component/SuperAdmin/Members/SuperMembers";
 import AddSuperMember from "./component/SuperAdmin/Members/AddSuperMember";
+import DocumentUpload from "./component/Mentees/DocumentUpload";
 
 function App() {
   const PrivateRoute = () => {
@@ -112,6 +113,7 @@ function App() {
         <Route element={<Layout />}>
           <Route path="/dashboard" element={<Dashboard />} />
 
+          <Route path="/mentee-doc-upload/:id" element={<DocumentUpload />} />
           <Route path="/mentee-document-upload/:id" element={<MenteeDocs />} />
           <Route path="/programs" element={<Programs />} />
           <Route path="/program-details/:id" element={<ProgramDetails />} />

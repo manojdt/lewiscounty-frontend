@@ -48,7 +48,7 @@ export const updateProgramRequest = createAsyncThunk(
 export const certificateRequest = createAsyncThunk(
     "certificateRequest",
     async (queryString) => {
-        const certificateReq = await api.get(`certificate/certificate_request?status=${queryString}`);
+        const certificateReq = await api.get(`certificate/certificate_request?status=${queryString}&type=request`);
         if (certificateReq.status === 200 && certificateReq.data) {
             return certificateReq.data;
         }

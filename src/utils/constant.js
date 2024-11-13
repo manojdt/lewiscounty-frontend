@@ -414,7 +414,7 @@ export const requestStatusText = {
   accept: 'Accept',
   launched: 'Launched',
   cancel: 'Cancel',
-  Wating_for_response: "Wating For Response"
+  Wating_for_response: "Wating for Response"
 }
 
 export const requestStatusColor = {
@@ -497,6 +497,10 @@ export const reportStatusColor = {
     color: 'rgba(224, 56, 45, 1)',
     bg: '#fff'
   },
+  new: {
+    color: 'rgba(29, 91, 191, 1)',
+    bg: 'rgba(238, 245, 255, 1)'
+  },
   pending: {
     color: 'rgba(255, 213, 0, 1)',
     bg: 'rgba(255, 251, 233, 1)'
@@ -516,6 +520,7 @@ export const reportStatus = {
   accept: 'Accept',
   cancel: 'Cancel',
   draft: 'Draft',
+  new: 'New',
 }
 
 
@@ -524,6 +529,7 @@ export const reportAllStatus = {
   accept: 'accept',
   cancel: 'cancel',
   draft: 'draft',
+  new: 'new'
 }
 
 

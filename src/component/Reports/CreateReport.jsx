@@ -58,7 +58,7 @@ export default function CreateReport() {
     }
 
     const getProgramInfo = (categoryId) => {
-        dispatch(getCompletedProgramsByCategoryId(categoryId))
+        dispatch(getCompletedProgramsByCategoryId({categoryId: categoryId, type: 'report'}))
     }
 
     const handleClose = () => {

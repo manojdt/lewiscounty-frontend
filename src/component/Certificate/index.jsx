@@ -28,7 +28,7 @@ export default function Certificate() {
     const role = userInfo.data.role
     const dispatch = useDispatch()
     const handleSearch = (value) => {
-        dispatch(getCertificateList(value))
+        dispatch(getCertificateList(`?search=${value}`))
     }
     const handleClose = () => {
         setAnchorEl(null);
@@ -246,7 +246,7 @@ export default function Certificate() {
 
 
 
-                        <DataTable rows={certificatesList || []} columns={certificateColumn} hideFooter />
+                        <DataTable rows={certificatesList || []} columns={certificateColumn} hideFooter={certificatesList.length <= 10} />
                     </div>
                 </div>
             </div>

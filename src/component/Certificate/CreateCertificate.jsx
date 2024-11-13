@@ -17,7 +17,7 @@ import { MenteeAssignColumns } from '../../mock';
 import { getAllCategories } from '../../services/programInfo';
 
 import { certificateStatus, pipeUrls, programActionStatus, reportsStatus } from '../../utils/constant';
-import { createReport, getProgramsByCategoryId, getReportProgramDetails } from '../../services/reportsInfo';
+import { createReport, getCompletedProgramsByCategoryId, getProgramsByCategoryId, getReportProgramDetails } from '../../services/reportsInfo';
 import ToastNotification from '../../shared/Toast';
 import { dateTimeFormat } from '../../utils';
 import MuiModal from '../../shared/Modal';
@@ -59,7 +59,7 @@ export default function CreateCertificate() {
     }
 
     const getProgramInfo = (categoryId) => {
-        dispatch(getProgramsByCategoryId(categoryId))
+        dispatch(getCompletedProgramsByCategoryId({ categoryId: categoryId, type: 'certificate' }))
     }
 
     const handleClose = () => {

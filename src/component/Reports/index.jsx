@@ -111,7 +111,7 @@ const Reports = () => {
                 console.log('params', params)
                 return <>
                     {
-                        (params.row.report_status !== 'accept' && params.row.report_status !== 'cancel') &&
+
 
                         <>
                             <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleClick(e, [params.row])}>
@@ -126,10 +126,23 @@ const Reports = () => {
                                     'aria-labelledby': 'basic-button',
                                 }}
                             >
-                                <MenuItem onClick={() => navigate(`/edit-report/${reportData.selectedItem[0].id}`)} className='!text-[12px]'>
-                                    <img src={EditIcon} alt="EditIcon" className='pr-3 w-[30px]' />
-                                    Edit
-                                </MenuItem>
+                                {
+                                    params.row.report_status === 'cancel' &&
+                                    <MenuItem onClick={() => navigate(`/edit-report/${reportData.selectedItem[0].id}?type=re-open`)} className='!text-[12px]'>
+                                        <img src={ViewIcon} alt="ViewIcon" className='pr-3 w-[30px]' />
+                                        Re-Open
+                                    </MenuItem>
+                                }
+
+                                {
+                                    (params.row.report_status === 'new' || params.row.report_status === 'pending') &&
+
+                                    <MenuItem onClick={() => navigate(`/edit-report/${reportData.selectedItem[0].id}`)} className='!text-[12px]'>
+                                        <img src={EditIcon} alt="EditIcon" className='pr-3 w-[30px]' />
+                                        Edit
+                                    </MenuItem>
+                                }
+
                                 <MenuItem onClick={() => navigate(`/view-report/${reportData.selectedItem[0].id}`)} className='!text-[12px]'>
                                     <img src={ViewIcon} alt="ViewIcon" className='pr-3 w-[30px]' />
                                     View
@@ -143,6 +156,8 @@ const Reports = () => {
                                         Download
                                     </MenuItem>
                                 }
+
+
 
                                 <MenuItem onClick={handleDeleteSelectedRows} className='!text-[12px]'>
                                     <img src={DeleteIcon} alt="DeleteIcon" className='pr-3 w-[27px]' />

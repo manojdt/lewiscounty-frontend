@@ -568,10 +568,14 @@ export default function EditReport() {
                                 </div>
                                 <div className="flex gap-6 justify-center align-middle py-16">
                                     <Button btnName='Cancel' btnCls="w-[13%]" btnCategory="secondary" onClick={() => navigate('/reports')} />
-                                    <Button btnName='Save To Draft'
-                                        style={{ background: 'rgba(29, 91, 191, 1)', color: '#fff' }}
-                                        btnCls="w-[13%]" btnCategory="secondary" onClick={handleSubmit((d) => onSubmit({ ...d, action: 'draft' }))} />
-                                    <Button btnType="submit" btnCls="w-[13%]" btnName='Submit' btnCategory="primary" />
+                                    {
+                                        reportDetails.report_status === 'draft' &&
+                                        <Button btnName='Save To Draft'
+                                            style={{ background: 'rgba(29, 91, 191, 1)', color: '#fff' }}
+                                            btnCls="w-[13%]" btnCategory="secondary" onClick={handleSubmit((d) => onSubmit({ ...d, action: 'draft' }))} />
+                                    }
+
+                                    <Button btnType="submit" btnCls="w-[13%]" btnName='Save Changes' btnCategory="primary" />
                                 </div>
                             </form>
                         </div>

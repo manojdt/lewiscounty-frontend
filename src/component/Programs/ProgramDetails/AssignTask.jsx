@@ -125,10 +125,7 @@ export default function AssignTask() {
             name: 'Completed',
             key: 'completed'
         },
-        {
-            name: 'Lorem Ipsum ',
-            key: 'ioremipsum '
-        },
+       
     ]
 
     const handleTab = (key) => {
@@ -528,7 +525,7 @@ export default function AssignTask() {
                                                     : null
                                             }
 
-{
+                                            {
                                                 programdetails.reschedule_info !== '' &&
                                                 <div className='flex gap-5 items-center'>
                                                     <span style={{ background: 'rgba(255, 213, 0, 1)', borderRadius: '3px', padding: '10px' }}>
@@ -588,9 +585,9 @@ export default function AssignTask() {
                                                             )
                                                         }
 
-                                                        <span className='ml-10 cursor-pointer'>
+                                                        {/* <span className='ml-10 cursor-pointer'>
                                                             <img src={PlusIcon} alt="PlusIcon" />
-                                                        </span>
+                                                        </span> */}
                                                     </div>
                                                 </div>
 
@@ -598,7 +595,7 @@ export default function AssignTask() {
                                                 null
                                         }
 
-                                        <div className='discussions pt-8 flex gap-6'>
+                                        {/* <div className='discussions pt-8 flex gap-6'>
                                             <button
                                                 className='text-[12px] py-3 px-9 cursor-pointer'
                                                 style={{
@@ -612,7 +609,7 @@ export default function AssignTask() {
                                                     border: '1px dotted rgba(29, 91, 191, 1)', color: 'rgba(29, 91, 191, 1)', background: 'rgba(29, 91, 191, 0.05)',
                                                     borderRadius: '3px'
                                                 }}>Individual Discussions</button>
-                                        </div>
+                                        </div> */}
 
 
 
@@ -799,12 +796,17 @@ export default function AssignTask() {
                                         <div style={{ border: '1px solid rgba(223, 237, 255, 1)', borderRadius: '10px' }}
                                             className='px-6 pt-6 pb-3'>
                                             <ul className='flex flex-col gap-3'>
-                                                <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px' }}>
-                                                    <span>Ratings</span>
-                                                    <span className='flex gap-2 items-center'>
-                                                        <img src={RatingsIcon} style={{ width: '12px', height: '12px' }} alt="RatingsIcon" />
-                                                        4.8 (36,763 reviews)</span>
-                                                </li>
+                                                {
+                                                    role === 'mentee' &&
+
+                                                    <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px' }}>
+                                                        <span>Ratings</span>
+                                                        <span className='flex gap-2 items-center'>
+                                                            <img src={RatingsIcon} style={{ width: '12px', height: '12px' }} alt="RatingsIcon" />
+                                                            4.8 (36,763 reviews)</span>
+                                                    </li>
+                                                }
+
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}>
                                                     <span>Course Level</span>
                                                     <span>{programdetails.course_level}</span>
@@ -813,13 +815,13 @@ export default function AssignTask() {
                                                     <span>{`${formatDateFunToAll(programdetails?.start_date)}  &  ${formatDateFunToAll(programdetails?.end_date)} `}</span>
                                                 </li>
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>Duration</span>
-                                                    <span>{programdetails.duration}</span>
+                                                    <span>{programdetails.duration} {' days'}</span>
                                                 </li>
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>Schedule</span>
                                                     <span>Flexible schedule</span>
                                                 </li>
                                                 <li className='flex justify-between text-[12px]' style={{ paddingTop: '14px' }}> <span>Mentees</span>
-                                                    <span className='underline cursor-pointer'>{programdetails.members.length}</span>
+                                                    <span className='underline cursor-pointer'>{programdetails.participated_mentees_count}</span>
                                                 </li>
                                             </ul>
                                         </div>
@@ -891,9 +893,9 @@ export default function AssignTask() {
                                                 </ul> */}
                                             </div>
                                             <div className='program-certificate pt-8'>
-                                                <div className='font-semibold pb-3'>Program Certificate -
-                                                    {
-                                                        programdetails.certifications.length <= 9 ? ' 0' + programdetails.certifications.length : programdetails.certifications.length}
+                                                <div className='font-semibold pb-3'>Types of Certificates 
+                                                    {/* {
+                                                        programdetails.certifications.length <= 9 ? ' 0' + programdetails.certifications.length : programdetails.certifications.length} */}
                                                 </div>
                                                 <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700 mb-10">
                                                     <ul className="flex flex-wrap -mb-px">
@@ -917,10 +919,9 @@ export default function AssignTask() {
 
                                                         <div className={`certificate-tab-content flex items-center justify-between relative ${participatedTab.key === certificateActiveTab ? 'block' : 'hidden'}`} key={participatedTab.key}>
                                                             <div className='px-9 py-16 w-4/6 leading-6'>
-                                                                {participatedTab.key} Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a
-                                                                galley of type and scrambled it to make a type specimen book.It has survived not only five centuries, but also the leap into electronic typesetting,
-                                                                remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop.
-                                                            </div>
+                                                            {participatedTab.key === 'participated' && 'The ability for members to earn badges and receive certifications is another essential feature of our Mentoring Management program. It helps in creating engaging and impactful relationships between mentors and mentees.'} 
+                                                            {participatedTab.key === 'completed' && 
+                                                            'All the badges and certifications are secured through a blockchain system to ensure authenticity and traceability. This innovative approach not only enhances motivation but also provides tangible recognition of achievements, encouraging continuous growth and engagement.'}       </div>
                                                             <img className='absolute right-0' src={CertificateIcon} alt="CertificateIcon" />
                                                         </div>
 
@@ -935,9 +936,9 @@ export default function AssignTask() {
 
                                         <div className={`program-outcomes ${activeTab === 'program_testimonials' ? 'block' : 'hidden'}`}>
                                             <div className='testimonials bg-white px-5 py-7'>
-                                                <div className='flex justify-end'>
+                                                {/* <div className='flex justify-end'>
                                                     <button className='py-2 px-6 mb-10' style={{ color: 'rgba(29, 91, 191, 1)', border: '1px dotted rgba(29, 91, 191, 1)', borderRadius: '3px' }}>Request Testimonials</button>
-                                                </div>
+                                                </div> */}
                                                 <div className="grid grid-cols-3 gap-8">
 
                                                     <div className='pt-16 pb-2 px-7 leading-5 relative' style={{ background: 'rgba(248, 249, 250, 1)', }}>

@@ -39,9 +39,24 @@ export const PersonalInformationFields = [{
     name: "phone_number",
     fieldtype: "number",
     label: "Primary Contact Number",
-    placeholder: "Enter Phone Number",
+    placeholder: "Enter Primary Contact Number",
     inputRules: {
       required: "This field is required",
+      pattern: {
+        value: /^[0-9]{10}$/,
+        message: 'Enter valid phone number'
+      },
+    },
+    size: true,
+  },
+  {
+    type: "input",
+    name: "secondary_phone_number",
+    fieldtype: "number",
+    label: "Secondary Contact Number",
+    placeholder: "Enter Secondary Number",
+    inputRules: {
+      // required: "This field is required",
       pattern: {
         value: /^[0-9]{10}$/,
         message: 'Enter valid phone number'
@@ -427,6 +442,20 @@ export const MenteePersonalInformationFields = [{
     placeholder: "Enter Primary Contact Number",
     inputRules: {
       required: "This field is required",
+      pattern: {
+        value: /^[0-9]{10}$/,
+        message: 'Enter valid phone number'
+      },
+    },
+    size: true,
+  },
+  {
+    type: "input",
+    name: "secondary_phone_number",
+    fieldtype: "number",
+    label: "Secondary Contact Number",
+    placeholder: "Enter Secondary Contact Number",
+    inputRules: {
       pattern: {
         value: /^[0-9]{10}$/,
         message: 'Enter valid phone number'
@@ -1284,26 +1313,26 @@ export const ProgramInformationFields = [{
     icon: 'add',
     for: ['admin', 'mentor']
   },
-  {
-    type: "checkbox",
-    name: "mentee_upload_certificates",
-    label: "Mentee Upload experience Certficate",
-    placeholder: "",
-    options: [{
-        key: 'true',
-        value: 'Mandatory'
-      },
-      {
-        key: 'false',
-        value: 'Non-Mandatory'
-      }
-    ],
-    inputRules: {
-      required: "This field is required",
-    },
-    width: 'w-full',
-    for: ['admin', 'mentor']
-  },
+  // {
+  //   type: "checkbox",
+  //   name: "mentee_upload_certificates",
+  //   label: "Mentee Upload experience Certficate",
+  //   placeholder: "",
+  //   options: [{
+  //       key: 'true',
+  //       value: 'Mandatory'
+  //     },
+  //     {
+  //       key: 'false',
+  //       value: 'Non-Mandatory'
+  //     }
+  //   ],
+  //   inputRules: {
+  //     required: "This field is required",
+  //   },
+  //   width: 'w-full',
+  //   for: ['admin', 'mentor']
+  // },
   {
     type: "input",
     name: "max_mentor_count",
@@ -1704,7 +1733,7 @@ export const ReportFields = [{
   {
     type: "dropdown",
     name: "mentor_manager",
-    label: "Mentor Manager",
+    label: "Program Creator",
     placeholder: "Select Mentor Manager",
     inputRules: {
       // required: "This field is required",

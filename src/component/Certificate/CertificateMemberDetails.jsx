@@ -68,15 +68,15 @@ export default function CertificateMemberDetails() {
   };
   let certificateColumn = [
     ...certificateMenberColumns,
-    {
-      field: "mark",
-      headerName: "Total Over All Mark",
-      flex: 1,
-      id: 1,
-      renderCell: (params) => {
-        return <></>;
-      },
-    },
+    // {
+    //   field: "mark",
+    //   headerName: "Total Over All Mark",
+    //   flex: 1,
+    //   id: 1,
+    //   renderCell: (params) => {
+    //     return <></>;
+    //   },
+    // },
     {
       field: "status",
       headerName: "Status",

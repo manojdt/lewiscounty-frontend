@@ -149,7 +149,7 @@ export default function ProgramCompletion() {
                                                     Durations
                                                 </th>
                                                 <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
-                                                    {completedProgram.duration}
+                                                    {completedProgram.duration} {' Days'}
                                                 </td>
                                             </tr>
                                             <tr className="bg-white border-b dark:bg-gray-800 ">
@@ -157,7 +157,7 @@ export default function ProgramCompletion() {
                                                     Attended Mentees
                                                 </th>
                                                 <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
-                                                    {completedProgram?.participated_mentees?.lenght}
+                                                    {completedProgram?.participated_mentees_count}
                                                 </td>
                                             </tr>
                                             <tr className="bg-white border-b  dark:bg-gray-800">
@@ -180,13 +180,13 @@ export default function ProgramCompletion() {
                                     </table>
                                 </div>
                             </div>
-                            <p>If you want to take more time for this program request to admin,
+                            {/* <p>If you want to take more time for this program request to admin,
                                 <span style={{ color: 'rgba(29, 91, 191, 1)', textDecoration: 'underline', cursor: 'pointer' }}> CLICK HERE</span>
-                            </p>
+                            </p> */}
                         </div>
 
                         <div className="flex gap-6 justify-center align-middle py-10">
-                            <Button btnName='Cancel' btnCls="w-[13%]" btnCategory="secondary" onClick={() => navigate('/programs')} />
+                            <Button btnName='Skip' btnCls="w-[13%]" btnCategory="secondary" onClick={() => navigate(`/generate_certificate/${params.id}`)} />
                             <Button btnType="button" btnCls="w-[13%]" onClick={() =>  navigate(`/create-report?program_id=${params.id}&cat_id=${programdetails?.categories[0]?.id}`)} btnName='Create Report' btnCategory="primary" />
                         </div>
 

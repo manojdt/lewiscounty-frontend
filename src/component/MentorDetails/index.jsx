@@ -577,7 +577,7 @@ export default function MentorDetails() {
                                                 </div>
                                             </div>
 
-                                            {
+                                            {/* {
                                                 role === 'mentee' &&
                                                 <div style={{ boxShadow: '4px 4px 15px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }} className='mt-8'>
                                                     <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
@@ -614,7 +614,7 @@ export default function MentorDetails() {
                                                     </div>
 
                                                 </div>
-                                            }
+                                            } */}
                                         </div>
                                     </div>
 

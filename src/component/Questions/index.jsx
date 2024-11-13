@@ -140,7 +140,7 @@ export const Questions = () => {
   }
 
   const menteeNavigate = async () => {
-    let url = searchParams.get("program_id") && searchParams.get("program_id") !== '' ? `/program-details/${searchParams.get("program_id")}` : '/programs'
+    let url = searchParams.get("program_id") && searchParams.get("program_id") !== '' ? `/mentee-doc-upload/${searchParams.get("program_id")}` : '/programs'
 
     if (searchParams.get("program_id") && searchParams.get("program_id") !== '' && searchParams.get("program_id") !== null) {
       setCustomLoading(true)

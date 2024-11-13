@@ -68,7 +68,7 @@ export const Stepper = ({ steps, currentStep = 0, btnTypeAction,handleStepClick 
           {
             steps.map((step, index) => {
               const currentIndex = parseInt(index)
-              const fieldView = step.status === 'In-Progress' ? 'opacity-50' : 'opacity-100'
+              const fieldView = step.status === 'In-Progress' ? 'opacity-100' : 'opacity-100'
              
               return (
                 <li className="flex flex-row cursor-pointer items-center" style={{ color: `${currentStep >= currentIndex + 1 ? 'rgba(29, 91, 191, 1)' : '#000'}` }} key={index}  
@@ -86,7 +86,7 @@ export const Stepper = ({ steps, currentStep = 0, btnTypeAction,handleStepClick 
                   <div className="flex flex-col text-left pr-4">
                     <div className={
                      `
-                      ${step.status === 'In-Progress' ? 'opacity-50' : 'opacity-100'} 
+                      ${step.status === 'In-Progress' ? 'opacity-100' : 'opacity-100'} 
                 
                       font-medium`
                       }>{step.name}</div>
