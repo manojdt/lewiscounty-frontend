@@ -135,7 +135,7 @@ const Reports = () => {
                                 }
 
                                 {
-                                    (params.row.report_status === 'new' || params.row.report_status === 'pending') &&
+                                    (params.row.report_status === 'new' || params.row.report_status === 'pending' || params.row.report_status === 'draft') &&
 
                                     <MenuItem onClick={() => navigate(`/edit-report/${reportData.selectedItem[0].id}`)} className='!text-[12px]'>
                                         <img src={EditIcon} alt="EditIcon" className='pr-3 w-[30px]' />

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { Backdrop, CircularProgress } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
@@ -33,6 +33,7 @@ export default function EditReport() {
     const navigate = useNavigate()
     const [addMenteeModal, setMentalModal] = useState(false)
     const [taskSuccess, setTaskSuccess] = useState(false)
+    const [searchParams] = useSearchParams();
 
     const params = useParams();
 
@@ -249,7 +250,7 @@ export default function EditReport() {
                         <nav className="flex px-7 pt-6 pb-5 mx-2 border-b-2 justify-between" aria-label="Breadcrumb">
                             <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
                                 <li className="inline-flex items-center">
-                                    <h2>Edit Teaching Program Report </h2>
+                                    <h2>{searchParams.has("type") && searchParams.get("type") === 're-open' ? 'Re-open' : 'Edit' } - {reportDetails.report_name} </h2>
                                 </li>
                             </ol>
                             <img className='cursor-pointer' onClick={() => navigate('/reports')}
@@ -569,13 +570,13 @@ export default function EditReport() {
                                 <div className="flex gap-6 justify-center align-middle py-16">
                                     <Button btnName='Cancel' btnCls="w-[13%]" btnCategory="secondary" onClick={() => navigate('/reports')} />
                                     {
-                                        reportDetails.report_status === 'draft' &&
+                                        (reportDetails.report_status === 'draft' || searchParams.get('type') === 're-open' )  &&
                                         <Button btnName='Save To Draft'
                                             style={{ background: 'rgba(29, 91, 191, 1)', color: '#fff' }}
                                             btnCls="w-[13%]" btnCategory="secondary" onClick={handleSubmit((d) => onSubmit({ ...d, action: 'draft' }))} />
                                     }
 
-                                    <Button btnType="submit" btnCls="w-[13%]" btnName='Save Changes' btnCategory="primary" />
+                                    <Button btnType="submit" btnCls="w-[13%]" btnName={searchParams.get('type') === 're-open' ? 'Submit': `Save Changes`} btnCategory="primary" />
                                 </div>
                             </form>
                         </div>
