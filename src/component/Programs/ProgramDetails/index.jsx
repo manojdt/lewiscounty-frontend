@@ -462,10 +462,14 @@ export default function ProgramDetails() {
                                         <div className='flex items-center gap-3 text-[12px]' >
                                             <img src={UserImage} style={{ borderRadius: '50%', width: '35px', height: '35px' }} alt="UserImage" />
                                             <span>Instructor :</span>
-                                            <span style={{ color: 'rgba(29, 91, 191, 1)', textDecoration: 'underline', cursor: 'pointer' }} onClick={() => handleInstructor(programdetails)}>
-                                                {programdetails?.mentor_name}
-                                            </span>
 
+                                            <span>Instructor :</span>
+                                            {
+                                                role === 'mentee' ?
+                                                    <span style={{ color: 'rgba(29, 91, 191, 1)', textDecoration: 'underline', cursor: 'pointer' }} onClick={() => handleInstructor(programdetails)}>{programdetails?.mentor_name}</span>
+                                                    :
+                                                    <span style={{ color: 'rgba(29, 91, 191, 1)' }}>{programdetails?.mentor_name}</span>
+                                            }
                                         </div>
 
 
