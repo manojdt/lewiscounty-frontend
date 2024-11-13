@@ -45,6 +45,7 @@ import Certificate from "./component/Certificate";
 import CertificateDetails from "./component/Certificate/CertificateDetails";
 import MentorViewMenteeGoal from "./component/Goals/MentorViewMenteeGoal";
 import Profile from "./component/Profile";
+import MyProfile from "./component/Profile/MyProfile";
 import EditProfile from "./component/Profile/EditProfile";
 import NotificationMenu from "./component/Notification/NotificationMenu";
 import Feeds from "./component/Feeds";
@@ -144,6 +145,7 @@ function App() {
           <Route path="/feeds" element={<Feeds />} />
           <Route path="/feed-details/:id" element={<FeedDetails />} />
           <Route path="/my-profile" element={<Profile />} />
+          <Route path="/profile" element={<MyProfile />} />
 
           <Route path="/certificates" element={<Certificate />} />
           <Route path="/create-certificate" element={<CreateCertificate />} />

@@ -274,22 +274,33 @@ export default function Programs() {
         if (userprograms.status === programStatus.load) {
             let loadProgram = []
             const filterType = searchParams.get("type");
+            const isBookmark = searchParams.get("is_bookmark");
             if (filterType === null && isBookmark === null) {
                 loadProgram = userprograms.yettojoin
             }
+
+            console.log('isBookmark', isBookmark)
 
             if (isBookmark !== null && isBookmark !== '') {
                 loadProgram = userprograms.bookmarked
             }
 
-            if (filterType === null && userInfo?.data?.is_registered) {
+            console.log('loadss', loadProgram)
+
+            if (filterType === null && userInfo?.data?.is_registered && isBookmark === null) {
+                console.log('REg')
                 loadProgram = userprograms.allprograms
             }
 
-            if (filterType !== null && filterType !== '') {
+
+
+            if (filterType !== null && filterType !== '' && isBookmark === null) {
+                console.log('REg 1')
                 if (filterType === 'planned') {
+                    console.log('REg 2')
                     loadProgram = userprograms.yettojoin;
                 } else {
+                    console.log('REg 3')
                     loadProgram = userprograms[filterType]
                 }
             }

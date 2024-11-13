@@ -2236,3 +2236,73 @@ export const CreateCertificateFields = [{
     width: 'w-[49%]',
   },
 ];
+
+
+
+
+
+
+
+
+
+
+
+
+export const ProfileFields = [{
+  type: "input",
+  name: "first_name",
+  fieldtype: "text",
+  label: "First Name",
+  placeholder: "Enter First Name",
+  inputRules: {
+  },
+  disabled: true
+},
+{
+  type: "input",
+  name: "last_name",
+  fieldtype: "text",
+  label: "Last Name",
+  placeholder: "Enter Last Name",
+  inputRules: {
+  },
+  disabled: true
+},
+{
+  type: "input",
+  name: "phone_number",
+  fieldtype: "number",
+  label: "Primary Contact Number",
+  placeholder: "Enter Primary Contact Number",
+  inputRules: {
+  }
+},
+{
+  type: "input",
+  name: "secondary_phone_number",
+  fieldtype: "number",
+  label: "Secondary Contact Number",
+  placeholder: "Enter Secondary Contact Number",
+  inputRules: {
+  }
+},
+{
+  type: "input",
+  name: "email",
+  fieldtype: "text",
+  label: "Email",
+  placeholder: "Enter Email",
+  inputRules: {
+  },
+  disabled: true
+},
+{
+  type: "input",
+  name: "address",
+  fieldtype: "text",
+  label: "Address",
+  placeholder: "Enter Address",
+  inputRules: {
+  },
+}
+];

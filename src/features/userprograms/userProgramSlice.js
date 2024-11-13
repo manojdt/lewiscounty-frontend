@@ -108,6 +108,8 @@ export const userProgramSlice = createSlice({
         if (filterType !== "") {
           const filtertype =
             filterType !== "is_bookmark" ? filterValue : "bookmarked";
+
+            console.log('filtertype', filtertype, programs)
           updateState[filtertype] = programs;
         }
         return updateState;
