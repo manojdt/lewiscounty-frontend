@@ -97,8 +97,8 @@ export const Mentor = () => {
                 <div className="main-grid grid grid-cols-5 gap-3">
                     <div className="left-bar row-span-3 flex flex-col gap-8">
                         <UserInfoCard />
-                        <ViewImpression />
-                        <RecentActivities />
+                        {/* <ViewImpression /> */}
+                        {/* <RecentActivities /> */}
                         <Invite />
                     </div>
 

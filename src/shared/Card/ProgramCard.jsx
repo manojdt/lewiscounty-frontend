@@ -47,7 +47,7 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
     const userInfo = useSelector(state => state.userInfo)
     const role = userInfo.data.role
 
-    const statusNotShow = ['yettoapprove', 'yettojoin', 'yettostart', 'draft', 'new_program_request_rejected', 'start_request_submitted']
+    const statusNotShow = ['yettoapprove', 'yettojoin', 'yettostart', 'draft', 'start_request_submitted']
 
     const programImageRestirct = ['yettoapprove', 'draft', 'cancelled', 'completed']
 

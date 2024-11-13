@@ -916,7 +916,12 @@ export const ProgramStatusInCard = {
     text: 'Cancelled',
     color: 'rgb(224, 56, 45)',
     bg: 'rgb(255, 231, 231)'
-  }
+  },
+  new_program_request_rejected: {
+    text: 'Rejected',
+    color: 'rgb(224, 56, 45)',
+    bg: 'rgb(255, 231, 231)'
+  },
 }
 
 

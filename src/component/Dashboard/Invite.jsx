@@ -82,9 +82,9 @@ export default function Invite() {
                     <img src={InviteFriendsIcon} alt="user icon" />
                 </div>
 
-                <div>
-                    <p className="text-sm">Invite to your friends</p>
-                    <p className="text-sm">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                <div className='flex items-center justify-center'>
+                    <p className="text-[18px]">Invite friends</p>
+                    {/* <p className="text-sm">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p> */}
                 </div>
             </div>
             <div className="text-center">
