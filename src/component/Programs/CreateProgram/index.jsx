@@ -36,7 +36,7 @@ export default function CreatePrograms() {
     const [actionModal, setActionModal] = useState('')
     const [programAllFields, setProgramAllFields] = useState(ProgramFields)
     const [formDetails, setFormDetails] = useState({ category: [], materials: [], skills: [], certificate: [], members: [] })
-    const [logo, setLogo] = useState()
+    const [logo, setLogo] = useState({})
     const [stepWiseData, setStepWiseData] = useState({})
     const [programApiStatus, setProgramApiStatus] = useState('')
     const [updateProgramInfo, setUpdateProgramInfo] = useState(false)

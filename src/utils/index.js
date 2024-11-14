@@ -263,6 +263,9 @@ export const todatDateInfo = () => {
 
 
 export const convertDateFormat = (dateStr) => {
-  const parts = dateStr.split('/');
-  return `${parts[2]}-${parts[1]}-${parts[0]}`;
+  let date = new Date(dateStr)
+  let year = date.getFullYear();
+  let month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+  let day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }

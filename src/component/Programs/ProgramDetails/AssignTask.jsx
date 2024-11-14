@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -62,6 +62,7 @@ export default function AssignTask() {
     const params = useParams();
 
     const timerData = useTimer()
+    const calendarRef = useRef([])
 
     const { allPrograms, programDetails } = useSelector(state => state.programInfo)
     const userdetails = useSelector(state => state.userInfo)
@@ -69,7 +70,7 @@ export default function AssignTask() {
 
     const { loading: requestLoading, status: requestStatusInfo, error: requestError } = useSelector(state => state.requestList);
     const [currentPage, setCurrentPage] = useState('')
-    const [ratingModal, setRatingModal] = useState({modal: false, success: false})
+    const [ratingModal, setRatingModal] = useState({ modal: false, success: false })
     const location = useLocation()
     const [anchorEl, setAnchorEl] = useState(null);
     const [loading, setLoading] = useState({ initial: true, task: false })
@@ -127,7 +128,7 @@ export default function AssignTask() {
             name: 'Completed',
             key: 'completed'
         },
-       
+
     ]
 
     const handleTab = (key) => {
@@ -200,12 +201,8 @@ export default function AssignTask() {
     const onSubmit = (data) => {
         if (moreMenuModal.reschedule) {
 
-            const startDate = new Date(data.reschedule_start_date);
-            const endDate = new Date(data.reschedule_end_date);
-
-            // console.log(startDate.toLocaleDateString())
-            const formattedStartDate = convertDateFormat(startDate.toLocaleDateString());
-            const formattedEndDate = convertDateFormat(endDate.toLocaleDateString());
+            const formattedStartDate = convertDateFormat(data.reschedule_start_date);
+            const formattedEndDate = convertDateFormat(data.reschedule_end_date);
 
             const payload = {
                 reschedule_start_date: formattedStartDate,
@@ -307,9 +304,9 @@ export default function AssignTask() {
             }
 
 
-            
-            if(programdetails.status === 'completed' && !programdetails.mentee_program_rating){
-                setRatingModal({modal: true, success: false})
+
+            if (programdetails.status === 'completed' && !programdetails.mentee_program_rating) {
+                setRatingModal({ modal: true, success: false })
             }
         }
     }, [programdetails, role])
@@ -340,7 +337,11 @@ export default function AssignTask() {
     }, [message])
 
     const handleDateClick = () => {
-        document.querySelector('.p-datepicker')?.classList.add('program-date-picker')
+        console.log('pppp')
+        setTimeout(() => {
+            document.querySelector('.p-datepicker')?.classList.add('program-date-picker')
+        },200)
+       
     }
 
     const handleTimeClick = () => {
@@ -358,11 +359,11 @@ export default function AssignTask() {
 
 
     const ratingModalSuccess = () => {
-        setRatingModal({modal: false, success: true})
+        setRatingModal({ modal: false, success: true })
     }
 
     const ratingModalClose = () => {
-        setRatingModal({modal: false, success: false})
+        setRatingModal({ modal: false, success: false })
     }
 
 
@@ -406,7 +407,7 @@ export default function AssignTask() {
                 </div>
             </Backdrop>
 
-            <Ratings open={ratingModal.modal} modalSuccess={ratingModalSuccess} modalClose={ratingModalClose}/>
+            <Ratings open={ratingModal.modal} modalSuccess={ratingModalSuccess} modalClose={ratingModalClose} />
 
 
             {
@@ -600,13 +601,13 @@ export default function AssignTask() {
                                                 {
                                                     role === 'mentee' ?
 
-                                                    <span style={{ color: 'rgba(29, 91, 191, 1)', textDecoration: 'underline', cursor: 'pointer' }} onClick={() => handleInstructor(programdetails)}>{programdetails?.mentor_name}</span>
-                                              
-                                                    :
+                                                        <span style={{ color: 'rgba(29, 91, 191, 1)', textDecoration: 'underline', cursor: 'pointer' }} onClick={() => handleInstructor(programdetails)}>{programdetails?.mentor_name}</span>
 
-                                                    <span style={{ color: 'rgba(29, 91, 191, 1)' }}>{programdetails?.mentor_name}</span>
+                                                        :
+
+                                                        <span style={{ color: 'rgba(29, 91, 191, 1)' }}>{programdetails?.mentor_name}</span>
                                                 }
-                                                
+
                                             </div>
 
                                         </div>
@@ -934,7 +935,7 @@ export default function AssignTask() {
                                                 </ul> */}
                                             </div>
                                             <div className='program-certificate pt-8'>
-                                                <div className='font-semibold pb-3'>Types of Certificates 
+                                                <div className='font-semibold pb-3'>Types of Certificates
                                                     {/* {
                                                         programdetails.certifications.length <= 9 ? ' 0' + programdetails.certifications.length : programdetails.certifications.length} */}
                                                 </div>
@@ -960,9 +961,9 @@ export default function AssignTask() {
 
                                                         <div className={`certificate-tab-content flex items-center justify-between relative ${participatedTab.key === certificateActiveTab ? 'block' : 'hidden'}`} key={participatedTab.key}>
                                                             <div className='px-9 py-16 w-4/6 leading-6'>
-                                                            {participatedTab.key === 'participated' && 'The ability for members to earn badges and receive certifications is another essential feature of our Mentoring Management program. It helps in creating engaging and impactful relationships between mentors and mentees.'} 
-                                                            {participatedTab.key === 'completed' && 
-                                                            'All the badges and certifications are secured through a blockchain system to ensure authenticity and traceability. This innovative approach not only enhances motivation but also provides tangible recognition of achievements, encouraging continuous growth and engagement.'}       </div>
+                                                                {participatedTab.key === 'participated' && 'The ability for members to earn badges and receive certifications is another essential feature of our Mentoring Management program. It helps in creating engaging and impactful relationships between mentors and mentees.'}
+                                                                {participatedTab.key === 'completed' &&
+                                                                    'All the badges and certifications are secured through a blockchain system to ensure authenticity and traceability. This innovative approach not only enhances motivation but also provides tangible recognition of achievements, encouraging continuous growth and engagement.'}       </div>
                                                             <img className='absolute right-0' src={CertificateIcon} alt="CertificateIcon" />
                                                         </div>
 
@@ -1139,18 +1140,26 @@ export default function AssignTask() {
                                                                 onChange={(e) => {
                                                                     dateStartField.onChange(e)
                                                                     setDateFormat({ reschedule_end_date: '', reschedule_start_date: e.value })
+                                                                    calendarRef?.current[0]?.hide()
                                                                 }}
                                                                 onClick={handleDateClick}
                                                                 disabled={false}
-                                                                minDate={new Date(programdetails.start_date)}
-                                                                maxDate={new Date(programdetails.end_date)}
+                                                                minDate={new Date()}
+                                                                // maxDate={new Date(programdetails.end_date)}
                                                                 showTime={false}
                                                                 hourFormat="12"
                                                                 dateFormat="dd/mm/yy"
                                                                 style={{ width: '60%' }}
+                                                                ref={el => (calendarRef.current[0] = el)}
                                                             />
 
-                                                            <img className='absolute top-5 right-2' src={CalendarIcon} alt="CalendarIcon" />
+                                                            <img className='absolute top-5 right-2 cursor-pointer' src={CalendarIcon} alt="CalendarIcon"
+                                                                onClick={(e) => {
+                                                                    handleDateClick();
+                                                                    calendarRef?.current[0]?.show();
+
+                                                                }}
+                                                            />
                                                         </div>
                                                         {errors['reschedule_start_date'] && (
                                                             <p className="error" role="alert">
@@ -1166,7 +1175,6 @@ export default function AssignTask() {
                                                         </label>
 
                                                         <div className='relative input-bg'>
-
                                                             <Calendar
                                                                 className='calendar-control w-full'
                                                                 {...dateEndField}
@@ -1174,28 +1182,32 @@ export default function AssignTask() {
                                                                 onChange={(e) => {
                                                                     dateEndField.onChange(e)
                                                                     setDateFormat({ ...dateFormat, ['reschedule_end_date']: e.value })
+                                                                    calendarRef?.current[1]?.hide()
                                                                 }}
                                                                 onClick={handleDateClick}
                                                                 disabled={false}
                                                                 minDate={new Date(dateFormat.reschedule_start_date)}
-                                                                maxDate={new Date(programdetails.end_date)}
+                                                                // maxDate={new Date(programdetails.end_date)}
                                                                 showTime={false}
                                                                 hourFormat="12"
                                                                 dateFormat="dd/mm/yy"
                                                                 style={{ width: '60%' }}
+                                                                ref={el => (calendarRef.current[1] = el)}
                                                             />
 
+                                                            <img className='absolute top-5 right-2 cursor-pointer' src={CalendarIcon} alt="CalendarIcon"
+                                                                onClick={(e) => {
+                                                                    handleDateClick();
+                                                                    calendarRef?.current[1]?.show();
 
-
-
-                                                            <img className='absolute top-5 right-2' src={CalendarIcon} alt="CalendarIcon" />
+                                                                }}
+                                                            />
                                                         </div>
                                                         {errors['reschedule_end_date'] && (
                                                             <p className="error" role="alert">
                                                                 {errors['reschedule_end_date'].message}
                                                             </p>
                                                         )}
-
                                                     </div>
 
                                                     <div className={`relative mb-6 w-full`} >
