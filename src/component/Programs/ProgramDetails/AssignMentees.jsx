@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Calendar } from 'primereact/calendar';
 import { useForm } from 'react-hook-form';
@@ -29,6 +29,7 @@ export default function AssignMentees() {
     const [taskSuccess, setTaskSuccess] = useState(false)
 
     const params = useParams();
+    const calendarRef = useRef([])
     const dispatch = useDispatch()
     const { programdetails, loading: programLoading, error, status, programMenteeList } = useSelector(state => state.userPrograms)
     const { category, loading: apiLoading } = useSelector(state => state.programInfo)
@@ -340,6 +341,7 @@ export default function AssignMentees() {
                                                                                             onChange={(e) => {
                                                                                                 dateField.onChange(e)
                                                                                                 setDateFormat({ ...dateFormat, [field.name]: e.value })
+                                                                                                calendarRef?.current[index]?.hide()
                                                                                             }}
                                                                                             disabled={field.disabled}
                                                                                             {...field.name === 'due_date'? 
@@ -352,9 +354,16 @@ export default function AssignMentees() {
                                                                                             showTime={field.name !== 'due_date'}
                                                                                             hourFormat="12"
                                                                                             dateFormat="dd/mm/yy"
-                                                                                            style={{ width: '30%' }}
+                                                                                            style={{ width: '42%' }}
+                                                                                            ref={el => (calendarRef.current[index] = el)}
                                                                                         />
-                                                                                        <img className='absolute top-5 right-2' src={CalendarIcon} alt="CalendarIcon" />
+                                                                                        <img className='absolute top-5 right-2 cursor-pointer' src={CalendarIcon} alt="CalendarIcon"
+                                                                                         onClick={(e) => {
+                                                                                           
+                                                                                            calendarRef?.current[index]?.show();
+                        
+                                                                                        }}
+                                                                                        />
 
                                                                                     </div>
                                                                                     {errors[field.name] && (

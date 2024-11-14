@@ -106,6 +106,8 @@ export default function Layout({ subheader }) {
     if (Object.keys(userInfo?.data).length && !userInfo?.data?.is_registered) return true
   }
 
+  const documentUpload = window.location.href.includes('mentor-doc-upload') || window.location.href.includes('mentee-doc-upload')
+
   useEffect(() => {
     if ((userInfo?.data?.userinfo?.approve_status === 'new' || notValidUser(userInfo)) && role !== 'mentee') {
       localStorage.removeItem('access_token');
@@ -121,7 +123,7 @@ export default function Layout({ subheader }) {
   return (
     <div>
       <Navbar />
-      {!subheader && userInfo?.data?.is_registered  ? (
+      {!subheader && userInfo?.data?.is_registered && !documentUpload  ? (
         <div
           className="secondary-menu py-8"
           style={{ boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.05)" }}
@@ -211,7 +213,7 @@ export default function Layout({ subheader }) {
                   onClick={() => navigate("/all-request")}
                   className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer"
                 >
-                  {role !== "admin" ? "My " : "Service "}Request
+                  My Request
                 </span>
               </li>
             )}

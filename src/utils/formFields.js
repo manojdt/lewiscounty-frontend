@@ -1716,7 +1716,7 @@ export const ReportFields = [{
       required: "This field is required",
     },
     options: [],
-    width: 'width-32',
+    width: "w-[49.4%]",
   },
   {
     type: "dropdown",
@@ -1727,20 +1727,20 @@ export const ReportFields = [{
       required: "This field is required",
     },
     options: [],
-    width: 'width-32',
+    width: "w-[49.4%]",
   },
 
-  {
-    type: "dropdown",
-    name: "mentor_manager",
-    label: "Program Creator",
-    placeholder: "Select Mentor Manager",
-    inputRules: {
-      // required: "This field is required",
-    },
-    options: [],
-    width: 'width-32',
-  },
+  // {
+  //   type: "dropdown",
+  //   name: "mentor_manager",
+  //   label: "Program Creator",
+  //   placeholder: "Select Mentor Manager",
+  //   inputRules: {
+  //     // required: "This field is required",
+  //   },
+  //   options: [],
+  //   width: 'width-32',
+  // },
   {
     type: "input",
     name: "mentor_name",

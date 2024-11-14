@@ -119,7 +119,6 @@ export default function DocumentUpload() {
                                 <div className="flex items-center">
                                     <a href="#" className="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">
                                         Upload Documents
-
                                     </a>
                                 </div>
                             </li>

@@ -126,6 +126,8 @@ export const Navbar = () => {
         setSearchProps({ ...searchProps, searchType: key, searchData: [] })
     }
 
+    const documentUpload = window.location.href.includes('mentor-doc-upload') || window.location.href.includes('mentee-doc-upload')
+
 
     const handleOpenSearchBar = e => {
         if (!document.getElementById('search_overlay_panel')) {
@@ -215,9 +217,9 @@ export const Navbar = () => {
 
                     </div>
 
-                    <div className={`navbar-icons flex items-center ${userInfo?.data?.is_registered ? 'justify-between' : 'justify-end'} ${getWindowDimensions().width <= 1536 ? 'w-3/6' : 'w-2/5'} p-4`}>
+                    <div className={`navbar-icons flex items-center ${userInfo?.data?.is_registered && !documentUpload ? 'justify-between' : 'justify-end'} ${getWindowDimensions().width <= 1536 ? 'w-3/6' : 'w-2/5'} p-4`}>
                         {
-                            userInfo?.data?.is_registered &&
+                            userInfo?.data?.is_registered && !documentUpload &&
 
                             <div className="relative mt-1 search-container">
                                 {userInfo?.data?.role === 'super_admin' ? null : <div>
@@ -259,7 +261,7 @@ export const Navbar = () => {
 
                         {/* <img className='search-icon hidden' src={SearchIcon} alt="SearchIcon" /> */}
                         {
-                            userInfo?.data?.is_registered &&
+                            userInfo?.data?.is_registered && !documentUpload &&
 
                             <>
                             {userInfo?.data?.role === 'super_admin' ? null :  <div className='relative notitification-group'>
@@ -292,7 +294,7 @@ export const Navbar = () => {
                             >
 
                                 {
-                                    userInfo?.data?.is_registered &&
+                                    userInfo?.data?.is_registered && !documentUpload &&
 
                                     <>
                                         <MenuItem onClick={() => {

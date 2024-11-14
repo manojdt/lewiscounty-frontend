@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import CancelIcon from '../../assets/images/cancel1x.png'
 import CalendarIcon from '../../assets/images/calender_1x.png'
 import MuiModal from '../../shared/Modal';
@@ -13,6 +13,7 @@ import { goalPeriods } from '../../utils/constant';
 
 export default function CreateGoal({ open, handleCloseModal, seletedItem, editMode }) {
     const [dateFormat, setDateFormat] = useState({})
+    const calendarRef = useRef(null)
     const dispatch = useDispatch()
     const { loading, error } = useSelector(state => state.goals)
 
@@ -60,20 +61,23 @@ export default function CreateGoal({ open, handleCloseModal, seletedItem, editMo
     useEffect(() => {
         if (editMode) {
             reset(seletedItem)
-        }else{
+        } else {
             reset({})
         }
     }, [seletedItem, editMode])
 
     const handleDateClick = () => {
-        document.querySelector('.p-datepicker')?.classList.add('goals-date')
+        setTimeout(() => {
+            document.querySelector('.p-datepicker')?.classList.add('goals-date')
+        },300)
+        
     }
 
     useEffect(() => {
-        return(
+        return (
             document.querySelector('.p-datepicker')?.classList.remove('goals-date')
         )
-    },[])
+    }, [])
 
 
     const dateField = register('start_date', { required: "This field is required" })
@@ -167,13 +171,19 @@ export default function CreateGoal({ open, handleCloseModal, seletedItem, editMo
                                             onChange={(e) => {
                                                 dateField.onChange(e)
                                                 setDateFormat({ ...dateFormat, start_date: e.value })
+                                                calendarRef?.current?.hide()
                                             }}
                                             onClick={handleDateClick}
                                             minDate={new Date()}
                                             hourFormat="12"
                                             dateFormat="dd/mm/yy"
+                                            ref={el => (calendarRef.current = el)}
                                         />
-                                        <img className='absolute top-5 right-2' src={CalendarIcon} alt="CalendarIcon" />
+                                        <img className='absolute top-5 right-2 cursor-pointer' src={CalendarIcon} alt="CalendarIcon"
+                                            onClick={(e) => {
+                                                handleDateClick();
+                                                calendarRef?.current?.show();
+                                            }} />
                                     </div>
                                     {errors['start_date'] && (
                                         <p className="error" role="alert">
