@@ -303,9 +303,7 @@ export default function AssignTask() {
                 navigate('/programs')
             }
 
-
-
-            if (programdetails.status === 'completed' && !programdetails.mentee_program_rating) {
+            if (role === 'mentee' && programdetails.status === 'completed' && !programdetails.mentee_program_rating) {
                 setRatingModal({ modal: true, success: false })
             }
         }
