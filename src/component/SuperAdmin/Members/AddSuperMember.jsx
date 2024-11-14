@@ -6,6 +6,8 @@ import { Button } from "../../../shared";
 import protectedApi from "../../../services/api";
 import SuccessTik from "../../../assets/images/blue_tik1x.png";
 import MuiModal from "../../../shared/Modal";
+import MultiSelectElement from "../../MultiSelectElement/MultiSelectElement";
+
 
 function AddSuperMember() {
   const [taskSuccess, setTaskSuccess] = useState(false);
@@ -62,7 +64,19 @@ function AddSuperMember() {
       }));
     }
   };
-
+  const handledropChange = (selectedOptions) => {
+    // Handle the selection change for multi-select
+    setErrFields((prevErrors) => ({
+      ...prevErrors,
+      Category: "", // Clear error for the specific field
+    }));
+  
+    // Update the Category state with the selected category IDs
+    setFormDetail((prevDetail) => ({
+      ...prevDetail,
+      Category: selectedOptions ? selectedOptions.map(option => option.value) : [], // Update with selected IDs
+    }));
+  };
   const validateForm = () => {
     let isValid = true;
     let errors = {};
@@ -120,11 +134,10 @@ function AddSuperMember() {
         role: "admin",
         categories: formDetail.Category, // Make sure this is an array of IDs
       };
-      setLoading(true); 
+      setLoading(true);
       protectedApi
-        .post("/register", data) 
+        .post("/register", data)
         .then((response) => {
-         
           if (response.status === 200 && response.data?.error) {
             alert(response.data.error);
           } else {
@@ -168,7 +181,7 @@ function AddSuperMember() {
           >
             <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
               <li className="inline-flex items-center">
-                <h2>Add New Org Admin</h2>
+                <h2>Add New Admin</h2>
               </li>
             </ol>
             <img
@@ -220,7 +233,7 @@ function AddSuperMember() {
                       className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
                       placeholder="Enter Last Name"
                     />
-                     {errFields.LastName && (
+                    {errFields.LastName && (
                       <p className="mt-1 ms-1 text-xs text-red-400">
                         {errFields.LastName}
                       </p>
@@ -319,7 +332,7 @@ function AddSuperMember() {
 
                 <div className="col-span-12">
                   <FormField label="Select Category" required>
-                    <select
+                    {/* <select
                       name="Category"
                       value={formDetail.Category[0] || ""} // Access the first value of the array
                       onChange={handleInputChange}
@@ -331,7 +344,27 @@ function AddSuperMember() {
                           {category.name}
                         </option>
                       ))}
-                    </select>
+                    </select> */}
+                    <MultiSelectElement
+                      name="Category"
+                      value={categories
+                        .filter((category) =>
+                          formDetail.Category.includes(category.id)
+                        )
+                        .map((category) => ({
+                          label: category.name,
+                          value: category.id,
+                        }))} // Make sure this matches the options format
+                      onChange={handledropChange}
+                      options={categories.map((category) => ({
+                        label: category.name,
+                        value: category.id,
+                      }))}
+                      className="content-center w-full border-none py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
+                      placeholder="Select categories"
+                      required
+                      
+                    />
                     {errFields.Category && (
                       <p className="mt-1 ms-1 text-xs text-red-400">
                         {errFields.Category}
@@ -351,7 +384,7 @@ function AddSuperMember() {
                 <Button
                   btnType="submit"
                   btnCls="w-[18%]"
-                  btnName="Add New Org admin"
+                  btnName="Add New Admin"
                   btnCategory="primary"
                 />
               </div>
