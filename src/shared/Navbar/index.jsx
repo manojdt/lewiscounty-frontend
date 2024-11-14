@@ -64,7 +64,14 @@ export const Navbar = () => {
 
     const handleProfile = () => {
         handleClose();
-        navigate('/my-profile');
+        if (
+            userInfo?.data?.role === 'super_admin' &&
+            userInfo?.data?.is_registered === true
+        ) {
+            navigate('/my-profile-admin');
+        } else {
+            navigate('/my-profile');
+        }  
     }
 
 
@@ -213,6 +220,7 @@ export const Navbar = () => {
                             userInfo?.data?.is_registered &&
 
                             <div className="relative mt-1 search-container">
+                                {userInfo?.data?.role === 'super_admin' ? null : <div>
                                 <input type="text" id="search-navbar" className="block w-full p-2 text-sm text-gray-900 border-none rounded-lg"
                                     placeholder="Search..." style={{ backgroundColor: '#F5F9FF', width: '430px', height: '50px', borderRadius: '3px' }}
                                     onClick={(e) => handleOpenSearchBar(e)}
@@ -245,6 +253,7 @@ export const Navbar = () => {
                                         </ul>
                                     </div>
                                 </OverlayPanel>
+                                </div>}                              
                             </div>
                         }
 
@@ -253,13 +262,13 @@ export const Navbar = () => {
                             userInfo?.data?.is_registered &&
 
                             <>
-                                <div className='relative notitification-group'>
+                            {userInfo?.data?.role === 'super_admin' ? null :  <div className='relative notitification-group'>
                                     <img src={NotificationIcon} className='cursor-pointer notification-image' onClick={(e) => op.current.toggle(e)} alt="NotificationIcon" />
 
                                     <OverlayPanel ref={op} id="overlay_panel" style={{ width: '450px' }} className="notification-container">
                                         <Notification handleClose={handleCloseNotification} />
                                     </OverlayPanel>
-                                </div>
+                                </div>}                            
                                 {/* <img src={SettingsIcon} alt="SettingsIcon" /> */}
                             </>
                         }
@@ -288,7 +297,14 @@ export const Navbar = () => {
                                     <>
                                         <MenuItem onClick={() => {
                                             handleClose();
-                                            navigate('/help');
+                                            if (
+                                                userInfo?.data?.role === 'super_admin' &&
+                                                userInfo?.data?.is_registered === true
+                                            ) {
+                                                navigate('/help-admin');
+                                            } else {
+                                                navigate('/help');
+                                            }
                                         }}>
                                             <img src={HelpIcon} alt="HelpIcon" className='pr-3 w-[30px]' />
                                             Help</MenuItem>

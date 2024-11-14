@@ -21,6 +21,7 @@ function SuperMembers() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [supermemberData, setSupermemberData] = useState([]); // Store the fetched data
   const [loading, setLoading] = useState(true); // Track loading state
+  const [searchQuery, setSearchQuery] = useState(""); // State for search query
   const navigate = useNavigate();
   const open = Boolean(anchorEl);
 
@@ -123,6 +124,11 @@ function SuperMembers() {
       }
     });
   };
+  // Filter the members based on search query
+  const filteredMembers = supermemberData.filter((member) =>
+    (member.users_name || "").toLowerCase().includes(searchQuery) ||
+  (member.email || "").toLowerCase().includes(searchQuery) 
+  );
   const supermemberColumn = [
     // {
     //   field: "id",
@@ -326,7 +332,7 @@ function SuperMembers() {
         >
           <div className="flex justify-between px-5 pb-4 mb-8 items-center border-b-2">
             <div className="flex gap-5 items-center text-[18px] font-semibold">
-              <p>Org Admin List</p>
+              <p>Admin List</p>
             </div>
 
             <div className="flex gap-5">
@@ -342,7 +348,7 @@ function SuperMembers() {
                     height: "45px",
                     width: "280px",
                   }}
-                  // onChange={(e) => handleSearch(e.target.value)}
+                  onChange={(e) => setSearchQuery(e.target.value.toLowerCase())}
                 />
                 <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
                   <img src={SearchIcon} alt="SearchIcon" />
@@ -350,7 +356,7 @@ function SuperMembers() {
               </div>
 
               <Button
-                btnName="Add Org Admin"
+                btnName="Add Admin"
                 onClick={() => navigate("/super-members/add")}
               />
             </div>
@@ -360,7 +366,7 @@ function SuperMembers() {
             <div className="px-6 py-70">
               <DataTable
                 hideCheckbox
-                rows={supermemberData || []} // Use fetched data here
+                rows={filteredMembers} // Use filtered data
                 columns={supermemberColumn}
               />
             </div>
