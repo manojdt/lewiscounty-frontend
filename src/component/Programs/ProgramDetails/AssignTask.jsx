@@ -82,6 +82,7 @@ export default function AssignTask() {
     const [dateFormat, setDateFormat] = useState({})
     const [message, setMessage] = useState(false);
     const role = userdetails.data.role || ''
+    const rating = programdetails?.mentor_rating === 0 ? 3 : programdetails?.mentor_rating;
 
     const url = `${process.env.REACT_APP_SITE_URL}/program-details/${params.id}`
 
@@ -337,8 +338,8 @@ export default function AssignTask() {
     const handleDateClick = () => {
         setTimeout(() => {
             document.querySelector('.p-datepicker')?.classList.add('program-date-picker')
-        },200)
-       
+        }, 200)
+
     }
 
     const handleTimeClick = () => {
@@ -841,9 +842,14 @@ export default function AssignTask() {
                                                     <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px' }}>
                                                         <span>Ratings</span>
                                                         <span className='flex gap-2 items-center'>
-                                                            
-                                                            <img src={RatingsIcon} style={{ width: '12px', height: '12px' }} alt="RatingsIcon" />
-                                                            {programdetails.mentor_rating === 0 ? '3' : programdetails.mentor_rating} </span>
+
+                                                            {
+                                                                Array.from({ length: rating }, (_, i) => i + 1).map(i => {
+                                                                    return <img src={RatingsIcon} style={{ width: '12px', height: '12px' }} alt="RatingsIcon" />
+                                                                })
+                                                            }
+                                                            {rating}
+                                                             </span>
                                                     </li>
                                                 }
 

@@ -37,13 +37,15 @@ export default function ProgramDetails() {
     const params = useParams();
     const [searchParams] = useSearchParams();
     const [activeTab, setActiveTab] = useState('about_program')
-    const [ratingModal, setRatingModal] = useState({modal: false, success: false})
+    const [ratingModal, setRatingModal] = useState({ modal: false, success: false })
     const [certificateActiveTab, setCertificateActiveTab] = useState('participated')
     const [confirmPopup, setConfirmPopup] = useState({ accept: false, cancel: false, programId: '' })
     const userdetails = useSelector(state => state.userInfo)
     const { programdetails, loading: programLoading, error, menteeJoined, status } = useSelector(state => state.userPrograms)
     const { loading: requestLoading, status: requestProgramStatus, error: requestError } = useSelector(state => state.requestList);
     const role = userdetails.data.role || ''
+    const rating = programdetails?.mentor_rating === 0 ? 3 : programdetails?.mentor_rating;
+
     const tabs = [
         {
             name: 'About Program',
@@ -58,7 +60,6 @@ export default function ProgramDetails() {
             key: 'program_testimonials'
         },
     ]
-
 
     const requestId = searchParams.get("request_id") || '';
 
@@ -173,21 +174,21 @@ export default function ProgramDetails() {
     }
 
     const ratingModalSuccess = () => {
-        setRatingModal({modal: false, success: true})
+        setRatingModal({ modal: false, success: true })
     }
 
     const ratingModalClose = () => {
-        setRatingModal({modal: false, success: false})
+        setRatingModal({ modal: false, success: false })
     }
 
     useEffect(() => {
-        if(ratingModal.success){
+        if (ratingModal.success) {
             setTimeout(() => {
-                setRatingModal({modal: false, success: false})
+                setRatingModal({ modal: false, success: false })
                 dispatch(getProgramDetails(params.id))
-            },3000)
+            }, 3000)
         }
-    },[ratingModal.success])
+    }, [ratingModal.success])
 
     useEffect(() => {
         if (Object.keys(programdetails).length && !programLoading) {
@@ -212,10 +213,10 @@ export default function ProgramDetails() {
                 }
             }
 
-            
 
-            if(role === 'mentee' && programdetails.status === 'completed' && !programdetails.mentee_program_rating){
-                setRatingModal({modal: true, success: false})
+
+            if (role === 'mentee' && programdetails.status === 'completed' && !programdetails.mentee_program_rating) {
+                setRatingModal({ modal: true, success: false })
             }
 
             setLoading({ ...loading, initial: false })
@@ -279,7 +280,6 @@ export default function ProgramDetails() {
                 <CircularProgress color="inherit" />
             </Backdrop>
 
-
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                 open={ratingModal.success}
@@ -291,7 +291,7 @@ export default function ProgramDetails() {
                 </div>
             </Backdrop>
 
-            <Ratings open={ratingModal.modal} modalSuccess={ratingModalSuccess} modalClose={ratingModalClose}/>
+            <Ratings open={ratingModal.modal} modalSuccess={ratingModalSuccess} modalClose={ratingModalClose} />
 
             {/* Program Request Updated Popup */}
             <MuiModal modalOpen={requestProgramStatus === requestStatus.programupdate} modalClose={() => undefined} noheader>
@@ -331,7 +331,6 @@ export default function ProgramDetails() {
                     </div>
                 </div>
             </Backdrop>
-
 
             {/* Program Cancel Popup */}
             <MuiModal modalSize='md' modalOpen={confirmPopup.cancel} modalClose={resetAcceptCancelPopup} noheader>
@@ -462,13 +461,13 @@ export default function ProgramDetails() {
 
                                             {
                                                 programdetails.reschedule_info !== '' &&
-                                                <div className='flex gap-3'>
-                                                    <span style={{ background: 'rgba(255, 213, 0, 1)', borderRadius: '3px' }}>
+                                                <div className='flex gap-3 items-center'>
+                                                    <span style={{ background: 'rgba(255, 213, 0, 1)', borderRadius: '3px',padding: '10px'  }}>
                                                         <img src={TimeHistoryIcon} alt="TimeHistoryIcon" />
                                                     </span>
                                                     <p style={{
                                                         background: 'rgba(255, 249, 216, 1)', color: 'rgba(255, 213, 0, 1)',
-                                                        padding: '10px', borderRadius: '20%'
+                                                        padding: '10px', borderRadius: '10px', fontSize: '12px', fontWeight: 500
                                                     }}>{programdetails.reschedule_info}</p>
                                                 </div>
                                             }
@@ -500,7 +499,7 @@ export default function ProgramDetails() {
 
                                         <div className='flex items-center gap-3 text-[12px]' >
                                             <img src={UserImage} style={{ borderRadius: '50%', width: '35px', height: '35px' }} alt="UserImage" />
-                                           
+
 
                                             <span>Instructor :</span>
                                             {
@@ -795,8 +794,13 @@ export default function ProgramDetails() {
                                                     <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px' }}>
                                                         <span>Ratings</span>
                                                         <span className='flex gap-2 items-center'>
-                                                            <img src={RatingsIcon} style={{ width: '12px', height: '12px' }} alt="RatingsIcon" />
-                                                           {programdetails.mentor_rating === 0 ? '3' : programdetails.mentor_rating} </span>
+                                                            {
+                                                                Array.from({ length: rating }, (_, i) => i + 1).map(i => {
+                                                                    return <img src={RatingsIcon} style={{ width: '12px', height: '12px' }} alt="RatingsIcon" />
+                                                                })
+                                                            }
+                                                            {rating}
+                                                        </span>
                                                     </li>
                                                 }
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}>
