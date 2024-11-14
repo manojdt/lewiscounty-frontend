@@ -401,7 +401,7 @@ const MentorTask = () => {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
-                        <MenuItem onClick={() => navigate(`/mentor-tasks-details/${params.row.id}?mentee_id=${params.row.mentee_id}`)} className='!text-[12px]'>
+                        <MenuItem onClick={() => navigate(`/mentor-tasks-details/${seletedItem.id}?mentee_id=${seletedItem.mentee_id}`)} className='!text-[12px]'>
                             <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
                             View
                         </MenuItem>
