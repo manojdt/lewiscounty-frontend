@@ -437,7 +437,7 @@ export default function AssignTask() {
                                 </ol>
 
                                 {
-                                    role !== 'admin' &&
+                                    (role === 'mentor' || (role === 'mentee' && programdetails.status === programActionStatus.inprogress )) &&
 
                                     <>
                                         <div className='cursor-pointer' onClick={handleClick}>

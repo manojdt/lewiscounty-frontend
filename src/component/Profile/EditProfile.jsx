@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import UserIcon from '../../assets/icons/MyProfileUser.svg'
+import UserImage from "../../assets/icons/user-icon.svg";
 import LocationIcon from '../../assets/images/Location1x.png'
 import SuccessTik from '../../assets/images/blue_tik1x.png';
 import { Button } from '../../shared'
@@ -105,7 +106,7 @@ export default function EditProfile() {
                 <div className="grid grid-cols-8 gap-3">
                     <div className='col-span-2'>
                         <div className='upload-profile'>
-                            <img style={{borderRadius:'50%', height:'150px'}} src={profile?.image || UserIcon} alt="UserIcon" />
+                            <img style={{borderRadius:'50%', height:'150px'}} src={profile?.image || UserImage} alt="UserIcon" />
                             <label className="w-[40%] flex items-center justify-center pb-3 
                              rounded-lg text-white text-[14px] cursor-pointer" style={{ background: 'linear-gradient(to right, rgb(0, 174, 189), rgb(29, 91, 191))',
                                 border: 'none'}}>
