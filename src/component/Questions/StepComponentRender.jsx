@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from "react-router-dom";
 import { Calendar } from 'primereact/calendar';
 import { Button } from '../../shared';
@@ -7,6 +7,7 @@ import CalendarIcon from '../../assets/images/calender_1x.png'
 
 const StepComponenRender = ({ stepFields, currentStep, handleNextStep, handlePreviousStep, stepData, stepName, totalSteps }) => {
     const navigate = useNavigate();
+    const calendarRef = useRef([])
     const {
         register,
         formState: { errors },
@@ -139,12 +140,17 @@ const StepComponenRender = ({ stepFields, currentStep, handleNextStep, handlePre
                                                                 onChange={(e) => {
                                                                     dateField.onChange(e)
                                                                     setDateFormat({ ...dateFormat, [field.name]: e.value })
+                                                                    calendarRef?.current[index]?.hide()
                                                                 }}
 
                                                                 hourFormat="12"
                                                                 dateFormat="dd/mm/yy"
+                                                                ref={el => (calendarRef.current[index] = el)}
                                                             />
-                                                            <img className='absolute top-5 right-2' src={CalendarIcon} alt="CalendarIcon" />
+                                                            <img className='absolute top-5 right-2 cursor-pointer' src={CalendarIcon} alt="CalendarIcon"
+                                                             onClick={(e) => {
+                                                                calendarRef?.current[index]?.show()
+                                                            }} />
                                                             {errors[field.name] && (
                                                                 <p className="error" role="alert">
                                                                     {errors[field.name].message}

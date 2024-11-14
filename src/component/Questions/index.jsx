@@ -161,7 +161,7 @@ export const Questions = () => {
     }
 
     if (role === 'mentor') {
-      // navigate('/dashboard')
+      navigate('/dashboard')
     }
   }
 
@@ -208,7 +208,7 @@ export const Questions = () => {
         if (role === 'mentee') {
           menteeNavigate()
         } else {
-          navigate('/logout')
+          navigate('/mentor-doc-upload')
         }
       }, [3000])
     }

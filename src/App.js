@@ -115,6 +115,7 @@ function App() {
         <Route element={<Layout />}>
           <Route path="/dashboard" element={<Dashboard />} />
 
+          <Route path="/mentor-doc-upload" element={<DocumentUpload />} />
           <Route path="/mentee-doc-upload/:id" element={<DocumentUpload />} />
           <Route path="/mentee-document-upload/:id" element={<MenteeDocs />} />
           <Route path="/programs" element={<Programs />} />

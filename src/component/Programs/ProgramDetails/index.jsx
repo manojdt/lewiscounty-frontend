@@ -796,7 +796,7 @@ export default function ProgramDetails() {
                                                         <span>Ratings</span>
                                                         <span className='flex gap-2 items-center'>
                                                             <img src={RatingsIcon} style={{ width: '12px', height: '12px' }} alt="RatingsIcon" />
-                                                            4.8 (36,763 reviews)</span>
+                                                           {programdetails.mentor_rating === 0 ? '3' : programdetails.mentor_rating} </span>
                                                     </li>
                                                 }
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}>

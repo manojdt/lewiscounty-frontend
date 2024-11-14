@@ -430,7 +430,7 @@ export default function AssignTask() {
                                     <li>
                                         <div className="flex items-center">
                                             <div className="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">
-                                                Planned Program </div>
+                                                Program Details </div>
                                         </div>
                                     </li>
 
@@ -842,8 +842,9 @@ export default function AssignTask() {
                                                     <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px' }}>
                                                         <span>Ratings</span>
                                                         <span className='flex gap-2 items-center'>
+                                                            
                                                             <img src={RatingsIcon} style={{ width: '12px', height: '12px' }} alt="RatingsIcon" />
-                                                            4.8 (36,763 reviews)</span>
+                                                            {programdetails.mentor_rating === 0 ? '3' : programdetails.mentor_rating} </span>
                                                     </li>
                                                 }
 

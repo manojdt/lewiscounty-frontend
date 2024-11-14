@@ -342,7 +342,9 @@ export default function Programs() {
                             : null
                     }
                 </Backdrop>
-                <div> Programs </div>
+                {
+                     userInfo?.data?.is_registered &&  <div> Programs </div>
+                }
                 {
                     userInfo && userInfo.data && (userInfo.data.role === 'mentor' || userInfo.data.role === 'admin') &&
                     <div>

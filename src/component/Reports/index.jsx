@@ -148,7 +148,7 @@ const Reports = () => {
                                     <img src={ViewIcon} alt="ViewIcon" className='pr-3 w-[30px]' />
                                     View
                                 </MenuItem>
-                                {
+                                {/* {
                                     params.row.report_status === reportAllStatus.accept
                                     &&
 
@@ -156,7 +156,7 @@ const Reports = () => {
                                         <img src={DownloadIcon} alt="DownloadIcon" className='pr-3 w-[30px]' />
                                         Download
                                     </MenuItem>
-                                }
+                                } */}
 
 
 

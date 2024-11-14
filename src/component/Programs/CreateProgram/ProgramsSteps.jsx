@@ -345,7 +345,6 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                                         <img className='absolute top-5 right-2 cursor-pointer' src={CalendarIcon} alt="CalendarIcon"
                                                                             onClick={(e) => {
                                                                                 calendarRef?.current[index]?.show()
-                                                                               console.log('eee', calendarRef?.current[index])
                                                                             }}
                                                                         />
 

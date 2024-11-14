@@ -121,7 +121,7 @@ export default function Layout({ subheader }) {
   return (
     <div>
       <Navbar />
-      {!subheader  ? (
+      {!subheader && userInfo?.data?.is_registered  ? (
         <div
           className="secondary-menu py-8"
           style={{ boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.05)" }}

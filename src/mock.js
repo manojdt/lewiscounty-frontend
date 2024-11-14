@@ -662,6 +662,12 @@ export const mentorTaskColumns = [{
     id: 0,
 },
 {
+    field: 'task_name',
+    headerName: 'Task Name',
+    flex: 1,
+    id: 1,
+},
+{
     field: 'mentee_name',
     headerName: 'Mentee Name',
     flex: 1,

@@ -45,13 +45,13 @@ export default function DocumentUpload() {
         let bodyFormData = new FormData();
         if (idProof.length) {
             idProof.forEach(file => bodyFormData.append('documents', file[0]))
-            
+
         }
 
         console.log('allFiles', allFiles)
         // return
-       
-       
+
+
         const headers = {
             'Content-Type': 'multipart/form-data',
         }
@@ -61,7 +61,7 @@ export default function DocumentUpload() {
             localStorage.setItem("access_token", submitDocument.data.access);
             localStorage.setItem("refresh_token", submitDocument.data.refresh);
             let decoded = jwtDecode(submitDocument.data.access);
-            dispatch(updateUserInfo({data: decoded}))
+            dispatch(updateUserInfo({ data: decoded }))
             reset()
             setIdProof([])
             setActionInfo({ loading: false, modal: true })
@@ -69,13 +69,12 @@ export default function DocumentUpload() {
     }
 
     useEffect(() => {
-        if (userInfo?.data?.document_upload && !actionInfo.modal && !params.id){
-            navigate('/dashboard')
-        }   
-        if(userInfo?.data?.document_upload && params.id && params.id !== null){
-            console.log('Inside')
+        if (userInfo?.data?.document_upload && ((!actionInfo.modal && !params.id) || userInfo?.data?.role === 'mentor')) {
+            navigate('/logout')
+        }
+
+        if (userInfo?.data?.role === 'mentee' && userInfo?.data?.document_upload && params.id && params.id !== null) {
             setTimeout(() => {
-                console.log('Timeout')
                 setActionInfo({ modal: false, loading: false })
                 navigate(`/program-details/${params.id}`)
             }, 3000)
@@ -86,7 +85,6 @@ export default function DocumentUpload() {
         if (actionInfo.modal) {
             setTimeout(() => {
                 setActionInfo({ modal: false, loading: false })
-                // navigate(`/program-details/${params.id}`)
             }, 2000)
         }
     }, [actionInfo.modal])

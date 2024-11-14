@@ -54,7 +54,7 @@ export default function ProgramCompletion() {
     }, [programdetails])
 
     useEffect(() => {
-        if (!Object.keys(programdetails).length) {
+        if (params.id) {
             const programId = params.id;
             if (programId && programId !== '') {
                 dispatch(getProgramDetails(programId))
