@@ -53,6 +53,7 @@ import { programCancelRequest, programRescheduleRequest, updateLocalRequest } fr
 import './details.css'
 import { convertDateFormat, formatDateFunToAll, formatDateTimeISO, todatDateInfo } from '../../../utils';
 import ToastNotification from '../../../shared/Toast';
+import Ratings from '../Ratings';
 
 
 export default function AssignTask() {
@@ -68,6 +69,7 @@ export default function AssignTask() {
 
     const { loading: requestLoading, status: requestStatusInfo, error: requestError } = useSelector(state => state.requestList);
     const [currentPage, setCurrentPage] = useState('')
+    const [ratingModal, setRatingModal] = useState({modal: false, success: false})
     const location = useLocation()
     const [anchorEl, setAnchorEl] = useState(null);
     const [loading, setLoading] = useState({ initial: true, task: false })
@@ -303,6 +305,12 @@ export default function AssignTask() {
             if (programdetails.status === programActionStatus.completed) {
                 navigate('/programs')
             }
+
+
+            
+            if(programdetails.status === 'completed' && !programdetails.mentee_program_rating){
+                setRatingModal({modal: true, success: false})
+            }
         }
     }, [programdetails, role])
 
@@ -348,6 +356,16 @@ export default function AssignTask() {
         }
     }
 
+
+    const ratingModalSuccess = () => {
+        setRatingModal({modal: false, success: true})
+    }
+
+    const ratingModalClose = () => {
+        setRatingModal({modal: false, success: false})
+    }
+
+
     useEffect(() => {
         return () => {
             document.querySelector('.p-datepicker')?.classList.remove('program-date-picker')
@@ -376,6 +394,20 @@ export default function AssignTask() {
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
+
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={ratingModal.success}
+            >
+                <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
+                    style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
+                    <img src={SuccessTik} alt="SuccessTik" />
+                    <p className='text-white text-[12px]'>Thank you for providing the rating for this program</p>
+                </div>
+            </Backdrop>
+
+            <Ratings open={ratingModal.modal} modalSuccess={ratingModalSuccess} modalClose={ratingModalClose}/>
+
 
             {
                 message &&
