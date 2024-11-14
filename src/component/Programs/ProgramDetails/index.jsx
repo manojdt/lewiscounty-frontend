@@ -804,7 +804,7 @@ export default function ProgramDetails() {
                                                     <span>{programdetails.course_level}</span>
                                                 </li>
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>Start Date & End Date</span>
-                                                    <span>{`${dateFormat(programdetails?.start_date)}  &  ${dateFormat(programdetails?.end_date)} `}</span>
+                                                    <span>{`${dateFormat(programdetails?.start_date)}  --  ${dateFormat(programdetails?.end_date)} `}</span>
                                                 </li>
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>Duration</span>
                                                     <span>{programdetails.duration} {' days'}</span>
