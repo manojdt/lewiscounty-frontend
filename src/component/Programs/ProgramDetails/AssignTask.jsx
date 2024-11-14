@@ -335,7 +335,6 @@ export default function AssignTask() {
     }, [message])
 
     const handleDateClick = () => {
-        console.log('pppp')
         setTimeout(() => {
             document.querySelector('.p-datepicker')?.classList.add('program-date-picker')
         },200)
@@ -915,7 +914,7 @@ export default function AssignTask() {
                                             <div className='sponsor pt-8'>
                                                 <div className='font-semibold pb-5'>Sponsored by </div>
                                                 <ul className='flex gap-5'>
-                                                    <img style={{ width: '100px', height: '100px' }} src={programdetails.program_image} alt="SponsorIcon" />
+                                                    <img style={{ width: '100px', height: '100px' }} src={programdetails.image} alt="SponsorIcon" />
                                                 </ul>
                                             </div>
 

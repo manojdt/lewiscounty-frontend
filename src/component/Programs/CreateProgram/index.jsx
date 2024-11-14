@@ -88,6 +88,7 @@ export default function CreatePrograms() {
                     status = 'draft'
                 }
 
+
                 setProgramApiStatus(status)
 
                 if (params.id) {
@@ -104,20 +105,24 @@ export default function CreatePrograms() {
             }
         }
         else {
+            let allLogo = { ...logo }
             if (data.hasOwnProperty('image') && data?.image?.length) {
-                setLogo({ ...logo, image: data.image[0] })
+                allLogo.image = data.image[0] 
             }
             if (data.hasOwnProperty('program_image') && data?.program_image?.length) {
-                setLogo({ ...logo, program_image: data.program_image[0] })
+                allLogo.program_image = data.program_image[0] 
+                
             }
+            setLogo(allLogo)
             setCurrentStep(currentStep + 1)
             setTabActionInfo({ ...tabActionInfo, activeTab: ProgramTabs[currentStep].key })
         }
     }
 
+
     const handlePreviousStep = () => {
         setCurrentStep(currentStep - 1)
-        setTabActionInfo({ ...tabActionInfo, activeTab: ProgramTabs[currentStep-2].key })
+        setTabActionInfo({ ...tabActionInfo, activeTab: ProgramTabs[currentStep - 2].key })
     }
 
     const handleAction = (key) => {
@@ -420,7 +425,7 @@ export default function CreatePrograms() {
         if (Object.keys(programdetails).length && params.id !== '') {
             let stepListData = {}
             let data = {}
-            
+
             programAllFields.forEach((field, index) => {
                 let stepField = {}
                 field.forEach((fl, i) => {
@@ -444,11 +449,11 @@ export default function CreatePrograms() {
                         currentFieldValue = programdetails['certifications']
                     }
 
-                    if(currentField === 'testimonial_type'){
+                    if (currentField === 'testimonial_type') {
                         currentFieldValue = programdetails['testimonial_types']
                     }
 
-                    if(currentField === 'program_image'){
+                    if (currentField === 'program_image') {
                         currentFieldValue = programdetails['program_image']
                     }
 
@@ -462,8 +467,8 @@ export default function CreatePrograms() {
 
             setTimeout(() => {
                 setUpdateProgramInfo(false)
-            },1000)
-            
+            }, 1000)
+
         }
     }, [programdetails])
 
