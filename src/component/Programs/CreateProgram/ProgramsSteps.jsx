@@ -24,7 +24,7 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
     const [formData, setFormData] = useState({})
     const [logoImage, setLogoImage] = useState({})
     const [checkBoxValue, setCheckBoxValue] = useState({})
-    const calendarRef = useRef(null)
+    const calendarRef = useRef([])
     const {
         register,
         formState: { errors },
@@ -323,7 +323,8 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
 
                                                                     <div className='relative'>
                                                                         <Calendar
-                                                                            ref={calendarRef}
+                                                                            
+                                                                      
                                                                             className='calendar-control input-bg'
                                                                             {...dateField}
                                                                             value={dateFormat[field.name]}
@@ -331,17 +332,20 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                                                 console.log(e)
                                                                                 dateField.onChange(e)
                                                                                 setDateFormat({ ...dateFormat, [field.name]: e.value })
+                                                                                calendarRef?.current[index]?.hide()
                                                                             }}
                                                                             {...field.name === 'start_date' ? { minDate: new Date() } : {}}
                                                                             {...field.name === 'end_date' ? { minDate: getValues('start_date') } : {}}
                                                                             showTime
                                                                             hourFormat="12"
                                                                             dateFormat="dd/mm/yy"
+                                                                           
+                                                                            ref={el => (calendarRef.current[index] = el)}
                                                                         />
-                                                                        <img className='absolute top-5 right-2' src={CalendarIcon} alt="CalendarIcon"
+                                                                        <img className='absolute top-5 right-2 cursor-pointer' src={CalendarIcon} alt="CalendarIcon"
                                                                             onClick={(e) => {
-                                                                                calendarRef.current?.click()
-                                                                               console.log('eee', calendarRef)
+                                                                                calendarRef?.current[index]?.show()
+                                                                               console.log('eee', calendarRef?.current[index])
                                                                             }}
                                                                         />
 

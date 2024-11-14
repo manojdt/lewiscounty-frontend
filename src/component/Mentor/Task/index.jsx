@@ -7,15 +7,19 @@ import { Button } from '../../../shared';
 import DataTable from '../../../shared/DataGrid';
 import { mentorTaskColumns } from '../../../mock';
 import ViewIcon from '../../../assets/images/view1x.png'
+import MoreIcon from "../../../assets/icons/moreIcon.svg";
 import { useDispatch, useSelector } from 'react-redux';
 import { getMenteeTaskfromMentor } from '../../../services/task';
-import { Backdrop, CircularProgress } from '@mui/material';
+import { Backdrop, CircularProgress, Menu, MenuItem } from '@mui/material';
 
 
 const MentorTask = () => {
     const [activeTaskMenu, setActiveTaskMenu] = useState('my-task')
     const [activeCategoryMenu, setActiveCategoryMenu] = useState('')
     const [activeTab, setActiveTab] = useState('all_programs')
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+    const [seletedItem, setSelectedItem] = useState({})
     const dispatch = useDispatch();
     const [searchParams] = useSearchParams()
     const { menteeTask, loading: menteeTaskLoading, status } = useSelector(state => state.tasks)
@@ -91,6 +95,15 @@ const MentorTask = () => {
     const handleBookmark = (program) => {
         // dispatch(updateProgram({ id: program.id, is_bookmark: !program.is_bookmark }))
     }
+
+    const handleClick = (event, data) => {
+        setSelectedItem(data)
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
 
     const programs = [
         {
@@ -376,9 +389,23 @@ const MentorTask = () => {
             id: 4,
             renderCell: (params) => {
                 return <>
-                    <div className='cursor-pointer flex items-center h-full' onClick={() => navigate(`/mentor-tasks-details/${params.row.id}?mentee_id=${params.row.mentee_id}`)}>
-                        <img src={ViewIcon} alt='ViewIcon' />
+                    <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleClick(e, params.row)}>
+                        <img src={MoreIcon} alt='ViewIcon' />
                     </div>
+                    <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                        MenuListProps={{
+                            'aria-labelledby': 'basic-button',
+                        }}
+                    >
+                        <MenuItem onClick={() => navigate(`/mentor-tasks-details/${params.row.id}?mentee_id=${params.row.mentee_id}`)} className='!text-[12px]'>
+                            <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
+                            View
+                        </MenuItem>
+                    </Menu>
 
                 </>
             }
@@ -418,13 +445,13 @@ const MentorTask = () => {
         setActiveTaskMenu(key)
         if (key === 'mentee-task') {
             navigate(`${pipeUrls.mentortask}?type=menteetask`)
-            
+
         }
     }
 
     const handleMenteeTaskFilterTab = (value) => {
         let queryString = `?status=${value}`
-        if(searchParams.get("type") === 'menteetask') {
+        if (searchParams.get("type") === 'menteetask') {
             queryString += `&type=${searchParams.get("type")}`
         }
         navigate(`${pipeUrls.mentortask}${queryString}`)
@@ -432,17 +459,13 @@ const MentorTask = () => {
 
     useEffect(() => {
 
-        if(searchParams && searchParams.get("type")){
-            
-        }
-
-        if (searchParams && searchParams.get("type") && searchParams.get("type") === 'menteetask' && !searchParams.get("status") ) {
+        if (searchParams && searchParams.get("type") && searchParams.get("type") === 'menteetask' && !searchParams.get("status")) {
             dispatch(getMenteeTaskfromMentor());
             setActiveTaskMenu('mentee-task')
         }
 
-        if (searchParams && searchParams.get("type") && searchParams.get("type") === 'menteetask' && searchParams.get("status") && searchParams.get("status") !== '' ) {
-            dispatch(getMenteeTaskfromMentor({status: searchParams.get("status")}));
+        if (searchParams && searchParams.get("type") && searchParams.get("type") === 'menteetask' && searchParams.get("status") && searchParams.get("status") !== '') {
+            dispatch(getMenteeTaskfromMentor({ status: searchParams.get("status") }));
             setActiveTaskMenu('mentee-task')
         }
     }, [searchParams])
