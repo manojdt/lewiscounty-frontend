@@ -106,6 +106,8 @@ function App() {
         <Route element={<Layout subheader={true} />}>
           <Route path="/super-members" element={<SuperMembers />} />
           <Route path="/super-members/add" element={<AddSuperMember />} />
+          <Route path="/my-profile-admin" element={<Profile />} />
+          <Route path="/help-admin" element={<HelpPage />} />
         </Route>
 
         <Route path="/login-type" element={<LoginType />} />
