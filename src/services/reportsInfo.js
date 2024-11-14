@@ -9,7 +9,7 @@ import api from "./api";
 export const getAllReports = createAsyncThunk(
     "getAllReports",
     async (query = '') => {
-        const queryString = query !== '' ? `?status=${query}` : ''
+        const queryString = query !== '' ? `?${new URLSearchParams(query).toString()}` : ''
         const allReports = await api.get(`reports/reports${queryString}`);
         if (allReports.status === 200 && allReports.data) {
             return allReports.data;

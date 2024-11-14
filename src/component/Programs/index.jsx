@@ -31,7 +31,7 @@ export default function Programs() {
     const [programView, setProgramView] = useState('grid');
     const [seletedItem, setSelectedItem] = useState({})
     const [search, setSearch] = useState('')
-    const [programFilter, setProgramFilter] = useState({search: '', datefilter: ''})
+    const [programFilter, setProgramFilter] = useState({ search: '', datefilter: '' })
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
 
@@ -45,7 +45,7 @@ export default function Programs() {
 
     const handleBookmark = async (program) => {
         const payload = {
-            "program_id":program.id,
+            "program_id": program.id,
             "marked": !program.is_bookmark
         }
         setLoading(true)
@@ -54,8 +54,10 @@ export default function Programs() {
         if (bookmark.status === 201 && bookmark.data) {
             setLoading(false)
             getPrograms()
+            if (role === 'mentor') dispatch(getProgramCounts())
+            if (role === 'mentee') dispatch(getMenteeProgramCount())
         }
-       
+
         // dispatch(updateProgram({ id: program.id, is_bookmark: !program.is_bookmark }))
     }
 
@@ -106,11 +108,11 @@ export default function Programs() {
         }
 
         if (filterSearch && filterSearch !== '') {
-            query.search = { search: 'search' , value: filterSearch }
+            query.search = { search: 'search', value: filterSearch }
         }
 
         if (filterDate && filterDate !== '') {
-            query.date = { date: 'filter_by' , value: filterDate }
+            query.date = { date: 'filter_by', value: filterDate }
         }
 
         if (isBookmark && isBookmark !== '') {
@@ -125,6 +127,9 @@ export default function Programs() {
             dispatch(getMenteePrograms(query))
         }
         if (role === 'mentor') dispatch(getUserPrograms(query));
+
+
+
     }
 
     const programTableFields = [
@@ -192,29 +197,30 @@ export default function Programs() {
         if (filterType && filterType !== '') {
             query = { type: filterType }
         }
-        if(programFilter.search !== '')  query.search = programFilter.search
-        if(programFilter.datefilter !== '')  query.datefilter = programFilter.datefilter
+        if (programFilter.search !== '') query.search = programFilter.search
+        if (programFilter.datefilter !== '') query.datefilter = programFilter.datefilter
         return query
     }
 
     const handleProgramSearch = (e) => {
-        setProgramFilter({...programFilter, search: e.target.value})
+        setProgramFilter({ ...programFilter, search: e.target.value })
         // setSearch(e.target.value)
     }
 
     const handleDateFilter = (e) => {
         console.log(e.target.value)
-        setProgramFilter({...programFilter, datefilter: e.target.value})
+        setProgramFilter({ ...programFilter, datefilter: e.target.value })
     }
 
     const menuNavigate = () => {
         setSearch('')
+        setProgramFilter({ search: '', datefilter: '' })
     }
 
     useEffect(() => {
         let query = getQueryString()
         setSearchParams(query)
-    },[programFilter])
+    }, [programFilter])
 
     useEffect(() => {
         let listPrograms = programMenus('program').filter(programs => programs.for.includes(role));
@@ -265,8 +271,15 @@ export default function Programs() {
                 query = { type: 'is_bookmark', value: isBookmark }
             }
 
-            if (role === 'mentee') dispatch(getMenteePrograms(query))
-            if (role === 'mentor') dispatch(getUserPrograms(query))
+            if (role === 'mentee') {
+                dispatch(getMenteePrograms(query))
+                dispatch(getMenteeProgramCount())
+            }
+            if (role === 'mentor') {
+                dispatch(getUserPrograms(query))
+                dispatch(getProgramCounts())
+            }
+
         }
     }, [userprograms.status])
 
@@ -307,6 +320,7 @@ export default function Programs() {
 
             console.log('loadProgram', loadProgram)
             setProgramsList(loadProgram)
+
         }
     }, [userprograms])
 
@@ -373,7 +387,7 @@ export default function Programs() {
                                 <p className="text-[12px] py-2 pl-5 pr-4 flex gap-4" style={{ background: 'rgba(223, 237, 255, 1)', borderRadius: '5px' }}>
                                     <img src={CalendarIcon} alt="CalendarIcon" />
                                     <select className='focus:outline-none' style={{ background: 'rgba(223, 237, 255, 1)', border: 'none' }}
-                                    onChange={handleDateFilter}>
+                                        onChange={handleDateFilter}>
                                         <option value="day">Day</option>
                                         <option value="month">Month</option>
                                         <option value="year">Year</option>

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Backdrop, CircularProgress } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -14,14 +14,16 @@ import { pipeUrls } from '../../utils/constant';
 import './dashboard.css';
 import UserInfoCard from "./UserInfoCard";
 import ProgramCard from "../../shared/Card/ProgramCard";
+import api from "../../services/api";
 
 export const Mentor = () => {
     const dispatch = useDispatch()
     const [searchParams] = useSearchParams();
     const navigate = useNavigate()
+    const [loading, setLoading] = useState(false)
     const { programRequest } = useSelector(state => state.requestList);
     const userpragrams = useSelector(state => state.userPrograms)
- 
+
     const handlePerformanceFilter = (e) => {
         const res = e?.target?.value || "date"
         dispatch(chartProgramList(res))
@@ -52,8 +54,21 @@ export const Mentor = () => {
         }
     }
 
-    const handleBookmark = (program) => {
-        dispatch(updateProgram({ id: program.id, is_bookmark: !program.is_bookmark }))
+    const handleBookmark = async (program) => {
+        const payload = {
+            "program_id": program.id,
+            "marked": !program.is_bookmark
+        }
+        setLoading(true)
+
+        const bookmark = await api.post('bookmark', payload);
+        if (bookmark.status === 201 && bookmark.data) {
+            setLoading(false)
+            getPrograms()
+            dispatch(getProgramCounts())
+        }
+
+
     }
 
     useEffect(() => {
@@ -85,12 +100,12 @@ export const Mentor = () => {
             <div className="dashboard-content px-8 mt-10">
                 <Backdrop
                     sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                    open={userpragrams.loading}
+                    open={userpragrams.loading || loading}
                 >
                     {
-                        userpragrams.loading ?
-                            <CircularProgress color="inherit" />
-                            : null
+
+                        <CircularProgress color="inherit" />
+
                     }
                 </Backdrop>
 

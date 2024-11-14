@@ -209,12 +209,14 @@ export const getMenteePrograms = createAsyncThunk(
             }
 
             if(queryString.hasOwnProperty('search')){
-                queryParams =  (queryParams === '' ? '?' : `${queryParams}&`) + `${queryString.search}=${queryString.value}`
+                queryParams =  (queryParams === '' ? '?' : `${queryParams}&`) + `${queryString.search.search}=${queryString.search.value}`
             }
 
-            if(queryString.hasOwnProperty('datefilter')){
-                queryParams =  (queryParams === '' ? '?' : `${queryParams}&`) + `${queryString.filter_type}=${queryString.value}`
+            if(queryString.hasOwnProperty('date')){
+                queryParams =  (queryParams === '' ? '?' : `${queryParams}&`) + `${queryString.date.date}=${queryString.date.value}`
             }
+
+
         }
         queryParams = queryParams !== '' ? `${queryParams}&limit=6` : '?limit=6'
 

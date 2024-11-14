@@ -30,8 +30,9 @@ const Reports = () => {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const [deleteModal, setDeleteModal] = useState(false)
+    const [filter, setFilter] = useState({ search: '', filter_by: '' })
     const [requestTab, setRequestTab] = useState('all')
-    const [searchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
     const [reportData, setReportData] = useState({ action: '', selectedItem: [] })
 
     const requestBtns = [
@@ -182,6 +183,7 @@ const Reports = () => {
             typeString = ''
         }
         navigate(`${pipeUrls.reports}${typeString}`)
+        setFilter({filter_by: '', search: ''})
         setRequestTab(key)
     }
 
@@ -197,11 +199,21 @@ const Reports = () => {
 
     const getReports = () => {
         const filterType = searchParams.get("type");
-
-        let query = ''
+        const filterSearch = searchParams.get("search");
+        const filterDate = searchParams.get("filter_by");
+        let query = {}
         if (filterType && filterType !== '') {
-            query = filterType
+            query.status = filterType
         }
+
+        if (filterSearch && filterSearch !== '') {
+            query.search = filterSearch
+        }
+
+        if (filterDate && filterDate !== '') {
+            query.filter_by = filterDate
+        }
+        console.log('query', query)
         dispatch(getAllReports(query));
     }
 
@@ -209,6 +221,26 @@ const Reports = () => {
         setDeleteModal(false);
         setReportData({ action: '', selectedItem: [] })
     }
+
+    const getQueryString = () => {
+        const filterType = searchParams.get("type");
+        let query = {}
+        if (filterType && filterType !== '') {
+            query = { type: filterType }
+        }
+        if (filter.search !== '') query.search = filter.search
+        if (filter.filter_by !== '') query.filter_by = filter.filter_by
+        return query
+    }
+
+    const handleSearch = (e) => {
+        setFilter({ ...filter, search: e.target.value })
+    }
+
+    useEffect(() => {
+        let query = getQueryString()
+        setSearchParams(query)
+    }, [filter])
 
     useEffect(() => {
         getReports()
@@ -285,10 +317,10 @@ const Reports = () => {
 
                         <div className="relative flex gap-3 py-3 px-3" style={{ border: '1px solid rgba(24, 40, 61, 0.25)' }}>
                             <img src={CalenderIcon} alt="CalenderIcon" />
-                            <select className='focus:outline-none'>
-                                <option>Month</option>
-                                <option>Week</option>
-                                <option>Day</option>
+                            <select className='focus:outline-none' onChange={(e) => setFilter({ ...filter, filter_by: e.target.value })}>
+                                <option value="month" selected={filter.filter_by === 'month'}>Month</option>
+                                <option value="week" selected={filter.filter_by === 'week'}>Week</option>
+                                <option value="day" selected={filter.filter_by === 'day'}>Day</option>
                             </select>
                         </div>
                         <Button btnName="Create Report" onClick={() => navigate('/create-report')} btnCls="!py-4" />
@@ -325,7 +357,10 @@ const Reports = () => {
                                             border: '1px solid rgba(29, 91, 191, 1)',
                                             height: '60px',
                                             width: '345px'
-                                        }} />
+                                        }}
+                                        value={filter.search}
+                                        onChange={handleSearch}
+                                    />
                                     <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
                                         <img src={SearchIcon} alt='SearchIcon' />
                                     </div>

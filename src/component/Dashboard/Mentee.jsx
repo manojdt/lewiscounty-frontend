@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Backdrop, CircularProgress } from "@mui/material";
@@ -18,12 +18,15 @@ import './dashboard.css';
 import ProgramCard from "../../shared/Card/ProgramCard";
 import { programFeeds } from "../../utils/mock";
 import Invite from "./Invite";
+import api from "../../services/api";
 
 
 export const Mentee = () => {
     const dispatch = useDispatch()
     const [searchParams] = useSearchParams();
     const navigate = useNavigate()
+    const [loading, setLoading] = useState(false)
+    const [topMentotList, setTopMentorList] = useState([])
     const userpragrams = useSelector(state => state.userPrograms)
     const userInfo = useSelector(state => state.userInfo)
 
@@ -55,6 +58,13 @@ export const Mentee = () => {
         dispatch(getMenteePrograms(query));
     }
 
+    const getTopMentors = async () => {
+        const topMentor = await api.get('rating/top_mentor');
+        if (topMentor.status === 200 && topMentor.data?.results) {
+            setTopMentorList(topMentor.data.results)
+        }
+    }
+
     useEffect(() => {
         if (role !== '' && userInfo?.data?.is_registered) {
             getPrograms()
@@ -65,6 +75,7 @@ export const Mentee = () => {
         const filterType = searchParams.get("type");
         const isBookmark = searchParams.get("is_bookmark");
         dispatch(getMenteeProgramCount())
+        getTopMentors()
         if (filterType === null && isBookmark === null && userInfo?.data?.is_registered) {
             dispatch(getMenteePrograms({}));
         }
@@ -83,9 +94,25 @@ export const Mentee = () => {
         }
     }
 
-    const handleBookmark = (program) => {
-        dispatch(updateProgram({ id: program.id, is_bookmark: !program.is_bookmark }))
+    const handleBookmark = async (program) => {
+
+        const payload = {
+            "program_id": program.id,
+            "marked": !program.is_bookmark
+        }
+        setLoading(true)
+
+        const bookmark = await api.post('bookmark', payload);
+        if (bookmark.status === 201 && bookmark.data) {
+            setLoading(false)
+            getPrograms()
+            if (role === 'mentee') dispatch(getMenteeProgramCount())
+        }
+
+       
     }
+
+
 
     useEffect(() => {
         if (userpragrams.status === programStatus.bookmarked && userInfo?.data?.is_registered) {
@@ -121,19 +148,19 @@ export const Mentee = () => {
         }
     ]
 
+
+    console.log('topMentotList', topMentotList)
     return (
         <>
             <div className="dashboard-content px-8 mt-10">
 
                 <Backdrop
                     sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                    open={userpragrams.loading}
+                    open={userpragrams.loading || loading}
                 >
-                    {
-                        userpragrams.loading ?
-                            <CircularProgress color="inherit" />
-                            : null
-                    }
+
+                    <CircularProgress color="inherit" />
+
                 </Backdrop>
 
                 <div className="grid grid-cols-5 gap-7">
@@ -158,39 +185,46 @@ export const Mentee = () => {
 
                             <div className="content flex flex-col gap-4 py-5 px-5 overflow-x-auto">
                                 {
-                                    topMentors.map((recentReq, index) =>
-                                        <div key={index} className="py-3 px-3" style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '10px' }}>
-                                            <div className="flex gap-2 pb-3" style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
-                                                <div className="w-1/4"> <img src={index % 2 === 0 ? MaleIcon : FemaleIcon} alt="male-icon" /> </div>
-                                                <div className="flex flex-col gap-2">
-                                                    <p className="text-[14px]" style={{ width: '100px', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}
-                                                        title={recentReq.name}
-                                                    >{recentReq.name}</p>
-                                                    <p className="text-[12px]">{recentReq.role}</p>
+                                    topMentotList.map((recentReq, index) => {
+                                        let name = `${recentReq.first_name} ${recentReq.last_name}`;
+                                        return (
+                                            <div key={index} className="py-3 px-3" style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '10px' }}>
+                                                <div className="flex gap-2 pb-3" style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
+                                                    <div className="w-1/4"> <img src={index % 2 === 0 ? MaleIcon : FemaleIcon} alt="male-icon" /> </div>
+                                                    <div className="flex flex-col gap-2">
+                                                        <p className="text-[14px]" style={{ width: '100px', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}
+                                                            title={name}
+                                                        >{name}</p>
+                                                        <p className="text-[12px]">{recentReq.role}</p>
+                                                    </div>
+                                                </div>
+                                                <div className="flex gap-3 pt-3">
+                                                    <div className="flex items-center gap-1">
+                                                        <span className="lg:w-2 lg:h-2  rounded-full" style={{ background: 'rgba(29, 91, 191, 1)' }}></span>
+                                                        <span className="lg:text-[10px]">Attended({recentReq.attended || 0})</span>
+                                                    </div>
+                                                    <div className="flex items-center gap-1">
+                                                        <span className="lg:w-2 lg:h-2  rounded-full" style={{ background: 'rgba(0, 174, 189, 1)' }}></span>
+                                                        <span className="lg:text-[10px]">Completed({recentReq.completed || 0})</span>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div className="flex gap-3 pt-3">
-                                                <div className="flex items-center gap-1">
-                                                    <span className="lg:w-2 lg:h-2  rounded-full" style={{ background: 'rgba(29, 91, 191, 1)' }}></span>
-                                                    <span className="lg:text-[10px]">Attended({recentReq.attended || 0})</span>
-                                                </div>
-                                                <div className="flex items-center gap-1">
-                                                    <span className="lg:w-2 lg:h-2  rounded-full" style={{ background: 'rgba(0, 174, 189, 1)' }}></span>
-                                                    <span className="lg:text-[10px]">Completed({recentReq.completed || 0})</span>
-                                                </div>
-                                            </div>
-                                        </div>
-
+                                        )
+                                    }
                                     )
                                 }
+
+
+
+
                             </div>
 
-                          
+
 
                         </div>
                         <div className="mt-6">
-                                <Invite />
-                            </div>
+                            <Invite />
+                        </div>
                     </div>
 
 
@@ -295,7 +329,7 @@ export const Mentee = () => {
 
 
 
-            </div>
+            </div >
         </>
     );
 };

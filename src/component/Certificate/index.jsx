@@ -28,7 +28,11 @@ export default function Certificate() {
     const role = userInfo.data.role
     const dispatch = useDispatch()
     const handleSearch = (value) => {
-        dispatch(getCertificateList(`?search=${value}`))
+        let query = ''
+        if(value !== ''){
+            query = `?search=${value}`   
+        }
+        dispatch(getCertificateList(query))
     }
     const handleClose = () => {
         setAnchorEl(null);
@@ -172,6 +176,7 @@ export default function Certificate() {
                                     height: '45px',
                                     width: '280px'
                                 }}
+                                
                                 onChange={(e) => handleSearch(e.target.value)}
                             />
                             <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
