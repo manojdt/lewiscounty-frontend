@@ -619,12 +619,12 @@ export const taskColumns = [{
         flex: 1,
         id: 2,
     },
-    {
-        field: 'file_size',
-        headerName: 'File',
-        flex: 1,
-        id: 2,
-    },
+    // {
+    //     field: 'file_size',
+    //     headerName: 'File',
+    //     flex: 1,
+    //     id: 2,
+    // },
     {
         field: 'result',
         headerName: 'Result',

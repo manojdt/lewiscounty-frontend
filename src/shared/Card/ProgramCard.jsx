@@ -22,6 +22,7 @@ import MuiModal from '../Modal';
 import { Button } from '../Button';
 import { updateProgramImage } from '../../services/userprograms';
 import { Backdrop, CircularProgress } from '@mui/material';
+import { current } from '@reduxjs/toolkit';
 
 
 
@@ -237,7 +238,7 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                                                     <img src={StarColorIcon} alt="StarColorIcon" />
                                                     <span>{rating}</span>
                                                     <span style={{ borderRight: '1px solid #18283D' }}></span>
-                                                    <img className="w-6 h-6 rounded-full shadow-lg object-cover" src={profile?.image || UserImage} alt="User logo" />
+                                                    <img className="w-6 h-6 rounded-full shadow-lg object-cover" src={currentProgram?.mentor_profile_image || UserImage} alt="User logo" />
                                                     <span style={{
                                                         textOverflow: 'ellipsis', overflow: 'hidden',
                                                         width: '215px', whiteSpace: 'nowrap'

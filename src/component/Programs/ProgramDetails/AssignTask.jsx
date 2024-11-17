@@ -443,7 +443,7 @@ export default function AssignTask() {
                                 </ol>
 
                                 {
-                                    (role === 'mentor' || (role === 'mentee' && programdetails.status === programActionStatus.inprogress)) &&
+                                    ((role === 'mentor' && programDetails.created_by === userdetails?.data?.user_id ) || (role === 'mentee' && programdetails.status === programActionStatus.inprogress)) &&
 
                                     <>
                                         <div className='cursor-pointer' onClick={handleClick}>
@@ -602,7 +602,7 @@ export default function AssignTask() {
                                             <div className='flex gap-3 items-center text-[12px]'>
                                                 {
                                                     !profileLoading &&
-                                                    <img src={profile?.image || UserImage} style={{ borderRadius: '50%', width: '35px', height: '35px' }} alt="UserImage" />
+                                                    <img src={programdetails?.mentor_profile_image || UserImage} style={{ borderRadius: '50%', width: '35px', height: '35px' }} alt="UserImage" />
                                                 }
                                                 <span>Instructor :</span>
                                                 {
