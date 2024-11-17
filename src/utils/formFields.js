@@ -1949,7 +1949,7 @@ export const reportColumns = [{
     status: ['all', 'new', 'pending', 'accept', 'cancel', 'draft']
   }, {
     field: 'report_name',
-    headerName: 'Report',
+    headerName: 'Report Name',
     flex: 1,
     id: 3,
     status: ['all', 'new', 'pending', 'accept', 'cancel', 'draft']
@@ -1959,7 +1959,7 @@ export const reportColumns = [{
     headerName: 'Create Time/ Date',
     flex: 1,
     id: 4,
-    status: ['all', 'new', 'pending', 'accept', 'cancel', 'draft']
+    status: ['all', 'new', 'pending', 'accept', 'cancel']
   },
   {
     field: 'approved_date',
@@ -1989,13 +1989,13 @@ export const reportColumns = [{
     id: 8,
     status: ['all', 'cancel']
   },
-  {
-    field: 'file',
-    headerName: 'File',
-    flex: 1,
-    id: 9,
-    status: ['all', 'new', 'pending', 'accept', 'cancel', 'draft']
-  },
+  // {
+  //   field: 'file',
+  //   headerName: 'File',
+  //   flex: 1,
+  //   id: 9,
+  //   status: ['all', 'new', 'pending', 'accept', 'cancel', 'draft']
+  // },
 ];
 
 
@@ -2267,16 +2267,6 @@ export const CreateCertificateFields = [{
 ];
 
 
-
-
-
-
-
-
-
-
-
-
 export const ProfileFields = [{
   type: "input",
   name: "first_name",
@@ -2304,7 +2294,12 @@ export const ProfileFields = [{
   label: "Primary Contact Number",
   placeholder: "Enter Primary Contact Number",
   inputRules: {
-  }
+    required: "This field is required",
+    pattern: {
+      value: /^[0-9]{10}$/,
+      message: 'Enter valid phone number'
+    },
+  },
 },
 {
   type: "input",
@@ -2313,7 +2308,12 @@ export const ProfileFields = [{
   label: "Secondary Contact Number",
   placeholder: "Enter Secondary Contact Number",
   inputRules: {
-  }
+    required: "This field is required",
+    pattern: {
+      value: /^[0-9]{10}$/,
+      message: 'Enter valid phone number'
+    },
+  },
 },
 {
   type: "input",
@@ -2332,6 +2332,7 @@ export const ProfileFields = [{
   label: "Address",
   placeholder: "Enter Address",
   inputRules: {
+    required: "This field is required",
   },
 }
 ];

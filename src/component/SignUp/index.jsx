@@ -90,14 +90,12 @@ export const Signup = () => {
     else navigate("/questions");
   }
 
-
   const handleKeyDown = (e) => {
     console.log('KEY', e.key. e?.target?.name)
     if (e.key === 'Enter') {
       e.preventDefault();
     }
   }
-
 
   useEffect(() => {
     if (!userData.loading && Object.keys(userData.data).length && userData.status === userStatus.create) {
@@ -140,13 +138,11 @@ export const Signup = () => {
                     :
                     <CircularProgress color="inherit" />
                 }
-
               </Backdrop>
 
               <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                 open={userData.loading || userData.status === userStatus.login || userData.status === userStatus.pending}
-
               >
                 {
                   (userData.status === userStatus.login || userData.status === userStatus.pending) ?
@@ -156,37 +152,16 @@ export const Signup = () => {
                         {
                           userData.status === userStatus.pending ? 'Waiting for admin approval' : ' Login  Successful!'
                         }
-
-
-
                       </span>
                     </div>
                     :
                     <CircularProgress color="inherit" />
                 }
-
               </Backdrop>
               <div className="signup-content px-4 md:px-0 lg:w-7/12 text-black">
                 <div className="md:mx-4 md:p-8">
                   <div className="text-left">
                     <div className="flex items-center logo">
-                      {/* <svg
-                        width="59"
-                        height="59"
-                        viewBox="0 0 59 59"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          clipRule="evenodd"
-                          d="M29.0588 58.5365C45.1076 58.5365 58.1177 45.4327 58.1177 29.2682C58.1177 13.1039 45.1076 0 29.0588 0C13.0101 0 0 13.1039 0 29.2682C0 45.4327 13.0101 58.5365 29.0588 58.5365ZM38.1242 13.6344C38.5654 12.0557 37.0444 11.1221 35.6552 12.119L16.2629 26.0335C14.7564 27.1145 14.9934 29.2682 16.6189 29.2682H21.7254V29.2284H31.6778L23.5685 32.1103L19.9935 44.9022C19.5523 46.4809 21.0732 47.4144 22.4625 46.4176L41.8548 32.5031C43.3613 31.4221 43.1242 29.2682 41.4988 29.2682H33.7549L38.1242 13.6344Z"
-                          fill="#00AEBD"
-                          style={{
-                            fill: "#00AEBD;fill:color(display-p3 0.0000 0.6824 0.7412);fill-opacity:1",
-                          }}
-                        />
-                      </svg> */}
                       <h4 className="mt-1 pb-1 text-xl font-semibold logoColor">
                         My Logo
                       </h4>
@@ -243,11 +218,10 @@ export const Signup = () => {
                                 {...field.fieldtype === 'password' ? { onKeyUp: (e) => handleField(field.fieldtype, e.target.value) } : {}}
                                 // onBlur={(e) => handleField(field.fieldtype, e.target.value)}
                                 aria-invalid={errors[field.name] ? "true" : "false"}
-                                
+                                tabIndex={index+1}
                               />
                               {
                                 field.fieldtype === 'password' &&
-
                                 <button
                                   type="button"
                                   className="absolute top-9 end-0 p-3.5 rounded-e-md"
@@ -284,7 +258,6 @@ export const Signup = () => {
                                         pd = 2
                                         textColor = '#00AEBD'
                                       }
-
                                       return (
                                         <li key={index} className={`text-[12px] list-none before:content-['${icon}'] before:pr-${pd} before:text-[10px]`}
                                           style={{ color: textColor }}>{rule.name}</li>)
@@ -305,17 +278,15 @@ export const Signup = () => {
                           {
                           ...register("user_agree_terms", { required: true })
                           }
+                          tabIndex={SignupFields.length+1}
                         />
                         <label className="inline-block ps-[0.15rem] hover:cursor-pointer defaultTextColor text-[14px]">
                           I agree to the
-
                           <span className="cursor-pointer px-1" onClick={() => navigate('/login')}
                             style={{ color: 'rgba(29, 91, 191, 1)', textDecoration: 'underline', fontWeight: 600 }}>Terms & Service</span>
-
                           and
                           <span className="cursor-pointer pl-1" onClick={() => navigate('/login')}
                             style={{ color: 'rgba(29, 91, 191, 1)', textDecoration: 'underline', fontWeight: 600 }}>Privacy Policy</span>
-
                         </label>
                       </div>
                       {errors['user_agree_terms'] && (
@@ -325,7 +296,6 @@ export const Signup = () => {
                       )}
                     </div>
 
-
                     <div className="flex create-button justify-center text-center lg:text-left">
                       <button
                         type="submit"
@@ -334,9 +304,9 @@ export const Signup = () => {
                         data-twe-ripple-color="light"
                         style={{
                           background:
-                            "linear-gradient(to right, #00AEBD, #1D5BBF)",
-
+                            "linear-gradient(to right, #00AEBD, #1D5BBF)"
                         }}
+                        tabIndex={SignupFields.length+2}
                       >
                         Create Account
                       </button>

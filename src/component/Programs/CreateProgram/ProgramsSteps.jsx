@@ -105,6 +105,8 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
     }
 
 
+
+
     return (
         <>
             <div className="py-9">
@@ -113,9 +115,17 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                         {
                             stepFields.map((field, index) => {
                                 const dateField = field.type === 'date' ? register(field.name, field.inputRules) : undefined
-                                var imageField = field.type === 'file' ? register(field.name, field.inputRules) : undefined
+                                let imageField = field.type === 'file' ? register(field.name, field.inputRules) : undefined
                                 const dropdownimageField = field.type === 'dropdown' ? register(field.name, field.inputRules) : undefined
                                 const checkbox = field.type === 'checkbox' ? register(field.name, field.inputRules) : undefined
+                                let imageName = ''
+                                if (field.type === 'file' && params.id) {
+                                    const url = getValues(field.name)
+                                    if (url !== null && url !== undefined && typeof url === 'string') {
+                                        imageName = url.substring(url.lastIndexOf('/') + 1);
+                                        imageField = register(field.name, {required: false})
+                                    }
+                                }
                                 return (
                                     <div className={`relative mb-6  ${getWindowDimensions().width <= 1536 && field.width === 'width-82' ? 'w-[81%]' : field.width}`} key={index}>
                                         <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor={field.label}>
@@ -323,8 +333,6 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
 
                                                                     <div className='relative'>
                                                                         <Calendar
-                                                                            
-                                                                      
                                                                             className='calendar-control input-bg'
                                                                             {...dateField}
                                                                             value={dateFormat[field.name]}
@@ -339,7 +347,7 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                                             showTime
                                                                             hourFormat="12"
                                                                             dateFormat="dd/mm/yy"
-                                                                           
+
                                                                             ref={el => (calendarRef.current[index] = el)}
                                                                         />
                                                                         <img className='absolute top-5 right-2 cursor-pointer' src={CalendarIcon} alt="CalendarIcon"
@@ -405,9 +413,9 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                                                             style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }}>
                                                                                             <div className='flex w-[80%] gap-3 items-center'>
                                                                                                 <img src={UploadIcon} alt="altlogo" />
-                                                                                                <span className='text-[12px]'> {getValues(imageField.name) && getValues(imageField.name)[0]?.name}
-
-
+                                                                                                <span className='text-[12px]'>
+                                                                                                    {getValues(imageField.name) && getValues(imageField.name)[0]?.name}
+                                                                                                    {params.id && imageName}
                                                                                                 </span>
                                                                                             </div>
                                                                                             <img className='w-[30px] cursor-pointer' onClick={() => handleDeleteImage(field.name)} src={DeleteIcon} alt="DeleteIcon" />
@@ -434,9 +442,9 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                     <div className="flex gap-6 justify-center align-middle">
                         {currentStep === 1 && <Button btnName='Cancel' btnCategory="secondary" onClick={() => navigate('/programs')} />}
                         {currentStep > 1 && <Button btnName='Back' btnCategory="secondary" onClick={handlePreviousStep} />}
-                        {/* {currentStep === totalSteps && 
+                        {currentStep !== '' &&
                             (!Object.keys(programDetails).length) ? <Button btnType="button" onClick={handleDraft} btnStyle={{ background: 'rgba(197, 197, 197, 1)', color: '#000' }}
-                            btnCls="w-[150px]" btnName={'Save as Draft'} btnCategory="primary" /> : null} */}
+                                btnCls="w-[150px]" btnName={'Save as Draft'} btnCategory="primary" /> : null}
 
                         <Button btnType="submit" id={'program-submit'} btnCls="w-[100px]"
 

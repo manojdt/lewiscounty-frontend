@@ -70,7 +70,7 @@ export const Navbar = () => {
         ) {
             navigate('/my-profile-admin');
         } else {
-            navigate('/my-profile');
+            navigate('/profile');
         }  
     }
 

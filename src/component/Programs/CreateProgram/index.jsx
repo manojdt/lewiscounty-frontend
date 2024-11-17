@@ -95,6 +95,13 @@ export default function CreatePrograms() {
                     if (programdetails.status === 'draft') {
                         bodyFormData.append('status', 'create')
                     }
+                    if(typeof fieldData?.program_image === 'string'){
+                        bodyFormData.delete('program_image');
+                    }
+                    if(typeof fieldData?.image === 'string'){
+                        bodyFormData.delete('image');
+                    }
+                   
                     bodyFormData.append('program_id', params.id)
                     dispatch(editUpdateProgram(bodyFormData))
                 } else {
@@ -216,7 +223,7 @@ export default function CreatePrograms() {
                 break;
             case 'certificates':
                 const certificates = [...certificate].filter(certificate => certificate.name.toLowerCase().includes(field.target.value))
-                setFormDetails({ ...formDetails, certificates: certificates });
+                setFormDetails({ ...formDetails, certificate: certificates });
                 break;
             case 'members':
                 const member = [...members].filter(member => member.first_name.toLowerCase().includes(field.target.value))

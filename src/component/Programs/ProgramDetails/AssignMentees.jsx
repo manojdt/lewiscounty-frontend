@@ -358,11 +358,7 @@ export default function AssignMentees() {
                                                                                             ref={el => (calendarRef.current[index] = el)}
                                                                                         />
                                                                                         <img className='absolute top-5 right-2 cursor-pointer' src={CalendarIcon} alt="CalendarIcon"
-                                                                                         onClick={(e) => {
-                                                                                           
-                                                                                            calendarRef?.current[index]?.show();
-                        
-                                                                                        }}
+                                                                                         
                                                                                         />
 
                                                                                     </div>

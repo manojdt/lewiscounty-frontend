@@ -54,6 +54,7 @@ import './details.css'
 import { convertDateFormat, formatDateFunToAll, formatDateTimeISO, todatDateInfo } from '../../../utils';
 import ToastNotification from '../../../shared/Toast';
 import Ratings from '../Ratings';
+import { getUserProfile } from '../../../services/profile';
 
 
 export default function AssignTask() {
@@ -67,6 +68,7 @@ export default function AssignTask() {
     const { allPrograms, programDetails } = useSelector(state => state.programInfo)
     const userdetails = useSelector(state => state.userInfo)
     const { programdetails, loading: programLoading, error, status } = useSelector(state => state.userPrograms)
+    const { profile, loading: profileLoading } = useSelector(state => state.profileInfo)
 
     const { loading: requestLoading, status: requestStatusInfo, error: requestError } = useSelector(state => state.requestList);
     const [currentPage, setCurrentPage] = useState('')
@@ -278,6 +280,10 @@ export default function AssignTask() {
             dispatch(getProgramDetails(programId))
         }
 
+        if (!Object.keys(profile).length) {
+            dispatch(getUserProfile())
+        }
+
     }, [params.id])
 
     useEffect(() => {
@@ -437,7 +443,7 @@ export default function AssignTask() {
                                 </ol>
 
                                 {
-                                    (role === 'mentor' || (role === 'mentee' && programdetails.status === programActionStatus.inprogress )) &&
+                                    (role === 'mentor' || (role === 'mentee' && programdetails.status === programActionStatus.inprogress)) &&
 
                                     <>
                                         <div className='cursor-pointer' onClick={handleClick}>
@@ -594,7 +600,10 @@ export default function AssignTask() {
                                             <div style={{ borderRight: '1px solid rgba(24, 40, 61, 1)' }}></div>
 
                                             <div className='flex gap-3 items-center text-[12px]'>
-                                                <img src={UserImage} style={{ borderRadius: '50%', width: '35px', height: '35px' }} alt="UserImage" />
+                                                {
+                                                    !profileLoading &&
+                                                    <img src={profile?.image || UserImage} style={{ borderRadius: '50%', width: '35px', height: '35px' }} alt="UserImage" />
+                                                }
                                                 <span>Instructor :</span>
                                                 {
                                                     role === 'mentee' ?
@@ -849,7 +858,7 @@ export default function AssignTask() {
                                                                 })
                                                             }
                                                             {rating}
-                                                             </span>
+                                                        </span>
                                                     </li>
                                                 }
 

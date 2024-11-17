@@ -2,22 +2,22 @@ import React, { useEffect, useState } from 'react'
 import { Button } from '../../shared'
 import { useNavigate } from 'react-router-dom'
 
-
-import ProfileEditIcon from '../../assets/icons/profile-edit-icon.svg'
+import SuccessTik from '../../assets/images/blue_tik1x.png';
 import ProfileImageIcon from '../../assets/icons/profile-image-icon.svg'
 import ProfileImagePencilIcon from '../../assets/icons/profile-image-pencil-icon.svg'
-import { getUserProfile, updateProfileImage } from '../../services/profile'
+import { getUserProfile, updateLocalProfileInfo, updateProfile, updateProfileImage } from '../../services/profile'
 import { useDispatch, useSelector } from 'react-redux'
 import { Backdrop, CircularProgress } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import { ProfileFields } from '../../utils/formFields'
+import { profileStatus } from '../../utils/constant'
 
 export default function MyProfile() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [editMode, setEditMode] = useState(false)
   const userData = useSelector((state) => state.userInfo);
-  const { profile, loading } = useSelector(state => state.profileInfo);
+  const { profile, loading, status } = useSelector(state => state.profileInfo);
   const {
     register,
     formState: { errors },
@@ -28,28 +28,59 @@ export default function MyProfile() {
   } = useForm();
 
 
+  const loadUserProfile = () => {
+    dispatch(getUserProfile())
+  }
+
   const uploadUserImage = (e) => {
     if (e.target.files && e.target.files[0]) {
       let bodyFormData = new FormData();
       bodyFormData.append('profile_image', e.target.files[0]);
-      dispatch(updateProfileImage(bodyFormData)).then(() => dispatch(getUserProfile()))
+      dispatch(updateProfileImage(bodyFormData)).then(() => loadUserProfile())
     }
   }
 
   const handleEditMode = () => {
     setEditMode(true)
-    reset({
-      
-    })
+
   }
 
   const onSubmit = (data) => {
+    console.log('Data', data)
+    const apiPayload = {
+      phone_number: data.phone_number,
+      address: data.address,
+    }
+    dispatch(updateProfile(apiPayload))
 
   }
 
   useEffect(() => {
-    dispatch(getUserProfile())
+    if (Object.keys(profile).length) {
+      const name = profile?.name?.split(" ");
+      reset({
+        first_name: name[0] || '',
+        last_name: name[1] || '',
+        phone_number: profile?.phone_no,
+        secondary_phone_number: '',
+        email: profile?.email,
+        address: profile?.address
+      });
+    }
+  }, [profile])
+
+  useEffect(() => {
+    loadUserProfile()
   }, [])
+
+  useEffect(() => {
+    if (status === profileStatus.update) {
+      setTimeout(() => {
+        setEditMode(false)
+        loadUserProfile()
+      }, 3000)
+    }
+  }, [status])
 
   return (
     <div className="profile-container">
@@ -62,74 +93,94 @@ export default function MyProfile() {
 
       </Backdrop>
 
+
+
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={status === profileStatus.update}
+      >
+        <div className='px-5 py-1 flex justify-center items-center'>
+          <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
+            style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
+            <img src={SuccessTik} alt="SuccessTik" />
+            <p className='text-white text-[12px]'>Profile updated Successfully</p>
+          </div>
+
+        </div>
+      </Backdrop>
+
       <div className='flex justify-between items-center mb-8'>
         <div className='text-color font-medium' >
           Profile
         </div>
       </div>
 
-      <div className='profile-content py-8 px-14' style={{ border: '1px solid rgba(219, 224, 229, 1)', background: 'rgba(255, 255, 255, 1)' }}>
-        <div className='flex justify-between items-center mb-8'>
-          <div className='text-color font-medium' >
-            Profile Picture
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className='profile-content py-8 px-14' style={{ border: '1px solid rgba(219, 224, 229, 1)', background: 'rgba(255, 255, 255, 1)' }}>
+          <div className='flex justify-between items-center mb-8'>
+            <div className='text-color font-medium' >
+              Profile Picture
+            </div>
+            <div>
+              {
+                !editMode ?
+                  <Button onClick={handleEditMode} btnType="button" btnName="Edit" btnCls={'w-[140px]'} />
+                  :
+                  <Button btnType="submit" btnName="Save Changes" btnCls={'w-[170px]'} />
+              }
+
+            </div>
           </div>
-          <div>
-            {
-              !editMode ?
-              <Button onClick={handleEditMode} btnName="Edit" btnCls={'w-[140px]'} />
-              :
-              <Button onClick={handleEditMode} btnName="Save Changes" btnCls={'w-[170px]'} />
-            }
-           
-          </div>
-        </div>
 
-
-        <div className='py-4 relative'>
-          <div className='upload-profile'>
-
-            <label className="w-[40%]  pb-3 
-                             rounded-lg text-white text-[14px] cursor-pointer" style={{
-
+          <div className='py-4 relative w-[12%]'>
+            <div className='upload-profile'>
+              <label className="w-[40%] pb-3 rounded-lg text-white text-[14px] cursor-pointer" style={{
                 border: 'none'
               }}>
-              <img src={profile?.image || ProfileImageIcon} style={{ borderRadius: '50%', height: '143px' }} alt="ProfileImageIcon" />
-              <img src={ProfileImagePencilIcon} className='absolute top-[50%] left-2 cursor-pointer' alt="ProfileImagePencilIcon" />
+                <img src={profile?.image || ProfileImageIcon} style={{ borderRadius: '50%', height: '143px' }} alt="ProfileImageIcon" />
+                <img src={ProfileImagePencilIcon} className='absolute top-[50%] left-2 cursor-pointer' alt="ProfileImagePencilIcon" />
 
-              <input type='file' class="hidden" onChange={uploadUserImage} />
-            </label>
+                <input type='file' class="hidden" onChange={uploadUserImage} />
+              </label>
+            </div>
+
+
           </div>
 
-
-        </div>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className='grid grid-cols-6 mt-12'>
+          <div className='grid grid-cols-6 gap-3 mt-12'>
             {
               ProfileFields.map((profilefield, index) =>
                 <div className='col-span-2' key={index}>
                   <div className='mb-5'>
                     <label className="block tracking-wide  text-xs mb-2" style={{ color: 'rgba(116, 116, 116, 1)' }}>
-                      {profilefield.label}
+                      {profilefield.label}{editMode && <span style={{ color: 'red' }}>{profilefield?.inputRules?.required ? '*' : ''}</span>}
                     </label>
                     {
                       editMode ?
-                        <input {...register(profilefield.name, profilefield.inputRules)}
-                          type={profilefield.fieldtype}
-                          className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none 
+                        <>
+                          <input {...register(profilefield.name, profilefield.inputRules)}
+                            type={profilefield.fieldtype}
+                            className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none 
                                                                     focus-visible:outline-none text-[14px] h-[60px]"
-                          placeholder={profilefield.placeholder}
-                          style={{
-                            color: "#232323",
-                            borderRadius: '3px',
+                            placeholder={profilefield.placeholder}
+                            style={{
+                              color: "#232323",
+                              borderRadius: '3px',
 
-                            paddingLeft: profilefield.name === 'phone_number' ? '76px' : '10px'
-                          }}
+                              paddingLeft: '10px'
+                            }}
 
-                          disabled={profilefield.disabled}
-                          aria-invalid={!!errors[profilefield.name]}
-                        />
+                            disabled={profilefield.disabled}
+                            aria-invalid={!!errors[profilefield.name]}
+                          />
+                          {errors[profilefield.name] && (
+                            <p className="error" role="alert">
+                              {errors[profilefield.name].message}
+                            </p>
+                          )}
+                        </>
                         :
-                        <p className="text-[14px]">{userData?.data?.first_name}</p>
+                        <p className="text-[14px]">{getValues(profilefield.name)}</p>
                     }
 
 
@@ -138,61 +189,9 @@ export default function MyProfile() {
 
               )
             }
-
-            {/* <div className='col-span-2'>
-              <div className='mb-5'>
-                <label className="block tracking-wide text-gray-700 text-xs mb-2" style={{ color: 'rgba(116, 116, 116, 1)' }}>
-                  Last Name
-                </label>
-                <p className="text-[14px]">{userData?.data?.last_name}</p>
-              </div>
-            </div>
-            <div className='col-span-2'>
-              <div className='mb-5'>
-                <label className="block tracking-wide text-gray-700 text-xs mb-2" style={{ color: 'rgba(116, 116, 116, 1)' }}>
-                  Primary Phone Number
-                </label>
-                <p className="text-[14px]">{profile?.phone_no}</p>
-              </div>
-            </div>
-            <div className='col-span-2'>
-              <div className='mb-5'>
-                <label className="block tracking-wide text-gray-700 text-xs mb-2" style={{ color: 'rgba(116, 116, 116, 1)' }}>
-                  Secondary Contact Number
-                </label>
-                <p className="text-[14px]">{profile?.phone_no}</p>
-              </div>
-            </div>
-            <div className='col-span-2'>
-              <div className='mb-5'>
-                <label className="block tracking-wide text-gray-700 text-xs mb-2" style={{ color: 'rgba(116, 116, 116, 1)' }}>
-                  Email
-                </label>
-                <p className="text-[14px]">{profile?.email}</p>
-              </div>
-            </div>
-            <div className='col-span-2'>
-              <div className='mb-5'>
-                <label className="block tracking-wide text-gray-700 text-xs mb-2" style={{ color: 'rgba(116, 116, 116, 1)' }}>
-                  Address
-                </label>
-                <p className="text-[14px]">{profile?.location}</p>
-              </div>
-            </div>
-            <div className='col-span-6'>
-              <div className='mb-5'>
-                <label className="block tracking-wide text-gray-700 text-xs mb-2" style={{ color: 'rgba(116, 116, 116, 1)' }}>
-                  Professional Bio
-                </label>
-                <p className="text-[14px]">{profile?.professional_bio}</p>
-              </div>
-            </div> */}
           </div>
-
-        </form>
-
-
-      </div>
+        </div>
+      </form>
 
     </div>
   )

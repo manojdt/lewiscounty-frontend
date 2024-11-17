@@ -17,6 +17,9 @@ export const getUserProfile = createAsyncThunk(
 );
 
 
+export const updateLocalProfileInfo = createAction('update/updateLocalProfileInfo')
+
+
 export const updateProfile = createAsyncThunk(
     "updateProfile",
     async (data) => {

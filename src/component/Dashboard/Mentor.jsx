@@ -15,6 +15,7 @@ import './dashboard.css';
 import UserInfoCard from "./UserInfoCard";
 import ProgramCard from "../../shared/Card/ProgramCard";
 import api from "../../services/api";
+import { getUserProfile } from "../../services/profile";
 
 export const Mentor = () => {
     const dispatch = useDispatch()
@@ -67,12 +68,11 @@ export const Mentor = () => {
             getPrograms()
             dispatch(getProgramCounts())
         }
-
-
     }
 
     useEffect(() => {
         handlePerformanceFilter()
+        dispatch(getUserProfile())
     }, [])
 
     useEffect(() => {
@@ -103,9 +103,7 @@ export const Mentor = () => {
                     open={userpragrams.loading || loading}
                 >
                     {
-
                         <CircularProgress color="inherit" />
-
                     }
                 </Backdrop>
 

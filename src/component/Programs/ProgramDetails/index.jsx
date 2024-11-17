@@ -26,6 +26,7 @@ import { Button } from '../../../shared';
 import { dateFormat, formatDateTimeISO } from '../../../utils';
 import './program-details.css'
 import Ratings from '../Ratings';
+import { getUserProfile } from '../../../services/profile';
 
 
 export default function ProgramDetails() {
@@ -41,6 +42,7 @@ export default function ProgramDetails() {
     const [certificateActiveTab, setCertificateActiveTab] = useState('participated')
     const [confirmPopup, setConfirmPopup] = useState({ accept: false, cancel: false, programId: '' })
     const userdetails = useSelector(state => state.userInfo)
+    const { profile, loading: profileLoading } = useSelector(state => state.profileInfo)
     const { programdetails, loading: programLoading, error, menteeJoined, status } = useSelector(state => state.userPrograms)
     const { loading: requestLoading, status: requestProgramStatus, error: requestError } = useSelector(state => state.requestList);
     const role = userdetails.data.role || ''
@@ -228,6 +230,10 @@ export default function ProgramDetails() {
         if (programId && programId !== '') {
             dispatch(getSpecificProgramDetails({ id: programId, requestId: requestId }))
             if (role === 'mentee') { dispatch(getMenteeJoinedInProgram({ id: programId })); }
+        }
+
+        if (!Object.keys(profile).length) {
+            dispatch(getUserProfile())
         }
 
     }, [params.id, role])
@@ -462,7 +468,7 @@ export default function ProgramDetails() {
                                             {
                                                 programdetails.reschedule_info !== '' &&
                                                 <div className='flex gap-3 items-center'>
-                                                    <span style={{ background: 'rgba(255, 213, 0, 1)', borderRadius: '3px',padding: '10px'  }}>
+                                                    <span style={{ background: 'rgba(255, 213, 0, 1)', borderRadius: '3px', padding: '10px' }}>
                                                         <img src={TimeHistoryIcon} alt="TimeHistoryIcon" />
                                                     </span>
                                                     <p style={{
@@ -497,8 +503,11 @@ export default function ProgramDetails() {
                                             </div>
                                         </div>
 
-                                        <div className='flex items-center gap-3 text-[12px]' >
-                                            <img src={UserImage} style={{ borderRadius: '50%', width: '35px', height: '35px' }} alt="UserImage" />
+                                        <div className='flex items-center gap-3 text-[12px]'>
+                                            {
+                                                !profileLoading && <img src={profile?.image || UserImage} style={{ borderRadius: '50%', width: '35px', height: '35px' }} alt="UserImage" />
+
+                                            }
 
 
                                             <span>Instructor :</span>

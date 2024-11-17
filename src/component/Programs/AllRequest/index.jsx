@@ -37,7 +37,7 @@ export default function AllRequest() {
     const { programRequest: programTableInfo, memberRequest, resourceRequest, categoryList, goalsRequest: goalsRequestInfo, certificateRequestList, reportsRequest: reportsRequestInfo,
         loading, status, error } = useSelector(state => state.requestList);
     const [currentRequestTab, setCurrentRequestTab] = useState(RequestStatus.programRequest)
-    const [filterStatus, setFilterStatus] = useState('new')
+    const [filterStatus, setFilterStatus] = useState('all')
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const [actionTab, setActiveTab] = useState('new_program_request')
@@ -77,12 +77,12 @@ export default function AllRequest() {
         {
             name: 'Program Reschedule',
             key: 'program_reschedule',
-            for: ['mentor','admin']
+            for: ['mentor', 'admin']
         },
         {
             name: 'Program Cancel',
             key: 'program_cancel',
-            for: ['mentor','mentee', 'admin']
+            for: ['mentor', 'mentee', 'admin']
         }
     ]
 
@@ -325,7 +325,6 @@ export default function AllRequest() {
         handleClose()
     }
 
-
     // REPORTS
     const handleAcceptReportsRequest = () => {
         handleOpenConfirmPopup('Report Request', currentRequestTab.key, actionTab, 'approve')
@@ -367,7 +366,6 @@ export default function AllRequest() {
         setCategoryPopup({ show: false, selectedItem: [], page: '', tab: '' })
     }
 
-
     // Handle Selected Items for Category 
     const handleSelectedItems = (selectedInfo) => {
         let data = { ...categoryPopup }
@@ -405,7 +403,6 @@ export default function AllRequest() {
         programRequestColumn = programRequestColumn.filter(column => column.field !== 'auto_approval')
     }
 
-
     programRequestColumn = [
         ...programRequestColumn,
         {
@@ -437,7 +434,7 @@ export default function AllRequest() {
                 id: 4,
                 renderCell: (params) => {
                     return <>
-    
+
                         <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleMoreClick(e, params.row)}>
                             <img src={MoreIcon} alt='MoreIcon' />
                         </div>
@@ -805,7 +802,8 @@ export default function AllRequest() {
     const getProgramRequestApi = () => {
         let payload = {
             request_type: actionTab,
-            status: filterStatus
+            ...filterStatus !== 'all' ? { status: filterStatus } : ''
+
         }
 
         if (role === 'mentor') {
@@ -817,7 +815,7 @@ export default function AllRequest() {
 
     const getGoalsRequestApi = () => {
         dispatch(goalsRequest({
-            status: filterStatus,
+            ...filterStatus !== 'all' && { status: filterStatus },
             created_at: actionTab,
             filter_by: 'day'
         }))
@@ -825,26 +823,24 @@ export default function AllRequest() {
 
     const getReportsRequestApi = () => {
         dispatch(getReportRequest({
-            rep_status: filterStatus,
+            ...filterStatus !== 'all' && { rep_status: filterStatus }
         }))
     }
 
     const getCerificateRequestAPi = () => {
-        dispatch(certificateRequest(
-            filterStatus,
-        ))
+        dispatch(certificateRequest(...filterStatus !== 'all' && filterStatus))
     }
 
     const getMembersRequestApi = () => {
         dispatch(getMemberRequest({
-            status: filterStatus,
+            ...filterStatus !== 'all' && { status: filterStatus },
             user: actionTab,
         }));
     }
 
     const getResourceRequestApi = () => {
         dispatch(getResourceRequest({
-            status: filterStatus,
+            ...filterStatus !== 'all' && { status: filterStatus },
             created_at: actionTab,
             filter_by: 'day'
         }))
@@ -853,7 +849,6 @@ export default function AllRequest() {
     const handleStatus = (e) => {
         setFilterStatus(e.target.value)
     }
-
 
     useEffect(() => {
         if (searchParams.get("type") && role !== '' && !userInfo.loading) {
@@ -1063,7 +1058,7 @@ export default function AllRequest() {
             <div className='flex gap-6 justify-center items-center py-4'>
                 <button onClick={() => setCategoryPopup({ show: false, selectedItem: [] })} className='py-3 px-6 w-[16%]'
                     style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '3px', color: 'rgba(29, 91, 191, 1)' }}>Cancel</button>
-                <button onClick={() => {  handleSelectedItems(props.selectedRows) }}
+                <button onClick={() => { handleSelectedItems(props.selectedRows) }}
                     className='text-white py-3 px-6 w-[16%]'
                     style={{ background: 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)', borderRadius: '3px' }}>Submit</button>
             </div>)
@@ -1234,6 +1229,7 @@ export default function AllRequest() {
 
                                         <p className="text-[12px] py-2 pl-5 pr-4 flex gap-4" style={{ background: 'rgba(29, 91, 191, 1)', borderRadius: '5px', height: '40px' }}>
                                             <select className='focus:outline-none' style={{ background: 'rgba(29, 91, 191, 1)', border: 'none', color: '#fff' }} onChange={handleStatus}>
+                                                <option value="all">All</option>
                                                 <option value="new">New</option>
                                                 <option value="pending">Pending</option>
                                                 <option value="accept">Approved</option>

@@ -1,10 +1,15 @@
-import { createSlice } from "@reduxjs/toolkit";
+import {
+  createSlice
+} from "@reduxjs/toolkit";
 import {
   getUserProfile,
+  updateLocalProfileInfo,
   updateProfile,
   updateProfileImage,
 } from "../../services/profile";
-import { profileStatus } from "../../utils/constant";
+import {
+  profileStatus
+} from "../../utils/constant";
 
 const initialState = {
   profile: {},
@@ -40,7 +45,7 @@ export const profileSlice = createSlice({
           error: action.error.message,
         };
       });
-  
+
     builder
       .addCase(updateProfile.pending, (state) => {
         return {
@@ -84,6 +89,14 @@ export const profileSlice = createSlice({
           error: action.error.message,
         };
       });
+
+
+    builder.addCase(updateLocalProfileInfo, (state, action) => {
+      return {
+        ...state,
+        ...action.payload
+      }
+    })
   },
 });
 

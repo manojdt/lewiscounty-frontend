@@ -79,13 +79,13 @@ export default function Layout({ subheader }) {
       </div>,
       command: () => navigate('/certificates')
     },
-    {
-      label: <div className='flex gap-4 items-center'>
-          <img src={FeedIcon} alt="FeedIcon" />
-          <p>Feed</p>
-      </div>,
-      command: () => navigate('/feeds')
-    },
+    // {
+    //   label: <div className='flex gap-4 items-center'>
+    //       <img src={FeedIcon} alt="FeedIcon" />
+    //       <p>Feed</p>
+    //   </div>,
+    //   command: () => navigate('/feeds')
+    // },
 
 
   ];

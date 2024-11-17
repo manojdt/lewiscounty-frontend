@@ -51,7 +51,9 @@ export default function CertificateDetails() {
   const handleDownload = () => {
     const input = document.getElementById("certificate-content");
     setLoading(true);
-    html2canvas(input).then((canvas) => {
+    console.log('input',input)
+    html2canvas(input, {  }).then((canvas) => {
+      
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF();
       const imgWidth = 190; // Set your desired width

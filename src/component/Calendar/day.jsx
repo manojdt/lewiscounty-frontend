@@ -38,8 +38,6 @@ export default function Day({
   });
 
   
-
-
   const renderData = newData.filter((event) => {
     return (
       new Date(day).toDateString() ===

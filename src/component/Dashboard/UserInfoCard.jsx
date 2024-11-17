@@ -4,14 +4,15 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { programActionStatus, programMenus, statusAction } from '../../utils/constant';
 
 import UserImage from "../../assets/icons/user-icon.svg";
+import EditIcon from '../../assets/icons/editIcon.svg';
 import RightArrow from '../../assets/icons/rightArrow.svg'
-import { getUserProfile } from '../../services/profile';
 
 export default function UserInfoCard() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const userInfo = useSelector(state => state.userInfo)
-    const { profile } = useSelector(state => state.profileInfo)
+    const { profile, loading } = useSelector(state => state.profileInfo)
+    const [hoverIndex, setHoverIndex] = useState(false)
     const userprograms = useSelector(state => state.userPrograms)
 
     const [programMenusList, setProgramMenusList] = useState([])
@@ -19,9 +20,6 @@ export default function UserInfoCard() {
 
     const role = userInfo.data.role
 
-    useEffect(() => {
-        dispatch(getUserProfile())
-    }, [])
 
     useEffect(() => {
 
@@ -33,17 +31,17 @@ export default function UserInfoCard() {
                     return { ...menu, count: role === 'mentor' ? userprograms.totalPrograms : totalCount?.allprogram }
                 }
                 // Mentor Response Count
-                if (role ==='mentor' && statusAction.includes(menu.status)) {
+                if (role === 'mentor' && statusAction.includes(menu.status)) {
                     return { ...menu, count: totalCount[menu.mentorStatus] }
                 }
 
                 // Mentee Response Count
-                if(role === 'mentee'){
+                if (role === 'mentee') {
                     return { ...menu, count: totalCount[menu.menteeStatus] }
                 }
-             
+
                 return menu
-                
+
             })
             setProgramMenusList(programMenu)
         }
@@ -53,8 +51,22 @@ export default function UserInfoCard() {
     return (
         <div className="">
             <div className="pb-3 w-full max-w-sm bg-white rounded-lg" style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', background: 'rgba(255, 255, 255, 1)' }}>
-                <div className="flex flex-col items-center pb-10 pt-14 border-b-2">
-                    <img className="w-24 h-24 mb-3 rounded-full shadow-lg object-cover cursor-pointer" onClick={() => navigate('/my-profile')} src={profile?.image || UserImage} alt="User logo" />
+                <div className="flex flex-col items-center pb-10 pt-14 border-b-2 relative">
+                    {
+                        !loading &&
+                        <img className={`w-24 h-24 mb-3 rounded-full shadow-lg object-cover cursor-pointer ${hoverIndex ? 'opacity-20' : ''}`}
+                        onMouseEnter={() => setHoverIndex(true)} onMouseLeave={() => setHoverIndex(false)}
+                        onClick={() => navigate('/my-profile')} src={profile?.image || UserImage} alt="User logo" />
+                    }
+
+
+                    <div className={`absolute top-[30%] left-[40%] cursor-pointer  ${hoverIndex ? 'show' : 'hidden'}`} style={{ background: '#fff', borderRadius: '50%', padding: '13px 15px' }}
+                        onClick={() => navigate('/edit-profile')} onMouseEnter={() => setHoverIndex(true)} 
+                        onMouseLeave={() => setHoverIndex(false)}
+                    >
+                        <img className="h-[25px] w-[22px]" src={EditIcon} alt="EditIcon" />
+                    </div>
+
                     <h5 className="mb-1 text-xl font-medium text-gray-900 ">
                         {userInfo?.data?.first_name} {userInfo?.data?.last_name}
                     </h5>
@@ -76,7 +88,7 @@ export default function UserInfoCard() {
                                             || (searchParams.get("type") === null && searchParams.get("is_bookmark") === null && menu.status === programActionStatus.all) ? 'active' : ''}`} aria-current="page"
                                         onClick={() => navigate(menu.page)}>
                                         <span className="text-sm">{menu.name}</span>
-                                        <span className="text-base">{menu.count > 0 ? menu.count: ''}</span>
+                                        <span className="text-base">{menu.count > 0 ? menu.count : ''}</span>
                                     </div>
                                 </li>
                             )

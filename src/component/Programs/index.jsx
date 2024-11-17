@@ -18,6 +18,7 @@ import { getMenteeProgramCount, getMenteePrograms, getProgramCounts, getUserProg
 import DataTable from '../../shared/DataGrid';
 import { programListColumns } from '../../utils/tableFields';
 import api from '../../services/api';
+import { getUserProfile } from '../../services/profile';
 
 
 export default function Programs() {
@@ -36,6 +37,7 @@ export default function Programs() {
     const open = Boolean(anchorEl);
 
     const userInfo = useSelector(state => state.userInfo)
+    const { profile } = useSelector(state => state.profileInfo)
     const userprograms = useSelector(state => state.userPrograms)
 
     const role = userInfo.data.role || ''
@@ -193,12 +195,18 @@ export default function Programs() {
 
     const getQueryString = () => {
         const filterType = searchParams.get("type");
+        const isBookmark = searchParams.get("is_bookmark");
+
         let query = {}
         if (filterType && filterType !== '') {
             query = { type: filterType }
         }
+        if (isBookmark && isBookmark !== '') {
+            query.is_bookmark = true
+        }
         if (programFilter.search !== '') query.search = programFilter.search
         if (programFilter.datefilter !== '') query.datefilter = programFilter.datefilter
+        
         return query
     }
 
@@ -208,7 +216,6 @@ export default function Programs() {
     }
 
     const handleDateFilter = (e) => {
-        console.log(e.target.value)
         setProgramFilter({ ...programFilter, datefilter: e.target.value })
     }
 
@@ -219,6 +226,7 @@ export default function Programs() {
 
     useEffect(() => {
         let query = getQueryString()
+        console.log('QQQQQ')
         setSearchParams(query)
     }, [programFilter])
 
@@ -254,6 +262,9 @@ export default function Programs() {
     useEffect(() => {
         if (role !== '') {
             getPrograms()
+        }
+        if (!Object.keys(profile).length) {
+            dispatch(getUserProfile())
         }
     }, [searchParams, role])
 
@@ -343,7 +354,7 @@ export default function Programs() {
                     }
                 </Backdrop>
                 {
-                     userInfo?.data?.is_registered &&  <div> Programs </div>
+                    userInfo?.data?.is_registered && <div> Programs </div>
                 }
                 {
                     userInfo && userInfo.data && (userInfo.data.role === 'mentor' || userInfo.data.role === 'admin') &&

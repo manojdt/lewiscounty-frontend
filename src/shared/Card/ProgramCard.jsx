@@ -45,6 +45,7 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
 
     const open = Boolean(anchorEl);
     const userInfo = useSelector(state => state.userInfo)
+    const { profile } = useSelector(state => state.profileInfo)
     const role = userInfo.data.role
 
     const statusNotShow = ['yettoapprove', 'yettojoin', 'yettostart', 'draft', 'start_request_submitted']
@@ -171,10 +172,12 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                                 const options = {
                                     hour: '2-digit',
                                     minute: '2-digit',
-                                    hour12: true, 
-                                  };
-                                  
-                                  const timeInAMPM = date.toLocaleString('en-US', options);
+                                    hour12: true,
+                                };
+
+                                const timeInAMPM = date.toLocaleString('en-US', options);
+
+                                const rating = currentProgram?.mentor_rating === 0 ? 3 : currentProgram?.mentor_rating;
 
                                 return (
                                     <div key={index} className={`curated-programs program-container flex gap-1 items-center py-5 px-5 w-[33%]`}
@@ -222,7 +225,7 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                                                 </div>
                                                 <div className='cursor-pointer flex justify-between'
                                                     onClick={() => navigate(`/update-program/${currentProgram.id}`)}
-                                                onMouseOver={() => setHoverIndex({ ...hoverIndex, desc: index })} onMouseLeave={() => setHoverIndex({ ...hoverIndex, desc: null })}>
+                                                    onMouseOver={() => setHoverIndex({ ...hoverIndex, desc: index })} onMouseLeave={() => setHoverIndex({ ...hoverIndex, desc: null })}>
 
                                                     <span className="text-[12px] line-clamp-2 ">{currentProgram.description}</span>
                                                     {
@@ -232,9 +235,9 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                                                 </div>
                                                 <div className='flex gap-2 items-center py-3 text-[12px]'>
                                                     <img src={StarColorIcon} alt="StarColorIcon" />
-                                                    <span>4.6</span>
+                                                    <span>{rating}</span>
                                                     <span style={{ borderRight: '1px solid #18283D' }}></span>
-                                                    <img className="w-6 h-6 rounded-full shadow-lg object-cover" src={UserImage} alt="User logo" />
+                                                    <img className="w-6 h-6 rounded-full shadow-lg object-cover" src={profile?.image || UserImage} alt="User logo" />
                                                     <span style={{
                                                         textOverflow: 'ellipsis', overflow: 'hidden',
                                                         width: '215px', whiteSpace: 'nowrap'
