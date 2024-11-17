@@ -10,7 +10,6 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserProfile, updateProfile, updateProfileImage } from '../../services/profile';
 import { Backdrop, CircularProgress } from '@mui/material';
-import MuiModal from '../../shared/Modal';
 import { profileStatus } from '../../utils/constant';
 
 export default function EditProfile() {
@@ -91,7 +90,10 @@ export default function EditProfile() {
 
             </Backdrop>
 
-            <MuiModal modalOpen={status === profileStatus.update || status === profileStatus.image} modalClose={() => undefined} noheader>
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={status === profileStatus.update || status === profileStatus.image}
+            >
                 <div className='px-5 py-1 flex justify-center items-center'>
                     <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
                         style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
@@ -100,16 +102,19 @@ export default function EditProfile() {
                     </div>
 
                 </div>
-            </MuiModal>
+
+            </Backdrop>
 
             <div className='edit-profile-content'>
                 <div className="grid grid-cols-8 gap-3">
                     <div className='col-span-2'>
                         <div className='upload-profile'>
-                            <img style={{borderRadius:'50%', height:'150px'}} src={profile?.image || UserImage} alt="UserIcon" />
+                            <img style={{ borderRadius: '50%', height: '150px' }} src={profile?.image || UserImage} alt="UserIcon" />
                             <label className="w-[40%] flex items-center justify-center pb-3 
-                             rounded-lg text-white text-[14px] cursor-pointer" style={{ background: 'linear-gradient(to right, rgb(0, 174, 189), rgb(29, 91, 191))',
-                                border: 'none'}}>
+                             rounded-lg text-white text-[14px] cursor-pointer" style={{
+                                    background: 'linear-gradient(to right, rgb(0, 174, 189), rgb(29, 91, 191))',
+                                    border: 'none'
+                                }}>
                                 <span class="mt-2  leading-normal">Upload Profile</span>
                                 <input type='file' class="hidden" onChange={uploadUserImage} />
                             </label>

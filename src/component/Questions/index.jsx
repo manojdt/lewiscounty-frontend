@@ -12,7 +12,6 @@ import StepComponenRender from "./StepComponentRender";
 
 import { updateInfo, updateMenteeQuestions, updateQuestions } from "../../services/loginInfo";
 import SuccessIcon from "../../assets/images/Success_tic1x.png"
-import MuiModal from "../../shared/Modal";
 import ToastNotification from "../../shared/Toast";
 import api from "../../services/api";
 
@@ -293,7 +292,10 @@ export const Questions = () => {
           <CircularProgress color="inherit" />
         </Backdrop>
 
-        <MuiModal modalOpen={loading || userInfo.status === userStatus.pending} modalClose={() => setLoading(false)} noheader>
+        <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={loading || userInfo.status === userStatus.pending}
+        >
           <div className='px-5 py-1 flex justify-center items-center'>
             <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
               style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
@@ -308,9 +310,8 @@ export const Questions = () => {
                   : (redirect ? 'We are redirecting to login page' : 'Questions submitted Successfully. Please wait for admin approval')}
               </p>
             </div>
-
           </div>
-        </MuiModal>
+        </Backdrop>
 
         <div style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
           <div className="steps pl-24 pr-28" style={{ boxShadow: '4px 4px 15px 0px rgba(0, 0, 0, 0.1)' }}>

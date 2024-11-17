@@ -56,7 +56,7 @@ export default function AssignMentees() {
             end_date: new Date(data.end_date).toISOString(),
             mentor: programdetails?.mentor_info?.id,
             due_date: new Date(data.due_date).toISOString()
-        }      
+        }
         dispatch(assignProgramTask(apiData))
     }
 
@@ -344,7 +344,7 @@ export default function AssignMentees() {
                                                                                                 calendarRef?.current[index]?.hide()
                                                                                             }}
                                                                                             disabled={field.disabled}
-                                                                                            {...field.name === 'due_date'? 
+                                                                                            {...field.name === 'due_date' ?
                                                                                                 {
                                                                                                     minDate: getValues('start_date'),
                                                                                                     maxDate: getValues('end_date')
@@ -358,7 +358,7 @@ export default function AssignMentees() {
                                                                                             ref={el => (calendarRef.current[index] = el)}
                                                                                         />
                                                                                         <img className='absolute top-5 right-2 cursor-pointer' src={CalendarIcon} alt="CalendarIcon"
-                                                                                         
+
                                                                                         />
 
                                                                                     </div>
@@ -523,7 +523,10 @@ export default function AssignMentees() {
                                         selectedAllRows={menteeAllList} />
                                 </MuiModal>
 
-                                <MuiModal modalOpen={taskSuccess} modalClose={() => setTaskSuccess(false)} noheader>
+                                <Backdrop
+                                    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                                    open={taskSuccess}
+                                >
                                     <div className='px-5 py-1 flex justify-center items-center'>
                                         <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
                                             style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
@@ -532,7 +535,7 @@ export default function AssignMentees() {
                                         </div>
 
                                     </div>
-                                </MuiModal>
+                                </Backdrop>
                             </div>
                         </div>
                     </div>

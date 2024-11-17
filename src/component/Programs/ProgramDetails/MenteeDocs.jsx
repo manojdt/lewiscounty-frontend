@@ -13,7 +13,6 @@ import { Backdrop, CircularProgress } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { Button } from '../../../shared';
 import api from '../../../services/api';
-import MuiModal from '../../../shared/Modal';
 
 
 export default function MenteeDocs() {
@@ -112,7 +111,10 @@ export default function MenteeDocs() {
                 <CircularProgress color="inherit" />
             </Backdrop>
 
-            <MuiModal modalOpen={actionInfo.modal} modalClose={resetActionInfo} noheader>
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={actionInfo.modal}
+            >
                 <div className='px-5 py-1 flex justify-center items-center'>
                     <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
                         style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
@@ -121,7 +123,7 @@ export default function MenteeDocs() {
                     </div>
 
                 </div>
-            </MuiModal>
+            </Backdrop>
 
 
             <div className='grid mb-10' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)', borderRadius: '5px' }}>

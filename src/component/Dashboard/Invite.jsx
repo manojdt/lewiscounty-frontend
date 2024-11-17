@@ -59,12 +59,12 @@ export default function Invite() {
     }
 
     useEffect(() => {
-        if(message){
+        if (message) {
             setTimeout(() => {
                 setMessage(false)
-            },3000)
+            }, 3000)
         }
-    },[message])
+    }, [message])
 
     useEffect(() => {
         if (inviteModal.success) {
@@ -88,7 +88,7 @@ export default function Invite() {
                 </div>
             </div>
             <div className="text-center">
-                <Button btnCls="!px-12 !py-3" btnName='Invite' btnCategory="primary" onClick={() => setInviteModal({...inviteModal, open: true})} />
+                <Button btnCls="!px-12 !py-3" btnName='Invite' btnCategory="primary" onClick={() => setInviteModal({ ...inviteModal, open: true })} />
             </div>
 
             {
@@ -117,7 +117,7 @@ export default function Invite() {
                                     </label>
 
                                     <div className='relative input-bg w-full'>
-                                        <input className='input-bg text-[12px] h-[60px] w-full px-5' 
+                                        <input className='input-bg text-[12px] h-[60px] w-full px-5'
                                             value={process.env.REACT_APP_SITE_URL} disabled />
                                     </div>
                                 </div>
@@ -141,7 +141,7 @@ export default function Invite() {
                             </div>
 
                             <div className='flex gap-7'>
-                                <img className='cursor-pointer' src={LinkIcon} alt="LinkIcon" onClick={handleCopy}/>
+                                <img className='cursor-pointer' src={LinkIcon} alt="LinkIcon" onClick={handleCopy} />
                                 <img className='cursor-pointer' src={LinkedInIcon} alt="LinkedInIcon" />
                                 <img className='cursor-pointer' src={InstagramIcon} alt="InstagramIcon" />
                                 <img className='cursor-pointer' src={FacebookOutlineIcon} alt="FacebookOutlineIcon" />
@@ -157,8 +157,10 @@ export default function Invite() {
                 </div>
             </MuiModal>
 
-
-            <MuiModal modalOpen={inviteModal.success} modalClose={handleCloseInviteModal} noheader>
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={inviteModal.success}
+            >
                 <div className='px-5 py-1 flex justify-center items-center'>
                     <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
                         style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
@@ -166,8 +168,7 @@ export default function Invite() {
                         <p className='text-white text-[12px]'>Your invitation is successfully sent</p>
                     </div>
                 </div>
-            </MuiModal>
-
+            </Backdrop>
 
         </div>
     )

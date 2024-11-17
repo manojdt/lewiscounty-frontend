@@ -19,7 +19,6 @@ import { reportsStatus } from '../../utils/constant';
 import { createReport, getCompletedProgramsByCategoryId, getProgramsByCategoryId, getReportProgramDetails } from '../../services/reportsInfo';
 import ToastNotification from '../../shared/Toast';
 import { dateTimeFormat } from '../../utils';
-import MuiModal from '../../shared/Modal';
 
 
 export default function CreateReport() {
@@ -58,7 +57,7 @@ export default function CreateReport() {
     }
 
     const getProgramInfo = (categoryId) => {
-        dispatch(getCompletedProgramsByCategoryId({categoryId: categoryId, type: 'report'}))
+        dispatch(getCompletedProgramsByCategoryId({ categoryId: categoryId, type: 'report' }))
     }
 
     const handleClose = () => {
@@ -85,7 +84,7 @@ export default function CreateReport() {
             setTimeout(() => {
                 if (searchParams.get('program_id') && searchParams.get('program_id') !== '' && searchParams.get('program_id') !== null) {
                     navigate(`/generate_certificate/${searchParams.get('program_id')}`)
-                }else{
+                } else {
                     navigate('/reports')
                 }
             }, 3000)
@@ -156,7 +155,7 @@ export default function CreateReport() {
             if (searchParams.has('program_id') && searchParams.get('program_id') !== '') {
                 handleProgramData(searchParams.get('program_id'))
             }
-        }else{
+        } else {
             const fields = [...reportFields].map(field => {
                 if (field.name === 'program') {
                     return {
@@ -195,7 +194,10 @@ export default function CreateReport() {
                 <CircularProgress color="inherit" />
             </Backdrop>
 
-            <MuiModal modalOpen={status === reportsStatus.create} modalClose={() => setLoading(false)} noheader>
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={status === reportsStatus.create}
+            >
                 <div className='px-5 py-1 flex justify-center items-center'>
                     <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
                         style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
@@ -204,7 +206,7 @@ export default function CreateReport() {
                     </div>
 
                 </div>
-            </MuiModal>
+            </Backdrop>
 
             {
                 notification.program &&

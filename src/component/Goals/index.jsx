@@ -13,7 +13,6 @@ import MenteeGoals from './MenteeGoals';
 
 import { deleteGoalInfo, getAllGoals, getGoalsCount, getGoalsHistory, getGoalsRequest, updateLocalGoalInfo } from '../../services/goalsInfo';
 import { goalDataStatus, goalPeriods, goalRequestColor, goalRequestStatus, goalStatus, goalStatusColor } from '../../utils/constant';
-import MuiModal from '../../shared/Modal';
 import { goalsColumns, goalsHistoryColumn, goalsRequestColumn, menteeGoalsRequestColumn } from '../../mock';
 
 import DataTable from '../../shared/DataGrid';
@@ -489,7 +488,10 @@ const Goals = () => {
 
             </Backdrop>
 
-            <MuiModal modalOpen={popupModal !== ''} modalClose={() => setPopupModal('')} noheader>
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={popupModal !== ''}
+            >
                 <div className='px-5 py-1 flex justify-center items-center'>
                     <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
                         style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
@@ -498,7 +500,7 @@ const Goals = () => {
                     </div>
 
                 </div>
-            </MuiModal>
+            </Backdrop>
 
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}

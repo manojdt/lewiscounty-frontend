@@ -13,9 +13,7 @@ import DeleteIcon from "../../assets/images/delete_1x.png"
 
 
 import { Button } from '../../shared';
-import MuiModal from '../../shared/Modal';
 import { MenteeAssignColumns } from '../../mock';
-import DataTable from '../../shared/DataGrid';
 import SuccessTik from '../../assets/images/blue_tik1x.png';
 import CancelIcon from '../../assets/images/cancel1x.png'
 import { getAllCategories } from '../../services/programInfo';
@@ -229,7 +227,10 @@ export default function EditReport() {
             }
 
 
-            <MuiModal modalOpen={status === reportsStatus.update} modalClose={() => undefined} noheader>
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={status === reportsStatus.update}
+            >
                 <div className='px-5 py-1 flex justify-center items-center'>
                     <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
                         style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
@@ -238,7 +239,7 @@ export default function EditReport() {
                     </div>
 
                 </div>
-            </MuiModal>
+            </Backdrop>
 
 
             {
@@ -250,7 +251,7 @@ export default function EditReport() {
                         <nav className="flex px-7 pt-6 pb-5 mx-2 border-b-2 justify-between" aria-label="Breadcrumb">
                             <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
                                 <li className="inline-flex items-center">
-                                    <h2>{searchParams.has("type") && searchParams.get("type") === 're-open' ? 'Re-open' : 'Edit' } - {reportDetails.report_name} </h2>
+                                    <h2>{searchParams.has("type") && searchParams.get("type") === 're-open' ? 'Re-open' : 'Edit'} - {reportDetails.report_name} </h2>
                                 </li>
                             </ol>
                             <img className='cursor-pointer' onClick={() => navigate('/reports')}
@@ -570,13 +571,13 @@ export default function EditReport() {
                                 <div className="flex gap-6 justify-center align-middle py-16">
                                     <Button btnName='Cancel' btnCls="w-[13%]" btnCategory="secondary" onClick={() => navigate('/reports')} />
                                     {
-                                        (reportDetails.report_status === 'draft' || searchParams.get('type') === 're-open' )  &&
+                                        (reportDetails.report_status === 'draft' || searchParams.get('type') === 're-open') &&
                                         <Button btnName='Save To Draft'
                                             style={{ background: 'rgba(29, 91, 191, 1)', color: '#fff' }}
                                             btnCls="w-[13%]" btnCategory="secondary" onClick={handleSubmit((d) => onSubmit({ ...d, action: 'draft' }))} />
                                     }
 
-                                    <Button btnType="submit" btnCls="w-[13%]" btnName={searchParams.get('type') === 're-open' ? 'Submit': `Save Changes`} btnCategory="primary" />
+                                    <Button btnType="submit" btnCls="w-[13%]" btnName={searchParams.get('type') === 're-open' ? 'Submit' : `Save Changes`} btnCategory="primary" />
                                 </div>
                             </form>
                         </div>

@@ -1079,7 +1079,10 @@ export default function AssignTask() {
                                 </div>
                             </MuiModal>
 
-                            <MuiModal modalOpen={requestStatusInfo === requestStatus.reschedule || requestStatusInfo === requestStatus.cancel} modalClose={() => undefined} noheader>
+                            <Backdrop
+                                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                                open={requestStatusInfo === requestStatus.reschedule || requestStatusInfo === requestStatus.cancel}
+                            >
                                 <div className='px-5 py-1 flex justify-center items-center'>
                                     <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
                                         style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
@@ -1090,9 +1093,13 @@ export default function AssignTask() {
                                     </div>
 
                                 </div>
-                            </MuiModal>
 
-                            <MuiModal modalOpen={startProgramModal.success} modalClose={() => setStartProgramModal({ loading: false, success: false })} noheader>
+                            </Backdrop>
+
+                            <Backdrop
+                                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                                open={startProgramModal.success}
+                            >
                                 <div className='px-5 py-1 flex justify-center items-center'>
                                     <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
                                         style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
@@ -1101,7 +1108,8 @@ export default function AssignTask() {
                                     </div>
 
                                 </div>
-                            </MuiModal>
+
+                            </Backdrop>
 
                             <MuiModal modalOpen={moreMenuModal.share} modalClose={handleMoreMenuClosePopup} noheader>
                                 <div className='px-5 py-1 flex justify-center items-center' style={{ border: '1px solid rgba(29, 91, 191, 1)' }}>
@@ -1324,16 +1332,7 @@ export default function AssignTask() {
                             }
 
 
-                            <MuiModal modalOpen={startProgramModal.success} modalClose={() => setStartProgramModal({ loading: false, success: false })} noheader>
-                                <div className='px-5 py-1 flex justify-center items-center'>
-                                    <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
-                                        style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
-                                        <img src={SuccessTik} alt="SuccessTik" />
-                                        <p className='text-white text-[12px]'>Started Request Approved by Mentor Manager</p>
-                                    </div>
 
-                                </div>
-                            </MuiModal>
                         </div>
                     </div>
                     : null

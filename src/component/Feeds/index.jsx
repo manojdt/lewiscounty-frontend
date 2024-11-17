@@ -11,7 +11,6 @@ import MaleIcon from '../../assets/images/male-profile1x.png'
 import FemaleIcon from '../../assets/images/female-profile1x.png'
 
 import { Button } from '../../shared'
-import MuiModal from '../../shared/Modal'
 import SettingsModal from './SettingsModal'
 import CreatePostModal from './CreatePostModal'
 import { useDispatch, useSelector } from 'react-redux'
@@ -125,7 +124,10 @@ export default function Feeds() {
                     <CircularProgress color="inherit" />
                 </Backdrop>
 
-                <MuiModal modalOpen={status === feedStatus.create} modalClose={() => undefined} noheader>
+                <Backdrop
+                    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                    open={status === feedStatus.create}
+                >
                     <div className='px-5 py-1 flex justify-center items-center'>
                         <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
                             style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
@@ -134,7 +136,8 @@ export default function Feeds() {
                         </div>
 
                     </div>
-                </MuiModal>
+
+                </Backdrop>
 
                 {
                     postModal.create && <CreatePostModal formData={formData} open={postModal.create} handleClose={handleClose} handleVisibilty={handleVisibilty} handlePostData={handlePostData} />

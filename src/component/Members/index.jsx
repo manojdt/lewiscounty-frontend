@@ -127,10 +127,10 @@ const Members = () => {
     let payload = { assignPopup: false }
 
     if (type === 'taskassigned') {
-      payload = { ...payload, message: 'Program Assigned to Mentor Successfully'}
+      payload = { ...payload, message: 'Program Assigned to Mentor Successfully' }
       dispatch(getMembersList({ role_name: actionTab }))
     }
-    
+
     setAssignProgramInfo({ ...assignProgramInfo, ...payload })
   }
 
@@ -140,12 +140,12 @@ const Members = () => {
   }
 
   useEffect(() => {
-    if(assignProgramInfo.message !== ''){
+    if (assignProgramInfo.message !== '') {
       setTimeout(() => {
-        setAssignProgramInfo({assignPopup: false, message: ''})
-      },2000)
+        setAssignProgramInfo({ assignPopup: false, message: '' })
+      }, 2000)
     }
-  },[assignProgramInfo])
+  }, [assignProgramInfo])
 
   useEffect(() => {
     let tableData = []
@@ -368,8 +368,11 @@ const Members = () => {
         ) : null}
       </div>
 
-        {/* Success Modal */}
-      <MuiModal modalOpen={assignProgramInfo.message !== ''} modalClose={() => setAssignProgramInfo({ assignPopup: false, message: ''})} noheader>
+      {/* Success Modal */}
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={assignProgramInfo.message !== ''}
+      >
         <div className='px-5 py-1 flex justify-center items-center'>
           <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
             style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
@@ -378,7 +381,7 @@ const Members = () => {
           </div>
 
         </div>
-      </MuiModal>
+      </Backdrop>
 
 
       {/* {'Cancel Popup'} */}

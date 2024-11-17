@@ -211,7 +211,7 @@ export default function MentorDetails() {
             <div className='flex gap-6 justify-center items-center py-4'>
                 <button onClick={() => setCategoryPopup({ show: false, selectedItem: [] })} className='py-3 px-6 w-[16%]'
                     style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '3px', color: 'rgba(29, 91, 191, 1)' }}>Cancel</button>
-                <button onClick={() => {  handleSelectedItems(props.selectedRows) }}
+                <button onClick={() => { handleSelectedItems(props.selectedRows) }}
                     className='text-white py-3 px-6 w-[16%]'
                     style={{ background: 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)', borderRadius: '3px' }}>Submit</button>
             </div>)
@@ -350,7 +350,10 @@ export default function MentorDetails() {
 
             </Backdrop>
 
-            <MuiModal modalOpen={requestStatusInfo === requestStatus.memberupdate || requestStatusInfo === requestStatus.membercancel} modalClose={resetConfirmPopup} noheader>
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={requestStatusInfo === requestStatus.memberupdate || requestStatusInfo === requestStatus.membercancel}
+            >
                 <div className='px-5 py-1 flex justify-center items-center'>
                     <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
                         style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
@@ -359,10 +362,13 @@ export default function MentorDetails() {
                     </div>
 
                 </div>
-            </MuiModal>
 
+            </Backdrop>
 
-            <MuiModal modalOpen={requestStatusInfo === requestStatus.autoapproval} modalClose={resetConfirmPopup} noheader>
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={requestStatusInfo === requestStatus.autoapproval}
+            >
                 <div className='px-5 py-1 flex justify-center items-center'>
                     <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
                         style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
@@ -371,7 +377,7 @@ export default function MentorDetails() {
                     </div>
 
                 </div>
-            </MuiModal>
+            </Backdrop>
 
 
 

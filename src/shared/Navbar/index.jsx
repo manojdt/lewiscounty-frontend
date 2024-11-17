@@ -18,6 +18,7 @@ import { OverlayPanel } from 'primereact/overlaypanel';
 import Notification from '../../component/Notification';
 import { userActivities } from '../../services/activities';
 import api from '../../services/api';
+import { getUserProfile } from '../../services/profile';
 
 export const Navbar = () => {
     const navigate = useNavigate();
@@ -28,6 +29,7 @@ export const Navbar = () => {
     const location = useLocation();
     const dispatch = useDispatch();
     const [anchorEl, setAnchorEl] = useState(null);
+    const { profile } = useSelector(state => state.profileInfo);
     const [searchProps, setSearchProps] = useState({ searchType: 'program', search: '', dropOpen: false, searchData: [], current: null })
     const open = Boolean(anchorEl);
     const { pathname } = location
@@ -155,6 +157,12 @@ export const Navbar = () => {
         }
       };
 
+    useEffect(() => {
+        if(!Object.keys(profile).length){
+            dispatch(getUserProfile())
+        }
+    },[])
+
 
     useEffect(() => {
         dispatch(userActivities())
@@ -281,7 +289,7 @@ export const Navbar = () => {
                         <span className='more-icon-menu cursor-pointer hidden text-[25px]' onClick={() => openNav()}>&#9776;</span>
 
                         <div className='reletive action-menu'>
-                            <img className='rounded-3xl object-cover h-8 w-8 cursor-pointer' src={UserImage} alt="User Icon"
+                            <img className='rounded-3xl object-cover h-8 w-8 cursor-pointer' src={profile?.image || UserImage} alt="User Icon"
                                 onClick={handleClick} />
                             <Menu
                                 id="basic-menu"

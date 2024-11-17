@@ -95,13 +95,13 @@ export default function CreatePrograms() {
                     if (programdetails.status === 'draft') {
                         bodyFormData.append('status', 'create')
                     }
-                    if(typeof fieldData?.program_image === 'string'){
+                    if (typeof fieldData?.program_image === 'string') {
                         bodyFormData.delete('program_image');
                     }
-                    if(typeof fieldData?.image === 'string'){
+                    if (typeof fieldData?.image === 'string') {
                         bodyFormData.delete('image');
                     }
-                   
+
                     bodyFormData.append('program_id', params.id)
                     dispatch(editUpdateProgram(bodyFormData))
                 } else {
@@ -114,11 +114,11 @@ export default function CreatePrograms() {
         else {
             let allLogo = { ...logo }
             if (data.hasOwnProperty('image') && data?.image?.length) {
-                allLogo.image = data.image[0] 
+                allLogo.image = data.image[0]
             }
             if (data.hasOwnProperty('program_image') && data?.program_image?.length) {
-                allLogo.program_image = data.program_image[0] 
-                
+                allLogo.program_image = data.program_image[0]
+
             }
             setLogo(allLogo)
             setCurrentStep(currentStep + 1)
@@ -665,7 +665,10 @@ export default function CreatePrograms() {
                     </div>
                 </MuiModal>
 
-                <MuiModal modalOpen={loading.success} modalClose={() => setLoading({ create: false, success: false })} noheader>
+                <Backdrop
+                    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                    open={loading.success}
+                >
                     <div className='px-5 py-1 flex justify-center items-center'>
                         <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
                             style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
@@ -673,7 +676,8 @@ export default function CreatePrograms() {
                             <p className='text-white text-[12px]'>Requested Successfully</p>
                         </div>
                     </div>
-                </MuiModal>
+
+                </Backdrop>
 
                 <MuiModal modalSize='lg' modalOpen={actionModal !== ''} modalClose={() => setActionModal('')} noheader>
                     <div className='relative'>

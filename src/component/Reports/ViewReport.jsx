@@ -10,7 +10,6 @@ import SuccessTik from '../../assets/images/blue_tik1x.png';
 import ReportVideoIcon from '../../assets/images/report1.png'
 import { Button } from '../../shared'
 import { useNavigate, useParams } from 'react-router-dom'
-import MuiModal from '../../shared/Modal';
 import { useDispatch, useSelector } from 'react-redux'
 import { Backdrop, CircularProgress } from '@mui/material'
 import { getReportDetails } from '../../services/reportsInfo'
@@ -56,7 +55,10 @@ const ViewReport = () => {
 
     return (
         <div className="px-9 py-9">
-            <MuiModal modalOpen={loading} modalClose={() => setLoading(false)} noheader>
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={loading}
+            >
                 <div className='px-5 py-1 flex justify-center items-center'>
                     <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
                         style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
@@ -65,7 +67,7 @@ const ViewReport = () => {
                     </div>
 
                 </div>
-            </MuiModal>
+            </Backdrop>
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                 open={reportsLoading}
