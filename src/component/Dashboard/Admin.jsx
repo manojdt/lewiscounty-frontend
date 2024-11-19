@@ -17,6 +17,7 @@ import Tooltip from '../../shared/Tooltip';
 import { programFeeds } from '../../utils/mock';
 import { chartProgramList } from '../../services/userprograms';
 import MemberRequest from './MemberRequest';
+import protectedApi from "../../services/api";
 
 export default function Admin() {
     const navigate = useNavigate()
@@ -26,6 +27,8 @@ export default function Admin() {
 
     const [programMenusList, setProgramMenusList] = useState([])
     const [chartList, setChartList] = useState([])
+    const [membersCount, setMembersCount] = useState([])
+    const [loading, setLoading] = useState(true); // Track loading state
  
     const role = userInfo.data.role
     const dispatch = useDispatch()
@@ -33,24 +36,39 @@ export default function Admin() {
         console.log('View all')
     }
 
-    const membersList = [
-        {
-            name: 'Mentor Managers',
-            count: 10
-        },
-        {
-            name: 'Mentors',
-            count: 20
-        },
-        {
-            name: 'Mentees',
-            count: 30
-        },
-        {
-            name: 'Technical Supports',
-            count: 40
-        },
-    ]
+    // const membersList = [
+    //     {
+    //         name: 'Mentor Managers',
+    //         count: 10
+    //     },
+    //     {
+    //         name: 'Mentors',
+    //         count: 20
+    //     },
+    //     {
+    //         name: 'Mentees',
+    //         count: 30
+    //     },
+    //     {
+    //         name: 'Technical Supports',
+    //         count: 40
+    //     },
+    // ]
+
+    const fetchMembersCount = async () => {
+        setLoading(true); // Set loading to true while fetching
+        try {
+          const response = await protectedApi.get("/dashboard/member-count");
+          setMembersCount(response.data);
+        } catch (error) {
+          console.error("Error fetching member-count data:", error);
+        } finally {
+          setLoading(false); // Set loading to false after data is fetched
+        }
+      };
+      useEffect(() => {
+        fetchMembersCount();
+      }, []); 
 
     const data =
         [
@@ -178,10 +196,11 @@ export default function Admin() {
                             </button>
                         </div>
                     </div>
+                    
 
                     <div className='mt-4'>
                         <ListCard title="Members" viewall handleViewall={handleViewAllMembers}
-                            items={membersList}
+                            items={membersCount}
                         />
                     </div>
                 </div>
