@@ -1,4 +1,5 @@
 import React from 'react'
+import { capitalizeEachWord } from '../../utils/constant'
 
 export default function ListCard({ title = '', viewall = false, handleViewall, items = [], onItemClick }) {
 
@@ -18,7 +19,7 @@ export default function ListCard({ title = '', viewall = false, handleViewall, i
                         <div className="flex justify-between py-2 px-6 rounded cursor-pointer" 
                         onClick={() => handleClickItem(menu)}
                         aria-current="page">
-                            <span className="text-sm">{menu.name}</span>
+                            <span className="text-sm">{capitalizeEachWord(menu.role)}</span>
                             <span className="text-base">{menu.count}</span>
                         </div>
                     </li>)
