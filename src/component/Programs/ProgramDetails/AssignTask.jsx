@@ -1152,7 +1152,7 @@ export default function AssignTask() {
                                                         <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor={'Reschedule Date'}>
                                                             Reschedule Start Date
                                                         </label>
-{console.log("programdetails ===>", programdetails)}
+
                                                         <div className='relative input-bg'>
                                                             <Calendar
                                                                 className='calendar-control w-full'
