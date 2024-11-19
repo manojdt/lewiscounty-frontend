@@ -1152,7 +1152,7 @@ export default function AssignTask() {
                                                         <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor={'Reschedule Date'}>
                                                             Reschedule Start Date
                                                         </label>
-
+{console.log("programdetails ===>", programdetails)}
                                                         <div className='relative input-bg'>
                                                             <Calendar
                                                                 className='calendar-control w-full'
@@ -1165,8 +1165,10 @@ export default function AssignTask() {
                                                                 }}
                                                                 onClick={handleDateClick}
                                                                 disabled={false}
-                                                                minDate={new Date()}
+                                                                // minDate={new Date()}
                                                                 // maxDate={new Date(programdetails.end_date)}
+                                                                minDate={programdetails?.status === "yettostart" ? new Date() : new Date(programdetails?.start_date)}
+                                                                maxDate={programdetails?.status === "yettostart" ? "" : new Date(programdetails?.end_date)}
                                                                 showTime={false}
                                                                 hourFormat="12"
                                                                 dateFormat="dd/mm/yy"
@@ -1207,8 +1209,10 @@ export default function AssignTask() {
                                                                 }}
                                                                 onClick={handleDateClick}
                                                                 disabled={false}
-                                                                minDate={new Date(dateFormat.reschedule_start_date)}
+                                                                // minDate={new Date(dateFormat.reschedule_start_date)}
                                                                 // maxDate={new Date(programdetails.end_date)}
+                                                                minDate={new Date(dateFormat.reschedule_start_date)}
+                                                                maxDate={programdetails?.status === "yettostart" ? "" : new Date(programdetails?.end_date)}
                                                                 showTime={false}
                                                                 hourFormat="12"
                                                                 dateFormat="dd/mm/yy"
