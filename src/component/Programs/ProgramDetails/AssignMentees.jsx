@@ -332,7 +332,10 @@ export default function AssignMentees() {
                                                                             :
                                                                             field.type === 'date' ?
                                                                                 <>
-                                                                                    <div className='relative input-bg'>
+                                                                                    <div className='relative input-bg'
+                                                                                        onClick={(e) => {
+                                                                                            calendarRef?.current[index]?.show();
+                                                                                        }}>
                                                                                         <Calendar
                                                                                             className='calendar-control w-full'
                                                                                             {...dateField}
@@ -358,7 +361,7 @@ export default function AssignMentees() {
                                                                                             ref={el => (calendarRef.current[index] = el)}
                                                                                         />
                                                                                         <img className='absolute top-5 right-2 cursor-pointer' src={CalendarIcon} alt="CalendarIcon"
-
+                                                                                           
                                                                                         />
 
                                                                                     </div>
