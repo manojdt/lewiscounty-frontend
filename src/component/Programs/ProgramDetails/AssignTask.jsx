@@ -1174,6 +1174,7 @@ export default function AssignTask() {
                                                                 dateFormat="dd/mm/yy"
                                                                 style={{ width: '60%' }}
                                                                 ref={el => (calendarRef.current[0] = el)}
+                                                                viewDate={programdetails?.status === "yettostart" ? new Date() : new Date(programdetails?.start_date)}
                                                             />
 
                                                             <img className='absolute top-5 right-2 cursor-pointer' src={CalendarIcon} alt="CalendarIcon"
@@ -1218,6 +1219,7 @@ export default function AssignTask() {
                                                                 dateFormat="dd/mm/yy"
                                                                 style={{ width: '60%' }}
                                                                 ref={el => (calendarRef.current[1] = el)}
+                                                                viewDate={new Date(dateFormat.reschedule_start_date ?? programdetails?.start_date)}
                                                             />
 
                                                             <img className='absolute top-5 right-2 cursor-pointer' src={CalendarIcon} alt="CalendarIcon"
