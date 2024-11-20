@@ -14,10 +14,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { getReportProgramDetails } from "../../services/reportsInfo";
 import { Button } from "../../shared";
 import MoreIcon from "../../assets/icons/moreIcon.svg";
-import { Menu } from "@mui/material";
+import { Backdrop, Menu } from "@mui/material";
 import SuccessTik from "../../assets/images/blue_tik1x.png";
 import { createCertificate } from "../../services/certificate";
-import MuiModal from "../../shared/Modal";
 
 export default function CertificateMemberDetails() {
   const navigate = useNavigate();
@@ -172,10 +171,10 @@ export default function CertificateMemberDetails() {
         className="px-3 py-5"
         style={{ boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.15)" }}
       >
-        <MuiModal
-          modalOpen={status === certificateStatus.create}
-          modalClose={() => setLoading(false)}
-          noheader
+        <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={status === certificateStatus.create}
+          onClick={() => setLoading(false)}
         >
           <div className="px-5 py-1 flex justify-center items-center">
             <div
@@ -192,7 +191,7 @@ export default function CertificateMemberDetails() {
               </p>
             </div>
           </div>
-        </MuiModal>
+        </Backdrop>
         <div className="flex justify-between px-5 pb-4 mb-8 items-center border-b-2">
           <div className="flex gap-5 items-center text-[14px]">
          
