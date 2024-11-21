@@ -49,6 +49,7 @@ export default function MyProfile() {
     console.log('Data', data)
     const apiPayload = {
       phone_number: data.phone_number,
+      secondary_phone_number: data.secondary_phone_number,
       address: data.address,
     }
     dispatch(updateProfile(apiPayload))
@@ -62,7 +63,7 @@ export default function MyProfile() {
         first_name: name[0] || '',
         last_name: name[1] || '',
         phone_number: profile?.phone_no,
-        secondary_phone_number: '',
+        secondary_phone_number: profile?.secondary_phone_number || '',
         email: profile?.email,
         address: profile?.address
       });

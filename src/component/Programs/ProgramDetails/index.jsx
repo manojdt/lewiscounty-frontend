@@ -809,7 +809,7 @@ export default function ProgramDetails() {
                                             className='px-6 pt-6 pb-3'>
                                             <ul className='flex flex-col gap-3'>
                                                 {
-                                                    role === 'mentee' &&
+                                                    role === 'mentee1' &&
                                                     <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px' }}>
                                                         <span>Ratings</span>
                                                         <span className='flex gap-2 items-center'>
@@ -823,21 +823,30 @@ export default function ProgramDetails() {
                                                     </li>
                                                 }
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}>
+                                                    <span>Session</span>
+                                                    <span>{programdetails.session_details}</span>
+                                                </li>
+                                                <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}>
                                                     <span>Course Level</span>
                                                     <span>{programdetails.course_level}</span>
                                                 </li>
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>Start Date & End Date</span>
                                                     <span>{`${dateFormat(programdetails?.start_date)}  --  ${dateFormat(programdetails?.end_date)} `}</span>
                                                 </li>
+
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>Duration</span>
                                                     <span>{programdetails.duration} {' days'}</span>
                                                 </li>
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>Schedule</span>
                                                     <span>Flexible schedule</span>
                                                 </li>
-                                                <li className='flex justify-between text-[12px]' style={{ paddingTop: '14px' }}> <span>Mentees</span>
-                                                    <span>{programdetails.participated_mentees_count}</span>
-                                                </li>
+                                                {
+                                                    role === 'mentor' &&
+                                                    <li className='flex justify-between text-[12px]' style={{ paddingTop: '14px' }}> <span>Joined Mentees</span>
+                                                        <span className='underline cursor-pointer'>{programdetails.participated_mentees_count}</span>
+                                                    </li>
+                                                }
+
                                             </ul>
                                         </div>
                                     </div>

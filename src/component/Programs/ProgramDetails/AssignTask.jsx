@@ -443,7 +443,7 @@ export default function AssignTask() {
                                 </ol>
 
                                 {
-                                    ((role === 'mentor' && programDetails.created_by === userdetails?.data?.user_id ) || (role === 'mentee' && programdetails.status === programActionStatus.inprogress)) &&
+                                    ((role === 'mentor' && programDetails.created_by === userdetails?.data?.user_id) || (role === 'mentee' && programdetails.status === programActionStatus.inprogress)) &&
 
                                     <>
                                         <div className='cursor-pointer' onClick={handleClick}>
@@ -846,7 +846,7 @@ export default function AssignTask() {
                                             className='px-6 pt-6 pb-3'>
                                             <ul className='flex flex-col gap-3'>
                                                 {
-                                                    role === 'mentee' &&
+                                                    role === 'mentee1' &&
 
                                                     <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px' }}>
                                                         <span>Ratings</span>
@@ -861,6 +861,10 @@ export default function AssignTask() {
                                                         </span>
                                                     </li>
                                                 }
+                                                <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}>
+                                                    <span>Session</span>
+                                                    <span>{programdetails.session_details}</span>
+                                                </li>
 
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}>
                                                     <span>Course Level</span>
@@ -869,15 +873,19 @@ export default function AssignTask() {
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>Start Date & End Date</span>
                                                     <span>{`${formatDateFunToAll(programdetails?.start_date)}  --  ${formatDateFunToAll(programdetails?.end_date)} `}</span>
                                                 </li>
+
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>Duration</span>
                                                     <span>{programdetails.duration} {' days'}</span>
                                                 </li>
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>Schedule</span>
                                                     <span>Flexible schedule</span>
                                                 </li>
-                                                <li className='flex justify-between text-[12px]' style={{ paddingTop: '14px' }}> <span>Mentees</span>
-                                                    <span className='underline cursor-pointer'>{programdetails.participated_mentees_count}</span>
-                                                </li>
+                                                {
+                                                    role === 'mentor' &&
+                                                    <li className='flex justify-between text-[12px]' style={{ paddingTop: '14px' }}> <span>Joined Mentees</span>
+                                                        <span className='underline cursor-pointer'>{programdetails.participated_mentees_count}</span>
+                                                    </li>
+                                                }
                                             </ul>
                                         </div>
                                     </div>
@@ -1140,7 +1148,7 @@ export default function AssignTask() {
                                 <MuiModal modalOpen={moreMenuModal.reschedule} modalClose={handleMoreMenuClosePopup} noheader>
                                     <div style={{ border: '1px solid rgba(29, 91, 191, 1)' }}>
                                         <div className='flex justify-between items-center px-3 py-4 mx-1' style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
-                                            <div>Reschedule Teaching Program</div>
+                                            <div>Reschedule {programdetails.name}</div>
                                             <img className='cursor-pointer' onClick={() => setMoreMenuModal({ share: false, reschedule: false })} src={CancelIcon} alt="CancelIcon" />
                                         </div>
                                         <form onSubmit={handleSubmit(onSubmit)}>

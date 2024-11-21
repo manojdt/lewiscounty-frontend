@@ -683,7 +683,7 @@ export const programMenus = (page = 'dashboard') => {
       name: "Reschedule Programs",
       count: 0,
       page: `${pipeUrl}${programFilterUrls.reschedule}`,
-      for: ['mentor'],
+      for: ['mentor','mentee'],
       mentorStatus: '',
       menteeStatus: '',
       status: programActionStatus.reschedule

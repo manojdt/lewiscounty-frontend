@@ -273,7 +273,7 @@ export default function CreateMeeting() {
                                     </div>
 
                                     {
-                                        datePopup.type === 'custom1' &&
+                                        datePopup.type === 'custom' &&
 
                                         <>
                                             <div className='relative flex items-center mt-7 gap-2'>

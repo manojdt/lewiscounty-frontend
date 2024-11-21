@@ -135,8 +135,11 @@ export default function AllRequest() {
 
 
     const handleMoreClick = (event, data) => {
-        setSelectedItem(data)
-        setAnchorEl(event.currentTarget);
+       
+            setSelectedItem(data)
+            setAnchorEl(event.currentTarget);
+       
+      
     };
 
     // Reset Confirm Popup
@@ -452,7 +455,7 @@ export default function AllRequest() {
                                 View
                             </MenuItem>
                             {
-                                (params.row.status === 'new' || params.row.status === 'pending') &&
+                                (params.row.status === 'new' || params.row.status === 'pending') ?
                                 <>
                                     <MenuItem onClick={handleAcceptProgramRequest} className='!text-[12px]'>
                                         <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
@@ -463,6 +466,7 @@ export default function AllRequest() {
                                         Reject
                                     </MenuItem>
                                 </>
+                                : null
                             }
                         </Menu>
                     </>
@@ -996,7 +1000,7 @@ export default function AllRequest() {
     useEffect(() => {
 
         if (searchParams.get('type') === 'program_request' || !searchParams.get('type')) {
-            setActiveTableDetails({ column: programRequestColumn, data: programTableInfo })
+            setActiveTableDetails({ column: programRequestColumn, data: programTableInfo.results })
         }
 
         if (searchParams.get('type') === 'member_join_request') {
@@ -1274,7 +1278,7 @@ export default function AllRequest() {
 
                                     </Backdrop>
 
-                                    <DataTable rows={activeTableDetails.data} columns={activeTableDetails.column} hideFooter={!activeTableDetails.data.length} />
+                                    <DataTable rows={activeTableDetails.data || []} columns={activeTableDetails.column} hideFooter={!activeTableDetails?.data?.length} />
                                 </div>
                             </div>
                         </div>
