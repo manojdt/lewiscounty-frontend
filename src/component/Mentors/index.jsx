@@ -96,7 +96,7 @@ export const Mentors = () => {
             flex: 1,
             id: 5,
             renderCell: (params) => {
-                return <div className='flex gap-2 items-center'> <img src={StarIcon} alt="StarIcon" /> 4.5</div>
+                return <div className='flex gap-2 items-center'> <img src={StarIcon} alt="StarIcon" />{params?.row?.average_rating === 0 ? 3 : params?.row?.average_rating}</div>
             }
         },
         {

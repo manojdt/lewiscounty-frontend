@@ -824,10 +824,7 @@ export default function AllRequest() {
 
     const handleClick = (menu) => {
         navigate(`/all-request?type=${menu.status}`)
-        setPaginationModel({
-            page: 0,
-            pageSize: 10
-        })
+        handleStatus("all")
     }
 
     const getProgramRequestApi = () => {

@@ -145,6 +145,7 @@ export const Tasks = () => {
             page:0,
             pageSize: 10
         })
+        handleTaskSearch("")
     }
 
 
