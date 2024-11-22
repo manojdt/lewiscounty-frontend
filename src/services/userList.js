@@ -8,8 +8,8 @@ import api from "./api";
 
 export const getMyMentors = createAsyncThunk(
     "getMyMentors",
-    async () => {
-        const myMentors = await api.get('/mentors/my_mentors');
+    async (data) => {
+        const myMentors = await api.get(`/mentors/my_mentors?page=${data?.page + 1 ?? 1}&limit=${data?.pageSize}`);
         if (myMentors.status === 200 && myMentors.data) {
             return myMentors.data.mentor || myMentors.data;
         }
@@ -53,8 +53,8 @@ export const getMentorProgramActivity = createAsyncThunk(
 
 export const getMyMentees = createAsyncThunk(
     "getMyMentees",
-    async () => {
-        const myMenteeList = await api.get('/mentee/my_mentee');
+    async (data) => {
+        const myMenteeList = await api.get(`/mentee/my_mentee?page=${data?.page + 1 ?? 1}&limit=${data?.pageSize}`);
         if (myMenteeList.status === 200 && myMenteeList.data) {
             return myMenteeList.data;
         }

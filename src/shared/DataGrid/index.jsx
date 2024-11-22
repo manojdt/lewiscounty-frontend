@@ -96,13 +96,9 @@ function Pagination(props) {
     );
 }
 
-function CustomPagination(props) {
-    return <div className='flex h-[90px] mx-2 custom-pagination w-full relative'> <TablePaginationActions {...props} /></div>;
-}
-
 function TablePaginationActions(props) {
     const theme = useTheme();
-    const { onPageChange } = props;  
+    const { onPageChange } = props;
     const apiRef = useGridApiContext();
     const paginationDetails = useGridSelector(apiRef, gridPaginationSelector);
     const meta = useGridSelector(apiRef, gridPaginationMetaSelector);
@@ -110,21 +106,40 @@ function TablePaginationActions(props) {
     const handleBackButtonClick = (
         event
     ) => {
-        apiRef.current.setPage(paginationDetails.paginationModel.page - 1);
-        apiRef.current.setPageSize(paginationDetails.paginationModel.pageSize)
+        // apiRef.current.setPage(props.paginationModel.page - 1);
+        // apiRef.current.setPageSize(props.paginationModel.pageSize)
+
+        props?.setPaginationModel({
+            ...props?.paginationModel,
+            page: props.paginationModel.page - 1,
+            pageSize: props.paginationModel.pageSize
+        })
+        // props?.getPageDetails(props.paginationModel.page - 1, props.paginationModel.pageSize)
     };
 
     const handleNextButtonClick = (
         event
     ) => {
-        apiRef.current.setPage(paginationDetails.paginationModel.page + 1);
-        apiRef.current.setPageSize(paginationDetails.paginationModel.pageSize)
-        
+        // apiRef.current.setPage(props.paginationModel.page + 1);
+        // apiRef.current.setPageSize(props.paginationModel.pageSize)
+        props?.setPaginationModel({
+            ...props?.paginationModel,
+            page: props.paginationModel.page + 1,
+            pageSize: props.paginationModel.pageSize
+        })
+        // props?.getPageDetails(props.paginationModel.page + 1, props.paginationModel.pageSize)
     };
 
     const handlePerPage = (event) => {
-        apiRef.current.setPageSize(event.target.value)
+        props?.setPaginationModel({
+            ...props?.paginationModel,
+            pageSize: Number(event.target.value),
+            page: 0
+        })
+        // apiRef.current.setPageSize(Number(event.target.value))
+        // props?.getPageDetails(props.paginationModel.page + 1, Number(event.target.value))
     }
+
 
     return (
         <div className='w-full flex items-center justify-between'>
@@ -135,7 +150,7 @@ function TablePaginationActions(props) {
 
                         {
                             options.map((option, index) =>
-                                <option key={index} selected={option === paginationDetails.paginationModel.pageSize} value={option}>{option}</option>
+                                <option key={index} selected={option === props.paginationModel.pageSize} value={option}>{option}</option>
                             )
                         }
                     </select>
@@ -143,7 +158,7 @@ function TablePaginationActions(props) {
                 </div>
                 <div className='flex gap-4'>
                     {
-                        paginationDetails.paginationModel.page >= 1 &&
+                        props?.paginationModel?.page >= 1 &&
 
                         <button onClick={handleBackButtonClick}
                             // disabled={paginationDetails.paginationModel.page
@@ -152,11 +167,11 @@ function TablePaginationActions(props) {
                             style={{ border: '1px solid rgba(0, 0, 0, 1)', borderRadius: '3px', width: '150px', color: 'rgba(0, 0, 0, 1)' }}>Previous Page</button>
                     }
                     {
-                        paginationDetails.paginationModel.pageSize < paginationDetails.rowCount &&
+                        props?.paginationModel?.pageSize < paginationDetails.rowCount &&
 
                         <button onClick={handleNextButtonClick}
-                            disabled={paginationDetails.paginationModel.page
-                                >= Math.ceil(paginationDetails.rowCount / paginationDetails.paginationModel.pageSize) - 1}
+                            disabled={props?.paginationModel?.page
+                                >= Math.ceil(paginationDetails.rowCount / props?.paginationModel?.pageSize) - 1}
                             className='text-white py-3 px-6 col-span-1'
                             style={{ background: 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)', borderRadius: '3px', width: '150px' }}>Next Page</button>
                     }
@@ -165,16 +180,18 @@ function TablePaginationActions(props) {
             </div>
             <div className='flex items-center'>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                    <span style={{ border: '1px solid rgba(9, 19, 22, 1)', display: 'flex', width: '36px', height: '37px', justifyContent: 'center',
-                         alignItems: 'center' }} >
+                    <span style={{
+                        border: '1px solid rgba(9, 19, 22, 1)', display: 'flex', width: '36px', height: '37px', justifyContent: 'center',
+                        alignItems: 'center'
+                    }} >
                         {/* <input type="number" style={{width: '100%', height: '100%', padding: '12px'}} value={paginationDetails.paginationModel.page + 1} 
                         
                         /> */}
-                         {paginationDetails.paginationModel.page + 1}</span> of
-                    <span className='pl-1'>{Math.ceil(paginationDetails.rowCount / paginationDetails.paginationModel.pageSize)}</span></div>
+                        {props?.paginationModel.page + 1}</span> of
+                    <span className='pl-1'>{Math.ceil(paginationDetails.rowCount / props?.paginationModel.pageSize)}</span></div>
                 <IconButton
                     onClick={handleBackButtonClick}
-                    disabled={paginationDetails.paginationModel.page === 0}
+                    disabled={props?.paginationModel.page === 0}
                     aria-label="previous page"
                 >
                     {theme.direction === "rtl" ? (
@@ -185,8 +202,8 @@ function TablePaginationActions(props) {
                 </IconButton>
                 <IconButton
                     onClick={handleNextButtonClick}
-                    disabled={paginationDetails.paginationModel.page
-                        >= Math.ceil(paginationDetails.rowCount / paginationDetails.paginationModel.pageSize) - 1}
+                    disabled={props?.paginationModel.page
+                        >= Math.ceil(paginationDetails.rowCount / props?.paginationModel.pageSize) - 1}
                     aria-label="next page"
                 >
                     {theme.direction === "rtl" ? (
@@ -202,16 +219,17 @@ function TablePaginationActions(props) {
 }
 
 
-export default function DataTable({ rows, columns, footerAction, footerComponent, selectedAllRows = [],
-    hideCheckbox = false, hideFooter = false, handleSelectedRow = undefined, height = 600 }) {
+export default function DataTable({ rows = [], columns, footerAction, footerComponent, selectedAllRows = [],
+    hideCheckbox = false, hideFooter = false, handleSelectedRow = undefined, height = 600, getPageDetails = () => false, rowCount = 0,
+    setPaginationModel = () => false, paginationModel = "" }) {
     const [selectedRows, setSelectedRows] = useState([])
     const [selectedIds, setSelectedIds] = useState([])
 
 
-    const [paginationModel, setPaginationModel] = React.useState({
-        page: 0,
-        pageSize: 10,
-    });
+    // const [paginationModel, setPaginationModel] = React.useState({
+    //     page: 0,
+    //     pageSize: 10,
+    // });
 
     const handleRowSelection = (ids) => {
         const selected = [...rows].filter(row => ids.includes(row.id || row.categories_id))
@@ -226,6 +244,11 @@ export default function DataTable({ rows, columns, footerAction, footerComponent
         setSelectedIds(ids)
     }, [])
 
+    function CustomPagination(props) {
+        return <div className='flex h-[90px] mx-2 custom-pagination w-full relative'> <TablePaginationActions {...props}
+            paginationModel={paginationModel} setPaginationModel={setPaginationModel} getPageDetails={getPageDetails} /></div>;
+    }
+
     return (
         <div style={{ height: height, width: '100%', position: 'relative' }}>
             <DataGrid
@@ -235,6 +258,8 @@ export default function DataTable({ rows, columns, footerAction, footerComponent
                 getRowId={(row) => row.id || row.first_name || row.categories_id}
                 checkboxSelection={!hideCheckbox}
                 onPageChange={(e) => console.log('change', e)}
+                page={paginationModel?.page}
+                pageSize={paginationModel?.pageSize}
                 {
                 ...footerComponent ?
                     {
@@ -249,7 +274,7 @@ export default function DataTable({ rows, columns, footerAction, footerComponent
                     {
                         initialState: {
                             pagination: {
-                                paginationModel: { pageSize: 10 },
+                                paginationModel: paginationModel
                             },
                         },
                         slots: {
@@ -280,13 +305,14 @@ export default function DataTable({ rows, columns, footerAction, footerComponent
                 rowSelectionModel={selectedIds}
                 onRowSelectionModelChange={(itm, i) => handleRowSelection(itm)}
 
-            // slotProps={{
-            //     pagination: {
-            //         ActionsComponent: TablePaginationActions,
-            //     },
-            // }}
-            // paginationModel={{ pageSize: 10 }}
-
+                // slotProps={{
+                //     pagination: {
+                //         ActionsComponent: TablePaginationActions,
+                //     },
+                // }}
+                // paginationModel={{ pageSize: 10 }}
+                paginationMode="server"
+                rowCount={rowCount}
             />
         </div>
     );
