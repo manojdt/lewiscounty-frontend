@@ -21,7 +21,7 @@ const MentorTask = () => {
     const open = Boolean(anchorEl);
     const [seletedItem, setSelectedItem] = useState({})
     const dispatch = useDispatch();
-    const [searchParams] = useSearchParams()
+    const [searchParams, setSearchParams] = useSearchParams()
     const { menteeTask, loading: menteeTaskLoading, status } = useSelector(state => state.tasks)
     const navigate = useNavigate();
     const [paginationModel, setPaginationModel] = React.useState({
@@ -436,6 +436,10 @@ const MentorTask = () => {
             key: 'pending'
         },
         {
+            name: 'Ongoing Task',
+            key: 'ongoing'
+        },
+        {
             name: 'Waiting Task',
             key: 'waiting_for_approval'
         },
@@ -464,6 +468,10 @@ const MentorTask = () => {
         }
         navigate(`${pipeUrls.mentortask}${queryString}`)
     }
+
+    useEffect(() => {
+        navigate(`${pipeUrls.mentortask}?type=menteetask`)
+    },[])
 
     useEffect(() => {
 

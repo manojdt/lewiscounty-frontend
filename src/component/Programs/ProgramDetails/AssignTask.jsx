@@ -443,7 +443,12 @@ export default function AssignTask() {
                                 </ol>
 
                                 {
-                                    ((role === 'mentor' && programDetails.created_by === userdetails?.data?.user_id) || (role === 'mentee' && programdetails.status === programActionStatus.inprogress)) &&
+                                    (
+                                        (role === 'mentor' && programDetails.created_by === userdetails?.data?.user_id) || 
+                                        (role === 'mentee' && 
+                                            (programdetails.status === programActionStatus.inprogress || programdetails.mentee_join_status === programActionStatus.program_join_request_accepted)
+                                        )
+                                    ) &&
 
                                     <>
                                         <div className='cursor-pointer' onClick={handleClick}>
@@ -522,7 +527,9 @@ export default function AssignTask() {
 
                                                                 <>
                                                                     {
-                                                                        programdetails.status === programActionStatus.inprogress &&
+                                                                        (programdetails.status === programActionStatus.inprogress ||
+                                                                            programdetails.mentee_join_status === programActionStatus.program_join_request_accepted
+                                                                        ) &&
 
                                                                         <MenuItem onClick={() => handleMenu('cancel')} className='!text-[12px]'>
                                                                             <img src={AbortIcon} alt="AbortIcon" className='pr-3 w-[25px]' />

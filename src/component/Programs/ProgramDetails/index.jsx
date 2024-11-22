@@ -194,7 +194,7 @@ export default function ProgramDetails() {
 
     useEffect(() => {
         if (Object.keys(programdetails).length && !programLoading) {
-            const notAllowedCond = ['completed', 'yettoapprove', 'draft']
+            const notAllowedCond = ['completed', 'yettoapprove', 'draft','cancelled']
 
 
             if (!notAllowedCond.includes(programdetails.status)) {

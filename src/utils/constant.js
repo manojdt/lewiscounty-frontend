@@ -561,7 +561,8 @@ export const programActionStatus = {
   bookmark: 'bookmarked',
   planned: 'planned',
   draft: 'draft',
-  reschedule: 'reschedule'
+  reschedule: 'reschedule',
+  program_join_request_accepted:'program_join_request_accepted'
 }
 
 
