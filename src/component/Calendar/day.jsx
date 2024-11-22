@@ -14,9 +14,10 @@ export default function Day({
   isWeek,
   fetchEvents,
   deleteAppointment,
-  newData
+  newData,
+  currentMonth,
+  currentYear
 }) {
-
 
   const [showModal, setShowModal] = useState(false);
 
@@ -37,11 +38,11 @@ export default function Day({
     );
   });
 
-  
+
   const renderData = newData.filter((event) => {
     return (
       new Date(day).toDateString() ===
-      new Date(event.date).toDateString() 
+      new Date(event.date).toDateString()
     );
   })
 
@@ -51,6 +52,12 @@ export default function Day({
 
   const openEvent = () => {
     setShowModal(true)
+  }
+
+
+  const isCurrentMonth = (seconds) => {
+    const date = new Date(seconds);
+    return date.getFullYear() === currentYear && date.getMonth() === currentMonth;
   }
 
 
@@ -69,7 +76,7 @@ export default function Day({
             className={`${isWeek ? "border-b-[1px] py-2" : ""
               } flex justify-end`}
           >
-            <div className={`text-center text-sm ${getCurrentDayClass()}`}>
+            <div className={`text-center text-sm ${getCurrentDayClass()}`} data-attr={day} data-col={colIdx} style={{opacity: `${!isCurrentMonth(day) ? 0.5: 1}`}}>
               {colIdx === 0 ? "-" : day.format("DD")}
             </div>
           </div>

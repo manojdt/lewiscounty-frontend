@@ -31,6 +31,8 @@ export default function Week({
               deleteAppointment={deleteAppointment}
               isWeek
               newData={newData}
+              currentMonth={dayjs(currentDate).month()}
+              currentYear={dayjs(currentDate).year()}
             />
           ))}
         </React.Fragment>

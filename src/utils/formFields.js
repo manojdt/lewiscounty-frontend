@@ -2047,18 +2047,18 @@ export const CreateMeetingFields = [{
         key: "do_not_repeat",
         value: "Does Not repeat"
       },
-      // {
-      //   key: "daily",
-      //   value: "Daily"
-      // },
-      // {
-      //   key: "every_week",
-      //   value: "Every weekday(Monday to Friday)"
-      // },
-      // {
-      //   key: "weekly",
-      //   value: "Weekly On  Thursday"
-      // },
+      {
+        key: "daily",
+        value: "Daily"
+      },
+      {
+        key: "every_week",
+        value: "Every weekday(Monday to Friday)"
+      },
+      {
+        key: "weekly",
+        value: "Weekly On  Thursday"
+      },
       {
         key: "custom",
         value: "Custom"

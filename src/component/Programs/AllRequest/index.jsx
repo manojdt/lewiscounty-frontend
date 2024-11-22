@@ -162,8 +162,11 @@ export default function AllRequest() {
 
 
     const handleMoreClick = (event, data) => {
-        setSelectedItem(data)
-        setAnchorEl(event.currentTarget);
+       
+            setSelectedItem(data)
+            setAnchorEl(event.currentTarget);
+       
+      
     };
 
     // Reset Confirm Popup
@@ -479,7 +482,7 @@ export default function AllRequest() {
                                 View
                             </MenuItem>
                             {
-                                (params.row.status === 'new' || params.row.status === 'pending') &&
+                                (params.row.status === 'new' || params.row.status === 'pending') ?
                                 <>
                                     <MenuItem onClick={handleAcceptProgramRequest} className='!text-[12px]'>
                                         <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
@@ -490,6 +493,7 @@ export default function AllRequest() {
                                         Reject
                                     </MenuItem>
                                 </>
+                                : null
                             }
                         </Menu>
                     </>

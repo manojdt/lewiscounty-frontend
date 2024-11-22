@@ -1,6 +1,7 @@
 import React from "react";
 import Day from "./day";
 import { getMonth } from "../../utils";
+import dayjs from "dayjs";
 export default function Month({
   currentDate,
   savedEvents,
@@ -24,6 +25,8 @@ export default function Month({
               deleteAppointment={deleteAppointment}
               isMonth
               newData={newData}
+              currentMonth={dayjs(currentDate).month()}
+              currentYear={dayjs(currentDate).year()}
             />
           ))}
         </React.Fragment>

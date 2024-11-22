@@ -500,7 +500,7 @@ const MentorTask = () => {
                 <div className='mx-5'>
 
                     <div className="main-grid grid grid-cols-5 gap-3">
-                        <div className="left-bar row-span-3 flex flex-col gap-8">
+                        {/* <div className="left-bar row-span-3 flex flex-col gap-8">
                             <div className="pb-3 w-full max-w-sm bg-white rounded-lg" style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', background: 'rgba(255, 255, 255, 1)' }}>
                                 <div className="title flex justify-between py-3 px-4 border-b-2">
                                     <h4 className="text-base" style={{ color: 'rgba(29, 91, 191, 1)' }}>Task</h4>
@@ -536,7 +536,6 @@ const MentorTask = () => {
                                                         `} aria-current="page"
                                                         onClick={() => setActiveCategoryMenu(menu.key)}>
                                                         <span className="text-sm">{menu.name}</span>
-                                                        {/* <span className="text-sm">{menu.count}</span> */}
                                                     </div>
                                                 </li>
                                             )
@@ -545,11 +544,11 @@ const MentorTask = () => {
 
                                 </ul>
                             </div>
-                        </div>
+                        </div> */}
 
-                        <div className='flex relative flex-col col-span-4'>
+                        <div className='flex relative flex-col col-span-5'>
                             {
-                                activeTaskMenu === 'my-task' ?
+                                activeTaskMenu === 'my-task1' ?
 
                                     <>
                                         <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700 mb-10">
@@ -589,7 +588,7 @@ const MentorTask = () => {
                                                     }
                                                 </select>
                                             </div>
-                                            <Button btnType="button" btnCls="w-[150px]" btnName={'Create Task'} btnCategory="primary" />
+                                            {/* <Button btnType="button" btnCls="w-[150px]" btnName={'Create Task'} btnCategory="primary" /> */}
                                         </div>
 
                                         <div className='task-list py-10'>
