@@ -1101,10 +1101,6 @@ export default function AllRequest() {
     }
 
     const resetPageDetails = () => {
-        setPaginationModel({
-            page: 0,
-            pageSize: 10
-        })
         handleStatus("all")
     }
 
@@ -1276,7 +1272,7 @@ export default function AllRequest() {
                                                 
                                                 {
                                                     statusOptions.map((option, index) =>
-                                                        <option key={index} selected={option === filterStatus} value={option?.value}>{option?.label}</option>
+                                                        <option key={index} selected={option?.value === filterStatus} value={option?.value}>{option?.label}</option>
                                                     )
                                                 }
                                             </select>
