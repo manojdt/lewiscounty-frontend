@@ -359,6 +359,7 @@ export default function AssignMentees() {
                                                                                             dateFormat="dd/mm/yy"
                                                                                             style={{ width: '42%' }}
                                                                                             ref={el => (calendarRef.current[index] = el)}
+                                                                                            minDate={new Date()}
                                                                                         />
                                                                                         <img className='absolute top-5 right-2 cursor-pointer' src={CalendarIcon} alt="CalendarIcon"
                                                                                            

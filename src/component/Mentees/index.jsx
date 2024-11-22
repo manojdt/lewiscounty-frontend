@@ -28,6 +28,10 @@ export const Mentees = () => {
     const [mentorType, setMentorType] = useState('my-mentee')
     const [requestTab, setRequestTab] = useState('all-request')
     const [selectedMentee, setSelectedMentee] = useState({})
+    const [paginationModel, setPaginationModel] = React.useState({
+        page: 0,
+        pageSize: 10,
+    });
 
     const menteeOption = [
         {
@@ -104,8 +108,8 @@ export const Mentees = () => {
     const handleTab = (key) => setRequestTab(key)
 
     useEffect(() => {
-        dispatch(getMyMentees())
-    }, [])
+        dispatch(getMyMentees(paginationModel))
+    }, [paginationModel])
 
     return (
         <div className="px-9 py-9">
@@ -160,7 +164,9 @@ export const Mentees = () => {
                         </div>
                     }
 
-                    <DataTable rows={menteeList} columns={myMenteeColumn} hideCheckbox />
+                    <DataTable rows={menteeList?.results} columns={myMenteeColumn} hideCheckbox 
+                    rowCount={menteeList?.count}
+                    paginationModel={paginationModel} setPaginationModel={setPaginationModel} />
 
                 </div>
             </div>

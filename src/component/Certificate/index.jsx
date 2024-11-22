@@ -25,14 +25,18 @@ export default function Certificate() {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const [seletedItem, setSelectedItem] = useState({})
+    const [paginationModel, setPaginationModel] = React.useState({
+        page: 0,
+        pageSize: 10,
+    });
     const role = userInfo.data.role
     const dispatch = useDispatch()
     const handleSearch = (value) => {
         let query = ''
-        if(value !== ''){
-            query = `?search=${value}`   
+        if (value !== '') {
+            query = `?search=${value}`
         }
-        dispatch(getCertificateList(query))
+        dispatch(getCertificateList(query + `&page=${paginationModel?.page + 1}&limit=${paginationModel?.pageSize}`))
     }
     const handleClose = () => {
         setAnchorEl(null);
@@ -101,19 +105,19 @@ export default function Certificate() {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
-                        {role === 'mentee'&&seletedItem.status==="accept" ?
+                        {role === 'mentee' && seletedItem.status === "accept" ?
                             <MenuItem onClick={() => navigate(`/certificate-view/${seletedItem.id}`)} className='!text-[12px]'>
                                 <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
                                 View
                             </MenuItem> : null}
-                        {role === 'mentor'&&seletedItem.status!=="pending" ?
+                        {role === 'mentor' && seletedItem.status !== "pending" ?
                             <MenuItem onClick={() => navigate(`/certificate_mentees/${seletedItem.id}?type=${actionTab}`)} className='!text-[12px]'>
                                 <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
                                 View
                             </MenuItem> : null}
 
 
-                       
+
 
 
                     </Menu>
@@ -125,6 +129,10 @@ export default function Certificate() {
 
     const handleTab = (key) => {
         setRequestTab(key)
+        setPaginationModel({
+            page: 0,
+            pageSize: 10
+        })
     }
 
     const requestBtns = [
@@ -146,11 +154,11 @@ export default function Certificate() {
 
 
     useEffect(() => {
-        if(role){
-            dispatch(getCertificateList(role === "admin" ? `?status=${requestTab}` : role === "mentor" ? `?status=${actionTab}` : ""))
+        if (role) {
+            dispatch(getCertificateList(role === "admin" ? `?status=${requestTab}` : role === "mentor" ? `?status=${actionTab}&page=${paginationModel?.page + 1}&limit=${paginationModel?.pageSize}` : `?page=${paginationModel?.page + 1}&limit=${paginationModel?.pageSize}`))
         }
         // dispatch(getCertificates({search: role === "admin" ? requestTab : actionTab}))
-    }, [requestTab,role, actionTab])
+    }, [requestTab, role, actionTab])
     return (
         <div className="program-request px-8 mt-10">
 
@@ -164,7 +172,7 @@ export default function Certificate() {
             <div className='px-3 py-5' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
                 <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
                     <div className='flex gap-5 items-center text-[18px] font-semibold'>
-                        <p>{role !== 'mentee' && 'Generate ' } Certificates {role === 'mentor' ? "Request" : ""}</p>
+                        <p>{role !== 'mentee' && 'Generate '} Certificates {role === 'mentor' ? "Request" : ""}</p>
                     </div>
 
                     <div className='flex gap-5'>
@@ -176,7 +184,7 @@ export default function Certificate() {
                                     height: '45px',
                                     width: '280px'
                                 }}
-                                
+
                                 onChange={(e) => handleSearch(e.target.value)}
                             />
                             <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
@@ -250,8 +258,9 @@ export default function Certificate() {
                         }
 
 
-
-                        <DataTable rows={certificatesList || []} columns={certificateColumn} hideFooter={certificatesList.length <= 10} />
+                        <DataTable rows={certificatesList?.results || []} columns={certificateColumn} hideFooter={certificatesList?.results?.length <= 10}
+                            rowCount={certificatesList?.count}
+                            paginationModel={paginationModel} setPaginationModel={setPaginationModel} />
                     </div>
                 </div>
             </div>

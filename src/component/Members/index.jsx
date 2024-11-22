@@ -42,6 +42,10 @@ const Members = () => {
   const [filterInfo, setFilterInfo] = useState({ search: '', status: '' })
   const dispatch = useDispatch()
   const { mentor, mentee, loading, error } = useSelector(state => state.members)
+  const [paginationModel, setPaginationModel] = React.useState({
+    page: 0,
+    pageSize: 10,
+  });
 
   const open = Boolean(anchorEl);
 
@@ -80,7 +84,7 @@ const Members = () => {
         "deactivate_user": seletedItem.id
       })).then(() => {
         handleCloseCancelReasonPopup()
-        dispatch(getMembersList({ role_name: actionTab }))
+        dispatch(getMembersList({ role_name: actionTab, page: paginationModel?.page + 1, limit: paginationModel?.pageSize }))
       })
     }
   }
@@ -91,7 +95,7 @@ const Members = () => {
       "deactivate_user": seletedItem.id
     })).then(() => {
       handleCloseCancelReasonPopup()
-      dispatch(getMembersList({ role_name: actionTab }))
+      dispatch(getMembersList({ role_name: actionTab, page: paginationModel?.page + 1, limit: paginationModel?.pageSize }))
     })
   }
 
@@ -108,10 +112,18 @@ const Members = () => {
 
   const handleTab = (key) => {
     setActionTab(key);
+    setPaginationModel({
+      page: 0,
+      pageSize: 10
+    })
   };
 
   const handleStatus = (e) => {
     setFilterInfo({ ...filterInfo, status: e.target.value })
+    setPaginationModel({
+      page: 0,
+      pageSize: 10
+    })
   }
 
   const handleSearch = (value) => {
@@ -128,7 +140,7 @@ const Members = () => {
 
     if (type === 'taskassigned') {
       payload = { ...payload, message: 'Program Assigned to Mentor Successfully' }
-      dispatch(getMembersList({ role_name: actionTab }))
+      dispatch(getMembersList({ role_name: actionTab, page: paginationModel?.page, limit: paginationModel?.pageSize }))
     }
 
     setAssignProgramInfo({ ...assignProgramInfo, ...payload })
@@ -323,19 +335,23 @@ const Members = () => {
   }, [mentor, mentee, anchorEl])
 
   useEffect(() => {
-    let payload = { role_name: actionTab }
+    let payload = { role_name: actionTab, page: paginationModel?.page + 1, limit: paginationModel?.pageSize }
     if (filterInfo.status !== '' && filterInfo.status !== 'all') {
-      payload = { ...payload, status: filterInfo.status }
+      payload = { ...payload, status: filterInfo.status, page: paginationModel?.page + 1, limit: paginationModel?.pageSize }
     }
     if (filterInfo.search !== '') {
-      payload = { ...payload, search: filterInfo.search }
+      payload = { ...payload, search: filterInfo.search, page: 1, limit: 10 }
+      setPaginationModel({
+        page: 0,
+        pageSize: 10
+      })
     }
     dispatch(getMembersList(payload))
   }, [filterInfo])
 
   useEffect(() => {
-    dispatch(getMembersList({ role_name: actionTab }))
-  }, [actionTab]);
+    dispatch(getMembersList({ role_name: actionTab, page: paginationModel?.page + 1, limit: paginationModel?.pageSize }))
+  }, [actionTab, paginationModel]);
 
   return (
     <div className="program-request px-8 mt-10">
@@ -519,8 +535,11 @@ const Members = () => {
             </Backdrop>
 
             <DataTable
-              rows={activeTableDetails.data || []}
+              rows={activeTableDetails?.data?.results || []}
               columns={activeTableDetails.column}
+              rowCount={activeTableDetails?.data?.count}
+              paginationModel={paginationModel}
+              setPaginationModel={setPaginationModel}
             />
           </div>
         </div>

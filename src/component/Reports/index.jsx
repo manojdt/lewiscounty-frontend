@@ -34,6 +34,10 @@ const Reports = () => {
     const [requestTab, setRequestTab] = useState('all')
     const [searchParams, setSearchParams] = useSearchParams();
     const [reportData, setReportData] = useState({ action: '', selectedItem: [] })
+    const [paginationModel, setPaginationModel] = React.useState({
+        page: 0,
+        pageSize: 10,
+    });
 
     const requestBtns = [
         {
@@ -109,7 +113,6 @@ const Reports = () => {
             flex: 1,
             id: 11,
             renderCell: (params) => {
-                console.log('params', params)
                 return <>
                     {
 
@@ -185,6 +188,10 @@ const Reports = () => {
         navigate(`${pipeUrls.reports}${typeString}`)
         setFilter({filter_by: '', search: ''})
         setRequestTab(key)
+        setPaginationModel({
+            page: 0,
+            pageSize: 10
+        })
     }
 
     const handleSelectedRow = (row) => {
@@ -213,8 +220,7 @@ const Reports = () => {
         if (filterDate && filterDate !== '') {
             query.filter_by = filterDate
         }
-        console.log('query', query)
-        dispatch(getAllReports(query));
+        dispatch(getAllReports({...query, page: paginationModel?.page + 1, limit: paginationModel?.pageSize}));
     }
 
     const handleCancelDelete = () => {
@@ -244,7 +250,7 @@ const Reports = () => {
 
     useEffect(() => {
         getReports()
-    }, [searchParams])
+    }, [searchParams, paginationModel])
 
 
     useEffect(() => {
@@ -367,7 +373,10 @@ const Reports = () => {
                                 </div>
                             </div>
                         </div>
-                        <DataTable rows={allreports} columns={reportColumn} handleSelectedRow={handleSelectedRow} />
+                        <DataTable rows={allreports?.results ?? []} columns={reportColumn} handleSelectedRow={handleSelectedRow}
+                        rowCount={allreports?.count}
+                        paginationModel={paginationModel} setPaginationModel={setPaginationModel}
+                        hideFooter={allreports?.results?.length === 0} />
                     </div>
 
                 </div>

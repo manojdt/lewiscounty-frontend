@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -15,21 +15,29 @@ import FollowIcon from '../../assets/images/connect1x.png'
 
 import Dropdown from '../../shared/Dropdown';
 import { mentorColumns, mentorRows } from '../../mock';
-import { getMyMentors } from '../../services/userList';
+import { getMyMentors, getMyTopMentors } from '../../services/userList';
 import { myMentorColumns } from '../../utils/formFields';
 import { Backdrop, CircularProgress } from '@mui/material';
+import { debounce } from '../../utils/constant';
 
 
 export const Mentors = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const [anchorEl, setAnchorEl] = useState(null);
+    const [searchParams] = useSearchParams();
+    const mentortype = searchParams.get("type")
 
     const { mentorList, loading } = useSelector(state => state.userList)
 
-    const [mentorType, setMentorType] = useState('mymentor')
+    const [mentorType, setMentorType] = useState(mentortype ?? 'mymentor')
     const [requestTab, setRequestTab] = useState('all-request')
     const [selectedItem, setSelectedItem] = useState({})
+    const [paginationModel, setPaginationModel] = React.useState({
+        page: 0,
+        pageSize: 10,
+    });
+    const [search, setSearch] = React.useState("")
 
     const mentorOption = [
         {
@@ -92,7 +100,7 @@ export const Mentors = () => {
             flex: 1,
             id: 5,
             renderCell: (params) => {
-                return <div className='flex gap-2 items-center'> <img src={StarIcon} alt="StarIcon" /> 4.5</div>
+                return <div className='flex gap-2 items-center'> <img src={StarIcon} alt="StarIcon" />{params?.row?.average_rating === 0 ? 3 : params?.row?.average_rating}</div>
             }
         },
         {
@@ -134,9 +142,35 @@ export const Mentors = () => {
 
     const handleTab = (key) => setRequestTab(key)
 
+    const getMentorDatas = (type = mentorType) => {
+        if (type === "topmentor") {
+            dispatch(getMyTopMentors(paginationModel))
+        } else {
+            dispatch(getMyMentors(paginationModel))
+        }
+    }
+
     useEffect(() => {
-        dispatch(getMyMentors())
-    }, [])
+        getMentorDatas()
+    }, [paginationModel])
+
+    const handleMentorTypeChange = (value) => {
+        setMentorType(value)
+        getMentorDatas(value)
+        setPaginationModel({
+            page: 0,
+            pageSize: 10
+        })
+    }
+
+    const handleSearch = (value) => {
+        setSearch(value)
+        if (mentorType === "topmentor") {
+            dispatch(getMyTopMentors({...paginationModel, search: value}))
+        } else {
+            dispatch(getMyMentors({...paginationModel, search: value}))
+        }
+    }
 
     return (
         <div className="px-9 py-9">
@@ -159,7 +193,9 @@ export const Mentors = () => {
                                     border: '1px solid rgba(29, 91, 191, 1)',
                                     height: '41px',
                                     width: '345px'
-                                }} />
+                                }}
+                                value={search}
+                                onChange={(e) => handleSearch(e.target.value)} />
                             <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
                                 <img src={SearchIcon} alt='SearchIcon' />
                             </div>
@@ -168,7 +204,7 @@ export const Mentors = () => {
                             label={'My Mentors'}
                             options={mentorOption}
                             value={mentorType}
-                            handleDropdown={(event) => setMentorType(event.target.value)}
+                            handleDropdown={(event) => handleMentorTypeChange(event.target.value)}
                         />
                     </div>
                 </div>
@@ -191,7 +227,9 @@ export const Mentors = () => {
                         </div>
                     }
 
-                    <DataTable rows={mentorList} columns={mentorColumn} hideCheckbox />
+                    <DataTable rows={mentorList?.results} columns={mentorColumn} hideCheckbox
+                        rowCount={mentorList?.count}
+                        paginationModel={paginationModel} setPaginationModel={setPaginationModel} />
 
                 </div>
             </div>

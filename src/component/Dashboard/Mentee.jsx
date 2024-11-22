@@ -175,7 +175,7 @@ export const Mentee = () => {
                                     <p className="text-[12px] py-2 px-2 cursor-pointer" style={{
                                         background: 'rgba(217, 228, 242, 1)', color: 'rgba(29, 91, 191, 1)', borderRadius: '3px'
                                     }}
-                                        onClick={() => navigate('/mentors')}
+                                        onClick={() => navigate('/mentors?type=topmentor')}
                                     >View All</p>
                                 </div>
                             </div>

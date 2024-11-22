@@ -30,6 +30,10 @@ export const Tasks = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch()
     const { taskList, loading } = useSelector(state => state.tasks)
+    const [paginationModel, setPaginationModel] = React.useState({
+        page: 0,
+        pageSize: 10,
+    });
 
 
     const taskMenuList = [
@@ -137,6 +141,11 @@ export const Tasks = () => {
         }
         navigate(`${pipeUrls.menteetask}${typeString}`)
         setRequestTab(key)
+        setPaginationModel({
+            page:0,
+            pageSize: 10
+        })
+        handleTaskSearch("")
     }
 
 
@@ -146,7 +155,7 @@ export const Tasks = () => {
     }
 
     useEffect(() => {
-        dispatch(getAllTasks({ search: searchTask }))
+        dispatch(getAllTasks({ search: searchTask, page: paginationModel?.page + 1, limit: paginationModel?.pageSize }))
     }, [searchTask])
 
 
@@ -157,8 +166,8 @@ export const Tasks = () => {
         if (filterType && filterType !== '') {
             query = { status: filterType }
         }
-        dispatch(getAllTasks(query));
-    }, [searchParams])
+        dispatch(getAllTasks({...query, page: paginationModel?.page + 1, limit: paginationModel?.pageSize}));
+    }, [searchParams, paginationModel])
 
 
     return (
@@ -270,7 +279,9 @@ export const Tasks = () => {
 
                     {
                         !loading &&
-                        <DataTable rows={taskList} columns={mentorColumn} hideCheckbox />
+                        <DataTable rows={taskList?.results ?? []} columns={mentorColumn} hideCheckbox
+                            rowCount={taskList?.count}
+                            paginationModel={paginationModel} setPaginationModel={setPaginationModel} />
                     }
                 </div>
             </div>
