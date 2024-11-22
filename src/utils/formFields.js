@@ -1962,6 +1962,13 @@ export const reportColumns = [{
     status: ['all', 'new', 'pending', 'accept', 'cancel']
   },
   {
+    field: 'requested_date',
+    headerName: 'Requested Date',
+    flex: 1,
+    id: 4,
+    status: ['all', 'new', 'pending', 'accept', 'cancel']
+  },
+  {
     field: 'approved_date',
     headerName: 'Approved Time/ Date',
     flex: 1,
