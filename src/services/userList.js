@@ -17,6 +17,17 @@ export const getMyMentors = createAsyncThunk(
     }
 );
 
+export const getMyTopMentors = createAsyncThunk(
+    "getMyMentors",
+    async (data) => {
+        const myMentors = await api.get(`/rating/top_mentor?page=${data?.page + 1 ?? 1}&limit=${data?.pageSize}&search=${data?.search ?? ""}`);
+        if (myMentors.status === 200 && myMentors.data) {
+            return myMentors.data.mentor || myMentors.data;
+        }
+        return myMentors
+    }
+);
+
 export const getMyMentorInfo = createAsyncThunk(
     "getMyMentorInfo",
     async (id) => {
