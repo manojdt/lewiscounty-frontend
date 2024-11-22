@@ -48,6 +48,10 @@ export default function AllRequest() {
     const [cancelPopup, setCancelPopup] = useState({ show: false, page: '' })
     const [showToast, setShowToast] = useState({ show: false, message: '' })
     const [categoryPopup, setCategoryPopup] = useState({ show: false, selectedItem: [], page: '', tab: '' })
+    const [paginationModel, setPaginationModel] = React.useState({
+        page: 0,
+        pageSize: 10,
+    });
     const userInfo = useSelector(state => state.userInfo)
 
     const {
@@ -126,6 +130,29 @@ export default function AllRequest() {
         {
             name: 'Mentee Resources',
             key: 'mentee'
+        }
+    ]
+
+    const statusOptions = [
+        {
+            label: "All",
+            value: "all"
+        },
+        {
+            label: "New",
+            value: "new"
+        },
+        {
+            label: "Pending",
+            value: "pending"
+        },
+        {
+            label: "Approved",
+            value: "accept"
+        },
+        {
+            label: "Rejected",
+            value: "cancel"
         }
     ]
 
@@ -797,13 +824,17 @@ export default function AllRequest() {
 
     const handleClick = (menu) => {
         navigate(`/all-request?type=${menu.status}`)
+        setPaginationModel({
+            page: 0,
+            pageSize: 10
+        })
     }
 
     const getProgramRequestApi = () => {
         let payload = {
             request_type: actionTab,
-            ...filterStatus !== 'all' ? { status: filterStatus } : ''
-
+            ...filterStatus !== 'all' ? { status: filterStatus } : '',
+            page: paginationModel?.page + 1, limit: paginationModel?.pageSize
         }
 
         if (role === 'mentor') {
@@ -823,18 +854,21 @@ export default function AllRequest() {
 
     const getReportsRequestApi = () => {
         dispatch(getReportRequest({
-            ...filterStatus !== 'all' && { rep_status: filterStatus }
+            ...filterStatus !== 'all' && { rep_status: filterStatus },
+            page: paginationModel?.page + 1,
+            limit: paginationModel?.pageSize
         }))
     }
 
     const getCerificateRequestAPi = () => {
-        dispatch(certificateRequest(...filterStatus !== 'all' && filterStatus))
+        dispatch(certificateRequest({filterStatus: filterStatus !== 'all' ? filterStatus : "", page: paginationModel?.page + 1, limit: paginationModel?.pageSize ?? 10}))
     }
 
     const getMembersRequestApi = () => {
         dispatch(getMemberRequest({
             ...filterStatus !== 'all' && { status: filterStatus },
             user: actionTab,
+            page: paginationModel?.page + 1, limit: paginationModel?.pageSize
         }));
     }
 
@@ -846,8 +880,12 @@ export default function AllRequest() {
         }))
     }
 
-    const handleStatus = (e) => {
-        setFilterStatus(e.target.value)
+    const handleStatus = (val) => {
+        setFilterStatus(val)
+        setPaginationModel({
+            page: 0,
+            pageSize: 10
+        })
     }
 
     useEffect(() => {
@@ -869,7 +907,6 @@ export default function AllRequest() {
                     }
                     tableDetails = { column: programRequestColumn, data: [] }
                     actionFilter = programInfoTab
-                    console.log('actionFilter', actionFilter)
                     activeTabName = role === 'mentee' ? 'joining_request' : 'new_program_request'
                     break;
                 case RequestStatus.memberJoinRequest.key:
@@ -909,7 +946,6 @@ export default function AllRequest() {
             setActionTabFilter(actionFilter)
             setActiveTab(activeTabName)
         } else {
-            console.log('programRequestTab', programRequestTab)
             setActionTabFilter(programRequestTab)
             setActiveTab(role !== 'admin' ? 'joining_request' : 'new_program_request')
         }
@@ -996,11 +1032,11 @@ export default function AllRequest() {
     useEffect(() => {
 
         if (searchParams.get('type') === 'program_request' || !searchParams.get('type')) {
-            setActiveTableDetails({ column: programRequestColumn, data: programTableInfo })
+            setActiveTableDetails({ column: programRequestColumn, data: programTableInfo.results, rowCount: programTableInfo?.count })
         }
 
         if (searchParams.get('type') === 'member_join_request') {
-            setActiveTableDetails({ column: actionTab === 'mentor' ? [...memberMentorRequestColumns, ...membersColumns] : [...memberMenteeRequestColumns, ...membersColumns], data: memberRequest })
+            setActiveTableDetails({ column: actionTab === 'mentor' ? [...memberMentorRequestColumns, ...membersColumns] : [...memberMenteeRequestColumns, ...membersColumns], data: memberRequest?.results, rowCount: memberRequest?.count })
         }
 
 
@@ -1008,7 +1044,7 @@ export default function AllRequest() {
             setActiveTableDetails({ column: goalColumns, data: goalsRequestInfo })
         }
         if (searchParams.get('type') === 'certificate_request') {
-            setActiveTableDetails({ column: certificateColumns, data: certificateRequestList })
+            setActiveTableDetails({ column: certificateColumns, data: certificateRequestList?.results, rowCount: certificateRequestList?.count })
         }
 
         if (searchParams.get('type') === 'resource_access_request') {
@@ -1016,7 +1052,7 @@ export default function AllRequest() {
         }
 
         if (searchParams.get('type') === 'report_request') {
-            setActiveTableDetails({ column: reportRequestColumn, data: reportsRequestInfo })
+            setActiveTableDetails({ column: reportRequestColumn, data: reportsRequestInfo?.results, rowCount: reportsRequestInfo?.count  })
         }
 
     }, [programTableInfo, memberRequest, resourceRequest, goalsRequestInfo, certificateRequestList, reportsRequestInfo, anchorEl])
@@ -1051,7 +1087,7 @@ export default function AllRequest() {
 
         }
 
-    }, [actionTab, searchParams, filterStatus, role])
+    }, [actionTab, searchParams, filterStatus, role, paginationModel])
 
     const footerComponent = (props) => {
         return (
@@ -1062,6 +1098,14 @@ export default function AllRequest() {
                     className='text-white py-3 px-6 w-[16%]'
                     style={{ background: 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)', borderRadius: '3px' }}>Submit</button>
             </div>)
+    }
+
+    const resetPageDetails = () => {
+        setPaginationModel({
+            page: 0,
+            pageSize: 10
+        })
+        handleStatus("all")
     }
 
     return (
@@ -1228,12 +1272,13 @@ export default function AllRequest() {
                                         </p>
 
                                         <p className="text-[12px] py-2 pl-5 pr-4 flex gap-4" style={{ background: 'rgba(29, 91, 191, 1)', borderRadius: '5px', height: '40px' }}>
-                                            <select className='focus:outline-none' style={{ background: 'rgba(29, 91, 191, 1)', border: 'none', color: '#fff' }} onChange={handleStatus}>
-                                                <option value="all">All</option>
-                                                <option value="new">New</option>
-                                                <option value="pending">Pending</option>
-                                                <option value="accept">Approved</option>
-                                                <option value="cancel">Rejected</option>
+                                            <select className='focus:outline-none' style={{ background: 'rgba(29, 91, 191, 1)', border: 'none', color: '#fff' }} onChange={(e) => handleStatus(e?.target?.value)}>
+                                                
+                                                {
+                                                    statusOptions.map((option, index) =>
+                                                        <option key={index} selected={option === filterStatus} value={option?.value}>{option?.label}</option>
+                                                    )
+                                                }
                                             </select>
                                         </p>
                                     </div>
@@ -1248,7 +1293,10 @@ export default function AllRequest() {
                                                     {
                                                         actionTabFilter.map((discussion, index) =>
                                                             <li className={`${actionTab === discussion.key ? 'active' : ''} relative`} key={index}
-                                                                onClick={() => setActiveTab(discussion.key)}
+                                                                onClick={() => {
+                                                                    setActiveTab(discussion.key)
+                                                                    resetPageDetails()
+                                                                }}
                                                             >
                                                                 {/* <div className='flex justify-center pb-1'>
                                                                     <div className={`total-proram-count relative ${actionTab === discussion.key ? 'active' : ''}`}>10
@@ -1274,7 +1322,8 @@ export default function AllRequest() {
 
                                     </Backdrop>
 
-                                    <DataTable rows={activeTableDetails.data} columns={activeTableDetails.column} hideFooter={!activeTableDetails.data.length} />
+                                    <DataTable rows={activeTableDetails.data} columns={activeTableDetails.column} hideFooter={!activeTableDetails?.data?.length} rowCount={activeTableDetails?.rowCount}
+                                        paginationModel={paginationModel} setPaginationModel={setPaginationModel} />
                                 </div>
                             </div>
                         </div>

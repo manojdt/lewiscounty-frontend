@@ -24,6 +24,10 @@ const MentorTask = () => {
     const [searchParams] = useSearchParams()
     const { menteeTask, loading: menteeTaskLoading, status } = useSelector(state => state.tasks)
     const navigate = useNavigate();
+    const [paginationModel, setPaginationModel] = React.useState({
+        page: 0,
+        pageSize: 10,
+    });
 
     const taskList = [
         {
@@ -80,6 +84,10 @@ const MentorTask = () => {
 
     const handleTab = (key) => {
         setActiveTab(key)
+        setPaginationModel({
+            page: 0,
+            pageSize: 10
+        })
     }
 
     const handleNavigateDetails = (program) => {
@@ -460,15 +468,15 @@ const MentorTask = () => {
     useEffect(() => {
 
         if (searchParams && searchParams.get("type") && searchParams.get("type") === 'menteetask' && !searchParams.get("status")) {
-            dispatch(getMenteeTaskfromMentor());
+            dispatch(getMenteeTaskfromMentor({page: paginationModel?.page + 1, limit: paginationModel?.pageSize}));
             setActiveTaskMenu('mentee-task')
         }
 
         if (searchParams && searchParams.get("type") && searchParams.get("type") === 'menteetask' && searchParams.get("status") && searchParams.get("status") !== '') {
-            dispatch(getMenteeTaskfromMentor({ status: searchParams.get("status") }));
+            dispatch(getMenteeTaskfromMentor({ status: searchParams.get("status"), page: paginationModel?.page + 1, limit: paginationModel?.pageSize}));
             setActiveTaskMenu('mentee-task')
         }
-    }, [searchParams])
+    }, [searchParams, paginationModel])
 
 
 
@@ -585,7 +593,9 @@ const MentorTask = () => {
                                         </div>
 
                                         <div className='task-list py-10'>
-                                            <DataTable rows={menteeTask} columns={mentorTaskColumn} hideCheckbox />
+                                            <DataTable rows={menteeTask?.results ?? []} columns={mentorTaskColumn} hideCheckbox 
+                                            rowCount={menteeTask?.count}
+                                            paginationModel={paginationModel} setPaginationModel={setPaginationModel} />
                                         </div>
                                     </>
                             }

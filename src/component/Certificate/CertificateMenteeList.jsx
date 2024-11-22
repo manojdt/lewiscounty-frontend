@@ -37,12 +37,17 @@ export default function CertificateMenteeList() {
   const [seletedItem, setSelectedItem] = useState({});
 
   const [loading, setLoading] = useState(false);
+  const [paginationModel, setPaginationModel] = React.useState({
+    page: 0,
+    pageSize: 10,
+  });
+
   const getCertificateDetails = async () => {
     dispatch(
       getCertificateMember(
         searchParams.get("type") === "approved"
-          ? `?id=${id}`
-          : `?program_id=${id}`
+          ? `?id=${id}&page=${paginationModel?.page + 1}&limit=${paginationModel?.pageSize}`
+          : `?program_id=${id}&page=${paginationModel?.page + 1}&limit=${paginationModel?.pageSize}`
       )
     );
   };
@@ -228,10 +233,12 @@ export default function CertificateMenteeList() {
           </div>
         </div>
         <DataTable
-          rows={certificatesMembers || []}
+          rows={certificatesMembers?.results || []}
           columns={certificateColumn}
           hideCheckbox
-          hideFooter
+          hideFooter={certificatesMembers?.results?.length <= 10}
+          rowCount={certificatesMembers?.count}
+          paginationModel={paginationModel} setPaginationModel={setPaginationModel}
         />
         {searchParams.get("type") !== "approved" && (
           <div>

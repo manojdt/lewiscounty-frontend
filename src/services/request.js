@@ -47,8 +47,10 @@ export const updateProgramRequest = createAsyncThunk(
 );
 export const certificateRequest = createAsyncThunk(
     "certificateRequest",
-    async (queryString) => {
-        const certificateReq = await api.get(`certificate/certificate_request?status=${queryString}&type=request`);
+    async (query = "") => {
+        const url = query?.filterStatus?.length ? `certificate/certificate_request?status=${query?.filterStatus}&type=request&page=${query?.page}&limit=${query?.limit}` :
+        `certificate/certificate_request?type=request&page=${query?.page}&limit=${query?.limit}`
+        const certificateReq = await api.get(url);
         if (certificateReq.status === 200 && certificateReq.data) {
             return certificateReq.data;
         }
@@ -123,7 +125,7 @@ export const getMemberRequest = createAsyncThunk(
     "getMemberRequest",
     async (query='') => {
         let queryString = new URLSearchParams(query).toString()
-        const getMemberInfo = await api.get(`user/join_request?${queryString}`);
+        const getMemberInfo = await api.get(`user/join_request?${queryString}&page=${query?.page ?? 1}&limit=${query?.limit ?? 10}`);
         if (getMemberInfo.status === 200 && getMemberInfo.data) {
             return getMemberInfo.data;
         }
@@ -197,7 +199,7 @@ export const getReportRequest = createAsyncThunk(
     "getReportRequest",
     async (query='') => {
         let queryString = new URLSearchParams(query).toString()
-        const getReportRequestInfo = await api.get(`program_request/report_request?${queryString}`);
+        const getReportRequestInfo = await api.get(`program_request/report_request?${queryString}&page=${query?.page ?? 1}&limit=${query?.limit ?? 10}`);
         if (getReportRequestInfo.status === 200 && getReportRequestInfo.data) {
             return getReportRequestInfo.data;
         }

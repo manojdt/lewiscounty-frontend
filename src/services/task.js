@@ -9,15 +9,9 @@ import api from "./api";
 export const getAllTasks = createAsyncThunk(
     "getAllTasks",
     async (query = {}) => {
-        let queryString = ''
-        if (Object.keys(query).length) {
-            queryString += '?'
-            for (let a in query) {
-                queryString += `${a}=${query[a]}`
-            }
-        }
+        let queryString = Object.entries(query).map(([key, value])=>`${key}=${value}`).join("&")
 
-        const getAllTask = await api.get(`/program_task_assign/task_list_mentee${queryString}`);
+        const getAllTask = await api.get(`/program_task_assign/task_list_mentee?${queryString}`);
         if (getAllTask.status === 200 && getAllTask.data) {
             return getAllTask.data;
         }
@@ -51,15 +45,11 @@ export const getSpecificTask = createAsyncThunk(
 
 export const getMenteeTaskfromMentor = createAsyncThunk(
     "getMenteeTaskfromMentor",
-    async (query = {}) => {
-        let queryString = ''
-        if (Object.keys(query).length) {
-            queryString += '?'
-            for (let a in query) {
-                queryString += `${a}=${query[a]}`
-            }
-        }
-        const getAllTask = await api.get(`/program_task_assign/task_list_mentor${queryString}`);
+    async (query = {}, pageModel = {}) => {
+
+        let queryString = Object.entries(query).map(([key, value])=>`${key}=${value}`).join("&")
+
+        const getAllTask = await api.get(`/program_task_assign/task_list_mentor?${queryString}`);
         if (getAllTask.status === 200 && getAllTask.data) {
             return getAllTask.data;
         }

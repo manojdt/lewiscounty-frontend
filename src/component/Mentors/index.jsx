@@ -30,6 +30,10 @@ export const Mentors = () => {
     const [mentorType, setMentorType] = useState('mymentor')
     const [requestTab, setRequestTab] = useState('all-request')
     const [selectedItem, setSelectedItem] = useState({})
+    const [paginationModel, setPaginationModel] = React.useState({
+        page: 0,
+        pageSize: 10,
+    });
 
     const mentorOption = [
         {
@@ -135,8 +139,8 @@ export const Mentors = () => {
     const handleTab = (key) => setRequestTab(key)
 
     useEffect(() => {
-        dispatch(getMyMentors())
-    }, [])
+        dispatch(getMyMentors(paginationModel))
+    }, [paginationModel])
 
     return (
         <div className="px-9 py-9">
@@ -191,7 +195,9 @@ export const Mentors = () => {
                         </div>
                     }
 
-                    <DataTable rows={mentorList} columns={mentorColumn} hideCheckbox />
+                    <DataTable rows={mentorList?.results} columns={mentorColumn} hideCheckbox
+                    rowCount={mentorList?.count}
+                    paginationModel={paginationModel} setPaginationModel={setPaginationModel} />
 
                 </div>
             </div>
