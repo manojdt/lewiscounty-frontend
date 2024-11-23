@@ -373,6 +373,10 @@ export const userProgramSlice = createSlice({
             updateState['cancelled'] = programs;
           }
 
+          if (filterValue === 'reschedule') {
+            updateState['reschedule'] = programs;
+          }
+
         }
 
         return updateState;

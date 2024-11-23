@@ -870,7 +870,7 @@ export default function AssignTask() {
                                                 }
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}>
                                                     <span>Session</span>
-                                                    <span>{programdetails.session_details}</span>
+                                                    <span>{programdetails.session_count}</span>
                                                 </li>
 
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}>
