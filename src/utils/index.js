@@ -176,7 +176,7 @@ export const dateTimeFormat = data => {
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
     const seconds = String(date.getSeconds()).padStart(2, '0');
-    const formattedDate = `${month}/${day}/${year} | ${hours}:${minutes}:${seconds}`;
+    const formattedDate = `${month}/${day}/${year} | ${hours}:${minutes}`;
     return formattedDate
   }
   return ''
@@ -268,4 +268,37 @@ export const convertDateFormat = (dateStr) => {
   let month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
   let day = String(date.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
+}
+
+
+export const getFiles = (files) => {
+  const allFiles = {
+    image: [],
+    doc: [],
+    video: [],
+    files: false
+  };
+
+  const imageExtension = ['jpg','jpeg','png']
+  const docuementExtension = ['pfd','doc','docx']
+  const videoExtension = ['mov','mp4','avi']
+
+  files.forEach(file => {
+    const url = file.files;
+    const fileName = url.split('/').pop().split('.')[0]; 
+    const extension = url.split('.').pop() || '';  
+  
+
+    if (imageExtension.includes(extension.toLowerCase())) {
+      allFiles.image.push({ name: fileName, fileurl: url });
+      allFiles.files = true
+    } else if (docuementExtension.includes(extension.toLowerCase())) {
+      allFiles.doc.push({ name: fileName, fileurl: url });
+      allFiles.files = true
+    } else if (videoExtension.includes(extension.toLowerCase())) {
+      allFiles.video.push({ name: fileName, fileurl: url });
+      allFiles.files = true
+    }
+  });
+  return allFiles
 }

@@ -687,7 +687,7 @@ export default function ProgramDetails() {
 
 
                                         {
-                                            role === 'admin' ?
+                                            (role === 'admin' && !programCompleted.includes(programdetails.status) && !programCancelled.includes(programdetails.status)) ?
                                                 <>
                                                     {
                                                         <div className='flex gap-4 pt-10' >

@@ -358,6 +358,12 @@ export const resultText = {
   Pass: "Pass",
   Fail: "fail"
 }
+
+export const certificateResultText = {
+  pass: "Pass",
+  fail: "Fail"
+}
+
 export const empty = [{
   title: '',
   value: 100,
@@ -369,6 +375,18 @@ export const resultColor = {
     bg: 'rgba(218, 252, 231, 1)'
   },
   Fail: {
+    color: 'rgba(224, 56, 45, 1)',
+    bg: 'rgba(255, 231, 231, 1)'
+  },
+}
+
+
+export const certificateResultColor = {
+  pass: {
+    color: 'rgba(47, 147, 132, 1)',
+    bg: 'rgba(218, 252, 231, 1)'
+  },
+  fail: {
     color: 'rgba(224, 56, 45, 1)',
     bg: 'rgba(255, 231, 231, 1)'
   },
@@ -457,6 +475,7 @@ export const memberStatusColor = {
 
 export const taskStatusText = {
   draft: 'Draft',
+  inprogress: 'In-Progress',
   rejected: 'Cancel',
   pending: 'Pending',
   newtask: 'New',
@@ -476,6 +495,10 @@ export const taskStatusColor = {
   pending: {
     color: 'rgba(255, 213, 0, 1)',
     bg: 'rgba(255, 251, 233, 1)'
+  },
+  inprogress: {
+    color: 'rgba(29, 91, 191, 1)',
+    bg: 'rgba(207, 225, 255, 1)'
   },
   waiting_for_approval: {
     color: 'rgba(255, 213, 0, 1)',

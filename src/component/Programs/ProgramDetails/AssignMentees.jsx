@@ -150,7 +150,7 @@ export default function AssignMentees() {
                 mentor: `${programdetails?.mentor_info?.first_name} ${programdetails?.mentor_info?.last_name}`,
                 start_date: new Date(programdetails.start_date),
                 end_date: new Date(programdetails.end_date),
-                duration: programdetails.duration,
+                duration: `${programdetails.duration} days`,
                 mentees_list: '',
                 task_details: '',
                 due_date: ''

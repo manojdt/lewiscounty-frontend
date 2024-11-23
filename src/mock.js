@@ -1220,14 +1220,14 @@ export const programRequestColumns = [
     },
     {
         field: 'to_request',
-        headerName: 'To Requested',
+        headerName: 'Requeste To',
         flex: 1,
         id: 4,
         for: ['mentor']
     },
     {
         field: 'requested_date_and_time',
-        headerName: 'Request Date & Time',
+        headerName: 'Request Date',
         flex: 1,
         id: 5,
         for: ['admin','mentor','mentee']

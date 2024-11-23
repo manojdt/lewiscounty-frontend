@@ -37,6 +37,7 @@ export default function AllRequest() {
     const { programRequest: programTableInfo, memberRequest, resourceRequest, categoryList, goalsRequest: goalsRequestInfo, certificateRequestList, reportsRequest: reportsRequestInfo,
         loading, status, error } = useSelector(state => state.requestList);
     const [currentRequestTab, setCurrentRequestTab] = useState(RequestStatus.programRequest)
+    const [categoryInfo, setCategoryInfo] = useState({ search: '', list: [] })
     const [filterStatus, setFilterStatus] = useState('all')
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -160,17 +161,10 @@ export default function AllRequest() {
         setAnchorEl(null);
     };
 
-    const handleMoreClick1 = (event, data) => {
-        setSelectedItem(data)
-        setAnchorEl(event.currentTarget);
-    };
 
     const handleMoreClick = (event, data) => {
-
         setSelectedItem(data)
         setAnchorEl(event.currentTarget);
-
-
     };
 
     // Reset Confirm Popup
@@ -437,32 +431,6 @@ export default function AllRequest() {
         programRequestColumn = programRequestColumn.filter(column => column.field !== 'auto_approval')
     }
 
-    const options = (rowData) => {
-        console.log('rowData.row.status', rowData.row)
-        return (
-            <>
-                <MenuItem onClick={(e) => navigate(`/program-details/${seletedItem.program}?request_id=${seletedItem.id}`)} className='!text-[12px]'>
-                    <img src={ViewIcon} alt="ViewIcon" className='pr-3 w-[30px]' />
-                    View
-                </MenuItem>
-
-                {
-                    (rowData.row.status === 'new' || rowData.row.status === 'pending') &&
-                    <>
-                        <MenuItem onClick={handleAcceptProgramRequest} className='!text-[12px]'>
-                            <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
-                            Approve1
-                        </MenuItem>
-                        <MenuItem onClick={handleCancelProgramRequest} className='!text-[12px]'>
-                            <img src={CloseCircle} alt="CancelIcon" className='pr-3 w-[27px]' />
-                            Reject2
-                        </MenuItem>
-                    </>
-                }
-
-            </>
-        )
-    }
 
     programRequestColumn = [
         ...programRequestColumn,
@@ -494,9 +462,10 @@ export default function AllRequest() {
                 flex: 1,
                 id: 4,
                 renderCell: (params) => {
+
                     return <>
 
-                        <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleMoreClick1(e, params.row)}>
+                        <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleMoreClick(e, params.row)}>
                             <img src={MoreIcon} alt='MoreIcon' />
                         </div>
                         <Menu
@@ -508,7 +477,27 @@ export default function AllRequest() {
                                 'aria-labelledby': 'basic-button',
                             }}
                         >
-                            {options(params)}
+                            <MenuItem onClick={(e) => {
+                                const url = role === 'admin' ? `/program-details/${seletedItem.program}?request_id=${seletedItem.id}` : `/mentee-details/${seletedItem.requested_by}?type=mentee_request`;
+                                return navigate(url);
+                            }} className='!text-[12px]'>
+                                <img src={ViewIcon} alt="ViewIcon" className='pr-3 w-[30px]' />
+                                View
+                            </MenuItem>
+
+                            {
+                                (seletedItem.status === 'new' || seletedItem.status === 'pending') &&
+                                <>
+                                    <MenuItem onClick={handleAcceptProgramRequest} className='!text-[12px]'>
+                                        <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
+                                        Approve
+                                    </MenuItem>
+                                    <MenuItem onClick={handleCancelProgramRequest} className='!text-[12px]'>
+                                        <img src={CloseCircle} alt="CancelIcon" className='pr-3 w-[27px]' />
+                                        Reject
+                                    </MenuItem>
+                                </>
+                            }
                         </Menu>
                     </>
                 }
@@ -634,7 +623,7 @@ export default function AllRequest() {
                             role === 'admin' &&
                             <>
                                 {
-                                    (params.row.status === 'new' || params.row.status === 'pending') &&
+                                    (seletedItem.status === 'new' || seletedItem.status === 'pending') &&
 
                                     <>
 
@@ -649,10 +638,10 @@ export default function AllRequest() {
                                     </>
                                 }
 
-                                <MenuItem onClick={() => undefined} className='!text-[12px]'>
+                                {/* <MenuItem onClick={() => undefined} className='!text-[12px]'>
                                     <img src={ShareIcon} alt="ShareIcon" className='pr-3 w-[27px]' />
                                     Share
-                                </MenuItem>
+                                </MenuItem> */}
                             </>
                         }
                     </Menu>
@@ -816,6 +805,10 @@ export default function AllRequest() {
                             role === 'admin' &&
 
                             <>
+                                <MenuItem onClick={() => navigate(`/certificate_mentees/${seletedItem.program}`)} className='!text-[12px]'>
+                                    <img src={ViewIcon} alt="AcceptIcon" className='pr-3 w-[27px]' />
+                                    View
+                                </MenuItem>
                                 {
                                     (params.row.status === 'new' || params.row.status === 'pending') &&
 
@@ -903,6 +896,12 @@ export default function AllRequest() {
         })
     }
 
+    const handleSearchCategory = (e) => {
+        let catList = categoryInfo.list.filter(list => list.name.toLowerCase().includes(e.target.value.toLowerCase()))
+        if (e.target.value === '') catList = categoryList
+        setCategoryInfo({ search: e.target.value, list: catList })
+    }
+
     useEffect(() => {
         if (searchParams.get("type") && role !== '' && !userInfo.loading) {
             const tab = searchParams.get("type")
@@ -964,9 +963,6 @@ export default function AllRequest() {
             setActionTabFilter(programRequestTab)
             setActiveTab(role !== 'admin' ? 'joining_request' : 'new_program_request')
         }
-
-
-
     }, [searchParams, role])
 
 
@@ -986,6 +982,7 @@ export default function AllRequest() {
         // Category load action
         if (status === requestStatus.categoryload) {
             setCategoryPopup({ show: true, selectedItem: [], page: currentRequestTab.key, tab: actionTab })
+            setCategoryInfo({ search: '', list: categoryList })
             setTimeout(() => {
                 dispatch(updateLocalRequest({ status: '' }))
             }, 2000)
@@ -1054,7 +1051,6 @@ export default function AllRequest() {
             setActiveTableDetails({ column: actionTab === 'mentor' ? [...memberMentorRequestColumns, ...membersColumns] : [...memberMenteeRequestColumns, ...membersColumns], data: memberRequest?.results, rowCount: memberRequest?.count })
         }
 
-
         if (searchParams.get('type') === 'goal_request') {
             setActiveTableDetails({ column: goalColumns, data: goalsRequestInfo })
         }
@@ -1098,8 +1094,6 @@ export default function AllRequest() {
             if (searchParams.get('type') === 'report_request') {
                 getReportsRequestApi()
             }
-
-
         }
 
     }, [actionTab, searchParams, filterStatus, role, paginationModel])
@@ -1237,7 +1231,10 @@ export default function AllRequest() {
                                             borderRadius: '50px',
                                             height: '60px',
                                             width: '100%'
-                                        }} />
+                                        }}
+                                        onChange={handleSearchCategory}
+                                        value={categoryInfo.search}
+                                    />
                                     <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
                                         <img src={SearchIcon} alt='SearchIcon' />
                                     </div>
@@ -1246,7 +1243,7 @@ export default function AllRequest() {
 
 
                             <DataTable
-                                rows={categoryList}
+                                rows={categoryInfo.list}
                                 columns={categoryColumns}
                                 height={'460px'}
                                 footerComponent={footerComponent}

@@ -1,3 +1,5 @@
+import { dateFormat } from ".";
+
 export const PersonalInformationFields = [{
     type: "input",
     name: "first_name",
@@ -1927,7 +1929,15 @@ export const EditProfileFields = [{
 ];
 
 
-export const reportColumns = [{
+export const reportColumns = [
+  {
+    field: 'report_name',
+    headerName: 'Report Name',
+    flex: 1,
+    id: 3,
+    status: ['all', 'new', 'pending', 'accept', 'cancel', 'draft']
+  },
+  {
     field: 'category_name',
     headerName: 'Category',
     flex: 1,
@@ -1947,33 +1957,29 @@ export const reportColumns = [{
     flex: 1,
     id: 2,
     status: ['all', 'new', 'pending', 'accept', 'cancel', 'draft']
-  }, {
-    field: 'report_name',
-    headerName: 'Report Name',
-    flex: 1,
-    id: 3,
-    status: ['all', 'new', 'pending', 'accept', 'cancel', 'draft']
-  },
-  {
-    field: 'created_at',
-    headerName: 'Create Time/ Date',
-    flex: 1,
-    id: 4,
-    status: ['all', 'new', 'pending', 'accept', 'cancel']
-  },
+  }, 
+  // {
+  //   field: 'created_at',
+  //   headerName: 'Create Time/ Date',
+  //   flex: 1,
+  //   id: 4,
+  //   status: ['all', 'new', 'pending', 'accept', 'cancel']
+  // },
   {
     field: 'requested_date',
     headerName: 'Requested Date',
     flex: 1,
     id: 4,
-    status: ['all', 'new', 'pending', 'accept', 'cancel']
+    status: ['all', 'new', 'pending', 'accept', 'cancel'],
+    renderCell: (params) => <span>{dateFormat(params.row.requested_date)}</span>
   },
   {
     field: 'approved_date',
     headerName: 'Approved Time/ Date',
     flex: 1,
     id: 5,
-    status: ['all', 'accept']
+    status: ['all', 'accept'],
+    renderCell: (params) => <span>{dateFormat(params.row.approved_date)}</span>
   },
   {
     field: 'approver',

@@ -115,8 +115,6 @@ const Reports = () => {
             renderCell: (params) => {
                 return <>
                     {
-
-
                         <>
                             <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleClick(e, [params.row])}>
                                 <img src={MoreIcon} alt='MoreIcon' />
@@ -131,7 +129,7 @@ const Reports = () => {
                                 }}
                             >
                                 {
-                                    params.row.report_status === 'cancel' &&
+                                    reportData.selectedItem[0]?.report_status === 'cancel' &&
                                     <MenuItem onClick={() => navigate(`/edit-report/${reportData.selectedItem[0].id}?type=re-open`)} className='!text-[12px]'>
                                         <img src={ViewIcon} alt="ViewIcon" className='pr-3 w-[30px]' />
                                         Re-Open
@@ -139,7 +137,7 @@ const Reports = () => {
                                 }
 
                                 {
-                                    (params.row.report_status === 'new' || params.row.report_status === 'pending' || params.row.report_status === 'draft') &&
+                                    (reportData.selectedItem[0]?.report_status === 'new' || reportData.selectedItem[0]?.report_status === 'pending' || reportData.selectedItem[0]?.report_status === 'draft') &&
 
                                     <MenuItem onClick={() => navigate(`/edit-report/${reportData.selectedItem[0].id}`)} className='!text-[12px]'>
                                         <img src={EditIcon} alt="EditIcon" className='pr-3 w-[30px]' />
