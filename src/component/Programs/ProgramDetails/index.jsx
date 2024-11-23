@@ -276,6 +276,7 @@ export default function ProgramDetails() {
         }
     }, [loading.join])
 
+   
     return (
         <div className="px-9 my-6 grid">
 
@@ -349,7 +350,7 @@ export default function ProgramDetails() {
                     <div className='flex justify-center flex-col gap-5  mt-4 mb-4'
                         style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '10px', }}>
                         <div className='flex justify-between px-3 py-4 items-center' style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
-                            <p className='text-[18px]' style={{ color: 'rgba(0, 0, 0, 1)' }}>Reject Program Request Reason </p>
+                            <p className='text-[18px]' style={{ color: 'rgba(0, 0, 0, 1)' }}>Reject Request Reason </p>
                             <img className='cursor-pointer' onClick={resetAcceptCancelPopup} src={CancelIcon} alt="CancelIcon" />
                         </div>
 
@@ -692,7 +693,13 @@ export default function ProgramDetails() {
                                                         <div className='flex gap-4 pt-10' >
                                                             {
                                                                 (requestId !== '' && (programRequestApproval.includes(programdetails.status) ||
-                                                                    programWaitingActiveApproval.includes(programdetails.status))
+                                                                    programWaitingActiveApproval.includes(programdetails.status) ||
+                                                                (Object.keys(programdetails.cancel_reason).length && programdetails.cancel_reason?.id === parseInt(requestId)
+                                                                && (programdetails.cancel_reason?.status === 'new' || programdetails.cancel_reason?.status === 'pending')) ||
+
+                                                                (Object.keys(programdetails.reschedule_reason).length
+                                                                && (programdetails.reschedule_reason?.status === 'new' || programdetails.reschedule_reason?.status === 'pending'))
+                                                                )
                                                                 ) ?
 
                                                                     <>

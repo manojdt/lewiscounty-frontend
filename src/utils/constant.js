@@ -543,7 +543,7 @@ export const PasswordRulesSet = {
   common: 'common',
 }
 
-export const statusAction = ['yettoapprove', 'yettojoin', 'yettostart', 'inprogress', 'completed', 'cancelled', 'bookmarked', 'draft']
+export const statusAction = ['yettoapprove', 'yettojoin', 'yettostart', 'inprogress', 'completed', 'cancelled', 'bookmarked', 'draft','reschedule']
 
 export const programActionStatus = {
   all: 'all',
@@ -685,8 +685,8 @@ export const programMenus = (page = 'dashboard') => {
       count: 0,
       page: `${pipeUrl}${programFilterUrls.reschedule}`,
       for: ['mentor','mentee'],
-      mentorStatus: '',
-      menteeStatus: '',
+      mentorStatus: 'reschedule',
+      menteeStatus: 'reschedule',
       status: programActionStatus.reschedule
     },
     {

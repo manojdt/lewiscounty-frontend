@@ -160,13 +160,17 @@ export default function AllRequest() {
         setAnchorEl(null);
     };
 
+    const handleMoreClick1 = (event, data) => {
+        setSelectedItem(data)
+        setAnchorEl(event.currentTarget);
+    };
 
     const handleMoreClick = (event, data) => {
-       
-            setSelectedItem(data)
-            setAnchorEl(event.currentTarget);
-       
-      
+
+        setSelectedItem(data)
+        setAnchorEl(event.currentTarget);
+
+
     };
 
     // Reset Confirm Popup
@@ -433,6 +437,33 @@ export default function AllRequest() {
         programRequestColumn = programRequestColumn.filter(column => column.field !== 'auto_approval')
     }
 
+    const options = (rowData) => {
+        console.log('rowData.row.status', rowData.row)
+        return (
+            <>
+                <MenuItem onClick={(e) => navigate(`/program-details/${seletedItem.program}?request_id=${seletedItem.id}`)} className='!text-[12px]'>
+                    <img src={ViewIcon} alt="ViewIcon" className='pr-3 w-[30px]' />
+                    View
+                </MenuItem>
+
+                {
+                    (rowData.row.status === 'new' || rowData.row.status === 'pending') &&
+                    <>
+                        <MenuItem onClick={handleAcceptProgramRequest} className='!text-[12px]'>
+                            <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
+                            Approve1
+                        </MenuItem>
+                        <MenuItem onClick={handleCancelProgramRequest} className='!text-[12px]'>
+                            <img src={CloseCircle} alt="CancelIcon" className='pr-3 w-[27px]' />
+                            Reject2
+                        </MenuItem>
+                    </>
+                }
+
+            </>
+        )
+    }
+
     programRequestColumn = [
         ...programRequestColumn,
         {
@@ -465,7 +496,7 @@ export default function AllRequest() {
                 renderCell: (params) => {
                     return <>
 
-                        <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleMoreClick(e, params.row)}>
+                        <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleMoreClick1(e, params.row)}>
                             <img src={MoreIcon} alt='MoreIcon' />
                         </div>
                         <Menu
@@ -477,24 +508,7 @@ export default function AllRequest() {
                                 'aria-labelledby': 'basic-button',
                             }}
                         >
-                            <MenuItem onClick={(e) => navigate(`/program-details/${seletedItem.program}?request_id=${seletedItem.id}`)} className='!text-[12px]'>
-                                <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
-                                View
-                            </MenuItem>
-                            {
-                                (params.row.status === 'new' || params.row.status === 'pending') ?
-                                <>
-                                    <MenuItem onClick={handleAcceptProgramRequest} className='!text-[12px]'>
-                                        <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
-                                        Approve
-                                    </MenuItem>
-                                    <MenuItem onClick={handleCancelProgramRequest} className='!text-[12px]'>
-                                        <img src={CloseCircle} alt="CancelIcon" className='pr-3 w-[27px]' />
-                                        Reject
-                                    </MenuItem>
-                                </>
-                                : null
-                            }
+                            {options(params)}
                         </Menu>
                     </>
                 }
@@ -862,7 +876,7 @@ export default function AllRequest() {
     }
 
     const getCerificateRequestAPi = () => {
-        dispatch(certificateRequest({filterStatus: filterStatus !== 'all' ? filterStatus : "", page: paginationModel?.page + 1, limit: paginationModel?.pageSize ?? 10}))
+        dispatch(certificateRequest({ filterStatus: filterStatus !== 'all' ? filterStatus : "", page: paginationModel?.page + 1, limit: paginationModel?.pageSize ?? 10 }))
     }
 
     const getMembersRequestApi = () => {
@@ -1053,7 +1067,7 @@ export default function AllRequest() {
         }
 
         if (searchParams.get('type') === 'report_request') {
-            setActiveTableDetails({ column: reportRequestColumn, data: reportsRequestInfo?.results, rowCount: reportsRequestInfo?.count  })
+            setActiveTableDetails({ column: reportRequestColumn, data: reportsRequestInfo?.results, rowCount: reportsRequestInfo?.count })
         }
 
     }, [programTableInfo, memberRequest, resourceRequest, goalsRequestInfo, certificateRequestList, reportsRequestInfo, anchorEl])
@@ -1270,7 +1284,7 @@ export default function AllRequest() {
 
                                         <p className="text-[12px] py-2 pl-5 pr-4 flex gap-4" style={{ background: 'rgba(29, 91, 191, 1)', borderRadius: '5px', height: '40px' }}>
                                             <select className='focus:outline-none' style={{ background: 'rgba(29, 91, 191, 1)', border: 'none', color: '#fff' }} onChange={(e) => handleStatus(e?.target?.value)}>
-                                                
+
                                                 {
                                                     statusOptions.map((option, index) =>
                                                         <option key={index} selected={option?.value === filterStatus} value={option?.value}>{option?.label}</option>

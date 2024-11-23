@@ -71,6 +71,7 @@ import MenteeDocs from "./component/Programs/ProgramDetails/MenteeDocs";
 import SuperMembers from "./component/SuperAdmin/Members/SuperMembers";
 import AddSuperMember from "./component/SuperAdmin/Members/AddSuperMember";
 import DocumentUpload from "./component/Mentees/DocumentUpload";
+import ProfileView from "./component/Profile/ProfileView";
 
 function App() {
   const PrivateRoute = () => {
@@ -140,7 +141,7 @@ function App() {
 
           <Route path="/discussions" element={<Discussions />} />
 
-          <Route path="/mentor-profile/:id" element={<MentorProfile />} />
+          <Route path="/mentor-profile/:id" element={<ProfileView />} />
 
           <Route path="/edit-profile" element={<EditProfile />} />
           <Route path="/program-data" element={<ProgramsData />} />
@@ -161,7 +162,7 @@ function App() {
           
 
           <Route path="/mentors" element={<Mentors />} />
-          <Route path="/mentor-details/:id" element={<MentorDetails />} />
+          <Route path="/mentor-details/:id" element={<ProfileView />} />
           <Route path="/mentor-tasks" element={<MentorTask />} />
           <Route
             path="/mentor-tasks-details/:id"
@@ -170,7 +171,7 @@ function App() {
           <Route path="/mentor-change-view" element={<MentorChangeRequest />}/>
 
           <Route path="/mentees" element={<Mentees />} />
-          <Route path="/mentee-details/:id" element={<MentorDetails />} />
+          <Route path="/mentee-details/:id" element={<ProfileView />} />
           <Route path="/mentee-tasks" element={<Tasks />} />
           <Route path="/mentee-tasks-details/:id" element={<TaskDetails />} />
           <Route path="/preview-mentee-tasks-details/:id" element={<PreviewTaskDetails />} />

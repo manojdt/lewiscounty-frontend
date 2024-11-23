@@ -125,15 +125,10 @@ export default function Programs() {
             query = { type: 'is_bookmark', value: isBookmark }
         }
 
-       
-
         if (role === 'mentee') {
             dispatch(getMenteePrograms(query))
         }
         if (role === 'mentor') dispatch(getUserPrograms(query));
-
-
-
     }
 
     const programTableFields = [
@@ -253,7 +248,6 @@ export default function Programs() {
             if (role === 'mentee') {
                 return { ...menu, count: totalCount[menu.menteeStatus] }
             }
-
             return menu
         })
         setProgramMenusList(programMenu)
@@ -290,7 +284,6 @@ export default function Programs() {
                 dispatch(getUserPrograms(query))
                 dispatch(getProgramCounts())
             }
-
         }
     }, [userprograms.status])
 
@@ -311,8 +304,6 @@ export default function Programs() {
                 loadProgram = userprograms.allprograms
             }
 
-
-
             if (filterType !== null && filterType !== '' && isBookmark === null) {
                 if (filterType === 'planned') {
                     loadProgram = userprograms.yettojoin;
@@ -321,7 +312,6 @@ export default function Programs() {
                 }
             }
             setProgramsList(loadProgram)
-
         }
     }, [userprograms])
 
