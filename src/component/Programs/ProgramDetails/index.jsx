@@ -194,7 +194,7 @@ export default function ProgramDetails() {
 
     useEffect(() => {
         if (Object.keys(programdetails).length && !programLoading) {
-            const notAllowedCond = ['completed', 'yettoapprove', 'draft','cancelled']
+            const notAllowedCond = ['completed', 'yettoapprove', 'draft', 'cancelled']
 
 
             if (!notAllowedCond.includes(programdetails.status)) {
@@ -276,7 +276,7 @@ export default function ProgramDetails() {
         }
     }, [loading.join])
 
-   
+
     return (
         <div className="px-9 my-6 grid">
 
@@ -694,11 +694,11 @@ export default function ProgramDetails() {
                                                             {
                                                                 (requestId !== '' && (programRequestApproval.includes(programdetails.status) ||
                                                                     programWaitingActiveApproval.includes(programdetails.status) ||
-                                                                (Object.keys(programdetails.cancel_reason).length && programdetails.cancel_reason?.id === parseInt(requestId)
-                                                                && (programdetails.cancel_reason?.status === 'new' || programdetails.cancel_reason?.status === 'pending')) ||
+                                                                    (Object.keys(programdetails.cancel_reason).length && programdetails.cancel_reason?.id === parseInt(requestId)
+                                                                        && (programdetails.cancel_reason?.status === 'new' || programdetails.cancel_reason?.status === 'pending')) ||
 
-                                                                (Object.keys(programdetails.reschedule_reason).length
-                                                                && (programdetails.reschedule_reason?.status === 'new' || programdetails.reschedule_reason?.status === 'pending'))
+                                                                    (Object.keys(programdetails.reschedule_reason).length
+                                                                        && (programdetails.reschedule_reason?.status === 'new' || programdetails.reschedule_reason?.status === 'pending'))
                                                                 )
                                                                 ) ?
 
@@ -908,13 +908,17 @@ export default function ProgramDetails() {
                                                     : null
                                             }
 
+                                            {
+                                                programdetails.image !== null && programdetails.image !== '' &&
 
-                                            <div className='sponsor pt-8'>
-                                                <div className='font-semibold pb-5'>Sponsored by </div>
-                                                <ul className='flex gap-5'>
-                                                    <img style={{ width: '100px', height: '100px' }} src={programdetails.image} alt="SponsorIcon" />
-                                                </ul>
-                                            </div>
+                                                <div className='sponsor pt-8'>
+                                                    <div className='font-semibold pb-5'>Sponsored by </div>
+                                                    <ul className='flex gap-5'>
+                                                        <img style={{ width: '100px', height: '100px' }} src={programdetails.image} alt="SponsorIcon" />
+                                                    </ul>
+                                                </div>
+                                            }
+
 
                                         </div>
 

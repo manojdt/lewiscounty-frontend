@@ -9,7 +9,6 @@ import SearchIcon from '../../assets/icons/SearchColor.svg'
 import EditIcon from '../../assets/icons/editIcon.svg';
 import SuccessTik from '../../assets/images/blue_tik1x.png';
 import CancelIcon from '../../assets/images/cancel1x.png'
-import FilterIcon from '../../assets/icons/Filter.svg';
 import UserImage from "../../assets/icons/user-icon.svg";
 import MoreIcon from '../../assets/icons/moreIcon.svg'
 import BookmarkedIcon from '../../assets/icons/Bookmarked.svg'
@@ -129,8 +128,7 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
         }
     }, [programUploadAction.successModal])
 
-    console.log('categoryList', categoryPopup)
-
+ 
     return (
         <>
             <div className='main-program' style={{ boxShadow: noTitle ? 'none' : '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }}>

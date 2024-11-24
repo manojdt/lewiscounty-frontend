@@ -17,7 +17,6 @@ export const getUserPrograms = createAsyncThunk(
             updateQuery = {...query, value: 'yettojoin'}
         }
 
-        console.log('updateQuery', updateQuery)
         let queryParams = ''
         if(updateQuery && Object.keys(updateQuery).length){         
             if(updateQuery.hasOwnProperty('type')){
@@ -108,8 +107,7 @@ export const getSpecificProgramDetails = createAsyncThunk(
             queryString = queryString+'?request_id='+requestId
         }
 
-        console.log('queryString', queryString+'?request_id='+requestId)
-
+      
         const getDetailsofProgram = await api.get(`fetch_program_detail/${queryString}`);
         if (getDetailsofProgram.status === 200 && getDetailsofProgram.data && getDetailsofProgram.data.program) {
             return getDetailsofProgram.data.program;

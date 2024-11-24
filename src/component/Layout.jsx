@@ -33,15 +33,15 @@ export default function Layout({ subheader }) {
   let items = [
     {
       label: <div className='flex gap-4 items-center'>
-          <img src={TaskIcon} alt="TaskIcon" />
-          <p>Task</p>
+        <img src={TaskIcon} alt="TaskIcon" />
+        <p>Task</p>
       </div>,
       command: () => navigate(role === 'mentee' ? '/mentee-tasks' : '/mentor-tasks')
     },
     {
       label: <div className='flex gap-4 items-center'>
-          <img src={GoalIcon} alt="GoalIcon" />
-          <p>Goal</p>
+        <img src={GoalIcon} alt="GoalIcon" />
+        <p>Goal</p>
       </div>,
       command: () => navigate('/goals')
     },
@@ -50,8 +50,8 @@ export default function Layout({ subheader }) {
   if (role === 'admin') {
     items.unshift({
       label: <div className='flex gap-4 items-center'>
-          <img src={TaskIcon} alt="TaskIcon" />
-          <p>Launch Program</p>
+        <img src={TaskIcon} alt="TaskIcon" />
+        <p>Launch Program</p>
       </div>,
       command: () => navigate('/launch-program')
     })
@@ -60,22 +60,22 @@ export default function Layout({ subheader }) {
   let moreitems = [
     {
       label: <div className='flex gap-4 items-center'>
-          <img src={DiscussionIcon} alt="DiscussionIcon" />
-          <p>Discussions</p>
+        <img src={DiscussionIcon} alt="DiscussionIcon" />
+        <p>Discussions</p>
       </div>,
       command: () => navigate('/discussions')
     },
     {
       label: <div className='flex gap-4 items-center'>
-          <img src={FeedbackIcon} alt="FeedbackIcon" />
-          <p>Feedback</p>
+        <img src={FeedbackIcon} alt="FeedbackIcon" />
+        <p>Feedback</p>
       </div>,
       command: () => navigate('/feedback')
     },
     {
       label: <div className='flex gap-4 items-center'>
-          <img src={CertificateIcon} alt="CertificateIcon" />
-          <p>Certificate</p>
+        <img src={CertificateIcon} alt="CertificateIcon" />
+        <p>Certificate</p>
       </div>,
       command: () => navigate('/certificates')
     },
@@ -94,8 +94,8 @@ export default function Layout({ subheader }) {
     moreitems.unshift({
 
       label: <div className='flex gap-4 items-center'>
-          <img src={ReportIcon} alt="ReportIcon" />
-          <p>Reports</p>
+        <img src={ReportIcon} alt="ReportIcon" />
+        <p>Reports</p>
       </div>,
       command: () => navigate('/reports')
     },
@@ -109,13 +109,22 @@ export default function Layout({ subheader }) {
   const documentUpload = window.location.href.includes('mentor-doc-upload') || window.location.href.includes('mentee-doc-upload')
 
   useEffect(() => {
-    if ((userInfo?.data?.userinfo?.approve_status === 'new' || notValidUser(userInfo)) && role !== 'mentee') {
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('refresh_token');
-      navigate('/logout');
+    // if ((userInfo?.data?.userinfo?.approve_status === 'new' || notValidUser(userInfo)) && role !== 'mentee') {
+    //   localStorage.removeItem('access_token');
+    //   localStorage.removeItem('refresh_token');
+    //   navigate('/logout');
+    // }
+
+    if (role === 'mentor') {
+      if (!userInfo.data.is_registered) {
+        navigate('/questions')
+      }
+      if (!userInfo.data.document_upload) {
+        navigate('/mentor-doc-upload')
+      }
     }
 
-    if(role === 'mentee' && !userInfo?.data?.is_registered){
+    if (role === 'mentee' && !userInfo?.data?.is_registered) {
       navigate('/programs')
     }
   }, [userInfo])
@@ -123,7 +132,7 @@ export default function Layout({ subheader }) {
   return (
     <div>
       <Navbar />
-      {!subheader && userInfo?.data?.is_registered && !documentUpload  ? (
+      {!subheader && userInfo?.data?.is_registered && !documentUpload ? (
         <div
           className="secondary-menu py-8"
           style={{ boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.05)" }}
@@ -132,9 +141,8 @@ export default function Layout({ subheader }) {
           rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0`}>
             {userInfo?.data?.is_registered && (
               <li
-                className={`${
-                  pathname === "/dashboard" ? "dashboard-menu-active" : ""
-                }`}
+                className={`${pathname === "/dashboard" ? "dashboard-menu-active" : ""
+                  }`}
               >
                 <span
                   onClick={() => navigate("/dashboard")}
@@ -147,9 +155,8 @@ export default function Layout({ subheader }) {
             )}
 
             <li
-              className={`${
-                pathname === "/programs" ? "dashboard-menu-active" : ""
-              }`}
+              className={`${pathname === "/programs" ? "dashboard-menu-active" : ""
+                }`}
             >
               <span
                 onClick={() => navigate("/programs")}
@@ -160,9 +167,8 @@ export default function Layout({ subheader }) {
             </li>
             {role === "mentee" && userInfo?.data?.is_registered && (
               <li
-                className={`${
-                  pathname === "/mentors" ? "dashboard-menu-active" : ""
-                }`}
+                className={`${pathname === "/mentors" ? "dashboard-menu-active" : ""
+                  }`}
               >
                 <span
                   onClick={() => navigate("/mentors")}
@@ -175,9 +181,8 @@ export default function Layout({ subheader }) {
 
             {role === "mentor" && userInfo?.data?.is_registered && (
               <li
-                className={`${
-                  pathname === "/mentees" ? "dashboard-menu-active" : ""
-                }`}
+                className={`${pathname === "/mentees" ? "dashboard-menu-active" : ""
+                  }`}
               >
                 <span
                   onClick={() => navigate("/mentees")}
@@ -190,9 +195,8 @@ export default function Layout({ subheader }) {
 
             {role === "admin" && (
               <li
-                className={`${
-                  pathname === "/members" ? "dashboard-menu-active" : ""
-                }`}
+                className={`${pathname === "/members" ? "dashboard-menu-active" : ""
+                  }`}
               >
                 <span
                   onClick={() => navigate("/members")}
@@ -205,9 +209,8 @@ export default function Layout({ subheader }) {
 
             {userInfo?.data?.is_registered && (
               <li
-                className={`${
-                  pathname === "/all-request" ? "dashboard-menu-active" : ""
-                }`}
+                className={`${pathname === "/all-request" ? "dashboard-menu-active" : ""
+                  }`}
               >
                 <span
                   onClick={() => navigate("/all-request")}
@@ -241,11 +244,10 @@ export default function Layout({ subheader }) {
             {userInfo?.data?.is_registered && (
               <>
                 <li
-                  className={`${
-                    pathname === "/mentee-tasks" || pathname === "/mentor-tasks"
-                      ? "dashboard-menu-active"
-                      : ""
-                  }`}
+                  className={`${pathname === "/mentee-tasks" || pathname === "/mentor-tasks"
+                    ? "dashboard-menu-active"
+                    : ""
+                    }`}
                 >
                   <span
                     onClick={() =>
@@ -260,9 +262,8 @@ export default function Layout({ subheader }) {
                 </li>
 
                 <li
-                  className={`${
-                    pathname === "/goals" ? "dashboard-menu-active" : ""
-                  }`}
+                  className={`${pathname === "/goals" ? "dashboard-menu-active" : ""
+                    }`}
                 >
                   <span
                     onClick={() => navigate("/goals")}
@@ -273,9 +274,8 @@ export default function Layout({ subheader }) {
                 </li>
 
                 <li
-                  className={`${
-                    pathname === "/calendar" ? "dashboard-menu-active" : ""
-                  }`}
+                  className={`${pathname === "/calendar" ? "dashboard-menu-active" : ""
+                    }`}
                 >
                   <span
                     onClick={() => navigate("/calendar")}

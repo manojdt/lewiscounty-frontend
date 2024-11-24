@@ -239,10 +239,10 @@ const ViewReport = () => {
                                 }
 
 
-                                <Button btnType="button" btnCls="w-[14%]"
+                                {/* <Button btnType="button" btnCls="w-[14%]"
                                     onClick={() => { navigate('/reports') }} btnName='Close'
                                     btnStyle={{ background: 'rgba(29, 91, 191, 1)' }}
-                                />
+                                /> */}
                             </div>
                         </div>
 

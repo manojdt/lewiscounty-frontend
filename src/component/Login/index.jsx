@@ -63,29 +63,22 @@ export const Login = () => {
   // }
 
   const handleRedirect = () => {
-    console.log("role:", userData.data.role);
-    console.log("is_registered:", userData.data.is_registered);
     dispatch(updateInfo());
     if (
       userData.data.role === "super_admin" &&
       userData.data.is_registered === true
     ) {
-      console.log("Redirecting to /super-members");
       navigate("/super-members");
     } else if (userData.data.role === "fresher") {
-      console.log("Redirecting to /login-type");
       navigate("/login-type");
     } else if (userData.data.is_registered) {
-      console.log("Redirecting to /dashboard");
       navigate("/dashboard");
     } else if (
       userData.data.role === "mentee" &&
       !userData.data.is_registered
     ) {
-      console.log("Redirecting to /programs");
       navigate("/programs");
     } else {
-      console.log("Redirecting to /questions");
       navigate("/questions");
     }
   };

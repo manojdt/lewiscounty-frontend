@@ -12,7 +12,7 @@ import FemaleIcon from '../../assets/images/female-profile1x.png'
 
 import { pipeUrls } from '../../utils/constant';
 import { programStatus } from "../../utils/constant";
-import { getMenteeProgramCount, getMenteePrograms, updateProgram } from "../../services/userprograms";
+import { getMenteeProgramCount, getMenteePrograms } from "../../services/userprograms";
 
 import './dashboard.css';
 import ProgramCard from "../../shared/Card/ProgramCard";
@@ -86,14 +86,11 @@ export const Mentee = () => {
         let baseUrl = pipeUrls.programdetails
         if (Object.keys(program).length) {
             const filterType = searchParams.get("type");
-           
-                navigate(`${baseUrl}/${program.id}`)
-           
+            navigate(`${baseUrl}/${program.id}`)
         }
     }
 
     const handleBookmark = async (program) => {
-
         const payload = {
             "program_id": program.id,
             "marked": !program.is_bookmark
@@ -106,11 +103,7 @@ export const Mentee = () => {
             getPrograms()
             if (role === 'mentee') dispatch(getMenteeProgramCount())
         }
-
-       
     }
-
-
 
     useEffect(() => {
         if (userpragrams.status === programStatus.bookmarked && userInfo?.data?.is_registered) {
@@ -119,35 +112,6 @@ export const Mentee = () => {
     }, [userpragrams.status])
 
 
-    const topMentors = [
-        {
-            name: 'Rhea Ripley',
-            role: 'Mentor',
-            attended: 10,
-            completed: 20
-        },
-        {
-            name: 'Rhea Ripley',
-            role: 'Mentor',
-            attended: 10,
-            completed: 20
-        },
-        {
-            name: 'Rhea Ripley',
-            role: 'Mentor',
-            attended: 10,
-            completed: 20
-        },
-        {
-            name: 'Rhea Ripley',
-            role: 'Mentor',
-            attended: 10,
-            completed: 20
-        }
-    ]
-
-
-    console.log('topMentotList', topMentotList)
     return (
         <>
             <div className="dashboard-content px-8 mt-10">

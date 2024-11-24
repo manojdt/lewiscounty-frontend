@@ -399,8 +399,6 @@ const certificateRow = () => {
     for (let a = 1; a <= 20; a++) {
         data.push(certificateData(`Certificate Name ${a}`, 3287263))
     }
-
-    // console.log('data', data)
     return data
 }
 

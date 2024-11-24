@@ -444,8 +444,8 @@ export default function AssignTask() {
 
                                 {
                                     (
-                                        (role === 'mentor' && programDetails.created_by === userdetails?.data?.user_id) || 
-                                        (role === 'mentee' && 
+                                        (role === 'mentor' && programDetails.created_by === userdetails?.data?.user_id) ||
+                                        (role === 'mentee' &&
                                             (programdetails.status === programActionStatus.inprogress || programdetails.mentee_join_status === programActionStatus.program_join_request_accepted)
                                         )
                                     ) &&
@@ -940,13 +940,17 @@ export default function AssignTask() {
                                                     : null
                                             }
 
+                                            {
+                                                programdetails.image !== null && programdetails.image !== '' &&
 
-                                            <div className='sponsor pt-8'>
-                                                <div className='font-semibold pb-5'>Sponsored by </div>
-                                                <ul className='flex gap-5'>
-                                                    <img style={{ width: '100px', height: '100px' }} src={programdetails.image} alt="SponsorIcon" />
-                                                </ul>
-                                            </div>
+                                                <div className='sponsor pt-8'>
+                                                    <div className='font-semibold pb-5'>Sponsored by </div>
+                                                    <ul className='flex gap-5'>
+                                                        <img style={{ width: '100px', height: '100px' }} src={programdetails.image} alt="SponsorIcon" />
+                                                    </ul>
+                                                </div>
+
+                                            }
 
                                         </div>
 
@@ -1227,7 +1231,7 @@ export default function AssignTask() {
                                                                 disabled={false}
                                                                 // minDate={new Date(dateFormat.reschedule_start_date)}
                                                                 // maxDate={new Date(programdetails.end_date)}
-                                                                minDate={dateFormat.reschedule_start_date? new Date(dateFormat.reschedule_start_date) : new Date()}
+                                                                minDate={dateFormat.reschedule_start_date ? new Date(dateFormat.reschedule_start_date) : new Date()}
                                                                 maxDate={programdetails?.status === "yettostart" ? "" : new Date(programdetails?.end_date)}
                                                                 showTime={false}
                                                                 hourFormat="12"

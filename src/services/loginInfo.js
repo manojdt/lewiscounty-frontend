@@ -142,10 +142,6 @@ export const updateQuestions = createAsyncThunk(
     const updateQuestion = await api.put("user_info_update", data);
     if (updateQuestion.status === 200) {
       let decoded = jwtDecode(updateQuestion.data.access);
-      if(decoded?.userinfo?.approve_status === 'new'){
-        return {}
-      }
-
       localStorage.setItem("access_token", updateQuestion.data.access);
       localStorage.setItem("refresh_token", updateQuestion.data.refresh);
       return decoded;
