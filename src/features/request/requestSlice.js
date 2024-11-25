@@ -22,7 +22,8 @@ import {
     updateProgramMenteeRequest,
     updateCertificateRequest,
     updateProgramRequest,
-    updateReportRequest
+    updateReportRequest,
+    getlearningAccessRequest
 } from "../../services/request";
 
 const initialState = {
@@ -36,6 +37,7 @@ const initialState = {
     reportRequest: [],
     categoryList: [],
     reportsRequest: [],
+    learningAccessRequests: [],
     loading: false,
     status: "",
     error: "",
@@ -437,6 +439,31 @@ export const requestSlice = createSlice({
                 };
             })
             .addCase(updateReportRequest.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
+            // learning Access Request
+
+            builder
+            .addCase(getlearningAccessRequest.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(getlearningAccessRequest.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    learningAccessRequests: action.payload,
+                    status: requestStatus.load,
+                    loading: false,
+                };
+            })
+            .addCase(getlearningAccessRequest.rejected, (state, action) => {
                 return {
                     ...state,
                     loading: false,

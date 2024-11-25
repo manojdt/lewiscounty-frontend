@@ -1304,6 +1304,149 @@ export const programRequestColumns = [
     }
 ];
 
+export const learningAccessRequestsColumns = [
+    {
+        field: 'name',
+        headerName: 'Material Name',
+        flex: 1,
+        id: 0,
+        for: ['mentee'],
+        minWidth: 150,
+    },
+    {
+        field: 'material_link',
+        headerName: 'Material Link',
+        flex: 1,
+        id: 1,
+        for: ['mentee'],
+        minWidth: 150,
+    },
+    {
+        field: 'requested_by',
+        headerName: 'Requested To',
+        flex: 1,
+        id: 2,
+        for: ['mentee'],
+        minWidth: 150,
+    },
+    {
+        field: 'requested_date',
+        headerName: 'Request Data',
+        flex: 1,
+        id: 3,
+        for: ['mentee'],
+        minWidth: 150,
+    },
+    {
+        field: 'updated_at',
+        headerName: 'Last Updated Date',
+        flex: 1,
+        id: 4,
+        for: ['mentee'],
+        minWidth: 150,
+    },
+    {
+        field: 'updated_by',
+        headerName: 'Last Update by',
+        flex: 1,
+        id: 5,
+        for: ['mentee'],
+        minWidth: 150,
+    },
+    // {
+    //     field: 'status',
+    //     headerName: 'Status',
+    //     flex: 1,
+    //     id: 6,
+    //     for: ['mentee'],
+    //     minWidth: 150,
+    // },
+    {
+        field: 'url',
+        headerName: 'Document',
+        flex: 1,
+        id: 7,
+        for: ['mentee'],
+        minWidth: 150,
+    },
+    {
+        field: 'action',
+        headerName: 'Action',
+        flex: 1,
+        id: 8,
+        for: ['mentee'],
+        minWidth: 150,
+    },
+    
+]
+export const newGoalsRequestsColumns = [
+    {
+        field: 'goal_name',
+        headerName: 'Goal Name',
+        flex: 1,
+        id: 0,
+        for: ['mentee'],
+        minWidth: 150,
+    },
+    {
+        field: 'description',
+        headerName: 'Description',
+        flex: 1,
+        id: 1,
+        for: ['mentee'],
+        minWidth: 150,
+    },
+    {
+        field: 'request_date',
+        headerName: 'Request Date ',
+        flex: 1,
+        id: 2,
+        for: ['mentee'],
+        minWidth: 150,
+    },
+    {
+        field: 'requested_to',
+        headerName: 'Requested to',
+        flex: 1,
+        id: 3,
+        for: ['mentee'],
+        minWidth: 150,
+    },
+    {
+        field: 'last_updated_date',
+        headerName: 'Last Updated Date',
+        flex: 1,
+        id: 4,
+        for: ['mentee'],
+        minWidth: 150,
+    },
+    {
+        field: 'last_update_by',
+        headerName: 'Last Update by',
+        flex: 1,
+        id: 5,
+        for: ['mentee'],
+        minWidth: 150,
+    },
+    {
+        field: 'status',
+        headerName: 'Status',
+        flex: 1,
+        id: 6,
+        for: ['mentee'],
+        minWidth: 150,
+    },
+    {
+        field: 'action',
+        headerName: 'Action',
+        flex: 1,
+        id: 8,
+        for: ['mentee'],
+        minWidth: 150,
+    },
+    
+]
+
 
 export const memberMentorRequestColumns = [
     {

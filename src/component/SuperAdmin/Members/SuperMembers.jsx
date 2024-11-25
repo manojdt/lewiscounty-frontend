@@ -83,7 +83,7 @@ function SuperMembers() {
         }
       });
     },
-    [setSupermemberData]
+    [supermemberData]
   );
 
    const handleToggleStatus = async (userId, currentStatus) => {
