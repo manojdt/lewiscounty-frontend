@@ -862,18 +862,39 @@ export default function ProgramDetails() {
 
 
                                 {
-                                    role !== 'mentee' && ((role === 'admin' && requestId !== null && programdetails?.cancel_reason && Object.keys(programdetails?.cancel_reason).length) 
+                                    role !== 'mentee' && ((role === 'admin' && requestId !== null && programdetails?.cancel_reason && Object.keys(programdetails?.cancel_reason).length &&
+                                        programdetails.cancel_reason.id === parseInt(requestId))
                                         || (programdetails.status === programActionStatus.cancelled)) &&
                                     <div className={`action-set action_cancelled`}>
                                         <div className='reason-title'>
-                                            {programdetails.status === programActionStatus.cancelled || 
-                                            
-                                            (role === 'admin' && requestId !== null && programdetails?.cancel_reason && Object.keys(programdetails?.cancel_reason).length)
-                                            
-                                            ? 'Cancelled ' : ''} Reason
+                                            {programdetails.status === programActionStatus.cancelled ||
+
+                                                (role === 'admin' && requestId !== null && programdetails?.cancel_reason && Object.keys(programdetails?.cancel_reason).length)
+
+                                                ? 'Cancelled ' : ''} Reason
                                         </div>
                                         <div className='reason-content'>
                                             {programdetails?.cancel_reason?.cancel_request_reason}
+                                        </div>
+                                    </div>
+                                }
+
+
+                                {
+                                    role !== 'mentee' && ((role === 'admin' && requestId !== null && programdetails?.reschedule_reason && Object.keys(programdetails?.reschedule_reason).length &&
+                                    programdetails.reschedule_reason.id === parseInt(requestId)
+                                        )
+                                        ) &&
+                                    <div className={`action-set action_cancelled`} style={{border: '1px solid rgba(255, 118, 0, 1)', background: 'rgba(255, 242, 231, 1)'}}>
+                                        <div className='reason-title' style={{color: 'rgba(255, 118, 0, 1)'}}>
+                                            {programdetails.status === programActionStatus.cancelled ||
+
+                                                (role === 'admin' && requestId !== null && programdetails?.reschedule_reason && Object.keys(programdetails?.reschedule_reason).length)
+
+                                                ? 'Rescheduled ' : ''} Reason
+                                        </div>
+                                        <div className='reason-content'>
+                                            {programdetails?.reschedule_reason?.reason}
                                         </div>
                                     </div>
                                 }
