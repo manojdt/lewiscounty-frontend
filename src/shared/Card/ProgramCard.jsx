@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 
 import SearchIcon from '../../assets/icons/SearchColor.svg'
+import FilterIcon from '../../assets/icons/filterIcon.svg'
 import EditIcon from '../../assets/icons/editIcon.svg';
 import SuccessTik from '../../assets/images/blue_tik1x.png';
 import CancelIcon from '../../assets/images/cancel1x.png'
@@ -145,7 +146,7 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                         <div className="flex gap-4">
                             <div className="card-dash" style={{ background: 'linear-gradient(180deg, #00B1C0 0%, #005DC6 100%)' }} ></div>
                             <h4>{title}</h4>
-                            <img className='cursor-pointer' onClick={handleCategoryFilter} src={SearchIcon} alt="statistics" />
+                            <img className='cursor-pointer' onClick={handleCategoryFilter} src={FilterIcon} alt="statistics" />
                         </div>
                         {
                             programs && programs.length ?

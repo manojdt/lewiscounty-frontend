@@ -34,6 +34,10 @@ export const getUserPrograms = createAsyncThunk(
             if(updateQuery.hasOwnProperty('date')){
                 queryParams =  (queryParams === '' ? '?' : `${queryParams}&`) + `${updateQuery.date.date}=${updateQuery.date.value}`
             }
+
+            if(updateQuery.hasOwnProperty('category_id')){
+                queryParams =  (queryParams === '' ? '?' : `${queryParams}&`) + `category_id=${updateQuery.category_id}`
+            }
         }
         queryParams = queryParams !== '' ? `${queryParams}&limit=6` : '?limit=6'
        
