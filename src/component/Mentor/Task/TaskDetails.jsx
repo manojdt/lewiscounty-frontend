@@ -54,8 +54,11 @@ const MentorTaskDetails = () => {
     }, [status])
 
     useEffect(() => {
+        console.log('taskDetails', taskDetails)
         if (taskDetails.status === 'waiting_for_approval' && !editTask) {
             setEditTask(true)
+        }else{
+            setEditTask(false)
         }
     }, [taskDetails])
 
@@ -76,9 +79,6 @@ const MentorTaskDetails = () => {
 
     const allFiles = getFiles(taskDetails?.files || [])
 
-    console.log('taskDetails', taskDetails)
-
-    console.log('allFiles', allFiles)
 
     return (
         <div className="px-9 py-9">
