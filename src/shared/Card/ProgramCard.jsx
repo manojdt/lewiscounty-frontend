@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { useDispatch, useSelector } from 'react-redux';
@@ -28,6 +28,7 @@ import { getAllCategories } from '../../services/programInfo';
 export default function ProgramCard({ title, viewpage, handleNavigateDetails, handleBookmark, programs, height, action = [], noTitle = false, loadProgram }) {
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const [searchParams, setSearchParams] = useSearchParams()
     const [anchorEl, setAnchorEl] = useState(null);
     const [programImage, setProgramImage] = useState(null)
     const [hoverIndex, setHoverIndex] = useState({ image: null, desc: null })
@@ -105,6 +106,12 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
     }
 
     const handleSearchSubmit = () => {
+        const selectedCategory = categoryPopup.selectedItem
+        if(selectedCategory.length){
+            searchParams.set("category_id", selectedCategory.toString());
+            setSearchParams(searchParams)
+        }
+        setCategoryPopup({ show: false, search: '', categoryList: category, selectedItem: [] })
         console.log(categoryPopup)
     }
 
@@ -138,7 +145,7 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                         <div className="flex gap-4">
                             <div className="card-dash" style={{ background: 'linear-gradient(180deg, #00B1C0 0%, #005DC6 100%)' }} ></div>
                             <h4>{title}</h4>
-                            {/* <img className='cursor-pointer' onClick={handleCategoryFilter} src={FilterIcon} alt="statistics" /> */}
+                            <img className='cursor-pointer' onClick={handleCategoryFilter} src={SearchIcon} alt="statistics" />
                         </div>
                         {
                             programs && programs.length ?
@@ -478,7 +485,8 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                                 {
                                     categoryPopup.categoryList.map((category, index) =>
                                         <li key={index} className='flex gap-7'>
-                                            <input type="checkbox" className='w-[20px]' onChange={() => handleSelectCategory(category.id)} value={category.id} />
+                                            <input type="checkbox" className='w-[20px]' checked={categoryPopup.selectedItem.includes(category.id)} 
+                                                onChange={() => handleSelectCategory(category.id)} value={category.id} />
                                             <span className='text-[16px]'>{category.name}</span>
                                         </li>
                                     )

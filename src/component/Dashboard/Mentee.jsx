@@ -44,6 +44,7 @@ export const Mentee = () => {
     const getPrograms = () => {
         const filterType = searchParams.get("type");
         const isBookmark = searchParams.get("is_bookmark");
+        const categoryFilter = searchParams.get("category_id");
 
         let query = {}
 
@@ -54,6 +55,12 @@ export const Mentee = () => {
         if (isBookmark && isBookmark !== '') {
             query = { type: 'is_bookmark', value: isBookmark }
         }
+
+        if(categoryFilter && categoryFilter !== ''){
+            query.category_id = categoryFilter
+        }
+
+        console.log('QIERY', query)
 
         dispatch(getMenteePrograms(query));
     }

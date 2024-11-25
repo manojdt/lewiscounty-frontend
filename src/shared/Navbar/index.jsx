@@ -146,7 +146,8 @@ export const Navbar = () => {
     }
 
     const handleLogoClick = () => {
-        if (!window.location.href.includes('mentee-doc-upload') && !window.location.href.includes('questions')) {
+        if (!window.location.href.includes('mentee-doc-upload') && !window.location.href.includes('questions')
+        && !window.location.href.includes('mentor-doc-upload')) {
             if (role === 'mentee' && !userInfo?.data?.is_registered) {
                 navigate('/programs');
             } else if (

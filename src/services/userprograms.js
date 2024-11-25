@@ -215,6 +215,11 @@ export const getMenteePrograms = createAsyncThunk(
             }
 
 
+            if(queryString.hasOwnProperty('category_id')){
+                queryParams =  (queryParams === '' ? '?' : `${queryParams}&`) + `category_id=${queryString.category_id}`
+            }
+
+
         }
         queryParams = queryParams !== '' ? `${queryParams}&limit=6` : '?limit=6'
 

@@ -862,15 +862,19 @@ export default function ProgramDetails() {
 
 
                                 {
-                                    role !== 'mentee' && (programdetails.status === programActionStatus.cancelled) &&
-                                    <div className={`action-set action_${programdetails.status}`}>
+                                    role !== 'mentee' && ((role === 'admin' && requestId !== null && programdetails?.cancel_reason && Object.keys(programdetails?.cancel_reason).length) 
+                                        || (programdetails.status === programActionStatus.cancelled)) &&
+                                    <div className={`action-set action_cancelled`}>
                                         <div className='reason-title'>
-                                            {programdetails.status === programActionStatus.cancelled ? 'Cancelled ' : ''} Reason
+                                            {programdetails.status === programActionStatus.cancelled || 
+                                            
+                                            (role === 'admin' && requestId !== null && programdetails?.cancel_reason && Object.keys(programdetails?.cancel_reason).length)
+                                            
+                                            ? 'Cancelled ' : ''} Reason
                                         </div>
                                         <div className='reason-content'>
                                             {programdetails?.cancel_reason?.cancel_request_reason}
                                         </div>
-
                                     </div>
                                 }
 

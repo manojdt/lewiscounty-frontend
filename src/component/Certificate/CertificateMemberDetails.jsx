@@ -6,6 +6,8 @@ import ArrowRightIcon from "../../assets/icons/arrowRightColor.svg";
 import DataTable from "../../shared/DataGrid";
 import { certificateMenberColumns } from "../../utils/tableFields";
 import {
+  certificateResultColor,
+  certificateResultText,
   certificateStatus,
   resultColor,
   resultText,
@@ -88,17 +90,17 @@ export default function CertificateMemberDetails() {
               <span
                 className="w-[80px] flex justify-center h-[30px] px-3"
                 style={{
-                  background: resultColor[params.row.status]?.bg || "",
+                  background: certificateResultColor[params.row.result]?.bg || "",
                   lineHeight: "30px",
                   borderRadius: "3px",
                   width: "110px",
                   height: "34px",
-                  color: resultColor[params.row.status]?.color || "",
+                  color: certificateResultColor[params.row.result]?.color || "",
                   fontSize: "12px",
                 }}
               >
                 {" "}
-                {resultText[params.row.status]}
+                {certificateResultText[params.row.result]}
               </span>
             </div>
           </>
