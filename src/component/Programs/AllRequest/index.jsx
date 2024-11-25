@@ -19,11 +19,11 @@ import ShareIcon from '../../../assets/icons/Share.svg'
 
 
 import DataTable from '../../../shared/DataGrid';
-import { categoryColumns, certificateRequestColumns, goalsRequestColumns, memberMenteeRequestColumns, memberMentorRequestColumns, programRequestColumns, programRequestData, reportRequestColumns, resourceAccessRequestColumns, techinicalSupportRequestColumns, testimonialRequestColumns } from '../../../mock';
+import { categoryColumns, certificateRequestColumns, goalsRequestColumns, learningAccessRequestsColumns, memberMenteeRequestColumns, memberMentorRequestColumns, newGoalsRequestsColumns, programRequestColumns, programRequestData, reportRequestColumns, resourceAccessRequestColumns, techinicalSupportRequestColumns, testimonialRequestColumns } from '../../../mock';
 
 import './request.css';
 
-import { cancelMemberRequest, certificateRequest, getCategoryList, getMemberRequest, getprogramRequest, getReportRequest, getResourceRequest, goalsRequest, updateCertificateRequest, updateGoalRequest, updateLocalRequest, updateMemberRequest, updateProgramMenteeRequest, updateProgramRequest, updateReportRequest } from '../../../services/request';
+import { cancelMemberRequest, certificateRequest, getCategoryList, getlearningAccessRequest, getMemberRequest, getprogramRequest, getReportRequest, getResourceRequest, goalsRequest, updateCertificateRequest, updateGoalRequest, updateLocalRequest, updateMemberRequest, updateProgramMenteeRequest, updateProgramRequest, updateReportRequest } from '../../../services/request';
 import ToastNotification from '../../../shared/Toast';
 import MuiModal from '../../../shared/Modal';
 import { useForm } from 'react-hook-form';
@@ -34,8 +34,10 @@ export default function AllRequest() {
     const [searchParams] = useSearchParams();
 
     const dispatch = useDispatch();
-    const { programRequest: programTableInfo, memberRequest, resourceRequest, categoryList, goalsRequest: goalsRequestInfo, certificateRequestList, reportsRequest: reportsRequestInfo,
-        loading, status, error } = useSelector(state => state.requestList);
+    const { programRequest: programTableInfo, memberRequest, resourceRequest, categoryList, goalsRequest: goalsRequestInfo, certificateRequestList, reportsRequest: reportsRequestInfo, learningAccessRequests,
+        loading, status, error } = useSelector(state => {
+            // console.log("state from useSelector ==>", state)
+           return state.requestList});
     const [currentRequestTab, setCurrentRequestTab] = useState(RequestStatus.programRequest)
     const [categoryInfo, setCategoryInfo] = useState({ search: '', list: [] })
     const [filterStatus, setFilterStatus] = useState('all')
@@ -54,7 +56,7 @@ export default function AllRequest() {
         pageSize: 10,
     });
     const userInfo = useSelector(state => state.userInfo)
-
+// console.log("programTableInfo ===>", programTableInfo, "====>", learningAccessRequests)
     const {
         register,
         formState: { errors },
@@ -833,6 +835,9 @@ export default function AllRequest() {
         },
     ]
 
+    let learningAccessRequestsColumn = learningAccessRequestsColumns.filter(request => request.for.includes(role))
+    let newGoalsRequestsColumn = newGoalsRequestsColumns.filter(request => request.for.includes(role))
+
     const handleClick = (menu) => {
         navigate(`/all-request?type=${menu.status}`)
         handleStatus("all")
@@ -850,6 +855,24 @@ export default function AllRequest() {
             // payload.request_type = 'joining_request'
         }
         dispatch(getprogramRequest(payload))
+    }
+
+    const getLearningAccessApi = async() => {
+      const res =  await dispatch(getlearningAccessRequest({
+            ...filterStatus !== 'all' && { status: filterStatus },
+            created_at: 'mentor',
+            filter_by: 'month',
+            page: paginationModel?.page + 1, limit: paginationModel?.pageSize
+        }))
+        // console.log("res ==>", res)
+
+        dispatch(getlearningAccessRequest({
+            ...filterStatus !== 'all' && { status: filterStatus },
+            created_at: 'mentor',
+            filter_by: 'month',
+            page: paginationModel?.page + 1, limit: paginationModel?.pageSize
+        }))
+    
     }
 
     const getGoalsRequestApi = () => {
@@ -949,6 +972,14 @@ export default function AllRequest() {
                     break;
                 case RequestStatus.reportRequest.key:
                     tableDetails = { column: reportRequestColumns, data: [] }
+                    break;
+                case RequestStatus.learningAccessRequests.key:
+                    tableDetails = { column: learningAccessRequestsColumn, data: [] }
+                    actionFilter = []
+                    break;
+                case RequestStatus.newGoalsRequests.key:
+                    tableDetails = { column: newGoalsRequestsColumn, data: [] }
+                    actionFilter = []
                     break;
                 default:
                     tableDetails = { column: programRequestTab, data: [] }
@@ -1065,16 +1096,22 @@ export default function AllRequest() {
         if (searchParams.get('type') === 'report_request') {
             setActiveTableDetails({ column: reportRequestColumn, data: reportsRequestInfo?.results, rowCount: reportsRequestInfo?.count })
         }
+        if (searchParams.get('type') === 'learning_access_requests') {
+            setActiveTableDetails({ column: learningAccessRequestsColumns, data: learningAccessRequests?.results, rowCount: learningAccessRequests?.count })
+        }
 
-    }, [programTableInfo, memberRequest, resourceRequest, goalsRequestInfo, certificateRequestList, reportsRequestInfo, anchorEl])
-
+    }, [programTableInfo, memberRequest, resourceRequest, goalsRequestInfo, certificateRequestList, reportsRequestInfo, anchorEl, learningAccessRequests])
+// console.log("searchParams.get('type') ===>", searchParams.get('type'))
     useEffect(() => {
 
         if (role !== '') {
             if (!searchParams.get('type') || searchParams.get('type') === 'program_request') {
                 getProgramRequestApi()
             }
-
+           
+            if (searchParams.get('type') === 'learning_access_requests') {
+                getLearningAccessApi()
+            }
             if (searchParams.get('type') === 'member_join_request') {
                 getMembersRequestApi()
             }

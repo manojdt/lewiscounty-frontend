@@ -765,6 +765,14 @@ export const RequestStatusArray = [{
     key: 'report_request',
     name: 'Report Requests'
   },
+  {
+    key: 'learning_access_requests',
+    name: 'Learning Access Requests'
+  },
+  {
+    key: 'new_goals_request',
+    name: 'New Goals Requests'
+  },
 ]
 
 export const RequestStatus = {
@@ -800,8 +808,15 @@ export const RequestStatus = {
     key: 'report_request',
     name: 'Report Requests'
   },
+  learningAccessRequests: {
+    key: 'learning_access_requests',
+    name: 'Learning Access Requests'
+  },
+  newGoalsRequests: {
+    key: 'new_goals_request',
+    name: 'New Goals Requests'
+  },
 }
-
 
 export const requestOverview = [{
     name: "Program Requests",
@@ -858,7 +873,21 @@ export const requestOverview = [{
     count: 0,
     status: RequestStatus.reportRequest.key,
     for: ['admin', 'mentor']
-  }
+  },
+  {
+    name: "Learning Access Requests",
+    key: RequestStatus.learningAccessRequests.key,
+    count: 0,
+    status: RequestStatus.learningAccessRequests.key,
+    for: ['mentee']
+  },
+  {
+    name: "New Goals Requests",
+    key: RequestStatus.newGoalsRequests.key,
+    count: 0,
+    status: RequestStatus.newGoalsRequests.key,
+    for: ['mentee']
+  },
 ]
 
 export const allowedImagesTypes = ['png', 'jpeg', 'jpg'];
