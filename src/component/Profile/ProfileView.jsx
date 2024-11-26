@@ -457,7 +457,7 @@ export default function ProfileView() {
                             <label className="w-[40%] pb-3 rounded-lg text-white text-[14px] cursor-pointer" style={{
                                 border: 'none'
                             }}>
-                                <img src={profile?.image || ProfileImageIcon} style={{ borderRadius: '50%', height: '143px' }} alt="ProfileImageIcon" />
+                                <img src={userDetails?.profile_image || ProfileImageIcon} style={{ borderRadius: '50%', height: '143px' }} alt="ProfileImageIcon" />
                             </label>
                         </div>
 
