@@ -55,6 +55,8 @@ import { convertDateFormat, formatDateFunToAll, formatDateTimeISO, todatDateInfo
 import ToastNotification from '../../../shared/Toast';
 import Ratings from '../Ratings';
 import { getUserProfile } from '../../../services/profile';
+import { JoinedMenteeColumn } from '../../../mock';
+import DataTable from '../../../shared/DataGrid';
 
 
 export default function AssignTask() {
@@ -77,6 +79,7 @@ export default function AssignTask() {
     const [anchorEl, setAnchorEl] = useState(null);
     const [loading, setLoading] = useState({ initial: true, task: false })
     const [activeTab, setActiveTab] = useState('about_program')
+    const [viewMenteeModal, setViewMenteeModal] = useState(false)
     const [certificateActiveTab, setCertificateActiveTab] = useState('participated')
     const [startProgramModal, setStartProgramModal] = useState({ loading: false, success: false })
     const [moreMenuModal, setMoreMenuModal] = useState({ share: false, reschedule: false })
@@ -142,6 +145,39 @@ export default function AssignTask() {
         setCertificateActiveTab(key)
     }
 
+
+    const handleViewJoinedMentees = (programInfo) => {
+        setViewMenteeModal(true)
+    }
+
+    const JoinMenteeColumn = [
+        ...JoinedMenteeColumn,
+        {
+            field: 'action',
+            headerName: 'View',
+            width: 300,
+            id: 3,
+            renderCell: (params) => {
+                console.log('params123', params)
+                return <button style={
+                    {
+                        background: 'rgb(29, 91, 191)',
+                        color: 'rgb(255, 255, 255)',
+                        padding: '2px 20px',
+                        height: '32px',
+                        margin: '9px 0px',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderRadius: '3px'
+                    }
+                }
+                    onClick={
+                        () => navigate(`/mentee-details/${params.row.mentee_id}`)
+                    } > View Profile </button>;
+            }
+        }
+    ]
 
     const handleActionPage = async () => {
 
@@ -413,6 +449,21 @@ export default function AssignTask() {
 
             <Ratings open={ratingModal.modal} modalSuccess={ratingModalSuccess} modalClose={ratingModalClose} />
 
+
+            <MuiModal modalSize='md' modalOpen={viewMenteeModal} modalClose={undefined} noheader>
+                <div className='px-5 py-5'>
+                    <div className='flex justify-center flex-col gap-5  mt-4 mb-4'
+                        style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '10px', }}>
+                        <div className='flex justify-between px-3 py-4 items-center' style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
+                            <p className='text-[18px]' style={{ color: 'rgba(0, 0, 0, 1)' }}>Joining Mentees </p>
+                            <img className='cursor-pointer' onClick={() => setViewMenteeModal(false)} src={CancelIcon} alt="CancelIcon" />
+                        </div>
+                        <div className='px-5'>
+                            <DataTable rows={programdetails.participated_mentees} columns={JoinMenteeColumn} hideCheckbox />
+                        </div>
+                    </div>
+                </div>
+            </MuiModal>
 
             {
                 message &&
@@ -894,7 +945,7 @@ export default function AssignTask() {
                                                 {
                                                     role === 'mentor' &&
                                                     <li className='flex justify-between text-[12px]' style={{ paddingTop: '14px' }}> <span>Joined Mentees</span>
-                                                        <span className='underline cursor-pointer'>{programdetails.participated_mentees_count}</span>
+                                                        <span className='underline cursor-pointer' onClick={() => handleViewJoinedMentees(programdetails)}>{programdetails.participated_mentees_count}</span>
                                                     </li>
                                                 }
                                             </ul>

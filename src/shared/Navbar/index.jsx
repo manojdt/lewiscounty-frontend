@@ -26,6 +26,7 @@ export const Navbar = () => {
     const op = useRef(null);
     const [isLogout, setIsLogout] = useState(false)
     const userInfo = useSelector(state => state.userInfo)
+    const { activity } = useSelector(state => state.activity)
     const location = useLocation();
     const dispatch = useDispatch();
     const [anchorEl, setAnchorEl] = useState(null);
@@ -147,7 +148,7 @@ export const Navbar = () => {
 
     const handleLogoClick = () => {
         if (!window.location.href.includes('mentee-doc-upload') && !window.location.href.includes('questions')
-        && !window.location.href.includes('mentor-doc-upload')) {
+            && !window.location.href.includes('mentor-doc-upload')) {
             if (role === 'mentee' && !userInfo?.data?.is_registered) {
                 navigate('/programs');
             } else if (
@@ -168,7 +169,16 @@ export const Navbar = () => {
 
 
     useEffect(() => {
-        dispatch(userActivities())
+        const intervalId = setInterval(() => {
+            dispatch(userActivities({ limit: 10 }))
+        }, 5000);
+
+        return () => clearInterval(intervalId);
+    }, []);
+
+
+    useEffect(() => {
+        dispatch(userActivities({ limit: 10 }))
     }, [])
 
     return (
@@ -274,16 +284,32 @@ export const Navbar = () => {
                         {
                             userInfo?.data?.is_registered && !documentUpload &&
 
-                            <>
-                                {userInfo?.data?.role === 'super_admin' ? null : <div className='relative notitification-group'>
+                            <div className='relative'>
+                                {userInfo?.data?.role === 'super_admin' ? null : <div className='notitification-group'>
                                     <img src={NotificationIcon} className='cursor-pointer notification-image' onClick={(e) => op.current.toggle(e)} alt="NotificationIcon" />
+                                    {
+                                        activity.length > 0 ?
+                                            <span style={{
+                                                position: 'absolute',
+                                                top: '-15px',
+                                                right: '-16px',
+                                                background: 'yellow',
+                                                padding: '2px 6px',
+                                                borderRadius: '50%',
+                                                fontSize: '13px',
+                                                color: 'red',
+                                                fontWeight: 'bold'
+                                            }}>{activity.length}</span>
+                                            : null
+                                    }
+
 
                                     <OverlayPanel ref={op} id="overlay_panel" style={{ width: '450px' }} className="notification-container">
                                         <Notification handleClose={handleCloseNotification} />
                                     </OverlayPanel>
                                 </div>}
                                 {/* <img src={SettingsIcon} alt="SettingsIcon" /> */}
-                            </>
+                            </div>
                         }
 
 

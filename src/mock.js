@@ -2219,3 +2219,18 @@ export const MentorChangeViewColumns = [
     },
 
 ];
+
+
+
+export const JoinedMenteeColumn = [{
+    field: 'mentee_name',
+    headerName: 'Mentee Name',
+    width: 300,
+    id: 0,
+},
+{
+    field: 'category',
+    headerName: 'Category',
+    width: 300,
+    id: 1,
+}]

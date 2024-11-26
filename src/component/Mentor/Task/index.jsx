@@ -7,11 +7,13 @@ import { Button } from '../../../shared';
 import DataTable from '../../../shared/DataGrid';
 import { mentorTaskColumns } from '../../../mock';
 import ViewIcon from '../../../assets/images/view1x.png'
+import CloseIcon from '../../../assets/icons/closeIcon.svg';
 import SearchIcon from '../../../assets/icons/search.svg';
 import MoreIcon from "../../../assets/icons/moreIcon.svg";
 import { useDispatch, useSelector } from 'react-redux';
 import { getMenteeTaskfromMentor } from '../../../services/task';
 import { Backdrop, CircularProgress, Menu, MenuItem } from '@mui/material';
+import { fileNameFromUrl, fileNameString } from '../../../utils';
 
 
 const MentorTask = () => {
@@ -21,6 +23,7 @@ const MentorTask = () => {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const [seletedItem, setSelectedItem] = useState({})
+    const [taskFilesPopup, setTaskFilesPopup] = useState({ modal: false, files: [] })
     const dispatch = useDispatch();
     const [searchParams, setSearchParams] = useSearchParams()
     const { menteeTask, loading: menteeTaskLoading, status } = useSelector(state => state.tasks)
@@ -394,8 +397,59 @@ const MentorTask = () => {
         }
     ]
 
+    const handleFileLink = (files) => {
+        setTaskFilesPopup({ modal: true, files: files })
+        console.log('files123', files)
+    }
+
     const mentorTaskColumn = [
         ...mentorTaskColumns,
+        {
+            field: 'file_by',
+            headerName: 'Link',
+            flex: 1,
+            id: 2,
+            renderCell: (params) => {
+                if (params.row.files && params.row.files.length) {
+                    const files = fileNameString(params.row.files)
+                    console.log('REsponse', files)
+                    return (
+                        <>
+                            {
+                                <div className='flex  items-center'>
+                                    <a className='underline pr-3' href={params.row.files[0].files} target="_blank" style={{ color: 'rgba(24, 40, 61, 1)' }}>{files.filename}</a>
+
+
+                                    {
+                                        files.remainingCount > 0 &&
+                                        <span style={{
+                                            background: 'rgb(217, 228, 242)',
+                                            color: 'rgb(29, 91, 191)',
+                                            borderRadius: '50%',
+                                            fontWeight: 'bold',
+                                            width: '35px',
+                                            height: '35px',
+                                            marginTop: '4px',
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            alignItems: 'center'
+                                        }}
+                                            className='cursor-pointer'
+                                            onClick={() => handleFileLink(params.row.files)}
+                                        >
+                                            + {files.remainingCount}
+                                        </span>
+                                    }
+
+
+                                </div>
+                            }
+                        </>
+                    )
+                }
+                return <></>
+            }
+        },
         {
             field: 'action',
             headerName: 'Action',
@@ -480,19 +534,19 @@ const MentorTask = () => {
     }, [])
 
     useEffect(() => {
-        let query = { page: paginationModel?.page + 1, limit: paginationModel?.pageSize}
+        let query = { page: paginationModel?.page + 1, limit: paginationModel?.pageSize }
 
         const statusQuery = searchParams.has('status') ? searchParams.get('status') : ''
-        if(statusQuery !== ''){
+        if (statusQuery !== '') {
             query.status = statusQuery
         }
 
         const searchQuery = searchParams.has('search') ? searchParams.get('search') : ''
-        if(searchQuery !== ''){
+        if (searchQuery !== '') {
             query.search = searchQuery
         }
 
-        if(Object.keys(query).length){
+        if (Object.keys(query).length) {
             dispatch(getMenteeTaskfromMentor(query));
         }
 
@@ -502,10 +556,45 @@ const MentorTask = () => {
 
     return (
         <div className="mentor-task px-9 py-9">
+
+
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={taskFilesPopup.modal}
+            >
+                <div className='py-3 px-4 bg-white' style={{ borderRadius: '3px' }}>
+                    <div style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '3px' }} className='py-2'>
+                        <div className='flex justify-between px-3 py-1' style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
+                            <p style={{ color: 'rgba(29, 91, 191, 1)' }}>Reference Link View</p>
+                            <img src={CloseIcon} alt="CloseIcon" className='cursor-pointer' onClick={() => setTaskFilesPopup({ modal: false, files: [] })} />
+                        </div>
+                        <ul className='text-black py-2 px-5 leading-10'>
+                            {
+                                taskFilesPopup.files.map((file, index) => {
+                                    if (index > 0) {
+                                        return (
+                                            <li key={index} >
+                                                <a href={file.files} style={{ color: 'rgba(24, 40, 61, 1)', textDecoration: 'underline' }} target='_blank'>{fileNameFromUrl(file.files)}</a>
+                                            </li>
+                                        )
+                                    }
+                                }
+
+                                )
+                            }
+                        </ul>
+
+                    </div>
+                </div>
+
+            </Backdrop>
+
+
+
             <div className='px-3 py-5' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
                 <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
                     <div className='flex gap-5 items-center text-[20px]'>
-                        <p>Task</p>
+                        <p>Mentee Task</p>
                     </div>
 
                 </div>

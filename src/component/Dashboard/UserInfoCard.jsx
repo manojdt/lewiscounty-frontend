@@ -61,7 +61,7 @@ export default function UserInfoCard() {
 
 
                     <div className={`absolute top-[30%] left-[40%] cursor-pointer  ${hoverIndex ? 'show' : 'hidden'}`} style={{ background: '#fff', borderRadius: '50%', padding: '13px 15px' }}
-                        onClick={() => navigate('/edit-profile')} onMouseEnter={() => setHoverIndex(true)} 
+                        onClick={() => navigate('/profile?mode=edit')} onMouseEnter={() => setHoverIndex(true)} 
                         onMouseLeave={() => setHoverIndex(false)}
                     >
                         <img className="h-[25px] w-[22px]" src={EditIcon} alt="EditIcon" />
