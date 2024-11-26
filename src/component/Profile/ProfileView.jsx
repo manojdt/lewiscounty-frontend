@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Button } from '../../shared'
-import { useParams, useSearchParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import ProfileImageIcon from '../../assets/icons/profile-image-icon.svg'
 import CancelIcon from '../../assets/images/cancel1x.png'
 import TickColorIcon from '../../assets/icons/tickColorLatest.svg'
@@ -13,25 +13,35 @@ import { Backdrop, CircularProgress } from '@mui/material'
 import { ProfileFields } from '../../utils/formFields'
 import { getFollowList, getProfileInfo, userFollow, userUnFollow } from '../../services/userList';
 import ConnectIcon from '../../assets/images/Connectpop1x.png'
-import { cancelMemberRequest, getCategoryList, updateLocalRequest, updateMemberRequest } from '../../services/request';
+import { cancelMemberRequest, getCategoryList, updateLocalRequest, updateMemberRequest, updateProgramMenteeRequest } from '../../services/request';
 import MuiModal from '../../shared/Modal';
 import DataTable from '../../shared/DataGrid';
 import { categoryColumns } from '../../mock';
 import { requestStatus } from '../../utils/constant';
+import { useForm } from 'react-hook-form'
 
 export default function ProfileView() {
+    const navigate = useNavigate()
     const dispatch = useDispatch()
     const [confirmPopup, setConfirmPopup] = useState({ show: false, category: false, selectedItem: [] })
     const [categoryOptions, setCategoryOptions] = useState({ search: '', list: [] })
+    const [menteeRequestOption, setMenteeRequestOption] = useState({ modal: false, cancel: false })
     const [activity, setActivity] = useState({ modal: false, following: false, complete: false })
     const { userDetails, loading: userInfoLoading, followInfo } = useSelector((state) => state.userList);
     const { profile, loading } = useSelector(state => state.profileInfo);
     const { data } = useSelector(state => state.userInfo)
-    const { categoryList, status: requeststatus, loading: reportLoading } = useSelector(state => state.requestList);
+    const { categoryList, status: requeststatus, loading: reportLoading, error } = useSelector(state => state.requestList);
     const params = useParams();
     const [searchParams] = useSearchParams()
     const pageType = window.location.href.includes('mentor-details') ? 'Mentor' : 'Mentee'
     const role = data?.role || ''
+
+    const {
+        register,
+        formState: { errors },
+        handleSubmit,
+        reset,
+    } = useForm();
 
     const loadUserProfile = () => {
         dispatch(getProfileInfo(params.id));
@@ -69,14 +79,31 @@ export default function ProfileView() {
         setConfirmPopup({ show: false, category: false, selectedItem: [] })
     }
 
+    const resetMenteeRequest = () => {
+        setMenteeRequestOption({ modal: false, cancel: false })
+    }
+
     // Admin Action
     const handleMemberAcceptRequest = () => {
-        dispatch(getCategoryList())
+        if (role === 'admin') {
+            dispatch(getCategoryList())
+        }
+
+        if (role === 'mentor') {
+            setMenteeRequestOption({ modal: true, cancel: false })
+        }
+
     }
 
     // Member Cancel opup
     const handleMemberCancelRequest = () => {
-        setConfirmPopup({ show: true, category: false, selectedItem: [] })
+        if (role === 'admin') {
+            setConfirmPopup({ show: true, category: false, selectedItem: [] })
+        }
+
+        if(role === 'mentor'){
+            setMenteeRequestOption({modal: false, cancel: true})
+        }
 
     }
 
@@ -98,9 +125,27 @@ export default function ProfileView() {
 
     // Confirm Accept Popup
     const handleConfirmPopup = () => {
-        dispatch(cancelMemberRequest({
-            member_id: params.id
-        }))
+        if (role === 'admin') {
+            dispatch(cancelMemberRequest({
+                member_id: params.id
+            }))
+        }
+
+        if (role === 'mentor') {
+            dispatch(updateProgramMenteeRequest(
+                {
+                    "id": parseInt(searchParams.get('request_id')),
+                    "action": "accept"
+                }
+            )).then(() => {
+                setTimeout(() => {
+                    console.log('MMMM');
+                    dispatch(updateLocalRequest({ status: '' }));
+                    resetMenteeRequest()
+                    navigate('/all-request')
+                }, 100);
+            })
+        }
     }
 
     const footerComponent = (props) => {
@@ -120,6 +165,23 @@ export default function ProfileView() {
         setCategoryOptions({ search: e.target.value, list: catList })
     }
 
+    const handleCancelReasonPopupSubmit = (data) => {
+        if (data.cancel_reason !== '') {
+            dispatch(updateProgramMenteeRequest({
+                id: parseInt(searchParams.get('request_id')),
+                action: "cancel",
+                cancelled_reason: data.cancel_reason
+            })).then(() => {
+                setTimeout(() => {
+                    console.log('MMMM');
+                    dispatch(updateLocalRequest({ status: '' }));
+                    resetMenteeRequest()
+                    navigate('/all-request')
+                }, 100);
+            })
+        }
+    }
+
     useEffect(() => {
         // Category load action
         if (requeststatus === requestStatus.categoryload) {
@@ -133,10 +195,24 @@ export default function ProfileView() {
         if (requeststatus === requestStatus.memberupdate || requeststatus === requestStatus.membercancel) {
             resetConfirmPopup()
             setTimeout(() => {
+                resetMenteeRequest()
                 dispatch(updateLocalRequest({ status: '' }))
                 dispatch(getProfileInfo(params.id));
+                navigate('/all-request')
             }, 3000)
         }
+
+        console.log('requeststatus', requeststatus, requestStatus.programupdate)
+
+        // if (requestStatus === requestStatus.programupdate) {
+        //     console.log('llll');
+        //     setTimeout(() => {
+        //         console.log('MMMM');
+        //         // dispatch(updateLocalRequest({ status: '' }));
+        //         // resetMenteeRequest()
+        //         navigate('/all-request')
+        //     }, 3000);
+        // }
 
     }, [requeststatus])
 
@@ -186,7 +262,7 @@ export default function ProfileView() {
                     <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
                         style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
                         <img src={SuccessTik} alt="SuccessTik" />
-                        <p className='text-white text-[12px]'>Member request updated successfully</p>
+                        <p className='text-white text-[12px]'>Request updated successfully</p>
                     </div>
 
                 </div>
@@ -206,6 +282,91 @@ export default function ProfileView() {
 
                 </div>
             </Backdrop>
+
+
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => 1 }}
+                open={menteeRequestOption.modal}
+            >
+                <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
+                    <img src={TickColorIcon} alt="TickColorIcon" />
+                    <span style={{ color: '#232323', fontWeight: 600, fontSize: '24px' }}>
+                        Approve
+                    </span>
+                    <div className='py-5'>
+                        <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 600, fontSize: '18px' }}>
+                            Are you sure want to accept program request?
+                        </p>
+                    </div>
+                    <div className='flex justify-center'>
+                        <div className="flex gap-6 justify-center align-middle">
+                            <Button btnCls="w-[110px]" btnName={'Cancel'} btnCategory="secondary" onClick={resetMenteeRequest} />
+                            <Button btnType="button" btnCls="w-[110px]" btnName={'Approve'}
+                                style={{ background: '#16B681' }} btnCategory="primary"
+                                onClick={handleConfirmPopup}
+                            />
+                        </div>
+                    </div>
+                </div>
+
+            </Backdrop>
+
+
+            <MuiModal modalSize='md' modalOpen={menteeRequestOption.cancel} modalClose={undefined} noheader>
+
+                <div className='px-5 py-5'>
+                    <div className='flex justify-center flex-col gap-5  mt-4 mb-4'
+                        style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '10px', }}>
+                        <div className='flex justify-between px-3 py-4 items-center' style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
+                            <p className='text-[18px]' style={{ color: 'rgba(0, 0, 0, 1)' }}>Reject Request Reason </p>
+                            <img className='cursor-pointer' onClick={resetMenteeRequest} src={CancelIcon} alt="CancelIcon" />
+                        </div>
+
+                        <div className='px-5'>
+                            {
+                                error !== '' ? <p className="error" role="alert">{error}</p> : null
+                            }
+
+
+                            <form onSubmit={handleSubmit(handleCancelReasonPopupSubmit)}>
+                                <div className='relative pb-8'>
+                                    <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
+                                        Reject Reason
+                                    </label>
+
+                                    <div className='relative'>
+                                        <textarea
+                                            {...register('cancel_reason', {
+                                                required: "This field is required",
+                                            })}
+                                            id="message" rows="4" className={`block p-2.5 input-bg w-full text-sm text-gray-900  border
+                                                                   focus-visible:outline-none focus-visible:border-none`}
+                                            style={{ border: '2px solid rgba(229, 0, 39, 1)' }}
+                                            placeholder={''}
+                                        ></textarea>
+                                        {errors['cancel_reason'] && (
+                                            <p className="error" role="alert">
+                                                {errors['cancel_reason'].message}
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div className='flex justify-center gap-5 items-center pt-5 pb-10'>
+                                    <Button btnName='Cancel' btnCls="w-[18%]" btnCategory="secondary" onClick={resetConfirmPopup} />
+                                    <button
+                                        type='submit'
+                                        className='text-white py-3 px-7 w-[18%]'
+                                        style={{ background: 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)', borderRadius: '3px' }}>
+                                        Submit
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </MuiModal>
 
 
             {/* Select Categort Popup */}
@@ -306,7 +467,8 @@ export default function ProfileView() {
                             role !== 'admin' ?
                                 <>
                                     {
-                                        (role === 'mentor' && searchParams.has('type') && searchParams.get('type') === 'mentee_request') ?
+                                        (role === 'mentor' && searchParams.has('type') && searchParams.get('type') === 'mentee_request' &&
+                                            searchParams.has('request_id') && searchParams.get('request_id') !== '') ?
 
                                             <div className='flex gap-4 pt-10'>
                                                 <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{

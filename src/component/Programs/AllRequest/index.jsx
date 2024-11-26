@@ -35,9 +35,7 @@ export default function AllRequest() {
 
     const dispatch = useDispatch();
     const { programRequest: programTableInfo, memberRequest, resourceRequest, categoryList, goalsRequest: goalsRequestInfo, certificateRequestList, reportsRequest: reportsRequestInfo, learningAccessRequests,
-        loading, status, error } = useSelector(state => {
-            // console.log("state from useSelector ==>", state)
-           return state.requestList});
+        loading, status, error } = useSelector(state => state.requestList);
     const [currentRequestTab, setCurrentRequestTab] = useState(RequestStatus.programRequest)
     const [categoryInfo, setCategoryInfo] = useState({ search: '', list: [] })
     const [filterStatus, setFilterStatus] = useState('all')
@@ -480,7 +478,8 @@ export default function AllRequest() {
                             }}
                         >
                             <MenuItem onClick={(e) => {
-                                const url = role === 'admin' ? `/program-details/${seletedItem.program}?request_id=${seletedItem.id}` : `/mentee-details/${seletedItem.requested_by}?type=mentee_request`;
+                                const requestQuery = seletedItem.status === 'new' || seletedItem.status === 'pending' ? `&request_id=${seletedItem.id}` : ''
+                                const url = role === 'admin' ? `/program-details/${seletedItem.program}?request_id=${seletedItem.id}` : `/mentee-details/${seletedItem.requested_by}?type=mentee_request${requestQuery}`;
                                 return navigate(url);
                             }} className='!text-[12px]'>
                                 <img src={ViewIcon} alt="ViewIcon" className='pr-3 w-[30px]' />
