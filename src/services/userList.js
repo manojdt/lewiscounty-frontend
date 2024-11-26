@@ -28,6 +28,17 @@ export const getMyTopMentors = createAsyncThunk(
     }
 );
 
+export const getMyReqMentors = createAsyncThunk(
+    "getMyMentors",
+    async (data) => {
+        const myMentors = await api.get(`/program_request/follow-request?page=${data?.page + 1 ?? 1}&limit=${data?.pageSize}&search=${data?.search ?? ""}`);
+        if (myMentors.status === 200 && myMentors.data) {
+            return myMentors.data.mentor || myMentors.data;
+        }
+        return myMentors
+    }
+);
+
 export const getMyMentorInfo = createAsyncThunk(
     "getMyMentorInfo",
     async (id) => {
@@ -41,8 +52,9 @@ export const getMyMentorInfo = createAsyncThunk(
 
 export const getProfileInfo = createAsyncThunk(
     "getProfileInfo",
-    async (id) => {
-        const myProfile = await api.get(`/user/${id}`);
+    async (data) => {
+        const url = data?.follow_id ? `/user/${data?.id}?follow_id=${data?.follow_id}` : `/user/${data?.id}`
+        const myProfile = await api.get(url);
         if (myProfile.status === 200 && myProfile.data) {
             return myProfile.data.mentor || myProfile.data;
         }
@@ -64,8 +76,32 @@ export const getMentorProgramActivity = createAsyncThunk(
 
 export const getMyMentees = createAsyncThunk(
     "getMyMentees",
-    async (data) => {
-        const myMenteeList = await api.get(`/mentee/my_mentee?page=${data?.page + 1 ?? 1}&limit=${data?.pageSize}`);
+    async (query) => {
+        let filteredQuery = Object.fromEntries(
+            Object.entries(query).filter(([key, value]) => !(key === "search" && value.trim().length === 0))
+        );
+        let queryString = new URLSearchParams(filteredQuery).toString()
+        // page=${data?.page + 1 ?? 1}&limit=${data?.pageSize}
+        const myMenteeList = await api.get(`/mentee/my_mentee?${queryString}`);
+        if (myMenteeList.status === 200 && myMenteeList.data) {
+            return myMenteeList.data;
+        }
+        return myMenteeList
+    }
+);
+
+
+export const getMyReqMentees = createAsyncThunk(
+    "getMyReqMentees",
+    async (query) => {
+        let filteredQuery = Object.fromEntries(
+            Object.entries(query).filter(([key, value]) => !(key === "search" && value.trim().length === 0) &&
+                !(key === "status" && value === "all")
+            )
+        );
+        let queryString = new URLSearchParams(filteredQuery).toString()
+        const myMenteeList = await api.get(`/program_request/follow-request?${queryString}`);
+        // page=${data?.page + 1 ?? 1}&limit=${data?.pageSize}
         if (myMenteeList.status === 200 && myMenteeList.data) {
             return myMenteeList.data;
         }
@@ -130,3 +166,43 @@ export const userUnFollow = createAsyncThunk(
         return userUnFollowInfo
     }
 );
+
+
+export const menteeFollowReq = createAsyncThunk(
+    "menteeFollowReq",
+    async (data) => {
+        const menteeFollowReqInfo = await api.post("/program_request/follow-request", data);
+        if (menteeFollowReqInfo.status === 200 && menteeFollowReqInfo.data) {
+            return menteeFollowReqInfo.data
+        }
+        return menteeFollowReqInfo
+    }
+)
+
+export const mentorAcceptReq = createAsyncThunk(
+    "mentorAcceptReq",
+    async (data) => {
+        const mentorAcceptReqInfo = await api.patch("/program_request/follow-request", data);
+        if (mentorAcceptReqInfo.status === 200 && mentorAcceptReqInfo.data) {
+            return mentorAcceptReqInfo.data
+        }
+        return mentorAcceptReqInfo
+    }
+)
+
+export const updateUserList = createAsyncThunk(
+    "updateUserList", async (data) => {
+        return data
+    }
+)
+
+export const menteeUnFollowReq = createAsyncThunk(
+    "menteeUnFollowReq",
+    async (data) => {
+        const menteeFollowReqInfo = await api.post("/post/unfollow", data);
+        if (menteeFollowReqInfo.status === 200 && menteeFollowReqInfo.data) {
+            return menteeFollowReqInfo.data
+        }
+        return menteeFollowReqInfo
+    }
+)
