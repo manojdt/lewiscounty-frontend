@@ -47,6 +47,39 @@ export const myMenteeColumns = [
   },
 ];
 
+export const myReqMenteeColumns = [
+  {
+    field: "name",
+    headerName: "Name",
+    flex: 1,
+    id: 1,
+  },
+  {
+    field: "profession",
+    headerName: "professional",
+    flex: 1,
+    id: 1,
+  },
+  {
+    field: "contact",
+    headerName: "Contact",
+    flex: 1,
+    id: 1,
+  },
+  {
+    field: "email",
+    headerName: "Email",
+    flex: 1,
+    id: 1,
+  },
+  {
+    field: "location",
+    headerName: "Location",
+    flex: 1,
+    id: 2,
+  },
+]
+
 export const discussionColumns = [
   {
     field: "program_name",

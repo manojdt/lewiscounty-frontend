@@ -11,7 +11,12 @@ import {
     getProfileInfo,
     getFollowList,
     userFollow,
-    userUnFollow
+    userUnFollow,
+    menteeFollowReq,
+    getMyReqMentees,
+    mentorAcceptReq,
+    updateUserList,
+    menteeUnFollowReq
 } from "../../services/userList";
 
 const initialState = {
@@ -22,6 +27,7 @@ const initialState = {
     menteeDetails: {},
     userDetails: {},
     followInfo: {},
+    menteeFollowReqInfo: {},
     loading: false,
     status: "",
     error: "",
@@ -150,6 +156,29 @@ export const userListSlice = createSlice({
 
 
         builder
+            .addCase(getMyReqMentees.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(getMyReqMentees.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    menteeList: action.payload,
+                    loading: false,
+                };
+            })
+            .addCase(getMyReqMentees.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
+
+        builder
             .addCase(getMyMenteeInfo.pending, (state) => {
                 return {
                     ...state,
@@ -269,6 +298,84 @@ export const userListSlice = createSlice({
             });
 
 
+        builder
+            .addCase(menteeFollowReq.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                    status: "pending"
+                };
+            })
+            .addCase(menteeFollowReq.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    status: 'done',
+                    loading: false,
+                };
+            })
+            .addCase(menteeFollowReq.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
+
+        builder
+            .addCase(mentorAcceptReq.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                    status: "pending"
+                };
+            })
+            .addCase(mentorAcceptReq.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    status: 'done',
+                    loading: false,
+                };
+            })
+            .addCase(mentorAcceptReq.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
+        
+            builder.addCase(updateUserList.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    status: '',
+                    loading: false,
+                };
+            })
+
+            builder
+            .addCase(menteeUnFollowReq.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                    status: "pending"
+                };
+            })
+            .addCase(menteeUnFollowReq.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    status: 'done',
+                    loading: false,
+                };
+            })
+            .addCase(menteeUnFollowReq.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
     },
 });
 
