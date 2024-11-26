@@ -2321,7 +2321,6 @@ export const ProfileFields = [{
   label: "Secondary Contact Number",
   placeholder: "Enter Secondary Contact Number",
   inputRules: {
-    required: "This field is required",
     pattern: {
       value: /^[0-9]{10}$/,
       message: 'Enter valid phone number'

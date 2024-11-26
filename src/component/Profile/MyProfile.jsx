@@ -40,9 +40,9 @@ export default function MyProfile() {
     }
   }
 
-  const handleEditMode = () => {
+  const handleEditMode = (e) => {
+    e.preventDefault()
     setEditMode(true)
-
   }
 
   const onSubmit = (data) => {

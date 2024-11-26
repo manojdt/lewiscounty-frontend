@@ -523,31 +523,33 @@ export default function ProfileView() {
                                                 </div>
 
                                                 :
-                                                userDetails?.approve_status === 'accept' ?
+                                                // userDetails?.approve_status === 'accept' ?
 
-                                                    <button className='py-3 px-16 mt-7 text-white text-[14px] flex items-center' style={{
-                                                        background: "#16B681",
-                                                        borderRadius: '5px'
-                                                    }}
-                                                        onClick={() => undefined}
-                                                    >Approved
-                                                    </button>
-                                                    :
+                                                //     <button className='py-3 px-16 mt-7 text-white text-[14px] flex items-center' style={{
+                                                //         background: "#16B681",
+                                                //         borderRadius: '5px'
+                                                //     }}
+                                                //         onClick={() => undefined}
+                                                //     >Approved
+                                                //     </button>
+                                                //     :
 
-                                                    userDetails?.approve_status === 'cancel' ?
-                                                        <div className='flex gap-4 pt-10' >
-                                                            <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                                border: "1px solid #E0382D",
-                                                                borderRadius: '5px',
-                                                                color: '#E0382D',
-                                                                cursor: 'not-allowed'
-                                                            }}
-                                                                onClick={() => undefined}
-                                                            >Rejected
-                                                            </button>
-                                                        </div>
+                                                //     userDetails?.approve_status === 'cancel' ?
+                                                //         <div className='flex gap-4 pt-10' >
+                                                //             <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                //                 border: "1px solid #E0382D",
+                                                //                 borderRadius: '5px',
+                                                //                 color: '#E0382D',
+                                                //                 cursor: 'not-allowed'
+                                                //             }}
+                                                //                 onClick={() => undefined}
+                                                //             >Rejected
+                                                //             </button>
+                                                //         </div>
 
-                                                        : null
+                                                        // : 
+                                                        
+                                                        null
                                         }
 
                                     </>
