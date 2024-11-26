@@ -71,6 +71,7 @@ import MenteeDocs from "./component/Programs/ProgramDetails/MenteeDocs";
 import SuperMembers from "./component/SuperAdmin/Members/SuperMembers";
 import AddSuperMember from "./component/SuperAdmin/Members/AddSuperMember";
 import DocumentUpload from "./component/Mentees/DocumentUpload";
+import MentorMenteeProfile from "./component/mentorMenteeProfile";
 import ProfileView from "./component/Profile/ProfileView";
 
 function App() {
@@ -189,6 +190,7 @@ function App() {
           <Route path="/create-report" element={<CreateReport />} />
           <Route path="/edit-report/:id" element={<EditReport />} />
           <Route path="/view-report/:id" element={<ViewReport />} />
+          <Route path="/profileView" element={<MentorMenteeProfile />} />
         </Route>
       </Route>
 

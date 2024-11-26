@@ -1069,3 +1069,60 @@ export function capitalizeEachWord(string) {
     .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize the first letter of each word
     .join(' '); // Join the words back into a single string
 }
+
+
+export const MentorMenteeProfileViewList = [
+  {
+    label: "First Name",
+    value: "first_name",
+    grid: 4
+  },
+  {
+    label: "Last Name",
+    value: "last_name",
+    grid: 4
+  },
+  {
+    label: "Primary Phone Number",
+    value: "phone_number",
+    grid: 4
+  },
+  {
+    label: "Secondary Contact Number",
+    value: "secondary_phone_number",
+    grid: 4
+  },
+  {
+    label: "Mail Id",
+    value: "email",
+    grid: 4
+  },
+  {
+    label: "Address",
+    value: "address",
+    grid: 4
+  },
+  {
+    label: "Skils",
+    value: "strongest_skills",
+    grid: 4
+  },
+  {
+    label: "Professional Bio",
+    value: "professional_bio",
+    grid: 12
+  },
+  {
+    label: "Documents",
+    value: "documents",
+    grid: 12
+  },
+
+]
+
+
+export const followBtnText = {
+  "new" : "Follow",
+  "waiting": "Requested",
+  "accepted": "Unfollow"
+}
