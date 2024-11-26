@@ -51,7 +51,6 @@ export default function CertificateDetails() {
   const handleDownload = () => {
     const input = document.getElementById("certificate-content");
     setLoading(true);
-    console.log('input',input)
     html2canvas(input, {  }).then((canvas) => {
       
       const imgData = canvas.toDataURL("image/png");

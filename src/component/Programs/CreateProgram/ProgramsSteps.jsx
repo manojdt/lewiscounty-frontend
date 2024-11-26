@@ -73,6 +73,7 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
         if (currentStepData !== undefined && Object.keys(currentStepData).length) {
             reset(currentStepData)
         }
+        setValue('status','')
     }, [])
 
     useEffect(() => {
@@ -110,7 +111,7 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
     return (
         <>
             <div className="py-9">
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form id="program-form" onSubmit={handleSubmit(onSubmit)}>
                     <div className="flex flex-wrap gap-4">
                         {
                             stepFields.map((field, index) => {
@@ -340,7 +341,7 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                                                 console.log(e)
                                                                                 dateField.onChange(e)
                                                                                 setDateFormat({ ...dateFormat, [field.name]: e.value })
-                                                                                calendarRef?.current[index]?.hide()
+                                                                                // calendarRef?.current[index]?.hide()
                                                                             }}
                                                                             {...field.name === 'start_date' ? { minDate: new Date() } : {}}
                                                                             {...field.name === 'end_date' ? { minDate: getValues('start_date') } : {}}
@@ -442,11 +443,11 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                     <div className="flex gap-6 justify-center align-middle">
                         {currentStep === 1 && <Button btnName='Cancel' btnCategory="secondary" onClick={() => navigate('/programs')} />}
                         {currentStep > 1 && <Button btnName='Back' btnCategory="secondary" onClick={handlePreviousStep} />}
-                        {currentStep !== '' &&
-                            (!Object.keys(programDetails).length) ? <Button btnType="button" onClick={handleDraft} btnStyle={{ background: 'rgba(197, 197, 197, 1)', color: '#000' }}
+                        {(currentStep !== '' &&
+                            (!Object.keys(programDetails).length)) || (Object.keys(programDetails).length && programDetails.status === 'draft') ? <Button btnType="button" onClick={handleDraft} btnStyle={{ background: 'rgba(197, 197, 197, 1)', color: '#000' }}
                                 btnCls="w-[150px]" btnName={'Save as Draft'} btnCategory="primary" /> : null}
 
-                        <Button btnType="submit" id={'program-submit'} btnCls="w-[100px]"
+                        <Button btnType="submit" id={'program-submit'} btnCls="w-[100px]" 
 
                             btnName={currentStep === totalSteps ? 'Submit' : 'Next'} btnCategory="primary" />
                     </div>

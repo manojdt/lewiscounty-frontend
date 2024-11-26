@@ -34,12 +34,19 @@ export const Mentor = () => {
         let query = {}
         const filterType = searchParams.get("type");
         const isBookmark = searchParams.get("is_bookmark");
+        const categoryFilter = searchParams.get("category_id");
         if (filterType && filterType !== '') {
             query = { type: 'status', value: filterType }
         }
 
+
+
         if (isBookmark && isBookmark !== '') {
             query = { type: 'is_bookmark', value: isBookmark }
+        }
+
+        if(categoryFilter && categoryFilter !== ''){
+            query.category_id = categoryFilter
         }
         dispatch(getUserPrograms(query));
     }

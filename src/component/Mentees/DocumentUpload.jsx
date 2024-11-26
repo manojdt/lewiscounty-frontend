@@ -19,8 +19,9 @@ export default function DocumentUpload() {
     const navigate = useNavigate()
     const params = useParams()
     const [idProof, setIdProof] = useState([])
-    const [actionInfo, setActionInfo] = useState({ loading: false, modal: false })
+    const [actionInfo, setActionInfo] = useState({ loading: false, modal: false, redirect: false })
     const userInfo = useSelector(state => state.userInfo)
+    const role = userInfo?.role || ''
     const dispatch = useDispatch()
     const {
         register,
@@ -45,46 +46,58 @@ export default function DocumentUpload() {
         let bodyFormData = new FormData();
         if (idProof.length) {
             idProof.forEach(file => bodyFormData.append('documents', file[0]))
-
         }
-
-        console.log('allFiles', allFiles)
-        // return
-
-
         const headers = {
             'Content-Type': 'multipart/form-data',
         }
         const submitDocument = await api.post("user/documents", bodyFormData, { headers: headers });
         if (submitDocument.status === 201 || submitDocument.status === 200) {
-            console.log('submitDocument', submitDocument)
-            localStorage.setItem("access_token", submitDocument.data.access);
-            localStorage.setItem("refresh_token", submitDocument.data.refresh);
-            let decoded = jwtDecode(submitDocument.data.access);
-            dispatch(updateUserInfo({ data: decoded }))
-            reset()
-            setIdProof([])
-            setActionInfo({ loading: false, modal: true })
+            if(userInfo?.data?.role === 'mentee'){
+                const joinProgramAction = await api.post('join_program', { id: params.id });
+                if (joinProgramAction.status === 200 && joinProgramAction.data) {
+                    handleSubmitData(submitDocument)
+                }
+            }else{
+                handleSubmitData(submitDocument)
+            }
         }
     }
 
+    const handleSubmitData = (submitDocument) => {
+        localStorage.setItem("access_token", submitDocument.data.access);
+        localStorage.setItem("refresh_token", submitDocument.data.refresh);
+        let decoded = jwtDecode(submitDocument.data.access);
+        dispatch(updateUserInfo({ data: decoded }))
+        reset()
+        setIdProof([])
+        setActionInfo({ loading: false, modal: true })
+    }
+
     useEffect(() => {
-        if (userInfo?.data?.document_upload && ((!actionInfo.modal && !params.id) || userInfo?.data?.role === 'mentor')) {
-            navigate('/logout')
-        }
+        // if (userInfo?.data?.document_upload === true && ((!actionInfo.modal && !params.id) || userInfo?.data?.role === 'mentor')) {
+        //     navigate('/logout')
+        // }
 
         if (userInfo?.data?.role === 'mentee' && userInfo?.data?.document_upload && params.id && params.id !== null) {
             setTimeout(() => {
                 setActionInfo({ modal: false, loading: false })
                 navigate(`/program-details/${params.id}`)
-            }, 3000)
+            }, 2000)
         }
     }, [userInfo])
 
     useEffect(() => {
         if (actionInfo.modal) {
+            let userRole = userInfo?.data?.role
             setTimeout(() => {
-                setActionInfo({ modal: false, loading: false })
+                if(userRole === 'mentee'){
+                    setActionInfo({ modal: false, loading: false })
+                    navigate(`/program-details/${params.id}`)
+                }
+    
+                if(userRole === 'mentor'){
+                    navigate('/logout');
+                }
             }, 2000)
         }
     }, [actionInfo.modal])

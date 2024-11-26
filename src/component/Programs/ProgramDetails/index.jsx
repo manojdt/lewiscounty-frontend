@@ -96,8 +96,13 @@ export default function ProgramDetails() {
 
     const handleJoinProgram = async (programId) => {
 
-        if (role === 'mentee' && !userdetails?.data?.is_registered) {
-            navigate(`/questions?program_id=${programdetails.id}`)
+        if (role === 'mentee') {
+            if (!userdetails?.data?.is_registered) {
+                navigate(`/questions?program_id=${programdetails.id}`)
+            }
+            else if (!userdetails?.data?.document_upload) {
+                navigate(`/mentee-doc-upload/${programdetails.id}`)
+            }
         } else {
             setLoading({ initial: true, join: false })
             const joinProgramAction = await api.post('join_program', { id: programId });
@@ -194,7 +199,7 @@ export default function ProgramDetails() {
 
     useEffect(() => {
         if (Object.keys(programdetails).length && !programLoading) {
-            const notAllowedCond = ['completed', 'yettoapprove', 'draft']
+            const notAllowedCond = ['completed', 'yettoapprove', 'draft', 'cancelled']
 
 
             if (!notAllowedCond.includes(programdetails.status)) {
@@ -276,6 +281,7 @@ export default function ProgramDetails() {
         }
     }, [loading.join])
 
+
     return (
         <div className="px-9 my-6 grid">
 
@@ -349,7 +355,7 @@ export default function ProgramDetails() {
                     <div className='flex justify-center flex-col gap-5  mt-4 mb-4'
                         style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '10px', }}>
                         <div className='flex justify-between px-3 py-4 items-center' style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
-                            <p className='text-[18px]' style={{ color: 'rgba(0, 0, 0, 1)' }}>Reject Program Request Reason </p>
+                            <p className='text-[18px]' style={{ color: 'rgba(0, 0, 0, 1)' }}>Reject Request Reason </p>
                             <img className='cursor-pointer' onClick={resetAcceptCancelPopup} src={CancelIcon} alt="CancelIcon" />
                         </div>
 
@@ -522,7 +528,7 @@ export default function ProgramDetails() {
 
                                             <span>Instructor :</span>
                                             {
-                                                role === 'mentee' ?
+                                                role !== 'mentor' ?
                                                     <span style={{ color: 'rgba(29, 91, 191, 1)', textDecoration: 'underline', cursor: 'pointer' }} onClick={() => handleInstructor(programdetails)}>{programdetails?.mentor_name}</span>
                                                     :
                                                     <span style={{ color: 'rgba(29, 91, 191, 1)' }}>{programdetails?.mentor_name}</span>
@@ -686,13 +692,19 @@ export default function ProgramDetails() {
 
 
                                         {
-                                            role === 'admin' ?
+                                            (role === 'admin' && !programCompleted.includes(programdetails.status) && !programCancelled.includes(programdetails.status)) ?
                                                 <>
                                                     {
                                                         <div className='flex gap-4 pt-10' >
                                                             {
                                                                 (requestId !== '' && (programRequestApproval.includes(programdetails.status) ||
-                                                                    programWaitingActiveApproval.includes(programdetails.status))
+                                                                    programWaitingActiveApproval.includes(programdetails.status) ||
+                                                                    (Object.keys(programdetails.cancel_reason).length && programdetails.cancel_reason?.id === parseInt(requestId)
+                                                                        && (programdetails.cancel_reason?.status === 'new' || programdetails.cancel_reason?.status === 'pending')) ||
+
+                                                                    (Object.keys(programdetails.reschedule_reason).length
+                                                                        && (programdetails.reschedule_reason?.status === 'new' || programdetails.reschedule_reason?.status === 'pending'))
+                                                                )
                                                                 ) ?
 
                                                                     <>
@@ -767,7 +779,7 @@ export default function ProgramDetails() {
 
                                                                                     :
 
-                                                                                    (!programRequestApproval.includes(programdetails.status) && !commonApproval.includes(programdetails.status)) &&
+                                                                                    (!programRequestApproval.includes(programdetails.status) && !commonApproval.includes(programdetails.status)) ?
 
                                                                                     <>
                                                                                         <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
@@ -779,6 +791,8 @@ export default function ProgramDetails() {
                                                                                         >Approved
                                                                                         </button>
                                                                                     </>
+                                                                                    : null
+                                                                                    
                                                             }
                                                         </div>
                                                     }
@@ -824,14 +838,17 @@ export default function ProgramDetails() {
                                                 }
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}>
                                                     <span>Session</span>
-                                                    <span>{programdetails.session_details}</span>
+                                                    <span>{programdetails.session_count}</span>
                                                 </li>
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}>
                                                     <span>Course Level</span>
                                                     <span>{programdetails.course_level}</span>
                                                 </li>
-                                                <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>Start Date & End Date</span>
-                                                    <span>{`${dateFormat(programdetails?.start_date)}  --  ${dateFormat(programdetails?.end_date)} `}</span>
+                                                <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>Start Date</span>
+                                                    <span>{`${dateFormat(programdetails?.start_date)} `}</span>
+                                                </li>
+                                                <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>End Date</span>
+                                                    <span> {`${dateFormat(programdetails?.end_date)}`}</span>
                                                 </li>
 
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>Duration</span>
@@ -855,16 +872,42 @@ export default function ProgramDetails() {
 
 
                                 {
-                                    role !== 'mentee' && (programdetails.status === programActionStatus.cancelled) &&
-                                    <div className={`action-set action_${programdetails.status}`}>
+                                    (role !== 'mentee' && ((role === 'admin' && requestId !== null && programdetails?.cancel_reason && Object.keys(programdetails?.cancel_reason).length &&
+                                        programdetails.cancel_reason.id === parseInt(requestId))
+                                        || (programdetails.status === programActionStatus.cancelled))) ?
+                                    <div className={`action-set action_cancelled`}>
                                         <div className='reason-title'>
-                                            {programdetails.status === programActionStatus.cancelled ? 'Cancelled ' : ''} Reason
+                                            {programdetails.status === programActionStatus.cancelled ||
+
+                                                (role === 'admin' && requestId !== null && programdetails?.cancel_reason && Object.keys(programdetails?.cancel_reason).length)
+
+                                                ? 'Cancelled ' : ''} Reason
                                         </div>
                                         <div className='reason-content'>
                                             {programdetails?.cancel_reason?.cancel_request_reason}
                                         </div>
-
                                     </div>
+                                    : null
+                                }
+
+
+                                {
+                                    (role !== 'mentee' && ((role === 'admin' && requestId !== null && programdetails?.reschedule_reason && 
+                                            Object.keys(programdetails?.reschedule_reason).length &&
+                                        programdetails.reschedule_reason.id === parseInt(requestId)))) ?
+                                    <div className={`action-set action_cancelled`} style={{ border: '1px solid rgba(255, 118, 0, 1)', background: 'rgba(255, 242, 231, 1)' }}>
+                                        <div className='reason-title' style={{ color: 'rgba(255, 118, 0, 1)' }}>
+                                            {programdetails.status === programActionStatus.cancelled ||
+
+                                                (role === 'admin' && requestId !== null && programdetails?.reschedule_reason && Object.keys(programdetails?.reschedule_reason).length)
+
+                                                ? 'Rescheduled ' : ''} Reason
+                                        </div>
+                                        <div className='reason-content'>
+                                            {programdetails?.reschedule_reason?.reason}
+                                        </div>
+                                    </div>
+                                    : null
                                 }
 
                                 {/* Detail Section */}
@@ -901,13 +944,17 @@ export default function ProgramDetails() {
                                                     : null
                                             }
 
+                                            {
+                                                programdetails.image !== null && programdetails.image !== '' &&
 
-                                            <div className='sponsor pt-8'>
-                                                <div className='font-semibold pb-5'>Sponsored by </div>
-                                                <ul className='flex gap-5'>
-                                                    <img style={{ width: '100px', height: '100px' }} src={programdetails.image} alt="SponsorIcon" />
-                                                </ul>
-                                            </div>
+                                                <div className='sponsor pt-8'>
+                                                    <div className='font-semibold pb-5'>Sponsored by </div>
+                                                    <ul className='flex gap-5'>
+                                                        <img style={{ width: '100px', height: '100px' }} src={programdetails.image} alt="SponsorIcon" />
+                                                    </ul>
+                                                </div>
+                                            }
+
 
                                         </div>
 

@@ -17,7 +17,6 @@ export const getUserPrograms = createAsyncThunk(
             updateQuery = {...query, value: 'yettojoin'}
         }
 
-        console.log('updateQuery', updateQuery)
         let queryParams = ''
         if(updateQuery && Object.keys(updateQuery).length){         
             if(updateQuery.hasOwnProperty('type')){
@@ -34,6 +33,10 @@ export const getUserPrograms = createAsyncThunk(
 
             if(updateQuery.hasOwnProperty('date')){
                 queryParams =  (queryParams === '' ? '?' : `${queryParams}&`) + `${updateQuery.date.date}=${updateQuery.date.value}`
+            }
+
+            if(updateQuery.hasOwnProperty('category_id')){
+                queryParams =  (queryParams === '' ? '?' : `${queryParams}&`) + `category_id=${updateQuery.category_id}`
             }
         }
         queryParams = queryParams !== '' ? `${queryParams}&limit=6` : '?limit=6'
@@ -108,8 +111,7 @@ export const getSpecificProgramDetails = createAsyncThunk(
             queryString = queryString+'?request_id='+requestId
         }
 
-        console.log('queryString', queryString+'?request_id='+requestId)
-
+      
         const getDetailsofProgram = await api.get(`fetch_program_detail/${queryString}`);
         if (getDetailsofProgram.status === 200 && getDetailsofProgram.data && getDetailsofProgram.data.program) {
             return getDetailsofProgram.data.program;
@@ -214,6 +216,11 @@ export const getMenteePrograms = createAsyncThunk(
 
             if(queryString.hasOwnProperty('date')){
                 queryParams =  (queryParams === '' ? '?' : `${queryParams}&`) + `${queryString.date.date}=${queryString.date.value}`
+            }
+
+
+            if(queryString.hasOwnProperty('category_id')){
+                queryParams =  (queryParams === '' ? '?' : `${queryParams}&`) + `category_id=${queryString.category_id}`
             }
 
 

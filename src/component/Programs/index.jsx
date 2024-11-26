@@ -109,6 +109,10 @@ export default function Programs() {
             query = { type: 'status', value: filterType }
         }
 
+        if (!filterType && role === 'mentee' && !userInfo?.data?.is_registered) {
+            query = { type: 'status', value: 'planned' }
+        }
+
         if (filterSearch && filterSearch !== '') {
             query.search = { search: 'search', value: filterSearch }
         }
@@ -121,17 +125,10 @@ export default function Programs() {
             query = { type: 'is_bookmark', value: isBookmark }
         }
 
-        if (!filterType && role === 'mentee' && !userInfo?.data?.is_registered) {
-            query = { type: 'status', value: 'planned' }
-        }
-
         if (role === 'mentee') {
             dispatch(getMenteePrograms(query))
         }
         if (role === 'mentor') dispatch(getUserPrograms(query));
-
-
-
     }
 
     const programTableFields = [
@@ -212,7 +209,6 @@ export default function Programs() {
 
     const handleProgramSearch = (e) => {
         setProgramFilter({ ...programFilter, search: e.target.value })
-        // setSearch(e.target.value)
     }
 
     const handleDateFilter = (e) => {
@@ -226,7 +222,6 @@ export default function Programs() {
 
     useEffect(() => {
         let query = getQueryString()
-        console.log('QQQQQ')
         setSearchParams(query)
     }, [programFilter])
 
@@ -253,7 +248,6 @@ export default function Programs() {
             if (role === 'mentee') {
                 return { ...menu, count: totalCount[menu.menteeStatus] }
             }
-
             return menu
         })
         setProgramMenusList(programMenu)
@@ -290,7 +284,6 @@ export default function Programs() {
                 dispatch(getUserPrograms(query))
                 dispatch(getProgramCounts())
             }
-
         }
     }, [userprograms.status])
 
@@ -303,35 +296,22 @@ export default function Programs() {
                 loadProgram = userprograms.yettojoin
             }
 
-            console.log('isBookmark', isBookmark)
-
             if (isBookmark !== null && isBookmark !== '') {
                 loadProgram = userprograms.bookmarked
             }
 
-            console.log('loadss', loadProgram)
-
             if (filterType === null && userInfo?.data?.is_registered && isBookmark === null) {
-                console.log('REg')
                 loadProgram = userprograms.allprograms
             }
 
-
-
             if (filterType !== null && filterType !== '' && isBookmark === null) {
-                console.log('REg 1')
                 if (filterType === 'planned') {
-                    console.log('REg 2')
                     loadProgram = userprograms.yettojoin;
                 } else {
-                    console.log('REg 3')
                     loadProgram = userprograms[filterType]
                 }
             }
-
-            console.log('loadProgram', loadProgram)
             setProgramsList(loadProgram)
-
         }
     }, [userprograms])
 

@@ -136,7 +136,6 @@ export default function Scheduler() {
                         <div className="events-calendar pb-3 px-2" style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px', border: '1px solid rgba(219, 224, 229, 1)' }}>
                             <InlineCalendar />
                         </div>
-
                     </div>
 
                     {
@@ -149,21 +148,11 @@ export default function Scheduler() {
                                     addSection={false}
                                     events={events}
                                 />
-
                             </div>
-
                         </div>
                     }
-
                 </div>
             </div>
-
-
-
-
-
-
-
         </div>
     )
 }

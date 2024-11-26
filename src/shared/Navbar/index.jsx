@@ -73,7 +73,7 @@ export const Navbar = () => {
             navigate('/my-profile-admin');
         } else {
             navigate('/profile');
-        }  
+        }
     }
 
 
@@ -146,22 +146,25 @@ export const Navbar = () => {
     }
 
     const handleLogoClick = () => {
-        if (role === 'mentee' && !userInfo?.data?.is_registered) {
-          navigate('/programs');
-        } else if (
-            userInfo?.data?.role === 'super_admin' &&
-            userInfo?.data?.is_registered === true
-        ) {
-        } else {
-          navigate('/dashboard');
+        if (!window.location.href.includes('mentee-doc-upload') && !window.location.href.includes('questions')
+        && !window.location.href.includes('mentor-doc-upload')) {
+            if (role === 'mentee' && !userInfo?.data?.is_registered) {
+                navigate('/programs');
+            } else if (
+                userInfo?.data?.role === 'super_admin' &&
+                userInfo?.data?.is_registered === true
+            ) {
+            } else {
+                navigate('/dashboard');
+            }
         }
-      };
+    };
 
     useEffect(() => {
-        if(!Object.keys(profile).length){
+        if (!Object.keys(profile).length) {
             dispatch(getUserProfile())
         }
-    },[])
+    }, [])
 
 
     useEffect(() => {
@@ -231,39 +234,39 @@ export const Navbar = () => {
 
                             <div className="relative mt-1 search-container">
                                 {userInfo?.data?.role === 'super_admin' ? null : <div>
-                                <input type="text" id="search-navbar" className="block w-full p-2 text-sm text-gray-900 border-none rounded-lg"
-                                    placeholder="Search..." style={{ backgroundColor: '#F5F9FF', width: '430px', height: '50px', borderRadius: '3px' }}
-                                    onClick={(e) => handleOpenSearchBar(e)}
-                                    onChange={(e) => handleGlobalChange(e.target.value)}
-                                />
-                                <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
-                                    <img src={SearchIcon} alt="SearchIcon" />
-                                </div>
+                                    <input type="text" id="search-navbar" className="block w-full p-2 text-sm text-gray-900 border-none rounded-lg"
+                                        placeholder="Search..." style={{ backgroundColor: '#F5F9FF', width: '430px', height: '50px', borderRadius: '3px' }}
+                                        onClick={(e) => handleOpenSearchBar(e)}
+                                        onChange={(e) => handleGlobalChange(e.target.value)}
+                                    />
+                                    <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
+                                        <img src={SearchIcon} alt="SearchIcon" />
+                                    </div>
 
-                                <OverlayPanel ref={searchBar} id="search_overlay_panel" style={{ width: '430px', top: '63px !important' }}
-                                    className="notification-container searchbar-container" onClose={() => console.log('Close')}>
-                                    <div className='flex gap-4'>
-                                        {
-                                            filterBtn.map(fBtn =>
-                                                <button key={fBtn.key} onClick={() => handleSelectFilter(fBtn.key)}
-                                                    className={`${searchProps.searchType === fBtn.key ? 'active-info' : ''}`}>{fBtn.name}</button>)
-                                        }
-                                    </div>
-                                    <div>
-                                        <ul>
+                                    <OverlayPanel ref={searchBar} id="search_overlay_panel" style={{ width: '430px', top: '63px !important' }}
+                                        className="notification-container searchbar-container" onClose={() => console.log('Close')}>
+                                        <div className='flex gap-4'>
                                             {
-                                                searchProps.searchData.map((sData, i) => {
-                                                    let name = searchProps.searchType === 'program' ? sData.program_name : sData.name
-                                                    let url = searchProps.searchType === 'program' ? `program-details/${sData.id}` : `mentor-details/${sData.id}`
-                                                    return <li key={i} className='cursor-pointer' onClick={() => searchNavigation(url)}>
-                                                        {name}
-                                                    </li>
-                                                })
+                                                filterBtn.map(fBtn =>
+                                                    <button key={fBtn.key} onClick={() => handleSelectFilter(fBtn.key)}
+                                                        className={`${searchProps.searchType === fBtn.key ? 'active-info' : ''}`}>{fBtn.name}</button>)
                                             }
-                                        </ul>
-                                    </div>
-                                </OverlayPanel>
-                                </div>}                              
+                                        </div>
+                                        <div>
+                                            <ul>
+                                                {
+                                                    searchProps.searchData.map((sData, i) => {
+                                                        let name = searchProps.searchType === 'program' ? sData.program_name : sData.name
+                                                        let url = searchProps.searchType === 'program' ? `program-details/${sData.id}` : `mentor-details/${sData.id}`
+                                                        return <li key={i} className='cursor-pointer' onClick={() => searchNavigation(url)}>
+                                                            {name}
+                                                        </li>
+                                                    })
+                                                }
+                                            </ul>
+                                        </div>
+                                    </OverlayPanel>
+                                </div>}
                             </div>
                         }
 
@@ -272,13 +275,13 @@ export const Navbar = () => {
                             userInfo?.data?.is_registered && !documentUpload &&
 
                             <>
-                            {userInfo?.data?.role === 'super_admin' ? null :  <div className='relative notitification-group'>
+                                {userInfo?.data?.role === 'super_admin' ? null : <div className='relative notitification-group'>
                                     <img src={NotificationIcon} className='cursor-pointer notification-image' onClick={(e) => op.current.toggle(e)} alt="NotificationIcon" />
 
                                     <OverlayPanel ref={op} id="overlay_panel" style={{ width: '450px' }} className="notification-container">
                                         <Notification handleClose={handleCloseNotification} />
                                     </OverlayPanel>
-                                </div>}                            
+                                </div>}
                                 {/* <img src={SettingsIcon} alt="SettingsIcon" /> */}
                             </>
                         }

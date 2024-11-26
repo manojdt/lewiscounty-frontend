@@ -406,9 +406,11 @@ export const programListColumns = [
       flex: 1,
       id: 8,
       renderCell : (params) => {
+        let rating = params.row.mentor_rating === 0 ? 3 : params.row.mentor_rating
         return <div className='flex gap-2 items-center text-[12px]'>
+         
         <img src={StarColorIcon} alt="StarColorIcon" />
-        <span>4.6</span>
+        <span>{rating}</span>
   
     </div>
     }

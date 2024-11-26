@@ -292,10 +292,10 @@ export const TaskDetails = () => {
                                     </tr>
                                     <tr className="bg-white border-b dark:bg-gray-800 ">
                                         <th style={{ border: '1px solid rgba(29, 91, 191, 1)', background: '#fff' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
-                                            File Type
+                                        Program Duration
                                         </th>
                                         <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
-                                            {true ? '-' : 'Video, Jpg, PDF'}
+                                        {taskData.program_duration} hours
                                         </td>
                                     </tr>
                                     <tr className="bg-white border-b  dark:bg-gray-800">

@@ -6,6 +6,9 @@ export const Button = (props) => {
     if (btnCategory === 'primary') {
         customStyle = { background: 'linear-gradient(to right, #00AEBD, #1D5BBF)', border: 'none', ...btnStyle }
     }
+    if (btnCategory === 'secondary') {
+        customStyle = { border: '1px solid rgba(29, 91, 191, 1)', background: '#fff', color: 'rgba(29, 91, 191, 1)', ...btnStyle }
+    }
     return (
         <button
             type={btnType}

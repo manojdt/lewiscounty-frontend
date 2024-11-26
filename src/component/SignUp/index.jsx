@@ -90,13 +90,6 @@ export const Signup = () => {
     else navigate("/questions");
   }
 
-  const handleKeyDown = (e) => {
-    console.log('KEY', e.key. e?.target?.name)
-    if (e.key === 'Enter') {
-      e.preventDefault();
-    }
-  }
-
   useEffect(() => {
     if (!userData.loading && Object.keys(userData.data).length && userData.status === userStatus.create) {
       setTimeout(() => {
@@ -176,7 +169,7 @@ export const Signup = () => {
                     </p>
                   </div>
 
-                  <form onSubmit={handleSubmit(onSubmit)} onKeyDown={handleKeyDown}>
+                  <form onSubmit={handleSubmit(onSubmit)}>
                     <SocialMediaLogin view={'horizontal'} />
 
                     <div className="mb-8 mt-8 flex items-center before:mt-0.5 before:flex-1 before:border-t

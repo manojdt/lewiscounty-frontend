@@ -4,12 +4,13 @@ import CancelIcon from '../../../assets/images/cancel-colour1x.png'
 import EditIcon from '../../../assets/images/Edit1x.png'
 import FileIcon from '../../../assets/icons/linkIcon.svg'
 import SuccessTik from '../../../assets/images/blue_tik1x.png';
+import UploadIcon from "../../../assets/images/image_1x.png"
 import { Button } from '../../../shared'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { Backdrop, CircularProgress } from '@mui/material'
 import { getSpecificTask, updateTaskMark } from '../../../services/task'
-import { dateFormat, dateTimeFormat } from '../../../utils'
+import { dateFormat, dateTimeFormat, getFiles } from '../../../utils'
 import { TaskApiStatus, TaskStatus } from '../../../utils/constant'
 import { useForm } from 'react-hook-form'
 
@@ -53,8 +54,11 @@ const MentorTaskDetails = () => {
     }, [status])
 
     useEffect(() => {
+        console.log('taskDetails', taskDetails)
         if (taskDetails.status === 'waiting_for_approval' && !editTask) {
             setEditTask(true)
+        }else{
+            setEditTask(false)
         }
     }, [taskDetails])
 
@@ -73,7 +77,8 @@ const MentorTaskDetails = () => {
 
     const radiobox = register('result', { required: 'This field is required' })
 
-    console.log('taskDetails', taskDetails)
+    const allFiles = getFiles(taskDetails?.files || [])
+
 
     return (
         <div className="px-9 py-9">
@@ -85,7 +90,7 @@ const MentorTaskDetails = () => {
                     <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
                         style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
                         <img src={SuccessTik} alt="SuccessTik" />
-                        <p className='text-white text-[12px]'>Score Updated Successfully</p>
+                        <p className='text-white text-[12px]'>Result Updated Successfully</p>
                     </div>
 
                 </div>
@@ -210,10 +215,104 @@ const MentorTaskDetails = () => {
 
                     <div className='task-desc flex mt-5 px-5 py-6' style={{ border: '1px solid rgba(29, 91, 191, 0.5)' }}>
 
-                        <p className='text-[14px]'>{taskDetails.task_description}</p>
+                        <p className='text-[14px]'>Task</p>  :
+                        <p className='text-[14px] pl-6'>{taskDetails.task_name}</p>
+                    </div>
+
+                    <div className='task-desc flex mt-5 px-5 py-6' style={{ border: '1px solid rgba(29, 91, 191, 0.5)' }}>
+
+                        <p className='text-[14px]'>Task Description</p>  :
+                        <p className='text-[14px] pl-6'>{taskDetails.task_description}</p>
+                    </div>
+
+                    <div className='task-desc flex mt-5 px-5 py-6' style={{ border: '1px solid rgba(29, 91, 191, 0.5)' }}>
+
+                        <p className='text-[14px]'>Task Solution</p>  :
+                        <p className='text-[14px] pl-6'>{taskDetails.task_solution}</p>
+                    </div>
+
+                    <div className='flex justify-between task-uploaded-images-container'>
+                        {
+                            allFiles.files ?
+
+                                <div>
+                                    <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Image</div>
+                                    {
+                                        allFiles.image.map((imges, index) =>
+
+                                            <div className='uploaded-images task-image-list' key={index}>
+                                                <div className='flex gap-3 w-[400px] justify-between items-center mt-5 px-4 py-4'
+                                                    style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }}>
+                                                    <div className='flex gap-3 items-center'>
+                                                        <img src={UploadIcon} alt="altlogo" />
+                                                        <span className='text-[12px] image-name'>{imges.name}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )
+                                    }
+                                </div>
+
+                                : null
+                        }
+
+
+                        {
+                            allFiles.video.length ?
+
+                                <div>
+                                    <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Video</div>
+
+                                    {
+                                        allFiles.video.map((imges, index) =>
+                                            <div className='task-image-list flex gap-3 w-[400px] justify-between items-center mt-5 px-4 py-4'
+                                                style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }} key={index}>
+                                                <div className='flex gap-3 items-center'>
+                                                    <img src={UploadIcon} alt="altlogo" />
+                                                    <span className='text-[12px] image-name'>{imges.name}</span>
+                                                </div>
+                                            </div>
+                                        )
+                                    }
+                                </div>
+
+
+                                :
+
+                                null
+
+                        }
+
+
+
+                        {
+                            allFiles.doc.length ?
+
+                                <div>
+                                    <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Files</div>
+
+                                    {
+                                        allFiles.doc.map((imges, index) =>
+                                            <div className='task-image-list flex gap-3 w-[400px] justify-between items-center mt-5 px-4 py-4'
+                                                style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }} key={index}>
+                                                <div className='flex gap-3 items-center'>
+                                                    <img src={UploadIcon} alt="altlogo" />
+                                                    <span className='text-[12px] image-name'>{imges.name}</span>
+                                                </div>
+                                            </div>
+                                        )
+                                    }
+                                </div>
+
+                                : null
+                        }
+
                     </div>
 
                     <form onSubmit={handleSubmit(onSubmit)}>
+
+
+
                         <div className='py-6 mb-16'>
                             <div className='reference-link flex justify-between mb-8'>
                                 <div className='reference-view'>

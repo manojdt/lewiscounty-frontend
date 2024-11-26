@@ -14,7 +14,22 @@ export const getprogramRequest = createAsyncThunk(
         if (programRequests.status === 200 && programRequests.data) {
             return programRequests.data;
         }
+        // console.log(programRequests,3434343)
         return programRequests;
+    }
+);
+export const getlearningAccessRequest = createAsyncThunk(
+    "getlearningAccessRequest",
+    async (query = '') => {
+        let queryString = new URLSearchParams(query).toString()
+
+        const learningAccessRequests = await api.get(`resource-request/?${queryString}`);
+        // console.log("learningAccessRequests ==>", learningAccessRequests)
+        if (learningAccessRequests.status === 200 && learningAccessRequests.data) {
+            return learningAccessRequests.data;
+        }
+        // console.log(learningAccessRequests,34242342)
+        return learningAccessRequests;
     }
 );
 

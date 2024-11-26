@@ -40,9 +40,9 @@ export default function MyProfile() {
     }
   }
 
-  const handleEditMode = () => {
+  const handleEditMode = (e) => {
+    e.preventDefault()
     setEditMode(true)
-
   }
 
   const onSubmit = (data) => {
@@ -62,7 +62,7 @@ export default function MyProfile() {
       reset({
         first_name: name[0] || '',
         last_name: name[1] || '',
-        phone_number: profile?.phone_no,
+        phone_number: profile?.phone_number,
         secondary_phone_number: profile?.secondary_phone_number || '',
         email: profile?.email,
         address: profile?.address

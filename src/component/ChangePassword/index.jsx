@@ -8,7 +8,8 @@ import { ReactComponent as EyeCloseIcon } from "../../assets/icons/eyeClose.svg"
 import { ReactComponent as EyeOpenIcon } from "../../assets/icons/eyeOpen.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { resetUserInfo, updatePassword } from "../../services/loginInfo";
-import { userStatus } from "../../utils/constant";
+import { PasswordRulesSet, userStatus } from "../../utils/constant";
+import { PasswordRules } from "../../utils/loginFields";
 
 export const ChangePassword = () => {
   const dispatch = useDispatch();
@@ -20,12 +21,24 @@ export const ChangePassword = () => {
     new_password: false,
     confirm_password: false,
   });
+  const [verifyPasswordRule, setVerifyPasswordRule] = useState({
+    [PasswordRulesSet.character]: false,
+    [PasswordRulesSet.upperlowercase]: false,
+    [PasswordRulesSet.number]: false,
+    [PasswordRulesSet.email]: false,
+    [PasswordRulesSet.common]: false,
+  })
   const {
     register,
     handleSubmit,
     formState: { errors },
     setError,
+    getValues
   } = useForm();
+
+  const eightCharacter = (str) => /^.{8,}$/.test(str)
+  const upperLowerCase = (str) => /^(?=.*[a-z])(?=.*[A-Z])\S+$/.test(str)
+  const letterSymbol = (str) => /[\d!@#$%^&*()_+={}\[\]:;<>,.?\\\/\-]/.test(str)
 
   const onSubmit = (data) => {
     const { new_password, confirm_password } = data
@@ -35,9 +48,41 @@ export const ChangePassword = () => {
         message: "New password and Confirm password should be same",
       })
     } else if (userEmail !== '' && new_password === confirm_password) {
-      dispatch(updatePassword({ email: userEmail, new_password: new_password }))
+
+      if (!verifyPasswordRule[PasswordRulesSet.character] || !verifyPasswordRule[PasswordRulesSet.upperlowercase] ||
+        !verifyPasswordRule[PasswordRulesSet.number] || !verifyPasswordRule[PasswordRulesSet.email] ||
+        !verifyPasswordRule[PasswordRulesSet.common]) {
+        setError("common", {
+          type: "manual",
+          message: "All Conditions must be satisfied",
+        })
+      } else {
+        dispatch(updatePassword({ email: userEmail, new_password: new_password }))
+      }
     }
   };
+
+
+  const handleField = (field, value) => {
+    const email = userEmail
+    let emailExist = email !== '' && value !== ''
+    if (email !== '') {
+      const emailValidation = new RegExp(email);
+      emailExist = !emailValidation.test(value)
+    }
+    const eightCharacterExist = eightCharacter(value)
+    const upperLowerCaseExist = upperLowerCase(value)
+    const letterSymbolExist = letterSymbol(value)
+
+    const passRule = {
+      [PasswordRulesSet.character]: eightCharacterExist,
+      [PasswordRulesSet.upperlowercase]: upperLowerCaseExist,
+      [PasswordRulesSet.number]: letterSymbolExist,
+      [PasswordRulesSet.email]: emailExist,
+      [PasswordRulesSet.common]: eightCharacterExist && upperLowerCaseExist && letterSymbolExist && emailExist
+    }
+    setVerifyPasswordRule(passRule)
+  }
 
   useEffect(() => {
     dispatch(resetUserInfo())
@@ -48,6 +93,8 @@ export const ChangePassword = () => {
       navigate('/')
     }
   }, [userInfo])
+
+  console.log('getValues', getValues('new_password'), typeof getValues('new_password') !== 'undefined')
 
   return (
     <div className="h-full">
@@ -66,7 +113,7 @@ export const ChangePassword = () => {
                 <div className="w-9/12">
                   <div className="text-center">
                     <div className="flex justify-center items-center">
-                     
+
                       <h4 className="mt-1 pl-3 pb-1 text-xl font-semibold logoColor">
                         MyLogo
                       </h4>
@@ -78,7 +125,7 @@ export const ChangePassword = () => {
                   </div>
 
                   <form onSubmit={handleSubmit(onSubmit)}>
-                  {
+                    {
                       userInfo.error !== '' ? <div className="pb-7">
                         <p className="error" role="alert">
                           {userInfo.error}
@@ -100,6 +147,7 @@ export const ChangePassword = () => {
                         {...register("new_password", {
                           required: true,
                         })}
+                        onKeyUp={(e) => handleField('text', e.target.value)}
                         aria-invalid={errors.new_password ? "true" : "false"}
                       />
 
@@ -172,6 +220,38 @@ export const ChangePassword = () => {
                         </p>
                       )}
                     </div>
+
+
+                    {errors.common?.type === "manual" && (
+                      <p className="error" role="alert">
+                        {errors.common?.message }
+                      </p>
+                    )}
+
+
+                    {
+                      typeof getValues('new_password') !== 'undefined' &&
+                      <div className="pb-3 leading-6">
+                        <p className="text-[14px] pb-1">Create a password That:</p>
+                        <ul className="">
+                          {
+                            PasswordRules.map((rule, index) => {
+                              let icon = '\\2022'
+                              let pd = 3
+                              let textColor = '#000'
+                              if (verifyPasswordRule[rule.key]) {
+                                icon = '\\2714\\0020'
+                                pd = 2
+                                textColor = '#00AEBD'
+                              }
+                              return (
+                                <li key={index} className={`text-[12px] list-none before:content-['${icon}'] before:pr-${pd} before:text-[10px]`}
+                                  style={{ color: textColor }}>{rule.name}</li>)
+                            })
+                          }
+                        </ul>
+                      </div>
+                    }
 
                     <div className="text-center lg:text-left">
                       <button

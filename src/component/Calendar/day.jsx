@@ -76,7 +76,7 @@ export default function Day({
             className={`${isWeek ? "border-b-[1px] py-2" : ""
               } flex justify-end`}
           >
-            <div className={`text-center text-sm ${getCurrentDayClass()}`} data-attr={day} data-col={colIdx} style={{opacity: `${!isCurrentMonth(day) ? 0.5: 1}`}}>
+            <div className={`text-center text-sm ${getCurrentDayClass()}`} data-attr={day} data-col={colIdx} style={{display: `${!isCurrentMonth(day) ? 'none': 'block'}`}}>
               {colIdx === 0 ? "-" : day.format("DD")}
             </div>
           </div>

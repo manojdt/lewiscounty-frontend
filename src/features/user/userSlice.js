@@ -220,7 +220,8 @@ export const userSlice = createSlice({
           ...state,
           loading: false,
           data: action.payload,
-          status : !Object.keys(action.payload).length ? userStatus.pending : userStatus.questions
+          // status : !Object.keys(action.payload).length ? userStatus.pending : userStatus.questions
+          status : userStatus.questions
         };
       })
       .addCase(updateQuestions.rejected, (state, action) => {

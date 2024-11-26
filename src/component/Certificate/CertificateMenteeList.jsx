@@ -6,6 +6,8 @@ import TickCircle from "../../assets/icons/tickCircle.svg";
 import DataTable from "../../shared/DataGrid";
 import { certificateMenberColumns } from "../../utils/tableFields";
 import {
+  certificateResultColor,
+  certificateResultText,
   certificateStatus,
   resultColor,
   resultText,
@@ -26,6 +28,8 @@ export default function CertificateMenteeList() {
   const navigate = useNavigate();
   const { id } = useParams();
   const [searchParams] = useSearchParams();
+  const { data } = useSelector(state => state.userInfo)
+  const role = data?.role || '';
 
   const { status, certificatesMembers } = useSelector(
     (state) => state.certificates
@@ -68,19 +72,6 @@ export default function CertificateMenteeList() {
   let certificateColumn = [
     ...certificateMenberColumns,
     {
-      field: "mark",
-      headerName: "Total Over All Mark",
-      flex: 1,
-      id: 1,
-      renderCell: (params) => {
-        return (
-          <>
-            <div>{`${params.row.mark}/10`}</div>
-          </>
-        );
-      },
-    },
-    {
       field: "status",
       headerName: "Status",
       flex: 1,
@@ -88,78 +79,86 @@ export default function CertificateMenteeList() {
       renderCell: (params) => {
         return (
           <>
+
             <div className="cursor-pointer flex items-center h-full relative">
               <span
                 className="w-[80px] flex justify-center h-[30px] px-3"
                 style={{
-                  background: resultColor[params.row.status]?.bg || "",
+                  background: certificateResultColor[params.row.status]?.bg || "",
                   lineHeight: "30px",
                   borderRadius: "3px",
                   width: "110px",
                   height: "34px",
-                  color: resultColor[params.row.status]?.color || "",
+                  color: certificateResultColor[params.row.status]?.color || "",
                   fontSize: "12px",
                 }}
               >
                 {" "}
-                {resultText[params.row.status]}
+                {certificateResultText[params.row.status]}
               </span>
             </div>
-          </>
-        );
-      },
-    },
-    {
-      field: "action",
-      headerName: "Action",
-      flex: 1,
-      id: 4,
-      renderCell: (params) => {
-        return (
-          <>
-            <div
-              className="cursor-pointer flex items-center h-full"
-              onClick={(e) => handleMoreClick(e, params.row)}
-            >
-              <img src={MoreIcon} alt="MoreIcon" />
-            </div>
-            <Menu
-              id="basic-menu"
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleClose}
-              MenuListProps={{
-                "aria-labelledby": "basic-button",
-              }}
-            >
-              {searchParams.get("type") === "approved" && (
-                <MenuItem
-                  onClick={() =>
-                    navigate(
-                      `/certificate-view/${id}?mentee_id=${seletedItem?.mentee_id}`
-                    )
-                  }
-                  className="!text-[12px]"
-                >
-                  <img
-                    src={TickCircle}
-                    alt="AcceptIcon"
-                    className="pr-3 w-[27px]"
-                  />
-                  View
-                </MenuItem>
-              )}
 
-              {/* <MenuItem onClick={handleCeritificateDownload} className='!text-[12px]'>
-                            <img src={DownloadIcon} alt="AcceptIcon" className='pr-3 w-[27px]' />
-                            
-                        </MenuItem> */}
-            </Menu>
           </>
         );
       },
     },
   ];
+
+  if(role === 'mentor'){
+    certificateColumn = [
+      ...certificateColumn,
+      {
+        field: "action",
+        headerName: "Action",
+        flex: 1,
+        id: 4,
+        renderCell: (params) => {
+          return (
+            <>
+  
+  
+              <div
+                className="cursor-pointer flex items-center h-full"
+                onClick={(e) => handleMoreClick(e, params.row)}
+              >
+                <img src={MoreIcon} alt="MoreIcon" />
+              </div>
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
+                }}
+              >
+                {searchParams.get("type") === "approved" && (
+                  <MenuItem
+                    onClick={() =>
+                      navigate(
+                        `/certificate-view/${id}?mentee_id=${seletedItem?.mentee_id}`
+                      )
+                    }
+                    className="!text-[12px]"
+                  >
+                    <img
+                      src={TickCircle}
+                      alt="AcceptIcon"
+                      className="pr-3 w-[27px]"
+                    />
+                    View
+                  </MenuItem>
+                )}
+              </Menu>
+            </>
+  
+          );
+        },
+      }
+    ]
+  }
+
+
   useEffect(() => {
     if (status === certificateStatus.create) {
       setTimeout(() => {

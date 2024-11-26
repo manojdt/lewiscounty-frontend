@@ -19,11 +19,11 @@ import ShareIcon from '../../../assets/icons/Share.svg'
 
 
 import DataTable from '../../../shared/DataGrid';
-import { categoryColumns, certificateRequestColumns, goalsRequestColumns, memberMenteeRequestColumns, memberMentorRequestColumns, programRequestColumns, programRequestData, reportRequestColumns, resourceAccessRequestColumns, techinicalSupportRequestColumns, testimonialRequestColumns } from '../../../mock';
+import { categoryColumns, certificateRequestColumns, goalsRequestColumns, learningAccessRequestsColumns, memberMenteeRequestColumns, memberMentorRequestColumns, newGoalsRequestsColumns, programRequestColumns, programRequestData, reportRequestColumns, resourceAccessRequestColumns, techinicalSupportRequestColumns, testimonialRequestColumns } from '../../../mock';
 
 import './request.css';
 
-import { cancelMemberRequest, certificateRequest, getCategoryList, getMemberRequest, getprogramRequest, getReportRequest, getResourceRequest, goalsRequest, updateCertificateRequest, updateGoalRequest, updateLocalRequest, updateMemberRequest, updateProgramMenteeRequest, updateProgramRequest, updateReportRequest } from '../../../services/request';
+import { cancelMemberRequest, certificateRequest, getCategoryList, getlearningAccessRequest, getMemberRequest, getprogramRequest, getReportRequest, getResourceRequest, goalsRequest, updateCertificateRequest, updateGoalRequest, updateLocalRequest, updateMemberRequest, updateProgramMenteeRequest, updateProgramRequest, updateReportRequest } from '../../../services/request';
 import ToastNotification from '../../../shared/Toast';
 import MuiModal from '../../../shared/Modal';
 import { useForm } from 'react-hook-form';
@@ -34,9 +34,10 @@ export default function AllRequest() {
     const [searchParams] = useSearchParams();
 
     const dispatch = useDispatch();
-    const { programRequest: programTableInfo, memberRequest, resourceRequest, categoryList, goalsRequest: goalsRequestInfo, certificateRequestList, reportsRequest: reportsRequestInfo,
+    const { programRequest: programTableInfo, memberRequest, resourceRequest, categoryList, goalsRequest: goalsRequestInfo, certificateRequestList, reportsRequest: reportsRequestInfo, learningAccessRequests,
         loading, status, error } = useSelector(state => state.requestList);
     const [currentRequestTab, setCurrentRequestTab] = useState(RequestStatus.programRequest)
+    const [categoryInfo, setCategoryInfo] = useState({ search: '', list: [] })
     const [filterStatus, setFilterStatus] = useState('all')
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -53,7 +54,7 @@ export default function AllRequest() {
         pageSize: 10,
     });
     const userInfo = useSelector(state => state.userInfo)
-
+// console.log("programTableInfo ===>", programTableInfo, "====>", learningAccessRequests)
     const {
         register,
         formState: { errors },
@@ -162,11 +163,8 @@ export default function AllRequest() {
 
 
     const handleMoreClick = (event, data) => {
-       
-            setSelectedItem(data)
-            setAnchorEl(event.currentTarget);
-       
-      
+        setSelectedItem(data)
+        setAnchorEl(event.currentTarget);
     };
 
     // Reset Confirm Popup
@@ -433,6 +431,7 @@ export default function AllRequest() {
         programRequestColumn = programRequestColumn.filter(column => column.field !== 'auto_approval')
     }
 
+
     programRequestColumn = [
         ...programRequestColumn,
         {
@@ -463,6 +462,7 @@ export default function AllRequest() {
                 flex: 1,
                 id: 4,
                 renderCell: (params) => {
+
                     return <>
 
                         <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleMoreClick(e, params.row)}>
@@ -477,12 +477,17 @@ export default function AllRequest() {
                                 'aria-labelledby': 'basic-button',
                             }}
                         >
-                            <MenuItem onClick={(e) => navigate(`/program-details/${seletedItem.program}?request_id=${seletedItem.id}`)} className='!text-[12px]'>
-                                <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
+                            <MenuItem onClick={(e) => {
+                                const requestQuery = seletedItem.status === 'new' || seletedItem.status === 'pending' ? `&request_id=${seletedItem.id}` : ''
+                                const url = role === 'admin' ? `/program-details/${seletedItem.program}?request_id=${seletedItem.id}` : `/mentee-details/${seletedItem.requested_by}?type=mentee_request${requestQuery}`;
+                                return navigate(url);
+                            }} className='!text-[12px]'>
+                                <img src={ViewIcon} alt="ViewIcon" className='pr-3 w-[30px]' />
                                 View
                             </MenuItem>
+
                             {
-                                (params.row.status === 'new' || params.row.status === 'pending') ?
+                                (seletedItem.status === 'new' || seletedItem.status === 'pending') &&
                                 <>
                                     <MenuItem onClick={handleAcceptProgramRequest} className='!text-[12px]'>
                                         <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
@@ -493,7 +498,6 @@ export default function AllRequest() {
                                         Reject
                                     </MenuItem>
                                 </>
-                                : null
                             }
                         </Menu>
                     </>
@@ -620,7 +624,7 @@ export default function AllRequest() {
                             role === 'admin' &&
                             <>
                                 {
-                                    (params.row.status === 'new' || params.row.status === 'pending') &&
+                                    (seletedItem.status === 'new' || seletedItem.status === 'pending') &&
 
                                     <>
 
@@ -635,10 +639,10 @@ export default function AllRequest() {
                                     </>
                                 }
 
-                                <MenuItem onClick={() => undefined} className='!text-[12px]'>
+                                {/* <MenuItem onClick={() => undefined} className='!text-[12px]'>
                                     <img src={ShareIcon} alt="ShareIcon" className='pr-3 w-[27px]' />
                                     Share
-                                </MenuItem>
+                                </MenuItem> */}
                             </>
                         }
                     </Menu>
@@ -802,8 +806,12 @@ export default function AllRequest() {
                             role === 'admin' &&
 
                             <>
+                                <MenuItem onClick={() => navigate(`/certificate_mentees/${seletedItem.program}`)} className='!text-[12px]'>
+                                    <img src={ViewIcon} alt="AcceptIcon" className='pr-3 w-[27px]' />
+                                    View
+                                </MenuItem>
                                 {
-                                    (params.row.status === 'new' || params.row.status === 'pending') &&
+                                    (seletedItem.status === 'new' || seletedItem.status === 'pending') &&
 
                                     <>
 
@@ -826,6 +834,9 @@ export default function AllRequest() {
         },
     ]
 
+    let learningAccessRequestsColumn = learningAccessRequestsColumns.filter(request => request.for.includes(role))
+    let newGoalsRequestsColumn = newGoalsRequestsColumns.filter(request => request.for.includes(role))
+
     const handleClick = (menu) => {
         navigate(`/all-request?type=${menu.status}`)
         handleStatus("all")
@@ -845,6 +856,24 @@ export default function AllRequest() {
         dispatch(getprogramRequest(payload))
     }
 
+    const getLearningAccessApi = async() => {
+      const res =  await dispatch(getlearningAccessRequest({
+            ...filterStatus !== 'all' && { status: filterStatus },
+            created_at: 'mentor',
+            filter_by: 'month',
+            page: paginationModel?.page + 1, limit: paginationModel?.pageSize
+        }))
+        // console.log("res ==>", res)
+
+        dispatch(getlearningAccessRequest({
+            ...filterStatus !== 'all' && { status: filterStatus },
+            created_at: 'mentor',
+            filter_by: 'month',
+            page: paginationModel?.page + 1, limit: paginationModel?.pageSize
+        }))
+    
+    }
+
     const getGoalsRequestApi = () => {
         dispatch(goalsRequest({
             ...filterStatus !== 'all' && { status: filterStatus },
@@ -862,7 +891,7 @@ export default function AllRequest() {
     }
 
     const getCerificateRequestAPi = () => {
-        dispatch(certificateRequest({filterStatus: filterStatus !== 'all' ? filterStatus : "", page: paginationModel?.page + 1, limit: paginationModel?.pageSize ?? 10}))
+        dispatch(certificateRequest({ filterStatus: filterStatus !== 'all' ? filterStatus : "", page: paginationModel?.page + 1, limit: paginationModel?.pageSize ?? 10 }))
     }
 
     const getMembersRequestApi = () => {
@@ -887,6 +916,12 @@ export default function AllRequest() {
             page: 0,
             pageSize: 10
         })
+    }
+
+    const handleSearchCategory = (e) => {
+        let catList = categoryInfo.list.filter(list => list.name.toLowerCase().includes(e.target.value.toLowerCase()))
+        if (e.target.value === '') catList = categoryList
+        setCategoryInfo({ search: e.target.value, list: catList })
     }
 
     useEffect(() => {
@@ -937,6 +972,14 @@ export default function AllRequest() {
                 case RequestStatus.reportRequest.key:
                     tableDetails = { column: reportRequestColumns, data: [] }
                     break;
+                case RequestStatus.learningAccessRequests.key:
+                    tableDetails = { column: learningAccessRequestsColumn, data: [] }
+                    actionFilter = []
+                    break;
+                case RequestStatus.newGoalsRequests.key:
+                    tableDetails = { column: newGoalsRequestsColumn, data: [] }
+                    actionFilter = []
+                    break;
                 default:
                     tableDetails = { column: programRequestTab, data: [] }
                     actionFilter = []
@@ -950,9 +993,6 @@ export default function AllRequest() {
             setActionTabFilter(programRequestTab)
             setActiveTab(role !== 'admin' ? 'joining_request' : 'new_program_request')
         }
-
-
-
     }, [searchParams, role])
 
 
@@ -972,6 +1012,7 @@ export default function AllRequest() {
         // Category load action
         if (status === requestStatus.categoryload) {
             setCategoryPopup({ show: true, selectedItem: [], page: currentRequestTab.key, tab: actionTab })
+            setCategoryInfo({ search: '', list: categoryList })
             setTimeout(() => {
                 dispatch(updateLocalRequest({ status: '' }))
             }, 2000)
@@ -1040,7 +1081,6 @@ export default function AllRequest() {
             setActiveTableDetails({ column: actionTab === 'mentor' ? [...memberMentorRequestColumns, ...membersColumns] : [...memberMenteeRequestColumns, ...membersColumns], data: memberRequest?.results, rowCount: memberRequest?.count })
         }
 
-
         if (searchParams.get('type') === 'goal_request') {
             setActiveTableDetails({ column: goalColumns, data: goalsRequestInfo })
         }
@@ -1053,18 +1093,24 @@ export default function AllRequest() {
         }
 
         if (searchParams.get('type') === 'report_request') {
-            setActiveTableDetails({ column: reportRequestColumn, data: reportsRequestInfo?.results, rowCount: reportsRequestInfo?.count  })
+            setActiveTableDetails({ column: reportRequestColumn, data: reportsRequestInfo?.results, rowCount: reportsRequestInfo?.count })
+        }
+        if (searchParams.get('type') === 'learning_access_requests') {
+            setActiveTableDetails({ column: learningAccessRequestsColumns, data: learningAccessRequests?.results, rowCount: learningAccessRequests?.count })
         }
 
-    }, [programTableInfo, memberRequest, resourceRequest, goalsRequestInfo, certificateRequestList, reportsRequestInfo, anchorEl])
-
+    }, [programTableInfo, memberRequest, resourceRequest, goalsRequestInfo, certificateRequestList, reportsRequestInfo, anchorEl, learningAccessRequests])
+// console.log("searchParams.get('type') ===>", searchParams.get('type'))
     useEffect(() => {
 
         if (role !== '') {
             if (!searchParams.get('type') || searchParams.get('type') === 'program_request') {
                 getProgramRequestApi()
             }
-
+           
+            if (searchParams.get('type') === 'learning_access_requests') {
+                getLearningAccessApi()
+            }
             if (searchParams.get('type') === 'member_join_request') {
                 getMembersRequestApi()
             }
@@ -1084,8 +1130,6 @@ export default function AllRequest() {
             if (searchParams.get('type') === 'report_request') {
                 getReportsRequestApi()
             }
-
-
         }
 
     }, [actionTab, searchParams, filterStatus, role, paginationModel])
@@ -1223,7 +1267,10 @@ export default function AllRequest() {
                                             borderRadius: '50px',
                                             height: '60px',
                                             width: '100%'
-                                        }} />
+                                        }}
+                                        onChange={handleSearchCategory}
+                                        value={categoryInfo.search}
+                                    />
                                     <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
                                         <img src={SearchIcon} alt='SearchIcon' />
                                     </div>
@@ -1232,7 +1279,7 @@ export default function AllRequest() {
 
 
                             <DataTable
-                                rows={categoryList}
+                                rows={categoryInfo.list}
                                 columns={categoryColumns}
                                 height={'460px'}
                                 footerComponent={footerComponent}
@@ -1270,7 +1317,7 @@ export default function AllRequest() {
 
                                         <p className="text-[12px] py-2 pl-5 pr-4 flex gap-4" style={{ background: 'rgba(29, 91, 191, 1)', borderRadius: '5px', height: '40px' }}>
                                             <select className='focus:outline-none' style={{ background: 'rgba(29, 91, 191, 1)', border: 'none', color: '#fff' }} onChange={(e) => handleStatus(e?.target?.value)}>
-                                                
+
                                                 {
                                                     statusOptions.map((option, index) =>
                                                         <option key={index} selected={option?.value === filterStatus} value={option?.value}>{option?.label}</option>

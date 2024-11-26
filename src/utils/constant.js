@@ -358,6 +358,12 @@ export const resultText = {
   Pass: "Pass",
   Fail: "fail"
 }
+
+export const certificateResultText = {
+  pass: "Pass",
+  fail: "Fail"
+}
+
 export const empty = [{
   title: '',
   value: 100,
@@ -369,6 +375,18 @@ export const resultColor = {
     bg: 'rgba(218, 252, 231, 1)'
   },
   Fail: {
+    color: 'rgba(224, 56, 45, 1)',
+    bg: 'rgba(255, 231, 231, 1)'
+  },
+}
+
+
+export const certificateResultColor = {
+  pass: {
+    color: 'rgba(47, 147, 132, 1)',
+    bg: 'rgba(218, 252, 231, 1)'
+  },
+  fail: {
     color: 'rgba(224, 56, 45, 1)',
     bg: 'rgba(255, 231, 231, 1)'
   },
@@ -457,6 +475,7 @@ export const memberStatusColor = {
 
 export const taskStatusText = {
   draft: 'Draft',
+  inprogress: 'In-Progress',
   rejected: 'Cancel',
   pending: 'Pending',
   newtask: 'New',
@@ -476,6 +495,10 @@ export const taskStatusColor = {
   pending: {
     color: 'rgba(255, 213, 0, 1)',
     bg: 'rgba(255, 251, 233, 1)'
+  },
+  inprogress: {
+    color: 'rgba(29, 91, 191, 1)',
+    bg: 'rgba(207, 225, 255, 1)'
   },
   waiting_for_approval: {
     color: 'rgba(255, 213, 0, 1)',
@@ -543,7 +566,7 @@ export const PasswordRulesSet = {
   common: 'common',
 }
 
-export const statusAction = ['yettoapprove', 'yettojoin', 'yettostart', 'inprogress', 'completed', 'cancelled', 'bookmarked', 'draft']
+export const statusAction = ['yettoapprove', 'yettojoin', 'yettostart', 'inprogress', 'completed', 'cancelled', 'bookmarked', 'draft','reschedule']
 
 export const programActionStatus = {
   all: 'all',
@@ -561,7 +584,8 @@ export const programActionStatus = {
   bookmark: 'bookmarked',
   planned: 'planned',
   draft: 'draft',
-  reschedule: 'reschedule'
+  reschedule: 'reschedule',
+  program_join_request_accepted:'program_join_request_accepted'
 }
 
 
@@ -684,8 +708,8 @@ export const programMenus = (page = 'dashboard') => {
       count: 0,
       page: `${pipeUrl}${programFilterUrls.reschedule}`,
       for: ['mentor','mentee'],
-      mentorStatus: '',
-      menteeStatus: '',
+      mentorStatus: 'reschedule',
+      menteeStatus: 'reschedule',
       status: programActionStatus.reschedule
     },
     {
@@ -741,6 +765,14 @@ export const RequestStatusArray = [{
     key: 'report_request',
     name: 'Report Requests'
   },
+  {
+    key: 'learning_access_requests',
+    name: 'Learning Access Requests'
+  },
+  {
+    key: 'new_goals_request',
+    name: 'New Goals Requests'
+  },
 ]
 
 export const RequestStatus = {
@@ -776,8 +808,15 @@ export const RequestStatus = {
     key: 'report_request',
     name: 'Report Requests'
   },
+  learningAccessRequests: {
+    key: 'learning_access_requests',
+    name: 'Learning Access Requests'
+  },
+  newGoalsRequests: {
+    key: 'new_goals_request',
+    name: 'New Goals Requests'
+  },
 }
-
 
 export const requestOverview = [{
     name: "Program Requests",
@@ -834,7 +873,21 @@ export const requestOverview = [{
     count: 0,
     status: RequestStatus.reportRequest.key,
     for: ['admin', 'mentor']
-  }
+  },
+  {
+    name: "Learning Access Requests",
+    key: RequestStatus.learningAccessRequests.key,
+    count: 0,
+    status: RequestStatus.learningAccessRequests.key,
+    for: ['mentee']
+  },
+  {
+    name: "New Goals Requests",
+    key: RequestStatus.newGoalsRequests.key,
+    count: 0,
+    status: RequestStatus.newGoalsRequests.key,
+    for: ['mentee']
+  },
 ]
 
 export const allowedImagesTypes = ['png', 'jpeg', 'jpg'];

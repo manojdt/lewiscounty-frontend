@@ -443,7 +443,12 @@ export default function AssignTask() {
                                 </ol>
 
                                 {
-                                    ((role === 'mentor' && programDetails.created_by === userdetails?.data?.user_id) || (role === 'mentee' && programdetails.status === programActionStatus.inprogress)) &&
+                                    (
+                                        (role === 'mentor' && programDetails.created_by === userdetails?.data?.user_id) ||
+                                        (role === 'mentee' &&
+                                            (programdetails.status === programActionStatus.inprogress || programdetails.mentee_join_status === programActionStatus.program_join_request_accepted)
+                                        )
+                                    ) &&
 
                                     <>
                                         <div className='cursor-pointer' onClick={handleClick}>
@@ -522,7 +527,9 @@ export default function AssignTask() {
 
                                                                 <>
                                                                     {
-                                                                        programdetails.status === programActionStatus.inprogress &&
+                                                                        (programdetails.status === programActionStatus.inprogress ||
+                                                                            programdetails.mentee_join_status === programActionStatus.program_join_request_accepted
+                                                                        ) &&
 
                                                                         <MenuItem onClick={() => handleMenu('cancel')} className='!text-[12px]'>
                                                                             <img src={AbortIcon} alt="AbortIcon" className='pr-3 w-[25px]' />
@@ -606,7 +613,7 @@ export default function AssignTask() {
                                                 }
                                                 <span>Instructor :</span>
                                                 {
-                                                    role === 'mentee' ?
+                                                    role !== 'mentor' ?
 
                                                         <span style={{ color: 'rgba(29, 91, 191, 1)', textDecoration: 'underline', cursor: 'pointer' }} onClick={() => handleInstructor(programdetails)}>{programdetails?.mentor_name}</span>
 
@@ -863,15 +870,19 @@ export default function AssignTask() {
                                                 }
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}>
                                                     <span>Session</span>
-                                                    <span>{programdetails.session_details}</span>
+                                                    <span>{programdetails.session_count}</span>
                                                 </li>
 
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}>
                                                     <span>Course Level</span>
                                                     <span>{programdetails.course_level}</span>
                                                 </li>
-                                                <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>Start Date & End Date</span>
-                                                    <span>{`${formatDateFunToAll(programdetails?.start_date)}  --  ${formatDateFunToAll(programdetails?.end_date)} `}</span>
+                                                <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>Start Date</span>
+                                                    <span>{`${formatDateFunToAll(programdetails?.start_date)}`}</span>
+                                                </li>
+
+                                                <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>End Date</span>
+                                                    <span>{`${formatDateFunToAll(programdetails?.end_date)} `}</span>
                                                 </li>
 
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>Duration</span>
@@ -933,13 +944,17 @@ export default function AssignTask() {
                                                     : null
                                             }
 
+                                            {
+                                                programdetails.image !== null && programdetails.image !== '' &&
 
-                                            <div className='sponsor pt-8'>
-                                                <div className='font-semibold pb-5'>Sponsored by </div>
-                                                <ul className='flex gap-5'>
-                                                    <img style={{ width: '100px', height: '100px' }} src={programdetails.image} alt="SponsorIcon" />
-                                                </ul>
-                                            </div>
+                                                <div className='sponsor pt-8'>
+                                                    <div className='font-semibold pb-5'>Sponsored by </div>
+                                                    <ul className='flex gap-5'>
+                                                        <img style={{ width: '100px', height: '100px' }} src={programdetails.image} alt="SponsorIcon" />
+                                                    </ul>
+                                                </div>
+
+                                            }
 
                                         </div>
 
@@ -1220,7 +1235,7 @@ export default function AssignTask() {
                                                                 disabled={false}
                                                                 // minDate={new Date(dateFormat.reschedule_start_date)}
                                                                 // maxDate={new Date(programdetails.end_date)}
-                                                                minDate={dateFormat.reschedule_start_date? new Date(dateFormat.reschedule_start_date) : new Date()}
+                                                                minDate={dateFormat.reschedule_start_date ? new Date(dateFormat.reschedule_start_date) : new Date()}
                                                                 maxDate={programdetails?.status === "yettostart" ? "" : new Date(programdetails?.end_date)}
                                                                 showTime={false}
                                                                 hourFormat="12"

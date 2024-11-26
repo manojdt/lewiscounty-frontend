@@ -138,41 +138,24 @@ export const Questions = () => {
     setBtnTypeAction({ back: false, next: true })
   }
 
-  const menteeNavigate = async () => {
-    let url = searchParams.get("program_id") && searchParams.get("program_id") !== '' ? `/mentee-doc-upload/${searchParams.get("program_id")}` : '/programs'
+ 
+  const handleRedirect = () => {
+    if(role === 'mentor'){
+      navigate('/mentor-doc-upload')
+    }
 
-    if (searchParams.get("program_id") && searchParams.get("program_id") !== '' && searchParams.get("program_id") !== null) {
-      setCustomLoading(true)
-      const joinProgramAction = await api.post('join_program', { id: searchParams.get("program_id") });
-      if (joinProgramAction.status === 200 && joinProgramAction.data) {
-        setCustomLoading(false)
-        navigate(url)
-      }
-    } else {
+    if(role === 'mentee'){
+      const url = searchParams.get("program_id") && searchParams.get("program_id") !== '' ? `/mentee-doc-upload/${searchParams.get("program_id")}` : '/programs'
       navigate(url)
-    }
-
-  }
-
-  const handleUserRedirect = () => {
-    if (role === 'mentee') {
-      menteeNavigate()
-    }
-
-    if (role === 'mentor') {
-      navigate('/dashboard')
     }
   }
 
   useEffect(() => {
-    if (loading) {
-      setTimeout(() => {
-        dispatch(updateInfo())
-        setLoading(false)
-        setRedirect(true)
-      }, [2000])
+    if(userInfo && userInfo?.data?.is_registered === true && userInfo?.data?.document_upload === false){
+      console.log('HANDLE')
+      handleRedirect()
     }
-  }, [loading])
+  },[])
 
   useEffect(() => {
     if (userInfo && userInfo.data && Object.keys(userInfo.data).length && currentStep === 1) {
@@ -184,34 +167,18 @@ export const Questions = () => {
       })
     }
 
-    if (userInfo.status === userStatus.pending) {
-      setTimeout(() => {
-        setRedirect(true)
-      }, [3000])
-    }
+    
 
-    if (userInfo.data && Object.keys(userInfo.data).length && userInfo.data.hasOwnProperty('userinfo')) {
-      if (userInfo.data.userinfo?.approve_status !== 'accept' || userInfo.data?.is_registered === true) {
-        if (userInfo.status === userStatus.questions) {
-          setLoading(true)
-        } else {
-          handleUserRedirect()
-        }
-      }
-    }
   }, [userInfo])
 
   useEffect(() => {
-    if (redirect) {
+    if(userInfo.status === userStatus.questions){
       setTimeout(() => {
-        if (role === 'mentee') {
-          menteeNavigate()
-        } else {
-          navigate('/mentor-doc-upload')
-        }
-      }, [3000])
+        dispatch(updateInfo())
+        handleRedirect()
+      },2000)
     }
-  }, [redirect])
+  },[userInfo.status])
 
   const handlePreviousStep = (data) => {
     const activeSteps = allStepList.map(step => {
@@ -294,7 +261,7 @@ export const Questions = () => {
 
         <Backdrop
           sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          open={loading || userInfo.status === userStatus.pending}
+          open={loading || userInfo.status === userStatus.questions}
         >
           <div className='px-5 py-1 flex justify-center items-center'>
             <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
@@ -307,7 +274,7 @@ export const Questions = () => {
                   (redirect ? 'We are redirecting to programs page' :
                     'Questions submitted Successfully')
 
-                  : (redirect ? 'We are redirecting to login page' : 'Questions submitted Successfully. Please wait for admin approval')}
+                  : (redirect ? 'We are redirecting to login page' : 'Questions submitted Successfully. Please upload your documents on next screen')}
               </p>
             </div>
           </div>

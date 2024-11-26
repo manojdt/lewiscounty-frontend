@@ -1,14 +1,12 @@
 import dayjs from "dayjs";
 import { useState, useEffect } from "react";
+import {
+  Link,
+  useNavigate,
+  useLocation,
+  useSearchParams,
+} from "react-router-dom";
 import BackArrowIcon from "../../assets/icons/back-arrow.svg";
-
-// import {
-//   getMonth,
-//   getWeek,
-//   getToday,
-//   getYearMonths,
-//   getMonth2,
-// } from "../utils";
 import Month from "./month";
 import CalendarHeader from "./calendarheader";
 
@@ -17,12 +15,6 @@ import YearView from "./YearView";
 import TodayView from "./TodayView";
 import useAppointments from "../../hooks/useAppointments";
 
-import {
-  Link,
-  useNavigate,
-  useLocation,
-  useSearchParams,
-} from "react-router-dom";
 
 
 const CalendarMain = ({ title = 'Calendar', addSection = true, events }) => {
@@ -33,7 +25,6 @@ const CalendarMain = ({ title = 'Calendar', addSection = true, events }) => {
   const [currentCalendarView, setCurrentCalendarView] = useState("Month");
 
   const [currentDate, setCurrentDate] = useState(dayjs());
-  // const [isNew, setIsNew] = useState(false);
 
   const handleCalendarChange = (mode) => {
     let dateParameter = "month";

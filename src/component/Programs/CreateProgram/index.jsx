@@ -92,7 +92,7 @@ export default function CreatePrograms() {
                 setProgramApiStatus(status)
 
                 if (params.id) {
-                    if (programdetails.status === 'draft') {
+                    if (programdetails.status === 'draft' && status !== 'draft') {
                         bodyFormData.append('status', 'create')
                     }
                     if (typeof fieldData?.program_image === 'string') {
