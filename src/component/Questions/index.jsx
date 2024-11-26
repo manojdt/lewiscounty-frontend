@@ -151,6 +151,13 @@ export const Questions = () => {
   }
 
   useEffect(() => {
+    if(userInfo && userInfo?.data?.is_registered === true && userInfo?.data?.document_upload === false){
+      console.log('HANDLE')
+      handleRedirect()
+    }
+  },[])
+
+  useEffect(() => {
     if (userInfo && userInfo.data && Object.keys(userInfo.data).length && currentStep === 1) {
       setStepData({
         ...stepData,
@@ -159,6 +166,8 @@ export const Questions = () => {
         email: userInfo.data.email
       })
     }
+
+    
 
   }, [userInfo])
 

@@ -82,7 +82,7 @@ export default function DocumentUpload() {
             setTimeout(() => {
                 setActionInfo({ modal: false, loading: false })
                 navigate(`/program-details/${params.id}`)
-            }, 3000)
+            }, 2000)
         }
     }, [userInfo])
 

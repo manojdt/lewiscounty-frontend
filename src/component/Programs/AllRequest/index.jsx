@@ -811,7 +811,7 @@ export default function AllRequest() {
                                     View
                                 </MenuItem>
                                 {
-                                    (params.row.status === 'new' || params.row.status === 'pending') &&
+                                    (seletedItem.status === 'new' || seletedItem.status === 'pending') &&
 
                                     <>
 

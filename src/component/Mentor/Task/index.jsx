@@ -7,6 +7,7 @@ import { Button } from '../../../shared';
 import DataTable from '../../../shared/DataGrid';
 import { mentorTaskColumns } from '../../../mock';
 import ViewIcon from '../../../assets/images/view1x.png'
+import SearchIcon from '../../../assets/icons/search.svg';
 import MoreIcon from "../../../assets/icons/moreIcon.svg";
 import { useDispatch, useSelector } from 'react-redux';
 import { getMenteeTaskfromMentor } from '../../../services/task';
@@ -108,6 +109,11 @@ const MentorTask = () => {
         setSelectedItem(data)
         setAnchorEl(event.currentTarget);
     };
+
+    const handleSearch = (search) => {
+        searchParams.set('search', search);
+        setSearchParams(searchParams)
+    }
 
     const handleClose = () => {
         setAnchorEl(null);
@@ -471,19 +477,25 @@ const MentorTask = () => {
 
     useEffect(() => {
         navigate(`${pipeUrls.mentortask}?type=menteetask`)
-    },[])
+    }, [])
 
     useEffect(() => {
+        let query = { page: paginationModel?.page + 1, limit: paginationModel?.pageSize}
 
-        if (searchParams && searchParams.get("type") && searchParams.get("type") === 'menteetask' && !searchParams.get("status")) {
-            dispatch(getMenteeTaskfromMentor({page: paginationModel?.page + 1, limit: paginationModel?.pageSize}));
-            setActiveTaskMenu('mentee-task')
+        const statusQuery = searchParams.has('status') ? searchParams.get('status') : ''
+        if(statusQuery !== ''){
+            query.status = statusQuery
         }
 
-        if (searchParams && searchParams.get("type") && searchParams.get("type") === 'menteetask' && searchParams.get("status") && searchParams.get("status") !== '') {
-            dispatch(getMenteeTaskfromMentor({ status: searchParams.get("status"), page: paginationModel?.page + 1, limit: paginationModel?.pageSize}));
-            setActiveTaskMenu('mentee-task')
+        const searchQuery = searchParams.has('search') ? searchParams.get('search') : ''
+        if(searchQuery !== ''){
+            query.search = searchQuery
         }
+
+        if(Object.keys(query).length){
+            dispatch(getMenteeTaskfromMentor(query));
+        }
+
     }, [searchParams, paginationModel])
 
 
@@ -596,13 +608,29 @@ const MentorTask = () => {
                                                     }
                                                 </select>
                                             </div>
+
+                                            <div className="relative">
+                                                <input type="text" id="search-navbar" className="block w-full p-2 text-sm text-gray-900 border-none"
+                                                    placeholder="Search here..." style={{
+                                                        border: '1px solid rgba(29, 91, 191, 1)',
+                                                        borderRadius: '1px',
+                                                        height: '45px',
+                                                        width: '280px'
+                                                    }}
+
+                                                    onChange={(e) => handleSearch(e.target.value)}
+                                                />
+                                                <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
+                                                    <img src={SearchIcon} alt='SearchIcon' />
+                                                </div>
+                                            </div>
                                             {/* <Button btnType="button" btnCls="w-[150px]" btnName={'Create Task'} btnCategory="primary" /> */}
                                         </div>
 
                                         <div className='task-list py-10'>
-                                            <DataTable rows={menteeTask?.results ?? []} columns={mentorTaskColumn} hideCheckbox 
-                                            rowCount={menteeTask?.count}
-                                            paginationModel={paginationModel} setPaginationModel={setPaginationModel} />
+                                            <DataTable rows={menteeTask?.results ?? []} columns={mentorTaskColumn} hideCheckbox
+                                                rowCount={menteeTask?.count}
+                                                paginationModel={paginationModel} setPaginationModel={setPaginationModel} />
                                         </div>
                                     </>
                             }

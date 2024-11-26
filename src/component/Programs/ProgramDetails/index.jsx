@@ -96,8 +96,13 @@ export default function ProgramDetails() {
 
     const handleJoinProgram = async (programId) => {
 
-        if (role === 'mentee' && !userdetails?.data?.is_registered) {
-            navigate(`/questions?program_id=${programdetails.id}`)
+        if (role === 'mentee') {
+            if (!userdetails?.data?.is_registered) {
+                navigate(`/questions?program_id=${programdetails.id}`)
+            }
+            else if (!userdetails?.data?.document_upload) {
+                navigate(`/mentee-doc-upload/${programdetails.id}`)
+            }
         } else {
             setLoading({ initial: true, join: false })
             const joinProgramAction = await api.post('join_program', { id: programId });
@@ -523,7 +528,7 @@ export default function ProgramDetails() {
 
                                             <span>Instructor :</span>
                                             {
-                                                role === 'mentee' ?
+                                                role !== 'mentor' ?
                                                     <span style={{ color: 'rgba(29, 91, 191, 1)', textDecoration: 'underline', cursor: 'pointer' }} onClick={() => handleInstructor(programdetails)}>{programdetails?.mentor_name}</span>
                                                     :
                                                     <span style={{ color: 'rgba(29, 91, 191, 1)' }}>{programdetails?.mentor_name}</span>
@@ -837,8 +842,11 @@ export default function ProgramDetails() {
                                                     <span>Course Level</span>
                                                     <span>{programdetails.course_level}</span>
                                                 </li>
-                                                <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>Start Date & End Date</span>
-                                                    <span>{`${dateFormat(programdetails?.start_date)}  --  ${dateFormat(programdetails?.end_date)} `}</span>
+                                                <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>Start Date</span>
+                                                    <span>{`${dateFormat(programdetails?.start_date)} `}</span>
+                                                </li>
+                                                <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>End Date</span>
+                                                    <span> {`${dateFormat(programdetails?.end_date)}`}</span>
                                                 </li>
 
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>Duration</span>
@@ -882,11 +890,11 @@ export default function ProgramDetails() {
 
                                 {
                                     role !== 'mentee' && ((role === 'admin' && requestId !== null && programdetails?.reschedule_reason && Object.keys(programdetails?.reschedule_reason).length &&
-                                    programdetails.reschedule_reason.id === parseInt(requestId)
-                                        )
-                                        ) &&
-                                    <div className={`action-set action_cancelled`} style={{border: '1px solid rgba(255, 118, 0, 1)', background: 'rgba(255, 242, 231, 1)'}}>
-                                        <div className='reason-title' style={{color: 'rgba(255, 118, 0, 1)'}}>
+                                        programdetails.reschedule_reason.id === parseInt(requestId)
+                                    )
+                                    ) &&
+                                    <div className={`action-set action_cancelled`} style={{ border: '1px solid rgba(255, 118, 0, 1)', background: 'rgba(255, 242, 231, 1)' }}>
+                                        <div className='reason-title' style={{ color: 'rgba(255, 118, 0, 1)' }}>
                                             {programdetails.status === programActionStatus.cancelled ||
 
                                                 (role === 'admin' && requestId !== null && programdetails?.reschedule_reason && Object.keys(programdetails?.reschedule_reason).length)
