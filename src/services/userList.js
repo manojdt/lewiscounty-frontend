@@ -9,7 +9,7 @@ import api from "./api";
 export const getMyMentors = createAsyncThunk(
     "getMyMentors",
     async (data) => {
-        const myMentors = await api.get(`/mentors/my_mentors?page=${data?.page + 1 ?? 1}&limit=${data?.pageSize}`);
+        const myMentors = await api.get(`/mentors/my_mentors?page=${data?.page + 1 ?? 1}&limit=${data?.pageSize}&search=${data?.search ?? ""}`);
         if (myMentors.status === 200 && myMentors.data) {
             return myMentors.data.mentor || myMentors.data;
         }
@@ -30,8 +30,14 @@ export const getMyTopMentors = createAsyncThunk(
 
 export const getMyReqMentors = createAsyncThunk(
     "getMyMentors",
-    async (data) => {
-        const myMentors = await api.get(`/program_request/follow-request?page=${data?.page + 1 ?? 1}&limit=${data?.pageSize}&search=${data?.search ?? ""}`);
+    async (query) => {
+        let filteredQuery = Object.fromEntries(
+            Object.entries(query).filter(([key, value]) => !(key === "search" && value.trim().length === 0) &&
+                !(key === "status" && value === "all")
+            )
+        );
+        let queryString = new URLSearchParams(filteredQuery).toString()
+        const myMentors = await api.get(`/rating/request-mentor?${queryString}`);
         if (myMentors.status === 200 && myMentors.data) {
             return myMentors.data.mentor || myMentors.data;
         }
@@ -148,7 +154,7 @@ export const getFollowList = createAsyncThunk(
 export const userFollow = createAsyncThunk(
     "userFollow",
     async (data) => {
-        const userFollowInfo = await api.post(`/post/follow`, data);
+        const userFollowInfo = await api.post(`/program_request/follow-request`, data);
         if (userFollowInfo.status === 200 && userFollowInfo.data) {
             return userFollowInfo.data;
         }
@@ -200,6 +206,18 @@ export const menteeUnFollowReq = createAsyncThunk(
     "menteeUnFollowReq",
     async (data) => {
         const menteeFollowReqInfo = await api.post("/post/unfollow", data);
+        if (menteeFollowReqInfo.status === 200 && menteeFollowReqInfo.data) {
+            return menteeFollowReqInfo.data
+        }
+        return menteeFollowReqInfo
+    }
+)
+
+
+export const menteeCancelReq = createAsyncThunk(
+    "menteeCancelReq",
+    async (data) => {
+        const menteeFollowReqInfo = await api.patch("/rating/request-mentor", data);
         if (menteeFollowReqInfo.status === 200 && menteeFollowReqInfo.data) {
             return menteeFollowReqInfo.data
         }
