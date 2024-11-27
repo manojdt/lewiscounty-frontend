@@ -91,7 +91,9 @@ export const updateUserRole = createAsyncThunk("updateUserRole", async (data) =>
 export const forgotPassword = createAsyncThunk(
   "userTriggerOtp",
   async (data) => {
+   
     const triggerOtp = await api.post("trigger-otp", data);
+    console.log('data', triggerOtp)
     if (triggerOtp.status === 200) {
       return triggerOtp;
     }
@@ -101,6 +103,12 @@ export const forgotPassword = createAsyncThunk(
         error: 'Server error'
       };
     }
+    if (triggerOtp.status === 429) {
+      return {
+        ...triggerOtp,
+        error: 'Error'
+      };
+    }
     if (triggerOtp.status === 401) {
       return {
         ...triggerOtp,
@@ -108,6 +116,8 @@ export const forgotPassword = createAsyncThunk(
       };
     }
     return triggerOtp;
+    
+   
   }
 );
 

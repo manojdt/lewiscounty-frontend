@@ -33,12 +33,19 @@ export const ChangePassword = () => {
     handleSubmit,
     formState: { errors },
     setError,
-    getValues
+    getValues,
+    clearErrors
   } = useForm();
 
   const eightCharacter = (str) => /^.{8,}$/.test(str)
   const upperLowerCase = (str) => /^(?=.*[a-z])(?=.*[A-Z])\S+$/.test(str)
   const letterSymbol = (str) => /[\d!@#$%^&*()_+={}\[\]:;<>,.?\\\/\-]/.test(str)
+
+  const passwordFailRule = () => {
+    return !verifyPasswordRule[PasswordRulesSet.character] || !verifyPasswordRule[PasswordRulesSet.upperlowercase] ||
+    !verifyPasswordRule[PasswordRulesSet.number] || !verifyPasswordRule[PasswordRulesSet.email] ||
+    !verifyPasswordRule[PasswordRulesSet.common]
+  }
 
   const onSubmit = (data) => {
     const { new_password, confirm_password } = data
@@ -49,9 +56,7 @@ export const ChangePassword = () => {
       })
     } else if (userEmail !== '' && new_password === confirm_password) {
 
-      if (!verifyPasswordRule[PasswordRulesSet.character] || !verifyPasswordRule[PasswordRulesSet.upperlowercase] ||
-        !verifyPasswordRule[PasswordRulesSet.number] || !verifyPasswordRule[PasswordRulesSet.email] ||
-        !verifyPasswordRule[PasswordRulesSet.common]) {
+      if (passwordFailRule()) {
         setError("common", {
           type: "manual",
           message: "All Conditions must be satisfied",
@@ -85,6 +90,12 @@ export const ChangePassword = () => {
   }
 
   useEffect(() => {
+    if(!passwordFailRule()){
+      clearErrors('common')
+    }
+  },[verifyPasswordRule])
+
+  useEffect(() => {
     dispatch(resetUserInfo())
   }, [])
 
@@ -94,8 +105,7 @@ export const ChangePassword = () => {
     }
   }, [userInfo])
 
-  console.log('getValues', getValues('new_password'), typeof getValues('new_password') !== 'undefined')
-
+ 
   return (
     <div className="h-full">
       <div className="flex flex-wrap h-full">
@@ -196,6 +206,11 @@ export const ChangePassword = () => {
                           errors.confirm_password ? "true" : "false"
                         }
                       />
+                      {errors.confirm_password?.type === "required" && (
+                        <p className="error" role="alert">
+                          Confirm Password is required
+                        </p>
+                      )}
 
                       <button
                         type="button"

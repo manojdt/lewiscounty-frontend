@@ -1,10 +1,10 @@
 import React, { useRef, useState, useEffect } from "react";
-import { useNavigate, useSearchParams  } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import LogoSlide from "../LogoSlide";
 import { useDispatch, useSelector } from "react-redux";
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
-import { resetUserInfo, validateOTP } from "../../services/loginInfo";
+import { forgotPassword, resetUserInfo, validateOTP } from "../../services/loginInfo";
 import { userStatus } from "../../utils/constant";
 
 export const VerifyOTP = () => {
@@ -16,24 +16,42 @@ export const VerifyOTP = () => {
   const userInfo = useSelector(state => state.userInfo);
   const [otp, setOtp] = useState(new Array(numberOfDigits).fill(""));
   const [disableSubmit, setDisableSubmit] = useState(true);
+  const [seconds, setSeconds] = useState(60);
+  const [isActive, setIsActive] = useState(false)
+
   const otpBoxReference = useRef([]);
 
   const handleSubmit = () => {
     const verifyOtp = otp.join("");
-    if(verifyOtp !== '' && verifyOtp.length === 6 && userEmail !== ''){
-      dispatch(validateOTP({"email" : userEmail, "otp": verifyOtp}))
+    if (verifyOtp !== '' && verifyOtp.length === 6 && userEmail !== '') {
+      dispatch(validateOTP({ "email": userEmail, "otp": verifyOtp }))
     }
   };
+
+  useEffect(() => {
+    console.log('seconds', seconds)
+    if (!isActive) return;
+
+    if(seconds === 0) { setIsActive(false); return }
+
+
+
+    const interval = setInterval(() => {
+      setSeconds((prevSeconds) => prevSeconds - 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isActive, seconds]);
 
   useEffect(() => {
     dispatch(resetUserInfo())
   }, [])
 
   useEffect(() => {
-    if(!userInfo.loading && userInfo.status === userStatus.otpSuccess){
+    if (!userInfo.loading && userInfo.status === userStatus.otpSuccess) {
       navigate(`/change-password?email=${userEmail}`)
     }
-  },[userInfo])
+  }, [userInfo])
 
   function handleChange(value, index) {
     let newArr = [...otp];
@@ -58,6 +76,11 @@ export const VerifyOTP = () => {
     if (otp.join("").length > 6 || otp.join("").length < 6) setDisableSubmit(true);
   }
 
+  const handleResendOTP = (e) => {
+    e.preventDefault()
+    dispatch(forgotPassword({ email: userEmail })).then(() => setIsActive(true))
+  }
+
 
   return (
     <div className="h-full">
@@ -76,7 +99,7 @@ export const VerifyOTP = () => {
                 <div className="otp-root w-9/12">
                   <div className="text-center">
                     <div className="flex justify-center items-center">
-                     
+
                       <h4 className="mt-1 pl-3 pb-1 text-xl font-semibold logoColor">
                         MyLogo
                       </h4>
@@ -88,7 +111,7 @@ export const VerifyOTP = () => {
                   </div>
 
                   <form>
-                  {
+                    {
                       userInfo.error !== '' ? <div className="pb-7">
                         <p className="error" role="alert">
                           {userInfo.error}
@@ -109,7 +132,7 @@ export const VerifyOTP = () => {
                           className={`otp-input border w-12 h-auto  p-3 rounded-md block  focus:border-2 focus:outline-none appearance-none`}
                         />
                       ))}
-                     
+
                     </div>
 
                     <div className="text-center lg:text-left">
@@ -127,19 +150,26 @@ export const VerifyOTP = () => {
                       >
                         Verify
                       </button>
+                      {
+                        !isActive ?
 
-                      <p
-                        className="mb-0 mt-2 pt-1 text-sm font-semibold text-center"
-                        style={{ color: "#232323" }}
-                      >
-                        <button
-                          className="text-danger transition duration-150 ease-in-out hover:text-danger-600 focus:text-danger-600 active:text-danger-700 pl-1"
-                          style={{ color: "#1D5BBF" }}
-                          onClick={() => navigate("/")}
+                        <p
+                          className="mb-0 mt-2 pt-1 text-sm font-semibold text-center"
+                          style={{ color: "#232323" }}
                         >
-                          Resend OTP
-                        </button>
-                      </p>
+                          <button
+                            className="text-danger transition duration-150 ease-in-out hover:text-danger-600 focus:text-danger-600 active:text-danger-700 pl-1"
+                            style={{ color: "#1D5BBF" }}
+                            onClick={handleResendOTP}
+                            type='button'
+                          >
+                            Resend OTP
+                          </button>
+                        </p>
+                        :
+                        <span className="mt-2 flex justify-center">00:{String(seconds).padStart(2, '0')}</span>
+                      }
+
                     </div>
                   </form>
                 </div>

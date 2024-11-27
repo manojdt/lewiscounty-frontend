@@ -328,6 +328,7 @@ export const fileNameString = (data) => {
   const remainingImagesCount = fileNames.length - 1;
   return {
     filename: firstImageName,
+    fullName: fileNames[0],
     remainingCount: remainingImagesCount
   };
 }
