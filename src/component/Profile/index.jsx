@@ -95,7 +95,7 @@ export default function Profile() {
                     Profile
                 </div>
                 <div>
-                    <Button onClick={() => navigate('/edit-profile')} btnName="Edit" btnCls={'w-[140px]'} />
+                    <Button onClick={() => navigate('/profile')} btnName="Edit" btnCls={'w-[140px]'} />
                 </div>
             </div>
 

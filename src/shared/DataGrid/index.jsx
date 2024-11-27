@@ -255,7 +255,7 @@ export default function DataTable({ rows = [], columns, footerAction, footerComp
                 rows={rows}
                 columns={columns}
                 hideFooterPagination={hideFooter}
-                getRowId={(row) => row.id || row.first_name || row.categories_id}
+                getRowId={(row) => row.id || row.first_name || row.categories_id || row.mentee_id}
                 checkboxSelection={!hideCheckbox}
                 onPageChange={(e) => console.log('change', e)}
                 page={paginationModel?.page}

@@ -27,6 +27,8 @@ import { dateFormat, formatDateTimeISO } from '../../../utils';
 import './program-details.css'
 import Ratings from '../Ratings';
 import { getUserProfile } from '../../../services/profile';
+import DataTable from '../../../shared/DataGrid';
+import { JoinedMenteeColumn } from '../../../mock';
 
 
 export default function ProgramDetails() {
@@ -40,6 +42,7 @@ export default function ProgramDetails() {
     const [activeTab, setActiveTab] = useState('about_program')
     const [ratingModal, setRatingModal] = useState({ modal: false, success: false })
     const [certificateActiveTab, setCertificateActiveTab] = useState('participated')
+    const [viewMenteeModal, setViewMenteeModal] = useState(false)
     const [confirmPopup, setConfirmPopup] = useState({ accept: false, cancel: false, programId: '' })
     const userdetails = useSelector(state => state.userInfo)
     const { profile, loading: profileLoading } = useSelector(state => state.profileInfo)
@@ -96,13 +99,11 @@ export default function ProgramDetails() {
 
     const handleJoinProgram = async (programId) => {
 
-        if (role === 'mentee') {
-            if (!userdetails?.data?.is_registered) {
-                navigate(`/questions?program_id=${programdetails.id}`)
-            }
-            else if (!userdetails?.data?.document_upload) {
-                navigate(`/mentee-doc-upload/${programdetails.id}`)
-            }
+        if (role === 'mentee' && !userdetails?.data?.is_registered) {
+            navigate(`/questions?program_id=${programdetails.id}`)
+        }
+        else if (role === 'mentee' && !userdetails?.data?.document_upload) {
+            navigate(`/mentee-doc-upload/${programdetails.id}`)
         } else {
             setLoading({ initial: true, join: false })
             const joinProgramAction = await api.post('join_program', { id: programId });
@@ -187,6 +188,39 @@ export default function ProgramDetails() {
     const ratingModalClose = () => {
         setRatingModal({ modal: false, success: false })
     }
+
+    const handleViewJoinedMentees = (programInfo) => {
+        setViewMenteeModal(true)
+    }
+
+    const JoinMenteeColumn = [
+        ...JoinedMenteeColumn,
+        {
+            field: 'action',
+            headerName: 'View',
+            width: 300,
+            id: 3,
+            renderCell: (params) => {
+                console.log('params123', params)
+                return <button style={
+                    {
+                        background: 'rgb(29, 91, 191)',
+                        color: 'rgb(255, 255, 255)',
+                        padding: '2px 20px',
+                        height: '32px',
+                        margin: '9px 0px',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderRadius: '3px'
+                    }
+                }
+                    onClick={
+                        () => navigate(`/mentee-details/${params.row.mentee_id}`)
+                    } > View Profile </button>;
+            }
+        }
+    ]
 
     useEffect(() => {
         if (ratingModal.success) {
@@ -320,6 +354,22 @@ export default function ProgramDetails() {
                 </div>
 
             </Backdrop>
+
+
+            <MuiModal modalSize='md' modalOpen={viewMenteeModal} modalClose={undefined} noheader>
+                <div className='px-5 py-5'>
+                    <div className='flex justify-center flex-col gap-5  mt-4 mb-4'
+                        style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '10px', }}>
+                        <div className='flex justify-between px-3 py-4 items-center' style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
+                            <p className='text-[18px]' style={{ color: 'rgba(0, 0, 0, 1)' }}>Joining Mentees </p>
+                            <img className='cursor-pointer' onClick={() => setViewMenteeModal(false)} src={CancelIcon} alt="CancelIcon" />
+                        </div>
+                        <div className='px-5'>
+                            <DataTable rows={programdetails.participated_mentees} columns={JoinMenteeColumn} hideCheckbox />
+                        </div>
+                    </div>
+                </div>
+            </MuiModal>
 
             {/* Program Accept Popup */}
             <Backdrop
@@ -781,18 +831,18 @@ export default function ProgramDetails() {
 
                                                                                     (!programRequestApproval.includes(programdetails.status) && !commonApproval.includes(programdetails.status)) ?
 
-                                                                                    <>
-                                                                                        <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                                                            background: "#16B681",
-                                                                                            borderRadius: '5px',
-                                                                                            cursor: 'not-allowed'
-                                                                                        }}
-                                                                                            onClick={undefined}
-                                                                                        >Approved
-                                                                                        </button>
-                                                                                    </>
-                                                                                    : null
-                                                                                    
+                                                                                        <>
+                                                                                            <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                                                                background: "#16B681",
+                                                                                                borderRadius: '5px',
+                                                                                                cursor: 'not-allowed'
+                                                                                            }}
+                                                                                                onClick={undefined}
+                                                                                            >Approved
+                                                                                            </button>
+                                                                                        </>
+                                                                                        : null
+
                                                             }
                                                         </div>
                                                     }
@@ -860,7 +910,7 @@ export default function ProgramDetails() {
                                                 {
                                                     role === 'mentor' &&
                                                     <li className='flex justify-between text-[12px]' style={{ paddingTop: '14px' }}> <span>Joined Mentees</span>
-                                                        <span className='underline cursor-pointer'>{programdetails.participated_mentees_count}</span>
+                                                        <span className='underline cursor-pointer' onClick={() => handleViewJoinedMentees(programdetails)}>{programdetails.participated_mentees_count}</span>
                                                     </li>
                                                 }
 
@@ -875,39 +925,39 @@ export default function ProgramDetails() {
                                     (role !== 'mentee' && ((role === 'admin' && requestId !== null && programdetails?.cancel_reason && Object.keys(programdetails?.cancel_reason).length &&
                                         programdetails.cancel_reason.id === parseInt(requestId))
                                         || (programdetails.status === programActionStatus.cancelled))) ?
-                                    <div className={`action-set action_cancelled`}>
-                                        <div className='reason-title'>
-                                            {programdetails.status === programActionStatus.cancelled ||
+                                        <div className={`action-set action_cancelled`}>
+                                            <div className='reason-title'>
+                                                {programdetails.status === programActionStatus.cancelled ||
 
-                                                (role === 'admin' && requestId !== null && programdetails?.cancel_reason && Object.keys(programdetails?.cancel_reason).length)
+                                                    (role === 'admin' && requestId !== null && programdetails?.cancel_reason && Object.keys(programdetails?.cancel_reason).length)
 
-                                                ? 'Cancelled ' : ''} Reason
+                                                    ? 'Cancelled ' : ''} Reason
+                                            </div>
+                                            <div className='reason-content'>
+                                                {programdetails?.cancel_reason?.cancel_request_reason}
+                                            </div>
                                         </div>
-                                        <div className='reason-content'>
-                                            {programdetails?.cancel_reason?.cancel_request_reason}
-                                        </div>
-                                    </div>
-                                    : null
+                                        : null
                                 }
 
 
                                 {
-                                    (role !== 'mentee' && ((role === 'admin' && requestId !== null && programdetails?.reschedule_reason && 
-                                            Object.keys(programdetails?.reschedule_reason).length &&
+                                    (role !== 'mentee' && ((role === 'admin' && requestId !== null && programdetails?.reschedule_reason &&
+                                        Object.keys(programdetails?.reschedule_reason).length &&
                                         programdetails.reschedule_reason.id === parseInt(requestId)))) ?
-                                    <div className={`action-set action_cancelled`} style={{ border: '1px solid rgba(255, 118, 0, 1)', background: 'rgba(255, 242, 231, 1)' }}>
-                                        <div className='reason-title' style={{ color: 'rgba(255, 118, 0, 1)' }}>
-                                            {programdetails.status === programActionStatus.cancelled ||
+                                        <div className={`action-set action_cancelled`} style={{ border: '1px solid rgba(255, 118, 0, 1)', background: 'rgba(255, 242, 231, 1)' }}>
+                                            <div className='reason-title' style={{ color: 'rgba(255, 118, 0, 1)' }}>
+                                                {programdetails.status === programActionStatus.cancelled ||
 
-                                                (role === 'admin' && requestId !== null && programdetails?.reschedule_reason && Object.keys(programdetails?.reschedule_reason).length)
+                                                    (role === 'admin' && requestId !== null && programdetails?.reschedule_reason && Object.keys(programdetails?.reschedule_reason).length)
 
-                                                ? 'Rescheduled ' : ''} Reason
+                                                    ? 'Rescheduled ' : ''} Reason
+                                            </div>
+                                            <div className='reason-content'>
+                                                {programdetails?.reschedule_reason?.reason}
+                                            </div>
                                         </div>
-                                        <div className='reason-content'>
-                                            {programdetails?.reschedule_reason?.reason}
-                                        </div>
-                                    </div>
-                                    : null
+                                        : null
                                 }
 
                                 {/* Detail Section */}
