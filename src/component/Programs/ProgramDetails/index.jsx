@@ -99,13 +99,11 @@ export default function ProgramDetails() {
 
     const handleJoinProgram = async (programId) => {
 
-        if (role === 'mentee') {
-            if (!userdetails?.data?.is_registered) {
-                navigate(`/questions?program_id=${programdetails.id}`)
-            }
-            else if (!userdetails?.data?.document_upload) {
-                navigate(`/mentee-doc-upload/${programdetails.id}`)
-            }
+        if (role === 'mentee' && !userdetails?.data?.is_registered) {
+            navigate(`/questions?program_id=${programdetails.id}`)
+        }
+        else if (role === 'mentee' && !userdetails?.data?.document_upload) {
+            navigate(`/mentee-doc-upload/${programdetails.id}`)
         } else {
             setLoading({ initial: true, join: false })
             const joinProgramAction = await api.post('join_program', { id: programId });
@@ -367,7 +365,7 @@ export default function ProgramDetails() {
                             <img className='cursor-pointer' onClick={() => setViewMenteeModal(false)} src={CancelIcon} alt="CancelIcon" />
                         </div>
                         <div className='px-5'>
-                            <DataTable rows={programdetails.participated_mentees} columns={JoinMenteeColumn} hideCheckbox/>
+                            <DataTable rows={programdetails.participated_mentees} columns={JoinMenteeColumn} hideCheckbox />
                         </div>
                     </div>
                 </div>
