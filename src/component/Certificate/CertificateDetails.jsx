@@ -1,9 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Backdrop, CircularProgress } from "@mui/material";
-import { jsPDF } from "jspdf";
-import html2canvas from "html2canvas";
-import html2pdf from 'html2pdf.js';
 import CancelIcon from "../../assets/images/cancel-colour1x.png";
 import Tooltip from "../../shared/Tooltip";
 import api from "../../services/api";
@@ -28,29 +25,7 @@ export default function CertificateDetails() {
     }
     setLoading(false);
   };
-  const downloadAsPDF = () => {
-    // Create a hidden iframe
-    const iframe = document.createElement("iframe");
-    iframe.style.position = "absolute";
-    iframe.style.top = "-10000px";
-    document.body.appendChild(iframe);
-
-    // Write the certificate HTML to the iframe
-    iframe.contentDocument.open();
-    iframe.contentDocument.write(certificateDetails);
-    iframe.contentDocument.close();
-
-    // Wait for the content to load, then print the iframe content
-    iframe.onload = () => {
-      iframe.contentWindow.focus();
-      iframe.contentWindow.print();
-
-      // Clean up the iframe after printing
-      document.body.removeChild(iframe);
-    };
-  };
-
-
+ 
   const handleDownload = async () => {
     const res = searchParams.get("mentee_id");
     const resId = res ? `&mentee_id=${res}` : "";
