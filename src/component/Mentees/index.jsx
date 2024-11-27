@@ -47,6 +47,7 @@ export const Mentees = () => {
         type: "",
         id: ""
     })
+    const [search, setSearch] = React.useState("")
 
     const menteeOption = [
         {
@@ -229,11 +230,11 @@ export const Mentees = () => {
 
     const handleTab = (key) => setRequestTab(key)
 
-    const getTableData = () => {
+    const getTableData = (search = "") => {
         if (mentorType === "my-mentee") {
-            dispatch(getMyMentees({ page: paginationModel?.page + 1, limit: paginationModel?.pageSize, search: "" }))
+            dispatch(getMyMentees({ page: paginationModel?.page + 1, limit: paginationModel?.pageSize, search: search }))
         } else {
-            dispatch(getMyReqMentees({ page: paginationModel?.page + 1, limit: paginationModel?.pageSize, search: "", status: requestTab }))
+            dispatch(getMyReqMentees({ page: paginationModel?.page + 1, limit: paginationModel?.pageSize, search: search, status: requestTab }))
         }
     }
 
@@ -266,6 +267,11 @@ export const Mentees = () => {
         })
     }
 
+    const handleSearch = (searchText) => {
+        setSearch(searchText)
+        getTableData(searchText)
+    }
+
 
     return (
         <div className="px-9 py-9">
@@ -288,7 +294,10 @@ export const Mentees = () => {
                                     border: '1px solid rgba(29, 91, 191, 1)',
                                     height: '41px',
                                     width: '345px'
-                                }} />
+                                }}
+                                value={search}
+                                onChange={(e) => handleSearch(e.target.value)}
+                            />
                             <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
                                 <img src={SearchIcon} alt='SearchIcon' />
                             </div>

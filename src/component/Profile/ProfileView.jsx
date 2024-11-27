@@ -44,7 +44,7 @@ export default function ProfileView() {
     } = useForm();
 
     const loadUserProfile = () => {
-        dispatch(getProfileInfo(params.id));
+        dispatch(getProfileInfo({id: params.id}));
         dispatch(getFollowList(params.id))
     }
 
@@ -197,7 +197,7 @@ export default function ProfileView() {
             setTimeout(() => {
                 resetMenteeRequest()
                 dispatch(updateLocalRequest({ status: '' }))
-                dispatch(getProfileInfo(params.id));
+                dispatch(getProfileInfo({id: params.id}));
                 navigate('/all-request')
             }, 3000)
         }

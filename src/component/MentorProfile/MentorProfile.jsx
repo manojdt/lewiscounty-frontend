@@ -62,7 +62,7 @@ function MentorProfile() {
   const dispatch = useDispatch();
   const fetchMentoProfile = async () => {
     if (id) {
-      dispatch(getProfileInfo(id));
+      dispatch(getProfileInfo({id: id}));
     }
   };
   const handleOpenConfirmPopup = (
