@@ -56,7 +56,7 @@ export default function UserInfoCard() {
                         !loading &&
                         <img className={`w-24 h-24 mb-3 rounded-full shadow-lg object-cover cursor-pointer ${hoverIndex ? 'opacity-20' : ''}`}
                         onMouseEnter={() => setHoverIndex(true)} onMouseLeave={() => setHoverIndex(false)}
-                        onClick={() => navigate('/my-profile')} src={profile?.image || UserImage} alt="User logo" />
+                        onClick={() => navigate('/profile?mode=edit')} src={profile?.image || UserImage} alt="User logo" />
                     }
 
 
