@@ -222,14 +222,14 @@ export default function MentorDetails() {
             resetConfirmPopup()
             setCategoryPopup({ show: false, selectedItem: [] })
             setTimeout(() => {
-                dispatch(getProfileInfo(params.id))
+                dispatch(getProfileInfo({id: params.id}))
                 dispatch(updateLocalRequest({ status: '' }))
             }, 3000)
         }
 
         if (requestStatusInfo === requestStatus.autoapproval) {
             setTimeout(() => {
-                dispatch(getProfileInfo(params.id))
+                dispatch(getProfileInfo({id: params.id}))
                 dispatch(updateLocalRequest({ status: '' }))
             }, 3000)
 
@@ -255,7 +255,7 @@ export default function MentorDetails() {
                 dispatch(getMenteeProgramActivity(params.id))
             }
 
-            dispatch(getProfileInfo(params.id))
+            dispatch(getProfileInfo({id: params.id}))
             dispatch(getFollowList(params.id))
         }
     }, [params.id, role])

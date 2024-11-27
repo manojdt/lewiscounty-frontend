@@ -49,85 +49,85 @@ export const StepsList = [
 
 
 export const MenteeStepsList = [{
-    name: "Personal Information",
-    status: "In-Progress",
-    key: 'personal_information'
-  },
-  {
-    name: "Career/Academic Goals",
-    status: "",
-    key: 'career_goals'
-  },
-  {
-    name: "Current Status",
-    status: "",
-    key: 'current_status'
-  },
-  {
-    name: "Mentoring Preferences",
-    status: "",
-    key: 'mentoring_preference'
-  },
-  {
-    name: "Skills and Interests",
-    status: "",
-    key: 'skills_and_interests'
-  },
-  {
-    name: "Expectations & Goals",
-    status: "",
-    key: 'expectations_goals'
-  },
-  {
-    name: "Availability",
-    status: "",
-    key: 'availability'
-  },
-  {
-    name: "Detailed Career",
-    status: "",
-    key: 'detailed_career'
-  },
-  {
-    name: "Challenges & Obstacles",
-    status: "",
-    key: 'challenges_obstacles'
-  },
-  {
-    name: "Mentoring Experience",
-    status: "",
-    key: 'mentoring_experience'
-  },
-  {
-    name: "Learning Style & Preference",
-    status: "",
-    key: 'learning_style_preference'
-  },
-  {
-    name: "Network & Preference",
-    status: "",
-    key: 'network_preference'
-  },
-  {
-    name: "Personal Development",
-    status: "",
-    key: 'personal_development'
-  },
-  {
-    name: "Mentoring Relationship",
-    status: "",
-    key: 'mentoring_relationship'
-  },
-  {
-    name: "Long-term Vision",
-    status: "",
-    key: 'long_term_vision'
-  },
-  {
-    name: "Additional Information",
-    status: "",
-    key: 'additional_information'
-  },
+  name: "Personal Information",
+  status: "In-Progress",
+  key: 'personal_information'
+},
+{
+  name: "Career/Academic Goals",
+  status: "",
+  key: 'career_goals'
+},
+{
+  name: "Current Status",
+  status: "",
+  key: 'current_status'
+},
+{
+  name: "Mentoring Preferences",
+  status: "",
+  key: 'mentoring_preference'
+},
+{
+  name: "Skills and Interests",
+  status: "",
+  key: 'skills_and_interests'
+},
+{
+  name: "Expectations & Goals",
+  status: "",
+  key: 'expectations_goals'
+},
+{
+  name: "Availability",
+  status: "",
+  key: 'availability'
+},
+{
+  name: "Detailed Career",
+  status: "",
+  key: 'detailed_career'
+},
+{
+  name: "Challenges & Obstacles",
+  status: "",
+  key: 'challenges_obstacles'
+},
+{
+  name: "Mentoring Experience",
+  status: "",
+  key: 'mentoring_experience'
+},
+{
+  name: "Learning Style & Preference",
+  status: "",
+  key: 'learning_style_preference'
+},
+{
+  name: "Network & Preference",
+  status: "",
+  key: 'network_preference'
+},
+{
+  name: "Personal Development",
+  status: "",
+  key: 'personal_development'
+},
+{
+  name: "Mentoring Relationship",
+  status: "",
+  key: 'mentoring_relationship'
+},
+{
+  name: "Long-term Vision",
+  status: "",
+  key: 'long_term_vision'
+},
+{
+  name: "Additional Information",
+  status: "",
+  key: 'additional_information'
+},
 ];
 
 export const userStatus = {
@@ -231,21 +231,21 @@ export const profileStatus = {
 
 
 export const goalPeriods = [{
-    name: '1 Month',
-    value: 1
-  },
-  {
-    name: '3 Months',
-    value: 3
-  },
-  {
-    name: '6 Months',
-    value: 6
-  },
-  {
-    name: '12 Months',
-    value: 12
-  },
+  name: '1 Month',
+  value: 1
+},
+{
+  name: '3 Months',
+  value: 3
+},
+{
+  name: '6 Months',
+  value: 6
+},
+{
+  name: '12 Months',
+  value: 12
+},
 
 ]
 
@@ -566,7 +566,7 @@ export const PasswordRulesSet = {
   common: 'common',
 }
 
-export const statusAction = ['yettoapprove', 'yettojoin', 'yettostart', 'inprogress', 'completed', 'cancelled', 'bookmarked', 'draft','reschedule']
+export const statusAction = ['yettoapprove', 'yettojoin', 'yettostart', 'inprogress', 'completed', 'cancelled', 'bookmarked', 'draft', 'reschedule']
 
 export const programActionStatus = {
   all: 'all',
@@ -585,7 +585,7 @@ export const programActionStatus = {
   planned: 'planned',
   draft: 'draft',
   reschedule: 'reschedule',
-  program_join_request_accepted:'program_join_request_accepted'
+  program_join_request_accepted: 'program_join_request_accepted'
 }
 
 
@@ -633,146 +633,146 @@ export const menteeCountStatus = {
 export const programMenus = (page = 'dashboard') => {
   const pipeUrl = page === 'program' ? pipeUrls.programs : pipeUrls.dashboard
   return [{
-      name: "All Programs",
-      count: 0,
-      page: pipeUrls.programs,
-      for: ['mentor', 'mentee', 'admin'],
-      mentorStatus: 'all',
-      menteeStatus: 'allprogram',
-      status: 'all'
-    },
-    {
-      name: "Active Programs",
-      count: 0,
-      page: `${pipeUrl}${programFilterUrls.planned}`,
-      for: ['admin','mentor','mentee'],
-      mentorStatus: programActionStatus.yettojoin,
-      menteeStatus: 'planned',
-      status: programActionStatus.yettojoin
-    },
-    {
-      name: "Recently Joined Programs",
-      count: 0,
-      page: `${pipeUrl}${programFilterUrls.yettostart}`,
-      for: ['mentor', 'admin','mentee'],
-      mentorStatus: programActionStatus.yettostart,
-      menteeStatus: 'recently_joined',
-      status: programActionStatus.yettostart
-    },
-    {
-      name: "Ongoing Programs",
-      count: 0,
-      page: `${pipeUrl}${programFilterUrls.inprogress}`,
-      for: ['mentor', 'admin','mentee'],
-      mentorStatus: programActionStatus.inprogress,
-      menteeStatus: 'ongoing',
-      status: programActionStatus.inprogress
-    },
-    // {
-    //   name: "Curated Programs",
-    //   count: 0,
-    //   page: `${pipeUrl}${programFilterUrls.yettojoin}`,
-    //   for: ['mentor', 'mentee'],
-    //   status: programActionStatus.yettojoin
-    // },
-    // {
-    //   name: "Draft Programs",
-    //   count: 0,
-    //   page: `${pipeUrl}${programFilterUrls.draft}`,
-    //   for: ['mentor'],
-    //   mentorStatus: 'draft',
-    //   menteeStatus: '',
-    //   status: programActionStatus.draft
-    // },
-    // {
-    //   name: "My Learning Programs",
-    //   count: 0,
-    //   page: `${pipeUrl}${programFilterUrls.learning}`,
-    //   for: ['mentee'],
-    //   mentorStatus: '',
-    //   menteeStatus: 'learning',
-    //   status: programActionStatus.learning
-    // },
-   
-    {
-      name: "Bookmarked Programs",
-      count: 0,
-      page: `${pipeUrl}${programFilterUrls.bookmark}`,
-      for: ['mentor', 'mentee'],
-      mentorStatus: 'bookmarked',
-      menteeStatus: 'bookmark',
-      status: programActionStatus.bookmark
-    },
-    {
-      name: "Reschedule Programs",
-      count: 0,
-      page: `${pipeUrl}${programFilterUrls.reschedule}`,
-      for: ['mentor','mentee'],
-      mentorStatus: 'reschedule',
-      menteeStatus: 'reschedule',
-      status: programActionStatus.reschedule
-    },
-    {
-      name: "Completed Programs",
-      count: 0,
-      page: `${pipeUrl}${programFilterUrls.completed}`,
-      for: ['mentor', 'mentee'],
-      mentorStatus: 'completed',
-      menteeStatus: 'completed',
-      status: programActionStatus.completed
-    },
-    {
-      name: "Cancelled Programs",
-      count: 0,
-      page: `${pipeUrl}${programFilterUrls.cancelled}`,
-      for: ['mentee', 'mentor'],
-      mentorStatus: 'cancelled',
-      menteeStatus: 'cancel',
-      status: programActionStatus.cancelled
-    }
+    name: "All Programs",
+    count: 0,
+    page: pipeUrls.programs,
+    for: ['mentor', 'mentee', 'admin'],
+    mentorStatus: 'all',
+    menteeStatus: 'allprogram',
+    status: 'all'
+  },
+  {
+    name: "Active Programs",
+    count: 0,
+    page: `${pipeUrl}${programFilterUrls.planned}`,
+    for: ['admin', 'mentor', 'mentee'],
+    mentorStatus: programActionStatus.yettojoin,
+    menteeStatus: 'planned',
+    status: programActionStatus.yettojoin
+  },
+  {
+    name: "Recently Joined Programs",
+    count: 0,
+    page: `${pipeUrl}${programFilterUrls.yettostart}`,
+    for: ['mentor', 'admin', 'mentee'],
+    mentorStatus: programActionStatus.yettostart,
+    menteeStatus: 'recently_joined',
+    status: programActionStatus.yettostart
+  },
+  {
+    name: "Ongoing Programs",
+    count: 0,
+    page: `${pipeUrl}${programFilterUrls.inprogress}`,
+    for: ['mentor', 'admin', 'mentee'],
+    mentorStatus: programActionStatus.inprogress,
+    menteeStatus: 'ongoing',
+    status: programActionStatus.inprogress
+  },
+  // {
+  //   name: "Curated Programs",
+  //   count: 0,
+  //   page: `${pipeUrl}${programFilterUrls.yettojoin}`,
+  //   for: ['mentor', 'mentee'],
+  //   status: programActionStatus.yettojoin
+  // },
+  // {
+  //   name: "Draft Programs",
+  //   count: 0,
+  //   page: `${pipeUrl}${programFilterUrls.draft}`,
+  //   for: ['mentor'],
+  //   mentorStatus: 'draft',
+  //   menteeStatus: '',
+  //   status: programActionStatus.draft
+  // },
+  // {
+  //   name: "My Learning Programs",
+  //   count: 0,
+  //   page: `${pipeUrl}${programFilterUrls.learning}`,
+  //   for: ['mentee'],
+  //   mentorStatus: '',
+  //   menteeStatus: 'learning',
+  //   status: programActionStatus.learning
+  // },
+
+  {
+    name: "Bookmarked Programs",
+    count: 0,
+    page: `${pipeUrl}${programFilterUrls.bookmark}`,
+    for: ['mentor', 'mentee'],
+    mentorStatus: 'bookmarked',
+    menteeStatus: 'bookmark',
+    status: programActionStatus.bookmark
+  },
+  {
+    name: "Reschedule Programs",
+    count: 0,
+    page: `${pipeUrl}${programFilterUrls.reschedule}`,
+    for: ['mentor', 'mentee'],
+    mentorStatus: 'reschedule',
+    menteeStatus: 'reschedule',
+    status: programActionStatus.reschedule
+  },
+  {
+    name: "Completed Programs",
+    count: 0,
+    page: `${pipeUrl}${programFilterUrls.completed}`,
+    for: ['mentor', 'mentee'],
+    mentorStatus: 'completed',
+    menteeStatus: 'completed',
+    status: programActionStatus.completed
+  },
+  {
+    name: "Cancelled Programs",
+    count: 0,
+    page: `${pipeUrl}${programFilterUrls.cancelled}`,
+    for: ['mentee', 'mentor'],
+    mentorStatus: 'cancelled',
+    menteeStatus: 'cancel',
+    status: programActionStatus.cancelled
+  }
   ]
 }
 
 export const RequestStatusArray = [{
-    key: 'program_request',
-    name: 'Program Request'
-  },
-  {
-    key: 'member_join_request',
-    name: 'Member Join Requests'
-  },
-  {
-    key: 'goal_request',
-    name: 'Goals Requests'
-  },
-  {
-    key: 'resource_access_request',
-    name: 'Resource Access Requests'
-  },
-  {
-    key: 'technical_support_request',
-    name: 'Technical Support Requests'
-  },
-  {
-    key: 'testimonial_request',
-    name: 'Testimonials Requests'
-  },
-  {
-    key: 'certificate_request',
-    name: 'Certificate Requests'
-  },
-  {
-    key: 'report_request',
-    name: 'Report Requests'
-  },
-  {
-    key: 'learning_access_requests',
-    name: 'Learning Access Requests'
-  },
-  {
-    key: 'new_goals_request',
-    name: 'New Goals Requests'
-  },
+  key: 'program_request',
+  name: 'Program Request'
+},
+{
+  key: 'member_join_request',
+  name: 'Member Join Requests'
+},
+{
+  key: 'goal_request',
+  name: 'Goals Requests'
+},
+{
+  key: 'resource_access_request',
+  name: 'Resource Access Requests'
+},
+{
+  key: 'technical_support_request',
+  name: 'Technical Support Requests'
+},
+{
+  key: 'testimonial_request',
+  name: 'Testimonials Requests'
+},
+{
+  key: 'certificate_request',
+  name: 'Certificate Requests'
+},
+{
+  key: 'report_request',
+  name: 'Report Requests'
+},
+{
+  key: 'learning_access_requests',
+  name: 'Learning Access Requests'
+},
+{
+  key: 'new_goals_request',
+  name: 'New Goals Requests'
+},
 ]
 
 export const RequestStatus = {
@@ -819,75 +819,75 @@ export const RequestStatus = {
 }
 
 export const requestOverview = [{
-    name: "Program Requests",
-    key: RequestStatus.programRequest.key,
-    count: 0,
-    status: RequestStatus.programRequest.key,
-    for: ['admin', 'mentor', 'mentee']
-  },
-  {
-    name: "Member Join Requests",
-    key: RequestStatus.memberJoinRequest,
-    count: 0,
-    status: RequestStatus.memberJoinRequest.key,
-    for: ['admin']
-  },
-  {
-    name: "Goal Requests",
-    key: RequestStatus.goalRequest,
-    count: 0,
-    status: RequestStatus.goalRequest.key,
-    for: ['admin']
-  },
-  {
-    name: "Resource Access Requests",
-    key: RequestStatus.resourceAccessRequest,
-    count: 0,
-    status: RequestStatus.resourceAccessRequest.key,
-    for: ['admin', 'mentor']
-  },
-  {
-    name: "Technical Support Requests",
-    key: RequestStatus.technicalSupportRequest,
-    count: 0,
-    status: RequestStatus.technicalSupportRequest.key,
-    for: ['admin', 'mentor']
-  },
-  {
-    name: "Testimonial Requests",
-    key: RequestStatus.testimonicalRequest,
-    count: 0,
-    status: RequestStatus.testimonicalRequest.key,
-    for: ['admin', 'mentor']
-  },
-  {
-    name: "Certificate Requests",
-    key: RequestStatus.certificateRequest,
-    count: 0,
-    status: RequestStatus.certificateRequest.key,
-    for: ['admin', 'mentor']
-  },
-  {
-    name: "Report Requests",
-    key: RequestStatus.reportRequest,
-    count: 0,
-    status: RequestStatus.reportRequest.key,
-    for: ['admin', 'mentor']
-  },
-  {
-    name: "Learning Access Requests",
-    key: RequestStatus.learningAccessRequests.key,
-    count: 0,
-    status: RequestStatus.learningAccessRequests.key,
-    for: ['mentee']
-  },
-  {
-    name: "New Goals Requests",
-    key: RequestStatus.newGoalsRequests.key,
-    count: 0,
-    status: RequestStatus.newGoalsRequests.key,
-    for: ['mentee']
-  },
+  name: "Program Requests",
+  key: RequestStatus.programRequest.key,
+  count: 0,
+  status: RequestStatus.programRequest.key,
+  for: ['admin', 'mentor', 'mentee']
+},
+{
+  name: "Member Join Requests",
+  key: RequestStatus.memberJoinRequest,
+  count: 0,
+  status: RequestStatus.memberJoinRequest.key,
+  for: ['admin']
+},
+{
+  name: "Goal Requests",
+  key: RequestStatus.goalRequest,
+  count: 0,
+  status: RequestStatus.goalRequest.key,
+  for: ['admin']
+},
+{
+  name: "Resource Access Requests",
+  key: RequestStatus.resourceAccessRequest,
+  count: 0,
+  status: RequestStatus.resourceAccessRequest.key,
+  for: ['admin', 'mentor']
+},
+{
+  name: "Technical Support Requests",
+  key: RequestStatus.technicalSupportRequest,
+  count: 0,
+  status: RequestStatus.technicalSupportRequest.key,
+  for: ['admin', 'mentor']
+},
+{
+  name: "Testimonial Requests",
+  key: RequestStatus.testimonicalRequest,
+  count: 0,
+  status: RequestStatus.testimonicalRequest.key,
+  for: ['admin', 'mentor']
+},
+{
+  name: "Certificate Requests",
+  key: RequestStatus.certificateRequest,
+  count: 0,
+  status: RequestStatus.certificateRequest.key,
+  for: ['admin', 'mentor']
+},
+{
+  name: "Report Requests",
+  key: RequestStatus.reportRequest,
+  count: 0,
+  status: RequestStatus.reportRequest.key,
+  for: ['admin', 'mentor']
+},
+{
+  name: "Learning Access Requests",
+  key: RequestStatus.learningAccessRequests.key,
+  count: 0,
+  status: RequestStatus.learningAccessRequests.key,
+  for: ['mentee']
+},
+{
+  name: "New Goals Requests",
+  key: RequestStatus.newGoalsRequests.key,
+  count: 0,
+  status: RequestStatus.newGoalsRequests.key,
+  for: ['mentee']
+},
 ]
 
 export const allowedImagesTypes = ['png', 'jpeg', 'jpg'];
@@ -939,7 +939,7 @@ export const ProgramStatusInCard = {
     color: '#FF8A00',
     bg: '#FFE3C2'
   },
-  
+
   yettostart: {
     text: 'Ongoing',
     color: '#FF8A00',
@@ -1071,58 +1071,61 @@ export function capitalizeEachWord(string) {
 }
 
 
-export const MentorMenteeProfileViewList = [
-  {
-    label: "First Name",
-    value: "first_name",
-    grid: 4
-  },
-  {
-    label: "Last Name",
-    value: "last_name",
-    grid: 4
-  },
-  {
-    label: "Primary Phone Number",
-    value: "phone_number",
-    grid: 4
-  },
-  {
-    label: "Secondary Contact Number",
-    value: "secondary_phone_number",
-    grid: 4
-  },
-  {
-    label: "Mail Id",
-    value: "email",
-    grid: 4
-  },
-  {
-    label: "Address",
-    value: "address",
-    grid: 4
-  },
-  {
-    label: "Skils",
-    value: "strongest_skills",
-    grid: 4
-  },
-  {
-    label: "Professional Bio",
-    value: "professional_bio",
-    grid: 12
-  },
-  {
-    label: "Documents",
-    value: "documents",
-    grid: 12
-  },
+export const MentorMenteeProfileViewList = (hide) => {
+  return [
+    {
+      label: "First Name",
+      value: "first_name",
+      grid: 4
+    },
+    {
+      label: "Last Name",
+      value: "last_name",
+      grid: 4
+    },
+    {
+      label: "Primary Phone Number",
+      value: "phone_number",
+      grid: 4
+    },
+    {
+      label: "Secondary Contact Number",
+      value: "secondary_phone_number",
+      grid: 4
+    },
+    {
+      label: "Mail Id",
+      value: "email",
+      grid: 4
+    },
+    {
+      label: "Address",
+      value: "address",
+      grid: 4
+    },
+    {
+      label: "Skils",
+      value: "strongest_skills",
+      grid: 4
+    },
+    {
+      label: "Professional Bio",
+      value: "professional_bio",
+      grid: 12
+    },
+    {
+      label: "Documents",
+      value: "documents",
+      grid: 12,
+      hide: hide
+    },
 
-]
+  ]
+}
 
 
 export const followBtnText = {
-  "new" : "Follow",
+  "new": "Follow",
   "waiting": "Requested",
   "accepted": "Unfollow"
 }

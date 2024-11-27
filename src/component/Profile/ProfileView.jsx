@@ -197,7 +197,7 @@ export default function ProfileView() {
             setTimeout(() => {
                 resetMenteeRequest()
                 dispatch(updateLocalRequest({ status: '' }))
-                dispatch(getProfileInfo({ id: params.id}));
+                dispatch(getProfileInfo({id: params.id}));
                 navigate('/all-request')
             }, 3000)
         }
