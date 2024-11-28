@@ -334,7 +334,7 @@ export default function AssignMentees() {
                                                                                 <>
                                                                                     <div className='relative input-bg'
                                                                                         onClick={(e) => {
-                                                                                            calendarRef?.current[index]?.show();
+                                                                                           !field.disabled && calendarRef?.current[index]?.show();
                                                                                         }}>
                                                                                         <Calendar
                                                                                             className='calendar-control w-full'
