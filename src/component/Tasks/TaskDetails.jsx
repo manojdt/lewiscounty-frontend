@@ -445,7 +445,7 @@ export const TaskDetails = () => {
                                                     style={{
                                                         background: 'rgba(243, 247, 252, 1)', border: imageError.error || errors['file'] ? '2px dashed red' : 'none',
 
-                                                        cursor: (taskData.status === TaskAllStatus.newtask || taskData.status === TaskAllStatus.pending) ? 'pointer' : 'not-allowed'
+                                                        cursor: (taskData.status === TaskAllStatus.newtask || taskData.status === TaskAllStatus.pending || taskData.status === TaskAllStatus.inprogress) ? 'pointer' : 'not-allowed'
                                                     }} >
                                                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                                         <img src={FileIcon} alt="FileIcon" />

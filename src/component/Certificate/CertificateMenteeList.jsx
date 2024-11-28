@@ -104,7 +104,7 @@ export default function CertificateMenteeList() {
     },
   ];
 
-  if (role === 'mentor') {
+  if (role !== 'mentee') {
     certificateColumn = [
       ...certificateColumn,
       {
@@ -133,7 +133,7 @@ export default function CertificateMenteeList() {
                 }}
               >
 
-                {(searchParams.get("type") === "approved" || searchParams.get("type") === "waiting_for_response") && (
+                {(searchParams.get("type") === "approved" || searchParams.get("type") === "waiting_for_response" || role === 'admin') && (
                   <MenuItem
                     onClick={() => {
                       let url = searchParams.get("type") === "approved" ?  `/certificate-view/${id}?mentee_id=${seletedItem?.mentee_id}` :

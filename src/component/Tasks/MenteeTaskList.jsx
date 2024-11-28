@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import SearchIcon from '../../assets/icons/SearchColor.svg'
 import { useDispatch, useSelector } from 'react-redux';
 import { getMenteeAllTask } from '../../services/task';
+import Cancel from "../../assets/images/cancel-colour1x.png";
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Backdrop, CircularProgress } from '@mui/material';
 
@@ -45,6 +46,12 @@ export default function MenteeTaskList() {
                 <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
                     <div className='flex w-full gap-5 items-center justify-between'>
                         <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 500 }}>View Mentee Task List</p>
+                    </div>
+                    <div
+                        className="cursor-pointer"
+                        onClick={() => navigate("/certificates")}
+                    >
+                        <img src={Cancel} alt="link" className="w-[20px] h[10px]" />
                     </div>
                 </div>
 
