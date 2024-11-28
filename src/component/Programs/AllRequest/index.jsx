@@ -31,7 +31,7 @@ import { Button } from '../../../shared';
 
 export default function AllRequest() {
     const navigate = useNavigate()
-    const [searchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
 
     const dispatch = useDispatch();
     const { programRequest: programTableInfo, memberRequest, resourceRequest, categoryList, goalsRequest: goalsRequestInfo, certificateRequestList, reportsRequest: reportsRequestInfo, learningAccessRequests,
@@ -40,6 +40,7 @@ export default function AllRequest() {
     const [categoryInfo, setCategoryInfo] = useState({ search: '', list: [] })
     const [filterStatus, setFilterStatus] = useState('all')
     const [anchorEl, setAnchorEl] = useState(null);
+    const [filter, setFilter] = useState({ search: '', filter_by: '' })
     const open = Boolean(anchorEl);
     const [actionTab, setActiveTab] = useState('new_program_request')
     const [actionTabFilter, setActionTabFilter] = useState([])
@@ -54,7 +55,7 @@ export default function AllRequest() {
         pageSize: 10,
     });
     const userInfo = useSelector(state => state.userInfo)
-// console.log("programTableInfo ===>", programTableInfo, "====>", learningAccessRequests)
+    // console.log("programTableInfo ===>", programTableInfo, "====>", learningAccessRequests)
     const {
         register,
         formState: { errors },
@@ -479,7 +480,7 @@ export default function AllRequest() {
                         >
                             <MenuItem onClick={(e) => {
                                 const requestQuery = seletedItem.status === 'new' || seletedItem.status === 'pending' ? `&request_id=${seletedItem.id}` : ''
-                                const url = role === 'admin' ? `/program-details/${seletedItem.program}?request_id=${seletedItem.id}` : `/mentee-details/${seletedItem.requested_by}?type=mentee_request${requestQuery}`;
+                                const url = role === 'admin' ? `/program-details/${seletedItem.program}?request_id=${seletedItem.id}&type=${actionTab}` : `/mentee-details/${seletedItem.requested_by}?type=mentee_request${requestQuery}`;
                                 return navigate(url);
                             }} className='!text-[12px]'>
                                 <img src={ViewIcon} alt="ViewIcon" className='pr-3 w-[30px]' />
@@ -725,7 +726,7 @@ export default function AllRequest() {
                                     View
                                 </MenuItem>
                                 {
-                                    (params.row.status === 'new' || params.row.status === 'pending') &&
+                                    (seletedItem.status === 'new' || seletedItem.status === 'pending') &&
                                     <>
                                         <MenuItem onClick={handleAcceptReportsRequest} className='!text-[12px]'>
                                             <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
@@ -840,14 +841,18 @@ export default function AllRequest() {
     const handleClick = (menu) => {
         navigate(`/all-request?type=${menu.status}`)
         handleStatus("all")
+        setFilter({ search: '', filter_by: '' })
     }
 
     const getProgramRequestApi = () => {
         let payload = {
             request_type: actionTab,
             ...filterStatus !== 'all' ? { status: filterStatus } : '',
-            page: paginationModel?.page + 1, limit: paginationModel?.pageSize
+            page: paginationModel?.page + 1, limit: paginationModel?.pageSize,
+            ...filter.search !== '' && { search: filter.search },
+            ...filter.filter_by !== '' ? { filter_by: filter.filter_by } : { filter_by: 'month' }
         }
+
 
         if (role === 'mentor') {
             payload.created_at = 'mentee'
@@ -856,29 +861,24 @@ export default function AllRequest() {
         dispatch(getprogramRequest(payload))
     }
 
-    const getLearningAccessApi = async() => {
-      const res =  await dispatch(getlearningAccessRequest({
-            ...filterStatus !== 'all' && { status: filterStatus },
-            created_at: 'mentor',
-            filter_by: 'month',
-            page: paginationModel?.page + 1, limit: paginationModel?.pageSize
-        }))
-        // console.log("res ==>", res)
-
+    const getLearningAccessApi = async () => {
         dispatch(getlearningAccessRequest({
             ...filterStatus !== 'all' && { status: filterStatus },
             created_at: 'mentor',
             filter_by: 'month',
-            page: paginationModel?.page + 1, limit: paginationModel?.pageSize
+            page: paginationModel?.page + 1, limit: paginationModel?.pageSize,
+            ...filter.search !== '' && { search: filter.search },
+            ...filter.filter_by !== '' ? { filter_by: filter.filter_by } : { filter_by: 'month' }
         }))
-    
+
     }
 
     const getGoalsRequestApi = () => {
         dispatch(goalsRequest({
             ...filterStatus !== 'all' && { status: filterStatus },
             created_at: actionTab,
-            filter_by: 'day'
+            ...filter.search !== '' && { search: filter.search },
+            ...filter.filter_by !== '' ? { filter_by: filter.filter_by } : { filter_by: 'month' }
         }))
     }
 
@@ -886,19 +886,29 @@ export default function AllRequest() {
         dispatch(getReportRequest({
             ...filterStatus !== 'all' && { rep_status: filterStatus },
             page: paginationModel?.page + 1,
-            limit: paginationModel?.pageSize
+            limit: paginationModel?.pageSize,
+            ...filter.search !== '' && { search: filter.search },
+            ...filter.filter_by !== '' ? { filter_by: filter.filter_by } : { filter_by: 'month' }
         }))
     }
 
     const getCerificateRequestAPi = () => {
-        dispatch(certificateRequest({ filterStatus: filterStatus !== 'all' ? filterStatus : "", page: paginationModel?.page + 1, limit: paginationModel?.pageSize ?? 10 }))
+        dispatch(certificateRequest({
+            filterStatus: filterStatus !== 'all' ? filterStatus : "",
+            page: paginationModel?.page + 1,
+            limit: paginationModel?.pageSize ?? 10,
+            ...filter.search !== '' && { search: filter.search },
+            ...filter.filter_by !== '' ? { filter_by: filter.filter_by } : { filter_by: 'month' }
+        }))
     }
 
     const getMembersRequestApi = () => {
         dispatch(getMemberRequest({
             ...filterStatus !== 'all' && { status: filterStatus },
             user: actionTab,
-            page: paginationModel?.page + 1, limit: paginationModel?.pageSize
+            page: paginationModel?.page + 1, limit: paginationModel?.pageSize,
+            ...filter.search !== '' && { search: filter.search },
+            ...filter.filter_by !== '' ? { filter_by: filter.filter_by } : { filter_by: 'month' }
         }));
     }
 
@@ -906,7 +916,8 @@ export default function AllRequest() {
         dispatch(getResourceRequest({
             ...filterStatus !== 'all' && { status: filterStatus },
             created_at: actionTab,
-            filter_by: 'day'
+            ...filter.search !== '' && { search: filter.search },
+            ...filter.filter_by !== '' ? { filter_by: filter.filter_by } : { filter_by: 'month' }
         }))
     }
 
@@ -943,7 +954,12 @@ export default function AllRequest() {
                     }
                     tableDetails = { column: programRequestColumn, data: [] }
                     actionFilter = programInfoTab
-                    activeTabName = role === 'mentee' ? 'joining_request' : 'new_program_request'
+                    activeTabName = role === 'mentee' || role === 'mentor' ? 'joining_request' : 'new_program_request'
+                    console.log('activeTabName', activeTabName, actionTab)
+                    if(actionTab !== 'joining_request' && actionTab !== 'new_program_request'){
+                        activeTabName = actionTab
+                    }
+                   
                     break;
                 case RequestStatus.memberJoinRequest.key:
                     tableDetails = { column: memberMentorRequestColumns, data: [] }
@@ -990,8 +1006,10 @@ export default function AllRequest() {
             setActionTabFilter(actionFilter)
             setActiveTab(activeTabName)
         } else {
-            setActionTabFilter(programRequestTab)
-            setActiveTab(role !== 'admin' ? 'joining_request' : 'new_program_request')
+            if (role !== '') {
+                setActionTabFilter(programRequestTab)
+                setActiveTab(role !== 'admin' ? 'joining_request' : 'new_program_request')
+            }
         }
     }, [searchParams, role])
 
@@ -1068,7 +1086,6 @@ export default function AllRequest() {
             }, 3000)
         }
 
-
     }, [status])
 
     useEffect(() => {
@@ -1100,14 +1117,14 @@ export default function AllRequest() {
         }
 
     }, [programTableInfo, memberRequest, resourceRequest, goalsRequestInfo, certificateRequestList, reportsRequestInfo, anchorEl, learningAccessRequests])
-// console.log("searchParams.get('type') ===>", searchParams.get('type'))
+    // console.log("searchParams.get('type') ===>", searchParams.get('type'))
     useEffect(() => {
 
         if (role !== '') {
             if (!searchParams.get('type') || searchParams.get('type') === 'program_request') {
                 getProgramRequestApi()
             }
-           
+
             if (searchParams.get('type') === 'learning_access_requests') {
                 getLearningAccessApi()
             }
@@ -1132,6 +1149,8 @@ export default function AllRequest() {
             }
         }
 
+
+
     }, [actionTab, searchParams, filterStatus, role, paginationModel])
 
     const footerComponent = (props) => {
@@ -1148,6 +1167,26 @@ export default function AllRequest() {
     const resetPageDetails = () => {
         handleStatus("all")
     }
+
+
+    const handleSearch = (e) => {
+        setFilter({ ...filter, search: e.target.value })
+    }
+
+    useEffect(() => {
+        if (filter.search !== '') {
+            searchParams.set('search', filter.search)
+        }else{
+            searchParams.delete('search')
+        }
+        if (filter.filter_by !== '') {
+            searchParams.set('filter_by', filter.filter_by)
+        }else{
+            searchParams.delete('filter_by')
+        }
+        setSearchParams(searchParams)
+    }, [filter])
+
 
     return (
         <div className="program-request px-8 mt-10">
@@ -1305,13 +1344,29 @@ export default function AllRequest() {
                                         {currentRequestTab.name}
                                     </div>
                                     <div className="flex gap-7 items-center">
-                                        <img src={SearchIcon} alt="statistics" />
+                                        <div className="relative">
+                                            <input type="text" id="search-navbar" className="block w-full p-2 text-sm text-gray-900 border-none"
+                                                placeholder="Search here..." style={{
+                                                    border: '1px solid rgba(29, 91, 191, 1)',
+                                                    height: '45px',
+                                                    width: '280px'
+                                                }}
+                                                value={filter.search}
+                                                onChange={handleSearch}
+                                            />
+                                            <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
+                                                <img src={SearchIcon} alt='SearchIcon' />
+                                            </div>
+                                        </div>
+                                        {/* <img src={SearchIcon} alt="statistics" /> */}
 
                                         <p className="text-[12px] py-2 pl-5 pr-4 flex gap-4" style={{ background: 'rgba(223, 237, 255, 1)', borderRadius: '5px' }}>
                                             <img src={CalendarIcon} alt="CalendarIcon" />
-                                            <select className='focus:outline-none' style={{ background: 'rgba(223, 237, 255, 1)', border: 'none' }}>
-                                                <option>Day</option>
-                                                <option>Month</option>
+
+                                            <select className='focus:outline-none' style={{ background: 'rgba(223, 237, 255, 1)', border: 'none' }}
+                                                onChange={(e) => setFilter({ ...filter, filter_by: e.target.value })}>
+                                                <option value="month" selected={filter.filter_by === 'month'}>Month</option>
+                                                <option value="day" selected={filter.filter_by === 'day'}>Day</option>
                                             </select>
                                         </p>
 
@@ -1320,7 +1375,7 @@ export default function AllRequest() {
 
                                                 {
                                                     statusOptions.map((option, index) =>
-                                                        <option key={index} selected={option?.value === filterStatus} value={option?.value}>{option?.label}</option>
+                                                        <option style={{background: '#fff', color: '#000'}} key={index} selected={option?.value === filterStatus} value={option?.value}>{option?.label}</option>
                                                     )
                                                 }
                                             </select>
@@ -1340,6 +1395,7 @@ export default function AllRequest() {
                                                                 onClick={() => {
                                                                     setActiveTab(discussion.key)
                                                                     resetPageDetails()
+                                                                    // setFilter({ search: '', filter_by: '' })
                                                                 }}
                                                             >
                                                                 {/* <div className='flex justify-center pb-1'>

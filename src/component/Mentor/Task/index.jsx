@@ -399,7 +399,6 @@ const MentorTask = () => {
 
     const handleFileLink = (files) => {
         setTaskFilesPopup({ modal: true, files: files })
-        console.log('files123', files)
     }
 
     const mentorTaskColumn = [
@@ -412,14 +411,12 @@ const MentorTask = () => {
             renderCell: (params) => {
                 if (params.row.files && params.row.files.length) {
                     const files = fileNameString(params.row.files)
-                    console.log('REsponse', files)
                     return (
                         <>
                             {
                                 <div className='flex  items-center'>
-                                    <a className='underline pr-3' href={params.row.files[0].files} target="_blank" style={{ color: 'rgba(24, 40, 61, 1)' }}>{files.filename}</a>
-
-
+                                    <a className='underline pr-3' href={params.row.files[0].files} target="_blank" style={{ color: 'rgba(24, 40, 61, 1)' }}
+                                    title={files.fullName}>{files.filename}</a>
                                     {
                                         files.remainingCount > 0 &&
                                         <span style={{
@@ -571,13 +568,13 @@ const MentorTask = () => {
                         <ul className='text-black py-2 px-5 leading-10'>
                             {
                                 taskFilesPopup.files.map((file, index) => {
-                                    if (index > 0) {
-                                        return (
-                                            <li key={index} >
-                                                <a href={file.files} style={{ color: 'rgba(24, 40, 61, 1)', textDecoration: 'underline' }} target='_blank'>{fileNameFromUrl(file.files)}</a>
-                                            </li>
-                                        )
-                                    }
+
+                                    return (
+                                        <li key={index} >
+                                            <a href={file.files} style={{ color: 'rgba(24, 40, 61, 1)', textDecoration: 'underline' }} target='_blank'>{fileNameFromUrl(file.files)}</a>
+                                        </li>
+                                    )
+
                                 }
 
                                 )

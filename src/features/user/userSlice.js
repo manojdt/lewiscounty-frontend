@@ -156,6 +156,7 @@ export const userSlice = createSlice({
         };
       })
       .addCase(forgotPassword.rejected, (state, action) => {
+        console.log('GGG', action)
         return {
           ...state,
           loading: false,

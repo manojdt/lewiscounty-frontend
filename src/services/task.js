@@ -5,6 +5,18 @@ import {
 
 import api from "./api";
 
+export const getMenteeAllTask = createAsyncThunk(
+    "getMenteeAllTask",
+    async (query = {}) => {
+        let queryString = Object.entries(query).map(([key, value])=>`${key}=${value}`).join("&")
+
+        const getMenteeTask = await api.get(`/program_task_assign/mentee_tasks_all?${queryString}`);
+        if (getMenteeTask.status === 200 && getMenteeTask.data) {
+            return getMenteeTask.data;
+        }
+        return getMenteeTask
+    }
+);
 
 export const getAllTasks = createAsyncThunk(
     "getAllTasks",

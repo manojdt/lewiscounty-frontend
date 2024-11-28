@@ -5,6 +5,7 @@ import MenuItem from '@mui/material/MenuItem';
 import DataTable from '../../shared/DataGrid';
 
 import MoreIcon from '../../assets/icons/moreIcon.svg'
+import CloseIcon from '../../assets/icons/closeIcon.svg';
 import ViewIcon from '../../assets/images/view1x.png'
 import SearchIcon from '../../assets/images/search1x.png'
 import RequestIcon from '../../assets/images/Requesttask1x.png'
@@ -18,6 +19,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getAllTasks } from '../../services/task';
 import { Backdrop, CircularProgress } from '@mui/material';
 import { pipeUrls, taskStatusColor, taskStatusText } from '../../utils/constant';
+import { fileNameFromUrl, fileNameString } from '../../utils';
 
 export const Tasks = () => {
     const [requestTab, setRequestTab] = useState('all')
@@ -26,6 +28,7 @@ export const Tasks = () => {
     const open = Boolean(anchorEl);
     const [searchParams] = useSearchParams();
     const [requestTask, setRequestTask] = useState(false)
+    const [taskFilesPopup, setTaskFilesPopup] = useState({ modal: false, files: [] })
     const [seletedItem, setSelectedItem] = useState({})
     const navigate = useNavigate();
     const dispatch = useDispatch()
@@ -34,6 +37,10 @@ export const Tasks = () => {
         page: 0,
         pageSize: 10,
     });
+
+    const handleFileLink = (files) => {
+        setTaskFilesPopup({ modal: true, files: files })
+    }
 
 
     const taskMenuList = [
@@ -92,6 +99,50 @@ export const Tasks = () => {
 
     const mentorColumn = [
         ...list,
+        {
+            field: 'file_by',
+            headerName: 'Link',
+            flex: 1,
+            id: 2,
+            renderCell: (params) => {
+                if (params.row.files && params.row.files.length) {
+                    const files = fileNameString(params.row.files)
+                    return (
+                        <>
+                            {
+                                <div className='flex  items-center'>
+                                    <a className='underline pr-3' href={params.row.files[0].files} target="_blank" style={{ color: 'rgba(24, 40, 61, 1)' }}
+                                    title={files.fullName}>{files.filename}</a>
+                                    {
+                                        files.remainingCount > 0 &&
+                                        <span style={{
+                                            background: 'rgb(217, 228, 242)',
+                                            color: 'rgb(29, 91, 191)',
+                                            borderRadius: '50%',
+                                            fontWeight: 'bold',
+                                            width: '35px',
+                                            height: '35px',
+                                            marginTop: '4px',
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            alignItems: 'center'
+                                        }}
+                                            className='cursor-pointer'
+                                            onClick={() => handleFileLink(params.row.files)}
+                                        >
+                                            + {files.remainingCount}
+                                        </span>
+                                    }
+
+
+                                </div>
+                            }
+                        </>
+                    )
+                }
+                return <></>
+            }
+        },
         {
             field: 'action',
             headerName: 'Action',
@@ -173,6 +224,8 @@ export const Tasks = () => {
     return (
         <div className="px-9 py-9">
 
+
+
             <MuiModal modalSize='lg' modalOpen={requestTask} modalClose={() => { setRequestTask(false) }} noheader>
                 <div className='px-5 py-5'>
                     <div className='flex justify-center flex-col gap-5  mt-4 mb-4'
@@ -234,9 +287,38 @@ export const Tasks = () => {
                 open={loading}
             >
                 <CircularProgress color="inherit" />
-
             </Backdrop>
 
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={taskFilesPopup.modal}
+            >
+                <div className='py-3 px-4 bg-white' style={{ borderRadius: '3px' }}>
+                    <div style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '3px' }} className='py-2'>
+                        <div className='flex justify-between px-3 py-1' style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
+                            <p style={{ color: 'rgba(29, 91, 191, 1)' }}>Reference Link View</p>
+                            <img src={CloseIcon} alt="CloseIcon" className='cursor-pointer' onClick={() => setTaskFilesPopup({ modal: false, files: [] })} />
+                        </div>
+                        <ul className='text-black py-2 px-5 leading-10'>
+                            {
+                                taskFilesPopup.files.map((file, index) => {
+
+                                    return (
+                                        <li key={index} >
+                                            <a href={file.files} style={{ color: 'rgba(24, 40, 61, 1)', textDecoration: 'underline' }} target='_blank'>{fileNameFromUrl(file.files)}</a>
+                                        </li>
+                                    )
+
+                                }
+
+                                )
+                            }
+                        </ul>
+
+                    </div>
+                </div>
+
+            </Backdrop>
 
 
             <div className='px-3 py-5' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>

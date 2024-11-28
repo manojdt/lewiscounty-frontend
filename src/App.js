@@ -75,6 +75,7 @@ import MentorMenteeProfile from "./component/mentorMenteeProfile";
 import ProfileView from "./component/Profile/ProfileView";
 import Category from "./component/category";
 import CategoryView from "./component/category/categoryView";
+import MenteeTaskList from "./component/Tasks/MenteeTaskList";
 
 function App() {
   const PrivateRoute = () => {
@@ -176,6 +177,7 @@ function App() {
           <Route path="/mentees" element={<Mentees />} />
           <Route path="/mentee-details/:id" element={<ProfileView />} />
           <Route path="/mentee-tasks" element={<Tasks />} />
+          <Route path="/mentee-task_list/:id" element={<MenteeTaskList />} />
           <Route path="/mentee-tasks-details/:id" element={<TaskDetails />} />
           <Route path="/preview-mentee-tasks-details/:id" element={<PreviewTaskDetails />} />
 

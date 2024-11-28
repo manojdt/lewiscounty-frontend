@@ -104,7 +104,7 @@ export default function CertificateMenteeList() {
     },
   ];
 
-  if(role === 'mentor'){
+  if (role !== 'mentee') {
     certificateColumn = [
       ...certificateColumn,
       {
@@ -115,8 +115,8 @@ export default function CertificateMenteeList() {
         renderCell: (params) => {
           return (
             <>
-  
-  
+
+
               <div
                 className="cursor-pointer flex items-center h-full"
                 onClick={(e) => handleMoreClick(e, params.row)}
@@ -132,12 +132,15 @@ export default function CertificateMenteeList() {
                   "aria-labelledby": "basic-button",
                 }}
               >
-                {searchParams.get("type") === "approved" && (
+
+                {(searchParams.get("type") === "approved" || searchParams.get("type") === "waiting_for_response" || role === 'admin') && (
                   <MenuItem
-                    onClick={() =>
-                      navigate(
-                        `/certificate-view/${id}?mentee_id=${seletedItem?.mentee_id}`
-                      )
+                    onClick={() => {
+                      let url = searchParams.get("type") === "approved" ?  `/certificate-view/${id}?mentee_id=${seletedItem?.mentee_id}` :
+                      `/mentee-task_list/${id}?mentee_id=${seletedItem?.mentee_id}&program_id=${seletedItem.program_id}`;
+                      return navigate(url)
+                    }
+
                     }
                     className="!text-[12px]"
                   >
@@ -151,7 +154,7 @@ export default function CertificateMenteeList() {
                 )}
               </Menu>
             </>
-  
+
           );
         },
       }

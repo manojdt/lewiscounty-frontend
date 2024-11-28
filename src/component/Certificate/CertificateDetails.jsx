@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Backdrop, CircularProgress } from "@mui/material";
-import { jsPDF } from "jspdf";
-import html2canvas from "html2canvas";
 import CancelIcon from "../../assets/images/cancel-colour1x.png";
 import Tooltip from "../../shared/Tooltip";
 import api from "../../services/api";
@@ -10,71 +8,40 @@ import { Button } from "../../shared";
 
 export default function CertificateDetails() {
   const navigate = useNavigate();
+  const contentRef = useRef();
   const { id } = useParams();
   const [searchParams] = useSearchParams();
   const [certificateDetails, setCertificateDetails] = useState(<></>);
   const [loading, setLoading] = useState(true);
 
-  const getCertificateDetails = async () => {
+  const getCertificateDetails = async (actiontype = 'view') => {
     const res = searchParams.get("mentee_id");
     const resId = res ? `&mentee_id=${res}` : "";
     const certificateAction = await api.get(
-      `mentee_program/certifications/download?id=${id}&action=view${resId}`
+      `mentee_program/certifications/download?id=${id}&action=${actiontype}${resId}`
     );
     if (certificateAction.status === 200 && certificateAction.data) {
       setCertificateDetails(certificateAction.data);
     }
     setLoading(false);
   };
-  const downloadAsPDF = () => {
-    // Create a hidden iframe
-    const iframe = document.createElement("iframe");
-    iframe.style.position = "absolute";
-    iframe.style.top = "-10000px";
-    document.body.appendChild(iframe);
-
-    // Write the certificate HTML to the iframe
-    iframe.contentDocument.open();
-    iframe.contentDocument.write(certificateDetails);
-    iframe.contentDocument.close();
-
-    // Wait for the content to load, then print the iframe content
-    iframe.onload = () => {
-      iframe.contentWindow.focus();
-      iframe.contentWindow.print();
-
-      // Clean up the iframe after printing
-      document.body.removeChild(iframe);
-    };
-  };
-
-  const handleDownload = () => {
-    const input = document.getElementById("certificate-content");
+ 
+  const handleDownload = async () => {
+    const res = searchParams.get("mentee_id");
+    const resId = res ? `&mentee_id=${res}` : "";
     setLoading(true);
-    html2canvas(input, {  }).then((canvas) => {
-      
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF();
-      const imgWidth = 190; // Set your desired width
-      const pageHeight = pdf.internal.pageSize.height;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      let heightLeft = imgHeight;
-
-      let position = 0;
-
-      pdf.addImage(imgData, "PNG", 10, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
-
-      while (heightLeft >= 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, "PNG", 10, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-      }
-
-      pdf.save("certificate.pdf");
+    const certificateAction = await api.get(
+      `mentee_program/certifications/download?id=${id}&action=download${resId}`
+    );
+    if (certificateAction.status === 200 && certificateAction.data) {
+      const blob = new Blob([certificateAction.data], { type: "application/pdf" });
+      console.log(blob);
+      const link = document.createElement("a");
+      link.href = window.URL.createObjectURL(blob);
+      link.download = 'certificate.pdf';
+      link.click();
       setLoading(false);
-    });
+    }
   };
 
   useEffect(() => {
@@ -117,6 +84,7 @@ export default function CertificateDetails() {
         <div className="flex flex-col gap-3 items-center py-10 px-40">
           <div
             id="certificate-content"
+            ref={contentRef}
             dangerouslySetInnerHTML={{ __html: certificateDetails }}
           ></div>
 

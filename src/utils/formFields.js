@@ -1990,10 +1990,11 @@ export const reportColumns = [
   },
   {
     field: 'rejected_date',
-    headerName: 'Rejected Time/ Date',
+    headerName: 'Rejected Date',
     flex: 1,
     id: 7,
-    status: ['all', 'cancel']
+    status: ['all', 'cancel'],
+    renderCell: (params) => <span>{dateFormat(params.row.rejected_date)}</span>
   },
   {
     field: 'rejecter',

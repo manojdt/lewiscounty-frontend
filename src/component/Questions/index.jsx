@@ -152,7 +152,6 @@ export const Questions = () => {
 
   useEffect(() => {
     if(userInfo && userInfo?.data?.is_registered === true && userInfo?.data?.document_upload === false){
-      console.log('HANDLE')
       handleRedirect()
     }
   },[])

@@ -764,7 +764,8 @@ export default function ProgramDetails() {
                                                                             color: '#E0382D'
                                                                         }}
                                                                             onClick={() => handleAcceptCancelProgramRequest('cancel', programdetails.id)}
-                                                                        >Reject Request
+                                                                        >
+                                                                            {searchParams.has('type') && searchParams.get('type') === 'program_cancel' ? 'Continue' : 'Reject Request'}
                                                                         </button>
                                                                         <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
                                                                             background: "#16B681",
