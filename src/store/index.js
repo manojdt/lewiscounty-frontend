@@ -18,7 +18,7 @@ import activityReducer from "../features/activities/activitySlice";
 import requestReducer from "../features/request/requestSlice";
 import launchProgramReducer from "../features/launchProgram/launchProgramSlice";
 import memberReducer from "../features/members/memberSlice";
-
+import categoryReducer from "../features/category/categorySlice"
 
 const combinedReducer = combineReducers({
   userInfo: userReducer,
@@ -36,7 +36,8 @@ const combinedReducer = combineReducers({
   tasks: taskReducer,
   activity: activityReducer,
   launchProgram: launchProgramReducer,
-  members: memberReducer
+  members: memberReducer,
+  category: categoryReducer
 });
 
 const rootReducer = (state, action) => {
