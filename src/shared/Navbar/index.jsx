@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { useDispatch, useSelector } from "react-redux";
-import NotificationIcon from "../../assets/icons/notification-icon.svg";
+import NotificationIcon from "../../assets/icons/notificationIconNew.svg";
 import SettingsIcon from "../../assets/images/setting1x.png";
 import UserImage from "../../assets/icons/user-icon.svg";
 import SearchIcon from "../../assets/images/search1x.png";
@@ -11,7 +11,7 @@ import HelpIcon from '../../assets/icons/Help.svg';
 import ProfileIcon from '../../assets/icons/Profile.svg';
 import LogoutIcon from '../../assets/icons/Logout.svg';
 import LogoutColorIcon from '../../assets/icons/Logoutpop.svg'
-import { Backdrop } from '@mui/material';
+import { Backdrop, ClickAwayListener, Stack, Tooltip, tooltipClasses, Typography } from '@mui/material';
 import { Button } from '../Button';
 
 import { OverlayPanel } from 'primereact/overlaypanel';
@@ -19,6 +19,21 @@ import Notification from '../../component/Notification';
 import { userActivities } from '../../services/activities';
 import api from '../../services/api';
 import { getUserProfile } from '../../services/profile';
+import SettingIcon from "../../assets/icons/settingIcon.svg"
+import { styled } from '@mui/material/styles';
+import CategoryIcon from '../../assets/icons/category.svg'
+import PermissionIcon from "../../assets/icons/permissionIcon.svg"
+
+const HtmlTooltip = styled(({ className, ...props }) => (
+    <Tooltip {...props} classes={{ popper: className }} arrow />
+))(({ theme }) => ({
+    [`& .${tooltipClasses.tooltip}`]: {
+        backgroundColor: '#fff',
+        maxWidth: 220,
+        border: '1px solid #1D5BBF80',
+        padding: "16px"
+    },
+}));
 
 export const Navbar = () => {
     const navigate = useNavigate();
@@ -181,6 +196,17 @@ export const Navbar = () => {
         dispatch(userActivities({ limit: 10 }))
     }, [])
 
+
+    const [openSetting, setOpenSetting] = React.useState(false);
+
+    const handleTooltipClose = () => {
+        setOpenSetting(false);
+    };
+
+    const handleTooltipOpen = () => {
+        setOpenSetting(true);
+    };
+
     return (
         <div className="navbar-content px-4" style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
 
@@ -286,19 +312,22 @@ export const Navbar = () => {
 
                             <div className='relative'>
                                 {userInfo?.data?.role === 'super_admin' ? null : <div className='notitification-group'>
-                                    <img src={NotificationIcon} className='cursor-pointer notification-image' onClick={(e) => op.current.toggle(e)} alt="NotificationIcon" />
+                                    <div className='bg-[#EEF5FF] rounded-[3px] h-[40px] w-[40px] flex items-center justify-center'>
+                                        <img src={NotificationIcon} className='cursor-pointer notification-image' onClick={(e) => op.current.toggle(e)} alt="NotificationIcon" />
+                                    </div>
                                     {
                                         activity.length > 0 ?
                                             <span style={{
                                                 position: 'absolute',
-                                                top: '-15px',
-                                                right: '-16px',
-                                                background: 'yellow',
-                                                padding: '2px 6px',
+                                                top: '1px',
+                                                right: '-6px',
+                                                background: '#f00',
+                                                padding: '2px 4px',
                                                 borderRadius: '50%',
-                                                fontSize: '13px',
-                                                color: 'red',
-                                                fontWeight: 'bold'
+                                                fontSize: '11px',
+                                                color: '#fff',
+                                                fontWeight: 'bold',
+                                                border: "3px solid #fff"
                                             }}>{activity.length}</span>
                                             : null
                                     }
@@ -313,6 +342,43 @@ export const Navbar = () => {
                         }
 
 
+                        {/* Setting Start */}
+                        <ClickAwayListener onClickAway={handleTooltipClose}>
+                            <div>
+                                <HtmlTooltip
+                                    onClose={handleTooltipClose}
+                                    open={openSetting}
+                                    disableFocusListener
+                                    disableHoverListener
+                                    disableTouchListener
+                                    title={
+                                        <React.Fragment>
+                                            <Stack spacing={3}>
+                                                <Stack direction={"row"} alignItems={"center"} spacing={"12px"} className='cursor-pointer'
+                                                    onClick={() => {
+                                                        handleTooltipClose()
+                                                    }}>
+                                                    <img src={PermissionIcon} />
+                                                    <Typography className='text-[#18283D] text-[14px]'>Permission</Typography>
+                                                </Stack>
+
+                                                <Stack direction={"row"} alignItems={"center"} spacing={"12px"} className='cursor-pointer'
+                                                    onClick={() => {
+                                                        navigate('/category')
+                                                        handleTooltipClose()
+                                                    }}>
+                                                    <img src={CategoryIcon} />
+                                                    <Typography className='text-[#18283D] text-[14px]'>Category</Typography>
+                                                </Stack>
+                                            </Stack>
+                                        </React.Fragment>
+                                    }>
+                                    <img src={SettingIcon} onClick={handleTooltipOpen} />
+                                </HtmlTooltip>
+                            </div>
+                        </ClickAwayListener>
+
+                        {/* Setting end */}
 
 
                         <span className='more-icon-menu cursor-pointer hidden text-[25px]' onClick={() => openNav()}>&#9776;</span>

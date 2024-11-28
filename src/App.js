@@ -73,6 +73,8 @@ import AddSuperMember from "./component/SuperAdmin/Members/AddSuperMember";
 import DocumentUpload from "./component/Mentees/DocumentUpload";
 import MentorMenteeProfile from "./component/mentorMenteeProfile";
 import ProfileView from "./component/Profile/ProfileView";
+import Category from "./component/category";
+import CategoryView from "./component/category/categoryView";
 
 function App() {
   const PrivateRoute = () => {
@@ -191,6 +193,8 @@ function App() {
           <Route path="/edit-report/:id" element={<EditReport />} />
           <Route path="/view-report/:id" element={<ViewReport />} />
           <Route path="/profileView" element={<MentorMenteeProfile />} />
+          <Route path="/category" element={<Category />} />
+          <Route path="/categoryView" element={<CategoryView />} />
         </Route>
       </Route>
 

@@ -432,7 +432,9 @@ export const requestStatusText = {
   accept: 'Accept',
   launched: 'Launched',
   cancel: 'Cancel',
-  Wating_for_response: "Wating for Response"
+  Wating_for_response: "Wating for Response",
+  active: "Active",
+  deactivated: "Deactivated"
 }
 
 export const requestStatusColor = {
@@ -459,6 +461,14 @@ export const requestStatusColor = {
   cancel: {
     bgColor: 'rgba(255, 231, 231, 1)',
     color: 'rgba(224, 56, 45, 1)'
+  },
+  active: {
+    bgColor: "rgba(235, 255, 243, 1)",
+    color: "rgba(22, 182, 129, 1)"
+  },
+  deactivated: {
+    bgColor: "rgba(207, 225, 255, 1)",
+    color: "rgba(29, 91, 191, 1)"
   }
 }
 
