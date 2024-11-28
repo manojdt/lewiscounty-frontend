@@ -717,6 +717,20 @@ input[type="range"]::-ms-thumb {
   ;
 }
 
+.notification-message .task_action_pass{
+  background-color: rgba(235, 255, 243, 1);
+  color: rgba(22, 182, 129, 1);
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.notification-message .task_action_fail{
+  background-color: rgba(255, 231, 231, 1);
+  color: rgba(224, 56, 45, 1);
+  border-radius: 20px;
+  font-size: 12px;
+}
+
 
 
 .notification-content {

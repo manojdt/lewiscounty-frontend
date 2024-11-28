@@ -4,6 +4,7 @@ import {
 
 import {
     getAllTasks,
+    getMenteeAllTask,
     getMenteeTaskfromMentor,
     getSpecificTask,
     updateTaskMark
@@ -16,6 +17,7 @@ const initialState = {
     taskList: [],
     task: {},
     menteeTask: [],
+    menteeProgramTask: [],
     loading: false,
     status: "",
     error: "",
@@ -118,6 +120,32 @@ export const taskSlice = createSlice({
                     error: action.error.message,
                 };
             });
+
+
+
+            builder
+            .addCase(getMenteeAllTask.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(getMenteeAllTask.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    status: '',
+                    menteeProgramTask: action.payload,
+                    loading: false,
+                };
+            })
+            .addCase(getMenteeAllTask.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
 
     },
 });

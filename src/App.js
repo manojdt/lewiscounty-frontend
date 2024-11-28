@@ -73,6 +73,7 @@ import AddSuperMember from "./component/SuperAdmin/Members/AddSuperMember";
 import DocumentUpload from "./component/Mentees/DocumentUpload";
 import MentorMenteeProfile from "./component/mentorMenteeProfile";
 import ProfileView from "./component/Profile/ProfileView";
+import MenteeTaskList from "./component/Tasks/MenteeTaskList";
 
 function App() {
   const PrivateRoute = () => {
@@ -174,6 +175,7 @@ function App() {
           <Route path="/mentees" element={<Mentees />} />
           <Route path="/mentee-details/:id" element={<ProfileView />} />
           <Route path="/mentee-tasks" element={<Tasks />} />
+          <Route path="/mentee-task_list/:id" element={<MenteeTaskList />} />
           <Route path="/mentee-tasks-details/:id" element={<TaskDetails />} />
           <Route path="/preview-mentee-tasks-details/:id" element={<PreviewTaskDetails />} />
 
