@@ -16,6 +16,7 @@ import { allowedDocTypes, allowedImagesTypes, allowedVideoTypes, programStatus, 
 import { useForm } from 'react-hook-form'
 import ToastNotification from '../../shared/Toast';
 import { getSpecificTask } from '../../services/task';
+import { getFiles } from '../../utils';
 
 
 export const TaskDetails = () => {
@@ -62,8 +63,6 @@ export const TaskDetails = () => {
             const fileExtension = TaskFileTypes.includes(fileExtensionName)
 
             if (fileExtension) {
-                // setError('file', { required: false })
-                // setTaskSolutionDocs(docs)
                 setImageError({ error: false, message: '' })
                 setTaskImages([...taskImages, { ...e.target.files, id: uuidv4() }]);
             } else {
@@ -93,24 +92,15 @@ export const TaskDetails = () => {
         }
 
         if (taskImages.length) {
-            const files = {}
             let bodyFormData = new FormData();
 
             taskImages.forEach((element, index) => {
                 bodyFormData.append('file_1', element[0])
-                // files[`file_1`] = element[0]
             });
 
             bodyFormData.append('task_solution', data.task_solution)
             bodyFormData.append('task_id', parseInt(params.id))
             bodyFormData.append('status', 'completed')
-
-            // const payload = {
-            //     task_solution: data.task_solution,
-            //     task_id: parseInt(params.id),
-            //     status: 'completed',
-            //     ...files
-            // }
             dispatch(submitProgramTaskDetails(bodyFormData))
         }
     }
@@ -177,6 +167,10 @@ export const TaskDetails = () => {
             }
         })
     }
+
+    const allFiles = getFiles(taskData?.files || [])
+
+    console.log('allFiles', allFiles, taskData.files)
 
 
     return (
@@ -292,10 +286,10 @@ export const TaskDetails = () => {
                                     </tr>
                                     <tr className="bg-white border-b dark:bg-gray-800 ">
                                         <th style={{ border: '1px solid rgba(29, 91, 191, 1)', background: '#fff' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
-                                        Program Duration
+                                            Program Duration
                                         </th>
                                         <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
-                                        {taskData.program_duration} hours
+                                            {taskData.program_duration} hours
                                         </td>
                                     </tr>
                                     <tr className="bg-white border-b  dark:bg-gray-800">
@@ -439,49 +433,145 @@ export const TaskDetails = () => {
                                         </p>
                                     )}
                                 </div>
+                                {
+                                    (taskData.status === TaskAllStatus.newtask || taskData.status === TaskAllStatus.pending) ?
 
-                                <div className='relative mt-12'>
+                                        <div className='relative mt-12'>
 
-                                    <div className="flex items-center justify-center w-full">
-                                        <label htmlFor="dropzone-file"
-                                            className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed cursor-pointer
+                                            <div className="flex items-center justify-center w-full">
+                                                <label htmlFor="dropzone-file"
+                                                    className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed cursor-pointer
                                                      bg-gray-50 dark:hover:bg-bray-800 dark:border-gray-600"
-                                            style={{
-                                                background: 'rgba(243, 247, 252, 1)', border: imageError.error || errors['file'] ? '2px dashed red' : 'none',
+                                                    style={{
+                                                        background: 'rgba(243, 247, 252, 1)', border: imageError.error || errors['file'] ? '2px dashed red' : 'none',
 
-                                                cursor: (taskData.status === TaskAllStatus.rejected || taskData.status === TaskAllStatus.completed) ? 'not-allowed' : 'pointer'
-                                            }} >
-                                            <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                                <img src={FileIcon} alt="FileIcon" />
-                                                <p className="mb-2 mt-3 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">
-                                                    Drop your Image ,video,  document or browse</span>
-                                                </p>
-                                                <p className="text-xs text-gray-500 dark:text-gray-400">
-                                                    supports: JPG,PNG,PDF,DOC
-                                                </p>
+                                                        cursor: (taskData.status === TaskAllStatus.newtask || taskData.status === TaskAllStatus.pending) ? 'pointer' : 'not-allowed'
+                                                    }} >
+                                                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                                                        <img src={FileIcon} alt="FileIcon" />
+                                                        <p className="mb-2 mt-3 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">
+                                                            Drop your Image ,video,  document or browse</span>
+                                                        </p>
+                                                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                                                            supports: JPG,PNG,PDF,DOC
+                                                        </p>
+                                                    </div>
+                                                    <input id="dropzone-file" type="file"
+                                                        name="file"
+
+                                                        {...imageField}
+
+                                                        onChange={(e) => {
+                                                            if (taskData.status === TaskAllStatus.newtask || taskData.status === TaskAllStatus.pending) return undefined
+                                                            else {
+                                                                imageField.onChange(e);
+                                                                handleImageUpload(e);
+                                                            }
+                                                        }}
+
+                                                        disabled={taskData.status === TaskAllStatus.rejected || taskData.status === TaskAllStatus.completed}
+
+                                                        className="hidden" />
+                                                </label>
+
                                             </div>
-                                            <input id="dropzone-file" type="file"
-                                                name="file"
+                                            {(imageError.error || errors['file']) && (
+                                                <p className="error" role="alert">
+                                                    {errors['file']?.message}
+                                                </p>
+                                            )}
+                                        </div>
 
-                                                {...imageField}
+                                        :
 
-                                                onChange={(e) => {
-                                                    imageField.onChange(e)
-                                                    handleImageUpload(e)
-                                                }}
+                                        <>
 
-                                                disabled={taskData.status === TaskAllStatus.rejected || taskData.status === TaskAllStatus.completed}
+                                            <div className='flex justify-between task-uploaded-images-container'>
+                                                {
+                                                    allFiles.files ?
 
-                                                className="hidden" />
-                                        </label>
+                                                        <div>
+                                                            <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Image</div>
+                                                            {
+                                                                allFiles.image.map((imges, index) =>
 
-                                    </div>
-                                    {(imageError.error || errors['file']) && (
-                                        <p className="error" role="alert">
-                                            {errors['file']?.message}
-                                        </p>
-                                    )}
-                                </div>
+                                                                    <div className='uploaded-images task-image-list' key={index}>
+                                                                        <a href={imges.fileurl} target='_blank'>
+                                                                            <div className='flex gap-3 w-[400px] justify-between items-center mt-5 px-4 py-4'
+                                                                                style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }}>
+                                                                                <div className='flex gap-3 items-center'>
+                                                                                    <img src={UploadIcon} alt="altlogo" />
+                                                                                    <span className='text-[12px] image-name'>{imges.name}</span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </a>
+                                                                    </div>
+                                                                )
+                                                            }
+                                                        </div>
+
+                                                        : null
+                                                }
+
+
+                                                {
+                                                    allFiles.video.length ?
+
+                                                        <div>
+                                                            <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Video</div>
+
+                                                            {
+                                                                allFiles.video.map((imges, index) =>
+                                                                    <div className='task-image-list flex gap-3 w-[400px] justify-between items-center mt-5 px-4 py-4'
+                                                                        style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }} key={index}>
+                                                                        <a href={imges.fileurl} target='_blank'>
+                                                                            <div className='flex gap-3 items-center'>
+                                                                                <img src={UploadIcon} alt="altlogo" />
+                                                                                <span className='text-[12px] image-name'>{imges.name}</span>
+                                                                            </div>
+                                                                        </a>
+                                                                    </div>
+                                                                )
+                                                            }
+                                                        </div>
+
+
+                                                        :
+
+                                                        null
+
+                                                }
+
+
+
+                                                {
+                                                    allFiles.doc.length ?
+
+                                                        <div>
+                                                            <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Files</div>
+
+                                                            {
+                                                                allFiles.doc.map((imges, index) =>
+                                                                    <div className='task-image-list flex gap-3 w-[400px] justify-between items-center mt-5 px-4 py-4'
+                                                                        style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }} key={index}>
+                                                                        <a href={imges.fileurl} target='_blank'>
+                                                                            <div className='flex gap-3 items-center'>
+                                                                                <img src={UploadIcon} alt="altlogo" />
+                                                                                <span className='text-[12px] image-name'>{imges.name}</span>
+                                                                            </div>
+                                                                        </a>
+                                                                    </div>
+                                                                )
+                                                            }
+                                                        </div>
+
+                                                        : null
+                                                }
+
+                                            </div>
+                                        </>
+                                }
+
 
                                 <div className='flex justify-between task-uploaded-images-container'>
                                     {
