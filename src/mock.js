@@ -2234,3 +2234,161 @@ export const JoinedMenteeColumn = [{
     width: 300,
     id: 1,
 }]
+
+
+
+export const AdminCategory = [
+    {
+        field: 'mentor_count',
+        headerName: 'Mentors',
+        flex: 1,
+        id: 0,
+    },
+    {
+        field: 'mentee_count',
+        headerName: 'Mentees',
+        flex: 1,
+        id: 0,
+    },
+    {
+        field: 'program_count',
+        headerName: 'Program',
+        flex: 1,
+        id: 0,
+    },
+]
+
+export const categoryViewMentors = [
+    {
+        field: 'first_name',
+        headerName: 'Name',
+        flex: 1,
+        id: 0,
+    },
+    {
+        field: 'areas_of_expertise',
+        headerName: 'Designation',
+        flex: 1,
+        id: 0,
+    },
+    {
+        field: 'skills',
+        headerName: 'Skills',
+        flex: 1,
+        id: 0,
+    },
+    {
+        field: 'phone_number',
+        headerName: 'Phone Number',
+        flex: 1,
+        id: 0,
+    },
+    {
+        field: 'email',
+        headerName: 'Email',
+        flex: 1,
+        id: 0,
+    },
+    {
+        field: 'location',
+        headerName: 'Location',
+        flex: 1,
+        id: 0,
+    },
+    {
+        field: 'years_of_experience',
+        headerName: 'Experience',
+        flex: 1,
+        id: 0,
+    },
+    {
+        field: 'attend_program',
+        headerName: 'Attend Program',
+        flex: 1,
+        id: 0,
+    },
+    {
+        field: 'certificates',
+        headerName: 'Certificates',
+        flex: 1,
+        id: 0,
+    }
+]
+
+export const categoryViewMentees = [
+    {
+        field: 'full_name',
+        headerName: 'Name',
+        flex: 1,
+        id: 0,
+    },
+    {
+        field: 'current_education',
+        headerName: 'Designation',
+        flex: 1,
+        id: 0,
+    },
+    {
+        field: 'phone_number',
+        headerName: 'Phone Number',
+        flex: 1,
+        id: 0,
+    },
+    {
+        field: 'email',
+        headerName: 'Email',
+        flex: 1,
+        id: 0,
+    },
+    {
+        field: 'location',
+        headerName: 'Location',
+        flex: 1,
+        id: 0,
+    },
+    // {
+    //     field: 'experience',
+    //     headerName: 'Experience',
+    //     flex: 1,
+    //     id: 0,
+    // },
+    {
+        field: 'enrolled_program',
+        headerName: 'Enrolled Program',
+        flex: 1,
+        id: 0,
+    },
+    {
+        field: 'certificates',
+        headerName: 'Certificates',
+        flex: 1,
+        id: 0,
+    }
+]
+
+export const categoryViewProgram = [
+    {
+        field: 'category_name',
+        headerName: 'Category',
+        flex: 1,
+        id: 0,
+    },
+    {
+        field: 'program_name',
+        headerName: 'Program Name',
+        flex: 1,
+        id: 0,
+    },
+    {
+        field: 'mentor_count',
+        headerName: 'Mentors',
+        flex: 1,
+        id: 0,
+    },
+    {
+        field: 'mentee_count',
+        headerName: 'Mentees',
+        flex: 1,
+        id: 0,
+    }
+]
