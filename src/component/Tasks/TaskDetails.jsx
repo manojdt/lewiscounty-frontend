@@ -434,7 +434,7 @@ export const TaskDetails = () => {
                                     )}
                                 </div>
                                 {
-                                    (taskData.status === TaskAllStatus.newtask || taskData.status === TaskAllStatus.pending) ?
+                                    (taskData.status === TaskAllStatus.inprogress || taskData.status === TaskAllStatus.newtask || taskData.status === TaskAllStatus.pending) ?
 
                                         <div className='relative mt-12'>
 
