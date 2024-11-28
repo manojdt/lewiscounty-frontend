@@ -11,7 +11,7 @@ import GoalProgress from './GoalProgress';
 import GoalPerformance from './GoalPerformance';
 import MenteeGoals from './MenteeGoals';
 
-import { deleteGoalInfo, getAllGoals, getGoalsCount, getGoalsHistory, getGoalsRequest, updateLocalGoalInfo } from '../../services/goalsInfo';
+import { deleteGoalInfo, getAllGoals, getGoalsCount, getGoalsHistory, getGoalsRequest, updateHistoryGoal, updateLocalGoalInfo } from '../../services/goalsInfo';
 import { goalDataStatus, goalPeriods, goalRequestColor, goalRequestStatus, goalStatus, goalStatusColor } from '../../utils/constant';
 import { goalsColumns, goalsHistoryColumn, goalsRequestColumn, menteeGoalsRequestColumn } from '../../mock';
 
@@ -25,8 +25,16 @@ import SuccessTik from '../../assets/images/blue_tik1x.png';
 import OverDeleteIcon from '../../assets/images/delete_1x.png'
 import CancelIcon from '../../assets/images/cancel1x.png'
 import EditIcon from '../../assets/images/Edit1x.png'
+import CompleteIcon from "../../assets/icons/Completed.svg"
+import CancelReqIcon from "../../assets/icons/cancelReqIcon.svg"
+import TickColorIcon from "../../assets/icons/tickColorLatest.svg"
+import ConnectIcon from '../../assets/images/Connectpop1x.png'
+import CloseReqPopup from "../../assets/icons/blackCloseIcon.svg"
+import CancelReq from "../../assets/icons/cancelRequest.svg"
 
 import './goal.css'
+import dayjs from 'dayjs';
+import { Button } from '../../shared';
 
 
 const Goals = () => {
@@ -86,6 +94,21 @@ const Goals = () => {
         }
     ]
 
+    const timeFrameList = [
+        {
+            label: "Month",
+            value: "month"
+        },
+        {
+            label: "Week",
+            value: "week"
+        },
+        {
+            label: "Day",
+            value: "day"
+        },
+    ]
+
     const handleClose = () => {
         setAnchorEl(null);
     };
@@ -118,7 +141,13 @@ const Goals = () => {
     const getAllGoalData = () => {
         dispatch(getGoalsCount())
         dispatch(getGoalsRequest())
-        dispatch(getGoalsHistory())
+        dispatch(getGoalsHistory({
+            status: "new",
+            // created_by: "mentee",
+            time_frame: "month",
+            page: 1,
+            limit: 10
+        }))
     }
 
     useEffect(() => {
@@ -310,6 +339,24 @@ const Goals = () => {
     const goalHistoryColumn = [
         ...goalsHistoryColumn,
         {
+            field: 'period',
+            headerName: 'Period',
+            flex: 1,
+            id: 1,
+            renderCell: (params) => {
+                return <div className='flex gap-2 items-center'>{`${params?.row?.period} ${params?.row?.period === 1 ? 'Month' : 'Months'}`}</div>
+            }
+        },
+        {
+            field: 'completed_date',
+            headerName: 'Completed Date',
+            flex: 1,
+            id: 1,
+            renderCell: (params) => {
+                return <div className='flex gap-2 items-center'>{params?.row?.completed_date ? dayjs(params?.row?.completed_date).format("DD-MM-YYYY") : "..."}</div>
+            }
+        },
+        {
             field: 'goal_status',
             headerName: 'Status',
             flex: 1,
@@ -319,11 +366,11 @@ const Goals = () => {
                     <div className='cursor-pointer flex items-center h-full relative'>
                         <span className='w-[80px] flex justify-center h-[30px] px-7'
                             style={{
-                                background: goalStatusColor[params.row.goal_status].bg, lineHeight: '30px',
-                                borderRadius: '3px', width: '110px', height: '34px', color: goalStatusColor[params.row.goal_status].color,
+                                background: goalRequestColor[params.row.status]?.bg, lineHeight: '30px',
+                                borderRadius: '3px', width: '110px', height: '34px', color: goalRequestColor[params.row.status]?.color,
                                 fontSize: '12px'
                             }}>
-                            {goalDataStatus[params.row.goal_status]}
+                            {goalRequestStatus[params.row.status]}
                         </span>
                     </div>
                 </>
@@ -355,6 +402,19 @@ const Goals = () => {
                         } className='!text-[12px]'>
                             <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
                             View
+                        </MenuItem>
+
+                        {
+                            params?.row?.status === "active" &&
+                            <MenuItem onClick={() => handleOpenConfirmPopup("complete")} className='!text-[12px]'>
+                                <img src={CompleteIcon} alt="CompleteIcon" field={params.id} className='pr-3 w-[30px]' />
+                                Complete
+                            </MenuItem>
+                        }
+
+                        <MenuItem onClick={() => handleOpenConfirmPopup("cancel")} className='!text-[12px]'>
+                            <img src={CancelReqIcon} alt="CancelReqIcon" field={params.id} className='pr-3 w-[30px]' />
+                            Cancel
                         </MenuItem>
                     </Menu>
                 </>
@@ -477,6 +537,83 @@ const Goals = () => {
     useEffect(() => {
         setGoals(goalsList)
     }, [goalsList])
+
+
+    // My Changes
+
+    const [historyTimeFrame, setHistoryTimeFrame] = React.useState("month")
+    const [confirmPopup, setConfirmPopup] = React.useState({
+        bool: false,
+        activity: false,
+        type: ""
+    })
+
+    const handleChangeHistoryTimeFrame = (value) => {
+        setHistoryTimeFrame(value)
+        dispatch(getGoalsHistory({
+            status: "new",
+            created_by: role,
+            time_frame: value,
+            page: 1,
+            limit: 10
+        }))
+    }
+
+    const handleOpenConfirmPopup = (type) => {
+        handleClose()
+        setConfirmPopup({
+            ...confirmPopup,
+            bool: true,
+            type: type
+        })
+    }
+
+    const handleCloseConfirmPopup = (type) => {
+        setConfirmPopup({
+            ...confirmPopup,
+            bool: false,
+            type: "",
+            activity: false
+        })
+    }
+
+    const handleUpdateHistoryGoal = () => {
+        const payload = {
+            id: seletedItem?.id,
+            action: confirmPopup?.type === "complete" ? "complete" : "abort",
+            start_date: dayjs(new Date()).format("YYYY-MM-DD")
+        }
+        dispatch(updateHistoryGoal(payload)).then((res) => {
+            if (res?.meta?.requestStatus === "fulfilled") {
+                setConfirmPopup({
+                    ...confirmPopup,
+                    bool: false,
+                    activity: true,
+                    type: ""
+                })
+
+                setTimeout(() => {
+                    setConfirmPopup({
+                        ...confirmPopup,
+                        bool: false,
+                        activity: false,
+                        type: ""
+                    })
+
+                    dispatch(getGoalsHistory({
+                        status: "new",
+                        created_by: role,
+                        time_frame: "month",
+                        page: 1,
+                        limit: 10
+                    }))
+                }, 2000)
+
+            }
+        })
+    }
+
+
 
     return (
         <div className="goals px-9 py-9">
@@ -659,15 +796,21 @@ const Goals = () => {
                                                                 <div className="relative flex gap-3 py-3 px-3"
                                                                     style={{ border: '1px solid rgba(24, 40, 61, 0.25)', background: 'rgba(238, 245, 255, 1)', borderRadius: '3px' }}>
                                                                     <img src={CalenderIcon} alt="CalenderIcon" />
-                                                                    <select className='focus:outline-none' style={{ background: 'rgba(238, 245, 255, 1)' }}>
-                                                                        <option>Month</option>
-                                                                        <option>Week</option>
-                                                                        <option>Day</option>
+
+                                                                    <select className='focus:outline-none' style={{ background: 'rgba(238, 245, 255, 1)' }}
+                                                                        value={historyTimeFrame}
+                                                                        onChange={(e) => handleChangeHistoryTimeFrame(e.target.value)}>
+                                                                        {
+                                                                            timeFrameList?.map((e) => {
+                                                                                return <option value={e?.value}>{e?.label}</option>
+                                                                            })
+                                                                        }
                                                                     </select>
+
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <DataTable rows={goalHistory} columns={goalHistoryColumn} handleSelectedRow={handleSelectedRow} hideFooter height={350} />
+                                                        <DataTable rows={goalHistory?.results} columns={goalHistoryColumn} handleSelectedRow={handleSelectedRow} hideFooter height={350} />
                                                     </div>
 
 
@@ -710,6 +853,79 @@ const Goals = () => {
                 </div>
             </div>
 
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={confirmPopup?.bool && confirmPopup?.type === "complete"}
+            >
+                <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
+                    <img src={ConnectIcon} alt="ConnectIcon" />
+                    {/* <span style={{ color: '#232323', fontWeight: 600, fontSize: '24px' }}>{followInfo.is_following ? 'UnFollow' : 'Follow'}</span> */}
+
+                    <div className='py-5'>
+                        <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 600, fontSize: '18px' }}>Are you sure want to Complete this goal?</p>
+                    </div>
+                    <div className='flex justify-center'>
+                        <div className="flex gap-6 justify-center align-middle">
+                            <Button btnName='Cancel' btnCategory="secondary" onClick={() => handleCloseConfirmPopup()} />
+                            <Button btnType="button" btnCls="w-[110px]" btnName={"Complete"} btnCategory="primary"
+                                onClick={() => handleUpdateHistoryGoal()}
+                            />
+                        </div>
+                    </div>
+                </div>
+
+            </Backdrop>
+
+            {/* cancel Request */}
+
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={confirmPopup?.bool && confirmPopup?.type === "cancel"}
+            >
+
+                <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] p-[12px] justify-center items-center">
+                    <div className='border border-[#E50027] rounded-[15px] h-[100%] w-[100%] justify-center items-center flex flex-col relative'>
+                        <div className='absolute top-[12px] right-[12px] cursor-pointer' onClick={() => handleCloseConfirmPopup()}>
+                            <img src={CloseReqPopup} />
+                        </div>
+                        <img src={CancelReq} alt="ConnectIcon" />
+
+                        <div className='py-5'>
+                            <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 600, fontSize: '18px' }}>Are you sure want to cancel this Request?</p>
+                        </div>
+                        <div className='flex justify-center'>
+                            <div className="flex gap-6 justify-center align-middle">
+                                <Button btnName='No' btnCategory="secondary"
+                                    btnCls="border !border-[#E50027] !text-[#E50027] w-[110px]" onClick={() => handleCloseConfirmPopup()} />
+                                <Button btnType="button" btnCls="w-[110px] !bg-[#E50027] !text-[#fff] border !border-[#E50027]" btnName={"Yes"}
+                                    btnCategory="secondary"
+                                    onClick={() => handleUpdateHistoryGoal()}
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </Backdrop>
+
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={confirmPopup?.activity}
+                onClick={() => false}
+            >
+                <div className='px-5 py-1 flex justify-center items-center'>
+                    <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
+                        style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
+                        <img src={SuccessTik} alt="SuccessTik" />
+                        <p className='text-white text-[12px]'>
+                            {
+                                confirmPopup?.type === "cancel" ? "Your New goal has been successfully canceled" : "Your goal has been successfully completed"
+                            }
+                        </p>
+                    </div>
+
+                </div>
+            </Backdrop>
         </div>
     )
 }

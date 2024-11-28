@@ -24,7 +24,7 @@ export const updateLocalGoalInfo = createAction('update/updateLocalGoalInfo')
 export const createGoal = createAsyncThunk(
     "createGoal",
     async (data) => {
-        const createGoal = await api.post("goals/create-goal", data);
+        const createGoal = await api.post("goals/create/goal", data);
         if (createGoal.status === 201 && createGoal.data) {
             return createGoal.data;
         }
@@ -48,9 +48,9 @@ export const getGoalInfo = createAsyncThunk(
 export const getGoalsCount = createAsyncThunk(
     "getGoalsCount",
     async () => {
-        const getAllGoalsCount = await api.get(`goals/goal-status-count`);
+        const getAllGoalsCount = await api.get(`/goals/goal/status/count`);
         if (getAllGoalsCount.status === 200 && getAllGoalsCount.data) {
-            return getAllGoalsCount.data;
+            return getAllGoalsCount?.data?.data;
         }
         return getAllGoalsCount
     }
@@ -62,7 +62,7 @@ export const updateGoalStatus = createAsyncThunk(
     async (data) => {
         const updateGoalStatusValue = await api.put('goals/update-goal-status', data);
         if (updateGoalStatusValue.status === 200 && updateGoalStatusValue.data) {
-            return { ...updateGoalStatusValue.data, actionstatus: data.action  } ;
+            return { ...updateGoalStatusValue.data, actionstatus: data.action };
         }
         return updateGoalStatusValue
     }
@@ -121,6 +121,7 @@ export const getGoalsOverAllData = createAsyncThunk(
 export const getGoalsRequest = createAsyncThunk(
     "getGoalsRequest",
     async () => {
+
         const programRequest = await api.get('goals/goals-request');
         if (programRequest.status === 200 && programRequest.data) {
             return programRequest.data;
@@ -132,8 +133,13 @@ export const getGoalsRequest = createAsyncThunk(
 
 export const getGoalsHistory = createAsyncThunk(
     "getGoalsHistory",
-    async () => {
-        const goalsHistory = await api.get('goals/goals-history');
+    async (query) => {
+        let filteredQuery = Object.fromEntries(
+            Object.entries(query).filter(([key, value]) => !(key === "search" && value.trim().length === 0) &&
+                !(key === "created_by" && value === "mentee"))
+        );
+        let queryString = new URLSearchParams(filteredQuery).toString()
+        const goalsHistory = await api.get(`goals/get/all/goals?${queryString}`);
         if (goalsHistory.status === 200 && goalsHistory.data) {
             return goalsHistory.data;
         }
@@ -158,11 +164,23 @@ export const getRecentGoalActivity = createAsyncThunk(
 export const getMenteeGoals = createAsyncThunk(
     "getMenteeGoals",
     async (queryString = '') => {
-        const query = queryString !== '' ? `?status=${queryString}`: ''
+        const query = queryString !== '' ? `?status=${queryString}` : ''
         const menteeGoals = await api.get(`goals/mentee-goals${query}`);
         if (menteeGoals.status === 200 && menteeGoals.data) {
             return menteeGoals.data;
         }
         return menteeGoals
+    }
+);
+
+
+export const updateHistoryGoal = createAsyncThunk(
+    "updateHistoryGoal",
+    async (data) => {
+        const updateHistoryGoal = await api.put(`goals/update/goal`, data);
+        if (updateHistoryGoal.status === 200 && updateHistoryGoal.data) {
+            return updateHistoryGoal.data;
+        }
+        return updateHistoryGoal
     }
 );

@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createGoal, updateGoal } from '../../services/goalsInfo';
 import { Backdrop, CircularProgress } from '@mui/material';
 import { goalPeriods } from '../../utils/constant';
+import dayjs from 'dayjs';
 
 
 export default function CreateGoal({ open, handleCloseModal, seletedItem, editMode }) {
@@ -25,19 +26,18 @@ export default function CreateGoal({ open, handleCloseModal, seletedItem, editMo
     } = useForm();
 
     const onSubmit = (data) => {
-        let date = new Date(data.start_date), mnth = ("0" + (date.getMonth() + 1)).slice(-2), day = ("0" + date.getDate()).slice(-2);
-        date = [date.getFullYear(), mnth, day].join("-")
 
         let apiData = {
-            ...data,
-            start_date: date,
-            period: parseInt(data.period)
+            goal_name: data?.goal_name,
+            designation: data?.goal_designation,
+            goal_description: data?.goal_description,
+            period: parseInt(data.period),
+            start_date: dayjs(data?.start_date).format("YYYY-MM-DD")
         }
+
         if (editMode) {
             apiData = {
                 ...apiData,
-                start_date: date,
-                period: parseInt(data.period),
                 id: seletedItem.id
             }
             dispatch(updateGoal(apiData))
@@ -69,8 +69,8 @@ export default function CreateGoal({ open, handleCloseModal, seletedItem, editMo
     const handleDateClick = () => {
         setTimeout(() => {
             document.querySelector('.p-datepicker')?.classList.add('goals-date')
-        },300)
-        
+        }, 300)
+
     }
 
     useEffect(() => {

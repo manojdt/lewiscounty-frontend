@@ -269,6 +269,7 @@ export const goalDataStatus = {
   ongoing: 'Ongoing',
   completed: 'Completed',
   aborted: 'Aborted',
+  new: "New"
 }
 
 export const goalStatusColor = {

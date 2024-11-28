@@ -22,9 +22,9 @@ import { Button } from '../../shared'
 import { useNavigate, useParams } from 'react-router-dom'
 import MuiModal from '../../shared/Modal';
 import { useDispatch, useSelector } from 'react-redux'
-import { Backdrop, CircularProgress } from '@mui/material'
+import { Backdrop, CircularProgress, Stack, Typography } from '@mui/material'
 import { getGoalInfo, updateGoalStatus } from '../../services/goalsInfo'
-import { goalDataStatus, goalPeriods, goalStatus, requestStatus } from '../../utils/constant'
+import { goalDataStatus, goalPeriods, goalRequestStatus, goalStatus, requestStatus } from '../../utils/constant'
 import { getCategoryList, updateGoalRequest, updateLocalRequest } from '../../services/request'
 import DataTable from '../../shared/DataGrid'
 import { categoryColumns } from '../../mock'
@@ -387,11 +387,11 @@ const ViewGoal = ({ type = '' }) => {
             {
                 Object.keys(goalInfo).length && !loading ?
                     <div className='px-3 py-5' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
-                        <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
+                        {/* <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
                             <div className='flex gap-5 items-center text-[20px]'>
                                 <p>Goals </p>
                             </div>
-                        </div>
+                        </div> */}
 
                         <div className='px-4' style={{ border: '1px solid rgba(223, 237, 255, 1)', borderRadius: '10px' }}>
 
@@ -437,36 +437,35 @@ const ViewGoal = ({ type = '' }) => {
                                     }
 
                                     <div className='py-7'>
-                                        <table className="w-[700px] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 !bg-white">
+                                        <table className="w-[100%] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 !bg-white">
                                             <tbody>
                                                 <tr className="bg-white text-black">
-                                                    <th scope="row" className="px-6 py-4 font-medium whitespace-nowrap w-[20px] ">
+                                                    <th scope="row" className="px-0 py-4 font-medium whitespace-nowrap w-[40px] ">
                                                         Start date:
                                                     </th>
-                                                    <td className="px-6 py-4">
+                                                    <td className="px-0 py-4">
                                                         {goalInfo.start_date}
                                                     </td>
                                                 </tr>
                                                 <tr className="bg-white text-black">
-                                                    <th scope="row" className="px-6 py-4 font-medium  whitespace-nowrap w-[20px]">
+                                                    <th scope="row" className="px-0 py-4 font-medium  whitespace-nowrap w-[40px]">
                                                         Period:
                                                     </th>
-                                                    <td className="px-6 py-4">
+                                                    <td className="px-0 py-4">
                                                         {goalPeriods.find(goalPeriod => parseInt(goalPeriod.value) === parseInt(goalInfo.period))?.name}
                                                     </td>
                                                 </tr>
                                                 <tr className="bg-white text-black">
-                                                    <th scope="row" className="px-6 py-4 font-medium whitespace-nowrap w-[20px]">
+                                                    <th scope="row" className="px-0 py-4 font-medium whitespace-nowrap w-[40px]">
                                                         Status :
                                                     </th>
-                                                    <td className="px-6 py-4">
-                                                        {goalDataStatus[goalInfo.goal_status]}
+                                                    <td className="px-0 py-4">
+                                                        {goalRequestStatus[goalInfo.status]}&nbsp;&nbsp;Goal
                                                     </td>
                                                 </tr>
-
-
                                             </tbody>
                                         </table>
+                                        <Typography className="text-[18px] mt-[20px] text-[#3E3E3E]">{goalInfo?.designation}</Typography>
                                     </div>
                                     <div className='leading-8'>
                                         {goalInfo.goal_description}
@@ -536,7 +535,6 @@ const ViewGoal = ({ type = '' }) => {
                                             </>
                                         }
 
-
                                         {
                                             (role === 'admin' && goalInfo.goal_status !== 'completed') ?
 
@@ -592,10 +590,21 @@ const ViewGoal = ({ type = '' }) => {
 
                                                 : null
                                         }
-
-
-
-
+                                        {
+                                            (role === "mentee" && ["new", "pending"].includes(goalInfo?.status)) &&
+                                            <Stack direction={"row"} alignItems={"center"} spacing={2}>
+                                                
+                                                    <Button
+                                                        onClick={() => navigate('/goals')}
+                                                        btnName={'Cancel'} btnCategory="secondary"
+                                                        btnCls="border !border-[#E0382D] !text-[#E0382D] w-[140px] bg-[#fff]"/>
+                                                
+                                                    <Button
+                                                        onClick={() => navigate('/goals')}
+                                                        btnName={'Complete'} btnCategory="primary" btnCls="w-[140px]"/>
+                                                
+                                            </Stack>
+                                        }
                                     </div>
                                 </div>
                             </div>

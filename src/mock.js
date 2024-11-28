@@ -998,18 +998,7 @@ export const goalsHistoryColumn = [
         flex: 1,
         id: 1,
     },
-    {
-        field: 'period',
-        headerName: 'Period',
-        flex: 1,
-        id: 1,
-    },
-    {
-        field: 'end_date',
-        headerName: 'End Date',
-        flex: 1,
-        id: 1,
-    },
+
 ];
 
 
