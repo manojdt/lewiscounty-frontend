@@ -119,7 +119,7 @@ export default function RecentRequests({ data = [] }) {
             id: 0,
             renderCell: (params) => {
                 return <>
-                    <div className="pt-1 cursor-pointer" style={{ marginLeft: 'auto' }}
+                    <div className="pt-1 cursor-pointer" style={{ marginLeft: 'auto', marginTop:'20px' }}
                         onClick={(e) => handleMoreClick(e, params.row)}
                     ><img src={MoreIcon} alt="MoreIcon" />
                     </div>
@@ -159,6 +159,8 @@ export default function RecentRequests({ data = [] }) {
         getRecentRequest()
     }, [])
 
+    console.log('programRequest', programRequest)
+
     return (
         <div className='recent-request' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }}>
             <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
@@ -171,7 +173,7 @@ export default function RecentRequests({ data = [] }) {
             <div className="content flex gap-4 py-5 px-5 overflow-x-auto">
 
                 <DataTable
-                    rows={programRequest}
+                    rows={programRequest?.results || []}
                     columns={recentRequestColumn}
                     height={'460px'}
                     hideCheckbox
