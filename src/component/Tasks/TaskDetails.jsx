@@ -462,10 +462,12 @@ export const TaskDetails = () => {
                                                         {...imageField}
 
                                                         onChange={(e) => {
-                                                            if (taskData.status === TaskAllStatus.newtask || taskData.status === TaskAllStatus.pending) return undefined
-                                                            else {
+                                                            if (taskData.status === TaskAllStatus.inprogress || taskData.status === TaskAllStatus.newtask || taskData.status === TaskAllStatus.pending) {
                                                                 imageField.onChange(e);
                                                                 handleImageUpload(e);
+                                                            }
+                                                            else {
+                                                              return undefined
                                                             }
                                                         }}
 
