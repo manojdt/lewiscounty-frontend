@@ -1041,23 +1041,23 @@ export default function ProgramDetails() {
                                                                 </>
 
                                                                 :
-                                                                (Object.keys(programdetails.cancel_reason).length || Object.keys(programdetails.reschedule_reason
-                                                                ).length) ?
+                                                                // (Object.keys(programdetails.cancel_reason).length || Object.keys(programdetails.reschedule_reason
+                                                                // ).length) ?
 
-                                                                    <div className='flex gap-4 pt-10' >
-                                                                        <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                                            border: "1px solid #E0382D",
-                                                                            borderRadius: '5px',
-                                                                            color: '#E0382D',
-                                                                            cursor: 'not-allowed'
-                                                                        }}
-                                                                            onClick={() => undefined}
-                                                                        >
-                                                                            <i className="pi pi-clock" style={{ color: 'red' }}></i>
-                                                                            <span className='pl-3'>Waiting for admin approval</span>
-                                                                        </button>
-                                                                    </div>
-                                                                    :
+                                                                //     <div className='flex gap-4 pt-10' >
+                                                                //         <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                                //             border: "1px solid #E0382D",
+                                                                //             borderRadius: '5px',
+                                                                //             color: '#E0382D',
+                                                                //             cursor: 'not-allowed'
+                                                                //         }}
+                                                                //             onClick={() => undefined}
+                                                                //         >
+                                                                //             <i className="pi pi-clock" style={{ color: 'red' }}></i>
+                                                                //             <span className='pl-3'>Waiting for admin approval</span>
+                                                                //         </button>
+                                                                //     </div>
+                                                                //     :
 
                                                                     programApprovalStage[programdetails.status] ?
                                                                         <div className='flex gap-4 pt-10' >
