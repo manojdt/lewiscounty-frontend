@@ -1,15 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Backdrop, CircularProgress } from '@mui/material';
+import { Backdrop, CircularProgress, Menu, MenuItem } from '@mui/material';
 import { useForm } from 'react-hook-form';
 
 import api from '../../../services/api';
 import { menteeNotJoinCondition, menteeProgramStatus, pipeUrls, programActionStatus, programAdminRejected, programApprovalStage, programCancelled, programCompleted, programInProgress, programNotLaunched, programNotStarted, programRequestApproval, programWaitingActiveApproval, requestStatus } from '../../../utils/constant';
 import { getMenteeJoinedInProgram, getProgramDetails, getSpecificProgramDetails, updateProgram } from '../../../services/userprograms';
-import { updateLocalRequest, updateProgramMenteeRequest, updateProgramRequest } from '../../../services/request';
+import { programCancelRequest, programRescheduleRequest, updateLocalRequest, updateProgramMenteeRequest, updateProgramRequest } from '../../../services/request';
 
 import UserImage from "../../../assets/icons/user-icon.svg";
+import ShareIcon from '../../../assets/images/share1x.png';
+import DiscussionsIcon from '../../../assets/images/discussions1x.png';
+import RescheduleIcon from '../../../assets/images/reschedule1x.png';
+import MoreIcon from '../../../assets/images/more1x.png';
+import AbortIcon from '../../../assets/images/abort1x.png';
 import LocationIcon from '../../../assets/images/Location1x.png';
 import CalendarIcon from '../../../assets/images/calender_1x.png';
 import DoubleArrowIcon from '../../../assets/images/double_arrow 1x.png';
@@ -18,23 +23,31 @@ import CertificateIcon from '../../../assets/images/certficate1x.png';
 import QuoteIcon from '../../../assets/images/quotes1x.png';
 import MuiModal from '../../../shared/Modal';
 import SuccessTik from '../../../assets/images/blue_tik1x.png';
+import LinkIcon from '../../../assets/images/link1x.png';
 import TickColorIcon from '../../../assets/icons/tickColorLatest.svg'
 import TimeHistoryIcon from '../../../assets/icons/time-history-icon.svg'
 import CancelIcon from '../../../assets/images/cancel1x.png'
 
 import { Button } from '../../../shared';
-import { dateFormat, formatDateTimeISO } from '../../../utils';
+import { convertDateFormat, dateFormat, formatDateTimeISO } from '../../../utils';
 import './program-details.css'
 import Ratings from '../Ratings';
 import { getUserProfile } from '../../../services/profile';
 import DataTable from '../../../shared/DataGrid';
 import { JoinedMenteeColumn } from '../../../mock';
+import ToastNotification from '../../../shared/Toast';
+import { Calendar } from 'primereact/calendar';
 
 
 export default function ProgramDetails() {
     const [loading, setLoading] = useState({ initial: true, join: false })
+    const calendarRef = useRef([])
     const [taskJoined, setTaskJoined] = useState(false)
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [message, setMessage] = useState(false);
+    const [dateFormatted, setDateFormat] = useState({})
     const [taskJoinedRequest, setTaskJoinedRequest] = useState(false)
+    const [moreMenuModal, setMoreMenuModal] = useState({ share: false, reschedule: false })
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const params = useParams();
@@ -50,6 +63,7 @@ export default function ProgramDetails() {
     const { loading: requestLoading, status: requestProgramStatus, error: requestError } = useSelector(state => state.requestList);
     const role = userdetails.data.role || ''
     const rating = programdetails?.mentor_rating === 0 ? 3 : programdetails?.mentor_rating;
+    const url = `${process.env.REACT_APP_SITE_URL}/program-details/${params.id}`
 
     const tabs = [
         {
@@ -86,6 +100,14 @@ export default function ProgramDetails() {
         },
 
     ]
+
+    const open = Boolean(anchorEl);
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
 
     const handleTab = (key) => {
         setActiveTab(key)
@@ -222,6 +244,85 @@ export default function ProgramDetails() {
         }
     ]
 
+    const handleMenu = (key) => {
+        switch (key) {
+            case 'create-task':
+                navigate('/assign-mentees/1')
+                handleClose()
+                break;
+            case 'share':
+                setMoreMenuModal({ ...moreMenuModal, share: true });
+                handleClose()
+                break
+            case 'reschedule':
+                setMoreMenuModal({ ...moreMenuModal, reschedule: true })
+                handleClose()
+                break;
+
+            case 'cancel':
+                setMoreMenuModal({ ...moreMenuModal, reschedule: false, cancel: true })
+                handleClose()
+                break;
+            case 'discussion':
+                break;
+            default:
+                break
+        }
+    }
+
+    const handleMoreMenuClosePopup = () => {
+        setMoreMenuModal({ share: false, reschedule: false, cancel: false })
+        reset()
+    }
+
+    const handleDateClick = () => {
+        setTimeout(() => {
+            document.querySelector('.p-datepicker')?.classList.add('program-date-picker')
+        }, 200)
+
+    }
+
+    const handleCopy = () => {
+
+        navigator.clipboard.writeText(url)
+            .then(() => {
+                setMessage(true);
+            })
+            .catch((err) => {
+                console.error('Error copying text: ', err);
+                setMessage(false);
+            });
+    };
+
+    const handleCloseNotify = () => {
+        setMessage(false)
+    }
+
+    console.log('error', error)
+    const onSubmit = (data) => {
+        console.log('Data', data)
+        if (moreMenuModal.reschedule) {
+
+            const formattedStartDate = convertDateFormat(data.reschedule_start_date);
+            const formattedEndDate = convertDateFormat(data.reschedule_end_date);
+
+            const payload = {
+                reschedule_start_date: formattedStartDate,
+                reschedule_end_date: formattedEndDate,
+                program_id: params.id,
+                reason: data.reason
+            }
+            dispatch(programRescheduleRequest(payload))
+        }
+
+        if (moreMenuModal.cancel) {
+            dispatch(programCancelRequest({
+                program_id: params.id,
+                reason: data.cancel_reason
+            }))
+        }
+    }
+
     useEffect(() => {
         if (ratingModal.success) {
             setTimeout(() => {
@@ -291,6 +392,17 @@ export default function ProgramDetails() {
                 dispatch(updateLocalRequest({ status: '' }))
             }, [2000])
         }
+
+        if (requestProgramStatus === requestStatus.reschedule || requestProgramStatus === requestStatus.cancel) {
+            setMoreMenuModal({ share: false, reschedule: false })
+            reset()
+            setDateFormat({})
+            setTimeout(() => {
+                dispatch(getProgramDetails(parseInt(params.id)))
+                dispatch(updateLocalRequest({ status: '' }))
+
+            }, 3000)
+        }
     }, [requestProgramStatus])
 
     useEffect(() => {
@@ -315,6 +427,9 @@ export default function ProgramDetails() {
         }
     }, [loading.join])
 
+    const dateStartField = moreMenuModal.reschedule ? register('reschedule_start_date', { required: "This field is required" }) : undefined
+    const dateEndField = moreMenuModal.reschedule ? register('reschedule_end_date', { required: "This field is required" }) : undefined
+
 
     return (
         <div className="px-9 my-6 grid">
@@ -338,6 +453,22 @@ export default function ProgramDetails() {
             </Backdrop>
 
             <Ratings open={ratingModal.modal} modalSuccess={ratingModalSuccess} modalClose={ratingModalClose} />
+
+
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={requestProgramStatus === requestStatus.reschedule || requestProgramStatus === requestStatus.cancel}
+            >
+                <div className='px-5 py-1 flex justify-center items-center'>
+                    <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
+                        style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
+                        <img src={SuccessTik} alt="SuccessTik" />
+                        <p className='text-white text-[12px]'>Program {requestProgramStatus === requestStatus.reschedule ? 'Rescheduled ' :
+                            requestProgramStatus === requestStatus.cancel ? 'Cancelled ' : ''
+                        } Successfully</p>
+                    </div>
+                </div>
+            </Backdrop>
 
             {/* Program Request Updated Popup */}
             <Backdrop
@@ -399,64 +530,69 @@ export default function ProgramDetails() {
             </Backdrop>
 
             {/* Program Cancel Popup */}
-            <MuiModal modalSize='md' modalOpen={confirmPopup.cancel} modalClose={resetAcceptCancelPopup} noheader>
+            {
+                confirmPopup.cancel &&
 
-                <div className='px-5 py-5'>
-                    <div className='flex justify-center flex-col gap-5  mt-4 mb-4'
-                        style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '10px', }}>
-                        <div className='flex justify-between px-3 py-4 items-center' style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
-                            <p className='text-[18px]' style={{ color: 'rgba(0, 0, 0, 1)' }}>Reject Request Reason </p>
-                            <img className='cursor-pointer' onClick={resetAcceptCancelPopup} src={CancelIcon} alt="CancelIcon" />
-                        </div>
+                <MuiModal modalSize='md' modalOpen={confirmPopup.cancel} modalClose={resetAcceptCancelPopup} noheader>
 
-                        <div className='px-5'>
-                            {
-                                requestError !== '' ? <p className="error" role="alert">{requestError}</p> : null
-                            }
+                    <div className='px-5 py-5'>
+                        <div className='flex justify-center flex-col gap-5  mt-4 mb-4'
+                            style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '10px', }}>
+                            <div className='flex justify-between px-3 py-4 items-center' style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
+                                <p className='text-[18px]' style={{ color: 'rgba(0, 0, 0, 1)' }}>Reject Request Reason </p>
+                                <img className='cursor-pointer' onClick={resetAcceptCancelPopup} src={CancelIcon} alt="CancelIcon" />
+                            </div>
+
+                            <div className='px-5'>
+                                {
+                                    requestError !== '' ? <p className="error" role="alert">{requestError}</p> : null
+                                }
 
 
-                            <form onSubmit={handleSubmit(handleCancelReasonPopupSubmit)}>
-                                <div className='relative pb-8'>
-                                    <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
-                                        Reject Request Reason
-                                    </label>
+                                <form onSubmit={handleSubmit(handleCancelReasonPopupSubmit)}>
+                                    <div className='relative pb-8'>
+                                        <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
+                                            Reject Request Reason
+                                        </label>
 
-                                    <div className='relative'>
-                                        <textarea
-                                            {...register('cancel_reason', {
-                                                required: "This field is required",
-                                            })}
-                                            id="message" rows="4" className={`block p-2.5 input-bg w-full text-sm text-gray-900  border
-                                               focus-visible:outline-none focus-visible:border-none`}
-                                            style={{ border: '2px solid rgba(229, 0, 39, 1)' }}
-                                            placeholder={''}
-                                        ></textarea>
-                                        {errors['cancel_reason'] && (
-                                            <p className="error" role="alert">
-                                                {errors['cancel_reason'].message}
-                                            </p>
-                                        )}
+                                        <div className='relative'>
+                                            <textarea
+                                                {...register('cancel_reason', {
+                                                    required: "This field is required",
+                                                })}
+                                                id="message" rows="4" className={`block p-2.5 input-bg w-full text-sm text-gray-900  border
+                                    focus-visible:outline-none focus-visible:border-none`}
+                                                style={{ border: '2px solid rgba(229, 0, 39, 1)' }}
+                                                placeholder={''}
+                                            ></textarea>
+                                            {errors['cancel_reason'] && (
+                                                <p className="error" role="alert">
+                                                    {errors['cancel_reason'].message}
+                                                </p>
+                                            )}
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div className='flex justify-center gap-5 items-center pt-5 pb-10'>
-                                    <Button btnName='Cancel' btnCls="w-[18%]" btnCategory="secondary" onClick={resetAcceptCancelPopup} />
-                                    <button
-                                        type='submit'
-                                        className='text-white py-3 px-7 w-[18%]'
-                                        style={{ background: 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)', borderRadius: '3px' }}>
-                                        Submit
-                                    </button>
-                                </div>
-                            </form>
+                                    <div className='flex justify-center gap-5 items-center pt-5 pb-10'>
+                                        <Button btnName='Cancel' btnCls="w-[18%]" btnCategory="secondary" onClick={resetAcceptCancelPopup} />
+                                        <button
+                                            type='submit'
+                                            className='text-white py-3 px-7 w-[18%]'
+                                            style={{ background: 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)', borderRadius: '3px' }}>
+                                            Submit
+                                        </button>
+                                    </div>
+                                </form>
+
+                            </div>
+
 
                         </div>
-
 
                     </div>
+                </MuiModal>
+            }
 
-                </div>
-            </MuiModal>
 
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -486,12 +622,228 @@ export default function ProgramDetails() {
                 </div>
             </Backdrop>
 
+
+            {
+                message &&
+                <ToastNotification openToaster={message} message={'URL copied!'} handleClose={handleCloseNotify} toastType={'success'} />
+            }
+
+            <MuiModal modalOpen={moreMenuModal.share} modalClose={handleMoreMenuClosePopup} noheader>
+                <div className='px-5 py-1 flex justify-center items-center' style={{ border: '1px solid rgba(29, 91, 191, 1)' }}>
+                    <div className='flex justify-center items-center flex-col gap-8 py-10 px-20 mt-5'
+                    >
+                        <div>{programdetails?.program_name}</div>
+                        <input className='input-bg text-[12px] h-[60px] w-[396px] px-5' style={{ borderRadius: '27px' }} disabled
+                            value={url} />
+                        <div className='flex gap-7'>
+                            <img className='cursor-pointer' src={LinkIcon} alt="LinkIcon" onClick={handleCopy} />
+                        </div>
+
+                        <div className="flex  justify-center align-middle pt-4">
+                            <Button btnType="button" onClick={handleMoreMenuClosePopup} btnName='Close' btnCategory="primary" />
+                        </div>
+                    </div>
+
+                </div>
+            </MuiModal>
+
+            {
+                moreMenuModal.reschedule &&
+
+                <MuiModal modalOpen={moreMenuModal.reschedule} modalClose={handleMoreMenuClosePopup} noheader>
+                    <div style={{ border: '1px solid rgba(29, 91, 191, 1)' }}>
+                        <div className='flex justify-between items-center px-3 py-4 mx-1' style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
+                            <div>Reschedule {programdetails.name}</div>
+                            <img className='cursor-pointer' onClick={() => setMoreMenuModal({ share: false, reschedule: false })} src={CancelIcon} alt="CancelIcon" />
+                        </div>
+                        <form onSubmit={handleSubmit(onSubmit)}>
+                            <div className='px-4 py-7'>
+
+                                <div className="flex flex-wrap gap-4">
+
+                                    <div className={`relative mb-6 w-[48%]`} >
+                                        <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor={'Reschedule Date'}>
+                                            Reschedule Start Date
+                                        </label>
+
+                                        <div className='relative input-bg'>
+                                            <Calendar
+                                                className='calendar-control w-full'
+                                                {...dateStartField}
+                                                value={dateFormatted['reschedule_start_date']}
+                                                onChange={(e) => {
+                                                    dateStartField.onChange(e)
+                                                    setDateFormat({ reschedule_end_date: '', reschedule_start_date: e.value })
+                                                    calendarRef?.current[0]?.hide()
+                                                }}
+                                                onClick={handleDateClick}
+                                                disabled={false}
+                                                minDate={new Date()}
+                                                maxDate={programdetails?.status === "yettostart" ? "" : new Date(programdetails?.end_date)}
+                                                showTime={false}
+                                                hourFormat="12"
+                                                dateFormat="dd/mm/yy"
+                                                style={{ width: '60%' }}
+                                                ref={el => (calendarRef.current[0] = el)}
+                                                viewDate={programdetails?.status === "yettostart" ? new Date() : new Date(programdetails?.start_date)}
+                                            />
+
+                                            <img className='absolute top-5 right-2 cursor-pointer' src={CalendarIcon} alt="CalendarIcon"
+                                                onClick={(e) => {
+                                                    handleDateClick();
+                                                    calendarRef?.current[0]?.show();
+                                                }}
+                                            />
+                                        </div>
+                                        {errors['reschedule_start_date'] && (
+                                            <p className="error" role="alert">
+                                                {errors['reschedule_start_date'].message}
+                                            </p>
+                                        )}
+
+                                    </div>
+
+                                    <div className={`relative mb-6 w-[48%]`} >
+                                        <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor={'Reschedule Date'}>
+                                            Reschedule End Date
+                                        </label>
+
+                                        <div className='relative input-bg'>
+                                            <Calendar
+                                                className='calendar-control w-full'
+                                                {...dateEndField}
+                                                value={dateFormatted['reschedule_end_date']}
+                                                onChange={(e) => {
+                                                    dateEndField.onChange(e)
+                                                    setDateFormat({ ...dateFormatted, ['reschedule_end_date']: e.value })
+                                                    calendarRef?.current[1]?.hide()
+                                                }}
+                                                onClick={handleDateClick}
+                                                disabled={false}
+                                                minDate={dateFormatted.reschedule_start_date ? new Date(dateFormatted.reschedule_start_date) : new Date()}
+                                                maxDate={programdetails?.status === "yettostart" ? "" : new Date(programdetails?.end_date)}
+                                                showTime={false}
+                                                hourFormat="12"
+                                                dateFormat="dd/mm/yy"
+                                                style={{ width: '60%' }}
+                                                ref={el => (calendarRef.current[1] = el)}
+                                                viewDate={new Date(dateFormatted.reschedule_start_date ?? programdetails?.start_date)}
+                                            />
+
+                                            <img className='absolute top-5 right-2 cursor-pointer' src={CalendarIcon} alt="CalendarIcon"
+                                                onClick={(e) => {
+                                                    handleDateClick();
+                                                    calendarRef?.current[1]?.show();
+
+                                                }}
+                                            />
+                                        </div>
+                                        {errors['reschedule_end_date'] && (
+                                            <p className="error" role="alert">
+                                                {errors['reschedule_end_date'].message}
+                                            </p>
+                                        )}
+                                    </div>
+
+                                    <div className={`relative mb-6 w-full`} >
+                                        <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor={'Comments'}>
+                                            Comments
+                                        </label>
+                                        <textarea id="message" rows="4" className={`block p-2.5 input-bg w-full text-sm text-gray-900  rounded-lg border
+                                                                   focus:visible:outline-none focus:visible:border-none}`}
+                                            placeholder={''}
+                                            {...register('reason', { required: "This field is required" })}></textarea>
+
+                                        {errors['reason'] && (
+                                            <p className="error" role="alert">
+                                                {errors['reason'].message}
+                                            </p>
+                                        )}
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div className="flex gap-6 justify-center align-middle py-5">
+                                <Button btnName='Cancel' btnCategory="secondary" onClick={() => setMoreMenuModal({ share: false, reschedule: false })} />
+                                <Button btnType="submit" btnName='Submit' btnCategory="primary" />
+                            </div>
+                        </form>
+                    </div>
+                </MuiModal>
+
+            }
+
+            {
+                moreMenuModal.cancel &&
+
+                <MuiModal modalSize='md' modalOpen={moreMenuModal.cancel} modalClose={handleMoreMenuClosePopup} noheader>
+
+                    <div className='px-5 py-5'>
+                        <div className='flex justify-center flex-col gap-5  mt-4 mb-4'
+                            style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '10px', }}>
+                            <div className='flex justify-between px-3 py-4 items-center' style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
+                                <p className='text-[18px]' style={{ color: 'rgba(0, 0, 0, 1)' }}>Cancel Request Reason </p>
+                                <img className='cursor-pointer' onClick={handleMoreMenuClosePopup} src={CancelIcon} alt="CancelIcon" />
+                            </div>
+
+                            <div className='px-5'>
+                                {
+                                    requestError !== '' ? <p className="error" role="alert">{requestError}</p> : null
+                                }
+
+                                <form onSubmit={handleSubmit(onSubmit)}>
+                                    <div className='relative pb-8'>
+                                        <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
+                                            Cancel Reason
+                                        </label>
+
+                                        <div className='relative'>
+                                            <textarea
+                                                {...register('cancel_reason', {
+                                                    required: "This field is required",
+                                                })}
+                                                id="message" rows="4" className={`block p-2.5 input-bg w-full text-sm text-gray-900  border
+                                                                focus-visible:outline-none focus-visible:border-none`}
+                                                style={{ border: '2px solid rgba(229, 0, 39, 1)' }}
+                                                placeholder={''}
+                                            ></textarea>
+                                            {errors['cancel_reason'] && (
+                                                <p className="error" role="alert">
+                                                    {errors['cancel_reason'].message}
+                                                </p>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    <div className='flex justify-center gap-5 items-center pt-5 pb-10'>
+                                        <Button btnName='Cancel' btnCls="w-[18%]" btnCategory="secondary" onClick={handleMoreMenuClosePopup} />
+                                        <button
+                                            type='submit'
+                                            className='text-white py-3 px-7 w-[18%]'
+                                            style={{ background: 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)', borderRadius: '3px' }}>
+                                            Submit
+                                        </button>
+                                    </div>
+                                </form>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                </MuiModal>
+            }
+
             {
                 (!programLoading && Object.keys(programdetails).length) ?
 
                     <div className='grid mb-10' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)', borderRadius: '5px' }}>
                         <div className='breadcrum'>
-                            <nav className="flex px-7 pt-6 pb-5 mx-2 border-b-2" aria-label="Breadcrumb">
+                            <nav className="flex justify-between px-7 pt-6 pb-5 mx-2 border-b-2" aria-label="Breadcrumb">
                                 <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
                                     <li className="inline-flex items-center">
                                         <a href="#" className="inline-flex items-center text-sm font-medium" style={{ color: 'rgba(89, 117, 162, 1)' }}>
@@ -509,6 +861,42 @@ export default function ProgramDetails() {
                                     </li>
 
                                 </ol>
+                                <div className='cursor-pointer' onClick={handleClick}>
+                                    <img src={MoreIcon} alt='MoreIcon' />
+                                </div>
+                                <Menu
+                                    id="basic-menu"
+                                    anchorEl={anchorEl}
+                                    open={open}
+                                    onClose={handleClose}
+                                    MenuListProps={{
+                                        'aria-labelledby': 'basic-button',
+                                    }}
+                                >
+                                    <MenuItem onClick={() => handleMenu('share')} className='!text-[12px]'>
+                                        <img src={ShareIcon} alt="ShareIcon" className='pr-3 w-[25px]' />
+                                        Share
+                                    </MenuItem>
+                                    {
+                                        !Object.keys(programdetails.reschedule_reason).length &&
+
+                                        <MenuItem onClick={() => handleMenu('reschedule')} className='!text-[12px]'>
+                                            <img src={RescheduleIcon} alt="RescheduleIcon" className='pr-3 w-[25px]' />
+                                            Reschedule
+                                        </MenuItem>
+                                    }
+
+                                    {
+                                        !Object.keys(programdetails.cancel_reason).length &&
+                                        <MenuItem onClick={() => handleMenu('cancel')} className='!text-[12px]'>
+                                            <img src={AbortIcon} alt="Cancel" className='pr-3 w-[25px]' />
+                                            Cancel
+                                        </MenuItem>
+                                    }
+
+
+                                </Menu>
+
                             </nav>
 
                             <div className='content px-8'>
@@ -651,9 +1039,11 @@ export default function ProgramDetails() {
                                                                         </button>
                                                                     }
                                                                 </>
-                                                                :
 
-                                                                programApprovalStage[programdetails.status] ?
+                                                                :
+                                                                (Object.keys(programdetails.cancel_reason).length || Object.keys(programdetails.reschedule_reason
+                                                                ).length) ?
+
                                                                     <div className='flex gap-4 pt-10' >
                                                                         <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
                                                                             border: "1px solid #E0382D",
@@ -663,34 +1053,50 @@ export default function ProgramDetails() {
                                                                         }}
                                                                             onClick={() => undefined}
                                                                         >
-                                                                            {programApprovalStage[programdetails.status].type === 'waiting' && <i className="pi pi-clock" style={{ color: 'red' }}></i>}
-                                                                            {programApprovalStage[programdetails.status].type === 'reject' && <i className="pi pi-ban" style={{ color: 'red' }}></i>}
-                                                                            <span className='pl-3'>{programApprovalStage[programdetails.status]?.text}</span>
+                                                                            <i className="pi pi-clock" style={{ color: 'red' }}></i>
+                                                                            <span className='pl-3'>Waiting for admin approval</span>
                                                                         </button>
                                                                     </div>
                                                                     :
-                                                                    programdetails.status === 'draft' ?
-                                                                        <div className='py-9'>
-                                                                            <div className='py-3 px-16 text-white text-[14px] flex justify-center items-center' style={{
-                                                                                background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
+
+                                                                    programApprovalStage[programdetails.status] ?
+                                                                        <div className='flex gap-4 pt-10' >
+                                                                            <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                                                border: "1px solid #E0382D",
                                                                                 borderRadius: '5px',
-                                                                                width: '30%'
-                                                                            }}>Drafted</div>
+                                                                                color: '#E0382D',
+                                                                                cursor: 'not-allowed'
+                                                                            }}
+                                                                                onClick={() => undefined}
+                                                                            >
+                                                                                {programApprovalStage[programdetails.status].type === 'waiting' && <i className="pi pi-clock" style={{ color: 'red' }}></i>}
+                                                                                {programApprovalStage[programdetails.status].type === 'reject' && <i className="pi pi-ban" style={{ color: 'red' }}></i>}
+                                                                                <span className='pl-3'>{programApprovalStage[programdetails.status]?.text}</span>
+                                                                            </button>
                                                                         </div>
                                                                         :
-                                                                        programdetails.status === 'yettojoin' ?
-
+                                                                        programdetails.status === 'draft' ?
                                                                             <div className='py-9'>
-                                                                                <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                                                <div className='py-3 px-16 text-white text-[14px] flex justify-center items-center' style={{
                                                                                     background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
-                                                                                    borderRadius: '5px'
-                                                                                }}
-                                                                                    onClick={() => handleJoinProgram(programdetails.id)}
-                                                                                >Launch Program
-                                                                                    <span className='pl-8 pt-1'><img style={{ width: '15px', height: '13px' }} src={DoubleArrowIcon} alt="DoubleArrowIcon" /></span>
-                                                                                </button>
+                                                                                    borderRadius: '5px',
+                                                                                    width: '30%'
+                                                                                }}>Drafted</div>
                                                                             </div>
-                                                                            : null
+                                                                            :
+                                                                            programdetails.status === 'yettojoin' ?
+
+                                                                                <div className='py-9'>
+                                                                                    <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                                                        background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
+                                                                                        borderRadius: '5px'
+                                                                                    }}
+                                                                                        onClick={() => handleJoinProgram(programdetails.id)}
+                                                                                    >Launch Program
+                                                                                        <span className='pl-8 pt-1'><img style={{ width: '15px', height: '13px' }} src={DoubleArrowIcon} alt="DoubleArrowIcon" /></span>
+                                                                                    </button>
+                                                                                </div>
+                                                                                : null
                                                     }
                                                 </>
                                                 : null
