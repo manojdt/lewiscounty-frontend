@@ -17,6 +17,7 @@ import { useForm } from 'react-hook-form'
 import ToastNotification from '../../shared/Toast';
 import { getSpecificTask } from '../../services/task';
 import { getFiles } from '../../utils';
+import api from '../../services/api';
 
 
 export const TaskDetails = () => {
@@ -32,6 +33,8 @@ export const TaskDetails = () => {
     const [taskImages, setTaskImages] = useState([])
     const [imageError, setImageError] = useState({ error: false, errorMessage: '' })
     const [taskSolutionDocs, setTaskSolutionDocs] = useState({ img: [], video: [], doc: [] })
+    const [successModal, setSuccessModal] = useState({ loading: false, success: false })
+
 
     const {
         register,
@@ -45,14 +48,6 @@ export const TaskDetails = () => {
     const referenceView = taskData?.reference_link || ''
 
     const docs = referenceView !== '' ? referenceView?.split(',') || [] : []
-
-    const handleSubmitTask = () => {
-        // if (!startTask) {
-        //     setStartTask(false)
-        // } else {
-        //     setLoading(true)
-        // }
-    }
 
     const handleImageUpload = (e) => {
         if (e.target.files && e.target.files[0]) {
@@ -103,6 +98,20 @@ export const TaskDetails = () => {
             bodyFormData.append('status', 'completed')
             dispatch(submitProgramTaskDetails(bodyFormData))
         }
+    }
+
+    const handleTaskAction = async () => {
+        setSuccessModal({ loading: true, success: false })
+        const startTask = await api.patch('program_task_assign/task_start', { task_id: taskData.id });
+        if (startTask.status === 200 && startTask.data) {
+            setSuccessModal({ loading: false, success: true })
+            setTimeout(() => {
+                dispatch(updateUserProgramInfo({ status: '' }))
+                setSuccessModal({ loading: false, success: false })
+                dispatch(getSpecificTask({ task_id: params.id }))
+            }, [2000])
+        }
+
     }
 
     useEffect(() => {
@@ -193,9 +202,23 @@ export const TaskDetails = () => {
 
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={loading}
+                open={loading || successModal.loading || successModal.success}
             >
-                <CircularProgress color="inherit" />
+                {
+                    successModal.success ?
+
+                        <div className='px-5 py-1 flex justify-center items-center'>
+                            <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
+                                style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
+                                <img src={SuccessTik} alt="SuccessTik" />
+                                <p className='text-white text-[12px]'>Successfully task is started</p>
+                            </div>
+
+                        </div>
+                        :
+                        <CircularProgress color="inherit" />
+                }
+
             </Backdrop>
 
             <div className='px-3 py-5' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
@@ -308,11 +331,273 @@ export const TaskDetails = () => {
                         <form onSubmit={handleSubmit(onSubmit)}>
 
                             <div className='task-desc flex mt-5 px-5 py-6' style={{ border: '1px solid rgba(29, 91, 191, 0.5)' }}>
+                                <p className='w-[30%]'>Task Name : </p>
+                                <p className='text-[14px]'>{taskData?.task_name}</p>
+                            </div>
+                            <div className='task-desc flex mt-5 px-5 py-6' style={{ border: '1px solid rgba(29, 91, 191, 0.5)' }}>
                                 <p className='w-[30%]'>Task Description : </p>
                                 <p className='text-[14px]'>{taskData?.task_description}</p>
                             </div>
 
+
+
                             <div className='py-6 mb-16'>
+
+                                {
+                                    (taskData.status === TaskAllStatus.inprogress || taskData.status === TaskAllStatus.pending ||
+                                        taskData.status === TaskAllStatus.draft
+                                    ) ?
+                                        <>
+                                            <div className='relative'>
+                                                <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2" >
+                                                    Task Solution
+                                                </label>
+                                                <textarea id="message" rows="4"
+                                                    className={`block p-2.5 input-bg w-full h-[170px] text-sm text-gray-900  rounded-lg border
+                                                        focus-visible:outline-none focus:visible:border-none`} style={{
+                                                        border: errors['task_solution'] ? '2px solid red' : 'none',
+
+                                                        cursor: taskData.status === TaskAllStatus.rejected ? 'not-allowed' : 'inherit'
+                                                    }}
+                                                    placeholder=""
+                                                    {...register('task_solution', {
+                                                        required: "This field is required",
+                                                    })}
+                                                    disabled={taskData.status === TaskAllStatus.rejected || taskData.status === TaskAllStatus.completed}
+                                                ></textarea>
+                                                {errors['task_solution'] && (
+                                                    <p className="error" role="alert">
+                                                        {errors['task_solution'].message}
+                                                    </p>
+                                                )}
+                                            </div>
+
+
+                                            <div className='relative mt-12'>
+                                                <div className="flex items-center justify-center w-full">
+                                                    <label htmlFor="dropzone-file"
+                                                        className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed cursor-pointer
+                                                     bg-gray-50 dark:hover:bg-bray-800 dark:border-gray-600"
+                                                        style={{
+                                                            background: 'rgba(243, 247, 252, 1)', border: imageError.error || errors['file'] ? '2px dashed red' : 'none',
+
+                                                            cursor: (taskData.status === TaskAllStatus.newtask || taskData.status === TaskAllStatus.pending || taskData.status === TaskAllStatus.inprogress) ? 'pointer' : 'not-allowed'
+                                                        }} >
+                                                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                                                            <img src={FileIcon} alt="FileIcon" />
+                                                            <p className="mb-2 mt-3 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">
+                                                                Drop your Image ,video,  document or browse</span>
+                                                            </p>
+                                                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                                                                supports: JPG,PNG,PDF,DOC
+                                                            </p>
+                                                        </div>
+                                                        <input id="dropzone-file" type="file"
+                                                            name="file"
+
+                                                            {...imageField}
+
+                                                            onChange={(e) => {
+                                                                if (taskData.status === TaskAllStatus.inprogress || taskData.status === TaskAllStatus.newtask || taskData.status === TaskAllStatus.pending) {
+                                                                    imageField.onChange(e);
+                                                                    handleImageUpload(e);
+                                                                }
+                                                                else {
+                                                                    return undefined
+                                                                }
+                                                            }}
+
+                                                            disabled={taskData.status === TaskAllStatus.rejected || taskData.status === TaskAllStatus.completed}
+
+                                                            className="hidden" />
+                                                    </label>
+
+                                                </div>
+                                                {(imageError.error || errors['file']) && (
+                                                    <p className="error" role="alert">
+                                                        {errors['file']?.message}
+                                                    </p>
+                                                )}
+                                            </div>
+
+
+                                            <div className='flex justify-between task-uploaded-images-container'>
+                                                {
+                                                    taskSolutionDocs.img.length ?
+                                                        <div>
+                                                            <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Image</div>
+                                                            {
+                                                                taskSolutionDocs.img.map((imges, index) =>
+
+                                                                    <div className='uploaded-images task-image-list' key={index}>
+                                                                        <div className='flex gap-3 w-[400px] justify-between items-center mt-5 px-4 py-4'
+                                                                            style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }}>
+                                                                            <div className='flex gap-3 items-center'>
+                                                                                <img src={UploadIcon} alt="altlogo" />
+                                                                                <span className='text-[12px] image-name'>{imges[0].name}</span>
+                                                                            </div>
+                                                                            <img className='w-[30px] cursor-pointer' onClick={() => handleDelete(imges.id)} src={DeleteIcon} alt="DeleteIcon" />
+                                                                        </div>
+                                                                    </div>
+                                                                )
+                                                            }
+                                                        </div>
+                                                        : null
+                                                }
+
+                                                {
+                                                    taskSolutionDocs.video.length ?
+
+                                                        <div>
+                                                            <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Video</div>
+
+                                                            {
+                                                                taskSolutionDocs.video.map((imges, index) =>
+                                                                    <div className='task-image-list flex gap-3 w-[400px] justify-between items-center mt-5 px-4 py-4'
+                                                                        style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }} key={index}>
+                                                                        <div className='flex gap-3 items-center'>
+                                                                            <img src={UploadIcon} alt="altlogo" />
+                                                                            <span className='text-[12px] image-name'>{imges[0].name}</span>
+                                                                        </div>
+                                                                        <img className='w-[30px] cursor-pointer' onClick={() => handleDelete(imges.id)} src={DeleteIcon} alt="DeleteIcon" />
+                                                                    </div>
+                                                                )
+                                                            }
+                                                        </div>
+                                                        :
+                                                        null
+                                                }
+                                                {
+                                                    taskSolutionDocs.doc.length ?
+                                                        <div>
+                                                            <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Files</div>
+
+                                                            {
+                                                                taskSolutionDocs.doc.map((imges, index) =>
+                                                                    <div className='task-image-list flex gap-3 w-[400px] justify-between items-center mt-5 px-4 py-4'
+                                                                        style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }} key={index}>
+                                                                        <div className='flex gap-3 items-center'>
+                                                                            <img src={UploadIcon} alt="altlogo" />
+                                                                            <span className='text-[12px] image-name'>{imges[0].name}</span>
+                                                                        </div>
+                                                                        <img className='w-[30px] cursor-pointer' onClick={() => handleDelete(imges.id)} src={DeleteIcon} alt="DeleteIcon" />
+                                                                    </div>
+                                                                )
+                                                            }
+                                                        </div>
+                                                        : null
+                                                }
+                                            </div>
+                                        </>
+                                        :
+
+
+
+
+                                        (taskData?.status !== TaskAllStatus.yettostart || taskData?.status !== TaskAllStatus.newtask) ?
+
+                                            <>
+                                                {
+                                                    taskData?.task_solution &&
+                                                    <div className='task-desc flex mt-5 px-5 py-6' style={{ border: '1px solid rgba(29, 91, 191, 0.5)' }}>
+                                                        <p className='w-[30%]'>Task Solution : </p>
+                                                        <p className='text-[14px]'>{taskData?.task_solution}</p>
+                                                    </div>
+                                                }
+
+
+                                                <div className='flex justify-between task-uploaded-images-container'>
+                                                    {
+                                                        allFiles.files ?
+
+                                                            <div>
+                                                                <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Image</div>
+                                                                {
+                                                                    allFiles.image.map((imges, index) =>
+
+                                                                        <div className='uploaded-images task-image-list' key={index}>
+                                                                            <a href={imges.fileurl} target='_blank'>
+                                                                                <div className='flex gap-3 w-[400px] justify-between items-center mt-5 px-4 py-4'
+                                                                                    style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }}>
+                                                                                    <div className='flex gap-3 items-center'>
+                                                                                        <img src={UploadIcon} alt="altlogo" />
+                                                                                        <span className='text-[12px] image-name'>{imges.name}</span>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </a>
+                                                                        </div>
+                                                                    )
+                                                                }
+                                                            </div>
+
+                                                            : null
+                                                    }
+
+
+                                                    {
+                                                        allFiles.video.length ?
+
+                                                            <div>
+                                                                <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Video</div>
+
+                                                                {
+                                                                    allFiles.video.map((imges, index) =>
+                                                                        <div className='task-image-list flex gap-3 w-[400px] justify-between items-center mt-5 px-4 py-4'
+                                                                            style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }} key={index}>
+                                                                            <a href={imges.fileurl} target='_blank'>
+                                                                                <div className='flex gap-3 items-center'>
+                                                                                    <img src={UploadIcon} alt="altlogo" />
+                                                                                    <span className='text-[12px] image-name'>{imges.name}</span>
+                                                                                </div>
+                                                                            </a>
+                                                                        </div>
+                                                                    )
+                                                                }
+                                                            </div>
+
+
+                                                            :
+
+                                                            null
+
+                                                    }
+
+
+
+                                                    {
+                                                        allFiles.doc.length ?
+
+                                                            <div>
+                                                                <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Files</div>
+
+                                                                {
+                                                                    allFiles.doc.map((imges, index) =>
+                                                                        <div className='task-image-list flex gap-3 w-[400px] justify-between items-center mt-5 px-4 py-4'
+                                                                            style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }} key={index}>
+                                                                            <a href={imges.fileurl} target='_blank'>
+                                                                                <div className='flex gap-3 items-center'>
+                                                                                    <img src={UploadIcon} alt="altlogo" />
+                                                                                    <span className='text-[12px] image-name'>{imges.name}</span>
+                                                                                </div>
+                                                                            </a>
+                                                                        </div>
+                                                                    )
+                                                                }
+                                                            </div>
+
+                                                            : null
+                                                    }
+
+                                                </div>
+                                            </>
+
+                                            : null
+
+
+
+
+
+                                }
                                 <div className='reference-link flex justify-between mb-8'>
                                     <div className='reference-view'>
                                         <p className='py-4'>Reference View</p>
@@ -320,340 +605,8 @@ export const TaskDetails = () => {
                                             {
                                                 docs?.map((doc, index) => <li key={index}>{index + 1}. <span>{doc}</span></li>)
                                             }
-
-
                                         </ul>
                                     </div>
-                                    {/* {
-                                !startTask &&
-
-                                <div style={{ background: 'rgba(26, 153, 92, 1)' }}
-                                    className='flex justify-center items-center text-white w-[12%] mt-2'>
-                                    <span className='text-[50px]'>09</span>
-                                </div>
-                            } */}
-
-                                </div>
-
-                                {/* {
-                            params.id === '1' &&
-
-                            <>
-                                <div className='pt-4 pb-2'>
-                                    <div className='task-details'>
-                                        <p>Task</p>
-                                        <div className='task-information px-7 py-8 text-[14px]' style={{ background: 'rgba(217, 228, 242, 1)', borderRadius: '3px' }}>
-                                            Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                                            Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
-                                            took a galley of type and scrambled it to make a type specimen book.It has survived not only five
-                                            centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was
-                                            popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and
-                                            more recently with desktop.
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className='flex justify-between mb-10'>
-                                    <div>
-                                        <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Image</div>
-                                        <div className='uploaded-images'>
-                                            <div className='flex gap-3 w-[400px] justify-between items-center mt-5 px-4 py-4'
-                                                style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }}>
-                                                <div className='flex gap-3 items-center'>
-                                                    <img src={UploadIcon} alt="altlogo" />
-                                                    <span className='text-[12px]'>145816452.jpg</span>
-                                                </div>
-                                                <img className='w-[30px] cursor-pointer' onClick={() => console.log('delete')} src={DeleteIcon} alt="DeleteIcon" />
-                                            </div>
-                                        </div>
-
-                                    </div>
-
-                                    <div>
-                                        <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Video</div>
-
-                                        <div className='flex gap-3 w-[400px] justify-between items-center mt-5 px-4 py-4'
-                                            style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }}>
-                                            <div className='flex gap-3 items-center'>
-                                                <img src={UploadIcon} alt="altlogo" />
-                                                <span className='text-[12px]'>loripusum.video</span>
-                                            </div>
-                                            <img className='w-[30px] cursor-pointer' onClick={() => console.log('delete')} src={DeleteIcon} alt="DeleteIcon" />
-                                        </div>
-                                    </div>
-
-
-                                    <div>
-                                        <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Files</div>
-
-                                        <div className='flex gap-3 w-[400px] justify-between items-center mt-5 px-4 py-4'
-                                            style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }}>
-                                            <div className='flex gap-3 items-center'>
-                                                <img src={UploadIcon} alt="altlogo" />
-                                                <span className='text-[12px]'>loripusum.PDF</span>
-                                            </div>
-                                            <img className='w-[30px] cursor-pointer' onClick={() => console.log('delete')} src={DeleteIcon} alt="DeleteIcon" />
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                <div className='flex justify-center items-center'>
-                                    <div style={{ background: 'rgba(26, 153, 92, 1)' }}
-                                        className='flex justify-center items-center py-9 text-white w-[16%] mt-2'>
-                                        <span className='text-[50px]'>09</span>
-                                    </div>
-                                </div>
-                            </>
-                        } */}
-
-                                <div className='relative'>
-                                    <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2" >
-                                        Task Solution
-                                    </label>
-                                    <textarea id="message" rows="4"
-                                        className={`block p-2.5 input-bg w-full h-[170px] text-sm text-gray-900  rounded-lg border
-                                    focus-visible:outline-none focus:visible:border-none`} style={{
-                                            border: errors['task_solution'] ? '2px solid red' : 'none',
-
-                                            cursor: taskData.status === TaskAllStatus.rejected ? 'not-allowed' : 'inherit'
-                                        }}
-                                        placeholder=""
-                                        {...register('task_solution', {
-                                            required: "This field is required",
-                                        })}
-
-
-
-                                        disabled={taskData.status === TaskAllStatus.rejected || taskData.status === TaskAllStatus.completed}
-                                    ></textarea>
-                                    {errors['task_solution'] && (
-                                        <p className="error" role="alert">
-                                            {errors['task_solution'].message}
-                                        </p>
-                                    )}
-                                </div>
-                                {
-                                    (taskData.status === TaskAllStatus.inprogress || taskData.status === TaskAllStatus.newtask || taskData.status === TaskAllStatus.pending) ?
-
-                                        <div className='relative mt-12'>
-
-                                            <div className="flex items-center justify-center w-full">
-                                                <label htmlFor="dropzone-file"
-                                                    className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed cursor-pointer
-                                                     bg-gray-50 dark:hover:bg-bray-800 dark:border-gray-600"
-                                                    style={{
-                                                        background: 'rgba(243, 247, 252, 1)', border: imageError.error || errors['file'] ? '2px dashed red' : 'none',
-
-                                                        cursor: (taskData.status === TaskAllStatus.newtask || taskData.status === TaskAllStatus.pending || taskData.status === TaskAllStatus.inprogress) ? 'pointer' : 'not-allowed'
-                                                    }} >
-                                                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                                        <img src={FileIcon} alt="FileIcon" />
-                                                        <p className="mb-2 mt-3 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">
-                                                            Drop your Image ,video,  document or browse</span>
-                                                        </p>
-                                                        <p className="text-xs text-gray-500 dark:text-gray-400">
-                                                            supports: JPG,PNG,PDF,DOC
-                                                        </p>
-                                                    </div>
-                                                    <input id="dropzone-file" type="file"
-                                                        name="file"
-
-                                                        {...imageField}
-
-                                                        onChange={(e) => {
-                                                            if (taskData.status === TaskAllStatus.inprogress || taskData.status === TaskAllStatus.newtask || taskData.status === TaskAllStatus.pending) {
-                                                                imageField.onChange(e);
-                                                                handleImageUpload(e);
-                                                            }
-                                                            else {
-                                                              return undefined
-                                                            }
-                                                        }}
-
-                                                        disabled={taskData.status === TaskAllStatus.rejected || taskData.status === TaskAllStatus.completed}
-
-                                                        className="hidden" />
-                                                </label>
-
-                                            </div>
-                                            {(imageError.error || errors['file']) && (
-                                                <p className="error" role="alert">
-                                                    {errors['file']?.message}
-                                                </p>
-                                            )}
-                                        </div>
-
-                                        :
-
-                                        <>
-
-                                            <div className='flex justify-between task-uploaded-images-container'>
-                                                {
-                                                    allFiles.files ?
-
-                                                        <div>
-                                                            <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Image</div>
-                                                            {
-                                                                allFiles.image.map((imges, index) =>
-
-                                                                    <div className='uploaded-images task-image-list' key={index}>
-                                                                        <a href={imges.fileurl} target='_blank'>
-                                                                            <div className='flex gap-3 w-[400px] justify-between items-center mt-5 px-4 py-4'
-                                                                                style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }}>
-                                                                                <div className='flex gap-3 items-center'>
-                                                                                    <img src={UploadIcon} alt="altlogo" />
-                                                                                    <span className='text-[12px] image-name'>{imges.name}</span>
-                                                                                </div>
-                                                                            </div>
-                                                                        </a>
-                                                                    </div>
-                                                                )
-                                                            }
-                                                        </div>
-
-                                                        : null
-                                                }
-
-
-                                                {
-                                                    allFiles.video.length ?
-
-                                                        <div>
-                                                            <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Video</div>
-
-                                                            {
-                                                                allFiles.video.map((imges, index) =>
-                                                                    <div className='task-image-list flex gap-3 w-[400px] justify-between items-center mt-5 px-4 py-4'
-                                                                        style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }} key={index}>
-                                                                        <a href={imges.fileurl} target='_blank'>
-                                                                            <div className='flex gap-3 items-center'>
-                                                                                <img src={UploadIcon} alt="altlogo" />
-                                                                                <span className='text-[12px] image-name'>{imges.name}</span>
-                                                                            </div>
-                                                                        </a>
-                                                                    </div>
-                                                                )
-                                                            }
-                                                        </div>
-
-
-                                                        :
-
-                                                        null
-
-                                                }
-
-
-
-                                                {
-                                                    allFiles.doc.length ?
-
-                                                        <div>
-                                                            <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Files</div>
-
-                                                            {
-                                                                allFiles.doc.map((imges, index) =>
-                                                                    <div className='task-image-list flex gap-3 w-[400px] justify-between items-center mt-5 px-4 py-4'
-                                                                        style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }} key={index}>
-                                                                        <a href={imges.fileurl} target='_blank'>
-                                                                            <div className='flex gap-3 items-center'>
-                                                                                <img src={UploadIcon} alt="altlogo" />
-                                                                                <span className='text-[12px] image-name'>{imges.name}</span>
-                                                                            </div>
-                                                                        </a>
-                                                                    </div>
-                                                                )
-                                                            }
-                                                        </div>
-
-                                                        : null
-                                                }
-
-                                            </div>
-                                        </>
-                                }
-
-
-                                <div className='flex justify-between task-uploaded-images-container'>
-                                    {
-                                        taskSolutionDocs.img.length ?
-
-                                            <div>
-                                                <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Image</div>
-                                                {
-                                                    taskSolutionDocs.img.map((imges, index) =>
-
-                                                        <div className='uploaded-images task-image-list' key={index}>
-                                                            <div className='flex gap-3 w-[400px] justify-between items-center mt-5 px-4 py-4'
-                                                                style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }}>
-                                                                <div className='flex gap-3 items-center'>
-                                                                    <img src={UploadIcon} alt="altlogo" />
-                                                                    <span className='text-[12px] image-name'>{imges[0].name}</span>
-                                                                </div>
-                                                                <img className='w-[30px] cursor-pointer' onClick={() => handleDelete(imges.id)} src={DeleteIcon} alt="DeleteIcon" />
-                                                            </div>
-                                                        </div>
-                                                    )
-                                                }
-                                            </div>
-
-                                            : null
-                                    }
-
-
-                                    {
-                                        taskSolutionDocs.video.length ?
-
-                                            <div>
-                                                <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Video</div>
-
-                                                {
-                                                    taskSolutionDocs.video.map((imges, index) =>
-                                                        <div className='task-image-list flex gap-3 w-[400px] justify-between items-center mt-5 px-4 py-4'
-                                                            style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }} key={index}>
-                                                            <div className='flex gap-3 items-center'>
-                                                                <img src={UploadIcon} alt="altlogo" />
-                                                                <span className='text-[12px] image-name'>{imges[0].name}</span>
-                                                            </div>
-                                                            <img className='w-[30px] cursor-pointer' onClick={() => handleDelete(imges.id)} src={DeleteIcon} alt="DeleteIcon" />
-                                                        </div>
-                                                    )
-                                                }
-                                            </div>
-
-
-                                            :
-
-                                            null
-
-                                    }
-
-
-
-                                    {
-                                        taskSolutionDocs.doc.length ?
-
-                                            <div>
-                                                <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Files</div>
-
-                                                {
-                                                    taskSolutionDocs.doc.map((imges, index) =>
-                                                        <div className='task-image-list flex gap-3 w-[400px] justify-between items-center mt-5 px-4 py-4'
-                                                            style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }} key={index}>
-                                                            <div className='flex gap-3 items-center'>
-                                                                <img src={UploadIcon} alt="altlogo" />
-                                                                <span className='text-[12px] image-name'>{imges[0].name}</span>
-                                                            </div>
-                                                            <img className='w-[30px] cursor-pointer' onClick={() => handleDelete(imges.id)} src={DeleteIcon} alt="DeleteIcon" />
-                                                        </div>
-                                                    )
-                                                }
-                                            </div>
-
-                                            : null
-                                    }
-
                                 </div>
 
                             </div>
@@ -661,8 +614,8 @@ export const TaskDetails = () => {
                             <div className='close-btn flex justify-center gap-7 pb-5'>
                                 <Button btnName='Cancel' btnCls="w-[12%]" btnCategory="secondary" onClick={() => navigate('/mentee-tasks')} />
                                 {
-                                    (taskData.status === TaskAllStatus.start || taskData.status === TaskAllStatus.pending
-                                        || taskData.status === TaskAllStatus.draft || taskData?.status === TaskAllStatus.yettostart ||
+                                    (taskData.status === TaskAllStatus.pending
+                                        || taskData.status === TaskAllStatus.draft ||
                                         taskData.status === TaskAllStatus.inprogress
 
                                     ) &&
@@ -686,17 +639,12 @@ export const TaskDetails = () => {
                                     </>
                                 }
                                 {
-                                    taskData?.status === TaskAllStatus.yettostart &&
+                                    (taskData?.status === TaskAllStatus.yettostart || taskData?.status === TaskAllStatus.newtask) &&
 
-                                    <Button btnType="button" btnCls={`${startTask ? 'w-[14%]' : 'w-[12%]'}`} onClick={() => setStartTask(true)} btnName='Start Task' btnCategory="primary" />
+                                    <Button btnType="button" btnCls={`${startTask ? 'w-[14%]' : 'w-[12%]'}`} onClick={handleTaskAction} btnName='Start Task' btnCategory="primary" />
                                 }
 
-                                {
-                                    task_status === TaskAllStatus.submitted &&
 
-                                    <Button btnType="button" btnCls="w-[10%]"
-                                        onClick={() => { navigate('/mentee-tasks') }} btnName='Close' btnCategory="primary" />
-                                }
                             </div>
 
                         </form>

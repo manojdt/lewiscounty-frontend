@@ -318,10 +318,10 @@ export const Navbar = () => {
                             {
                                 userInfo?.data?.is_registered && !documentUpload &&
 
-                                <div className='relative'>
+                                <div className='relative' onClick={(e) => op.current.toggle(e)}>
                                     {userInfo?.data?.role === 'super_admin' ? null : <div className='notitification-group'>
                                         <div className='bg-[#EEF5FF] rounded-[3px] h-[40px] w-[40px] flex items-center justify-center'>
-                                            <img src={NotificationIcon} className='cursor-pointer notification-image' onClick={(e) => op.current.toggle(e)} alt="NotificationIcon" />
+                                            <img src={NotificationIcon} className='cursor-pointer notification-image' alt="NotificationIcon" />
                                         </div>
                                         {
                                             activity.length > 0 ?
@@ -335,7 +335,8 @@ export const Navbar = () => {
                                                     fontSize: '11px',
                                                     color: '#fff',
                                                     fontWeight: 'bold',
-                                                    border: "3px solid #fff"
+                                                    border: "3px solid #fff",
+                                                    cursor: "pointer"
                                                 }}>{activity.length}</span>
                                                 : null
                                         }

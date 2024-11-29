@@ -102,7 +102,6 @@ const MentorTaskDetails = () => {
                 open={taskDetailsLoading}
             >
                 <CircularProgress color="inherit" />
-
             </Backdrop>
 
 
@@ -110,7 +109,7 @@ const MentorTaskDetails = () => {
                 <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
                     <div className='flex gap-5 items-center text-[20px]'>
                         <p>Task - {taskDetails.task_name}</p>
-                        {
+                        {/* {
                             (taskDetails.status === 'waiting_for_approval' && !editTask) &&
 
 
@@ -119,7 +118,7 @@ const MentorTaskDetails = () => {
                             >
                                 <img src={EditIcon} alt='EditIcon' />
                             </div>
-                        }
+                        } */}
                     </div>
 
                     <div className='flex gap-8 items-center'>
@@ -347,7 +346,7 @@ const MentorTaskDetails = () => {
                             }
 
                             {
-                                editTask &&
+                                taskDetails.status === 'waiting_for_approval' &&
                                 <>
                                     <div className='relative py-5'>
                                         <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2" >
