@@ -335,7 +335,8 @@ export const Navbar = () => {
                                                     fontSize: '11px',
                                                     color: '#fff',
                                                     fontWeight: 'bold',
-                                                    border: "3px solid #fff"
+                                                    border: "3px solid #fff",
+                                                    cursor: "pointer"
                                                 }}>{activity.length}</span>
                                                 : null
                                         }
