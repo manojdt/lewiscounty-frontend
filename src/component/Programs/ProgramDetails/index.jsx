@@ -861,41 +861,38 @@ export default function ProgramDetails() {
                                     </li>
 
                                 </ol>
-                                <div className='cursor-pointer' onClick={handleClick}>
-                                    <img src={MoreIcon} alt='MoreIcon' />
-                                </div>
-                                <Menu
-                                    id="basic-menu"
-                                    anchorEl={anchorEl}
-                                    open={open}
-                                    onClose={handleClose}
-                                    MenuListProps={{
-                                        'aria-labelledby': 'basic-button',
-                                    }}
-                                >
-                                    <MenuItem onClick={() => handleMenu('share')} className='!text-[12px]'>
-                                        <img src={ShareIcon} alt="ShareIcon" className='pr-3 w-[25px]' />
-                                        Share
-                                    </MenuItem>
-                                    {
-                                        !Object.keys(programdetails.reschedule_reason).length &&
+                                {
+                                    role === 'mentor' &&
+                                    <>
+                                        <div className='cursor-pointer' onClick={handleClick}>
+                                            <img src={MoreIcon} alt='MoreIcon' />
+                                        </div>
+                                        <Menu
+                                            id="basic-menu"
+                                            anchorEl={anchorEl}
+                                            open={open}
+                                            onClose={handleClose}
+                                            MenuListProps={{
+                                                'aria-labelledby': 'basic-button',
+                                            }}
+                                        >
+                                            <MenuItem onClick={() => handleMenu('share')} className='!text-[12px]'>
+                                                <img src={ShareIcon} alt="ShareIcon" className='pr-3 w-[25px]' />
+                                                Share
+                                            </MenuItem>
+                                            <MenuItem onClick={() => handleMenu('reschedule')} className='!text-[12px]'>
+                                                <img src={RescheduleIcon} alt="RescheduleIcon" className='pr-3 w-[25px]' />
+                                                Reschedule
+                                            </MenuItem>
 
-                                        <MenuItem onClick={() => handleMenu('reschedule')} className='!text-[12px]'>
-                                            <img src={RescheduleIcon} alt="RescheduleIcon" className='pr-3 w-[25px]' />
-                                            Reschedule
-                                        </MenuItem>
-                                    }
+                                            <MenuItem onClick={() => handleMenu('cancel')} className='!text-[12px]'>
+                                                <img src={AbortIcon} alt="Cancel" className='pr-3 w-[25px]' />
+                                                Cancel
+                                            </MenuItem>
+                                        </Menu>
+                                    </>
+                                }
 
-                                    {
-                                        !Object.keys(programdetails.cancel_reason).length &&
-                                        <MenuItem onClick={() => handleMenu('cancel')} className='!text-[12px]'>
-                                            <img src={AbortIcon} alt="Cancel" className='pr-3 w-[25px]' />
-                                            Cancel
-                                        </MenuItem>
-                                    }
-
-
-                                </Menu>
 
                             </nav>
 
@@ -959,7 +956,7 @@ export default function ProgramDetails() {
 
                                         <div className='flex items-center gap-3 text-[12px]'>
                                             {
-                                                !profileLoading && <img src={profile?.image || UserImage} style={{ borderRadius: '50%', width: '35px', height: '35px' }} alt="UserImage" />
+                                                !profileLoading && <img src={programdetails?.mentor_profile_image || UserImage} style={{ borderRadius: '50%', width: '35px', height: '35px' }} alt="UserImage" />
 
                                             }
 
@@ -1059,44 +1056,44 @@ export default function ProgramDetails() {
                                                                 //     </div>
                                                                 //     :
 
-                                                                    programApprovalStage[programdetails.status] ?
-                                                                        <div className='flex gap-4 pt-10' >
-                                                                            <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                                                border: "1px solid #E0382D",
+                                                                programApprovalStage[programdetails.status] ?
+                                                                    <div className='flex gap-4 pt-10' >
+                                                                        <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                                            border: "1px solid #E0382D",
+                                                                            borderRadius: '5px',
+                                                                            color: '#E0382D',
+                                                                            cursor: 'not-allowed'
+                                                                        }}
+                                                                            onClick={() => undefined}
+                                                                        >
+                                                                            {programApprovalStage[programdetails.status].type === 'waiting' && <i className="pi pi-clock" style={{ color: 'red' }}></i>}
+                                                                            {programApprovalStage[programdetails.status].type === 'reject' && <i className="pi pi-ban" style={{ color: 'red' }}></i>}
+                                                                            <span className='pl-3'>{programApprovalStage[programdetails.status]?.text}</span>
+                                                                        </button>
+                                                                    </div>
+                                                                    :
+                                                                    programdetails.status === 'draft' ?
+                                                                        <div className='py-9'>
+                                                                            <div className='py-3 px-16 text-white text-[14px] flex justify-center items-center' style={{
+                                                                                background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
                                                                                 borderRadius: '5px',
-                                                                                color: '#E0382D',
-                                                                                cursor: 'not-allowed'
-                                                                            }}
-                                                                                onClick={() => undefined}
-                                                                            >
-                                                                                {programApprovalStage[programdetails.status].type === 'waiting' && <i className="pi pi-clock" style={{ color: 'red' }}></i>}
-                                                                                {programApprovalStage[programdetails.status].type === 'reject' && <i className="pi pi-ban" style={{ color: 'red' }}></i>}
-                                                                                <span className='pl-3'>{programApprovalStage[programdetails.status]?.text}</span>
-                                                                            </button>
+                                                                                width: '30%'
+                                                                            }}>Drafted</div>
                                                                         </div>
                                                                         :
-                                                                        programdetails.status === 'draft' ?
-                                                                            <div className='py-9'>
-                                                                                <div className='py-3 px-16 text-white text-[14px] flex justify-center items-center' style={{
-                                                                                    background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
-                                                                                    borderRadius: '5px',
-                                                                                    width: '30%'
-                                                                                }}>Drafted</div>
-                                                                            </div>
-                                                                            :
-                                                                            programdetails.status === 'yettojoin' ?
+                                                                        programdetails.status === 'yettojoin' ?
 
-                                                                                <div className='py-9'>
-                                                                                    <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                                                        background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
-                                                                                        borderRadius: '5px'
-                                                                                    }}
-                                                                                        onClick={() => handleJoinProgram(programdetails.id)}
-                                                                                    >Launch Program
-                                                                                        <span className='pl-8 pt-1'><img style={{ width: '15px', height: '13px' }} src={DoubleArrowIcon} alt="DoubleArrowIcon" /></span>
-                                                                                    </button>
-                                                                                </div>
-                                                                                : null
+                                                                            <div className='py-9'>
+                                                                                <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                                                    background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
+                                                                                    borderRadius: '5px'
+                                                                                }}
+                                                                                    onClick={() => handleJoinProgram(programdetails.id)}
+                                                                                >Launch Program
+                                                                                    <span className='pl-8 pt-1'><img style={{ width: '15px', height: '13px' }} src={DoubleArrowIcon} alt="DoubleArrowIcon" /></span>
+                                                                                </button>
+                                                                            </div>
+                                                                            : null
                                                     }
                                                 </>
                                                 : null
