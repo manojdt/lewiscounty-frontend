@@ -30,7 +30,7 @@ export default function CreateGoal({ open, handleCloseModal, seletedItem, editMo
         let apiData = {
             goal_name: data?.goal_name,
             designation: data?.goal_designation,
-            goal_description: data?.goal_description,
+            description: data?.goal_description,
             period: parseInt(data.period),
             start_date: dayjs(data?.start_date).format("YYYY-MM-DD")
         }

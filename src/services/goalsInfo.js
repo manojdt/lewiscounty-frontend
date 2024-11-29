@@ -9,8 +9,12 @@ import api from "./api";
 export const getAllGoals = createAsyncThunk(
     "getAllGoals",
     async (query = '') => {
-        const queryString = query !== '' ? `?status=${query}` : ''
-        const allGoals = await api.get(`goals/goal${queryString}`);
+        let filteredQuery = Object.fromEntries(
+            Object.entries(query).filter(([key, value]) => !(key === "search" && value.trim().length === 0) &&
+                !(key === "created_by" && value === "mentee"))
+        );
+        let queryString = new URLSearchParams(filteredQuery).toString()
+        const allGoals = await api.get(`goals/get/all/goals?${queryString}`);
         if (allGoals.status === 200 && allGoals.data) {
             return allGoals.data;
         }
@@ -47,8 +51,8 @@ export const getGoalInfo = createAsyncThunk(
 
 export const getGoalsCount = createAsyncThunk(
     "getGoalsCount",
-    async () => {
-        const getAllGoalsCount = await api.get(`/goals/goal/status/count`);
+    async (query) => {
+        const getAllGoalsCount = await api.get(`/goals/goal/status/count?time_frame=${query?.time_frame}`);
         if (getAllGoalsCount.status === 200 && getAllGoalsCount.data) {
             return getAllGoalsCount?.data?.data;
         }
@@ -120,9 +124,12 @@ export const getGoalsOverAllData = createAsyncThunk(
 
 export const getGoalsRequest = createAsyncThunk(
     "getGoalsRequest",
-    async () => {
-
-        const programRequest = await api.get('goals/goals-request');
+    async (query) => {
+        let filteredQuery = Object.fromEntries(
+            Object.entries(query).filter(([key, value]) => !(key === "search" && value.trim().length === 0) )
+        );
+        let queryString = new URLSearchParams(filteredQuery).toString()
+        const programRequest = await api.get(`goals/get/goals/request?${queryString}`);
         if (programRequest.status === 200 && programRequest.data) {
             return programRequest.data;
         }

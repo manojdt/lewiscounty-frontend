@@ -51,6 +51,21 @@ const Goals = () => {
     const [goals, setGoals] = useState([])
     const [seletedItem, setSelectedItem] = useState({})
     const [popupModal, setPopupModal] = useState('')
+    const [allTimeFrame, setAllTimeFrame] = React.useState("month")
+    const [historyTimeFrame, setHistoryTimeFrame] = React.useState("month")
+    const [requestTimeFrame, setRequestTimeFrame] = React.useState("month")
+    const [requestPaginationModel, setRequestPaginationModel] = React.useState({
+        page: 0,
+        pageSize: 5
+    })
+    const [historyPaginationModel, setHistoryPaginationModel] = React.useState({
+        page: 0,
+        pageSize: 5
+    })
+    const [allGoalPaginationModel, setAllGoalPaginationModel] = React.useState({
+        page: 0,
+        pageSize: 5
+    })
 
     const userInfo = useSelector(state => state.userInfo)
 
@@ -139,14 +154,20 @@ const Goals = () => {
     }
 
     const getAllGoalData = () => {
-        dispatch(getGoalsCount())
-        dispatch(getGoalsRequest())
+        dispatch(getGoalsCount({ time_frame: allTimeFrame }))
+        dispatch(getGoalsRequest({
+            status: "new",
+            // created_by: "mentee",
+            time_frame: requestTimeFrame,
+            page: requestPaginationModel?.page + 1,
+            limit: requestPaginationModel?.pageSize
+        }))
         dispatch(getGoalsHistory({
             status: "new",
             // created_by: "mentee",
-            time_frame: "month",
-            page: 1,
-            limit: 10
+            time_frame: historyTimeFrame,
+            page: historyPaginationModel?.page + 1,
+            limit: historyPaginationModel?.pageSize
         }))
     }
 
@@ -154,15 +175,36 @@ const Goals = () => {
         getAllGoalData()
     }, [])
 
+    const handleGetAllGoals = (timeframe = allTimeFrame) => {
+        const filterType = searchParams.get("type");
+        // let query = ''
+        // if (filterType && filterType !== '') {
+        //     query += filterType === 'total_goals' ? '' : filterType
+        // }
+        // // allGoalPaginationModel, setAllGoalPaginationModel
+        // query += `page=${allGoalPaginationModel?.page + 1}&limit=${allGoalPaginationModel?.pageSize}`
+
+        const payload = {
+            page: allGoalPaginationModel?.page + 1,
+            limit: allGoalPaginationModel?.pageSize,
+            status: filterType === "aborted" ? "cancel" : filterType,
+            time_frame: timeframe
+        }
+        dispatch(getAllGoals(payload))
+        dispatch(getGoalsCount({ time_frame: timeframe }))
+    }
+
 
     useEffect(() => {
-        const filterType = searchParams.get("type");
+        // const filterType = searchParams.get("type");
 
-        let query = ''
-        if (filterType && filterType !== '') {
-            query = filterType === 'total_goals' ? '' : filterType
-            dispatch(getAllGoals(query));
-        }
+        // let query = ''
+        // if (filterType && filterType !== '') {
+        //     query = filterType === 'total_goals' ? '' : filterType
+        //     dispatch(getAllGoals(query));
+        // }
+
+        handleGetAllGoals()
     }, [searchParams])
 
 
@@ -217,7 +259,18 @@ const Goals = () => {
                 id: 2,
                 flex: 1,
                 renderCell: (params) => {
-                    return <div>{goalDataStatus[params.row.goal_status]}</div>
+                    return (
+                        <div className='cursor-pointer flex items-center h-full relative'>
+
+                            <span className='w-[80px] flex justify-center h-[30px] px-7'
+                                style={{
+                                    background: goalRequestColor[params.row.status].bg, lineHeight: '30px',
+                                    borderRadius: '3px', width: '110px', height: '34px', color: goalRequestColor[params.row.status].color
+                                }}>
+                                {goalRequestStatus[params.row.status]}
+                            </span>
+                        </div>
+                    )
                 }
             }
         },
@@ -425,7 +478,51 @@ const Goals = () => {
     ]
 
     const goalRequestColumn = [
-        ...goalsRequestColumn,
+        {
+            field: 'goal_name',
+            headerName: 'Goals Name',
+            id: 0,
+            flex: 1,
+            renderCell: (params) => {
+                return <div className='flex gap-2 items-center'>{params?.row?.goal?.goal_name ?? "..."}</div>
+            }
+        },
+        {
+            field: 'goal_designation',
+            headerName: 'Goals Designation',
+            flex: 1,
+            id: 1,
+            renderCell: (params) => {
+                return <div className='flex gap-2 items-center'>{params?.row?.goal?.designation ?? "..."}</div>
+            }
+        },
+        {
+            field: 'goal_description',
+            headerName: 'Goals Description',
+            flex: 1,
+            id: 2,
+            renderCell: (params) => {
+                return <div className='flex gap-2 items-center'>{params?.row?.goal?.description?.length ? params?.row?.goal?.description : "..."}</div>
+            }
+        },
+        {
+            field: 'request_date',
+            headerName: 'Request Date',
+            flex: 1,
+            id: 3,
+            renderCell: (params) => {
+                return <div className='flex gap-2 items-center'>{params?.row?.requested_date ? dayjs(params?.row?.requested_date).format("DD-MM-YYYY") : "..."}</div>
+            }
+        },
+        {
+            field: 'approved_date',
+            headerName: 'Approved Date',
+            flex: 1,
+            id: 4,
+            renderCell: (params) => {
+                return <div className='flex gap-2 items-center'>{params?.row?.approved_date ? dayjs(params?.row?.approved_date).format("DD-MM-YYYY") : "..."}</div>
+            }
+        },
         {
             field: 'status',
             headerName: 'Status',
@@ -541,7 +638,7 @@ const Goals = () => {
 
     // My Changes
 
-    const [historyTimeFrame, setHistoryTimeFrame] = React.useState("month")
+
     const [confirmPopup, setConfirmPopup] = React.useState({
         bool: false,
         activity: false,
@@ -552,10 +649,10 @@ const Goals = () => {
         setHistoryTimeFrame(value)
         dispatch(getGoalsHistory({
             status: "new",
-            created_by: role,
+            // created_by: role,
             time_frame: value,
-            page: 1,
-            limit: 10
+            page: historyPaginationModel?.page + 1,
+            limit: historyPaginationModel?.pageSize
         }))
     }
 
@@ -580,7 +677,7 @@ const Goals = () => {
     const handleUpdateHistoryGoal = () => {
         const payload = {
             id: seletedItem?.id,
-            action: confirmPopup?.type === "complete" ? "complete" : "abort",
+            status: confirmPopup?.type === "complete" ? "complete" : "cancel",
             start_date: dayjs(new Date()).format("YYYY-MM-DD")
         }
         dispatch(updateHistoryGoal(payload)).then((res) => {
@@ -600,19 +697,30 @@ const Goals = () => {
                         type: ""
                     })
 
-                    dispatch(getGoalsHistory({
-                        status: "new",
-                        created_by: role,
-                        time_frame: "month",
-                        page: 1,
-                        limit: 10
-                    }))
+                    getAllGoalData()
                 }, 2000)
 
             }
         })
     }
 
+
+    const handleChangeRequestTimeFrame = (value) => {
+        setRequestTimeFrame(value)
+        dispatch(getGoalsRequest({
+            status: "new",
+            // created_by: "mentee",
+            time_frame: value,
+            page: requestPaginationModel?.page + 1,
+            limit: requestPaginationModel?.pageSize
+        }))
+    }
+
+
+    const handleAllTimeFrame = (value) => {
+        setAllTimeFrame(value)
+        handleGetAllGoals(value)
+    }
 
 
     return (
@@ -723,10 +831,16 @@ const Goals = () => {
                                     <div className="relative flex gap-3 py-3 px-3"
                                         style={{ border: '1px solid rgba(24, 40, 61, 0.25)', background: 'rgba(238, 245, 255, 1)', borderRadius: '3px' }}>
                                         <img src={CalenderIcon} alt="CalenderIcon" />
-                                        <select className='focus:outline-none' style={{ background: 'rgba(238, 245, 255, 1)' }}>
-                                            <option>Month</option>
-                                            <option>Week</option>
-                                            <option>Day</option>
+                                        <select className='focus:outline-none' style={{ background: 'rgba(238, 245, 255, 1)' }}
+                                            value={allTimeFrame}
+                                            onChange={(e) => handleAllTimeFrame(e.target.value)}>
+                                            {
+                                                timeFrameList?.map((e) => {
+                                                    return (
+                                                        <option value={e?.value}>{e?.label}</option>
+                                                    )
+                                                })
+                                            }
                                         </select>
                                     </div>
                                 </div>
@@ -744,16 +858,29 @@ const Goals = () => {
                                                 onClick={() => handleGoalsClick(goal)}
                                             >
                                                 <p>{goal.name}</p>
-                                                <p className='goal-count'>{goalsCount[goal.key]}</p>
+                                                <p className='goal-count'>
+                                                    {
+                                                        goal?.key === "total_goals" && goalsCount?.total_goals_count
+                                                    }
+                                                    {
+                                                        goalsCount?.goals?.find((e) => e?.status === goal.key)?.goal_count
+                                                    }
+                                                    {
+                                                        goal.key === "aborted" && goalsCount?.goals?.filter((e) => e?.status === "cancel")?.[0]?.goal_count
+                                                    }
+                                                </p>
                                             </div>
                                         )
                                     }
-                                    <div className="create-goal flex justify-center items-center flex-col gap-4"
-                                        onClick={handleOpenCreateGoalModal}
-                                    >
-                                        <p>{role === 'mentee' ? 'New Goal Request' : 'Create New Goal'}</p>
-                                        <img src={AddGoalIcon} alt="AddGoalIcon" />
-                                    </div>
+                                    {
+                                        role !== "admin" &&
+                                        <div className="create-goal flex justify-center items-center flex-col gap-4"
+                                            onClick={handleOpenCreateGoalModal}
+                                        >
+                                            <p>{role === 'mentee' ? 'New Goal Request' : 'Create New Goal'}</p>
+                                            <img src={AddGoalIcon} alt="AddGoalIcon" />
+                                        </div>
+                                    }
                                 </div>
 
 
@@ -773,16 +900,29 @@ const Goals = () => {
                                                                 <div className="relative flex gap-3 py-3 px-3"
                                                                     style={{ border: '1px solid rgba(24, 40, 61, 0.25)', background: 'rgba(238, 245, 255, 1)', borderRadius: '3px' }}>
                                                                     <img src={CalenderIcon} alt="CalenderIcon" />
-                                                                    <select className='focus:outline-none' style={{ background: 'rgba(238, 245, 255, 1)' }}>
-                                                                        <option>Month</option>
-                                                                        <option>Week</option>
-                                                                        <option>Day</option>
+                                                                    <select className='focus:outline-none' style={{ background: 'rgba(238, 245, 255, 1)' }}
+                                                                        value={requestTimeFrame}
+                                                                        onChange={(e) => handleChangeRequestTimeFrame(e.target.value)}>
+                                                                        {
+                                                                            timeFrameList?.map((e) => {
+                                                                                return (
+                                                                                    <option value={e?.value}>{e?.label}</option>
+                                                                                )
+                                                                            })
+                                                                        }
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                         </div>
 
-                                                        <DataTable rows={goalRequest} columns={goalRequestColumn} handleSelectedRow={handleSelectedRow} hideFooter height={350} />
+                                                        <DataTable rows={goalRequest?.results}
+                                                            columns={goalRequestColumn}
+                                                            handleSelectedRow={handleSelectedRow}
+                                                            height={350}
+                                                            rowCount={goalRequest?.count}
+                                                            paginationModel={requestPaginationModel}
+                                                            setPaginationModel={setRequestPaginationModel}
+                                                        />
                                                     </div>
 
 
@@ -810,7 +950,13 @@ const Goals = () => {
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <DataTable rows={goalHistory?.results} columns={goalHistoryColumn} handleSelectedRow={handleSelectedRow} hideFooter height={350} />
+                                                        <DataTable rows={goalHistory?.results}
+                                                            columns={goalHistoryColumn} handleSelectedRow={handleSelectedRow}
+                                                            height={350}
+                                                            rowCount={goalHistory?.count}
+                                                            paginationModel={historyPaginationModel}
+                                                            setPaginationModel={setHistoryPaginationModel}
+                                                        />
                                                     </div>
 
 
@@ -824,8 +970,12 @@ const Goals = () => {
                                                     <div className='px-2 py-5'>
                                                         {title}
                                                     </div>
-                                                    <DataTable rows={goals} columns={goalColumn} handleSelectedRow={handleSelectedRow}
-                                                        hideFooter={goals.length > 5}
+                                                    <DataTable rows={goals?.results} columns={goalColumn}
+                                                        handleSelectedRow={handleSelectedRow}
+                                                        rowCount={goals?.count}
+                                                        paginationModel={allGoalPaginationModel}
+                                                        setPaginationModel={setAllGoalPaginationModel}
+                                                        hideFooter={goals?.results?.length === 0}
                                                     />
                                                 </div>
                                         }

@@ -508,6 +508,26 @@ export default function AllRequest() {
     ]
 
     const goalColumns = [
+        {
+            field: 'goal_name',
+            headerName: 'Goal Name',
+            flex: 1,
+            id: 0,
+            for: ['admin','mentor'],
+            renderCell: (params) => {
+                return <div className='flex gap-2 items-center'>{params?.row?.goal?.goal_name ?? "..."}</div>
+            }
+        },
+        {
+            field: 'reason_request',
+            headerName: 'Reason Request',
+            flex: 1,
+            id: 1,
+            for: ['admin','mentor'],
+            renderCell: (params) => {
+                return <div className='flex gap-2 items-center'>{params?.row?.goal?.description?.length ? params?.row?.goal?.description : "..."}</div>
+            }
+        },
         ...goalsRequestColumns,
         {
             field: 'status',
@@ -551,7 +571,7 @@ export default function AllRequest() {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
-                        <MenuItem onClick={(e) => { navigate(`/view-goal/${seletedItem.id}`) }} className='!text-[12px]'>
+                        <MenuItem onClick={(e) => { navigate(`/view-goal/${seletedItem?.goal?.id}`) }} className='!text-[12px]'>
                             <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
                             View
                         </MenuItem>
@@ -876,7 +896,7 @@ export default function AllRequest() {
     const getGoalsRequestApi = () => {
         dispatch(goalsRequest({
             ...filterStatus !== 'all' && { status: filterStatus },
-            created_at: actionTab,
+            created_by: actionTab,
             ...filter.search !== '' && { search: filter.search },
             ...filter.filter_by !== '' ? { filter_by: filter.filter_by } : { filter_by: 'month' }
         }))
@@ -1099,7 +1119,7 @@ export default function AllRequest() {
         }
 
         if (searchParams.get('type') === 'goal_request') {
-            setActiveTableDetails({ column: goalColumns, data: goalsRequestInfo })
+            setActiveTableDetails({ column: goalColumns, data: goalsRequestInfo?.results, rowCount: goalsRequestInfo?.count })
         }
         if (searchParams.get('type') === 'certificate_request') {
             setActiveTableDetails({ column: certificateColumns, data: certificateRequestList?.results, rowCount: certificateRequestList?.count })

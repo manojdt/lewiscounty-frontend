@@ -23,12 +23,14 @@ import { useNavigate, useParams } from 'react-router-dom'
 import MuiModal from '../../shared/Modal';
 import { useDispatch, useSelector } from 'react-redux'
 import { Backdrop, CircularProgress, Stack, Typography } from '@mui/material'
-import { getGoalInfo, updateGoalStatus } from '../../services/goalsInfo'
+import { getGoalInfo, getGoalsHistory, updateGoalStatus, updateHistoryGoal } from '../../services/goalsInfo'
 import { goalDataStatus, goalPeriods, goalRequestStatus, goalStatus, requestStatus } from '../../utils/constant'
 import { getCategoryList, updateGoalRequest, updateLocalRequest } from '../../services/request'
 import DataTable from '../../shared/DataGrid'
 import { categoryColumns } from '../../mock'
-
+import CloseReqPopup from "../../assets/icons/blackCloseIcon.svg"
+import CancelReq from "../../assets/icons/cancelRequest.svg"
+import dayjs from 'dayjs'
 
 const ViewGoal = ({ type = '' }) => {
     const navigate = useNavigate()
@@ -37,6 +39,11 @@ const ViewGoal = ({ type = '' }) => {
     const [pageloading, setPageLoading] = useState(false)
     const [categoryPopup, setCategoryPopup] = useState({ show: false, selectedItem: [], page: '', tab: '' })
     const [actionModal, setActionModal] = useState({ start: false, started: false, cancel: false, cancelled: false, complete: false, completed: false })
+    const [confirmPopup, setConfirmPopup] = React.useState({
+        bool: false,
+        activity: false,
+        type: ""
+    })
 
     const { goalInfo, loading, status } = useSelector(state => state.goals)
     const userInfo = useSelector(state => state.userInfo)
@@ -212,6 +219,55 @@ const ViewGoal = ({ type = '' }) => {
                 break
         }
 
+    }
+
+    // My changes
+
+    const handleOpenConfirmPopup = (type) => {
+        setConfirmPopup({
+            ...confirmPopup,
+            bool: true,
+            type: type
+        })
+    }
+
+    const handleCloseConfirmPopup = (type) => {
+        setConfirmPopup({
+            ...confirmPopup,
+            bool: false,
+            type: "",
+            activity: false
+        })
+    }
+
+    const handleUpdateHistoryGoal = () => {
+        const payload = {
+            id: params.id,
+            action: confirmPopup?.type === "complete" ? "complete" : "abort",
+            start_date: dayjs(new Date()).format("YYYY-MM-DD")
+        }
+        dispatch(updateHistoryGoal(payload)).then((res) => {
+            if (res?.meta?.requestStatus === "fulfilled") {
+                setConfirmPopup({
+                    ...confirmPopup,
+                    bool: false,
+                    activity: true,
+                    type: ""
+                })
+
+                setTimeout(() => {
+                    setConfirmPopup({
+                        ...confirmPopup,
+                        bool: false,
+                        activity: false,
+                        type: ""
+                    })
+
+                    dispatch(getGoalInfo(params.id))
+                }, 2000)
+
+            }
+        })
     }
 
     return (
@@ -465,7 +521,7 @@ const ViewGoal = ({ type = '' }) => {
                                                 </tr>
                                             </tbody>
                                         </table>
-                                        <Typography className="text-[18px] mt-[20px] text-[#3E3E3E]">{goalInfo?.designation}</Typography>
+                                        <Typography className="text-[18px] mt-[20px] text-[#3E3E3E]">{goalInfo?.description}</Typography>
                                     </div>
                                     <div className='leading-8'>
                                         {goalInfo.goal_description}
@@ -593,16 +649,16 @@ const ViewGoal = ({ type = '' }) => {
                                         {
                                             (role === "mentee" && ["new", "pending"].includes(goalInfo?.status)) &&
                                             <Stack direction={"row"} alignItems={"center"} spacing={2}>
-                                                
-                                                    <Button
-                                                        onClick={() => navigate('/goals')}
-                                                        btnName={'Cancel'} btnCategory="secondary"
-                                                        btnCls="border !border-[#E0382D] !text-[#E0382D] w-[140px] bg-[#fff]"/>
-                                                
-                                                    <Button
-                                                        onClick={() => navigate('/goals')}
-                                                        btnName={'Complete'} btnCategory="primary" btnCls="w-[140px]"/>
-                                                
+
+                                                <Button
+                                                    onClick={() => handleOpenConfirmPopup('cancel')}
+                                                    btnName={'Cancel'} btnCategory="secondary"
+                                                    btnCls="border !border-[#E0382D] !text-[#E0382D] w-[140px] bg-[#fff]" />
+
+                                                <Button
+                                                    onClick={() => handleOpenConfirmPopup('complete')}
+                                                    btnName={'Complete'} btnCategory="primary" btnCls="w-[140px]" />
+
                                             </Stack>
                                         }
                                     </div>
@@ -612,6 +668,83 @@ const ViewGoal = ({ type = '' }) => {
                     </div>
                     : null
             }
+
+
+            {/* request popup */}
+
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={confirmPopup?.bool && confirmPopup?.type === "complete"}
+            >
+                <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
+                    <img src={ConnectIcon} alt="ConnectIcon" />
+                    {/* <span style={{ color: '#232323', fontWeight: 600, fontSize: '24px' }}>{followInfo.is_following ? 'UnFollow' : 'Follow'}</span> */}
+
+                    <div className='py-5'>
+                        <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 600, fontSize: '18px' }}>Are you sure want to Complete this goal?</p>
+                    </div>
+                    <div className='flex justify-center'>
+                        <div className="flex gap-6 justify-center align-middle">
+                            <Button btnName='Cancel' btnCategory="secondary" onClick={() => handleCloseConfirmPopup()} />
+                            <Button btnType="button" btnCls="w-[110px]" btnName={"Complete"} btnCategory="primary"
+                                onClick={() => handleUpdateHistoryGoal()}
+                            />
+                        </div>
+                    </div>
+                </div>
+
+            </Backdrop>
+
+            {/* cancel Request */}
+
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={confirmPopup?.bool && confirmPopup?.type === "cancel"}
+            >
+
+                <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] p-[12px] justify-center items-center">
+                    <div className='border border-[#E50027] rounded-[15px] h-[100%] w-[100%] justify-center items-center flex flex-col relative'>
+                        <div className='absolute top-[12px] right-[12px] cursor-pointer' onClick={() => handleCloseConfirmPopup()}>
+                            <img src={CloseReqPopup} />
+                        </div>
+                        <img src={CancelReq} alt="ConnectIcon" />
+
+                        <div className='py-5'>
+                            <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 600, fontSize: '18px' }}>Are you sure want to cancel this Request?</p>
+                        </div>
+                        <div className='flex justify-center'>
+                            <div className="flex gap-6 justify-center align-middle">
+                                <Button btnName='No' btnCategory="secondary"
+                                    btnCls="border !border-[#E50027] !text-[#E50027] w-[110px]" onClick={() => handleCloseConfirmPopup()} />
+                                <Button btnType="button" btnCls="w-[110px] !bg-[#E50027] !text-[#fff] border !border-[#E50027]" btnName={"Yes"}
+                                    btnCategory="secondary"
+                                    onClick={() => handleUpdateHistoryGoal()}
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </Backdrop>
+
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={confirmPopup?.activity}
+                onClick={() => false}
+            >
+                <div className='px-5 py-1 flex justify-center items-center'>
+                    <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
+                        style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
+                        <img src={SuccessTik} alt="SuccessTik" />
+                        <p className='text-white text-[12px]'>
+                            {
+                                confirmPopup?.type === "cancel" ? "Your New goal has been successfully canceled" : "Your goal has been successfully completed"
+                            }
+                        </p>
+                    </div>
+
+                </div>
+            </Backdrop>
         </div>
     )
 }

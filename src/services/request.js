@@ -101,7 +101,7 @@ export const goalsRequest = createAsyncThunk(
     "goalsRequest",
     async (query) => {
         let queryString = new URLSearchParams(query).toString()
-        const goalsRequestInfo = await api.get(`goals/goal-request?${queryString}`);
+        const goalsRequestInfo = await api.get(`goals/get/goals/request?${queryString}`);
         if (goalsRequestInfo.status === 200 && goalsRequestInfo.data) {
             return goalsRequestInfo.data;
         }
