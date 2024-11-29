@@ -114,8 +114,11 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
         const selectedCategory = categoryPopup.selectedItem
         if(selectedCategory.length){
             searchParams.set("category_id", selectedCategory.toString());
-            setSearchParams(searchParams)
+            
+        }else{
+            searchParams.delete("category_id")
         }
+        setSearchParams(searchParams)
         setCategoryPopup({ show: false, search: '', categoryList: category, selectedItem: [] })
     }
 
