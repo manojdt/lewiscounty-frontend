@@ -97,7 +97,6 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
         let image = { ...logoImage }
         delete image[key]
         setValue(key, '')
-
         setLogoImage(image)
     }
 
@@ -105,8 +104,9 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
         setCheckBoxValue({ ...checkBoxValue, [e.target.name]: e.target.value })
     }
 
+    console.log('stepData', stepData)
 
-
+    console.log('logoImage', logoImage)
 
     return (
         <>
@@ -127,6 +127,7 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                         imageField = register(field.name, {required: false})
                                     }
                                 }
+                                const reader = new FileReader();
                                 return (
                                     <div className={`relative mb-6  ${getWindowDimensions().width <= 1536 && field.width === 'width-82' ? 'w-[81%]' : field.width}`} key={index}>
                                         <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor={field.label}>
@@ -392,14 +393,15 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                                                         <input id={imageField.name} type="file" {...imageField}
 
                                                                                             onChange={(e) => {
-                                                                                                imageField.onChange(e);
+                                                                                               
                                                                                                 if (e.target.files && e.target.files[0]) {
+
+                                                                                                    console.log('pppppp', e.target.files)
                                                                                                     let types = ['image/png', 'image/jpeg']
                                                                                                     if (types.includes(e.target.files[0].type)) {
+                                                                                                        imageField.onChange(e);
                                                                                                         setLogoImage({ ...logoImage, [field.name]: URL.createObjectURL(e.target.files[0]) });
-                                                                                                    } else {
-                                                                                                        setError([field.name], 'Invalid file type')
-                                                                                                    }
+                                                                                                    } 
                                                                                                 }
                                                                                             }}
                                                                                             className="hidden" />
@@ -415,7 +417,7 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                                                             <div className='flex w-[80%] gap-3 items-center'>
                                                                                                 <img src={UploadIcon} alt="altlogo" />
                                                                                                 <span className='text-[12px]'>
-                                                                                                    {getValues(imageField.name) && getValues(imageField.name)[0]?.name}
+                                                                                                    {getValues(field.name) && getValues(field.name)[0]?.name}
                                                                                                     {params.id && imageName}
                                                                                                 </span>
                                                                                             </div>
