@@ -309,7 +309,8 @@ export const goalRequestStatus = {
   new: 'New',
   pending: 'Pending',
   accept: 'Accept',
-  decline: 'Decline'
+  decline: 'Decline',
+  cancel: "Cancel"
 }
 
 export const goalRequestColor = {
@@ -340,8 +341,11 @@ export const goalRequestColor = {
   decline: {
     color: 'rgba(224, 56, 45, 1)',
     bg: 'rgba(255, 231, 231, 1)'
+  },
+  cancel: {
+    color: 'rgba(224, 56, 45, 1)',
+    bg: 'rgba(255, 231, 231, 1)'
   }
-
 }
 
 export const certificateText = {

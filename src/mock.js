@@ -797,43 +797,6 @@ const goalsRequestRowData = () => {
 export const goalsRequestRow = goalsRequestRowData();
 
 
-export const goalsRequestColumn = [{
-    field: 'goal_name',
-    headerName: 'Goals Name',
-    id: 0,
-    flex: 1
-},
-{
-    field: 'goal_designation',
-    headerName: 'Goals Designation',
-    flex: 1,
-    id: 1,
-},
-{
-    field: 'goal_description',
-    headerName: 'Goals Description',
-    flex: 1,
-    id: 2,
-},
-{
-    field: 'request_date',
-    headerName: 'Request Date',
-    flex: 1,
-    id: 3,
-},
-{
-    field: 'approved_date',
-    headerName: 'Approved Date',
-    flex: 1,
-    id: 4,
-},
-
-];
-
-
-
-
-
 export const menteeGoalsRequestColumn = [{
     field: 'mentee_name',
     headerName: 'Mentee Name',
@@ -1557,20 +1520,7 @@ export const memberMenteeRequestColumns = [
 
 
 export const goalsRequestColumns = [
-    {
-        field: 'goal_name',
-        headerName: 'Goal Name',
-        flex: 1,
-        id: 0,
-        for: ['admin','mentor']
-    },
-    {
-        field: 'reason_request',
-        headerName: 'Reason Request',
-        flex: 1,
-        id: 1,
-        for: ['admin','mentor']
-    },
+   
     {
         field: 'requested_date',
         headerName: 'Request Date',

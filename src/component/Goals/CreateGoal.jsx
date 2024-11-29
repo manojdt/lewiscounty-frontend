@@ -10,12 +10,14 @@ import { createGoal, updateGoal } from '../../services/goalsInfo';
 import { Backdrop, CircularProgress } from '@mui/material';
 import { goalPeriods } from '../../utils/constant';
 import dayjs from 'dayjs';
+import { useNavigate } from 'react-router-dom';
 
 
-export default function CreateGoal({ open, handleCloseModal, seletedItem, editMode }) {
+export default function CreateGoal({ open, handleCloseModal, seletedItem, editMode, recreate = false }) {
     const [dateFormat, setDateFormat] = useState({})
     const calendarRef = useRef(null)
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     const { loading, error } = useSelector(state => state.goals)
 
     const {
@@ -30,7 +32,7 @@ export default function CreateGoal({ open, handleCloseModal, seletedItem, editMo
         let apiData = {
             goal_name: data?.goal_name,
             designation: data?.goal_designation,
-            goal_description: data?.goal_description,
+            description: data?.goal_description,
             period: parseInt(data.period),
             start_date: dayjs(data?.start_date).format("YYYY-MM-DD")
         }
@@ -40,12 +42,20 @@ export default function CreateGoal({ open, handleCloseModal, seletedItem, editMo
                 ...apiData,
                 id: seletedItem.id
             }
-            dispatch(updateGoal(apiData))
+            dispatch(updateGoal(apiData)).then((res)=>{
+                if(res?.meta?.requestStatus === "fulfilled"){
+                    if (recreate) {
+                        handleCloseModal()
+                    }
+                }
+            })
         } else {
             dispatch(createGoal(apiData))
         }
         reset()
         setDateFormat({})
+
+        
     }
 
     const handleClose = () => {
@@ -60,7 +70,15 @@ export default function CreateGoal({ open, handleCloseModal, seletedItem, editMo
 
     useEffect(() => {
         if (editMode) {
-            reset(seletedItem)
+            const constructed = {
+                goal_name: seletedItem?.goal_name,
+                goal_designation: seletedItem?.designation,
+                goal_description: seletedItem?.description,
+                period: seletedItem?.period,
+                start_date: seletedItem?.start_date,
+                ...seletedItem
+            }
+            reset(constructed)
         } else {
             reset({})
         }
