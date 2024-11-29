@@ -397,7 +397,8 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                                                                 if (e.target.files && e.target.files[0]) {
 
                                                                                                     console.log('pppppp', e.target.files)
-                                                                                                    let types = ['image/png', 'image/jpeg']
+                                                                                                    let types = ['image/png', 'image/jpeg', 'image/jpg','image/webp','image/heic']
+                                                                                                    console.log('Image', e.target.files)
                                                                                                     if (types.includes(e.target.files[0].type)) {
                                                                                                         imageField.onChange(e);
                                                                                                         setLogoImage({ ...logoImage, [field.name]: URL.createObjectURL(e.target.files[0]) });
