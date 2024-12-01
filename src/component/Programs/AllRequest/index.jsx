@@ -42,7 +42,8 @@ export default function AllRequest() {
     const [anchorEl, setAnchorEl] = useState(null);
     const [filter, setFilter] = useState({ search: '', filter_by: '' })
     const open = Boolean(anchorEl);
-    const [actionTab, setActiveTab] = useState('new_program_request')
+    const type = searchParams.get("type")
+    const [actionTab, setActiveTab] = useState(type === "goal_request" ? "mentor" : 'new_program_request')
     const [actionTabFilter, setActionTabFilter] = useState([])
     const [activeTableDetails, setActiveTableDetails] = useState({ column: [], data: [] })
     const [seletedItem, setSelectedItem] = useState({})
@@ -182,12 +183,7 @@ export default function AllRequest() {
     const handleConfirmPopup = () => {
         if (confirmPopup.requestType === 'program_request') {
             handleAcceptProgramApiRequest()
-        }
-        if (confirmPopup.requestType === 'goal_request') {
-            if (confirmPopup.type === 'reject') {
-                handleCancelGoalApiRequest()
-            }
-        }
+        }        
 
         if (confirmPopup.requestType === 'member_join_request') {
             if (confirmPopup.type === 'reject') {
@@ -261,11 +257,16 @@ export default function AllRequest() {
     }
 
     // Cancel Goal Request Api Call
-    const handleCancelGoalApiRequest = () => {
+    const handleCancelGoalApiRequest = (reason = "") => {
         dispatch(updateGoalRequest({
-            status: "cancel",
-            id: seletedItem.id
-        }))
+            action: "cancel",
+            goal_request_ids: [seletedItem.id],
+            description: reason
+        })).then((res)=>{
+            if(res?.meta?.requestStatus === "fulfilled"){
+                handleCloseCancelReasonPopup()
+            }
+        })
     }
 
     // Cancel Member Request Api Call
@@ -319,6 +320,10 @@ export default function AllRequest() {
                         report_status: "cancel",
                         report_comment: data.cancel_reason
                     }))
+                }
+
+                if (cancelPopup.page === 'goal_request') {
+                    handleCancelGoalApiRequest(data.cancel_reason)
                 }
 
             }
@@ -386,7 +391,8 @@ export default function AllRequest() {
 
     // Goal Dropdown Cancel
     const handleCancelGoalRequest = () => {
-        handleOpenConfirmPopup('Goal Request', currentRequestTab.key, actionTab, 'reject')
+        // handleOpenConfirmPopup('Goal Request', currentRequestTab.key, actionTab, 'reject')
+        setCancelPopup({ show: true, page: currentRequestTab.key })
         handleClose()
     }
 
@@ -861,6 +867,9 @@ export default function AllRequest() {
         navigate(`/all-request?type=${menu.status}`)
         handleStatus("all")
         setFilter({ search: '', filter_by: '' })
+        if(menu?.status === "goal_request"){
+            setActiveTab("mentor")
+        }
     }
 
     const getProgramRequestApi = () => {
@@ -892,10 +901,10 @@ export default function AllRequest() {
 
     }
 
-    const getGoalsRequestApi = () => {
+    const getGoalsRequestApi = (createdBy = actionTab) => {
         dispatch(goalsRequest({
             ...filterStatus !== 'all' && { status: filterStatus },
-            created_by: actionTab,
+            created_by: createdBy,
             ...filter.search !== '' && { search: filter.search },
             ...filter.filter_by !== '' ? { filter_by: filter.filter_by } : { filter_by: 'month' }
         }))

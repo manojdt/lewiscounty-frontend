@@ -10,8 +10,7 @@ export const getAllGoals = createAsyncThunk(
     "getAllGoals",
     async (query = '') => {
         let filteredQuery = Object.fromEntries(
-            Object.entries(query).filter(([key, value]) => !(key === "search" && value.trim().length === 0) &&
-                !(key === "created_by" && value === "mentee"))
+            Object.entries(query).filter(([key, value]) => !(key === "search" && value.trim().length === 0))
         );
         let queryString = new URLSearchParams(filteredQuery).toString()
         const allGoals = await api.get(`goals/get/all/goals?${queryString}`);
@@ -142,8 +141,7 @@ export const getGoalsHistory = createAsyncThunk(
     "getGoalsHistory",
     async (query) => {
         let filteredQuery = Object.fromEntries(
-            Object.entries(query).filter(([key, value]) => !(key === "search" && value.trim().length === 0) &&
-                !(key === "created_by" && value === "mentee"))
+            Object.entries(query).filter(([key, value]) => !(key === "search" && value.trim().length === 0))
         );
         let queryString = new URLSearchParams(filteredQuery).toString()
         const goalsHistory = await api.get(`goals/get/all/goals?${queryString}`);

@@ -31,7 +31,7 @@ import TickColorIcon from "../../assets/icons/tickColorLatest.svg"
 import ConnectIcon from '../../assets/images/Connectpop1x.png'
 import CloseReqPopup from "../../assets/icons/blackCloseIcon.svg"
 import CancelReq from "../../assets/icons/cancelRequest.svg"
-
+import CloseIcon from "../../assets/icons/closeIcon.svg"
 import './goal.css'
 import dayjs from 'dayjs';
 import { Button } from '../../shared';
@@ -67,6 +67,13 @@ const Goals = () => {
         pageSize: 5
     })
     const [showAdmin, setShowAdmin] = React.useState(false)
+    const [createdBy, setCreatedBy] = React.useState("")
+    const [adminTab, setAdminTab] = React.useState("mentor")
+    const [adminTablePaginationModal, setAdminTablePaginationModal] = React.useState({
+        page: 0,
+        pageSize: 10
+    })
+    const [adminTimeFrame, setAdminTimeFrame] = React.useState("month")
 
     const userInfo = useSelector(state => state.userInfo)
 
@@ -160,18 +167,18 @@ const Goals = () => {
         setActionModal(true)
     }
 
-    const getAllGoalData = () => {
+    const getAllGoalData = (created_by = createdBy) => {
         dispatch(getGoalsCount({ time_frame: allTimeFrame }))
         dispatch(getGoalsRequest({
             status: "new",
-            // created_by: "mentee",
+            created_by: created_by,
             time_frame: requestTimeFrame,
             page: requestPaginationModel?.page + 1,
             limit: requestPaginationModel?.pageSize
         }))
         dispatch(getGoalsHistory({
             status: "new",
-            // created_by: "mentee",
+            created_by: created_by,
             time_frame: historyTimeFrame,
             page: historyPaginationModel?.page + 1,
             limit: historyPaginationModel?.pageSize
@@ -554,7 +561,7 @@ const Goals = () => {
                         }}
                     >
                         <MenuItem onClick={(e) => {
-                            navigate(`/view-goal/${seletedItem.id}`);
+                            navigate(`/view-goal/${seletedItem?.goal?.id}`);
                         }
                         } className='!text-[12px]'>
                             <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
@@ -576,7 +583,8 @@ const Goals = () => {
         },
     ]
 
-    const title = goalsListMenu.find(option => option.key === searchParams.get("type"))?.name || (role === 'mentee' ? 'Mentee Goals' : 'My Goals')
+    const title = role === "admin" ? (adminTab === "mentor" ? "Mentor Goal" : "Mentee Goal" ):
+    goalsListMenu.find(option => option.key === searchParams.get("type"))?.name || (role === 'mentee' ? 'Mentee Goals' : 'My Goals')
 
     const handleTab = (key) => {
         setRequestTab(key)
@@ -640,7 +648,7 @@ const Goals = () => {
         setHistoryTimeFrame(value)
         dispatch(getGoalsHistory({
             status: "new",
-            // created_by: role,
+            created_by: createdBy,
             time_frame: value,
             page: historyPaginationModel?.page + 1,
             limit: historyPaginationModel?.pageSize
@@ -700,7 +708,7 @@ const Goals = () => {
         setRequestTimeFrame(value)
         dispatch(getGoalsRequest({
             status: "new",
-            // created_by: "mentee",
+            created_by: createdBy,
             time_frame: value,
             page: requestPaginationModel?.page + 1,
             limit: requestPaginationModel?.pageSize
@@ -712,13 +720,6 @@ const Goals = () => {
         setAllTimeFrame(value)
         handleGetAllGoals(value)
     }
-
-    const [adminTab, setAdminTab] = React.useState("mentor")
-    const [adminTablePaginationModal, setAdminTablePaginationModal] = React.useState({
-        page: 0,
-        pageSize: 10
-    })
-    const [adminTimeFrame, setAdminTimeFrame] = React.useState("month")
 
     const handleAdminTabChange = async (event, newValue) => {
         setAdminTab(newValue);
@@ -739,7 +740,7 @@ const Goals = () => {
             flex: 1,
             id: 1,
             renderCell: (params) => {
-                return <div className='flex gap-2 items-center'>{params?.row?.requested_by}</div>
+                return <div className='flex gap-2 items-center'>{params?.row?.created_by}</div>
             }
         },
         {
@@ -790,7 +791,7 @@ const Goals = () => {
             flex: 1,
             id: 1,
             renderCell: (params) => {
-                return <div className='flex gap-2 items-center'>{params?.row?.requested_by}</div>
+                return <div className='flex gap-2 items-center'>{params?.row?.created_by}</div>
             }
         },
         {
@@ -835,10 +836,10 @@ const Goals = () => {
     ]
 
 
-    const handleGetAdminTableData = (time_frame = adminTimeFrame) => {
+    const handleGetAdminTableData = (time_frame = adminTimeFrame, created_by = adminTab) => {
         dispatch(getAllGoals({
             status: "new",
-            created_by: adminTab,
+            created_by: created_by,
             time_frame: time_frame,
             page: adminTablePaginationModal?.page + 1,
             limit: adminTablePaginationModal?.pageSize
@@ -855,10 +856,20 @@ const Goals = () => {
     }
 
     const handleViewTab = (type) =>{
-        setRequestTab(type === "mentee" ? "mentee-goals" :'mentor-goals')
+        handleClose()
+        setRequestTab('mentor-goals')
         setShowAdmin(false)
+        setCreatedBy(type)
+        getAllGoalData(type)
     }
 
+    const handleCloseAdmin = () =>{
+        setShowAdmin(true)
+        setCreatedBy("")
+        setAdminTab("mentor")
+        handleGetAdminTableData("month","mentor")
+    }
+    console.log("adminTab ===>", adminTab)
     return (
         <div className="goals px-9 py-9">
             <Backdrop
@@ -930,6 +941,12 @@ const Goals = () => {
                     <div className='flex gap-5 items-center'>
                         <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 700 }}>Goals</p>
                     </div>
+                    {
+                        (!showAdmin && role === "admin") && 
+                        <div onClick={()=>handleCloseAdmin()}>
+                            <img src={CloseIcon} alt='CloseIcon'/>
+                        </div>
+                    }
                 </div>
 
                 <div className='mx-5'>
@@ -1132,7 +1149,7 @@ const Goals = () => {
                     }
 
                     {
-                        (requestTab === 'mentee-goals' && !showAdmin) && <MenteeGoals />
+                        requestTab === 'mentee-goals' && <MenteeGoals />
                     }
 
                     {
