@@ -97,7 +97,6 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
         let image = { ...logoImage }
         delete image[key]
         setValue(key, '')
-
         setLogoImage(image)
     }
 
@@ -105,8 +104,9 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
         setCheckBoxValue({ ...checkBoxValue, [e.target.name]: e.target.value })
     }
 
+    console.log('stepData', stepData)
 
-
+    console.log('logoImage', logoImage)
 
     return (
         <>
@@ -127,6 +127,7 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                         imageField = register(field.name, {required: false})
                                     }
                                 }
+                                const reader = new FileReader();
                                 return (
                                     <div className={`relative mb-6  ${getWindowDimensions().width <= 1536 && field.width === 'width-82' ? 'w-[81%]' : field.width}`} key={index}>
                                         <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor={field.label}>
@@ -392,14 +393,16 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                                                         <input id={imageField.name} type="file" {...imageField}
 
                                                                                             onChange={(e) => {
-                                                                                                imageField.onChange(e);
+                                                                                               
                                                                                                 if (e.target.files && e.target.files[0]) {
-                                                                                                    let types = ['image/png', 'image/jpeg']
+
+                                                                                                    console.log('pppppp', e.target.files)
+                                                                                                    let types = ['image/png', 'image/jpeg', 'image/jpg','image/webp','image/heic']
+                                                                                                    console.log('Image', e.target.files)
                                                                                                     if (types.includes(e.target.files[0].type)) {
+                                                                                                        imageField.onChange(e);
                                                                                                         setLogoImage({ ...logoImage, [field.name]: URL.createObjectURL(e.target.files[0]) });
-                                                                                                    } else {
-                                                                                                        setError([field.name], 'Invalid file type')
-                                                                                                    }
+                                                                                                    } 
                                                                                                 }
                                                                                             }}
                                                                                             className="hidden" />
@@ -415,7 +418,7 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                                                             <div className='flex w-[80%] gap-3 items-center'>
                                                                                                 <img src={UploadIcon} alt="altlogo" />
                                                                                                 <span className='text-[12px]'>
-                                                                                                    {getValues(imageField.name) && getValues(imageField.name)[0]?.name}
+                                                                                                    {getValues(field.name) && getValues(field.name)[0]?.name}
                                                                                                     {params.id && imageName}
                                                                                                 </span>
                                                                                             </div>
@@ -443,9 +446,12 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                     <div className="flex gap-6 justify-center align-middle">
                         {currentStep === 1 && <Button btnName='Cancel' btnCategory="secondary" onClick={() => navigate('/programs')} />}
                         {currentStep > 1 && <Button btnName='Back' btnCategory="secondary" onClick={handlePreviousStep} />}
-                        {(currentStep !== '' &&
+                        {currentStep === totalSteps && 
+                        <Button btnType="button" onClick={handleDraft} btnStyle={{ background: 'rgba(197, 197, 197, 1)', color: '#000' }}
+                                btnCls="w-[150px]" btnName={'Save as Draft'} btnCategory="primary" /> }
+                        {/* {(currentStep !== '' &&
                             (!Object.keys(programDetails).length)) || (Object.keys(programDetails).length && programDetails.status === 'draft') ? <Button btnType="button" onClick={handleDraft} btnStyle={{ background: 'rgba(197, 197, 197, 1)', color: '#000' }}
-                                btnCls="w-[150px]" btnName={'Save as Draft'} btnCategory="primary" /> : null}
+                                btnCls="w-[150px]" btnName={'Save as Draft'} btnCategory="primary" /> : null} */}
 
                         <Button btnType="submit" id={'program-submit'} btnCls="w-[100px]" 
 

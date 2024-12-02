@@ -13,7 +13,8 @@ import {
     getProgramsByCategoryId,
     getReportDetails,
     getReportProgramDetails,
-    updateReportDetails
+    updateReportDetails,
+    updateReportLocalState
 } from "../../services/reportsInfo";
 
 const initialState = {
@@ -212,6 +213,14 @@ export const reportsSlice = createSlice({
                     error: action.error.message,
                 };
             });
+
+
+        builder.addCase(updateReportLocalState, (state, action) => {
+            return {
+                ...state,
+                ...action.payload
+            }
+        })
     }
 })
 

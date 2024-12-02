@@ -497,11 +497,11 @@ export default function AllRequest() {
                                 <>
                                     <MenuItem onClick={handleAcceptProgramRequest} className='!text-[12px]'>
                                         <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
-                                        Approve
+                                       {actionTab === 'program_cancel' ? 'Accept' : 'Approve' }
                                     </MenuItem>
                                     <MenuItem onClick={handleCancelProgramRequest} className='!text-[12px]'>
                                         <img src={CloseCircle} alt="CancelIcon" className='pr-3 w-[27px]' />
-                                        Reject
+                                        {actionTab === 'program_cancel' ? 'Continue' : 'Reject' }
                                     </MenuItem>
                                 </>
                             }
@@ -1422,7 +1422,7 @@ export default function AllRequest() {
 
                                                 {
                                                     statusOptions.map((option, index) =>
-                                                        <option style={{ background: '#fff', color: '#000' }} key={index} selected={option?.value === filterStatus} value={option?.value}>{option?.label}</option>
+                                                        <option style={{background: '#fff !important', color: '#000'}} key={index} selected={option?.value === filterStatus} value={option?.value}>{option?.label}</option>
                                                     )
                                                 }
                                             </select>

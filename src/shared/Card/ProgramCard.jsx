@@ -91,7 +91,11 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
     }
 
     const handleCategoryFilter = () => {
-        setCategoryPopup({ ...categoryPopup, show: true, search: '', selectedItem: [] })
+        let options = { ...categoryPopup, show: true, search: '', selectedItem : [] }
+        if(searchParams.has('category_id') && searchParams.get('category_id') !== ''){
+            options = {...options, selectedItem: searchParams.get('category_id').split(',').map(Number) }
+        }
+        setCategoryPopup(options)
     }
 
     const handleCategorySearch = (value) => {
@@ -110,10 +114,12 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
         const selectedCategory = categoryPopup.selectedItem
         if(selectedCategory.length){
             searchParams.set("category_id", selectedCategory.toString());
-            setSearchParams(searchParams)
+            
+        }else{
+            searchParams.delete("category_id")
         }
+        setSearchParams(searchParams)
         setCategoryPopup({ show: false, search: '', categoryList: category, selectedItem: [] })
-        console.log(categoryPopup)
     }
 
     useEffect(() => {
@@ -487,7 +493,9 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                                     categoryPopup.categoryList.map((category, index) =>
                                         <li key={index} className='flex gap-7'>
                                             <input type="checkbox" className='w-[20px]' checked={categoryPopup.selectedItem.includes(category.id)} 
-                                                onChange={() => handleSelectCategory(category.id)} value={category.id} />
+                                                onChange={() => handleSelectCategory(category.id)} value={category.id}
+                                                
+                                                />
                                             <span className='text-[16px]'>{category.name}</span>
                                         </li>
                                     )

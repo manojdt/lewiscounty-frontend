@@ -18,6 +18,8 @@ export const getAllReports = createAsyncThunk(
     }
 );
 
+export const updateReportLocalState = createAction('update/updateReportLocalState')
+
 export const getCompletedProgramsByCategoryId = createAsyncThunk(
     "getCompletedProgramsByCategoryId",
     async (query) => {

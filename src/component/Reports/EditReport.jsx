@@ -20,7 +20,7 @@ import { getAllCategories } from '../../services/programInfo';
 
 import { getMentees, getProgramDetails, updateProgram } from '../../services/userprograms';
 import { pipeUrls, programActionStatus, reportAllStatus, reportsStatus } from '../../utils/constant';
-import { getProgramsByCategoryId, getReportDetails, getReportProgramDetails, updateReportDetails } from '../../services/reportsInfo';
+import { getProgramsByCategoryId, getReportDetails, getReportProgramDetails, updateReportDetails, updateReportLocalState } from '../../services/reportsInfo';
 import { dateTimeFormat } from '../../utils';
 import ToastNotification from '../../shared/Toast';
 
@@ -207,6 +207,13 @@ export default function EditReport() {
             setAllMenteeList(value)
         }
     }
+
+    useEffect(() => {
+        return () => {
+            dispatch(updateReportLocalState({programDetails: {}, reportDetails: {}}))
+            console.log('LEase')
+        }
+    },[])
 
 
     return (

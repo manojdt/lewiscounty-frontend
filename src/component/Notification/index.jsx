@@ -11,6 +11,8 @@ import { userActivities, userActivitiyVisited } from '../../services/activities'
 export default function Notification({ handleClose }) {
 
     const { activity, loading } = useSelector(state => state.activity)
+    const { data } = useSelector(state => state.userInfo)
+    const role = data?.role || ''
     const dispatch = useDispatch()
 
     const navigate = useNavigate()
@@ -27,6 +29,26 @@ export default function Notification({ handleClose }) {
             case 'program':
                 handleClose && handleClose()
                 navigate(`/program-details/${data.related_data.program_id}?request_id=${data.related_data.program_request_id}`)
+                break;
+            case 'task':
+                const url = role === 'mentee' ? `mentee-tasks-details/${data.related_data.task_id}` : `mentor-tasks-details/${data.related_data.task_id}?mentee_id=${data.related_data?.mentee_id}`
+                handleClose && handleClose()
+                navigate(url)
+                break;
+            case 'report':
+                const reporturl = role === 'mentor' ? `view-report/${data.related_data.report_id}` : `mentor-tasks-details/${data.related_data.report_id}?request_id=${data.related_data?.report_request_id}`
+                handleClose && handleClose()
+                navigate(reporturl)
+                break;
+            case 'member':
+                const memberurl = role === 'mentor' ? `mentor-details/${data.related_data.member_id}` : `mentor-details/${data.related_data.member_id}?request_id=${data.related_data?.member_request_id}`
+                handleClose && handleClose()
+                navigate(memberurl)
+                break;
+            case 'certificate':
+                const certificateurl = role === 'mentor' ? `certificate_mentees/${data.related_data.certificate_id}` : `certificate_mentees/${data.related_data.certificate_id}?request_id=${data.related_data?.certificate_request_id}`
+                handleClose && handleClose()
+                navigate(certificateurl)
                 break;
             default:
                 handleNavigation()

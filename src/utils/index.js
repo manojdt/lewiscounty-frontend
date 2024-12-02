@@ -280,7 +280,7 @@ export const getFiles = (files) => {
   };
 
   const imageExtension = ['jpg', 'jpeg', 'png']
-  const docuementExtension = ['pfd', 'doc', 'docx']
+  const docuementExtension = ['pdf', 'doc', 'docx']
   const videoExtension = ['mov', 'mp4', 'avi']
 
   files.forEach(file => {

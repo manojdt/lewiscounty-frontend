@@ -2345,7 +2345,7 @@ export const ProfileFields = [{
   label: "Address",
   placeholder: "Enter Address",
   inputRules: {
-    required: "This field is required",
+
   },
 }
 ];

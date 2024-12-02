@@ -57,7 +57,7 @@ const MentorTaskDetails = () => {
         console.log('taskDetails', taskDetails)
         if (taskDetails.status === 'waiting_for_approval' && !editTask) {
             setEditTask(true)
-        }else{
+        } else {
             setEditTask(false)
         }
     }, [taskDetails])
@@ -102,7 +102,6 @@ const MentorTaskDetails = () => {
                 open={taskDetailsLoading}
             >
                 <CircularProgress color="inherit" />
-
             </Backdrop>
 
 
@@ -110,7 +109,7 @@ const MentorTaskDetails = () => {
                 <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
                     <div className='flex gap-5 items-center text-[20px]'>
                         <p>Task - {taskDetails.task_name}</p>
-                        {
+                        {/* {
                             (taskDetails.status === 'waiting_for_approval' && !editTask) &&
 
 
@@ -119,7 +118,7 @@ const MentorTaskDetails = () => {
                             >
                                 <img src={EditIcon} alt='EditIcon' />
                             </div>
-                        }
+                        } */}
                     </div>
 
                     <div className='flex gap-8 items-center'>
@@ -243,10 +242,12 @@ const MentorTaskDetails = () => {
                                             <div className='uploaded-images task-image-list' key={index}>
                                                 <div className='flex gap-3 w-[400px] justify-between items-center mt-5 px-4 py-4'
                                                     style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }}>
-                                                    <div className='flex gap-3 items-center'>
-                                                        <img src={UploadIcon} alt="altlogo" />
-                                                        <span className='text-[12px] image-name'>{imges.name}</span>
-                                                    </div>
+                                                    <a href={imges.fileurl} target='_blank'>
+                                                        <div className='flex gap-3 items-center'>
+                                                            <img src={UploadIcon} alt="altlogo" />
+                                                            <span className='text-[12px] image-name'>{imges.name}</span>
+                                                        </div>
+                                                    </a>
                                                 </div>
                                             </div>
                                         )
@@ -267,10 +268,12 @@ const MentorTaskDetails = () => {
                                         allFiles.video.map((imges, index) =>
                                             <div className='task-image-list flex gap-3 w-[400px] justify-between items-center mt-5 px-4 py-4'
                                                 style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }} key={index}>
-                                                <div className='flex gap-3 items-center'>
-                                                    <img src={UploadIcon} alt="altlogo" />
-                                                    <span className='text-[12px] image-name'>{imges.name}</span>
-                                                </div>
+                                                <a href={imges.fileurl} target='_blank'>
+                                                    <div className='flex gap-3 items-center'>
+                                                        <img src={UploadIcon} alt="altlogo" />
+                                                        <span className='text-[12px] image-name'>{imges.name}</span>
+                                                    </div>
+                                                </a>
                                             </div>
                                         )
                                     }
@@ -295,10 +298,12 @@ const MentorTaskDetails = () => {
                                         allFiles.doc.map((imges, index) =>
                                             <div className='task-image-list flex gap-3 w-[400px] justify-between items-center mt-5 px-4 py-4'
                                                 style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }} key={index}>
-                                                <div className='flex gap-3 items-center'>
-                                                    <img src={UploadIcon} alt="altlogo" />
-                                                    <span className='text-[12px] image-name'>{imges.name}</span>
-                                                </div>
+                                                <a href={imges.fileurl} target='_blank'>
+                                                    <div className='flex gap-3 items-center'>
+                                                        <img src={UploadIcon} alt="altlogo" />
+                                                        <span className='text-[12px] image-name'>{imges.name}</span>
+                                                    </div>
+                                                </a>
                                             </div>
                                         )
                                     }
@@ -341,7 +346,7 @@ const MentorTaskDetails = () => {
                             }
 
                             {
-                                editTask &&
+                                taskDetails.status === 'waiting_for_approval' &&
                                 <>
                                     <div className='relative py-5'>
                                         <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2" >
