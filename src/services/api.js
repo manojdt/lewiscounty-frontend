@@ -2,11 +2,11 @@ import axios from "axios";
 
 let refresh = false;
 
-// const baseUrl = "http://52.88.78.226:8000/api";
+// const baseUrl = "http://192.168.3.169:8000//api";
 
 const baseUrl = "https://mentor-backend.dataterrain-dev.net/api/"
 
-// const baseUrl = "https://mentor-backend.dataterrain-test.net/api/"
+// const baseUrl = "https://fe9b-2401-4900-2324-12cc-bce2-16d4-825c-4231.ngrok-free.app/api/"
 
 const api = axios.create({
   baseURL: baseUrl,

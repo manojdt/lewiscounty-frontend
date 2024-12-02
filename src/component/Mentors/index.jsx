@@ -22,10 +22,10 @@ import { Button } from '../../shared';
 import ConnectIcon from '../../assets/images/Connectpop1x.png'
 import SuccessTik from '../../assets/images/blue_tik1x.png';
 import { followBtnText, requestStatusColor, requestStatusText } from '../../utils/constant';
-import { format } from "date-fns";
 import CloseRequest from "../../assets/icons/closeCircle.svg"
 import CloseReqPopup from "../../assets/icons/closeReqPopup.svg"
 import CancelReq from "../../assets/icons/cancelRequest.svg"
+import dayjs from 'dayjs';
 
 export const Mentors = () => {
     const navigate = useNavigate()
@@ -191,7 +191,7 @@ export const Mentors = () => {
             flex: 1,
             id: 5,
             renderCell: (params) => {
-                return <div className='flex gap-2 items-center'> {params?.row?.requested_date ? format(params?.row?.requested_date, "dd/MM/yyyy") : "..."}</div>
+                return <div className='flex gap-2 items-center'> {params?.row?.requested_date ? dayjs(params?.row?.requested_date).format("DD/MM/YYYY") : "..."}</div>
             }
         },
         {
@@ -200,7 +200,7 @@ export const Mentors = () => {
             flex: 1,
             id: 5,
             renderCell: (params) => {
-                return <div className='flex gap-2 items-center'> {params?.row?.cancelled_date ? format(params?.row?.cancelled_date, "dd/MM/yyyy") : "..."}</div>
+                return <div className='flex gap-2 items-center'> {params?.row?.cancelled_date ? dayjs(params?.row?.cancelled_date).format("DD/MM/YYYY") : "..."}</div>
             }
         },
         {

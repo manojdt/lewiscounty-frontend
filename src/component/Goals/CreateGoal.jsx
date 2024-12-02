@@ -9,12 +9,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createGoal, updateGoal } from '../../services/goalsInfo';
 import { Backdrop, CircularProgress } from '@mui/material';
 import { goalPeriods } from '../../utils/constant';
+import dayjs from 'dayjs';
+import { useNavigate } from 'react-router-dom';
 
 
-export default function CreateGoal({ open, handleCloseModal, seletedItem, editMode }) {
+export default function CreateGoal({ open, handleCloseModal, seletedItem, editMode, recreate = false }) {
     const [dateFormat, setDateFormat] = useState({})
     const calendarRef = useRef(null)
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     const { loading, error } = useSelector(state => state.goals)
 
     const {
@@ -25,27 +28,40 @@ export default function CreateGoal({ open, handleCloseModal, seletedItem, editMo
     } = useForm();
 
     const onSubmit = (data) => {
-        let date = new Date(data.start_date), mnth = ("0" + (date.getMonth() + 1)).slice(-2), day = ("0" + date.getDate()).slice(-2);
-        date = [date.getFullYear(), mnth, day].join("-")
 
         let apiData = {
-            ...data,
-            start_date: date,
-            period: parseInt(data.period)
+            goal_name: data?.goal_name,
+            designation: data?.goal_designation,
+            description: data?.goal_description,
+            period: parseInt(data.period),
+            start_date: dayjs(data?.start_date).format("YYYY-MM-DD")
         }
+
         if (editMode) {
             apiData = {
                 ...apiData,
-                start_date: date,
-                period: parseInt(data.period),
                 id: seletedItem.id
             }
-            dispatch(updateGoal(apiData))
+            dispatch(updateGoal(apiData)).then((res) => {
+                if (res?.meta?.requestStatus === "fulfilled") {
+                    if (recreate) {
+                        handleCloseModal()
+                    }
+                }
+            })
         } else {
-            dispatch(createGoal(apiData))
+            dispatch(createGoal(apiData)).then((res)=>{
+                if(res?.meta?.requestStatus === "fulfilled"){
+                    if (!recreate) {
+                        handleCloseModal()
+                    }
+                }
+            })
         }
         reset()
         setDateFormat({})
+
+
     }
 
     const handleClose = () => {
@@ -60,7 +76,25 @@ export default function CreateGoal({ open, handleCloseModal, seletedItem, editMo
 
     useEffect(() => {
         if (editMode) {
-            reset(seletedItem)
+            const constructed = {
+                goal_name: seletedItem?.goal_name,
+                goal_designation: seletedItem?.designation,
+                goal_description: seletedItem?.description,
+                period: seletedItem?.period,
+                start_date: seletedItem?.start_date,
+                ...seletedItem
+            }
+            reset(constructed)
+        } else if (!recreate) {
+            const constructed = {
+                goal_name: seletedItem?.goal_name,
+                goal_designation: seletedItem?.designation,
+                goal_description: seletedItem?.description,
+                period: seletedItem?.period,
+                start_date: seletedItem?.start_date,
+                ...seletedItem
+            }
+            reset(constructed)
         } else {
             reset({})
         }
@@ -69,8 +103,8 @@ export default function CreateGoal({ open, handleCloseModal, seletedItem, editMo
     const handleDateClick = () => {
         setTimeout(() => {
             document.querySelector('.p-datepicker')?.classList.add('goals-date')
-        },300)
-        
+        }, 300)
+
     }
 
     useEffect(() => {

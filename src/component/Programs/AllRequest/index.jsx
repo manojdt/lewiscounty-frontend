@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Backdrop, CircularProgress } from '@mui/material';
+import { Backdrop, Checkbox, CircularProgress } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Card from '../../../shared/Card'
@@ -42,7 +42,8 @@ export default function AllRequest() {
     const [anchorEl, setAnchorEl] = useState(null);
     const [filter, setFilter] = useState({ search: '', filter_by: '' })
     const open = Boolean(anchorEl);
-    const [actionTab, setActiveTab] = useState('new_program_request')
+    const type = searchParams.get("type")
+    const [actionTab, setActiveTab] = useState(type === "goal_request" ? "mentor" : 'new_program_request')
     const [actionTabFilter, setActionTabFilter] = useState([])
     const [activeTableDetails, setActiveTableDetails] = useState({ column: [], data: [] })
     const [seletedItem, setSelectedItem] = useState({})
@@ -55,7 +56,7 @@ export default function AllRequest() {
         pageSize: 10,
     });
     const userInfo = useSelector(state => state.userInfo)
-    // console.log("programTableInfo ===>", programTableInfo, "====>", learningAccessRequests)
+    const [selectedCategory, setSelectedCategory] = React.useState("")
     const {
         register,
         formState: { errors },
@@ -182,12 +183,7 @@ export default function AllRequest() {
     const handleConfirmPopup = () => {
         if (confirmPopup.requestType === 'program_request') {
             handleAcceptProgramApiRequest()
-        }
-        if (confirmPopup.requestType === 'goal_request') {
-            if (confirmPopup.type === 'reject') {
-                handleCancelGoalApiRequest()
-            }
-        }
+        }        
 
         if (confirmPopup.requestType === 'member_join_request') {
             if (confirmPopup.type === 'reject') {
@@ -261,11 +257,16 @@ export default function AllRequest() {
     }
 
     // Cancel Goal Request Api Call
-    const handleCancelGoalApiRequest = () => {
+    const handleCancelGoalApiRequest = (reason = "") => {
         dispatch(updateGoalRequest({
             status: "cancel",
-            id: seletedItem.id
-        }))
+            goal_request_ids: [seletedItem.id],
+            description: reason
+        })).then((res)=>{
+            if(res?.meta?.requestStatus === "fulfilled"){
+                handleCloseCancelReasonPopup()
+            }
+        })
     }
 
     // Cancel Member Request Api Call
@@ -319,6 +320,10 @@ export default function AllRequest() {
                         report_status: "cancel",
                         report_comment: data.cancel_reason
                     }))
+                }
+
+                if (cancelPopup.page === 'goal_request') {
+                    handleCancelGoalApiRequest(data.cancel_reason)
                 }
 
             }
@@ -386,13 +391,15 @@ export default function AllRequest() {
 
     // Goal Dropdown Cancel
     const handleCancelGoalRequest = () => {
-        handleOpenConfirmPopup('Goal Request', currentRequestTab.key, actionTab, 'reject')
+        // handleOpenConfirmPopup('Goal Request', currentRequestTab.key, actionTab, 'reject')
+        setCancelPopup({ show: true, page: currentRequestTab.key })
         handleClose()
     }
 
     // Category Popup Close
     const handleCloseCategoryPopup = () => {
         setCategoryPopup({ show: false, selectedItem: [], page: '', tab: '' })
+        setSelectedCategory("")
     }
 
     // Handle Selected Items for Category 
@@ -402,12 +409,10 @@ export default function AllRequest() {
             data = { ...data, selectedItem: selectedInfo }
         }
         if (categoryPopup.page === 'goal_request') {
-            const categoryId = []
-            data.selectedItem.forEach((selected) => categoryId.push(selected.categories_id))
             const payload = {
                 status: "accept",
-                id: seletedItem.id,
-                categories: categoryId
+                goal_request_ids: [seletedItem.id],
+                category_id: selectedCategory
             }
             dispatch(updateGoalRequest(payload))
         }
@@ -508,6 +513,26 @@ export default function AllRequest() {
     ]
 
     const goalColumns = [
+        {
+            field: 'goal_name',
+            headerName: 'Goal Name',
+            flex: 1,
+            id: 0,
+            for: ['admin', 'mentor'],
+            renderCell: (params) => {
+                return <div className='flex gap-2 items-center'>{params?.row?.goal?.goal_name ?? "..."}</div>
+            }
+        },
+        {
+            field: 'reason_request',
+            headerName: 'Reason Request',
+            flex: 1,
+            id: 1,
+            for: ['admin', 'mentor'],
+            renderCell: (params) => {
+                return <div className='flex gap-2 items-center'>{params?.row?.goal?.description?.length ? params?.row?.goal?.description : "..."}</div>
+            }
+        },
         ...goalsRequestColumns,
         {
             field: 'status',
@@ -551,7 +576,7 @@ export default function AllRequest() {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
-                        <MenuItem onClick={(e) => { navigate(`/view-goal/${seletedItem.id}`) }} className='!text-[12px]'>
+                        <MenuItem onClick={(e) => { navigate(`/view-goal/${seletedItem?.goal?.id}`) }} className='!text-[12px]'>
                             <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
                             View
                         </MenuItem>
@@ -842,6 +867,9 @@ export default function AllRequest() {
         navigate(`/all-request?type=${menu.status}`)
         handleStatus("all")
         setFilter({ search: '', filter_by: '' })
+        if(menu?.status === "goal_request"){
+            setActiveTab("mentor")
+        }
     }
 
     const getProgramRequestApi = () => {
@@ -873,10 +901,10 @@ export default function AllRequest() {
 
     }
 
-    const getGoalsRequestApi = () => {
+    const getGoalsRequestApi = (createdBy = actionTab) => {
         dispatch(goalsRequest({
             ...filterStatus !== 'all' && { status: filterStatus },
-            created_at: actionTab,
+            created_by: createdBy,
             ...filter.search !== '' && { search: filter.search },
             ...filter.filter_by !== '' ? { filter_by: filter.filter_by } : { filter_by: 'month' }
         }))
@@ -956,10 +984,10 @@ export default function AllRequest() {
                     actionFilter = programInfoTab
                     activeTabName = role === 'mentee' || role === 'mentor' ? 'joining_request' : 'new_program_request'
                     console.log('activeTabName', activeTabName, actionTab)
-                    if(actionTab !== 'joining_request' && actionTab !== 'new_program_request'){
+                    if (actionTab !== 'joining_request' && actionTab !== 'new_program_request') {
                         activeTabName = actionTab
                     }
-                   
+
                     break;
                 case RequestStatus.memberJoinRequest.key:
                     tableDetails = { column: memberMentorRequestColumns, data: [] }
@@ -1099,7 +1127,7 @@ export default function AllRequest() {
         }
 
         if (searchParams.get('type') === 'goal_request') {
-            setActiveTableDetails({ column: goalColumns, data: goalsRequestInfo })
+            setActiveTableDetails({ column: goalColumns, data: goalsRequestInfo?.results, rowCount: goalsRequestInfo?.count })
         }
         if (searchParams.get('type') === 'certificate_request') {
             setActiveTableDetails({ column: certificateColumns, data: certificateRequestList?.results, rowCount: certificateRequestList?.count })
@@ -1176,17 +1204,35 @@ export default function AllRequest() {
     useEffect(() => {
         if (filter.search !== '') {
             searchParams.set('search', filter.search)
-        }else{
+        } else {
             searchParams.delete('search')
         }
         if (filter.filter_by !== '') {
             searchParams.set('filter_by', filter.filter_by)
-        }else{
+        } else {
             searchParams.delete('filter_by')
         }
         setSearchParams(searchParams)
     }, [filter])
 
+    const categoryColumn = [
+        {
+            field: 'checkbox',
+            headerName: '',
+            // flex: 1,
+            id: 0,
+            width: 100,
+            for: ['admin', 'mentor'],
+            renderCell: (params) => {
+                return (
+                    <div>
+                        <Checkbox checked={selectedCategory === params?.row?.categories_id} onChange={() => setSelectedCategory(params.row.categories_id)} />
+                    </div>
+                )
+            }
+        },
+        ...categoryColumns
+    ]
 
     return (
         <div className="program-request px-8 mt-10">
@@ -1319,9 +1365,10 @@ export default function AllRequest() {
 
                             <DataTable
                                 rows={categoryInfo.list}
-                                columns={categoryColumns}
+                                columns={categoryPopup.page === 'goal_request' ? categoryColumn : categoryColumns}
                                 height={'460px'}
                                 footerComponent={footerComponent}
+                                hideCheckbox={categoryPopup.page === 'goal_request'}
                                 selectedAllRows={categoryPopup.selectedItem}
                             />
 

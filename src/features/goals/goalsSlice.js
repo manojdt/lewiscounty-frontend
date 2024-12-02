@@ -15,6 +15,7 @@ import {
     getRecentGoalActivity,
     updateGoal,
     updateGoalStatus,
+    updateHistoryGoal,
     updateLocalGoalInfo,
 } from "../../services/goalsInfo";
 import {
@@ -340,6 +341,31 @@ export const goalsSlice = createSlice({
                 };
             });
 
+
+
+        builder
+            .addCase(updateHistoryGoal.pending, (state) => {
+                return {
+                    ...state,
+                    status: "pending",
+                    loading: true,
+                };
+            })
+            .addCase(updateHistoryGoal.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    status: "done",
+                    loading: false,
+                };
+            })
+            .addCase(updateHistoryGoal.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    status: "",
+                    error: action.error.message,
+                };
+            });
     },
 });
 

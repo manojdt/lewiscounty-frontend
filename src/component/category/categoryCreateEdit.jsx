@@ -28,7 +28,7 @@ export const CategoryCreateEdit = ({
         <Box className={"border border-[#1D5BBF] rounded-[3px] p-[12px]"}>
             <Stack direction={"row"} alignItems={"center"} justifyContent={"space-between"} p={"12px 24px 24px"}>
                 <Typography className='text-[18px] text-[#1D5BBF]' sx={{ fontWeight: 600 }}>Create Category</Typography>
-                <Box className="cursor-pointer">
+                <Box className="cursor-pointer" onClick={handleCancelForm}>
                     <img src={CloseIcon} alt="close" />
                 </Box>
             </Stack>

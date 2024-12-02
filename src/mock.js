@@ -797,43 +797,6 @@ const goalsRequestRowData = () => {
 export const goalsRequestRow = goalsRequestRowData();
 
 
-export const goalsRequestColumn = [{
-    field: 'goal_name',
-    headerName: 'Goals Name',
-    id: 0,
-    flex: 1
-},
-{
-    field: 'goal_designation',
-    headerName: 'Goals Designation',
-    flex: 1,
-    id: 1,
-},
-{
-    field: 'goal_description',
-    headerName: 'Goals Description',
-    flex: 1,
-    id: 2,
-},
-{
-    field: 'request_date',
-    headerName: 'Request Date',
-    flex: 1,
-    id: 3,
-},
-{
-    field: 'approved_date',
-    headerName: 'Approved Date',
-    flex: 1,
-    id: 4,
-},
-
-];
-
-
-
-
-
 export const menteeGoalsRequestColumn = [{
     field: 'mentee_name',
     headerName: 'Mentee Name',
@@ -869,7 +832,7 @@ export const menteeGoalsRequestColumn = [{
 
 
 export const mentorMenteeGoalsColumn = [{
-    field: 'mentee_name',
+    field: 'created_by_name',
     headerName: 'Mentee Name',
     id: 0,
     flex: 1,
@@ -885,19 +848,7 @@ export const mentorMenteeGoalsColumn = [{
     headerName: 'Start Date',
     id: 1,
     flex: 1,
-},
-{
-    field: 'completed_date',
-    headerName: 'Completed Date',
-    id: 1,
-    flex: 1,
-},
-{
-    field: 'period',
-    headerName: 'Period Time',
-    id: 1,
-    flex: 1,
-},
+}
 ];
 
 
@@ -998,18 +949,7 @@ export const goalsHistoryColumn = [
         flex: 1,
         id: 1,
     },
-    {
-        field: 'period',
-        headerName: 'Period',
-        flex: 1,
-        id: 1,
-    },
-    {
-        field: 'end_date',
-        headerName: 'End Date',
-        flex: 1,
-        id: 1,
-    },
+
 ];
 
 
@@ -1568,20 +1508,7 @@ export const memberMenteeRequestColumns = [
 
 
 export const goalsRequestColumns = [
-    {
-        field: 'goal_name',
-        headerName: 'Goal Name',
-        flex: 1,
-        id: 0,
-        for: ['admin','mentor']
-    },
-    {
-        field: 'reason_request',
-        headerName: 'Reason Request',
-        flex: 1,
-        id: 1,
-        for: ['admin','mentor']
-    },
+   
     {
         field: 'requested_date',
         headerName: 'Request Date',
@@ -2302,14 +2229,8 @@ export const categoryViewMentors = [
         id: 0,
     },
     {
-        field: 'attend_program',
+        field: 'attend_program_count',
         headerName: 'Attend Program',
-        flex: 1,
-        id: 0,
-    },
-    {
-        field: 'certificates',
-        headerName: 'Certificates',
         flex: 1,
         id: 0,
     }
@@ -2353,13 +2274,13 @@ export const categoryViewMentees = [
     //     id: 0,
     // },
     {
-        field: 'enrolled_program',
+        field: 'enrolled_program_count',
         headerName: 'Enrolled Program',
         flex: 1,
         id: 0,
     },
     {
-        field: 'certificates',
+        field: 'certificates_count',
         headerName: 'Certificates',
         flex: 1,
         id: 0,
