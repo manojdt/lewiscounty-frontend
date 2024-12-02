@@ -259,7 +259,7 @@ export default function AllRequest() {
     // Cancel Goal Request Api Call
     const handleCancelGoalApiRequest = (reason = "") => {
         dispatch(updateGoalRequest({
-            action: "cancel",
+            status: "cancel",
             goal_request_ids: [seletedItem.id],
             description: reason
         })).then((res)=>{
@@ -410,7 +410,7 @@ export default function AllRequest() {
         }
         if (categoryPopup.page === 'goal_request') {
             const payload = {
-                action: "accept",
+                status: "accept",
                 goal_request_ids: [seletedItem.id],
                 category_id: selectedCategory
             }

@@ -64,22 +64,26 @@ const ViewGoal = ({ type = '' }) => {
     }
 
     const handleSubmitGoal = () => {
-        dispatch(updateGoalStatus({ id: parseInt(goalInfo.id), action: 'complete' }))
-        resetActionModal()
+        dispatch(updateGoalStatus({ id: parseInt(goalInfo.id), status: 'completed' })).then((res) => {
+            if (res?.meta?.requestStatus === "fulfilled") {
+                resetActionModal()
+            }
+        })
+
     }
 
     const handleStartGoal = () => {
         const payload = {
             id: goalInfo.id,
-            action: "start",
+            status: "in_progress",
             start_date: dayjs(new Date()).format("YYYY-MM-DD")
         }
-        dispatch(updateHistoryGoal(payload)).then((res)=>{
-            if(res?.meta?.requestStatus === "fulfilled"){
+        dispatch(updateHistoryGoal(payload)).then((res) => {
+            if (res?.meta?.requestStatus === "fulfilled") {
                 dispatch(getGoalInfo(params.id))
                 resetActionModal()
             }
-        })        
+        })
     }
 
 
@@ -87,6 +91,7 @@ const ViewGoal = ({ type = '' }) => {
 
     const resetActionModal = () => {
         setActionModal({ start: false, started: false, cancel: false, cancelled: false, complete: false, completed: false })
+        dispatch(getGoalInfo(params.id))
     }
 
 
@@ -101,7 +106,11 @@ const ViewGoal = ({ type = '' }) => {
                 id: params.id
             }))
         } else {
-            dispatch(updateGoalStatus({ id: parseInt(goalInfo.id), action: 'abort' }))
+            dispatch(updateGoalStatus({ id: parseInt(goalInfo.id), status: 'cancel' })).then((res)=>{
+                if(res?.meta?.requestStatus === "fulfilled"){
+                    resetActionModal()
+                }
+            })
         }
     }
 
@@ -207,7 +216,7 @@ const ViewGoal = ({ type = '' }) => {
     }, [])
 
     if (Object.keys(goalInfo).length) {
-        switch (goalInfo.goal_status) {
+        switch (goalInfo.status) {
             case 'inactive':
                 imageIcon = CancelGoalIcon
                 break;
@@ -249,7 +258,7 @@ const ViewGoal = ({ type = '' }) => {
     const handleUpdateHistoryGoal = () => {
         const payload = {
             id: params.id,
-            action: confirmPopup?.type === "complete" ? "complete" : "cancel",
+            status: confirmPopup?.type === "complete" ? "completed" : "cancel",
             start_date: dayjs(new Date()).format("YYYY-MM-DD")
         }
         dispatch(updateHistoryGoal(payload)).then((res) => {
@@ -471,9 +480,9 @@ const ViewGoal = ({ type = '' }) => {
                             <div className=''>
                                 <div className='flex justify-between px-5 py-5 items-center border-b-2'>
                                     <div className='flex gap-5 items-center text-[20px]'>
-                                        <p>{goalDataStatus[goalInfo.goal_status]} </p>
+                                        <p>{goalDataStatus[goalInfo.status]} </p>
                                         {
-                                            (goalInfo.goal_status === 'active' && role !== 'admin') &&
+                                            (goalInfo.status === 'active' && role !== 'admin') &&
                                             <div className="inset-y-0 end-0 flex items-center pe-3 cursor-pointer"
                                                 onClick={() => navigate('/edit-report/1')}
                                             >
@@ -506,7 +515,7 @@ const ViewGoal = ({ type = '' }) => {
                                         {goalInfo.goal_name}
                                     </h3>
                                     {
-                                        goalInfo.goal_status === 'completed' && <img className='absolute top-0 right-0' src={BatchIcon} alt="BatchIcon" />
+                                        goalInfo.status === 'completed' && <img className='absolute top-0 right-0' src={BatchIcon} alt="BatchIcon" />
                                     }
 
                                     <div className='py-7'>
@@ -552,15 +561,15 @@ const ViewGoal = ({ type = '' }) => {
                                     }
 
                                     <div className='flex items-center py-9 gap-4'>
-                                        {
-                                            (goalInfo.goal_status === 'completed' || type === 'mentor') &&
+                                        {/* {
+                                            (goalInfo.status === 'completed' || type === 'mentor') &&
                                             <>
                                                 <Button
                                                     onClick={() => navigate('/goals')}
                                                     btnName={'Close'} btnCatergory="primary"
                                                     style={{ background: 'linear-gradient(to right, #00AEBD, #1D5BBF)', borderRadius: '27px', width: '180px' }} />
                                             </>
-                                        }
+                                        } */}
 
                                         {
                                             (type === '' && role !== 'admin') &&
@@ -569,15 +578,15 @@ const ViewGoal = ({ type = '' }) => {
 
 
                                                 {
-                                                    goalInfo.status === 'ongoing' &&
+                                                    goalInfo.status === 'in_progress' &&
                                                     <>
-                                                        <Button btnName="Cancel Goal" style={{ border: '1px solid rgba(0, 0, 0, 1)', borderRadius: '27px', width: '180px', color: 'rgba(24, 40, 61, 1)' }}
+                                                        <Button btnName="Cancel Goal" style={{ border: '1px solid rgba(0, 0, 0, 1)', borderRadius: '4px', width: '180px', color: 'rgba(24, 40, 61, 1)' }}
                                                             onClick={handleCancelGoal}
                                                         />
                                                         <Button
                                                             onClick={handleActionCompleteBtn}
                                                             btnName={'Complete Goal'} btnCatergory="primary"
-                                                            style={{ background: 'linear-gradient(to right, #00AEBD, #1D5BBF)', borderRadius: '27px', width: '180px' }} />
+                                                            style={{ background: 'linear-gradient(to right, #00AEBD, #1D5BBF)', borderRadius: '4px', width: '180px' }} />
                                                         {/* <Button
                                                             onClick={() => navigate('/goals')}
                                                             btnName={'Close'} btnCatergory="primary"
@@ -600,7 +609,7 @@ const ViewGoal = ({ type = '' }) => {
 
 
                                                 {
-                                                    (goalInfo.status === 'cancel' && goalInfo.status === 'accept') &&
+                                                    (goalInfo.status === 'cancel' || goalInfo.status === 'accept' || goalInfo?.status === "completed") &&
                                                     <>
                                                         <Button btnName="Back" style={{ border: '1px solid rgba(29, 91, 191, 1)', width: '180px', color: 'rgba(29, 91, 191, 1)' }}
                                                             onClick={() => navigate('/goals')}
@@ -616,11 +625,11 @@ const ViewGoal = ({ type = '' }) => {
                                         }
 
                                         {
-                                            (role === 'admin' && goalInfo.goal_status !== 'completed') ?
+                                            (role === 'admin' && goalInfo.status !== 'completed') ?
 
                                                 <>
                                                     {
-                                                        goalInfo.goal_status === 'inactive' ?
+                                                        goalInfo.status === 'inactive' ?
 
                                                             <>
                                                                 <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
@@ -642,7 +651,7 @@ const ViewGoal = ({ type = '' }) => {
 
                                                             :
 
-                                                            goalInfo.goal_status === 'aborted' ?
+                                                            goalInfo.status === 'aborted' ?
                                                                 <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
                                                                     border: "1px solid #E0382D",
                                                                     borderRadius: '5px',
@@ -671,7 +680,7 @@ const ViewGoal = ({ type = '' }) => {
                                                 : null
                                         }
                                         {
-                                            (role === "mentee" && ["new", "pending"].includes(goalInfo?.status)) &&
+                                            (["new", "pending"].includes(goalInfo?.status)) &&
                                             <Stack direction={"row"} alignItems={"center"} spacing={2}>
 
                                                 <Button
@@ -680,8 +689,8 @@ const ViewGoal = ({ type = '' }) => {
                                                     btnCls="border !border-[#E0382D] !text-[#E0382D] w-[140px] bg-[#fff]" />
 
                                                 <Button
-                                                    onClick={() => handleOpenConfirmPopup('complete')}
-                                                    btnName={'Complete'} btnCategory="primary" btnCls="w-[140px]" />
+                                                    onClick={() => handleOpenEditForm()}
+                                                    btnName={'Edit'} btnCategory="primary" btnCls="w-[140px]" />
 
                                             </Stack>
                                         }
@@ -694,7 +703,7 @@ const ViewGoal = ({ type = '' }) => {
             }
 
             {/* Edit Goal Form */}
-            <CreateGoal open={editActionModal} handleCloseModal={handleCloseModal} editMode={true} seletedItem={goalInfo} recreate={true} />
+            <CreateGoal open={editActionModal} handleCloseModal={handleCloseModal} editMode={goalInfo?.status === "completed" ? false : true} seletedItem={goalInfo} recreate={["new", "completed"].includes(goalInfo?.status) ? false : true} />
 
             {/* request popup */}
 

@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react'
 import Menu from '@mui/material/Menu';
-import { Backdrop, CircularProgress } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
+import React, { useEffect, useState } from 'react';
 
-import MoreIcon from '../../assets/icons/moreIcon.svg'
-import CalenderIcon from '../../assets/icons/CalenderIcon.svg'
-import ViewIcon from '../../assets/images/view1x.png'
-import DataTable from '../../shared/DataGrid'
-import { useDispatch, useSelector } from 'react-redux'
-import { menteeGoalsRequestColumn, mentorMenteeGoalsColumn } from '../../mock'
-import { getGoalsRequest, getMenteeGoals } from '../../services/goalsInfo';
-import { goalDataStatus, goalStatusColor } from '../../utils/constant';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import CalenderIcon from '../../assets/icons/CalenderIcon.svg';
+import MoreIcon from '../../assets/icons/moreIcon.svg';
+import ViewIcon from '../../assets/images/view1x.png';
+import { mentorMenteeGoalsColumn } from '../../mock';
+import { getGoalsHistory } from '../../services/goalsInfo';
+import DataTable from '../../shared/DataGrid';
+import { goalDataStatus, goalStatusColor } from '../../utils/constant';
+import dayjs from 'dayjs';
 
 export default function MenteeGoals() {
     const [anchorEl, setAnchorEl] = useState(null);
@@ -22,7 +22,7 @@ export default function MenteeGoals() {
         pageSize: 10
     })
     const [timeFrame, setTimeFrame] = React.useState("month")
-    const [filterStatus, setFilterStatus] = React.useState("new")
+    const [filterStatus, setFilterStatus] = React.useState("")
 
     const timeFrameList = [
         {
@@ -42,7 +42,7 @@ export default function MenteeGoals() {
     const navigate = useNavigate()
 
     const dispatch = useDispatch()
-    const { goalRequest } = useSelector(state => state.goals)
+    const { goalHistory } = useSelector(state => state.goals)
 
     const handleClick = (event, data) => {
         setSelectedItem(data)
@@ -55,6 +55,24 @@ export default function MenteeGoals() {
 
     const menteeGoalsColumn = [
         ...mentorMenteeGoalsColumn,
+        {
+            field: 'completed_date',
+            headerName: 'Completed Date',
+            id: 1,
+            flex: 1,
+            renderCell: (params) => {
+                return <div className='flex gap-2 items-center'>{`${params?.row?.completed_date ? dayjs(params?.row?.completed_date).format("DD-MM-YYYY") : "..."}`}</div>
+            }
+        },
+        {
+            field: 'period',
+            headerName: 'Period Time',
+            id: 1,
+            flex: 1,
+            renderCell: (params) => {
+                return <div className='flex gap-2 items-center'>{`${params?.row?.period} ${params?.row?.period === 1 ? 'Month' : 'Months'}`}</div>
+            }
+        },
         {
             field: 'performance',
             headerName: 'Performance',
@@ -88,11 +106,11 @@ export default function MenteeGoals() {
 
                         <span className='w-[80px] flex justify-center h-[30px] px-7'
                             style={{
-                                background: goalStatusColor[params.row.goal_status]?.bg, lineHeight: '30px',
-                                borderRadius: '3px', width: '110px', height: '34px', color: goalStatusColor[params.row.goal_status]?.color,
+                                background: goalStatusColor[params.row.status]?.bg, lineHeight: '30px',
+                                borderRadius: '3px', width: '110px', height: '34px', color: goalStatusColor[params.row.status]?.color,
                                 fontSize: '12px'
                             }}>
-                            {goalDataStatus[params.row.goal_status]}
+                            {goalDataStatus[params.row.status]}
                         </span>
 
                     </div>
@@ -135,7 +153,7 @@ export default function MenteeGoals() {
     ]
 
     const getGoalList = (time_frame = timeFrame, status = filterStatus) => {
-        dispatch(getGoalsRequest({
+        dispatch(getGoalsHistory({
             status: status,
             created_by: "mentee",
             time_frame: time_frame,
@@ -183,19 +201,20 @@ export default function MenteeGoals() {
                     </div>
                     <select className='table-select' onChange={(e) => handleFilterMenteeGoals(e.target.value)}
                         value={filterStatus}>
-                        <option value="new">Total Goals</option>
+                        <option value="">Total Goals</option>
                         <option value="active">Active Goals</option>
-                        <option value="ongoing">Goals in progress</option>
+                        <option value="in_progress">Goals in progress</option>
                         <option value="completed">Completed Goals</option>
-                        <option value="aborted">Aborted Goals</option>
+                        <option value="cancel">Aborted Goals</option>
                     </select>
                 </div>
 
             </div>
             <div className='py-8 px-6'>
-                <DataTable rows={goalRequest?.results} columns={menteeGoalsColumn}
-                    rowCount={goalRequest?.count}
-                    paginationModel={paginationModel} setPaginationModel={setPaginationModel} />
+                <DataTable rows={goalHistory?.results} columns={menteeGoalsColumn}
+                    rowCount={goalHistory?.count}
+                    paginationModel={paginationModel} setPaginationModel={setPaginationModel} 
+                    hideFooter={goalHistory?.results?.length === 0} hideCheckbox />
             </div>
 
         </div>

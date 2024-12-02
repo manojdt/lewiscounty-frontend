@@ -269,7 +269,8 @@ export const goalDataStatus = {
   ongoing: 'Ongoing',
   completed: 'Completed',
   aborted: 'Aborted',
-  new: "New"
+  new: "New",
+  cancel: "Cancel"
 }
 
 export const goalStatusColor = {
@@ -301,6 +302,10 @@ export const goalStatusColor = {
     color: 'rgba(224, 56, 45, 1)',
     bg: 'rgba(255, 231, 231, 1)'
   },
+  cancel: {
+    color: 'rgba(224, 56, 45, 1)',
+    bg: 'rgba(255, 231, 231, 1)'
+  },
 }
 
 export const goalRequestStatus = {
@@ -310,7 +315,9 @@ export const goalRequestStatus = {
   pending: 'Pending',
   accept: 'Accept',
   decline: 'Decline',
-  cancel: "Cancel"
+  cancel: "Cancel",
+  in_progress: "In Progress",
+  completed: "Completed"
 }
 
 export const goalRequestColor = {
@@ -345,6 +352,14 @@ export const goalRequestColor = {
   cancel: {
     color: 'rgba(224, 56, 45, 1)',
     bg: 'rgba(255, 231, 231, 1)'
+  },
+  in_progress: {
+    color: 'rgba(255, 118, 0, 1)',
+    bg: 'rgba(255, 242, 231, 1)'
+  },
+  completed: {
+    color: 'rgba(47, 147, 132, 1)',
+    bg: 'rgba(218, 252, 231, 1)'
   }
 }
 

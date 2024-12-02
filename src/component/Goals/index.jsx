@@ -39,6 +39,8 @@ import { Button } from '../../shared';
 
 const Goals = () => {
     const navigate = useNavigate()
+    const userInfo = useSelector(state => state.userInfo)
+    const role = userInfo.data.role
     const [searchParams] = useSearchParams();
     const [anchorEl, setAnchorEl] = useState(null);
     const [requestEl, setRequestEl] = useState(null);
@@ -74,10 +76,11 @@ const Goals = () => {
         pageSize: 10
     })
     const [adminTimeFrame, setAdminTimeFrame] = React.useState("month")
-
-    const userInfo = useSelector(state => state.userInfo)
-
-    const role = userInfo.data.role
+    const [confirmPopup, setConfirmPopup] = React.useState({
+        bool: false,
+        activity: false,
+        type: ""
+    })
 
     const { goalsList, loading, status, createdGoal, goalsCount, goalRequest, goalHistory } = useSelector(state => state.goals)
 
@@ -105,7 +108,7 @@ const Goals = () => {
         },
         {
             name: 'Goals in Progress',
-            key: 'ongoing',
+            key: 'in_progress',
         },
         {
             name: 'Completed Goals',
@@ -113,7 +116,7 @@ const Goals = () => {
         },
         {
             name: 'Cancel Goals',
-            key: 'aborted',
+            key: 'cancel',
         }
     ]
 
@@ -167,35 +170,51 @@ const Goals = () => {
         setActionModal(true)
     }
 
-    const getAllGoalData = (created_by = createdBy) => {
-        dispatch(getGoalsCount({ time_frame: allTimeFrame }))
+    const getAllGoalData = (created_by = createdBy, user_id) => {
+        dispatch(getGoalsCount({ time_frame: allTimeFrame, user_id: user_id }))
         dispatch(getGoalsRequest({
             status: "new",
             created_by: created_by,
             time_frame: requestTimeFrame,
             page: requestPaginationModel?.page + 1,
-            limit: requestPaginationModel?.pageSize
+            limit: requestPaginationModel?.pageSize,
+            user_id: user_id
         }))
         dispatch(getGoalsHistory({
             status: "new",
             created_by: created_by,
             time_frame: historyTimeFrame,
             page: historyPaginationModel?.page + 1,
-            limit: historyPaginationModel?.pageSize
+            limit: historyPaginationModel?.pageSize,
+            user_id: user_id
         }))
     }
 
-    useEffect(() => {
-        getAllGoalData()
-    }, [])
+    // useEffect(() => {
+    //     if(role === "admin"){
+    //         getAllGoalData("mentor")
+    //     }        
+    // }, [])
 
     const handleGetAllGoals = (timeframe = allTimeFrame) => {
         const filterType = searchParams.get("type");
-        const payload = {
-            page: allGoalPaginationModel?.page + 1,
-            limit: allGoalPaginationModel?.pageSize,
-            status: filterType === "aborted" ? "cancel" : filterType,
-            time_frame: timeframe
+        let payload = {}
+        if(role === "admin"){
+            payload = {
+                page: allGoalPaginationModel?.page + 1,
+                limit: allGoalPaginationModel?.pageSize,
+                status: filterType,
+                time_frame: timeframe,
+                created_by: createdBy
+            }
+        }else{
+            payload = {
+                page: allGoalPaginationModel?.page + 1,
+                limit: allGoalPaginationModel?.pageSize,
+                status: filterType,
+                time_frame: timeframe,
+                created_by: createdBy
+            }
         }
         dispatch(getAllGoals(payload))
         dispatch(getGoalsCount({ time_frame: timeframe }))
@@ -583,8 +602,8 @@ const Goals = () => {
         },
     ]
 
-    const title = role === "admin" ? (adminTab === "mentor" ? "Mentor Goal" : "Mentee Goal" ):
-    goalsListMenu.find(option => option.key === searchParams.get("type"))?.name || (role === 'mentee' ? 'Mentee Goals' : 'My Goals')
+    const title = role === "admin" ? (adminTab === "mentor" ? "Mentor Goal" : "Mentee Goal") :
+        goalsListMenu.find(option => option.key === searchParams.get("type"))?.name || (role === 'mentee' ? 'Mentee Goals' : 'My Goals')
 
     const handleTab = (key) => {
         setRequestTab(key)
@@ -623,7 +642,13 @@ const Goals = () => {
             if (filterType && filterType !== '') {
                 query = filterType === 'total_goals' ? '' : filterType
             }
-            dispatch(getAllGoals(query))
+            const payload = {
+                page: allGoalPaginationModel?.page + 1,
+                limit: allGoalPaginationModel?.pageSize,
+                status: filterType,
+                time_frame: allTimeFrame
+            }
+            dispatch(getAllGoals(payload))
             getAllGoalData()
         }
 
@@ -634,15 +659,6 @@ const Goals = () => {
         setGoals(goalsList)
     }, [goalsList])
 
-
-    // My Changes
-
-
-    const [confirmPopup, setConfirmPopup] = React.useState({
-        bool: false,
-        activity: false,
-        type: ""
-    })
 
     const handleChangeHistoryTimeFrame = (value) => {
         setHistoryTimeFrame(value)
@@ -676,7 +692,7 @@ const Goals = () => {
     const handleUpdateHistoryGoal = () => {
         const payload = {
             id: seletedItem?.id,
-            status: confirmPopup?.type === "complete" ? "complete" : "cancel",
+            status: confirmPopup?.type === "complete" ? "completed" : "cancel",
             start_date: dayjs(new Date()).format("YYYY-MM-DD")
         }
         dispatch(updateHistoryGoal(payload)).then((res) => {
@@ -728,10 +744,10 @@ const Goals = () => {
             page: 0,
             pageSize: 10
         })
-        
+
     };
 
-    
+
 
     const adminMentorColumns = [
         {
@@ -740,7 +756,7 @@ const Goals = () => {
             flex: 1,
             id: 1,
             renderCell: (params) => {
-                return <div className='flex gap-2 items-center'>{params?.row?.created_by}</div>
+                return <div className='flex gap-2 items-center'>{params?.row?.created_by_name ?? "..."}</div>
             }
         },
         {
@@ -791,7 +807,7 @@ const Goals = () => {
             flex: 1,
             id: 1,
             renderCell: (params) => {
-                return <div className='flex gap-2 items-center'>{params?.row?.created_by}</div>
+                return <div className='flex gap-2 items-center'>{params?.row?.created_by_name ?? "..."}</div>
             }
         },
         {
@@ -847,29 +863,31 @@ const Goals = () => {
     }
 
     React.useEffect(() => {
-        handleGetAdminTableData()
+        if (role === "admin") {
+            handleGetAdminTableData(adminTimeFrame, adminTab)
+        }
     }, [adminTablePaginationModal])
 
-    const handleAdminTimeFrame = (value) =>{
+    const handleAdminTimeFrame = (value) => {
         handleGetAdminTableData(value)
         setAdminTimeFrame(value)
     }
 
-    const handleViewTab = (type) =>{
+    const handleViewTab = (type) => {
         handleClose()
         setRequestTab('mentor-goals')
         setShowAdmin(false)
         setCreatedBy(type)
-        getAllGoalData(type)
+        getAllGoalData(type, seletedItem?.created_by)
     }
 
-    const handleCloseAdmin = () =>{
+    const handleCloseAdmin = () => {
         setShowAdmin(true)
         setCreatedBy("")
         setAdminTab("mentor")
-        handleGetAdminTableData("month","mentor")
+        handleGetAdminTableData("month", "mentor")
     }
-    console.log("adminTab ===>", adminTab)
+
     return (
         <div className="goals px-9 py-9">
             <Backdrop
@@ -942,9 +960,9 @@ const Goals = () => {
                         <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 700 }}>Goals</p>
                     </div>
                     {
-                        (!showAdmin && role === "admin") && 
-                        <div onClick={()=>handleCloseAdmin()}>
-                            <img src={CloseIcon} alt='CloseIcon'/>
+                        (!showAdmin && role === "admin") &&
+                        <div onClick={() => handleCloseAdmin()}>
+                            <img src={CloseIcon} alt='CloseIcon' />
                         </div>
                     }
                 </div>
@@ -1017,9 +1035,6 @@ const Goals = () => {
                                                     }
                                                     {
                                                         goalsCount?.goals?.find((e) => e?.status === goal.key)?.goal_count
-                                                    }
-                                                    {
-                                                        goal.key === "aborted" && goalsCount?.goals?.filter((e) => e?.status === "cancel")?.[0]?.goal_count
                                                     }
                                                 </p>
                                             </div>
@@ -1183,7 +1198,7 @@ const Goals = () => {
                                     <div className="relative flex gap-3 py-3 px-3"
                                         style={{ border: '1px solid rgba(24, 40, 61, 0.25)', borderRadius: '3px' }}>
                                         <img src={CalenderIcon} alt="CalenderIcon" />
-                                        <select className='focus:outline-none' 
+                                        <select className='focus:outline-none'
                                             value={adminTimeFrame}
                                             onChange={(e) => handleAdminTimeFrame(e.target.value)}>
                                             {

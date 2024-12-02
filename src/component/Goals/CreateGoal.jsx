@@ -42,20 +42,26 @@ export default function CreateGoal({ open, handleCloseModal, seletedItem, editMo
                 ...apiData,
                 id: seletedItem.id
             }
-            dispatch(updateGoal(apiData)).then((res)=>{
-                if(res?.meta?.requestStatus === "fulfilled"){
+            dispatch(updateGoal(apiData)).then((res) => {
+                if (res?.meta?.requestStatus === "fulfilled") {
                     if (recreate) {
                         handleCloseModal()
                     }
                 }
             })
         } else {
-            dispatch(createGoal(apiData))
+            dispatch(createGoal(apiData)).then((res)=>{
+                if(res?.meta?.requestStatus === "fulfilled"){
+                    if (!recreate) {
+                        handleCloseModal()
+                    }
+                }
+            })
         }
         reset()
         setDateFormat({})
 
-        
+
     }
 
     const handleClose = () => {
@@ -70,6 +76,16 @@ export default function CreateGoal({ open, handleCloseModal, seletedItem, editMo
 
     useEffect(() => {
         if (editMode) {
+            const constructed = {
+                goal_name: seletedItem?.goal_name,
+                goal_designation: seletedItem?.designation,
+                goal_description: seletedItem?.description,
+                period: seletedItem?.period,
+                start_date: seletedItem?.start_date,
+                ...seletedItem
+            }
+            reset(constructed)
+        } else if (!recreate) {
             const constructed = {
                 goal_name: seletedItem?.goal_name,
                 goal_designation: seletedItem?.designation,
