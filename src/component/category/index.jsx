@@ -114,7 +114,7 @@ const Category = () => {
         },
         {
             field: 'description',
-            headerName: 'Descriptions',
+            headerName: 'Description',
             flex: 1,
             id: 0,
             renderCell: (params) => {
@@ -290,7 +290,7 @@ const Category = () => {
                         <Button btnName={
                             <Stack direction={"row"} alignItems={"center"} spacing={2}>
                                 <img src={AddCategory} />
-                                <Typography>Add Category</Typography>
+                                <Typography className='!text-[14px]'>Add Category</Typography>
                             </Stack>
                         }
                             onClick={() => setCreateEditForm({

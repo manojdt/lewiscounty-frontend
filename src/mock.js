@@ -2342,25 +2342,25 @@ export const JoinedMenteeColumn = [
 ];
 
 export const AdminCategory = [
-  {
-    field: 'mentor_count',
-    headerName: 'Mentors',
-    flex: 1,
-    id: 0,
-  },
-  {
-    field: 'mentee_count',
-    headerName: 'Mentees',
-    flex: 1,
-    id: 0,
-  },
-  {
-    field: 'program_count',
-    headerName: 'Program',
-    flex: 1,
-    id: 0,
-  },
-];
+    {
+        field: 'mentor_count',
+        headerName: 'Mentors',
+        flex: 1,
+        id: 0,
+    },
+    {
+        field: 'mentee_count',
+        headerName: 'Mentees',
+        flex: 1,
+        id: 0,
+    },
+    {
+        field: 'program_count',
+        headerName: 'Programs',
+        flex: 1,
+        id: 0,
+    },
+]
 
 export const categoryViewMentors = [
   {

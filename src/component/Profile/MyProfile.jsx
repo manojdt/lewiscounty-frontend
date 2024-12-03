@@ -46,11 +46,10 @@ export default function MyProfile() {
   }
 
   const onSubmit = (data) => {
-    console.log('Data', data)
     const apiPayload = {
       phone_number: data.phone_number,
       secondary_phone_number: data.secondary_phone_number,
-      address: data.address,
+      location: data.location,
     }
     dispatch(updateProfile(apiPayload))
 
@@ -65,7 +64,7 @@ export default function MyProfile() {
         phone_number: profile?.phone_number,
         secondary_phone_number: profile?.secondary_phone_number || '',
         email: profile?.email,
-        address: profile?.address
+        location: profile?.location
       });
     }
   }, [profile])

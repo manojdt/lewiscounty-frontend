@@ -140,9 +140,9 @@ const CategoryView = () => {
 
             <Box p={4}>
             <Stack direction={"row"} alignItems={"center"} spacing={1}>
-                <Typography className="text-[#5975A2] text-[16px] cursor-pointer" sx={{fontWeight: 500}} onClick={()=> navigate(-1)}>Category</Typography>
+                <Typography className="text-[#5975A2] !text-[12px] cursor-pointer" sx={{fontWeight: 500}} onClick={()=> navigate(-1)}>Category</Typography>
                 <img src={ArrowRight} />
-                <Typography className="text-[#18283D] text-[16px]" sx={{fontWeight: 500}}>View Teaching Category</Typography>
+                <Typography className="text-[#18283D] !text-[12px]" sx={{fontWeight: 500}}>View Teaching Category</Typography>
             </Stack>
                 <Tabs
                     value={value}
@@ -165,11 +165,11 @@ const CategoryView = () => {
                                     value={e?.value}
                                     label={
                                         <Stack alignItems={"center"} spacing={1}>
-                                            <Typography className={`${e?.value === value ? 'bg-[#EEF5FF]' : 'bg-[#D6D6D6]'} 
+                                            {/* <Typography className={`${e?.value === value ? 'bg-[#EEF5FF]' : 'bg-[#D6D6D6]'} 
                                         p-[4px] text-[${e?.value === value ? '#1D5BBF' : '#18283D'}] 
-                                        rounded-[2px] text-[16px]`}>{e?.count}</Typography>
+                                        rounded-[2px] !text-[12px]`}>{e?.count}</Typography> */}
 
-                                            <Typography className={`text-[16px] text-[${e?.value === value ? '#1D5BBF' : '#18283D'}] 
+                                            <Typography className={`!text-[14px] text-[${e?.value === value ? '#1D5BBF' : '#18283D'}] 
                                         capitalize`} sx={{ fontWeight: 500 }}>{e?.title}</Typography>
                                         </Stack>
                                     }
