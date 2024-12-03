@@ -138,6 +138,7 @@ const Goals = () => {
     React.useEffect(() => {
         if (role === "admin") {
             setShowAdmin(true)
+            setCreatedBy("mentor")
         }
     }, [role])
 
@@ -171,6 +172,7 @@ const Goals = () => {
     }
 
     const getAllGoalData = (created_by = createdBy, user_id) => {
+        console.log("user_id ===?>", user_id)
         dispatch(getGoalsCount({ time_frame: allTimeFrame, user_id: user_id }))
         dispatch(getGoalsRequest({
             status: "new",
@@ -190,16 +192,23 @@ const Goals = () => {
         }))
     }
 
-    // useEffect(() => {
-    //     if(role === "admin"){
-    //         getAllGoalData("mentor")
-    //     }        
-    // }, [])
+    useEffect(() => {
+        if (role === "admin") {
+            dispatch(getGoalsHistory({
+                status: "new",
+                created_by: createdBy,
+                time_frame: historyTimeFrame,
+                page: historyPaginationModel?.page + 1,
+                limit: historyPaginationModel?.pageSize,
+                // user_id: user_id
+            }))
+        }
+    }, [createdBy])
 
     const handleGetAllGoals = (timeframe = allTimeFrame) => {
-        const filterType = searchParams.get("type");
+        const filterType = searchParams.get("type") ?? "";
         let payload = {}
-        if(role === "admin"){
+        if (role === "admin") {
             payload = {
                 page: allGoalPaginationModel?.page + 1,
                 limit: allGoalPaginationModel?.pageSize,
@@ -207,7 +216,7 @@ const Goals = () => {
                 time_frame: timeframe,
                 created_by: createdBy
             }
-        }else{
+        } else {
             payload = {
                 page: allGoalPaginationModel?.page + 1,
                 limit: allGoalPaginationModel?.pageSize,
@@ -223,7 +232,18 @@ const Goals = () => {
 
     useEffect(() => {
         handleGetAllGoals()
-    }, [searchParams])
+    }, [searchParams, allGoalPaginationModel])
+
+    useEffect(() => {
+        dispatch(getGoalsHistory({
+            status: "new",
+            created_by: createdBy,
+            time_frame: historyTimeFrame,
+            page: historyPaginationModel?.page + 1,
+            limit: historyPaginationModel?.pageSize,
+            user_id: role === "admin" ? seletedItem?.created_by : ""
+        }))
+    }, [historyPaginationModel])
 
 
     useEffect(() => {
@@ -449,7 +469,7 @@ const Goals = () => {
                     <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleClick(e, params.row)}>
                         <img src={MoreIcon} alt='MoreIcon' />
                     </div>
-                    <Menu
+                    {params?.row?.id === seletedItem?.id && <Menu
                         id="basic-menu"
                         anchorEl={anchorEl}
                         open={open}
@@ -481,12 +501,14 @@ const Goals = () => {
                                 Complete
                             </MenuItem>
                         }
-
-                        <MenuItem onClick={() => handleOpenConfirmPopup("cancel")} className='!text-[12px]'>
-                            <img src={CancelReqIcon} alt="CancelReqIcon" field={params.id} className='pr-3 w-[30px]' />
-                            Cancel
-                        </MenuItem>
-                    </Menu>
+                        {
+                            params?.row?.status === "new" &&
+                            <MenuItem onClick={() => handleOpenConfirmPopup("cancel")} className='!text-[12px]'>
+                                <img src={CancelReqIcon} alt="CancelReqIcon" field={params.id} className='pr-3 w-[30px]' />
+                                Cancel
+                            </MenuItem>
+                        }
+                    </Menu>}
                 </>
             }
 
@@ -616,6 +638,7 @@ const Goals = () => {
     const handleCloseModal = () => {
         setActionModal(false)
         setSelectedItem({})
+        handleGetAllGoals()
     }
 
     const handleGoalsClick = (goal) => {
@@ -662,12 +685,16 @@ const Goals = () => {
 
     const handleChangeHistoryTimeFrame = (value) => {
         setHistoryTimeFrame(value)
+        setHistoryPaginationModel({
+            page: 0,
+            pageSize: 5
+        })
         dispatch(getGoalsHistory({
             status: "new",
             created_by: createdBy,
             time_frame: value,
-            page: historyPaginationModel?.page + 1,
-            limit: historyPaginationModel?.pageSize
+            page: 1,
+            limit: 5
         }))
     }
 
@@ -722,19 +749,27 @@ const Goals = () => {
 
     const handleChangeRequestTimeFrame = (value) => {
         setRequestTimeFrame(value)
+        setRequestPaginationModel({
+            page: 0,
+            pageSize: 5
+        })
         dispatch(getGoalsRequest({
             status: "new",
             created_by: createdBy,
             time_frame: value,
-            page: requestPaginationModel?.page + 1,
-            limit: requestPaginationModel?.pageSize
+            page: 1,
+            limit: 5
         }))
     }
 
 
-    const handleAllTimeFrame = (value) => {
+    const handleAllTimeFrame = async (value) => {
         setAllTimeFrame(value)
-        handleGetAllGoals(value)
+        await setAllGoalPaginationModel({
+            page: 0,
+            pageSize: 5
+        })
+        await handleGetAllGoals(value)
     }
 
     const handleAdminTabChange = async (event, newValue) => {
@@ -1215,9 +1250,9 @@ const Goals = () => {
 
                                 <Box mt={2}>
                                     <DataTable
-                                        rows={goalsList?.results ?? []}
+                                        rows={goalHistory?.results ?? []}
                                         columns={adminTab === "mentor" ? adminMentorColumns : adminMenteeColumns}
-                                        rowCount={goalsList?.count}
+                                        rowCount={goalHistory?.count}
                                         paginationModel={adminTablePaginationModal}
                                         setPaginationModel={setAdminTablePaginationModal}
                                         hideCheckbox />
