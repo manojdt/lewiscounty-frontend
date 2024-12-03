@@ -284,7 +284,7 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                                                         <img className="w-6 h-6 rounded-full shadow-lg object-cover" src={currentProgram?.mentor_profile_image || UserImage} alt="User logo" />
                                                         <span style={{
                                                             textOverflow: 'ellipsis', overflow: 'hidden',
-                                                            width: '215px', whiteSpace: 'nowrap'
+                                                            width: '215px', whiteSpace: 'nowrap', textTransform: "capitalize"
                                                         }}>Instructor : {currentProgram?.mentor_name}</span>
                                                     </div>
                                                     <div className='flex justify-center pt-2'>

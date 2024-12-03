@@ -42,6 +42,7 @@ const Goals = () => {
     const userInfo = useSelector(state => state.userInfo)
     const role = userInfo.data.role
     const [searchParams] = useSearchParams();
+    const filterType = searchParams.get("type") ?? "";
     const [anchorEl, setAnchorEl] = useState(null);
     const [requestEl, setRequestEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -172,10 +173,9 @@ const Goals = () => {
     }
 
     const getAllGoalData = (created_by = createdBy, user_id) => {
-        console.log("user_id ===?>", user_id)
         dispatch(getGoalsCount({ time_frame: allTimeFrame, user_id: user_id }))
         dispatch(getGoalsRequest({
-            status: "new",
+            status: filterType,
             created_by: created_by,
             time_frame: requestTimeFrame,
             page: requestPaginationModel?.page + 1,
@@ -183,7 +183,7 @@ const Goals = () => {
             user_id: user_id
         }))
         dispatch(getGoalsHistory({
-            status: "new",
+            status: filterType ?? "new",
             created_by: created_by,
             time_frame: historyTimeFrame,
             page: historyPaginationModel?.page + 1,
@@ -192,10 +192,14 @@ const Goals = () => {
         }))
     }
 
+    // useEffect(() => {
+    //     getAllGoalData()
+    // }, [filterType])
+
     useEffect(() => {
         if (role === "admin") {
             dispatch(getGoalsHistory({
-                status: "new",
+                status: "new2",
                 created_by: createdBy,
                 time_frame: historyTimeFrame,
                 page: historyPaginationModel?.page + 1,
@@ -206,7 +210,6 @@ const Goals = () => {
     }, [createdBy])
 
     const handleGetAllGoals = (timeframe = allTimeFrame) => {
-        const filterType = searchParams.get("type") ?? "";
         let payload = {}
         if (role === "admin") {
             payload = {
@@ -226,6 +229,7 @@ const Goals = () => {
             }
         }
         dispatch(getAllGoals(payload))
+        dispatch(getGoalsRequest(payload))
         dispatch(getGoalsCount({ time_frame: timeframe }))
     }
 
@@ -236,7 +240,7 @@ const Goals = () => {
 
     useEffect(() => {
         dispatch(getGoalsHistory({
-            status: "new",
+            status: filterType,
             created_by: createdBy,
             time_frame: historyTimeFrame,
             page: historyPaginationModel?.page + 1,
@@ -495,7 +499,7 @@ const Goals = () => {
                         }
 
                         {
-                            params?.row?.status === "active" &&
+                            params?.row?.status === "in_progress" &&
                             <MenuItem onClick={() => handleOpenConfirmPopup("complete")} className='!text-[12px]'>
                                 <img src={CompleteIcon} alt="CompleteIcon" field={params.id} className='pr-3 w-[30px]' />
                                 Complete
@@ -627,8 +631,8 @@ const Goals = () => {
     const title = role === "admin" ? (adminTab === "mentor" ? "Mentor Goal" : "Mentee Goal") :
         goalsListMenu.find(option => option.key === searchParams.get("type"))?.name || (role === 'mentee' ? 'Mentee Goals' : 'My Goals')
 
-    const handleTab = (key) => {
-        setRequestTab(key)
+    const handleTab = (event, newValue) => {
+        setRequestTab(newValue)
     }
 
     const handleSelectedRow = (row) => {
@@ -1007,7 +1011,34 @@ const Goals = () => {
                         role === 'mentor' &&
 
                         <div className='flex gap-7 mb-6 '>
-                            {
+                            <Tabs
+                                value={requestTab}
+                                onChange={handleTab}
+                                sx={{
+                                    "& .MuiTabs-indicator": {
+                                        height: "5px",
+                                        background: "linear-gradient(to right, #1D5BBF, #00AEBD)",
+                                        borderRadius: "12px 12px 0px 0px"
+                                    }
+                                }}
+                            >
+                                {
+                                    requestBtns?.map((e) => {
+                                        return (
+                                            <Tab value={e?.key} label={
+                                                <Typography className={`text-[16px] text-[${requestTab === e.key ? '#1D5BBF' : '#18283D'}] 
+                                    capitalize`} sx={{ fontWeight: 500 }}>{e?.name}</Typography>
+                                            } />
+                                        )
+                                    })
+                                }
+
+                                {/* <Tab value="mentee" label={
+                                    <Typography className={`text-[16px] text-[${requestTab === actionBtn.key ? '#1D5BBF' : '#18283D'}] 
+                                    capitalize`} sx={{ fontWeight: 500 }}>Mentee Goals</Typography>
+                                } /> */}
+                            </Tabs>
+                            {/* {
                                 requestBtns.map((actionBtn, index) =>
                                     <button key={index} className='px-5 py-4 text-[14px]' style={{
                                         background: requestTab === actionBtn.key ? 'linear-gradient(97.86deg, #005DC6 -15.07%, #00B1C0 112.47%)' :
@@ -1020,7 +1051,7 @@ const Goals = () => {
                                         onClick={() => handleTab(actionBtn.key)}
                                     >{actionBtn.name}</button>
                                 )
-                            }
+                            } */}
                         </div>
                     }
 

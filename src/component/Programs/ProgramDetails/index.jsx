@@ -223,7 +223,6 @@ export default function ProgramDetails() {
             width: 300,
             id: 3,
             renderCell: (params) => {
-                console.log('params123', params)
                 return <button style={
                     {
                         background: 'rgb(29, 91, 191)',
@@ -298,9 +297,7 @@ export default function ProgramDetails() {
         setMessage(false)
     }
 
-    console.log('error', error)
     const onSubmit = (data) => {
-        console.log('Data', data)
         if (moreMenuModal.reschedule) {
 
             const formattedStartDate = convertDateFormat(data.reschedule_start_date);
@@ -721,7 +718,7 @@ export default function ProgramDetails() {
                                                 onClick={handleDateClick}
                                                 disabled={false}
                                                 minDate={dateFormatted.reschedule_start_date ? new Date(dateFormatted.reschedule_start_date) : new Date()}
-                                                maxDate={programdetails?.status === "yettostart" ? "" : new Date(programdetails?.end_date)}
+                                                maxDate={["yettojoin", "yettostart"].includes(programdetails?.status) ? "" : new Date(programdetails?.end_date)}
                                                 showTime={false}
                                                 hourFormat="12"
                                                 dateFormat="dd/mm/yy"
@@ -880,15 +877,15 @@ export default function ProgramDetails() {
                                                 <img src={ShareIcon} alt="ShareIcon" className='pr-3 w-[25px]' />
                                                 Share
                                             </MenuItem>
-                                            <MenuItem onClick={() => handleMenu('reschedule')} className='!text-[12px]'>
+                                            {!programdetails?.status === "completed" && <MenuItem onClick={() => handleMenu('reschedule')} className='!text-[12px]'>
                                                 <img src={RescheduleIcon} alt="RescheduleIcon" className='pr-3 w-[25px]' />
                                                 Reschedule
-                                            </MenuItem>
+                                            </MenuItem>}
 
-                                            <MenuItem onClick={() => handleMenu('cancel')} className='!text-[12px]'>
+                                            {!programdetails?.status === "completed" && <MenuItem onClick={() => handleMenu('cancel')} className='!text-[12px]'>
                                                 <img src={AbortIcon} alt="Cancel" className='pr-3 w-[25px]' />
                                                 Cancel
-                                            </MenuItem>
+                                            </MenuItem>}
                                         </Menu>
                                     </>
                                 }
@@ -1296,7 +1293,7 @@ export default function ProgramDetails() {
                                                 </li>
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}>
                                                     <span>Course Level</span>
-                                                    <span>{programdetails.course_level}</span>
+                                                    <span style={{textTransform: "capitalize"}}>{programdetails.course_level}</span>
                                                 </li>
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>Start Date</span>
                                                     <span>{`${dateFormat(programdetails?.start_date)} `}</span>

@@ -253,6 +253,7 @@ export const goalsSlice = createSlice({
                 return {
                     ...state,
                     goalHistory: action.payload,
+                    goalsList: action.payload,
                     loading: false,
                 };
             })

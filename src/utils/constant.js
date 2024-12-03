@@ -705,15 +705,15 @@ export const programMenus = (page = 'dashboard') => {
   //   for: ['mentor', 'mentee'],
   //   status: programActionStatus.yettojoin
   // },
-  // {
-  //   name: "Draft Programs",
-  //   count: 0,
-  //   page: `${pipeUrl}${programFilterUrls.draft}`,
-  //   for: ['mentor'],
-  //   mentorStatus: 'draft',
-  //   menteeStatus: '',
-  //   status: programActionStatus.draft
-  // },
+  {
+    name: "Drafted Programs",
+    count: 0,
+    page: `${pipeUrl}${programFilterUrls.draft}`,
+    for: ['mentor'],
+    mentorStatus: 'draft',
+    menteeStatus: '',
+    status: programActionStatus.draft
+  },
   // {
   //   name: "My Learning Programs",
   //   count: 0,
@@ -734,7 +734,7 @@ export const programMenus = (page = 'dashboard') => {
     status: programActionStatus.bookmark
   },
   {
-    name: "Reschedule Programs",
+    name: "Rescheduled Programs",
     count: 0,
     page: `${pipeUrl}${programFilterUrls.reschedule}`,
     for: ['mentor', 'mentee'],

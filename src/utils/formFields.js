@@ -2340,10 +2340,10 @@ export const ProfileFields = [{
 },
 {
   type: "input",
-  name: "address",
+  name: "location",
   fieldtype: "text",
-  label: "Address",
-  placeholder: "Enter Address",
+  label: "Location",
+  placeholder: "Enter Location",
   inputRules: {
 
   },

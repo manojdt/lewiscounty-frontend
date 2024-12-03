@@ -28,6 +28,7 @@ import ToastNotification from '../../../shared/Toast';
 import MuiModal from '../../../shared/Modal';
 import { useForm } from 'react-hook-form';
 import { Button } from '../../../shared';
+import { SelectBox } from '../../../shared/SelectBox';
 
 export default function AllRequest() {
     const navigate = useNavigate()
@@ -183,7 +184,7 @@ export default function AllRequest() {
     const handleConfirmPopup = () => {
         if (confirmPopup.requestType === 'program_request') {
             handleAcceptProgramApiRequest()
-        }        
+        }
 
         if (confirmPopup.requestType === 'member_join_request') {
             if (confirmPopup.type === 'reject') {
@@ -262,8 +263,8 @@ export default function AllRequest() {
             status: "cancel",
             goal_request_ids: [seletedItem.id],
             description: reason
-        })).then((res)=>{
-            if(res?.meta?.requestStatus === "fulfilled"){
+        })).then((res) => {
+            if (res?.meta?.requestStatus === "fulfilled") {
                 handleCloseCancelReasonPopup()
             }
         })
@@ -497,11 +498,11 @@ export default function AllRequest() {
                                 <>
                                     <MenuItem onClick={handleAcceptProgramRequest} className='!text-[12px]'>
                                         <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
-                                       {actionTab === 'program_cancel' ? 'Accept' : 'Approve' }
+                                        {actionTab === 'program_cancel' ? 'Accept' : 'Approve'}
                                     </MenuItem>
                                     <MenuItem onClick={handleCancelProgramRequest} className='!text-[12px]'>
                                         <img src={CloseCircle} alt="CancelIcon" className='pr-3 w-[27px]' />
-                                        {actionTab === 'program_cancel' ? 'Continue' : 'Reject' }
+                                        {actionTab === 'program_cancel' ? 'Continue' : 'Reject'}
                                     </MenuItem>
                                 </>
                             }
@@ -867,7 +868,7 @@ export default function AllRequest() {
         navigate(`/all-request?type=${menu.status}`)
         handleStatus("all")
         setFilter({ search: '', filter_by: '' })
-        if(menu?.status === "goal_request"){
+        if (menu?.status === "goal_request") {
             setActiveTab("mentor")
         }
     }
@@ -983,7 +984,6 @@ export default function AllRequest() {
                     tableDetails = { column: programRequestColumn, data: [] }
                     actionFilter = programInfoTab
                     activeTabName = role === 'mentee' || role === 'mentor' ? 'joining_request' : 'new_program_request'
-                    console.log('activeTabName', activeTabName, actionTab)
                     if (actionTab !== 'joining_request' && actionTab !== 'new_program_request') {
                         activeTabName = actionTab
                     }
@@ -1145,7 +1145,6 @@ export default function AllRequest() {
         }
 
     }, [programTableInfo, memberRequest, resourceRequest, goalsRequestInfo, certificateRequestList, reportsRequestInfo, anchorEl, learningAccessRequests])
-    // console.log("searchParams.get('type') ===>", searchParams.get('type'))
     useEffect(() => {
 
         if (role !== '') {
@@ -1417,16 +1416,19 @@ export default function AllRequest() {
                                             </select>
                                         </p>
 
-                                        <p className="text-[12px] py-2 pl-5 pr-4 flex gap-4" style={{ background: 'rgba(29, 91, 191, 1)', borderRadius: '5px', height: '40px' }}>
+                                        {/* <p className="text-[12px] py-2 pl-5 pr-4 flex gap-4" style={{ background: 'rgba(29, 91, 191, 1)', borderRadius: '5px', height: '40px' }}>
                                             <select className='focus:outline-none' style={{ background: 'rgba(29, 91, 191, 1)', border: 'none', color: '#fff' }} onChange={(e) => handleStatus(e?.target?.value)}>
 
                                                 {
                                                     statusOptions.map((option, index) =>
-                                                        <option style={{background: '#fff !important', color: '#000'}} key={index} selected={option?.value === filterStatus} value={option?.value}>{option?.label}</option>
+                                                        <option style={{ background: '#fff !important', color: '#000' }} key={index} selected={option?.value === filterStatus} value={option?.value}>{option?.label}</option>
                                                     )
                                                 }
-                                            </select>
-                                        </p>
+                                            </select>                                            
+                                        </p> */}
+                                        <SelectBox value={filterStatus}
+                                                handleChange={(e) => handleStatus(e?.target?.value)}
+                                                menuList={statusOptions} />
                                     </div>
                                 </div>
 

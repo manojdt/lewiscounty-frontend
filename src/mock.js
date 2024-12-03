@@ -2179,7 +2179,7 @@ export const AdminCategory = [
     },
     {
         field: 'program_count',
-        headerName: 'Program',
+        headerName: 'Programs',
         flex: 1,
         id: 0,
     },

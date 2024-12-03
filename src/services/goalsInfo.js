@@ -12,8 +12,7 @@ export const getAllGoals = createAsyncThunk(
         let filteredQuery = Object.fromEntries(
             Object.entries(query).filter(([key, value]) => !(key === "search" && value.trim().length === 0) &&
                 !(key === "user_id" && (value).toString().trim().length === 0) &&
-                !(key === "created_by" && value.trim().length === 0) &&
-                !(key === "status" && (value !== null || value.trim().length === 0))
+                !(key === "created_by" && value.trim().length === 0)
             )
         );
         let queryString = new URLSearchParams(filteredQuery).toString()
@@ -151,9 +150,7 @@ export const getGoalsHistory = createAsyncThunk(
         let filteredQuery = Object.fromEntries(
             Object.entries(query).filter(([key, value]) => !(key === "search" && value.trim().length === 0) &&
                 !(key === "created_by" && value.trim().length === 0) &&
-                !(key === "status" && (value !== null || value.trim().length === 0)) &&
                 !(key === "user_id" && (value).toString().trim().length === 0)
-
             )
         );
         let queryString = new URLSearchParams(filteredQuery).toString()
