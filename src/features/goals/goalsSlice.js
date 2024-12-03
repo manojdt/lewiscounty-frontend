@@ -54,6 +54,7 @@ export const goalsSlice = createSlice({
                 return {
                     ...state,
                     goalsList: action.payload,
+                    goalHistory: action.payload,
                     status: goalStatus.load,
                     loading: false,
                 };
