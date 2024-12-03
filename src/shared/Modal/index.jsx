@@ -12,33 +12,43 @@ import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
+  return <Slide direction='up' ref={ref} {...props} />;
 });
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-    '& .MuiDialogContent-root': {
-        padding: theme.spacing(2),
-    },
-    '& .MuiDialogActions-root': {
-        padding: theme.spacing(1),
-    },
+  '& .MuiDialogContent-root': {
+    padding: theme.spacing(2),
+  },
+  '& .MuiDialogActions-root': {
+    padding: theme.spacing(1),
+  },
 }));
 
-export default function MuiModal({ modalOpen, title = '', children, footer = false, modalClose, modalSize = 'sm', noheader = false }) {
-    const [open, setOpen] = React.useState(modalOpen);
+export default function MuiModal({
+  modalOpen,
+  title = '',
+  children,
+  footer = false,
+  modalClose,
+  modalSize = 'sm',
+  noheader = false,
+  rightIcon,
+  onClick,
+}) {
+  const [open, setOpen] = React.useState(modalOpen);
 
-    const handleClose = () => {
-        setOpen(false);
-        modalClose(false)
-    };
+  const handleClose = () => {
+    setOpen(false);
+    modalClose(false);
+  };
 
-    React.useEffect(() => {
-        setOpen(modalOpen)
-    }, [modalOpen])
+  React.useEffect(() => {
+    setOpen(modalOpen);
+  }, [modalOpen]);
 
-    return (
-        <React.Fragment>
-            {/* <Dialog
+  return (
+    <React.Fragment>
+      {/* <Dialog
                 open={open}
                 TransitionComponent={Transition}
                 keepMounted
@@ -58,52 +68,57 @@ export default function MuiModal({ modalOpen, title = '', children, footer = fal
                 </DialogActions>
             </Dialog> */}
 
-
-
-            <BootstrapDialog
-                onClose={handleClose}
-                aria-labelledby="customized-dialog-title"
-                open={open}
-                TransitionComponent={Transition}
-                fullWidth
-                maxWidth={modalSize}
-
+      <BootstrapDialog
+        onClose={handleClose}
+        aria-labelledby='customized-dialog-title'
+        open={open}
+        TransitionComponent={Transition}
+        fullWidth
+        maxWidth={modalSize}
+      >
+        {!noheader && (
+          <>
+            <DialogTitle
+              sx={{ m: 0, p: 2 }}
+              id='customized-dialog-title'
+              className='flex items-center gap-3'
             >
-                {
-                    !noheader &&
-                    <>
-                        <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-                            {title}
-                        </DialogTitle>
-                        <IconButton
-                            aria-label="close"
-                            onClick={handleClose}
-                            sx={{
-                                position: 'absolute',
-                                right: 8,
-                                top: 8,
-                                color: (theme) => theme.palette.grey[500],
-                            }}
-                        >
-                            <CloseIcon />
-                        </IconButton>
-                    </>
-                }
+              {title}
+              {rightIcon && (
+                <img
+                  className='cursor-pointer'
+                  src={rightIcon}
+                  alt=''
+                  width={20}
+                  height={20}
+                  onClick={onClick}
+                />
+              )}
+            </DialogTitle>
+            <IconButton
+              aria-label='close'
+              onClick={handleClose}
+              sx={{
+                position: 'absolute',
+                right: 8,
+                top: 8,
+                color: (theme) => theme.palette.grey[500],
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </>
+        )}
 
-                <DialogContent dividers>
-                    {children}
-                </DialogContent>
-                {
-                    footer ?
-                        <DialogActions>
-                            <Button autoFocus onClick={handleClose}>
-                                Save changes
-                            </Button>
-                        </DialogActions>
-                        : null
-                }
-
-            </BootstrapDialog>
-        </React.Fragment>
-    );
+        <DialogContent dividers>{children}</DialogContent>
+        {footer ? (
+          <DialogActions>
+            <Button autoFocus onClick={handleClose}>
+              Save changes
+            </Button>
+          </DialogActions>
+        ) : null}
+      </BootstrapDialog>
+    </React.Fragment>
+  );
 }
