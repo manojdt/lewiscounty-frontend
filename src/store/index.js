@@ -1,24 +1,21 @@
-import {
-  configureStore,
-  combineReducers
-} from "@reduxjs/toolkit";
-import userReducer from "../features/user/userSlice";
-import programReducer from "../features/program/programSlice";
-import userProgramReducer from "../features/userprograms/userProgramSlice";
-import goalsReducer from "../features/goals/goalsSlice";
-import reportsReducer from "../features/reports/reportsSlice";
-import helpReducer from "../features/help/helpSlice";
-import userListReducer from "../features/userList/userListSlice";
-import scheduleReducer from "../features/schedule/scheduleSlice";
-import taskReducer from "../features/task/taskSlice";
-import profileReducer from "../features/profile/profileSlice";
-import feedReducer from "../features/feeds/feedSlice";
-import certificateReducer from "../features/certificates/certificateSlice";
-import activityReducer from "../features/activities/activitySlice";
-import requestReducer from "../features/request/requestSlice";
-import launchProgramReducer from "../features/launchProgram/launchProgramSlice";
-import memberReducer from "../features/members/memberSlice";
-import categoryReducer from "../features/category/categorySlice"
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
+import userReducer from '../features/user/userSlice';
+import programReducer from '../features/program/programSlice';
+import userProgramReducer from '../features/userprograms/userProgramSlice';
+import goalsReducer from '../features/goals/goalsSlice';
+import reportsReducer from '../features/reports/reportsSlice';
+import helpReducer from '../features/help/helpSlice';
+import userListReducer from '../features/userList/userListSlice';
+import scheduleReducer from '../features/schedule/scheduleSlice';
+import taskReducer from '../features/task/taskSlice';
+import profileReducer from '../features/profile/profileSlice';
+import feedReducer from '../features/feeds/feedSlice';
+import certificateReducer from '../features/certificates/certificateSlice';
+import activityReducer from '../features/activities/activitySlice';
+import requestReducer from '../features/request/requestSlice';
+import launchProgramReducer from '../features/launchProgram/launchProgramSlice';
+import memberReducer from '../features/members/memberSlice';
+import categoryReducer from '../features/category/categorySlice';
 
 const combinedReducer = combineReducers({
   userInfo: userReducer,
@@ -37,17 +34,17 @@ const combinedReducer = combineReducers({
   activity: activityReducer,
   launchProgram: launchProgramReducer,
   members: memberReducer,
-  category: categoryReducer
+  category: categoryReducer,
 });
 
 const rootReducer = (state, action) => {
-  if (action.type === 'logout') { //We are calling this RESET, but call what you like!
-    state = undefined
+  if (action.type === 'logout') {
+    //We are calling this RESET, but call what you like!
+    state = undefined;
   }
   return combinedReducer(state, action);
 };
 
 export const store = configureStore({
-  reducer: rootReducer
-
+  reducer: rootReducer,
 });
