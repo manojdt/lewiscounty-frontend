@@ -4,13 +4,21 @@ import Tooltip from '../../shared/Tooltip';
 import DeleteIcon from '../../assets/icons/DeleteRed.svg';
 import CancelIcon from '../../assets/images/cancel-colour1x.png';
 import EventModal from './EventModal';
+import DeleteModal from './delete-modal';
 
 const MultiEventModal = ({ open, closeModal, events, actionActionBtn }) => {
   const [showModal, setShowModal] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState(null); // State to store the selected event
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [itemId, setItemId] = useState(null);
+  const [deleteModal, setDeleteModal] = useState(false);
 
   const toggleModal = () => {
     setShowModal(!showModal);
+  };
+
+  const handleEventDelete = (id) => {
+    setItemId(id);
+    setDeleteModal(true);
   };
 
   const handleEventClick = (item) => {
@@ -46,12 +54,16 @@ const MultiEventModal = ({ open, closeModal, events, actionActionBtn }) => {
                 key={index} // Add a key to each element
                 className='event-list py-3 px-3 border-b-2 font-semibold'
                 style={{ color: 'rgba(24, 40, 61, 1)' }}
-                onClick={() => handleEventClick(item)} // Pass item to the handler
+                onClick={() => handleEventClick(item)}
               >
                 <div className='event-title flex justify-between'>
                   <div className='event-name text-[18px]'>{item.title}</div>
                   <img
                     src={DeleteIcon}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEventDelete(item.id);
+                    }}
                     className='cursor-pointer'
                     alt='DeleteIcon'
                   />
@@ -76,7 +88,14 @@ const MultiEventModal = ({ open, closeModal, events, actionActionBtn }) => {
             actionActionBtn={actionActionBtn}
             open={showModal}
             closeModal={toggleModal}
-            event={selectedEvent} // Pass the selected event to the EventModal
+            event={selectedEvent}
+          />
+        )}
+        {deleteModal && (
+          <DeleteModal
+            open={deleteModal}
+            itemId={itemId}
+            closeModal={() => setDeleteModal(false)}
           />
         )}
       </div>

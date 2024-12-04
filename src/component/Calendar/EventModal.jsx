@@ -5,11 +5,16 @@ import EditIcon from '../../assets/icons/editIcon.svg'; // Assuming this is an S
 import { IconButton } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import DeleteModal from './delete-modal';
+import DoubleAvatar from '../../assets/icons/double-avatar.svg';
+import DummyAvatar from '../../assets/icons/dummy-avatar.svg';
+import BellIcon from '../../assets/icons/bell-icon.svg';
+import GMeetModal from './GMeetModal';
 
-const EventModal = ({ open, closeModal, actionActionBtn, event }) => {
-  console.log('event', event);
+const EventModal = ({ open, closeModal, actionActionBtn, event = [] }) => {
   const [deleteModal, setDeleteModal] = useState(false);
   const navigate = useNavigate();
+
+  // console.log(event);
 
   const [showGoogleMeetModal, setShowGoogleMeetModal] = useState(false);
   // Map of button names for simplicity
@@ -33,6 +38,8 @@ const EventModal = ({ open, closeModal, actionActionBtn, event }) => {
     }
   };
 
+  // console.log(event);
+
   return (
     <MuiModal
       modalOpen={open}
@@ -41,28 +48,90 @@ const EventModal = ({ open, closeModal, actionActionBtn, event }) => {
       rightIcon={EditIcon}
       onClick={() => navigate(`/edit-meeting?id=${event.id}`)}
     >
-      <div className='p-6'>
-        {/* Event details */}
+      <div className='p-6 space-y-8'>
         <div className='flex flex-col'>
           <div className='flex gap-4'>
-            <div className='bg-blue-700 m-1 w-6 h-6 rounded-md' />
+            <div className='bg-blue-700 m-2 w-6 h-6 rounded-md' />
             <div>
               <h2 className='text-2xl font-semibold'>
                 {event?.title || 'Title Name'}
               </h2>
               <span className='text-slate-400'>
-                {event?.date || 'Wednesday, June 19. 1:00 - 2:00'}
+                {event?.start_date} &nbsp; {event.start.slice(0, 5)} -{' '}
+                {event.end.slice(0, 5)}
               </span>
             </div>
           </div>
+        </div>
 
-          <div></div>
+        <div>
+          <div className='flex items-start justify-between ml-2'>
+            <div className='flex items-start justify-start gap-6'>
+              <div className='mt-1'>
+                <img src={DoubleAvatar} alt='' width={25} height={25} />
+              </div>
+              <div className='space-y-2'>
+                <p>{event.attendees.length} Mentees</p>
+                <p className='text-slate-400'>
+                  {event.attendees.length} Waiting
+                </p>
+              </div>
+            </div>
+            <div className='w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300 transition-all duration-200'>
+              <img src={EditIcon} alt='' />
+            </div>
+          </div>
+
+          <div className='space-y-3 ml-20 mt-3'>
+            {event &&
+              event.attendees &&
+              event.attendees.map((attendee, index) => (
+                <div className='flex items-start gap-3'>
+                  <img src={DummyAvatar} alt='' width={25} height={25} />
+                  <p>{attendee.full_name}</p>
+                </div>
+              ))}
+          </div>
+        </div>
+
+        <div>
+          <div className='flex items-start justify-between ml-2'>
+            <div className='flex items-start justify-start gap-6'>
+              <div className='mt-1'>
+                <img src={DoubleAvatar} alt='' width={25} height={25} />
+              </div>
+              <div className='space-y-2'>
+                <p>{event.guests.length} Mentees</p>
+                <p className='text-slate-400'>{event.guests.length} Waiting</p>
+              </div>
+            </div>
+            <div className='w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300 transition-all duration-200'>
+              <img src={EditIcon} alt='' />
+            </div>
+          </div>
+
+          <div className='space-y-3 ml-20 mt-3'>
+            {event &&
+              event.guests &&
+              event.guests.map((guest, index) => (
+                <div className='flex items-center gap-3 justify-start'>
+                  <img src={DummyAvatar} alt='' width={25} height={25} />
+                  <p>{guest}</p>
+                </div>
+              ))}
+          </div>
+        </div>
+
+        <div className='flex items-center justify-start gap-4'>
+          <img src={BellIcon} alt='' />
+          <p>10 minutes before</p>
         </div>
 
         {/* Action buttons */}
         <div className='text-center space-x-4 mt-4'>
           <Button
             btnName='Cancel'
+            onClick={closeModal}
             btnCls='w-[120px]'
             btnStyle={{
               border: '1px solid rgba(29, 91, 191, 1)',
@@ -87,7 +156,8 @@ const EventModal = ({ open, closeModal, actionActionBtn, event }) => {
 
           <Button
             btnType='submit'
-            btnCls='w-[150px]'
+            onClick={onSubmit}
+            btnCls='w-[170px]'
             btnName={actionButtonName}
             btnCategory='primary'
           />
@@ -97,7 +167,16 @@ const EventModal = ({ open, closeModal, actionActionBtn, event }) => {
       {deleteModal && (
         <DeleteModal
           open={deleteModal}
+          itemId={event.id}
           closeModal={() => setDeleteModal(false)}
+        />
+      )}
+
+      {showGoogleMeetModal && (
+        <GMeetModal
+          open={showGoogleMeetModal}
+          event={event}
+          closeModal={() => setShowGoogleMeetModal(false)}
         />
       )}
     </MuiModal>

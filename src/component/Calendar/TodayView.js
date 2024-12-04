@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import dayjs from 'dayjs';
-import { getTodayTime } from '../../utils';
+import { formatTime, getTodayTime } from '../../utils';
 import GoogleIcon from '../../assets/icons/google_icon.svg';
 import TrashIcon from '../../assets/images/delete.png';
 import CalendarIcon from '../../assets/icons/calendar-boxed.svg';
@@ -17,6 +17,7 @@ export default function TodayView({
   deleteAppointment,
   isWeek,
   rowIdx,
+  actionActionBtn,
   colIdx,
   newData,
 }) {
@@ -33,6 +34,7 @@ export default function TodayView({
               colIdx={colIdx}
               key={index}
               time={time}
+              actionActionBtn={actionActionBtn}
               savedEvents={savedEvents}
               fetchEvents={fetchEvents}
               deleteAppointment={deleteAppointment}
@@ -53,6 +55,7 @@ function TimeBlock({
   savedEvents,
   fetchEvents,
   deleteAppointment,
+  actionActionBtn,
   newData,
 }) {
   const startTime = time.format('h:mm A'); // Format the start time
@@ -120,8 +123,14 @@ function TimeBlock({
   });
 
   const [showDetailModal, setShowDetailModal] = useState(null);
+  const [selectedEvent, setSelectedEvent] = useState(null);
   const toggleDetailModal = (index) => {
     setShowDetailModal(index);
+  };
+
+  const handleEventClick = (item) => {
+    setSelectedEvent(item);
+    setShowModal(true);
   };
 
   const [editEvent, setEditEvent] = useState(false);
@@ -143,10 +152,9 @@ function TimeBlock({
   const toggleModal = () => {
     setShowModal(!showModal);
   };
-
   return (
     <div
-      className={`flex-1 grid grid-cols-9 gap-2 m-0 opacity-75 ${
+      className={`flex-1 grid grid-cols-9 gap-2 opacity-75 ${
         isWeek ? 'border-b-[1px] h-16' : 'border'
       }  border-gray-200`}
     >
@@ -189,12 +197,14 @@ function TimeBlock({
             }
 
             return (
-              <>
+              <div className='cursor-pointer'>
                 <div
                   key={index}
-                  className={`${isWeek ? '' : 'm-2'} mb-0 relative`}
+                  className='cursor-pointer'
+                  // className={`${isWeek ? '' : 'm-2'} mb-0 cursor-pointer`}
+                  onClick={() => handleEventClick(event)}
                 >
-                  <a
+                  {/* <a
                     // href={event.htmlLink}
                     target='_blank'
                     onClick={(e) => {
@@ -202,30 +212,67 @@ function TimeBlock({
                       e.stopPropagation();
                       toggleDetailModal(index);
                     }}
+                  > */}
+                  <div
+                    // className={`relative flex flex-row gap-1 items-center justify-between w-full h-7 rounded-tl-sm rounded-tr-sm mx-1 ${getTitleBackGround()}`}
+                    className='text-sm relative cursor-pointer calendar-event-conatiner'
+                    onClick={() => handleEventClick(event)}
+                    style={{
+                      boxShadow: '4px 4px 15px 2px rgba(0, 0, 0, 0.1)',
+                      borderRadius: '3px',
+                      background: '#fff',
+                    }}
                   >
+                    {event?.length > 1 && (
+                      <span
+                        className='absolute notification-count'
+                        style={{
+                          background: 'rgba(255, 206, 71, 1)',
+                          right: '4px',
+                          top: '-7px',
+                          height: '23px',
+                          width: '23px',
+                          textAlign: 'center',
+                          borderRadius: '50%',
+                          color: '#fff',
+                        }}
+                      >
+                        {event?.length}
+                      </span>
+                    )}
                     <div
-                      className={`relative flex flex-row gap-1 items-center justify-between w-full h-7 rounded-tl-sm rounded-tr-sm mx-1 ${getTitleBackGround()}`}
+                      // className='flex items-center gap-1'
+                      className='event-title'
+                      onClick={() => handleEventClick(event)}
+                      // title={event?.title}
+                      style={{
+                        background: '#1D5BBF',
+                        color: '#fff',
+                        padding: '5px',
+                        borderRadius: '3px',
+                      }}
                     >
-                      <div className='flex items-center gap-1'>
-                        <img
-                          src={
-                            event?.isExternal
-                              ? GoogleIcon
-                              : InternalCalendarIcon
-                          }
-                          className={
-                            event?.isExternal
-                              ? 'h-[16px] w-[16px] ms-1 bg-white rounded-full'
-                              : 'h-[20px] w-[20px] ms-1'
-                          }
-                          alt='event-meet'
-                        />
-                        <div className='text-center text-xs font-normal truncate'>
-                          {eventTitleDisplay}
-                        </div>
+                      <div className='text-xs font-normal truncate'>
+                        {/* {eventTitleDisplay} */}
+                        {event.title}
                       </div>
+                    </div>
+                    <div className='meeting-details px-2 pt-2 pb-3'>
+                      <div
+                        className='mb-2 meeting-scheduler text-xs'
+                        title='Mentor : John Doe'
+                      >
+                        Mentor : John Doe
+                      </div>
+                      <div
+                        className='text-[12px] meeting-time'
+                        style={{ color: 'rgba(40, 41, 59, 1)' }}
+                      >
+                        Time: {formatTime(event.start)} -{formatTime(event.end)}
+                      </div>
+                    </div>
 
-                      {/* <PrivateComponent permission="delete_appointments_in_my_calendar">
+                    {/* <PrivateComponent permission="delete_appointments_in_my_calendar">
                         <div className="absolute inset-y-0 right-0 bg-slate-50 px-1 m-1 rounded flex items-center justify-end pe-1">
                           <button
                             onClick={(e) => {
@@ -238,8 +285,8 @@ function TimeBlock({
                           </button>
                         </div>
                       </PrivateComponent> */}
-                    </div>
-                  </a>
+                  </div>
+                  {/* </a> */}
                 </div>
                 {/* {showDetailModal === index && (
                   <AppointmentDetail_Modal
@@ -270,7 +317,7 @@ function TimeBlock({
                   isUpdate={editEvent === index}
                   isView={viewEvent === index}
                 /> */}
-              </>
+              </div>
             );
           })}
 
@@ -284,18 +331,18 @@ function TimeBlock({
               +{eventsForHour.length - 1} more
             </div>
           )}
-
-          {showModal && (
-            <EventModal
-              show={showModal}
-              eventDate={`${startTime}-${endTime}`}
-              toggleModal={toggleModal}
-              events={eventsForHour}
-              fetchEvents={fetchEvents}
-              deleteAppointment={deleteAppointment}
-            />
-          )}
         </div>
+      )}
+      {showModal && (
+        <EventModal
+          open={showModal}
+          eventDate={`${startTime}-${endTime}`}
+          closeModal={toggleModal}
+          event={selectedEvent}
+          actionActionBtn={actionActionBtn}
+          fetchEvents={fetchEvents}
+          deleteAppointment={deleteAppointment}
+        />
       )}
     </div>
   );
