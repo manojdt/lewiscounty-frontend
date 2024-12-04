@@ -187,8 +187,20 @@ function TablePaginationActions(props) {
                         {/* <input type="number" style={{width: '100%', height: '100%', padding: '12px'}} value={paginationDetails.paginationModel.page + 1} 
                         
                         /> */}
-                        {props?.paginationModel.page + 1}</span> of
-                    <span className='pl-1'>{Math.ceil(paginationDetails.rowCount / props?.paginationModel.pageSize)}</span></div>
+                        {/* {props?.paginationModel.page + 1}</span> of
+                    <span className='pl-1'>{Math.ceil(paginationDetails.rowCount / props?.paginationModel.pageSize)}</span> */}
+                    {props?.paginationModel?.page !== undefined 
+        ? props.paginationModel.page + 1 
+        : 1}
+</span> 
+of 
+<span className='pl-1'>
+    {paginationDetails?.rowCount && props?.paginationModel?.pageSize 
+        ? Math.ceil(paginationDetails.rowCount / props.paginationModel.pageSize) 
+        : 1}
+</span>
+                    
+                    </div>
                 <IconButton
                     onClick={handleBackButtonClick}
                     disabled={props?.paginationModel.page === 0}
