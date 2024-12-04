@@ -73,7 +73,7 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
         if (currentStepData !== undefined && Object.keys(currentStepData).length) {
             reset(currentStepData)
         }
-        setValue('status','')
+        setValue('status', '')
     }, [])
 
     useEffect(() => {
@@ -104,10 +104,6 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
         setCheckBoxValue({ ...checkBoxValue, [e.target.name]: e.target.value })
     }
 
-    console.log('stepData', stepData)
-
-    console.log('logoImage', logoImage)
-
     return (
         <>
             <div className="py-9">
@@ -124,7 +120,7 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                     const url = getValues(field.name)
                                     if (url !== null && url !== undefined && typeof url === 'string') {
                                         imageName = url.substring(url.lastIndexOf('/') + 1);
-                                        imageField = register(field.name, {required: false})
+                                        imageField = register(field.name, { required: false })
                                     }
                                 }
                                 const reader = new FileReader();
@@ -391,18 +387,18 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                                                             </p>
                                                                                         </div>
                                                                                         <input id={imageField.name} type="file" {...imageField}
-
+                                                                                            accept='image/png, image/jpeg, image/jpg,image/webp,image/heic'
                                                                                             onChange={(e) => {
-                                                                                               
+
                                                                                                 if (e.target.files && e.target.files[0]) {
 
                                                                                                     console.log('pppppp', e.target.files)
-                                                                                                    let types = ['image/png', 'image/jpeg', 'image/jpg','image/webp','image/heic']
+                                                                                                    let types = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp', 'image/heic']
                                                                                                     console.log('Image', e.target.files)
                                                                                                     if (types.includes(e.target.files[0].type)) {
                                                                                                         imageField.onChange(e);
                                                                                                         setLogoImage({ ...logoImage, [field.name]: URL.createObjectURL(e.target.files[0]) });
-                                                                                                    } 
+                                                                                                    }
                                                                                                 }
                                                                                             }}
                                                                                             className="hidden" />
@@ -446,14 +442,14 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                     <div className="flex gap-6 justify-center align-middle">
                         {currentStep === 1 && <Button btnName='Cancel' btnCategory="secondary" onClick={() => navigate('/programs')} />}
                         {currentStep > 1 && <Button btnName='Back' btnCategory="secondary" onClick={handlePreviousStep} />}
-                        {currentStep === totalSteps && 
-                        <Button btnType="button" onClick={handleDraft} btnStyle={{ background: 'rgba(197, 197, 197, 1)', color: '#000' }}
-                                btnCls="w-[150px]" btnName={'Save as Draft'} btnCategory="primary" /> }
+                        {currentStep === totalSteps &&
+                            <Button btnType="button" onClick={handleDraft} btnStyle={{ background: 'rgba(197, 197, 197, 1)', color: '#000' }}
+                                btnCls="w-[150px]" btnName={'Save as Draft'} btnCategory="primary" />}
                         {/* {(currentStep !== '' &&
                             (!Object.keys(programDetails).length)) || (Object.keys(programDetails).length && programDetails.status === 'draft') ? <Button btnType="button" onClick={handleDraft} btnStyle={{ background: 'rgba(197, 197, 197, 1)', color: '#000' }}
                                 btnCls="w-[150px]" btnName={'Save as Draft'} btnCategory="primary" /> : null} */}
 
-                        <Button btnType="submit" id={'program-submit'} btnCls="w-[100px]" 
+                        <Button btnType="submit" id={'program-submit'} btnCls="w-[100px]"
 
                             btnName={currentStep === totalSteps ? 'Submit' : 'Next'} btnCategory="primary" />
                     </div>

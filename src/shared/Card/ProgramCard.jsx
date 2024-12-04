@@ -280,12 +280,13 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                                                     <div className='flex gap-2 items-center py-3 text-[12px]'>
                                                         <img src={StarColorIcon} alt="StarColorIcon" />
                                                         <span>{rating}</span>
-                                                        <span style={{ borderRight: '1px solid #18283D' }}></span>
+                                                        <span style={{ borderRight: '1px solid #18283D', height: "20px" }}></span>
                                                         <img className="w-6 h-6 rounded-full shadow-lg object-cover" src={currentProgram?.mentor_profile_image || UserImage} alt="User logo" />
                                                         <span style={{
                                                             textOverflow: 'ellipsis', overflow: 'hidden',
-                                                            width: '215px', whiteSpace: 'nowrap', textTransform: "capitalize"
-                                                        }}>Instructor : {currentProgram?.mentor_name}</span>
+                                                            width: '215px', whiteSpace: 'nowrap', textTransform: "capitalize",
+                                                            color: "#1D5BBF"
+                                                        }}>Instructor : {currentProgram?.mentor_name} ({currentProgram?.role ?? ""})</span>
                                                     </div>
                                                     <div className='flex justify-center pt-2'>
                                                         {
