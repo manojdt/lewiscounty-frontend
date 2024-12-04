@@ -147,15 +147,16 @@ const Category = () => {
                                     id: seletedItem?.id
                                 }
                             })
-                        }}>
+                        }} className='!text-[14px] !text-[#18283D]' style={{fontWeight: 500}}>
                             <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
                             View
                         </MenuItem>
-                        <MenuItem onClick={() => handleOpenEditForm(seletedItem, true)}>
+                        <MenuItem onClick={() => handleOpenEditForm(seletedItem, true)}
+                        className='!text-[14px] !text-[#18283D]' style={{fontWeight: 500}}>
                             <img src={EditIcon} alt="EditIcon" field={params.id} className='pr-3 w-[30px]' />
                             Edit
                         </MenuItem>
-                        <MenuItem onClick={() => handleOpenDeletePopup(seletedItem?.id)}>
+                        <MenuItem onClick={() => handleOpenDeletePopup(seletedItem?.id)} className='!text-[14px] !text-[#18283D]' style={{fontWeight: 500}}>
                             <img src={DeleteIcon} alt="EditIcon" field={params.id} className='pr-3 w-[30px]' />
                             Delete
                         </MenuItem>

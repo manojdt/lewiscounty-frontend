@@ -926,7 +926,7 @@ export default function AssignTask() {
 
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}>
                                                     <span>Course Level</span>
-                                                    <span>{programdetails.course_level}</span>
+                                                    <span style={{textTransform: "capitalize"}}>{programdetails.course_level}</span>
                                                 </li>
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>Start Date</span>
                                                     <span>{`${formatDateFunToAll(programdetails?.start_date)}`}</span>

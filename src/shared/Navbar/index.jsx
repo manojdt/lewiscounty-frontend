@@ -462,7 +462,7 @@ export const Navbar = () => {
                               }}
                             >
                               <img src={PermissionIcon} />
-                              <Typography className='text-[#18283D] text-[14px]'>
+                              <Typography className='text-[#18283D] !text-[14px]'>
                                 Permission
                               </Typography>
                             </Stack>
@@ -478,7 +478,7 @@ export const Navbar = () => {
                               }}
                             >
                               <img src={CategoryIcon} />
-                              <Typography className='text-[#18283D] text-[14px]'>
+                              <Typography className='text-[#18283D] !text-[14px]'>
                                 Category
                               </Typography>
                             </Stack>
@@ -486,7 +486,7 @@ export const Navbar = () => {
                         </React.Fragment>
                       }
                     >
-                      <img src={SettingIcon} onClick={handleTooltipOpen} />
+                      <img src={SettingIcon} onClick={handleTooltipOpen} className='cursor-pointer' />
                     </HtmlTooltip>
                   </div>
                 </ClickAwayListener>

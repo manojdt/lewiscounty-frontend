@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate, useSearchParams, useParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, useParams, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Backdrop, CircularProgress, Menu, MenuItem } from '@mui/material';
 import { useForm } from 'react-hook-form';
@@ -37,6 +37,7 @@ import DataTable from '../../../shared/DataGrid';
 import { JoinedMenteeColumn } from '../../../mock';
 import ToastNotification from '../../../shared/Toast';
 import { Calendar } from 'primereact/calendar';
+import PaymentButton from '../../../shared/paymentButton';
 
 
 export default function ProgramDetails() {
@@ -64,6 +65,7 @@ export default function ProgramDetails() {
     const role = userdetails.data.role || ''
     const rating = programdetails?.mentor_rating === 0 ? 3 : programdetails?.mentor_rating;
     const url = `${process.env.REACT_APP_SITE_URL}/program-details/${params.id}`
+    const state = useLocation()?.state
 
     const tabs = [
         {
@@ -843,17 +845,18 @@ export default function ProgramDetails() {
                             <nav className="flex justify-between px-7 pt-6 pb-5 mx-2 border-b-2" aria-label="Breadcrumb">
                                 <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
                                     <li className="inline-flex items-center">
-                                        <a href="#" className="inline-flex items-center text-sm font-medium" style={{ color: 'rgba(89, 117, 162, 1)' }}>
-                                            Program
-                                        </a>
+                                        <p href="#" className="inline-flex items-center text-sm font-medium cursor-pointer" style={{ color: 'rgba(89, 117, 162, 1)' }}
+                                            onClick={() => navigate(-1)}>
+                                            {state?.from === "category" ? "Category View" : "Program"}
+                                        </p>
                                         <svg className="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
                                         </svg>
                                     </li>
                                     <li>
                                         <div className="flex items-center">
-                                            <a href="#" className="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">
-                                                Program Details </a>
+                                            <p href="#" className="ms-1 text-sm font-medium text-gray-700 ">
+                                                Program Details </p>
                                         </div>
                                     </li>
 
@@ -877,12 +880,12 @@ export default function ProgramDetails() {
                                                 <img src={ShareIcon} alt="ShareIcon" className='pr-3 w-[25px]' />
                                                 Share
                                             </MenuItem>
-                                            {!programdetails?.status === "completed" && <MenuItem onClick={() => handleMenu('reschedule')} className='!text-[12px]'>
+                                            {programdetails?.status !== "completed" && <MenuItem onClick={() => handleMenu('reschedule')} className='!text-[12px]'>
                                                 <img src={RescheduleIcon} alt="RescheduleIcon" className='pr-3 w-[25px]' />
                                                 Reschedule
                                             </MenuItem>}
 
-                                            {!programdetails?.status === "completed" && <MenuItem onClick={() => handleMenu('cancel')} className='!text-[12px]'>
+                                            {programdetails?.status !== "completed" && <MenuItem onClick={() => handleMenu('cancel')} className='!text-[12px]'>
                                                 <img src={AbortIcon} alt="Cancel" className='pr-3 w-[25px]' />
                                                 Cancel
                                             </MenuItem>}
@@ -1293,7 +1296,7 @@ export default function ProgramDetails() {
                                                 </li>
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}>
                                                     <span>Course Level</span>
-                                                    <span style={{textTransform: "capitalize"}}>{programdetails.course_level}</span>
+                                                    <span style={{ textTransform: "capitalize" }}>{programdetails.course_level}</span>
                                                 </li>
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>Start Date</span>
                                                     <span>{`${dateFormat(programdetails?.start_date)} `}</span>
@@ -1314,7 +1317,10 @@ export default function ProgramDetails() {
                                                         <span className='underline cursor-pointer' onClick={() => handleViewJoinedMentees(programdetails)}>{programdetails.participated_mentees_count}</span>
                                                     </li>
                                                 }
-
+                                                <li className='flex justify-between text-[12px]' style={{ paddingBottom: '10px', paddingTop: '14px' }}>
+                                                    <span>Payment</span>
+                                                    <span><PaymentButton /></span>
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>

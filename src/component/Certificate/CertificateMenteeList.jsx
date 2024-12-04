@@ -53,7 +53,7 @@ export default function CertificateMenteeList() {
           ? `?id=${id}&page=${paginationModel?.page + 1}&limit=${
               paginationModel?.pageSize
             }`
-          : `?program_id=${id}&page=${paginationModel?.page + 1}&limit=${
+          : `?id=${id}&page=${paginationModel?.page + 1}&limit=${
               paginationModel?.pageSize
             }`
       )

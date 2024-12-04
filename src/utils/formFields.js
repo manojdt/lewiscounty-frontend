@@ -1476,7 +1476,8 @@ export const AboutProgramFields = [{
     required: "This field is required",
   },
   width: 'w-full',
-  for: ['admin', 'mentor']
+  for: ['admin', 'mentor'],
+  is_image: true
 },
 {
   type: "file",

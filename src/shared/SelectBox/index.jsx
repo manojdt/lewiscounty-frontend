@@ -34,10 +34,10 @@ export const SelectBox = ({
 
             }}
 
-            onOpen={handleOpen} // Triggered when dropdown opens
-            onClose={handleClose} // Triggered when dropdown closes
+            onOpen={handleOpen}
+            onClose={handleClose} 
             IconComponent={(props) =>
-                <img src={ArrowDown} alt='ArrowUp' style={{ transform: isOpen ? "rotate(180deg)" : "" }} />
+                <img src={ArrowDown} alt='ArrowUp' style={{ transform: isOpen ? "rotate(180deg)" : "", cursor: "pointer" }} />
             }
         >
             {
