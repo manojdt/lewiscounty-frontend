@@ -380,13 +380,9 @@ export const AdditionalInformationFields = [{
 export const StepFormFields = [
   PersonalInformationFields,
   AreaOfExpertiseFields,
-  ProfessionalBackgroundFields,
   EducationalBackgroundFields,
   MentorShipExperienceFields,
-  MentorshipPreferenceFields,
   GoalsandExperienceFields,
-  AvailabilityCommitmentFields,
-  AdditionalInformationFields,
 ];
 
 const ageField = () => {
@@ -468,7 +464,7 @@ export const MenteePersonalInformationFields = [{
 {
   type: "date",
   name: "dob",
-  label: "DOB",
+  label: "Date Of Birth",
   placeholder: "Select Program Start Date and Time",
   inputRules: {
     required: "This field is required",
@@ -1114,49 +1110,34 @@ export const MenteeStepFormFields = [
   MenteeCareerInformationFields,
   MenteeCurrentStatusFields,
   MenteeMentoringPreferenceFields,
-  MenteeSkillsFields,
-  MenteeExpectationGoalsFields,
-  MenteeAvailabilitysFields,
-  MenteeDetailedCareerFields,
-  MenteeChallengesFields,
-  MenteeMentoringExperienceFields,
-  MenteeLearningFields,
-  MenteeNetworkingFields,
-  MenteePersonalDevelopmentFields,
-  MenteeMentoringRelationshipFields,
+  // MenteeSkillsFields,
+  // MenteeExpectationGoalsFields,
+  // MenteeAvailabilitysFields,
+  // MenteeDetailedCareerFields,
+  // MenteeChallengesFields,
+  // MenteeMentoringExperienceFields,
+  // MenteeLearningFields,
+  // MenteeNetworkingFields,
+  // MenteePersonalDevelopmentFields,
+  // MenteeMentoringRelationshipFields,
   MenteeLongTermFields,
-  MenteeAdditionalFields
+  // MenteeAdditionalFields
 ];
 
 export const Stepname = [
   "personal_information",
-  "professional_information",
   "educational_background",
   "area_of_expertise",
   "mentor_ship_experience",
-  "mentor_ship_preference",
   "goals_expectations",
-  "availability_commitment",
-  "additional_information",
 ];
 
 export const MenteeStepname = [
   "personal_information",
-  "career_goals",
   "current_status",
-  "mentoring_preference",
   "skills_and_interests",
   "expectations_goals",
-  "availability",
-  "detailed_career",
-  "challenges_obstacles",
-  "mentoring_experience",
-  "learning_style_preference",
-  "network_preference",
-  "personal_development",
-  "mentoring_relationship",
   "long_term_vision",
-  "additional_information"
 ];
 
 export const ProgramTabs = [{
@@ -1989,20 +1970,35 @@ export const reportColumns = [
     status: ['all', 'accept']
   },
   {
-    field: 'rejected_date',
-    headerName: 'Rejected Date',
+    field: 'last_updated_date',
+    headerName: 'Last updated Date',
     flex: 1,
-    id: 7,
-    status: ['all', 'cancel'],
-    renderCell: (params) => <span>{dateFormat(params.row.rejected_date)}</span>
+    id: 5,
+    status: ['all', 'new', 'pending', 'accept', 'cancel'],
+    // renderCell: (params) => <span>{dateFormat(params.row.updated_at)}</span>
   },
   {
-    field: 'rejecter',
-    headerName: 'Rejected by',
+    field: 'last_updated_by',
+    headerName: 'Last updated by',
     flex: 1,
-    id: 8,
-    status: ['all', 'cancel']
+    id: 6,
+    status: ['all', 'new', 'pending', 'accept', 'cancel'],
   },
+  // {
+  //   field: 'rejected_date',
+  //   headerName: 'Rejected Date',
+  //   flex: 1,
+  //   id: 7,
+  //   status: ['all', 'cancel'],
+  //   renderCell: (params) => <span>{dateFormat(params.row.rejected_date)}</span>
+  // },
+  // {
+  //   field: 'rejecter',
+  //   headerName: 'Rejected by',
+  //   flex: 1,
+  //   id: 8,
+  //   status: ['all', 'cancel']
+  // },
   // {
   //   field: 'file',
   //   headerName: 'File',
