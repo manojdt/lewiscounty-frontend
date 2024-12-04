@@ -55,6 +55,8 @@ const EventModal = ({ open, closeModal, actionActionBtn, event }) => {
               </span>
             </div>
           </div>
+
+          <div></div>
         </div>
 
         {/* Action buttons */}
