@@ -334,7 +334,7 @@ export default function AssignMentees() {
                                                                                 <>
                                                                                     <div className='relative input-bg'
                                                                                         onClick={(e) => {
-                                                                                           !field.disabled && calendarRef?.current[index]?.show();
+                                                                                            !field.disabled && calendarRef?.current[index]?.show();
                                                                                         }}>
                                                                                         <Calendar
                                                                                             className='calendar-control w-full'
@@ -362,7 +362,7 @@ export default function AssignMentees() {
                                                                                             minDate={new Date()}
                                                                                         />
                                                                                         <img className='absolute top-5 right-2 cursor-pointer' src={CalendarIcon} alt="CalendarIcon"
-                                                                                           
+
                                                                                         />
 
                                                                                     </div>
@@ -532,10 +532,14 @@ export default function AssignMentees() {
                                     open={taskSuccess}
                                 >
                                     <div className='px-5 py-1 flex justify-center items-center'>
-                                        <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
-                                            style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
+                                        <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+                                            style={{ background: '#fff', borderRadius: '10px' }}>
                                             <img src={SuccessTik} alt="SuccessTik" />
-                                            <p className='text-white text-[12px]'>Successfully task assigned to Mentees</p>
+                                            <p className='text-white text-[16px] bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                                                style={{
+                                                    fontWeight: 600
+                                                }}
+                                            >Successfully task assigned to Mentees</p>
                                         </div>
 
                                     </div>

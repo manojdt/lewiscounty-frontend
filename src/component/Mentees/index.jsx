@@ -240,36 +240,36 @@ export const Mentees = () => {
               </MenuItem>
               {(selectedMentee?.status === 'new' ||
                 selectedMentee?.status === 'pending') && (
-                <MenuItem
-                  onClick={() =>
-                    handleOpenActivityPopup(selectedMentee?.id, 'accept')
-                  }
-                  className='!text-[12px]'
-                >
-                  <img
-                    src={ConnectIcon}
-                    alt='ViewIcon'
-                    className='pr-3 w-[30px]'
-                  />
-                  Connect
-                </MenuItem>
-              )}
+                  <MenuItem
+                    onClick={() =>
+                      handleOpenActivityPopup(selectedMentee?.id, 'accept')
+                    }
+                    className='!text-[12px]'
+                  >
+                    <img
+                      src={ConnectIcon}
+                      alt='ViewIcon'
+                      className='pr-3 w-[30px]'
+                    />
+                    Connect
+                  </MenuItem>
+                )}
               {(selectedMentee?.status === 'new' ||
                 selectedMentee?.status === 'pending') && (
-                <MenuItem
-                  onClick={() =>
-                    handleOpenActivityPopup(selectedMentee?.id, 'reject')
-                  }
-                  className='!text-[12px]'
-                >
-                  <img
-                    src={RejectIcon}
-                    alt='ViewIcon'
-                    className='pr-3 w-[30px]'
-                  />
-                  Reject
-                </MenuItem>
-              )}
+                  <MenuItem
+                    onClick={() =>
+                      handleOpenActivityPopup(selectedMentee?.id, 'reject')
+                    }
+                    className='!text-[12px]'
+                  >
+                    <img
+                      src={RejectIcon}
+                      alt='ViewIcon'
+                      className='pr-3 w-[30px]'
+                    />
+                    Reject
+                  </MenuItem>
+                )}
             </Menu>
           </>
         );
@@ -484,23 +484,21 @@ export const Mentees = () => {
             open={confirmation?.bool}
             onClick={() => closeConfirmation()}
           >
+
             <div className='px-5 py-1 flex justify-center items-center'>
-              <div
-                className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
-                style={{
-                  background:
-                    'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)',
-                  borderRadius: '10px',
-                }}
-              >
-                <img src={SuccessTik} alt='SuccessTik' />
-                <p className='text-white text-[12px]'>
-                  {confirmation?.type === 'accept' &&
-                    'Mentee has been successfully connected'}
-                  {confirmation?.type === 'reject' &&
-                    'Mentee has been successfully deleted'}
-                </p>
+              <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+                style={{ background: '#fff', borderRadius: '10px' }}>
+                <img src={SuccessTik} alt="SuccessTik" />
+                <p className='text-white text-[16px] bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                  style={{
+                    fontWeight: 600
+                  }}
+                >{confirmation?.type === 'accept' &&
+                  'Mentee has been successfully connected'}
+                {confirmation?.type === 'reject' &&
+                  'Mentee has been successfully deleted'}</p>
               </div>
+
             </div>
           </Backdrop>
         </div>

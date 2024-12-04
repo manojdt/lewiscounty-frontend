@@ -138,23 +138,23 @@ export const Questions = () => {
     setBtnTypeAction({ back: false, next: true })
   }
 
- 
+
   const handleRedirect = () => {
-    if(role === 'mentor'){
+    if (role === 'mentor') {
       navigate('/mentor-doc-upload')
     }
 
-    if(role === 'mentee'){
+    if (role === 'mentee') {
       const url = searchParams.get("program_id") && searchParams.get("program_id") !== '' ? `/mentee-doc-upload/${searchParams.get("program_id")}` : '/programs'
       navigate(url)
     }
   }
 
   useEffect(() => {
-    if(userInfo && userInfo?.data?.is_registered === true && userInfo?.data?.document_upload === false){
+    if (userInfo && userInfo?.data?.is_registered === true && userInfo?.data?.document_upload === false) {
       handleRedirect()
     }
-  },[])
+  }, [])
 
   useEffect(() => {
     if (userInfo && userInfo.data && Object.keys(userInfo.data).length && currentStep === 1) {
@@ -166,18 +166,18 @@ export const Questions = () => {
       })
     }
 
-    
+
 
   }, [userInfo])
 
   useEffect(() => {
-    if(userInfo.status === userStatus.questions){
+    if (userInfo.status === userStatus.questions) {
       setTimeout(() => {
         dispatch(updateInfo())
         handleRedirect()
-      },2000)
+      }, 2000)
     }
-  },[userInfo.status])
+  }, [userInfo.status])
 
   const handlePreviousStep = (data) => {
     const activeSteps = allStepList.map(step => {
@@ -263,11 +263,14 @@ export const Questions = () => {
           open={loading || userInfo.status === userStatus.questions}
         >
           <div className='px-5 py-1 flex justify-center items-center'>
-            <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
-              style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
+            <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+              style={{ background: '#fff', borderRadius: '10px' }}>
               <img src={SuccessTik} alt="SuccessTik" />
-              <p className='text-white text-[12px]'>
-
+              <p className='text-white text-[16px] bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                style={{
+                  fontWeight: 600
+                }}
+              >
                 {role === 'mentee' ?
 
                   (redirect ? 'We are redirecting to programs page' :
@@ -276,6 +279,7 @@ export const Questions = () => {
                   : (redirect ? 'We are redirecting to login page' : 'Questions submitted Successfully. Please upload your documents on next screen')}
               </p>
             </div>
+
           </div>
         </Backdrop>
 

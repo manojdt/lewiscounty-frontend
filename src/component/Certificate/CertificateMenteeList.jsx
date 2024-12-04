@@ -206,6 +206,7 @@ export default function CertificateMenteeList() {
               </p>
             </div>
           </div>
+          
         </MuiModal>
         <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
           <div className='flex gap-5 items-center text-[14px]'>

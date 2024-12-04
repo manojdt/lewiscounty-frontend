@@ -41,10 +41,10 @@ export default function CertificateMemberDetails() {
     const res =
       listMentee.length > 0
         ? listMentee.map((val, i) => ({
-            ...val,
-            id: i + 1,
-            program_name: programDetails?.program_name,
-          }))
+          ...val,
+          id: i + 1,
+          program_name: programDetails?.program_name,
+        }))
         : [];
 
     setMenteeList(res);
@@ -178,25 +178,22 @@ export default function CertificateMemberDetails() {
           open={status === certificateStatus.create}
           onClick={() => setLoading(false)}
         >
-          <div className="px-5 py-1 flex justify-center items-center">
-            <div
-              className="flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20"
-              style={{
-                background:
-                  "linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)",
-                borderRadius: "10px",
-              }}
-            >
+          <div className='px-5 py-1 flex justify-center items-center'>
+            <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+              style={{ background: '#fff', borderRadius: '10px' }}>
               <img src={SuccessTik} alt="SuccessTik" />
-              <p className="text-white text-[12px]">
-                Certificate request is successfully created
-              </p>
+              <p className='text-white text-[16px] bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                style={{
+                  fontWeight: 600
+                }}
+              >Certificate request is successfully created</p>
             </div>
+
           </div>
         </Backdrop>
         <div className="flex justify-between px-5 pb-4 mb-8 items-center border-b-2">
           <div className="flex gap-5 items-center text-[14px]">
-         
+
             <p> Member Select</p>
           </div>
           <div
