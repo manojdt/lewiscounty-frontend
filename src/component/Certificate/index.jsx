@@ -127,9 +127,17 @@ export default function Certificate() {
         },
     ]
 
-    const handleTab = (key) => {
+    const handleTab = async (key) => {
         setRequestTab(key)
         setPaginationModel({
+            page: 0,
+            pageSize: 10
+        })
+    }
+
+    const handleMenteeTabChange = async (key) => {
+        setActiveTab(key)
+        await setPaginationModel({
             page: 0,
             pageSize: 10
         })
@@ -158,13 +166,13 @@ export default function Certificate() {
             dispatch(getCertificateList(role === "admin" ? `?status=${requestTab}` : role === "mentor" ? `?status=${actionTab}&page=${paginationModel?.page + 1}&limit=${paginationModel?.pageSize}` : `?page=${paginationModel?.page + 1}&limit=${paginationModel?.pageSize}`))
         }
         // dispatch(getCertificates({search: role === "admin" ? requestTab : actionTab}))
-    }, [requestTab, role, actionTab])
+    }, [requestTab, role, actionTab, paginationModel])
     return (
         <div className="program-request px-8 mt-10">
 
             <Backdrop
                 sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={false}
+                open={loading}
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
@@ -235,7 +243,7 @@ export default function Certificate() {
                                                     {
                                                         certificateRequestTab.map((request, index) =>
                                                             <li className={`${actionTab === request.key ? 'active' : ''} relative`} key={index}
-                                                                onClick={() => setActiveTab(request.key)}
+                                                                onClick={() => handleMenteeTabChange(request.key)}
                                                             >
                                                                 {/* <div className='flex justify-center pb-1'>
                                                                     <div className={`total-proram-count relative ${actionTab === request.key ? 'active' : ''}`}>10
@@ -258,7 +266,7 @@ export default function Certificate() {
                         }
 
 
-                        <DataTable rows={certificatesList?.results || []} columns={certificateColumn} hideFooter={certificatesList?.results?.length <= 10}
+                        <DataTable rows={certificatesList?.results || []} columns={certificateColumn} hideFooter={certificatesList?.results?.length === 0}
                             rowCount={certificatesList?.count}
                             paginationModel={paginationModel} setPaginationModel={setPaginationModel} />
                     </div>

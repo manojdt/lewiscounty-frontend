@@ -57,6 +57,7 @@ import Ratings from '../Ratings';
 import { getUserProfile } from '../../../services/profile';
 import { JoinedMenteeColumn } from '../../../mock';
 import DataTable from '../../../shared/DataGrid';
+import PaymentButton from '../../../shared/paymentButton';
 
 
 export default function AssignTask() {
@@ -926,7 +927,7 @@ export default function AssignTask() {
 
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}>
                                                     <span>Course Level</span>
-                                                    <span style={{textTransform: "capitalize"}}>{programdetails.course_level}</span>
+                                                    <span style={{ textTransform: "capitalize" }}>{programdetails.course_level}</span>
                                                 </li>
                                                 <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>Start Date</span>
                                                     <span>{`${formatDateFunToAll(programdetails?.start_date)}`}</span>
@@ -944,10 +945,14 @@ export default function AssignTask() {
                                                 </li>
                                                 {
                                                     role === 'mentor' &&
-                                                    <li className='flex justify-between text-[12px]' style={{ paddingTop: '14px' }}> <span>Joined Mentees</span>
+                                                    <li className='flex justify-between text-[12px]' style={{ paddingTop: '14px', paddingBottom: "10px", borderBottom: '1px solid rgba(217, 217, 217, 1)', }}> <span>Joined Mentees</span>
                                                         <span className='underline cursor-pointer' onClick={() => handleViewJoinedMentees(programdetails)}>{programdetails.participated_mentees_count}</span>
                                                     </li>
                                                 }
+                                                <li className='flex justify-between text-[12px]' style={{ paddingBottom: '10px', paddingTop: '14px' }}>
+                                                    <span>Payment</span>
+                                                    <span><PaymentButton /></span>
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>
@@ -1242,13 +1247,13 @@ export default function AssignTask() {
                                                                 // minDate={new Date()}
                                                                 // maxDate={new Date(programdetails.end_date)}
                                                                 minDate={new Date()}
-                                                                maxDate={programdetails?.status === "yettostart" ? "" : new Date(programdetails?.end_date)}
+                                                                maxDate={["yettostart", "yettojoin"].includes(programdetails?.status) ? "" : new Date(programdetails?.end_date)}
                                                                 showTime={false}
                                                                 hourFormat="12"
                                                                 dateFormat="dd/mm/yy"
                                                                 style={{ width: '60%' }}
                                                                 ref={el => (calendarRef.current[0] = el)}
-                                                                viewDate={programdetails?.status === "yettostart" ? new Date() : new Date(programdetails?.start_date)}
+                                                                viewDate={["yettostart", "yettojoin"].includes(programdetails?.status) ? new Date() : new Date(programdetails?.start_date)}
                                                             />
 
                                                             <img className='absolute top-5 right-2 cursor-pointer' src={CalendarIcon} alt="CalendarIcon"
@@ -1287,7 +1292,7 @@ export default function AssignTask() {
                                                                 // minDate={new Date(dateFormat.reschedule_start_date)}
                                                                 // maxDate={new Date(programdetails.end_date)}
                                                                 minDate={dateFormat.reschedule_start_date ? new Date(dateFormat.reschedule_start_date) : new Date()}
-                                                                maxDate={programdetails?.status === "yettostart" ? "" : new Date(programdetails?.end_date)}
+                                                                maxDate={["yettostart", "yettojoin"].includes(programdetails?.status) ? "" : new Date(programdetails?.end_date)}
                                                                 showTime={false}
                                                                 hourFormat="12"
                                                                 dateFormat="dd/mm/yy"
