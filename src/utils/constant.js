@@ -6,43 +6,23 @@ export const StepsList = [
   },
   {
     name: 'Skills and Area of Expertise',
-    status: '',
+    status: 'Waiting',
     key: 'area_of_expertise',
   },
   {
-    name: 'Professional Background',
-    status: '',
-    key: 'professional_information',
-  },
-  {
     name: 'Educational Background',
-    status: '',
+    status: 'Waiting',
     key: 'educational_background',
   },
   {
     name: 'Mentorship Experience',
-    status: '',
+    status: 'Waiting',
     key: 'mentor_ship_experience',
   },
   {
-    name: 'Mentorship Preference',
-    status: '',
-    key: 'mentor_ship_preference',
-  },
-  {
     name: 'Goals and Expectations',
-    status: '',
+    status: 'Waiting',
     key: 'goals_expectations',
-  },
-  {
-    name: 'Availability and Commitment',
-    status: '',
-    key: 'availability_commitment',
-  },
-  {
-    name: 'Additional Information',
-    status: '',
-    key: 'additional_information',
   },
 ];
 
@@ -53,79 +33,24 @@ export const MenteeStepsList = [
     key: 'personal_information',
   },
   {
-    name: 'Career/Academic Goals',
-    status: '',
-    key: 'career_goals',
-  },
-  {
     name: 'Current Status',
-    status: '',
+    status: 'Waiting',
     key: 'current_status',
   },
   {
-    name: 'Mentoring Preferences',
-    status: '',
-    key: 'mentoring_preference',
-  },
-  {
     name: 'Skills and Interests',
-    status: '',
+    status: 'Waiting',
     key: 'skills_and_interests',
   },
   {
     name: 'Expectations & Goals',
-    status: '',
+    status: 'Waiting',
     key: 'expectations_goals',
   },
   {
-    name: 'Availability',
-    status: '',
-    key: 'availability',
-  },
-  {
-    name: 'Detailed Career',
-    status: '',
-    key: 'detailed_career',
-  },
-  {
-    name: 'Challenges & Obstacles',
-    status: '',
-    key: 'challenges_obstacles',
-  },
-  {
-    name: 'Mentoring Experience',
-    status: '',
-    key: 'mentoring_experience',
-  },
-  {
-    name: 'Learning Style & Preference',
-    status: '',
-    key: 'learning_style_preference',
-  },
-  {
-    name: 'Network & Preference',
-    status: '',
-    key: 'network_preference',
-  },
-  {
-    name: 'Personal Development',
-    status: '',
-    key: 'personal_development',
-  },
-  {
-    name: 'Mentoring Relationship',
-    status: '',
-    key: 'mentoring_relationship',
-  },
-  {
     name: 'Long-term Vision',
-    status: '',
+    status: 'Waiting',
     key: 'long_term_vision',
-  },
-  {
-    name: 'Additional Information',
-    status: '',
-    key: 'additional_information',
   },
 ];
 
@@ -451,6 +376,52 @@ export const requestStatusText = {
   active: 'Active',
   deactivated: 'Deactivated',
 };
+export const programStatusText = {
+  inprogress: "Ongoing",
+  completed: "Completed",
+  cancelled: "Cancelled",
+  new_program_request_rejected: "Rejected",
+  yettojoin: "Yet to Launch",
+  yettostart: "Yet to Start",
+  draft: "Draft",
+  yettoapprove: "Waiting for Approval",
+};
+
+export const programStatusColor = {
+  yettojoin: {
+    bgColor: 'rgba(238, 245, 255, 1)',
+    color: 'rgba(29, 91, 191, 1)',
+  },
+  yettostart: {
+    bgColor: 'rgba(255, 251, 233, 1)',
+    color: 'rgba(255, 213, 0, 1)',
+  },
+  completed: {
+    bgColor: 'rgba(235, 255, 243, 1)',
+    color: '#33bc93',
+  },
+  cancelled: {
+    bgColor: 'rgba(255, 231, 231, 1)',
+    color: 'rgba(224, 56, 45, 1)',
+  },
+ 
+  draft: {
+    bgColor: 'rgba(207, 225, 255, 1)',
+    color: 'rgba(29, 91, 191, 1)',
+  },
+  yettoapprove: {
+    bgColor: 'rgba(255, 251, 233, 1)',
+    color: 'rgba(255, 213, 0, 1)',
+  },
+  new_program_request_rejected: {
+    bgColor: 'rgba(255, 231, 231, 1)',
+    color: 'rgba(224, 56, 45, 1)',
+  },
+  inprogress: {
+    bgColor: 'rgba(235, 255, 243, 1)',
+    color: '#ffb155',
+  },
+};
 
 export const requestStatusColor = {
   new: {
@@ -463,7 +434,7 @@ export const requestStatusColor = {
   },
   Wating_for_response: {
     bgColor: 'rgba(255, 251, 233, 1)',
-    color: 'rgba(255, 213, 0, 1)',
+    color: 'rgba(29, 91, 191, 1)',
   },
   accept: {
     bgColor: 'rgba(235, 255, 243, 1)',
