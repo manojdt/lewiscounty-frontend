@@ -678,13 +678,13 @@ export default function ProgramDetails() {
                                                 onClick={handleDateClick}
                                                 disabled={false}
                                                 minDate={new Date()}
-                                                maxDate={programdetails?.status === "yettostart" ? "" : new Date(programdetails?.end_date)}
+                                                maxDate={["yettostart", "yettojoin"].includes(programdetails?.status) ? "" : new Date(programdetails?.end_date)}
                                                 showTime={false}
                                                 hourFormat="12"
                                                 dateFormat="dd/mm/yy"
                                                 style={{ width: '60%' }}
                                                 ref={el => (calendarRef.current[0] = el)}
-                                                viewDate={programdetails?.status === "yettostart" ? new Date() : new Date(programdetails?.start_date)}
+                                                viewDate={["yettostart", "yettojoin"].includes(programdetails?.status) ? new Date() : new Date(programdetails?.start_date)}
                                             />
 
                                             <img className='absolute top-5 right-2 cursor-pointer' src={CalendarIcon} alt="CalendarIcon"
