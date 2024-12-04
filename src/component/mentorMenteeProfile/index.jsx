@@ -29,6 +29,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import SuccessTik from '../../assets/images/blue_tik1x.png';
 import CloseReqPopup from '../../assets/icons/closeReqPopup.svg';
 import CancelReq from '../../assets/icons/cancelRequest.svg';
+import CancelIcon from '../../assets/images/cancel-colour1x.png'
+import ArrowRight from "../../assets/icons/breadCrumbsArrow.svg"
 
 const MentorMenteeProfile = () => {
   const [activity, setActivity] = React.useState({
@@ -122,6 +124,11 @@ const MentorMenteeProfile = () => {
     });
   };
 
+  const profileType = {
+    mentee: "Mentee Profile",
+    mentor: "Mentor Profile"
+  }
+
   return (
     <>
       <Backdrop
@@ -139,10 +146,10 @@ const MentorMenteeProfile = () => {
         mt={'16px'}
       >
         <Typography
-          className='text-[12px] text-[#5975A2] cursor-pointer'
+          className='!text-[12px] !text-[#5975A2] cursor-pointer'
           onClick={() =>
             navigate(
-              state?.page !== 'requested_mentor' ? '/mentees' : '/mentors',
+              state?.from === "category" ? -1 : state?.page !== 'requested_mentor' ? '/mentees' : '/mentors',
               {
                 state: {
                   type:
@@ -154,13 +161,15 @@ const MentorMenteeProfile = () => {
             )
           }
         >
-          {state?.page !== 'requested_mentor'
+          {state?.from === "category" ? "Category View" : state?.page !== 'requested_mentor'
             ? 'New Request Mentee'
             : 'Request Mentors'}
         </Typography>
-        <Typography>{'>'}</Typography>
-        <Typography className='text-[12px] text-[#18283D]'>
-          {state?.page !== 'requested_mentor'
+        <img src={ArrowRight} />
+        <Typography className='!text-[12px] !text-[#18283D]'>
+          { state?.from === "category" ? 
+          profileType[userDetails?.role] : 
+          state?.page !== 'requested_mentor'
             ? 'Mentee Profile'
             : 'View New Request Mentor Profile'}
         </Typography>
@@ -176,13 +185,23 @@ const MentorMenteeProfile = () => {
             Profile Picture
           </div>
           {state?.page !== 'requested_mentor' ? (
-            <Box
-              className={
-                'h-[40px] w-[40px] rounded-[6px] bg-[#DFEDFF] flex items-center justify-center'
-              }
-            >
-              <img src={ThreeDotIcon} />
-            </Box>
+            // <Box
+            //   className={
+            //     'h-[40px] w-[40px] rounded-[6px] bg-[#DFEDFF] flex items-center justify-center'
+            //   }
+            // >
+            //   <img src={ThreeDotIcon} />
+            // </Box>
+            <>
+            {
+              state?.from === "category" &&
+              <div onClick={()=>{
+                navigate(-1)
+              }} className='cursor-pointer'>
+                <img src={CancelIcon} alt='CancelIcon' />
+              </div>
+            }
+            </>
           ) : (
             <div
               className='cursor-pointer'
@@ -213,7 +232,7 @@ const MentorMenteeProfile = () => {
                   }}
                 >
                   <img
-                    src={profile?.image ?? ProfileImageIcon}
+                    src={userDetails?.profile_image ?? ProfileImageIcon}
                     style={{ borderRadius: '50%', height: '143px' }}
                     alt='ProfileImageIcon'
                   />
@@ -331,7 +350,8 @@ const MentorMenteeProfile = () => {
                           {userDetails?.documents?.map((doc) => {
                             return (
                               <Link
-                                href='#'
+                                target="_blank"
+                                href={doc?.file}
                                 variant='body2'
                                 className={'text-[18px]'}
                               >

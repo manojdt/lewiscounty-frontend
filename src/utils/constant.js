@@ -1119,8 +1119,8 @@ export const MentorMenteeProfileViewList = (hide) => {
       grid: 4,
     },
     {
-      label: 'Address',
-      value: 'address',
+      label: 'Location',
+      value: 'location',
       grid: 4,
     },
     {

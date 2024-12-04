@@ -9,7 +9,7 @@ import CancelColorIcon from '../../assets/icons/cancelCircle.svg';
 import SuccessTik from '../../assets/images/blue_tik1x.png';
 import SearchIcon from '../../assets/icons/search.svg';
 import { useDispatch, useSelector } from 'react-redux';
-import { Backdrop, CircularProgress } from '@mui/material';
+import { Backdrop, Checkbox, CircularProgress } from '@mui/material';
 import { ProfileFields } from '../../utils/formFields';
 import {
   getFollowList,
@@ -158,19 +158,24 @@ export default function ProfileView() {
     );
     const payload = {
       member_id: params.id,
-      categories_id: categoryId,
+      categories_id: confirmPopup?.selectedItem,
     };
-    dispatch(updateMemberRequest(payload));
+    dispatch(updateMemberRequest(payload)).then((res) => {
+      if (res?.meta?.requestStatus === "fulfilled") {
+        navigate("/all-request")
+      }
+    })
   };
 
   // Confirm Accept Popup
   const handleConfirmPopup = () => {
     if (role === 'admin') {
       dispatch(
-        cancelMemberRequest({
-          member_id: params.id,
+        cancelMemberRequest({member_id: params.id,})).then((res) => {
+          if (res?.meta?.requestStatus === "fulfilled") {
+            navigate("/all-request")
+          }
         })
-      );
     }
 
     if (role === 'mentor') {
@@ -271,8 +276,6 @@ export default function ProfileView() {
       }, 3000);
     }
 
-    console.log('requeststatus', requeststatus, requestStatus.programupdate);
-
     // if (requestStatus === requestStatus.programupdate) {
     //     console.log('llll');
     //     setTimeout(() => {
@@ -289,6 +292,32 @@ export default function ProfileView() {
       loadUserProfile();
     }
   }, [params]);
+
+  const handleSelectCategory = (value) => {
+    setConfirmPopup({
+      ...confirmPopup,
+      selectedItem: !confirmPopup?.selectedItem?.includes(value) ? [...confirmPopup?.selectedItem, value] : confirmPopup?.selectedItem?.filter((e) => e !== value)
+
+    })
+  }
+
+  const categoryColumn = [
+    {
+      field: 'checkbox',
+      headerName: '',
+      id: 0,
+      for: ['admin', 'mentor'],
+      width: 100,
+      renderCell: (params) => {
+        return <div>
+          <Checkbox checked={confirmPopup?.selectedItem?.includes(params?.row?.categories_id)}
+            onChange={() => handleSelectCategory(params?.row?.categories_id)} />
+        </div>
+      }
+    },
+    ...categoryColumns
+  ]
+
 
   return (
     <div className='profile-container'>
@@ -568,10 +597,11 @@ export default function ProfileView() {
 
             <DataTable
               rows={categoryOptions.list}
-              columns={categoryColumns}
+              columns={categoryColumn}
               height={'460px'}
               footerComponent={footerComponent}
               selectedAllRows={confirmPopup.selectedItem}
+              hideCheckbox
             />
           </div>
         </div>
@@ -654,10 +684,10 @@ export default function ProfileView() {
             {role !== 'admin' ? (
               <>
                 {role === 'mentor' &&
-                searchParams.has('type') &&
-                searchParams.get('type') === 'mentee_request' &&
-                searchParams.has('request_id') &&
-                searchParams.get('request_id') !== '' ? (
+                  searchParams.has('type') &&
+                  searchParams.get('type') === 'mentee_request' &&
+                  searchParams.has('request_id') &&
+                  searchParams.get('request_id') !== '' ? (
                   <div className='flex gap-4 pt-10'>
                     <button
                       className='py-3 px-16 text-white text-[14px] flex items-center'
@@ -701,7 +731,7 @@ export default function ProfileView() {
             ) : role === 'admin' ? (
               <>
                 {userDetails?.approve_status === 'new' ||
-                userDetails?.approve_status === 'pending' ? (
+                  userDetails?.approve_status === 'pending' ? (
                   <div className='flex gap-4 pt-10'>
                     <button
                       className='py-3 px-16 text-white text-[14px] flex items-center'
@@ -727,31 +757,31 @@ export default function ProfileView() {
                   </div>
                 ) : // userDetails?.approve_status === 'accept' ?
 
-                //     <button className='py-3 px-16 mt-7 text-white text-[14px] flex items-center' style={{
-                //         background: "#16B681",
-                //         borderRadius: '5px'
-                //     }}
-                //         onClick={() => undefined}
-                //     >Approved
-                //     </button>
-                //     :
+                  //     <button className='py-3 px-16 mt-7 text-white text-[14px] flex items-center' style={{
+                  //         background: "#16B681",
+                  //         borderRadius: '5px'
+                  //     }}
+                  //         onClick={() => undefined}
+                  //     >Approved
+                  //     </button>
+                  //     :
 
-                //     userDetails?.approve_status === 'cancel' ?
-                //         <div className='flex gap-4 pt-10' >
-                //             <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                //                 border: "1px solid #E0382D",
-                //                 borderRadius: '5px',
-                //                 color: '#E0382D',
-                //                 cursor: 'not-allowed'
-                //             }}
-                //                 onClick={() => undefined}
-                //             >Rejected
-                //             </button>
-                //         </div>
+                  //     userDetails?.approve_status === 'cancel' ?
+                  //         <div className='flex gap-4 pt-10' >
+                  //             <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                  //                 border: "1px solid #E0382D",
+                  //                 borderRadius: '5px',
+                  //                 color: '#E0382D',
+                  //                 cursor: 'not-allowed'
+                  //             }}
+                  //                 onClick={() => undefined}
+                  //             >Rejected
+                  //             </button>
+                  //         </div>
 
-                // :
+                  // :
 
-                null}
+                  null}
               </>
             ) : null}
           </div>
