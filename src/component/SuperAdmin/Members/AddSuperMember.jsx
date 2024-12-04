@@ -70,7 +70,7 @@ function AddSuperMember() {
       ...prevErrors,
       Category: "", // Clear error for the specific field
     }));
-  
+
     // Update the Category state with the selected category IDs
     setFormDetail((prevDetail) => ({
       ...prevDetail,
@@ -208,12 +208,12 @@ function AddSuperMember() {
                       type="text"
                       className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
                       placeholder="Enter First Name"
-                      //   style={{
-                      //     border: `1px solid ${
-                      //       !errFields.FirstName ? "1d5bbf0d" : "red"
-                      //     }`,
-                      //     fontSize: "14px",
-                      //   }}
+                    //   style={{
+                    //     border: `1px solid ${
+                    //       !errFields.FirstName ? "1d5bbf0d" : "red"
+                    //     }`,
+                    //     fontSize: "14px",
+                    //   }}
                     />
                     {errFields.FirstName && (
                       <p className="mt-1 ms-1 text-xs text-red-400">
@@ -250,12 +250,12 @@ function AddSuperMember() {
                       type="text"
                       className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
                       placeholder="Enter User Name"
-                      //   style={{
-                      //     border: `1px solid ${
-                      //       !errFields.UserName ? "1d5bbf0d" : "red"
-                      //     }`,
-                      //     fontSize: "14px",
-                      //   }}
+                    //   style={{
+                    //     border: `1px solid ${
+                    //       !errFields.UserName ? "1d5bbf0d" : "red"
+                    //     }`,
+                    //     fontSize: "14px",
+                    //   }}
                     />
                     {errFields.UserName && (
                       <p className="mt-1 ms-1 text-xs text-red-400">
@@ -274,12 +274,12 @@ function AddSuperMember() {
                       type="email"
                       className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
                       placeholder="Enter Email ID"
-                      //   style={{
-                      //     border: `1px solid ${
-                      //       !errFields.EmailId ? "1d5bbf0d" : "red"
-                      //     }`,
-                      //     fontSize: "14px",
-                      //   }}
+                    //   style={{
+                    //     border: `1px solid ${
+                    //       !errFields.EmailId ? "1d5bbf0d" : "red"
+                    //     }`,
+                    //     fontSize: "14px",
+                    //   }}
                     />
                     {errFields.EmailId && (
                       <p className="mt-1 ms-1 text-xs text-red-400">
@@ -300,12 +300,12 @@ function AddSuperMember() {
                       pattern="[0-9]*" // Restricts input to numbers only
                       className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
                       placeholder="Enter Primary Phone Number"
-                      //   style={{
-                      //     border: `1px solid ${
-                      //       !errFields.PrimaryPhoneNumber ? "1d5bbf0d" : "red"
-                      //     }`,
-                      //     fontSize: "14px",
-                      //   }}
+                    //   style={{
+                    //     border: `1px solid ${
+                    //       !errFields.PrimaryPhoneNumber ? "1d5bbf0d" : "red"
+                    //     }`,
+                    //     fontSize: "14px",
+                    //   }}
                     />
                     {errFields.PrimaryPhoneNumber && (
                       <p className="mt-1 ms-1 text-xs text-red-400">
@@ -363,7 +363,7 @@ function AddSuperMember() {
                       className="content-center w-full border-none py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
                       placeholder="Select categories"
                       required
-                      
+
                     />
                     {errFields.Category && (
                       <p className="mt-1 ms-1 text-xs text-red-400">
@@ -397,20 +397,17 @@ function AddSuperMember() {
         modalClose={() => setTaskSuccess(false)}
         noheader
       >
-        <div className="px-5 py-1 flex justify-center items-center">
-          <div
-            className="flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20"
-            style={{
-              background:
-                "linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)",
-              borderRadius: "10px",
-            }}
-          >
+        <div className='px-5 py-1 flex justify-center items-center'>
+          <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+            style={{ background: '#fff', borderRadius: '10px' }}>
             <img src={SuccessTik} alt="SuccessTik" />
-            <p className="text-white text-[12px]">
-              New Org Admin successfully created!
-            </p>
+            <p className='text-white text-[16px] bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+              style={{
+                fontWeight: 600
+              }}
+            >New Org Admin successfully created!</p>
           </div>
+
         </div>
       </MuiModal>
     </div>

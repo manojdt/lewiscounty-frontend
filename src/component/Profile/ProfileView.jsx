@@ -171,7 +171,7 @@ export default function ProfileView() {
   const handleConfirmPopup = () => {
     if (role === 'admin') {
       dispatch(
-        cancelMemberRequest({member_id: params.id,})).then((res) => {
+        cancelMemberRequest({ member_id: params.id, })).then((res) => {
           if (res?.meta?.requestStatus === "fulfilled") {
             navigate("/all-request")
           }
@@ -377,19 +377,16 @@ export default function ProfileView() {
         }
       >
         <div className='px-5 py-1 flex justify-center items-center'>
-          <div
-            className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
-            style={{
-              background:
-                'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)',
-              borderRadius: '10px',
-            }}
-          >
-            <img src={SuccessTik} alt='SuccessTik' />
-            <p className='text-white text-[12px]'>
-              Request updated successfully
-            </p>
+          <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+            style={{ background: '#fff', borderRadius: '10px' }}>
+            <img src={SuccessTik} alt="SuccessTik" />
+            <p className='text-white text-[16px] bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+              style={{
+                fontWeight: 600
+              }}
+            >Request updated successfully</p>
           </div>
+
         </div>
       </Backdrop>
 
@@ -398,21 +395,18 @@ export default function ProfileView() {
         open={activity.complete}
       >
         <div className='px-5 py-1 flex justify-center items-center'>
-          <div
-            className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
-            style={{
-              background:
-                'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)',
-              borderRadius: '10px',
-            }}
-          >
-            <img src={SuccessTik} alt='SuccessTik' />
-            <p className='text-white text-[12px]'>
-              Successfully{' '}
-              {followInfo.is_following ? 'followed ' : 'unfollowed '}{' '}
-              {pageType.toLowerCase()}
-            </p>
+          <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+            style={{ background: '#fff', borderRadius: '10px' }}>
+            <img src={SuccessTik} alt="SuccessTik" />
+            <p className='text-white text-[16px] bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+              style={{
+                fontWeight: 600
+              }}
+            > Successfully{' '}
+            {followInfo.is_following ? 'followed ' : 'unfollowed '}{' '}
+            {pageType.toLowerCase()}</p>
           </div>
+
         </div>
       </Backdrop>
 

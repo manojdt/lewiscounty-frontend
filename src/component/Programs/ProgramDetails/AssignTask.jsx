@@ -263,7 +263,7 @@ export default function AssignTask() {
 
     const handleComplete = (programId) => {
         handleClose()
-        dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.completed }))
+        dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.completed })).then((6))
         navigate(`/program-completion/${programId}`)
     }
 
@@ -427,6 +427,24 @@ export default function AssignTask() {
     const dateStartField = moreMenuModal.reschedule ? register('reschedule_start_date', { required: "This field is required" }) : undefined
     const dateEndField = moreMenuModal.reschedule ? register('reschedule_end_date', { required: "This field is required" }) : undefined
 
+    const [completeProgram, setCompleteProgram] = React.useState({
+        bool: false,
+        activity: false
+    })
+    const handleOpenConfirmPopup = () => {
+        setCompleteProgram({
+            ...completeProgram,
+            bool: true
+        })
+    }
+
+    const handleCloseConfirmPopup = () => {
+        setCompleteProgram({
+            bool: false,
+            activity: false
+        })
+    }
+
     return (
         <div className="px-9 my-6 grid">
 
@@ -441,10 +459,17 @@ export default function AssignTask() {
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                 open={ratingModal.success}
             >
-                <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
-                    style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
-                    <img src={SuccessTik} alt="SuccessTik" />
-                    <p className='text-white text-[12px]'>Thank you for providing the rating for this program</p>
+                <div className='px-5 py-1 flex justify-center items-center'>
+                    <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+                        style={{ background: '#fff', borderRadius: '10px' }}>
+                        <img src={SuccessTik} alt="SuccessTik" />
+                        <p className='text-white text-[16px] bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                            style={{
+                                fontWeight: 600
+                            }}
+                        >Thank you for providing the rating for this program</p>
+                    </div>
+
                 </div>
             </Backdrop>
 
@@ -564,7 +589,7 @@ export default function AssignTask() {
 
                                                                         ) &&
                                                                         <>
-                                                                            <MenuItem onClick={() => handleComplete(programDetails.id)} className='!text-[12px]'>
+                                                                            <MenuItem onClick={() => handleOpenConfirmPopup()} className='!text-[12px]'>
                                                                                 <img src={CompleteIcon} alt="AbortIcon" className='pr-3 w-[25px]' />
                                                                                 Complete</MenuItem>
                                                                             <MenuItem onClick={() => navigate(`${pipeUrls.assignmentess}/${programdetails.id}`)} className='!text-[12px]'>
@@ -1163,12 +1188,16 @@ export default function AssignTask() {
                                 open={requestStatusInfo === requestStatus.reschedule || requestStatusInfo === requestStatus.cancel}
                             >
                                 <div className='px-5 py-1 flex justify-center items-center'>
-                                    <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
-                                        style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
+                                    <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+                                        style={{ background: '#fff', borderRadius: '10px' }}>
                                         <img src={SuccessTik} alt="SuccessTik" />
-                                        <p className='text-white text-[12px]'>Program {requestStatusInfo === requestStatus.reschedule ? 'Rescheduled ' :
+                                        <p className='text-white text-[16px] bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                                            style={{
+                                                fontWeight: 600
+                                            }}
+                                        >Program {requestStatusInfo === requestStatus.reschedule ? 'Rescheduled ' :
                                             requestStatusInfo === requestStatus.cancel ? 'Cancelled ' : ''
-                                        } Successfully</p>
+                                            } Successfully</p>
                                     </div>
 
                                 </div>
@@ -1180,14 +1209,17 @@ export default function AssignTask() {
                                 open={startProgramModal.success}
                             >
                                 <div className='px-5 py-1 flex justify-center items-center'>
-                                    <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
-                                        style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
+                                    <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+                                        style={{ background: '#fff', borderRadius: '10px' }}>
                                         <img src={SuccessTik} alt="SuccessTik" />
-                                        <p className='text-white text-[12px]'>Started Request Approved by Mentor Manager</p>
+                                        <p className='text-white text-[16px] bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                                            style={{
+                                                fontWeight: 600
+                                            }}
+                                        >Started Request Approved by Mentor Manager</p>
                                     </div>
 
                                 </div>
-
                             </Backdrop>
 
                             <MuiModal modalOpen={moreMenuModal.share} modalClose={handleMoreMenuClosePopup} noheader>
@@ -1416,7 +1448,45 @@ export default function AssignTask() {
                                 </MuiModal>
                             }
 
+                            <Backdrop
+                                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                                open={completeProgram.bool}
+                            >
+                                <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
+                                    {/* <img src={TickColorIcon} alt="TickColorIcon" /> */}
+                                    <span style={{ color: '#232323', fontWeight: 600, fontSize: '24px' }}>
+                                        Approve
+                                    </span>
+                                    <div className='py-5'>
+                                        <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 600, fontSize: '18px' }}>
+                                            Are you sure want to complete the program?
+                                        </p>
+                                    </div>
+                                    <div className='flex justify-center'>
+                                        <div className="flex gap-6 justify-center align-middle">
+                                            <Button btnCls="w-[110px]" btnName={'Cancel'} btnCategory="secondary" onClick={handleCloseConfirmPopup} />
+                                            <Button btnType="button" btnCls="w-[110px]" btnName={'Approve'}
+                                                style={{ background: '#16B681' }} btnCategory="primary"
+                                                onClick={() => handleComplete(programDetails.id)}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </Backdrop>
 
+                            <Backdrop
+                                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                                open={completeProgram.activity}
+                            >
+                                <div className='px-5 py-1 flex justify-center items-center'>
+                                    <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
+                                        style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
+                                        {/* <img src={SuccessTik} alt="SuccessTik" />/ */}
+                                        <p className='text-white text-[12px]'>Successfully completed a program</p>
+                                    </div>
+
+                                </div>
+                            </Backdrop>
 
                         </div>
                     </div>

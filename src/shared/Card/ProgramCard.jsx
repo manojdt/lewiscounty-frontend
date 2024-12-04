@@ -91,9 +91,9 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
     }
 
     const handleCategoryFilter = () => {
-        let options = { ...categoryPopup, show: true, search: '', selectedItem : [] }
-        if(searchParams.has('category_id') && searchParams.get('category_id') !== ''){
-            options = {...options, selectedItem: searchParams.get('category_id').split(',').map(Number) }
+        let options = { ...categoryPopup, show: true, search: '', selectedItem: [] }
+        if (searchParams.has('category_id') && searchParams.get('category_id') !== '') {
+            options = { ...options, selectedItem: searchParams.get('category_id').split(',').map(Number) }
         }
         setCategoryPopup(options)
     }
@@ -112,10 +112,10 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
 
     const handleSearchSubmit = () => {
         const selectedCategory = categoryPopup.selectedItem
-        if(selectedCategory.length){
+        if (selectedCategory.length) {
             searchParams.set("category_id", selectedCategory.toString());
-            
-        }else{
+
+        } else {
             searchParams.delete("category_id")
         }
         setSearchParams(searchParams)
@@ -142,7 +142,7 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
         }
     }, [programUploadAction.successModal])
 
- 
+
     return (
         <>
             <div className='main-program' style={{ boxShadow: noTitle ? 'none' : '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }}>
@@ -453,10 +453,14 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                     open={programUploadAction.successModal}
                 >
                     <div className='px-5 py-1 flex justify-center items-center'>
-                        <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
-                            style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
+                        <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+                            style={{ background: '#fff', borderRadius: '10px' }}>
                             <img src={SuccessTik} alt="SuccessTik" />
-                            <p className='text-white text-[12px]'>Program Image Updated successfully</p>
+                            <p className='text-white text-[16px] bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                                style={{
+                                    fontWeight: 600
+                                }}
+                            >Program Image Updated successfully</p>
                         </div>
 
                     </div>
@@ -493,10 +497,10 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                                 {
                                     categoryPopup.categoryList.map((category, index) =>
                                         <li key={index} className='flex gap-7'>
-                                            <input type="checkbox" className='w-[20px]' checked={categoryPopup.selectedItem.includes(category.id)} 
+                                            <input type="checkbox" className='w-[20px]' checked={categoryPopup.selectedItem.includes(category.id)}
                                                 onChange={() => handleSelectCategory(category.id)} value={category.id}
-                                                
-                                                />
+
+                                            />
                                             <span className='text-[16px]'>{category.name}</span>
                                         </li>
                                     )
