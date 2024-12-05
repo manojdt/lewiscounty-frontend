@@ -102,9 +102,9 @@ export default function MenteeTaskList() {
                         <p className='font-normal flex gap-2 items-center'>
                           <p>{list.task_name}</p>
                           <p
-                            className={`px-7 py-1 task_action_${list?.result?.toLowerCase()}`}
+                            className={`px-7 py-1 task_action_${(list?.result ?? "fail")?.toLowerCase()}`}
                           >
-                            {list.result}
+                            {list.result ?? "Fail"}
                           </p>
                         </p>
                         <p className='text-[13px] pt-4 leading-6'>
@@ -119,7 +119,12 @@ export default function MenteeTaskList() {
                         }}
                         onClick={() =>
                           navigate(
-                            `/mentor-tasks-details/${list.id}?mentee_id=${list.mentee_id}`
+                            `/mentor-tasks-details/${list.id}?mentee_id=${list.mentee_id}`,
+                            {
+                              state: {
+                                from: "program"
+                              }
+                            }
                           )
                         }
                       >

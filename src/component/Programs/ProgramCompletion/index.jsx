@@ -36,12 +36,12 @@ export default function ProgramCompletion() {
             let startDate = ''
             let endDate = ''
             if (programdetails.start_date !== '') {
-                startDate = new Date(programdetails?.start_date)?.toISOString().substring(0, 10).split("-")
+                startDate = programdetails?.start_date ? new Date(programdetails?.start_date)?.toISOString().substring(0, 10).split("-") : ""
             }
             const actualStartDate = startDate.length ? `${startDate[2]}/${startDate[1]}/${startDate[0]}` : ''
 
             if (programdetails.end_date !== '') {
-                endDate = new Date(programdetails?.start_date)?.toISOString().substring(0, 10).split("-")
+                endDate = programdetails?.start_date ? new Date(programdetails?.start_date)?.toISOString().substring(0, 10).split("-") : ""
             }
             const actualEndDate = endDate.length ? `${endDate[2]}/${endDate[1]}/${endDate[0]}` : ''
 

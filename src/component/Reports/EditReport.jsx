@@ -211,7 +211,6 @@ export default function EditReport() {
     useEffect(() => {
         return () => {
             dispatch(updateReportLocalState({ programDetails: {}, reportDetails: {} }))
-            console.log('LEase')
         }
     }, [])
 
