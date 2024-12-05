@@ -588,7 +588,7 @@ export default function EditReport() {
                                             btnCls="w-[13%]" btnCategory="secondary" onClick={handleSubmit((d) => onSubmit({ ...d, action: 'draft' }))} />
                                     }
 
-                                    <Button btnType="submit" btnCls="w-[13%]" btnName={searchParams.get('type') === 're-open' ? 'Submit' : `Save Changes`} btnCategory="primary" />
+                                    <Button btnType="submit" btnCls="w-[13%]" btnName={searchParams.get('type') === 're-open'||reportDetails.report_status === 'draft'? 'Submit' : `Save Changes`} btnCategory="primary" />
                                 </div>
                             </form>
                         </div>

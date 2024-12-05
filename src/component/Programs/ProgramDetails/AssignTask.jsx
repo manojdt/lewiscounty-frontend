@@ -43,7 +43,7 @@ import { Button } from '../../../shared';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { pipeUrls, programActionStatus, programStatus, requestStatus } from '../../../utils/constant';
-import { updateNewPrograms } from '../../../services/programInfo';
+import { getProgramMentees, updateNewPrograms } from '../../../services/programInfo';
 import { getProgramDetails, updateProgram } from '../../../services/userprograms';
 import { Backdrop, CircularProgress } from '@mui/material';
 import useTimer from '../../../hooks/useTimer';
@@ -55,7 +55,7 @@ import { convertDateFormat, formatDateFunToAll, formatDateTimeISO, todatDateInfo
 import ToastNotification from '../../../shared/Toast';
 import Ratings from '../Ratings';
 import { getUserProfile } from '../../../services/profile';
-import { JoinedMenteeColumn } from '../../../mock';
+import { JoinedMenteeColumn, JoinedProgramMenteeColumn } from '../../../mock';
 import DataTable from '../../../shared/DataGrid';
 import PaymentButton from '../../../shared/paymentButton';
 
@@ -68,7 +68,7 @@ export default function AssignTask() {
     const timerData = useTimer()
     const calendarRef = useRef([])
 
-    const { allPrograms, programDetails } = useSelector(state => state.programInfo)
+    const { allPrograms, programDetails,programMentees } = useSelector(state => state.programInfo)
     const userdetails = useSelector(state => state.userInfo)
     const { programdetails, loading: programLoading, error, status } = useSelector(state => state.userPrograms)
     const { profile, loading: profileLoading } = useSelector(state => state.profileInfo)
@@ -148,11 +148,13 @@ export default function AssignTask() {
 
 
     const handleViewJoinedMentees = (programInfo) => {
+        // console.log(programInfo,"programInfo")
+        // dispatch(getProgramMentees(programInfo?.id))
         setViewMenteeModal(true)
     }
 
     const JoinMenteeColumn = [
-        ...JoinedMenteeColumn,
+        ...JoinedProgramMenteeColumn,
         {
             field: 'action',
             headerName: 'View',
@@ -500,7 +502,7 @@ export default function AssignTask() {
                             <img className='cursor-pointer' onClick={() => setViewMenteeModal(false)} src={CancelIcon} alt="CancelIcon" />
                         </div>
                         <div className='px-5'>
-                            <DataTable rows={programdetails.participated_mentees} columns={JoinMenteeColumn} hideCheckbox />
+                            <DataTable rows={programMentees?.length>0 ? programMentees : programdetails.participated_mentees} columns={JoinMenteeColumn} hideCheckbox />
                         </div>
                     </div>
                 </div>

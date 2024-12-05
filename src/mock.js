@@ -2346,6 +2346,44 @@ export const JoinedMenteeColumn = [
     id: 1,
   },
 ];
+export const JoinedProgramMenteeColumn = [
+  {
+    field: 'full_name',
+    headerName: 'Mentee Name',
+    width: 300,
+    id: 0,
+  },
+  {
+    field: 'category',
+    headerName: 'Category',
+    width: 300,
+    id: 1,
+  },
+  // {
+  //   field: 'category',
+  //   headerName: 'Professional',
+  //   width: 300,
+  //   id: 1,
+  // },
+  // {
+  //   field: 'category',
+  //   headerName: 'Phone Number',
+  //   width: 300,
+  //   id: 1,
+  // },
+  // {
+  //   field: 'category',
+  //   headerName: 'Email',
+  //   width: 300,
+  //   id: 1,
+  // },
+  // {
+  //   field: 'category',
+  //   headerName: 'Certificates',
+  //   width: 300,
+  //   id: 1,
+  // },
+];
 
 export const AdminCategory = [
     {

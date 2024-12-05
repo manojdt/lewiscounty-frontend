@@ -364,7 +364,7 @@ const skipAall =  () => {
                   (redirect ? 'We are redirecting to programs page' :
                     'Questions submitted Successfully')
 
-                  : (redirect ? 'We are redirecting to login page' : 'Questions submitted Successfully. Please upload your documents on next screen')}
+                  : (redirect ? 'We are redirecting to login page' : 'Questions submitted Successfully.')}
               </p>
             </div>
 
