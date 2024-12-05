@@ -375,7 +375,7 @@ export const MentorDocumentUplaod = [{
   inputRules: {
     required: "This field is required",
   },
-  size: true,
+  size: false,
 },
 
 
@@ -1103,10 +1103,8 @@ export const MenteeDocumentUplaod = [{
   inputRules: {
     required: "This field is required",
   },
-  size: true,
+  size: false,
 },
-
-
 ];
 
 

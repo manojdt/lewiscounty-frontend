@@ -316,9 +316,9 @@ useEffect(() => {
 const skipAall =  () => {
   return  (
     ((role === 'mentor' && currentStep >= 2) || (role === 'mentee' && currentStep > 1))&& currentStep!==formFields.length&&
-    <div className="flex items-center gap-2">
-      <p style={{ fontWeight: 'bold', cursor: 'pointer' }} onClick={handleSkip}>Skip All</p>
-      <img src={rightArrow} className="h-[20px] w-[20px]" alt="right"/>
+    <div className="flex items-center gap-2"  onClick={handleSkip}>
+      <p style={{ fontWeight: 'bold', cursor: 'pointer' }}>Skip All</p>
+      <img src={rightArrow} className="h-[20px] w-[20px] cursor-pointer" alt="right"/>
     </div>
   )
 }

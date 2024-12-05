@@ -393,9 +393,9 @@ export const programListColumns = [
     id: 5,
     renderCell: (params) => {
         return <>
-            <div className='cursor-pointer h-full relative'>
+            <div className='cursor-pointer flex items-center justify-center h-full relative'>
 
-                <span className='w-[80px]  h-[30px] px-7'
+                <span className='w-[100px] flex justify-center h-[30px] px-4'
                     style={{
                         background: programStatusColor[params?.row?.status]?.bgColor, lineHeight: '30px',
                         borderRadius: '3px', width: '110px', height: '34px', color: programStatusColor?.[params?.row?.status]?.color

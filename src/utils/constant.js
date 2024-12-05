@@ -386,6 +386,16 @@ export const requestStatusText = {
   active: 'Active',
   deactivated: 'Deactivated',
 };
+export const certificateRequestStatusText = {
+  new: 'New',
+  pending: 'Pending',
+  accept: 'Accept',
+  launched: 'Launched',
+  cancel: 'Cancel',
+  Wating_for_response: 'Wating for your Response',
+  active: 'Active',
+  deactivated: 'Deactivated',
+};
 export const programStatusText = {
   inprogress: "Ongoing",
   completed: "Completed",
