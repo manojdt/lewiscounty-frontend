@@ -1225,8 +1225,8 @@ export const MenteeStepFormFields = [
 
 export const Stepname = [
   'personal_information',
-  'educational_background',
   'area_of_expertise',
+  'educational_background',
   'mentor_ship_experience',
   'goals_expectations',
   'document_upload',

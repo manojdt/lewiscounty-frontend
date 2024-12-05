@@ -8,6 +8,7 @@ import DocumentUpload from '../Mentees/DocumentUpload';
 import FileUploadIcon from "../../assets/icons/Upload.svg"
 import UploadIcon from "../../assets/images/image_1x.png"
 import DeleteIcon from "../../assets/images/delete_1x.png"
+import ToastNotification from '../../shared/Toast';
 
 const StepComponenRender = ({ stepFields, currentStep, handleNextStep,role, handlePreviousStep, stepData, stepName,handleSkip, totalSteps }) => {
     const navigate = useNavigate();
@@ -24,6 +25,7 @@ const StepComponenRender = ({ stepFields, currentStep, handleNextStep,role, hand
 
     const [dateFormat, setDateFormat] = useState({})
     const [checkBoxValue, setCheckBoxValue] = useState('')
+    const [errorNot, setErrorNot] = useState(false)
     const [idProof, setIdProof] = useState([])
     const onSubmit = (data) => {
         handleNextStep(data)
@@ -83,6 +85,12 @@ const StepComponenRender = ({ stepFields, currentStep, handleNextStep,role, hand
     return (
         <>
             <div className="form-container">
+            {
+          errorNot &&
+
+          <ToastNotification openToaster={errorNot} message={'Please fill all mandatory fields'} handleClose={() => setErrorNot(false)} toastType={'error'} />
+
+        }
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="flex flex-wrap gap-4">
                        
@@ -155,8 +163,9 @@ const StepComponenRender = ({ stepFields, currentStep, handleNextStep,role, hand
                                                 Upload Documents</span>
                                             </p>
                                          </div>
-                                         <input id="dropzone-file" type="file"
+                                         <input id="dropzone-file"  type="file"
                                             // {...fileUpload}
+                                             accept="image/png, image/jpeg, application/pdf"
                                             onChange={(e) => {
                                                 // fileUpload.onChange(e);
                                               
