@@ -47,13 +47,14 @@ export default function CertificateMenteeList() {
   });
 
   const getCertificateDetails = async () => {
+    const type = searchParams.get('type')
     dispatch(
       getCertificateMember(
-        searchParams.get('type') === 'approved'
+        (type === 'approved' || type === 'pending')
           ? `?id=${id}&page=${paginationModel?.page + 1}&limit=${
               paginationModel?.pageSize
             }`
-          : `?id=${id}&page=${paginationModel?.page + 1}&limit=${
+          : `?program_id=${id}&page=${paginationModel?.page + 1}&limit=${
               paginationModel?.pageSize
             }`
       )

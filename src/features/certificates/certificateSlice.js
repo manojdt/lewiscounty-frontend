@@ -53,6 +53,7 @@ export const certificateSlice = createSlice({
                 return {
                     ...state,
                     loading: true,
+                    certificatesMembers: []
                 };
             })
             .addCase(getCertificateMember.fulfilled, (state, action) => {
