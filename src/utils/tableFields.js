@@ -1,7 +1,6 @@
 import { dateFormat } from ".";
 import { CourseLevelOptions } from "./formFields";
 import StarColorIcon from '../assets/icons/starColor.svg';
-import { programStatusColor, programStatusText, requestStatusColor, requestStatusText } from "./constant";
 
 export const myMenteeColumns = [
   {
@@ -383,29 +382,9 @@ export const programListColumns = [
       flex: 1,
       id: 5,
       renderCell: (params) => {
-        return <div className="pl-4">{params.row.duration} {params?.row?.duration>1?"Days":"Day"}</div>
+        return <div className="pl-4">{params.row.duration}</div>
       }
   },
-  {
-    field: 'status',
-    headerName: 'Status',
-    flex: 1,
-    id: 5,
-    renderCell: (params) => {
-        return <>
-            <div className='cursor-pointer h-full relative'>
-
-                <span className='w-[80px]  h-[30px] px-7'
-                    style={{
-                        background: programStatusColor[params?.row?.status]?.bgColor, lineHeight: '30px',
-                        borderRadius: '3px', width: '110px', height: '34px', color: programStatusColor?.[params?.row?.status]?.color
-                    }}>
-                    {programStatusText?.[params?.row?.status]}
-                </span>
-            </div>
-        </>
-    }
-},
   // {
   //     field: 'mentor_manager_id',
   //     headerName: 'M.M',

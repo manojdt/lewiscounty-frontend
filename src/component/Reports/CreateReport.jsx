@@ -16,7 +16,7 @@ import CancelIcon from '../../assets/images/cancel1x.png'
 import { getAllCategories } from '../../services/programInfo';
 
 import { reportsStatus } from '../../utils/constant';
-import { createReport, getCompletedProgramsByCategoryId, getProgramsByCategoryId, getReportProgramDetails } from '../../services/reportsInfo';
+import { createReport, getCompletedProgramsByCategoryId, getProgramsByCategoryId, getReportProgramDetails, updateReportLocalState } from '../../services/reportsInfo';
 import ToastNotification from '../../shared/Toast';
 import { dateTimeFormat } from '../../utils';
 
@@ -53,7 +53,11 @@ export default function CreateReport() {
             "description": data.description,
             "action": data?.action || "submit"
         }
-        dispatch(createReport(apiData))
+        dispatch(createReport(apiData)).then((res)=>{
+            if(res?.meta?.requestStatus === "fulfilled"){
+                dispatch(updateReportLocalState({programDetails: {}}))
+            }
+        })
     }
 
     const getProgramInfo = (categoryId) => {
@@ -202,7 +206,7 @@ export default function CreateReport() {
                     <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
                         style={{ background: '#fff', borderRadius: '10px' }}>
                         <img src={SuccessTik} alt="SuccessTik" />
-                        <p className='text-white text-[16px] bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                        <p className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
                             style={{
                                 fontWeight: 600
                             }}

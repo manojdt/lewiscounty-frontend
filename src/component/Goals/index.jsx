@@ -198,16 +198,9 @@ const Goals = () => {
 
     useEffect(() => {
         if (role === "admin") {
-            dispatch(getGoalsHistory({
-                status: "new2",
-                created_by: createdBy,
-                time_frame: historyTimeFrame,
-                page: historyPaginationModel?.page + 1,
-                limit: historyPaginationModel?.pageSize,
-                // user_id: user_id
-            }))
+            handleGetAdminTableData(adminTimeFrame, adminTab)
         }
-    }, [createdBy])
+    }, [createdBy, adminTablePaginationModal])
 
     const handleGetAllGoals = (timeframe = allTimeFrame) => {
         let payload = {}
@@ -694,7 +687,7 @@ const Goals = () => {
             pageSize: 5
         })
         dispatch(getGoalsHistory({
-            status: "new",
+            status: "new1",
             created_by: createdBy,
             time_frame: value,
             page: 1,
@@ -758,7 +751,7 @@ const Goals = () => {
             pageSize: 5
         })
         dispatch(getGoalsRequest({
-            status: "new",
+            status: "new2",
             created_by: createdBy,
             time_frame: value,
             page: 1,
@@ -783,7 +776,6 @@ const Goals = () => {
             page: 0,
             pageSize: 10
         })
-
     };
 
 
@@ -901,11 +893,11 @@ const Goals = () => {
         }))
     }
 
-    React.useEffect(() => {
-        if (role === "admin") {
-            handleGetAdminTableData(adminTimeFrame, adminTab)
-        }
-    }, [adminTablePaginationModal])
+    // React.useEffect(() => {
+    //     if (role === "admin") {
+    //         handleGetAdminTableData(adminTimeFrame, adminTab)
+    //     }
+    // }, [adminTablePaginationModal])
 
     const handleAdminTimeFrame = (value) => {
         handleGetAdminTableData(value)
@@ -945,7 +937,7 @@ const Goals = () => {
                     <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
                         style={{ background: '#fff', borderRadius: '10px' }}>
                         <img src={SuccessTik} alt="SuccessTik" />
-                        <p className='text-white text-[16px] bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                        <p className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
                             style={{
                                 fontWeight: 600
                             }}
@@ -1030,8 +1022,8 @@ const Goals = () => {
                                     requestBtns?.map((e) => {
                                         return (
                                             <Tab value={e?.key} label={
-                                                <Typography className={`text-[16px] text-[${requestTab === e.key ? '#1D5BBF' : '#18283D'}] 
-                                    capitalize`} sx={{ fontWeight: 500 }}>{e?.name}</Typography>
+                                                <Typography className={`!text-[14px] text-[${requestTab === e.key ? '#1D5BBF' : '#18283D'}] 
+                                                    capitalize -pb-[8px]`} sx={{ fontWeight: 500 }}>{e?.name}</Typography>
                                             } />
                                         )
                                     })
@@ -1365,7 +1357,7 @@ const Goals = () => {
                     <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
                         style={{ background: '#fff', borderRadius: '10px' }}>
                         <img src={SuccessTik} alt="SuccessTik" />
-                        <p className='text-white text-[16px] bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                        <p className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
                             style={{
                                 fontWeight: 600
                             }}

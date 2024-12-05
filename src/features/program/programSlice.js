@@ -395,6 +395,8 @@ export const programSlice = createSlice({
           error: action.error.message,
         };
       });
+
+      // builder.addCase(updateLocalProgram)
   },
 });
 

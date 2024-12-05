@@ -66,33 +66,11 @@ export default function MenteeGoals() {
         },
         {
             field: 'period',
-            headerName: 'Period Time',
+            headerName: 'Duration',
             id: 1,
             flex: 1,
             renderCell: (params) => {
                 return <div className='flex gap-2 items-center'>{`${params?.row?.period} ${params?.row?.period === 1 ? 'Month' : 'Months'}`}</div>
-            }
-        },
-        {
-            field: 'performance',
-            headerName: 'Performance',
-            id: 2,
-            flex: 1,
-            renderCell: (params) => {
-                return <>
-                    <div className='relative' style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', height: '100%', width: '70%' }}>
-                        <div style={{
-                            background: '#FFD41B', width: '67%', borderRadius: '30px', height: '30px', top: '20%',
-                            position: 'absolute'
-                        }}>
-
-                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', color: '#18283D', height: '30px' }}>50%</div>
-                        </div>
-                        <div style={{
-                            background: 'rgba(217, 217, 217, 1)', width: '100%', borderRadius: '30px', height: '30px'
-                        }}></div>
-                    </div>
-                </>
             }
         },
         {
@@ -199,13 +177,13 @@ export default function MenteeGoals() {
                             }
                         </select>
                     </div>
-                    <select className='table-select' onChange={(e) => handleFilterMenteeGoals(e.target.value)}
-                        value={filterStatus}>
-                        <option value="">Total Goals</option>
-                        <option value="active">Active Goals</option>
-                        <option value="in_progress">Goals in progress</option>
-                        <option value="completed">Completed Goals</option>
-                        <option value="cancel">Aborted Goals</option>
+                    <select className='table-select text-[16px]' onChange={(e) => handleFilterMenteeGoals(e.target.value)}
+                        value={filterStatus} style={{fontWeight: 500}}>
+                        <option className='!text-[16px]' value="">Total Goals</option>
+                        <option className='!text-[16px]' value="active">Active Goals</option>
+                        <option className='!text-[16px]' value="in_progress">Goals in progress</option>
+                        <option className='!text-[16px]' value="completed">Completed Goals</option>
+                        <option className='!text-[16px]' value="cancel">Aborted Goals</option>
                     </select>
                 </div>
 

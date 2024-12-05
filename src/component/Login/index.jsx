@@ -98,7 +98,7 @@ export const Login = () => {
     if (!userData.loading && userData.status === userStatus.login) {
       setTimeout(() => {
         handleRedirect()
-      }, 2000)
+      }, 20)
     }
 
     if (!userData.loading && userData.status === userStatus.pending) {
@@ -127,16 +127,16 @@ export const Login = () => {
               <LogoSlide />
               <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={userData.loading || userData.status === userStatus.login || userData.status === userStatus.pending}
+                open={userData.loading || userData.status === userStatus.pending}
 
               >
                 {
-                  (userData.status === userStatus.login || userData.status === userStatus.pending) ?
+                  (userData.status === userStatus.pending) ?
                   <div className="popup-content w-2/6 bg-white flex flex-col gap-4 h-[330px] justify-center items-center">
                     <img src={userData.status === userStatus.pending ? FailedIcon : SuccessIcon} alt="VerifyIcon" />
                     <span style={{ color: '#232323', fontWeight: 600 }}>
                         {
-                          userData.status === userStatus.pending ? 'Waiting for admin approval' : ' Login  Successful!'
+                          userData.status === userStatus.pending ? 'Waiting for admin approval' : ' Login Successful!'
                         }
 
 

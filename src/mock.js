@@ -1068,6 +1068,12 @@ export const mentorMenteeGoalsColumn = [
     flex: 1,
   },
   {
+    field: 'category_name',
+    headerName: 'Category',
+    id: 0,
+    flex: 1,
+  },
+  {
     field: 'goal_name',
     headerName: 'Goals Name',
     id: 0,
