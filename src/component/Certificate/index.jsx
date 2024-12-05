@@ -13,7 +13,7 @@ import MoreIcon from '../../assets/icons/moreIcon.svg'
 import { certificateColumns } from '../../utils/tableFields';
 import { useNavigate } from 'react-router-dom';
 import { certificateDownload, getCertificateList, getCertificates } from '../../services/certificate';
-import { certificateColor, certificateText, requestStatusColor, requestStatusText } from '../../utils/constant';
+import { certificateColor, certificateRequestStatusText, certificateText, requestStatusColor, requestStatusText } from '../../utils/constant';
 
 
 export default function Certificate() {
@@ -74,14 +74,14 @@ export default function Certificate() {
             renderCell: (params) => {
 
                 return <>
-                    <div className='cursor-pointer flex items-center h-full relative'>
+                    <div className='cursor-pointer flex items-center justify-center h-full relative'>
                         <span className='w-[80px] flex justify-center h-[30px] px-3'
                             style={{
                                 background: requestStatusColor[params.row.status]?.bg || '', lineHeight: '30px',
                                 borderRadius: '3px', width: '110px', height: '34px', color: requestStatusColor[params.row.status]?.color || '',
                                 fontSize: '12px'
                             }}
-                        > {requestStatusText[params.row.status]}</span>
+                        > {certificateRequestStatusText[params.row.status]}</span>
                     </div>
                 </>
             }
