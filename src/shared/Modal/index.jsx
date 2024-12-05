@@ -79,7 +79,7 @@ export default function MuiModal({
         {!noheader && (
           <>
             <DialogTitle
-              sx={{ m: 0, p: 2 }}
+              sx={{ m: 0, p: padding ?? 2 }}
               id='customized-dialog-title'
               className='flex items-center gap-3'
             >

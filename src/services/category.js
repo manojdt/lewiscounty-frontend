@@ -70,3 +70,14 @@ export const getCategoryView = createAsyncThunk(
         return getCat
     }
 );
+
+export const acceptMember = createAsyncThunk(
+    "acceptMember",
+    async (payload) => {
+        const createCat = await api.post(`/user/accept_member`, payload);
+        if (createCat.status === 200 && createCat.data) {
+            return createCat.data;
+        }
+        return createCat
+    }
+);
