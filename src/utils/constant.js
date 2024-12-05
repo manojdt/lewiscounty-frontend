@@ -24,6 +24,11 @@ export const StepsList = [
     status: 'Waiting',
     key: 'goals_expectations',
   },
+  {
+    name: 'Document Upload',
+    status: 'Waiting',
+    key: 'document_upload',
+  },
 ];
 
 export const MenteeStepsList = [
@@ -51,6 +56,11 @@ export const MenteeStepsList = [
     name: 'Long-term Vision',
     status: 'Waiting',
     key: 'long_term_vision',
+  },
+  {
+    name: 'Document Upload',
+    status: 'Waiting',
+    key: 'document_upload',
   },
 ];
 

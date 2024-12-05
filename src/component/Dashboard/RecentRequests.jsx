@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import MoreIcon from '../../assets/icons/moreIcon.svg'
 import MaleIcon from '../../assets/images/male-profile1x.png'
 import FemaleIcon from '../../assets/images/female-profile1x.png'
+import SearchIcon from '../../assets/icons/search.svg';
 import TickCircle from '../../assets/icons/tickCircle.svg'
 import CloseCircle from '../../assets/icons/closeCircle.svg'
 import TickColorIcon from '../../assets/icons/tickColorLatest.svg'
@@ -167,6 +168,12 @@ export default function RecentRequests({ data = [] }) {
                 <div className="flex gap-4">
                     <div className="card-dash" style={{ background: 'linear-gradient(180deg, #00B1C0 0%, #005DC6 100%)' }} ></div>
                     <h4>Recent Requests</h4>
+                </div>
+                <div className='flex gap-4 items-center'>
+                <img src={SearchIcon} alt="statistics" />
+                <p className="text-[12px] py-2 px-2 cursor-pointer"
+                                            onClick={() => navigate('/mentees')}
+                                            style={{ background: 'rgba(223, 237, 255, 1)', borderRadius: '5px' }}>View All</p>
                 </div>
             </div>
 
