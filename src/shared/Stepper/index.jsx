@@ -11,44 +11,54 @@ export const Stepper = ({ steps, currentStep = 0, btnTypeAction,handleStepClick 
   const [iconsVisibility, setIconsVisibility] = useState({ prevIcon: false, nextIcon: true })
   const slideLeft = () => {
     const slider = document.getElementById('slider');
-    const scroll = slider.scrollLeft - 200;
-    slider.scrollLeft = scroll;
-    setIconsVisibility({ prevIcon: scroll > 0, nextIcon: true })
+    if (slider) {
+      const stepWidth = slider.scrollWidth / steps.length;
+      const newScrollLeft = slider.scrollLeft - stepWidth;
+
+      slider.scrollTo({ left: newScrollLeft, behavior: 'smooth' });
+
+      setIconsVisibility({
+        prevIcon: newScrollLeft > 0,
+        nextIcon: newScrollLeft + slider.clientWidth < slider.scrollWidth,
+      });
+    }
   };
+
   const slideRight = () => {
     const slider = document.getElementById('slider');
-    const scroll = slider.scrollLeft + 300;
-    slider.scrollLeft = scroll;
-    setIconsVisibility({ prevIcon: true, nextIcon: slider.clientWidth - scroll > (getWindowDimensions().width <=1536 ? 10 : 500)  })
+    if (slider) {
+      const stepWidth = slider.scrollWidth / steps.length;
+      const newScrollLeft = slider.scrollLeft + stepWidth;
+
+      slider.scrollTo({ left: newScrollLeft, behavior: 'smooth' });
+
+      setIconsVisibility({
+        prevIcon: newScrollLeft > 0,
+        nextIcon: newScrollLeft + slider.clientWidth < slider.scrollWidth,
+      });
+    }
   };
-
-
-  function getWindowDimensions() {
-    const { innerWidth: width, innerHeight: height } = window;
-    return {
-      width,
-      height
-    };
-  }
 
   useEffect(() => {
     const slider = document.getElementById('slider');
-    if(btnTypeAction.next && currentStep > 3 ){
-      const slideMove =  300
-      const slider = document.getElementById('slider');
-      const scroll = slider.scrollLeft + slideMove;
-      slider.scrollLeft = scroll;
-      setIconsVisibility({ prevIcon: true, nextIcon: slider.clientWidth - scroll > (getWindowDimensions().width <=1536 ? 10 : 500) })
+    if (slider) {
+      const stepWidth = slider.scrollWidth / steps.length;
+      const scrollTo = currentStep === 1 
+        ? 0 
+        : stepWidth * (currentStep - 1) - stepWidth / 2;
+  
+      slider.scrollTo({ 
+        left: scrollTo, 
+        behavior: currentStep === 1 ? 'auto' : 'smooth' 
+      });
+  
+      setIconsVisibility({
+        prevIcon: scrollTo > 0,
+        nextIcon: scrollTo + slider.clientWidth < slider.scrollWidth,
+      });
     }
-    if(btnTypeAction.back && currentStep >= 3){
-      const slideMove = 400
-      const slider = document.getElementById('slider');
-      const scroll = slider.scrollLeft - slideMove;
-      slider.scrollLeft = scroll;
-      setIconsVisibility({ prevIcon: scroll > 0, nextIcon: true })
-    }
-    
-  },[currentStep])
+  }, [currentStep, steps]);
+  
 
   return (
     <Box sx={{ width: '100%' }} className="relative">
