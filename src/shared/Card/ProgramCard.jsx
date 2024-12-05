@@ -285,8 +285,8 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                                                         <span style={{
                                                             textOverflow: 'ellipsis', overflow: 'hidden',
                                                             width: '215px', whiteSpace: 'nowrap', textTransform: "capitalize",
-                                                            color: "#1D5BBF"
-                                                        }}>Instructor : {currentProgram?.mentor_name} ({currentProgram?.role ?? ""})</span>
+                                                            
+                                                        }}>Instructor : <span style={{color: "#1D5BBF"}}>{currentProgram?.mentor_name} ({currentProgram?.role ?? ""})</span></span>
                                                     </div>
                                                     <div className='flex justify-center pt-2'>
                                                         {
