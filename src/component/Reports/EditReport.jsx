@@ -37,7 +37,7 @@ export default function EditReport() {
 
     const dispatch = useDispatch()
 
-    const [reportFields, setReportFields] = useState(ReportFields)
+    const [reportFields, setReportFields] = useState(ReportFields(true))
     const [dateFormat, setDateFormat] = useState({})
     const [menteeAllList, setAllMenteeList] = useState([])
     const [notification, setNotification] = useState({ program: false })

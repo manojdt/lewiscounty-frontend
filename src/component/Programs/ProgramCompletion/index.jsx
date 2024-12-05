@@ -107,9 +107,9 @@ export default function ProgramCompletion() {
                                         </div>
                                     </li>
                                 </ol>
-                                <div className='cursor-pointer' onClick={handleClick}>
+                                {/* <div className='cursor-pointer' onClick={handleClick}>
                                     <img src={MoreIcon} alt='MoreIcon' />
-                                </div>
+                                </div> */}
                                 <Menu
                                     id="basic-menu"
                                     anchorEl={anchorEl}
