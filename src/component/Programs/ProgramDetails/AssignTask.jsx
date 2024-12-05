@@ -1479,8 +1479,8 @@ export default function AssignTask() {
                                     </div>
                                     <div className='flex justify-center'>
                                         <div className="flex gap-6 justify-center align-middle">
-                                            <Button btnCls="w-[110px]" btnName={'Cancel'} btnCategory="secondary" onClick={handleCloseConfirmPopup} />
-                                            <Button btnType="button" btnCls="w-[110px]" btnName={'Complete'}
+                                            <Button btnCls="w-[110px]" btnName={'No'} btnCategory="secondary" onClick={handleCloseConfirmPopup} />
+                                            <Button btnType="button" btnCls="w-[110px]" btnName={'Yes'}
                                                 style={{ background: '#16B681' }} btnCategory="primary"
                                                 onClick={() => handleComplete(programDetails.id)}
                                             />
@@ -1494,10 +1494,14 @@ export default function AssignTask() {
                                 open={completeProgram.activity}
                             >
                                 <div className='px-5 py-1 flex justify-center items-center'>
-                                    <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
-                                        style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
-                                        <img src={SuccessTik} alt="SuccessTik" />/
-                                        <p className='text-white text-[12px]'>Successfully completed a program</p>
+                                    <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+                                        style={{ background: '#fff', borderRadius: '10px' }}>
+                                        <img src={SuccessTik} alt="SuccessTik" />
+                                        <p className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                                            style={{
+                                                fontWeight: 600
+                                            }}
+                                        >Successfully completed a program</p>
                                     </div>
 
                                 </div>
