@@ -366,7 +366,20 @@ export const AvailabilityCommitmentFields = [{
   size: false,
 },
 ];
+export const MentorDocumentUplaod = [{
+  type: "file",
+  name: "documents",
+  fieldtype: "file",
+  label: "Doument Upload",
+  placeholder: "",
+  inputRules: {
+    required: "This field is required",
+  },
+  size: true,
+},
 
+
+];
 export const AdditionalInformationFields = [{
   type: "textbox",
   name: "additional_info",
@@ -383,6 +396,7 @@ export const StepFormFields = [
   EducationalBackgroundFields,
   MentorShipExperienceFields,
   GoalsandExperienceFields,
+  MentorDocumentUplaod,
 ];
 
 const ageField = () => {
@@ -1080,6 +1094,21 @@ export const MenteeLongTermFields = [{
   size: false,
 }
 ];
+export const MenteeDocumentUplaod = [{
+  type: "file",
+  name: "documents",
+  fieldtype: "file",
+  label: "Doument Upload",
+  placeholder: "",
+  inputRules: {
+    required: "This field is required",
+  },
+  size: true,
+},
+
+
+];
+
 
 export const MenteeAdditionalFields = [{
   type: "input",
@@ -1110,18 +1139,8 @@ export const MenteeStepFormFields = [
   MenteeCareerInformationFields,
   MenteeCurrentStatusFields,
   MenteeMentoringPreferenceFields,
-  // MenteeSkillsFields,
-  // MenteeExpectationGoalsFields,
-  // MenteeAvailabilitysFields,
-  // MenteeDetailedCareerFields,
-  // MenteeChallengesFields,
-  // MenteeMentoringExperienceFields,
-  // MenteeLearningFields,
-  // MenteeNetworkingFields,
-  // MenteePersonalDevelopmentFields,
-  // MenteeMentoringRelationshipFields,
   MenteeLongTermFields,
-  // MenteeAdditionalFields
+  MenteeDocumentUplaod,
 ];
 
 export const Stepname = [
@@ -1130,6 +1149,7 @@ export const Stepname = [
   "area_of_expertise",
   "mentor_ship_experience",
   "goals_expectations",
+  "document_upload"
 ];
 
 export const MenteeStepname = [
@@ -1138,6 +1158,7 @@ export const MenteeStepname = [
   "skills_and_interests",
   "expectations_goals",
   "long_term_vision",
+  "document_upload"
 ];
 
 export const ProgramTabs = [{

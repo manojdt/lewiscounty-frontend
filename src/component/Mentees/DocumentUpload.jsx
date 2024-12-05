@@ -15,9 +15,11 @@ import { updateUserInfo } from '../../services/loginInfo';
 
 
 
-export default function DocumentUpload() {
+export default function DocumentUpload(props) {
     const navigate = useNavigate()
-    const params = useParams()
+    const routeParams = useParams();
+    console.log(props,"docProps")
+    const params = props?.id ? { id: props?.id } : routeParams;
     const [idProof, setIdProof] = useState([])
     const [actionInfo, setActionInfo] = useState({ loading: false, modal: false, redirect: false })
     const userInfo = useSelector(state => state.userInfo)

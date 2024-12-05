@@ -5,15 +5,17 @@ import Backdrop from '@mui/material/Backdrop';
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 import SuccessTik from '../../assets/images/blue_tik1x.png';
+import rightArrow from '../../assets/images/right.png';
 import { Navbar, Stepper } from '../../shared';
 import { MenteeStepsList, StepsList, userStatus } from '../../utils/constant';
 import { StepFormFields, Stepname, MenteeStepname, MenteeStepFormFields } from "../../utils/formFields";
 import StepComponenRender from "./StepComponentRender";
 
-import { updateInfo, updateMenteeQuestions, updateQuestions } from "../../services/loginInfo";
+import { updateInfo, updateMenteeQuestions, updateQuestions, updateUserInfo } from "../../services/loginInfo";
 import SuccessIcon from "../../assets/images/Success_tic1x.png"
 import ToastNotification from "../../shared/Toast";
 import api from "../../services/api";
+import { jwtDecode } from "jwt-decode";
 
 export const Questions = () => {
   const navigate = useNavigate();
@@ -28,6 +30,7 @@ export const Questions = () => {
   const [stepName, setStepName] = useState([])
   const [redirect, setRedirect] = useState(false)
   const [errorNot, setErrorNot] = useState(false)
+  const [actionInfo, setActionInfo] = useState({ loading: false, modal: false, redirect: false })
   const [searchParams] = useSearchParams();
   const [customLoading, setCustomLoading] = useState(false)
 
@@ -39,28 +42,83 @@ export const Questions = () => {
         ...apiData,
         gender: apiData.gender ? Array.isArray(apiData.gender) ? apiData.gender[0] : apiData.gender : null,
         dob: new Date(apiData.dob).toISOString().split('T')[0],
-        phone_number: apiData.phone_number
+        phone_number: apiData.phone_number,
+        documents:undefined
       }
-      dispatch(updateMenteeQuestions(menteeApiData))
+      dispatch(updateMenteeQuestions(menteeApiData)).then((res)=>{
+        docUpload(apiData)
+      })
     }
     else {
 
       const mentorApiData = {
         ...apiData,
         gender: apiData.gender ? Array.isArray(apiData.gender) ? apiData.gender[0] : apiData.gender : null,
-        phone_number: apiData.phone_number
+        phone_number: apiData.phone_number,
+        documents:undefined,
       }
-      dispatch(updateQuestions(mentorApiData))
+      dispatch(updateQuestions(mentorApiData)).then((res)=>{
+        docUpload(apiData)
+      })
     }
 
   }
-  const handleSkip = () => {
-    const { first_name, last_name, email, ...apiData } = { ...stepData, prev_mentorship: stepData.prev_mentorship === "true" }
-    const combinedData = { ...stepData };
-    const res = handleSubmit(combinedData);
-    if (!res) {
-      submitQuestionsData(apiData)
+  const docUpload = async (data) => {
+    setActionInfo({ loading: true, modal: false })
+    let allFiles = []
+    let bodyFormData = new FormData();
+    if (data.documents.length) {
+      data.documents.forEach(file => bodyFormData.append('documents', file[0]))
     }
+    const headers = {
+        'Content-Type': 'multipart/form-data',
+    }
+    const submitDocument = await api.post("user/documents", bodyFormData, { headers: headers });
+    if (submitDocument.status === 201 || submitDocument.status === 200) {
+        if(userInfo?.data?.role === 'mentee'){
+            const joinProgramAction = await api.post('join_program', { id:  searchParams.get("program_id") });
+            if (joinProgramAction.status === 200 && joinProgramAction.data) {
+                handleSubmitData(submitDocument)
+            }
+        }else{
+            handleSubmitData(submitDocument)
+        }
+    }
+}
+
+const handleSubmitData = (submitDocument) => {
+    localStorage.setItem("access_token", submitDocument.data.access);
+    localStorage.setItem("refresh_token", submitDocument.data.refresh);
+    let decoded = jwtDecode(submitDocument.data.access);
+    dispatch(updateUserInfo({ data: decoded }))
+    // reset()
+    // setIdProof([])
+    setActionInfo({ loading: false, modal: true })
+}
+  const handleSkip = () => {
+    // const { first_name, last_name, email, ...apiData } = { ...stepData, prev_mentorship: stepData.prev_mentorship === "true" }
+    // const combinedData = { ...stepData };
+    // const res = handleSubmit(combinedData);
+    // if (!res) {
+    //   submitQuestionsData(apiData)
+    // }
+    const lastStep = allStepList.length; // Get the last step number
+
+  const updatedSteps = allStepList.map((step, index) => {
+    // Set the last step to "In-Progress"
+    if (index === lastStep - 1) {
+      return { ...step, status: 'In-Progress' };
+    }
+    // Retain "Completed" status for steps before the last step
+    if (index < lastStep - 1 && step.status === 'Completed') {
+      return { ...step, status: 'Completed' };
+    }
+    // Set other steps after the last step to an empty status
+    return { ...step, status: '' };
+  });
+
+  setAllStepList(updatedSteps);
+  setCurrentStep(lastStep); // Go 
   }
   const validateRequiredFields = (fields, data) => {
     const missingFields = fields
@@ -79,7 +137,32 @@ export const Questions = () => {
 
     return [];
   };
+  useEffect(() => {
+    // if (userInfo?.data?.document_upload === true && ((!actionInfo.modal && !searchParams.get("program_id")) || userInfo?.data?.role === 'mentor')) {
+    //     navigate('/logout')
+    // }
 
+    if (userInfo?.data?.role === 'mentee' && userInfo?.data?.document_upload && searchParams.get("program_id") &&searchParams.get("program_id") !== null) {
+        setTimeout(() => {
+            setActionInfo({ modal: false, loading: false })
+            navigate(`/program-details/${ searchParams.get("program_id")}`)
+        }, 1000)
+    }
+}, [userInfo])
+useEffect(() => {
+  if (actionInfo.modal) {
+      let userRole = userInfo?.data?.role
+      setTimeout(() => {
+          if(userRole === 'mentee'){
+              setActionInfo({ modal: false, loading: false })
+              navigate(`/program-details/${searchParams.get("program_id")}`)
+          }
+          if(userRole === 'mentor'){
+              navigate('/logout');
+          }
+      }, 1000)
+  }
+}, [actionInfo.modal])
   const handleSubmit = (combinedData) => {
     const allFields = formFields.flat(); // Flatten all fields for validation
     const errorMessages = validateRequiredFields(allFields, combinedData);
@@ -141,12 +224,12 @@ export const Questions = () => {
 
   const handleRedirect = () => {
     if (role === 'mentor') {
-      navigate('/mentor-doc-upload')
+      // navigate('/mentor-doc-upload')
     }
 
     if (role === 'mentee') {
       const url = searchParams.get("program_id") && searchParams.get("program_id") !== '' ? `/mentee-doc-upload/${searchParams.get("program_id")}` : '/programs'
-      navigate(url)
+      // navigate(url)
     }
   }
 
@@ -230,7 +313,15 @@ export const Questions = () => {
 
     }
   }, [errorNot])
-
+const skipAall =  () => {
+  return  (
+    ((role === 'mentor' && currentStep >= 2) || (role === 'mentee' && currentStep > 1))&& currentStep!==formFields.length&&
+    <div className="flex items-center gap-2">
+      <p style={{ fontWeight: 'bold', cursor: 'pointer' }} onClick={handleSkip}>Skip All</p>
+      <img src={rightArrow} className="h-[20px] w-[20px]" alt="right"/>
+    </div>
+  )
+}
   return (
     <>
       <Navbar />
@@ -239,10 +330,7 @@ export const Questions = () => {
           <h2 className="text-xl text-left py-8" style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 500 }}>
             {/* Fill the Question and Answer */}
           </h2>
-          {
-            ((role === 'mentor' && currentStep >= 2) || (role === 'mentee' && currentStep > 1)) &&
-            <p style={{ color: '#1D5BBF', textDecoration: 'underline', fontWeight: 'bold', cursor: 'pointer' }} onClick={handleSkip}>Skip</p>
-          }
+         
 
         </div>
         {
@@ -298,6 +386,8 @@ export const Questions = () => {
                 handleNextStep={handleNextStep}
                 handlePreviousStep={handlePreviousStep}
                 totalSteps={formFields.length}
+                role={role}
+                handleSkip={skipAall}
               />
               : null
           }
