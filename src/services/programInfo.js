@@ -168,3 +168,15 @@ export const getProgramsByCategory = createAsyncThunk(
     return allPrograms;
   }
 );
+export const getProgramMentees = createAsyncThunk(
+  "getProgramMentees",
+  async (programId) => {
+    const allProgramsMentees = await api.get(
+      `program/participates?program_id=${programId}`
+    );
+    if (allProgramsMentees.status === 200 && allProgramsMentees.data) {
+      return allProgramsMentees.data;
+    }
+    return allProgramsMentees;
+  }
+);

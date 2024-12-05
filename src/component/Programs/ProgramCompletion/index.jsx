@@ -84,14 +84,7 @@ export default function ProgramCompletion() {
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
                                         </svg>
                                     </li>
-                                    <li className="inline-flex items-center">
-                                        <p className="inline-flex items-center text-sm font-medium" style={{ color: 'rgba(89, 117, 162, 1)' }}>
-                                            Curated Program
-                                        </p>
-                                        <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
-                                        </svg>
-                                    </li>
+                                   
                                     <li className="inline-flex items-center">
                                         <p className="inline-flex items-center text-sm font-medium" style={{ color: 'rgba(89, 117, 162, 1)' }}>
                                             {programdetails.program_name}
@@ -130,7 +123,7 @@ export default function ProgramCompletion() {
                             </nav>
                         </div>
                         <div className='flex justify-center items-center flex-col gap-8 py-10'>
-                            <div className='font-semibold' style={{ color: 'rgba(29, 91, 191, 1)' }}>Completed Teaching Program</div>
+                            <div className='font-semibold' style={{ color: 'rgba(29, 91, 191, 1)' }}>Completed {programdetails?.program_name} Program</div>
                             <img src={CompletedIcon} alt="CompletedIcon" className='w-[2%]' />
                             <div>
                                 <div className="relative ">

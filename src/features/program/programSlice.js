@@ -11,6 +11,7 @@ import {
   getAllPrograms,
   getAllSkills,
   getProgramDetails,
+  getProgramMentees,
   getProgramsByCategory,
   loadAllPrograms,
   updateAllPrograms,
@@ -22,6 +23,7 @@ import { programStatus, userStatus } from "../../utils/constant";
 const initialState = {
   allPrograms: [],
   programDetails: {},
+  programMentees:[],
   createdPrograms: [],
   category: [],
   materials: [],
@@ -77,6 +79,28 @@ export const programSlice = createSlice({
         };
       })
       .addCase(getProgramDetails.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
+    builder
+      .addCase(getProgramMentees.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(getProgramMentees.fulfilled, (state, action) => {
+        return {
+          ...state,
+          programMentees: action.payload,
+          status: userStatus.create,
+          loading: false,
+        };
+      })
+      .addCase(getProgramMentees.rejected, (state, action) => {
         return {
           ...state,
           loading: false,
