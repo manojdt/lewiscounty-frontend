@@ -114,7 +114,7 @@ export default function MyProfile() {
       </Backdrop>
 
       <div className='flex justify-between items-center mb-8'>
-        <div className='text-color font-medium' >
+        <div className='text-color font-medium !text-[20px]' >
           Profile
         </div>
       </div>
@@ -123,7 +123,7 @@ export default function MyProfile() {
         <div className='profile-content py-8 px-14' style={{ border: '1px solid rgba(219, 224, 229, 1)', background: 'rgba(255, 255, 255, 1)' }}>
           <div className='flex justify-between items-center mb-8'>
             <div className='text-color font-medium' >
-              Profile Picture
+              {/* Profile Picture */}
             </div>
             <div>
               {

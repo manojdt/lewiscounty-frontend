@@ -106,8 +106,8 @@ const ViewGoal = ({ type = '' }) => {
                 id: params.id
             }))
         } else {
-            dispatch(updateGoalStatus({ id: parseInt(goalInfo.id), status: 'cancel' })).then((res)=>{
-                if(res?.meta?.requestStatus === "fulfilled"){
+            dispatch(updateGoalStatus({ id: parseInt(goalInfo.id), status: 'cancel' })).then((res) => {
+                if (res?.meta?.requestStatus === "fulfilled") {
                     resetActionModal()
                 }
             })
@@ -639,7 +639,7 @@ const ViewGoal = ({ type = '' }) => {
 
                                                 <>
                                                     {
-                                                        goalInfo.status === 'inactive' ?
+                                                        (goalInfo.status === 'inactive' || ["new", "pending"].includes(goalInfo?.status)) ?
 
                                                             <>
                                                                 <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
@@ -671,15 +671,17 @@ const ViewGoal = ({ type = '' }) => {
                                                                     onClick={() => undefined}
                                                                 >Cancelled
                                                                 </button>
-                                                                :
-                                                                <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                                    background: "#16B681",
-                                                                    borderRadius: '5px',
-                                                                    cursor: 'not-allowed'
-                                                                }}
-                                                                    onClick={undefined}
-                                                                >Approved
-                                                                </button>
+                                                                : <>
+                                                                    {
+                                                                        !["new", "pending"].includes(goalInfo?.status) &&
+                                                                        <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                                            background: "#16B681",
+                                                                            borderRadius: '5px',
+                                                                            cursor: 'not-allowed'
+                                                                        }}
+                                                                            onClick={undefined}
+                                                                        >Approved
+                                                                        </button>}</>
                                                     }
 
 
@@ -690,7 +692,7 @@ const ViewGoal = ({ type = '' }) => {
                                                 : null
                                         }
                                         {
-                                            (["new", "pending"].includes(goalInfo?.status)) &&
+                                            (["new", "pending"].includes(goalInfo?.status) && role !== "admin") &&
                                             <Stack direction={"row"} alignItems={"center"} spacing={2}>
 
                                                 <Button
@@ -786,8 +788,8 @@ const ViewGoal = ({ type = '' }) => {
                                 fontWeight: 600
                             }}
                         >{
-                            confirmPopup?.type === "cancel" ? "Your New goal has been successfully canceled" : "Your goal has been successfully completed"
-                        }</p>
+                                confirmPopup?.type === "cancel" ? "Your New goal has been successfully canceled" : "Your goal has been successfully completed"
+                            }</p>
                     </div>
 
                 </div>

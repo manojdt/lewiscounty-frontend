@@ -16,15 +16,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { getReportProgramDetails } from "../../services/reportsInfo";
 import { Button } from "../../shared";
 import MoreIcon from "../../assets/icons/moreIcon.svg";
-import { Backdrop, Menu } from "@mui/material";
+import { Backdrop, Menu, MenuItem } from "@mui/material";
 import SuccessTik from "../../assets/images/blue_tik1x.png";
 import { createCertificate } from "../../services/certificate";
+import TickCircle from '../../assets/icons/tickCircle.svg';
 
 export default function CertificateMemberDetails() {
   const navigate = useNavigate();
   const { id } = useParams();
   const { programDetails } = useSelector((state) => state.reports);
   const { status } = useSelector((state) => state.certificates);
+  const userInfo = useSelector(state => state.userInfo);
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -34,9 +36,23 @@ export default function CertificateMemberDetails() {
   const getCertificateDetails = async () => {
     dispatch(getReportProgramDetails(id));
   };
+  const role = userInfo.data.role
   const getMenteeList = async () => {
-    const passMenteeList = programDetails?.pass_mentee_list || [];
-    const failMenteeList = programDetails?.fail_mentee_list || [];
+    const constructedPassList = programDetails?.pass_mentee_list?.map((e) => {
+      return {
+        ...e,
+        program_id: programDetails?.id
+      }
+    })
+
+    const constructedFailList = programDetails?.fail_mentee_list?.map((e) => {
+      return {
+        ...e,
+        program_id: programDetails?.id
+      }
+    })
+    const passMenteeList = constructedPassList || [];
+    const failMenteeList = constructedFailList || [];
     const listMentee = [...passMenteeList, ...failMenteeList];
     const res =
       listMentee.length > 0
@@ -49,6 +65,8 @@ export default function CertificateMemberDetails() {
 
     setMenteeList(res);
   };
+
+  console.log("menteeList ===>", menteeList)
 
   useEffect(() => {
     if (id) {
@@ -130,10 +148,17 @@ export default function CertificateMemberDetails() {
                 "aria-labelledby": "basic-button",
               }}
             >
-              {/* {role === "mentee" ? (
+              {role === "mentor" ? (
                 <MenuItem
                   onClick={() =>
-                    navigate(`/certificate-view/${seletedItem.id}`)
+                    navigate(
+                      `/mentee-task_list/${seletedItem.id}?mentee_id=${seletedItem?.mentee_id}&program_id=${seletedItem?.program_id}`, {
+                        state: {
+                          from: "program"
+                        }
+                      }
+                      // `/certificate-view/${seletedItem.id}?mentee_id=${seletedItem?.mentee_id}`
+                    )
                   }
                   className="!text-[12px]"
                 >
@@ -144,7 +169,7 @@ export default function CertificateMemberDetails() {
                   />
                   View
                 </MenuItem>
-              ) : null} */}
+              ) : null}
 
               {/* <MenuItem onClick={handleCeritificateDownload} className='!text-[12px]'>
                             <img src={DownloadIcon} alt="AcceptIcon" className='pr-3 w-[27px]' />

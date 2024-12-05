@@ -332,7 +332,7 @@ export default function ProgramDetails() {
     }, [ratingModal.success])
 
     useEffect(() => {
-        if (Object.keys(programdetails).length && !programLoading) {
+        if (Object.keys(programdetails)?.length && !programLoading) {
             const notAllowedCond = ['completed', 'yettoapprove', 'draft', 'cancelled']
 
 
@@ -371,7 +371,7 @@ export default function ProgramDetails() {
             if (role === 'mentee') { dispatch(getMenteeJoinedInProgram({ id: programId })); }
         }
 
-        if (!Object.keys(profile).length) {
+        if (!Object.keys(profile)?.length) {
             dispatch(getUserProfile())
         }
 
@@ -862,7 +862,7 @@ export default function ProgramDetails() {
             }
 
             {
-                (!programLoading && Object.keys(programdetails).length) ?
+                (!programLoading && Object.keys(programdetails)?.length) ?
 
                     <div className='grid mb-10' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)', borderRadius: '5px' }}>
                         <div className='breadcrum'>
@@ -928,7 +928,7 @@ export default function ProgramDetails() {
                                         <div className='flex items-center gap-6 pb-6'>
                                             <h3 className='font-semibold text-[18px]' style={{ color: 'rgba(29, 91, 191, 1)' }}>{programdetails.program_name}</h3>
                                             {
-                                                programdetails.categories.length ?
+                                                programdetails?.categories?.length ?
 
                                                     <div className='text-[10px] px-3 py-2' style={{
                                                         background: 'rgba(238, 240, 244, 1)',
@@ -1176,10 +1176,10 @@ export default function ProgramDetails() {
                                                             {
                                                                 (requestId !== '' && (programRequestApproval.includes(programdetails.status) ||
                                                                     programWaitingActiveApproval.includes(programdetails.status) ||
-                                                                    (Object.keys(programdetails.cancel_reason).length && programdetails.cancel_reason?.id === parseInt(requestId)
+                                                                    (Object.keys(programdetails.cancel_reason)?.length && programdetails.cancel_reason?.id === parseInt(requestId)
                                                                         && (programdetails.cancel_reason?.status === 'new' || programdetails.cancel_reason?.status === 'pending')) ||
 
-                                                                    (Object.keys(programdetails.reschedule_reason).length
+                                                                    (Object.keys(programdetails.reschedule_reason)?.length
                                                                         && (programdetails.reschedule_reason?.status === 'new' || programdetails.reschedule_reason?.status === 'pending'))
                                                                 )
                                                                 ) ?
@@ -1353,14 +1353,14 @@ export default function ProgramDetails() {
 
 
                                 {
-                                    (role !== 'mentee' && ((role === 'admin' && requestId !== null && programdetails?.cancel_reason && Object.keys(programdetails?.cancel_reason).length &&
+                                    (role !== 'mentee' && ((role === 'admin' && requestId !== null && programdetails?.cancel_reason && Object.keys(programdetails?.cancel_reason)?.length &&
                                         programdetails.cancel_reason.id === parseInt(requestId))
                                         || (programdetails.status === programActionStatus.cancelled))) ?
                                         <div className={`action-set action_cancelled`}>
                                             <div className='reason-title'>
                                                 {programdetails.status === programActionStatus.cancelled ||
 
-                                                    (role === 'admin' && requestId !== null && programdetails?.cancel_reason && Object.keys(programdetails?.cancel_reason).length)
+                                                    (role === 'admin' && requestId !== null && programdetails?.cancel_reason && Object.keys(programdetails?.cancel_reason)?.length)
 
                                                     ? 'Cancelled ' : ''} Reason
                                             </div>
@@ -1374,13 +1374,13 @@ export default function ProgramDetails() {
 
                                 {
                                     (role !== 'mentee' && ((role === 'admin' && requestId !== null && programdetails?.reschedule_reason &&
-                                        Object.keys(programdetails?.reschedule_reason).length &&
+                                        Object.keys(programdetails?.reschedule_reason)?.length &&
                                         programdetails.reschedule_reason.id === parseInt(requestId)))) ?
                                         <div className={`action-set action_cancelled`} style={{ border: '1px solid rgba(255, 118, 0, 1)', background: 'rgba(255, 242, 231, 1)' }}>
                                             <div className='reason-title' style={{ color: 'rgba(255, 118, 0, 1)' }}>
                                                 {programdetails.status === programActionStatus.cancelled ||
 
-                                                    (role === 'admin' && requestId !== null && programdetails?.reschedule_reason && Object.keys(programdetails?.reschedule_reason).length)
+                                                    (role === 'admin' && requestId !== null && programdetails?.reschedule_reason && Object.keys(programdetails?.reschedule_reason)?.length)
 
                                                     ? 'Rescheduled ' : ''} Reason
                                             </div>
@@ -1410,7 +1410,7 @@ export default function ProgramDetails() {
                                                 {programdetails.about_program}
                                             </div>
                                             {
-                                                programdetails.skills.length ?
+                                                programdetails?.skills?.length ?
 
                                                     <div className='skills pt-8'>
                                                         <div className='font-semibold pb-5'>Skills you'll gain</div>
