@@ -54,7 +54,7 @@ const MentorMenteeProfile = () => {
 
   const statusStyle = {
     rejected:
-      'text-[16px] w-[140px] h-[40px] flex items-center justify-center !text-[#E0382D] border border-[#E0382D] rounded-[3px]',
+      'text-[16px] w-[auto] px-3 h-[40px] flex items-center justify-center !text-[#E0382D] border border-[#E0382D] rounded-[3px] whitespace-nowrap',
     connected:
       'text-[16px] w-[140px] h-[40px] flex items-center justify-center !text-[#1D5BBF] border border-[#1D5BBF] rounded-[3px]',
   };
@@ -309,18 +309,19 @@ const MentorMenteeProfile = () => {
                 </Stack>
               )}
 
-            {userDetails?.request_status === 'cancel' && (
-              <Typography className={statusStyle['rejected']}>
-                Rejected
-              </Typography>
-            )}
+            {(state?.page !== 'requested_mentor' &&
+              userDetails?.request_status === 'cancel') && (
+                <Typography className={statusStyle['rejected']}>
+                  Rejected
+                </Typography>
+              )}
             {userDetails?.request_status === 'accept' && (
               <Typography className={statusStyle['connected']}>
                 Connected
               </Typography>
             )}
-            {state?.page === 'requested_mentor' &&
-              userDetails?.request_status === 'cancel' && (
+            {(state?.page === 'requested_mentor' &&
+              userDetails?.request_status === 'cancel') && (
                 <Typography className={statusStyle['rejected']}>
                   Request Canceled
                 </Typography>
@@ -430,7 +431,7 @@ const MentorMenteeProfile = () => {
           <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
             style={{ background: '#fff', borderRadius: '10px' }}>
             <img src={SuccessTik} alt="SuccessTik" />
-            <p className='text-white text-[16px] bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+            <p className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
               style={{
                 fontWeight: 600
               }}
@@ -497,7 +498,7 @@ const MentorMenteeProfile = () => {
           <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
             style={{ background: '#fff', borderRadius: '10px' }}>
             <img src={SuccessTik} alt="SuccessTik" />
-            <p className='text-white text-[16px] bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+            <p className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
               style={{
                 fontWeight: 600
               }}

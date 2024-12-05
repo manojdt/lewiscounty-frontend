@@ -32,7 +32,7 @@ import ResumeIcon from '../../../assets/images/resume1x.png';
 import CompleteIcon from '../../../assets/images/completed1x.png'
 import PlusCircle from '../../../assets/icons/Pluscircle.svg'
 import TimeHistoryIcon from '../../../assets/icons/time-history-icon.svg'
-
+import TickColorIcon from '../../../assets/icons/tickColorLatest.svg'
 
 import './program-details.css'
 import Carousel from '../../../shared/Carousel';
@@ -263,8 +263,22 @@ export default function AssignTask() {
 
     const handleComplete = (programId) => {
         handleClose()
-        dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.completed })).then((6))
-        navigate(`/program-completion/${programId}`)
+        dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.completed })).then((res) => {
+            if (res?.meta?.requestStatus === "fulfilled") {
+                setCompleteProgram({
+                    bool: false,
+                    activity: true
+                })
+                setTimeout(() => {
+                    setCompleteProgram({
+                        bool: false,
+                        activity: false
+                    })
+                    navigate(`/program-completion/${programId}`)
+                }, 2000);
+            }
+        })
+
     }
 
     const handleMoreMenuClosePopup = () => {
@@ -432,6 +446,7 @@ export default function AssignTask() {
         activity: false
     })
     const handleOpenConfirmPopup = () => {
+        handleClose()
         setCompleteProgram({
             ...completeProgram,
             bool: true
@@ -463,7 +478,7 @@ export default function AssignTask() {
                     <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
                         style={{ background: '#fff', borderRadius: '10px' }}>
                         <img src={SuccessTik} alt="SuccessTik" />
-                        <p className='text-white text-[16px] bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                        <p className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
                             style={{
                                 fontWeight: 600
                             }}
@@ -1191,7 +1206,7 @@ export default function AssignTask() {
                                     <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
                                         style={{ background: '#fff', borderRadius: '10px' }}>
                                         <img src={SuccessTik} alt="SuccessTik" />
-                                        <p className='text-white text-[16px] bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                                        <p className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
                                             style={{
                                                 fontWeight: 600
                                             }}
@@ -1212,7 +1227,7 @@ export default function AssignTask() {
                                     <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
                                         style={{ background: '#fff', borderRadius: '10px' }}>
                                         <img src={SuccessTik} alt="SuccessTik" />
-                                        <p className='text-white text-[16px] bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                                        <p className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
                                             style={{
                                                 fontWeight: 600
                                             }}
@@ -1453,9 +1468,9 @@ export default function AssignTask() {
                                 open={completeProgram.bool}
                             >
                                 <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
-                                    {/* <img src={TickColorIcon} alt="TickColorIcon" /> */}
+                                    <img src={TickColorIcon} alt="TickColorIcon" />
                                     <span style={{ color: '#232323', fontWeight: 600, fontSize: '24px' }}>
-                                        Approve
+                                        Complete
                                     </span>
                                     <div className='py-5'>
                                         <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 600, fontSize: '18px' }}>
@@ -1465,7 +1480,7 @@ export default function AssignTask() {
                                     <div className='flex justify-center'>
                                         <div className="flex gap-6 justify-center align-middle">
                                             <Button btnCls="w-[110px]" btnName={'Cancel'} btnCategory="secondary" onClick={handleCloseConfirmPopup} />
-                                            <Button btnType="button" btnCls="w-[110px]" btnName={'Approve'}
+                                            <Button btnType="button" btnCls="w-[110px]" btnName={'Complete'}
                                                 style={{ background: '#16B681' }} btnCategory="primary"
                                                 onClick={() => handleComplete(programDetails.id)}
                                             />
@@ -1481,7 +1496,7 @@ export default function AssignTask() {
                                 <div className='px-5 py-1 flex justify-center items-center'>
                                     <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
                                         style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
-                                        {/* <img src={SuccessTik} alt="SuccessTik" />/ */}
+                                        <img src={SuccessTik} alt="SuccessTik" />/
                                         <p className='text-white text-[12px]'>Successfully completed a program</p>
                                     </div>
 

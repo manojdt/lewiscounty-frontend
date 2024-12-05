@@ -21,6 +21,7 @@ import './program.css'
 
 import { assignProgramTask, getProgramDetails, getProgramMentees, getProgramTaskMentees, updateProgram } from '../../../services/userprograms';
 import { pipeUrls, programActionStatus, programStatus } from '../../../utils/constant';
+import dayjs from 'dayjs';
 
 
 export default function AssignMentees() {
@@ -55,7 +56,7 @@ export default function AssignMentees() {
             start_date: new Date(data.start_date).toISOString(),
             end_date: new Date(data.end_date).toISOString(),
             mentor: programdetails?.mentor_info?.id,
-            due_date: new Date(data.due_date).toISOString()
+            due_date: dayjs(data.due_date).format("YYYY-MM-DDTHH:mm:ss")
         }
         dispatch(assignProgramTask(apiData))
     }
@@ -347,19 +348,21 @@ export default function AssignMentees() {
                                                                                                 calendarRef?.current[index]?.hide()
                                                                                             }}
                                                                                             disabled={field.disabled}
-                                                                                            {...field.name === 'due_date' ?
-                                                                                                {
-                                                                                                    minDate: getValues('start_date'),
-                                                                                                    maxDate: getValues('end_date')
-                                                                                                }
-                                                                                                : {}
-                                                                                            }
+                                                                                            // {...field.name === 'due_date' ?
+                                                                                            //     {
+                                                                                            //         minDate: getValues('start_date'),
+                                                                                            //         maxDate: getValues('end_date')
+                                                                                            //     }
+                                                                                            //     : {}
+                                                                                            // }
+
+                                                                                            minDate={new Date()}
+                                                                                            maxDate={field.name === 'due_date' ? getValues('end_date') : ""}
                                                                                             showTime={field.name !== 'due_date'}
                                                                                             hourFormat="12"
                                                                                             dateFormat="dd/mm/yy"
                                                                                             style={{ width: '42%' }}
                                                                                             ref={el => (calendarRef.current[index] = el)}
-                                                                                            minDate={new Date()}
                                                                                         />
                                                                                         <img className='absolute top-5 right-2 cursor-pointer' src={CalendarIcon} alt="CalendarIcon"
 
@@ -535,7 +538,7 @@ export default function AssignMentees() {
                                         <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
                                             style={{ background: '#fff', borderRadius: '10px' }}>
                                             <img src={SuccessTik} alt="SuccessTik" />
-                                            <p className='text-white text-[16px] bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                                            <p className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
                                                 style={{
                                                     fontWeight: 600
                                                 }}

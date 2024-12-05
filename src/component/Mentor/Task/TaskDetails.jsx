@@ -17,7 +17,7 @@ import { useForm } from 'react-hook-form'
 
 const MentorTaskDetails = () => {
     const navigate = useNavigate()
-    const [editTask, setEditTask] = useState(false)
+    const [editTask, setEditTask] = useState(true)
     const params = useParams();
     const [searchParams] = useSearchParams()
     const dispatch = useDispatch()
@@ -90,7 +90,7 @@ const MentorTaskDetails = () => {
                     <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
                         style={{ background: '#fff', borderRadius: '10px' }}>
                         <img src={SuccessTik} alt="SuccessTik" />
-                        <p className='text-white text-[16px] bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                        <p className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
                             style={{
                                 fontWeight: 600
                             }}
