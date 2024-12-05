@@ -181,8 +181,8 @@ const MentorMenteeProfile = () => {
           justifyContent={'space-between'}
           alignItems={'center'}
         >
-          <div className='text-[#353F4F] text-[24px] font-medium'>
-            Profile Picture
+          <div className='text-[#353F4F] text-[20px] font-medium'>
+            Profile
           </div>
           {state?.page !== 'requested_mentor' ? (
             // <Box

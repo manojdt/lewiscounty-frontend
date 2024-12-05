@@ -3,7 +3,7 @@ import SearchIcon from '../../assets/icons/SearchColor.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import { getMenteeAllTask } from '../../services/task';
 import Cancel from '../../assets/images/cancel-colour1x.png';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { Backdrop, CircularProgress } from '@mui/material';
 
 export default function MenteeTaskList() {
@@ -13,6 +13,7 @@ export default function MenteeTaskList() {
   const [searchKey, setSearchKey] = useState('');
   const { activity } = useSelector((state) => state.activity);
   const { menteeProgramTask, loading } = useSelector((state) => state.tasks);
+  const state = useLocation()?.state
 
   const handleSearch = (e) => {
     const searchValue = e.target.value;
@@ -62,7 +63,7 @@ export default function MenteeTaskList() {
           </div>
           <div
             className='cursor-pointer'
-            onClick={() => navigate('/certificates')}
+            onClick={() => navigate(state?.from === "program" ? -1 : '/certificates')}
           >
             <img src={Cancel} alt='link' className='w-[20px] h[10px]' />
           </div>

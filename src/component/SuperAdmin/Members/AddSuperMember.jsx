@@ -14,10 +14,11 @@ function AddSuperMember() {
   const [formDetail, setFormDetail] = useState({
     FirstName: "",
     LastName: "",
-    UserName: "",
+    // UserName: "",
     PrimaryPhoneNumber: "",
     SecondaryPhoneNumber: "",
     EmailId: "",
+    OrgEmailId: "",
     Category: [],
   });
   const navigate = useNavigate();
@@ -43,14 +44,26 @@ function AddSuperMember() {
 
   const handleInputChange = (e) => {
     const { name, value, type } = e.target;
+    console.log(name, value)
 
     // Clear error for this field when user changes the value
     setErrFields((prevErrors) => ({
       ...prevErrors,
       [name]: "", // Clear error for the specific field
     }));
-
-    if (type === "select-one") {
+    if (name === "FirstName") {
+      setFormDetail((prevDetail) => ({
+        ...prevDetail,
+        [name]: value,
+        OrgEmailId: `${value}${prevDetail?.LastName}@socialroots.ai`
+      }));
+    } else if (name === "LastName") {
+      setFormDetail((prevDetail) => ({
+        ...prevDetail,
+        [name]: value,
+        OrgEmailId: `${prevDetail?.FirstName}${value}@socialroots.ai`
+      }));
+    } else if (type === "select-one") {
       // For single select, store the value as an array
       setFormDetail((prevDetail) => ({
         ...prevDetail,
@@ -86,7 +99,6 @@ function AddSuperMember() {
     let mandatoryFields = [
       "FirstName",
       "LastName",
-      "UserName",
       "EmailId",
       "PrimaryPhoneNumber",
       "Category",
@@ -120,14 +132,13 @@ function AddSuperMember() {
 
     // Validate form before submitting
     if (validateForm()) {
-      console.log("Form Submitted", formDetail);
 
       // Prepare the data to send in the API request
       const data = {
         first_name: formDetail.FirstName,
         last_name: formDetail.LastName,
-        email: formDetail.EmailId,
-        users_name: formDetail.UserName,
+        personal_email: formDetail.EmailId,
+        email: formDetail.OrgEmailId,
         phone_number: formDetail.PrimaryPhoneNumber,
         secondary_phone_number: formDetail.SecondaryPhoneNumber,
         is_staff: true,
@@ -242,14 +253,14 @@ function AddSuperMember() {
                 </div>
 
                 <div className="col-span-6">
-                  <FormField label="User Name" required>
+                  <FormField label="Personal Email Id" required>
                     <input
-                      name="UserName"
-                      value={formDetail.UserName}
+                      name="EmailId"
+                      value={formDetail.EmailId}
                       onChange={handleInputChange}
-                      type="text"
+                      type="email"
                       className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
-                      placeholder="Enter User Name"
+                      placeholder="Enter Email Id"
                     //   style={{
                     //     border: `1px solid ${
                     //       !errFields.UserName ? "1d5bbf0d" : "red"
@@ -257,23 +268,24 @@ function AddSuperMember() {
                     //     fontSize: "14px",
                     //   }}
                     />
-                    {errFields.UserName && (
+                    {errFields.EmailId && (
                       <p className="mt-1 ms-1 text-xs text-red-400">
-                        {errFields.UserName}
+                        {errFields.EmailId}
                       </p>
                     )}
                   </FormField>
                 </div>
 
                 <div className="col-span-6">
-                  <FormField label="Email ID" required>
+                  <FormField label="User ID">
                     <input
-                      name="EmailId"
-                      value={formDetail.EmailId}
+                      name="OrgEmailId"
+                      value={formDetail.OrgEmailId}
                       onChange={handleInputChange}
                       type="email"
                       className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
-                      placeholder="Enter Email ID"
+                      placeholder="Enter Organization Email ID"
+                      disabled={true}
                     //   style={{
                     //     border: `1px solid ${
                     //       !errFields.EmailId ? "1d5bbf0d" : "red"
@@ -281,9 +293,9 @@ function AddSuperMember() {
                     //     fontSize: "14px",
                     //   }}
                     />
-                    {errFields.EmailId && (
+                    {errFields.OrgEmailId && (
                       <p className="mt-1 ms-1 text-xs text-red-400">
-                        {errFields.EmailId}
+                        {errFields.OrgEmailId}
                       </p>
                     )}
                   </FormField>

@@ -301,10 +301,10 @@ export default function AssignTask() {
 
     useEffect(() => {
         const pathname = location.pathname.split('/')
-        if (pathname.length && pathname.includes('assign-task')) {
+        if (pathname?.length && pathname.includes('assign-task')) {
             setCurrentPage('assigntask')
         }
-        if (pathname.length && pathname.includes('start-program')) {
+        if (pathname?.length && pathname.includes('start-program')) {
             setCurrentPage('startprogram')
         }
     }, [location])
@@ -331,14 +331,14 @@ export default function AssignTask() {
             dispatch(getProgramDetails(programId))
         }
 
-        if (!Object.keys(profile).length) {
+        if (!Object.keys(profile)?.length) {
             dispatch(getUserProfile())
         }
 
     }, [params.id])
 
     useEffect(() => {
-        if (Object.keys(programdetails).length) {
+        if (Object.keys(programdetails)?.length) {
             setLoading({ ...loading, initial: false })
 
             if (role === 'mentee' && window.location.href.includes('assign-task')) {
@@ -512,7 +512,7 @@ export default function AssignTask() {
             }
 
             {
-                Object.keys(programdetails).length && !programLoading ?
+                Object.keys(programdetails)?.length && !programLoading ?
                     <div className='grid mb-10' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)', borderRadius: '5px' }}>
                         <div className='breadcrum'>
                             <nav className="flex px-7 pt-6 pb-5 mx-2 border-b-2 justify-between" aria-label="Breadcrumb">
@@ -649,14 +649,14 @@ export default function AssignTask() {
                                         <div className='flex items-center gap-6 pb-6'>
                                             <h3 className='font-semibold text-[18px]' style={{ color: 'rgba(29, 91, 191, 1)' }}>{programdetails.program_name}</h3>
                                             {
-                                                programdetails.categories.length ?
+                                                programdetails?.categories?.length ?
 
                                                     <div className='text-[10px] px-3 py-2' style={{
                                                         background: 'rgba(238, 240, 244, 1)',
                                                         color: 'rgba(253, 0, 58, 1)',
                                                         borderRadius: '5px'
                                                     }}>
-                                                        {programdetails.categories[0].name}
+                                                        {programdetails?.categories[0]?.name}
                                                     </div>
                                                     : null
                                             }
@@ -719,7 +719,7 @@ export default function AssignTask() {
                                         </div>
 
                                         {
-                                            programdetails.learning_materials.length ?
+                                            programdetails?.learning_materials?.length ?
                                                 <div>
                                                     <p className='pb-3'>Our Learning Materials</p>
                                                     <div className='flex gap-3  items-center'>
@@ -1025,7 +1025,7 @@ export default function AssignTask() {
                                                 {programdetails.about_program}
                                             </div>
                                             {
-                                                programdetails.skills.length ?
+                                                programdetails?.skills?.length ?
 
                                                     <div className='skills pt-8'>
                                                         <div className='font-semibold pb-5'>Skills you'll gain</div>

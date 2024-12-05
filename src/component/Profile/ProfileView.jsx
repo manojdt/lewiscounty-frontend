@@ -643,7 +643,8 @@ export default function ProfileView() {
       </Backdrop>
 
       <div className='flex justify-between items-center mb-8'>
-        <div className='text-color font-medium'>My {pageType} Profile</div>
+        {/* <div className='text-color font-medium'>My {pageType} Profile</div> */}
+        <div className='text-color font-medium !text-[20px]'>Profile</div>
       </div>
 
       <div
@@ -653,9 +654,9 @@ export default function ProfileView() {
           background: 'rgba(255, 255, 255, 1)',
         }}
       >
-        <div className='flex justify-between items-center mb-8'>
+        {/* <div className='flex justify-between items-center mb-8'>
           <div className='text-color font-medium'>Profile Picture</div>
-        </div>
+        </div> */}
 
         <div className='flex justify-between items-center'>
           <div className='py-4 relative w-[12%]'>
