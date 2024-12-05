@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import {
   createCalendarEvent,
+  deleteCalendarEvent,
   getCalendarEvents,
   getCalendarFilterEvents,
   updateCalendarEvent,
@@ -90,6 +91,28 @@ export const schedulerSlice = createSlice({
         };
       })
       .addCase(updateCalendarEvent.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
+
+    builder
+      .addCase(deleteCalendarEvent.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(deleteCalendarEvent.fulfilled, (state, action) => {
+        return {
+          ...state,
+          status: calendarStatus.load,
+          loading: false,
+        };
+      })
+      .addCase(deleteCalendarEvent.rejected, (state, action) => {
         return {
           ...state,
           loading: false,

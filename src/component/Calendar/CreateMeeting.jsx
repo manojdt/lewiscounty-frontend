@@ -20,6 +20,7 @@ import DataTable from '../../shared/DataGrid';
 import { CalendarMentee } from '../../mock';
 import {
   createCalendarEvent,
+  getCalendarEvent,
   updateCalendarEvent,
 } from '../../services/scheduler';
 import { calendarStatus } from '../../utils/constant';
@@ -37,7 +38,6 @@ export default function CreateMeeting() {
     status,
     getEvent,
   } = useSelector((state) => state.events);
-  console.log(getEvent);
   const [internalLoading, setInternalLoading] = useState(false);
   const [createMeetingLoading, setCreateMeetingLoading] = useState(false);
   const [addMenteeModal, setMentalModal] = useState(false);
@@ -52,9 +52,8 @@ export default function CreateMeeting() {
     end_date: '',
     repeat_time: '',
     repeat_type: '',
-    never: false,
   });
-
+  const [eventSelect, setEventSelect] = useState(null);
   const today = new Date();
 
   const [dateFormat, setDateFormat] = useState({});
@@ -63,7 +62,19 @@ export default function CreateMeeting() {
   const dispatch = useDispatch();
   const [selectedDays, setSelectedDays] = useState([]);
   const [monthlyOn, setMonthlyOn] = useState();
-  // console.log(selectedDays.join(","));
+
+  useEffect(() => {
+    if (getEvent && id) {
+      setCustomSelect({
+        type: getEvent.meeting_type || '',
+        start_date: getEvent.start_date || '',
+        end_date: getEvent.end_date || '',
+        repeat_time: getEvent.interval || '',
+        repeat_type: getEvent.req || '',
+      });
+      setSelectedDays(getEvent.byday);
+    }
+  }, [getEvent, id]);
 
   const daysOfWeek = [
     { key: 'SU', value: 'S' },
@@ -83,7 +94,57 @@ export default function CreateMeeting() {
     getValues,
     setError,
     setValue,
-  } = useForm();
+  } = useForm({
+    // defaultValues: {
+    //   title: getEvent?.title || '',
+    //   date: getEvent?.date || '',
+    //   start: getEvent?.start || '',
+    //   end: getEvent?.end || '',
+    //   notification_time: getEvent?.notification_time || '',
+    //   date_category: getEvent?.date_category || '',
+    //   mentee: getEvent.attendees?.map((item) => item.full_name),
+    // },
+  });
+
+  // setDateFormat({
+  //   ...dateFormat,
+  //   [field.name]: e.value,
+  // });
+
+  function formatTimeToDate(inputTime, date = new Date()) {
+    if (!inputTime) return null;
+
+    const [hours, minutes, seconds] = inputTime.split(':').map(Number);
+
+    date.setHours(hours, minutes, seconds || 0, 0);
+
+    return date;
+  }
+
+  useEffect(() => {
+    if (getEvent && id && location.pathname === '/edit-meeting') {
+      // Object.keys(getEvent).forEach((key) => {
+      //   setValue(key, getEvent[key]);
+      // });
+      reset({
+        ...getEvent,
+
+        mentee: getEvent.attendees?.join(','),
+      });
+      setDateFormat({
+        ...dateFormat,
+        start: formatTimeToDate(getEvent?.start),
+        end: formatTimeToDate(getEvent?.end),
+      });
+
+      if (getEvent.attendees) {
+        const attendeeNames = getEvent.attendees.map((item) => item);
+        setAllMenteeList(attendeeNames);
+      }
+    }
+  }, [getEvent, reset]);
+  console.log(dateFormat);
+  console.log(getEvent);
 
   const timeFormat = (utcTimestamp) => {
     let timeString = '';
@@ -154,18 +215,6 @@ export default function CreateMeeting() {
     );
   };
 
-  useEffect(() => {
-    if (getEvent) {
-      reset({
-        ...getEvent,
-        start: getEvent.start?.slice(0, 5), // Format for time input
-        end: getEvent.end?.slice(0, 5), // Format for time input
-        mentee: getEvent.attendees?.join(', '), // Optional
-      });
-      setAllMenteeList(getEvent.attendees || []);
-    }
-  }, [getEvent, reset]);
-
   const onSubmit = (data) => {
     let attendees = [];
     data.attendees.forEach((attendee) => {
@@ -197,6 +246,53 @@ export default function CreateMeeting() {
       monthly_day: monthlyOn,
     };
 
+    // console.log(apiData);
+
+    if (apiData && eventSelect && id) {
+      return dispatch(updateCalendarEvent({ apiData, eventSelect, id }));
+    }
+
+    return dispatch(createCalendarEvent(apiData));
+  };
+
+  const onDraftSubmit = (data) => {
+    let attendees = [];
+    data.attendees.forEach((attendee) => {
+      attendees.push(attendee.email);
+    });
+
+    let allGuest = [];
+    if (data.guests !== '') {
+      let guestList = data.guests.split(',') || [];
+      guestList.forEach((guest) => {
+        allGuest.push(guest);
+      });
+    }
+
+    let apiData = {
+      ...data,
+      start: timeFormat(data.start),
+      end: timeFormat(data.end),
+      attendees: attendees,
+      guests: allGuest,
+      status: 'draft',
+      start_date: todayDate(customSelect.start_date),
+      end_date:
+        !customSelect.end_date || datePopup.type === 'do_not_repeat'
+          ? todayDate(customSelect.start_date)
+          : todayDate(customSelect.end_date),
+      byday: selectedDays.join(','),
+      req: customSelect.repeat_type,
+      interval: customSelect.repeat_time,
+      monthly_day: monthlyOn,
+    };
+
+    // console.log(apiData);
+
+    // if (apiData && eventSelect && id) {
+    //   dispatch(updateCalendarEvent({ apiData, eventSelect, id }));
+    // }
+
     dispatch(createCalendarEvent(apiData));
   };
 
@@ -208,7 +304,7 @@ export default function CreateMeeting() {
 
   useEffect(() => {
     if (location.pathname === '/edit-meeting' && id) {
-      dispatch(updateCalendarEvent(id));
+      dispatch(getCalendarEvent(id));
     }
   }, [id]);
 
@@ -251,7 +347,6 @@ export default function CreateMeeting() {
       end_date: '',
       repeat_time: '',
       repeat_type: '',
-      never: false,
     });
   };
 
@@ -284,7 +379,6 @@ export default function CreateMeeting() {
     //   end_date: new Date(),
     //   repeat_time: "",
     //   repeat_type: "",
-    //   never: false,
     // });
     setCustomSelect((prevState) => ({
       ...prevState,
@@ -341,9 +435,11 @@ export default function CreateMeeting() {
     if (value.length) {
       setValue('attendees', value);
       setMentalModal(false);
-      setAllMenteeList(value);
+      setAllMenteeList((prev) => [...prev, ...value]);
     }
   };
+
+  // console.log('menteeAllList', menteeAllList);
 
   const CustomFooterStatusComponent = (props) => {
     return (
@@ -382,6 +478,9 @@ export default function CreateMeeting() {
     setMentalModal(true);
   };
 
+  const submitButtonName =
+    location.pathname === '/edit-meeting' ? 'Update Meeting' : 'Create Meeting';
+
   return (
     <div className='dashboard-content px-8 mt-10'>
       <div
@@ -392,7 +491,11 @@ export default function CreateMeeting() {
       >
         <div className='title flex justify-between py-3 px-4 border-b-2 items-center'>
           <div className='flex gap-4'>
-            <h4>Create New Meeting</h4>
+            <h4>
+              {location.pathname === '/edit-meeting'
+                ? 'Edit Meeting'
+                : 'Create New Meeting'}
+            </h4>
           </div>
           <div className='flex gap-20 items-center'>
             <Tooltip title='Cancel'>
@@ -446,14 +549,12 @@ export default function CreateMeeting() {
                     <div className='relative'>
                       <Calendar
                         className='calendar-control input-bg'
-                        value={customSelect.start_date}
-                        // onChange={(e) => {
-                        //   setCustomSelect({
-                        //     ...customSelect,
-                        //     type: datePopup.type,
-                        //     start_date: e.value,
-                        //   });
-                        // }}
+                        // value={customSelect.start_date}
+                        value={
+                          customSelect.start_date
+                            ? new Date(customSelect.start_date)
+                            : null
+                        }
                         onChange={(e) => {
                           const selectedStartDate = e.value;
                           setCustomSelect((prevState) => ({
@@ -491,14 +592,12 @@ export default function CreateMeeting() {
                       <div className='relative'>
                         <Calendar
                           className='calendar-control input-bg'
-                          value={customSelect.end_date}
-                          // onChange={(e) => {
-                          //   setCustomSelect({
-                          //     ...customSelect,
-                          //     type: datePopup.type,
-                          //     end_date: e.value,
-                          //   });
-                          // }}
+                          // value={customSelect.end_date}
+                          value={
+                            customSelect.end_date
+                              ? new Date(customSelect.end_date)
+                              : null
+                          }
                           onChange={(e) => {
                             const selectedEndDate = e.value;
                             setCustomSelect((prevState) => ({
@@ -542,6 +641,7 @@ export default function CreateMeeting() {
                               borderRadius: '3px',
                               borderRight: '16px solid transparent',
                             }}
+                            value={customSelect.repeat_time}
                             onChange={(e) => {
                               setCustomSelect({
                                 ...customSelect,
@@ -569,6 +669,7 @@ export default function CreateMeeting() {
                               borderRadius: '3px',
                               borderRight: '16px solid transparent',
                             }}
+                            value={customSelect.repeat_type}
                             onChange={(e) => {
                               setCustomSelect({
                                 ...customSelect,
@@ -621,6 +722,7 @@ export default function CreateMeeting() {
                               borderRadius: '3px',
                               borderRight: '16px solid transparent',
                             }}
+                            value={monthlyOn}
                             onChange={(e) => {
                               setMonthlyOn(e.target.value);
                             }}
@@ -886,7 +988,7 @@ export default function CreateMeeting() {
                             });
                           }}
                           timeOnly
-                          time
+                          // time
                         />
                         <img
                           className='absolute top-5 right-2'
@@ -905,6 +1007,33 @@ export default function CreateMeeting() {
                 );
               })}
             </div>
+            {location.pathname === '/edit-meeting' && id && (
+              <div className='flex flex-col'>
+                <label className='text-xs mb-1 font-semibold' htmlFor=''>
+                  Event
+                </label>
+                <select
+                  className='w-[500px] border-none px-3 py-[0.32rem] leading-[2.15] input-bg 
+                                                                        focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[50px]'
+                  style={{
+                    color: '#232323',
+                    borderRadius: '3px',
+                    borderRight: '16px solid transparent',
+                  }}
+                  name='Event'
+                  onChange={(e) => {
+                    setEventSelect(e.target.value);
+                  }}
+                >
+                  <option value=''>Select</option>
+                  <option value='all_event'>All Event</option>
+                  <option value='this_event'>This Event</option>
+                  <option value='this_event_and_following_events'>
+                    This Event And Following Events
+                  </option>
+                </select>
+              </div>
+            )}
             <div className='flex gap-6 justify-center align-middle'>
               <Button
                 btnName='Cancel'
@@ -916,11 +1045,21 @@ export default function CreateMeeting() {
                 btnCategory='secondary'
                 onClick={() => navigate('/calendar')}
               />
-              {/* <Button btnName='Draft' btnCls="w-[170px]" btnStyle={{ background: 'rgba(217, 228, 242, 1)', color: 'rgba(29, 91, 191, 1)', border: 'none' }} btnCategory="secondary" onClick={() => console.log('draft')} /> */}
+              <Button
+                btnName='Draft'
+                btnCls='w-[170px]'
+                btnStyle={{
+                  background: 'rgba(217, 228, 242, 1)',
+                  color: 'rgba(29, 91, 191, 1)',
+                  border: 'none',
+                }}
+                btnCategory='secondary'
+                onClick={handleSubmit(onDraftSubmit)}
+              />
               <Button
                 btnType='submit'
                 btnCls='w-[170px]'
-                btnName={'Create Meeting'}
+                btnName={submitButtonName}
                 btnCategory='primary'
               />
             </div>

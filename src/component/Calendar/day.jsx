@@ -156,10 +156,12 @@ export default function Day({
                 rowIdx={rowIdx}
                 colIdx={colIdx}
                 isWeek
+                actionActionBtn={actionActionBtn}
                 savedEvents={eventsForDay}
                 fetchEvents={fetchEvents}
                 deleteAppointment={deleteAppointment}
                 newData={newData}
+                renderData={renderData}
               />
             )}
           </>

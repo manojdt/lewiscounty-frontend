@@ -24,7 +24,13 @@ const CalendarMain = ({
 }) => {
   const navigate = useNavigate();
 
-  const CALENDAR_VIEWS = ['Today', 'Week', 'Month', 'Year', 'day'];
+  const CALENDAR_VIEWS = [
+    'Today',
+    // 'Week',
+    'Month',
+    'Year',
+    'day',
+  ];
   const [currentCalendarView, setCurrentCalendarView] = useState('Month');
 
   const [currentDate, setCurrentDate] = useState(dayjs());
@@ -215,6 +221,7 @@ const CalendarMain = ({
             fetchEvents={fetchAppointments}
             deleteAppointment={deleteAppointment}
             newData={events}
+            actionActionBtn={actionActionBtn}
           />
         );
       case 'Week':
@@ -223,6 +230,7 @@ const CalendarMain = ({
             currentDate={currentDate}
             savedEvents={events}
             fetchEvents={fetchAppointments}
+            actionActionBtn={actionActionBtn}
             deleteAppointment={deleteAppointment}
             newData={events}
           />
@@ -246,6 +254,7 @@ const CalendarMain = ({
             fetchEvents={fetchAppointments}
             deleteAppointment={deleteAppointment}
             newData={events}
+            actionActionBtn={actionActionBtn}
           />
         );
       // new changes for redirect from dashboard calendar to appointment calendar

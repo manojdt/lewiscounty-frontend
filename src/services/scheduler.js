@@ -26,12 +26,39 @@ export const createCalendarEvent = createAsyncThunk(
 
 export const updateCalendarEvent = createAsyncThunk(
   'updateCalendarEvent',
-  async (id) => {
-    const updateEvent = await api.get(`/calendar_meeting/meeting?id=${id}`);
+  async ({ apiData, eventSelect, id }) => {
+    const updateEvent = await api.put(
+      `/calendar_meeting/meeting?option=${eventSelect}&id=${id}`,
+      apiData
+    );
     if (updateEvent.status === 200 && updateEvent.data) {
       return updateEvent.data;
     }
     return updateEvent;
+  }
+);
+
+export const deleteCalendarEvent = createAsyncThunk(
+  'deleteCalendarEvent',
+  async ({ selectedOption, itemId }) => {
+    const deleteEvent = await api.delete(
+      `/calendar_meeting/meeting?option=${selectedOption}&id=${itemId}`
+    );
+    if (deleteEvent.status === 200 && deleteEvent.data) {
+      return deleteEvent.data;
+    }
+    return deleteEvent;
+  }
+);
+
+export const getCalendarEvent = createAsyncThunk(
+  'updateCalendarEvent',
+  async (id) => {
+    const getEvent = await api.get(`/calendar_meeting/meeting?id=${id}`);
+    if (getEvent.status === 200 && getEvent.data) {
+      return getEvent.data;
+    }
+    return getEvent;
   }
 );
 
