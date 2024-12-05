@@ -1710,7 +1710,7 @@ export const AssignMenteesFields = [{
 
 
 
-export const ReportFields = [{
+export const ReportFields = (bool = false) => [{
   type: "dropdown",
   name: "category",
   label: "Category",
@@ -1720,6 +1720,7 @@ export const ReportFields = [{
   },
   options: [],
   width: "w-[49.4%]",
+  disabled: bool
 },
 {
   type: "dropdown",
@@ -1731,6 +1732,7 @@ export const ReportFields = [{
   },
   options: [],
   width: "w-[49.4%]",
+  disabled: bool
 },
 
 // {
@@ -1765,6 +1767,7 @@ export const ReportFields = [{
     // required: "This field is required",
   },
   width: 'width-32',
+  disabled: bool
 },
 {
   type: "date",
@@ -1775,6 +1778,7 @@ export const ReportFields = [{
     // required: "This field is required",
   },
   width: 'width-32',
+  disabled: bool
 },
 {
   type: "popup-input",
@@ -1786,6 +1790,7 @@ export const ReportFields = [{
   },
   options: [],
   width: 'w-full',
+  disabled: bool
 },
 {
   type: "input",

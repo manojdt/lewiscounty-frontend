@@ -28,7 +28,7 @@ export default function CreateReport() {
     const dispatch = useDispatch()
     const { category, loading: apiLoading } = useSelector(state => state.programInfo)
     const { categoryPrograms, loading: reportsLoading, programDetails, status } = useSelector(state => state.reports)
-    const [reportFields, setReportFields] = useState(ReportFields)
+    const [reportFields, setReportFields] = useState(ReportFields(true))
     const [notification, setNotification] = useState({ program: false })
     const [actionType, setActionType] = useState('')
     const [commonLoading, setCommonLoading] = useState(false)
