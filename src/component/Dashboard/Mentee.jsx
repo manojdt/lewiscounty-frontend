@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Backdrop, CircularProgress } from "@mui/material";
+import { Backdrop, CircularProgress, Stack, Typography } from "@mui/material";
 
 import UserInfoCard from "./UserInfoCard";
 
@@ -19,7 +19,11 @@ import ProgramCard from "../../shared/Card/ProgramCard";
 import { programFeeds } from "../../utils/mock";
 import Invite from "./Invite";
 import api from "../../services/api";
-
+import MuiModal from "../../shared/Modal";
+import { CategoryPopup } from "./categoryPopup";
+import CloseIcon from "../../assets/icons/blueCloseIcon.svg"
+import { acceptMember, getCategory } from "../../services/category";
+import { jwtDecode } from "jwt-decode";
 
 export const Mentee = () => {
     const dispatch = useDispatch()
@@ -27,9 +31,17 @@ export const Mentee = () => {
     const navigate = useNavigate()
     const [loading, setLoading] = useState(false)
     const [topMentotList, setTopMentorList] = useState([])
+    const [openCategory, setOpenCategory] = React.useState(false)
     const userpragrams = useSelector(state => state.userPrograms)
     const userInfo = useSelector(state => state.userInfo)
-
+    const token = localStorage.getItem("access_token")
+    let decoded = jwtDecode(token);
+    
+    React.useEffect(() => {
+        if (!decoded?.category_added) {
+            setOpenCategory(true)
+        }
+    }, [])
 
     function getWindowDimensions() {
         const { innerWidth: width, innerHeight: height } = window;
@@ -56,11 +68,10 @@ export const Mentee = () => {
             query = { type: 'is_bookmark', value: isBookmark }
         }
 
-        if(categoryFilter && categoryFilter !== ''){
+        if (categoryFilter && categoryFilter !== '') {
             query.category_id = categoryFilter
         }
 
-        console.log('QIERY', query)
 
         dispatch(getMenteePrograms(query));
     }
@@ -118,6 +129,48 @@ export const Mentee = () => {
         }
     }, [userpragrams.status])
 
+    const [selectedCategory, setSelectedCategory] = React.useState([])
+    const [category, setCategory] = React.useState([])
+
+    const handleGetCategory = (searchText = "") => {
+        const payload = {
+            search: searchText
+        }
+        dispatch(getCategory(payload)).then((res) => {
+            if (res?.meta?.requestStatus === "fulfilled") {
+                setCategory(res?.payload ?? [])
+            }
+        })
+    }
+
+    const handleUpdateGategory = (type = "") => {
+        let payload = {}
+        if (type === "update") {
+            payload = {
+                type: "mentee_category",
+                categories_id: selectedCategory
+            }
+        } else {
+            payload = {
+                type: "mentee_category",
+            }
+        }
+        dispatch(acceptMember(payload)).then((res) => {
+            if (res.meta.requestStatus === "fulfilled") {
+                setOpenCategory(false)
+                setCategory([])
+                localStorage.setItem("access_token", res?.payload?.access)
+                localStorage.setItem("refresh_token", res?.payload?.refresh)
+            }
+        })
+    }
+
+    const handleSelectCategory = (value) => {
+        setSelectedCategory([
+            ...selectedCategory,
+            value
+        ])
+    }
 
     return (
         <>
@@ -299,6 +352,28 @@ export const Mentee = () => {
 
 
             </div >
+
+
+            {/* category Popup */}
+            <MuiModal
+                modalOpen={openCategory}
+                modalClose={() => setOpenCategory(false)}
+                noheader
+                padding={0}>
+                <Stack p={"12px 18px"} className="border-b border-[#D9E4F2]" direction={"row"} alignItems={"center"} justifyContent={"space-between"}>
+                    <Typography>Select Category's</Typography>
+                    <div onClick={() => setOpenCategory(false)}>
+                        <img src={CloseIcon} />
+                    </div>
+                </Stack>
+                <CategoryPopup
+                    category={category}
+                    selectedCategory={selectedCategory}
+                    setSelectedCategory={setSelectedCategory}
+                    handleGetCategory={handleGetCategory}
+                    handleUpdateGategory={handleUpdateGategory}
+                    handleSelectCategory={handleSelectCategory} />
+            </MuiModal>
         </>
     );
 };
