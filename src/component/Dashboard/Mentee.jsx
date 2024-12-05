@@ -161,6 +161,7 @@ export const Mentee = () => {
                 setCategory([])
                 localStorage.setItem("access_token", res?.payload?.access)
                 localStorage.setItem("refresh_token", res?.payload?.refresh)
+                getPrograms()
             }
         })
     }

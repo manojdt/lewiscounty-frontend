@@ -6,7 +6,7 @@ import FileIcon from '../../../assets/icons/linkIcon.svg'
 import SuccessTik from '../../../assets/images/blue_tik1x.png';
 import UploadIcon from "../../../assets/images/image_1x.png"
 import { Button } from '../../../shared'
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { Backdrop, CircularProgress } from '@mui/material'
 import { getSpecificTask, updateTaskMark } from '../../../services/task'
@@ -22,6 +22,7 @@ const MentorTaskDetails = () => {
     const [searchParams] = useSearchParams()
     const dispatch = useDispatch()
     const { task: taskDetails, loading: taskDetailsLoading, status } = useSelector(state => state.tasks)
+    const state = useLocation()?.state
 
     const {
         register,
@@ -128,7 +129,7 @@ const MentorTaskDetails = () => {
                     <div className='flex gap-8 items-center'>
                         <div className="relative">
                             <div className="inset-y-0 end-0 flex items-center pe-3 cursor-pointer"
-                                onClick={() => navigate('/mentor-tasks')}
+                                onClick={() => navigate(state?.from === "program" ? -1 : '/mentor-tasks')}
                             >
                                 <img src={CancelIcon} alt='SearchIcon' />
                             </div>
