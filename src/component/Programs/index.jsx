@@ -117,7 +117,7 @@ export default function Programs() {
             query = { type: 'status', value: filterType }
         }
 
-        if (!filterType && role === 'mentee' && !userInfo?.data?.is_registered) {
+        if (!filterType && (role === 'mentee' ||role==='admin')&& !userInfo?.data?.is_registered) {
             query = { type: 'status', value: 'planned' }
         }
 
@@ -136,7 +136,8 @@ export default function Programs() {
         if (role === 'mentee') {
             dispatch(getMenteePrograms(query))
         }
-        if (role === 'mentor') dispatch(getUserPrograms(query));
+        if (role === 'mentor'||role === 'admin') dispatch(getUserPrograms(query));
+        // if (role === '') dispatch(getUserPrograms(query));
     }
     const getTableData = (search = '') => {
         if (role === 'mentee') {
@@ -216,7 +217,7 @@ export default function Programs() {
         if (role === 'mentee') {
             dispatch(getMenteePrograms(query))
         }
-        if (role === 'mentor') dispatch(getUserPrograms(query));
+        if (role === 'mentor'||role==='admin') dispatch(getUserPrograms(query));
     }
 
     const getQueryString = () => {
@@ -257,24 +258,24 @@ export default function Programs() {
     useEffect(() => {
         let listPrograms = programMenus('program').filter(programs => programs.for.includes(role));
 
-        const totalCount = role === 'mentor' ? userprograms.statusCounts : userprograms.programsCounts
+        const totalCount = role === 'mentor'||role==='admin' ? userprograms.statusCounts : userprograms.programsCounts
 
-        if (role === 'mentee' && !userInfo?.data?.is_registered) {
+        if ((role === 'mentee' ||role==='admin')&& !userInfo?.data?.is_registered) {
             listPrograms = listPrograms.filter(list => list.status === programActionStatus.yettojoin)
         }
 
         const programMenu = [...listPrograms].map(menu => {
 
             if (menu.status === 'all') {
-                return { ...menu, count: role === 'mentor' ? userprograms.totalPrograms : totalCount?.allprogram }
+                return { ...menu, count: role === 'mentor'||role==='admin' ? userprograms.totalPrograms : totalCount?.allprogram }
             }
             // Mentor Response Count
-            if (role === 'mentor' && statusAction.includes(menu.status)) {
+            if ((role === 'mentor'|| role==='admin') && statusAction.includes(menu.status)) {
                 return { ...menu, count: totalCount[menu.mentorStatus] }
             }
 
             // Mentee Response Count
-            if (role === 'mentee') {
+            if (role === 'mentee'|| role==='admin') {
                 return { ...menu, count: totalCount[menu.menteeStatus] }
             }
             return menu
@@ -283,7 +284,7 @@ export default function Programs() {
     }, [userprograms.statusCounts, userprograms.programsCounts])
 
     useEffect(() => {
-        if (role !== '') {
+        if (role !== ''||role==='admin') {
             getPrograms()
         }
         if (!Object.keys(profile).length) {
@@ -309,7 +310,7 @@ export default function Programs() {
                 dispatch(getMenteePrograms(query))
                 dispatch(getMenteeProgramCount())
             }
-            if (role === 'mentor') {
+            if (role === 'mentor'||role === 'admin') {
                 dispatch(getUserPrograms(query))
                 dispatch(getProgramCounts())
             }
@@ -345,7 +346,7 @@ export default function Programs() {
     }, [userprograms])
 
     useEffect(() => {
-        if (role === 'mentor') dispatch(getProgramCounts())
+        if (role === 'mentor'||role==='admin') dispatch(getProgramCounts())
         if (role === 'mentee') dispatch(getMenteeProgramCount())
     }, [role])
 
@@ -385,7 +386,7 @@ export default function Programs() {
                             <div className="flex gap-4">
                                 <div>
                                     {programMenusList.find(menu => menu.status === searchParams.get("type"))?.name ||
-                                        ((searchParams.get("type") === 'planned' || (searchParams.get("type") === null && role === 'mentee' && !userInfo?.data?.is_registered)) && 'Active Programs') ||
+                                        ((searchParams.get("type") === 'planned' || (searchParams.get("type") === null &&(role === 'mentee' ||role==='admin')&& !userInfo?.data?.is_registered)) && 'Active Programs') ||
                                         (searchParams.get("is_bookmark") ? 'Bookmarked Programs' : 'All Programs')}
                                 </div>
                                 <img src={programView === 'grid' ? ListViewIcon : GridViewIcon} className='cursor-pointer' alt="viewicon" onClick={handleViewChange} />

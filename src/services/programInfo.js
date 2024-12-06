@@ -27,7 +27,7 @@ export const getallMyProgram = createAsyncThunk(
     );
     let queryString = new URLSearchParams(filteredQuery).toString();
     const myMenteeList = await api.get(
-      `/fetch_program?${queryString}`
+      `/programs?${queryString}`
     );
     // page=${data?.page + 1 ?? 1}&limit=${data?.pageSize}
     if (myMenteeList.status === 200 && myMenteeList.data) {
@@ -48,7 +48,7 @@ export const getallMenteeProgram = createAsyncThunk(
     );
     let queryString = new URLSearchParams(filteredQuery).toString();
     const myMenteeList = await api.get(
-      `/mentee_program/all?${queryString}`
+      `/programs?${queryString}`
     );
     // page=${data?.page + 1 ?? 1}&limit=${data?.pageSize}
     if (myMenteeList.status === 200 && myMenteeList.data) {
@@ -106,7 +106,7 @@ export const editUpdateProgram = createAsyncThunk(
 );
 
 export const fetchProgram = createAsyncThunk("fetchProgram", async (data) => {
-  const fetchProgram = await api.get("fetch_program", data);
+  const fetchProgram = await api.get("programs", data);
   if (fetchProgram.status === 200) {
     return fetchProgram;
   }
