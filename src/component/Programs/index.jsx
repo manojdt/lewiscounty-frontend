@@ -40,7 +40,6 @@ export default function Programs() {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const { allProgramsList } = useSelector(state => state.programInfo)
-    console.log(allProgramsList,"all")
     const userInfo = useSelector(state => state.userInfo)
     const { profile } = useSelector(state => state.profileInfo)
     const userprograms = useSelector(state => state.userPrograms)
