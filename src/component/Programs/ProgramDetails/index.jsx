@@ -242,7 +242,7 @@ export default function ProgramDetails() {
                     }
                 }
                     onClick={
-                        () => navigate(`/mentee-details/${params.row.mentee_id}`)
+                        () => navigate(`/mentee-details/${params.row?.id}`)
                     } > View Profile </button>;
             }
         }
