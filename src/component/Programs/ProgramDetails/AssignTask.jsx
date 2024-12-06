@@ -147,9 +147,8 @@ export default function AssignTask() {
     }
 
 
-    const handleViewJoinedMentees = (programInfo) => {
-        // console.log(programInfo,"programInfo")
-        // dispatch(getProgramMentees(programInfo?.id))
+    const handleViewJoinedMentees =async (programInfo) => {
+       dispatch(getProgramMentees(programInfo?.id))
         setViewMenteeModal(true)
     }
 
@@ -158,7 +157,7 @@ export default function AssignTask() {
         {
             field: 'action',
             headerName: 'View',
-            width: 300,
+            width: 150,
             id: 3,
             renderCell: (params) => {
                 console.log('params123', params)
@@ -502,7 +501,7 @@ export default function AssignTask() {
                             <img className='cursor-pointer' onClick={() => setViewMenteeModal(false)} src={CancelIcon} alt="CancelIcon" />
                         </div>
                         <div className='px-5'>
-                            <DataTable rows={programMentees?.length>0 ? programMentees : programdetails.participated_mentees} columns={JoinMenteeColumn} hideCheckbox />
+                            <DataTable rows={programMentees?.length>0&&programMentees} columns={JoinMenteeColumn} hideCheckbox />
                         </div>
                     </div>
                 </div>

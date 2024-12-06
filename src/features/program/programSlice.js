@@ -8,6 +8,8 @@ import {
   getAllCertificates,
   getAllMaterials,
   getAllMembers,
+  getallMenteeProgram,
+  getallMyProgram,
   getAllPrograms,
   getAllSkills,
   getProgramDetails,
@@ -24,6 +26,7 @@ const initialState = {
   allPrograms: [],
   programDetails: {},
   programMentees:[],
+  allProgramsList:{},
   createdPrograms: [],
   category: [],
   materials: [],
@@ -57,6 +60,50 @@ export const programSlice = createSlice({
         };
       })
       .addCase(getAllPrograms.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
+    builder
+      .addCase(getallMyProgram.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(getallMyProgram.fulfilled, (state, action) => {
+        return {
+          ...state,
+          allProgramsList: action.payload,
+          status: userStatus.create,
+          loading: false,
+        };
+      })
+      .addCase(getallMyProgram.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
+    builder
+      .addCase(getallMenteeProgram.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(getallMenteeProgram.fulfilled, (state, action) => {
+        return {
+          ...state,
+          allProgramsList: action.payload,
+          status: userStatus.create,
+          loading: false,
+        };
+      })
+      .addCase(getallMenteeProgram.rejected, (state, action) => {
         return {
           ...state,
           loading: false,

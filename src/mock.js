@@ -2350,39 +2350,39 @@ export const JoinedProgramMenteeColumn = [
   {
     field: 'full_name',
     headerName: 'Mentee Name',
-    width: 300,
+    width: 150,
     id: 0,
   },
+  // {
+  //   field: 'category',
+  //   headerName: 'Category',
+  //   width: 200,
+  //   id: 1,
+  // },
   {
-    field: 'category',
-    headerName: 'Category',
-    width: 300,
+    field: 'role',
+    headerName: 'Professional',
+    width: 150,
     id: 1,
   },
-  // {
-  //   field: 'category',
-  //   headerName: 'Professional',
-  //   width: 300,
-  //   id: 1,
-  // },
-  // {
-  //   field: 'category',
-  //   headerName: 'Phone Number',
-  //   width: 300,
-  //   id: 1,
-  // },
-  // {
-  //   field: 'category',
-  //   headerName: 'Email',
-  //   width: 300,
-  //   id: 1,
-  // },
-  // {
-  //   field: 'category',
-  //   headerName: 'Certificates',
-  //   width: 300,
-  //   id: 1,
-  // },
+  {
+    field: 'phone_number',
+    headerName: 'Phone Number',
+    width: 150,
+    id: 1,
+  },
+  {
+    field: 'email',
+    headerName: 'Email',
+    width: 200,
+    id: 1,
+  },
+  {
+    field: 'certificate',
+    headerName: 'Certificates',
+    width: 100,
+    id: 1,
+  },
 ];
 
 export const AdminCategory = [

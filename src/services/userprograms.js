@@ -54,7 +54,6 @@ export const getUserPrograms = createAsyncThunk(
     }
 );
 
-
 export const updateProgram = createAsyncThunk(
     "updateProgram",
     async (data) => {
