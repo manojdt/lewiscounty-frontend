@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from '../../shared';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import {  useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import ProfileImageIcon from '../../assets/icons/profile-image-icon.svg';
 import CancelIcon from '../../assets/images/cancel1x.png';
 import TickColorIcon from '../../assets/icons/tickColorLatest.svg';
@@ -9,7 +9,7 @@ import CancelColorIcon from '../../assets/icons/cancelCircle.svg';
 import SuccessTik from '../../assets/images/blue_tik1x.png';
 import SearchIcon from '../../assets/icons/search.svg';
 import { useDispatch, useSelector } from 'react-redux';
-import { Backdrop, Checkbox, CircularProgress } from '@mui/material';
+import { Backdrop, Checkbox, CircularProgress, Link, Stack } from '@mui/material';
 import { ProfileFields } from '../../utils/formFields';
 import {
   getFollowList,
@@ -796,6 +796,38 @@ export default function ProfileView() {
               </div>
             </div>
           ))}
+        </div>
+        <div className='col-span-2'>
+          {userDetails?.documents?.length>0&&
+        <Stack>
+          
+                      <label
+                        className='block tracking-wide  text-xs mb-2'
+                        style={{ color: 'rgba(116, 116, 116, 1)' }}
+                      >
+                        Documents
+                      </label>
+                    
+                        <Stack
+                         direction={'row'}
+                         alignItems={'center'}
+                          spacing={2}
+                        >
+                          {userDetails?.documents?.map((doc) => {
+                            return (
+                              <Link
+                                target="_blank"
+                                href={doc?.file}
+                                variant='body2'
+                                className={'text-[18px]'}
+                              >
+                                {doc?.file_display_name}
+                              </Link>
+                            );
+                          })}
+                        </Stack>
+                    
+                    </Stack>}
         </div>
       </div>
     </div>
