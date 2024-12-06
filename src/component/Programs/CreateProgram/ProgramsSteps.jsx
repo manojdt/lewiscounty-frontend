@@ -52,14 +52,15 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
         for (const field in stepData) {
             if (fName.includes(field)) f[field] = stepData[field]
         }
+        console.log('f[field]', stepData)
         if (currentStep === 1) {
             f.start_date = dateFormat.start_date || stepData['start_date']
             f.end_date = dateFormat.end_date || stepData['end_date']
+            const p = { ...getValues(), ...f }
             if (params.id !== '') {
-                setDateFormat({ start_date: stepData['start_date'], end_date: stepData['end_date'] })
+                setDateFormat({ start_date: p['start_date'], end_date: p['end_date'] })
             }
         }
-        const p = { ...getValues(), ...f }
         reset(f)
     }
 
@@ -335,7 +336,6 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                                             {...dateField}
                                                                             value={dateFormat[field.name]}
                                                                             onChange={(e) => {
-                                                                                console.log(e)
                                                                                 dateField.onChange(e)
                                                                                 setDateFormat({ ...dateFormat, [field.name]: e.value })
                                                                                 // calendarRef?.current[index]?.hide()
@@ -391,10 +391,7 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                                                             onChange={(e) => {
 
                                                                                                 if (e.target.files && e.target.files[0]) {
-
-                                                                                                    console.log('pppppp', e.target.files)
                                                                                                     let types = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp', 'image/heic']
-                                                                                                    console.log('Image', e.target.files)
                                                                                                     if (types.includes(e.target.files[0].type)) {
                                                                                                         imageField.onChange(e);
                                                                                                         setLogoImage({ ...logoImage, [field.name]: URL.createObjectURL(e.target.files[0]) });
