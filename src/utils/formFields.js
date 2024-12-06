@@ -384,7 +384,7 @@ export const MentorDocumentUplaod = [
     type: 'file',
     name: 'documents',
     fieldtype: 'file',
-    label: 'Doument Upload',
+    label: 'Document Upload',
     placeholder: '',
     inputRules: {
       required: 'This field is required',
@@ -1176,7 +1176,7 @@ export const MenteeDocumentUplaod = [
     type: 'file',
     name: 'documents',
     fieldtype: 'file',
-    label: 'Doument Upload',
+    label: 'Document Upload',
     placeholder: '',
     inputRules: {
       required: 'This field is required',
@@ -1882,7 +1882,7 @@ export const ReportFields = (bool = false) => [
     },
     options: [],
     width: 'w-full',
-    disabled: bool,
+    // disabled: false,
   },
   {
     type: 'input',

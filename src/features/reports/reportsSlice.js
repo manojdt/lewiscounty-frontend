@@ -90,6 +90,7 @@ export const reportsSlice = createSlice({
                     ...state,
                     status: '',
                     categoryPrograms: action.payload,
+                    programDetails: {},
                     loading: false,
                 };
             })
@@ -136,6 +137,7 @@ export const reportsSlice = createSlice({
                 return {
                     ...state,
                     status: reportsStatus.create,
+                    programDetails: {},
                     loading: false,
                 };
             })

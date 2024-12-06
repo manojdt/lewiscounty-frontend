@@ -184,7 +184,7 @@ const Reports = () => {
             typeString = ''
         }
         navigate(`${pipeUrls.reports}${typeString}`)
-        setFilter({filter_by: '', search: ''})
+        setFilter({ filter_by: '', search: '' })
         setRequestTab(key)
         setPaginationModel({
             page: 0,
@@ -218,7 +218,7 @@ const Reports = () => {
         if (filterDate && filterDate !== '') {
             query.filter_by = filterDate
         }
-        dispatch(getAllReports({...query, page: paginationModel?.page + 1, limit: paginationModel?.pageSize}));
+        dispatch(getAllReports({ ...query, page: paginationModel?.page + 1, limit: paginationModel?.pageSize }));
     }
 
     const handleCancelDelete = () => {
@@ -327,7 +327,7 @@ const Reports = () => {
                                 <option value="day" selected={filter.filter_by === 'day'}>Day</option>
                             </select>
                         </div>
-                        <Button btnName="Create Report" onClick={() => navigate('/create-report')} btnCls="!py-4" />
+                        <Button btnName="Create Report" onClick={() => navigate('/create-report', { state: { type: "new" } })} btnCls="!py-4" />
                     </div>
                 </div>
 
@@ -372,9 +372,9 @@ const Reports = () => {
                             </div>
                         </div>
                         <DataTable rows={allreports?.results ?? []} columns={reportColumn} handleSelectedRow={handleSelectedRow}
-                        rowCount={allreports?.count}
-                        paginationModel={paginationModel} setPaginationModel={setPaginationModel}
-                        hideFooter={allreports?.results?.length === 0} />
+                            rowCount={allreports?.count}
+                            paginationModel={paginationModel} setPaginationModel={setPaginationModel}
+                            hideFooter={allreports?.results?.length === 0} />
                     </div>
 
                 </div>

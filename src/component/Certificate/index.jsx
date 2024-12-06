@@ -200,7 +200,7 @@ export default function Certificate() {
                             </div>
                         </div>
                         {role !== 'mentee' &&
-                            <Button btnName="Create Certificate" onClick={() => navigate('/create-certificate')} />}
+                            <Button btnName="Create Certificate" onClick={() => navigate('/create-certificate', {state: {type : "new"}})} />}
                     </div>
 
                 </div>

@@ -209,9 +209,9 @@ export default function EditReport() {
     }
 
     useEffect(() => {
-        return () => {
-            dispatch(updateReportLocalState({ programDetails: {}, reportDetails: {} }))
-        }
+        // return () => {
+        //     dispatch(updateReportLocalState({ programDetails: {}, reportDetails: {} }))
+        // }
     }, [])
 
 

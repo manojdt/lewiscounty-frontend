@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { Backdrop, CircularProgress } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
@@ -24,11 +24,11 @@ import { dateTimeFormat } from '../../utils';
 export default function CreateReport() {
     const navigate = useNavigate()
     const [searchParams] = useSearchParams();
-
+    const state = useLocation()?.state
     const dispatch = useDispatch()
     const { category, loading: apiLoading } = useSelector(state => state.programInfo)
     const { categoryPrograms, loading: reportsLoading, programDetails, status } = useSelector(state => state.reports)
-    const [reportFields, setReportFields] = useState(ReportFields(true))
+    const [reportFields, setReportFields] = useState(ReportFields(searchParams.get('program_id') ? true : false))
     const [notification, setNotification] = useState({ program: false })
     const [actionType, setActionType] = useState('')
     const [commonLoading, setCommonLoading] = useState(false)
@@ -44,6 +44,13 @@ export default function CreateReport() {
         setValue
     } = useForm();
 
+    React.useEffect(() => {
+        if (state?.type === "new") {
+            reset()
+            dispatch(updateReportLocalState({ programDetails: {} }))
+        }
+    }, [])
+
     const onSubmit = (data) => {
         const apiData = {
             "category": parseInt(data.category),
@@ -53,9 +60,9 @@ export default function CreateReport() {
             "description": data.description,
             "action": data?.action || "submit"
         }
-        dispatch(createReport(apiData)).then((res)=>{
-            if(res?.meta?.requestStatus === "fulfilled"){
-                dispatch(updateReportLocalState({programDetails: {}}))
+        dispatch(createReport(apiData)).then((res) => {
+            if (res?.meta?.requestStatus === "fulfilled") {
+                dispatch(updateReportLocalState({ programDetails: {} }))
             }
         })
     }
@@ -94,27 +101,29 @@ export default function CreateReport() {
             }, 3000)
         }
     }, [status])
-
+    console.log("programDetails===>", programDetails)
     useEffect(() => {
-        if (programDetails && Object.keys(programDetails).length) {
-            let payload = {
-                mentor_name: programDetails.mentor_full_name,
-                start_date: dateTimeFormat(programDetails.start_date),
-                end_date: dateTimeFormat(programDetails.end_date),
-                participated_mentees: programDetails.participated_mentees
-            }
-            if (searchParams.has('cat_id') && searchParams.has('program_id')) {
-                payload = {
-                    ...payload,
-                    category: searchParams.get('cat_id'),
-                    program: searchParams.get('program_id')
+        if (!state?.type) {
+            if (programDetails && Object.keys(programDetails).length) {
+                let payload = {
+                    mentor_name: programDetails.mentor_full_name,
+                    start_date: dateTimeFormat(programDetails.start_date),
+                    end_date: dateTimeFormat(programDetails.end_date),
+                    participated_mentees: programDetails.participated_mentees
                 }
+                if (searchParams.has('cat_id') && searchParams.has('program_id')) {
+                    payload = {
+                        ...payload,
+                        category: searchParams.get('cat_id'),
+                        program: searchParams.get('program_id')
+                    }
+                }
+                reset(payload)
             }
-            reset(payload)
-        }
 
-        if (searchParams.get('cat_id') !== '' && searchParams.get('program_id') !== '') {
-            setCommonLoading(false)
+            if (searchParams.get('cat_id') !== '' && searchParams.get('program_id') !== '') {
+                setCommonLoading(false)
+            }
         }
     }, [programDetails])
 

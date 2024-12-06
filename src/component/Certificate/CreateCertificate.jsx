@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { Backdrop, CircularProgress } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,7 +17,7 @@ import { MenteeAssignColumns } from '../../mock';
 import { getAllCategories } from '../../services/programInfo';
 
 import { certificateStatus, pipeUrls, programActionStatus, reportsStatus } from '../../utils/constant';
-import { createReport, getCompletedProgramsByCategoryId, getProgramsByCategoryId, getReportProgramDetails } from '../../services/reportsInfo';
+import { createReport, getCompletedProgramsByCategoryId, getProgramsByCategoryId, getReportProgramDetails, updateReportLocalState } from '../../services/reportsInfo';
 import ToastNotification from '../../shared/Toast';
 import { dateTimeFormat } from '../../utils';
 import { createCertificate } from '../../services/certificate';
@@ -25,7 +25,7 @@ import { createCertificate } from '../../services/certificate';
 export default function CreateCertificate() {
     const navigate = useNavigate()
     const params = useParams();
-
+    const state = useLocation()?.state
     const dispatch = useDispatch()
     const { programdetails, loading: programLoading, error, menteeList } = useSelector(state => state.userPrograms)
     const { category, loading: apiLoading } = useSelector(state => state.programInfo)
@@ -47,6 +47,13 @@ export default function CreateCertificate() {
         getValues,
         setValue
     } = useForm();
+
+    React.useEffect(() => {
+        if (state?.type === "new") {
+            reset()
+            dispatch(updateReportLocalState({ programDetails: {} }))
+        }
+    }, [])
 
     const onSubmit = (data) => {
         const apiPayload = {
@@ -89,19 +96,21 @@ export default function CreateCertificate() {
             }, 3000)
         }
     }, [status])
-console.log("programDetails ===>", programDetails)
+
     useEffect(() => {
-        if (programDetails && Object.keys(programDetails).length) {
-            reset({
-                mentor_name: programDetails.mentor_full_name,
-                course_level: CourseLevelOptions.find(level => level.key === programDetails.course_level)?.value,
-                start_date: dateTimeFormat(programDetails.start_date),
-                end_date: dateTimeFormat(programDetails.end_date),
-                duration: programDetails.duration,
-                participated_mentees: programDetails.participated_mentees,
-                pass_mentee_list: programDetails.pass_mentee_list,
-                fail_mentee_list: programDetails.fail_mentee_list
-            })
+        if (!state?.type) {
+            if (programDetails && Object.keys(programDetails).length) {
+                reset({
+                    mentor_name: programDetails.mentor_full_name,
+                    course_level: CourseLevelOptions.find(level => level.key === programDetails.course_level)?.value,
+                    start_date: dateTimeFormat(programDetails.start_date),
+                    end_date: dateTimeFormat(programDetails.end_date),
+                    duration: programDetails.duration,
+                    participated_mentees: programDetails.participated_mentees,
+                    pass_mentee_list: programDetails.pass_mentee_list,
+                    fail_mentee_list: programDetails.fail_mentee_list
+                })
+            }
         }
     }, [programDetails])
 
