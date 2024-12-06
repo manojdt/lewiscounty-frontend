@@ -19,13 +19,17 @@ import DataTable from '../../shared/DataGrid';
 import { programListColumns } from '../../utils/tableFields';
 import api from '../../services/api';
 import { getUserProfile } from '../../services/profile';
+import { getallMenteeProgram, getallMyProgram } from '../../services/programInfo';
 
 
 export default function Programs() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const [searchParams, setSearchParams] = useSearchParams();
-
+    const [paginationModel, setPaginationModel] = React.useState({
+        page: 0,
+        pageSize: 10,
+    });
     const [loading, setLoading] = useState(false)
     const [programsList, setProgramsList] = useState([])
     const [programMenusList, setProgramMenusList] = useState([])
@@ -35,7 +39,8 @@ export default function Programs() {
     const [programFilter, setProgramFilter] = useState({ search: '', datefilter: '' })
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
-
+    const { allProgramsList } = useSelector(state => state.programInfo)
+    console.log(allProgramsList,"all")
     const userInfo = useSelector(state => state.userInfo)
     const { profile } = useSelector(state => state.profileInfo)
     const userprograms = useSelector(state => state.userPrograms)
@@ -134,7 +139,28 @@ export default function Programs() {
         }
         if (role === 'mentor') dispatch(getUserPrograms(query));
     }
-
+    const getTableData = (search = '') => {
+        if (role === 'mentee') {
+          dispatch(
+            getallMenteeProgram({
+              page: paginationModel?.page + 1,
+              limit: paginationModel?.pageSize,
+              search: search,
+            })
+          );
+        } else {
+          dispatch(
+            getallMyProgram({
+              page: paginationModel?.page + 1,
+              limit: paginationModel?.pageSize,
+              search: search,
+            })
+          );
+        }
+      };
+      useEffect(() => {
+        getTableData();
+      }, [paginationModel]);
     const programTableFields = [
         ...programListColumns,
         {
@@ -441,7 +467,8 @@ export default function Programs() {
                         {
                             programView === 'list' &&
                             <div className='py-6 px-6'>
-                                <DataTable rows={programsList} columns={programTableFields} hideFooter={!programsList.length} />
+                                <DataTable rows={allProgramsList?.programs||[]} columns={programTableFields} hideCheckbox  rowCount={allProgramsList?.count}
+                            paginationModel={paginationModel} setPaginationModel={setPaginationModel}/>
                             </div>
                         }
                     </div>

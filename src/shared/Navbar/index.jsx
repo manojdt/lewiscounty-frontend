@@ -13,6 +13,7 @@ import LogoutIcon from '../../assets/icons/Logout.svg';
 import LogoutColorIcon from '../../assets/icons/Logoutpop.svg';
 import {
   Backdrop,
+  Badge,
   ClickAwayListener,
   Stack,
   Tooltip,
@@ -400,13 +401,23 @@ export const Navbar = () => {
                   {userInfo?.data?.role === 'super_admin' ? null : (
                     <div className='notitification-group'>
                       <div className='bg-[#EEF5FF] rounded-[3px] h-[40px] w-[40px] flex items-center justify-center'>
+                      
+                      {activity?.length > 0?
+                      <Badge color="error" badgeContent={activity.length} variant='standard' max={activity.length}>
                         <img
                           src={NotificationIcon}
                           className='cursor-pointer notification-image'
                           alt='NotificationIcon'
                         />
+                        </Badge>
+                        : 
+                        <img
+                          src={NotificationIcon}
+                          className='cursor-pointer notification-image'
+                          alt='NotificationIcon'
+                        />}
                       </div>
-                      {activity.length > 0 ? (
+                      {/* {activity.length > 0 ? (
                         <span
                           style={{
                             position: 'absolute',
@@ -424,7 +435,7 @@ export const Navbar = () => {
                         >
                           {activity.length}
                         </span>
-                      ) : null}
+                      ) : null} */}
 
                       <OverlayPanel
                         ref={op}

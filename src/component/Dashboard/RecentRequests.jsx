@@ -8,7 +8,12 @@ import MoreIcon from '../../assets/icons/moreIcon.svg'
 import MaleIcon from '../../assets/images/male-profile1x.png'
 import FemaleIcon from '../../assets/images/female-profile1x.png'
 import SearchIcon from '../../assets/icons/search.svg';
+import RejectIcon from '../../assets/icons/reject.svg';
+import ConnectIcon from '../../assets/images/connect1x.png';
 import TickCircle from '../../assets/icons/tickCircle.svg'
+import ConnectPopupIcon from '../../assets/images/Connectpop1x.png';
+import SuccessTik from '../../assets/images/blue_tik1x.png';
+import RejectPopupIcon from '../../assets/icons/rejectPopup.svg';
 import CloseCircle from '../../assets/icons/closeCircle.svg'
 import TickColorIcon from '../../assets/icons/tickColorLatest.svg'
 import CancelIcon from '../../assets/images/cancel1x.png'
@@ -17,18 +22,29 @@ import { getprogramRequest, updateProgramMenteeRequest } from '../../services/re
 import MuiModal from '../../shared/Modal'
 import { Button } from '../../shared'
 import DataTable from '../../shared/DataGrid'
+import { getMyReqMentees, mentorAcceptReq, updateUserList } from '../../services/userList'
 
 export default function RecentRequests({ data = [] }) {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const { programRequest, loading, status, error } = useSelector(state => state.requestList);
-
+    const { menteeList ,status:tabStatus} = useSelector(
+        (state) => state.userList
+      );
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const [seletedItem, setSelectedItem] = useState({})
     const [confirmPopup, setConfirmPopup] = useState({ title: '', type: '', action: '' })
-
-
+    const [confirmation, setConfirmation] = React.useState({
+        bool: false,
+        activity: false,
+        type: '',
+        id: '',
+      });
+    const [paginationModel, setPaginationModel] = React.useState({
+        page: 0,
+        pageSize: 10,
+      });
     const {
         register,
         formState: { errors },
@@ -87,32 +103,71 @@ export default function RecentRequests({ data = [] }) {
 
     const getRecentRequest = () => {
         const mentorRecentRequestPayload = {
-            request_type: 'joining_request',
+            request_type: 'new',
             created_at: 'mentee',
             recent: 6
         }
         dispatch(getprogramRequest(mentorRecentRequestPayload))
     }
-
+    const handleOpenActivityPopup = (id, type) => {
+        handleClose();
+        setConfirmation({
+          ...confirmation,
+          activity: true,
+          type: type,
+          id: id,
+        });
+      };
+    const getTableData = (search = '') => {
+      
+          dispatch(
+            getMyReqMentees({
+              page: paginationModel?.page + 1,
+              limit: paginationModel?.pageSize,
+              search: search,
+              status: 'new',
+            })
+          );
+        
+      };
+      const closeConfirmation = () => {
+        handleClose();
+        setConfirmation({
+          ...confirmation,
+          bool: false,
+          activity: false,
+          type: '',
+          id: '',
+        });
+      };
+      useEffect(() => {
+        getTableData();
+      }, [paginationModel]);
     const recentRequestColumn = [
         {
-            field: 'program_name',
-            headerName: 'Program Name',
-            flex: 1,
-            id: 0,
-        },
-        {
-            field: 'requested_by_name',
-            headerName: 'Requested By',
-            flex: 1,
-            id: 0,
-        },
-        {
-            field: 'position',
-            headerName: 'Position',
+            field: "name",
+            headerName: "Name",
             flex: 1,
             id: 1,
-        },
+          },
+          {
+            field: "profession",
+            headerName: "professional",
+            flex: 1,
+            id: 1,
+          },
+          {
+            field: "contact",
+            headerName: "Contact",
+            flex: 1,
+            id: 1,
+          },
+          {
+            field: "email",
+            headerName: "Email",
+            flex: 1,
+            id: 1,
+          },
         {
             field: 'action',
             headerName: 'Action',
@@ -133,33 +188,83 @@ export default function RecentRequests({ data = [] }) {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
-                        <MenuItem onClick={(e) => navigate(`/program-details/${seletedItem.program}?request_id=${seletedItem.id}`)} className='!text-[12px]'>
+                        <MenuItem onClick={(e) =>  navigate(`/profileView`, {
+                    state: {
+                      row_id: seletedItem?.id,
+                      user_id: seletedItem?.requested_by,
+                      is_approved: seletedItem?.is_approved,
+                    },
+                  })} className='!text-[12px]'>
                             <img src={ViewIcon} alt="ViewIcon" className='pr-3 w-[30px]' />
                             View
                         </MenuItem>
-                        {
-                            (seletedItem.status === 'new' || seletedItem.status === 'pending') &&
-                            <>
-                                <MenuItem onClick={handleAcceptProgramRequest} className='!text-[12px]'>
-                                    <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
-                                    Approve
-                                </MenuItem>
-                                <MenuItem onClick={handleCancelProgramRequest} className='!text-[12px]'>
-                                    <img src={CloseCircle} alt="CancelIcon" className='pr-3 w-[27px]' />
-                                    Reject
-                                </MenuItem>
-                            </>
-                        }
+                        {(seletedItem?.status === 'new' ||
+                seletedItem?.status === 'pending') && (
+                  <MenuItem
+                    onClick={() =>
+                      handleOpenActivityPopup(seletedItem?.id, 'accept')
+                    }
+                    className='!text-[12px]'
+                  >
+                    <img
+                      src={ConnectIcon}
+                      alt='ViewIcon'
+                      className='pr-3 w-[30px]'
+                    />
+                    Connect
+                  </MenuItem>
+                )}
+              {(seletedItem?.status === 'new' ||
+                seletedItem?.status === 'pending') && (
+                  <MenuItem
+                    onClick={() =>
+                      handleOpenActivityPopup(seletedItem?.id, 'reject')
+                    }
+                    className='!text-[12px]'
+                  >
+                    <img
+                      src={RejectIcon}
+                      alt='ViewIcon'
+                      className='pr-3 w-[30px]'
+                    />
+                    Reject
+                  </MenuItem>
+                )}
                     </Menu>
                 </>
             },
         },
     ];
-
+    const handleConnectionReq = (id, status) => {
+        const payload = {
+          follow_id: id,
+          status: status,
+        };
+    
+        dispatch(mentorAcceptReq(payload));
+      };
+      
+  const handleConfirmBtn = () => {
+    handleConnectionReq(confirmation?.id, confirmation?.type);
+  };
     useEffect(() => {
         getRecentRequest()
     }, [])
-
+    React.useEffect(() => {
+        if (tabStatus === 'done') {
+          setConfirmation({
+            ...confirmation,
+            activity: false,
+            bool: true,
+          });
+          setTimeout(() => {
+            closeConfirmation();
+            getTableData();
+    
+            dispatch(updateUserList({ status: '' }));
+          }, [2000]);
+        }
+      }, [tabStatus]);
     console.log('programRequest', programRequest)
 
     return (
@@ -172,7 +277,11 @@ export default function RecentRequests({ data = [] }) {
                 <div className='flex gap-4 items-center'>
                 <img src={SearchIcon} alt="statistics" />
                 <p className="text-[12px] py-2 px-2 cursor-pointer"
-                                            onClick={() => navigate('/mentees')}
+                                            onClick={() => navigate('/mentees', {
+                                                state: {
+                                                  type:'new_req_mentee'
+                                                },
+                                              })}
                                             style={{ background: 'rgba(223, 237, 255, 1)', borderRadius: '5px' }}>View All</p>
                 </div>
             </div>
@@ -180,11 +289,13 @@ export default function RecentRequests({ data = [] }) {
             <div className="content flex gap-4 py-5 px-5 overflow-x-auto">
 
                 <DataTable
-                    rows={programRequest?.results || []}
+                    rows={menteeList?.results || []}
                     columns={recentRequestColumn}
                     height={'460px'}
                     hideCheckbox
-                    hideFooter={!programRequest.length}
+                    rowCount={menteeList?.count}
+                    paginationModel={paginationModel}
+                    setPaginationModel={setPaginationModel}
                 />
                 {/* {
                     programRequest.map((recentRequest, index) =>
@@ -332,6 +443,88 @@ export default function RecentRequests({ data = [] }) {
 
                 </div>
             </MuiModal>
+
+            <Backdrop
+            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            open={confirmation?.activity}
+          >
+            <div className='popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center'>
+              <img
+                src={
+                  confirmation?.type === 'reject'
+                    ? RejectPopupIcon
+                    : ConnectPopupIcon
+                }
+                alt='ConnectIcon'
+              />
+              <span
+                style={{ color: '#232323', fontWeight: 600, fontSize: '24px' }}
+              >
+                {confirmation?.type === 'reject' ? 'Reject' : 'Connect'}
+              </span>
+
+              <div className='py-5'>
+                <p
+                  style={{
+                    color: 'rgba(24, 40, 61, 1)',
+                    fontWeight: 600,
+                    fontSize: '18px',
+                  }}
+                >
+                  Are you sure you want to
+                  <span>
+                    {' '}
+                    {confirmation?.type === 'reject' ? 'reject' : 'follow'}{' '}
+                  </span>
+                  Mentee?
+                </p>
+              </div>
+              <div className='flex justify-center'>
+                <div className='flex gap-6 justify-center align-middle'>
+                  <Button
+                    btnName='Cancel'
+                    btnCategory='secondary'
+                    onClick={() => closeConfirmation()}
+                  />
+
+                  <Button
+                    btnType='button'
+                    btnCls='w-[110px] !bg-[#E0382D] border !border-[#E0382D] !text-[#fff]'
+                    btnName={
+                      confirmation?.type === 'reject' ? 'Reject' : 'Connect'
+                    }
+                    btnCategory={
+                      confirmation?.type === 'reject' ? '' : 'primary'
+                    }
+                    onClick={() => handleConfirmBtn()}
+                  />
+                </div>
+              </div>
+            </div>
+          </Backdrop>
+
+          <Backdrop
+            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            open={confirmation?.bool}
+            onClick={() => closeConfirmation()}
+          >
+
+            <div className='px-5 py-1 flex justify-center items-center'>
+              <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+                style={{ background: '#fff', borderRadius: '10px' }}>
+                <img src={SuccessTik} alt="SuccessTik" />
+                <p className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                  style={{
+                    fontWeight: 600
+                  }}
+                >{confirmation?.type === 'accept' &&
+                  'Mentee has been successfully connected'}
+                {confirmation?.type === 'reject' &&
+                  'Mentee has been successfully deleted'}</p>
+              </div>
+
+            </div>
+          </Backdrop>
         </div>
     )
 }
