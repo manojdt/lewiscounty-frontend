@@ -145,6 +145,7 @@ export const ProfessionalBackgroundFields = [
       // required: "This field is required",
     },
     size: true,
+    width: 'col-span-2',
   },
   {
     type: 'input',
@@ -156,6 +157,7 @@ export const ProfessionalBackgroundFields = [
       // required: "This field is required",
     },
     size: true,
+    width: 'col-span-2',
   },
   {
     type: 'input',
@@ -167,26 +169,20 @@ export const ProfessionalBackgroundFields = [
       // required: "This field is required",
     },
     size: false,
+    width: 'col-span-2',
   },
-  // {
-  //   type: "dropdown",
-  //   name: "linked_in",
-  //   label: "LinkedIn Profile (if available)",
-  //   placeholder: "",
-  //   options: [{
-  //       key: "yes",
-  //       value: "Yes"
-  //     },
-  //     {
-  //       key: "no",
-  //       value: "No"
-  //     },
-  //   ],
-  //   inputRules: {
-  //     required: "This field is required",
-  //   },
-  //   size: true,
-  // },
+  {
+    type: 'input',
+    name: 'linked_in',
+    label: 'LinkedIn Profile (if available)',
+    placeholder: 'LinkedIn Profile',
+
+    inputRules: {
+      required: 'This field is required',
+    },
+    size: true,
+    width: 'col-span-2',
+  },
 ];
 
 export const EducationalBackgroundFields = [
@@ -200,6 +196,7 @@ export const EducationalBackgroundFields = [
       // required: "This field is required",
     },
     size: true,
+    width: 'col-span-1',
   },
   {
     type: 'input',
@@ -211,18 +208,20 @@ export const EducationalBackgroundFields = [
       // required: "This field is required",
     },
     size: true,
+    width: 'col-span-1',
   },
-  // {
-  //   type: "input",
-  //   name: "industry1",
-  //   fieldtype: "text",
-  //   label: "Industry",
-  //   placeholder: "Industry",
-  //   inputRules: {
-  //     required: "This field is required",
-  //   },
-  //   size: false,
-  // },
+  {
+    type: 'input',
+    name: 'industry1',
+    fieldtype: 'text',
+    label: 'Industry',
+    placeholder: 'Industry',
+    inputRules: {
+      // required: 'This field is required',
+    },
+    size: false,
+    width: 'col-span-1',
+  },
 ];
 
 export const AreaOfExpertiseFields = [
@@ -236,6 +235,7 @@ export const AreaOfExpertiseFields = [
       // required: "This field is required",
     },
     size: false,
+    width: 'col-span-1',
   },
   {
     type: 'input',
@@ -248,6 +248,7 @@ export const AreaOfExpertiseFields = [
       // required: "This field is required",
     },
     size: false,
+    width: 'col-span-1',
   },
 ];
 
@@ -262,6 +263,7 @@ export const MentorShipExperienceFields = [
       // required: "This field is required",
     },
     size: false,
+    width: 'col-span-1',
   },
   {
     type: 'radio',
@@ -281,16 +283,17 @@ export const MentorShipExperienceFields = [
       // required: "This field is required",
     },
     size: false,
+    width: 'col-span-1',
   },
-
-  {
-    type: 'input',
-    name: 'mentor_exp_desc',
-    fieldtype: 'text',
-    label: 'If yes, please briefly describe your mentorship experience',
-    placeholder: 'mentorship experience',
-    size: false,
-  },
+  // {
+  //   type: 'input',
+  //   name: 'mentor_exp_desc',
+  //   fieldtype: 'text',
+  //   label: 'If yes, please briefly describe your mentorship experience',
+  //   placeholder: 'mentorship experience',
+  //   size: false,
+  //   width: 'col-span-1',
+  // },
 ];
 
 export const MentorshipPreferenceFields = [
@@ -305,6 +308,7 @@ export const MentorshipPreferenceFields = [
       // required: "This field is required",
     },
     size: true,
+    width: 'col-span-1',
   },
   {
     type: 'input',
@@ -316,6 +320,7 @@ export const MentorshipPreferenceFields = [
       // required: "This field is required",
     },
     size: true,
+    width: 'col-span-1',
   },
   {
     type: 'input',
@@ -327,6 +332,7 @@ export const MentorshipPreferenceFields = [
       // required: "This field is required",
     },
     size: false,
+    width: 'col-span-2',
   },
 ];
 
@@ -390,6 +396,7 @@ export const MentorDocumentUplaod = [
       required: 'This field is required',
     },
     size: false,
+    width: 'col-span-1',
   },
 ];
 export const AdditionalInformationFields = [
@@ -2405,6 +2412,7 @@ export const ProfileFields = [
     placeholder: 'Enter First Name',
     inputRules: {},
     disabled: true,
+    width: 'col-span-2',
   },
   {
     type: 'input',
@@ -2414,6 +2422,7 @@ export const ProfileFields = [
     placeholder: 'Enter Last Name',
     inputRules: {},
     disabled: true,
+    width: 'col-span-2',
   },
   {
     type: 'input',
@@ -2428,6 +2437,7 @@ export const ProfileFields = [
         message: 'Enter valid phone number',
       },
     },
+    width: 'col-span-2',
   },
   {
     type: 'input',
@@ -2441,6 +2451,7 @@ export const ProfileFields = [
         message: 'Enter valid phone number',
       },
     },
+    width: 'col-span-2',
   },
   {
     type: 'input',
@@ -2450,14 +2461,52 @@ export const ProfileFields = [
     placeholder: 'Enter Email',
     inputRules: {},
     disabled: true,
+    width: 'col-span-2',
   },
   {
     type: 'input',
-    name: 'location',
+    name: 'address',
     fieldtype: 'text',
-    label: 'Location',
-    placeholder: 'Enter Location',
+    label: 'Address',
+    placeholder: 'Enter Address',
     inputRules: {},
+    width: 'col-span-2',
+  },
+  {
+    type: 'input',
+    name: 'skills',
+    fieldtype: 'text',
+    label: 'Skills',
+    placeholder: 'Enter skills',
+    inputRules: {},
+    width: 'col-span-2',
+  },
+  {
+    type: 'input',
+    name: 'category',
+    fieldtype: 'text',
+    label: 'Category',
+    placeholder: 'Enter category',
+    inputRules: {},
+    width: 'col-span-2',
+  },
+  {
+    type: 'input',
+    name: 'professional_bio',
+    fieldtype: 'text',
+    label: 'Professional Bio',
+    placeholder: 'Enter category',
+    inputRules: {},
+    width: 'col-span-6',
+  },
+  {
+    type: 'input',
+    name: 'documents',
+    fieldtype: 'text',
+    label: 'Documents',
+    placeholder: 'Enter category',
+    inputRules: {},
+    width: 'col-span-6',
   },
 ];
 
@@ -2484,5 +2533,151 @@ export const categoryCreateEditFields = [
     },
     width: 'w-full',
     for: ['admin'],
+  },
+];
+
+export const PersonalInfoFields = [
+  {
+    type: 'input',
+    name: 'first_name',
+    fieldtype: 'text',
+    label: 'First Name',
+    placeholder: 'Enter First Name',
+    inputRules: {
+      required: 'This field is required',
+    },
+    size: true,
+    disable: true,
+    width: 'col-span-2',
+  },
+  {
+    type: 'input',
+    name: 'last_name',
+    fieldtype: 'text',
+    label: 'Last Name',
+    placeholder: 'Enter Last Name',
+    inputRules: {
+      // required: "This field is required",
+    },
+    size: true,
+    disable: true,
+    width: 'col-span-2',
+  },
+  {
+    type: 'input',
+    name: 'email',
+    fieldtype: 'email',
+    label: 'E-mail',
+    placeholder: 'Enter Email',
+    inputRules: {
+      required: 'This field is required',
+    },
+    size: true,
+    disable: true,
+    width: 'col-span-2',
+  },
+  {
+    type: 'input',
+    name: 'phone_number',
+    fieldtype: 'number',
+    label: 'Primary Contact Number',
+    placeholder: 'Enter Primary Contact Number',
+    inputRules: {
+      required: 'This field is required',
+      pattern: {
+        value: /^[0-9]{10}$/,
+        message: 'Enter valid phone number',
+      },
+    },
+    size: true,
+    width: 'col-span-2',
+  },
+  {
+    type: 'input',
+    name: 'secondary_phone_number',
+    fieldtype: 'number',
+    label: 'Secondary Contact Number',
+    placeholder: 'Enter Secondary Number',
+    inputRules: {
+      // required: "This field is required",
+      pattern: {
+        value: /^[0-9]{10}$/,
+        message: 'Enter valid phone number',
+      },
+    },
+    size: true,
+    width: 'col-span-2',
+  },
+  {
+    type: 'input',
+    name: 'address',
+    label: 'Address',
+    placeholder: 'Enter you address',
+    inputRules: {
+      // required: 'This field is required',
+    },
+    size: true,
+    width: 'col-span-2',
+  },
+  {
+    type: 'input',
+    name: 'linkedin',
+    fieldtype: 'text',
+    label: 'LinkedIn Profile Link',
+    placeholder: 'Enter LinkedIn Profile Link',
+    inputRules: {
+      // required: "This field is required",
+    },
+    size: true,
+    width: 'col-span-2',
+  },
+  {
+    type: 'radio',
+    name: 'gender',
+    label: 'Gender',
+    placeholder: '',
+    options: [
+      {
+        key: 'male',
+        value: 'male',
+      },
+      {
+        key: 'female',
+        value: 'female',
+      },
+      {
+        key: 'others',
+        value: 'others',
+      },
+    ],
+    inputRules: {
+      // required: "This field is required",
+    },
+    size: true,
+    width: 'col-span-2',
+  },
+  {
+    type: 'input',
+    name: 'location',
+    fieldtype: 'text',
+    label: 'Location',
+    placeholder: 'Enter Location',
+    inputRules: {
+      // required: "This field is required",
+    },
+    size: true,
+    width: 'col-span-2',
+  },
+  {
+    type: 'input',
+    name: 'professional_bio',
+    fieldtype: 'text',
+    label: 'Professional Bio',
+    placeholder: 'Enter your bio',
+    inputRules: {
+      // required: "This field is required",
+    },
+    size: true,
+    width: 'col-span-6',
   },
 ];

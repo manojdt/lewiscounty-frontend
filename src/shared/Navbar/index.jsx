@@ -497,7 +497,11 @@ export const Navbar = () => {
                         </React.Fragment>
                       }
                     >
-                      <img src={SettingIcon} onClick={handleTooltipOpen} className='cursor-pointer' />
+                      <img
+                        src={SettingIcon}
+                        onClick={handleTooltipOpen}
+                        className='cursor-pointer'
+                      />
                     </HtmlTooltip>
                   </div>
                 </ClickAwayListener>
