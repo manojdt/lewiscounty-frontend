@@ -44,10 +44,10 @@ export const Signup = () => {
       if (!verifyPasswordRule[PasswordRulesSet.character] || !verifyPasswordRule[PasswordRulesSet.upperlowercase] ||
         !verifyPasswordRule[PasswordRulesSet.number] || !verifyPasswordRule[PasswordRulesSet.email] ||
         !verifyPasswordRule[PasswordRulesSet.common]) {
-          setError("password", {
-            type: "manual",
-            message: "All Conditions must be satisfied",
-          })
+        setError("password", {
+          type: "manual",
+          message: "All Conditions must be satisfied",
+        })
       } else {
         dispatch(userAccountCreate(data))
       }
@@ -105,8 +105,8 @@ export const Signup = () => {
 
     if (!userData.loading && userData.status === userStatus.pending) {
       setTimeout(() => {
-        dispatch(updateUserInfo({status: ''}))
-      },3000) 
+        dispatch(updateUserInfo({ status: '' }))
+      }, 3000)
     }
   }, [userData])
 
@@ -211,7 +211,7 @@ export const Signup = () => {
                                 {...field.fieldtype === 'password' ? { onKeyUp: (e) => handleField(field.fieldtype, e.target.value) } : {}}
                                 // onBlur={(e) => handleField(field.fieldtype, e.target.value)}
                                 aria-invalid={errors[field.name] ? "true" : "false"}
-                                tabIndex={index+1}
+                                tabIndex={index + 1}
                               />
                               {
                                 field.fieldtype === 'password' &&
@@ -263,15 +263,15 @@ export const Signup = () => {
                         )
                       }
                     </div>
-                    <div className="mb-6 flex items-center justify-between">
-                      <div className="mb-[0.125rem] block min-h-[1.5rem] ps-[1.5rem]">
+                    <div className="mb-6 flex justify-between flex-col">
+                      <div className="mb-[0.125rem] block min-h-[1.5rem] ps-[1.5rem] flex items-center">
                         <input
                           className="relative float-left -ms-[1.5rem] me-[6px] mt-[0.15rem] h-[1.125rem] w-[1.125rem] text-[12px]"
                           type="checkbox"
                           {
                           ...register("user_agree_terms", { required: true })
                           }
-                          tabIndex={SignupFields.length+1}
+                          tabIndex={SignupFields.length + 1}
                         />
                         <label className="inline-block ps-[0.15rem] hover:cursor-pointer defaultTextColor text-[14px]">
                           I agree to the
@@ -281,10 +281,11 @@ export const Signup = () => {
                           <span className="cursor-pointer pl-1" onClick={() => navigate('/login')}
                             style={{ color: 'rgba(29, 91, 191, 1)', textDecoration: 'underline', fontWeight: 600 }}>Privacy Policy</span>
                         </label>
+
                       </div>
                       {errors['user_agree_terms'] && (
                         <p className="error" role="alert">
-                          Please agree terms
+                          Please agree to the terms and conditions
                         </p>
                       )}
                     </div>
@@ -299,7 +300,7 @@ export const Signup = () => {
                           background:
                             "linear-gradient(to right, #00AEBD, #1D5BBF)"
                         }}
-                        tabIndex={SignupFields.length+2}
+                        tabIndex={SignupFields.length + 2}
                       >
                         Create Account
                       </button>

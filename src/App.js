@@ -201,13 +201,6 @@ function App() {
           <Route path='/launch-program' element={<LaunchProgram />} />
           <Route path='/goals' element={<Goals />} />
           <Route
-            path='/preview-mentee-tasks-details/:id'
-            element={<PreviewTaskDetails />}
-          />
-
-          <Route path='/launch-program' element={<LaunchProgram />} />
-          <Route path='/goals' element={<Goals />} />
-          <Route
             path='/mentor-view-mentee-goal/:id'
             element={<MentorViewMenteeGoal />}
           />

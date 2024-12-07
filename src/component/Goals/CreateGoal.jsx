@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { Calendar } from 'primereact/calendar';
 import { Button } from '../../shared';
 import { useDispatch, useSelector } from 'react-redux';
-import { createGoal, updateGoal } from '../../services/goalsInfo';
+import { createGoal, reCreateGoal, updateGoal } from '../../services/goalsInfo';
 import { Backdrop, CircularProgress } from '@mui/material';
 import { goalPeriods } from '../../utils/constant';
 import dayjs from 'dayjs';
@@ -42,16 +42,28 @@ export default function CreateGoal({ open, handleCloseModal, seletedItem, editMo
                 ...apiData,
                 id: seletedItem.id
             }
-            dispatch(updateGoal(apiData)).then((res) => {
-                if (res?.meta?.requestStatus === "fulfilled") {
-                    if (recreate) {
-                        handleCloseModal()
+            if (recreate) {
+                dispatch(reCreateGoal(apiData)).then((res) => {
+                    if (res?.meta?.requestStatus === "fulfilled") {
+                        if (recreate) {
+                            handleCloseModal()
+                        }
                     }
-                }
-            })
+                })
+            }else {
+                
+                dispatch(updateGoal(apiData)).then((res) => {
+                    if (res?.meta?.requestStatus === "fulfilled") {
+                        if (recreate) {
+                            handleCloseModal()
+                        }
+                    }
+                })
+            }
+
         } else {
-            dispatch(createGoal(apiData)).then((res)=>{
-                if(res?.meta?.requestStatus === "fulfilled"){
+            dispatch(createGoal(apiData)).then((res) => {
+                if (res?.meta?.requestStatus === "fulfilled") {
                     if (!recreate) {
                         handleCloseModal()
                     }
@@ -77,14 +89,15 @@ export default function CreateGoal({ open, handleCloseModal, seletedItem, editMo
     useEffect(() => {
         if (editMode) {
             const constructed = {
+                ...seletedItem,
                 goal_name: seletedItem?.goal_name,
                 goal_designation: seletedItem?.designation,
                 goal_description: seletedItem?.description,
                 period: seletedItem?.period,
-                start_date: seletedItem?.start_date,
-                ...seletedItem
+                start_date: recreate ? new Date() : seletedItem?.start_date,
             }
             reset(constructed)
+            setDateFormat({ ...dateFormat, start_date: "" })
         } else if (!recreate) {
             const constructed = {
                 goal_name: seletedItem?.goal_name,
@@ -130,7 +143,7 @@ export default function CreateGoal({ open, handleCloseModal, seletedItem, editMo
                     <div className='flex justify-center flex-col gap-5  mt-4 mb-4'
                         style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '10px', }}>
                         <div className='flex justify-between px-3 py-4 items-center' style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
-                            <p className='text-[18px]' style={{ color: 'rgba(0, 0, 0, 1)' }}>{editMode ? 'Edit ' : 'Create'} Goal </p>
+                            <p className='text-[18px]' style={{ color: 'rgba(0, 0, 0, 1)' }}>{recreate ? "Re-Create" : editMode ? 'Edit ' : 'Create'} Goal </p>
                             <img className='cursor-pointer' onClick={handleClose} src={CancelIcon} alt="CancelIcon" />
                         </div>
                         <form onSubmit={handleSubmit(onSubmit)}>
@@ -140,7 +153,7 @@ export default function CreateGoal({ open, handleCloseModal, seletedItem, editMo
                                 }
                                 <div className='relative pb-8'>
                                     <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
-                                        {editMode ? 'Edit ' : 'Create New '} Goal
+                                        {recreate ? "Goal Name" : editMode ? 'Edit Goal' : 'Create New Goal'}
                                     </label>
 
 
@@ -201,7 +214,7 @@ export default function CreateGoal({ open, handleCloseModal, seletedItem, editMo
                                         <Calendar
                                             className='calendar-control input-bg demo-cc'
                                             {...dateField}
-                                            value={dateFormat['start_date'] || new Date(seletedItem.start_date)}
+                                            value={recreate ? new Date() : dateFormat['start_date'] || new Date(seletedItem.start_date)}
                                             onChange={(e) => {
                                                 dateField.onChange(e)
                                                 setDateFormat({ ...dateFormat, start_date: e.value })
@@ -285,9 +298,9 @@ export default function CreateGoal({ open, handleCloseModal, seletedItem, editMo
                                     <Button btnName='Cancel' btnCls="w-[18%]" btnCategory="secondary" onClick={handleClose} />
                                     <button
                                         type='submit'
-                                        className='text-white py-3 px-7 w-[18%]'
+                                        className='text-white py-3 px-7 w-[18%] whitespace-nowrap'
                                         style={{ background: 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)', borderRadius: '3px' }}>
-                                        {editMode ? 'Update ' : 'Create'}
+                                        {recreate ? "Submit to Admin" : editMode ? 'Update ' : 'Create'}
                                     </button>
                                 </div>
 

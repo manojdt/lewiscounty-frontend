@@ -199,3 +199,15 @@ export const updateHistoryGoal = createAsyncThunk(
         return updateHistoryGoal
     }
 );
+
+
+export const reCreateGoal = createAsyncThunk(
+    "reCreateGoal",
+    async (data) => {
+        const reCreateGoal = await api.put('goals/recreate/goal', data);
+        if (reCreateGoal.status === 200 && reCreateGoal.data) {
+            return reCreateGoal.data;
+        }
+        return reCreateGoal
+    }
+);

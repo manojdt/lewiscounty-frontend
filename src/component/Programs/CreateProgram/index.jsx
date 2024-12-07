@@ -7,7 +7,7 @@ import ReactPlayer from 'react-player';
 
 import ProgramSteps from './ProgramsSteps'
 import { ProgramTabs, ProgramFields } from '../../../utils/formFields'
-import { updateNewPrograms, getAllCategories, getAllMaterials, getAllCertificates, getAllSkills, getAllMembers, createNewPrograms, editUpdateProgram } from '../../../services/programInfo'
+import { updateNewPrograms, getAllCategories, getAllMaterials, getAllCertificates, getAllSkills, getAllMembers, createNewPrograms, editUpdateProgram, getProgramNameValidate } from '../../../services/programInfo'
 import { CertificateColumns, MaterialColumns, MemberColumns, SkillsColumns } from '../../../mock';
 import DataTable from '../../../shared/DataGrid';
 import { programStatus } from '../../../utils/constant';
@@ -65,65 +65,78 @@ export default function CreatePrograms() {
             ...stepData, ...data,
         }
         setStepData(fieldData)
-        if (ProgramFields.length === currentStep) {
-            const answeredSteps = Object.keys(stepWiseData).length;
-            if ((answeredSteps === currentStep - 1 && !stepWiseData.hasOwnProperty(currentStep)) || answeredSteps === ProgramFields.length) {
-                let bodyFormData = new FormData();
 
-                const fiel = ['learning_materials', 'skills', 'certificates', 'members']
-                fieldData.group_chat_requirement = fieldData.group_chat_requirement === 'true'
-                fieldData.individual_chat_requirement = fieldData.individual_chat_requirement === 'true'
-                fieldData.mentee_upload_certificates = fieldData.mentee_upload_certificates === 'true'
-                for (let a in fieldData) {
-                    if (a === 'program_image' && logo.program_image) { bodyFormData.append(a, logo.program_image); }
-                    if (a === 'image' && logo.image) { bodyFormData.append(a, logo.image); }
-                    if (a === 'start_date' || a === 'end_date') { bodyFormData.append(a, new Date(fieldData[a]).toISOString()); }
-                    else if (fiel.includes(a)) { bodyFormData.append(a, JSON.stringify(fieldData[a])) }
-                    else bodyFormData.append(a, fieldData[a]);
+        if (currentStep === 1) {
+            dispatch(getProgramNameValidate(data?.program_name)).then((res) => {
+                if (res?.meta?.requestStatus === "fulfilled") {
+                    if (!res?.payload?.is_available) {
+                        setCurrentStep(currentStep + 1)
+                        setTabActionInfo({ ...tabActionInfo, activeTab: ProgramTabs[currentStep].key })
+                    }
                 }
+            })
+        } else {
+            if (ProgramFields.length === currentStep) {
+                const answeredSteps = Object.keys(stepWiseData).length;
+                if ((answeredSteps === currentStep - 1 && !stepWiseData.hasOwnProperty(currentStep)) || answeredSteps === ProgramFields.length) {
+                    let bodyFormData = new FormData();
 
-                let status = ''
-
-                if (fieldData.hasOwnProperty('status') && fieldData.status === 'draft') {
-                    status = 'draft'
-                }
-
-
-                setProgramApiStatus(status)
-
-                if (params.id) {
-                    if (programdetails.status === 'draft' && status !== 'draft') {
-                        bodyFormData.append('status', 'create')
-                    }
-                    if (typeof fieldData?.program_image === 'string') {
-                        bodyFormData.delete('program_image');
-                    }
-                    if (typeof fieldData?.image === 'string') {
-                        bodyFormData.delete('image');
+                    const fiel = ['learning_materials', 'skills', 'certificates', 'members']
+                    fieldData.group_chat_requirement = fieldData.group_chat_requirement === 'true'
+                    fieldData.individual_chat_requirement = fieldData.individual_chat_requirement === 'true'
+                    fieldData.mentee_upload_certificates = fieldData.mentee_upload_certificates === 'true'
+                    for (let a in fieldData) {
+                        if (a === 'program_image' && logo.program_image) { bodyFormData.append(a, logo.program_image); }
+                        if (a === 'image' && logo.image) { bodyFormData.append(a, logo.image); }
+                        if (a === 'start_date' || a === 'end_date') { bodyFormData.append(a, new Date(fieldData[a]).toISOString()); }
+                        else if (fiel.includes(a)) { bodyFormData.append(a, JSON.stringify(fieldData[a])) }
+                        else bodyFormData.append(a, fieldData[a]);
                     }
 
-                    bodyFormData.append('program_id', params.id)
-                    dispatch(editUpdateProgram(bodyFormData))
+                    let status = ''
+
+                    if (fieldData.hasOwnProperty('status') && fieldData.status === 'draft') {
+                        status = 'draft'
+                    }
+
+
+                    setProgramApiStatus(status)
+
+                    if (params.id) {
+                        if (programdetails.status === 'draft' && status !== 'draft') {
+                            bodyFormData.append('status', 'create')
+                        }
+                        if (typeof fieldData?.program_image === 'string') {
+                            bodyFormData.delete('program_image');
+                        }
+                        if (typeof fieldData?.image === 'string') {
+                            bodyFormData.delete('image');
+                        }
+
+                        bodyFormData.append('program_id', params.id)
+                        dispatch(editUpdateProgram(bodyFormData))
+                    } else {
+                        dispatch(createNewPrograms(bodyFormData))
+                    }
                 } else {
-                    dispatch(createNewPrograms(bodyFormData))
+                    setTabActionInfo({ ...tabActionInfo, error: true })
                 }
-            } else {
-                setTabActionInfo({ ...tabActionInfo, error: true })
             }
-        }
-        else {
-            let allLogo = { ...logo }
-            if (data.hasOwnProperty('image') && data?.image?.length) {
-                allLogo.image = data.image[0]
-            }
-            if (data.hasOwnProperty('program_image') && data?.program_image?.length) {
-                allLogo.program_image = data.program_image[0]
+            else {
+                let allLogo = { ...logo }
+                if (data.hasOwnProperty('image') && data?.image?.length) {
+                    allLogo.image = data.image[0]
+                }
+                if (data.hasOwnProperty('program_image') && data?.program_image?.length) {
+                    allLogo.program_image = data.program_image[0]
 
+                }
+                setLogo(allLogo)
+                setCurrentStep(currentStep + 1)
+                setTabActionInfo({ ...tabActionInfo, activeTab: ProgramTabs[currentStep].key })
             }
-            setLogo(allLogo)
-            setCurrentStep(currentStep + 1)
-            setTabActionInfo({ ...tabActionInfo, activeTab: ProgramTabs[currentStep].key })
         }
+
     }
 
 
@@ -505,6 +518,7 @@ export default function CreatePrograms() {
                     <ToastNotification openToaster={tabActionInfo.error} message={'Please fill all mandatory fields'} handleClose={handleClose} toastType={'error'} />
 
                 }
+
                 <Backdrop
                     sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                     open={loading.create || apiLoading || status === programStatus.create || status === programStatus.exist || status === programStatus.error

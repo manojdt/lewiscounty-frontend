@@ -160,7 +160,6 @@ export default function AssignTask() {
             width: 150,
             id: 3,
             renderCell: (params) => {
-                console.log('params123', params)
                 return <button style={
                     {
                         background: 'rgb(29, 91, 191)',
@@ -519,7 +518,8 @@ export default function AssignTask() {
                             <nav className="flex px-7 pt-6 pb-5 mx-2 border-b-2 justify-between" aria-label="Breadcrumb">
                                 <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
                                     <li className="inline-flex items-center">
-                                        <div className="inline-flex items-center text-sm font-medium" style={{ color: 'rgba(89, 117, 162, 1)' }}>
+                                        <div className="inline-flex items-center text-sm font-medium cursor-pointer" style={{ color: 'rgba(89, 117, 162, 1)' }}
+                                        onClick={()=> navigate(-1)}>
                                             Program
                                         </div>
                                         <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
@@ -528,7 +528,7 @@ export default function AssignTask() {
                                     </li>
                                     <li>
                                         <div className="flex items-center">
-                                            <div className="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">
+                                            <div className="ms-1 text-sm font-medium text-gray-700 cursor-pointer">
                                                 Program Details </div>
                                         </div>
                                     </li>
@@ -591,7 +591,7 @@ export default function AssignTask() {
 
                                                                         <MenuItem onClick={() => handleMenu('cancel')} className='!text-[12px]'>
                                                                             <img src={AbortIcon} alt="AbortIcon" className='pr-3 w-[25px]' />
-                                                                            Abort</MenuItem>
+                                                                            Cancel</MenuItem>
                                                                     }
                                                                     <MenuItem onClick={() => handleMenu('reschedule')} className='!text-[12px]'>
                                                                         <img src={RescheduleIcon} alt="RescheduleIcon" className='pr-3 w-[25px]' />

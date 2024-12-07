@@ -1737,9 +1737,9 @@ export const AssignMenteesFields = [
   {
     type: 'input',
     name: 'duration',
-    label: 'Program Durations',
+    label: 'Program Duration',
     fieldtype: 'text',
-    placeholder: 'Program Durations',
+    placeholder: 'Program Duration',
     inputRules: {
       required: 'This field is required',
     },

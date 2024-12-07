@@ -263,8 +263,8 @@ export const goalRequestColor = {
     bg: 'rgba(238, 245, 255, 1)',
   },
   active: {
-    color: 'rgba(22, 182, 129, 1)',
-    bg: 'rgba(235, 255, 243, 1)',
+    color: 'rgba(255, 212, 27, 1)',
+    bg: 'rgba(255, 247, 216, 1)',
   },
   accept: {
     color: 'rgba(22, 182, 129, 1)',
@@ -913,7 +913,7 @@ export const requestOverview = [
 
 export const allowedImagesTypes = ['png', 'jpeg', 'jpg'];
 
-export const allowedDocTypes = ['pdf', 'doc', 'docx'];
+export const allowedDocTypes = ['pdf', 'doc', 'docx', 'txt'];
 
 export const allowedVideoTypes = ['avi', 'mp4', 'mov'];
 
