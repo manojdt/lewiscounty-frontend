@@ -834,7 +834,7 @@ export default function AllRequest() {
                             role === 'admin' &&
 
                             <>
-                                <MenuItem onClick={() => navigate(`/certificate_mentees/${seletedItem.program}`)} className='!text-[12px]'>
+                                <MenuItem onClick={() => navigate(`/certificate_mentees/${seletedItem.program}`, {state: {rowStatus: seletedItem?.status, rowId: seletedItem?.id}})} className='!text-[12px]'>
                                     <img src={ViewIcon} alt="AcceptIcon" className='pr-3 w-[27px]' />
                                     View
                                 </MenuItem>

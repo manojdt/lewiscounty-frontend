@@ -35,7 +35,8 @@ import CloseIcon from "../../assets/icons/closeIcon.svg"
 import './goal.css'
 import dayjs from 'dayjs';
 import { Button } from '../../shared';
-
+import StartIcon from "../../assets/icons/startIcon.svg"
+import TickCircleIcon from "../../assets/icons/tickCircle.svg"
 
 const Goals = () => {
     const navigate = useNavigate()
@@ -78,6 +79,11 @@ const Goals = () => {
     })
     const [adminTimeFrame, setAdminTimeFrame] = React.useState("month")
     const [confirmPopup, setConfirmPopup] = React.useState({
+        bool: false,
+        activity: false,
+        type: ""
+    })
+    const [actionPopup, setActionPopup] = React.useState({
         bool: false,
         activity: false,
         type: ""
@@ -342,6 +348,28 @@ const Goals = () => {
                                 Delete
                             </MenuItem>
                         }
+
+                        {
+                            params.row.status === 'active' &&
+                            <MenuItem onClick={() => handleOpenAction("start")} className='!text-[12px]'>
+                                <img src={StartIcon} alt="EditIcon" className='pr-3 w-[27px]' />
+                                Start
+                            </MenuItem>
+                        }
+                        {
+                            ["in_progress"].includes(params?.row?.status) &&
+                            <MenuItem onClick={() => handleOpenConfirmPopup("complete")} className='!text-[12px]'>
+                                <img src={TickCircleIcon} alt="CancelReqIcon" field={params.id} className='pr-3 w-[30px]' />
+                                Complete
+                            </MenuItem>
+                        }
+                        {
+                            ["active", "in_progress"].includes(params?.row?.status) &&
+                            <MenuItem onClick={() => handleOpenConfirmPopup("cancel")} className='!text-[12px]'>
+                                <img src={CancelReqIcon} alt="CancelReqIcon" field={params.id} className='pr-3 w-[30px]' />
+                                Cancel
+                            </MenuItem>
+                        }
                     </Menu>
                 </>
             }
@@ -499,7 +527,7 @@ const Goals = () => {
                             </MenuItem>
                         }
                         {
-                            params?.row?.status === "new" &&
+                            ["new", "active"].includes(params?.row?.status) &&
                             <MenuItem onClick={() => handleOpenConfirmPopup("cancel")} className='!text-[12px]'>
                                 <img src={CancelReqIcon} alt="CancelReqIcon" field={params.id} className='pr-3 w-[30px]' />
                                 Cancel
@@ -570,10 +598,10 @@ const Goals = () => {
 
                         <span className='w-[80px] flex justify-center h-[30px] px-7'
                             style={{
-                                background: goalRequestColor[params.row.status].bg, lineHeight: '30px',
-                                borderRadius: '3px', width: '110px', height: '34px', color: goalRequestColor[params.row.status].color
+                                background: goalRequestColor[params?.row?.goal?.status].bg, lineHeight: '30px',
+                                borderRadius: '3px', width: '110px', height: '34px', color: goalRequestColor[params?.row?.goal?.status].color
                             }}>
-                            {goalRequestStatus[params.row.status]}
+                            {goalRequestStatus[params?.row?.goal?.status]}
                         </span>
                     </div>
                 </>
@@ -724,8 +752,7 @@ const Goals = () => {
                 setConfirmPopup({
                     ...confirmPopup,
                     bool: false,
-                    activity: true,
-                    type: ""
+                    activity: true
                 })
 
                 setTimeout(() => {
@@ -736,7 +763,7 @@ const Goals = () => {
                         type: ""
                     })
 
-                    getAllGoalData()
+                    handleGetAllGoals()
                 }, 2000)
 
             }
@@ -917,6 +944,64 @@ const Goals = () => {
         setCreatedBy("")
         setAdminTab("mentor")
         handleGetAdminTableData("month", "mentor")
+    }
+
+    const resetActionModal = (type) => {
+        setActionPopup({
+            bool: false,
+            activity: false,
+            type: ""
+        })
+    }
+
+    const handleOpenAction = (type) => {
+        handleClose()
+        setActionPopup({
+            bool: true,
+            activity: false,
+            type: type
+        })
+    }
+
+    const handleOpenActivity = () => {
+        setActionPopup({
+            ...actionPopup,
+            activity: true,
+            bool: false
+        })
+        setTimeout(() => {
+            resetActionModal()
+        }, 2000);
+    }
+
+    // Start Goal Api
+
+    const handleStartGoal = () => {
+        const payload = {
+            id: seletedItem.id,
+            status: "in_progress",
+            start_date: dayjs(new Date()).format("YYYY-MM-DD")
+        }
+        dispatch(updateHistoryGoal(payload)).then((res) => {
+            if (res?.meta?.requestStatus === "fulfilled") {
+                handleOpenActivity()
+                handleGetAllGoals()
+            }
+        })
+    }
+    const actionButtonFunction = (type) => {
+        switch (type) {
+            case 'start':
+                handleStartGoal()
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    const activityPopupText = {
+        start: "Your goal has been successfully started"
     }
 
     return (
@@ -1362,12 +1447,62 @@ const Goals = () => {
                                 fontWeight: 600
                             }}
                         >{
-                            confirmPopup?.type === "cancel" ? "Your New goal has been successfully canceled" : "Your goal has been successfully completed"
-                        }</p>
+                                confirmPopup?.type === "cancel" ? "Your New goal has been successfully cancelled" : "Your goal has been successfully completed"
+                            }</p>
                     </div>
 
                 </div>
             </Backdrop>
+
+
+            {/* Start Goal Popup */}
+
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={actionPopup.bool}
+            >
+                <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
+                    <img src={ConnectIcon} alt="ConnectIcon" />
+
+                    <div className='py-5'>
+                        <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 600, fontSize: '18px' }}>Are you sure you want to Start goal?</p>
+                    </div>
+                    <div className='flex justify-center'>
+                        <div className="flex gap-6 justify-center align-middle">
+                            <Button btnCls="w-[130px]" btnName='Cancel' btnCategory="secondary" onClick={() => resetActionModal} />
+                            <Button btnCls="w-[130px]" btnType="button" btnName='Start goal' btnCategory="primary"
+                                onClick={() => actionButtonFunction(actionPopup?.type)}
+                            />
+                        </div>
+                    </div>
+                </div>
+
+            </Backdrop>
+
+            {/* Cancel Goal Popup */}
+
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={actionPopup.activity}
+            >
+                <div className='px-5 py-1 flex justify-center items-center'>
+                    <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+                        style={{ background: '#fff', borderRadius: '10px' }}>
+                        <img src={SuccessTik} alt="SuccessTik" />
+                        <p className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                            style={{
+                                fontWeight: 600
+                            }}
+                        >
+                            {
+                                activityPopupText[actionPopup?.type]
+                            }
+                        </p>
+                    </div>
+
+                </div>
+            </Backdrop>
+
         </div>
     )
 }

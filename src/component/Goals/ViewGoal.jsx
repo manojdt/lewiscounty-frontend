@@ -66,7 +66,14 @@ const ViewGoal = ({ type = '' }) => {
     const handleSubmitGoal = () => {
         dispatch(updateGoalStatus({ id: parseInt(goalInfo.id), status: 'completed' })).then((res) => {
             if (res?.meta?.requestStatus === "fulfilled") {
-                resetActionModal()
+                setActionModal({
+                    ...actionModal,
+                    complete: false,
+                    completed: true
+                })
+                setTimeout(() => {
+                    navigate(-1)
+                }, 2000);
             }
         })
 
@@ -80,8 +87,14 @@ const ViewGoal = ({ type = '' }) => {
         }
         dispatch(updateHistoryGoal(payload)).then((res) => {
             if (res?.meta?.requestStatus === "fulfilled") {
-                dispatch(getGoalInfo(params.id))
-                resetActionModal()
+                setActionModal({
+                    ...actionModal,
+                    start: false,
+                    started: true
+                })
+                setTimeout(() => {
+                    navigate(-1)
+                }, 2000);
             }
         })
     }
@@ -108,7 +121,14 @@ const ViewGoal = ({ type = '' }) => {
         } else {
             dispatch(updateGoalStatus({ id: parseInt(goalInfo.id), status: 'cancel' })).then((res) => {
                 if (res?.meta?.requestStatus === "fulfilled") {
-                    resetActionModal()
+                    setActionModal({
+                        ...actionModal,
+                        cancel: false,
+                        cancelled: true
+                    })
+                    setTimeout(() => {
+                        navigate(-1)
+                    }, 2000);
                 }
             })
         }
@@ -267,8 +287,16 @@ const ViewGoal = ({ type = '' }) => {
                     ...confirmPopup,
                     bool: false,
                     activity: true,
-                    type: ""
                 })
+
+                // setActionModal({
+                //     ...actionModal,
+                //     [confirmPopup?.type === "complete" ? "complete" : "cancel"]: false,
+                //     [confirmPopup?.type === "complete" ? "completed" : "cancelled"]: true
+                // })
+                // setTimeout(() => {
+                //     navigate(-1)
+                // }, 2000);
 
                 setTimeout(() => {
                     setConfirmPopup({
@@ -278,7 +306,7 @@ const ViewGoal = ({ type = '' }) => {
                         type: ""
                     })
 
-                    dispatch(getGoalInfo(params.id))
+                    navigate(-1)
                 }, 2000)
 
             }
@@ -491,14 +519,14 @@ const ViewGoal = ({ type = '' }) => {
                                 <div className='flex justify-between px-5 py-5 items-center border-b-2'>
                                     <div className='flex gap-5 items-center text-[20px]'>
                                         <p>{goalDataStatus[goalInfo.status]} </p>
-                                        {
+                                        {/* {
                                             (goalInfo.status === 'active' && role !== 'admin') &&
                                             <div className="inset-y-0 end-0 flex items-center pe-3 cursor-pointer"
                                                 onClick={() => navigate('/edit-report/1')}
                                             >
                                                 <img src={EditIcon} alt='EditIcon' />
                                             </div>
-                                        }
+                                        } */}
 
 
                                     </div>
@@ -607,9 +635,13 @@ const ViewGoal = ({ type = '' }) => {
                                                 {
                                                     goalInfo.status === 'active' &&
                                                     <>
-                                                        <Button btnName="Back" style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '4px', width: '180px', color: 'rgba(29, 91, 191, 1)' }}
+                                                        {/* <Button btnName="Back" style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '4px', width: '180px', color: 'rgba(29, 91, 191, 1)' }}
                                                             onClick={() => navigate('/goals')}
-                                                        />
+                                                        /> */}
+                                                        <Button
+                                                            onClick={() => handleOpenConfirmPopup('cancel')}
+                                                            btnName={'Cancel'} btnCategory="secondary"
+                                                            btnCls="border !border-[#E0382D] !text-[#E0382D] w-[140px] bg-[#fff]" />
 
                                                         <Button
                                                             onClick={handleActionBtn}
@@ -757,7 +789,7 @@ const ViewGoal = ({ type = '' }) => {
                         <img src={CancelReq} alt="ConnectIcon" />
 
                         <div className='py-5'>
-                            <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 600, fontSize: '18px' }}>Are you sure want to cancel this Request?</p>
+                            <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 600, fontSize: '18px' }}>Are you sure want to cancel this Goal?</p>
                         </div>
                         <div className='flex justify-center'>
                             <div className="flex gap-6 justify-center align-middle">
@@ -788,7 +820,7 @@ const ViewGoal = ({ type = '' }) => {
                                 fontWeight: 600
                             }}
                         >{
-                                confirmPopup?.type === "cancel" ? "Your New goal has been successfully canceled" : "Your goal has been successfully completed"
+                                confirmPopup?.type === "cancel" ? "Your New goal has been successfully cancelled" : "Your goal has been successfully completed"
                             }</p>
                     </div>
 

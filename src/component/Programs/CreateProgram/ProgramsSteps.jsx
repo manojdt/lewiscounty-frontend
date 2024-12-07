@@ -52,7 +52,7 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
         for (const field in stepData) {
             if (fName.includes(field)) f[field] = stepData[field]
         }
-        console.log('f[field]', stepData)
+
         if (currentStep === 1) {
             f.start_date = dateFormat.start_date || stepData['start_date']
             f.end_date = dateFormat.end_date || stepData['end_date']

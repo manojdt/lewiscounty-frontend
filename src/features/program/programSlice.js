@@ -12,6 +12,7 @@ import {
   getAllSkills,
   getProgramDetails,
   getProgramMentees,
+  getProgramNameValidate,
   getProgramsByCategory,
   loadAllPrograms,
   updateAllPrograms,
@@ -23,7 +24,7 @@ import { programStatus, userStatus } from "../../utils/constant";
 const initialState = {
   allPrograms: [],
   programDetails: {},
-  programMentees:[],
+  programMentees: [],
   createdPrograms: [],
   category: [],
   materials: [],
@@ -138,15 +139,16 @@ export const programSlice = createSlice({
         };
       })
       .addCase(createNewPrograms.fulfilled, (state, action) => {
+        console.log("action ===>", action, "state ===>", state)
         const responseStatus = action.payload.status;
         const status =
-          responseStatus === 200
+          (responseStatus === 200 || responseStatus === 400)
             ? programStatus.exist
             : responseStatus === 500
-            ? programStatus.error
-            : responseStatus === 201
-            ? programStatus.create
-            : "";
+              ? programStatus.error
+              : responseStatus === 201
+                ? programStatus.create
+                : "";
 
         return {
           ...state,
@@ -155,8 +157,20 @@ export const programSlice = createSlice({
         };
       })
       .addCase(createNewPrograms.rejected, (state, action) => {
+        console.log("action ===>", action, "state ===>", state)
+        const responseStatus = action.payload.status;
+        const status =
+          (responseStatus === 200 || responseStatus === 400)
+            ? programStatus.exist
+            : responseStatus === 500
+              ? programStatus.error
+              : responseStatus === 201
+                ? programStatus.create
+                : "";
+
         return {
           ...state,
+          status: status,
           loading: false,
           error: action.error.message,
         };
@@ -165,7 +179,7 @@ export const programSlice = createSlice({
 
 
 
-      builder
+    builder
       .addCase(editUpdateProgram.pending, (state) => {
         return {
           ...state,
@@ -178,8 +192,8 @@ export const programSlice = createSlice({
           responseStatus === 200 || responseStatus === 201
             ? programStatus.update
             : responseStatus === 500
-            ? programStatus.error
-            : "";
+              ? programStatus.error
+              : "";
 
         return {
           ...state,
@@ -420,8 +434,30 @@ export const programSlice = createSlice({
         };
       });
 
-      // builder.addCase(updateLocalProgram)
+    // builder.addCase(updateLocalProgram)builder
+    builder.addCase(getProgramNameValidate.pending, (state) => {
+      return {
+        ...state,
+        loading: true,
+      };
+    })
+      .addCase(getProgramNameValidate.fulfilled, (state, action) => {
+        return {
+          ...state,
+          status: action?.payload?.is_available ? programStatus.exist : "",
+          loading: false,
+        };
+      })
+      .addCase(getProgramNameValidate.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
   },
+
+
 });
 
 export default programSlice.reducer;

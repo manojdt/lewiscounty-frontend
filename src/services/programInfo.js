@@ -180,3 +180,16 @@ export const getProgramMentees = createAsyncThunk(
     return allProgramsMentees;
   }
 );
+
+export const getProgramNameValidate = createAsyncThunk(
+  "getProgramNameValidate",
+  async (program_name) => {
+    const getProgramNameValidate = await api.get(
+      `programs/validate_program_name?program_name=${program_name}`
+    );
+    if (getProgramNameValidate.status === 200 && getProgramNameValidate.data) {
+      return getProgramNameValidate.data;
+    }
+    return getProgramNameValidate;
+  }
+);

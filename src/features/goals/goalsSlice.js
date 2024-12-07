@@ -13,6 +13,7 @@ import {
     getGoalsRequest,
     getMenteeGoals,
     getRecentGoalActivity,
+    reCreateGoal,
     updateGoal,
     updateGoalStatus,
     updateHistoryGoal,
@@ -365,6 +366,29 @@ export const goalsSlice = createSlice({
                     ...state,
                     loading: false,
                     status: "",
+                    error: action.error.message,
+                };
+            });
+
+
+            builder
+            .addCase(reCreateGoal.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(reCreateGoal.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    status: "done",
+                    loading: false,
+                };
+            })
+            .addCase(reCreateGoal.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
                     error: action.error.message,
                 };
             });
