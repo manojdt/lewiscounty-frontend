@@ -8,11 +8,12 @@ import UploadIcon from "../../../assets/images/image_1x.png"
 import { Button } from '../../../shared'
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { Backdrop, CircularProgress } from '@mui/material'
+import { Backdrop, Box, CircularProgress, Stack, Typography } from '@mui/material'
 import { getSpecificTask, updateTaskMark } from '../../../services/task'
 import { dateFormat, dateTimeFormat, getFiles } from '../../../utils'
 import { TaskApiStatus, TaskStatus } from '../../../utils/constant'
 import { useForm } from 'react-hook-form'
+import dayjs from 'dayjs';
 
 
 const MentorTaskDetails = () => {
@@ -143,34 +144,18 @@ const MentorTaskDetails = () => {
                         <table className="w-[50%] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                             <tbody style={{ border: '1px solid rgba(0, 174, 189, 1)' }}>
                                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" style={{ border: '1px solid rgba(0, 174, 189, 1)', background: '#fff', color: '#000' }} className="px-6 py-4 font-medium whitespace-nowrap ">
+                                    <th scope="row" style={{ border: '1px solid rgba(0, 174, 189, 1)', background: '#fff', color: '#000' }} className="px-6 py-4 font-medium whitespace-nowrap !text-[#18283D] !text-[14px]">
                                         Category
                                     </th>
-                                    <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
+                                    <td className="px-6 py-4 text-white !text-[14px]" style={{ background: 'rgba(0, 174, 189, 1)' }}>
                                         {taskDetails.program_category || ''}
                                     </td>
                                 </tr>
-                                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th style={{ border: '1px solid rgba(0, 174, 189, 1)', background: '#fff', color: '#000' }} scope="row" className="px-6 py-4 font-medium  whitespace-nowrap ">
-                                        Program Name
-                                    </th>
-                                    <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
-                                        {taskDetails.program_name}
-                                    </td>
-                                </tr>
-                                <tr className="bg-white border-b dark:bg-gray-800 ">
-                                    <th style={{ border: '1px solid rgba(0, 174, 189, 1)', background: '#fff', color: '#000' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
-                                        Mentor Name
-                                    </th>
-                                    <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
-                                        {taskDetails.mentor_name}
-                                    </td>
-                                </tr>
                                 <tr className="bg-white border-b  dark:bg-gray-800">
-                                    <th style={{ border: '1px solid rgba(0, 174, 189, 1)', background: '#fff', color: '#000' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
+                                    <th style={{ border: '1px solid rgba(0, 174, 189, 1)', background: '#fff', color: '#000' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap !text-[#18283D] !text-[14px]">
                                         Program Start Date and Time
                                     </th>
-                                    <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
+                                    <td className="px-6 py-4 text-white !text-[14px]" style={{ background: 'rgba(0, 174, 189, 1)' }}>
                                         {dateTimeFormat(taskDetails.program_startdate)}
                                     </td>
                                 </tr>
@@ -181,43 +166,26 @@ const MentorTaskDetails = () => {
                         <table className="w-[50%] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                             <tbody style={{ border: '1px solid rgba(29, 91, 191, 1)' }}>
                                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" style={{ border: '1px solid rgba(29, 91, 191, 1)', background: '#fff', color: '#000' }} className="px-6 py-4 font-medium whitespace-nowrap ">
-                                        Program End Date and Time
+                                    <th style={{ border: '1px solid rgba(29, 91, 191, 1)', background: '#fff', color: '#000' }} scope="row" className="px-6 py-4 font-medium  whitespace-nowrap !text-[#18283D] !text-[14px]">
+                                        Program Name
                                     </th>
-                                    <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
-                                        {dateTimeFormat(taskDetails.program_enddate) || ''}
+                                    <td className="px-6 py-4 text-white !text-[14px]" style={{ background: 'rgba(29, 91, 191, 1)' }}>
+                                        {taskDetails.program_name}
                                     </td>
                                 </tr>
                                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th style={{ border: '1px solid rgba(29, 91, 191, 1)', background: '#fff', color: '#000' }} scope="row" className="px-6 py-4 font-medium  whitespace-nowrap ">
-                                        Program Duration
+                                    <th scope="row" style={{ border: '1px solid rgba(29, 91, 191, 1)', background: '#fff', color: '#000' }} className="px-6 py-4 font-medium whitespace-nowrap !text-[#18283D] !text-[14px]">
+                                        Program End Date and Time
                                     </th>
-                                    <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
-                                        {taskDetails.program_duration} {taskDetails.program_duration>1?"Days": "Day"}
+                                    <td className="px-6 py-4 text-white !text-[14px]" style={{ background: 'rgba(29, 91, 191, 1)' }}>
+                                        {dateTimeFormat(taskDetails.program_enddate) || ''}
                                     </td>
                                 </tr>
-                                <tr className="bg-white border-b dark:bg-gray-800 ">
-                                    <th style={{ border: '1px solid rgba(29, 91, 191, 1)', background: '#fff', color: '#000' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
-                                        Due Date
-                                    </th>
-                                    <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
-                                        {dateFormat(taskDetails.due_date)}
-                                    </td>
-                                </tr>
-                                <tr className="bg-white border-b  dark:bg-gray-800">
-                                    <th style={{ border: '1px solid rgba(29, 91, 191, 1)', background: '#fff', color: '#000' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
-                                        Status
-                                    </th>
-                                    <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
-                                        {TaskStatus[taskDetails?.status] || ''}
-                                    </td>
-                                </tr>
-
                             </tbody>
                         </table>
                     </div>
 
-                    <div className='task-desc flex mt-5 px-5 py-6' style={{ border: '1px solid rgba(29, 91, 191, 0.5)' }}>
+                    {/* <div className='task-desc flex mt-5 px-5 py-6' style={{ border: '1px solid rgba(29, 91, 191, 0.5)' }}>
 
                         <p className='text-[14px]'>Task</p>  :
                         <p className='text-[14px] pl-6'>{taskDetails.task_name}</p>
@@ -233,7 +201,30 @@ const MentorTaskDetails = () => {
 
                         <p className='text-[14px]'>Task Solution</p>  :
                         <p className='text-[14px] pl-6'>{taskDetails.task_solution}</p>
-                    </div>
+                    </div> */}
+
+                    <Box className="!border !border-[#1D5BBF80] rounded-[3px] mt-5">
+                        <Stack direction={"row"} alignItems={"center"} justifyContent={"space-between"} className='!border-b-2 !border-[#1D5BBF80] px-[35px] py-[22px]'>
+                            <Typography className='!text-[#18283D] !text-[16px]'>{taskDetails.task_name}</Typography>
+                            <Typography className='!text-[#18283D] !text-[14px]'>Due date: {dayjs(taskDetails.due_date).format("DD-MM-YYYY")}</Typography>
+                        </Stack>
+                        <Stack spacing={3} className='px-[35px] py-[22px]'>
+                            <Typography className='!text-[#18283D] !text-[16px]' sx={{fontWeight: 500}}>
+                                Reference Link:
+                                <span className='!text-[#1D5BBF] underline'>
+                                    {
+                                        docs?.map((doc, index) => <span>{doc}</span>)
+                                    }
+                                </span>
+                            </Typography>
+                            <Typography className='!text-[#18283D] !text-[14px]' sx={{fontWeight: 500}}>
+                                Task Details:
+                                <span>
+                                    {taskDetails?.task_description}
+                                </span>
+                            </Typography>
+                        </Stack>
+                    </Box>
 
                     <div className='flex justify-between task-uploaded-images-container'>
                         {
@@ -345,7 +336,7 @@ const MentorTaskDetails = () => {
                                         Result :
                                     </div>
                                     <div style={{ background: taskDetails.result === 'Pass' ? 'rgba(235, 255, 243, 1)' : 'rgba(255, 231, 231, 1)', padding: '24px 0', width: '240px', textAlign: 'center', fontSize: '40px' }}>
-                                        <span style={{ color: taskDetails.result === 'Pass' ? 'rgba(22, 182, 129, 1)' : 'rgba(224, 56, 45, 1)' }}>{taskDetails.result}</span>
+                                        <span style={{ color: taskDetails.result === 'Pass' ? 'rgba(22, 182, 129, 1)' : 'rgba(224, 56, 45, 1)' }}>{taskDetails.result}dddd</span>
                                     </div>
                                 </div>
                             }

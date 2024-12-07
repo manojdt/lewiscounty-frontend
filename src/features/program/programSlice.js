@@ -13,6 +13,7 @@ import {
   getAllPrograms,
   getAllSkills,
   getProgramDetails,
+  getProgramListWithCategory,
   getProgramMentees,
   getProgramNameValidate,
   getProgramsByCategory,
@@ -35,6 +36,7 @@ const initialState = {
   members: [],
   skills: [],
   categoryPrograms: [],
+  programListByCategory: [],
   loading: false,
   status: "",
   error: "",
@@ -502,8 +504,29 @@ export const programSlice = createSlice({
           error: action.error.message,
         };
       });
-  },
 
+
+      builder.addCase(getProgramListWithCategory.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+        .addCase(getProgramListWithCategory.fulfilled, (state, action) => {
+          return {
+            ...state,
+            programListByCategory: action.payload,
+            loading: false,
+          };
+        })
+        .addCase(getProgramListWithCategory.rejected, (state, action) => {
+          return {
+            ...state,
+            loading: false,
+            error: action.error.message,
+          };
+        });
+  },
 
 });
 

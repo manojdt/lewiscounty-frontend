@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { Calendar } from 'primereact/calendar';
 import { useForm } from 'react-hook-form';
-import { Backdrop, CircularProgress } from '@mui/material';
+import { Backdrop, CircularProgress, Stack, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { AssignMenteesFields } from '../../../utils/formFields'
@@ -16,43 +16,47 @@ import MuiModal from '../../../shared/Modal';
 import { MenteeAssignColumns } from '../../../mock';
 import DataTable from '../../../shared/DataGrid';
 import SuccessTik from '../../../assets/images/blue_tik1x.png';
-import { getAllCategories } from '../../../services/programInfo';
+import { getAllCategories, getProgramListWithCategory } from '../../../services/programInfo';
 import './program.css'
 
-import { assignProgramTask, getProgramDetails, getProgramMentees, getProgramTaskMentees, updateProgram } from '../../../services/userprograms';
+import { assignProgramTask, getMenteeDetails, getProgramDetails, getProgramMentees, getProgramTaskMentees, updateProgram } from '../../../services/userprograms';
 import { pipeUrls, programActionStatus, programStatus } from '../../../utils/constant';
 import dayjs from 'dayjs';
+import CloseIcon from "../../../assets/icons/closeIcon.svg"
 
 
 export default function AssignMentees() {
-    const navigate = useNavigate()
-    const [addMenteeModal, setMentalModal] = useState(false)
-    const [taskSuccess, setTaskSuccess] = useState(false)
-
-    const params = useParams();
-    const calendarRef = useRef([])
-    const dispatch = useDispatch()
-    const { programdetails, loading: programLoading, error, status, programMenteeList } = useSelector(state => state.userPrograms)
-    const { category, loading: apiLoading } = useSelector(state => state.programInfo)
-    const [menteeFields, setMenteeFields] = useState(AssignMenteesFields)
-    const [dateFormat, setDateFormat] = useState({})
-    const [menteeAllList, setAllMenteeList] = useState([])
-    const [loading, setLoading] = useState(false)
-    const [updatedMemberColumn, setUpdatedMemberColumn] = useState(MenteeAssignColumns)
-
     const {
         register,
         formState: { errors },
         handleSubmit,
         reset,
         getValues,
-        setValue
+        setValue,
+        watch
     } = useForm();
+    const navigate = useNavigate()
+    const [addMenteeModal, setMentalModal] = useState(false)
+    const [taskSuccess, setTaskSuccess] = useState(false)
+    const [searchParams, setSearchParams] = useSearchParams();
+    const params = useParams();
+    const calendarRef = useRef([])
+    const dispatch = useDispatch()
+    const type = searchParams.get('type')
+    const { programdetails, loading: programLoading, error, status, programMenteeList } = useSelector(state => state.userPrograms)
+    const { category, loading: apiLoading, programListByCategory } = useSelector(state => state.programInfo)
+    const [menteeFields, setMenteeFields] = useState(AssignMenteesFields(type === "new" ? false : true, type === "new" ? "new" : "", getValues))
+    const [dateFormat, setDateFormat] = useState({})
+    const [menteeAllList, setAllMenteeList] = useState([])
+    const [loading, setLoading] = useState(false)
+    const [updatedMemberColumn, setUpdatedMemberColumn] = useState(MenteeAssignColumns)
+    const allFields = watch()
+    console.log("allFields ===>", allFields)
 
     const onSubmit = (data) => {
         const apiData = {
             ...data,
-            program_id: programdetails.id,
+            program_id: type === "new" ? allFields?.program_id : programdetails.id,
             start_date: new Date(data.start_date).toISOString(),
             end_date: new Date(data.end_date).toISOString(),
             mentor: programdetails?.mentor_info?.id,
@@ -130,8 +134,74 @@ export default function AssignMentees() {
             }
             return field
         })
+
         setMenteeFields(fields)
     }, [category])
+
+
+    useEffect(() => {
+        if (type === "new" && allFields?.category_id) {
+            dispatch(getProgramListWithCategory(allFields?.category_id)).then((res) => {
+                if (res.meta.requestStatus === "fulfilled") {
+                    const constructedData = res?.payload?.map((e) => {
+                        return {
+                            ...e,
+                            name: e?.program_name
+                        }
+                    })
+                    const fields = [...menteeFields].map(field => {
+                        if (field.name === 'program_id') {
+                            return {
+                                ...field,
+                                options: constructedData ?? []
+                            }
+                        }
+                        return field
+                    })
+
+                    setMenteeFields(fields)
+                }
+            })
+        }
+    }, [allFields?.category_id])
+
+    useEffect(() => {
+        if (type === "new" && allFields?.program_id) {
+            const programOption = menteeFields?.filter((e) => e?.name === "program_id")?.[0]?.options
+            const filteredData = programOption?.filter((e) => e?.id === Number(allFields?.program_id))?.[0]
+            reset({
+                ...getValues(), 
+                "duration": filteredData?.duration + " Days",
+                "start_date": filteredData?.start_date,
+                "end_date": filteredData?.end_date
+            });
+            dispatch(getProgramTaskMentees(allFields?.program_id)).then((res) => {
+                if (res?.meta?.requestStatus === "fulfilled") {
+                    const constructedData = res?.payload?.map((e) => {
+                        return {
+                            ...e,
+                            name: `${e?.first_name} ${e?.last_name}`
+                        }
+                    })
+                    const fields = [...menteeFields].map(field => {
+                        if (field.name === 'mentor') {
+                            return {
+                                ...field,
+                                options: constructedData ?? []
+                            }
+                        }
+                        return field
+                    })
+
+                    setMenteeFields(fields)
+                }
+
+            })
+        }
+    }, [allFields?.program_id])
+
+    // selectedProgram
+    // getProgramMentees
 
 
     useEffect(() => {
@@ -164,7 +234,9 @@ export default function AssignMentees() {
         if (!category.length) {
             dispatch(getAllCategories())
         }
-        dispatch(getProgramTaskMentees(params.id))
+        if (type !== "new") {
+            dispatch(getProgramTaskMentees(params.id))
+        }
 
     }, [])
 
@@ -200,37 +272,46 @@ export default function AssignMentees() {
             </Backdrop>
 
             {
-                Object.keys(programdetails).length ?
+                (Object.keys(programdetails).length || type === "new") ?
                     <div className='grid mb-10' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)', borderRadius: '5px' }}>
-                        <div className='breadcrum'>
-                            <nav className="flex px-7 pt-6 pb-5 mx-2 border-b-2 justify-between" aria-label="Breadcrumb">
-                                <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
-                                    <li className="inline-flex items-center">
-                                        <span className="inline-flex items-center text-sm font-medium cursor-pointer" style={{ color: 'rgba(89, 117, 162, 1)' }}>
-                                            Program
-                                        </span>
-                                        <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
-                                        </svg>
-                                    </li>
-                                    <li>
-                                        <div className="flex items-center">
-                                            <span className="ms-1 text-sm font-medium cursor-pointer" style={{ color: 'rgba(89, 117, 162, 1)' }} onClick={() => navigate(-1)}>
-                                                {programdetails?.program_name} </span>
-                                            <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
-                                            </svg>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div className="flex items-center">
-                                            <span className="ms-1 text-sm font-medium cursor-pointer text-gray-700">
-                                                Assign Task to Mentees </span>
-                                        </div>
-                                    </li>
-                                </ol>
-                            </nav>
-                        </div>
+                        {
+                            (type === "new" || type === "edit") ?
+                                <Stack direction={"row"} alignItems={"center"} justifyContent={"space-between"} className='border-b-2 pt-8 pr-6 pb-6 pl-6'>
+                                    <Typography className='!text-[20px] !text-[#18283D]' sx={{ fontWeight: 600 }}>{type === "new" ? "Create Task" : "Edit Task"}</Typography>
+                                    <div className='cursor-pointer' onClick={() => navigate(-1)}>
+                                        <img src={CloseIcon} alt='CloseIcon' />
+                                    </div>
+                                </Stack> :
+                                <div className='breadcrum'>
+                                    <nav className="flex px-7 pt-6 pb-5 mx-2 border-b-2 justify-between" aria-label="Breadcrumb">
+                                        <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+                                            <li className="inline-flex items-center">
+                                                <span className="inline-flex items-center text-sm font-medium cursor-pointer" style={{ color: 'rgba(89, 117, 162, 1)' }}>
+                                                    Program
+                                                </span>
+                                                <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
+                                                </svg>
+                                            </li>
+                                            <li>
+                                                <div className="flex items-center">
+                                                    <span className="ms-1 text-sm font-medium cursor-pointer" style={{ color: 'rgba(89, 117, 162, 1)' }} onClick={() => navigate(-1)}>
+                                                        {programdetails?.program_name} </span>
+                                                    <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
+                                                    </svg>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div className="flex items-center">
+                                                    <span className="ms-1 text-sm font-medium cursor-pointer text-gray-700">
+                                                        Assign Task to Mentees </span>
+                                                </div>
+                                            </li>
+                                        </ol>
+                                    </nav>
+                                </div>
+                        }
                         <div className='content px-8'>
                             <div className="py-9">
                                 <form onSubmit={handleSubmit(onSubmit)}>
@@ -281,7 +362,7 @@ export default function AssignMentees() {
                                                                         >
                                                                             <option value="">Select</option>
                                                                             {
-                                                                                field.options.map((option, index) =>
+                                                                                field?.options.map((option, index) =>
                                                                                     <option
                                                                                         value={option.id}
                                                                                         key={index}
@@ -356,8 +437,8 @@ export default function AssignMentees() {
                                                                                             //     : {}
                                                                                             // }
 
-                                                                                            minDate={new Date()}
-                                                                                            maxDate={field.name === 'due_date' ? getValues('end_date') : ""}
+                                                                                            minDate={type === "new" ? new Date(getValues('start_date')) : new Date()}
+                                                                                            maxDate={field.name === 'due_date' ? new Date(getValues('end_date')) : ""}
                                                                                             showTime={field.name !== 'due_date'}
                                                                                             hourFormat="12"
                                                                                             dateFormat="dd/mm/yy"

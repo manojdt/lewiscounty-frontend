@@ -234,3 +234,17 @@ export const getProgramNameValidate = createAsyncThunk(
     return getProgramNameValidate;
   }
 );
+
+
+export const getProgramListWithCategory = createAsyncThunk(
+  "getProgramListWithCategory",
+  async (category_id) => {
+    const getProgramListWithCategory = await api.get(
+      `/program/completed-program-list?category_id=${category_id}&type=task`
+    );
+    if (getProgramListWithCategory.status === 200 && getProgramListWithCategory.data) {
+      return getProgramListWithCategory.data;
+    }
+    return getProgramListWithCategory;
+  }
+);

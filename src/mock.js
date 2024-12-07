@@ -2534,3 +2534,37 @@ export const categoryViewProgram = [
     id: 0,
   },
 ];
+
+
+export const mentorTaskListColumns = [
+  {
+    field: 'category_name',
+    headerName: 'Category',
+    flex: 1,
+    id: 0,
+  },
+  {
+    field: 'prgrame_name',
+    headerName: 'Program Name',
+    flex: 1,
+    id: 0,
+  },
+  {
+    field: 'task_name',
+    headerName: 'Task Name',
+    flex: 1,
+    id: 0,
+  },
+  {
+    field: 'task_details',
+    headerName: 'Task Description',
+    flex: 1,
+    id: 0,
+  },
+  {
+    field: 'total_mentees',
+    headerName: 'Total Mentees',
+    flex: 1,
+    id: 0,
+  }
+]

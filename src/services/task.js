@@ -61,7 +61,7 @@ export const getMenteeTaskfromMentor = createAsyncThunk(
 
         let queryString = Object.entries(query).map(([key, value])=>`${key}=${value}`).join("&")
 
-        const getAllTask = await api.get(`/program_task_assign/task_list_mentor?${queryString}`);
+        const getAllTask = await api.get(`/program_task_assign/mentortask?${queryString}`);
         if (getAllTask.status === 200 && getAllTask.data) {
             return getAllTask.data;
         }
