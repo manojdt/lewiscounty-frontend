@@ -7,7 +7,7 @@ import ProfileImageIcon from '../../assets/icons/profile-image-icon.svg'
 import ProfileImagePencilIcon from '../../assets/icons/profile-image-pencil-icon.svg'
 import { getUserProfile, updateLocalProfileInfo, updateProfile, updateProfileImage } from '../../services/profile'
 import { useDispatch, useSelector } from 'react-redux'
-import { Backdrop, CircularProgress } from '@mui/material'
+import { Backdrop, CircularProgress, Link, Stack } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import { ProfileFields } from '../../utils/formFields'
 import { profileStatus } from '../../utils/constant'
@@ -194,6 +194,37 @@ export default function MyProfile() {
               )
             }
           </div>
+            <div>
+{profile?.documents?.length>0&&
+          <Stack>
+                      <label
+                        className='block tracking-wide  text-xs mb-2'
+                        style={{ color: 'rgba(116, 116, 116, 1)' }}
+                      >
+                        Documents
+                      </label>
+                    
+                        <Stack
+                          direction={'row'}
+                          alignItems={'center'}
+                          spacing={2}
+                        >
+                          {profile?.documents?.map((doc) => {
+                            return (
+                              <Link
+                                target="_blank"
+                                href={doc?.file}
+                                variant='body2'
+                                className={'text-[18px]'}
+                              >
+                                {doc?.file_display_name}
+                              </Link>
+                            );
+                          })}
+                        </Stack>
+                    
+                    </Stack>}
+            </div>
         </div>
       </form>
 

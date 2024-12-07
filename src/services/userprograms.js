@@ -41,7 +41,7 @@ export const getUserPrograms = createAsyncThunk(
         }
         queryParams = queryParams !== '' ? `${queryParams}&limit=6` : '?limit=6'
        
-        const getUserProgram = await api.get(`fetch_program${queryParams}`);
+        const getUserProgram = await api.get(`programs${queryParams}`);
         if (getUserProgram.status === 200 && getUserProgram.data) {
             const response = {
                 ...getUserProgram.data,
@@ -53,7 +53,6 @@ export const getUserPrograms = createAsyncThunk(
         return getUserProgram;
     }
 );
-
 
 export const updateProgram = createAsyncThunk(
     "updateProgram",

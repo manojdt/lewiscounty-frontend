@@ -147,9 +147,8 @@ export default function AssignTask() {
     }
 
 
-    const handleViewJoinedMentees = (programInfo) => {
-        // console.log(programInfo,"programInfo")
-        // dispatch(getProgramMentees(programInfo?.id))
+    const handleViewJoinedMentees =async (programInfo) => {
+       dispatch(getProgramMentees(programInfo?.id))
         setViewMenteeModal(true)
     }
 
@@ -158,7 +157,7 @@ export default function AssignTask() {
         {
             field: 'action',
             headerName: 'View',
-            width: 300,
+            width: 150,
             id: 3,
             renderCell: (params) => {
                 return <button style={
@@ -175,7 +174,7 @@ export default function AssignTask() {
                     }
                 }
                     onClick={
-                        () => navigate(`/mentee-details/${params.row.mentee_id}`)
+                        () => navigate(`/mentee-details/${params.row?.id}`)
                     } > View Profile </button>;
             }
         }
@@ -501,7 +500,7 @@ export default function AssignTask() {
                             <img className='cursor-pointer' onClick={() => setViewMenteeModal(false)} src={CancelIcon} alt="CancelIcon" />
                         </div>
                         <div className='px-5'>
-                            <DataTable rows={programMentees?.length>0 ? programMentees : programdetails.participated_mentees} columns={JoinMenteeColumn} hideCheckbox />
+                            <DataTable rows={programMentees?.length>0&&programMentees} columns={JoinMenteeColumn} hideCheckbox />
                         </div>
                     </div>
                 </div>
@@ -664,7 +663,7 @@ export default function AssignTask() {
                                             }
 
                                             {
-                                                programdetails.reschedule_info !== '' &&
+                                               !completeProgram.activity&& programdetails?.reschedule_info !== '' &&
                                                 <div className='flex gap-5 items-center'>
                                                     <span style={{ background: 'rgba(255, 213, 0, 1)', borderRadius: '3px', padding: '10px' }}>
                                                         <img src={TimeHistoryIcon} alt="TimeHistoryIcon" />
@@ -683,29 +682,31 @@ export default function AssignTask() {
                                         </div>
 
                                         <div className='flex gap-6 py-6'>
+                                            {programdetails.venue&&
                                             <div className='flex gap-2 items-center'>
                                                 <img src={LocationIcon} alt="LocationIcon" />
                                                 <span className='text-[12px]'>
                                                     {programdetails.venue}
                                                 </span>
-                                            </div>
-                                            <div style={{ borderRight: '1px solid rgba(24, 40, 61, 1)' }}></div>
+                                            </div>}
+                                           {!completeProgram.activity&& <div style={{ borderRight: '1px solid rgba(24, 40, 61, 1)' }}></div>}
 
+                                            {!completeProgram.activity&&programdetails?.start_date&&
                                             <div className='flex gap-3 items-center'>
                                                 <img src={CalendarIcon} alt="CalendarIcon" />
                                                 <span className='text-[12px]'>
                                                     {formatDateTimeISO(programdetails?.start_date)}
                                                 </span>
-                                            </div>
+                                            </div>}
 
-                                            <div style={{ borderRight: '1px solid rgba(24, 40, 61, 1)' }}></div>
+                                            {!completeProgram.activity&&<div style={{ borderRight: '1px solid rgba(24, 40, 61, 1)' }}></div>}
 
                                             <div className='flex gap-3 items-center text-[12px]'>
                                                 {
-                                                    !profileLoading &&
+                                                   !completeProgram.activity&& !profileLoading &&
                                                     <img src={programdetails?.mentor_profile_image || UserImage} style={{ borderRadius: '50%', width: '35px', height: '35px' }} alt="UserImage" />
                                                 }
-                                                <span>Instructor :</span>
+                                                {!completeProgram.activity&&<span>Instructor :</span>}
                                                 {
                                                     role !== 'mentor' ?
 

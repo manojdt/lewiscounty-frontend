@@ -34,10 +34,11 @@ import './program-details.css'
 import Ratings from '../Ratings';
 import { getUserProfile } from '../../../services/profile';
 import DataTable from '../../../shared/DataGrid';
-import { JoinedMenteeColumn } from '../../../mock';
+import { JoinedMenteeColumn, JoinedProgramMenteeColumn } from '../../../mock';
 import ToastNotification from '../../../shared/Toast';
 import { Calendar } from 'primereact/calendar';
 import PaymentButton from '../../../shared/paymentButton';
+import { getProgramMentees } from '../../../services/programInfo';
 
 
 export default function ProgramDetails() {
@@ -60,6 +61,7 @@ export default function ProgramDetails() {
     const [confirmPopup, setConfirmPopup] = useState({ accept: false, cancel: false, programId: '' })
     const userdetails = useSelector(state => state.userInfo)
     const { profile, loading: profileLoading } = useSelector(state => state.profileInfo)
+    const { programMentees } = useSelector(state => state.programInfo)
     const { programdetails, loading: programLoading, error, menteeJoined, status } = useSelector(state => state.userPrograms)
     const { loading: requestLoading, status: requestProgramStatus, error: requestError } = useSelector(state => state.requestList);
     const role = userdetails.data.role || ''
@@ -214,15 +216,16 @@ export default function ProgramDetails() {
     }
 
     const handleViewJoinedMentees = (programInfo) => {
+        dispatch(getProgramMentees(programInfo?.id))
         setViewMenteeModal(true)
     }
 
     const JoinMenteeColumn = [
-        ...JoinedMenteeColumn,
+        ...JoinedProgramMenteeColumn,
         {
             field: 'action',
             headerName: 'View',
-            width: 300,
+            width: 150,
             id: 3,
             renderCell: (params) => {
                 return <button style={
@@ -239,7 +242,7 @@ export default function ProgramDetails() {
                     }
                 }
                     onClick={
-                        () => navigate(`/mentee-details/${params.row.mentee_id}`)
+                        () => navigate(`/mentee-details/${params.row?.id}`)
                     } > View Profile </button>;
             }
         }
@@ -511,7 +514,7 @@ export default function ProgramDetails() {
                             <img className='cursor-pointer' onClick={() => setViewMenteeModal(false)} src={CancelIcon} alt="CancelIcon" />
                         </div>
                         <div className='px-5'>
-                            <DataTable rows={programdetails.participated_mentees} columns={JoinMenteeColumn} hideCheckbox />
+                            <DataTable rows={programMentees?.length>0&&programMentees} columns={JoinMenteeColumn} hideCheckbox />
                         </div>
                     </div>
                 </div>

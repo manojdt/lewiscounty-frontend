@@ -15,7 +15,48 @@ export const getAllPrograms = createAsyncThunk(
     return validateOTP;
   }
 );
-
+export const getallMyProgram = createAsyncThunk(
+  'getallProgram',
+  async (query) => {
+    let filteredQuery = Object.fromEntries(
+      Object.entries(query).filter(
+        ([key, value]) =>
+          !(key === 'search' && value.trim().length === 0) &&
+          !(key === 'status' && value === 'all')
+      )
+    );
+    let queryString = new URLSearchParams(filteredQuery).toString();
+    const myMenteeList = await api.get(
+      `/programs?${queryString}`
+    );
+    // page=${data?.page + 1 ?? 1}&limit=${data?.pageSize}
+    if (myMenteeList.status === 200 && myMenteeList.data) {
+      return myMenteeList.data;
+    }
+    return myMenteeList;
+  }
+);
+export const getallMenteeProgram = createAsyncThunk(
+  'getallMenteeProgram',
+  async (query) => {
+    let filteredQuery = Object.fromEntries(
+      Object.entries(query).filter(
+        ([key, value]) =>
+          !(key === 'search' && value.trim().length === 0) &&
+          !(key === 'status' && value === 'all')
+      )
+    );
+    let queryString = new URLSearchParams(filteredQuery).toString();
+    const myMenteeList = await api.get(
+      `/programs?${queryString}`
+    );
+    // page=${data?.page + 1 ?? 1}&limit=${data?.pageSize}
+    if (myMenteeList.status === 200 && myMenteeList.data) {
+      return myMenteeList.data;
+    }
+    return myMenteeList;
+  }
+);
 // Get Specific Program
 export const getProgramDetails = createAsyncThunk(
   "getProgramDetails",
@@ -65,7 +106,7 @@ export const editUpdateProgram = createAsyncThunk(
 );
 
 export const fetchProgram = createAsyncThunk("fetchProgram", async (data) => {
-  const fetchProgram = await api.get("fetch_program", data);
+  const fetchProgram = await api.get("programs", data);
   if (fetchProgram.status === 200) {
     return fetchProgram;
   }
