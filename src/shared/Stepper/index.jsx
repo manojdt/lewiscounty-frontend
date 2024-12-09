@@ -100,7 +100,7 @@ export const Stepper = ({ steps, currentStep = 0, btnTypeAction,handleStepClick 
                 
                       font-medium`
                       }>{step.name}</div>
-                    <div className={`text-xs ${fieldView}`}>{step.status}</div>
+                    <div className={`text-xs ${fieldView}  ${step.status === 'In-Progress' ? 'text-orange-500' : ''} `}>{step.status}</div>
                   </div>
                   { currentIndex !== steps.length-1 ? <ArrowRight /> : null }
                 </li>

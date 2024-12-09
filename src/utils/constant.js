@@ -438,7 +438,7 @@ export const programStatusColor = {
     color: 'rgba(224, 56, 45, 1)',
   },
   inprogress: {
-    bgColor: 'rgba(235, 255, 243, 1)',
+    bgColor: '#ffead1',
     color: '#ffb155',
   },
 };
