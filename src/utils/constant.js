@@ -397,14 +397,14 @@ export const certificateRequestStatusText = {
   deactivated: 'Deactivated',
 };
 export const programStatusText = {
-  inprogress: "Ongoing",
-  completed: "Completed",
-  cancelled: "Cancelled",
-  new_program_request_rejected: "Rejected",
-  yettojoin: "Yet to Launch",
-  yettostart: "Yet to Start",
-  draft: "Draft",
-  yettoapprove: "Waiting for Approval",
+  inprogress: 'Ongoing',
+  completed: 'Completed',
+  cancelled: 'Cancelled',
+  new_program_request_rejected: 'Rejected',
+  yettojoin: 'Yet to Launch',
+  yettostart: 'Yet to Start',
+  draft: 'Draft',
+  yettoapprove: 'Waiting for Approval',
 };
 
 export const programStatusColor = {
@@ -424,7 +424,7 @@ export const programStatusColor = {
     bgColor: 'rgba(255, 231, 231, 1)',
     color: 'rgba(224, 56, 45, 1)',
   },
- 
+
   draft: {
     bgColor: 'rgba(207, 225, 255, 1)',
     color: 'rgba(29, 91, 191, 1)',
@@ -650,107 +650,108 @@ export const menteeCountStatus = {
 };
 
 export const programMenus = (page = 'dashboard') => {
-  const pipeUrl = page === 'program' ? pipeUrls.programs : pipeUrls.dashboard
-  return [{
-    name: "All Programs",
-    count: 0,
-    page: pipeUrls.programs,
-    for: ['mentor', 'mentee', 'admin'],
-    mentorStatus: 'all',
-    menteeStatus: 'allprogram',
-    status: 'all'
-  },
-  {
-    name: "Active Programs",
-    count: 0,
-    page: `${pipeUrl}${programFilterUrls.planned}`,
-    for: ['admin', 'mentor', 'mentee'],
-    mentorStatus: programActionStatus.yettojoin,
-    menteeStatus: 'planned',
-    status: programActionStatus.yettojoin
-  },
-  {
-    name: "Recently Joined Programs",
-    count: 0,
-    page: `${pipeUrl}${programFilterUrls.yettostart}`,
-    for: ['mentor', 'admin', 'mentee'],
-    mentorStatus: programActionStatus.yettostart,
-    menteeStatus: 'recently_joined',
-    status: programActionStatus.yettostart
-  },
-  {
-    name: "Ongoing Programs",
-    count: 0,
-    page: `${pipeUrl}${programFilterUrls.inprogress}`,
-    for: ['mentor', 'admin', 'mentee'],
-    mentorStatus: programActionStatus.inprogress,
-    menteeStatus: 'ongoing',
-    status: programActionStatus.inprogress
-  },
-  // {
-  //   name: "Curated Programs",
-  //   count: 0,
-  //   page: `${pipeUrl}${programFilterUrls.yettojoin}`,
-  //   for: ['mentor', 'mentee'],
-  //   status: programActionStatus.yettojoin
-  // },
-  {
-    name: "Drafted Programs",
-    count: 0,
-    page: `${pipeUrl}${programFilterUrls.draft}`,
-    for: ['mentor'],
-    mentorStatus: 'draft',
-    menteeStatus: '',
-    status: programActionStatus.draft
-  },
-  // {
-  //   name: "My Learning Programs",
-  //   count: 0,
-  //   page: `${pipeUrl}${programFilterUrls.learning}`,
-  //   for: ['mentee'],
-  //   mentorStatus: '',
-  //   menteeStatus: 'learning',
-  //   status: programActionStatus.learning
-  // },
+  const pipeUrl = page === 'program' ? pipeUrls.programs : pipeUrls.dashboard;
+  return [
+    {
+      name: 'All Programs',
+      count: 0,
+      page: pipeUrls.programs,
+      for: ['mentor', 'mentee', 'admin'],
+      mentorStatus: 'all',
+      menteeStatus: 'allprogram',
+      status: 'all',
+    },
+    {
+      name: 'Active Programs',
+      count: 0,
+      page: `${pipeUrl}${programFilterUrls.planned}`,
+      for: ['admin', 'mentor', 'mentee'],
+      mentorStatus: programActionStatus.yettojoin,
+      menteeStatus: 'planned',
+      status: programActionStatus.yettojoin,
+    },
+    {
+      name: 'Recently Joined Programs',
+      count: 0,
+      page: `${pipeUrl}${programFilterUrls.yettostart}`,
+      for: ['mentor', 'admin', 'mentee'],
+      mentorStatus: programActionStatus.yettostart,
+      menteeStatus: 'recently_joined',
+      status: programActionStatus.yettostart,
+    },
+    {
+      name: 'Ongoing Programs',
+      count: 0,
+      page: `${pipeUrl}${programFilterUrls.inprogress}`,
+      for: ['mentor', 'admin', 'mentee'],
+      mentorStatus: programActionStatus.inprogress,
+      menteeStatus: 'ongoing',
+      status: programActionStatus.inprogress,
+    },
+    // {
+    //   name: "Curated Programs",
+    //   count: 0,
+    //   page: `${pipeUrl}${programFilterUrls.yettojoin}`,
+    //   for: ['mentor', 'mentee'],
+    //   status: programActionStatus.yettojoin
+    // },
+    {
+      name: 'Drafted Programs',
+      count: 0,
+      page: `${pipeUrl}${programFilterUrls.draft}`,
+      for: ['mentor'],
+      mentorStatus: 'draft',
+      menteeStatus: '',
+      status: programActionStatus.draft,
+    },
+    // {
+    //   name: "My Learning Programs",
+    //   count: 0,
+    //   page: `${pipeUrl}${programFilterUrls.learning}`,
+    //   for: ['mentee'],
+    //   mentorStatus: '',
+    //   menteeStatus: 'learning',
+    //   status: programActionStatus.learning
+    // },
 
-  {
-    name: "Bookmarked Programs",
-    count: 0,
-    page: `${pipeUrl}${programFilterUrls.bookmark}`,
-    for: ['mentor', 'mentee'],
-    mentorStatus: 'bookmarked',
-    menteeStatus: 'bookmark',
-    status: programActionStatus.bookmark
-  },
-  {
-    name: "Rescheduled Programs",
-    count: 0,
-    page: `${pipeUrl}${programFilterUrls.reschedule}`,
-    for: ['mentor', 'mentee'],
-    mentorStatus: 'reschedule',
-    menteeStatus: 'reschedule',
-    status: programActionStatus.reschedule
-  },
-  {
-    name: "Completed Programs",
-    count: 0,
-    page: `${pipeUrl}${programFilterUrls.completed}`,
-    for: ['mentor', 'mentee'],
-    mentorStatus: 'completed',
-    menteeStatus: 'completed',
-    status: programActionStatus.completed
-  },
-  {
-    name: "Cancelled Programs",
-    count: 0,
-    page: `${pipeUrl}${programFilterUrls.cancelled}`,
-    for: ['mentee', 'mentor'],
-    mentorStatus: 'cancelled',
-    menteeStatus: 'cancel',
-    status: programActionStatus.cancelled
-  }
-  ]
-}
+    {
+      name: 'Bookmarked Programs',
+      count: 0,
+      page: `${pipeUrl}${programFilterUrls.bookmark}`,
+      for: ['mentor', 'mentee'],
+      mentorStatus: 'bookmarked',
+      menteeStatus: 'bookmark',
+      status: programActionStatus.bookmark,
+    },
+    {
+      name: 'Rescheduled Programs',
+      count: 0,
+      page: `${pipeUrl}${programFilterUrls.reschedule}`,
+      for: ['mentor', 'mentee'],
+      mentorStatus: 'reschedule',
+      menteeStatus: 'reschedule',
+      status: programActionStatus.reschedule,
+    },
+    {
+      name: 'Completed Programs',
+      count: 0,
+      page: `${pipeUrl}${programFilterUrls.completed}`,
+      for: ['mentor', 'mentee'],
+      mentorStatus: 'completed',
+      menteeStatus: 'completed',
+      status: programActionStatus.completed,
+    },
+    {
+      name: 'Cancelled Programs',
+      count: 0,
+      page: `${pipeUrl}${programFilterUrls.cancelled}`,
+      for: ['mentee', 'mentor'],
+      mentorStatus: 'cancelled',
+      menteeStatus: 'cancel',
+      status: programActionStatus.cancelled,
+    },
+  ];
+};
 
 export const RequestStatusArray = [
   {
@@ -1166,4 +1167,8 @@ export const followBtnText = {
   new: 'Follow',
   waiting: 'Requested',
   accepted: 'Unfollow',
+};
+
+export const view = {
+  viewOnly: 'viewOnly',
 };
