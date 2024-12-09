@@ -103,7 +103,7 @@ export default function CreateReport() {
     }, [status])
     console.log("programDetails===>", programDetails)
     useEffect(() => {
-        if (!state?.type) {
+        // if (!state?.type) {
             if (programDetails && Object.keys(programDetails).length) {
                 let payload = {
                     mentor_name: programDetails.mentor_full_name,
@@ -124,7 +124,7 @@ export default function CreateReport() {
             if (searchParams.get('cat_id') !== '' && searchParams.get('program_id') !== '') {
                 setCommonLoading(false)
             }
-        }
+        // }
     }, [programDetails])
 
     useEffect(() => {

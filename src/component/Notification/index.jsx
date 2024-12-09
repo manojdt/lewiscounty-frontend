@@ -36,10 +36,15 @@ export default function Notification({ handleClose }) {
                 navigate(url)
                 break;
             case 'report':
-                const reporturl = role === 'mentor' ? `view-report/${data.related_data.report_id}` : `mentor-tasks-details/${data.related_data.report_id}?request_id=${data.related_data?.report_request_id}`
+                const reporturl = role === 'mentor' ? `view-report/${data.related_data.report_id}` : `view-report/${data.related_data.report_id}`
                 handleClose && handleClose()
                 navigate(reporturl)
                 break;
+            // case 'report':
+            //     const reporturl = role === 'mentor' ? `view-report/${data.related_data.report_id}` : `mentor-tasks-details/${data.related_data.report_id}?request_id=${data.related_data?.report_request_id}`
+            //     handleClose && handleClose()
+            //     navigate(reporturl)
+            //     break;
             case 'member':
                 const memberurl = role === 'mentor' ? `mentor-details/${data.related_data.member_id}` : `mentor-details/${data.related_data.member_id}?request_id=${data.related_data?.member_request_id}`
                 handleClose && handleClose()
