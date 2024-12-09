@@ -26,16 +26,47 @@ import GoalsAndExpectatonsSection from './section-edit/GoalsAndExpectatonsSectio
 import AvailabilityAndCommitmentSection from './section-edit/AvailabilityAndCommitmentSection';
 import AdditionalInformationSection from './section-edit/AdditionalInformationSection';
 import ArrowDown from '../../assets/icons/blue-arrow-down.svg';
+import CurrentStatusSection from './section-edit/MenteeCurrentStatusSection';
+import MenteeCurrentStatusSection from './section-edit/MenteeCurrentStatusSection';
+import MenteeExpectionAndGoalsSection from './section-edit/MenteeExpectionAndGoalsSection';
+import MenteeSkillandInterestsSection from './section-edit/MenteeSkillandInterestsSection';
+import MenteeCareerAcademicGoalsSection from './section-edit/MenteeCareerAcademicGoalsSection';
+import MenteeMentoringPreferencesSection from './section-edit/MenteeMentoringPreferencesSection';
+import MenteeAvailabilitySection from './section-edit/MenteeAvailabilitySection';
+import MenteeDetailedCareerAcademicGoalsSection from './section-edit/MenteeDetailedCareerAcademicGoalsSection';
+import MenteeChallengesAndObstaclesSection from './section-edit/MenteeChallengesAndObstaclesSection';
+import MenteeMentoringExperienceSection from './section-edit/MenteeMentoringExperienceSection';
+import MenteeLearningSylePreferencesSection from './section-edit/MenteeLearningSylePreferencesSection';
+import MenteeNetworkingProfessionalDevelopementSection from './section-edit/MenteeNetworkingProfessionalDevelopementSection';
+import MenteePersonalDevelopmentSection from './section-edit/MenteePersonalDevelopmentSection';
+import MenteeMentoringRelationshipDynamicsSection from './section-edit/MenteeMentoringRelationshipDynamicsSection';
+import MenteeLongTermVisionSection from './section-edit/MenteeLongTermVisionSection';
+import { roleBasedSections } from './MyProfile';
 
 const EditProfile = ({ setEditMode }) => {
   const dispatch = useDispatch();
   const [showAll, setShowAll] = useState(false);
+  const [removeFiles, setRemoveFiles] = useState([]);
   const contentRef = useRef(null);
+  const userInfo = useSelector((state) => state.userInfo);
+  const userRole = userInfo?.data?.role;
 
-  const profileSection = [
+  const allProfileSections = [
     { title: 'Personal Information', component: <PersonalInfoSection /> },
     {
-      title: 'Professional Background',
+      title: 'Current Status',
+      component: <MenteeCurrentStatusSection />,
+    },
+    {
+      title: 'Skill and Interests',
+      component: <MenteeSkillandInterestsSection />,
+    },
+    {
+      title: 'Expectation and goals',
+      component: <MenteeExpectionAndGoalsSection />,
+    },
+    {
+      title: 'Professional Bakground',
       component: <ProfessionalBakgroundSection />,
     },
     {
@@ -44,16 +75,64 @@ const EditProfile = ({ setEditMode }) => {
     },
     { title: 'Area of expertise', component: <AreaOfExpertiseSection /> },
     {
-      title: 'Mentorship Experience ',
+      title: 'Mentorship Experience',
       component: <MentorshipExperienceSection />,
     },
-    { title: 'Document upload', component: <DocumentUploadSection /> },
+    {
+      title: 'Document upload',
+      component: <DocumentUploadSection setRemoveFiles={setRemoveFiles} />,
+    },
+    {
+      title: 'Career/Academic Goals',
+      component: <MenteeCareerAcademicGoalsSection />,
+    },
+    {
+      title: 'Mentoring Preferences',
+      component: <MenteeMentoringPreferencesSection />,
+    },
+    {
+      title: 'Availability',
+      component: <MenteeAvailabilitySection />,
+    },
+    {
+      title: 'Detailed Career/academic Goals',
+      component: <MenteeDetailedCareerAcademicGoalsSection />,
+    },
+    {
+      title: 'Challenges and Obstacles',
+      component: <MenteeChallengesAndObstaclesSection />,
+    },
+    {
+      title: 'Mentoring Experience',
+      component: <MenteeMentoringExperienceSection />,
+    },
+    {
+      title: 'Learning style & Preferences',
+      component: <MenteeLearningSylePreferencesSection />,
+    },
+    {
+      title: 'Networking & Professional Developement',
+      component: <MenteeNetworkingProfessionalDevelopementSection />,
+    },
+    {
+      title: 'Personal Development',
+      component: <MenteePersonalDevelopmentSection />,
+    },
+    {
+      title: 'Mentoring Relationship Dynamics',
+      component: <MenteeMentoringRelationshipDynamicsSection />,
+    },
+    {
+      title: 'Long-term Vision',
+      component: <MenteeLongTermVisionSection />,
+    },
+    // ----
     {
       title: 'Mentorship Preference',
       component: <MentorshipPreferenceSection />,
     },
     {
-      title: 'Goals and Expectations',
+      title: 'Goals and Expections',
       component: <GoalsAndExpectatonsSection />,
     },
     {
@@ -66,7 +145,9 @@ const EditProfile = ({ setEditMode }) => {
     },
   ];
 
-  const visibleSections = showAll ? profileSection : profileSection.slice(0, 2);
+  const profileSection = allProfileSections.filter((section) =>
+    roleBasedSections[userRole]?.includes(section.title)
+  );
 
   const { profile, loading, status } = useSelector(
     (state) => state.profileInfo
@@ -98,46 +179,79 @@ const EditProfile = ({ setEditMode }) => {
   }, [status]);
 
   const onSubmit = (data) => {
-    if (data) {
-      dispatch(
-        updateProfile({
-          // ...data,
-          documents: data.documents,
-          phone_number: data?.phone_number || '',
-          secondary_phone_number: data?.secondary_phone_number || '',
-          job_title: data?.job_title || '',
-          current_employer: data?.current_employer || '',
-          industry_type: data?.industry_type || '',
-          linked_in: data?.linked_in || '',
-          highest_degree: data?.highest_degree || '',
-          field_of_study: data?.field_of_study || '',
-          areas_of_expertise: data?.areas_of_expertise || '', // Update based on correct field name
-          confident_areas_of_expertise:
-            data?.confident_areas_of_expertise || '',
-          prev_mentorship: data?.prev_mentorship || false,
-          mentor_exp_desc: data?.mentor_exp_desc || '',
-          interested_mentee_type: data?.interested_mentee_type || '',
-          communication_mode: data?.communication_mode || '',
-          availability_frequency: data?.availability_frequency || '',
-          mentorship_achievement: data?.mentorship_achievement || '',
-          mentor_expectations: data?.mentor_expectations || '',
-          max_mentee_count: data?.max_mentee_count || null,
-          pref_mentorship_duration: data?.pref_mentorship_duration || '',
-          additional_info: data?.additional_info || '',
-          address: data?.address || '',
-          location: data?.location || '',
-          social_media: data?.social_media || '',
-          reviewandrating: data?.reviewandrating || false,
-          years_of_experience: data?.years_of_experience || '',
-          gender: data?.gender || '',
-        })
-      );
+    const formData = new FormData();
+
+    // Add documents to FormData (assumes documents is a file or array of files)
+    if (data.documents) {
+      if (Array.isArray(data.documents)) {
+        data.documents.forEach((file, index) => {
+          formData.append(`documents`, file);
+        });
+      } else {
+        formData.append('documents', data.documents);
+      }
     }
+
+    // Add other fields to FormData
+    formData.append('phone_number', data.phone_number || '');
+    formData.append(
+      'secondary_phone_number',
+      data.secondary_phone_number || ''
+    );
+    formData.append('job_title', data.job_title || '');
+    formData.append('current_employer', data.current_employer || '');
+    formData.append('industry_type', data.industry_type || '');
+    formData.append('linked_in', data.linked_in || '');
+    formData.append('highest_degree', data.highest_degree || '');
+    formData.append('field_of_study', data.field_of_study || '');
+    formData.append('areas_of_expertise', data.areas_of_expertise || '');
+    formData.append(
+      'confident_areas_of_expertise',
+      data.confident_areas_of_expertise || ''
+    );
+    formData.append('prev_mentorship', data.prev_mentorship || false);
+    formData.append('mentor_exp_desc', data.mentor_exp_desc || '');
+    formData.append(
+      'interested_mentee_type',
+      data.interested_mentee_type || ''
+    );
+    formData.append('communication_mode', data.communication_mode || '');
+    formData.append(
+      'availability_frequency',
+      data.availability_frequency || ''
+    );
+    formData.append(
+      'mentorship_achievement',
+      data.mentorship_achievement || ''
+    );
+    formData.append('mentor_expectations', data.mentor_expectations || '');
+    formData.append('max_mentee_count', data.max_mentee_count || null);
+    formData.append(
+      'pref_mentorship_duration',
+      data.pref_mentorship_duration || ''
+    );
+    formData.append('additional_info', data.additional_info || '');
+    formData.append('address', data.address || '');
+    formData.append('location', data.location || '');
+    formData.append('social_media', data.social_media || '');
+    formData.append('reviewandrating', data.reviewandrating || false);
+    formData.append('years_of_experience', data.years_of_experience || '');
+    formData.append('gender', data.gender || '');
+    formData.append('files_to_remove', removeFiles || []);
+    // if (removeFiles && Array.isArray(removeFiles)) {
+    //   removeFiles.forEach((id) => {
+    //     formData.append('files_to_remove[]', id); // Ensure each ID is appended
+    //   });
+    // }
+
+    // Dispatch the form data
+    console.log(formData);
+    dispatch(updateProfile(formData));
   };
 
   return (
     <FormContextProvider onSubmit={onSubmit} initialValues={profile}>
-      <div className='border p-12 rounded-lg'>
+      <div className='border px-12 py-6 rounded-lg'>
         <div className='flex items-center  justify-between'>
           <div className='py-4 relative w-[12%]'>
             <div className='upload-profile'>
@@ -186,9 +300,9 @@ const EditProfile = ({ setEditMode }) => {
           style={{
             maxHeight: showAll
               ? `${contentRef.current.scrollHeight}px`
-              : '875px',
+              : '825px',
             overflow: 'hidden',
-            transition: 'max-height 0.3s ease',
+            transition: 'max-height 0.5s ease',
           }}
         >
           {profileSection.map((section, index) => (
