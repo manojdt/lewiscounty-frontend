@@ -197,7 +197,7 @@ export const Signup = () => {
                           <>
                             <div className={`relative mb-6 ${field.size ? 'width-49' : 'w-full'}`} key={index}>
                               <label className="block tracking-wide text-gray-700 mb-2 text-[14px]">
-                                {field.label} *
+                                {field.label} <span style={{color: 'red'}}>{field?.inputRules?.required ? '*' : ''}</span>
                               </label>
                               <input
                                 type={field.fieldtype === 'password' ? (passwordVisibility ? 'text' : field.fieldtype) : field.fieldtype}
