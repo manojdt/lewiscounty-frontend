@@ -19,6 +19,7 @@ const FormContextProvider = ({ children, onSubmit, initialValues }) => {
         professional_bio: initialValues?.professional_bio,
         documents: initialValues?.documents.map((doc) => (
           <Link
+            {...doc}
             target='_blank'
             className='underline text-blue-500'
             to={doc.file}
