@@ -269,6 +269,7 @@ useEffect(() => {
       return step
     })
     setStepData({ ...stepData, ...data })
+    setAllStepList(activeSteps)
     setCurrentStep(currentStep - 1)
     setBtnTypeAction({ back: true, next: false })
   }
