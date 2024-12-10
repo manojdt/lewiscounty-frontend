@@ -43,7 +43,7 @@ export default function MyProfile() {
               {tabs.map((tab, index) => (
                 <div
                   key={index}
-                  className={`p-4 font-semibold pl-6 flex items-start gap-4 ${
+                  className={`p-4 font-semibold pl-6 flex items-start cursor-pointer gap-4 ${
                     activeTab === index
                       ? 'text-blue-500 bg-[#F0F5FF] border-r-4 rounded-tl-lg rounded-bl-lg border-blue-500'
                       : 'text-gray-500 hover:text-blue-500'
