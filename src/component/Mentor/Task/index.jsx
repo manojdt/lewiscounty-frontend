@@ -105,7 +105,7 @@ const MentorTask = () => {
     }
 
     const handleBookmark = (program) => {
-        // dispatch(updateProgram({ id: program.id, is_bookmark: !program.is_bookmark }))
+        console.log('program', program)
     }
 
     const handleClick = (event, data) => {
@@ -416,7 +416,7 @@ const MentorTask = () => {
                             {
                                 <div className='flex  items-center'>
                                     <a className='underline pr-3' href={params.row.files[0].files} target="_blank" style={{ color: 'rgba(24, 40, 61, 1)' }}
-                                    title={files.fullName}>{files.filename}</a>
+                                        title={files.fullName}>{files.filename}</a>
                                     {
                                         files.remainingCount > 0 &&
                                         <span style={{

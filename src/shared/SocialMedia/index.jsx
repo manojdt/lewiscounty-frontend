@@ -9,6 +9,7 @@ import GoogleIcon from '../../assets/images/google1x.png';
 import FacebookIcon from '../../assets/images/facebook1x.png';
 import InstagramIcon from '../../assets/images/instagram1x.png';
 import { useDispatch } from 'react-redux';
+import { Button } from '@mui/material';
 
 export default function SocialMediaLogin({ view = 'vertical' }) {
 
@@ -43,7 +44,7 @@ export default function SocialMediaLogin({ view = 'vertical' }) {
 
 
     return (
-        <div className={`flex gap-10 ${view === 'vertical' ? 'flex-col justify-center' : ''}`}>
+        <div className={`flex gap-7 ${view === 'vertical' ? 'flex-col justify-center' : ''}`}>
             {
                 view === 'vertical' ?
                     <>
@@ -60,20 +61,17 @@ export default function SocialMediaLogin({ view = 'vertical' }) {
                                 console.log("hbhbdhd", err);
                             }}
                         >
-                            <div className="cursor-pointer px-6 py-3 flex justify-center items-center gap-3" style={{ border: '0.5px solid rgba(62, 62, 62, 1)', borderRadius: '6px' }}>
-                                <img src={GoogleIcon} className='w-[30px]' alt='GoogleIcon' />
-                                <p>Continue with Google</p>
-                            </div>
+                            <Button fullWidth color='inherit' size='large' variant="outlined" startIcon={<img src={GoogleIcon} className='w-[20px]' alt='GoogleIcon' />}>
+                                Continue With Google
+                            </Button>
                         </LoginSocialGoogle>
 
-                        <div className="cursor-pointer px-6 py-3 flex justify-center items-center gap-3" style={{ border: '0.5px solid rgba(62, 62, 62, 1)', borderRadius: '6px' }}>
-                            <img src={InstagramIcon} alt='InstagramIcon' />
-                            <p>Continue with Instagram</p>
-                        </div>
-                        <div className="cursor-pointer px-6 py-3 flex justify-center items-center gap-3" style={{ border: '0.5px solid rgba(62, 62, 62, 1)', borderRadius: '6px' }}>
-                            <img src={FacebookIcon} alt='FacebookIcon' />
-                            <p>Continue with Facebook</p>
-                        </div>
+                        <Button fullWidth color='inherit' size='large' variant="outlined" startIcon={<img src={InstagramIcon} className='w-[20px]' alt='InstagramIcon' />}>
+                            Continue with Instagram
+                        </Button>
+                        <Button fullWidth color='inherit' size='large' variant="outlined" startIcon={<img src={FacebookIcon} className='w-[20px]' alt='FacebookIcon' />}>
+                            Continue with Facebook
+                        </Button>
                     </>
                     :
 
@@ -92,16 +90,16 @@ export default function SocialMediaLogin({ view = 'vertical' }) {
                                 console.log("hbhbdhd", err);
                             }}
                         >
-                            <div className="cursor-pointer px-6 py-3" style={{ border: '0.5px solid rgba(62, 62, 62, 1)', borderRadius: '6px' }}>
-                                <img src={GoogleIcon} alt='GoogleIcon' />
-                            </div>
+                            <Button fullWidth color='inherit' size='large' variant="outlined" startIcon={<img src={GoogleIcon} className='w-[20px]' alt='GoogleIcon' />}>
+                                Continue With Google
+                            </Button>
                         </LoginSocialGoogle>
-                        <div className="cursor-pointer px-6 py-3" style={{ border: '0.5px solid rgba(62, 62, 62, 1)', borderRadius: '6px' }}>
-                            <img src={InstagramIcon} alt='InstagramIcon' />
-                        </div>
-                        <div className="cursor-pointer px-6 py-3" style={{ border: '0.5px solid rgba(62, 62, 62, 1)', borderRadius: '6px' }}>
-                            <img src={FacebookIcon} alt='FacebookIcon' />
-                        </div>
+                        <Button fullWidth color='inherit' size='large' variant="outlined" startIcon={<img src={InstagramIcon} className='w-[20px]' alt='InstagramIcon' />}>
+                            Continue with Instagram
+                        </Button>
+                        <Button fullWidth color='inherit' size='large' variant="outlined" startIcon={<img src={FacebookIcon} className='w-[20px]' alt='FacebookIcon' />}>
+                            Continue with Facebook
+                        </Button>
                     </>
             }
 

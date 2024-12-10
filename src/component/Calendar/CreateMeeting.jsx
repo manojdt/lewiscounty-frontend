@@ -143,8 +143,6 @@ export default function CreateMeeting() {
       }
     }
   }, [getEvent, reset]);
-  console.log(dateFormat);
-  console.log(getEvent);
 
   const timeFormat = (utcTimestamp) => {
     let timeString = '';

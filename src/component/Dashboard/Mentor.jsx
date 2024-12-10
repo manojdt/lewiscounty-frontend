@@ -4,12 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 import RecentRequests from "./RecentRequests";
-import RecentActivities from "./RecentActivities";
-import ViewImpression from "./ViewImpression";
 import Programs from "./Programs";
 import Invite from "./Invite";
 import { programActionStatus, programStatus } from "../../utils/constant";
-import { chartProgramList, getProgramCounts, getUserPrograms, updateProgram } from "../../services/userprograms";
+import { chartProgramList, getProgramCounts, getUserPrograms } from "../../services/userprograms";
 import { pipeUrls } from '../../utils/constant';
 import './dashboard.css';
 import UserInfoCard from "./UserInfoCard";

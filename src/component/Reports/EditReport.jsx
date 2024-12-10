@@ -18,8 +18,7 @@ import SuccessTik from '../../assets/images/blue_tik1x.png';
 import CancelIcon from '../../assets/images/cancel1x.png'
 import { getAllCategories } from '../../services/programInfo';
 
-import { getMentees, getProgramDetails, updateProgram } from '../../services/userprograms';
-import { pipeUrls, programActionStatus, reportAllStatus, reportsStatus } from '../../utils/constant';
+import { reportsStatus } from '../../utils/constant';
 import { getProgramsByCategoryId, getReportDetails, getReportProgramDetails, updateReportDetails, updateReportLocalState } from '../../services/reportsInfo';
 import { dateTimeFormat } from '../../utils';
 import ToastNotification from '../../shared/Toast';

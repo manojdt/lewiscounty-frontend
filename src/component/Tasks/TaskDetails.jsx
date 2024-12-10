@@ -179,8 +179,6 @@ export const TaskDetails = () => {
 
     const allFiles = getFiles(taskData?.files || [])
 
-    console.log('allFiles', allFiles, taskData.files)
-
 
     return (
         <div className="px-9 py-9">

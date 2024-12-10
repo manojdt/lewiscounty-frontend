@@ -31,7 +31,6 @@ import {
   getMenteePrograms,
   getProgramCounts,
   getUserPrograms,
-  updateProgram,
 } from '../../services/userprograms';
 import DataTable from '../../shared/DataGrid';
 import { programListColumns } from '../../utils/tableFields';

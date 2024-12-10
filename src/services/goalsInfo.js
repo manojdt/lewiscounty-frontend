@@ -15,8 +15,9 @@ export const getAllGoals = createAsyncThunk(
                 !(key === "created_by" && value.trim().length === 0)
             )
         );
-        let queryString = new URLSearchParams(filteredQuery).toString()
-        const allGoals = await api.get(`goals/get/all/goals?${queryString}`);
+        const { params, ...queryWithoutParams } = filteredQuery;
+        let queryString = new URLSearchParams(queryWithoutParams).toString()
+        const allGoals = await api.get(`goals/get${params ? "" : "/all"}/goals${params ? `/${params}` : ""}${queryString ? `?${queryString}` : ""}`);
         if (allGoals.status === 200 && allGoals.data) {
             return allGoals.data;
         }
