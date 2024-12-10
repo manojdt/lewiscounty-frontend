@@ -60,7 +60,6 @@ export default function CreateCertificate() {
             id: parseInt(data.program),
         }
         dispatch(createCertificate(apiPayload))
-        // dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.assigned }))
         // reset()
     }
 

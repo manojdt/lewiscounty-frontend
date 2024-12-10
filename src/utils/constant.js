@@ -837,29 +837,23 @@ export const RequestStatus = {
     key: 'new_goals_request',
     name: 'New Goals Requests',
   },
+  extendedRequests: {
+    key: 'extended_request',
+    name: 'Extended Requests',
+  },
+  reOpenRequests: {
+    key: 're_open_request',
+    name: 'Re-open Requests',
+  },
 };
 
-export const requestOverview = [
+export const myRequestOverview = [
   {
     name: 'Program Requests',
     key: RequestStatus.programRequest.key,
     count: 0,
     status: RequestStatus.programRequest.key,
     for: ['admin', 'mentor', 'mentee'],
-  },
-  {
-    name: 'Member Join Requests',
-    key: RequestStatus.memberJoinRequest,
-    count: 0,
-    status: RequestStatus.memberJoinRequest.key,
-    for: ['admin'],
-  },
-  {
-    name: 'Goal Requests',
-    key: RequestStatus.goalRequest,
-    count: 0,
-    status: RequestStatus.goalRequest.key,
-    for: ['admin'],
   },
   {
     name: 'Resource Access Requests',
@@ -869,18 +863,11 @@ export const requestOverview = [
     for: ['admin', 'mentor'],
   },
   {
-    name: 'Technical Support Requests',
-    key: RequestStatus.technicalSupportRequest,
+    name: 'New Goals Requests',
+    key: RequestStatus.newGoalsRequests.key,
     count: 0,
-    status: RequestStatus.technicalSupportRequest.key,
-    for: ['admin', 'mentor'],
-  },
-  {
-    name: 'Testimonial Requests',
-    key: RequestStatus.testimonicalRequest,
-    count: 0,
-    status: RequestStatus.testimonicalRequest.key,
-    for: ['admin', 'mentor'],
+    status: RequestStatus.newGoalsRequests.key,
+    for: ['mentee', 'mentor'],
   },
   {
     name: 'Certificate Requests',
@@ -897,18 +884,88 @@ export const requestOverview = [
     for: ['admin', 'mentor'],
   },
   {
+    name: 'Testimonial Requests',
+    key: RequestStatus.testimonicalRequest,
+    count: 0,
+    status: RequestStatus.testimonicalRequest.key,
+    for: ['admin', 'mentor'],
+  },
+  // {
+  //   name: 'Technical Support Requests',
+  //   key: RequestStatus.technicalSupportRequest,
+  //   count: 0,
+  //   status: RequestStatus.technicalSupportRequest.key,
+  //   for: ['admin'],
+  // },
+  {
+    name: 'Member Join Requests',
+    key: RequestStatus.memberJoinRequest,
+    count: 0,
+    status: RequestStatus.memberJoinRequest.key,
+    for: ['admin'],
+  },
+  {
+    name: 'Goal Requests',
+    key: RequestStatus.goalRequest,
+    count: 0,
+    status: RequestStatus.goalRequest.key,
+    for: ['admin'],
+  },
+  {
+    name: 'Extended Requests',
+    key: RequestStatus.extendedRequests,
+    count: 0,
+    status: RequestStatus.extendedRequests.key,
+    for: ['admin', 'mentor'],
+  },
+  {
+    name: 'Re-open Requests',
+    key: RequestStatus.reOpenRequests,
+    count: 0,
+    status: RequestStatus.reOpenRequests.key,
+    for: ['mentor'],
+  },
+  {
     name: 'Learning Access Requests',
     key: RequestStatus.learningAccessRequests.key,
     count: 0,
     status: RequestStatus.learningAccessRequests.key,
     for: ['mentee'],
   },
+
+];
+
+export const menteesRequestOverview = [
   {
-    name: 'New Goals Requests',
-    key: RequestStatus.newGoalsRequests.key,
+    name: 'Program Requests',
+    key: RequestStatus.programRequest.key,
     count: 0,
-    status: RequestStatus.newGoalsRequests.key,
-    for: ['mentee'],
+    status: RequestStatus.programRequest.key,
+    for: ['mentor'],
+  },
+  {
+    name: 'Resource Access Requests',
+    key: RequestStatus.resourceAccessRequest,
+    count: 0,
+    status: RequestStatus.resourceAccessRequest.key,
+    for: ['mentor'],
+  },
+  {
+    name: 'Goal Requests',
+    key: RequestStatus.goalRequest,
+    count: 0,
+    status: RequestStatus.goalRequest.key,
+    for: ['mentor'],
+  },
+];
+
+export const adminRequestOverview = [
+  {
+    name: 'Mentor Changes request',
+    key: RequestStatus.programRequest.key,
+    count: 0,
+    status: RequestStatus.programRequest.key,
+    for: ['mentor'],
   },
 ];
 

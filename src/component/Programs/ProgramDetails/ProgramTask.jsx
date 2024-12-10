@@ -7,7 +7,7 @@ import CancelIcon from '../../../assets/images/cancel-colour1x.png'
 import DeleteIcon from "../../../assets/images/delete_1x.png"
 import FileUploadIcon from "../../../assets/icons/Upload.svg"
 
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getProgramDetails, updateProgram } from '../../../services/userprograms';
 import { useDispatch, useSelector } from 'react-redux';
 import { Backdrop, CircularProgress } from '@mui/material';

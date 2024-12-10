@@ -1,12 +1,8 @@
 import React, { useState } from 'react'
-import Card from '../../shared/Card'
-import { requestOverview } from '../../utils/constant'
 import SearchIcon from '../../assets/icons/search.svg';
-import CalendarIcon from '../../assets/images/calender_1x.png';
-import MoreIcon from '../../assets/icons/moreIcon.svg'
 import ViewIcon from '../../assets/images/view1x.png'
 import DataTable from '../../shared/DataGrid';
-import { discussionData, programRequestData } from '../../mock';
+import { discussionData } from '../../mock';
 import { discussionColumns } from '../../utils/tableFields';
 import { useNavigate } from 'react-router-dom';
 
