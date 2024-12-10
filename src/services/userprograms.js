@@ -74,6 +74,26 @@ export const updateProgram = createAsyncThunk(
         return updateUserProgram;
     }
 );
+export const launchProgram = createAsyncThunk(
+    "launchProgram",
+    async (data) => {
+        const updateUserProgram = await api.post("request", data);
+        if (updateUserProgram.status === 200 && updateUserProgram.data) {
+            let status = ''
+            // if (data.status && data.status !== '') {
+            //     status = data.status
+            // }
+            // if (data.hasOwnProperty('is_bookmark') && data.is_bookmark !== '') {
+            //     status = programActionStatus.bookmark
+            // }
+            return {
+                programdetails: updateUserProgram.data,
+                status
+            };
+        }
+        return updateUserProgram;
+    }
+);
 
 
 export const getProgramCounts = createAsyncThunk(

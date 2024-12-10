@@ -44,7 +44,7 @@ import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { pipeUrls, programActionStatus, programStatus, requestStatus } from '../../../utils/constant';
 import { getProgramMentees, updateNewPrograms } from '../../../services/programInfo';
-import { getProgramDetails, updateProgram } from '../../../services/userprograms';
+import { getProgramDetails, launchProgram, updateProgram } from '../../../services/userprograms';
 import { Backdrop, CircularProgress } from '@mui/material';
 import useTimer from '../../../hooks/useTimer';
 import SkillsSet from '../../SkillsSet';
@@ -188,28 +188,28 @@ export default function AssignTask() {
         // }
 
         if (programdetails.status === programActionStatus.yettostart) {
-            setLoading({ initial: true, task: false })
-            const startProgramRequest = await api.post('start_program', { id: parseInt(params.id) });
-            if ((startProgramRequest.status === 201 || startProgramRequest.status === 200) && startProgramRequest.data) {
-                setLoading({ initial: false, task: false })
-                dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.inprogress })).then(() => {
+            // setLoading({ initial: true, task: false })
+            // const startProgramRequest = await api.post('start_program', { id: parseInt(params.id) });
+            // if ((startProgramRequest.status === 201 || startProgramRequest.status === 200) && startProgramRequest.data) {
+                // setLoading({ initial: false, task: false })
+                dispatch(launchProgram({ program: programdetails.id, request_type: "program_start" })).then(() => {
                     dispatch(getProgramDetails(parseInt(params.id)))
                 })
 
-            }
+            // }
         }
 
-        if (programdetails.status === programActionStatus.started) {
-            dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.inprogress }))
-        }
+        // if (programdetails.status === programActionStatus.started) {
+        //     dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.inprogress }))
+        // }
 
-        if (programdetails.status === programActionStatus.inprogress) {
-            dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.paused }))
-        }
+        // if (programdetails.status === programActionStatus.inprogress) {
+        //     dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.paused }))
+        // }
 
-        if (programdetails.status === programStatus.paused) {
-            dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.inprogress }))
-        }
+        // if (programdetails.status === programStatus.paused) {
+        //     dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.inprogress }))
+        // }
     }
 
     const handleMenu = (key) => {
