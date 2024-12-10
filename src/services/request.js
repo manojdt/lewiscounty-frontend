@@ -10,7 +10,20 @@ export const getprogramRequest = createAsyncThunk(
     async (query = '') => {
         let queryString = new URLSearchParams(query).toString()
 
-        const programRequests = await api.get(`program_request/program_requests?${queryString}`);
+        const programRequests = await api.get(`request/?${queryString}`);
+        if (programRequests.status === 200 && programRequests.data) {
+            return programRequests.data;
+        }
+        // console.log(programRequests,3434343)
+        return programRequests;
+    }
+);
+export const getExtendProgramRequest = createAsyncThunk(
+    "getExtendProgramRequest",
+    async (query = '') => {
+        let queryString = new URLSearchParams(query).toString()
+
+        const programRequests = await api.get(`program_extend/?${queryString}`);
         if (programRequests.status === 200 && programRequests.data) {
             return programRequests.data;
         }
@@ -39,7 +52,7 @@ export const getResourceRequest = createAsyncThunk(
     async (query = '') => {
         let queryString = new URLSearchParams(query).toString()
 
-        const resourceRequests = await api.get(`resource-request/?${queryString}`);
+        const resourceRequests = await api.get(`learning_material/?${queryString}`);
         if (resourceRequests.status === 200 && resourceRequests.data) {
             return resourceRequests.data;
         }
@@ -72,8 +85,8 @@ export const updateProgramRequest = createAsyncThunk(
 export const certificateRequest = createAsyncThunk(
     "certificateRequest",
     async (query = "") => {
-        const url = query?.filterStatus?.length ? `certificate/certificate_request?status=${query?.filterStatus}&type=request&page=${query?.page}&limit=${query?.limit}` :
-        `certificate/certificate_request?type=request&page=${query?.page}&limit=${query?.limit}`
+        const url = query?.filterStatus?.length ? `certificate/?status=${query?.filterStatus}&type=request&page=${query?.page}&limit=${query?.limit}` :
+        `certificate/?type=request&page=${query?.page}&limit=${query?.limit}`
         const certificateReq = await api.get(url);
         if (certificateReq.status === 200 && certificateReq.data) {
             return certificateReq.data;
@@ -223,7 +236,7 @@ export const getReportRequest = createAsyncThunk(
     "getReportRequest",
     async (query='') => {
         let queryString = new URLSearchParams(query).toString()
-        const getReportRequestInfo = await api.get(`program_request/report_request?${queryString}&page=${query?.page ?? 1}&limit=${query?.limit ?? 10}`);
+        const getReportRequestInfo = await api.get(`report/?${queryString}&page=${query?.page ?? 1}&limit=${query?.limit ?? 10}`);
         if (getReportRequestInfo.status === 200 && getReportRequestInfo.data) {
             return getReportRequestInfo.data;
         }

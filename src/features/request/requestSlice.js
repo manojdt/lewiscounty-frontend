@@ -23,11 +23,13 @@ import {
     updateCertificateRequest,
     updateProgramRequest,
     updateReportRequest,
-    getlearningAccessRequest
+    getlearningAccessRequest,
+    getExtendProgramRequest
 } from "../../services/request";
 
 const initialState = {
     programRequest: [],
+    programExtend: [],
     memberRequest: [],
     resourceRequest: [],
     goalsRequest: [],
@@ -63,6 +65,28 @@ export const requestSlice = createSlice({
                 };
             })
             .addCase(getprogramRequest.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+        builder
+            .addCase(getExtendProgramRequest.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(getExtendProgramRequest.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    programExtend: action.payload,
+                    status: requestStatus.load,
+                    loading: false,
+                };
+            })
+            .addCase(getExtendProgramRequest.rejected, (state, action) => {
                 return {
                     ...state,
                     loading: false,

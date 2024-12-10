@@ -41,6 +41,7 @@ import {
     memberMenteeRequestColumns,
     memberMentorRequestColumns,
     newGoalsRequestsColumns,
+    programExtendRequestColumns,
     programRequestColumns,
     reportRequestColumns,
     resourceAccessRequestColumns,
@@ -54,6 +55,7 @@ import {
     cancelMemberRequest,
     certificateRequest,
     getCategoryList,
+    getExtendProgramRequest,
     getlearningAccessRequest,
     getMemberRequest,
     getprogramRequest,
@@ -83,6 +85,7 @@ export default function AllRequest() {
     const dispatch = useDispatch();
     const {
         programRequest: programTableInfo,
+        programExtend:programExtendRequests,
         memberRequest,
         resourceRequest,
         categoryList,
@@ -103,7 +106,7 @@ export default function AllRequest() {
     const [filter, setFilter] = useState({ search: "", filter_by: "" });
     const open = Boolean(anchorEl);
     const selectedRequestedtype = searchParams.get("type");
-    const [actionTab, setActiveTab] = useState("new_program_request");
+    const [actionTab, setActiveTab] = useState("program_new");
     const [actionTabFilter, setActionTabFilter] = useState([]);
     const [requestOverview, setRequestOverview] = useState([]);
     const [activeTableDetails, setActiveTableDetails] = useState({
@@ -152,13 +155,13 @@ export default function AllRequest() {
 
         {
             name: "New Program Request",
-            key: "new_program_request",
+            key: "program_new",
             for: ["admin", 'mentor'],
             forTabs: ['my']
         },
         {
             name: "Joining Request",
-            key: "joining_request",
+            key: "program_join",
             for: ["mentee", "mentor"],
             forTabs: ['mentees']
         },
@@ -574,6 +577,9 @@ export default function AllRequest() {
     );
 
     let programRequestColumn = programRequestColumns.filter((request) =>
+        request.for.includes(role)
+    );
+    let programExtendRequestColumn = programExtendRequestColumns.filter((request) =>
         request.for.includes(role)
     );
 
@@ -1096,6 +1102,109 @@ export default function AllRequest() {
             },
         },
     ];
+    const extendRequestColumn = [
+        ...programExtendRequestColumns,
+        {
+            field: "status",
+            headerName: "Status",
+            flex: 1,
+            id: 2,
+            renderCell: (params) => {
+                return (
+                    <>
+                        <div className="cursor-pointer flex items-center h-full relative">
+                            <span
+                                className="w-[80px] flex justify-center h-[30px] px-7"
+                                style={{
+                                    background: requestStatusColor[params.row.status]?.bg || "",
+                                    lineHeight: "30px",
+                                    borderRadius: "3px",
+                                    width: "110px",
+                                    height: "34px",
+                                    color: requestStatusColor[params.row.status]?.color || "",
+                                    fontSize: "12px",
+                                }}
+                            >
+                                {requestStatusText[params.row.status] || ""}
+                            </span>
+                        </div>
+                    </>
+                );
+            },
+        },
+        {
+            field: "action",
+            headerName: "Action",
+            flex: 1,
+            id: 4,
+            renderCell: (params) => {
+                return (
+                    <>
+                        <div
+                            className="cursor-pointer flex items-center h-full"
+                            onClick={(e) => handleMoreClick(e, params.row)}
+                        >
+                            <img src={MoreIcon} alt="MoreIcon" />
+                        </div>
+                        <Menu
+                            id="basic-menu"
+                            anchorEl={anchorEl}
+                            open={open}
+                            onClose={handleClose}
+                            MenuListProps={{
+                                "aria-labelledby": "basic-button",
+                            }}
+                        >
+                            {role === "admin" && (
+                                <>
+                                    <MenuItem
+                                        onClick={() =>
+                                            navigate(`/view-report/${seletedItem.report_id}`)
+                                        }
+                                        className="!text-[12px]"
+                                    >
+                                        <img
+                                            src={TickCircle}
+                                            alt="AcceptIcon"
+                                            className="pr-3 w-[27px]"
+                                        />
+                                        View
+                                    </MenuItem>
+                                    {(seletedItem.status === "new" ||
+                                        seletedItem.status === "pending") && (
+                                            <>
+                                                <MenuItem
+                                                    onClick={handleAcceptReportsRequest}
+                                                    className="!text-[12px]"
+                                                >
+                                                    <img
+                                                        src={TickCircle}
+                                                        alt="AcceptIcon"
+                                                        className="pr-3 w-[27px]"
+                                                    />
+                                                    Approve
+                                                </MenuItem>
+                                                <MenuItem
+                                                    onClick={handleCancelReportRequest}
+                                                    className="!text-[12px]"
+                                                >
+                                                    <img
+                                                        src={CloseCircle}
+                                                        alt="CancelIcon"
+                                                        className="pr-3 w-[27px]"
+                                                    />
+                                                    Reject
+                                                </MenuItem>
+                                            </>
+                                        )}
+                                </>
+                            )}
+                        </Menu>
+                    </>
+                );
+            },
+        },
+    ];
 
     const techinicalColums = [
         ...techinicalSupportRequestColumns,
@@ -1332,6 +1441,32 @@ export default function AllRequest() {
             })
         );
     };
+    const getExtendRequestApi = () => {
+        let payload = {
+            request_type: actionTab,
+            ...(filterStatus !== "all" ? { status: filterStatus } : ""),
+            page: paginationModel?.page + 1,
+            limit: paginationModel?.pageSize,
+            ...(filter.search !== "" && { search: filter.search }),
+            ...(filter.filter_by !== ""
+                ? { filter_by: filter.filter_by }
+                : { filter_by: "month" }),
+        };
+
+        // if (role === "mentor") {
+        //     if (selectedTab === "mentees") {
+        //         payload.created_at = "mentee";
+        //          payload.request_by = "mentee"
+        //     }
+        //     payload.request_type = actionTab
+        // }
+        // if (role === "admin") {
+        //     payload.request_by = "mentor"
+        // }
+        dispatch(
+            getExtendProgramRequest(payload)
+        );
+    };
 
     const getResourceRequestApi = () => {
         dispatch(
@@ -1379,11 +1514,11 @@ export default function AllRequest() {
                     actionFilter = programInfoTab;
                     activeTabName =
                         selectedTab === "my"
-                            ? "new_program_request"
-                            : selectedTab === "mentees" ? "joining_request" : "program_request";
+                            ? "program_new"
+                            : selectedTab === "mentees" ? "program_join" : "program_request";
                     if (
-                        actionTab !== "joining_request" &&
-                        actionTab !== "new_program_request"
+                        actionTab !== "program_join" &&
+                        actionTab !== "program_new"
                     ) {
                         activeTabName = actionTab;
                     }
@@ -1423,6 +1558,10 @@ export default function AllRequest() {
                     tableDetails = { column: newGoalsRequestsColumn, data: [] };
                     actionFilter = [];
                     break;
+                case RequestStatus.extendedRequests.key:
+                    tableDetails = { column: programExtendRequestColumn, data: [] };
+                    actionFilter = [];
+                    break;
                 default:
                     tableDetails = { column: programRequestTab, data: [] };
                     actionFilter = [];
@@ -1437,10 +1576,10 @@ export default function AllRequest() {
                 setActionTabFilter(programRequestTab);
                 if (role !== "admin") {
                     if (selectedTab === "my") {
-                        setActiveTab("new_program_request")
+                        setActiveTab("program_new")
                     } else if (selectedTab === "mentees") {
                         setActiveTab(
-                            "joining_request"
+                            "program_join"
                         );
                     }
                 }
@@ -1591,6 +1730,13 @@ export default function AllRequest() {
                 rowCount: reportsRequestInfo?.count,
             });
         }
+        if (selectedRequestedtype === "extended_request") {
+            setActiveTableDetails({
+                column: extendRequestColumn,
+                data: programExtendRequests?.results,
+                rowCount: programExtendRequests?.count,
+            });
+        }
         if (selectedRequestedtype === "learning_access_requests") {
             setActiveTableDetails({
                 column: learningAccessRequestsColumns,
@@ -1602,6 +1748,7 @@ export default function AllRequest() {
         programTableInfo,
         memberRequest,
         resourceRequest,
+        programExtendRequests,
         goalsRequestInfo,
         certificateRequestList,
         reportsRequestInfo,
@@ -1641,6 +1788,9 @@ export default function AllRequest() {
             }
             if (selectedRequestedtype === "report_request") {
                 getReportsRequestApi();
+            }
+            if (selectedRequestedtype === "extended_request") {
+                getExtendRequestApi();
             }
         }
     }, [actionTab, searchParams, filterStatus, role, paginationModel]);
@@ -1704,11 +1854,11 @@ export default function AllRequest() {
         switch (selectedTab) {
             case "my":
                 currentOveriew = myRequestOverview
-                currentTab = "new_program_request"
+                currentTab = "program_new"
                 break;
             case "mentees":
                 currentOveriew = menteesRequestOverview
-                currentTab = "joining_request"
+                currentTab = "program_join"
                 break;
             case "admin":
                 currentOveriew = adminRequestOverview
@@ -2047,7 +2197,7 @@ export default function AllRequest() {
                                 cardTitle={"Request Overview"}
                                 cardContent={requestList}
                                 handleClick={handleClick}
-                                activeItem={currentRequestTab.key}
+                                activeItem={currentRequestTab?.key}
                             />
                         </div>
 
@@ -2063,7 +2213,7 @@ export default function AllRequest() {
                                         className="flex gap-4"
                                         style={{ color: "rgba(24, 40, 61, 1)", fontWeight: 600 }}
                                     >
-                                        {currentRequestTab.name}
+                                        {currentRequestTab?.name}
                                     </div>
                                     <div className="flex gap-7 items-center">
                                         <div className="relative">

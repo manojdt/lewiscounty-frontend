@@ -1371,7 +1371,7 @@ export const programRequestColumns = [
     for: ['admin', 'mentor', 'mentee'],
   },
   {
-    field: 'requested_by_name',
+    field: 'created_by_full_name',
     headerName: 'Requested By',
     flex: 1,
     id: 2,
@@ -1392,7 +1392,7 @@ export const programRequestColumns = [
     for: ['mentor'],
   },
   {
-    field: 'requested_date_and_time',
+    field: 'created_at',
     headerName: 'Request Date',
     flex: 1,
     id: 5,
@@ -1406,14 +1406,14 @@ export const programRequestColumns = [
   //   for: ['mentor'],
   // },
   {
-    field: 'last_updated_date',
+    field: 'updated_at',
     headerName: 'Last Updated Date',
     flex: 1,
     id: 7,
     for: ['admin', 'mentee', "mentor"],
   },
   {
-    field: 'last_updated_by',
+    field: 'updated_by_full_name',
     headerName: 'Last Updated By',
     flex: 1,
     id: 8,
@@ -1469,6 +1469,71 @@ export const programRequestColumns = [
   //   id: 14,
   //   for: ['mentor'],
   // },
+];
+export const programExtendRequestColumns = [
+  {
+    field: 'category_name',
+    headerName: 'Category',
+    flex: 1,
+    id: 0,
+    for: ['admin', 'mentor', 'mentee'],
+  },
+  {
+    field: 'program_name',
+    headerName: 'Program Name',
+    flex: 1,
+    id: 1,
+    for: ['admin', 'mentor', 'mentee'],
+  },
+  {
+    field: 'created_by_full_name',
+    headerName: 'Requested By',
+    flex: 1,
+    id: 2,
+    for: ['admin', 'mentee'],
+  },
+  {
+    field: 'position',
+    headerName: 'Position',
+    flex: 1,
+    id: 3,
+    for: ['admin'],
+  },
+  {
+    field: 'to_request',
+    headerName: 'Requeste To',
+    flex: 1,
+    id: 4,
+    for: ['mentor'],
+  },
+  {
+    field: 'created_at',
+    headerName: 'Request Date',
+    flex: 1,
+    id: 5,
+    for: ['admin', 'mentor', 'mentee'],
+  },
+  {
+    field: 'updated_at',
+    headerName: 'Last Updated Date',
+    flex: 1,
+    id: 7,
+    for: ['admin', 'mentee', "mentor"],
+  },
+  {
+    field: 'updated_by_full_name',
+    headerName: 'Last Updated By',
+    flex: 1,
+    id: 8,
+    for: ['admin', 'mentee', "mentor"],
+  },
+  {
+    field: 'auto_approval',
+    headerName: 'Auto Approval',
+    flex: 1,
+    id: 8,
+    for: ['admin'],
+  },
 ];
 
 export const learningAccessRequestsColumns = [
