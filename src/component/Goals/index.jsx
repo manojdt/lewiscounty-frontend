@@ -471,7 +471,7 @@ const Goals = () => {
             renderCell: (params) => {
                 return <>
                     <div className='cursor-pointer flex items-center h-full relative'>
-                        <span className='w-[80px] flex justify-center h-[30px] px-7'
+                        <span className='w-[80px] flex justify-center h-[30px] px-4'
                             style={{
                                 background: goalRequestColor[params.row.status]?.bg, lineHeight: '30px',
                                 borderRadius: '3px', width: '110px', height: '34px', color: goalRequestColor[params.row.status]?.color,
@@ -1107,7 +1107,7 @@ const Goals = () => {
                                     requestBtns?.map((e) => {
                                         return (
                                             <Tab value={e?.key} label={
-                                                <Typography className={`!text-[14px] text-[${requestTab === e.key ? '#1D5BBF' : '#18283D'}] 
+                                                <Typography className={`!text-[14px] px-10 text-[${requestTab === e.key ? '#1D5BBF' : '#18283D'}] 
                                                     capitalize -pb-[8px]`} sx={{ fontWeight: 500 }}>{e?.name}</Typography>
                                             } />
                                         )
@@ -1206,7 +1206,7 @@ const Goals = () => {
                                                 <div>
                                                     {/* <GoalPerformance /> */}
 
-                                                    <div style={{ border: '1px solid rgba(29, 91, 191, 1)', padding: '20px', borderRadius: '10px', margin: '10px 0' }}>
+                                                    {/* <div style={{ border: '1px solid rgba(29, 91, 191, 1)', padding: '20px', borderRadius: '10px', margin: '10px 0' }}>
                                                         <div className='goal-title-container flex justify-between items-center mb-10'>
                                                             <div className='flex gap-5 items-center '>
                                                                 <p className='text-[18px] font-semibold'>Goals Request</p>
@@ -1238,7 +1238,7 @@ const Goals = () => {
                                                             paginationModel={requestPaginationModel}
                                                             setPaginationModel={setRequestPaginationModel}
                                                         />
-                                                    </div>
+                                                    </div> */}
 
 
 
@@ -1267,7 +1267,7 @@ const Goals = () => {
                                                         </div>
                                                         <DataTable rows={goalHistory?.results}
                                                             columns={goalHistoryColumn} handleSelectedRow={handleSelectedRow}
-                                                            height={350}
+                                                            height={650}
                                                             rowCount={goalHistory?.count}
                                                             paginationModel={historyPaginationModel}
                                                             setPaginationModel={setHistoryPaginationModel}

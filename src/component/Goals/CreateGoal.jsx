@@ -153,7 +153,7 @@ export default function CreateGoal({ open, handleCloseModal, seletedItem, editMo
                                 }
                                 <div className='relative pb-8'>
                                     <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
-                                        {recreate ? "Goal Name" : editMode ? 'Edit Goal' : 'Create New Goal'}
+                                        {recreate ? "Goal Name" : editMode ? 'Edit Goal' : 'Goal Name'}
                                     </label>
 
 
@@ -242,7 +242,7 @@ export default function CreateGoal({ open, handleCloseModal, seletedItem, editMo
 
                                 <div className='relative pb-8'>
                                     <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
-                                        Period
+                                        Duration
                                     </label>
 
                                     <div className='relative'>

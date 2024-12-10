@@ -789,7 +789,7 @@ const ViewGoal = ({ type = '' }) => {
                         <img src={CancelReq} alt="ConnectIcon" />
 
                         <div className='py-5'>
-                            <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 600, fontSize: '18px' }}>Are you sure want to cancel this Goal?</p>
+                            <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 600, fontSize: '18px' }}>Are you sure want to cancel this Active Goal?</p>
                         </div>
                         <div className='flex justify-center'>
                             <div className="flex gap-6 justify-center align-middle">
