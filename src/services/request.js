@@ -53,7 +53,16 @@ export const updateLocalRequest = createAction('update/updateRequest')
 export const updateProgramRequest = createAsyncThunk(
     "updateProgramRequest",
     async (data) => {
-        const updateProgramReq = await api.put('program_request/update-program-request-status', data);
+        let payload = {
+            status: data?.action
+        }
+        if(data?.action === "rejected"){
+            payload = {
+                ...payload,
+                rejection_reason: data?.reason ?? ''
+            }
+        }
+        const updateProgramReq = await api.patch(`request/${data?.id}/`, payload);
         if (updateProgramReq.status === 200 && updateProgramReq.data) {
             return updateProgramReq.data;
         }

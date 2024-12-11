@@ -385,6 +385,8 @@ export const requestStatusText = {
   Wating_for_response: 'Wating for Response',
   active: 'Active',
   deactivated: 'Deactivated',
+  rejected: "Rejected",
+  approved: "Approved"
 };
 export const certificateRequestStatusText = {
   new: 'New',
@@ -475,6 +477,14 @@ export const requestStatusColor = {
   deactivated: {
     bgColor: 'rgba(207, 225, 255, 1)',
     color: 'rgba(29, 91, 191, 1)',
+  },
+  rejected: {
+    bgColor: 'rgba(255, 231, 231, 1)',
+    color: 'rgba(224, 56, 45, 1)',
+  },
+  approved: {
+    bgColor: 'rgba(235, 255, 243, 1)',
+    color: 'rgba(22, 182, 129, 1)',
   },
 };
 

@@ -131,7 +131,7 @@ export const getSpecificProgramDetails = createAsyncThunk(
         }
 
       
-        const getDetailsofProgram = await api.get(`fetch_program_detail/${queryString}`);
+        const getDetailsofProgram = await api.get(`programs/${queryString}`);
         if (getDetailsofProgram.status === 200 && getDetailsofProgram.data && getDetailsofProgram.data.program) {
             return getDetailsofProgram.data.program;
         }

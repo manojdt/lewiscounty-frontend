@@ -31,7 +31,7 @@ import ViewIcon from "../../../assets/images/view1x.png";
 import CancelIcon from "../../../assets/images/cancel1x.png";
 import TickColorIcon from "../../../assets/icons/tickColorLatest.svg";
 import CancelColorIcon from "../../../assets/icons/cancelCircle.svg";
-
+import SuccessTik from '../../../assets/images/blue_tik1x.png';
 import DataTable from "../../../shared/DataGrid";
 import {
     categoryColumns,
@@ -321,7 +321,7 @@ export default function AllRequest() {
         dispatch(
             updateCertificateRequest({
                 id: seletedItem.id,
-                status: "accept",
+                status: "approved",
             })
         );
     };
@@ -343,7 +343,7 @@ export default function AllRequest() {
             dispatch(
                 updateProgramRequest({
                     id: seletedItem.id,
-                    action: "accept",
+                    action: "approved",
                 })
             );
         }
@@ -352,7 +352,7 @@ export default function AllRequest() {
             dispatch(
                 updateProgramMenteeRequest({
                     id: seletedItem.id,
-                    action: "accept",
+                    action: "approved",
                 })
             );
         }
@@ -363,7 +363,7 @@ export default function AllRequest() {
         dispatch(
             updateReportRequest({
                 id: seletedItem.id,
-                report_status: "accept",
+                report_status: "approved",
             })
         );
     };
@@ -412,8 +412,8 @@ export default function AllRequest() {
                         dispatch(
                             updateProgramRequest({
                                 id: seletedItem.id,
-                                action: "cancel",
-                                cancelled_reason: data.cancel_reason,
+                                action: "rejected",
+                                reason: data.cancel_reason,
                             })
                         );
                     }
@@ -422,8 +422,8 @@ export default function AllRequest() {
                         dispatch(
                             updateProgramMenteeRequest({
                                 id: seletedItem.id,
-                                action: "cancel",
-                                cancelled_reason: data.cancel_reason,
+                                action: "rejected",
+                                reason: data.cancel_reason,
                             })
                         );
                     }
@@ -433,7 +433,7 @@ export default function AllRequest() {
                     dispatch(
                         updateReportRequest({
                             id: seletedItem.id,
-                            report_status: "cancel",
+                            report_status: "rejected",
                             report_comment: data.cancel_reason,
                         })
                     );
@@ -647,8 +647,11 @@ export default function AllRequest() {
                                                 : "";
                                         const url =
                                             role === "admin"
-                                                ? `/program-details/${seletedItem.program}?request_id=${seletedItem.id}&type=${actionTab}`
-                                                : `/mentee-details/${seletedItem.requested_by}?type=mentee_request${requestQuery}`;
+                                                ?
+                                                `/program-details/${seletedItem.program}?request_id=${seletedItem.id}&type=${actionTab}`
+                                                : seletedItem?.status === "approved" ? 
+                                                    `/program-details/${seletedItem.program}` 
+                                                    : `/program-details/${seletedItem.program}?request_id=${seletedItem.id}&type=${actionTab}`
                                         return navigate(url);
                                     }}
                                     className="!text-[12px]"
@@ -661,8 +664,8 @@ export default function AllRequest() {
                                     View
                                 </MenuItem>
 
-                                {(seletedItem.status === "new" ||
-                                    seletedItem.status === "pending") && (
+                                {((seletedItem.status === "new" ||
+                                    seletedItem.status === "pending") && role === "admin") && (
                                         <>
                                             <MenuItem
                                                 onClick={handleAcceptProgramRequest}
@@ -688,6 +691,26 @@ export default function AllRequest() {
                                             </MenuItem>
                                         </>
                                     )}
+
+
+                                {/* {
+                                    (seletedItem.status === "new" && role === "mentor" && actionTab === "program_new") &&
+                                    <MenuItem
+                                        onClick={() =>{
+                                            setCancelPopup({
+                                                ...cancelPopup,
+                                                show: true
+                                            })
+                                        }}
+                                        className="!text-[12px]"
+                                    >
+                                        <img
+                                            src={CloseCircle}
+                                            alt="CancelIcon"
+                                            className="pr-3 w-[27px]"
+                                        />
+                                        Cancel Request
+                                    </MenuItem>} */}
                             </Menu>
                         </>
                     );
@@ -1224,7 +1247,7 @@ export default function AllRequest() {
 
         if (role === "mentor") {
             if (selectedTab === "mentee") {
-                payload.created_at = "mentee";
+                payload.request_by = "mentee"
             }
             payload.request_type = actionTab
         }
@@ -1728,7 +1751,7 @@ export default function AllRequest() {
         </Link>,
         <Typography key="2" variant="body2" color={"primary"}>
             All Request
-        </Typography>,
+        </Typography>
     ]
 
     return (
@@ -1759,12 +1782,31 @@ export default function AllRequest() {
                     </Breadcrumbs>
                 }
 
-                {showToast.show && (
+                {/* {showToast.show && (
                     <ToastNotification
                         message={showToast.message}
                         handleClose={handleClose}
                     />
-                )}
+                )} */}
+
+                <Backdrop
+                    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                    open={showToast.show}
+                    onClick={() => false}
+                >
+                    <div className='px-5 py-1 flex justify-center items-center'>
+                        <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+                            style={{ background: '#fff', borderRadius: '10px' }}>
+                            <img src={SuccessTik} alt="SuccessTik" />
+                            <p className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                                style={{
+                                    fontWeight: 600
+                                }}
+                            >{showToast.message}</p>
+                        </div>
+
+                    </div>
+                </Backdrop>
 
                 <Backdrop
                     sx={{ color: "#fff", zIndex: (theme) => 1 }}

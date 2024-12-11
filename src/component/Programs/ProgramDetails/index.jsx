@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams, useParams, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Backdrop, CircularProgress, Menu, MenuItem } from '@mui/material';
+import { Backdrop, Box, CircularProgress, Menu, MenuItem, Stack } from '@mui/material';
 import { useForm } from 'react-hook-form';
 
 import api from '../../../services/api';
@@ -144,8 +144,15 @@ export default function ProgramDetails() {
         if (role === 'admin') {
             dispatch(updateProgramRequest({
                 "id": parseInt(requestId),
-                "action": "accept"
-            }))
+                "action": "approved"
+            })).then((res) => {
+                if (res?.meta?.requestStatus === "fulfilled") {
+                    setConfirmPopup({
+                        ...confirmPopup,
+                        accept: false
+                    })
+                }
+            })
         }
         if (role === 'mentor') {
             dispatch(updateProgramMenteeRequest(
@@ -164,9 +171,16 @@ export default function ProgramDetails() {
                 if (role === 'admin') {
                     dispatch(updateProgramRequest({
                         id: parseInt(requestId),
-                        action: "cancel",
-                        cancelled_reason: data.cancel_reason
-                    }))
+                        action: "rejected",
+                        reason: data.cancel_reason
+                    })).then((res) => {
+                        if (res?.meta?.requestStatus === "fulfilled") {
+                            setConfirmPopup({
+                                ...confirmPopup,
+                                cancel: false
+                            })
+                        }
+                    })
                 }
 
                 if (role === 'mentor') {
@@ -496,7 +510,9 @@ export default function ProgramDetails() {
                             style={{
                                 fontWeight: 600
                             }}
-                        >Program Request updated successfully</p>
+                        >
+                            {programdetails?.program_name} Request is Successfully updated
+                        </p>
                     </div>
 
                 </div>
@@ -943,7 +959,7 @@ export default function ProgramDetails() {
                                             }
 
                                             {
-                                                programdetails.reschedule_info !== '' &&
+                                                programdetails.reschedule_info?.length > 0 &&
                                                 <div className='flex gap-3 items-center'>
                                                     <span style={{ background: 'rgba(255, 213, 0, 1)', borderRadius: '3px', padding: '10px' }}>
                                                         <img src={TimeHistoryIcon} alt="TimeHistoryIcon" />
@@ -1015,7 +1031,8 @@ export default function ProgramDetails() {
                                                 <>
 
                                                     {
-                                                        requestId !== '' && programdetails.mentor_join_request_status !== 'accept' && programdetails.mentor_join_request_status !== 'cancel' ?
+                                                        // requestId !== '' && programdetails.mentor_join_request_status !== 'accept' && programdetails.mentor_join_request_status !== 'cancel'
+                                                        programdetails.status === "yettoapprove" ?
                                                             <div className='flex gap-4 pt-10'>
                                                                 <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
                                                                     border: "1px solid #E0382D",
@@ -1169,9 +1186,10 @@ export default function ProgramDetails() {
                                                 : null
                                         }
 
-
-                                        {
-                                            (role === 'admin' && !programCompleted.includes(programdetails.status) && !programCancelled.includes(programdetails.status)) ?
+                                        {console.log('programdetails ==>', programdetails)}
+                                        {/* {
+                                            
+                                            (role === 'admin' && !programCompleted?.includes(programdetails.status) && !programCancelled?.includes(programdetails.status)) ?
                                                 <>
                                                     {
                                                         <div className='flex gap-4 pt-10' >
@@ -1279,6 +1297,44 @@ export default function ProgramDetails() {
 
                                                 </>
                                                 : null
+                                        } */}
+
+                                        {
+                                            <Box mt={2}>
+                                                {
+                                                    programdetails?.status === "yettoapprove" &&
+                                                    <Stack direction={"row"} alignItems={"center"} spacing={"20px"}>
+                                                        <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                            border: "1px solid #E0382D",
+                                                            borderRadius: '5px',
+                                                            color: '#E0382D'
+                                                        }}
+                                                            onClick={() => handleAcceptCancelProgramRequest('cancel', programdetails.id)}
+                                                        >
+                                                            {searchParams.has('type') && searchParams.get('type') === 'program_cancel' ? 'Continue' : 'Reject Request'}
+                                                        </button>
+                                                        <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                            background: "#16B681",
+                                                            borderRadius: '5px'
+                                                        }}
+                                                            onClick={() => handleAcceptCancelProgramRequest('accept', programdetails.id)}
+                                                        >Approve Request
+                                                        </button>
+                                                    </Stack>
+                                                }
+                                                {
+                                                    programdetails?.status === "new_program_request_rejected" &&
+                                                    <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                        border: "1px solid #E0382D",
+                                                        borderRadius: '5px',
+                                                        color: '#E0382D',
+                                                        cursor: 'not-allowed'
+                                                    }}
+                                                        onClick={undefined}
+                                                    >Rejected
+                                                    </button>
+                                                }
+                                            </Box>
                                         }
 
                                         {
@@ -1294,6 +1350,18 @@ export default function ProgramDetails() {
                                                 >Cancelled
                                                 </button>
                                             </div>
+                                        }
+
+                                        {
+                                            (programdetails?.status === "yettojoin" && role === "admin") &&
+                                            <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                background: "#16B681",
+                                                borderRadius: '5px',
+                                                cursor: 'not-allowed'
+                                            }}
+                                                onClick={undefined}
+                                            >Mentor yet to launch
+                                            </button>
                                         }
                                     </div>
 
