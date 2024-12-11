@@ -306,8 +306,7 @@ const ViewGoal = ({ type = '' }) => {
                         activity: false,
                         type: ""
                     })
-
-                    navigate(-1)
+                    navigate(payload?.status === "cancel"?"/goals?type=cancel":-1)
                 }, 2000)
 
             }
@@ -383,12 +382,12 @@ const ViewGoal = ({ type = '' }) => {
                     <img src={ConnectIcon} alt="ConnectIcon" />
 
                     <div className='py-5'>
-                        <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 600, fontSize: '18px' }}>Are you sure you want to Complete the goal?</p>
+                        <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 600, fontSize: '18px' }}>Are you sure you want to Complete this goal?</p>
                     </div>
                     <div className='flex justify-center'>
                         <div className="flex gap-6 justify-center align-middle">
                             <Button btnCls="w-[170px]" btnName='Cancel' btnCategory="secondary" onClick={resetActionModal} />
-                            <Button btnCls="w-[170px]" btnType="button" btnName='Complete goal' btnCategory="primary"
+                            <Button btnCls="w-[170px]" btnType="button" btnName='Complete' btnCategory="primary"
                                 onClick={handleSubmitGoal}
                             />
                         </div>
@@ -561,32 +560,32 @@ const ViewGoal = ({ type = '' }) => {
                                         <table className="w-[100%] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 !bg-white">
                                             <tbody>
                                                 <tr className="bg-white text-black">
-                                                    <th scope="row" className="px-0 pr-2 py-4 font-medium whitespace-nowrap w-[40px]">
-                                                        Start date
+                                                    <th scope="row" className="px-0 pr-4 py-2 font-medium whitespace-nowrap w-[40px]">
+                                                        Start date:
                                                     </th>
-                                                    <td className="px-0 py-4">
-                                                        : {dateFormatRever(goalInfo.start_date)}
+                                                    <td className="px-0 py-2">
+                                                         {dateFormatRever(goalInfo.start_date)}
                                                     </td>
                                                 </tr>
                                                 <tr className="bg-white text-black">
-                                                    <th scope="row" className="px-0 pr-2 py-4 font-medium  whitespace-nowrap w-[40px]">
-                                                        Duration
+                                                    <th scope="row" className="px-0 pr-4 py-2 font-medium  whitespace-nowrap w-[40px]">
+                                                        Duration:
                                                     </th>
-                                                    <td className="px-0 py-4">
-                                                        : {goalPeriods.find(goalPeriod => parseInt(goalPeriod.value) === parseInt(goalInfo.period))?.name}
+                                                    <td className="px-0 py-2">
+                                                         {goalPeriods.find(goalPeriod => parseInt(goalPeriod.value) === parseInt(goalInfo.period))?.name}
                                                     </td>
                                                 </tr>
                                                 <tr className="bg-white text-black">
-                                                    <th scope="row" className="px-0 pr-2 py-4 font-medium whitespace-nowrap w-[40px]">
-                                                        Status 
+                                                    <th scope="row" className="px-0 pr-4 py-2 font-medium whitespace-nowrap w-[40px]">
+                                                        Status: 
                                                     </th>
-                                                    <td className="px-0 py-4">
-                                                        : {goalRequestStatus[goalInfo.status]}&nbsp;&nbsp;Goal
+                                                    <td className="px-0 py-2">
+                                                         {goalRequestStatus[goalInfo.status]}&nbsp;&nbsp;Goal
                                                     </td>
                                                 </tr>
                                             </tbody>
                                         </table>
-                                        <Typography className="text-[18px] mt-[20px] text-[#3E3E3E]">{goalInfo?.description}</Typography>
+                                        <Typography className="text-[18px] mt-[20px] pt-7 text-[#3E3E3E]">{goalInfo?.description}</Typography>
                                     </div>
                                     <div className='leading-8'>
                                         {goalInfo.goal_description}
@@ -646,7 +645,7 @@ const ViewGoal = ({ type = '' }) => {
 
                                                         <Button
                                                             onClick={handleActionBtn}
-                                                            btnName={'Start'} btnCatergory="primary" style={{ background: 'linear-gradient(to right, #00AEBD, #1D5BBF)', borderRadius: '4px', width: '180px' }} />
+                                                            btnName={'Start'} btnCatergory="primary" style={{ background: 'linear-gradient(to right, #00AEBD, #1D5BBF)', borderRadius: '4px', width: '140px' }} />
                                                     </>
                                                 }
 
@@ -654,8 +653,8 @@ const ViewGoal = ({ type = '' }) => {
                                                 {
                                                     (goalInfo.status === 'cancel' || goalInfo.status === 'accept' || goalInfo?.status === "completed") &&
                                                     <>
-                                                        <Button btnName="Back" style={{ border: '1px solid rgba(29, 91, 191, 1)', width: '180px', color: 'rgba(29, 91, 191, 1)' }}
-                                                            onClick={() => navigate('/goals')}
+                                                        <Button btnName={goalInfo?.status === "completed"?"Close":"Back"} style={{ border: '1px solid rgba(29, 91, 191, 1)', width: '180px', color: 'rgba(29, 91, 191, 1)' }}
+                                                            onClick={() => navigate( goalInfo?.status === "completed"?"/goals?type=completed":'/goals')}
                                                         />
 
                                                         <Button

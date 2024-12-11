@@ -122,7 +122,7 @@ const Goals = () => {
             key: 'completed',
         },
         {
-            name: 'Cancel Goals',
+            name: 'Cancelled Goals',
             key: 'cancel',
         }
     ]
@@ -518,7 +518,7 @@ const Goals = () => {
                             </MenuItem>
                         }
                         {
-                            params?.row?.status === "new" &&
+                            params?.row?.status === "new" ||  params?.row?.status === "pending" &&
                             <MenuItem onClick={handlEditGoal} className='!text-[12px]'>
                                 <img src={EditIcon} alt="EditIcon" className='pr-3 w-[30px]' />
                                 Edit
@@ -534,10 +534,10 @@ const Goals = () => {
                         }
 
                         {
-                            ["new", "active"].includes(params?.row?.status) &&
+                            ["new","pending", "active"].includes(params?.row?.status) &&
                             <MenuItem onClick={() => handleOpenConfirmPopup("cancel")} className='!text-[12px]'>
                                 <img src={CancelReqIcon} alt="CancelReqIcon" field={params.id} className='pr-3 w-[30px]' />
-                                Cancel
+                                Cancel { params?.row?.status === "new"|| params?.row?.status === "pending"?"Request":null}
                             </MenuItem>
                         }
                     </Menu>}

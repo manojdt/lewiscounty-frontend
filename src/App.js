@@ -101,7 +101,8 @@ function App() {
     <Routes>
       <Route element={<PubicRoutes />}>
         <Route path='/' element={<AuthLayout />} >
-          <Route index path='/login' element={<Login />} />
+          <Route index element={<Navigate to="/login" replace />} />
+          <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Signup />} />
           <Route path='/forgot-password' element={<ForgotPassword />} />
           <Route path='/verify-otp' element={<VerifyOTP />} />
