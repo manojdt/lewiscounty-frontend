@@ -9,21 +9,13 @@ import "./index.css";
 import 'primeicons/primeicons.css';
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { createTheme, ThemeProvider  } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material/styles";
+import MuiTheme from "./theme/MuiTheme";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
-const theme = createTheme ({
-  Button: {
-    fontFamily: [
-      "Plus Jakarta Sans",
-      "sans-serif",
-    ].join(","),
-  },
-});
-
 root.render(
-  <ThemeProvider theme={theme}>
+  <ThemeProvider theme={MuiTheme}>
     <Provider store={store}>
       <BrowserRouter>
         <App />

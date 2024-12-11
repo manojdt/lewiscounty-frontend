@@ -328,7 +328,7 @@ const Goals = () => {
                         {
                             params.row.goal_status === 'active' &&
                             <MenuItem onClick={handlEditGoal} className='!text-[12px]'>
-                                <img src={EditIcon} alt="EditIcon" className='pr-3 w-[27px]' />
+                                <img src={EditIcon} alt="EditIcon" className='pr-3 w-[30px]' />
                                 Edit
                             </MenuItem>
                         }
@@ -344,7 +344,7 @@ const Goals = () => {
                         {
                             params.row.goal_status === 'inactive' &&
                             <MenuItem onClick={handleDelete} className='!text-[12px]'>
-                                <img src={DeleteIcon} alt="DeleteIcon" className='pr-3 w-[27px]' />
+                                <img src={DeleteIcon} alt="DeleteIcon" className='pr-3 w-[30px]' />
                                 Delete
                             </MenuItem>
                         }
@@ -352,7 +352,7 @@ const Goals = () => {
                         {
                             params.row.status === 'active' &&
                             <MenuItem onClick={() => handleOpenAction("start")} className='!text-[12px]'>
-                                <img src={StartIcon} alt="EditIcon" className='pr-3 w-[27px]' />
+                                <img src={StartIcon} alt="EditIcon" className='pr-3 w-[30px]' />
                                 Start
                             </MenuItem>
                         }
@@ -471,7 +471,7 @@ const Goals = () => {
             renderCell: (params) => {
                 return <>
                     <div className='cursor-pointer flex items-center h-full relative'>
-                        <span className='w-[80px] flex justify-center h-[30px] px-7'
+                        <span className='w-[80px] flex justify-center h-[30px] px-4'
                             style={{
                                 background: goalRequestColor[params.row.status]?.bg, lineHeight: '30px',
                                 borderRadius: '3px', width: '110px', height: '34px', color: goalRequestColor[params.row.status]?.color,
@@ -510,11 +510,17 @@ const Goals = () => {
                             <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
                             View
                         </MenuItem>
-
+                        {
+                            params.row.status === 'active' &&
+                            <MenuItem onClick={() => handleOpenAction("start")} className='!text-[12px]'>
+                                <img src={StartIcon} alt="EditIcon" className='pr-3 w-[30px]' />
+                                Start
+                            </MenuItem>
+                        }
                         {
                             params?.row?.status === "new" &&
                             <MenuItem onClick={handlEditGoal} className='!text-[12px]'>
-                                <img src={EditIcon} alt="EditIcon" className='pr-3 w-[27px]' />
+                                <img src={EditIcon} alt="EditIcon" className='pr-3 w-[30px]' />
                                 Edit
                             </MenuItem>
                         }
@@ -526,6 +532,7 @@ const Goals = () => {
                                 Complete
                             </MenuItem>
                         }
+
                         {
                             ["new", "active"].includes(params?.row?.status) &&
                             <MenuItem onClick={() => handleOpenConfirmPopup("cancel")} className='!text-[12px]'>
@@ -637,7 +644,7 @@ const Goals = () => {
                         {
                             params.row.goal_status === 'inactive' &&
                             <MenuItem onClick={handleDelete} className='!text-[12px]'>
-                                <img src={DeleteIcon} alt="DeleteIcon" className='pr-3 w-[27px]' />
+                                <img src={DeleteIcon} alt="DeleteIcon" className='pr-3 w-[30px]' />
                                 Delete
                             </MenuItem>
                         }
@@ -1107,7 +1114,7 @@ const Goals = () => {
                                     requestBtns?.map((e) => {
                                         return (
                                             <Tab value={e?.key} label={
-                                                <Typography className={`!text-[14px] text-[${requestTab === e.key ? '#1D5BBF' : '#18283D'}] 
+                                                <Typography className={`!text-[14px] px-10 text-[${requestTab === e.key ? '#1D5BBF' : '#18283D'}] 
                                                     capitalize -pb-[8px]`} sx={{ fontWeight: 500 }}>{e?.name}</Typography>
                                             } />
                                         )
@@ -1206,7 +1213,7 @@ const Goals = () => {
                                                 <div>
                                                     {/* <GoalPerformance /> */}
 
-                                                    <div style={{ border: '1px solid rgba(29, 91, 191, 1)', padding: '20px', borderRadius: '10px', margin: '10px 0' }}>
+                                                    {/* <div style={{ border: '1px solid rgba(29, 91, 191, 1)', padding: '20px', borderRadius: '10px', margin: '10px 0' }}>
                                                         <div className='goal-title-container flex justify-between items-center mb-10'>
                                                             <div className='flex gap-5 items-center '>
                                                                 <p className='text-[18px] font-semibold'>Goals Request</p>
@@ -1238,7 +1245,7 @@ const Goals = () => {
                                                             paginationModel={requestPaginationModel}
                                                             setPaginationModel={setRequestPaginationModel}
                                                         />
-                                                    </div>
+                                                    </div> */}
 
 
 
@@ -1267,7 +1274,7 @@ const Goals = () => {
                                                         </div>
                                                         <DataTable rows={goalHistory?.results}
                                                             columns={goalHistoryColumn} handleSelectedRow={handleSelectedRow}
-                                                            height={350}
+                                                            height={650}
                                                             rowCount={goalHistory?.count}
                                                             paginationModel={historyPaginationModel}
                                                             setPaginationModel={setHistoryPaginationModel}
@@ -1469,7 +1476,7 @@ const Goals = () => {
                     </div>
                     <div className='flex justify-center'>
                         <div className="flex gap-6 justify-center align-middle">
-                            <Button btnCls="w-[130px]" btnName='Cancel' btnCategory="secondary" onClick={() => resetActionModal} />
+                            <Button btnCls="w-[130px]" btnName='Cancel' btnCategory="secondary" onClick={() => resetActionModal()} />
                             <Button btnCls="w-[130px]" btnType="button" btnName='Start goal' btnCategory="primary"
                                 onClick={() => actionButtonFunction(actionPopup?.type)}
                             />

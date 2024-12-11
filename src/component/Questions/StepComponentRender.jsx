@@ -31,6 +31,7 @@ const StepComponenRender = ({ stepFields, currentStep, handleNextStep,role, hand
         handleNextStep(data)
         reset()
     }
+    
     const handleDeleteImage = (index) => {
         const files = idProof.filter((fil, i) => i !== index)
         if (files.length) setValue('documents', '')

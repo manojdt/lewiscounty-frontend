@@ -770,7 +770,18 @@ export const TaskDetails = () => {
                                 </div>
 
                             </div>}
+                            {
+                                (taskData.result !== '' && taskData.result !== null && taskData.result !== '----') &&
 
+                                <div className='mark flex'>
+                                    <div className='mr-96'>
+                                        Result :
+                                    </div>
+                                    <div style={{ background: taskData.result === 'Pass' ? 'rgba(235, 255, 243, 1)' : 'rgba(255, 231, 231, 1)', padding: '24px 0', width: '240px', textAlign: 'center', fontSize: '40px' }}>
+                                        <span style={{ color: taskData.result === 'Pass' ? 'rgba(22, 182, 129, 1)' : 'rgba(224, 56, 45, 1)' }}>{taskData.result}</span>
+                                    </div>
+                                </div>
+                            }
                             <div className='close-btn flex justify-center gap-7 pb-5'>
                                 <Button btnName='Cancel' btnCls="w-[12%]" btnCategory="secondary" onClick={() => navigate('/mentee-tasks')} />
                                 {

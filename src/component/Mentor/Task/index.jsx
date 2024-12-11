@@ -107,7 +107,7 @@ const MentorTask = () => {
     }
 
     const handleBookmark = (program) => {
-        // dispatch(updateProgram({ id: program.id, is_bookmark: !program.is_bookmark }))
+        console.log('program', program)
     }
 
     const handleClick = (event, data) => {

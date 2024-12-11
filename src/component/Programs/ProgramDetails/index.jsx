@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 
 import api from '../../../services/api';
 import { menteeNotJoinCondition, menteeProgramStatus, pipeUrls, programActionStatus, programAdminRejected, programApprovalStage, programCancelled, programCompleted, programInProgress, programNotLaunched, programNotStarted, programRequestApproval, programWaitingActiveApproval, requestStatus } from '../../../utils/constant';
-import { getMenteeJoinedInProgram, getProgramDetails, getSpecificProgramDetails, updateProgram } from '../../../services/userprograms';
+import { getMenteeJoinedInProgram, getProgramDetails, getSpecificProgramDetails, launchProgram, updateProgram } from '../../../services/userprograms';
 import { programCancelRequest, programRescheduleRequest, updateLocalRequest, updateProgramMenteeRequest, updateProgramRequest } from '../../../services/request';
 
 import UserImage from "../../../assets/icons/user-icon.svg";
@@ -124,19 +124,18 @@ export default function ProgramDetails() {
     const commonApproval = ['completed', 'cancelled']
 
     const handleJoinProgram = async (programId) => {
-
         if (role === 'mentee' && !userdetails?.data?.is_registered) {
             navigate(`/questions?program_id=${programdetails.id}`)
         }
         else if (role === 'mentee' && !userdetails?.data?.document_upload) {
             navigate(`/mentee-doc-upload/${programdetails.id}`)
         } else {
-            setLoading({ initial: true, join: false })
-            const joinProgramAction = await api.post('join_program', { id: programId });
-            if (joinProgramAction.status === 200 && joinProgramAction.data) {
-                setLoading({ initial: false, join: role === 'mentee' })
-                if (role === 'mentor') { dispatch(updateProgram({ id: programId, status: programActionStatus.yettostart })); }
-            }
+            // setLoading({ initial: true, join: false })
+            // const joinProgramAction = await api.post('join_program', { id: programId });
+            // if (joinProgramAction.status === 200 && joinProgramAction.data) {
+            //     setLoading({ initial: false, join: role === 'mentee' })
+            if (role === 'mentor') { dispatch(launchProgram({ program: programId, statusrequest_type: "program_join" })); }
+            // }
         }
     }
 
@@ -514,7 +513,7 @@ export default function ProgramDetails() {
                             <img className='cursor-pointer' onClick={() => setViewMenteeModal(false)} src={CancelIcon} alt="CancelIcon" />
                         </div>
                         <div className='px-5'>
-                            <DataTable rows={programMentees?.length>0&&programMentees} columns={JoinMenteeColumn} hideCheckbox />
+                            <DataTable rows={programMentees?.length > 0 && programMentees} columns={JoinMenteeColumn} hideCheckbox />
                         </div>
                     </div>
                 </div>

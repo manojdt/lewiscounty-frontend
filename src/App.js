@@ -77,6 +77,7 @@ import Category from './component/category';
 import CategoryView from './component/category/categoryView';
 import MenteeTaskList from './component/Tasks/MenteeTaskList';
 import ViewTask from './component/Mentor/Task/viewTask';
+import { AuthLayout } from './component/Login/AuthLayout';
 
 function App() {
   const PrivateRoute = () => {
@@ -100,12 +101,13 @@ function App() {
   return (
     <Routes>
       <Route element={<PubicRoutes />}>
-        <Route path='/' element={<Navigate to='/login' />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/register' element={<Signup />} />
-        <Route path='/forgot-password' element={<ForgotPassword />} />
-        <Route path='/verify-otp' element={<VerifyOTP />} />
-        <Route path='/change-password' element={<ChangePassword />} />
+        <Route path='/' element={<AuthLayout />} >
+          <Route index path='/login' element={<Login />} />
+          <Route path='/register' element={<Signup />} />
+          <Route path='/forgot-password' element={<ForgotPassword />} />
+          <Route path='/verify-otp' element={<VerifyOTP />} />
+          <Route path='/change-password' element={<ChangePassword />} />
+        </Route>
       </Route>
 
       <Route element={<PrivateRoute />}>

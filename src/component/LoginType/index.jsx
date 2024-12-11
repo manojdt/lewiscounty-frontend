@@ -5,6 +5,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Backdrop from '@mui/material/Backdrop';
 import { updateUserRole } from "../../services/loginInfo";
 import { userStatus } from "../../utils/constant";
+import bg_image from "../../assets/images/role-selection-screen-bg.svg";
 
 export const LoginType = () => {
     const navigate = useNavigate();
@@ -43,7 +44,7 @@ export const LoginType = () => {
 
 
     return (
-        <div className="h-full">
+        <div className="h-full" >
             <div className="flex flex-wrap h-full">
                 <div className="w-full">
                     <Backdrop
@@ -52,9 +53,9 @@ export const LoginType = () => {
                     >
                         <CircularProgress color="inherit" />
                     </Backdrop>
-                    <div className="block bg-white shadow-lg h-full">
+                    <div className="block bg-white shadow-lg h-full" style={{background: `url(${bg_image}) center / cover `}}>
                         <div className="g-0 flex justify-center items-center h-full">
-                            <div className="px-4 md:px-0 lg:w-4/12 flex justify-center items-center">
+                            <div className="px-4 md:px-0 lg:w-4/6 flex justify-center items-center">
                                 <div className="w-9/12">
                                     <div className="text-center">
                                         <div className="flex justify-center items-center">

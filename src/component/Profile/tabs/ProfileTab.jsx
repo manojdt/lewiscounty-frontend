@@ -1,0 +1,285 @@
+import React, { useEffect, useRef, useState } from 'react';
+import { Button } from '../../../shared';
+import ProfileImageIcon from '../../../assets/icons/profile-image-icon.svg';
+import ProfileImagePencilIcon from '../../../assets/icons/profile-image-pencil-icon.svg';
+import {
+  getUserProfile,
+  updateLocalProfileInfo,
+  updateProfile,
+  updateProfileImage,
+} from '../../../services/profile';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { profileStatus, view } from '../../../utils/constant';
+import { ProfileFields } from '../../../utils/formFields';
+import { Backdrop, CircularProgress } from '@mui/material';
+import PersonalInfoSection from '../section-edit/personal-info-section';
+import ProfessionalBakgroundSection from '../section-edit/ProfessionalBakgroundSection';
+import EducationalBackgroundSection from '../section-edit/EducationalBackgroundSection';
+import AreaOfExpertiseSection from '../section-edit/AreaOfExpertiseSection';
+import MentorshipExperienceSection from '../section-edit/MentorshipExperienceSection';
+import DocumentUploadSection from '../section-edit/DocumentUploadSection';
+import MentorshipPreferenceSection from '../section-edit/MentorshipPreferenceSection';
+import GoalsAndExpectatonsSection from '../section-edit/GoalsAndExpectatonsSection';
+import AvailabilityAndCommitmentSection from '../section-edit/AvailabilityAndCommitmentSection';
+import AdditionalInformationSection from '../section-edit/AdditionalInformationSection';
+
+import SuccessTik from '../../../assets/images/blue_tik1x.png';
+import ArrowDown from '../../../assets/icons/blue-arrow-down.svg';
+import Accordian from '../../../shared/Accordian';
+import FormContextProvider from '../form-context-provider';
+
+const ProfileTab = ({ setEditMode }) => {
+  const dispatch = useDispatch();
+  const [showAll, setShowAll] = useState(false);
+  const contentRef = useRef(null);
+  const { profile, loading, status } = useSelector(
+    (state) => state.profileInfo
+  );
+
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    reset,
+    getValues,
+    setValue,
+  } = useForm();
+
+  const profileSection = [
+    {
+      title: 'Professional Background',
+      component: (
+        <ProfessionalBakgroundSection
+          type={view.viewOnly}
+          // getValues={getValues}
+        />
+      ),
+    },
+    {
+      title: 'Educational Background',
+      component: <EducationalBackgroundSection type={view.viewOnly} />,
+    },
+    {
+      title: 'Area of expertise',
+      component: <AreaOfExpertiseSection type={view.viewOnly} />,
+    },
+    {
+      title: 'Mentorship Experience ',
+      component: <MentorshipExperienceSection type={view.viewOnly} />,
+    },
+    {
+      title: 'Document upload',
+      component: (
+        <DocumentUploadSection type={view.viewOnly} getValues={getValues} />
+      ),
+    },
+    {
+      title: 'Mentorship Preference',
+      component: <MentorshipPreferenceSection type={view.viewOnly} />,
+    },
+    {
+      title: 'Goals and Expectations',
+      component: (
+        <GoalsAndExpectatonsSection
+          type={view.viewOnly}
+          getValues={getValues}
+        />
+      ),
+    },
+    {
+      title: 'Availability and Commitment',
+      component: <AvailabilityAndCommitmentSection type={view.viewOnly} />,
+    },
+    {
+      title: 'Additional Information',
+      component: <AdditionalInformationSection type={view.viewOnly} />,
+    },
+  ];
+
+  const loadUserProfile = () => {
+    dispatch(getUserProfile());
+  };
+
+  const uploadUserImage = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      let bodyFormData = new FormData();
+      bodyFormData.append('profile_image', e.target.files[0]);
+      dispatch(updateProfileImage(bodyFormData)).then(() => loadUserProfile());
+    }
+  };
+
+  const handleEditMode = (e) => {
+    e.preventDefault();
+    setEditMode(true);
+  };
+
+  const onSubmit = (data) => {
+    const apiPayload = {
+      phone_number: data.phone_number,
+      secondary_phone_number: data.secondary_phone_number,
+      location: data.location,
+    };
+    dispatch(updateProfile(apiPayload));
+  };
+
+  useEffect(() => {
+    if (Object.keys(profile).length) {
+      const name = profile?.name?.split(' ');
+      reset({
+        first_name: name[0] || '',
+        last_name: name[1] || '',
+        phone_number: profile?.phone_number,
+        secondary_phone_number: profile?.secondary_phone_number || '',
+        email: profile?.email,
+        address: profile?.address,
+        professional_bio: profile?.professional_bio,
+        documents: profile?.documents.map((doc) => (
+          <Link
+            target='_blank'
+            className='underline text-blue-500'
+            to={doc.file}
+          >
+            {doc.file_display_name}
+          </Link>
+        )),
+      });
+    }
+  }, [profile]);
+
+  useEffect(() => {
+    loadUserProfile();
+  }, []);
+
+  useEffect(() => {
+    if (status === profileStatus.update) {
+      setTimeout(() => {
+        setEditMode(false);
+        loadUserProfile();
+      }, 3000);
+    }
+  }, [status]);
+
+  return (
+    <FormContextProvider initialValues={profile}>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
+        <CircularProgress color='inherit' />
+      </Backdrop>
+
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={status === profileStatus.update}
+      >
+        <div className='px-5 py-1 flex justify-center items-center'>
+          <div
+            className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+            style={{ background: '#fff', borderRadius: '10px' }}
+          >
+            <img src={SuccessTik} alt='SuccessTik' />
+            <p
+              className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+              style={{
+                fontWeight: 600,
+              }}
+            >
+              Profile updated Successfully
+            </p>
+          </div>
+        </div>
+      </Backdrop>
+      <div className='flex items-center justify-between'>
+        <p className='text-lg font-semibold'>Profile Picture</p>
+        <div>
+          <Button
+            onClick={handleEditMode}
+            btnType='button'
+            btnName='Edit'
+            btnCls={'w-[140px]'}
+          />
+        </div>
+      </div>
+
+      <div>
+        <div onSubmit={handleSubmit(onSubmit)}>
+          <div className='py-4 relative w-[12%]'>
+            <div className='upload-profile'>
+              <label
+                className='w-[40%] pb-3 rounded-lg text-white text-[14px] cursor-pointer'
+                style={{
+                  border: 'none',
+                }}
+              >
+                <img
+                  src={profile?.image || ProfileImageIcon}
+                  style={{ borderRadius: '50%', height: '143px' }}
+                  alt='ProfileImageIcon'
+                />
+                <img
+                  src={ProfileImagePencilIcon}
+                  className='absolute top-[50%] left-2 cursor-pointer'
+                  alt='ProfileImagePencilIcon'
+                />
+
+                <input type='file' class='hidden' onChange={uploadUserImage} />
+              </label>
+            </div>
+          </div>
+
+          <div className='grid grid-cols-6 gap-3 mt-12'>
+            {ProfileFields.map((profilefield, index) => (
+              <div className={`${profilefield.width}`} key={index}>
+                <div className='mb-5'>
+                  <label
+                    className='block tracking-wide  text-xs mb-2'
+                    style={{ color: 'rgba(116, 116, 116, 1)' }}
+                  >
+                    {profilefield.label}
+                  </label>
+
+                  <p className='text-[14px]'>{getValues(profilefield.name)}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div
+            ref={contentRef}
+            style={{
+              maxHeight: showAll
+                ? `${contentRef.current.scrollHeight}px`
+                : '0px',
+              overflow: 'hidden',
+              transition: 'max-height 0.3s ease',
+            }}
+          >
+            {profileSection.map((section, index) => (
+              <Accordian key={index} title={section.title} defaultValue={true}>
+                {section.component}
+              </Accordian>
+            ))}
+          </div>
+
+          <div
+            className='underline mt-3 flex items-center gap-2 text-blue-500 font-semibold text-lg cursor-pointer'
+            onClick={() => setShowAll(!showAll)}
+          >
+            {showAll ? 'View less' : 'View more'}
+            <img
+              className={`mt-1 transition-all duration-300 ${
+                showAll ? 'rotate-180' : ''
+              }`}
+              src={ArrowDown}
+              alt=''
+            />
+          </div>
+        </div>
+      </div>
+    </FormContextProvider>
+  );
+};
+
+export default ProfileTab;

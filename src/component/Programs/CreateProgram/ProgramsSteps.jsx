@@ -17,7 +17,7 @@ import "primereact/resources/themes/lara-light-cyan/theme.css";
 import Tooltip from '../../../shared/Tooltip';
 
 
-const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousStep, currentStepData, stepData, handleAction, totalSteps, fetchCategoryData, programDetails }) => {
+const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousStep,handleSaveDraft, currentStepData, stepData, handleAction, totalSteps, fetchCategoryData, programDetails }) => {
     const navigate = useNavigate();
     const params = useParams()
     const [dateFormat, setDateFormat] = useState({})
@@ -33,7 +33,8 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
         getFieldState,
         getValues,
         setError,
-        setValue
+        setValue,
+        // watch
     } = useForm();
 
     const onSubmit = (data) => {
@@ -42,7 +43,22 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
         handleNextStep(data, stData)
         reset()
     }
+    // const watchedFields = watch();
+    // const [previousFields, setPreviousFields] = useState({});
+    // const handleFieldChange = () => {
+    //     handleSaveDraft(watchedFields)
+    //   console.log('t')
+    // };
 
+    // useEffect(() => {
+    //     if (JSON.stringify(watchedFields) !== JSON.stringify(previousFields)) {
+    //         console.log("Fields have changed:", watchedFields);
+    //         setPreviousFields(watchedFields); // Update previous fields
+    //         handleFieldChange(); // Call the function to save data
+    //     }
+
+        
+    // }, [watchedFields]);
     const handleLoadFieldValues = () => {
         const fName = [];
         const f = {}
