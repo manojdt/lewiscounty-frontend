@@ -49,7 +49,7 @@ const ProfileTab = ({ setEditMode }) => {
 
   const profileSection = [
     {
-      title: 'Professional Bakground',
+      title: 'Professional Background',
       component: (
         <ProfessionalBakgroundSection
           type={view.viewOnly}
@@ -80,7 +80,7 @@ const ProfileTab = ({ setEditMode }) => {
       component: <MentorshipPreferenceSection type={view.viewOnly} />,
     },
     {
-      title: 'Goals and Expectatons',
+      title: 'Goals and Expectations',
       component: (
         <GoalsAndExpectatonsSection
           type={view.viewOnly}

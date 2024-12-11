@@ -57,7 +57,13 @@ export default function CreatePrograms() {
         setTabActionInfo({ ...tabActionInfo, activeTab: key })
         // }
     }
+// const saveDraft = (data)=> {
+//     let fieldData = {
+//         ...stepData, ...data,
+//     }
+//     setStepData(fieldData)
 
+// }
     const handleNextStep = (data, stData) => {
         setStepWiseData(stData)
         let u = { ...data }
@@ -570,6 +576,7 @@ export default function CreatePrograms() {
                             stepFields={programAllFields[currentStep - 1]}
                             currentStep={currentStep}
                             handleNextStep={handleNextStep}
+                            // handleSaveDraft={saveDraft}
                             handlePreviousStep={handlePreviousStep}
                             handleAction={handleAction}
                             totalSteps={programAllFields.length}

@@ -54,7 +54,7 @@ export default function CreateGoal({ open, handleCloseModal, seletedItem, editMo
                 
                 dispatch(updateGoal(apiData)).then((res) => {
                     if (res?.meta?.requestStatus === "fulfilled") {
-                        if (recreate) {
+                        if (!recreate) {
                             handleCloseModal()
                         }
                     }
@@ -143,7 +143,7 @@ export default function CreateGoal({ open, handleCloseModal, seletedItem, editMo
                     <div className='flex justify-center flex-col gap-5  mt-4 mb-4'
                         style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '10px', }}>
                         <div className='flex justify-between px-3 py-4 items-center' style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
-                            <p className='text-[18px]' style={{ color: 'rgba(0, 0, 0, 1)' }}>{recreate ? "Re-Create" : editMode ? 'Edit ' : 'Create'} Goal </p>
+                            <p className='text-[18px]' style={{ color: 'rgba(0, 0, 0, 1)' }}>{recreate ? "Re-Create" : editMode ? 'Edit ' : 'Create New'} Goal </p>
                             <img className='cursor-pointer' onClick={handleClose} src={CancelIcon} alt="CancelIcon" />
                         </div>
                         <form onSubmit={handleSubmit(onSubmit)}>

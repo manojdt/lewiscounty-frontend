@@ -35,7 +35,7 @@ const EditProfile = ({ setEditMode }) => {
   const profileSection = [
     { title: 'Personal Information', component: <PersonalInfoSection /> },
     {
-      title: 'Professional Bakground',
+      title: 'Professional Background',
       component: <ProfessionalBakgroundSection />,
     },
     {
@@ -53,7 +53,7 @@ const EditProfile = ({ setEditMode }) => {
       component: <MentorshipPreferenceSection />,
     },
     {
-      title: 'Goals and Expectatons',
+      title: 'Goals and Expectations',
       component: <GoalsAndExpectatonsSection />,
     },
     {

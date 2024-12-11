@@ -164,6 +164,7 @@ useEffect(() => {
   }
 }, [actionInfo.modal])
   const handleSubmit = (combinedData) => {
+    
     const allFields = formFields.flat(); // Flatten all fields for validation
     const errorMessages = validateRequiredFields(allFields, combinedData);
     const phoneField = allFields.find(field => field.name === 'phone_number');
