@@ -31,9 +31,6 @@ const StepComponenRender = ({ stepFields, currentStep, handleNextStep,role, hand
         handleNextStep(data)
         reset()
     }
-    useEffect(() => {
-    console.log(errors,"errors")
-    }, [errors])
     
     const handleDeleteImage = (index) => {
         const files = idProof.filter((fil, i) => i !== index)
