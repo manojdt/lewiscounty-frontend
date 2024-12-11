@@ -17,8 +17,10 @@ import {
   getUserPrograms,
   startProgramTask,
   submitProgramTaskDetails,
+  upateProgramTask,
   updateProgram,
   updateProgramImage,
+  updateTaskSubmission,
   updateUserProgramInfo,
 } from "../../services/userprograms";
 import {
@@ -276,6 +278,29 @@ export const userProgramSlice = createSlice({
         };
       })
       .addCase(assignProgramTask.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
+
+
+      builder
+      .addCase(upateProgramTask.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(upateProgramTask.fulfilled, (state, action) => {
+        return {
+          ...state,
+          status: programStatus.taskassigned,
+          loading: false,
+        };
+      })
+      .addCase(upateProgramTask.rejected, (state, action) => {
         return {
           ...state,
           loading: false,
@@ -559,6 +584,30 @@ export const userProgramSlice = createSlice({
           loading: false,
           error: action.error.message,
         };
+      });
+
+
+      
+      builder
+      .addCase(updateTaskSubmission.pending, (state) => {
+          return {
+              ...state,
+              loading: true,
+          };
+      })
+      .addCase(updateTaskSubmission.fulfilled, (state, action) => {
+          return {
+              ...state,
+              status: programStatus.tasksubmitted,
+              loading: false,
+          };
+      })
+      .addCase(updateTaskSubmission.rejected, (state, action) => {
+          return {
+              ...state,
+              loading: false,
+              error: action.error.message,
+          };
       });
 
   },

@@ -1666,7 +1666,7 @@ export const ProgramFields = [
   ProgramTestimonialsFields,
 ];
 
-export const AssignMenteesFields = (bool = true, type, getValues) =>{ 
+export const AssignMenteesFields = (bool = true, type, getValues) =>{
   return [
   {
     type: 'dropdown',
@@ -1703,11 +1703,11 @@ export const AssignMenteesFields = (bool = true, type, getValues) =>{
     options: []
   },
   {
-    type: type === "new" ? "dropdown" : 'input',
+    type: 'input',
     name: 'mentor',
     fieldtype: 'text',
     label: 'Mentor Name',
-    placeholder: 'Enter Program Name',
+    placeholder: 'Enter Mentor Name',
     inputRules: {
       // required: "This field is required",
     },
@@ -1724,7 +1724,7 @@ export const AssignMenteesFields = (bool = true, type, getValues) =>{
       // required: "This field is required",
     },
     width: 'width-32',
-    disabled: bool,
+    disabled: true,
   },
   {
     type: 'date',
@@ -1735,7 +1735,7 @@ export const AssignMenteesFields = (bool = true, type, getValues) =>{
       // required: "This field is required",
     },
     width: 'width-32',
-    disabled: bool,
+    disabled: true,
   },
   {
     type: 'input',

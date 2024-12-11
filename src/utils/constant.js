@@ -424,7 +424,7 @@ export const programStatusColor = {
     bgColor: 'rgba(255, 231, 231, 1)',
     color: 'rgba(224, 56, 45, 1)',
   },
- 
+
   draft: {
     bgColor: 'rgba(207, 225, 255, 1)',
     color: 'rgba(29, 91, 191, 1)',
@@ -1167,3 +1167,29 @@ export const followBtnText = {
   waiting: 'Requested',
   accepted: 'Unfollow',
 };
+
+export const taskStatus = {
+  completed: "Completed",
+  rejected: "Cancel",
+  pending: "Pending",
+  new: "New"
+}
+
+export const taskStatusColorNew = {
+  completed: {
+    bg: "#EBFFF3",
+    color: "#16B681"
+  },
+  rejected: {
+    bg: "#FFE7E7",
+    color: "#E0382D"
+  },
+  pending: {
+    bg: "#FFFBE9",
+    color: "#FFD500"
+  },
+  new: {
+    bg: "#EEF5FF",
+    color: "#1D5BBF"
+  }
+}

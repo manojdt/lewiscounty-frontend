@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { Calendar } from 'primereact/calendar';
 import { useForm } from 'react-hook-form';
 import { Backdrop, CircularProgress, Stack, Typography } from '@mui/material';
@@ -19,7 +19,7 @@ import SuccessTik from '../../../assets/images/blue_tik1x.png';
 import { getAllCategories, getProgramListWithCategory } from '../../../services/programInfo';
 import './program.css'
 
-import { assignProgramTask, getMenteeDetails, getProgramDetails, getProgramMentees, getProgramTaskMentees, updateProgram } from '../../../services/userprograms';
+import { assignProgramTask, getMenteeDetails, getProgramDetails, getProgramMentees, getProgramTaskMentees, upateProgramTask, updateProgram } from '../../../services/userprograms';
 import { pipeUrls, programActionStatus, programStatus } from '../../../utils/constant';
 import dayjs from 'dayjs';
 import CloseIcon from "../../../assets/icons/closeIcon.svg"
@@ -36,6 +36,7 @@ export default function AssignMentees() {
         watch
     } = useForm();
     const navigate = useNavigate()
+    const state = useLocation()?.state
     const [addMenteeModal, setMentalModal] = useState(false)
     const [taskSuccess, setTaskSuccess] = useState(false)
     const [searchParams, setSearchParams] = useSearchParams();
@@ -45,37 +46,64 @@ export default function AssignMentees() {
     const type = searchParams.get('type')
     const { programdetails, loading: programLoading, error, status, programMenteeList } = useSelector(state => state.userPrograms)
     const { category, loading: apiLoading, programListByCategory } = useSelector(state => state.programInfo)
-    const [menteeFields, setMenteeFields] = useState(AssignMenteesFields(type === "new" ? false : true, type === "new" ? "new" : "", getValues))
+    const [menteeFields, setMenteeFields] = useState(AssignMenteesFields(type === "new" ? false : true, type, getValues))
     const [dateFormat, setDateFormat] = useState({})
     const [menteeAllList, setAllMenteeList] = useState([])
     const [loading, setLoading] = useState(false)
     const [updatedMemberColumn, setUpdatedMemberColumn] = useState(MenteeAssignColumns)
     const allFields = watch()
-    console.log("allFields ===>", allFields)
+
 
     const onSubmit = (data) => {
-        const apiData = {
+        let apiData = {
             ...data,
-            program_id: type === "new" ? allFields?.program_id : programdetails.id,
+            program_id: type === "new" ? allFields?.program_id : state?.data?.program_id,
             start_date: new Date(data.start_date).toISOString(),
             end_date: new Date(data.end_date).toISOString(),
-            mentor: programdetails?.mentor_info?.id,
+            mentor: type === "new" ? allFields?.mentor_id : state?.data?.mentor_id,
             due_date: dayjs(data.due_date).format("YYYY-MM-DDTHH:mm:ss")
         }
-        dispatch(assignProgramTask(apiData))
+        if (type === "edit") {
+            apiData = {
+                ...apiData,
+                task_id: state?.data?.task_id
+            }
+        }
+        
+        if (type === "edit") {
+            dispatch(upateProgramTask(apiData)).then((res) => {
+                if (res.meta.requestStatus === "fulfilled") {
+                    setTaskSuccess(true)
+                    setTimeout(() => {
+                        setTaskSuccess(false)
+                        navigate('/mentor-tasks?type=menteetask')
+                    }, 2000);                    
+                }
+            })
+        } else {
+            dispatch(assignProgramTask(apiData)).then((res) => {
+                if (res.meta.requestStatus === "fulfilled") {
+                    setTaskSuccess(true)
+                    setTimeout(() => {
+                        setTaskSuccess(false)
+                        navigate('/mentor-tasks?type=menteetask')
+                    }, 2000);
+                }
+            })
+        }
     }
 
-    useEffect(() => {
-        if (status === programStatus.taskassigned) {
-            if (programdetails.status === programActionStatus.yettostart) {
-                dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.assigned }))
-            }
-            setTaskSuccess(true)
-            setTimeout(() => {
-                navigate(`${pipeUrls.startprogram}/${programdetails.id}`)
-            }, [3000])
-        }
-    }, [status])
+    // useEffect(() => {
+    //     if (status === programStatus.taskassigned) {
+    //         if (programdetails.status === programActionStatus.yettostart) {
+    //             dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.assigned }))
+    //         }
+    //         setTaskSuccess(true)
+    //         // setTimeout(() => {
+    //         //     navigate(`${pipeUrls.startprogram}/${programdetails.id}`)
+    //         // }, [3000])
+    //     }
+    // }, [status])
 
 
     const handleAddMentee = () => {
@@ -141,6 +169,10 @@ export default function AssignMentees() {
 
     useEffect(() => {
         if (type === "new" && allFields?.category_id) {
+            reset({
+                ...getValues(),
+                program_id: ""
+            })
             dispatch(getProgramListWithCategory(allFields?.category_id)).then((res) => {
                 if (res.meta.requestStatus === "fulfilled") {
                     const constructedData = res?.payload?.map((e) => {
@@ -164,16 +196,16 @@ export default function AssignMentees() {
             })
         }
     }, [allFields?.category_id])
-
     useEffect(() => {
         if (type === "new" && allFields?.program_id) {
             const programOption = menteeFields?.filter((e) => e?.name === "program_id")?.[0]?.options
             const filteredData = programOption?.filter((e) => e?.id === Number(allFields?.program_id))?.[0]
             reset({
-                ...getValues(), 
-                "duration": filteredData?.duration + " Days",
-                "start_date": filteredData?.start_date,
-                "end_date": filteredData?.end_date
+                ...getValues(),
+                mentor: filteredData?.mentor_name,
+                duration: filteredData?.duration + " Days",
+                start_date: new Date(filteredData?.start_date),
+                end_date: new Date(filteredData?.end_date)
             });
             dispatch(getProgramTaskMentees(allFields?.program_id)).then((res) => {
                 if (res?.meta?.requestStatus === "fulfilled") {
@@ -214,18 +246,22 @@ export default function AssignMentees() {
     }, [params.id])
 
     useEffect(() => {
-        if (Object.keys(programdetails).length) {
+        if (state?.data && Object.keys(state?.data).length) {
             let fieldValue = {
-                category_id: programdetails.categories.length ? programdetails.categories[0].id : '',
-                program_id: programdetails.program_name,
-                mentor: `${programdetails?.mentor_info?.first_name} ${programdetails?.mentor_info?.last_name}`,
-                start_date: new Date(programdetails.start_date),
-                end_date: new Date(programdetails.end_date),
-                duration: `${programdetails.duration} days`,
-                mentees_list: '',
-                task_details: '',
-                due_date: ''
+                category_id: state?.data?.category_id,
+                program_id: state?.data?.program_name,
+                mentor: state?.data?.mentor_name,
+                start_date: new Date(state?.data?.program_startdate),
+                end_date: new Date(state?.data?.program_enddate),
+                duration: `${state?.data?.program_duration} days`,
+                mentees_list: state?.data?.list_mentees ?? [],
+                due_date: new Date(state?.data?.due_date),
+                task_name: state?.data?.task_name,
+                task_details: state?.data?.task_details,
+                reference_links: state?.data?.reference_link,
+                mentor_id: state?.data?.mentor_id
             }
+            setAllMenteeList(state?.data?.list_mentees ?? [])
             reset(fieldValue)
         }
     }, [programdetails])
@@ -235,7 +271,7 @@ export default function AssignMentees() {
             dispatch(getAllCategories())
         }
         if (type !== "new") {
-            dispatch(getProgramTaskMentees(params.id))
+            dispatch(getProgramTaskMentees(state?.data?.program_id))
         }
 
     }, [])
@@ -272,7 +308,7 @@ export default function AssignMentees() {
             </Backdrop>
 
             {
-                (Object.keys(programdetails).length || type === "new") ?
+                (type === "new" || type === "edit") ?
                     <div className='grid mb-10' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)', borderRadius: '5px' }}>
                         {
                             (type === "new" || type === "edit") ?
@@ -422,7 +458,8 @@ export default function AssignMentees() {
                                                                                             className='calendar-control w-full'
                                                                                             {...dateField}
                                                                                             {...register(field.name, field.inputRules)}
-                                                                                            value={field.disabled ? new Date(programdetails[field.name]) : dateFormat[field.name]}
+                                                                                            value={getValues(field.name)}
+                                                                                            // value={field.disabled ? new Date(state?.data[field.name]) : dateFormat[field.name]}
                                                                                             onChange={(e) => {
                                                                                                 dateField.onChange(e)
                                                                                                 setDateFormat({ ...dateFormat, [field.name]: e.value })
@@ -471,13 +508,15 @@ export default function AssignMentees() {
                                                                                                         return (
                                                                                                             <>
                                                                                                                 <p className='flex items-center gap-1'>
-                                                                                                                    <p className='flex items-center px-3 py-3' style={{
-                                                                                                                        background: 'rgba(223, 237, 255, 1)', borderRadius: '50%',
-
-                                                                                                                    }}></p>
                                                                                                                     {
+                                                                                                                        popupfield?.profile_image?.length === 0 ?
+                                                                                                                            <p className='flex items-center px-3 py-3' style={{
+                                                                                                                                background: 'rgba(223, 237, 255, 1)', borderRadius: '50%',
 
-
+                                                                                                                            }}></p> :
+                                                                                                                            <img src={popupfield?.profile_image} alt='' className='h-[25px] w-[25px] rounded-[50%]' />
+                                                                                                                    }
+                                                                                                                    {
                                                                                                                         `${popupfield.first_name}`
                                                                                                                     }
                                                                                                                 </p>
@@ -512,9 +551,9 @@ export default function AssignMentees() {
                                                                                                 aria-invalid={!!errors[field.name]}
                                                                                             />
                                                                                             <button type='button' className='h-[60px] mt-2 w-[13%] text-[14px]'
-                                                                                                style={{ border: '1px dotted rgba(29, 91, 191, 1)', color: 'rgba(29, 91, 191, 1)' }}
+                                                                                                style={{ border: '1px dashed rgba(29, 91, 191, 1)', color: 'rgba(29, 91, 191, 1)' }}
                                                                                                 onClick={handleAddMentee}>
-                                                                                                Add Mentees
+                                                                                                + Add Mentees
                                                                                             </button>
                                                                                         </div>
                                                                                         {errors[field.name] && (
@@ -602,8 +641,8 @@ export default function AssignMentees() {
                                         }
                                     </div>
                                     <div className="flex gap-6 justify-center align-middle py-16">
-                                        <Button btnName='Cancel' btnCls="w-[13%]" btnCategory="secondary" onClick={() => navigate('/assign-task/1')} />
-                                        <Button btnType="submit" btnName='Create Task for Mentees' btnCategory="primary" />
+                                        <Button btnName='Cancel' btnCls="w-[13%]" btnCategory="secondary" onClick={() => navigate(-1)} />
+                                        <Button btnType="submit" btnName={"Submit"} btnCategory="primary" />
                                     </div>
                                 </form>
                                 <MuiModal modalSize='lg' modalOpen={addMenteeModal} title="Select Mentees" modalClose={() => setMentalModal(false)}>
@@ -623,11 +662,16 @@ export default function AssignMentees() {
                                                 style={{
                                                     fontWeight: 600
                                                 }}
-                                            >Successfully task assigned to Mentees</p>
+                                            >
+                                                {
+                                                    type === "new" ? "New task for Mentee has been successfully created" : "Mentee’s task has been Successfully re-edited"
+                                                }
+                                            </p>
                                         </div>
 
                                     </div>
                                 </Backdrop>
+
                             </div>
                         </div>
                     </div>

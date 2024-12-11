@@ -2568,3 +2568,25 @@ export const mentorTaskListColumns = [
     id: 0,
   }
 ]
+
+
+export const menteeTaskListFromMentor = [
+  {
+    field: 'mentee_name',
+    headerName: 'Mentee Name',
+    flex: 1,
+    id: 0,
+  },
+  {
+    field: 'phone_number',
+    headerName: 'Phone Number',
+    flex: 1,
+    id: 0,
+  },
+  {
+    field: 'email',
+    headerName: 'Email',
+    flex: 1,
+    id: 0,
+  },
+]

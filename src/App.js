@@ -76,6 +76,7 @@ import ProfileView from './component/Profile/ProfileView';
 import Category from './component/category';
 import CategoryView from './component/category/categoryView';
 import MenteeTaskList from './component/Tasks/MenteeTaskList';
+import ViewTask from './component/Mentor/Task/viewTask';
 
 function App() {
   const PrivateRoute = () => {
@@ -214,6 +215,7 @@ function App() {
           <Route path='/profileView' element={<MentorMenteeProfile />} />
           <Route path='/category' element={<Category />} />
           <Route path='/categoryView' element={<CategoryView />} />
+          <Route path='/viewTask/:id' element={<ViewTask />} />          
         </Route>
       </Route>
 
