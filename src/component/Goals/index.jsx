@@ -328,7 +328,7 @@ const Goals = () => {
                         {
                             params.row.goal_status === 'active' &&
                             <MenuItem onClick={handlEditGoal} className='!text-[12px]'>
-                                <img src={EditIcon} alt="EditIcon" className='pr-3 w-[27px]' />
+                                <img src={EditIcon} alt="EditIcon" className='pr-3 w-[30px]' />
                                 Edit
                             </MenuItem>
                         }
@@ -344,7 +344,7 @@ const Goals = () => {
                         {
                             params.row.goal_status === 'inactive' &&
                             <MenuItem onClick={handleDelete} className='!text-[12px]'>
-                                <img src={DeleteIcon} alt="DeleteIcon" className='pr-3 w-[27px]' />
+                                <img src={DeleteIcon} alt="DeleteIcon" className='pr-3 w-[30px]' />
                                 Delete
                             </MenuItem>
                         }
@@ -352,7 +352,7 @@ const Goals = () => {
                         {
                             params.row.status === 'active' &&
                             <MenuItem onClick={() => handleOpenAction("start")} className='!text-[12px]'>
-                                <img src={StartIcon} alt="EditIcon" className='pr-3 w-[27px]' />
+                                <img src={StartIcon} alt="EditIcon" className='pr-3 w-[30px]' />
                                 Start
                             </MenuItem>
                         }
@@ -510,11 +510,17 @@ const Goals = () => {
                             <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
                             View
                         </MenuItem>
-
+                        {
+                            params.row.status === 'active' &&
+                            <MenuItem onClick={() => handleOpenAction("start")} className='!text-[12px]'>
+                                <img src={StartIcon} alt="EditIcon" className='pr-3 w-[30px]' />
+                                Start
+                            </MenuItem>
+                        }
                         {
                             params?.row?.status === "new" &&
                             <MenuItem onClick={handlEditGoal} className='!text-[12px]'>
-                                <img src={EditIcon} alt="EditIcon" className='pr-3 w-[27px]' />
+                                <img src={EditIcon} alt="EditIcon" className='pr-3 w-[30px]' />
                                 Edit
                             </MenuItem>
                         }
@@ -526,6 +532,7 @@ const Goals = () => {
                                 Complete
                             </MenuItem>
                         }
+
                         {
                             ["new", "active"].includes(params?.row?.status) &&
                             <MenuItem onClick={() => handleOpenConfirmPopup("cancel")} className='!text-[12px]'>
@@ -637,7 +644,7 @@ const Goals = () => {
                         {
                             params.row.goal_status === 'inactive' &&
                             <MenuItem onClick={handleDelete} className='!text-[12px]'>
-                                <img src={DeleteIcon} alt="DeleteIcon" className='pr-3 w-[27px]' />
+                                <img src={DeleteIcon} alt="DeleteIcon" className='pr-3 w-[30px]' />
                                 Delete
                             </MenuItem>
                         }
@@ -1469,7 +1476,7 @@ const Goals = () => {
                     </div>
                     <div className='flex justify-center'>
                         <div className="flex gap-6 justify-center align-middle">
-                            <Button btnCls="w-[130px]" btnName='Cancel' btnCategory="secondary" onClick={() => resetActionModal} />
+                            <Button btnCls="w-[130px]" btnName='Cancel' btnCategory="secondary" onClick={() => resetActionModal()} />
                             <Button btnCls="w-[130px]" btnType="button" btnName='Start goal' btnCategory="primary"
                                 onClick={() => actionButtonFunction(actionPopup?.type)}
                             />

@@ -285,15 +285,15 @@ export const MentorShipExperienceFields = [
     size: false,
     width: 'col-span-1',
   },
-  // {
-  //   type: 'input',
-  //   name: 'mentor_exp_desc',
-  //   fieldtype: 'text',
-  //   label: 'If yes, please briefly describe your mentorship experience',
-  //   placeholder: 'mentorship experience',
-  //   size: false,
-  //   width: 'col-span-1',
-  // },
+  {
+    type: 'input',
+    name: 'mentor_exp_desc',
+    fieldtype: 'text',
+    label: 'If yes, please briefly describe your mentorship experience',
+    placeholder: 'mentorship experience',
+    size: false,
+    width: 'col-span-1',
+  },
 ];
 
 export const MentorshipPreferenceFields = [

@@ -32,6 +32,7 @@ import CloseReqPopup from "../../assets/icons/blackCloseIcon.svg"
 import CancelReq from "../../assets/icons/cancelRequest.svg"
 import dayjs from 'dayjs'
 import CreateGoal from './CreateGoal'
+import { dateFormatRever } from '../../utils'
 
 const ViewGoal = ({ type = '' }) => {
     const navigate = useNavigate()
@@ -519,14 +520,14 @@ const ViewGoal = ({ type = '' }) => {
                                 <div className='flex justify-between px-5 py-5 items-center border-b-2'>
                                     <div className='flex gap-5 items-center text-[20px]'>
                                         <p>{goalDataStatus[goalInfo.status]} </p>
-                                        {/* {
-                                            (goalInfo.status === 'active' && role !== 'admin') &&
+                                        {
+                                            (goalInfo.status ==="new") &&
                                             <div className="inset-y-0 end-0 flex items-center pe-3 cursor-pointer"
-                                                onClick={() => navigate('/edit-report/1')}
+                                                onClick={() => handleOpenEditForm()}
                                             >
                                                 <img src={EditIcon} alt='EditIcon' />
                                             </div>
-                                        } */}
+                                        }
 
 
                                     </div>
@@ -560,27 +561,27 @@ const ViewGoal = ({ type = '' }) => {
                                         <table className="w-[100%] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 !bg-white">
                                             <tbody>
                                                 <tr className="bg-white text-black">
-                                                    <th scope="row" className="px-0 py-4 font-medium whitespace-nowrap w-[40px] ">
-                                                        Start date:
+                                                    <th scope="row" className="px-0 pr-2 py-4 font-medium whitespace-nowrap w-[40px]">
+                                                        Start date
                                                     </th>
                                                     <td className="px-0 py-4">
-                                                        {goalInfo.start_date}
+                                                        : {dateFormatRever(goalInfo.start_date)}
                                                     </td>
                                                 </tr>
                                                 <tr className="bg-white text-black">
-                                                    <th scope="row" className="px-0 py-4 font-medium  whitespace-nowrap w-[40px]">
-                                                        Period:
+                                                    <th scope="row" className="px-0 pr-2 py-4 font-medium  whitespace-nowrap w-[40px]">
+                                                        Duration
                                                     </th>
                                                     <td className="px-0 py-4">
-                                                        {goalPeriods.find(goalPeriod => parseInt(goalPeriod.value) === parseInt(goalInfo.period))?.name}
+                                                        : {goalPeriods.find(goalPeriod => parseInt(goalPeriod.value) === parseInt(goalInfo.period))?.name}
                                                     </td>
                                                 </tr>
                                                 <tr className="bg-white text-black">
-                                                    <th scope="row" className="px-0 py-4 font-medium whitespace-nowrap w-[40px]">
-                                                        Status :
+                                                    <th scope="row" className="px-0 pr-2 py-4 font-medium whitespace-nowrap w-[40px]">
+                                                        Status 
                                                     </th>
                                                     <td className="px-0 py-4">
-                                                        {goalRequestStatus[goalInfo.status]}&nbsp;&nbsp;Goal
+                                                        : {goalRequestStatus[goalInfo.status]}&nbsp;&nbsp;Goal
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -789,7 +790,7 @@ const ViewGoal = ({ type = '' }) => {
                         <img src={CancelReq} alt="ConnectIcon" />
 
                         <div className='py-5'>
-                            <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 600, fontSize: '18px' }}>Are you sure want to cancel this Active Goal?</p>
+                            <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 600, fontSize: '18px' }}>Are you sure want to cancel this Goal?</p>
                         </div>
                         <div className='flex justify-center'>
                             <div className="flex gap-6 justify-center align-middle">
