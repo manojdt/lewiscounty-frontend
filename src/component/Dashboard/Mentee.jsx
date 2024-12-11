@@ -167,10 +167,13 @@ export const Mentee = () => {
     }
 
     const handleSelectCategory = (value) => {
-        setSelectedCategory([
-            ...selectedCategory,
-            value
-        ])
+        if (selectedCategory.includes(value)) {
+            // Remove the value if it's already selected
+            setSelectedCategory(selectedCategory.filter((id) => id !== value));
+        } else {
+            // Add the value if it's not already selected
+            setSelectedCategory([...selectedCategory, value]);
+        }
     }
 
     return (

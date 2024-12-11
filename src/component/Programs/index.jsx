@@ -7,10 +7,13 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  Stack,
+  Typography,
 } from '@mui/material';
 import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
 
 import Card from '../../shared/Card';
+import CloseIcon from "../../assets/icons/blueCloseIcon.svg"
 import ProgramCard from '../../shared/Card/ProgramCard';
 import SearchIcon from '../../assets/icons/search.svg';
 import CalendarIcon from '../../assets/images/calender_1x.png';
@@ -40,6 +43,10 @@ import {
   getallMenteeProgram,
   getallMyProgram,
 } from '../../services/programInfo';
+import { jwtDecode } from 'jwt-decode';
+import MuiModal from '../../shared/Modal';
+import { CategoryPopup } from '../Dashboard/categoryPopup';
+import { acceptMember, getCategory } from '../../services/category';
 
 export default function Programs() {
   const navigate = useNavigate();
@@ -70,7 +77,59 @@ export default function Programs() {
 
   const filterType = searchParams.get('type');
   const isBookmark = searchParams.get('is_bookmark');
+  const [openCategory, setOpenCategory] = React.useState(false)
+  const token = localStorage.getItem("access_token")
+  const decoded = React.useMemo(() => jwtDecode(token), [token]);
+  const [selectedCategory, setSelectedCategory] = React.useState([])
+  const [category, setCategory] = React.useState([])
+  const handleGetCategory = (searchText = "") => {
+    const payload = {
+        search: searchText
+    }
+    dispatch(getCategory(payload)).then((res) => {
+        if (res?.meta?.requestStatus === "fulfilled") {
+            setCategory(res?.payload ?? [])
+        }
+    })
+}
+const handleUpdateGategory = (type = "") => {
+  let payload = {}
+  if (type === "update") {
+      payload = {
+          type: "mentee_category",
+          categories_id: selectedCategory
+      }
+  } else {
+      payload = {
+          type: "mentee_category",
+      }
+  }
+  dispatch(acceptMember(payload)).then((res) => {
+      if (res.meta.requestStatus === "fulfilled") {
+          setOpenCategory(false)
+          setCategory([])
+          localStorage.setItem("access_token", res?.payload?.access)
+          localStorage.setItem("refresh_token", res?.payload?.refresh)
+          getPrograms()
+      }
+  })
+}
 
+const handleSelectCategory = (value) => {
+  if (selectedCategory.includes(value)) {
+      // Remove the value if it's already selected
+      setSelectedCategory(selectedCategory.filter((id) => id !== value));
+  } else {
+      // Add the value if it's not already selected
+      setSelectedCategory([...selectedCategory, value]);
+  }
+}
+React.useEffect(() => {
+  console.log(decoded,decoded?.category_added,"!decoded?.category_added")
+  if (!decoded?.category_added && role === "mentee") {
+      setOpenCategory(true);
+  }
+}, []);
   const handleBookmark = async (program) => {
     const payload = {
       program_id: program.id,
@@ -603,6 +662,25 @@ export default function Programs() {
             )}
           </div>
         </div>
+        <MuiModal
+                modalOpen={openCategory}
+                modalClose={() => setOpenCategory(false)}
+                noheader
+                padding={0}>
+                <Stack p={"12px 18px"} className="border-b border-[#D9E4F2]" direction={"row"} alignItems={"center"} justifyContent={"space-between"}>
+                    <Typography>Select Category's</Typography>
+                    <div onClick={() => setOpenCategory(false)}>
+                        <img src={CloseIcon} />
+                    </div>
+                </Stack>
+                <CategoryPopup
+                    category={category}
+                    selectedCategory={selectedCategory}
+                    setSelectedCategory={setSelectedCategory}
+                    handleGetCategory={handleGetCategory}
+                    handleUpdateGategory={handleUpdateGategory}
+                    handleSelectCategory={handleSelectCategory} />
+            </MuiModal>
       </div>
     </div>
   );

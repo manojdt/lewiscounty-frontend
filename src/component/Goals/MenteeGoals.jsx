@@ -183,7 +183,7 @@ export default function MenteeGoals() {
                         <option className='!text-[16px]' value="active">Active Goals</option>
                         <option className='!text-[16px]' value="in_progress">Goals in progress</option>
                         <option className='!text-[16px]' value="completed">Completed Goals</option>
-                        <option className='!text-[16px]' value="cancel">Aborted Goals</option>
+                        <option className='!text-[16px]' value="cancel">Cancelled Goals</option>
                     </select>
                 </div>
 

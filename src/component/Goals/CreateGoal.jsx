@@ -148,9 +148,9 @@ export default function CreateGoal({ open, handleCloseModal, seletedItem, editMo
                         </div>
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <div className='px-5'>
-                                {
+                                {/* {
                                     error !== '' ? <p className="error" role="alert">{error}</p> : null
-                                }
+                                } */}
                                 <div className='relative pb-8'>
                                     <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
                                         {recreate ? "Goal Name" : editMode ? 'Edit Goal' : 'Goal Name'}
