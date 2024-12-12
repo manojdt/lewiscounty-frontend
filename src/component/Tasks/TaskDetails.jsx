@@ -10,8 +10,8 @@ import SuccessTik from '../../assets/images/blue_tik1x.png';
 import { Button } from '../../shared'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { getProgramTaskDetails, submitProgramTaskDetails, updateUserProgramInfo } from '../../services/userprograms'
-import { Backdrop, CircularProgress } from '@mui/material'
+import { getProgramTaskDetails, submitProgramTaskDetails, updateTaskSubmission, updateUserProgramInfo } from '../../services/userprograms'
+import { Backdrop, Box, CircularProgress, Grid, Typography } from '@mui/material'
 import { allowedDocTypes, allowedImagesTypes, allowedVideoTypes, programStatus, TaskAllStatus, TaskFileTypes, TaskStatus } from '../../utils/constant'
 import { useForm } from 'react-hook-form'
 import ToastNotification from '../../shared/Toast';
@@ -34,69 +34,85 @@ export const TaskDetails = () => {
     const [imageError, setImageError] = useState({ error: false, errorMessage: '' })
     const [taskSolutionDocs, setTaskSolutionDocs] = useState({ img: [], video: [], doc: [] })
     const [successModal, setSuccessModal] = useState({ loading: false, success: false })
-
-
+    const [isPreview, setIsPreview] = React.useState(false)
+    const [formAction, setFormAction] = React.useState("");
+    const [taskFile, setTaskFile] = React.useState([])
+    const [deletedFile, setDelectedFile] = React.useState([])
     const {
         register,
         formState: { errors },
         handleSubmit,
         reset,
+        getValues,
         setError,
-        setValue
+        setValue,
+        watch
     } = useForm();
+
+    const allFields = watch()
+
 
     const referenceView = taskData?.reference_link || ''
 
     const docs = referenceView !== '' ? referenceView?.split(',') || [] : []
 
-    const handleImageUpload = (e) => {
+    const handleImageUpload = (field, e) => {
         if (e.target.files && e.target.files[0]) {
-
-            const fileName = e.target.files[0].name;
-            const fileNameSplit = fileName.split('.')
-            const fileExtensionName = fileNameSplit.pop().toLowerCase()
-            const fileExtension = TaskFileTypes.includes(fileExtensionName)
-
-            if (fileExtension) {
-                setImageError({ error: false, message: '' })
-                setTaskImages([...taskImages, { ...e.target.files, id: uuidv4() }]);
-            } else {
-                // setImageError({ error: true, message: 'Invalid file format. Only JPEG,PNG,PDF,DOC,AVI,MOV,MP4 files are allowed' })
-            }
-
+            setTaskFile([...taskFile, { ...e.target.files, row_id: uuidv4() }])
+            setValue(field, [...taskFile, { ...e.target.files, row_id: uuidv4() }])
         }
     }
-
     const handleReset = () => {
         reset()
         setTaskImages([])
     }
 
     const handleDelete = (id) => {
-        const taskDocs = taskImages.filter(task => task.id !== id)
+        const taskDocs = taskFile.filter(task => task.id !== id)
         if (!taskDocs.length) {
             setValue('file', '');
         }
-        setTaskImages(taskDocs)
-    }
+        setTaskFile(taskDocs)
+        if (id) {
+            setDelectedFile([...deletedFile, taskFile.filter(task => task.id === id)?.[0]?.id])
+        }
 
-    const onSubmit = (data) => {
-        if (!taskImages.length) {
+    }
+    
+    const onSubmit = (data, type) => {
+        if (!taskFile.length) {
             setImageError({ error: true, errorMessage: 'This field is required' })
             return
         }
 
-        if (taskImages.length) {
+        if (taskFile.length) {
             let bodyFormData = new FormData();
 
-            taskImages.forEach((element, index) => {
-                bodyFormData.append('file_1', element[0])
+            taskFile.forEach((element, index) => {
+                if (!element?.id) {
+                    bodyFormData.append('file_1', element[0])
+                }
             });
 
             bodyFormData.append('task_solution', data.task_solution)
             bodyFormData.append('task_id', parseInt(params.id))
-            bodyFormData.append('status', 'completed')
-            dispatch(submitProgramTaskDetails(bodyFormData))
+            if(deletedFile?.length){
+                bodyFormData.append("deleted", JSON.stringify(deletedFile))
+            }
+            if (type === "submit") {
+                bodyFormData.append('status', 'completed')
+            }
+
+            if (type === "submit" && taskData?.status === "draft") {
+                dispatch(updateTaskSubmission(bodyFormData))
+            } else if (type === "draft" && taskData?.status === "draft") {
+                dispatch(updateTaskSubmission(bodyFormData))
+            } else if (type === "submit" && taskData?.status === "inprogress") {
+                dispatch(submitProgramTaskDetails(bodyFormData))
+            } else if (type === "draft" && taskData?.status === "inprogress") {
+                dispatch(submitProgramTaskDetails(bodyFormData))
+            }
+
         }
     }
 
@@ -126,30 +142,46 @@ export const TaskDetails = () => {
 
     useEffect(() => {
         let allTaskDocuments = { img: [], video: [], doc: [] }
-        if (taskImages.length) {
-            taskImages.forEach((img) => {
-                const fileName = img[0]?.name;
-                const fileNameSplit = fileName?.split('.')
-                const fileExtensionName = fileNameSplit?.pop().toLowerCase()
-                if (allowedImagesTypes.includes(fileExtensionName)) {
-                    allTaskDocuments.img = [...allTaskDocuments.img, img]
-                }
-                if (allowedDocTypes.includes(fileExtensionName)) {
-                    allTaskDocuments.doc = [...allTaskDocuments.doc, img]
-                }
-                if (allowedVideoTypes.includes(fileExtensionName)) {
-                    allTaskDocuments.video = [...allTaskDocuments.video, img]
-                }
-            })
-        } else {
-            allTaskDocuments = { img: [], video: [], doc: [] }
-        }
+        // if (taskData?.status === "draft") {
+        //     const imgData = getFiles(taskData?.files || [])
+        //     allTaskDocuments = {
+        //         ...imgData,
+        //         img: imgData?.image
+        //     }
+        // } else {
+        //     if (taskImages?.length) {
+        //         taskImages.forEach((img) => {
+        //             const fileName = img[0]?.name;
+        //             const fileNameSplit = fileName?.split('.')
+        //             const fileExtensionName = fileNameSplit?.pop().toLowerCase()
+        //             if (allowedImagesTypes.includes(fileExtensionName)) {
+        //                 allTaskDocuments.img = [...allTaskDocuments.img, img]
+        //             }
+        //             if (allowedDocTypes.includes(fileExtensionName)) {
+        //                 allTaskDocuments.doc = [...allTaskDocuments.doc, img]
+        //             }
+        //             if (allowedVideoTypes.includes(fileExtensionName)) {
+        //                 allTaskDocuments.video = [...allTaskDocuments.video, img]
+        //             }
+        //         })
+        //     } else {
+        //         allTaskDocuments = { img: [], video: [], doc: [] }
+        //     }
+        // }
+        allTaskDocuments = getFiles(taskFile)
         setTaskSolutionDocs(allTaskDocuments)
-    }, [taskImages])
+    }, [taskFile])
 
     useEffect(() => {
         dispatch(getProgramTaskDetails(params.id))
-        dispatch(getSpecificTask({ task_id: params.id }))
+        dispatch(getSpecificTask({ task_id: params.id })).then((res) => {
+            if (res?.meta?.requestStatus === "fulfilled") {
+                const files = res?.payload?.files
+                
+                setValue('file', files ?? [], { shouldValidate: taskData?.statue === "draft" ? false : true });
+                setTaskFile(files ?? [])
+            }
+        })
     }, [])
 
 
@@ -162,22 +194,9 @@ export const TaskDetails = () => {
     }, [task_submission])
 
 
-    const imageField = {
-        ...register('file', {
-            required: "This field is required",
-            validate: (value) => {
-                const acceptedFormats = [...allowedImagesTypes, ...allowedDocTypes, ...allowedVideoTypes];
-                const fileExtension = value[0]?.name.split('.').pop().toLowerCase();
+    const allFiles = []
+    getFiles(taskFile || [])
 
-                if (!acceptedFormats.includes(fileExtension)) {
-                    return 'Invalid file format. Only JPEG,PNG,PDF,DOC,AVI,MOV,MP4 files are allowed.';
-                }
-                return true;
-            }
-        })
-    }
-
-    const allFiles = getFiles(taskData?.files || [])
 
 
     return (
@@ -194,13 +213,13 @@ export const TaskDetails = () => {
                             style={{
                                 fontWeight: 600
                             }}
-                        >Task Submitted Successfully</p>
+                        >{formAction === "draft" ? "Task Drafted Successfully" : "Task Submitted Successfully"}</p>
                     </div>
 
                 </div>
             </Backdrop>
 
-            {imageError.error && <ToastNotification openToaster={imageError.error} message={imageError.message} toastType='error' />}
+            {/* {imageError.error && <ToastNotification openToaster={imageError.error} message={imageError.message} toastType='error' />} */}
 
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -335,7 +354,7 @@ export const TaskDetails = () => {
                             </table>
                         </div>
 
-                        <form onSubmit={handleSubmit(onSubmit)}>
+                        <form onSubmit={handleSubmit((data) => onSubmit(data, formAction))}>
 
                             <div className='task-desc flex mt-5 px-5 py-6' style={{ border: '1px solid rgba(29, 91, 191, 0.5)' }}>
                                 <p className='w-[30%]'>Task Name : </p>
@@ -346,9 +365,136 @@ export const TaskDetails = () => {
                                 <p className='text-[14px]'>{taskData?.task_description}</p>
                             </div>
 
+                            {
+                                isPreview &&
+                                <Box mb={3}>
+                                    <div style={{ marginTop: "40px" }}>
+                                        <Typography className='!text-[14px] !text-[#18283D]'>Task</Typography>
+
+                                        <Box className="bg-[#1D5BBF] px-[20px] py-[12px] rounded-[3px]" mt={1}>
+                                            <Typography className='!text-[14px] !text-[#fff]'>{allFields?.task_solution}</Typography>
+                                        </Box>
+                                    </div>
 
 
-                            <div className='py-6 mb-16'>
+
+                                    <div className='flex justify-between task-uploaded-images-container'>
+                                        {
+                                            allFiles?.files?.length > 0 ?
+
+                                                <div>
+                                                    <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Image</div>
+                                                    {
+                                                        allFiles.image.map((imges, index) =>
+
+                                                            <div className='uploaded-images task-image-list !mt-[2]' key={index} style={{ marginTop: "8px" }}>.
+                                                                <a href={imges.fileurl} target='_blank'>
+                                                                    <span className='text-[14px] image-name !text-[#18283D] underline'>{imges.name}</span>
+                                                                </a>
+
+                                                            </div>
+                                                        )
+                                                    }
+                                                </div>
+
+                                                : null
+                                        }
+
+
+                                        {
+                                            allFiles?.video?.length > 0 ?
+
+                                                <div>
+                                                    <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Video</div>
+
+                                                    {
+                                                        allFiles.video.map((imges, index) =>
+                                                            <a href={imges.fileurl} target='_blank'>
+                                                                <span className='text-[14px] image-name !text-[#18283D] underline'>{imges.name}</span>
+                                                            </a>
+                                                        )
+                                                    }
+                                                </div>
+
+
+                                                :
+
+                                                null
+
+                                        }
+
+
+
+                                        {
+                                            allFiles?.doc?.length > 0 ?
+
+                                                <div>
+                                                    <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Files</div>
+
+                                                    {
+                                                        allFiles.doc.map((imges, index) =>
+                                                            <a href={imges.fileurl} target='_blank'>
+                                                                <span className='text-[14px] image-name !text-[#18283D] underline'>{imges.name}</span>
+                                                            </a>
+                                                        )
+                                                    }
+                                                </div>
+
+                                                : null
+                                        }
+
+                                    </div>
+
+                                    <div className='flex justify-between task-uploaded-images-container'>
+                                        {
+                                            taskSolutionDocs?.img?.length > 0 &&
+                                            <div>
+                                                <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Image</div>
+                                                {
+                                                    taskSolutionDocs.img.map((imges, index) =>
+                                                        <a href={"#"} target='_blank' className='cursor-pointer'>
+                                                            <span className='text-[14px] image-name !text-[#18283D] underline'>{imges?.name}</span>
+                                                        </a>
+                                                    )
+                                                }
+                                            </div>
+                                        }
+
+                                        {
+                                            taskSolutionDocs?.video?.length > 0 &&
+
+                                            <div>
+                                                <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Video</div>
+
+                                                {
+                                                    taskSolutionDocs.video.map((imges, index) =>
+                                                        <a href={"#"} target='_blank' className='cursor-pointer'>
+                                                            <span className='text-[14px] image-name !text-[#18283D] underline'>{imges?.name}</span>
+                                                        </a>
+                                                    )
+                                                }
+                                            </div>
+                                        }
+                                        {
+                                            taskSolutionDocs?.doc?.length > 0 &&
+                                            <div>
+                                                <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Files</div>
+
+                                                {
+                                                    taskSolutionDocs.doc.map((imges, index) =>
+                                                        <a href={"#"} target='_blank' className='cursor-pointer'>
+                                                            <span className='text-[14px] image-name !text-[#18283D] underline'>{imges[0]?.name}</span>
+                                                        </a>
+                                                    )
+                                                }
+                                            </div>
+                                        }
+                                    </div>
+                                </Box>
+                            }
+
+
+                            {!isPreview && <div className='py-6 mb-16'>
 
                                 {
                                     (taskData.status === TaskAllStatus.inprogress || taskData.status === TaskAllStatus.pending ||
@@ -388,7 +534,7 @@ export const TaskDetails = () => {
                                                         style={{
                                                             background: 'rgba(243, 247, 252, 1)', border: imageError.error || errors['file'] ? '2px dashed red' : 'none',
 
-                                                            cursor: (taskData.status === TaskAllStatus.newtask || taskData.status === TaskAllStatus.pending || taskData.status === TaskAllStatus.inprogress) ? 'pointer' : 'not-allowed'
+                                                            cursor: (taskData.status === TaskAllStatus.newtask || taskData.status === TaskAllStatus.pending || taskData.status === TaskAllStatus.inprogress || taskData.status === "draft") ? 'pointer' : 'not-allowed'
                                                         }} >
                                                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                                             <img src={FileIcon} alt="FileIcon" />
@@ -402,12 +548,13 @@ export const TaskDetails = () => {
                                                         <input id="dropzone-file" type="file"
                                                             name="file"
 
-                                                            {...imageField}
+                                                            {...register('file')}
 
                                                             onChange={(e) => {
-                                                                if (taskData.status === TaskAllStatus.inprogress || taskData.status === TaskAllStatus.newtask || taskData.status === TaskAllStatus.pending) {
-                                                                    imageField.onChange(e);
-                                                                    handleImageUpload(e);
+                                                                if (taskData.status === TaskAllStatus.inprogress || taskData.status === TaskAllStatus.newtask ||
+                                                                    taskData.status === TaskAllStatus.pending || taskData.status === "draft") {
+                                                                    // imageField?.onChange(e);
+                                                                    handleImageUpload('file', e);
                                                                 }
                                                                 else {
                                                                     return undefined
@@ -428,73 +575,79 @@ export const TaskDetails = () => {
                                             </div>
 
 
-                                            <div className='flex justify-between task-uploaded-images-container'>
-                                                {
-                                                    taskSolutionDocs.img.length ?
-                                                        <div>
-                                                            <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Image</div>
-                                                            {
-                                                                taskSolutionDocs.img.map((imges, index) =>
+                                            
+                                            {
+                                                <div>
 
-                                                                    <div className='uploaded-images task-image-list' key={index}>
-                                                                        <div className='flex gap-3 w-[400px] justify-between items-center mt-5 px-4 py-4'
-                                                                            style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }}>
-                                                                            <div className='flex gap-3 items-center'>
-                                                                                <img src={UploadIcon} alt="altlogo" />
-                                                                                <span className='text-[12px] image-name'>{imges[0].name}</span>
+                                                    
+                                                    <div className='flex justify-between task-uploaded-images-container'>
+                                                        {
+                                                            taskSolutionDocs?.image?.length > 0 &&
+                                                            <div>
+                                                                <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Image</div>
+                                                                {
+                                                                    taskSolutionDocs.image.map((img, index) =>
+                                                                        <div className='uploaded-images task-image-list' key={index}>
+                                                                            <div className='flex gap-3 w-[400px] justify-between items-center mt-5 px-4 py-4'
+                                                                                style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }}>
+                                                                                <div className='flex gap-3 items-center'>
+                                                                                    <img src={UploadIcon} alt="altlogo" />
+                                                                                    <span className='text-[12px] image-name'>{img?.name}</span>
+                                                                                </div>
+                                                                                <img className='w-[30px] cursor-pointer' onClick={() => handleDelete(img.id)} src={DeleteIcon} alt="DeleteIcon" />
                                                                             </div>
-                                                                            <img className='w-[30px] cursor-pointer' onClick={() => handleDelete(imges.id)} src={DeleteIcon} alt="DeleteIcon" />
                                                                         </div>
-                                                                    </div>
-                                                                )
-                                                            }
-                                                        </div>
-                                                        : null
-                                                }
+                                                                    )
+                                                                }
+                                                            </div>
+                                                        }
 
-                                                {
-                                                    taskSolutionDocs.video.length ?
+                                                        {
+                                                            taskSolutionDocs?.video?.length > 0 &&
 
-                                                        <div>
-                                                            <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Video</div>
+                                                            <div>
+                                                                <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Video</div>
 
-                                                            {
-                                                                taskSolutionDocs.video.map((imges, index) =>
-                                                                    <div className='task-image-list flex gap-3 w-[400px] justify-between items-center mt-5 px-4 py-4'
-                                                                        style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }} key={index}>
-                                                                        <div className='flex gap-3 items-center'>
-                                                                            <img src={UploadIcon} alt="altlogo" />
-                                                                            <span className='text-[12px] image-name'>{imges[0].name}</span>
+                                                                {
+                                                                    taskSolutionDocs.video.map((img, index) =>
+                                                                        <div className='uploaded-images task-image-list' key={index}>
+                                                                            <div className='flex gap-3 w-[400px] justify-between items-center mt-5 px-4 py-4'
+                                                                                style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }}>
+                                                                                <div className='flex gap-3 items-center'>
+                                                                                    <img src={UploadIcon} alt="altlogo" />
+                                                                                    <span className='text-[12px] image-name'>{img?.name}</span>
+                                                                                </div>
+                                                                                <img className='w-[30px] cursor-pointer' onClick={() => handleDelete(img.id)} src={DeleteIcon} alt="DeleteIcon" />
+                                                                            </div>
                                                                         </div>
-                                                                        <img className='w-[30px] cursor-pointer' onClick={() => handleDelete(imges.id)} src={DeleteIcon} alt="DeleteIcon" />
-                                                                    </div>
-                                                                )
-                                                            }
-                                                        </div>
-                                                        :
-                                                        null
-                                                }
-                                                {
-                                                    taskSolutionDocs.doc.length ?
-                                                        <div>
-                                                            <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Files</div>
+                                                                    )
+                                                                }
+                                                            </div>
+                                                        }
+                                                        {
+                                                            taskSolutionDocs?.doc?.length > 0 &&
+                                                            <div>
+                                                                <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Files</div>
 
-                                                            {
-                                                                taskSolutionDocs.doc.map((imges, index) =>
-                                                                    <div className='task-image-list flex gap-3 w-[400px] justify-between items-center mt-5 px-4 py-4'
-                                                                        style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }} key={index}>
-                                                                        <div className='flex gap-3 items-center'>
-                                                                            <img src={UploadIcon} alt="altlogo" />
-                                                                            <span className='text-[12px] image-name'>{imges[0].name}</span>
+                                                                {
+                                                                    taskSolutionDocs.doc.map((img, index) =>
+                                                                        <div className='uploaded-images task-image-list' key={index}>
+                                                                            <div className='flex gap-3 w-[400px] justify-between items-center mt-5 px-4 py-4'
+                                                                                style={{ border: '1px solid rgba(29, 91, 191, 0.5)', borderRadius: '3px' }}>
+                                                                                <div className='flex gap-3 items-center'>
+                                                                                    <img src={UploadIcon} alt="altlogo" />
+                                                                                    <span className='text-[12px] image-name'>{img?.name}</span>
+                                                                                </div>
+                                                                                <img className='w-[30px] cursor-pointer' onClick={() => handleDelete(img.id)} src={DeleteIcon} alt="DeleteIcon" />
+                                                                            </div>
                                                                         </div>
-                                                                        <img className='w-[30px] cursor-pointer' onClick={() => handleDelete(imges.id)} src={DeleteIcon} alt="DeleteIcon" />
-                                                                    </div>
-                                                                )
-                                                            }
-                                                        </div>
-                                                        : null
-                                                }
-                                            </div>
+                                                                    )
+                                                                }
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            }
                                         </>
                                         :
 
@@ -515,7 +668,7 @@ export const TaskDetails = () => {
 
                                                 <div className='flex justify-between task-uploaded-images-container'>
                                                     {
-                                                        allFiles.files ?
+                                                        allFiles?.files?.length > 0 ?
 
                                                             <div>
                                                                 <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Image</div>
@@ -542,7 +695,7 @@ export const TaskDetails = () => {
 
 
                                                     {
-                                                        allFiles.video.length ?
+                                                        allFiles?.video?.length > 0 ?
 
                                                             <div>
                                                                 <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Video</div>
@@ -572,7 +725,7 @@ export const TaskDetails = () => {
 
 
                                                     {
-                                                        allFiles.doc.length ?
+                                                        allFiles?.doc?.length > 0 ?
 
                                                             <div>
                                                                 <div className='text-[14px] pt-5' style={{ color: 'rgba(0, 0, 0, 1)' }}>Uploaded Files</div>
@@ -616,7 +769,7 @@ export const TaskDetails = () => {
                                     </div>
                                 </div>
 
-                            </div>
+                            </div>}
                             {
                                 (taskData.result !== '' && taskData.result !== null && taskData.result !== '----') &&
 
@@ -638,22 +791,26 @@ export const TaskDetails = () => {
 
                                     ) &&
                                     <>
-                                        <Button btnType="button" btnCls={`${startTask ? 'w-[14%]' : 'w-[12%]'}`}
-                                            onClick={handleReset} btnName='Reset'
+                                        <Button btnType="submit" btnCls={`${startTask ? 'w-[14%]' : 'w-[12%]'}`}
+                                            btnName='Draft'
                                             style={{
                                                 background: 'rgba(217, 228, 242, 1)',
                                                 color: 'rgba(29, 91, 191, 1)'
                                             }}
+                                            onClick={() => setFormAction("draft")}
                                         />
-                                        {/* <Button btnType="button" btnCls={`${startTask ? 'w-[14%]' : 'w-[12%]'}`}
-                                            onClick={() => navigate(`/preview-mentee-tasks-details/${params.id}`)} btnName='Preview'
+                                        <Button btnType="button" btnCls={`${startTask ? 'w-[14%]' : 'w-[12%]'}`}
+                                            onClick={() => setIsPreview(!isPreview)}
+                                            btnName={isPreview ? 'Edit' : 'Preview'}
                                             style={{
-                                                background: 'rgba(167, 181, 202, 1)',
-                                                color: 'rgba(24, 40, 61, 1)'
+                                                background: '#A7B5CA',
+                                                color: '#18283D'
                                             }}
-                                        /> */}
+                                        />
                                         <Button btnType="submit" btnCls={`${startTask ? 'w-[14%]' : 'w-[12%]'}`}
-                                            btnName='Submit to Mentor' btnCategory="primary" />
+                                            btnName='Submit to Mentor' btnCategory="primary"
+                                            onClick={() => setFormAction("submit")} />
+
                                     </>
                                 }
                                 {
@@ -665,57 +822,12 @@ export const TaskDetails = () => {
 
                             </div>
 
+
                         </form>
 
 
 
-                        {/* <div className='close-btn flex justify-center gap-7 pb-5'>
-                        {
-                            params.id !== '' || params.id === '5' ?
-
-                                <>
-                                    <Button btnName='Cancel' btnCls="w-[12%]" btnCategory="secondary" onClick={() => navigate('/mentee-tasks')} />
-                                    {
-                                        task_status === TaskAllStatus.start &&
-                                        <>
-                                            <Button btnType="button" btnCls={`${startTask ? 'w-[14%]' : 'w-[12%]'}`}
-                                                onClick={() => console.log('Reset')} btnName='Reset'
-                                                style={{
-                                                    background: 'rgba(217, 228, 242, 1)',
-                                                    color: 'rgba(29, 91, 191, 1)'
-                                                }}
-                                            />
-                                            <Button btnType="button" btnCls={`${startTask ? 'w-[14%]' : 'w-[12%]'}`}
-                                                onClick={() => navigate(`/preview-mentee-tasks-details/${params.id}`)} btnName='Preview'
-                                                style={{
-                                                    background: 'rgba(167, 181, 202, 1)',
-                                                    color: 'rgba(24, 40, 61, 1)'
-                                                }}
-                                            />
-                                            <Button btnType="button" btnCls={`${startTask ? 'w-[14%]' : 'w-[12%]'}`}
-                                                onClick={handleSubmitTask} btnName='Submit to Mentor' btnCategory="primary" />
-                                        </>
-
-                                    }
-                                    {
-                                        task_status ===
-                                            <Button btnType="button" btnCls={`${startTask ? 'w-[14%]' : 'w-[12%]'}`} onClick={() => setStartTask(true)} btnName='Start Task' btnCategory="primary" />
-                                    }
-
-                                </>
-                                :
-
-                                task_status === TaskAllStatus.submitted ?
-                                    <Button btnType="button" btnCls="w-[10%]"
-                                        onClick={() => { navigate('/mentee-tasks') }} btnName='Cancel'
-                                        style={{ border: '1px solid rgba(255, 10, 10, 1)', color: 'rgba(255, 10, 10, 1)' }} />
-                                    :
-
-                                    <Button btnType="button" btnCls="w-[10%]"
-                                        onClick={() => { navigate('/mentee-tasks') }} btnName='Close' btnCategory="primary" />
-                        }
-
-                    </div> */}
+                        
                     </div>
                 }
 

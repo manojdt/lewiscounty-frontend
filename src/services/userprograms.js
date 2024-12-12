@@ -13,34 +13,34 @@ export const getUserPrograms = createAsyncThunk(
     "getUserPrograms",
     async (query) => {
         let updateQuery = query
-        if(query.value === 'planned'){
-            updateQuery = {...query, value: 'yettojoin'}
+        if (query.value === 'planned') {
+            updateQuery = { ...query, value: 'yettojoin' }
         }
 
         let queryParams = ''
-        if(updateQuery && Object.keys(updateQuery).length){         
-            if(updateQuery.hasOwnProperty('type')){
-                queryParams = ( queryParams === '' ? '?' : '&') + `${updateQuery.type}=${updateQuery.value}`
+        if (updateQuery && Object.keys(updateQuery).length) {
+            if (updateQuery.hasOwnProperty('type')) {
+                queryParams = (queryParams === '' ? '?' : '&') + `${updateQuery.type}=${updateQuery.value}`
             }
 
-            if(updateQuery.hasOwnProperty('page')){
-                queryParams =  (queryParams === '' ? '?' : `${queryParams}&`) + `${updateQuery.page}=${updateQuery.number}`
+            if (updateQuery.hasOwnProperty('page')) {
+                queryParams = (queryParams === '' ? '?' : `${queryParams}&`) + `${updateQuery.page}=${updateQuery.number}`
             }
 
-            if(updateQuery.hasOwnProperty('search')){
-                queryParams =  (queryParams === '' ? '?' : `${queryParams}&`) + `${updateQuery.search.search}=${updateQuery.search.value}`
+            if (updateQuery.hasOwnProperty('search')) {
+                queryParams = (queryParams === '' ? '?' : `${queryParams}&`) + `${updateQuery.search.search}=${updateQuery.search.value}`
             }
 
-            if(updateQuery.hasOwnProperty('date')){
-                queryParams =  (queryParams === '' ? '?' : `${queryParams}&`) + `${updateQuery.date.date}=${updateQuery.date.value}`
+            if (updateQuery.hasOwnProperty('date')) {
+                queryParams = (queryParams === '' ? '?' : `${queryParams}&`) + `${updateQuery.date.date}=${updateQuery.date.value}`
             }
 
-            if(updateQuery.hasOwnProperty('category_id')){
-                queryParams =  (queryParams === '' ? '?' : `${queryParams}&`) + `category_id=${updateQuery.category_id}`
+            if (updateQuery.hasOwnProperty('category_id')) {
+                queryParams = (queryParams === '' ? '?' : `${queryParams}&`) + `category_id=${updateQuery.category_id}`
             }
         }
         queryParams = queryParams !== '' ? `${queryParams}&limit=6` : '?limit=6'
-       
+
         const getUserProgram = await api.get(`programs${queryParams}`);
         if (getUserProgram.status === 200 && getUserProgram.data) {
             const response = {
@@ -126,11 +126,11 @@ export const getSpecificProgramDetails = createAsyncThunk(
     async (ids) => {
         const { id, requestId = '' } = ids
         let queryString = id
-        if(requestId !== '' && requestId !== null){
-            queryString = queryString+'?request_id='+requestId
+        if (requestId !== '' && requestId !== null) {
+            queryString = queryString + '?request_id=' + requestId
         }
 
-      
+
         const getDetailsofProgram = await api.get(`fetch_program_detail/${queryString}`);
         if (getDetailsofProgram.status === 200 && getDetailsofProgram.data && getDetailsofProgram.data.program) {
             return getDetailsofProgram.data.program;
@@ -152,7 +152,7 @@ export const getMentees = createAsyncThunk(
 
 export const getProgramTaskMentees = createAsyncThunk(
     "getProgramTaskMentees",
-    async (id='') => {
+    async (id = '') => {
         const allMentees = await api.get(`program/participates?program_id=${id}`);
         if (allMentees.status === 200 && allMentees.data) {
             return allMentees.data;
@@ -163,7 +163,7 @@ export const getProgramTaskMentees = createAsyncThunk(
 
 export const getProgramMentees = createAsyncThunk(
     "getProgramMentees",
-    async (id='') => {
+    async (id = '') => {
         const allMentees = await api.get('program_task_assign/list_mentee');
         if (allMentees.status === 200 && allMentees.data) {
             return allMentees.data;
@@ -185,6 +185,22 @@ export const assignProgramTask = createAsyncThunk(
             return programTaskAssign.data;
         }
         return programTaskAssign;
+    }
+);
+
+export const upateProgramTask = createAsyncThunk(
+    "upateProgramTask",
+    async (data) => {
+        const headers = {
+            'Content-Type': 'application/json',
+        }
+        const upateProgramTask = await api.patch('program_task_assign/mentortask', data, {
+            headers: headers
+        });
+        if (upateProgramTask.status === 201 && upateProgramTask.data) {
+            return upateProgramTask.data;
+        }
+        return upateProgramTask;
     }
 );
 
@@ -212,7 +228,7 @@ export const getMenteePrograms = createAsyncThunk(
 
         if (queryString.value === 'yettostart') {
             queryString.value = 'recently_joined';
-        }     
+        }
 
         if (queryString.value === 'inprogress') {
             queryString.value = 'ongoing';
@@ -220,26 +236,26 @@ export const getMenteePrograms = createAsyncThunk(
 
 
         let queryParams = ''
-        if(queryString && Object.keys(queryString).length){         
-            if(queryString.hasOwnProperty('type')){
+        if (queryString && Object.keys(queryString).length) {
+            if (queryString.hasOwnProperty('type')) {
                 queryParams = (queryParams === '' ? '?' : '&') + `${queryString.type}=${queryString.value}`
             }
 
-            if(queryString.hasOwnProperty('page')){
-                queryParams =  (queryParams === '' ? '?' : `${queryParams}&`) + `${queryString.page}=${queryString.number}`
+            if (queryString.hasOwnProperty('page')) {
+                queryParams = (queryParams === '' ? '?' : `${queryParams}&`) + `${queryString.page}=${queryString.number}`
             }
 
-            if(queryString.hasOwnProperty('search')){
-                queryParams =  (queryParams === '' ? '?' : `${queryParams}&`) + `${queryString.search.search}=${queryString.search.value}`
+            if (queryString.hasOwnProperty('search')) {
+                queryParams = (queryParams === '' ? '?' : `${queryParams}&`) + `${queryString.search.search}=${queryString.search.value}`
             }
 
-            if(queryString.hasOwnProperty('date')){
-                queryParams =  (queryParams === '' ? '?' : `${queryParams}&`) + `${queryString.date.date}=${queryString.date.value}`
+            if (queryString.hasOwnProperty('date')) {
+                queryParams = (queryParams === '' ? '?' : `${queryParams}&`) + `${queryString.date.date}=${queryString.date.value}`
             }
 
 
-            if(queryString.hasOwnProperty('category_id')){
-                queryParams =  (queryParams === '' ? '?' : `${queryParams}&`) + `category_id=${queryString.category_id}`
+            if (queryString.hasOwnProperty('category_id')) {
+                queryParams = (queryParams === '' ? '?' : `${queryParams}&`) + `category_id=${queryString.category_id}`
             }
 
 
@@ -328,7 +344,7 @@ export const submitProgramTaskDetails = createAsyncThunk(
         const headers = {
             'Content-Type': 'multipart/form-data',
         }
-        const submitTask = await api.post("program_task_assign/task_submission", data,  { headers: headers });
+        const submitTask = await api.post("program_task_assign/task_submission", data, { headers: headers });
         if (submitTask.status === 201 && submitTask.data) {
             return submitTask.data;
         }
@@ -352,15 +368,27 @@ export const updateUserProgramInfo = createAction('update/userProgramInfo')
 export const updateProgramImage = createAsyncThunk(
     "updateProgramImage",
     async (data) => {
-      const headers = {
-        'Content-Type': 'multipart/form-data',
-      }
-      const updateProgramImageData = await api.patch("programs", data, {
-        headers: headers
-      });
-      if (updateProgramImageData.status === 201) {
+        const headers = {
+            'Content-Type': 'multipart/form-data',
+        }
+        const updateProgramImageData = await api.patch("programs", data, {
+            headers: headers
+        });
+        if (updateProgramImageData.status === 201) {
+            return updateProgramImageData;
+        }
         return updateProgramImageData;
-      }
-      return updateProgramImageData;
     }
-  );
+);
+
+
+export const updateTaskSubmission = createAsyncThunk(
+    "updateTaskSubmission",
+    async (payload) => {
+        const updateTaskSubmission = await api.put(`/program_task_assign/task_submission`, payload);
+        if (updateTaskSubmission.status === 200 && updateTaskSubmission.data) {
+            return updateTaskSubmission.data;
+        }
+        return updateTaskSubmission
+    }
+);

@@ -76,6 +76,7 @@ import ProfileView from './component/Profile/ProfileView';
 import Category from './component/category';
 import CategoryView from './component/category/categoryView';
 import MenteeTaskList from './component/Tasks/MenteeTaskList';
+import ViewTask from './component/Mentor/Task/viewTask';
 import { AuthLayout } from './component/Login/AuthLayout';
 
 function App() {
@@ -131,6 +132,7 @@ function App() {
           <Route path='/program-task/:id' element={<ProgramTask />} />
           <Route path='/assign-task/:id' element={<AssignTask />} />
           <Route path='/assign-mentees/:id' element={<AssignMentees />} />
+          <Route path='/assign-mentees' element={<AssignMentees />} />
           <Route path='/start-program/:id' element={<AssignTask />} />
           <Route path='/submit-task-program/:id' element={<TaskDetails />} />
           <Route
@@ -216,6 +218,7 @@ function App() {
           <Route path='/profileView' element={<MentorMenteeProfile />} />
           <Route path='/category' element={<Category />} />
           <Route path='/categoryView' element={<CategoryView />} />
+          <Route path='/viewTask/:id' element={<ViewTask />} />          
         </Route>
       </Route>
 
