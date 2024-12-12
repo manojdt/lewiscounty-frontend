@@ -17,7 +17,7 @@ import "primereact/resources/themes/lara-light-cyan/theme.css";
 import Tooltip from '../../../shared/Tooltip';
 
 
-const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousStep,handleSaveDraft, currentStepData, stepData, handleAction, totalSteps, fetchCategoryData, programDetails }) => {
+const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousStep,handleSaveDraft, onBlurFunction,currentStepData, stepData, handleAction, totalSteps, fetchCategoryData, programDetails }) => {
     const navigate = useNavigate();
     const params = useParams()
     const [dateFormat, setDateFormat] = useState({})
@@ -157,6 +157,12 @@ const ProgramSteps = ({ stepFields, currentStep, handleNextStep, handlePreviousS
                                                         style={{
                                                             color: "#232323",
                                                             borderRadius: '3px'
+                                                        }}
+                                                        onBlur={(e) => {
+                                                            const programName = e?.target?.value;
+                                                            if (programName&&field.name==="program_name") {
+                                                                onBlurFunction(programName)
+                                                        }
                                                         }}
                                                         aria-invalid={!!errors[field.name]}
                                                     />
