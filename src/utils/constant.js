@@ -396,6 +396,8 @@ export const requestStatusText = {
   Wating_for_response: 'Wating for Response',
   active: 'Active',
   deactivated: 'Deactivated',
+  rejected: "Rejected",
+  approved: "Approved"
 };
 export const certificateRequestStatusText = {
   new: 'New',
@@ -406,6 +408,8 @@ export const certificateRequestStatusText = {
   Wating_for_response: 'Wating for your Response',
   active: 'Active',
   deactivated: 'Deactivated',
+  approved: "Approved",
+  rejected: "Rejected",
 };
 export const programStatusText = {
   inprogress: 'Ongoing',
@@ -487,6 +491,14 @@ export const requestStatusColor = {
     bgColor: 'rgba(207, 225, 255, 1)',
     color: 'rgba(29, 91, 191, 1)',
   },
+  rejected: {
+    bgColor: 'rgba(255, 231, 231, 1)',
+    color: 'rgba(224, 56, 45, 1)',
+  },
+  approved: {
+    bgColor: 'rgba(235, 255, 243, 1)',
+    color: 'rgba(22, 182, 129, 1)',
+  },
 };
 
 export const memberStatusColor = {
@@ -562,6 +574,14 @@ export const reportStatusColor = {
     color: 'rgba(224, 56, 45, 1)',
     bg: 'rgba(255, 231, 231, 1)',
   },
+  deleted: {
+    color: 'rgba(224, 56, 45, 1)',
+    bg: 'rgba(255, 231, 231, 1)',
+  },
+  rejected: {
+    color: 'rgba(224, 56, 45, 1)',
+    bg: 'rgba(255, 231, 231, 1)',
+  },
 };
 
 export const reportStatus = {
@@ -570,6 +590,8 @@ export const reportStatus = {
   cancel: 'Cancel',
   draft: 'Draft',
   new: 'New',
+  deleted: "Deleted",
+  rejected: "Rejected"
 };
 
 export const reportAllStatus = {
@@ -952,21 +974,21 @@ export const menteesRequestOverview = [
     key: RequestStatus.programRequest.key,
     count: 0,
     status: RequestStatus.programRequest.key,
-    for: ['mentor'],
+    for: ['mentor', 'admin'],
   },
   {
     name: 'Resource Access Requests',
     key: RequestStatus.resourceAccessRequest,
     count: 0,
     status: RequestStatus.resourceAccessRequest.key,
-    for: ['mentor'],
+    for: ['mentor', 'admin'],
   },
   {
     name: 'Goal Requests',
     key: RequestStatus.goalRequest,
     count: 0,
     status: RequestStatus.goalRequest.key,
-    for: ['mentor'],
+    for: ['mentor', 'admin'],
   },
 ];
 

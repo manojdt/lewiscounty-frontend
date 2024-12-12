@@ -53,12 +53,13 @@ export default function CreateReport() {
 
     const onSubmit = (data) => {
         const apiData = {
-            "category": parseInt(data.category),
+            // "category": parseInt(data.category),
+            request_type: "report",
             "program": parseInt(data.program),
-            "report_name": data.report_name,
+            "name": data.report_name,
             "participated_mentees": data.participated_mentees,
-            "description": data.description,
-            "action": data?.action || "submit"
+            "comments": data.description,
+            "status": data?.action ?? null
         }
         dispatch(createReport(apiData)).then((res) => {
             if (res?.meta?.requestStatus === "fulfilled") {

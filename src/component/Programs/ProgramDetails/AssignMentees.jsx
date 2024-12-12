@@ -44,6 +44,7 @@ export default function AssignMentees() {
     const calendarRef = useRef([])
     const dispatch = useDispatch()
     const type = searchParams.get('type')
+    const from_type = searchParams.get('from')
     const { programdetails, loading: programLoading, error, status, programMenteeList } = useSelector(state => state.userPrograms)
     const { category, loading: apiLoading, programListByCategory } = useSelector(state => state.programInfo)
     const [menteeFields, setMenteeFields] = useState(AssignMenteesFields(type === "new" ? false : true, type, getValues))
@@ -55,6 +56,7 @@ export default function AssignMentees() {
 
 
     const onSubmit = (data) => {
+        debugger
         let apiData = {
             ...data,
             program_id: type === "new" ? allFields?.program_id : state?.data?.program_id,
@@ -63,14 +65,14 @@ export default function AssignMentees() {
             mentor: type === "new" ? allFields?.mentor_id : state?.data?.mentor_id,
             due_date: dayjs(data.due_date).format("YYYY-MM-DDTHH:mm:ss")
         }
-        if (type === "edit") {
+        if (type === "edit" && from_type !== "program") {
             apiData = {
                 ...apiData,
                 task_id: state?.data?.task_id
             }
         }
         
-        if (type === "edit") {
+        if (type === "edit" && from_type !== "program") {
             dispatch(upateProgramTask(apiData)).then((res) => {
                 if (res.meta.requestStatus === "fulfilled") {
                     setTaskSuccess(true)

@@ -36,7 +36,9 @@ export default function Certificate() {
         if (value !== '') {
             query = `?search=${value}`
         }
-        dispatch(getCertificateList(query + `&page=${paginationModel?.page + 1}&limit=${paginationModel?.pageSize}`))
+        dispatch(getCertificateList(query +
+            role === "admin" ? `&page=${paginationModel?.page + 1}&limit=${paginationModel?.pageSize}&request_type=certificate&requested_by=mentor`
+            : `&page=${paginationModel?.page + 1}&limit=${paginationModel?.pageSize}&request_type=certificate`))
     }
     const handleClose = () => {
         setAnchorEl(null);
@@ -105,7 +107,7 @@ export default function Certificate() {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
-                        {role === 'mentee' && seletedItem.status === "accept" ?
+                        {role === 'mentee' && (seletedItem.status === "accept" || seletedItem.status === "approved") ?
                             <MenuItem onClick={() => navigate(`/certificate-view/${seletedItem.id}`)} className='!text-[12px]'>
                                 <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
                                 View
@@ -163,7 +165,7 @@ export default function Certificate() {
 
     useEffect(() => {
         if (role) {
-            dispatch(getCertificateList(role === "admin" ? `?status=${requestTab}` : role === "mentor" ? `?status=${actionTab}&page=${paginationModel?.page + 1}&limit=${paginationModel?.pageSize}` : `?page=${paginationModel?.page + 1}&limit=${paginationModel?.pageSize}`))
+            dispatch(getCertificateList(role === "admin" ? `?status=${requestTab}&request_type=certificate&requested_by=mentor` : role === "mentor" ? `?status=${actionTab}&page=${paginationModel?.page + 1}&limit=${paginationModel?.pageSize}&request_type=certificate` : `?page=${paginationModel?.page + 1}&limit=${paginationModel?.pageSize}&request_type=certificate`))
         }
         // dispatch(getCertificates({search: role === "admin" ? requestTab : actionTab}))
     }, [requestTab, role, actionTab, paginationModel])
@@ -200,7 +202,7 @@ export default function Certificate() {
                             </div>
                         </div>
                         {role !== 'mentee' &&
-                            <Button btnName="Create Certificate" onClick={() => navigate('/create-certificate', {state: {type : "new"}})} />}
+                            <Button btnName="Create Certificate" onClick={() => navigate('/create-certificate', { state: { type: "new" } })} />}
                     </div>
 
                 </div>

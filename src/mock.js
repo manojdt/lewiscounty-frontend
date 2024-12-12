@@ -1371,7 +1371,7 @@ export const programRequestColumns = [
     for: ['admin', 'mentor', 'mentee'],
   },
   {
-    field: 'requested_by_name',
+    field: 'created_by_full_name',
     headerName: 'Requested By',
     flex: 1,
     id: 2,
@@ -1392,7 +1392,7 @@ export const programRequestColumns = [
     for: ['mentor'],
   },
   {
-    field: 'requested_date_and_time',
+    field: 'created_at',
     headerName: 'Request Date',
     flex: 1,
     id: 5,
@@ -1406,14 +1406,14 @@ export const programRequestColumns = [
   //   for: ['mentor'],
   // },
   {
-    field: 'last_updated_date',
+    field: 'updated_at',
     headerName: 'Last Updated Date',
     flex: 1,
     id: 7,
     for: ['admin', 'mentee', "mentor"],
   },
   {
-    field: 'last_updated_by',
+    field: 'updated_by_full_name',
     headerName: 'Last Updated By',
     flex: 1,
     id: 8,
@@ -1469,6 +1469,71 @@ export const programRequestColumns = [
   //   id: 14,
   //   for: ['mentor'],
   // },
+];
+export const programExtendRequestColumns = [
+  {
+    field: 'category_name',
+    headerName: 'Category',
+    flex: 1,
+    id: 0,
+    for: ['admin', 'mentor', 'mentee'],
+  },
+  {
+    field: 'program_name',
+    headerName: 'Program Name',
+    flex: 1,
+    id: 1,
+    for: ['admin', 'mentor', 'mentee'],
+  },
+  {
+    field: 'created_by_full_name',
+    headerName: 'Requested By',
+    flex: 1,
+    id: 2,
+    for: ['admin', 'mentee'],
+  },
+  {
+    field: 'position',
+    headerName: 'Position',
+    flex: 1,
+    id: 3,
+    for: ['admin'],
+  },
+  {
+    field: 'to_request',
+    headerName: 'Requeste To',
+    flex: 1,
+    id: 4,
+    for: ['mentor'],
+  },
+  {
+    field: 'created_at',
+    headerName: 'Request Date',
+    flex: 1,
+    id: 5,
+    for: ['admin', 'mentor', 'mentee'],
+  },
+  {
+    field: 'updated_at',
+    headerName: 'Last Updated Date',
+    flex: 1,
+    id: 7,
+    for: ['admin', 'mentee', "mentor"],
+  },
+  {
+    field: 'updated_by_full_name',
+    headerName: 'Last Updated By',
+    flex: 1,
+    id: 8,
+    for: ['admin', 'mentee', "mentor"],
+  },
+  {
+    field: 'auto_approval',
+    headerName: 'Auto Approval',
+    flex: 1,
+    id: 8,
+    for: ['admin'],
+  },
 ];
 
 export const learningAccessRequestsColumns = [
@@ -1763,7 +1828,7 @@ export const goalsRequestColumns = [
 
 export const resourceAccessRequestColumns = [
   {
-    field: 'name',
+    field: 'material_name',
     headerName: 'Material Name',
     flex: 1,
     id: 1,
@@ -1777,7 +1842,7 @@ export const resourceAccessRequestColumns = [
     for: ['admin', 'mentor', 'mentee'],
   },
   {
-    field: 'reason',
+    field: 'comments',
     headerName: 'Reason',
     flex: 1,
     id: 3,
@@ -1791,7 +1856,7 @@ export const resourceAccessRequestColumns = [
     for: ['admin'],
   },
   {
-    field: 'request_date',
+    field: 'created_at',
     headerName: 'Request Date ',
     flex: 1,
     id: 5,
@@ -1799,7 +1864,7 @@ export const resourceAccessRequestColumns = [
     minWidth: 150,
   },
   {
-    field: 'requested_to',
+    field: 'created_by_full_name',
     headerName: 'Requested to',
     flex: 1,
     id: 6,
@@ -1807,7 +1872,7 @@ export const resourceAccessRequestColumns = [
     minWidth: 150,
   },
   {
-    field: 'last_updated_date',
+    field: 'updated_at',
     headerName: 'Last Updated Date',
     flex: 1,
     id: 7,
@@ -1815,7 +1880,7 @@ export const resourceAccessRequestColumns = [
     minWidth: 150,
   },
   {
-    field: 'last_update_by',
+    field: 'updated_by_full_name',
     headerName: 'Last Update by',
     flex: 1,
     id: 8,
@@ -1823,7 +1888,7 @@ export const resourceAccessRequestColumns = [
     minWidth: 150,
   },
   {
-    field: 'material_link',
+    field: 'material_url',
     headerName: 'Material Link',
     flex: 1,
     id: 9,
@@ -1938,21 +2003,21 @@ export const certificateRequestColumns = [
     for: ['admin', 'mentor'],
   },
   {
-    field: 'Mentee_count',
+    field: 'participates_count',
     headerName: 'Mentees',
     flex: 1,
     id: 2,
     for: ['admin'],
   },
   {
-    field: 'requested_by',
+    field: 'created_by_full_name',
     headerName: 'Requested By',
     flex: 1,
     id: 3,
     for: ['admin'],
   },
   {
-    field: 'requested_date',
+    field: 'created_at',
     headerName: 'Requested Date',
     flex: 1,
     id: 3,
@@ -1976,21 +2041,21 @@ export const certificateRequestColumns = [
 
 export const reportRequestColumns = [
   {
-    field: 'report_name',
+    field: 'name',
     headerName: 'Report Name',
     flex: 1,
     id: 0,
     for: ['admin', 'mentor'],
   },
   {
-    field: 'mentor_name',
+    field: 'created_by_full_name',
     headerName: 'Mentor Name',
     flex: 1,
     id: 1,
     for: ['admin', 'mentor'],
   },
   {
-    field: 'category',
+    field: 'category_name',
     headerName: 'Category',
     flex: 1,
     id: 2,
@@ -2004,21 +2069,21 @@ export const reportRequestColumns = [
     for: ['admin'],
   },
   {
-    field: 'mentees',
+    field: 'participates_count',
     headerName: 'Mentees',
     flex: 1,
     id: 2,
     for: ['admin'],
   },
   {
-    field: 'updated_date',
+    field: 'updated_at',
     headerName: 'Last Updated Date',
     flex: 1,
     id: 3,
     for: ['admin'],
   },
   {
-    field: 'updated_by',
+    field: 'updated_by_full_name',
     headerName: 'Last Updated By',
     flex: 1,
     id: 3,

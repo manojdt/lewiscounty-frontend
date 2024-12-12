@@ -68,9 +68,10 @@ export default function AssignTask() {
     const timerData = useTimer()
     const calendarRef = useRef([])
 
-    const { allPrograms, programDetails,programMentees } = useSelector(state => state.programInfo)
+    const { allPrograms, programDetails, programMentees } = useSelector(state => state.programInfo)
     const userdetails = useSelector(state => state.userInfo)
     const { programdetails, loading: programLoading, error, status } = useSelector(state => state.userPrograms)
+    // const programdetails = programData
     const { profile, loading: profileLoading } = useSelector(state => state.profileInfo)
 
     const { loading: requestLoading, status: requestStatusInfo, error: requestError } = useSelector(state => state.requestList);
@@ -147,8 +148,8 @@ export default function AssignTask() {
     }
 
 
-    const handleViewJoinedMentees =async (programInfo) => {
-       dispatch(getProgramMentees(programInfo?.id))
+    const handleViewJoinedMentees = async (programInfo) => {
+        dispatch(getProgramMentees(programInfo?.id))
         setViewMenteeModal(true)
     }
 
@@ -180,21 +181,26 @@ export default function AssignTask() {
         }
     ]
 
-    const handleActionPage = async () => {
+    const handleActionPage = async (type = "") => {
 
 
         // if (programdetails.status === programActionStatus.yettostart) {
         //     navigate(`${pipeUrls.assignmentess}/${programdetails.id}`)
         // }
-
-        if (programdetails.status === programActionStatus.yettostart) {
+        if (type === "join_program") {
+            dispatch(launchProgram({ program: programdetails.id, request_type: "program_join" })).then((res) => {
+                if (res.meta.requestStatus === "fulfilled") {
+                    dispatch(getProgramDetails(parseInt(params.id)))
+                }
+            })
+        } else if (programdetails.status === programActionStatus.yettostart) {
             // setLoading({ initial: true, task: false })
             // const startProgramRequest = await api.post('start_program', { id: parseInt(params.id) });
             // if ((startProgramRequest.status === 201 || startProgramRequest.status === 200) && startProgramRequest.data) {
-                // setLoading({ initial: false, task: false })
-                dispatch(launchProgram({ program: programdetails.id, request_type: "program_start" })).then(() => {
-                    dispatch(getProgramDetails(parseInt(params.id)))
-                })
+            // setLoading({ initial: false, task: false })
+            dispatch(launchProgram({ program: programdetails.id, request_type: "program_start" })).then(() => {
+                dispatch(getProgramDetails(parseInt(params.id)))
+            })
 
             // }
         }
@@ -245,18 +251,20 @@ export default function AssignTask() {
             const formattedEndDate = convertDateFormat(data.reschedule_end_date);
 
             const payload = {
-                reschedule_start_date: formattedStartDate,
-                reschedule_end_date: formattedEndDate,
-                program_id: params.id,
-                reason: data.reason
+                request_type: "program_reschedule",
+                start_date: formattedStartDate,
+                end_date: formattedEndDate,
+                program: params.id,
+                comments: data?.reason
             }
             dispatch(programRescheduleRequest(payload))
         }
 
         if (moreMenuModal.cancel) {
             dispatch(programCancelRequest({
-                program_id: params.id,
-                reason: data.cancel_reason
+                program: params.id,
+                comments: data.cancel_reason,
+                request_type: "program_cancel"
             }))
         }
     }
@@ -460,6 +468,37 @@ export default function AssignTask() {
         })
     }
 
+
+    const handleNewTaskFromAdmin = (data) => {
+        const constructedData = {
+            ...data,
+
+            "program_category_name": programdetails?.category_name,
+            "program_name": programdetails?.program_name,
+            "program_startdate": programdetails?.start_date,
+            "program_enddate": programdetails?.end_date,
+            "task_name": programdetails?.task_name ?? "",
+            "reference_link": programdetails?.reference_links ?? "",
+            "task_details": programdetails?.task_details ?? "",
+            "due_date": programdetails?.due_date,
+            // "assign_task_id": null,
+            "list_mentees": programdetails?.participated_mentees,
+            "program_id": programdetails?.id,
+            "program_duration": programdetails?.duration,
+            "category_id": programdetails?.categories?.[0]?.id,
+            // "mentor_id": programdetails?.created_by,
+            "mentor_name": programdetails?.mentor_name,
+            // "task_id": null,
+            "state_date": programdetails?.start_date
+        }
+
+        navigate(`/assign-mentees/?type=edit&from=program`, {
+            state: {
+                data: constructedData
+            }
+        })
+    }
+
     return (
         <div className="px-9 my-6 grid">
 
@@ -500,16 +539,16 @@ export default function AssignTask() {
                             <img className='cursor-pointer' onClick={() => setViewMenteeModal(false)} src={CancelIcon} alt="CancelIcon" />
                         </div>
                         <div className='px-5'>
-                            <DataTable rows={programMentees?.length>0&&programMentees} columns={JoinMenteeColumn} hideCheckbox />
+                            <DataTable rows={programMentees?.length > 0 && programMentees} columns={JoinMenteeColumn} hideCheckbox />
                         </div>
                     </div>
                 </div>
             </MuiModal>
 
-            {
+            {/* {
                 message &&
                 <ToastNotification openToaster={message} message={'URL copied!'} handleClose={handleCloseNotify} toastType={'success'} />
-            }
+            } */}
 
             {
                 Object.keys(programdetails)?.length && !programLoading ?
@@ -519,7 +558,7 @@ export default function AssignTask() {
                                 <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
                                     <li className="inline-flex items-center">
                                         <div className="inline-flex items-center text-sm font-medium cursor-pointer" style={{ color: 'rgba(89, 117, 162, 1)' }}
-                                        onClick={()=> navigate(-1)}>
+                                            onClick={() => navigate(-1)}>
                                             Program
                                         </div>
                                         <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
@@ -537,7 +576,7 @@ export default function AssignTask() {
 
                                 {
                                     (
-                                        (role === 'mentor' && programDetails.created_by === userdetails?.data?.user_id) ||
+                                        ((role === 'mentor' || role === "admin") && programDetails.created_by === userdetails?.data?.user_id) ||
                                         (role === 'mentee' &&
                                             (programdetails.status === programActionStatus.inprogress || programdetails.mentee_join_status === programActionStatus.program_join_request_accepted)
                                         )
@@ -575,7 +614,7 @@ export default function AssignTask() {
                                                     currentPage === 'startprogram' ?
                                                         <>
                                                             {
-                                                                role === 'mentor' &&
+                                                                (role === 'mentor' || role === "admin") &&
 
                                                                 <>
 
@@ -588,15 +627,16 @@ export default function AssignTask() {
                                                                     }
 
                                                                     {
-
+                                                                        programdetails.status !== "yettoapprove" &&
                                                                         <MenuItem onClick={() => handleMenu('cancel')} className='!text-[12px]'>
                                                                             <img src={AbortIcon} alt="AbortIcon" className='pr-3 w-[25px]' />
                                                                             Cancel</MenuItem>
                                                                     }
-                                                                    <MenuItem onClick={() => handleMenu('reschedule')} className='!text-[12px]'>
-                                                                        <img src={RescheduleIcon} alt="RescheduleIcon" className='pr-3 w-[25px]' />
-                                                                        Reschedule
-                                                                    </MenuItem>
+                                                                    {programdetails.status !== "yettoapprove" &&
+                                                                        <MenuItem onClick={() => handleMenu('reschedule')} className='!text-[12px]'>
+                                                                            <img src={RescheduleIcon} alt="RescheduleIcon" className='pr-3 w-[25px]' />
+                                                                            Reschedule
+                                                                        </MenuItem>}
                                                                     <MenuItem onClick={() => handleMenu('share')} className='!text-[12px]'>
                                                                         <img src={ShareIcon} alt="ShareIcon" className='pr-3 w-[25px]' /> Share</MenuItem>
                                                                     {
@@ -608,7 +648,7 @@ export default function AssignTask() {
                                                                             <MenuItem onClick={() => handleOpenConfirmPopup()} className='!text-[12px]'>
                                                                                 <img src={CompleteIcon} alt="AbortIcon" className='pr-3 w-[25px]' />
                                                                                 Complete</MenuItem>
-                                                                            <MenuItem onClick={() => navigate(`${pipeUrls.assignmentess}/${programdetails.id}`)} className='!text-[12px]'>
+                                                                            <MenuItem onClick={() => handleNewTaskFromAdmin()} className='!text-[12px]'>
                                                                                 <img src={PlusCircle} alt="PlusCircle" className='pr-3 w-[25px]' />Assign Task to Mentees</MenuItem>
                                                                         </>
                                                                     }
@@ -663,7 +703,7 @@ export default function AssignTask() {
                                             }
 
                                             {
-                                               !completeProgram.activity&& programdetails?.reschedule_info !== '' &&
+                                                programdetails?.reschedule_info?.length > 0 &&
                                                 <div className='flex gap-5 items-center'>
                                                     <span style={{ background: 'rgba(255, 213, 0, 1)', borderRadius: '3px', padding: '10px' }}>
                                                         <img src={TimeHistoryIcon} alt="TimeHistoryIcon" />
@@ -682,31 +722,31 @@ export default function AssignTask() {
                                         </div>
 
                                         <div className='flex gap-6 py-6'>
-                                            {programdetails.venue&&
-                                            <div className='flex gap-2 items-center'>
-                                                <img src={LocationIcon} alt="LocationIcon" />
-                                                <span className='text-[12px]'>
-                                                    {programdetails.venue}
-                                                </span>
-                                            </div>}
-                                           {!completeProgram.activity&& <div style={{ borderRight: '1px solid rgba(24, 40, 61, 1)' }}></div>}
+                                            {programdetails.venue &&
+                                                <div className='flex gap-2 items-center'>
+                                                    <img src={LocationIcon} alt="LocationIcon" />
+                                                    <span className='text-[12px]'>
+                                                        {programdetails.venue}
+                                                    </span>
+                                                </div>}
+                                            {!completeProgram.activity && <div style={{ borderRight: '1px solid rgba(24, 40, 61, 1)' }}></div>}
 
-                                            {!completeProgram.activity&&programdetails?.start_date&&
-                                            <div className='flex gap-3 items-center'>
-                                                <img src={CalendarIcon} alt="CalendarIcon" />
-                                                <span className='text-[12px]'>
-                                                    {formatDateTimeISO(programdetails?.start_date)}
-                                                </span>
-                                            </div>}
+                                            {!completeProgram.activity && programdetails?.start_date &&
+                                                <div className='flex gap-3 items-center'>
+                                                    <img src={CalendarIcon} alt="CalendarIcon" />
+                                                    <span className='text-[12px]'>
+                                                        {formatDateTimeISO(programdetails?.start_date)}
+                                                    </span>
+                                                </div>}
 
-                                            {!completeProgram.activity&&<div style={{ borderRight: '1px solid rgba(24, 40, 61, 1)' }}></div>}
+                                            {!completeProgram.activity && <div style={{ borderRight: '1px solid rgba(24, 40, 61, 1)' }}></div>}
 
                                             <div className='flex gap-3 items-center text-[12px]'>
                                                 {
-                                                   !completeProgram.activity&& !profileLoading &&
+                                                    !completeProgram.activity && !profileLoading &&
                                                     <img src={programdetails?.mentor_profile_image || UserImage} style={{ borderRadius: '50%', width: '35px', height: '35px' }} alt="UserImage" />
                                                 }
-                                                {!completeProgram.activity&&<span>Instructor :</span>}
+                                                {!completeProgram.activity && <span>Instructor :</span>}
                                                 {
                                                     role !== 'mentor' ?
 
@@ -855,7 +895,7 @@ export default function AssignTask() {
                                                                     display: 'none',
                                                                     background: programdetails.status === programActionStatus.paused || programdetails.status === programActionStatus.assigned ? 'linear-gradient(97.32deg, #1D5BBF -32.84%, #00AEBD 128.72%)' : 'transparent'
                                                                 }}
-                                                                    onClick={handleActionPage}
+                                                                    onClick={() => handleActionPage()}
                                                                 >
                                                                     <img src={programdetails.status !== programActionStatus.inprogress ? ResumeIcon : PauseIcon} alt={programdetails.status !== programActionStatus.inprogress ? 'ResumeIcon' : 'PauseIcon'} className='pr-4' />
                                                                     {programdetails.status === programActionStatus.inprogress ? 'Pause' : 'Start'}</button>
@@ -897,13 +937,13 @@ export default function AssignTask() {
                                             } */}
 
                                             {
-                                                (programdetails.status === programActionStatus.yettostart && role === 'mentor') &&
+                                                (programdetails.status === programActionStatus.yettostart && (role === 'mentor' || role === "admin")) &&
 
                                                 <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
                                                     background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
                                                     borderRadius: '5px'
                                                 }}
-                                                    onClick={handleActionPage}
+                                                    onClick={() => handleActionPage()}
                                                 >
                                                     Start Program
 
@@ -912,28 +952,44 @@ export default function AssignTask() {
 
 
 
-                                            {/* {
-                                                programdetails.status !== programActionStatus.inprogress && programdetails.status !== programActionStatus.paused &&
-                                                programdetails.status !== programActionStatus.yettojoin && programdetails.status !== programActionStatus.assigned &&
-                                                programdetails.status !== programActionStatus.yettostart &&
-                                                role !== 'mentee' &&
+                                            {
+                                                // programdetails.status !== programActionStatus.inprogress && programdetails.status !== programActionStatus.paused &&
+                                                // programdetails.status !== programActionStatus.yettojoin && programdetails.status !== programActionStatus.assigned &&
+                                                // programdetails.status !== programActionStatus.yettostart &&
+                                                // role !== 'mentee' &&
+                                                (programdetails.status === "yettostart" && role === "mentee" &&
+                                                    programdetails?.mentee_join_status === "") &&
+                                                <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                    background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
+                                                    borderRadius: '5px'
+                                                }}
+                                                    onClick={() => handleActionPage("join_program")}
+                                                >{'Join Program'}
+
+                                                </button>
+                                            }
+
+                                            {programdetails?.mentee_join_status === "program_join_request_submitted" &&
 
                                                 <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
                                                     background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
                                                     borderRadius: '5px'
                                                 }}
-                                                    onClick={handleActionPage}
-                                                >{
-                                                        (programdetails.status === programActionStatus.yettostart && !programdetails.task.length) ? 'Assign Task To  Mentees'
-                                                            : (
-                                                                programdetails.status === programActionStatus.assigned
-                                                                || programdetails.status === programActionStatus.yettostart && programdetails.task.length
-                                                            )
-                                                                ? 'Start Program Request' :
-                                                                'Join Program'}
-
+                                                >
+                                                    Waiting for Mentor Approval
                                                 </button>
-                                            } */}
+                                            }
+
+                                            {programdetails?.mentee_join_status === "program_join_request_rejected" &&
+
+                                                <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                    background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
+                                                    borderRadius: '5px'
+                                                }}
+                                                >
+                                                    Mentor Rejected
+                                                </button>
+                                            }
 
                                         </div>
 

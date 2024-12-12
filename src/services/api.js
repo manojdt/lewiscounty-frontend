@@ -2,7 +2,7 @@ import axios from "axios";
 
 let refresh = false;
 
-// const baseUrl = "http://192.168.3.169:8000/api/";
+// const baseUrl = "http://192.168.3.60:8000/api/";
 
 const baseUrl = `${process.env.REACT_APP_BASE_URL}/api/`
 

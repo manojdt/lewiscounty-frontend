@@ -2037,7 +2037,7 @@ export const EditProfileFields = [
 
 export const reportColumns = [
   {
-    field: 'report_name',
+    field: 'name',
     headerName: 'Report Name',
     flex: 1,
     id: 3,
@@ -2058,7 +2058,7 @@ export const reportColumns = [
     status: ['all', 'new', 'pending', 'accept', 'cancel', 'draft'],
   },
   {
-    field: 'participated_mentees_count',
+    field: 'participates_count',
     headerName: 'Mentees',
     flex: 1,
     id: 2,
@@ -2072,13 +2072,13 @@ export const reportColumns = [
   //   status: ['all', 'new', 'pending', 'accept', 'cancel']
   // },
   {
-    field: 'requested_date',
+    field: 'created_at',
     headerName: 'Requested Date',
     flex: 1,
     id: 4,
     status: ['all', 'new', 'pending', 'accept', 'cancel'],
     renderCell: (params) => (
-      <span>{dateFormat(params.row.requested_date)}</span>
+      <span>{dateFormat(params.row.created_at)}</span>
     ),
   },
   {
@@ -2090,19 +2090,19 @@ export const reportColumns = [
     renderCell: (params) => <span>{dateFormat(params.row.approved_date)}</span>,
   },
   {
-    field: 'approver',
+    field: 'approved_by_full_name',
     headerName: 'Approved by',
     flex: 1,
     id: 6,
     status: ['all', 'accept'],
   },
   {
-    field: 'last_updated_date',
+    field: 'updated_at',
     headerName: 'Last updated Date',
     flex: 1,
     id: 5,
     status: ['all', 'new', 'pending', 'accept', 'cancel'],
-    // renderCell: (params) => <span>{dateFormat(params.row.updated_at)}</span>
+    renderCell: (params) => <span>{dateFormat(params.row.updated_at)}</span>
   },
   {
     field: 'last_updated_by',

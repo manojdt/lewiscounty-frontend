@@ -31,7 +31,7 @@ import ViewIcon from "../../../assets/images/view1x.png";
 import CancelIcon from "../../../assets/images/cancel1x.png";
 import TickColorIcon from "../../../assets/icons/tickColorLatest.svg";
 import CancelColorIcon from "../../../assets/icons/cancelCircle.svg";
-
+import SuccessTik from '../../../assets/images/blue_tik1x.png';
 import DataTable from "../../../shared/DataGrid";
 import {
     categoryColumns,
@@ -41,6 +41,7 @@ import {
     memberMenteeRequestColumns,
     memberMentorRequestColumns,
     newGoalsRequestsColumns,
+    programExtendRequestColumns,
     programRequestColumns,
     reportRequestColumns,
     resourceAccessRequestColumns,
@@ -54,11 +55,14 @@ import {
     cancelMemberRequest,
     certificateRequest,
     getCategoryList,
+    getExtendProgramRequest,
     getlearningAccessRequest,
     getMemberRequest,
     getprogramRequest,
+    getReopenRequest,
     getReportRequest,
     getResourceRequest,
+    getTestimonialRequest,
     goalsRequest,
     updateCertificateRequest,
     updateGoalRequest,
@@ -79,10 +83,13 @@ import { getAllGoals } from "../../../services/goalsInfo";
 export default function AllRequest() {
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
-
+    const userInfo = useSelector((state) => state.userInfo);
+    const role = userInfo.data.role;
+    const currentTab = role === "mentee" ? "program_join" : "program_new"
     const dispatch = useDispatch();
     const {
         programRequest: programTableInfo,
+        programExtend: programExtendRequests,
         memberRequest,
         resourceRequest,
         categoryList,
@@ -90,9 +97,11 @@ export default function AllRequest() {
         certificateRequestList,
         reportsRequest: reportsRequestInfo,
         learningAccessRequests,
+        testimonialRequest,
         loading,
         status,
         error,
+        reopenRequest
     } = useSelector((state) => state.requestList);
     const [currentRequestTab, setCurrentRequestTab] = useState(
         RequestStatus.programRequest
@@ -103,7 +112,7 @@ export default function AllRequest() {
     const [filter, setFilter] = useState({ search: "", filter_by: "" });
     const open = Boolean(anchorEl);
     const selectedRequestedtype = searchParams.get("type");
-    const [actionTab, setActiveTab] = useState("new_program_request");
+    const [actionTab, setActiveTab] = useState(currentTab);
     const [actionTabFilter, setActionTabFilter] = useState([]);
     const [requestOverview, setRequestOverview] = useState([]);
     const [activeTableDetails, setActiveTableDetails] = useState({
@@ -130,13 +139,15 @@ export default function AllRequest() {
         page: 0,
         pageSize: 10,
     });
-    const userInfo = useSelector((state) => state.userInfo);
+
     const [selectedCategory, setSelectedCategory] = React.useState("");
 
-    const [selectedTab, setSelectedTab] = React.useState("my");
+    const [selectedTab, setSelectedTab] = React.useState(role === "mentee" ? "mentees" : "my");
 
     const handleChange = (newAlignment) => () => {
         setSelectedTab(newAlignment);
+        // handleResetTab()
+        navigate(`/all-request?type=program_request`)
     };
 
     const {
@@ -146,19 +157,18 @@ export default function AllRequest() {
         reset,
     } = useForm();
 
-    const role = userInfo.data.role;
 
     let programRequestTab = [
 
         {
             name: "New Program Request",
-            key: "new_program_request",
+            key: "program_new",
             for: ["admin", 'mentor'],
             forTabs: ['my']
         },
         {
             name: "Joining Request",
-            key: "joining_request",
+            key: "program_join",
             for: ["mentee", "mentor"],
             forTabs: ['mentees']
         },
@@ -167,6 +177,12 @@ export default function AllRequest() {
             key: "program_reschedule",
             for: ["mentor", "admin"],
             forTabs: ["my"]
+        },
+        {
+            name: "Program Join",
+            key: "program_join",
+            for: ["mentor", "mentee", "admin"],
+            forTabs: role === "mentee" ? ["my"] : role === "admin" ? ["mentees"] : []
         },
         {
             name: "Program Cancel",
@@ -201,6 +217,18 @@ export default function AllRequest() {
         {
             name: "Admin Request",
             value: "admin",
+        },
+    ];
+
+
+    const requestAdminActionTab = [
+        {
+            name: "Mentor Request",
+            value: "my",
+        },
+        {
+            name: "Mentees Request",
+            value: "mentees",
         },
     ];
 
@@ -321,7 +349,7 @@ export default function AllRequest() {
         dispatch(
             updateCertificateRequest({
                 id: seletedItem.id,
-                status: "accept",
+                status: "approved",
             })
         );
     };
@@ -343,7 +371,7 @@ export default function AllRequest() {
             dispatch(
                 updateProgramRequest({
                     id: seletedItem.id,
-                    action: "accept",
+                    status: "approved",
                 })
             );
         }
@@ -352,7 +380,7 @@ export default function AllRequest() {
             dispatch(
                 updateProgramMenteeRequest({
                     id: seletedItem.id,
-                    action: "accept",
+                    status: "approved",
                 })
             );
         }
@@ -363,7 +391,7 @@ export default function AllRequest() {
         dispatch(
             updateReportRequest({
                 id: seletedItem.id,
-                report_status: "accept",
+                report_status: "approved",
             })
         );
     };
@@ -412,8 +440,8 @@ export default function AllRequest() {
                         dispatch(
                             updateProgramRequest({
                                 id: seletedItem.id,
-                                action: "cancel",
-                                cancelled_reason: data.cancel_reason,
+                                status: "rejected",
+                                reason: data.cancel_reason,
                             })
                         );
                     }
@@ -422,8 +450,8 @@ export default function AllRequest() {
                         dispatch(
                             updateProgramMenteeRequest({
                                 id: seletedItem.id,
-                                action: "cancel",
-                                cancelled_reason: data.cancel_reason,
+                                status: "rejected",
+                                rejection_reason: data.cancel_reason,
                             })
                         );
                     }
@@ -433,7 +461,7 @@ export default function AllRequest() {
                     dispatch(
                         updateReportRequest({
                             id: seletedItem.id,
-                            report_status: "cancel",
+                            report_status: "rejected",
                             report_comment: data.cancel_reason,
                         })
                     );
@@ -576,6 +604,9 @@ export default function AllRequest() {
     let programRequestColumn = programRequestColumns.filter((request) =>
         request.for.includes(role)
     );
+    let programExtendRequestColumn = programExtendRequestColumns.filter((request) =>
+        request.for.includes(role)
+    );
 
     if (actionTab !== "program_start") {
         programRequestColumn = programRequestColumn.filter(
@@ -640,16 +671,18 @@ export default function AllRequest() {
                             >
                                 <MenuItem
                                     onClick={(e) => {
-                                        const requestQuery =
-                                            seletedItem.status === "new" ||
-                                                seletedItem.status === "pending"
-                                                ? `&request_id=${seletedItem.id}`
-                                                : "";
+                                        const requestQuery =`&request_id=${seletedItem.id}`
                                         const url =
-                                            role === "admin"
-                                                ? `/program-details/${seletedItem.program}?request_id=${seletedItem.id}&type=${actionTab}`
-                                                : `/mentee-details/${seletedItem.requested_by}?type=mentee_request${requestQuery}`;
-                                        return navigate(url);
+                                            ((role === "mentor" || role === "admin") && actionTab === "program_join") ?
+                                                `/mentee-details/${seletedItem.created_by}?type=mentee_request${requestQuery}`
+                                                :
+                                                role === "admin"
+                                                    ?
+                                                    `/program-details/${seletedItem.program}?request_id=${seletedItem.id}&type=${actionTab}`
+                                                    : seletedItem?.status === "approved" ?
+                                                        `/program-details/${seletedItem.program}`
+                                                        : `/program-details/${seletedItem.program}?request_id=${seletedItem.id}&type=${actionTab}`
+                                        return navigate(url, { state: { data: seletedItem } });
                                     }}
                                     className="!text-[12px]"
                                 >
@@ -661,8 +694,8 @@ export default function AllRequest() {
                                     View
                                 </MenuItem>
 
-                                {(seletedItem.status === "new" ||
-                                    seletedItem.status === "pending") && (
+                                {((seletedItem.status === "new" ||
+                                    seletedItem.status === "pending") && (role === "admin" || role === "mentor")) && (
                                         <>
                                             <MenuItem
                                                 onClick={handleAcceptProgramRequest}
@@ -688,6 +721,26 @@ export default function AllRequest() {
                                             </MenuItem>
                                         </>
                                     )}
+
+
+                                {/* {
+                                    (seletedItem.status === "new" && role === "mentor" && actionTab === "program_new") &&
+                                    <MenuItem
+                                        onClick={() =>{
+                                            setCancelPopup({
+                                                ...cancelPopup,
+                                                show: true
+                                            })
+                                        }}
+                                        className="!text-[12px]"
+                                    >
+                                        <img
+                                            src={CloseCircle}
+                                            alt="CancelIcon"
+                                            className="pr-3 w-[27px]"
+                                        />
+                                        Cancel Request
+                                    </MenuItem>} */}
                             </Menu>
                         </>
                     );
@@ -949,6 +1002,29 @@ export default function AllRequest() {
             headerName: "Status",
             flex: 1,
             id: 2,
+            renderCell: (params) => {
+                return (
+                    <>
+                        <div className="cursor-pointer flex items-center h-full relative">
+                            <span
+                                className="w-[80px] flex justify-center h-[30px] px-7"
+                                style={{
+                                    background:
+                                        requestStatusColor[params.row.status]?.bgColor || "",
+                                    lineHeight: "30px",
+                                    borderRadius: "3px",
+                                    width: "110px",
+                                    height: "34px",
+                                    color: requestStatusColor[params.row.status]?.color || "",
+                                    fontSize: "12px",
+                                }}
+                            >
+                                {requestStatusText[params.row.status] || ""}
+                            </span>
+                        </div>
+                    </>
+                );
+            },
         },
         {
             field: "action",
@@ -972,6 +1048,109 @@ export default function AllRequest() {
 
     const reportRequestColumn = [
         ...reportRequestColumns,
+        {
+            field: "status",
+            headerName: "Status",
+            flex: 1,
+            id: 2,
+            renderCell: (params) => {
+                return (
+                    <>
+                        <div className="cursor-pointer flex items-center h-full relative">
+                            <span
+                                className="w-[80px] flex justify-center h-[30px] px-7"
+                                style={{
+                                    background: requestStatusColor[params.row.status]?.bg || "",
+                                    lineHeight: "30px",
+                                    borderRadius: "3px",
+                                    width: "110px",
+                                    height: "34px",
+                                    color: requestStatusColor[params.row.status]?.color || "",
+                                    fontSize: "12px",
+                                }}
+                            >
+                                {requestStatusText[params.row.status] || ""}
+                            </span>
+                        </div>
+                    </>
+                );
+            },
+        },
+        {
+            field: "action",
+            headerName: "Action",
+            flex: 1,
+            id: 4,
+            renderCell: (params) => {
+                return (
+                    <>
+                        <div
+                            className="cursor-pointer flex items-center h-full"
+                            onClick={(e) => handleMoreClick(e, params.row)}
+                        >
+                            <img src={MoreIcon} alt="MoreIcon" />
+                        </div>
+                        <Menu
+                            id="basic-menu"
+                            anchorEl={anchorEl}
+                            open={open}
+                            onClose={handleClose}
+                            MenuListProps={{
+                                "aria-labelledby": "basic-button",
+                            }}
+                        >
+                            {role === "admin" && (
+                                <>
+                                    <MenuItem
+                                        onClick={() =>
+                                            navigate(`/view-report/${seletedItem.report_id}`)
+                                        }
+                                        className="!text-[12px]"
+                                    >
+                                        <img
+                                            src={TickCircle}
+                                            alt="AcceptIcon"
+                                            className="pr-3 w-[27px]"
+                                        />
+                                        View
+                                    </MenuItem>
+                                    {(seletedItem.status === "new" ||
+                                        seletedItem.status === "pending") && (
+                                            <>
+                                                <MenuItem
+                                                    onClick={handleAcceptReportsRequest}
+                                                    className="!text-[12px]"
+                                                >
+                                                    <img
+                                                        src={TickCircle}
+                                                        alt="AcceptIcon"
+                                                        className="pr-3 w-[27px]"
+                                                    />
+                                                    Approve
+                                                </MenuItem>
+                                                <MenuItem
+                                                    onClick={handleCancelReportRequest}
+                                                    className="!text-[12px]"
+                                                >
+                                                    <img
+                                                        src={CloseCircle}
+                                                        alt="CancelIcon"
+                                                        className="pr-3 w-[27px]"
+                                                    />
+                                                    Reject
+                                                </MenuItem>
+                                            </>
+                                        )}
+                                </>
+                            )}
+                        </Menu>
+                    </>
+                );
+            },
+        },
+    ];
+    const extendRequestColumn = [
+        ...programExtendRequestColumns,
         {
             field: "status",
             headerName: "Status",
@@ -1104,7 +1283,7 @@ export default function AllRequest() {
                             <span
                                 className="w-[80px] flex justify-center h-[30px] px-7"
                                 style={{
-                                    background: requestStatusColor[params.row.status]?.bg || "",
+                                    background: requestStatusColor[params.row.status]?.bgColor || "",
                                     lineHeight: "30px",
                                     borderRadius: "3px",
                                     width: "110px",
@@ -1194,6 +1373,31 @@ export default function AllRequest() {
         },
     ];
 
+
+    const handleResetTab = (tab = actionTab) => {
+        console.log("ab ===>", tab)
+        switch (selectedTab) {
+            case 'my':
+                if(role === "mentee"){
+                    setActiveTab("program_join")
+                }
+                if (selectedRequestedtype === "program_request") {
+                    setActiveTab(tab === "program_new" ? "program_join" : tab ?? "program_join")
+                }
+                break;
+            case 'mentees':
+                if (selectedRequestedtype === "program_request") {
+                    setActiveTab(tab === "mentor" ? "program_join" : tab ?? "program_join")
+                }
+                break
+            case 'admin':
+
+                break
+            default:
+                break;
+        }
+    }
+
     let learningAccessRequestsColumn = learningAccessRequestsColumns.filter(
         (request) => request.for.includes(role)
     );
@@ -1208,9 +1412,11 @@ export default function AllRequest() {
         if (menu?.status === "goal_request") {
             setActiveTab("mentor");
         }
+        handleResetTab()
     };
 
     const getProgramRequestApi = () => {
+        console.log("actionTab ==>", actionTab)
         let payload = {
             request_type: actionTab,
             ...(filterStatus !== "all" ? { status: filterStatus } : ""),
@@ -1223,14 +1429,15 @@ export default function AllRequest() {
         };
 
         if (role === "mentor") {
-            if (selectedTab === "mentee") {
-                payload.created_at = "mentee";
+            if (selectedTab === "mentees") {
+                payload.request_by = "mentee"
             }
             payload.request_type = actionTab
         }
         if (role === "admin") {
-            payload.request_by = "mentor"
+            payload.request_by = selectedTab === "mentees" ? "mentee" : "mentor"
         }
+        handleResetTab(actionTab)
         dispatch(getprogramRequest(payload));
     };
 
@@ -1273,6 +1480,25 @@ export default function AllRequest() {
                 ...(filterStatus !== "all" && { rep_status: filterStatus }),
                 page: paginationModel?.page + 1,
                 limit: paginationModel?.pageSize,
+                request_type: "report",
+                ...(role === "admin" && { request_by: "mentor" }),
+                ...(filter.search !== "" && { search: filter.search }),
+                ...(filter.filter_by !== ""
+                    ? { filter_by: filter.filter_by }
+                    : { filter_by: "month" }),
+            })
+        );
+    };
+
+
+    const getTestimonialRequestApi = () => {
+        dispatch(
+            getTestimonialRequest({
+                ...(filterStatus !== "all" && { rep_status: filterStatus }),
+                page: paginationModel?.page + 1,
+                limit: paginationModel?.pageSize,
+                request_type: "testimonial",
+                ...(role === "admin" && { request_by: "mentor" }),
                 ...(filter.search !== "" && { search: filter.search }),
                 ...(filter.filter_by !== ""
                     ? { filter_by: filter.filter_by }
@@ -1287,6 +1513,8 @@ export default function AllRequest() {
                 filterStatus: filterStatus !== "all" ? filterStatus : "",
                 page: paginationModel?.page + 1,
                 limit: paginationModel?.pageSize ?? 10,
+                request_type: "certificate",
+                ...(role === "admin" && { request_by: "mentor" }),
                 ...(filter.search !== "" && { search: filter.search }),
                 ...(filter.filter_by !== ""
                     ? { filter_by: filter.filter_by }
@@ -1309,12 +1537,59 @@ export default function AllRequest() {
             })
         );
     };
+    const getExtendRequestApi = () => {
+        let payload = {
+            request_type: "program_extend",
+            ...(filterStatus !== "all" ? { status: filterStatus } : ""),
+            page: paginationModel?.page + 1,
+            limit: paginationModel?.pageSize,
+            ...(role === "admin" && { request_by: "mentor" }),
+            ...(filter.search !== "" && { search: filter.search }),
+            ...(filter.filter_by !== ""
+                ? { filter_by: filter.filter_by }
+                : { filter_by: "month" }),
+        };
+
+        // if (role === "mentor") {
+        //     if (selectedTab === "mentees") {
+        //         payload.created_at = "mentee";
+        //          payload.request_by = "mentee"
+        //     }
+        //     payload.request_type = actionTab
+        // }
+        // if (role === "admin") {
+        //     payload.request_by = "mentor"
+        // }
+        dispatch(
+            getExtendProgramRequest(payload)
+        );
+    };
 
     const getResourceRequestApi = () => {
         dispatch(
             getResourceRequest({
                 ...(filterStatus !== "all" && { status: filterStatus }),
                 // created_at: selectedTab,
+                request_type: "learning_material",
+                ...(role === "admin" && { request_by: "mentor" }),
+                ...(selectedTab === "mentees" && { request_by: "mentee" }),
+                ...(filter.search !== "" && { search: filter.search }),
+                ...(filter.filter_by !== ""
+                    ? { filter_by: filter.filter_by }
+                    : { filter_by: "month" }),
+            })
+        );
+    };
+
+
+    const getReopenRequestApi = () => {
+        dispatch(
+            getReopenRequest({
+                ...(filterStatus !== "all" && { rep_status: filterStatus }),
+                page: paginationModel?.page + 1,
+                limit: paginationModel?.pageSize,
+                request_type: "program_reopen",
+                ...(role === "admin" && { request_by: "mentor" }),
                 ...(filter.search !== "" && { search: filter.search }),
                 ...(filter.filter_by !== ""
                     ? { filter_by: filter.filter_by }
@@ -1351,16 +1626,16 @@ export default function AllRequest() {
             switch (tab) {
                 case RequestStatus.programRequest.key:
                     let programInfoTab = programRequestTab;
-
                     tableDetails = { column: programRequestColumn, data: [] };
                     actionFilter = programInfoTab;
                     activeTabName =
-                        selectedTab === "my"
-                            ? "new_program_request"
-                            : selectedTab === "mentees" ? "joining_request" : "program_request";
+                        (selectedTab === "my" && role === "mentee") ? "program_join" :
+                            (selectedTab === "mentees" && role === "mentor") ? "program_join" :
+                                selectedTab === "my" ? "program_new"
+                                    : selectedTab === "mentees" ? "program_join" : "program_request";
                     if (
-                        actionTab !== "joining_request" &&
-                        actionTab !== "new_program_request"
+                        actionTab !== "program_join" &&
+                        actionTab !== "program_new"
                     ) {
                         activeTabName = actionTab;
                     }
@@ -1400,6 +1675,10 @@ export default function AllRequest() {
                     tableDetails = { column: newGoalsRequestsColumn, data: [] };
                     actionFilter = [];
                     break;
+                case RequestStatus.extendedRequests.key:
+                    tableDetails = { column: programExtendRequestColumn, data: [] };
+                    actionFilter = [];
+                    break;
                 default:
                     tableDetails = { column: programRequestTab, data: [] };
                     actionFilter = [];
@@ -1414,10 +1693,10 @@ export default function AllRequest() {
                 setActionTabFilter(programRequestTab);
                 if (role !== "admin") {
                     if (selectedTab === "my") {
-                        setActiveTab("new_program_request")
+                        setActiveTab("program_new")
                     } else if (selectedTab === "mentees") {
                         setActiveTab(
-                            "joining_request"
+                            "program_join"
                         );
                     }
                 }
@@ -1558,7 +1837,7 @@ export default function AllRequest() {
         }
 
         if (selectedRequestedtype === "resource_access_request") {
-            setActiveTableDetails({ column: resourceColumns, data: resourceRequest });
+            setActiveTableDetails({ column: resourceColumns, data: resourceRequest?.results });
         }
 
         if (selectedRequestedtype === "report_request") {
@@ -1568,6 +1847,13 @@ export default function AllRequest() {
                 rowCount: reportsRequestInfo?.count,
             });
         }
+        if (selectedRequestedtype === "extended_request") {
+            setActiveTableDetails({
+                column: extendRequestColumn,
+                data: programExtendRequests?.results,
+                rowCount: programExtendRequests?.count,
+            });
+        }
         if (selectedRequestedtype === "learning_access_requests") {
             setActiveTableDetails({
                 column: learningAccessRequestsColumns,
@@ -1575,10 +1861,25 @@ export default function AllRequest() {
                 rowCount: learningAccessRequests?.count,
             });
         }
+        if (selectedRequestedtype === "testimonial_request") {
+            setActiveTableDetails({
+                column: testimonialRequestColumns,
+                data: testimonialRequest?.results,
+                rowCount: testimonialRequest?.count,
+            });
+        }
+        if (selectedRequestedtype === "re_open_request") {
+            setActiveTableDetails({
+                column: extendRequestColumn,
+                data: reopenRequest?.results,
+                rowCount: reopenRequest?.count,
+            });
+        }
     }, [
         programTableInfo,
         memberRequest,
         resourceRequest,
+        programExtendRequests,
         goalsRequestInfo,
         certificateRequestList,
         reportsRequestInfo,
@@ -1618,6 +1919,15 @@ export default function AllRequest() {
             }
             if (selectedRequestedtype === "report_request") {
                 getReportsRequestApi();
+            }
+            if (selectedRequestedtype === "extended_request") {
+                getExtendRequestApi();
+            }
+            if (selectedRequestedtype === "testimonial_request") {
+                getTestimonialRequestApi()
+            }
+            if (selectedRequestedtype === "re_open_request") {
+                getReopenRequestApi()
             }
         }
     }, [actionTab, searchParams, filterStatus, role, paginationModel]);
@@ -1681,11 +1991,11 @@ export default function AllRequest() {
         switch (selectedTab) {
             case "my":
                 currentOveriew = myRequestOverview
-                currentTab = "new_program_request"
+                currentTab = role === "mentee" ? "program_join" : "program_new"
                 break;
             case "mentees":
                 currentOveriew = menteesRequestOverview
-                currentTab = "joining_request"
+                currentTab = "program_join"
                 break;
             case "admin":
                 currentOveriew = adminRequestOverview
@@ -1728,7 +2038,7 @@ export default function AllRequest() {
         </Link>,
         <Typography key="2" variant="body2" color={"primary"}>
             All Request
-        </Typography>,
+        </Typography>
     ]
 
     return (
@@ -1739,6 +2049,20 @@ export default function AllRequest() {
                     className="flex gap-x-4 mb-6"
                 >
                     {requestActionTab.map((action) => {
+                        return (
+                            <Button onClick={handleChange(action.value)} btnCategory={selectedTab === action.value ? "primary" : ""} btnName={action.name} />
+                        );
+                    })}
+                </div>
+            }
+
+            {
+                role === "admin" && 
+                // requestAdminActionTab
+                <div
+                    className="flex gap-x-4 mb-6"
+                >
+                    {requestAdminActionTab.map((action) => {
                         return (
                             <Button onClick={handleChange(action.value)} btnCategory={selectedTab === action.value ? "primary" : ""} btnName={action.name} />
                         );
@@ -1759,12 +2083,31 @@ export default function AllRequest() {
                     </Breadcrumbs>
                 }
 
-                {showToast.show && (
+                {/* {showToast.show && (
                     <ToastNotification
                         message={showToast.message}
                         handleClose={handleClose}
                     />
-                )}
+                )} */}
+
+                <Backdrop
+                    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                    open={showToast.show}
+                    onClick={() => false}
+                >
+                    <div className='px-5 py-1 flex justify-center items-center'>
+                        <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+                            style={{ background: '#fff', borderRadius: '10px' }}>
+                            <img src={SuccessTik} alt="SuccessTik" />
+                            <p className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                                style={{
+                                    fontWeight: 600
+                                }}
+                            >{showToast.message}</p>
+                        </div>
+
+                    </div>
+                </Backdrop>
 
                 <Backdrop
                     sx={{ color: "#fff", zIndex: (theme) => 1 }}
@@ -2005,7 +2348,7 @@ export default function AllRequest() {
                                 cardTitle={"Request Overview"}
                                 cardContent={requestList}
                                 handleClick={handleClick}
-                                activeItem={currentRequestTab.key}
+                                activeItem={currentRequestTab?.key}
                             />
                         </div>
 
@@ -2021,7 +2364,7 @@ export default function AllRequest() {
                                         className="flex gap-4"
                                         style={{ color: "rgba(24, 40, 61, 1)", fontWeight: 600 }}
                                     >
-                                        {currentRequestTab.name}
+                                        {currentRequestTab?.name}
                                     </div>
                                     <div className="flex gap-7 items-center">
                                         <div className="relative">

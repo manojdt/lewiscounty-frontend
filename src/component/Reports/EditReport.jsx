@@ -61,10 +61,10 @@ export default function EditReport() {
             "id": params.id,
             "category": parseInt(data.category),
             "program": parseInt(data.program),
-            "report_name": data.report_name,
+            "name": data.report_name,
             "participated_mentees": data.participated_mentees,
-            "description": data.description,
-            "action": data?.action || "submit"
+            "comments": data.description,
+            "status": data?.action || "submit",
         }
         dispatch(updateReportDetails(apiData))
     }
@@ -96,8 +96,8 @@ export default function EditReport() {
                 start_date: dateTimeFormat(programDetails.start_date),
                 end_date: dateTimeFormat(programDetails.end_date),
                 participated_mentees: programDetails.participated_mentees,
-                report_name: reportDetails.report_name,
-                description: reportDetails.description
+                report_name: reportDetails.name,
+                description: reportDetails.comments
             }
             reset(updateFormValues)
         }
@@ -156,7 +156,7 @@ export default function EditReport() {
         dispatch(getReportProgramDetails(programId))
     }
 
-
+console.log("reportDetails ==>", reportDetails)
     useEffect(() => {
         if (Object.keys(reportDetails).length) {
             getCategoryPrograms(reportDetails.category)
