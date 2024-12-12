@@ -468,6 +468,37 @@ export default function AssignTask() {
         })
     }
 
+
+    const handleNewTaskFromAdmin = (data) => {
+        const constructedData = {
+            ...data,
+
+            "program_category_name": programdetails?.category_name,
+            "program_name": programdetails?.program_name,
+            "program_startdate": programdetails?.start_date,
+            "program_enddate": programdetails?.end_date,
+            "task_name": programdetails?.task_name ?? "",
+            "reference_link": programdetails?.reference_links ?? "",
+            "task_details": programdetails?.task_details ?? "",
+            "due_date": programdetails?.due_date,
+            // "assign_task_id": null,
+            "list_mentees": programdetails?.participated_mentees,
+            "program_id": programdetails?.id,
+            "program_duration": programdetails?.duration,
+            "category_id": programdetails?.categories?.[0]?.id,
+            // "mentor_id": programdetails?.created_by,
+            "mentor_name": programdetails?.mentor_name,
+            // "task_id": null,
+            "state_date": programdetails?.start_date
+        }
+
+        navigate(`/assign-mentees/?type=edit&from=program`, {
+            state: {
+                data: constructedData
+            }
+        })
+    }
+
     return (
         <div className="px-9 my-6 grid">
 
@@ -545,7 +576,7 @@ export default function AssignTask() {
 
                                 {
                                     (
-                                        (role === 'mentor' && programDetails.created_by === userdetails?.data?.user_id) ||
+                                        ((role === 'mentor' || role === "admin") && programDetails.created_by === userdetails?.data?.user_id) ||
                                         (role === 'mentee' &&
                                             (programdetails.status === programActionStatus.inprogress || programdetails.mentee_join_status === programActionStatus.program_join_request_accepted)
                                         )
@@ -583,7 +614,7 @@ export default function AssignTask() {
                                                     currentPage === 'startprogram' ?
                                                         <>
                                                             {
-                                                                role === 'mentor' &&
+                                                                (role === 'mentor' || role === "admin") &&
 
                                                                 <>
 
@@ -617,7 +648,7 @@ export default function AssignTask() {
                                                                             <MenuItem onClick={() => handleOpenConfirmPopup()} className='!text-[12px]'>
                                                                                 <img src={CompleteIcon} alt="AbortIcon" className='pr-3 w-[25px]' />
                                                                                 Complete</MenuItem>
-                                                                            <MenuItem onClick={() => navigate(`${pipeUrls.assignmentess}/${programdetails.id}`)} className='!text-[12px]'>
+                                                                            <MenuItem onClick={() => handleNewTaskFromAdmin()} className='!text-[12px]'>
                                                                                 <img src={PlusCircle} alt="PlusCircle" className='pr-3 w-[25px]' />Assign Task to Mentees</MenuItem>
                                                                         </>
                                                                     }
@@ -672,7 +703,7 @@ export default function AssignTask() {
                                             }
 
                                             {
-                                                programdetails?.reschedule_info?.length > 0  &&
+                                                programdetails?.reschedule_info?.length > 0 &&
                                                 <div className='flex gap-5 items-center'>
                                                     <span style={{ background: 'rgba(255, 213, 0, 1)', borderRadius: '3px', padding: '10px' }}>
                                                         <img src={TimeHistoryIcon} alt="TimeHistoryIcon" />
@@ -946,6 +977,17 @@ export default function AssignTask() {
                                                 }}
                                                 >
                                                     Waiting for Mentor Approval
+                                                </button>
+                                            }
+
+                                            {programdetails?.mentee_join_status === "program_join_request_rejected" &&
+
+                                                <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                    background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
+                                                    borderRadius: '5px'
+                                                }}
+                                                >
+                                                    Mentor Rejected
                                                 </button>
                                             }
 

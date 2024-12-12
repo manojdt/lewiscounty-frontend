@@ -33,6 +33,7 @@ import DataTable from '../../shared/DataGrid';
 import { categoryColumns } from '../../mock';
 import { requestStatus } from '../../utils/constant';
 import { useForm } from 'react-hook-form';
+import { CancelPopup } from '../Mentor/Task/cancelPopup';
 
 export default function ProfileView() {
   const navigate = useNavigate();
@@ -364,6 +365,7 @@ export default function ProfileView() {
     type: ""
   })
 
+
   const handleOpenAdminApprove = (type = "") => {
     setAdminPopup({
       ...adminPopup,
@@ -377,6 +379,7 @@ export default function ProfileView() {
       ...adminPopup,
       bool: false,
       activity: false,
+      close: false,
       type: ""
     })
   }
@@ -384,7 +387,7 @@ export default function ProfileView() {
   const handleAdminProgram = (type, reason) => {
     let payload = {
       id: requestData?.id,
-      status: 'rejected',
+      status: type,
 
     }
     if (type === "rejected") {
@@ -414,13 +417,13 @@ export default function ProfileView() {
 
       <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={activity.modal}
+        open={adminPopup?.bool && adminPopup?.type === "approved"}
       >
         <div className='popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center'>
           <img src={ConnectIcon} alt='ConnectIcon' />
-          <span style={{ color: '#232323', fontWeight: 600, fontSize: '24px' }}>
+          {/* <span style={{ color: '#232323', fontWeight: 600, fontSize: '24px' }}>
             {followInfo.is_following ? 'Unfollow' : 'Follow'}
-          </span>
+          </span> */}
 
           <div className='py-5'>
             <p
@@ -445,15 +448,18 @@ export default function ProfileView() {
                 btnCls='w-[110px]'
                 btnName={'Yes'}
                 btnCategory='primary'
-                onClick={() => handleAdminProgram("approve")}
+                onClick={() => handleAdminProgram("approved")}
               />
             </div>
           </div>
         </div>
       </Backdrop>
 
+      <CancelPopup open={(adminPopup?.bool && adminPopup?.type === "rejected")} header="Rejection Reason"
+        handleClosePopup={() => handleCloseAdminApprove()}
+        handleSubmit={(reason) => handleAdminProgram("rejected", reason)} />
 
-      
+
 
       {/* Admin Popup end */}
 
@@ -943,7 +949,7 @@ export default function ProfileView() {
               ) : null}
 
             {
-              (["new", "pening"].includes(requestData?.status) && role === "admin") &&
+              ((requestData?.request_type === "program_join" && ["new", "pening"].includes(requestData?.status) && role === "admin")) &&
               <div className='flex gap-4 pt-10'>
                 <button
                   className='py-3 px-16 text-white text-[14px] flex items-center'
@@ -952,7 +958,7 @@ export default function ProfileView() {
                     borderRadius: '5px',
                     color: '#E0382D',
                   }}
-                  onClick={() => handleCloseAdminApprove()}
+                  onClick={() => handleOpenAdminApprove("rejected")}
                 >
                   Reject
                 </button>
@@ -962,12 +968,15 @@ export default function ProfileView() {
                     background: '#16B681',
                     borderRadius: '5px',
                   }}
-                  onClick={() => handleOpenAdminApprove()}
+                  onClick={() => handleOpenAdminApprove("approved")}
                 >
                   Approve
                 </button>
               </div>
             }
+
+
+            {/* . */}
           </div>
         </div>
 

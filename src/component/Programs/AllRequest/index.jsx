@@ -671,11 +671,7 @@ export default function AllRequest() {
                             >
                                 <MenuItem
                                     onClick={(e) => {
-                                        const requestQuery =
-                                            seletedItem.status === "new" ||
-                                                seletedItem.status === "pending"
-                                                ? `&request_id=${seletedItem.id}`
-                                                : "";
+                                        const requestQuery =`&request_id=${seletedItem.id}`
                                         const url =
                                             ((role === "mentor" || role === "admin") && actionTab === "program_join") ?
                                                 `/mentee-details/${seletedItem.created_by}?type=mentee_request${requestQuery}`

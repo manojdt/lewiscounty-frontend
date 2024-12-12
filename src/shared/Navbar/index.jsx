@@ -208,13 +208,13 @@ export const Navbar = () => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   const intervalId = setInterval(() => {
-  //     dispatch(userActivities({ limit: 10 }));
-  //   }, 5000);
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      dispatch(userActivities({ limit: 10 }));
+    }, 5000);
 
-  //   return () => clearInterval(intervalId);
-  // }, []);
+    return () => clearInterval(intervalId);
+  }, []);
 
   useEffect(() => {
     dispatch(userActivities({ limit: 10 }));
