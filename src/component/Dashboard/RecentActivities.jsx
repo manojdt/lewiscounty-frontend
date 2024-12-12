@@ -17,7 +17,7 @@ export default function RecentActivities() {
         <div className="recent-activities pb-3" style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }}>
             <div className="title flex justify-between py-3 px-4 border-b-2">
                 <h4 className="text-base">Recent Activities</h4>
-                { goalActivity.length ? <p className="text-sm leading-8">View All</p> : null }
+                {/* { goalActivity.length ? <p className="text-sm leading-8">View All</p> : null } */}
             </div>
 
             {

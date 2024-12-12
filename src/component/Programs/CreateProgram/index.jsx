@@ -64,6 +64,16 @@ export default function CreatePrograms() {
 //     setStepData(fieldData)
 
 // }
+const onBlureFun = (data) => {
+    dispatch(getProgramNameValidate(data)).then((res) => {
+        if (res?.meta?.requestStatus === "fulfilled") {
+            if (!res?.payload?.is_available) {
+                setCurrentStep(currentStep + 1)
+                setTabActionInfo({ ...tabActionInfo, activeTab: ProgramTabs[currentStep].key })
+            }
+        }
+    })
+}
     const handleNextStep = (data, stData) => {
         setStepWiseData(stData)
         let u = { ...data }
@@ -577,6 +587,7 @@ export default function CreatePrograms() {
                             currentStep={currentStep}
                             handleNextStep={handleNextStep}
                             // handleSaveDraft={saveDraft}
+                            onBlurFunction={onBlureFun}
                             handlePreviousStep={handlePreviousStep}
                             handleAction={handleAction}
                             totalSteps={programAllFields.length}

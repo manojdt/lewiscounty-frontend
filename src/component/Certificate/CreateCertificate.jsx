@@ -149,7 +149,7 @@ export default function CreateCertificate() {
             setCertificateFields(fields)
         }
 
-        if (!categoryPrograms.length && getValues('category') !== '') {
+        if (!categoryPrograms.length && getValues('category')) {
             setNotification({ program: true })
         }
     }, [categoryPrograms])
