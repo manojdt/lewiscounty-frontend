@@ -353,7 +353,7 @@ export const Mentees = () => {
           <div className='flex gap-5 items-center '>
             <p>{title}</p>
             <p>
-              <img src={FilterIcon} alt='FilterIcon' />
+              {/* <img src={FilterIcon} alt='FilterIcon' /> */}
             </p>
           </div>
           <div className='flex gap-8 items-center'>

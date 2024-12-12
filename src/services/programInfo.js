@@ -48,7 +48,7 @@ export const getallMenteeProgram = createAsyncThunk(
     );
     let queryString = new URLSearchParams(filteredQuery).toString();
     const myMenteeList = await api.get(
-      `/programs?${queryString}`
+      `/mentee_program/all?${queryString}`
     );
     // page=${data?.page + 1 ?? 1}&limit=${data?.pageSize}
     if (myMenteeList.status === 200 && myMenteeList.data) {

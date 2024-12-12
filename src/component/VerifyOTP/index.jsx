@@ -58,7 +58,16 @@ export const VerifyOTP = () => {
 
   function handleChange(value, index) {
     let newArr = [...otp];
-  
+    if (value.length === numberOfDigits) {
+      // Split the pasted value into individual digits
+      const pastedOTP = value.split('').slice(0, numberOfDigits);
+      
+      // Update the entire OTP array
+      setOtp(pastedOTP);
+      
+      // Focus on the last input field
+      otpBoxReference.current[numberOfDigits - 1].focus();
+    } else {
     // Ensure only one digit is entered
     if (value.length > 1) {
       value = value.slice(0, 1);
@@ -72,6 +81,7 @@ export const VerifyOTP = () => {
     if (value && index < numberOfDigits - 1) {
       otpBoxReference.current[index + 1].focus();
     }
+  }
   }
   
   function handleBackspaceAndEnter(e, index) {

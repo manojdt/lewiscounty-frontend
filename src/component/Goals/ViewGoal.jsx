@@ -24,7 +24,7 @@ import MuiModal from '../../shared/Modal';
 import { useDispatch, useSelector } from 'react-redux'
 import { Backdrop, CircularProgress, Stack, Typography } from '@mui/material'
 import { getGoalInfo, getGoalsHistory, updateGoalStatus, updateHistoryGoal } from '../../services/goalsInfo'
-import { goalDataStatus, goalPeriods, goalRequestStatus, goalStatus, requestStatus } from '../../utils/constant'
+import { goalDataStatus, goalHeadingStatus, goalPeriods, goalRequestStatus, goalStatus, requestStatus } from '../../utils/constant'
 import { getCategoryList, updateGoalRequest, updateLocalRequest } from '../../services/request'
 import DataTable from '../../shared/DataGrid'
 import { categoryColumns } from '../../mock'
@@ -518,7 +518,7 @@ const ViewGoal = ({ type = '' }) => {
                             <div className=''>
                                 <div className='flex justify-between px-5 py-5 items-center border-b-2'>
                                     <div className='flex gap-5 items-center text-[20px]'>
-                                        <p>{goalDataStatus[goalInfo.status]} </p>
+                                        <p>{goalHeadingStatus[goalInfo.status]}</p>
                                         {
                                             (goalInfo.status ==="new") &&
                                             <div className="inset-y-0 end-0 flex items-center pe-3 cursor-pointer"
@@ -527,14 +527,12 @@ const ViewGoal = ({ type = '' }) => {
                                                 <img src={EditIcon} alt='EditIcon' />
                                             </div>
                                         }
-
-
                                     </div>
 
                                     <div className='flex gap-8 items-center'>
                                         <div className="relative">
                                             <div className="inset-y-0 end-0 flex items-center pe-3 cursor-pointer"
-                                                onClick={() => navigate('/goals')}
+                                                onClick={() => navigate(-1)}
                                             >
                                                 <img src={CancelIcon} alt='CancelIcon' />
                                             </div>
@@ -654,7 +652,7 @@ const ViewGoal = ({ type = '' }) => {
                                                     (goalInfo.status === 'cancel' || goalInfo.status === 'accept' || goalInfo?.status === "completed") &&
                                                     <>
                                                         <Button btnName={goalInfo?.status === "completed"?"Close":"Back"} style={{ border: '1px solid rgba(29, 91, 191, 1)', width: '180px', color: 'rgba(29, 91, 191, 1)' }}
-                                                            onClick={() => navigate( goalInfo?.status === "completed"?"/goals?type=completed":'/goals')}
+                                                            onClick={() => navigate( goalInfo?.status === "completed"?"/goals?type=completed":-1)}
                                                         />
 
                                                         <Button
