@@ -77,7 +77,7 @@ export const updateProgram = createAsyncThunk(
 export const launchProgram = createAsyncThunk(
     "launchProgram",
     async (data) => {
-        const updateUserProgram = await api.post("request", data);
+        const updateUserProgram = await api.post("request/", data);
         if (updateUserProgram.status === 200 && updateUserProgram.data) {
             let status = ''
             // if (data.status && data.status !== '') {
@@ -111,9 +111,9 @@ export const getProgramDetails = createAsyncThunk(
     "getProgramDetails",
     async (id) => {
 
-        const getDetailsofProgram = await api.get(`fetch_program_detail/${id}`);
-        if (getDetailsofProgram.status === 200 && getDetailsofProgram.data && getDetailsofProgram.data.program) {
-            return getDetailsofProgram.data.program;
+        const getDetailsofProgram = await api.get(`programs/${id}`);
+        if (getDetailsofProgram.status === 200 && getDetailsofProgram.data && getDetailsofProgram.data) {
+            return getDetailsofProgram.data;
         }
         return getDetailsofProgram;
     }

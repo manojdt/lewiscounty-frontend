@@ -59,8 +59,10 @@ import {
     getlearningAccessRequest,
     getMemberRequest,
     getprogramRequest,
+    getReopenRequest,
     getReportRequest,
     getResourceRequest,
+    getTestimonialRequest,
     goalsRequest,
     updateCertificateRequest,
     updateGoalRequest,
@@ -81,11 +83,13 @@ import { getAllGoals } from "../../../services/goalsInfo";
 export default function AllRequest() {
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
-
+    const userInfo = useSelector((state) => state.userInfo);
+    const role = userInfo.data.role;
+    const currentTab = role === "mentee" ? "program_join" : "program_new"
     const dispatch = useDispatch();
     const {
         programRequest: programTableInfo,
-        programExtend:programExtendRequests,
+        programExtend: programExtendRequests,
         memberRequest,
         resourceRequest,
         categoryList,
@@ -93,9 +97,11 @@ export default function AllRequest() {
         certificateRequestList,
         reportsRequest: reportsRequestInfo,
         learningAccessRequests,
+        testimonialRequest,
         loading,
         status,
         error,
+        reopenRequest
     } = useSelector((state) => state.requestList);
     const [currentRequestTab, setCurrentRequestTab] = useState(
         RequestStatus.programRequest
@@ -106,7 +112,7 @@ export default function AllRequest() {
     const [filter, setFilter] = useState({ search: "", filter_by: "" });
     const open = Boolean(anchorEl);
     const selectedRequestedtype = searchParams.get("type");
-    const [actionTab, setActiveTab] = useState("program_new");
+    const [actionTab, setActiveTab] = useState(currentTab);
     const [actionTabFilter, setActionTabFilter] = useState([]);
     const [requestOverview, setRequestOverview] = useState([]);
     const [activeTableDetails, setActiveTableDetails] = useState({
@@ -133,13 +139,15 @@ export default function AllRequest() {
         page: 0,
         pageSize: 10,
     });
-    const userInfo = useSelector((state) => state.userInfo);
+
     const [selectedCategory, setSelectedCategory] = React.useState("");
 
-    const [selectedTab, setSelectedTab] = React.useState("my");
+    const [selectedTab, setSelectedTab] = React.useState(role === "mentee" ? "mentees" : "my");
 
     const handleChange = (newAlignment) => () => {
         setSelectedTab(newAlignment);
+        // handleResetTab()
+        navigate(`/all-request?type=program_request`)
     };
 
     const {
@@ -149,7 +157,6 @@ export default function AllRequest() {
         reset,
     } = useForm();
 
-    const role = userInfo.data.role;
 
     let programRequestTab = [
 
@@ -170,6 +177,12 @@ export default function AllRequest() {
             key: "program_reschedule",
             for: ["mentor", "admin"],
             forTabs: ["my"]
+        },
+        {
+            name: "Program Join",
+            key: "program_join",
+            for: ["mentor", "mentee", "admin"],
+            forTabs: role === "mentee" ? ["my"] : role === "admin" ? ["mentees"] : []
         },
         {
             name: "Program Cancel",
@@ -204,6 +217,18 @@ export default function AllRequest() {
         {
             name: "Admin Request",
             value: "admin",
+        },
+    ];
+
+
+    const requestAdminActionTab = [
+        {
+            name: "Mentor Request",
+            value: "my",
+        },
+        {
+            name: "Mentees Request",
+            value: "mentees",
         },
     ];
 
@@ -346,7 +371,7 @@ export default function AllRequest() {
             dispatch(
                 updateProgramRequest({
                     id: seletedItem.id,
-                    action: "approved",
+                    status: "approved",
                 })
             );
         }
@@ -355,7 +380,7 @@ export default function AllRequest() {
             dispatch(
                 updateProgramMenteeRequest({
                     id: seletedItem.id,
-                    action: "approved",
+                    status: "approved",
                 })
             );
         }
@@ -415,7 +440,7 @@ export default function AllRequest() {
                         dispatch(
                             updateProgramRequest({
                                 id: seletedItem.id,
-                                action: "rejected",
+                                status: "rejected",
                                 reason: data.cancel_reason,
                             })
                         );
@@ -425,8 +450,8 @@ export default function AllRequest() {
                         dispatch(
                             updateProgramMenteeRequest({
                                 id: seletedItem.id,
-                                action: "rejected",
-                                reason: data.cancel_reason,
+                                status: "rejected",
+                                rejection_reason: data.cancel_reason,
                             })
                         );
                     }
@@ -652,13 +677,16 @@ export default function AllRequest() {
                                                 ? `&request_id=${seletedItem.id}`
                                                 : "";
                                         const url =
-                                            role === "admin"
-                                                ?
-                                                `/program-details/${seletedItem.program}?request_id=${seletedItem.id}&type=${actionTab}`
-                                                : seletedItem?.status === "approved" ? 
-                                                    `/program-details/${seletedItem.program}` 
-                                                    : `/program-details/${seletedItem.program}?request_id=${seletedItem.id}&type=${actionTab}`
-                                        return navigate(url);
+                                            ((role === "mentor" || role === "admin") && actionTab === "program_join") ?
+                                                `/mentee-details/${seletedItem.created_by}?type=mentee_request${requestQuery}`
+                                                :
+                                                role === "admin"
+                                                    ?
+                                                    `/program-details/${seletedItem.program}?request_id=${seletedItem.id}&type=${actionTab}`
+                                                    : seletedItem?.status === "approved" ?
+                                                        `/program-details/${seletedItem.program}`
+                                                        : `/program-details/${seletedItem.program}?request_id=${seletedItem.id}&type=${actionTab}`
+                                        return navigate(url, { state: { data: seletedItem } });
                                     }}
                                     className="!text-[12px]"
                                 >
@@ -671,7 +699,7 @@ export default function AllRequest() {
                                 </MenuItem>
 
                                 {((seletedItem.status === "new" ||
-                                    seletedItem.status === "pending") && role === "admin") && (
+                                    seletedItem.status === "pending") && (role === "admin" || role === "mentor")) && (
                                         <>
                                             <MenuItem
                                                 onClick={handleAcceptProgramRequest}
@@ -978,6 +1006,29 @@ export default function AllRequest() {
             headerName: "Status",
             flex: 1,
             id: 2,
+            renderCell: (params) => {
+                return (
+                    <>
+                        <div className="cursor-pointer flex items-center h-full relative">
+                            <span
+                                className="w-[80px] flex justify-center h-[30px] px-7"
+                                style={{
+                                    background:
+                                        requestStatusColor[params.row.status]?.bgColor || "",
+                                    lineHeight: "30px",
+                                    borderRadius: "3px",
+                                    width: "110px",
+                                    height: "34px",
+                                    color: requestStatusColor[params.row.status]?.color || "",
+                                    fontSize: "12px",
+                                }}
+                            >
+                                {requestStatusText[params.row.status] || ""}
+                            </span>
+                        </div>
+                    </>
+                );
+            },
         },
         {
             field: "action",
@@ -1236,7 +1287,7 @@ export default function AllRequest() {
                             <span
                                 className="w-[80px] flex justify-center h-[30px] px-7"
                                 style={{
-                                    background: requestStatusColor[params.row.status]?.bg || "",
+                                    background: requestStatusColor[params.row.status]?.bgColor || "",
                                     lineHeight: "30px",
                                     borderRadius: "3px",
                                     width: "110px",
@@ -1326,6 +1377,31 @@ export default function AllRequest() {
         },
     ];
 
+
+    const handleResetTab = (tab = actionTab) => {
+        console.log("ab ===>", tab)
+        switch (selectedTab) {
+            case 'my':
+                if(role === "mentee"){
+                    setActiveTab("program_join")
+                }
+                if (selectedRequestedtype === "program_request") {
+                    setActiveTab(tab === "program_new" ? "program_join" : tab ?? "program_join")
+                }
+                break;
+            case 'mentees':
+                if (selectedRequestedtype === "program_request") {
+                    setActiveTab(tab === "mentor" ? "program_join" : tab ?? "program_join")
+                }
+                break
+            case 'admin':
+
+                break
+            default:
+                break;
+        }
+    }
+
     let learningAccessRequestsColumn = learningAccessRequestsColumns.filter(
         (request) => request.for.includes(role)
     );
@@ -1340,9 +1416,11 @@ export default function AllRequest() {
         if (menu?.status === "goal_request") {
             setActiveTab("mentor");
         }
+        handleResetTab()
     };
 
     const getProgramRequestApi = () => {
+        console.log("actionTab ==>", actionTab)
         let payload = {
             request_type: actionTab,
             ...(filterStatus !== "all" ? { status: filterStatus } : ""),
@@ -1355,14 +1433,15 @@ export default function AllRequest() {
         };
 
         if (role === "mentor") {
-            if (selectedTab === "mentee") {
+            if (selectedTab === "mentees") {
                 payload.request_by = "mentee"
             }
             payload.request_type = actionTab
         }
         if (role === "admin") {
-            payload.request_by = "mentor"
+            payload.request_by = selectedTab === "mentees" ? "mentee" : "mentor"
         }
+        handleResetTab(actionTab)
         dispatch(getprogramRequest(payload));
     };
 
@@ -1405,6 +1484,25 @@ export default function AllRequest() {
                 ...(filterStatus !== "all" && { rep_status: filterStatus }),
                 page: paginationModel?.page + 1,
                 limit: paginationModel?.pageSize,
+                request_type: "report",
+                ...(role === "admin" && { request_by: "mentor" }),
+                ...(filter.search !== "" && { search: filter.search }),
+                ...(filter.filter_by !== ""
+                    ? { filter_by: filter.filter_by }
+                    : { filter_by: "month" }),
+            })
+        );
+    };
+
+
+    const getTestimonialRequestApi = () => {
+        dispatch(
+            getTestimonialRequest({
+                ...(filterStatus !== "all" && { rep_status: filterStatus }),
+                page: paginationModel?.page + 1,
+                limit: paginationModel?.pageSize,
+                request_type: "testimonial",
+                ...(role === "admin" && { request_by: "mentor" }),
                 ...(filter.search !== "" && { search: filter.search }),
                 ...(filter.filter_by !== ""
                     ? { filter_by: filter.filter_by }
@@ -1419,6 +1517,8 @@ export default function AllRequest() {
                 filterStatus: filterStatus !== "all" ? filterStatus : "",
                 page: paginationModel?.page + 1,
                 limit: paginationModel?.pageSize ?? 10,
+                request_type: "certificate",
+                ...(role === "admin" && { request_by: "mentor" }),
                 ...(filter.search !== "" && { search: filter.search }),
                 ...(filter.filter_by !== ""
                     ? { filter_by: filter.filter_by }
@@ -1443,10 +1543,11 @@ export default function AllRequest() {
     };
     const getExtendRequestApi = () => {
         let payload = {
-            request_type: actionTab,
+            request_type: "program_extend",
             ...(filterStatus !== "all" ? { status: filterStatus } : ""),
             page: paginationModel?.page + 1,
             limit: paginationModel?.pageSize,
+            ...(role === "admin" && { request_by: "mentor" }),
             ...(filter.search !== "" && { search: filter.search }),
             ...(filter.filter_by !== ""
                 ? { filter_by: filter.filter_by }
@@ -1473,6 +1574,26 @@ export default function AllRequest() {
             getResourceRequest({
                 ...(filterStatus !== "all" && { status: filterStatus }),
                 // created_at: selectedTab,
+                request_type: "learning_material",
+                ...(role === "admin" && { request_by: "mentor" }),
+                ...(selectedTab === "mentees" && { request_by: "mentee" }),
+                ...(filter.search !== "" && { search: filter.search }),
+                ...(filter.filter_by !== ""
+                    ? { filter_by: filter.filter_by }
+                    : { filter_by: "month" }),
+            })
+        );
+    };
+
+
+    const getReopenRequestApi = () => {
+        dispatch(
+            getReopenRequest({
+                ...(filterStatus !== "all" && { rep_status: filterStatus }),
+                page: paginationModel?.page + 1,
+                limit: paginationModel?.pageSize,
+                request_type: "program_reopen",
+                ...(role === "admin" && { request_by: "mentor" }),
                 ...(filter.search !== "" && { search: filter.search }),
                 ...(filter.filter_by !== ""
                     ? { filter_by: filter.filter_by }
@@ -1509,13 +1630,13 @@ export default function AllRequest() {
             switch (tab) {
                 case RequestStatus.programRequest.key:
                     let programInfoTab = programRequestTab;
-
                     tableDetails = { column: programRequestColumn, data: [] };
                     actionFilter = programInfoTab;
                     activeTabName =
-                        selectedTab === "my"
-                            ? "program_new"
-                            : selectedTab === "mentees" ? "program_join" : "program_request";
+                        (selectedTab === "my" && role === "mentee") ? "program_join" :
+                            (selectedTab === "mentees" && role === "mentor") ? "program_join" :
+                                selectedTab === "my" ? "program_new"
+                                    : selectedTab === "mentees" ? "program_join" : "program_request";
                     if (
                         actionTab !== "program_join" &&
                         actionTab !== "program_new"
@@ -1720,7 +1841,7 @@ export default function AllRequest() {
         }
 
         if (selectedRequestedtype === "resource_access_request") {
-            setActiveTableDetails({ column: resourceColumns, data: resourceRequest });
+            setActiveTableDetails({ column: resourceColumns, data: resourceRequest?.results });
         }
 
         if (selectedRequestedtype === "report_request") {
@@ -1742,6 +1863,20 @@ export default function AllRequest() {
                 column: learningAccessRequestsColumns,
                 data: learningAccessRequests?.results,
                 rowCount: learningAccessRequests?.count,
+            });
+        }
+        if (selectedRequestedtype === "testimonial_request") {
+            setActiveTableDetails({
+                column: testimonialRequestColumns,
+                data: testimonialRequest?.results,
+                rowCount: testimonialRequest?.count,
+            });
+        }
+        if (selectedRequestedtype === "re_open_request") {
+            setActiveTableDetails({
+                column: extendRequestColumn,
+                data: reopenRequest?.results,
+                rowCount: reopenRequest?.count,
             });
         }
     }, [
@@ -1791,6 +1926,12 @@ export default function AllRequest() {
             }
             if (selectedRequestedtype === "extended_request") {
                 getExtendRequestApi();
+            }
+            if (selectedRequestedtype === "testimonial_request") {
+                getTestimonialRequestApi()
+            }
+            if (selectedRequestedtype === "re_open_request") {
+                getReopenRequestApi()
             }
         }
     }, [actionTab, searchParams, filterStatus, role, paginationModel]);
@@ -1854,7 +1995,7 @@ export default function AllRequest() {
         switch (selectedTab) {
             case "my":
                 currentOveriew = myRequestOverview
-                currentTab = "program_new"
+                currentTab = role === "mentee" ? "program_join" : "program_new"
                 break;
             case "mentees":
                 currentOveriew = menteesRequestOverview
@@ -1912,6 +2053,20 @@ export default function AllRequest() {
                     className="flex gap-x-4 mb-6"
                 >
                     {requestActionTab.map((action) => {
+                        return (
+                            <Button onClick={handleChange(action.value)} btnCategory={selectedTab === action.value ? "primary" : ""} btnName={action.name} />
+                        );
+                    })}
+                </div>
+            }
+
+            {
+                role === "admin" && 
+                // requestAdminActionTab
+                <div
+                    className="flex gap-x-4 mb-6"
+                >
+                    {requestAdminActionTab.map((action) => {
                         return (
                             <Button onClick={handleChange(action.value)} btnCategory={selectedTab === action.value ? "primary" : ""} btnName={action.name} />
                         );

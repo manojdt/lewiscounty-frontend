@@ -16,6 +16,7 @@ import {
   updateUserList,
   menteeUnFollowReq,
   menteeCancelReq,
+  getRequestView,
 } from '../../services/userList';
 
 const initialState = {
@@ -27,6 +28,7 @@ const initialState = {
   userDetails: {},
   followInfo: {},
   menteeFollowReqInfo: {},
+  requestData: {},
   loading: false,
   status: '',
   error: '',
@@ -376,6 +378,31 @@ export const userListSlice = createSlice({
         };
       })
       .addCase(menteeCancelReq.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
+
+
+
+      builder
+      .addCase(getRequestView.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+          status: 'pending',
+        };
+      })
+      .addCase(getRequestView.fulfilled, (state, action) => {
+        return {
+          ...state,
+          requestData: action.payload,
+          loading: false,
+        };
+      })
+      .addCase(getRequestView.rejected, (state, action) => {
         return {
           ...state,
           loading: false,

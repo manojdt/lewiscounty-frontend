@@ -142,7 +142,7 @@ export default function SkillsSet({ programdetails }) {
 
                         </div>
 
-                        <div className={`skills-list`}>{activeTaskDetails.assign_task.task_name}</div>
+                        <div className={`skills-list`}>{activeTaskDetails.assign_task.task_details}</div>
 
                         <div className='action-btn'>
 

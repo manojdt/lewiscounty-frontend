@@ -134,7 +134,13 @@ export default function ProgramDetails() {
             // const joinProgramAction = await api.post('join_program', { id: programId });
             // if (joinProgramAction.status === 200 && joinProgramAction.data) {
             //     setLoading({ initial: false, join: role === 'mentee' })
-            if (role === 'mentor') { dispatch(launchProgram({ program: programId, statusrequest_type: "program_join" })); }
+            if (role === 'mentor' || role === "mentee" || role === "admin") {
+                dispatch(launchProgram({ program: programId, request_type: "program_join" })).then((res) => {
+                    if (res?.meta?.requestStatus === "fulfilled") {
+                        dispatch(getSpecificProgramDetails({ id: params?.id, requestId: requestId }))
+                    }
+                })
+            }
             // }
         }
     }
@@ -144,7 +150,7 @@ export default function ProgramDetails() {
         if (role === 'admin') {
             dispatch(updateProgramRequest({
                 "id": parseInt(requestId),
-                "action": "approved"
+                "status": "approved"
             })).then((res) => {
                 if (res?.meta?.requestStatus === "fulfilled") {
                     setConfirmPopup({
@@ -158,7 +164,7 @@ export default function ProgramDetails() {
             dispatch(updateProgramMenteeRequest(
                 {
                     "id": parseInt(requestId),
-                    "action": "accept"
+                    "status": "accept"
                 }
             ))
         }
@@ -171,7 +177,7 @@ export default function ProgramDetails() {
                 if (role === 'admin') {
                     dispatch(updateProgramRequest({
                         id: parseInt(requestId),
-                        action: "rejected",
+                        status: "rejected",
                         reason: data.cancel_reason
                     })).then((res) => {
                         if (res?.meta?.requestStatus === "fulfilled") {
@@ -186,7 +192,7 @@ export default function ProgramDetails() {
                 if (role === 'mentor') {
                     dispatch(updateProgramMenteeRequest({
                         id: parseInt(requestId),
-                        action: "cancel",
+                        status: "cancel",
                         cancelled_reason: data.cancel_reason
                     }))
                 }
@@ -322,18 +328,25 @@ export default function ProgramDetails() {
             const formattedEndDate = convertDateFormat(data.reschedule_end_date);
 
             const payload = {
-                reschedule_start_date: formattedStartDate,
-                reschedule_end_date: formattedEndDate,
-                program_id: params.id,
-                reason: data.reason
+                // reschedule_start_date: formattedStartDate,
+                // reschedule_end_date: formattedEndDate,
+                // program_id: params.id,
+                // reason: data.reason,
+
+                request_type: "program_reschedule",
+                start_date: formattedStartDate,
+                end_date: formattedEndDate,
+                program: params.id,
+                comments: data?.reason
             }
             dispatch(programRescheduleRequest(payload))
         }
 
         if (moreMenuModal.cancel) {
             dispatch(programCancelRequest({
-                program_id: params.id,
-                reason: data.cancel_reason
+                program: params.id,
+                comments: data.cancel_reason,
+                request_type: "program_cancel"
             }))
         }
     }
@@ -357,7 +370,7 @@ export default function ProgramDetails() {
                     navigate(`${pipeUrls.startprogram}/${params.id}`)
                 }
 
-                if (role === 'mentor' && requestId === '') {
+                if ((role === 'mentor' || role === "admin") && requestId === '') {
                     if (programdetails.status === programActionStatus.yettostart) {
                         navigate(`${pipeUrls.startprogram}/${params.id}`)
                     }
@@ -922,12 +935,12 @@ export default function ProgramDetails() {
                                                 <img src={ShareIcon} alt="ShareIcon" className='pr-3 w-[25px]' />
                                                 Share
                                             </MenuItem>
-                                            {programdetails?.status !== "completed" && <MenuItem onClick={() => handleMenu('reschedule')} className='!text-[12px]'>
+                                            {!["yettoapprove", "completed"].includes(programdetails?.status) && <MenuItem onClick={() => handleMenu('reschedule')} className='!text-[12px]'>
                                                 <img src={RescheduleIcon} alt="RescheduleIcon" className='pr-3 w-[25px]' />
                                                 Reschedule
                                             </MenuItem>}
 
-                                            {programdetails?.status !== "completed" && <MenuItem onClick={() => handleMenu('cancel')} className='!text-[12px]'>
+                                            {!["yettoapprove", "completed"].includes(programdetails?.status) && <MenuItem onClick={() => handleMenu('cancel')} className='!text-[12px]'>
                                                 <img src={AbortIcon} alt="Cancel" className='pr-3 w-[25px]' />
                                                 Cancel
                                             </MenuItem>}
@@ -1027,12 +1040,12 @@ export default function ProgramDetails() {
                                         }
 
                                         {
-                                            (role === 'mentor' && !programCompleted.includes(programdetails.status) && !programCancelled.includes(programdetails.status)) ?
+                                            ((role === 'mentor' || role === "admin") && !programCompleted.includes(programdetails.status) && !programCancelled.includes(programdetails.status)) ?
                                                 <>
 
                                                     {
                                                         // requestId !== '' && programdetails.mentor_join_request_status !== 'accept' && programdetails.mentor_join_request_status !== 'cancel'
-                                                        programdetails.status === "yettoapprove" ?
+                                                        (programdetails.status === "yettoapprove" && role === "admin") ?
                                                             <div className='flex gap-4 pt-10'>
                                                                 <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
                                                                     border: "1px solid #E0382D",
@@ -1142,7 +1155,7 @@ export default function ProgramDetails() {
                                                 : null
 
                                         }
-
+{console.log("programdetails ==>", programdetails)}
                                         {
                                             (role === 'mentee' && !programCompleted.includes(programdetails.status) && !programCancelled.includes(programdetails.status)) ?
                                                 <div className='py-9'>
@@ -1302,7 +1315,10 @@ export default function ProgramDetails() {
                                         {
                                             <Box mt={2}>
                                                 {
-                                                    programdetails?.status === "yettoapprove" &&
+                                                    (role === "admin" && (programdetails?.status === "yettoapprove" ||
+                                                        ((programdetails?.request_data?.request_type === "program_reschedule" || programdetails?.request_data?.request_type === "program_cancel") &&
+                                                            ["new", "pending"].includes(programdetails?.request_data?.status)
+                                                        ))) &&
                                                     <Stack direction={"row"} alignItems={"center"} spacing={"20px"}>
                                                         <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
                                                             border: "1px solid #E0382D",
@@ -1353,7 +1369,7 @@ export default function ProgramDetails() {
                                         }
 
                                         {
-                                            (programdetails?.status === "yettojoin" && role === "admin") &&
+                                            (programdetails?.status === "yettojoin" && role === "admin" && programdetails?.request_data?.request_type === "program_new") &&
                                             <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
                                                 background: "#16B681",
                                                 borderRadius: '5px',
@@ -1423,6 +1439,37 @@ export default function ProgramDetails() {
 
 
                                 {
+                                    ((programdetails?.request_data?.request_type === "program_reschedule" || programdetails?.request_data?.request_type === "program_cancel") &&
+                                        ["new", "pending", "approved", "rejected"].includes(programdetails?.request_data?.status) && requestId !== null) &&
+                                    <div className={`action-set action_cancelled`}>
+                                        {
+                                            programdetails?.request_data?.request_type !== "program_cancel" &&
+                                            <div className='reason-title'>
+                                                {programdetails.status === programActionStatus.cancelled ||
+
+                                                    (role === 'admin' && requestId !== null && programdetails?.request_data?.rejection_reason && Object.keys(programdetails?.request_data?.rejection_reason)?.length)
+
+                                                    ? 'Cancelled ' : 'Reschedule'} Reason
+                                            </div>
+                                        }
+                                        {
+                                            programdetails?.request_data?.request_type === "program_cancel" && 
+                                            <div className='reason-title'>
+                                                Cancelled Reason
+                                            </div>
+                                        }
+                                        <div className='reason-content'>
+                                            {
+                                                programdetails?.request_data?.status === "rejected" ?
+                                                    programdetails?.request_data?.rejection_reason
+                                                    : programdetails?.request_data?.comments
+                                            }
+                                        </div>
+                                    </div>
+                                }
+
+
+                                {/* {
                                     (role !== 'mentee' && ((role === 'admin' && requestId !== null && programdetails?.cancel_reason && Object.keys(programdetails?.cancel_reason)?.length &&
                                         programdetails.cancel_reason.id === parseInt(requestId))
                                         || (programdetails.status === programActionStatus.cancelled))) ?
@@ -1439,7 +1486,7 @@ export default function ProgramDetails() {
                                             </div>
                                         </div>
                                         : null
-                                }
+                                } */}
 
 
                                 {

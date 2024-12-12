@@ -23,7 +23,7 @@ export const getExtendProgramRequest = createAsyncThunk(
     async (query = '') => {
         let queryString = new URLSearchParams(query).toString()
 
-        const programRequests = await api.get(`program_extend/?${queryString}`);
+        const programRequests = await api.get(`request/?${queryString}`);
         if (programRequests.status === 200 && programRequests.data) {
             return programRequests.data;
         }
@@ -52,7 +52,7 @@ export const getResourceRequest = createAsyncThunk(
     async (query = '') => {
         let queryString = new URLSearchParams(query).toString()
 
-        const resourceRequests = await api.get(`learning_material/?${queryString}`);
+        const resourceRequests = await api.get(`request/?${queryString}`);
         if (resourceRequests.status === 200 && resourceRequests.data) {
             return resourceRequests.data;
         }
@@ -67,14 +67,15 @@ export const updateProgramRequest = createAsyncThunk(
     "updateProgramRequest",
     async (data) => {
         let payload = {
-            status: data?.action
+            status: data?.status
         }
-        if(data?.action === "rejected"){
+        if(data?.status === "rejected"){
             payload = {
                 ...payload,
                 rejection_reason: data?.reason ?? ''
             }
         }
+        console.log("data ==>", data, "payload ===>", payload)
         const updateProgramReq = await api.patch(`request/${data?.id}/`, payload);
         if (updateProgramReq.status === 200 && updateProgramReq.data) {
             return updateProgramReq.data;
@@ -85,8 +86,11 @@ export const updateProgramRequest = createAsyncThunk(
 export const certificateRequest = createAsyncThunk(
     "certificateRequest",
     async (query = "") => {
-        const url = query?.filterStatus?.length ? `certificate/?status=${query?.filterStatus}&type=request&page=${query?.page}&limit=${query?.limit}` :
-        `certificate/?type=request&page=${query?.page}&limit=${query?.limit}`
+        // request_type: "certificate",
+        //         requested_by: "mentor",
+        const url = query?.filterStatus?.length ? 
+        `request/?status=${query?.filterStatus}&type=request&page=${query?.page}&limit=${query?.limit}&request_type=${query?.request_type}${query?.request_by ? `&request_by=${query?.request_by}`: ""}` :
+        `request/?type=request&page=${query?.page}&limit=${query?.limit}&request_type=${query?.request_type}${query?.request_by ? `&request_by=${query?.request_by}` : ''}`
         const certificateReq = await api.get(url);
         if (certificateReq.status === 200 && certificateReq.data) {
             return certificateReq.data;
@@ -96,8 +100,9 @@ export const certificateRequest = createAsyncThunk(
 );
 export const updateCertificateRequest = createAsyncThunk(
     "updateCertificateRequest",
-    async (queryString) => {
-        const updateCertificateReq = await api.put(`certificate/certificate_request`,queryString);
+    async (data) => {
+
+        const updateCertificateReq = await api.patch(`request/${data?.id}/`,{status: data?.status});
         if (updateCertificateReq.status === 200 && updateCertificateReq.data) {
             return updateCertificateReq.data;
         }
@@ -109,7 +114,16 @@ export const updateCertificateRequest = createAsyncThunk(
 export const updateProgramMenteeRequest = createAsyncThunk(
     "updateProgramMenteeRequest",
     async (data) => {
-        const updateProgramMenteeReq = await api.post('program_request/program-request-mentee', data);
+        let payload = {
+            status: data?.status
+        }
+        if(data?.rejection_reason){
+            payload = {
+                ...payload,
+                rejection_reason: data?.rejection_reason
+            }
+        }        
+        const updateProgramMenteeReq = await api.patch(`request/${data?.id}/`, payload);
         if (updateProgramMenteeReq.status === 200 && updateProgramMenteeReq.data) {
             return updateProgramMenteeReq.data;
         }
@@ -199,7 +213,7 @@ export const cancelMemberRequest = createAsyncThunk(
 export const programRescheduleRequest = createAsyncThunk(
     "programRescheduleRequest",
     async (data) => {
-        const programRescheduleRequestInto = await api.post('program_request/program-reschedule', data);
+        const programRescheduleRequestInto = await api.post('request/', data);
         if (programRescheduleRequestInto.status === 200 && programRescheduleRequestInto.data) {
             return programRescheduleRequestInto.data;
         }
@@ -211,7 +225,7 @@ export const programRescheduleRequest = createAsyncThunk(
 export const programCancelRequest = createAsyncThunk(
     "programCancelRequest",
     async (data) => {
-        const programCancelRequestInfo = await api.post('program_request/program-cancel', data);
+        const programCancelRequestInfo = await api.post('request/', data);
         if (programCancelRequestInfo.status === 200 && programCancelRequestInfo.data) {
             return programCancelRequestInfo.data;
         }
@@ -236,7 +250,7 @@ export const getReportRequest = createAsyncThunk(
     "getReportRequest",
     async (query='') => {
         let queryString = new URLSearchParams(query).toString()
-        const getReportRequestInfo = await api.get(`report/?${queryString}&page=${query?.page ?? 1}&limit=${query?.limit ?? 10}`);
+        const getReportRequestInfo = await api.get(`request/?${queryString}&page=${query?.page ?? 1}&limit=${query?.limit ?? 10}&request_type=${query?.request_type}${query?.request_by ? `&request_by=${query?.request_by}` : ""}`);
         if (getReportRequestInfo.status === 200 && getReportRequestInfo.data) {
             return getReportRequestInfo.data;
         }
@@ -244,6 +258,29 @@ export const getReportRequest = createAsyncThunk(
     }
 );
 
+export const getTestimonialRequest = createAsyncThunk(
+    "getTestimonialRequest",
+    async (query='') => {
+        let queryString = new URLSearchParams(query).toString()
+        const getTestimonialRequest = await api.get(`request/?${queryString}&page=${query?.page ?? 1}&limit=${query?.limit ?? 10}&request_type=${query?.request_type}${query?.request_by ? `&request_by=${query?.request_by}` : ""}`);
+        if (getTestimonialRequest.status === 200 && getTestimonialRequest.data) {
+            return getTestimonialRequest.data;
+        }
+        return getTestimonialRequest;
+    }
+);
+
+export const getReopenRequest = createAsyncThunk(
+    "getReopenRequest",
+    async (query='') => {
+        let queryString = new URLSearchParams(query).toString()
+        const getReopenRequest = await api.get(`request/?${queryString}&page=${query?.page ?? 1}&limit=${query?.limit ?? 10}&request_type=${query?.request_type}${query?.request_by ? `&request_by=${query?.request_by}` : ""}`);
+        if (getReopenRequest.status === 200 && getReopenRequest.data) {
+            return getReopenRequest.data;
+        }
+        return getReopenRequest;
+    }
+);
 
 export const updateReportRequest = createAsyncThunk(
     "updateReportRequest",

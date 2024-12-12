@@ -27,6 +27,8 @@ const Reports = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const { allreports, loading, status } = useSelector(state => state.reports)
+    const userInfo = useSelector(state => state.userInfo);
+    const role = userInfo.data.role
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const [deleteModal, setDeleteModal] = useState(false)
@@ -96,12 +98,12 @@ const Reports = () => {
                     <div className='cursor-pointer flex items-center h-full relative'>
                         <span className='w-[80px] flex justify-center h-[30px] px-7'
                             style={{
-                                background: reportStatusColor[params.row.report_status]?.bg || '', lineHeight: '30px',
-                                borderRadius: '3px', height: '34px', color: reportStatusColor[params.row.report_status]?.color || '',
+                                background: reportStatusColor[params.row.status]?.bg || '', lineHeight: '30px',
+                                borderRadius: '3px', height: '34px', color: reportStatusColor[params.row.status]?.color || '',
                                 fontSize: '12px'
                             }}
                         >
-                            {reportStatus[params.row.report_status]}
+                            {reportStatus[params.row.status]}
                         </span>
                     </div>
                 </>
@@ -129,7 +131,7 @@ const Reports = () => {
                                 }}
                             >
                                 {
-                                    reportData.selectedItem[0]?.report_status === 'cancel' &&
+                                    reportData.selectedItem[0]?.status === 'rejected' &&
                                     <MenuItem onClick={() => navigate(`/edit-report/${reportData.selectedItem[0].id}?type=re-open`)} className='!text-[12px]'>
                                         <img src={ViewIcon} alt="ViewIcon" className='pr-3 w-[30px]' />
                                         Re-Open
@@ -137,7 +139,7 @@ const Reports = () => {
                                 }
 
                                 {
-                                    (reportData.selectedItem[0]?.report_status === 'new' || reportData.selectedItem[0]?.report_status === 'pending' || reportData.selectedItem[0]?.report_status === 'draft') &&
+                                    (reportData.selectedItem[0]?.status === 'new' || reportData.selectedItem[0]?.status === 'pending' || reportData.selectedItem[0]?.status === 'draft') &&
 
                                     <MenuItem onClick={() => navigate(`/edit-report/${reportData.selectedItem[0].id}`)} className='!text-[12px]'>
                                         <img src={EditIcon} alt="EditIcon" className='pr-3 w-[30px]' />
@@ -160,11 +162,13 @@ const Reports = () => {
                                 } */}
 
 
-
-                                <MenuItem onClick={handleDeleteSelectedRows} className='!text-[12px]'>
-                                    <img src={DeleteIcon} alt="DeleteIcon" className='pr-3 w-[27px]' />
-                                    Delete
-                                </MenuItem>
+                                {
+                                    (reportData.selectedItem[0]?.status === 'new' || reportData.selectedItem[0]?.status === 'pending' || reportData.selectedItem[0]?.status === 'draft') &&
+                                    <MenuItem onClick={handleDeleteSelectedRows} className='!text-[12px]'>
+                                        <img src={DeleteIcon} alt="DeleteIcon" className='pr-3 w-[27px]' />
+                                        Delete
+                                    </MenuItem>
+                                }
                             </Menu>
                         </>
                     }
@@ -208,7 +212,7 @@ const Reports = () => {
         const filterDate = searchParams.get("filter_by");
         let query = {}
         if (filterType && filterType !== '') {
-            query.status = filterType
+            query.status = filterType === "cancel" ? "rejected" : filterType
         }
 
         if (filterSearch && filterSearch !== '') {
@@ -217,6 +221,10 @@ const Reports = () => {
 
         if (filterDate && filterDate !== '') {
             query.filter_by = filterDate
+        }
+        query.request_type = "report"
+        if (role === "admin") {
+            query.requested_by = "mentor"
         }
         dispatch(getAllReports({ ...query, page: paginationModel?.page + 1, limit: paginationModel?.pageSize }));
     }

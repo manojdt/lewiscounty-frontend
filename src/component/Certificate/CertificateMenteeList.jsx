@@ -61,10 +61,10 @@ export default function CertificateMenteeList() {
     dispatch(
       getCertificateMember(
         (type === 'approved' || type === 'pending')
-          ? `?id=${id}&page=${paginationModel?.page + 1}&limit=${paginationModel?.pageSize
-          }`
+          ? `?certificate_id=${id}&page=${paginationModel?.page + 1}&limit=${paginationModel?.pageSize
+          }&request_type=certificate`
           : `?program_id=${id}&page=${paginationModel?.page + 1}&limit=${paginationModel?.pageSize
-          }`
+          }&request_type=certificate`
       )
     );
   };
@@ -144,13 +144,14 @@ export default function CertificateMenteeList() {
               >
                 {(searchParams.get('type') === 'approved' ||
                   searchParams.get('type') === 'waiting_for_response' ||
+                  searchParams.get('type') === 'pending' ||
                   role === 'admin') && (
                     <MenuItem
                       onClick={() => {
                         let url =
                           searchParams.get('type') === 'approved'
-                            ? `/certificate-view/${id}?mentee_id=${seletedItem?.mentee_id}`
-                            : `/mentee-task_list/${id}?mentee_id=${seletedItem?.mentee_id}&program_id=${seletedItem.program_id}`;
+                            ? `/certificate-view/${id}?mentee_id=${seletedItem?.mentee_id_task}`
+                            : `/mentee-task_list/${id}?mentee_id=${seletedItem?.mentee_id_task}&program_id=${seletedItem.program_id}`;
                         return navigate(url);
                       }}
                       className='!text-[12px]'

@@ -24,7 +24,9 @@ import {
     updateProgramRequest,
     updateReportRequest,
     getlearningAccessRequest,
-    getExtendProgramRequest
+    getExtendProgramRequest,
+    getTestimonialRequest,
+    getReopenRequest
 } from "../../services/request";
 
 const initialState = {
@@ -40,6 +42,8 @@ const initialState = {
     categoryList: [],
     reportsRequest: [],
     learningAccessRequests: [],
+    testimonialRequest: [],
+    reopenRequest: [],
     loading: false,
     status: "",
     error: "",
@@ -495,6 +499,51 @@ export const requestSlice = createSlice({
                 };
             });
 
+            builder
+            .addCase(getTestimonialRequest.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(getTestimonialRequest.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    testimonialRequest: action.payload,
+                    status: requestStatus.load,
+                    loading: false,
+                };
+            })
+            .addCase(getTestimonialRequest.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
+            builder
+            .addCase(getReopenRequest.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(getReopenRequest.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    reopenRequest: action.payload,
+                    status: requestStatus.load,
+                    loading: false,
+                };
+            })
+            .addCase(getReopenRequest.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
     },
 });
 

@@ -235,3 +235,12 @@ export const menteeCancelReq = createAsyncThunk(
     return menteeFollowReqInfo;
   }
 );
+
+
+export const getRequestView = createAsyncThunk('getRequestView', async (id) => {
+  const getRequestView = await api.get(`request/${id}/`);
+  if (getRequestView.status === 200 && getRequestView.data) {
+    return getRequestView.data;
+  }
+  return getRequestView;
+});

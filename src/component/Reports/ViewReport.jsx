@@ -79,7 +79,7 @@ const ViewReport = () => {
                 <CircularProgress color="inherit" />
             </Backdrop>
             {
-                (!reportsLoading && Object.keys(reportDetails).length > 0) &&
+                (!reportsLoading && Object.keys(reportDetails)?.length > 0) &&
 
 
                 <div className='px-3 py-5' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
@@ -145,7 +145,7 @@ const ViewReport = () => {
                                             Mentor Name
                                         </th>
                                         <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
-                                            {reportDetails.mentor_name}
+                                            {reportDetails.created_by_full_name}
                                         </td>
                                     </tr>
 
@@ -175,7 +175,7 @@ const ViewReport = () => {
                                             Participated Mentees
                                         </th>
                                         <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
-                                            {reportDetails.participated_mentees.length} Member
+                                            {reportDetails?.participated_mentees?.length} Member
                                         </td>
                                     </tr>
 
@@ -216,11 +216,11 @@ const ViewReport = () => {
 
                             <div className='flex flex-col gap-3 mb-10'>
                                 <div>
-                                    Report Name : {reportDetails.report_name}
+                                    Report Name : {reportDetails.name}
                                 </div>
 
                                 <div>
-                                    Report Description : {reportDetails.description}
+                                    Report Description : {reportDetails.comments}
                                 </div>
                             </div>
 
@@ -234,7 +234,8 @@ const ViewReport = () => {
                                 />
 
                                 {
-                                    reportDetails.report_status === reportAllStatus.pending &&
+                                    // reportDetails.report_status === reportAllStatus.pending &&
+                                    ["new", "draft", "pending"].includes(reportDetails?.status) &&
 
                                     <Button btnType="button" btnCls="w-[14%]"
                                         onClick={() => { navigate(`/edit-report/${reportDetails.id}`) }} btnName='Edit'

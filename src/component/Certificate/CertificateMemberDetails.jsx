@@ -190,7 +190,7 @@ export default function CertificateMemberDetails() {
   }, [status]);
 
   const handleSubmit = () => {
-    dispatch(createCertificate({ id: +id }));
+    dispatch(createCertificate({ program: +id, request_type: "certificate" }));
   };
   return (
     <div className="px-8 mt-10 pb-5">
