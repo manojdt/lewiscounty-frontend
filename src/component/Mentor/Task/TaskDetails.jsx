@@ -46,6 +46,7 @@ const MentorTaskDetails = () => {
         title: "Cancel Task Reason",
         pass: false
     })
+    const [newType,setNewType] =React.useState("")
 
     const handleClose = () => {
         setAnchorEl(null);
@@ -139,7 +140,8 @@ const MentorTaskDetails = () => {
         setSelectedTab(newValue)
     }
 
-    const handleOpenConfirmPopup = (type, title = confirmPopup?.title) => {
+    const handleOpenConfirmPopup = (type, title = confirmPopup?.title, new_type = "") => {
+        setNewType(new_type)
         handleClose()
         setConfirmPopup({
             ...confirmPopup,
@@ -268,7 +270,7 @@ const MentorTaskDetails = () => {
                             {
                                 params?.row?.status === "new" &&
                                 <MenuItem
-                                    onClick={() => handleOpenConfirmPopup("cancel")}
+                                    onClick={() => handleOpenConfirmPopup("cancel", "Cancel Task Reason", "newTab")}
                                     className='!text-[12px]'
                                 >
                                     <img src={Cancel} alt='Cancel' className='pr-3 w-[30px]' />
@@ -407,8 +409,8 @@ const MentorTaskDetails = () => {
     const handleCancelAllMentee = (reason = "") => {
         // updateCancelAllTask
         const payload = {
-            task_id: menteeTaskList?.assign_task_id,
-            type: "cancel_all_tasks",
+            task_id: (selectedTab === "new" && newType === "newTab") ? selectedItem?.id :  selectedTab === "" ? selectedItem?.id : menteeTaskList?.assign_task_id,
+            type: (selectedTab === "new" && newType === "newTab") ?"cancel_one_task" : selectedTab === "" ? "cancel_one_task" : "cancel_all_tasks",
             reason: reason
         }
         dispatch(updateCancelAllTask(payload)).then((res) => {
@@ -420,6 +422,7 @@ const MentorTaskDetails = () => {
                     activity: true,
                     type: "cancel_all"
                 })
+                setNewType("")
                 setTimeout(() => {
                     setConfirmPopup({
                         ...confirmPopup,
@@ -427,6 +430,7 @@ const MentorTaskDetails = () => {
                         cancel: false,
                         type: ""
                     })
+                    getMenteeList()
                 }, 2000);
             }
         })
@@ -459,6 +463,7 @@ const MentorTaskDetails = () => {
                             activity: false,
                             type: ""
                         })
+                        getMenteeList()
                     }, 2000);
                 } else {
                     setConfirmPopup({
@@ -923,7 +928,7 @@ const MentorTaskDetails = () => {
 
             <CancelPopup open={confirmPopup?.cancel} header={confirmPopup?.title} handleClosePopup={() => handleCloseConfirmPopup("cancel")}
                 handleSubmit={(reason) => {
-                    if (selectedTab === "new") {
+                    if (selectedTab === "new" || selectedTab === "") {
                         handleCancelAllMentee(reason)
                     } else if (selectedTab === "pending") {
                         handleUpdateAllTask("cancel", reason)

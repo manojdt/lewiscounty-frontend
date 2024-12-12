@@ -107,9 +107,9 @@ export const TaskDetails = () => {
                 dispatch(updateTaskSubmission(bodyFormData))
             } else if (type === "draft" && taskData?.status === "draft") {
                 dispatch(updateTaskSubmission(bodyFormData))
-            } else if (type === "submit" && taskData?.status === "in_progress") {
+            } else if (type === "submit" && taskData?.status === "inprogress") {
                 dispatch(submitProgramTaskDetails(bodyFormData))
-            } else if (type === "draft" && taskData?.status === "in_progress") {
+            } else if (type === "draft" && taskData?.status === "inprogress") {
                 dispatch(submitProgramTaskDetails(bodyFormData))
             }
 
