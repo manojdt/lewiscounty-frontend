@@ -6,7 +6,11 @@ import {
     getAllTasks,
     getMenteeAllTask,
     getMenteeTaskfromMentor,
+    getMenteeTaskListFromMentor,
     getSpecificTask,
+    updateAllPassFail,
+    updateCancelAllTask,
+    updateSinglePassFail,
     updateTaskMark
 } from "../../services/task";
 import {
@@ -18,6 +22,7 @@ const initialState = {
     task: {},
     menteeTask: [],
     menteeProgramTask: [],
+    menteeTaskList:[],
     loading: false,
     status: "",
     error: "",
@@ -139,6 +144,97 @@ export const taskSlice = createSlice({
                 };
             })
             .addCase(getMenteeAllTask.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
+            builder
+            .addCase(getMenteeTaskListFromMentor.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(getMenteeTaskListFromMentor.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    status: TaskApiStatus.load,
+                    menteeTaskList: action.payload,
+                    loading: false,
+                };
+            })
+            .addCase(getMenteeTaskListFromMentor.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
+            builder
+            .addCase(updateAllPassFail.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(updateAllPassFail.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    status: TaskApiStatus.load,
+                    menteeTaskList: action.payload,
+                    loading: false,
+                };
+            })
+            .addCase(updateAllPassFail.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
+
+            builder
+            .addCase(updateSinglePassFail.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(updateSinglePassFail.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    // status: TaskApiStatus.load,
+                    // menteeTaskList: action.payload,
+                    loading: false,
+                };
+            })
+            .addCase(updateSinglePassFail.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
+            builder
+            .addCase(updateCancelAllTask.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(updateCancelAllTask.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                };
+            })
+            .addCase(updateCancelAllTask.rejected, (state, action) => {
                 return {
                     ...state,
                     loading: false,

@@ -165,7 +165,7 @@ export default function MenteeGoals() {
                     <div className="relative flex gap-3 py-3 px-4"
                         style={{ border: '1px solid rgba(24, 40, 61, 0.25)', background: 'rgba(238, 245, 255, 1)', borderRadius: '3px' }}>
                         <img src={CalenderIcon} alt="CalenderIcon" />
-                        <select className='focus:outline-none' style={{ background: 'rgba(238, 245, 255, 1)' }}
+                        <select className='focus:outline-none cursor-pointer' style={{ background: 'rgba(238, 245, 255, 1)' }}
                             value={timeFrame}
                             onChange={(e) => handleTimeFrame(e.target.value)}>
                             {
@@ -177,7 +177,7 @@ export default function MenteeGoals() {
                             }
                         </select>
                     </div>
-                    <select className='table-select text-[16px]' onChange={(e) => handleFilterMenteeGoals(e.target.value)}
+                    <select className='table-select text-[16px] cursor-pointer' onChange={(e) => handleFilterMenteeGoals(e.target.value)}
                         value={filterStatus} style={{fontWeight: 500}}>
                         <option className='!text-[16px]' value="">Total Goals</option>
                         <option className='!text-[16px]' value="active">Active Goals</option>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { Button as Btn } from '@mui/material';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Backdrop, CircularProgress } from '@mui/material';
 
@@ -38,14 +38,14 @@ export const Mentees = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const state = useLocation()?.state;
-
+  const [searchParams, setSearchParams] = useSearchParams();
   const dispatch = useDispatch();
   const { menteeList, loading, status } = useSelector(
     (state) => state.userList
   );
 
   const [mentorType, setMentorType] = useState(
-    state?.type === 'new_req_mentee' ? 'new-request-mentees' : 'my-mentee'
+    state?.type === 'new_req_mentee' ? 'new-request-mentees' :searchParams.get('req')==="new-request-mentees"?"new-request-mentees": 'my-mentee'
   );
   const [requestTab, setRequestTab] = useState('all');
   const [selectedMentee, setSelectedMentee] = useState({});
@@ -67,7 +67,7 @@ export const Mentees = () => {
       value: 'my-mentee',
     },
     {
-      name: 'New Request Mentees',
+      name: 'New Follow Request',
       value: 'new-request-mentees',
     },
   ];
@@ -306,6 +306,11 @@ export const Mentees = () => {
   useEffect(() => {
     getTableData();
   }, [paginationModel, mentorType, requestTab]);
+  useEffect(() => {
+   if(searchParams.get('req')){
+    setMentorType(searchParams.get('req'))
+   }
+  }, [searchParams]);
 
   const handleOpenActivityPopup = (id, type) => {
     handleClose();
@@ -353,7 +358,7 @@ export const Mentees = () => {
           <div className='flex gap-5 items-center '>
             <p>{title}</p>
             <p>
-              <img src={FilterIcon} alt='FilterIcon' />
+              {/* <img src={FilterIcon} alt='FilterIcon' /> */}
             </p>
           </div>
           <div className='flex gap-8 items-center'>
@@ -379,7 +384,10 @@ export const Mentees = () => {
               label={'My Mentee'}
               options={menteeOption}
               value={mentorType}
-              handleDropdown={(event) => setMentorType(event.target.value)}
+              handleDropdown={(event) =>{ 
+                setMentorType(event.target.value)
+                navigate(`/mentees?req=${event.target.value}`)
+              }}
             />
           </div>
         </div>

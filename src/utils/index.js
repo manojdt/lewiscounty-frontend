@@ -292,29 +292,41 @@ export const getFiles = (files) => {
   };
 
   const imageExtension = ['jpg', 'jpeg', 'png']
-  const docuementExtension = ['pdf', 'doc', 'docx']
+  const docuementExtension = ['pdf', 'doc', 'docx', "txt"]
   const videoExtension = ['mov', 'mp4', 'avi']
 
-  files.forEach(file => {
-    const url = file.files;
-    const fileName = url.split('/').pop().split('.')[0];
-    const extension = url.split('.').pop() || '';
+  files?.forEach(file => {
+    let url = file?.files;
+    let fileName = url?.split('/')?.pop()?.split('.')[0];
+    let extension = url?.split('.')?.pop() || '';
 
+    if (file?.id) {
+      url = file?.files;
+      fileName = url?.split('/')?.pop()?.split('.')[0];
+      extension = url?.split('.')?.pop() || '';
+    } else {
+      url = file?.[0]?.name;
+      fileName = url?.split('/')?.pop()?.split('.')[0];
+      extension = url?.split('.')?.pop() || '';
+    }
 
     if (imageExtension.includes(extension.toLowerCase())) {
       allFiles.image.push({
+        ...file,
         name: fileName,
         fileurl: url
       });
       allFiles.files = true
     } else if (docuementExtension.includes(extension.toLowerCase())) {
       allFiles.doc.push({
+        ...file,
         name: fileName,
         fileurl: url
       });
       allFiles.files = true
     } else if (videoExtension.includes(extension.toLowerCase())) {
       allFiles.video.push({
+        ...file,
         name: fileName,
         fileurl: url
       });
@@ -333,11 +345,10 @@ export const fileNameFromUrl = (file) => {
 }
 
 export const fileNameString = (data) => {
- 
+
   const fileNames = data.map(item => item.files.split('/').pop());
-  console.log('fileNames', fileNames)
   const firstImageName = fileNames[0].slice(0, 6);
-  const remainingImagesCount = fileNames.length - 1;
+  const remainingImagesCount = fileNames?.length - 1;
   return {
     filename: firstImageName,
     fullName: fileNames[0],

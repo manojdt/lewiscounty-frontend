@@ -5,15 +5,17 @@ import DashboardCard from '../../../shared/Card/DashboardCard';
 import { pipeUrls, programActionStatus } from '../../../utils/constant';
 import { Button } from '../../../shared';
 import DataTable from '../../../shared/DataGrid';
-import { mentorTaskColumns } from '../../../mock';
+import { mentorTaskColumns, mentorTaskListColumns } from '../../../mock';
 import ViewIcon from '../../../assets/images/view1x.png'
 import CloseIcon from '../../../assets/icons/closeIcon.svg';
 import SearchIcon from '../../../assets/icons/search.svg';
 import MoreIcon from "../../../assets/icons/moreIcon.svg";
 import { useDispatch, useSelector } from 'react-redux';
 import { getMenteeTaskfromMentor } from '../../../services/task';
-import { Backdrop, CircularProgress, Menu, MenuItem } from '@mui/material';
+import { Backdrop, CircularProgress, Menu, MenuItem, Stack } from '@mui/material';
 import { fileNameFromUrl, fileNameString } from '../../../utils';
+import dayjs from 'dayjs';
+import EditIcon from "../../../assets/icons/editIcon.svg"
 
 
 const MentorTask = () => {
@@ -402,7 +404,26 @@ const MentorTask = () => {
     }
 
     const mentorTaskColumn = [
-        ...mentorTaskColumns,
+        ...mentorTaskListColumns,
+        ,
+        {
+            field: 'created_date',
+            headerName: 'Created Date',
+            flex: 1,
+            id: 0,
+            renderCell: (params) => {
+                return <div>{params?.row?.assign_task_created_at ? dayjs(params?.row?.assign_task_created_at).format("DD-MM-YYYY") : "..."}</div>;
+            },
+        },
+        {
+            field: 'due_date',
+            headerName: 'Due Date',
+            flex: 1,
+            id: 0,
+            renderCell: (params) => {
+                return <div>{params?.row?.due_date ? dayjs(params.row.due_date).format("DD-MM-YYYY") : "..."}</div>;
+            },
+        },
         {
             field: 'file_by',
             headerName: 'Link',
@@ -466,9 +487,13 @@ const MentorTask = () => {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
-                        <MenuItem onClick={() => navigate(`/mentor-tasks-details/${seletedItem.id}?mentee_id=${seletedItem.mentee_id}`)} className='!text-[12px]'>
+                        <MenuItem onClick={() => navigate(`/mentor-tasks-details/${seletedItem.id}`)} className='!text-[12px]'>
                             <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
                             View
+                        </MenuItem>
+                        <MenuItem onClick={() => handleEditTask()} className='!text-[12px]'>
+                            <img src={EditIcon} alt="EditIcon" field={params.id} className='pr-3 w-[30px]' />
+                            Edit Task
                         </MenuItem>
                     </Menu>
 
@@ -476,7 +501,7 @@ const MentorTask = () => {
             }
 
 
-        },
+        }
     ]
 
     const alltaskList = [
@@ -550,6 +575,43 @@ const MentorTask = () => {
     }, [searchParams, paginationModel])
 
 
+    const handleEditTask = () => {
+        const keysToExclude = ["results", "count", "next", "total_pages", "previous", "next", "page_size", "current_page"];
+
+        const data = Object.fromEntries(
+            Object.entries(seletedItem).filter(([key]) => !keysToExclude.includes(key))
+        );
+
+        const constructedData = {
+            ...data,
+            
+                "program_category_name": seletedItem?.category_name,
+                "program_name": seletedItem?.prgrame_name,
+                "program_startdate": seletedItem?.start_date,
+                "program_enddate": seletedItem?.end_date,
+                "task_name": seletedItem?.task_name,
+                "reference_link": seletedItem?.reference_links,
+                "task_details": seletedItem?.task_details,
+                "due_date": seletedItem?.due_date,
+                "assign_task_id": seletedItem?.id,
+                "list_mentees": seletedItem?.mentees_added_to_program,
+                "program_id": seletedItem?.program_id,
+                "program_duration": seletedItem?.duration,
+                "category_id": seletedItem?.category_id,
+                "mentor_id": seletedItem?.mentor_id,
+                "mentor_name": seletedItem?.mentor_name,
+                "task_id": seletedItem?.id,
+                "state_date": seletedItem?.start_date
+        
+        }
+
+        navigate(`/assign-mentees/?type=edit`, {
+            state: {
+                data: constructedData
+            }
+        })
+    }
+
 
     return (
         <div className="mentor-task px-9 py-9">
@@ -589,11 +651,29 @@ const MentorTask = () => {
 
 
             <div className='px-3 py-5' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
-                <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
+                <div className='flex justify-between px-5 pb-4 mb-8 items-center'>
                     <div className='flex gap-5 items-center text-[20px]'>
-                        <p>Mentee Task</p>
+                        <p className='text-[20px] text-[#18283D]' style={{ fontWeight: 500 }}>Mentee Task</p>
                     </div>
+                    <Stack direction={"row"} alignItems={"center"} spacing={2}>
+                        <div className="relative">
+                            <input type="text" id="search-navbar" className="block w-full p-2 text-sm text-gray-900 border-none"
+                                placeholder="Search here..." style={{
+                                    border: '1px solid rgba(29, 91, 191, 1)',
+                                    borderRadius: '1px',
+                                    height: '45px',
+                                    width: '280px'
+                                }}
 
+                                onChange={(e) => handleSearch(e.target.value)}
+                            />
+                            <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
+                                <img src={SearchIcon} alt='SearchIcon' />
+                            </div>
+                        </div>
+                        <Button btnType="button" btnCls="w-[150px]" btnName={'Create Task'} btnCategory="primary" onClick={() => navigate("/assign-mentees?type=new")} />
+
+                    </Stack>
                 </div>
 
                 <Backdrop
@@ -683,7 +763,7 @@ const MentorTask = () => {
                                     </>
 
                                     : <>
-                                        <div className='flex justify-between'>
+                                        {/* <div className='flex justify-between'>
                                             <div>
                                                 <select style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '3px' }}
                                                     className='px-4 py-4 w-[250px] text-[14px]'
@@ -695,25 +775,9 @@ const MentorTask = () => {
                                                 </select>
                                             </div>
 
-                                            <div className="relative">
-                                                <input type="text" id="search-navbar" className="block w-full p-2 text-sm text-gray-900 border-none"
-                                                    placeholder="Search here..." style={{
-                                                        border: '1px solid rgba(29, 91, 191, 1)',
-                                                        borderRadius: '1px',
-                                                        height: '45px',
-                                                        width: '280px'
-                                                    }}
+                                        </div> */}
 
-                                                    onChange={(e) => handleSearch(e.target.value)}
-                                                />
-                                                <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
-                                                    <img src={SearchIcon} alt='SearchIcon' />
-                                                </div>
-                                            </div>
-                                            {/* <Button btnType="button" btnCls="w-[150px]" btnName={'Create Task'} btnCategory="primary" /> */}
-                                        </div>
-
-                                        <div className='task-list py-10'>
+                                        <div className='task-list py-0'>
                                             <DataTable rows={menteeTask?.results ?? []} columns={mentorTaskColumn} hideCheckbox
                                                 rowCount={menteeTask?.count}
                                                 paginationModel={paginationModel} setPaginationModel={setPaginationModel} />

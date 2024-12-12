@@ -248,6 +248,17 @@ export const goalRequestStatus = {
   in_progress: 'In Progress',
   completed: 'Completed',
 };
+export const goalHeadingStatus = {
+  inactive: 'Inactive Goal',
+  active: 'Active Goal',
+  new: 'New Goal',
+  pending: 'Pending Goal',
+  accept: 'Accept Goal',
+  decline: 'Declined Goal',
+  cancel: 'Cancelled Goal',
+  in_progress: 'Goal In Progress',
+  completed: 'Completed Goal',
+};
 
 export const goalRequestColor = {
   inactive: {
@@ -1248,6 +1259,36 @@ export const followBtnText = {
   accepted: 'Unfollow',
 };
 
+export const taskStatus = {
+  completed: "Completed",
+  rejected: "Cancel",
+  pending: "Pending",
+  new: "New",
+  cancel: "Cancel"
+}
+
+export const taskStatusColorNew = {
+  completed: {
+    bg: "#EBFFF3",
+    color: "#16B681"
+  },
+  rejected: {
+    bg: "#FFE7E7",
+    color: "#E0382D"
+  },
+  pending: {
+    bg: "#FFFBE9",
+    color: "#FFD500"
+  },
+  new: {
+    bg: "#EEF5FF",
+    color: "#1D5BBF"
+  },
+  cancel: {
+    bg: "#FFE7E7",
+    color: "#E0382D"
+  },
+}
 export const view = {
   viewOnly: 'viewOnly',
 };

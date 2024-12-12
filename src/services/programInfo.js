@@ -48,7 +48,7 @@ export const getallMenteeProgram = createAsyncThunk(
     );
     let queryString = new URLSearchParams(filteredQuery).toString();
     const myMenteeList = await api.get(
-      `/programs?${queryString}`
+      `/mentee_program/all?${queryString}`
     );
     // page=${data?.page + 1 ?? 1}&limit=${data?.pageSize}
     if (myMenteeList.status === 200 && myMenteeList.data) {
@@ -232,5 +232,19 @@ export const getProgramNameValidate = createAsyncThunk(
       return getProgramNameValidate.data;
     }
     return getProgramNameValidate;
+  }
+);
+
+
+export const getProgramListWithCategory = createAsyncThunk(
+  "getProgramListWithCategory",
+  async (category_id) => {
+    const getProgramListWithCategory = await api.get(
+      `/program/completed-program-list?category_id=${category_id}&type=task`
+    );
+    if (getProgramListWithCategory.status === 200 && getProgramListWithCategory.data) {
+      return getProgramListWithCategory.data;
+    }
+    return getProgramListWithCategory;
   }
 );

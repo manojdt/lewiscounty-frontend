@@ -79,6 +79,24 @@ export const myReqMenteeColumns = [
     flex: 1,
     id: 2,
   },
+  {
+    field: 'created_at',
+    headerName: 'Request Date',
+    flex: 1,
+    id: 1,
+    renderCell: (params) => {
+        return <div>{dateFormat(params.row?.created_at)}</div>
+    }
+},
+{
+    field: 'updated_at',
+    headerName: 'Last Updated Date',
+    flex: 1,
+    id: 1,
+    renderCell: (params) => {
+        return <div>{dateFormat(params.row?.updated_at)}</div>
+    }
+},
 ]
 
 export const discussionColumns = [

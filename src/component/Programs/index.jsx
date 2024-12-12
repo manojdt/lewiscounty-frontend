@@ -129,7 +129,7 @@ React.useEffect(() => {
   if (!decoded?.category_added && role === "mentee") {
       setOpenCategory(true);
   }
-}, []);
+}, [role]);
   const handleBookmark = async (program) => {
     const payload = {
       program_id: program.id,
@@ -225,27 +225,52 @@ React.useEffect(() => {
     // if (role === '') dispatch(getUserPrograms(query));
   };
   const getTableData = (search = '') => {
+    const filterType = searchParams.get('type');
+    const filterSearch = searchParams.get('search');
+    const filterDate = searchParams.get('datefilter');
+    const isBookmark = searchParams.get('is_bookmark');
+    const payload= {
+      page: paginationModel?.page + 1,
+      limit: paginationModel?.pageSize,
+    }
+    if (filterType && filterType !== '') {
+      payload.status=filterType
+    }
+
+    if (
+      !filterType &&
+      (role === 'mentee' || role === 'admin') &&
+      !userInfo?.data?.is_registered
+    ) {
+      payload.status='planned'
+    }
+
+    if (filterSearch && filterSearch !== '') {
+      payload.search =  filterSearch 
+    }
+
+    if (filterDate && filterDate !== '') {
+      payload.filter_by = filterDate
+    }
+
+    if (isBookmark && isBookmark !== '') {
+      payload.is_bookmark =  isBookmark
+    }
     if (role === 'mentee') {
       dispatch(
-        getallMenteeProgram({
-          page: paginationModel?.page + 1,
-          limit: paginationModel?.pageSize,
-          search: search,
-        })
+        getallMenteeProgram(payload)
       );
     } else {
+      if (role === 'mentor' || role === 'admin'){
       dispatch(
-        getallMyProgram({
-          page: paginationModel?.page + 1,
-          limit: paginationModel?.pageSize,
-          search: search,
-        })
+        getallMyProgram(payload)
       );
+    }
     }
   };
   useEffect(() => {
     getTableData();
-  }, [paginationModel]);
+  }, [paginationModel,searchParams,role]);
   const programTableFields = [
     ...programListColumns,
     {
