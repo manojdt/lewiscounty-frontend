@@ -248,6 +248,17 @@ export const goalRequestStatus = {
   in_progress: 'In Progress',
   completed: 'Completed',
 };
+export const goalHeadingStatus = {
+  inactive: 'Inactive Goal',
+  active: 'Active Goal',
+  new: 'New Goal',
+  pending: 'Pending Goal',
+  accept: 'Accept Goal',
+  decline: 'Declined Goal',
+  cancel: 'Cancelled Goal',
+  in_progress: 'Goal In Progress',
+  completed: 'Completed Goal',
+};
 
 export const goalRequestColor = {
   inactive: {

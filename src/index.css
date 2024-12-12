@@ -233,11 +233,15 @@ input[type="range"]::-ms-thumb {
 .goals .goals-info .goal-counts-container {
   background: rgba(238, 245, 255, 1);
   width: 200px;
+  height: 160px; /* Set a fixed height */
   text-align: center;
   color: rgba(24, 40, 61, 1);
   padding: 30px;
   cursor: pointer;
   border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .goals .goals-info .create-goal {
