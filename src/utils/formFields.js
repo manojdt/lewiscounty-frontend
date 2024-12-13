@@ -1,7 +1,4 @@
 import { dateFormat } from '.';
-import { getCurrentWeekAndDay } from './constant';
-
-const { currentDayName } = getCurrentWeekAndDay();
 
 export const PersonalInformationFields = [
   {
@@ -295,7 +292,7 @@ export const MentorShipExperienceFields = [
     label: 'If yes, please briefly describe your mentorship experience',
     placeholder: 'mentorship experience',
     size: false,
-    width: 'col-span-2',
+    width: 'col-span-1',
   },
 ];
 
@@ -447,7 +444,6 @@ export const MenteePersonalInformationFields = [
     },
     size: true,
     disable: true,
-    width: 'col-span-2',
   },
   {
     type: 'input',
@@ -460,7 +456,6 @@ export const MenteePersonalInformationFields = [
     },
     size: true,
     disable: true,
-    width: 'col-span-2',
   },
   {
     type: 'input',
@@ -473,7 +468,6 @@ export const MenteePersonalInformationFields = [
     },
     size: true,
     disable: true,
-    width: 'col-span-2',
   },
   {
     type: 'input',
@@ -489,7 +483,6 @@ export const MenteePersonalInformationFields = [
       },
     },
     size: true,
-    width: 'col-span-2',
   },
   {
     type: 'input',
@@ -504,7 +497,6 @@ export const MenteePersonalInformationFields = [
       },
     },
     size: true,
-    width: 'col-span-2',
   },
   {
     type: 'date',
@@ -515,7 +507,6 @@ export const MenteePersonalInformationFields = [
       required: 'This field is required',
     },
     size: true,
-    width: 'col-span-2',
   },
   {
     type: 'checkbox',
@@ -540,7 +531,6 @@ export const MenteePersonalInformationFields = [
       // required: "This field is required",
     },
     size: true,
-    width: 'col-span-2',
   },
   {
     type: 'input',
@@ -552,7 +542,6 @@ export const MenteePersonalInformationFields = [
       // required: "This field is required",
     },
     size: true,
-    width: 'col-span-2',
   },
   {
     type: 'dropdown',
@@ -581,7 +570,6 @@ export const MenteePersonalInformationFields = [
       required: 'This field is required',
     },
     size: false,
-    width: 'col-span-2',
   },
 ];
 
@@ -596,7 +584,6 @@ export const MenteeCareerInformationFields = [
       // required: "This field is required",
     },
     size: true,
-    width: 'col-span-1',
   },
   {
     type: 'input',
@@ -609,7 +596,6 @@ export const MenteeCareerInformationFields = [
       // required: "This field is required",
     },
     size: true,
-    width: 'col-span-1',
   },
   {
     type: 'input',
@@ -621,7 +607,6 @@ export const MenteeCareerInformationFields = [
       // required: "This field is required",
     },
     size: true,
-    width: 'col-span-1',
   },
   {
     type: 'dropdown',
@@ -646,7 +631,6 @@ export const MenteeCareerInformationFields = [
       // required: "This field is required",
     },
     size: true,
-    width: 'col-span-1',
   },
 ];
 
@@ -661,7 +645,6 @@ export const MenteeCurrentStatusFields = [
       // required: "This field is required",
     },
     size: true,
-    width: 'col-span-1',
   },
   {
     type: 'input',
@@ -673,7 +656,6 @@ export const MenteeCurrentStatusFields = [
       // required: "This field is required",
     },
     size: true,
-    width: 'col-span-1',
   },
   {
     type: 'input',
@@ -686,7 +668,6 @@ export const MenteeCurrentStatusFields = [
       // required: "This field is required",
     },
     size: false,
-    width: 'col-span-2',
   },
 ];
 
@@ -706,7 +687,6 @@ export const MenteeMentoringPreferenceFields = [
       // required: "This field is required",
     },
     size: true,
-    width: 'col-span-1',
   },
   {
     type: 'dropdown',
@@ -723,7 +703,6 @@ export const MenteeMentoringPreferenceFields = [
       // required: "This field is required",
     },
     size: true,
-    width: 'col-span-1',
   },
   {
     type: 'dropdown',
@@ -740,7 +719,6 @@ export const MenteeMentoringPreferenceFields = [
       // required: "This field is required",
     },
     size: false,
-    width: 'col-span-2',
   },
 ];
 
@@ -755,7 +733,6 @@ export const MenteeSkillsFields = [
       // required: "This field is required",
     },
     size: true,
-    width: 'col-span-1',
   },
   {
     type: 'input',
@@ -767,7 +744,6 @@ export const MenteeSkillsFields = [
       // required: "This field is required",
     },
     size: true,
-    width: 'col-span-1',
   },
   {
     type: 'input',
@@ -779,7 +755,6 @@ export const MenteeSkillsFields = [
       // required: "This field is required",
     },
     size: false,
-    width: 'col-span-2',
   },
 ];
 
@@ -794,7 +769,6 @@ export const MenteeExpectationGoalsFields = [
       // required: "This field is required",
     },
     size: true,
-    width: 'col-span-1',
   },
   {
     type: 'input',
@@ -808,7 +782,6 @@ export const MenteeExpectationGoalsFields = [
       // required: "This field is required",
     },
     size: true,
-    width: 'col-span-1',
   },
   {
     type: 'input',
@@ -822,7 +795,6 @@ export const MenteeExpectationGoalsFields = [
       // required: "This field is required",
     },
     size: false,
-    width: 'col-span-2',
   },
 ];
 
@@ -837,7 +809,6 @@ export const MenteeAvailabilitysFields = [
       // required: "This field is required",
     },
     size: false,
-    width: 'col-span-1',
   },
   {
     type: 'input',
@@ -851,7 +822,6 @@ export const MenteeAvailabilitysFields = [
       // required: "This field is required",
     },
     size: false,
-    width: 'col-span-1',
   },
 ];
 
@@ -866,7 +836,6 @@ export const MenteeDetailedCareerFields = [
       // required: "This field is required",
     },
     size: true,
-    width: 'col-span-1',
   },
   {
     type: 'input',
@@ -880,7 +849,6 @@ export const MenteeDetailedCareerFields = [
       // required: "This field is required",
     },
     size: true,
-    width: 'col-span-1',
   },
   {
     type: 'input',
@@ -892,7 +860,6 @@ export const MenteeDetailedCareerFields = [
       // required: "This field is required",
     },
     size: true,
-    width: 'col-span-1',
   },
   {
     type: 'input',
@@ -906,7 +873,6 @@ export const MenteeDetailedCareerFields = [
       // required: "This field is required",
     },
     size: true,
-    width: 'col-span-1',
   },
 ];
 
@@ -923,7 +889,6 @@ export const MenteeChallengesFields = [
       // required: "This field is required",
     },
     size: true,
-    width: 'col-span-1',
   },
   {
     type: 'input',
@@ -937,7 +902,6 @@ export const MenteeChallengesFields = [
       // required: "This field is required",
     },
     size: true,
-    width: 'col-span-1',
   },
   {
     type: 'input',
@@ -949,7 +913,6 @@ export const MenteeChallengesFields = [
       // required: "This field is required",
     },
     size: false,
-    width: 'col-span-2',
   },
 ];
 
@@ -966,7 +929,6 @@ export const MenteeMentoringExperienceFields = [
       // required: "This field is required",
     },
     size: true,
-    width: 'col-span-1',
   },
   {
     type: 'input',
@@ -980,7 +942,6 @@ export const MenteeMentoringExperienceFields = [
       // required: "This field is required",
     },
     size: true,
-    width: 'col-span-1',
   },
   {
     type: 'input',
@@ -994,7 +955,6 @@ export const MenteeMentoringExperienceFields = [
       // required: "This field is required",
     },
     size: false,
-    width: 'col-span-2',
   },
 ];
 
@@ -1018,7 +978,6 @@ export const MenteeLearningFields = [
       // required: "This field is required",
     },
     size: true,
-    width: 'col-span-1',
   },
   ,
   {
@@ -1031,7 +990,6 @@ export const MenteeLearningFields = [
       // required: "This field is required",
     },
     size: true,
-    width: 'col-span-1',
   },
   {
     type: 'input',
@@ -1045,7 +1003,6 @@ export const MenteeLearningFields = [
       // required: "This field is required",
     },
     size: false,
-    width: 'col-span-2',
   },
 ];
 
@@ -1062,7 +1019,6 @@ export const MenteeNetworkingFields = [
       // required: "This field is required",
     },
     size: true,
-    width: 'col-span-1',
   },
   {
     type: 'input',
@@ -1075,7 +1031,6 @@ export const MenteeNetworkingFields = [
       // required: "This field is required",
     },
     size: true,
-    width: 'col-span-1',
   },
   {
     type: 'input',
@@ -1089,7 +1044,6 @@ export const MenteeNetworkingFields = [
       // required: "This field is required",
     },
     size: false,
-    width: 'col-span-2',
   },
 ];
 
@@ -1106,7 +1060,6 @@ export const MenteePersonalDevelopmentFields = [
       // required: "This field is required",
     },
     size: true,
-    width: 'col-span-1',
   },
   {
     type: 'input',
@@ -1120,7 +1073,6 @@ export const MenteePersonalDevelopmentFields = [
       // required: "This field is required",
     },
     size: true,
-    width: 'col-span-1',
   },
   {
     type: 'input',
@@ -1133,7 +1085,6 @@ export const MenteePersonalDevelopmentFields = [
       // required: "This field is required",
     },
     size: false,
-    width: 'col-span-2',
   },
 ];
 
@@ -1148,7 +1099,6 @@ export const MenteeMentoringRelationshipFields = [
       // required: "This field is required",
     },
     size: true,
-    width: 'col-span-1',
   },
   {
     type: 'input',
@@ -1162,7 +1112,6 @@ export const MenteeMentoringRelationshipFields = [
       // required: "This field is required",
     },
     size: true,
-    width: 'col-span-1',
   },
   {
     type: 'input',
@@ -1174,7 +1123,6 @@ export const MenteeMentoringRelationshipFields = [
       // required: "This field is required",
     },
     size: true,
-    width: 'col-span-1',
   },
   {
     type: 'input',
@@ -1188,7 +1136,6 @@ export const MenteeMentoringRelationshipFields = [
       // required: "This field is required",
     },
     size: true,
-    width: 'col-span-1',
   },
 ];
 
@@ -1203,7 +1150,6 @@ export const MenteeLongTermFields = [
       // required: "This field is required",
     },
     size: true,
-    width: 'col-span-1',
   },
   {
     type: 'input',
@@ -1217,7 +1163,6 @@ export const MenteeLongTermFields = [
       // required: "This field is required",
     },
     size: true,
-    width: 'col-span-1',
   },
   {
     type: 'input',
@@ -1231,7 +1176,6 @@ export const MenteeLongTermFields = [
       // required: "This field is required",
     },
     size: false,
-    width: 'col-span-2',
   },
 ];
 export const MenteeDocumentUplaod = [
@@ -1261,7 +1205,6 @@ export const MenteeAdditionalFields = [
       // required: "This field is required",
     },
     size: false,
-    width: 'col-span-1',
   },
   {
     type: 'input',
@@ -1275,7 +1218,6 @@ export const MenteeAdditionalFields = [
       // required: "This field is required",
     },
     size: false,
-    width: 'col-span-1',
   },
 ];
 
@@ -1731,144 +1673,144 @@ export const ProgramFields = [
   ProgramTestimonialsFields,
 ];
 
-export const AssignMenteesFields = (bool = true, type, getValues) => {
+export const AssignMenteesFields = (bool = true, type, getValues) =>{
   return [
-    {
-      type: 'dropdown',
-      name: 'category_id',
-      label: 'Category',
-      placeholder: 'Select Category',
-      inputRules: {
-        required: 'This field is required',
-      },
-      options: [
-        {
-          key: 'yes',
-          value: 'Category 1',
-        },
-        {
-          key: 'no',
-          value: 'Category 2',
-        },
-      ],
-      width: 'width-32',
-      disabled: bool,
+  {
+    type: 'dropdown',
+    name: 'category_id',
+    label: 'Category',
+    placeholder: 'Select Category',
+    inputRules: {
+      required: 'This field is required',
     },
-    {
-      type: type === 'new' ? 'dropdown' : 'input',
-      name: 'program_id',
-      fieldtype: 'text',
-      label: 'Program Name',
-      placeholder: 'Enter Program Name',
-      inputRules: {
-        required: 'This field is required',
+    options: [
+      {
+        key: 'yes',
+        value: 'Category 1',
       },
-      width: 'width-32',
-      disabled: bool,
-      options: [],
-    },
-    {
-      type: 'input',
-      name: 'mentor',
-      fieldtype: 'text',
-      label: 'Mentor Name',
-      placeholder: 'Enter Mentor Name',
-      inputRules: {
-        // required: "This field is required",
+      {
+        key: 'no',
+        value: 'Category 2',
       },
-      width: 'width-32',
-      disabled: bool,
-      options: [],
+    ],
+    width: 'width-32',
+    disabled: bool,
+  },
+  {
+    type: type === "new" ? "dropdown" : 'input',
+    name: 'program_id',
+    fieldtype: 'text',
+    label: 'Program Name',
+    placeholder: 'Enter Program Name',
+    inputRules: {
+      required: 'This field is required',
     },
-    {
-      type: 'date',
-      name: 'start_date',
-      label: 'Program Start Date and Time',
-      placeholder: 'Select Program Start Date and Time',
-      inputRules: {
-        // required: "This field is required",
-      },
-      width: 'width-32',
-      disabled: true,
+    width: 'width-32',
+    disabled: bool,
+    options: []
+  },
+  {
+    type: 'input',
+    name: 'mentor',
+    fieldtype: 'text',
+    label: 'Mentor Name',
+    placeholder: 'Enter Mentor Name',
+    inputRules: {
+      // required: "This field is required",
     },
-    {
-      type: 'date',
-      name: 'end_date',
-      label: 'Program End Date and Time',
-      placeholder: 'Select Program End Date and Time',
-      inputRules: {
-        // required: "This field is required",
-      },
-      width: 'width-32',
-      disabled: true,
+    width: 'width-32',
+    disabled: bool,
+    options: []
+  },
+  {
+    type: 'date',
+    name: 'start_date',
+    label: 'Program Start Date and Time',
+    placeholder: 'Select Program Start Date and Time',
+    inputRules: {
+      // required: "This field is required",
     },
-    {
-      type: 'input',
-      name: 'duration',
-      label: 'Program Duration',
-      fieldtype: 'text',
-      placeholder: 'Program Duration',
-      inputRules: {
-        required: 'This field is required',
-      },
-      width: 'width-32',
-      disabled: bool,
+    width: 'width-32',
+    disabled: true,
+  },
+  {
+    type: 'date',
+    name: 'end_date',
+    label: 'Program End Date and Time',
+    placeholder: 'Select Program End Date and Time',
+    inputRules: {
+      // required: "This field is required",
     },
-    {
-      type: 'text',
-      name: 'mentees_list',
-      label: 'Add Mentees for this Program',
-      width: 'w-full',
-      inputRules: {
-        required: 'This field is required',
-      },
+    width: 'width-32',
+    disabled: true,
+  },
+  {
+    type: 'input',
+    name: 'duration',
+    label: 'Program Duration',
+    fieldtype: 'text',
+    placeholder: 'Program Duration',
+    inputRules: {
+      required: 'This field is required',
     },
-    {
-      type: 'input',
-      name: 'reference_links',
-      fieldtype: 'text',
-      label: 'Reference Books',
-      placeholder: 'Enter Reference Book with comma(,) seperators',
-      inputRules: {
-        required: 'This field is required',
-      },
-      width: 'w-full',
+    width: 'width-32',
+    disabled: bool,
+  },
+  {
+    type: 'text',
+    name: 'mentees_list',
+    label: 'Add Mentees for this Program',
+    width: 'w-full',
+    inputRules: {
+      required: 'This field is required',
     },
+  },
+  {
+    type: 'input',
+    name: 'reference_links',
+    fieldtype: 'text',
+    label: 'Reference Books',
+    placeholder: 'Enter Reference Book with comma(,) seperators',
+    inputRules: {
+      required: 'This field is required',
+    },
+    width: 'w-full',
+  },
 
-    {
-      type: 'input',
-      name: 'task_name',
-      fieldtype: 'text',
-      label: 'Task Name',
-      placeholder: 'Enter Task Name',
-      inputRules: {
-        required: 'This field is required',
-      },
-      width: 'w-full',
+  {
+    type: 'input',
+    name: 'task_name',
+    fieldtype: 'text',
+    label: 'Task Name',
+    placeholder: 'Enter Task Name',
+    inputRules: {
+      required: 'This field is required',
     },
-    {
-      type: 'editor',
-      name: 'task_details',
-      fieldtype: 'text',
-      label: 'Task Details',
-      placeholder: 'List out Task Details',
-      inputRules: {
-        required: 'This field is required',
-      },
-      width: 'w-full',
+    width: 'w-full',
+  },
+  {
+    type: 'editor',
+    name: 'task_details',
+    fieldtype: 'text',
+    label: 'Task Details',
+    placeholder: 'List out Task Details',
+    inputRules: {
+      required: 'This field is required',
     },
-    {
-      type: 'date',
-      name: 'due_date',
-      label: 'Due Date',
-      placeholder: 'Due Date',
-      inputRules: {
-        required: 'This field is required',
-      },
-      width: 'w-full',
+    width: 'w-full',
+  },
+  {
+    type: 'date',
+    name: 'due_date',
+    label: 'Due Date',
+    placeholder: 'Due Date',
+    inputRules: {
+      required: 'This field is required',
     },
-  ];
-};
+    width: 'w-full',
+  },
+]
+}
 
 export const ReportFields = (bool = false) => [
   {
@@ -2135,7 +2077,9 @@ export const reportColumns = [
     flex: 1,
     id: 4,
     status: ['all', 'new', 'pending', 'accept', 'cancel'],
-    renderCell: (params) => <span>{dateFormat(params.row.created_at)}</span>,
+    renderCell: (params) => (
+      <span>{dateFormat(params.row.created_at)}</span>
+    ),
   },
   {
     field: 'approved_date',
@@ -2158,7 +2102,7 @@ export const reportColumns = [
     flex: 1,
     id: 5,
     status: ['all', 'new', 'pending', 'accept', 'cancel'],
-    renderCell: (params) => <span>{dateFormat(params.row.updated_at)}</span>,
+    renderCell: (params) => <span>{dateFormat(params.row.updated_at)}</span>
   },
   {
     field: 'last_updated_by',
@@ -2253,7 +2197,7 @@ export const CreateMeetingFields = [
       },
       {
         key: 'weekly',
-        value: `Weekly On ${currentDayName}`,
+        value: 'Weekly On  Thursday',
       },
       {
         key: 'custom',

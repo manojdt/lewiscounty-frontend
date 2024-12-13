@@ -5,7 +5,7 @@ import { MentorDocumentUplaod } from '../../../utils/formFields';
 import UploadIcon from '../../../assets/images/image_1x.png';
 import { view } from '../../../utils/constant';
 
-const DocumentUploadSection = ({ type, setRemoveFiles }) => {
+const DocumentUploadSection = ({ type }) => {
   const [logoImage, setLogoImage] = useState({});
   const [filePreviews, setFilePreviews] = useState({});
   const {
@@ -17,6 +17,15 @@ const DocumentUploadSection = ({ type, setRemoveFiles }) => {
     getValues,
     setValue,
   } = useFormContext();
+
+  const handleDeleteImage = (key) => {
+    let image = { ...logoImage };
+    delete image[key];
+    setValue(key, '');
+    setLogoImage(image);
+  };
+
+  // console.log(filePreviews);
 
   const handleFileChange = (field, files) => {
     const validFiles = Array.from(files).filter((filer) =>
@@ -35,18 +44,17 @@ const DocumentUploadSection = ({ type, setRemoveFiles }) => {
       [field]: [...(prev[field] || []), ...previews],
     }));
 
-    const existingFiles = getValues(field) || [];
-    setValue(field, [...existingFiles, ...validFiles]);
+    setValue(field, validFiles);
   };
 
-  const handleDeleteFile = (field, index, itemId) => {
+  const handleDeleteFile = (field, index) => {
     const currentFiles = getValues(field);
     const updatedFiles = [...currentFiles];
     updatedFiles.splice(index, 1);
 
+    // Update the previews and form value
     const updatedPreviews = filePreviews[field]?.filter((_, i) => i !== index);
     setFilePreviews((prev) => ({ ...prev, [field]: updatedPreviews }));
-    setRemoveFiles((prev) => [...prev, itemId]);
     setValue(field, updatedFiles);
   };
 
@@ -69,9 +77,7 @@ const DocumentUploadSection = ({ type, setRemoveFiles }) => {
                   {field?.inputRules?.required && '*'}
                 </label>
                 {type === view.viewOnly ? (
-                  <p className='text-[14px] pt-3'>
-                    {getValues(field.name) ? getValues(field.name) : '-'}
-                  </p>
+                  <p className='text-[14px] pt-3'>{getValues(field.name)}</p>
                 ) : (
                   <Controller
                     name={field.name}
@@ -126,7 +132,10 @@ const DocumentUploadSection = ({ type, setRemoveFiles }) => {
                     >
                       <label
                         htmlFor={field.name}
-                        className='flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600'
+                        className='flex flex-col items-center justify-center w-full h-64 border-2
+                                                                                 border-gray-300 border-dashed cursor-pointer
+                                                                                  bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100
+                                                                                   dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600'
                       >
                         <div className='flex flex-col items-center justify-center pt-5 pb-6'>
                           <svg
@@ -196,38 +205,26 @@ const DocumentUploadSection = ({ type, setRemoveFiles }) => {
                           Uploaded Image{' '}
                         </div>
 
-                        <div className='flex flex-wrap items-center justify-start gap-2'>
-                          {getValues(field.name) &&
-                            getValues(field.name).map((item, index) => {
-                              return (
-                                <div
-                                  className='flex justify-between items-center w-[25%] mt-5 px-4 py-4'
-                                  style={{
-                                    border: '1px solid rgba(29, 91, 191, 0.5)',
-                                    borderRadius: '3px',
-                                  }}
-                                >
-                                  <div className='flex gap-3 items-center'>
-                                    <img src={UploadIcon} alt='altlogo' />
-                                    <span className='text-[12px] w-40 truncate'>
-                                      {item.name || item}
-                                    </span>
-                                  </div>
-                                  <img
-                                    className='w-[30px] cursor-pointer'
-                                    onClick={() =>
-                                      handleDeleteFile(
-                                        field.name,
-                                        index,
-                                        item.props.id
-                                      )
-                                    }
-                                    src={DeleteIcon}
-                                    alt='DeleteIcon'
-                                  />
-                                </div>
-                              );
-                            })}
+                        <div
+                          className='flex justify-between items-center w-[30%] mt-5 px-4 py-4'
+                          style={{
+                            border: '1px solid rgba(29, 91, 191, 0.5)',
+                            borderRadius: '3px',
+                          }}
+                        >
+                          <div className='flex w-[80%] gap-3 items-center'>
+                            <img src={UploadIcon} alt='altlogo' />
+                            <span className='text-[12px]'>
+                              {getValues(field.name) &&
+                                getValues(field.name)[0]?.name}
+                            </span>
+                          </div>
+                          <img
+                            className='w-[30px] cursor-pointer'
+                            onClick={() => handleDeleteImage(field.name)}
+                            src={DeleteIcon}
+                            alt='DeleteIcon'
+                          />
                         </div>
                       </>
                     )}

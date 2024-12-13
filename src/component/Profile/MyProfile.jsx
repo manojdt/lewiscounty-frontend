@@ -7,48 +7,13 @@ import PermissionTab from './tabs/PermissionTab';
 import SecurityTab from './tabs/SecurityTab';
 import EditProfile from './edit-profile';
 
-export const roleBasedSections = {
-  mentor: [
-    'Personal Information',
-    'Professional Bakground',
-    'Educational Background',
-    'Area of expertise',
-    'Mentorship Experience',
-    'Document upload',
-    'Mentorship Preference',
-    'Goals and Expections',
-    'Availability and Commitment',
-    'Additional Information',
-  ],
-  mentee: [
-    'Personal Information',
-    'Current Status',
-    'Skill and Interests',
-    'Expectation and goals',
-    'Document upload',
-    'Career/Academic Goals',
-    'Mentoring Preferences',
-    'Availability',
-    'Detailed Career/academic Goals',
-    'Challenges and Obstacles',
-    'Mentoring Experience',
-    'Learning style & Preferences',
-    'Networking & Professional Developement',
-    'Personal Development',
-    'Mentoring Relationship Dynamics',
-    'Long-term Vision',
-    'Additional Information',
-  ],
-  admin: [],
-};
-
 export default function MyProfile() {
   const [activeTab, setActiveTab] = useState(0);
   const [editMode, setEditMode] = useState(false);
 
   const tabs = [
     {
-      label: 'Profile',
+      label: 'Home',
       icon: ProfileIcon,
       content: <ProfileTab setEditMode={() => setEditMode(true)} />,
     },
@@ -66,10 +31,10 @@ export default function MyProfile() {
 
   return (
     <div className='profile-container'>
-      <div className='flex justify-between items-center mb-6'>
-        <p className='text-color text-2xl font-semibold'>
-          {editMode ? 'Edit Profile' : 'Settings'}
-        </p>
+      <div className='flex justify-between items-center mb-8'>
+        <div className='text-color font-medium !text-[20px]'>
+          {editMode ? 'Edit Profile' : 'Profile'}
+        </div>
       </div>
       {!editMode ? (
         <div className='border grid grid-cols-5 rounded-xl'>

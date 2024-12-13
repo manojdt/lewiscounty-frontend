@@ -161,11 +161,16 @@ export default function CreateMeeting() {
 
     const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
     const dayOfWeekStart = startOfMonth.getDay();
+    // console.log(startOfMonth, dayOfWeekStart);
 
     const adjustedDate = currentDayOfMonth + dayOfWeekStart;
+    // console.log(adjustedDate);
 
+    // Determine the week number
     const weekNumber = Math.ceil(adjustedDate / 7);
+    // console.log(weekNumber);
 
+    // Map day index to day name
     const daysOfWeek = [
       'Sunday',
       'Monday',
@@ -176,6 +181,7 @@ export default function CreateMeeting() {
       'Saturday',
     ];
     const currentDayName = daysOfWeek[currentDayOfWeek];
+    // console.log(currentDayName);
 
     return { weekNumber, currentDayName };
   }
@@ -554,7 +560,7 @@ export default function CreateMeeting() {
                             start_date: selectedStartDate,
                             end_date:
                               prevState.end_date &&
-                              prevState.end_date < selectedStartDate
+                                prevState.end_date < selectedStartDate
                                 ? selectedStartDate
                                 : prevState.end_date,
                           }));
@@ -686,11 +692,10 @@ export default function CreateMeeting() {
                             {daysOfWeek.map((day, index) => (
                               <label
                                 key={day.key}
-                                className={`w-8 h-8 flex items-center justify-center rounded-full font-semibold text-xs cursor-pointer ${
-                                  selectedDays.includes(day.key)
+                                className={`w-8 h-8 flex items-center justify-center rounded-full font-semibold text-xs cursor-pointer ${selectedDays.includes(day.key)
                                     ? 'bg-blue-500 text-white'
                                     : 'bg-gray-300'
-                                }`}
+                                  }`}
                               >
                                 <input
                                   type='checkbox'
@@ -775,20 +780,16 @@ export default function CreateMeeting() {
           onClick={() => setCreateMeetingLoading(false)}
         >
           <div className='px-5 py-1 flex justify-center items-center'>
-            <div
-              className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
-              style={{ background: '#fff', borderRadius: '10px' }}
-            >
-              <img src={SuccessTik} alt='SuccessTik' />
-              <p
-                className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+            <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+              style={{ background: '#fff', borderRadius: '10px' }}>
+              <img src={SuccessTik} alt="SuccessTik" />
+              <p className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
                 style={{
-                  fontWeight: 600,
+                  fontWeight: 600
                 }}
-              >
-                Meeting created successfully to Mentees
-              </p>
+              >Meeting created successfully to Mentees</p>
             </div>
+
           </div>
         </Backdrop>
 
@@ -822,12 +823,11 @@ export default function CreateMeeting() {
 
                 return (
                   <div
-                    className={`relative mb-6  ${
-                      getWindowDimensions().width <= 1536 &&
-                      field.width === 'width-82'
+                    className={`relative mb-6  ${getWindowDimensions().width <= 1536 &&
+                        field.width === 'width-82'
                         ? 'w-[81%]'
                         : field.width
-                    }`}
+                      }`}
                     key={index}
                   >
                     <label

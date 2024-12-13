@@ -9,20 +9,20 @@ const Accordian = ({ title, children, defaultValue }) => {
   return (
     <div className='w-full border-gray-300'>
       <div
-        className='flex justify-between items-center border-b w-full p-2 text-left ease-in-out transition-all duration-500'
+        className='flex justify-between items-center border-b w-full p-4  text-left transition-all duration-300'
         onClick={toggleAccordion}
       >
-        <span className='text-lg text-[#2260D9] font-semibold'>{title}</span>
+        <span className='text-xl text-[#2260D9] font-semibold'>{title}</span>
         <img
           src={CircleArrowDown}
           alt=''
-          className={`transform cursor-pointer transition-all duration-500 ease-in-out ${
+          className={`transform cursor-pointer transition-transform duration-300 ${
             !isOpen ? 'rotate-180' : ''
           }`}
         />
       </div>
       <div
-        className={`overflow-hidden transition-all duration-500 ease-in-out ${
+        className={`overflow-hidden transition-all duration-300 ${
           isOpen ? 'max-h-screen' : 'max-h-0'
         }`}
       >

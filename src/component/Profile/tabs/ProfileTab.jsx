@@ -29,21 +29,6 @@ import SuccessTik from '../../../assets/images/blue_tik1x.png';
 import ArrowDown from '../../../assets/icons/blue-arrow-down.svg';
 import Accordian from '../../../shared/Accordian';
 import FormContextProvider from '../form-context-provider';
-import { roleBasedSections } from '../MyProfile';
-import MenteeCurrentStatusSection from '../section-edit/MenteeCurrentStatusSection';
-import MenteeSkillandInterestsSection from '../section-edit/MenteeSkillandInterestsSection';
-import MenteeExpectionAndGoalsSection from '../section-edit/MenteeExpectionAndGoalsSection';
-import MenteeCareerAcademicGoalsSection from '../section-edit/MenteeCareerAcademicGoalsSection';
-import MenteeMentoringPreferencesSection from '../section-edit/MenteeMentoringPreferencesSection';
-import MenteeAvailabilitySection from '../section-edit/MenteeAvailabilitySection';
-import MenteeDetailedCareerAcademicGoalsSection from '../section-edit/MenteeDetailedCareerAcademicGoalsSection';
-import MenteeChallengesAndObstaclesSection from '../section-edit/MenteeChallengesAndObstaclesSection';
-import MenteeMentoringExperienceSection from '../section-edit/MenteeMentoringExperienceSection';
-import MenteeLearningSylePreferencesSection from '../section-edit/MenteeLearningSylePreferencesSection';
-import MenteeNetworkingProfessionalDevelopementSection from '../section-edit/MenteeNetworkingProfessionalDevelopementSection';
-import MenteePersonalDevelopmentSection from '../section-edit/MenteePersonalDevelopmentSection';
-import MenteeMentoringRelationshipDynamicsSection from '../section-edit/MenteeMentoringRelationshipDynamicsSection';
-import MenteeLongTermVisionSection from '../section-edit/MenteeLongTermVisionSection';
 
 const ProfileTab = ({ setEditMode }) => {
   const dispatch = useDispatch();
@@ -52,8 +37,6 @@ const ProfileTab = ({ setEditMode }) => {
   const { profile, loading, status } = useSelector(
     (state) => state.profileInfo
   );
-  const userInfo = useSelector((state) => state.userInfo);
-  const userRole = userInfo?.data?.role;
 
   const {
     register,
@@ -64,79 +47,15 @@ const ProfileTab = ({ setEditMode }) => {
     setValue,
   } = useForm();
 
-  // const profileSection = [
-  //   {
-  //     title: 'Professional Background',
-  //     component: (
-  //       <ProfessionalBakgroundSection
-  //         type={view.viewOnly}
-  //         // getValues={getValues}
-  //       />
-  //     ),
-  //   },
-  //   {
-  //     title: 'Educational Background',
-  //     component: <EducationalBackgroundSection type={view.viewOnly} />,
-  //   },
-  //   {
-  //     title: 'Area of expertise',
-  //     component: <AreaOfExpertiseSection type={view.viewOnly} />,
-  //   },
-  //   {
-  //     title: 'Mentorship Experience ',
-  //     component: <MentorshipExperienceSection type={view.viewOnly} />,
-  //   },
-  //   {
-  //     title: 'Document upload',
-  //     component: (
-  //       <DocumentUploadSection type={view.viewOnly} getValues={getValues} />
-  //     ),
-  //   },
-  //   {
-  //     title: 'Mentorship Preference',
-  //     component: <MentorshipPreferenceSection type={view.viewOnly} />,
-  //   },
-  //   {
-  //     title: 'Goals and Expectatons',
-  //     component: (
-  //       <GoalsAndExpectatonsSection
-  //         type={view.viewOnly}
-  //         getValues={getValues}
-  //       />
-  //     ),
-  //   },
-  //   {
-  //     title: 'Availability and Commitment',
-  //     component: <AvailabilityAndCommitmentSection type={view.viewOnly} />,
-  //   },
-  //   {
-  //     title: 'Additional Information',
-  //     component: <AdditionalInformationSection type={view.viewOnly} />,
-  //   },
-  // ];
-
-  const allProfileSections = [
+  const profileSection = [
     {
-      title: 'Personal Information',
+      title: 'Professional Background',
       component: (
-        <PersonalInfoSection type={view.viewOnly} getValues={getValues} />
+        <ProfessionalBakgroundSection
+          type={view.viewOnly}
+          // getValues={getValues}
+        />
       ),
-    },
-    {
-      title: 'Current Status',
-      component: <MenteeCurrentStatusSection type={view.viewOnly} />,
-    },
-    {
-      title: 'Skill and Interests',
-      component: <MenteeSkillandInterestsSection type={view.viewOnly} />,
-    },
-    {
-      title: 'Expectation and goals',
-      component: <MenteeExpectionAndGoalsSection type={view.viewOnly} />,
-    },
-    {
-      title: 'Professional Bakground',
-      component: <ProfessionalBakgroundSection type={view.viewOnly} />,
     },
     {
       title: 'Educational Background',
@@ -147,71 +66,27 @@ const ProfileTab = ({ setEditMode }) => {
       component: <AreaOfExpertiseSection type={view.viewOnly} />,
     },
     {
-      title: 'Mentorship Experience',
+      title: 'Mentorship Experience ',
       component: <MentorshipExperienceSection type={view.viewOnly} />,
     },
     {
       title: 'Document upload',
-      component: <DocumentUploadSection type={view.viewOnly} />,
-    },
-    {
-      title: 'Career/Academic Goals',
-      component: <MenteeCareerAcademicGoalsSection type={view.viewOnly} />,
-    },
-    {
-      title: 'Mentoring Preferences',
-      component: <MenteeMentoringPreferencesSection type={view.viewOnly} />,
-    },
-    {
-      title: 'Availability',
-      component: <MenteeAvailabilitySection type={view.viewOnly} />,
-    },
-    {
-      title: 'Detailed Career/academic Goals',
       component: (
-        <MenteeDetailedCareerAcademicGoalsSection type={view.viewOnly} />
+        <DocumentUploadSection type={view.viewOnly} getValues={getValues} />
       ),
     },
-    {
-      title: 'Challenges and Obstacles',
-      component: <MenteeChallengesAndObstaclesSection type={view.viewOnly} />,
-    },
-    {
-      title: 'Mentoring Experience',
-      component: <MenteeMentoringExperienceSection type={view.viewOnly} />,
-    },
-    {
-      title: 'Learning style & Preferences',
-      component: <MenteeLearningSylePreferencesSection type={view.viewOnly} />,
-    },
-    {
-      title: 'Networking & Professional Developement',
-      component: (
-        <MenteeNetworkingProfessionalDevelopementSection type={view.viewOnly} />
-      ),
-    },
-    {
-      title: 'Personal Development',
-      component: <MenteePersonalDevelopmentSection type={view.viewOnly} />,
-    },
-    {
-      title: 'Mentoring Relationship Dynamics',
-      component: (
-        <MenteeMentoringRelationshipDynamicsSection type={view.viewOnly} />
-      ),
-    },
-    {
-      title: 'Long-term Vision',
-      component: <MenteeLongTermVisionSection type={view.viewOnly} />,
-    },
-    // ----
     {
       title: 'Mentorship Preference',
       component: <MentorshipPreferenceSection type={view.viewOnly} />,
     },
     {
-      title: 'Goals and Expections',
-      component: <GoalsAndExpectatonsSection type={view.viewOnly} />,
+      title: 'Goals and Expectations',
+      component: (
+        <GoalsAndExpectatonsSection
+          type={view.viewOnly}
+          getValues={getValues}
+        />
+      ),
     },
     {
       title: 'Availability and Commitment',
@@ -222,10 +97,6 @@ const ProfileTab = ({ setEditMode }) => {
       component: <AdditionalInformationSection type={view.viewOnly} />,
     },
   ];
-
-  const profileSection = allProfileSections.filter((section) =>
-    roleBasedSections[userRole]?.includes(section.title)
-  );
 
   const loadUserProfile = () => {
     dispatch(getUserProfile());
@@ -244,6 +115,15 @@ const ProfileTab = ({ setEditMode }) => {
     setEditMode(true);
   };
 
+  const onSubmit = (data) => {
+    const apiPayload = {
+      phone_number: data.phone_number,
+      secondary_phone_number: data.secondary_phone_number,
+      location: data.location,
+    };
+    dispatch(updateProfile(apiPayload));
+  };
+
   useEffect(() => {
     if (Object.keys(profile).length) {
       const name = profile?.name?.split(' ');
@@ -256,32 +136,30 @@ const ProfileTab = ({ setEditMode }) => {
         address: profile?.address,
         professional_bio: profile?.professional_bio,
         documents: profile?.documents.map((doc) => (
-          <div className=''>
-            <Link
-              target='_blank'
-              className='underline text-blue-500'
-              to={doc.file}
-            >
-              {doc.file_display_name}
-            </Link>
-          </div>
+          <Link
+            target='_blank'
+            className='underline text-blue-500'
+            to={doc.file}
+          >
+            {doc.file_display_name}
+          </Link>
         )),
       });
     }
   }, [profile]);
 
-  // useEffect(() => {
-  //   loadUserProfile();
-  // }, []);
+  useEffect(() => {
+    loadUserProfile();
+  }, []);
 
-  // useEffect(() => {
-  //   if (status === profileStatus.update) {
-  //     setTimeout(() => {
-  //       setEditMode(false);
-  //       loadUserProfile();
-  //     }, 3000);
-  //   }
-  // }, [status]);
+  useEffect(() => {
+    if (status === profileStatus.update) {
+      setTimeout(() => {
+        setEditMode(false);
+        loadUserProfile();
+      }, 3000);
+    }
+  }, [status]);
 
   return (
     <FormContextProvider initialValues={profile}>
@@ -314,7 +192,7 @@ const ProfileTab = ({ setEditMode }) => {
         </div>
       </Backdrop>
       <div className='flex items-center justify-between'>
-        <p className='text-xl font-semibold'>Profile Information</p>
+        <p className='text-lg font-semibold'>Profile Picture</p>
         <div>
           <Button
             onClick={handleEditMode}
@@ -326,7 +204,7 @@ const ProfileTab = ({ setEditMode }) => {
       </div>
 
       <div>
-        <div>
+        <div onSubmit={handleSubmit(onSubmit)}>
           <div className='py-4 relative w-[12%]'>
             <div className='upload-profile'>
               <label
@@ -362,11 +240,7 @@ const ProfileTab = ({ setEditMode }) => {
                     {profilefield.label}
                   </label>
 
-                  <p className='text-[14px] flex flex-wrap items-center justify-start gap-4'>
-                    {getValues(profilefield.name)
-                      ? getValues(profilefield.name)
-                      : '-'}
-                  </p>
+                  <p className='text-[14px]'>{getValues(profilefield.name)}</p>
                 </div>
               </div>
             ))}
@@ -379,7 +253,7 @@ const ProfileTab = ({ setEditMode }) => {
                 ? `${contentRef.current.scrollHeight}px`
                 : '0px',
               overflow: 'hidden',
-              transition: 'max-height 0.5s ease',
+              transition: 'max-height 0.3s ease',
             }}
           >
             {profileSection.map((section, index) => (
