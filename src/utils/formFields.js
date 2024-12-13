@@ -1673,143 +1673,143 @@ export const ProgramFields = [
   ProgramTestimonialsFields,
 ];
 
-export const AssignMenteesFields = (bool = true, type, getValues) =>{
+export const AssignMenteesFields = (bool = true, type, getValues) => {
   return [
-  {
-    type: 'dropdown',
-    name: 'category_id',
-    label: 'Category',
-    placeholder: 'Select Category',
-    inputRules: {
-      required: 'This field is required',
-    },
-    options: [
-      {
-        key: 'yes',
-        value: 'Category 1',
+    {
+      type: 'dropdown',
+      name: 'category_id',
+      label: 'Category',
+      placeholder: 'Select Category',
+      inputRules: {
+        required: 'This field is required',
       },
-      {
-        key: 'no',
-        value: 'Category 2',
+      options: [
+        {
+          key: 'yes',
+          value: 'Category 1',
+        },
+        {
+          key: 'no',
+          value: 'Category 2',
+        },
+      ],
+      width: 'width-32',
+      disabled: bool,
+    },
+    {
+      type: type === "new" ? "dropdown" : 'input',
+      name: 'program_id',
+      fieldtype: 'text',
+      label: 'Program Name',
+      placeholder: 'Enter Program Name',
+      inputRules: {
+        required: 'This field is required',
       },
-    ],
-    width: 'width-32',
-    disabled: bool,
-  },
-  {
-    type: type === "new" ? "dropdown" : 'input',
-    name: 'program_id',
-    fieldtype: 'text',
-    label: 'Program Name',
-    placeholder: 'Enter Program Name',
-    inputRules: {
-      required: 'This field is required',
+      width: 'width-32',
+      disabled: bool,
+      options: []
     },
-    width: 'width-32',
-    disabled: bool,
-    options: []
-  },
-  {
-    type: 'input',
-    name: 'mentor',
-    fieldtype: 'text',
-    label: 'Mentor Name',
-    placeholder: 'Enter Mentor Name',
-    inputRules: {
-      // required: "This field is required",
+    {
+      type: 'input',
+      name: 'mentor',
+      fieldtype: 'text',
+      label: 'Mentor Name',
+      placeholder: 'Enter Mentor Name',
+      inputRules: {
+        // required: "This field is required",
+      },
+      width: 'width-32',
+      disabled: bool,
+      options: []
     },
-    width: 'width-32',
-    disabled: bool,
-    options: []
-  },
-  {
-    type: 'date',
-    name: 'start_date',
-    label: 'Program Start Date and Time',
-    placeholder: 'Select Program Start Date and Time',
-    inputRules: {
-      // required: "This field is required",
+    {
+      type: 'date',
+      name: 'start_date',
+      label: 'Program Start Date and Time',
+      placeholder: 'Select Program Start Date and Time',
+      inputRules: {
+        // required: "This field is required",
+      },
+      width: 'width-32',
+      disabled: true,
     },
-    width: 'width-32',
-    disabled: true,
-  },
-  {
-    type: 'date',
-    name: 'end_date',
-    label: 'Program End Date and Time',
-    placeholder: 'Select Program End Date and Time',
-    inputRules: {
-      // required: "This field is required",
+    {
+      type: 'date',
+      name: 'end_date',
+      label: 'Program End Date and Time',
+      placeholder: 'Select Program End Date and Time',
+      inputRules: {
+        // required: "This field is required",
+      },
+      width: 'width-32',
+      disabled: true,
     },
-    width: 'width-32',
-    disabled: true,
-  },
-  {
-    type: 'input',
-    name: 'duration',
-    label: 'Program Duration',
-    fieldtype: 'text',
-    placeholder: 'Program Duration',
-    inputRules: {
-      required: 'This field is required',
+    {
+      type: 'input',
+      name: 'duration',
+      label: 'Program Duration',
+      fieldtype: 'text',
+      placeholder: 'Program Duration',
+      inputRules: {
+        required: 'This field is required',
+      },
+      width: 'width-32',
+      disabled: bool,
     },
-    width: 'width-32',
-    disabled: bool,
-  },
-  {
-    type: 'text',
-    name: 'mentees_list',
-    label: 'Add Mentees for this Program',
-    width: 'w-full',
-    inputRules: {
-      required: 'This field is required',
+    {
+      type: 'text',
+      name: 'mentees_list',
+      label: 'Add Mentees for this Program',
+      width: 'w-full',
+      inputRules: {
+        required: 'This field is required',
+      },
     },
-  },
-  {
-    type: 'input',
-    name: 'reference_links',
-    fieldtype: 'text',
-    label: 'Reference Books',
-    placeholder: 'Enter Reference Book with comma(,) seperators',
-    inputRules: {
-      required: 'This field is required',
+    {
+      type: 'input',
+      name: 'reference_links',
+      fieldtype: 'text',
+      label: 'Reference Books',
+      placeholder: 'Enter Reference Book with comma(,) seperators',
+      inputRules: {
+        required: 'This field is required',
+      },
+      width: 'w-full',
     },
-    width: 'w-full',
-  },
 
-  {
-    type: 'input',
-    name: 'task_name',
-    fieldtype: 'text',
-    label: 'Task Name',
-    placeholder: 'Enter Task Name',
-    inputRules: {
-      required: 'This field is required',
+    {
+      type: 'input',
+      name: 'task_name',
+      fieldtype: 'text',
+      label: 'Task Name',
+      placeholder: 'Enter Task Name',
+      inputRules: {
+        required: 'This field is required',
+      },
+      width: 'w-full',
     },
-    width: 'w-full',
-  },
-  {
-    type: 'editor',
-    name: 'task_details',
-    fieldtype: 'text',
-    label: 'Task Details',
-    placeholder: 'List out Task Details',
-    inputRules: {
-      required: 'This field is required',
+    {
+      type: 'editor',
+      name: 'task_details',
+      fieldtype: 'text',
+      label: 'Task Details',
+      placeholder: 'List out Task Details',
+      inputRules: {
+        required: 'This field is required',
+      },
+      width: 'w-full',
     },
-    width: 'w-full',
-  },
-  {
-    type: 'date',
-    name: 'due_date',
-    label: 'Due Date',
-    placeholder: 'Due Date',
-    inputRules: {
-      required: 'This field is required',
+    {
+      type: 'date',
+      name: 'due_date',
+      label: 'Due Date',
+      placeholder: 'Due Date',
+      inputRules: {
+        required: 'This field is required',
+      },
+      width: 'w-full',
     },
-    width: 'w-full',
-  },
-]
+  ]
 }
 
 export const ReportFields = (bool = false) => [
@@ -2685,3 +2685,82 @@ export const PersonalInfoFields = [
     width: 'col-span-6',
   },
 ];
+
+
+export const reportAdminColumns = [
+  {
+    field: 'name',
+    headerName: 'Report Name',
+    flex: 1,
+    id: 1,
+    status: ["all", "approved", "rejected"]
+  },
+  {
+    field: 'created_by_full_name',
+    headerName: 'Mentor Name',
+    flex: 1,
+    id: 1,
+    status: ["approved", "rejected"]
+  },
+  {
+    field: 'category_name',
+    headerName: 'Category',
+    flex: 1,
+    id: 1,
+    status: ["all", "approved", "rejected"]
+  },
+  {
+    field: 'program_name',
+    headerName: 'Program Name',
+    flex: 1,
+    id: 1,
+    status: ["all", "approved", "rejected"]
+  },
+  {
+    field: 'created_at',
+    headerName: 'Create Date',
+    flex: 1,
+    id: 1,
+    status: ["all"]
+  },
+  {
+    field: 'participates_count',
+    headerName: 'Mentees',
+    flex: 1,
+    id: 1,
+    status: ["all","approved", "rejected"]
+  },
+  {
+    field: 'updated_at',
+    headerName: 'Last Updated Date',
+    flex: 1,
+    id: 1,
+    status: ["approved", "rejected"]
+  },
+  {
+    field: 'updated_by_full_name',
+    headerName: 'Last Updated By',
+    flex: 1,
+    id: 1,
+    status: ["approved", "rejected"]
+  },
+
+  // {
+  //   field: 'designation',
+  //   headerName: 'Designation',
+  //   flex: 1,
+  //   id: 1,
+  // },
+  // {
+  //   field: 'designation',
+  //   headerName: 'Designation',
+  //   flex: 1,
+  //   id: 1,
+  // },
+  // {
+  //   field: 'designation',
+  //   headerName: 'Designation',
+  //   flex: 1,
+  //   id: 1,
+  // },
+]

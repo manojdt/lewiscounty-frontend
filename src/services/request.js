@@ -285,7 +285,10 @@ export const getReopenRequest = createAsyncThunk(
 export const updateReportRequest = createAsyncThunk(
     "updateReportRequest",
     async (data) => {
-        const updateReportRequestInfo = await api.put(`program_request/update_report_request`, data);
+        const payload = {
+            status: data?.status
+        }
+        const updateReportRequestInfo = await api.patch(`request/${data?.id}/`, payload);
         if (updateReportRequestInfo.status === 200 && updateReportRequestInfo.data) {
             return updateReportRequestInfo.data;
         }

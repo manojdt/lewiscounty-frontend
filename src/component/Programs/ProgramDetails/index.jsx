@@ -219,11 +219,12 @@ export default function ProgramDetails() {
     }
 
     const handleInstructor = (programdetails) => {
+        console.log("programdetailssdfsdfsdfsd ===>", programdetails, userdetails?.data?.user_id)
         const mentorId = programdetails?.mentor_info?.id || ''
 
-        if (mentorId !== '' && mentorId !== userdetails?.data?.user_id) {
+        // if (mentorId !== '' && mentorId !== userdetails?.data?.user_id) {
             navigate(`/mentor-profile/${mentorId}`)
-        }
+        // }
     }
 
     const ratingModalSuccess = () => {
@@ -839,7 +840,7 @@ export default function ProgramDetails() {
                         <div className='flex justify-center flex-col gap-5  mt-4 mb-4'
                             style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '10px', }}>
                             <div className='flex justify-between px-3 py-4 items-center' style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
-                                <p className='text-[18px]' style={{ color: 'rgba(0, 0, 0, 1)' }}>Cancel Request Reason </p>
+                                <p className='text-[18px]' style={{ color: 'rgba(0, 0, 0, 1)' }}>Cancel Reason </p>
                                 <img className='cursor-pointer' onClick={handleMoreMenuClosePopup} src={CancelIcon} alt="CancelIcon" />
                             </div>
 
@@ -917,7 +918,7 @@ export default function ProgramDetails() {
 
                                 </ol>
                                 {
-                                    role === 'mentor' &&
+                                    (role === 'mentor' || role === "admin") &&
                                     <>
                                         <div className='cursor-pointer' onClick={handleClick}>
                                             <img src={MoreIcon} alt='MoreIcon' />
@@ -1040,7 +1041,7 @@ export default function ProgramDetails() {
                                         }
 
                                         {
-                                            ((role === 'mentor' || role === "admin") && !programCompleted.includes(programdetails.status) && !programCancelled.includes(programdetails.status)) ?
+                                            ((role === 'mentor') && !programCompleted.includes(programdetails.status) && !programCancelled.includes(programdetails.status)) ?
                                                 <>
 
                                                     {
@@ -1155,7 +1156,20 @@ export default function ProgramDetails() {
                                                 : null
 
                                         }
-{console.log("programdetails ==>", programdetails)}
+                                        {
+                                            (role === "admin" && programdetails.status === 'yettojoin') &&
+
+                                            <div className='py-9'>
+                                                <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                    background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
+                                                    borderRadius: '5px'
+                                                }}
+                                                    onClick={() => handleJoinProgram(programdetails.id)}
+                                                >Launch Program
+                                                    <span className='pl-8 pt-1'><img style={{ width: '15px', height: '13px' }} src={DoubleArrowIcon} alt="DoubleArrowIcon" /></span>
+                                                </button>
+                                            </div>
+                                        }
                                         {
                                             (role === 'mentee' && !programCompleted.includes(programdetails.status) && !programCancelled.includes(programdetails.status)) ?
                                                 <div className='py-9'>

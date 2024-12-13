@@ -71,6 +71,10 @@ const MentorTaskDetails = () => {
             key: "pending"
         },
         {
+            name: "In Progress",
+            key: "inprogress"
+        },
+        {
             name: "Completed",
             key: "completed"
         },
@@ -527,7 +531,7 @@ const MentorTaskDetails = () => {
 
                 <Button
                     btnType='button'
-                    btnCls='w-[110px]'
+                    btnCls='w-[auto]'
                     btnName={'Edit Task'}
                     btnCategory='primary'
                     onClick={() => handleEditTask()}
@@ -624,16 +628,15 @@ const MentorTaskDetails = () => {
                         </Stack>
                         <Stack spacing={3} className='px-[35px] py-[22px]'>
                             <Typography className='!text-[#18283D] !text-[16px]' sx={{ fontWeight: 500 }}>
-                                Reference Link:
-                                <span className='!text-[#1D5BBF] underline'>
+                                {`Reference Book: `}
+                                <span className='!text-[#18283D] !text-[14px]'>
                                     {
-                                        docs?.length > 0 &&
-                                        docs?.map((doc, index) => <span>{doc}</span>)
+                                        menteeTaskList?.reference_link
                                     }
                                 </span>
                             </Typography>
-                            <Typography className='!text-[#18283D] !text-[14px]' sx={{ fontWeight: 500 }}>
-                                Task Details:
+                            <Typography className='!text-[#18283D] !text-[16px]' sx={{ fontWeight: 500 }}>
+                                {`Task Details: `}
                                 <span>
                                     {menteeTaskList?.task_details}
                                 </span>

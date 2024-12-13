@@ -37,7 +37,7 @@ export default function Certificate() {
             query = `?search=${value}`
         }
         dispatch(getCertificateList(query +
-            role === "admin" ? `&page=${paginationModel?.page + 1}&limit=${paginationModel?.pageSize}&request_type=certificate&requested_by=mentor`
+            role === "admin" ? `&page=${paginationModel?.page + 1}&limit=${paginationModel?.pageSize}&request_type=certificate${(role === "admin" && requestTab !== 'all') ? '&request_by=mentor' : ''}`
             : `&page=${paginationModel?.page + 1}&limit=${paginationModel?.pageSize}&request_type=certificate`))
     }
     const handleClose = () => {
@@ -112,11 +112,16 @@ export default function Certificate() {
                                 <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
                                 View
                             </MenuItem> : null}
-                        {role === 'mentor' ?
+                        {(role === 'mentor') ?
                             <MenuItem onClick={() => navigate(`/certificate_mentees/${seletedItem.id}?type=${actionTab}`)} className='!text-[12px]'>
                                 <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
                                 View
                             </MenuItem> : null}
+                        {role === "admin" &&
+                            <MenuItem onClick={() => navigate(`/certificate_mentees/${seletedItem.id}?type=approved`)} className='!text-[12px]'>
+                                <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
+                                View
+                            </MenuItem>}
 
 
 
@@ -165,7 +170,7 @@ export default function Certificate() {
 
     useEffect(() => {
         if (role) {
-            dispatch(getCertificateList(role === "admin" ? `?status=${requestTab}&request_type=certificate&requested_by=mentor` : role === "mentor" ? `?status=${actionTab}&page=${paginationModel?.page + 1}&limit=${paginationModel?.pageSize}&request_type=certificate` : `?page=${paginationModel?.page + 1}&limit=${paginationModel?.pageSize}&request_type=certificate`))
+            dispatch(getCertificateList(role === "admin" ? `?status=${role === "admin" ? "approved" :requestTab}&request_type=certificate${(role === "admin" && requestTab !== 'all') ? '&request_by=mentor' : ''}` : role === "mentor" ? `?status=${actionTab}&page=${paginationModel?.page + 1}&limit=${paginationModel?.pageSize}&request_type=certificate` : `?page=${paginationModel?.page + 1}&limit=${paginationModel?.pageSize}&request_type=certificate`))
         }
         // dispatch(getCertificates({search: role === "admin" ? requestTab : actionTab}))
     }, [requestTab, role, actionTab, paginationModel])

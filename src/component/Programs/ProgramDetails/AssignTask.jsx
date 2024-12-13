@@ -1043,7 +1043,7 @@ export default function AssignTask() {
                                                     <span>Flexible schedule</span>
                                                 </li>
                                                 {
-                                                    role === 'mentor' &&
+                                                    (role === 'mentor' || role === "admin") &&
                                                     <li className='flex justify-between text-[12px]' style={{ paddingTop: '14px', paddingBottom: "10px", borderBottom: '1px solid rgba(217, 217, 217, 1)', }}> <span>Joined Mentees</span>
                                                         <span className='underline cursor-pointer' onClick={() => handleViewJoinedMentees(programdetails)}>{programdetails.participated_mentees_count}</span>
                                                     </li>
@@ -1469,7 +1469,7 @@ export default function AssignTask() {
                                         <div className='flex justify-center flex-col gap-5  mt-4 mb-4'
                                             style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '10px', }}>
                                             <div className='flex justify-between px-3 py-4 items-center' style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
-                                                <p className='text-[18px]' style={{ color: 'rgba(0, 0, 0, 1)' }}>Cancel Request Reason </p>
+                                                <p className='text-[18px]' style={{ color: 'rgba(0, 0, 0, 1)' }}>Cancel Reason </p>
                                                 <img className='cursor-pointer' onClick={handleMoreMenuClosePopup} src={CancelIcon} alt="CancelIcon" />
                                             </div>
 

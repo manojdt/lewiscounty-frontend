@@ -582,6 +582,10 @@ export const reportStatusColor = {
     color: 'rgba(224, 56, 45, 1)',
     bg: 'rgba(255, 231, 231, 1)',
   },
+  approved: {
+    color: 'rgba(22, 182, 129, 1)',
+    bg: 'rgba(235, 255, 243, 1)',
+  },
 };
 
 export const reportStatus = {
@@ -591,7 +595,8 @@ export const reportStatus = {
   draft: 'Draft',
   new: 'New',
   deleted: "Deleted",
-  rejected: "Rejected"
+  rejected: "Rejected",
+  approved: "Approved"
 };
 
 export const reportAllStatus = {

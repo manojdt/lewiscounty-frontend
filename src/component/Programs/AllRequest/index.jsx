@@ -391,7 +391,7 @@ export default function AllRequest() {
         dispatch(
             updateReportRequest({
                 id: seletedItem.id,
-                report_status: "approved",
+                status: "approved",
             })
         );
     };

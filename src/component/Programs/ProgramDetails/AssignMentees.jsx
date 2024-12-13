@@ -56,7 +56,6 @@ export default function AssignMentees() {
 
 
     const onSubmit = (data) => {
-        debugger
         let apiData = {
             ...data,
             program_id: type === "new" ? allFields?.program_id : state?.data?.program_id,
@@ -315,7 +314,7 @@ export default function AssignMentees() {
                         {
                             (type === "new" || type === "edit") ?
                                 <Stack direction={"row"} alignItems={"center"} justifyContent={"space-between"} className='border-b-2 pt-8 pr-6 pb-6 pl-6'>
-                                    <Typography className='!text-[20px] !text-[#18283D]' sx={{ fontWeight: 600 }}>{type === "new" ? "Create Task" : "Edit Task"}</Typography>
+                                    <Typography className='!text-[20px] !text-[#18283D]' sx={{ fontWeight: 600 }}>{type === "new" ? "Create New Task" : from_type === "program" ? "Create New Task" : "Edit Task"}</Typography>
                                     <div className='cursor-pointer' onClick={() => navigate(-1)}>
                                         <img src={CloseIcon} alt='CloseIcon' />
                                     </div>
@@ -666,7 +665,7 @@ export default function AssignMentees() {
                                                 }}
                                             >
                                                 {
-                                                    type === "new" ? "New task for Mentee has been successfully created" : "Mentee’s task has been Successfully re-edited"
+                                                    type === "new" ? "New task for Mentee has been successfully created" : from_type === "program" ? "New task for Mentee has been successfully created" : "Mentee’s task has been Successfully re-edited"
                                                 }
                                             </p>
                                         </div>
