@@ -91,15 +91,13 @@ export default function Layout({ subheader }) {
       ),
       command: () => navigate('/certificates'),
     },
-    {
-      label: (
-        <div className='flex gap-4 items-center'>
-          <img src={FeedIcon} alt='FeedIcon' />
-          <p>Feed</p>
-        </div>
-      ),
-      command: () => navigate('/feeds'),
-    },
+    // {
+    //   label: <div className='flex gap-4 items-center'>
+    //       <img src={FeedIcon} alt="FeedIcon" />
+    //       <p>Feed</p>
+    //   </div>,
+    //   command: () => navigate('/feeds')
+    // },
   ];
 
   if (role !== 'mentee') {
