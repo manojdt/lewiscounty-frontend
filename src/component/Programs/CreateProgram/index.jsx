@@ -70,7 +70,6 @@ const onBlureFun = (data) => {
     dispatch(getProgramNameValidate(data)).then((res) => {
         if (res?.meta?.requestStatus === "fulfilled") {
             if (!res?.payload?.is_available) {
-                // setCurrentStep(currentStep + 1)
                 setOBlureFunction(false)
                 // setTabActionInfo({ ...tabActionInfo, activeTab: ProgramTabs[currentStep].key })
             }
