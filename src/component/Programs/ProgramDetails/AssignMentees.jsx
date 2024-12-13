@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { AssignMenteesFields } from '../../../utils/formFields'
 import CalendarIcon from '../../../assets/images/calender_1x.png'
+import UserImage from '../../../assets/icons/user-icon.svg';
 import HTMLIcon from '../../../assets/images/html1x.png'
 import TextIcon from "../../../assets/images/text1x.png";
 
@@ -315,7 +316,7 @@ export default function AssignMentees() {
                         {
                             (type === "new" || type === "edit") ?
                                 <Stack direction={"row"} alignItems={"center"} justifyContent={"space-between"} className='border-b-2 pt-8 pr-6 pb-6 pl-6'>
-                                    <Typography className='!text-[20px] !text-[#18283D]' sx={{ fontWeight: 600 }}>{type === "new" ? "Create Task" : "Edit Task"}</Typography>
+                                    <Typography className='!text-[20px] !text-[#18283D]' sx={{ fontWeight: 600 }}>{type === "new" ? "Create New Task" : "Edit Task"}</Typography>
                                     <div className='cursor-pointer' onClick={() => navigate(-1)}>
                                         <img src={CloseIcon} alt='CloseIcon' />
                                     </div>
@@ -511,12 +512,12 @@ export default function AssignMentees() {
                                                                                                             <>
                                                                                                                 <p className='flex items-center gap-1'>
                                                                                                                     {
-                                                                                                                        popupfield?.profile_image?.length === 0 ?
-                                                                                                                            <p className='flex items-center px-3 py-3' style={{
-                                                                                                                                background: 'rgba(223, 237, 255, 1)', borderRadius: '50%',
+                                                                                                                        // popupfield?.profile_image?.length === 0 ?
+                                                                                                                        //     <p className='flex items-center px-3 py-3' style={{
+                                                                                                                        //         background: 'rgba(223, 237, 255, 1)', borderRadius: '50%',
 
-                                                                                                                            }}></p> :
-                                                                                                                            <img src={popupfield?.profile_image} alt='' className='h-[25px] w-[25px] rounded-[50%]' />
+                                                                                                                        //     }}></p> :
+                                                                                                                            <img src={popupfield?.profile_image?popupfield?.profile_image:UserImage} alt='' className='h-[25px] w-[25px] rounded-[50%]' />
                                                                                                                     }
                                                                                                                     {
                                                                                                                         `${popupfield.first_name}`

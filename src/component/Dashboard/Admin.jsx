@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import UserImage from "../../assets/images/user.jpg";
+import UserImage from "../../assets/icons/user-icon.svg";
 import { activityStatusColor, empty, programActionStatus, programMenus } from '../../utils/constant';
 
 import RightArrow from '../../assets/icons/rightArrow.svg'
