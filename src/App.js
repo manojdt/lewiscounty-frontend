@@ -76,8 +76,9 @@ import ProfileView from './component/Profile/ProfileView';
 import Category from './component/category';
 import CategoryView from './component/category/categoryView';
 import MenteeTaskList from './component/Tasks/MenteeTaskList';
-import ViewTask from './component/Mentor/Task/viewTask';
-import { AuthLayout } from './component/Login/AuthLayout';
+import { Ticks } from 'chart.js';
+import SuperAdminTickets from './component/SuperAdmin/tickets/SuperAdminTickets';
+import AddNewTicket from './component/SuperAdmin/tickets/AddNewTicket';
 
 function App() {
   const PrivateRoute = () => {
@@ -101,8 +102,8 @@ function App() {
   return (
     <Routes>
       <Route element={<PubicRoutes />}>
-        <Route path='/' element={<AuthLayout />} >
-          <Route index element={<Navigate to="/login" replace />} />
+        <Route path='/' element={<AuthLayout />}>
+          <Route index element={<Navigate to='/login' replace />} />
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Signup />} />
           <Route path='/forgot-password' element={<ForgotPassword />} />
@@ -114,6 +115,8 @@ function App() {
       <Route element={<PrivateRoute />}>
         <Route element={<Layout subheader={true} />}>
           <Route path='/super-members' element={<SuperMembers />} />
+          <Route path='/tickets' element={<SuperAdminTickets />} />
+          <Route path='/add-new-ticket' element={<AddNewTicket />} />
           <Route path='/super-members/add' element={<AddSuperMember />} />
           <Route path='/my-profile-admin' element={<Profile />} />
           <Route path='/help-admin' element={<HelpPage />} />
@@ -218,7 +221,7 @@ function App() {
           <Route path='/profileView' element={<MentorMenteeProfile />} />
           <Route path='/category' element={<Category />} />
           <Route path='/categoryView' element={<CategoryView />} />
-          <Route path='/viewTask/:id' element={<ViewTask />} />          
+          <Route path='/viewTask/:id' element={<ViewTask />} />
         </Route>
       </Route>
 

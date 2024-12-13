@@ -1,18 +1,13 @@
 import React, { useRef } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import {
-  MenteePersonalInformationFields,
-  PersonalInfoFields,
-} from '../../../utils/formFields';
+
 import { user, view } from '../../../utils/constant';
 import { Calendar } from 'primereact/calendar';
 import { useSelector } from 'react-redux';
-// import CalendarIcon from '../../../assets/images/calender_1x.png';
+import { MenteeExpectationGoalsFields } from '../../../utils/formFields';
 
-const PersonalInfoSection = ({ type, getValues }) => {
+const MenteeExpectionAndGoalsSection = ({ type }) => {
   const userInfo = useSelector((state) => state.userInfo);
-
-  const calendarRef = useRef([]);
 
   const {
     register,
@@ -20,20 +15,20 @@ const PersonalInfoSection = ({ type, getValues }) => {
     handleSubmit,
     reset,
     control,
-    // getValues,
+    getValues,
     setValue,
   } = useFormContext();
 
-  const PersonalInfoRoleFields =
-    userInfo.data.role === user.mentor
-      ? PersonalInfoFields
-      : userInfo.data.role === user.mentee
-      ? MenteePersonalInformationFields
-      : PersonalInfoFields;
+  //   const PersonalInfoRoleFields =
+  //     userInfo.data.role === user.mentor
+  //       ? PersonalInfoFields
+  //       : userInfo.data.role === user.mentee
+  //       ? MenteePersonalInformationFields
+  //       : PersonalInfoFields;
 
   return (
-    <div className='grid grid-cols-6 gap-6'>
-      {PersonalInfoRoleFields.map((field) => {
+    <div className='grid grid-cols-2 gap-6'>
+      {MenteeExpectationGoalsFields.map((field) => {
         switch (field.type) {
           case 'input':
             return (
@@ -62,7 +57,7 @@ const PersonalInfoSection = ({ type, getValues }) => {
                         {...register(field.name, field.inputRules)}
                         type={field.fieldtype}
                         className='w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none
-                                                          focus-visible:outline-none text-[14px] h-[60px]'
+                                                            focus-visible:outline-none text-[14px] h-[60px]'
                         placeholder={field.placeholder}
                         style={{
                           color: '#232323',
@@ -223,7 +218,7 @@ const PersonalInfoSection = ({ type, getValues }) => {
                 <select
                   {...register(field.name, field.inputRules)}
                   className='w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg h-11
-                     focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]'
+                       focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]'
                   placeholder={field.placeholder}
                   style={{
                     color: '#232323',
@@ -253,4 +248,4 @@ const PersonalInfoSection = ({ type, getValues }) => {
   );
 };
 
-export default PersonalInfoSection;
+export default MenteeExpectionAndGoalsSection;
