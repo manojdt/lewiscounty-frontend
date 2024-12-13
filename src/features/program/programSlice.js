@@ -484,7 +484,7 @@ export const programSlice = createSlice({
       });
 
     // builder.addCase(updateLocalProgram)builder
-    builder.addCase(getProgramNameValidate.pending, (state,action) => {
+    builder.addCase(getProgramNameValidate.pending, (state) => {
       return {
         ...state,
         loading: true,
