@@ -758,7 +758,7 @@ const MentorTask = () => {
                                 <img src={SearchIcon} alt='SearchIcon' />
                             </div>
                         </div>
-                        <Button btnType="button" btnCls="w-[180px]" btnName={'Create Task'} btnCategory="primary" onClick={() => navigate("/assign-mentees?type=new")} />
+                        <Button btnType="button" btnCls="w-[150px]" btnName={'Create Task'} btnCategory="primary" onClick={() => navigate("/assign-mentees?type=new")} />
 
                     </Stack>
                 </div>
