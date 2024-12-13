@@ -1292,3 +1292,36 @@ export const taskStatusColorNew = {
 export const view = {
   viewOnly: 'viewOnly',
 };
+
+export function getCurrentWeekAndDay(date = new Date()) {
+  const currentDayOfMonth = date.getDate();
+  const currentDayOfWeek = date.getDay();
+  // console.log(currentDayOfMonth, currentDayOfWeek);
+
+  const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+  const dayOfWeekStart = startOfMonth.getDay();
+
+  const adjustedDate = currentDayOfMonth + dayOfWeekStart;
+
+  const weekNumber = Math.ceil(adjustedDate / 7);
+
+  const daysOfWeek = [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+  ];
+  const currentDayName = daysOfWeek[currentDayOfWeek];
+
+  return { weekNumber, currentDayName };
+}
+
+export const user = {
+  mentor: 'mentor',
+  mentee: 'mentee',
+  admin: 'admin',
+  super_admin: 'super_admin',
+};
