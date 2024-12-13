@@ -79,6 +79,8 @@ import MenteeTaskList from './component/Tasks/MenteeTaskList';
 import { Ticks } from 'chart.js';
 import SuperAdminTickets from './component/SuperAdmin/tickets/SuperAdminTickets';
 import AddNewTicket from './component/SuperAdmin/tickets/AddNewTicket';
+import { AuthLayout } from './component/Login/AuthLayout';
+import ViewTask from './component/Mentor/Task/viewTask';
 
 function App() {
   const PrivateRoute = () => {
