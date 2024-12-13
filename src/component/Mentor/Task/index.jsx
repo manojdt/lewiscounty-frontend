@@ -428,7 +428,6 @@ const MentorTask = () => {
 
   const mentorTaskColumn = [
     ...mentorTaskListColumns,
-    ,
     {
       field: 'created_date',
       headerName: 'Created Date',
@@ -736,47 +735,33 @@ const MentorTask = () => {
         </div>
       </Backdrop>
 
-      <div
-        className='px-3 py-5'
-        style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}
-      >
-        <div className='flex justify-between px-5 pb-4 mb-8 items-center'>
-          <div className='flex gap-5 items-center text-[20px]'>
-            <p
-              className='text-[20px] text-[#18283D]'
-              style={{ fontWeight: 500 }}
-            >
-              Mentee Task
-            </p>
-          </div>
-          <Stack direction={'row'} alignItems={'center'} spacing={2}>
-            <div className='relative'>
-              <input
-                type='text'
-                id='search-navbar'
-                className='block w-full p-2 text-sm text-gray-900 border-none'
-                placeholder='Search here...'
-                style={{
-                  border: '1px solid rgba(29, 91, 191, 1)',
-                  borderRadius: '1px',
-                  height: '45px',
-                  width: '280px',
-                }}
-                onChange={(e) => handleSearch(e.target.value)}
-              />
-              <div className='absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none'>
-                <img src={SearchIcon} alt='SearchIcon' />
-              </div>
-            </div>
-            <Button
-              btnType='button'
-              btnCls='w-[150px]'
-              btnName={'Create Task'}
-              btnCategory='primary'
-              onClick={() => navigate('/assign-mentees?type=new')}
-            />
-          </Stack>
-        </div>
+
+
+            <div className='px-3 py-5' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
+                <div className='flex justify-between px-5 pb-4 mb-8 items-center'>
+                    <div className='flex gap-5 items-center text-[20px]'>
+                        <p className='text-[20px] text-[#18283D]' style={{ fontWeight: 500 }}>Mentee Task</p>
+                    </div>
+                    <Stack direction={"row"} alignItems={"center"} spacing={2}>
+                        <div className="relative">
+                            <input type="text" id="search-navbar" className="block w-full p-2 text-sm text-gray-900 border-none"
+                                placeholder="Search here..." style={{
+                                    border: '1px solid rgba(29, 91, 191, 1)',
+                                    borderRadius: '1px',
+                                    height: '45px',
+                                    width: '280px'
+                                }}
+
+                                onChange={(e) => handleSearch(e.target.value)}
+                            />
+                            <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
+                                <img src={SearchIcon} alt='SearchIcon' />
+                            </div>
+                        </div>
+                        <Button btnType="button" btnCls="w-[180px]" btnName={'Create Task'} btnCategory="primary" onClick={() => navigate("/assign-mentees?type=new")} />
+
+                    </Stack>
+                </div>
 
         <Backdrop
           sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}

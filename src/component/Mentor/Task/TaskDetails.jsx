@@ -10,7 +10,7 @@ import { useLocation, useNavigate, useParams, useSearchParams } from 'react-rout
 import { useDispatch, useSelector } from 'react-redux'
 import { Backdrop, Box, CircularProgress, Menu, MenuItem, Stack, Tab, Tabs, Typography } from '@mui/material'
 import { getMenteeTaskfromMentor, getMenteeTaskListFromMentor, getSpecificTask, updateAllPassFail, updateCancelAllTask, updateSinglePassFail, updateTaskMark } from '../../../services/task'
-import { dateFormat, dateTimeFormat, getFiles } from '../../../utils'
+import { dateFormat, dateFormatRever, dateTimeFormat, getFiles } from '../../../utils'
 import { TaskApiStatus, taskStatus, TaskStatus, taskStatusColorNew } from '../../../utils/constant'
 import { useForm } from 'react-hook-form'
 import dayjs from 'dayjs';
@@ -527,7 +527,7 @@ const MentorTaskDetails = () => {
 
                 <Button
                     btnType='button'
-                    btnCls='w-[110px]'
+                    btnCls='w-[180px]'
                     btnName={'Edit Task'}
                     btnCategory='primary'
                     onClick={() => handleEditTask()}
@@ -570,7 +570,7 @@ const MentorTaskDetails = () => {
                                         Program Start Date and Time
                                     </th>
                                     <td className="px-6 py-4 text-white !text-[14px]" style={{ background: 'rgba(0, 174, 189, 1)' }}>
-                                        {dateTimeFormat(menteeTaskList?.program_startdate)}
+                                        {dateFormatRever(menteeTaskList?.program_startdate)}
                                     </td>
                                 </tr>
 
@@ -592,7 +592,7 @@ const MentorTaskDetails = () => {
                                         Program End Date and Time
                                     </th>
                                     <td className="px-6 py-4 text-white !text-[14px]" style={{ background: 'rgba(29, 91, 191, 1)' }}>
-                                        {dateTimeFormat(menteeTaskList?.program_enddate) || ''}
+                                        {dateFormatRever(menteeTaskList?.program_enddate) || ''}
                                     </td>
                                 </tr>
                             </tbody>
