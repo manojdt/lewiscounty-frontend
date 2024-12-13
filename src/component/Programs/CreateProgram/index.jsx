@@ -34,6 +34,7 @@ export default function CreatePrograms() {
     const [currentStep, setCurrentStep] = useState(1)
     const [stepData, setStepData] = useState({})
     const [actionModal, setActionModal] = useState('')
+    const [onBlureFunction,setOBlureFunction] = useState(false)
     const [programAllFields, setProgramAllFields] = useState(ProgramFields)
     const [formDetails, setFormDetails] = useState({ category: [], materials: [], skills: [], certificate: [], members: [] })
     const [logo, setLogo] = useState({})
@@ -65,14 +66,17 @@ export default function CreatePrograms() {
 
 // }
 const onBlureFun = (data) => {
+    setOBlureFunction(true)
     dispatch(getProgramNameValidate(data)).then((res) => {
         if (res?.meta?.requestStatus === "fulfilled") {
             if (!res?.payload?.is_available) {
                 // setCurrentStep(currentStep + 1)
+                setOBlureFunction(false)
                 setTabActionInfo({ ...tabActionInfo, activeTab: ProgramTabs[currentStep].key })
             }
         }
     })
+    setOBlureFunction(false)
 }
     const handleNextStep = (data, stData) => {
         setStepWiseData(stData)
@@ -537,7 +541,7 @@ const onBlureFun = (data) => {
 
                 <Backdrop
                     sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                    open={loading.create || apiLoading || status === programStatus.create || status === programStatus.exist || status === programStatus.error
+                    open={loading.create || onBlureFunction?!apiLoading:onBlureFunction || status === programStatus.create || status === programStatus.exist || status === programStatus.error
                         || programLoading || updateProgramInfo || status === programStatus.update
                     }
                 >
