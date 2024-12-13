@@ -10,6 +10,7 @@ export const NewTicketFields = [
     },
     size: true,
     disable: true,
+    width: 'col-span-1',
   },
   {
     type: 'input',
@@ -22,6 +23,7 @@ export const NewTicketFields = [
     },
     size: true,
     disable: true,
+    width: 'col-span-1',
   },
   {
     type: 'input',
@@ -34,6 +36,7 @@ export const NewTicketFields = [
     },
     size: true,
     disable: true,
+    width: 'col-span-1',
   },
   {
     type: 'radio',
@@ -58,6 +61,7 @@ export const NewTicketFields = [
       // required: "This field is required",
     },
     size: true,
+    width: 'col-span-1',
   },
   {
     type: 'input',
@@ -73,7 +77,7 @@ export const NewTicketFields = [
   },
 
   {
-    type: 'input',
+    type: 'date',
     name: 'due_date',
     fieldtype: 'text',
     label: 'Due date',
@@ -82,6 +86,7 @@ export const NewTicketFields = [
       // required: "This field is required",
     },
     size: true,
+    width: 'col-span-1',
   },
   {
     type: 'file',

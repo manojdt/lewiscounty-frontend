@@ -525,15 +525,15 @@ export const MenteePersonalInformationFields = [
     options: [
       {
         key: 'male',
-        value: 'Male',
+        value: 'male',
       },
       {
         key: 'female',
-        value: 'Female',
+        value: 'female',
       },
       {
         key: 'others',
-        value: 'Others',
+        value: 'others',
       },
     ],
     inputRules: {
@@ -2361,6 +2361,30 @@ export const CreateMeetingFields = [
     },
     width: 'w-full',
     icon: 'add',
+  },
+  {
+    type: 'dropdown',
+    name: 'event',
+    label: 'Event',
+    placeholder: 'Select the Event',
+    inputRules: {
+      required: 'This field is required',
+    },
+    options: [
+      {
+        key: 'all_event',
+        value: 'All Event',
+      },
+      {
+        key: 'this_event',
+        value: 'This Event',
+      },
+      {
+        key: 'this_event_and_following_events',
+        value: 'This Event And Following Events',
+      },
+    ],
+    width: 'w-full',
   },
 ];
 

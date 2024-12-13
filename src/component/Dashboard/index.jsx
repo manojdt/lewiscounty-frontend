@@ -1,18 +1,19 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Mentor } from "./Mentor";
-import { Mentee } from "./Mentee";
-import Admin from "./Admin";
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Mentor } from './Mentor';
+import { Mentee } from './Mentee';
+import Admin from './Admin';
 import './dashboard.css';
-import { useNavigate } from "react-router-dom";
-
+import { useNavigate } from 'react-router-dom';
+import { user } from '../../utils/constant';
+import SuperAdmin from './super-admin/SuperAdmin';
 
 export const Dashboard = () => {
-  const userInfo = useSelector(state => state.userInfo)
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const userInfo = useSelector((state) => state.userInfo);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const role = userInfo.data.role
+  const role = userInfo.data.role;
 
   // useEffect(() => {
   //   if(userInfo?.data?.userinfo?.approve_status === 'new'){
@@ -22,21 +23,17 @@ export const Dashboard = () => {
   //   }
   // },[userInfo])
 
-  if (role === '') return <></>
+  if (role === '') return <></>;
 
   return (
     <div>
-      {
-        role === 'mentee' && <Mentee />
-      }
+      {role === user.mentee && <Mentee />}
 
-      {
-        role === 'mentor' && <Mentor />
-      }
+      {role === user.mentor && <Mentor />}
 
-      {
-        role === 'admin' && <Admin />
-      }
+      {role === user.admin && <Admin />}
+
+      {role === user.super_admin && <SuperAdmin />}
     </div>
   );
 };

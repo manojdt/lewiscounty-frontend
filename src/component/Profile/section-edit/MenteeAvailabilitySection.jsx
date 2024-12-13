@@ -51,7 +51,9 @@ const MenteeAvailabilitySection = ({ type }) => {
                   {field?.inputRules?.required && '*'}
                 </label>
                 {type === view.viewOnly ? (
-                  <p className='text-[14px] pt-3'>{getValues(field.name)}</p>
+                  <p className='text-[14px] pt-3'>
+                    {getValues(field.name) ? getValues(field.name) : '-'}
+                  </p>
                 ) : (
                   <Controller
                     name={field.name}
@@ -63,7 +65,7 @@ const MenteeAvailabilitySection = ({ type }) => {
                         {...register(field.name, field.inputRules)}
                         type={field.fieldtype}
                         className='w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none
-                                                            focus-visible:outline-none text-[14px] h-[60px]'
+                                                                    focus-visible:outline-none text-[14px] h-[60px]'
                         placeholder={field.placeholder}
                         style={{
                           color: '#232323',
@@ -98,33 +100,39 @@ const MenteeAvailabilitySection = ({ type }) => {
                 >
                   {field.label}
                 </label>
-                <Controller
-                  name={field.name}
-                  control={control}
-                  defaultValue=''
-                  rules={field.inputRules}
-                  render={({ field: controllerField }) => (
-                    <div className='flex items-center justify-start gap-6 mt-6'>
-                      {field.options.map((option) => (
-                        <label
-                          className='flex items-center justify-center gap-1'
-                          key={option.key}
-                          style={{ marginRight: '8px' }}
-                        >
-                          <input
-                            type='radio'
-                            value={option.value}
-                            checked={controllerField.value === option.value}
-                            onChange={(e) =>
-                              controllerField.onChange(e.target.value)
-                            }
-                          />
-                          {option.value}
-                        </label>
-                      ))}
-                    </div>
-                  )}
-                />
+                {type === view.viewOnly ? (
+                  <p className='text-[14px] pt-3'>
+                    {getValues(field.name) ? getValues(field.name) : '-'}
+                  </p>
+                ) : (
+                  <Controller
+                    name={field.name}
+                    control={control}
+                    defaultValue=''
+                    rules={field.inputRules}
+                    render={({ field: controllerField }) => (
+                      <div className='flex items-center justify-start gap-6 mt-6'>
+                        {field.options.map((option) => (
+                          <label
+                            className='flex items-center justify-center gap-1'
+                            key={option.key}
+                            style={{ marginRight: '8px' }}
+                          >
+                            <input
+                              type='radio'
+                              value={option.value}
+                              checked={controllerField.value === option.value}
+                              onChange={(e) =>
+                                controllerField.onChange(e.target.value)
+                              }
+                            />
+                            {option.value}
+                          </label>
+                        ))}
+                      </div>
+                    )}
+                  />
+                )}
                 {errors[field.name] && (
                   <p style={{ color: 'red', fontSize: '12px' }}>
                     {errors[field.name]?.message}
@@ -145,33 +153,39 @@ const MenteeAvailabilitySection = ({ type }) => {
                 >
                   {field.label}
                 </label>
-                <Controller
-                  name={field.name}
-                  control={control}
-                  defaultValue=''
-                  rules={field.inputRules}
-                  render={({ field: controllerField }) => (
-                    <div className='flex items-center justify-start gap-6 mt-6'>
-                      {field.options.map((option) => (
-                        <label
-                          className='flex items-center justify-center gap-1'
-                          key={option.key}
-                          style={{ marginRight: '8px' }}
-                        >
-                          <input
-                            type='radio'
-                            value={option.value}
-                            checked={controllerField.value === option.value}
-                            onChange={(e) =>
-                              controllerField.onChange(e.target.value)
-                            }
-                          />
-                          {option.value}
-                        </label>
-                      ))}
-                    </div>
-                  )}
-                />
+                {type === view.viewOnly ? (
+                  <p className='text-[14px] pt-3'>
+                    {getValues(field.name) ? getValues(field.name) : '-'}
+                  </p>
+                ) : (
+                  <Controller
+                    name={field.name}
+                    control={control}
+                    defaultValue=''
+                    rules={field.inputRules}
+                    render={({ field: controllerField }) => (
+                      <div className='flex items-center justify-start gap-6 mt-6'>
+                        {field.options.map((option) => (
+                          <label
+                            className='flex items-center justify-center gap-1'
+                            key={option.key}
+                            style={{ marginRight: '8px' }}
+                          >
+                            <input
+                              type='radio'
+                              value={option.value}
+                              checked={controllerField.value === option.value}
+                              onChange={(e) =>
+                                controllerField.onChange(e.target.value)
+                              }
+                            />
+                            {option.value}
+                          </label>
+                        ))}
+                      </div>
+                    )}
+                  />
+                )}
                 {errors[field.name] && (
                   <p style={{ color: 'red', fontSize: '12px' }}>
                     {errors[field.name]?.message}
@@ -189,22 +203,28 @@ const MenteeAvailabilitySection = ({ type }) => {
                 >
                   {field.label}
                 </label>
-                <Controller
-                  name='date'
-                  control={control}
-                  defaultValue={null}
-                  rules={{ required: 'Date is required' }}
-                  render={({ field }) => (
-                    <Calendar
-                      className='calendar-control input-bg'
-                      value={field.value}
-                      onChange={(e) => field.onChange(e.value)}
-                      hourFormat='12'
-                      dateFormat='dd/mm/yy'
-                      showIcon
-                    />
-                  )}
-                />
+                {type === view.viewOnly ? (
+                  <p className='text-[14px] pt-3'>
+                    {getValues(field.name) ? getValues(field.name) : '-'}
+                  </p>
+                ) : (
+                  <Controller
+                    name='date'
+                    control={control}
+                    defaultValue={null}
+                    rules={{ required: 'Date is required' }}
+                    render={({ field }) => (
+                      <Calendar
+                        className='calendar-control input-bg'
+                        value={field.value}
+                        onChange={(e) => field.onChange(e.value)}
+                        hourFormat='12'
+                        dateFormat='dd/mm/yy'
+                        showIcon
+                      />
+                    )}
+                  />
+                )}
                 {errors.date && (
                   <p className='error' role='alert'>
                     {errors.date.message}
@@ -221,23 +241,29 @@ const MenteeAvailabilitySection = ({ type }) => {
                 >
                   {field.label}
                 </label>
-                <select
-                  {...register(field.name, field.inputRules)}
-                  className='w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg h-11
-                       focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]'
-                  placeholder={field.placeholder}
-                  style={{
-                    color: '#232323',
-                    borderRight: '16px solid transparent',
-                  }}
-                >
-                  <option value=''>Select</option>
-                  {field.options.map((option, index) => (
-                    <option value={option.key} key={index}>
-                      {option.value}
-                    </option>
-                  ))}
-                </select>
+                {type === view.viewOnly ? (
+                  <p className='text-[14px] pt-3'>
+                    {getValues(field.name) ? getValues(field.name) : '-'}
+                  </p>
+                ) : (
+                  <select
+                    {...register(field.name, field.inputRules)}
+                    className='w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg 
+                               focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]'
+                    placeholder={field.placeholder}
+                    style={{
+                      color: '#232323',
+                      borderRight: '16px solid transparent',
+                    }}
+                  >
+                    <option value=''>Select</option>
+                    {field.options.map((option, index) => (
+                      <option value={option.key} key={index}>
+                        {option.value}
+                      </option>
+                    ))}
+                  </select>
+                )}
                 {errors[field.name] && (
                   <p className='error' role='alert'>
                     {errors[field.name].message}

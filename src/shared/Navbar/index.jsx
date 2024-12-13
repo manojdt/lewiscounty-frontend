@@ -210,17 +210,19 @@ export const Navbar = () => {
     }
   }, []);
 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      dispatch(userActivities({ limit: 10 }));
-    }, 5000);
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     dispatch(userActivities({ limit: 10 }));
+  //   }, 5000);
 
-    return () => clearInterval(intervalId);
-  }, []);
+  //   return () => clearInterval(intervalId);
+  // }, []);
 
   useEffect(() => {
     dispatch(userActivities({ limit: 10 }));
   }, []);
+
+  console.log(userInfo.data.role);
 
   const [openSetting, setOpenSetting] = React.useState(false);
 
@@ -280,7 +282,7 @@ export const Navbar = () => {
       {!questionUpload && !documentUpload && (
         <nav className='bg-white border-gray-200'>
           <div className='flex justify-between'>
-            <div className='contain flex justify-between w-3/12 p-4'>
+            <div className='contain gap-24 flex justify-between w-3/12 p-4'>
               <div
                 className='site-logo cursor-pointer flex items-center space-x-3 rtl:space-x-reverse'
                 onClick={handleLogoClick}
@@ -289,6 +291,69 @@ export const Navbar = () => {
                   My Logo
                 </span>
               </div>
+              {userInfo?.data?.role === user.super_admin && (
+                <div>
+                  <ul
+                    // className='flex items-center justify-between h-full'
+                    style={{ gap: '40px' }}
+                    className={`flex flex-col ${
+                      !userInfo?.data?.is_registered
+                        ? 'ml-[150px]'
+                        : 'justify-center'
+                    } items-center p-4 md:p-0 mt-4 h-full font-medium border border-gray-100
+                    rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0`}
+                  >
+                    {userInfo?.data?.is_registered && (
+                      <li
+                        className={`transition-all duration-300 ${
+                          pathname === '/dashboard'
+                            ? 'dashboard-menu-active'
+                            : ''
+                        }`}
+                      >
+                        <span
+                          onClick={() => navigate('/dashboard')}
+                          className='block py-2 px-3 rounded md:p-0 cursor-pointer'
+                          aria-current='page'
+                        >
+                          Dashboard
+                        </span>
+                      </li>
+                    )}
+                    {userInfo?.data?.is_registered && (
+                      <li
+                        className={`transition-all duration-300 ${
+                          pathname === '/members' ? 'dashboard-menu-active' : ''
+                        }`}
+                      >
+                        <span
+                          onClick={() => navigate('/members')}
+                          className='block py-2 px-3 rounded md:p-0 cursor-pointer'
+                          aria-current='page'
+                        >
+                          Members
+                        </span>
+                      </li>
+                    )}
+
+                    {userInfo?.data?.is_registered && (
+                      <li
+                        className={`transition-all duration-300 ${
+                          pathname === '/tickets' ? 'dashboard-menu-active' : ''
+                        }`}
+                      >
+                        <span
+                          onClick={() => navigate('/tickets')}
+                          className='block py-2 px-3 rounded md:p-0 cursor-pointer'
+                          aria-current='page'
+                        >
+                          Tickets
+                        </span>
+                      </li>
+                    )}
+                  </ul>
+                </div>
+              )}
               <div className='navbar-mobile-menu' onClick={handleLeftSidebar}>
                 <div className='user-image'>
                   <img

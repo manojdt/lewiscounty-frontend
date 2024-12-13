@@ -15,7 +15,7 @@ import YearView from './YearView';
 import TodayView from './TodayView';
 import useAppointments from '../../hooks/useAppointments';
 
-const   CalendarMain = ({
+const CalendarMain = ({
   title = 'Calendar',
   addSection = true,
   events,

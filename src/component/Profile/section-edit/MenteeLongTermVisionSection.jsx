@@ -212,7 +212,7 @@ const MenteeLongTermVisionSection = ({ type }) => {
                 </label>
                 <select
                   {...register(field.name, field.inputRules)}
-                  className='w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg h-11
+                  className='w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg 
                        focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]'
                   placeholder={field.placeholder}
                   style={{

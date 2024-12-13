@@ -12,6 +12,7 @@ import FeedIcon from '../assets/icons/Feed.svg';
 import TaskIcon from '../assets/icons/TaskMenu.svg';
 import GoalIcon from '../assets/icons/GoalMenu.svg';
 import DiscussionIcon from '../assets/icons/discussionIcon.svg';
+import { user } from '../utils/constant';
 
 export default function Layout({ subheader }) {
   const navigate = useNavigate();
@@ -147,7 +148,10 @@ export default function Layout({ subheader }) {
   return (
     <div>
       <Navbar />
-      {!subheader && userInfo?.data?.is_registered && !documentUpload ? (
+      {!subheader &&
+      userInfo?.data?.is_registered &&
+      !documentUpload &&
+      userInfo.data.role !== user.super_admin ? (
         <div
           className='secondary-menu py-8'
           style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)' }}
@@ -161,7 +165,7 @@ export default function Layout({ subheader }) {
           >
             {userInfo?.data?.is_registered && (
               <li
-                className={`${
+                className={`transition-all duration-300 ${
                   pathname === '/dashboard' ? 'dashboard-menu-active' : ''
                 }`}
               >
@@ -176,7 +180,7 @@ export default function Layout({ subheader }) {
             )}
 
             <li
-              className={`${
+              className={`transition-all duration-300 ${
                 pathname === '/programs' ? 'dashboard-menu-active' : ''
               }`}
             >
@@ -189,7 +193,7 @@ export default function Layout({ subheader }) {
             </li>
             {role === 'mentee' && userInfo?.data?.is_registered && (
               <li
-                className={`${
+                className={`transition-all duration-300 ${
                   pathname === '/mentors' ? 'dashboard-menu-active' : ''
                 }`}
               >
@@ -204,7 +208,7 @@ export default function Layout({ subheader }) {
 
             {role === 'mentor' && userInfo?.data?.is_registered && (
               <li
-                className={`${
+                className={`transition-all duration-300 ${
                   pathname === '/mentees' ? 'dashboard-menu-active' : ''
                 }`}
               >
@@ -219,7 +223,7 @@ export default function Layout({ subheader }) {
 
             {role === 'admin' && (
               <li
-                className={`${
+                className={`transition-all duration-300 ${
                   pathname === '/members' ? 'dashboard-menu-active' : ''
                 }`}
               >
@@ -234,7 +238,7 @@ export default function Layout({ subheader }) {
 
             {userInfo?.data?.is_registered && (
               <li
-                className={`${
+                className={`transition-all duration-300 ${
                   pathname === '/all-request' ? 'dashboard-menu-active' : ''
                 }`}
               >
@@ -270,7 +274,7 @@ export default function Layout({ subheader }) {
             {userInfo?.data?.is_registered && (
               <>
                 <li
-                  className={`${
+                  className={`transition-all duration-300 ${
                     pathname === '/mentee-tasks' || pathname === '/mentor-tasks'
                       ? 'dashboard-menu-active'
                       : ''
@@ -289,7 +293,7 @@ export default function Layout({ subheader }) {
                 </li>
 
                 <li
-                  className={`${
+                  className={`transition-all duration-300 ${
                     pathname === '/goals' ? 'dashboard-menu-active' : ''
                   }`}
                 >
@@ -302,7 +306,7 @@ export default function Layout({ subheader }) {
                 </li>
 
                 <li
-                  className={`${
+                  className={`transition-all duration-300 ${
                     pathname === '/calendar' ? 'dashboard-menu-active' : ''
                   }`}
                 >

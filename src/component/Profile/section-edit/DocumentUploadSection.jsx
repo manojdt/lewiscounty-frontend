@@ -117,7 +117,9 @@ const DocumentUploadSection = ({ type, setRemoveFiles }) => {
                       {field.label}
                       {field?.inputRules?.required && '*'}
                     </label>
-                    <p className='text-[14px] mb-3'>{getValues(field.name)}</p>
+                    <p className='flex items-center flex-wrap justify-start gap-4'>
+                      {getValues(field.name) ? getValues(field.name) : '-'}
+                    </p>
                   </>
                 ) : (
                   <>
@@ -210,7 +212,7 @@ const DocumentUploadSection = ({ type, setRemoveFiles }) => {
                                   <div className='flex gap-3 items-center'>
                                     <img src={UploadIcon} alt='altlogo' />
                                     <span className='text-[12px] w-40 truncate'>
-                                      {item.name || item}
+                                      {item?.name || item}
                                     </span>
                                   </div>
                                   <img
@@ -219,7 +221,7 @@ const DocumentUploadSection = ({ type, setRemoveFiles }) => {
                                       handleDeleteFile(
                                         field.name,
                                         index,
-                                        item.props.id
+                                        item?.props?.id
                                       )
                                     }
                                     src={DeleteIcon}
