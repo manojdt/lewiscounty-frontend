@@ -722,7 +722,7 @@ const Goals = () => {
             pageSize: 5
         })
         dispatch(getGoalsHistory({
-            status: "new1",
+            status: "new",
             created_by: createdBy,
             time_frame: value,
             page: 1,
