@@ -1,5 +1,6 @@
 import React, { useCallback, useRef } from 'react'
 import {
+    LoginSocialFacebook,
     LoginSocialGoogle,
 } from "reactjs-social-login";
 
@@ -69,9 +70,21 @@ export default function SocialMediaLogin({ view = 'vertical' }) {
                         <Button fullWidth color='inherit' size='large' variant="outlined" startIcon={<img src={InstagramIcon} className='w-[20px]' alt='InstagramIcon' />}>
                             Continue with Instagram
                         </Button>
+                        {/* <LoginSocialFacebook
+                       appId={process.env.SOCIAL_AUTH_FACEBOOK_KEY} 
+                       onResolve={(e) => {
+                        console.log(e,"eeee")
+                        onLoginSuccess(e.data)
+                       }}
+                       onReject={(err) => {
+                        console.log("hbhbdhd", err);
+                       }}
+                        > */}
                         <Button fullWidth color='inherit' size='large' variant="outlined" startIcon={<img src={FacebookIcon} className='w-[20px]' alt='FacebookIcon' />}>
                             Continue with Facebook
                         </Button>
+                        {/* </LoginSocialFacebook> */}
+                       
                     </>
                     :
 
