@@ -179,15 +179,15 @@ const Goals = () => {
     }
 
     const getAllGoalData = (created_by = createdBy, user_id) => {
-        const res=seletedItem?.created_by?seletedItem?.created_by: user_id
-        dispatch(getGoalsCount({ time_frame: allTimeFrame, user_id: res }))
+        // const res=seletedItem?.created_by?seletedItem?.created_by: user_id
+        dispatch(getGoalsCount({ time_frame: allTimeFrame, user_id: user_id }))
         dispatch(getGoalsRequest({
             status: filterType,
             created_by: created_by,
             time_frame: requestTimeFrame,
             page: requestPaginationModel?.page + 1,
             limit: requestPaginationModel?.pageSize,
-            user_id:seletedItem?.created_by?seletedItem?.created_by: res
+            user_id:seletedItem?.created_by?seletedItem?.created_by: user_id
         }))
         dispatch(getGoalsHistory({
             status: filterType ?? "new",
@@ -195,7 +195,7 @@ const Goals = () => {
             time_frame: historyTimeFrame,
             page: historyPaginationModel?.page + 1,
             limit: historyPaginationModel?.pageSize,
-            user_id: res
+            user_id: user_id
         }))
     }
 
