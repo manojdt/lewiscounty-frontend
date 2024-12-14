@@ -64,7 +64,7 @@ export default function Programs() {
   const [search, setSearch] = useState('');
   const [programFilter, setProgramFilter] = useState({
     search: '',
-    datefilter: '',
+    datefilter: 'month',
   });
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -594,6 +594,7 @@ React.useEffect(() => {
                       border: 'none',
                     }}
                     onChange={handleDateFilter}
+                    value={programFilter?.datefilter}
                   >
                     <option value='day'>Day</option>
                     <option value='month'>Month</option>

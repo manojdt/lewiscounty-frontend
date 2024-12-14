@@ -57,6 +57,10 @@ export default function CreateCertificate() {
             reset()
             dispatch(updateReportLocalState({ programDetails: {} }))
         }
+        // return()=>{
+        //     reset()
+        //     dispatch(updateReportLocalState({ programDetails: {} }))
+        // }
     }, [])
 
     const onSubmit = (data) => {

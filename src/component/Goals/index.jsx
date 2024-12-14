@@ -179,6 +179,7 @@ const Goals = () => {
     }
 
     const getAllGoalData = (created_by = createdBy, user_id) => {
+        // const res=seletedItem?.created_by?seletedItem?.created_by: user_id
         dispatch(getGoalsCount({ time_frame: allTimeFrame, user_id: user_id }))
         dispatch(getGoalsRequest({
             status: filterType,
@@ -186,7 +187,7 @@ const Goals = () => {
             time_frame: requestTimeFrame,
             page: requestPaginationModel?.page + 1,
             limit: requestPaginationModel?.pageSize,
-            user_id: user_id
+            user_id:seletedItem?.created_by?seletedItem?.created_by: user_id
         }))
         dispatch(getGoalsHistory({
             status: filterType ?? "new",

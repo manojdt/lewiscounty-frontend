@@ -33,7 +33,9 @@ const AvailabilityAndCommitmentSection = ({ type }) => {
                   {field?.inputRules?.required && '*'}
                 </label>
                 {type === view.viewOnly ? (
-                  <p className='text-[14px] pt-3'>{getValues(field.name)}</p>
+                  <p className='text-[14px] pt-3'>
+                    {getValues(field.name) ? getValues(field.name) : '-'}
+                  </p>
                 ) : (
                   <Controller
                     name={field.name}

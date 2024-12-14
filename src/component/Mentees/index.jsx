@@ -38,6 +38,8 @@ export const Mentees = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const state = useLocation()?.state;
+  const [reason,setReason] = useState('')
+  const [reasonError, setReasonError] = React.useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const dispatch = useDispatch();
   const { menteeList, loading, status } = useSelector(
@@ -67,7 +69,7 @@ export const Mentees = () => {
       value: 'my-mentee',
     },
     {
-      name: 'New Follow Request',
+      name: 'New Follow Requests',
       value: 'new-request-mentees',
     },
   ];
@@ -109,7 +111,9 @@ export const Mentees = () => {
       follow_id: id,
       status: status,
     };
-
+if(reason){
+  payload.cancelled_reason=reason
+}
     dispatch(mentorAcceptReq(payload));
   };
 
@@ -120,6 +124,7 @@ export const Mentees = () => {
         activity: false,
         bool: true,
       });
+      setReason('')
       setTimeout(() => {
         closeConfirmation();
         getTableData();
@@ -323,7 +328,13 @@ export const Mentees = () => {
   };
 
   const handleConfirmBtn = () => {
-    handleConnectionReq(confirmation?.id, confirmation?.type);
+    if (confirmation?.type === 'reject' && !reason.trim()) {
+      setReasonError(true); // Set error if reason is empty
+      return; // Prevent further action
+    }
+      setReasonError(false);
+      handleConnectionReq(confirmation?.id, confirmation?.type);
+   
   };
 
   const closeConfirmation = () => {
@@ -335,6 +346,7 @@ export const Mentees = () => {
       type: '',
       id: '',
     });
+    setReason('')
   };
 
   const handleSearch = (searchText) => {
@@ -432,7 +444,7 @@ export const Mentees = () => {
             sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
             open={confirmation?.activity}
           >
-            <div className='popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center'>
+            <div className='popup-content w-3/6 bg-white flex flex-col gap-2 h-[430px] justify-center items-center'>
               <img
                 src={
                   confirmation?.type === 'reject'
@@ -446,7 +458,32 @@ export const Mentees = () => {
               >
                 {confirmation?.type === 'reject' ? 'Reject' : 'Connect'}
               </span>
+<div>
+  
 
+</div>
+{confirmation?.type === 'reject'?
+<div className="m-4">
+              <label className="block mb-2 text-black">Reason <span style={{color: 'red'}}>{'*'}</span></label>
+              <textarea
+                // disabled={disableEdit}
+                rows={5}
+                required
+                value={reason}
+                onChange={(e)=>{
+                  setReason(e.target.value)
+                  setReasonError(false)
+                }}
+                className={`text-xs p-2.5block p-2.5 input-bg w-[300px] text-gray-900  rounded-lg border  ${
+                reasonError ? 'border-red-500' : 'border-black'
+              }`}
+            ></textarea>
+            {reasonError && (
+              <p className="text-red-500 text-xs mt-1">
+                Please provide a reason for rejection.
+              </p>
+            )}
+            </div>:
               <div className='py-5'>
                 <p
                   style={{
@@ -462,8 +499,8 @@ export const Mentees = () => {
                   </span>
                   Mentee?
                 </p>
-              </div>
-              <div className='flex justify-center'>
+              </div>}
+              <div className='flex justify-center p-4'>
                 <div className='flex gap-6 justify-center align-middle'>
                   <Button
                     btnName='Cancel'

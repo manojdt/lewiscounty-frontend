@@ -10,7 +10,7 @@ import { useLocation, useNavigate, useParams, useSearchParams } from 'react-rout
 import { useDispatch, useSelector } from 'react-redux'
 import { Backdrop, Box, CircularProgress, Menu, MenuItem, Stack, Tab, Tabs, Typography } from '@mui/material'
 import { getMenteeTaskfromMentor, getMenteeTaskListFromMentor, getSpecificTask, updateAllPassFail, updateCancelAllTask, updateSinglePassFail, updateTaskMark } from '../../../services/task'
-import { dateFormat, dateTimeFormat, getFiles } from '../../../utils'
+import { dateFormat, dateFormatRever, dateTimeFormat, getFiles } from '../../../utils'
 import { TaskApiStatus, taskStatus, TaskStatus, taskStatusColorNew } from '../../../utils/constant'
 import { useForm } from 'react-hook-form'
 import dayjs from 'dayjs';
@@ -571,10 +571,10 @@ const MentorTaskDetails = () => {
                                 </tr>
                                 <tr className="bg-white border-b  dark:bg-gray-800">
                                     <th style={{ border: '1px solid rgba(0, 174, 189, 1)', background: '#fff', color: '#000' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap !text-[#18283D] !text-[14px]">
-                                        Program Start Date and Time
+                                        Program Start Date
                                     </th>
                                     <td className="px-6 py-4 text-white !text-[14px]" style={{ background: 'rgba(0, 174, 189, 1)' }}>
-                                        {dateTimeFormat(menteeTaskList?.program_startdate)}
+                                        {dateFormatRever(menteeTaskList?.program_startdate)}
                                     </td>
                                 </tr>
 
@@ -593,10 +593,10 @@ const MentorTaskDetails = () => {
                                 </tr>
                                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                     <th scope="row" style={{ border: '1px solid rgba(29, 91, 191, 1)', background: '#fff', color: '#000' }} className="px-6 py-4 font-medium whitespace-nowrap !text-[#18283D] !text-[14px]">
-                                        Program End Date and Time
+                                        Program End Date
                                     </th>
                                     <td className="px-6 py-4 text-white !text-[14px]" style={{ background: 'rgba(29, 91, 191, 1)' }}>
-                                        {dateTimeFormat(menteeTaskList?.program_enddate) || ''}
+                                        {dateFormatRever(menteeTaskList?.program_enddate) || ''}
                                     </td>
                                 </tr>
                             </tbody>

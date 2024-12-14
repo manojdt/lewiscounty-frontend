@@ -10,13 +10,23 @@ const MentorshipExperienceSection = ({ type }) => {
     handleSubmit,
     reset,
     control,
+    watch,
     getValues,
     setValue,
   } = useFormContext();
 
+  const hasPreviousMentorship = watch('prev_mentorship');
+
   return (
     <div className='grid grid-cols-2 gap-6'>
       {MentorShipExperienceFields.map((field) => {
+        if (
+          field.name === 'mentor_exp_desc' &&
+          hasPreviousMentorship !== 'Yes'
+        ) {
+          return null;
+        }
+
         switch (field.type) {
           case 'input':
             return (
@@ -33,7 +43,9 @@ const MentorshipExperienceSection = ({ type }) => {
                   {field?.inputRules?.required && '*'}
                 </label>
                 {type === view.viewOnly ? (
-                  <p className='text-[14px] pt-3'>{getValues(field.name)}</p>
+                  <p className='text-[14px] pt-3'>
+                    {getValues(field.name) ? getValues(field.name) : '-'}
+                  </p>
                 ) : (
                   <Controller
                     name={field.name}
@@ -80,37 +92,45 @@ const MentorshipExperienceSection = ({ type }) => {
                 >
                   {field.label}
                 </label>
-                <Controller
-                  name={field.name}
-                  control={control}
-                  defaultValue=''
-                  rules={field.inputRules}
-                  render={({ field: controllerField }) => (
-                    <div className='flex items-center justify-start gap-6 mt-6'>
-                      {field.options.map((option) => (
-                        <label
-                          className='flex items-center justify-center gap-1'
-                          key={option.key}
-                          style={{ marginRight: '8px' }}
-                        >
-                          <input
-                            type='radio'
-                            value={option.value}
-                            checked={controllerField.value === option.value}
-                            onChange={(e) =>
-                              controllerField.onChange(e.target.value)
-                            }
-                          />
-                          {option.value}
-                        </label>
-                      ))}
-                    </div>
-                  )}
-                />
-                {errors[field.name] && (
-                  <p style={{ color: 'red', fontSize: '12px' }}>
-                    {errors[field.name]?.message}
+                {type === view.viewOnly ? (
+                  <p className='text-[14px] pt-3'>
+                    {getValues(field.name) ? getValues(field.name) : '-'}
                   </p>
+                ) : (
+                  <>
+                    <Controller
+                      name={field.name}
+                      control={control}
+                      defaultValue=''
+                      rules={field.inputRules}
+                      render={({ field: controllerField }) => (
+                        <div className='flex items-center justify-start gap-6 mt-6'>
+                          {field.options.map((option) => (
+                            <label
+                              className='flex items-center justify-center gap-1'
+                              key={option.key}
+                              style={{ marginRight: '8px' }}
+                            >
+                              <input
+                                type='radio'
+                                value={option.value}
+                                checked={controllerField.value === option.value}
+                                onChange={(e) =>
+                                  controllerField.onChange(e.target.value)
+                                }
+                              />
+                              {option.value}
+                            </label>
+                          ))}
+                        </div>
+                      )}
+                    />
+                    {errors[field.name] && (
+                      <p style={{ color: 'red', fontSize: '12px' }}>
+                        {errors[field.name]?.message}
+                      </p>
+                    )}
+                  </>
                 )}
               </div>
             );

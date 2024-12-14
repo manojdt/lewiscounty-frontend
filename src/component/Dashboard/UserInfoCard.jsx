@@ -71,7 +71,7 @@ export default function UserInfoCard() {
                         {userInfo?.data?.first_name} {userInfo?.data?.last_name}
                     </h5>
                     <span className="text-sm text-gray-500 " style={{ textTransform: 'capitalize' }}>
-                        {userInfo.data.role} | Teaching Professional
+                        {userInfo.data.role} | {role === 'mentee'?"Student":role === 'mentor'?"Teaching Professional":role === 'admin'?"Organizational Admin":""}
                     </span>
                 </div>
 
