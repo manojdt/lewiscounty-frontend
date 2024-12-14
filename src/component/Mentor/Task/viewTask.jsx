@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
-import { getSpecificTask, updateSinglePassFail } from '../../../services/task';
+import { getSpecificTask, updateCancelAllTask, updateSinglePassFail } from '../../../services/task';
 import { useDispatch, useSelector } from 'react-redux';
 import { dateTimeFormat, getFiles } from '../../../utils';
 import { Backdrop, Box, Checkbox, Stack, Typography } from '@mui/material';
@@ -73,13 +73,18 @@ const ViewTask = () => {
         }
     }, [params])
 
-
-    const handleCancelSubmit = () => {
-        // dispatch().then((res) => {
-        //     if (res.meta.requestStatus === "fulfilled") {
-
-        //     }
-        // })
+console.log("taskDetails ==>", taskDetails)
+    const handleCancelSubmit = (reason) => {
+        const payload = {
+            task_id: taskDetails?.id,
+            type: "cancel_one_task",
+            reason: reason
+        }
+        dispatch(updateCancelAllTask(payload)).then((res) => {
+            if (res.meta.requestStatus === "fulfilled") {
+                navigate(-1)
+            }
+        })
 
         setCancelPopup({
             ...cancelPopup,
@@ -424,6 +429,7 @@ const ViewTask = () => {
                     }
 
                     {
+                        taskDetails.status === "cancel" &&
                         <Button
                             btnName='Close'
                             btnCategory='secondary'
@@ -434,7 +440,7 @@ const ViewTask = () => {
                 </Stack>
             </div>
             <CancelPopup open={cancelPopup?.bool} handleClosePopup={handleClosePopup} header="Cancel Task Reason"
-                handleSubmit={handleCancelSubmit} />
+                handleSubmit={(reason)=>handleCancelSubmit(reason)} />
 
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}

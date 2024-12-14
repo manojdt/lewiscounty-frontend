@@ -22,9 +22,11 @@ import { dateTimeFormat } from '../../utils';
 
 
 export default function CreateReport() {
+    const userInfo = useSelector(state => state.userInfo)
     const navigate = useNavigate()
     const [searchParams] = useSearchParams();
     const state = useLocation()?.state
+    const role = userInfo.data.role
     const dispatch = useDispatch()
     const { category, loading: apiLoading } = useSelector(state => state.programInfo)
     const { categoryPrograms, loading: reportsLoading, programDetails, status } = useSelector(state => state.reports)
@@ -52,6 +54,7 @@ export default function CreateReport() {
     }, [])
 
     const onSubmit = (data) => {
+        console.log("data ===>", data)
         const apiData = {
             // "category": parseInt(data.category),
             request_type: "report",
@@ -59,7 +62,7 @@ export default function CreateReport() {
             "name": data.report_name,
             "participated_mentees": data.participated_mentees,
             "comments": data.description,
-            "status": data?.action ?? null
+            "status": data?.action ?? "new"
         }
         dispatch(createReport(apiData)).then((res) => {
             if (res?.meta?.requestStatus === "fulfilled") {
@@ -105,26 +108,26 @@ export default function CreateReport() {
     console.log("programDetails===>", programDetails)
     useEffect(() => {
         // if (!state?.type) {
-            if (programDetails && Object.keys(programDetails).length) {
-                let payload = {
-                    mentor_name: programDetails.mentor_full_name,
-                    start_date: dateTimeFormat(programDetails.start_date),
-                    end_date: dateTimeFormat(programDetails.end_date),
-                    participated_mentees: programDetails.participated_mentees
-                }
-                if (searchParams.has('cat_id') && searchParams.has('program_id')) {
-                    payload = {
-                        ...payload,
-                        category: searchParams.get('cat_id'),
-                        program: searchParams.get('program_id')
-                    }
-                }
-                reset(payload)
+        if (programDetails && Object.keys(programDetails).length) {
+            let payload = {
+                mentor_name: programDetails.mentor_full_name,
+                start_date: dateTimeFormat(programDetails.start_date),
+                end_date: dateTimeFormat(programDetails.end_date),
+                participated_mentees: programDetails.participated_mentees
             }
+            if (searchParams.has('cat_id') && searchParams.has('program_id')) {
+                payload = {
+                    ...payload,
+                    category: searchParams.get('cat_id'),
+                    program: searchParams.get('program_id')
+                }
+            }
+            reset(payload)
+        }
 
-            if (searchParams.get('cat_id') !== '' && searchParams.get('program_id') !== '') {
-                setCommonLoading(false)
-            }
+        if (searchParams.get('cat_id') !== '' && searchParams.get('program_id') !== '') {
+            setCommonLoading(false)
+        }
         // }
     }, [programDetails])
 
@@ -454,9 +457,12 @@ export default function CreateReport() {
                             </div>
                             <div className="flex gap-6 justify-center align-middle py-16">
                                 <Button btnName='Cancel' btnCls="w-[13%]" btnCategory="secondary" onClick={() => navigate('/reports')} />
-                                <Button btnName='Save To Draft'
-                                    style={{ background: 'rgba(29, 91, 191, 1)', color: '#fff' }}
-                                    btnCls="w-[13%]" btnCategory="secondary" onClick={handleSubmit((d) => onSubmit({ ...d, action: 'draft' }))} />
+                                {
+                                    role !== "admin" &&
+                                    <Button btnName='Save To Draft'
+                                        style={{ background: 'rgba(29, 91, 191, 1)', color: '#fff' }}
+                                        btnCls="w-[13%]" btnCategory="secondary" onClick={handleSubmit((d) => onSubmit({ ...d, action: 'draft' }))} />
+                                }
                                 <Button btnType="submit" btnCls="w-[13%]" btnName='Submit' btnCategory="primary" />
                             </div>
                         </form>

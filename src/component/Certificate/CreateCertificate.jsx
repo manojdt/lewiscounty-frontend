@@ -21,6 +21,7 @@ import { createReport, getCompletedProgramsByCategoryId, getProgramsByCategoryId
 import ToastNotification from '../../shared/Toast';
 import { dateTimeFormat } from '../../utils';
 import { createCertificate } from '../../services/certificate';
+import { Calendar } from 'primereact/calendar';
 
 export default function CreateCertificate() {
     const navigate = useNavigate()
@@ -45,8 +46,11 @@ export default function CreateCertificate() {
         handleSubmit,
         reset,
         getValues,
-        setValue
+        setValue,
+        watch
     } = useForm();
+
+    const allFields = watch()
 
     React.useEffect(() => {
         if (state?.type === "new") {
@@ -61,7 +65,8 @@ export default function CreateCertificate() {
 
     const onSubmit = (data) => {
         const apiPayload = {
-            id: parseInt(data.program),
+            program: parseInt(data.program),
+            request_type: "certificate"
         }
         dispatch(createCertificate(apiPayload))
         // reset()
@@ -161,6 +166,43 @@ export default function CreateCertificate() {
     useEffect(() => {
         dispatch(getAllCategories())
     }, [])
+
+
+    useEffect(() => {
+
+        const selectedProgram = categoryPrograms?.filter((e) => e?.id === Number(allFields?.program))?.[0]
+
+        if (allFields?.program) {
+            reset({
+                ...getValues(),
+                mentor_name: selectedProgram?.mentor_name,
+                course_level: selectedProgram?.course_level,
+                start_date: new Date(selectedProgram?.start_date) ?? "",
+                end_date: new Date(selectedProgram?.end_date) ?? '',
+                duration: `${selectedProgram?.duration} Days`,
+                participated_mentees: "",
+                pass_mentee_list: "",
+                fail_mentee_list: "",
+            })
+        }
+    }, [allFields?.program])
+
+    useEffect(() => {
+        if (allFields?.category) {
+            reset({
+                ...getValues(),
+                program: "",
+                mentor_name: "",
+                course_level: "",
+                start_date: "",
+                end_date: "",
+                duration: "",
+                participated_mentees: "",
+                pass_mentee_list: "",
+                fail_mentee_list: "",
+            })
+        }
+    }, [allFields?.category])
 
 
     return (
@@ -330,7 +372,7 @@ export default function CreateCertificate() {
                                                                     field.type === 'date' ?
                                                                         <>
                                                                             <div className='relative input-bg'>
-                                                                                <input {...register(field.name, field.inputRules)}
+                                                                                {/* <input {...register(field.name, field.inputRules)}
                                                                                     type={field.fieldtype}
                                                                                     className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none 
                                                                                     focus-visible:outline-none text-[14px] h-[60px]"
@@ -341,6 +383,18 @@ export default function CreateCertificate() {
                                                                                     }}
                                                                                     disabled={field.disabled}
                                                                                     aria-invalid={!!errors[field.name]}
+                                                                                    value={getValues(field.name)}
+                                                                                    hourFormat="12"
+                                                                                    dateFormat="dd/mm/yy"
+                                                                                /> */}
+
+
+                                                                                <Calendar
+                                                                                    className='calendar-control w-full'
+                                                                                    value={getValues(field.name)}
+                                                                                    disabled={true}
+                                                                                    hourFormat="12"
+                                                                                    dateFormat="dd/mm/yy"
                                                                                 />
                                                                                 <img className='absolute top-5 right-2' src={CalendarIcon} alt="CalendarIcon" />
                                                                             </div>

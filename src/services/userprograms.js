@@ -264,7 +264,7 @@ export const getMenteePrograms = createAsyncThunk(
 
 
         // const queryParams = queryString && Object.keys(queryString).length ? `?${queryString.type}=${queryString.value}&limit=9` : '?limit=9'
-        const getUserProgram = await api.get(`mentee_program/all${queryParams}`);
+        const getUserProgram = await api.get(`programs${queryParams}`);
         if (getUserProgram.status === 200 && getUserProgram.data) {
             const response = {
                 ...getUserProgram.data,

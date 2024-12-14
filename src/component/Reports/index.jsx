@@ -18,7 +18,7 @@ import { Button } from '../../shared';
 import { deleteReports, getAllReports } from '../../services/reportsInfo';
 import { useDispatch, useSelector } from 'react-redux';
 import { pipeUrls, reportAllStatus, reportsStatus, reportStatus, reportStatusColor } from '../../utils/constant';
-import { reportColumns } from '../../utils/formFields';
+import { reportAdminColumns, reportColumns } from '../../utils/formFields';
 import api from '../../services/api';
 
 
@@ -68,6 +68,21 @@ const Reports = () => {
         }
     ]
 
+    const requestAdminBtn = [
+        {
+            name: 'My Reports',
+            key: 'all'
+        },
+        {
+            name: 'Approval Reports',
+            key: 'approved'
+        },
+        {
+            name: 'Cancel Reports',
+            key: 'rejected'
+        }
+    ]
+
     const handleClose = () => {
         setAnchorEl(null);
     };
@@ -87,7 +102,7 @@ const Reports = () => {
 
 
     const reportColumn = [
-        ...reportColumns.filter(rColumn => rColumn.status.includes(requestTab)),
+        ...(role === "admin" ? reportAdminColumns : reportColumns).filter(rColumn => rColumn.status.includes(requestTab)),
         {
             field: 'report_status',
             headerName: 'Status',
@@ -131,7 +146,7 @@ const Reports = () => {
                                 }}
                             >
                                 {
-                                    reportData.selectedItem[0]?.status === 'rejected' &&
+                                    (role === "mentor" && reportData.selectedItem[0]?.status === 'rejected') &&
                                     <MenuItem onClick={() => navigate(`/edit-report/${reportData.selectedItem[0].id}?type=re-open`)} className='!text-[12px]'>
                                         <img src={ViewIcon} alt="ViewIcon" className='pr-3 w-[30px]' />
                                         Re-Open
@@ -139,7 +154,7 @@ const Reports = () => {
                                 }
 
                                 {
-                                    (reportData.selectedItem[0]?.status === 'new' || reportData.selectedItem[0]?.status === 'pending' || reportData.selectedItem[0]?.status === 'draft') &&
+                                    (role === "mentor" && (reportData.selectedItem[0]?.status === 'new' || reportData.selectedItem[0]?.status === 'pending' || reportData.selectedItem[0]?.status === 'draft')) &&
 
                                     <MenuItem onClick={() => navigate(`/edit-report/${reportData.selectedItem[0].id}`)} className='!text-[12px]'>
                                         <img src={EditIcon} alt="EditIcon" className='pr-3 w-[30px]' />
@@ -163,7 +178,7 @@ const Reports = () => {
 
 
                                 {
-                                    (reportData.selectedItem[0]?.status === 'new' || reportData.selectedItem[0]?.status === 'pending' || reportData.selectedItem[0]?.status === 'draft') &&
+                                    (role === "mentor" && (reportData.selectedItem[0]?.status === 'new' || reportData.selectedItem[0]?.status === 'pending' || reportData.selectedItem[0]?.status === 'draft')) &&
                                     <MenuItem onClick={handleDeleteSelectedRows} className='!text-[12px]'>
                                         <img src={DeleteIcon} alt="DeleteIcon" className='pr-3 w-[27px]' />
                                         Delete
@@ -180,7 +195,7 @@ const Reports = () => {
         },
     ]
 
-    const title = requestBtns.find(option => option.key === requestTab)?.name || ''
+    const title = (role === "admin" ? requestAdminBtn : requestBtns).find(option => option.key === requestTab)?.name || ''
 
     const handleTab = (key) => {
         let typeString = `?type=${key}`
@@ -212,7 +227,7 @@ const Reports = () => {
         const filterDate = searchParams.get("filter_by");
         let query = {}
         if (filterType && filterType !== '') {
-            query.status = filterType === "cancel" ? "rejected" : filterType
+            query.status =  (role === "admin" && requestTab === "all") ? "approved" : filterType === "cancel" ? "rejected" : filterType
         }
 
         if (filterSearch && filterSearch !== '') {
@@ -224,7 +239,7 @@ const Reports = () => {
         }
         query.request_type = "report"
         if (role === "admin") {
-            query.requested_by = "mentor"
+            query.request_by = "mentor"
         }
         dispatch(getAllReports({ ...query, page: paginationModel?.page + 1, limit: paginationModel?.pageSize }));
     }
@@ -342,7 +357,7 @@ const Reports = () => {
                 <div className='mx-5'>
                     <div className='flex gap-7 mb-6'>
                         {
-                            requestBtns.map((actionBtn, index) =>
+                            (role === "admin" ? requestAdminBtn : requestBtns).map((actionBtn, index) =>
                                 <button key={index} className='px-5 py-4 text-[14px]' style={{
                                     background: requestTab === actionBtn.key ? 'linear-gradient(97.86deg, #005DC6 -15.07%, #00B1C0 112.47%)' :
                                         '#fff',
@@ -379,7 +394,7 @@ const Reports = () => {
                                 </div>
                             </div>
                         </div>
-                        <DataTable rows={allreports?.results ?? []} columns={reportColumn} handleSelectedRow={handleSelectedRow}
+                        <DataTable rows={allreports?.results ?? []} columns={ (role === "admin" && requestTab === "all") ? reportColumn?.filter((e)=> e?.field !== "report_status") : reportColumn} handleSelectedRow={handleSelectedRow}
                             rowCount={allreports?.count}
                             paginationModel={paginationModel} setPaginationModel={setPaginationModel}
                             hideFooter={allreports?.results?.length === 0} />

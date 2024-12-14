@@ -71,6 +71,7 @@ import {
     updateProgramMenteeRequest,
     updateProgramRequest,
     updateReportRequest,
+    updateTestimonial,
 } from "../../../services/request";
 import ToastNotification from "../../../shared/Toast";
 import MuiModal from "../../../shared/Modal";
@@ -338,7 +339,21 @@ export default function AllRequest() {
                 handleCancelCertificateApiRequest();
             }
         }
+
+        if (confirmPopup.requestType === "testimonial_request") {
+            handleTestimonialRequest()
+        }
     };
+
+    const handleTestimonialRequest = () => {
+        const payload = {
+            "request_id": seletedItem?.request_id,
+            "action": confirmPopup.type === "approve" ? "accept" : "reject"
+        }
+
+        dispatch(updateTestimonial(payload))
+        
+    }
 
     // Cancel Accept Popup
     const handleCancelConfirmPopup = () => {
@@ -391,7 +406,7 @@ export default function AllRequest() {
         dispatch(
             updateReportRequest({
                 id: seletedItem.id,
-                report_status: "approved",
+                status: "approved",
             })
         );
     };
@@ -542,6 +557,16 @@ export default function AllRequest() {
         handleClose();
     };
 
+    const handleCancelTestimonialRequest = () => {
+        handleOpenConfirmPopup(
+            "Testimonial Request",
+            currentRequestTab.key,
+            actionTab,
+            "reject"
+        );
+        handleClose();
+    };
+
     // Program Dropdown Cancel
     const handleCancelReportRequest = () => {
         setCancelPopup({ show: true, page: currentRequestTab.key });
@@ -671,7 +696,7 @@ export default function AllRequest() {
                             >
                                 <MenuItem
                                     onClick={(e) => {
-                                        const requestQuery =`&request_id=${seletedItem.id}`
+                                        const requestQuery = `&request_id=${seletedItem.id}`
                                         const url =
                                             ((role === "mentor" || role === "admin") && actionTab === "program_join") ?
                                                 `/mentee-details/${seletedItem.created_by}?type=mentee_request${requestQuery}`
@@ -1373,12 +1398,115 @@ export default function AllRequest() {
         },
     ];
 
+    const testimonialRequestColumn = [
+        ...testimonialRequestColumns,
+        {
+            field: "status",
+            headerName: "Status",
+            flex: 1,
+            id: 2,
+            renderCell: (params) => {
+                return (
+                    <>
+                        <div className="cursor-pointer flex items-center h-full relative">
+                            <span
+                                className="w-[80px] flex justify-center h-[30px] px-7"
+                                style={{
+                                    background: requestStatusColor[params.row.status]?.bgColor || "",
+                                    lineHeight: "30px",
+                                    borderRadius: "3px",
+                                    width: "110px",
+                                    height: "34px",
+                                    color: requestStatusColor[params.row.status]?.color || "",
+                                    fontSize: "12px",
+                                }}
+                            >
+                                {requestStatusText[params.row.status] || ""}
+                            </span>
+                        </div>
+                    </>
+                );
+            },
+        },
+        {
+            field: "action",
+            headerName: "Action",
+            flex: 1,
+            id: 4,
+            renderCell: (params) => {
+                return (
+                    <>
+                        <div
+                            className="cursor-pointer flex items-center h-full"
+                            onClick={(e) => handleMoreClick(e, params.row)}
+                        >
+                            <img src={MoreIcon} alt="MoreIcon" />
+                        </div>
+                        <Menu
+                            id="basic-menu"
+                            anchorEl={anchorEl}
+                            open={open}
+                            onClose={handleClose}
+                            MenuListProps={{
+                                "aria-labelledby": "basic-button",
+                            }}
+                        >
+                            {role === "admin" && (
+                                <>
+                                    <MenuItem
+                                        onClick={() =>
+                                            navigate(`/testimonialView/${seletedItem.request_id}`)
+                                        }
+                                        className="!text-[12px]"
+                                    >
+                                        <img
+                                            src={ViewIcon}
+                                            alt="AcceptIcon"
+                                            className="pr-3 w-[27px]"
+                                        />
+                                        View
+                                    </MenuItem>
+                                    {(seletedItem.status === "new" ||
+                                        seletedItem.status === "pending") && (
+                                            <>
+                                                <MenuItem
+                                                    onClick={handleAcceptCeritificateRequest}
+                                                    className="!text-[12px]"
+                                                >
+                                                    <img
+                                                        src={TickCircle}
+                                                        alt="AcceptIcon"
+                                                        className="pr-3 w-[27px]"
+                                                    />
+                                                    Approve
+                                                </MenuItem>
+                                                <MenuItem
+                                                    onClick={handleCancelTestimonialRequest}
+                                                    className="!text-[12px]"
+                                                >
+                                                    <img
+                                                        src={CloseCircle}
+                                                        alt="CancelIcon"
+                                                        className="pr-3 w-[27px]"
+                                                    />
+                                                    Reject
+                                                </MenuItem>
+                                            </>
+                                        )}
+                                </>
+                            )}
+                        </Menu>
+                    </>
+                );
+            },
+        },
+    ]
 
     const handleResetTab = (tab = actionTab) => {
         console.log("ab ===>", tab)
         switch (selectedTab) {
             case 'my':
-                if(role === "mentee"){
+                if (role === "mentee") {
                     setActiveTab("program_join")
                 }
                 if (selectedRequestedtype === "program_request") {
@@ -1494,15 +1622,15 @@ export default function AllRequest() {
     const getTestimonialRequestApi = () => {
         dispatch(
             getTestimonialRequest({
-                ...(filterStatus !== "all" && { rep_status: filterStatus }),
+                // ...(filterStatus !== "all" && { rep_status: filterStatus }),
                 page: paginationModel?.page + 1,
                 limit: paginationModel?.pageSize,
-                request_type: "testimonial",
-                ...(role === "admin" && { request_by: "mentor" }),
+                // request_type: "testimonial",
+                ...(role === "admin" && { request_by: selectedTab === "mentees" ? "mentee" : "mentor" }),
                 ...(filter.search !== "" && { search: filter.search }),
-                ...(filter.filter_by !== ""
-                    ? { filter_by: filter.filter_by }
-                    : { filter_by: "month" }),
+                // ...(filter.filter_by !== ""
+                //     ? { filter_by: filter.filter_by }
+                //     : { filter_by: "month" }),
             })
         );
     };
@@ -1796,6 +1924,20 @@ export default function AllRequest() {
                 dispatch(updateLocalRequest({ status: "" }));
             }, 3000);
         }
+
+        if (status === requestStatus.testimonialupdate) {
+            setShowToast({
+                show: true,
+                message: "Testimonial Request updated successfully",
+            });
+            getTestimonialRequestApi();
+            if (confirmPopup.show) resetConfirmPopup();
+            if (cancelPopup.show) resetCancelReasonPopup();
+            setTimeout(() => {
+                setShowToast({ show: false, message: "" });
+                dispatch(updateLocalRequest({ status: "" }));
+            }, [3000]);
+        }
     }, [status]);
 
     useEffect(() => {
@@ -1863,7 +2005,7 @@ export default function AllRequest() {
         }
         if (selectedRequestedtype === "testimonial_request") {
             setActiveTableDetails({
-                column: testimonialRequestColumns,
+                column: testimonialRequestColumn,
                 data: testimonialRequest?.results,
                 rowCount: testimonialRequest?.count,
             });
@@ -1885,8 +2027,9 @@ export default function AllRequest() {
         reportsRequestInfo,
         anchorEl,
         learningAccessRequests,
+        testimonialRequest
     ]);
-
+    console.log("testimonialRequest ===>", testimonialRequest)
     useEffect(() => {
         if (role !== "") {
             if (
@@ -2057,7 +2200,7 @@ export default function AllRequest() {
             }
 
             {
-                role === "admin" && 
+                role === "admin" &&
                 // requestAdminActionTab
                 <div
                     className="flex gap-x-4 mb-6"

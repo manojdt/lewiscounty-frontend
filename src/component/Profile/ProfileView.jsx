@@ -192,7 +192,7 @@ export default function ProfileView() {
 
         dispatch(updateProgramRequest({
           id: state?.data?.id,
-          action: "approved",
+          status: "approved",
         })).then(() => {
           setTimeout(() => {
             navigate('/all-request');
@@ -202,7 +202,7 @@ export default function ProfileView() {
         dispatch(
           updateProgramMenteeRequest({
             id: parseInt(searchParams.get('request_id')),
-            action: 'accept',
+            status: 'accept',
           })
         ).then(() => {
           setTimeout(() => {
@@ -259,7 +259,7 @@ export default function ProfileView() {
     if (state?.data?.id) {
       dispatch(updateProgramRequest({
         id: state?.data?.id,
-        action: "rejected",
+        status: "rejected",
         reason: data.cancel_reason,
       })).then(() => {
         setTimeout(() => {

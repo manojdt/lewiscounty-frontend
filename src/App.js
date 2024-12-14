@@ -80,6 +80,7 @@ import { Ticks } from 'chart.js';
 import SuperAdminTickets from './component/SuperAdmin/tickets/SuperAdminTickets';
 import AddNewTicket from './component/SuperAdmin/tickets/AddNewTicket';
 import { AuthLayout } from './component/Login/AuthLayout';
+import { TestimonialView } from './component/testimonialView';
 import ViewTask from './component/Mentor/Task/viewTask';
 
 function App() {
@@ -224,6 +225,7 @@ function App() {
           <Route path='/category' element={<Category />} />
           <Route path='/categoryView' element={<CategoryView />} />
           <Route path='/viewTask/:id' element={<ViewTask />} />
+          <Route path="/testimonialView/:id" element={<TestimonialView />} />          
         </Route>
       </Route>
 
