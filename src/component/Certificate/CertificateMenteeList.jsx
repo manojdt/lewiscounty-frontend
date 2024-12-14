@@ -212,7 +212,7 @@ export default function CertificateMenteeList() {
   const handleApproveCertificateApiRequest = () => {
     dispatch(updateCertificateRequest({
       "id": state?.rowId,
-      "status": "accept"
+      "status": "approved"
     })).then((res) => {
       if (res.meta.requestStatus === "fulfilled") {
         setActionPopup({
@@ -225,6 +225,7 @@ export default function CertificateMenteeList() {
             type: "",
             activity: false
           })
+          navigate(-1)
         }, 2000);
       }
     })
@@ -233,7 +234,7 @@ export default function CertificateMenteeList() {
   const handleCancelCertificateApiRequest = () => {
     dispatch(updateCertificateRequest({
       "id": state?.rowId,
-      "status": "cancel"
+      "status": "rejected"
     })).then((res) => {
       if (res.meta.requestStatus === "fulfilled") {
         setActionPopup({
@@ -246,6 +247,7 @@ export default function CertificateMenteeList() {
             type: "",
             activity: false
           })
+          navigate(-1)
         }, 2000);
       }
     })
@@ -312,7 +314,7 @@ export default function CertificateMenteeList() {
           </div>
           <div
             className='cursor-pointer'
-            onClick={() => navigate('/certificates')}
+            onClick={() => navigate(-1)}
           >
             <img src={Cancel} alt='link' className='w-[20px] h[10px]' />
           </div>
@@ -326,7 +328,7 @@ export default function CertificateMenteeList() {
           paginationModel={paginationModel}
           setPaginationModel={setPaginationModel}
         />
-        {searchParams.get('type') !== 'approved' && (
+        {(state?.status !== "approved" && state?.status !== "rejected") && 
           // <div>
           //   <div className='flex gap-6 justify-center align-middle py-16'>
           //     <Button
@@ -362,7 +364,7 @@ export default function CertificateMenteeList() {
               />
             </Stack>
           </Box>
-        )}
+        }
       </div>
 
       <Backdrop

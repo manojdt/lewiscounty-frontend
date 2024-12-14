@@ -74,10 +74,10 @@ export const Tasks = () => {
       name: 'Rejected Task',
       key: 'rejected',
     },
-    // {
-    //     name: 'Draft',
-    //     key: 'draft'
-    // },
+    {
+        name: 'Draft',
+        key: 'draft'
+    },
   ];
 
   const list = [...taskColumns].map((column) => {

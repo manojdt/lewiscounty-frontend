@@ -1827,7 +1827,7 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       type: 'input',
       name: 'reference_links',
       fieldtype: 'text',
-      label: 'Reference Books',
+      label: 'Reference Link',
       placeholder: 'Enter Reference Book with comma(,) seperators',
       inputRules: {
         required: 'This field is required',

@@ -1270,7 +1270,8 @@ export const taskStatus = {
   rejected: "Cancel",
   pending: "Pending",
   new: "New",
-  cancel: "Cancel"
+  cancel: "Cancel",
+  inprogress: "In Progress"
 }
 
 export const taskStatusColorNew = {
@@ -1293,6 +1294,10 @@ export const taskStatusColorNew = {
   cancel: {
     bg: "#FFE7E7",
     color: "#E0382D"
+  },
+  inprogress: {
+    bg: "#FFFBE9",
+    color: "#FFD500"
   },
 }
 export const view = {

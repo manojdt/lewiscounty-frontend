@@ -189,18 +189,18 @@ function TablePaginationActions(props) {
                         /> */}
                         {/* {props?.paginationModel.page + 1}</span> of
                     <span className='pl-1'>{Math.ceil(paginationDetails.rowCount / props?.paginationModel.pageSize)}</span> */}
-                    {props?.paginationModel?.page !== undefined 
-        ? props.paginationModel.page + 1 
-        : 1}
-</span> 
-of 
-<span className='pl-1'>
-    {paginationDetails?.rowCount && props?.paginationModel?.pageSize 
-        ? Math.ceil(paginationDetails.rowCount / props.paginationModel.pageSize) 
-        : 1}
-</span>
-                    
-                    </div>
+                        {props?.paginationModel?.page !== undefined
+                            ? props.paginationModel.page + 1
+                            : 1}
+                    </span>
+                    of
+                    <span className='pl-1'>
+                        {paginationDetails?.rowCount && props?.paginationModel?.pageSize
+                            ? Math.ceil(paginationDetails.rowCount / props.paginationModel.pageSize)
+                            : 1}
+                    </span>
+
+                </div>
                 <IconButton
                     onClick={handleBackButtonClick}
                     disabled={props?.paginationModel.page === 0}
@@ -272,6 +272,26 @@ export default function DataTable({ rows = [], columns, footerAction, footerComp
                 onPageChange={(e) => console.log('change', e)}
                 page={paginationModel?.page}
                 pageSize={paginationModel?.pageSize}
+                sx={{
+                    // "& .MuiDataGrid-cell": {
+                    //     textAlign: "center",
+                    //     justifyContent: "center",
+                    //     display: "flex",
+                    //     width: "100%"
+                    // },
+                    // "& .MuiDataGrid-columnHeaders": {
+                    //     textAlign: "center",
+                    //     justifyContent: "center",
+                    //     display: "flex",
+                    //     width: "100%"
+                    // },
+                    "& .MuiDataGrid-cell:focus": {
+                        outline: "none",
+                    },
+                    "& .MuiDataGrid-cell:focus-within": {
+                        outline: "none",
+                    },
+                }}
                 {
                 ...footerComponent ?
                     {
