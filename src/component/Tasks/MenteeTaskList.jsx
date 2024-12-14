@@ -63,7 +63,7 @@ export default function MenteeTaskList() {
           </div>
           <div
             className='cursor-pointer'
-            onClick={() => navigate(state?.from === "program" ? -1 : '/certificates')}
+            onClick={() => navigate(-1)}
           >
             <img src={Cancel} alt='link' className='w-[20px] h[10px]' />
           </div>

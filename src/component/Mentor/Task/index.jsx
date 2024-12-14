@@ -437,7 +437,7 @@ const MentorTask = () => {
         return (
           <div>
             {params?.row?.assign_task_created_at
-              ? dayjs(params?.row?.assign_task_created_at).format('DD-MM-YYYY')
+              ? dayjs(params?.row?.assign_task_created_at).format('DD/MM/YYYY')
               : '...'}
           </div>
         );
@@ -452,61 +452,61 @@ const MentorTask = () => {
         return (
           <div>
             {params?.row?.due_date
-              ? dayjs(params.row.due_date).format('DD-MM-YYYY')
+              ? dayjs(params.row.due_date).format('DD/MM/YYYY')
               : '...'}
           </div>
         );
       },
     },
-    {
-      field: 'file_by',
-      headerName: 'Link',
-      flex: 1,
-      id: 2,
-      renderCell: (params) => {
-        if (params.row.files && params.row.files.length) {
-          const files = fileNameString(params.row.files);
-          return (
-            <>
-              {
-                <div className='flex  items-center'>
-                  <a
-                    className='underline pr-3'
-                    href={params.row.files[0].files}
-                    target='_blank'
-                    style={{ color: 'rgba(24, 40, 61, 1)' }}
-                    title={files.fullName}
-                  >
-                    {files.filename}
-                  </a>
-                  {files.remainingCount > 0 && (
-                    <span
-                      style={{
-                        background: 'rgb(217, 228, 242)',
-                        color: 'rgb(29, 91, 191)',
-                        borderRadius: '50%',
-                        fontWeight: 'bold',
-                        width: '35px',
-                        height: '35px',
-                        marginTop: '4px',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}
-                      className='cursor-pointer'
-                      onClick={() => handleFileLink(params.row.files)}
-                    >
-                      + {files.remainingCount}
-                    </span>
-                  )}
-                </div>
-              }
-            </>
-          );
-        }
-        return <></>;
-      },
-    },
+    // {
+    //   field: 'file_by',
+    //   headerName: 'Link',
+    //   flex: 1,
+    //   id: 2,
+    //   renderCell: (params) => {
+    //     if (params.row.files && params.row.files.length) {
+    //       const files = fileNameString(params.row.files);
+    //       return (
+    //         <>
+    //           {
+    //             <div className='flex  items-center'>
+    //               <a
+    //                 className='underline pr-3'
+    //                 href={params.row.files[0].files}
+    //                 target='_blank'
+    //                 style={{ color: 'rgba(24, 40, 61, 1)' }}
+    //                 title={files.fullName}
+    //               >
+    //                 {files.filename}
+    //               </a>
+    //               {files.remainingCount > 0 && (
+    //                 <span
+    //                   style={{
+    //                     background: 'rgb(217, 228, 242)',
+    //                     color: 'rgb(29, 91, 191)',
+    //                     borderRadius: '50%',
+    //                     fontWeight: 'bold',
+    //                     width: '35px',
+    //                     height: '35px',
+    //                     marginTop: '4px',
+    //                     display: 'flex',
+    //                     justifyContent: 'center',
+    //                     alignItems: 'center',
+    //                   }}
+    //                   className='cursor-pointer'
+    //                   onClick={() => handleFileLink(params.row.files)}
+    //                 >
+    //                   + {files.remainingCount}
+    //                 </span>
+    //               )}
+    //             </div>
+    //           }
+    //         </>
+    //       );
+    //     }
+    //     return <></>;
+    //   },
+    // },
     {
       field: 'action',
       headerName: 'Action',
@@ -737,10 +737,10 @@ const MentorTask = () => {
 
 
 
-            <div className='px-3 py-5' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
+            <div className='px-3 py-5 !border !border-[#DBE0E5] rounded-[10px]'>
                 <div className='flex justify-between px-5 pb-4 mb-8 items-center'>
                     <div className='flex gap-5 items-center text-[20px]'>
-                        <p className='text-[20px] text-[#18283D]' style={{ fontWeight: 500 }}>Mentee Task</p>
+                        <p className='text-[20px] text-[#18283D]' style={{ fontWeight: 500 }}>Mentees Task</p>
                     </div>
                     <Stack direction={"row"} alignItems={"center"} spacing={2}>
                         <div className="relative">

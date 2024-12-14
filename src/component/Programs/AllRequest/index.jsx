@@ -1356,7 +1356,12 @@ export default function AllRequest() {
                                 <>
                                     <MenuItem
                                         onClick={() =>
-                                            navigate(`/certificate_mentees/${seletedItem.program}`)
+                                            navigate(`/certificate_mentees/${seletedItem.program}`, {
+                                                state: {
+                                                    rowId: seletedItem?.id,
+                                                    status: seletedItem?.status
+                                                }
+                                            })
                                         }
                                         className="!text-[12px]"
                                     >
@@ -1508,7 +1513,6 @@ export default function AllRequest() {
     ]
 
     const handleResetTab = (tab = actionTab) => {
-        console.log("ab ===>", tab)
         switch (selectedTab) {
             case 'my':
                 if (role === "mentee") {
@@ -1549,7 +1553,6 @@ export default function AllRequest() {
     };
 
     const getProgramRequestApi = () => {
-        console.log("actionTab ==>", actionTab)
         let payload = {
             request_type: actionTab,
             ...(filterStatus !== "all" ? { status: filterStatus } : ""),
@@ -2034,7 +2037,7 @@ export default function AllRequest() {
         learningAccessRequests,
         testimonialRequest
     ]);
-    console.log("testimonialRequest ===>", testimonialRequest)
+
     useEffect(() => {
         if (role !== "") {
             if (

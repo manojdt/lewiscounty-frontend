@@ -8,7 +8,7 @@ import UploadIcon from "../../../assets/images/image_1x.png"
 import { Button } from '../../../shared'
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { Backdrop, Box, CircularProgress, Menu, MenuItem, Stack, Tab, Tabs, Typography } from '@mui/material'
+import { Backdrop, Box, CircularProgress, Grid, Menu, MenuItem, Stack, Tab, Tabs, Typography } from '@mui/material'
 import { getMenteeTaskfromMentor, getMenteeTaskListFromMentor, getSpecificTask, updateAllPassFail, updateCancelAllTask, updateSinglePassFail, updateTaskMark } from '../../../services/task'
 import { dateFormat, dateFormatRever, dateTimeFormat, getFiles } from '../../../utils'
 import { TaskApiStatus, taskStatus, TaskStatus, taskStatusColorNew } from '../../../utils/constant'
@@ -46,7 +46,7 @@ const MentorTaskDetails = () => {
         title: "Cancel Task Reason",
         pass: false
     })
-    const [newType,setNewType] =React.useState("")
+    const [newType, setNewType] = React.useState("")
 
     const handleClose = () => {
         setAnchorEl(null);
@@ -71,7 +71,7 @@ const MentorTaskDetails = () => {
             key: "pending"
         },
         {
-            name: "In Progress",
+            name: "Mentee Task Status",
             key: "inprogress"
         },
         {
@@ -413,8 +413,8 @@ const MentorTaskDetails = () => {
     const handleCancelAllMentee = (reason = "") => {
         // updateCancelAllTask
         const payload = {
-            task_id: (selectedTab === "new" && newType === "newTab") ? selectedItem?.id :  selectedTab === "" ? selectedItem?.id : menteeTaskList?.assign_task_id,
-            type: (selectedTab === "new" && newType === "newTab") ?"cancel_one_task" : selectedTab === "" ? "cancel_one_task" : "cancel_all_tasks",
+            task_id: (selectedTab === "new" && newType === "newTab") ? selectedItem?.id : selectedTab === "" ? selectedItem?.id : menteeTaskList?.assign_task_id,
+            type: (selectedTab === "new" && newType === "newTab") ? "cancel_one_task" : selectedTab === "" ? "cancel_one_task" : "cancel_all_tasks",
             reason: reason
         }
         dispatch(updateCancelAllTask(payload)).then((res) => {
@@ -492,6 +492,28 @@ const MentorTaskDetails = () => {
 
     }
 
+    const leftGridData = [
+        {
+            title: "Category",
+            value: menteeTaskList?.program_category_name ?? ''
+        },
+        {
+            title: "Program Start Date",
+            value: dateFormatRever(menteeTaskList?.program_startdate)
+        },
+    ]
+
+    const rightGridData = [
+        {
+            title: "Program Name",
+            value: menteeTaskList?.program_name
+        },
+        {
+            title: "Program End Date",
+            value: dateFormatRever(menteeTaskList?.program_enddate)
+        }
+    ]
+
     return (
         <div className="px-9 py-9">
             <Backdrop
@@ -526,7 +548,7 @@ const MentorTaskDetails = () => {
                     <Typography className='!text-[#5975A2] !text-[14px] cursor-pointer' fontWeight={500}
                         onClick={() => navigate(-1)}>MenteesTask</Typography>
                     <img src={BreadCrumbsArrow} alt="" />
-                    <Typography className='!text-[#18283D] !text-[14px] cursor-pointer' fontWeight={500}>{menteeTaskList?.program_name}</Typography>
+                    <Typography className='!text-[#18283D] !text-[14px] cursor-pointer' fontWeight={500}>View {menteeTaskList?.program_name}</Typography>
                 </Stack>
 
                 <Button
@@ -558,50 +580,82 @@ const MentorTaskDetails = () => {
 
 
                 <div className='px-4'>
-                    <div className="relative flex gap-6 justify-between">
-                        <table className="w-[50%] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                            <tbody style={{ border: '1px solid rgba(0, 174, 189, 1)' }}>
-                                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" style={{ border: '1px solid rgba(0, 174, 189, 1)', background: '#fff', color: '#000' }} className="px-6 py-4 font-medium whitespace-nowrap !text-[#18283D] !text-[14px]">
-                                        Category
-                                    </th>
-                                    <td className="px-6 py-4 text-white !text-[14px]" style={{ background: 'rgba(0, 174, 189, 1)' }}>
-                                        {menteeTaskList?.program_category_name || ''}
-                                    </td>
-                                </tr>
-                                <tr className="bg-white border-b  dark:bg-gray-800">
-                                    <th style={{ border: '1px solid rgba(0, 174, 189, 1)', background: '#fff', color: '#000' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap !text-[#18283D] !text-[14px]">
-                                        Program Start Date
-                                    </th>
-                                    <td className="px-6 py-4 text-white !text-[14px]" style={{ background: 'rgba(0, 174, 189, 1)' }}>
-                                        {dateFormatRever(menteeTaskList?.program_startdate)}
-                                    </td>
-                                </tr>
+                    <Grid container spacing={3}>
+                        <Grid item xs={6}>
+                            <Grid container>
+                                {
+                                    leftGridData?.map((e, i, len) => {
+                                        return (
+                                            <Grid item xs={12}>
+                                                <Grid container>
+                                                    <Grid item xs={5} style={{
+                                                        borderTop: '1px solid #1D5BBF',
+                                                        borderLeft: '1px solid #1D5BBF',
+                                                        borderRight: '1px solid #1D5BBF',
+                                                        borderBottom: len.length - 1 !== i ? "none" : '1px solid #1D5BBF',
+                                                        borderTopLeftRadius: i === 0 && '3px',
+                                                        borderBottomLeftRadius: len?.length - 1 === i && '3px',
+                                                    }}>
+                                                        <Typography className="px-6 py-4 font-medium whitespace-nowrap !text-[#18283D] !text-[14px]">{e?.title}</Typography>
+                                                    </Grid>
+                                                    <Grid item xs={7} sx={{
+                                                        borderBottom: len?.length - 1 === i && "1px solid #00AEBD",
+                                                        borderTopRightRadius: i === 0 && '3px',
+                                                        borderBottomRightRadius: len?.length - 1 === i && '3px',
+                                                    }}>
+                                                        <Typography className="px-6 py-4 text-white !text-[14px] !bg-[#00AEBD]"
+                                                            sx={{
+                                                                borderBottom: len?.length - 1 === i && "1px solid #00AEBD",
+                                                                borderTopRightRadius: i === 0 && '3px',
+                                                                borderBottomRightRadius: len?.length - 1 === i && '3px',
+                                                            }}>{e?.value}</Typography>
+                                                    </Grid>
+                                                </Grid>
+                                            </Grid>
+                                        )
+                                    })
+                                }
 
-                            </tbody>
-                        </table>
+                            </Grid>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Grid container>
+                                {
+                                    rightGridData?.map((e, i, len) => {
+                                        return (
+                                            <Grid item xs={12}>
+                                                <Grid container>
+                                                    <Grid item xs={5} style={{
+                                                        borderTop: '1px solid #00AEBD',
+                                                        borderLeft: '1px solid #00AEBD',
+                                                        borderRight: '1px solid #00AEBD',
+                                                        borderBottom: len.length - 1 !== i ? "none" : '1px solid #00AEBD',
+                                                        borderTopLeftRadius: i === 0 && '3px',
+                                                        borderBottomLeftRadius: len?.length - 1 === i && '3px',
+                                                    }}>
+                                                        <Typography className="px-6 py-4 font-medium whitespace-nowrap !text-[#18283D] !text-[14px]">{e?.title}</Typography>
+                                                    </Grid>
+                                                    <Grid item xs={7} sx={{
+                                                        borderBottom: len?.length - 1 === i && "1px solid #1D5BBF",
+                                                        borderTopRightRadius: i === 0 && '3px',
+                                                        borderBottomRightRadius: len?.length - 1 === i && '3px',
+                                                    }}>
+                                                        <Typography className="px-6 py-4 text-white !text-[14px] !bg-[#1D5BBF]"
+                                                            sx={{
+                                                                borderBottom: len?.length - 1 === i && "1px solid #1D5BBF",
+                                                                borderTopRightRadius: i === 0 && '3px',
+                                                                borderBottomRightRadius: len?.length - 1 === i && '3px',
+                                                            }}>{e?.value}</Typography>
+                                                    </Grid>
+                                                </Grid>
+                                            </Grid>
+                                        )
+                                    })
+                                }
 
-                        <table className="w-[50%] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                            <tbody style={{ border: '1px solid rgba(29, 91, 191, 1)' }}>
-                                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th style={{ border: '1px solid rgba(29, 91, 191, 1)', background: '#fff', color: '#000' }} scope="row" className="px-6 py-4 font-medium  whitespace-nowrap !text-[#18283D] !text-[14px]">
-                                        Program Name
-                                    </th>
-                                    <td className="px-6 py-4 text-white !text-[14px]" style={{ background: 'rgba(29, 91, 191, 1)' }}>
-                                        {menteeTaskList?.program_name}
-                                    </td>
-                                </tr>
-                                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" style={{ border: '1px solid rgba(29, 91, 191, 1)', background: '#fff', color: '#000' }} className="px-6 py-4 font-medium whitespace-nowrap !text-[#18283D] !text-[14px]">
-                                        Program End Date
-                                    </th>
-                                    <td className="px-6 py-4 text-white !text-[14px]" style={{ background: 'rgba(29, 91, 191, 1)' }}>
-                                        {dateFormatRever(menteeTaskList?.program_enddate) || ''}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                            </Grid>
+                        </Grid>
+                    </Grid>
 
                     {/* <div className='task-desc flex mt-5 px-5 py-6' style={{ border: '1px solid rgba(29, 91, 191, 0.5)' }}>
 
@@ -623,8 +677,8 @@ const MentorTaskDetails = () => {
 
                     <Box className="!border !border-[#1D5BBF80] rounded-[3px] mt-5">
                         <Stack direction={"row"} alignItems={"center"} justifyContent={"space-between"} className='!border-b-2 !border-[#1D5BBF80] px-[35px] py-[22px]'>
-                            <Typography className='!text-[#18283D] !text-[16px]'>{menteeTaskList?.task_name}</Typography>
-                            <Typography className='!text-[#18283D] !text-[14px]'>Due date: {dayjs(menteeTaskList.due_date).format("DD-MM-YYYY")}</Typography>
+                            <Typography className='!text-[#18283D] !text-[16px]' fontWeight={600}>{menteeTaskList?.task_name}</Typography>
+                            <Typography className='!text-[#18283D] !text-[14px]'>Due date: {dayjs(menteeTaskList.due_date).format("DD/MM/YYYY")}</Typography>
                         </Stack>
                         <Stack spacing={3} className='px-[35px] py-[22px]'>
                             <Typography className='!text-[#18283D] !text-[16px]' sx={{ fontWeight: 500 }}>
@@ -662,7 +716,7 @@ const MentorTaskDetails = () => {
                                         return (
                                             <Tab value={e?.key} label={
                                                 <Typography className={`!text-[14px] text-[${selectedTab === e.key ? '#1D5BBF' : '#18283D'}] 
-                                                    capitalize -pb-[8px]`} sx={{ fontWeight: 500 }}>{e?.name}</Typography>
+                                                    capitalize -pb-[8px]`} sx={{ fontWeight: 400 }}>{e?.name}</Typography>
                                             } />
                                         )
                                     })

@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { getSpecificTask, updateCancelAllTask, updateSinglePassFail } from '../../../services/task';
 import { useDispatch, useSelector } from 'react-redux';
 import { dateTimeFormat, getFiles } from '../../../utils';
-import { Backdrop, Box, Checkbox, Stack, Typography } from '@mui/material';
+import { Backdrop, Box, Checkbox, CircularProgress, Stack, Typography } from '@mui/material';
 import dayjs from 'dayjs';
 import { Button } from '../../../shared';
 import BreadCrumbsArrow from "../../../assets/icons/breadCrumbsArrow.svg"
@@ -27,11 +27,12 @@ const ViewTask = () => {
     const params = useParams();
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const { task: taskDetails } = useSelector(state => state.tasks)
+    const { task: taskDetails, loading } = useSelector(state => state.tasks)
     const [resultCheck, setResultCheck] = React.useState("")
     const [activity, setActivity] = React.useState({
         bool: true,
-        type: ""
+        type: "",
+        activity: false
     })
 
     const referenceView = taskDetails?.reference_link || ''
@@ -73,7 +74,7 @@ const ViewTask = () => {
         }
     }, [params])
 
-console.log("taskDetails ==>", taskDetails)
+
     const handleCancelSubmit = (reason) => {
         const payload = {
             task_id: taskDetails?.id,
@@ -113,26 +114,30 @@ console.log("taskDetails ==>", taskDetails)
                 if (type === "pass") {
                     await setActivity({
                         bool: true,
-                        type: "pass"
+                        type: "pass",
+                        activity: true
                     })
                     await setResultCheck("")
                     setTimeout(() => {
                         setActivity({
                             bool: false,
-                            type: ""
+                            type: "",
+                            activity: false
                         })
                         dispatch(getSpecificTask({ task_id: params.id }))
                     }, 2000);
                 } else {
                     await setActivity({
                         bool: true,
-                        type: "fail"
+                        type: "fail",
+                        activity: true
                     })
                     await setResultCheck("")
                     setTimeout(() => {
                         setActivity({
                             bool: false,
-                            type: ""
+                            type: "",
+                            activity: false
                         })
                         dispatch(getSpecificTask({ task_id: params.id }))
                     }, 2000);
@@ -145,6 +150,12 @@ console.log("taskDetails ==>", taskDetails)
 
     return (
         <div className="px-9 py-9">
+            <Backdrop
+                sx={{ zIndex: (theme) => 999999 }}
+                open={loading}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
 
             <Stack direction={"row"} alignItems={"center"} spacing={"14px"} mb={"30px"}>
                 <Typography className='!text-[#5975A2] !text-[14px] cursor-pointer' fontWeight={500}
@@ -440,7 +451,7 @@ console.log("taskDetails ==>", taskDetails)
                 </Stack>
             </div>
             <CancelPopup open={cancelPopup?.bool} handleClosePopup={handleClosePopup} header="Cancel Task Reason"
-                handleSubmit={(reason)=>handleCancelSubmit(reason)} />
+                handleSubmit={(reason) => handleCancelSubmit(reason)} />
 
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -491,6 +502,25 @@ console.log("taskDetails ==>", taskDetails)
 
             <CancelPopup header='Task fail Reason' open={resultCheck === "fail"} handleSubmit={(reason) => handleUpdateResult("fail", reason)}
                 handleClosePopup={() => setResultCheck("")} />
+
+
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={activity?.activity}
+            >
+                <div className='px-5 py-1 flex justify-center items-center'>
+                    <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+                        style={{ background: '#fff', borderRadius: '10px' }}>
+                        <img src={SuccessTik} alt="SuccessTik" />
+                        <p className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                            style={{
+                                fontWeight: 600
+                            }}
+                        >Result successfully updated</p>
+                    </div>
+
+                </div>
+            </Backdrop>
         </div>
     )
 }
