@@ -213,6 +213,9 @@ React.useEffect(() => {
     if (filterDate && filterDate !== '') {
       query.date = { date: 'filter_by', value: filterDate };
     }
+    if (!filterDate) {
+      query.date = { date: 'filter_by', value:programFilter.datefilter };
+    }
 
     if (isBookmark && isBookmark !== '') {
       query = { type: 'is_bookmark', value: isBookmark };

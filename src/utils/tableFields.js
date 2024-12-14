@@ -89,12 +89,12 @@ export const myReqMenteeColumns = [
     }
 },
 {
-    field: 'updated_at',
+    field: 'last_updated_date',
     headerName: 'Last Updated Date',
     flex: 1,
     id: 1,
     renderCell: (params) => {
-        return <div>{dateFormat(params.row?.updated_at)}</div>
+        return <div>{dateFormat(params.row?.last_updated_date)}</div>
     }
 },
 ]

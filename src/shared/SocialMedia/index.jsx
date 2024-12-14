@@ -3,9 +3,8 @@ import {
     LoginSocialFacebook,
     LoginSocialGoogle,
 } from "reactjs-social-login";
-
 import { userAccountLogin } from "../../services/loginInfo";
-
+// import FacebookLogin from 'react-facebook-login';
 import GoogleIcon from '../../assets/images/google1x.png';
 import FacebookIcon from '../../assets/images/facebook1x.png';
 import InstagramIcon from '../../assets/images/instagram1x.png';
@@ -43,7 +42,25 @@ export default function SocialMediaLogin({ view = 'vertical' }) {
     }, []);
 
 
-
+    const handleFacebookLogin = async (response) => {
+        try {
+        //   console.log('Facebook response:', response);
+          // Handle the successful login here
+          // response will contain accessToken and other user info
+          if (response?.data && Object.keys(response?.data).length && response?.data?.hasOwnProperty('email')) {
+              let l = { 
+                first_name: response?.data?.first_name, 
+                last_name: response?.data?.last_name, 
+                email: response?.data?.email,
+                auth_access_token:response?.data?.accessToken, 
+                auth_type: 'facebook'
+             }
+            dispatch(userAccountLogin(l))
+        }
+        } catch (error) {
+          console.error('Facebook login error:', error);
+        }
+      };
     return (
         <div className={`flex gap-7 ${view === 'vertical' ? 'flex-col justify-center' : ''}`}>
             {
@@ -70,20 +87,22 @@ export default function SocialMediaLogin({ view = 'vertical' }) {
                         <Button fullWidth color='inherit' size='large' variant="outlined" startIcon={<img src={InstagramIcon} className='w-[20px]' alt='InstagramIcon' />}>
                             Continue with Instagram
                         </Button>
-                        {/* <LoginSocialFacebook
-                       appId={process.env.SOCIAL_AUTH_FACEBOOK_KEY} 
-                       onResolve={(e) => {
-                        console.log(e,"eeee")
-                        onLoginSuccess(e.data)
-                       }}
-                       onReject={(err) => {
-                        console.log("hbhbdhd", err);
-                       }}
-                        > */}
+                       
+                        <LoginSocialFacebook
+                       appId={process.env.REACT_APP_SOCIAL_AUTH_FACEBOOK_KEY} 
+                    //    appId={"939158531445780"} 
+                       fieldsProfile={
+                        'id,first_name,last_name,middle_name,name,email,picture'
+                      }
+                      onResolve={handleFacebookLogin}
+                      onReject={(error) => {
+                        console.log('Facebook login failed:', error);
+                      }}
+                        >
                         <Button fullWidth color='inherit' size='large' variant="outlined" startIcon={<img src={FacebookIcon} className='w-[20px]' alt='FacebookIcon' />}>
                             Continue with Facebook
                         </Button>
-                        {/* </LoginSocialFacebook> */}
+                        </LoginSocialFacebook>
                        
                     </>
                     :
@@ -110,9 +129,21 @@ export default function SocialMediaLogin({ view = 'vertical' }) {
                         <Button fullWidth color='inherit' size='large' variant="outlined" startIcon={<img src={InstagramIcon} className='w-[20px]' alt='InstagramIcon' />}>
                             Continue with Instagram
                         </Button>
+                        <LoginSocialFacebook
+                       appId={process.env.REACT_APP_SOCIAL_AUTH_FACEBOOK_KEY} 
+                    //    appId={"939158531445780"} 
+                    fieldsProfile={
+                        'id,first_name,last_name,middle_name,name,email,picture'
+                      }
+                      onResolve={handleFacebookLogin}
+                      onReject={(error) => {
+                        console.log('Facebook login failed:', error);
+                      }}
+                        >
                         <Button fullWidth color='inherit' size='large' variant="outlined" startIcon={<img src={FacebookIcon} className='w-[20px]' alt='FacebookIcon' />}>
                             Continue with Facebook
                         </Button>
+                        </LoginSocialFacebook>
                     </>
             }
 

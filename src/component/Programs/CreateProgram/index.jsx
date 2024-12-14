@@ -66,16 +66,18 @@ export default function CreatePrograms() {
 
 // }
 const onBlureFun = (data) => {
-    setOBlureFunction(true)
-    dispatch(getProgramNameValidate(data)).then((res) => {
-        if (res?.meta?.requestStatus === "fulfilled") {
-            if (!res?.payload?.is_available) {
-                setOBlureFunction(false)
-                // setTabActionInfo({ ...tabActionInfo, activeTab: ProgramTabs[currentStep].key })
+    if(!params.id){
+        setOBlureFunction(true)
+        dispatch(getProgramNameValidate(data)).then((res) => {
+            if (res?.meta?.requestStatus === "fulfilled") {
+                if (!res?.payload?.is_available) {
+                    setOBlureFunction(false)
+                    // setTabActionInfo({ ...tabActionInfo, activeTab: ProgramTabs[currentStep].key })
+                }
             }
-        }
-    })
-    setOBlureFunction(false)
+        })
+        setOBlureFunction(false)
+    }
 }
     const handleNextStep = (data, stData) => {
         setStepWiseData(stData)
@@ -85,7 +87,7 @@ const onBlureFun = (data) => {
         }
         setStepData(fieldData)
 
-        if (currentStep === 1) {
+        if (currentStep === 1&&!params.id) {
             dispatch(getProgramNameValidate(data?.program_name)).then((res) => {
                 if (res?.meta?.requestStatus === "fulfilled") {
                     if (!res?.payload?.is_available) {
