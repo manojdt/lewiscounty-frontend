@@ -124,25 +124,30 @@ export default function ProgramDetails() {
     const commonApproval = ['completed', 'cancelled']
 
     const handleJoinProgram = async (programId) => {
-        if (role === 'mentee' && !userdetails?.data?.is_registered) {
-            navigate(`/questions?program_id=${programdetails.id}`)
-        }
-        else if (role === 'mentee' && !userdetails?.data?.document_upload) {
-            navigate(`/mentee-doc-upload/${programdetails.id}`)
-        } else {
-            // setLoading({ initial: true, join: false })
-            // const joinProgramAction = await api.post('join_program', { id: programId });
-            // if (joinProgramAction.status === 200 && joinProgramAction.data) {
-            //     setLoading({ initial: false, join: role === 'mentee' })
-            if (role === 'mentor' || role === "mentee" || role === "admin") {
-                dispatch(launchProgram({ program: programId, request_type: "program_join" })).then((res) => {
-                    if (res?.meta?.requestStatus === "fulfilled") {
-                        dispatch(getSpecificProgramDetails({ id: params?.id, requestId: requestId }))
-                    }
-                })
+        // if (role === 'mentee' && !userdetails?.data?.is_registered) {
+        //     navigate(`/questions?program_id=${programdetails.id}`)
+        // }
+        // else if (role === 'mentee' && !userdetails?.data?.document_upload) {
+        //     navigate(`/mentee-doc-upload/${programdetails.id}`)
+        // } else {
+        //     // setLoading({ initial: true, join: false })
+        //     // const joinProgramAction = await api.post('join_program', { id: programId });
+        //     // if (joinProgramAction.status === 200 && joinProgramAction.data) {
+        //     //     setLoading({ initial: false, join: role === 'mentee' })
+        //     if (role === 'mentor' || role === "mentee" || role === "admin") {
+        //         dispatch(launchProgram({ program: programId, request_type: "program_join" })).then((res) => {
+        //             if (res?.meta?.requestStatus === "fulfilled") {
+        //                 dispatch(getSpecificProgramDetails({ id: params?.id, requestId: requestId }))
+        //             }
+        //         })
+        //     }
+        //     // }
+        // }
+        dispatch(launchProgram({ program: programId, request_type: "program_join" })).then((res) => {
+            if (res?.meta?.requestStatus === "fulfilled") {
+                dispatch(getSpecificProgramDetails({ id: params?.id, requestId: requestId }))
             }
-            // }
-        }
+        })
     }
 
     // Handle Accept Program Popup
@@ -1138,7 +1143,7 @@ export default function ProgramDetails() {
                                                                             }}>Drafted</div>
                                                                         </div>
                                                                         :
-                                                                        (programdetails.status === 'yettojoin' && role !== "admin") ?
+                                                                        programdetails.status === 'yettojoin' ?
 
                                                                             <div className='py-9'>
                                                                                 <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
@@ -1156,7 +1161,7 @@ export default function ProgramDetails() {
                                                 : null
 
                                         }
-                                        {
+                                        {/* {
                                             (role !== "admin" && programdetails.status === 'yettojoin') &&
 
                                             <div className='py-9'>
@@ -1169,7 +1174,7 @@ export default function ProgramDetails() {
                                                     <span className='pl-8 pt-1'><img style={{ width: '15px', height: '13px' }} src={DoubleArrowIcon} alt="DoubleArrowIcon" /></span>
                                                 </button>
                                             </div>
-                                        }
+                                        } */}
                                         {
                                             (role === 'mentee' && !programCompleted.includes(programdetails.status) && !programCancelled.includes(programdetails.status)) ?
                                                 <div className='py-9'>
