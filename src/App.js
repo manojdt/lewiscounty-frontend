@@ -220,7 +220,7 @@ function App() {
           <Route path='/category' element={<Category />} />
           <Route path='/categoryView' element={<CategoryView />} />
           <Route path='/viewTask/:id' element={<ViewTask />} />
-          <Route path="/testimonialView" element={<TestimonialView />} />          
+          <Route path="/testimonialView/:id" element={<TestimonialView />} />          
         </Route>
       </Route>
 

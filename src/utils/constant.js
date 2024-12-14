@@ -153,6 +153,7 @@ export const requestStatus = {
   reportupdate: 'reportupdated',
   cancel: 'cancelled',
   autoapproval: 'autoapproval',
+  testimonialupdate: 'testimonialupdated'
 };
 
 export const profileStatus = {

@@ -262,7 +262,7 @@ export const getTestimonialRequest = createAsyncThunk(
     "getTestimonialRequest",
     async (query='') => {
         let queryString = new URLSearchParams(query).toString()
-        const getTestimonialRequest = await api.get(`request/?${queryString}&page=${query?.page ?? 1}&limit=${query?.limit ?? 10}&request_type=${query?.request_type}${query?.request_by ? `&request_by=${query?.request_by}` : ""}`);
+        const getTestimonialRequest = await api.get(`request/testimonial-request?${queryString}`);
         if (getTestimonialRequest.status === 200 && getTestimonialRequest.data) {
             return getTestimonialRequest.data;
         }
@@ -293,5 +293,29 @@ export const updateReportRequest = createAsyncThunk(
             return updateReportRequestInfo.data;
         }
         return updateReportRequestInfo;
+    }
+);
+
+
+export const updateTestimonial = createAsyncThunk(
+    "updateTestimonial",
+    async (payload) => {
+        const updateTestimonial = await api.post(`request/testimonial-request`, payload);
+        if (updateTestimonial.status === 200 && updateTestimonial.data) {
+            return updateTestimonial.data;
+        }
+        return updateTestimonial;
+    }
+);
+
+
+export const getTestimonialView = createAsyncThunk(
+    "getTestimonialView",
+    async (data) => {
+        const getTestimonialView = await api.get(`request/testimonial-details/${data}`);
+        if (getTestimonialView.status === 200 && getTestimonialView.data) {
+            return getTestimonialView.data;
+        }
+        return getTestimonialView;
     }
 );

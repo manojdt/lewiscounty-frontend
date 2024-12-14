@@ -26,7 +26,9 @@ import {
     getlearningAccessRequest,
     getExtendProgramRequest,
     getTestimonialRequest,
-    getReopenRequest
+    getReopenRequest,
+    updateTestimonial,
+    getTestimonialView
 } from "../../services/request";
 
 const initialState = {
@@ -44,6 +46,7 @@ const initialState = {
     learningAccessRequests: [],
     testimonialRequest: [],
     reopenRequest: [],
+    testimonialData: {},
     loading: false,
     status: "",
     error: "",
@@ -544,6 +547,52 @@ export const requestSlice = createSlice({
                     error: action.error.message,
                 };
             });
+
+            
+            builder
+            .addCase(updateTestimonial.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(updateTestimonial.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    status: requestStatus.testimonialupdate,
+                    loading: false,
+                };
+            })
+            .addCase(updateTestimonial.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
+            builder
+            .addCase(getTestimonialView.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(getTestimonialView.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    testimonialData: action.payload,
+                    loading: false,
+                };
+            })
+            .addCase(getTestimonialView.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+            // getTestimonialView
     },
 });
 
