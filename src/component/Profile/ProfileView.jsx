@@ -64,6 +64,7 @@ export default function ProfileView() {
     loading: userInfoLoading,
     followInfo,
   } = useSelector((state) => state.userList);
+  console.log(userDetails,"userDetails")
   const { profile, loading } = useSelector((state) => state.profileInfo);
   const userInfo = useSelector(state => state.userInfo)
   const role = userInfo.data.role
@@ -990,7 +991,7 @@ export default function ProfileView() {
                 >
                   {profilefield.label}
                 </label>
-                {/* <p className='text-[14px]'>{userDetails[profilefield.name]}</p> */}
+                <p className='text-[14px]'>{userDetails[profilefield?.name]}</p>
               </div>
             </div>
           ))}

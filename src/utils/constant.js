@@ -1247,7 +1247,7 @@ export const MentorMenteeProfileViewList = (hide) => {
     },
     {
       label: 'Professional Bio',
-      value: 'professional_bio',
+      value: 'Professional_Bio',
       grid: 12,
     },
     {
