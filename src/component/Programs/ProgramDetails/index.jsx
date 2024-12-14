@@ -586,7 +586,7 @@ export default function ProgramDetails() {
                         <div className='flex justify-center flex-col gap-5  mt-4 mb-4'
                             style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '10px', }}>
                             <div className='flex justify-between px-3 py-4 items-center' style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
-                                <p className='text-[18px]' style={{ color: 'rgba(0, 0, 0, 1)' }}>Reject Request Reason </p>
+                                <p className='text-[18px]' style={{ color: 'rgba(0, 0, 0, 1)' }}>Reject Reason </p>
                                 <img className='cursor-pointer' onClick={resetAcceptCancelPopup} src={CancelIcon} alt="CancelIcon" />
                             </div>
 
@@ -599,7 +599,7 @@ export default function ProgramDetails() {
                                 <form onSubmit={handleSubmit(handleCancelReasonPopupSubmit)}>
                                     <div className='relative pb-8'>
                                         <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
-                                            Reject Request Reason
+                                            Reject Reason
                                         </label>
 
                                         <div className='relative'>
@@ -936,12 +936,12 @@ export default function ProgramDetails() {
                                                 <img src={ShareIcon} alt="ShareIcon" className='pr-3 w-[25px]' />
                                                 Share
                                             </MenuItem>
-                                            {!["yettoapprove", "completed"].includes(programdetails?.status) && <MenuItem onClick={() => handleMenu('reschedule')} className='!text-[12px]'>
+                                            {(!["yettoapprove", "completed"].includes(programdetails?.status) && role !== "admin") && <MenuItem onClick={() => handleMenu('reschedule')} className='!text-[12px]'>
                                                 <img src={RescheduleIcon} alt="RescheduleIcon" className='pr-3 w-[25px]' />
                                                 Reschedule
                                             </MenuItem>}
 
-                                            {!["yettoapprove", "completed"].includes(programdetails?.status) && <MenuItem onClick={() => handleMenu('cancel')} className='!text-[12px]'>
+                                            {(!["yettoapprove", "completed"].includes(programdetails?.status) && role !== "admin") && <MenuItem onClick={() => handleMenu('cancel')} className='!text-[12px]'>
                                                 <img src={AbortIcon} alt="Cancel" className='pr-3 w-[25px]' />
                                                 Cancel
                                             </MenuItem>}
@@ -1138,7 +1138,7 @@ export default function ProgramDetails() {
                                                                             }}>Drafted</div>
                                                                         </div>
                                                                         :
-                                                                        programdetails.status === 'yettojoin' ?
+                                                                        (programdetails.status === 'yettojoin' && role !== "admin") ?
 
                                                                             <div className='py-9'>
                                                                                 <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
@@ -1157,7 +1157,7 @@ export default function ProgramDetails() {
 
                                         }
                                         {
-                                            (role === "admin" && programdetails.status === 'yettojoin') &&
+                                            (role !== "admin" && programdetails.status === 'yettojoin') &&
 
                                             <div className='py-9'>
                                                 <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
