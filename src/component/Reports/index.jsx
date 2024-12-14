@@ -230,6 +230,10 @@ const Reports = () => {
             query.status =  (role === "admin" && requestTab === "all") ? "approved" : filterType === "cancel" ? "rejected" : filterType
         }
 
+        if(role === "admin" && requestTab === "all"){
+            query.status = "approved"
+        }
+
         if (filterSearch && filterSearch !== '') {
             query.search = filterSearch
         }
