@@ -841,7 +841,7 @@ export default function AllRequest() {
             flex: 1,
             id: 4,
             renderCell: (params) => {
-                if (params.row.status !== "new" && params.row.status !== "pending")
+                if (params.row.status !== "new" && params.row.status !== "pending"&&params.row.status !== "accept")
                     return <></>;
                 return (
                     <>
@@ -877,6 +877,9 @@ export default function AllRequest() {
 
                             {role === "admin" && (
                                 <>
+                                  {(seletedItem.status === "new" ||
+                                        seletedItem.status === "pending") && (
+                                            <>
                                     <MenuItem
                                         onClick={handleAcceptGoalRequest}
                                         className="!text-[12px]"
@@ -899,6 +902,8 @@ export default function AllRequest() {
                                         />
                                         Reject
                                     </MenuItem>
+                                    </>
+                                        )}
                                 </>
                             )}
                         </Menu>
@@ -1738,7 +1743,7 @@ export default function AllRequest() {
     };
 
     const handleSearchCategory = (e) => {
-        let catList = categoryInfo.list.filter((list) =>
+        let catList = categoryList&&categoryList?.length>0&&categoryList.filter((list) =>
             list.name.toLowerCase().includes(e.target.value.toLowerCase())
         );
         if (e.target.value === "") catList = categoryList;
@@ -2360,11 +2365,11 @@ export default function AllRequest() {
                             </div>
 
                             <div className="px-5">
-                                {error !== "" ? (
+                                {/* {error !== "" ? (
                                     <p className="error" role="alert">
                                         {error}
                                     </p>
-                                ) : null}
+                                ) : null} */}
 
                                 <form onSubmit={handleSubmit(handleCancelReasonPopupSubmit)}>
                                     <div className="relative pb-8">

@@ -329,7 +329,7 @@ export const Mentors = () => {
                   navigate(`/profileView`, {
                     state: {
                       row_id: selectedItem?.id,
-                      user_id: selectedItem?.requested_to,
+                      user_id: selectedItem?.following,
                       page: 'requested_mentor',
                     },
                   })

@@ -643,8 +643,8 @@ export default function AssignMentees() {
                                         }
                                     </div>
                                     <div className="flex gap-6 justify-center align-middle py-16">
-                                        <Button btnName='Cancel' btnCls="w-[130px]" btnCategory="secondary" onClick={() => navigate(-1)} />
-                                        <Button btnType="submit" btnCls="w-[130px]" btnName={"Submit"} btnCategory="primary" />
+                                        <Button btnName='Cancel' btnCls="w-[15%]" btnCategory="secondary" onClick={() => navigate(-1)} />
+                                        <Button btnType="submit" btnCls="w-[15%]" btnName={"Submit"} btnCategory="primary" />
                                     </div>
                                 </form>
                                 <MuiModal modalSize='lg' modalOpen={addMenteeModal} title="Select Mentees" modalClose={() => setMentalModal(false)}>

@@ -61,6 +61,7 @@ const MentorMenteeProfile = () => {
 
   React.useEffect(() => {
     if (state?.user_id !== '') {
+      console.log(state,"state")
       dispatch(
         getProfileInfo({ id: state?.user_id, follow_id: state?.row_id })
       );

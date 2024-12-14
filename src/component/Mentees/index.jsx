@@ -9,6 +9,7 @@ import { Backdrop, CircularProgress } from '@mui/material';
 import DataTable from '../../shared/DataGrid';
 import FilterIcon from '../../assets/icons/Filter.svg';
 import MoreIcon from '../../assets/icons/moreIcon.svg';
+import CancelIcon from '../../assets/images/cancel1x.png'
 import ViewIcon from '../../assets/images/view1x.png';
 import ConnectIcon from '../../assets/images/connect1x.png';
 import ConnectPopupIcon from '../../assets/images/Connectpop1x.png';
@@ -32,6 +33,7 @@ import {
 } from '../../utils/constant';
 import { Button } from '../../shared';
 import SuccessTik from '../../assets/images/blue_tik1x.png';
+import MuiModal from '../../shared/Modal';
 
 export const Mentees = () => {
   const navigate = useNavigate();
@@ -233,7 +235,7 @@ if(reason){
                   navigate(`/profileView`, {
                     state: {
                       row_id: selectedMentee?.id,
-                      user_id: selectedMentee?.requested_by,
+                      user_id: selectedMentee?.follower,
                       is_approved: selectedMentee?.is_approved,
                     },
                   })
@@ -327,7 +329,8 @@ if(reason){
     });
   };
 
-  const handleConfirmBtn = () => {
+  const handleConfirmBtn = (e) => {
+    if(e) e.preventDefault();
     if (confirmation?.type === 'reject' && !reason.trim()) {
       setReasonError(true); // Set error if reason is empty
       return; // Prevent further action
@@ -442,9 +445,9 @@ if(reason){
 
           <Backdrop
             sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-            open={confirmation?.activity}
+            open={confirmation?.activity&&confirmation?.type !== 'reject' }
           >
-            <div className='popup-content w-3/6 bg-white flex flex-col gap-2 h-[430px] justify-center items-center'>
+            <div className='popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center'>
               <img
                 src={
                   confirmation?.type === 'reject'
@@ -459,31 +462,7 @@ if(reason){
                 {confirmation?.type === 'reject' ? 'Reject' : 'Connect'}
               </span>
 <div>
-  
-
 </div>
-{confirmation?.type === 'reject'?
-<div className="m-4">
-              <label className="block mb-2 text-black">Reason <span style={{color: 'red'}}>{'*'}</span></label>
-              <textarea
-                // disabled={disableEdit}
-                rows={5}
-                required
-                value={reason}
-                onChange={(e)=>{
-                  setReason(e.target.value)
-                  setReasonError(false)
-                }}
-                className={`text-xs p-2.5block p-2.5 input-bg w-[300px] text-gray-900  rounded-lg border  ${
-                reasonError ? 'border-red-500' : 'border-black'
-              }`}
-            ></textarea>
-            {reasonError && (
-              <p className="text-red-500 text-xs mt-1">
-                Please provide a reason for rejection.
-              </p>
-            )}
-            </div>:
               <div className='py-5'>
                 <p
                   style={{
@@ -499,7 +478,7 @@ if(reason){
                   </span>
                   Mentee?
                 </p>
-              </div>}
+              </div>
               <div className='flex justify-center p-4'>
                 <div className='flex gap-6 justify-center align-middle'>
                   <Button
@@ -523,7 +502,61 @@ if(reason){
               </div>
             </div>
           </Backdrop>
+          <MuiModal modalSize='md' modalOpen={confirmation?.activity&&confirmation?.type === 'reject'} modalClose={closeConfirmation} noheader>
+<div className='px-5 py-5'>
+    <div className='flex justify-center flex-col gap-5  mt-4 mb-4'
+        style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '10px', }}>
+        <div className='flex justify-between px-3 py-4 items-center' style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
+            <p className='text-[18px]' style={{ color: 'rgba(0, 0, 0, 1)' }}>Reject Request Reason </p>
+            <img className='cursor-pointer' onClick={closeConfirmation} src={CancelIcon} alt="CancelIcon" />
+        </div>
 
+        <div className='px-5'>
+
+            <form onSubmit={handleConfirmBtn}>
+                <div className='relative pb-8'>
+                    <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
+                        Reject Reason <span style={{color: 'red'}}>{'*'}</span>
+                    </label>
+
+                    <div className='relative'>
+                        <textarea
+                             value={reason}
+                             onChange={(e)=>{
+                               setReason(e.target.value)
+                               setReasonError(false)
+                             }}
+                            id="message" rows="4" className={`block p-2.5 input-bg w-full rounded-lg text-sm text-gray-900  border
+                               focus-visible:outline-none focus-visible:border-none`}
+                            style={{ border: '1px solid black' }}
+                            placeholder={''}
+                        ></textarea>
+                       {reasonError && (
+              <p className="text-red-500 text-xs mt-1">
+                Please provide a reason for rejection.
+              </p>
+            )}
+                    </div>
+                </div>
+
+                <div className='flex justify-center gap-5 items-center pt-5 pb-10'>
+                    <Button btnName='Cancel' btnCls="w-[18%]" btnCategory="secondary" onClick={closeConfirmation} />
+                    <button
+                        type='submit'
+                        className='text-white py-3 px-7 w-[18%]'
+                        style={{ background: 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)', borderRadius: '3px' }}>
+                        Submit
+                    </button>
+                </div>
+            </form>
+
+        </div>
+
+
+    </div>
+
+</div>
+</MuiModal>
           <Backdrop
             sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
             open={confirmation?.bool}

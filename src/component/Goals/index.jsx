@@ -179,15 +179,16 @@ const Goals = () => {
     }
 
     const getAllGoalData = (created_by = createdBy, user_id) => {
-        // const res=seletedItem?.created_by?seletedItem?.created_by: user_id
-        dispatch(getGoalsCount({ time_frame: allTimeFrame, user_id: user_id }))
+        console.log(seletedItem,"select")
+        const res=seletedItem?.created_by?seletedItem?.created_by: user_id
+        dispatch(getGoalsCount({ time_frame: allTimeFrame, user_id: res}))
         dispatch(getGoalsRequest({
             status: filterType,
             created_by: created_by,
             time_frame: requestTimeFrame,
             page: requestPaginationModel?.page + 1,
             limit: requestPaginationModel?.pageSize,
-            user_id:seletedItem?.created_by?seletedItem?.created_by: user_id
+            user_id:res
         }))
         dispatch(getGoalsHistory({
             status: filterType ?? "new",
@@ -195,7 +196,7 @@ const Goals = () => {
             time_frame: historyTimeFrame,
             page: historyPaginationModel?.page + 1,
             limit: historyPaginationModel?.pageSize,
-            user_id: user_id
+            user_id: res
         }))
     }
 
@@ -211,13 +212,15 @@ const Goals = () => {
 
     const handleGetAllGoals = (timeframe = allTimeFrame) => {
         let payload = {}
+        
         if (role === "admin") {
             payload = {
                 page: allGoalPaginationModel?.page + 1,
                 limit: allGoalPaginationModel?.pageSize,
                 status: filterType,
                 time_frame: timeframe,
-                created_by: createdBy
+                created_by: createdBy,
+                user_id:seletedItem.created_by
             }
         } else {
             payload = {
@@ -225,12 +228,15 @@ const Goals = () => {
                 limit: allGoalPaginationModel?.pageSize,
                 status: filterType,
                 time_frame: timeframe,
-                created_by: createdBy
+                created_by: createdBy,
+                // user_id:seletedItem.created_by
+
             }
         }
+        console.log(payload,seletedItem,"select 2")
         dispatch(getAllGoals(payload))
         dispatch(getGoalsRequest(payload))
-        dispatch(getGoalsCount({ time_frame: timeframe }))
+        dispatch(getGoalsCount({ time_frame: timeframe ,  user_id:role === "admin"?seletedItem?.created_by:undefined}))
     }
 
 
@@ -952,6 +958,7 @@ const Goals = () => {
         setCreatedBy("")
         setAdminTab("mentor")
         handleGetAdminTableData("month", "mentor")
+        navigate('/goals')
     }
 
     const resetActionModal = (type) => {
