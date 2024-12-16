@@ -720,10 +720,14 @@ export default function AllRequest() {
                                     View
                                 </MenuItem>
 
-                                {((seletedItem.status === "new" ||
-                                    seletedItem.status === "pending") && (role === "admin")) && (
+                                {
+                                    (
+                                        (["new", "pending"].includes(seletedItem.status)) 
+                                        // &&
+                                        // (role === "mentor" && selectedTab !== "my")
+                                    ) && 
                                         <>
-                                            <MenuItem
+                                            {<MenuItem
                                                 onClick={handleAcceptProgramRequest}
                                                 className="!text-[12px]"
                                             >
@@ -733,7 +737,7 @@ export default function AllRequest() {
                                                     className="pr-3 w-[27px]"
                                                 />
                                                 {actionTab === "program_cancel" ? "Accept" : "Approve"}
-                                            </MenuItem>
+                                            </MenuItem>}
                                             <MenuItem
                                                 onClick={handleCancelProgramRequest}
                                                 className="!text-[12px]"
@@ -746,7 +750,7 @@ export default function AllRequest() {
                                                 {actionTab === "program_cancel" ? "Continue" : "Reject"}
                                             </MenuItem>
                                         </>
-                                    )}
+                                    }
 
 
                                 {/* {
@@ -2180,7 +2184,7 @@ export default function AllRequest() {
             default:
                 break;
         }
-        setActiveTab(selectedRequestedtype === "member_join_request"?"mentor":currentTab)
+        setActiveTab(selectedRequestedtype === "member_join_request" ? "mentor" : currentTab)
         setRequestOverview(currentOveriew)
     }, [selectedTab])
 

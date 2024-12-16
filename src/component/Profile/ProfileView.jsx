@@ -833,7 +833,7 @@ export default function ProfileView() {
                           }}
                           onClick={() => handleMemberCancelRequest()}
                         >
-                          Cancel
+                          Reject
                         </button>
                         <Button
                           btnType='button'
