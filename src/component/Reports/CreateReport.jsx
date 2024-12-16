@@ -51,7 +51,7 @@ export default function CreateReport() {
             reset()
             dispatch(updateReportLocalState({ programDetails: {} }))
         }
-    }, [])
+    }, [state])
 
     const onSubmit = (data) => {
         console.log("data ===>", data)
@@ -80,7 +80,7 @@ export default function CreateReport() {
     }
 
     const handleProgramData = (programId) => {
-        dispatch(getReportProgramDetails(programId))
+        dispatch(getReportProgramDetails(programId,"type"))
     }
 
 
@@ -98,8 +98,10 @@ export default function CreateReport() {
         if (status === reportsStatus.create) {
             setTimeout(() => {
                 if (searchParams.get('program_id') && searchParams.get('program_id') !== '' && searchParams.get('program_id') !== null) {
+                    dispatch(updateReportLocalState({ programDetails: {} }))
                     navigate(`/generate_certificate/${searchParams.get('program_id')}`)
                 } else {
+                    dispatch(updateReportLocalState({ programDetails: {} }))
                     navigate('/reports')
                 }
             }, 3000)
@@ -110,7 +112,7 @@ export default function CreateReport() {
         // if (!state?.type) {
         if (programDetails && Object.keys(programDetails).length) {
             let payload = {
-                mentor_name: programDetails.mentor_full_name,
+                mentor_name: programDetails.mentor_name,
                 start_date: dateTimeFormat(programDetails.start_date),
                 end_date: dateTimeFormat(programDetails.end_date),
                 participated_mentees: programDetails.participated_mentees
@@ -243,7 +245,11 @@ export default function CreateReport() {
                                 <h2>Create New Report</h2>
                             </li>
                         </ol>
-                        <img className='cursor-pointer' onClick={() => navigate('/reports')}
+                        <img className='cursor-pointer' onClick={() =>{
+                             reset();
+                             dispatch(updateReportLocalState({ programDetails: {} }))
+                             navigate('/reports')
+                            }}
                             src={CancelIcon} alt="CancelIcon" />
                     </nav>
 
@@ -406,7 +412,7 @@ export default function CreateReport() {
 
                                                                                                         }}></p>
                                                                                                         {
-                                                                                                            popupfield.mentee_name
+                                                                                                            popupfield.full_name
                                                                                                         }
                                                                                                     </p>
                                                                                                 </>
@@ -456,7 +462,12 @@ export default function CreateReport() {
                                 }
                             </div>
                             <div className="flex gap-6 justify-center align-middle py-16">
-                                <Button btnName='Cancel' btnCls="w-[13%]" btnCategory="secondary" onClick={() => navigate('/reports')} />
+                                <Button btnName='Cancel' btnCls="w-[13%]" btnCategory="secondary" onClick={() =>{
+                                    reset()
+                                    dispatch(updateReportLocalState({ programDetails: {} }))
+                                    navigate('/reports')
+                                } 
+                                } />
                                 {
                                     role !== "admin" &&
                                     <Button btnName='Save To Draft'

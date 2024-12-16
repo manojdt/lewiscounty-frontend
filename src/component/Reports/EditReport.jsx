@@ -92,7 +92,7 @@ export default function EditReport() {
             const updateFormValues = {
                 category: reportDetails.category,
                 program: programDetails.id,
-                mentor_name: programDetails.mentor_full_name,
+                mentor_name: programDetails.mentor_name,
                 start_date: dateTimeFormat(programDetails.start_date),
                 end_date: dateTimeFormat(programDetails.end_date),
                 participated_mentees: programDetails.participated_mentees,
@@ -153,7 +153,7 @@ export default function EditReport() {
     }
 
     const getProgramInfo = (programId) => {
-        dispatch(getReportProgramDetails(programId))
+        dispatch(getReportProgramDetails(programId,"type"))
     }
 
 console.log("reportDetails ==>", reportDetails)
@@ -208,9 +208,9 @@ console.log("reportDetails ==>", reportDetails)
     }
 
     useEffect(() => {
-        // return () => {
-        //     dispatch(updateReportLocalState({ programDetails: {}, reportDetails: {} }))
-        // }
+        return () => {
+            dispatch(updateReportLocalState({ programDetails: {}, reportDetails: {} }))
+        }
     }, [])
 
 
@@ -263,7 +263,10 @@ console.log("reportDetails ==>", reportDetails)
                                     <h2>{searchParams.has("type") && searchParams.get("type") === 're-open' ? 'Re-open' : 'Edit'} - {reportDetails.name} </h2>
                                 </li>
                             </ol>
-                            <img className='cursor-pointer' onClick={() => navigate('/reports')}
+                            <img className='cursor-pointer' onClick={() => {
+                                reset()
+                                dispatch(updateReportLocalState({ programDetails: {}, reportDetails: {} }))
+                            navigate('/reports')}}
                                 src={CancelIcon} alt="CancelIcon" />
                         </nav>
                     </div>
@@ -425,7 +428,7 @@ console.log("reportDetails ==>", reportDetails)
 
                                                                                                             }}></p>
                                                                                                             {
-                                                                                                                popupfield.mentee_name
+                                                                                                                popupfield.full_name
                                                                                                             }
                                                                                                         </p>
                                                                                                     </>
@@ -578,7 +581,11 @@ console.log("reportDetails ==>", reportDetails)
                                     </div>
                                 </div>
                                 <div className="flex gap-6 justify-center align-middle py-16">
-                                    <Button btnName='Cancel' btnCls="w-[13%]" btnCategory="secondary" onClick={() => navigate('/reports')} />
+                                    <Button btnName='Cancel' btnCls="w-[13%]" btnCategory="secondary" onClick={() => {
+                                         reset()
+                                         dispatch(updateReportLocalState({ programDetails: {}, reportDetails: {} }))
+                                        navigate('/reports')
+                                        }} />
                                     {
                                         (reportDetails.status === 'draft' || searchParams.get('type') === 're-open') &&
                                         <Button btnName='Save To Draft'

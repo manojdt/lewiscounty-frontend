@@ -136,14 +136,15 @@ export default function Programs() {
     setLoading(true);
     const filterDate = searchParams.get('datefilter');
   const pay=  {
-      filter_by:filterDate
+      filter_by:programFilter.datefilter?programFilter.datefilter:filterDate
     }
     const bookmark = await api.post('bookmark', payload);
     if (bookmark.status === 201 && bookmark.data) {
       setLoading(false);
       getPrograms();
-      if (role === "mentor") dispatch(getProgramCounts());
-      if (role === "mentee") dispatch(getMenteeProgramCount());
+      if (role === 'mentor') dispatch(getProgramCounts(pay));
+      console.log(pay,"programFilter.datefilter1")
+      if (role === 'mentee') dispatch(getMenteeProgramCount(pay));
     }
 
     // dispatch(updateProgram({ id: program.id, is_bookmark: !program.is_bookmark }))
@@ -203,7 +204,7 @@ export default function Programs() {
     const filterDate = searchParams.get('datefilter');
     const isBookmark = searchParams.get('is_bookmark');
 const pay={
-  filter_by:filterDate
+  filter_by:programFilter.datefilter?programFilter.datefilter:filterDate
 }
     let query = {};
 
@@ -240,10 +241,11 @@ const pay={
 
     if (role === "mentee") {
       dispatch(getMenteePrograms(query));
-    dispatch(getMenteeProgramCount());
+      console.log(programFilter.datefilter,"programFilter.datefilter2")
+    dispatch(getMenteeProgramCount(pay));
     }
     if (role === 'mentor' || role === 'admin'){
-      dispatch(getProgramCounts());
+      dispatch(getProgramCounts(pay));
       dispatch(getUserPrograms(query));
     } 
     // if (role === '') dispatch(getUserPrograms(query));
@@ -460,7 +462,7 @@ const pay={
       const isBookmark = searchParams.get('is_bookmark');
       const filterDate = searchParams.get('datefilter');
       const pay={
-        filter_by:filterDate
+        filter_by:programFilter.datefilter?programFilter.datefilter:filterDate
       }
       if (filterType && filterType !== '') {
         query = { type: 'status', value: filterType };
@@ -470,13 +472,16 @@ const pay={
         query = { type: "is_bookmark", value: isBookmark };
       }
 
-      if (role === "mentee") {
+      if (role === 'mentee') {
+        if(programFilter.datefilter||filterDate){
         dispatch(getMenteePrograms(query));
-        dispatch(getMenteeProgramCount());
+        }
+        console.log(programFilter.datefilter,"programFilter.datefilter")
+        dispatch(getMenteeProgramCount(pay));
       }
       if (role === "mentor" || role === "admin") {
         dispatch(getUserPrograms(query));
-        dispatch(getProgramCounts());
+        dispatch(getProgramCounts(pay));
       }
     }
   }, [userprograms.status]);
@@ -514,9 +519,16 @@ const pay={
   }, [userprograms]);
 
   useEffect(() => {
-    if (role === "mentor" || role === "admin") dispatch(getProgramCounts());
-    if (role === "mentee") dispatch(getMenteeProgramCount());
-  }, [role]);
+    if (role === 'mentor' || role === 'admin'){ dispatch(getProgramCounts({
+      filter_by:programFilter.datefilter?programFilter.datefilter:searchParams.get('datefilter')
+    }));}
+    if (role === 'mentee') {
+      dispatch(getMenteeProgramCount({
+      filter_by:programFilter.datefilter?programFilter.datefilter:searchParams.get('datefilter') 
+    }));
+  console.log(programFilter.datefilter,"programFilter.datefilter")
+}
+  }, [role,searchParams,programFilter]);
 
   return (
     <div className="dashboard-content px-8 mt-10">
