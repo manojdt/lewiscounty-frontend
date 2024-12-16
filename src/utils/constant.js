@@ -655,6 +655,7 @@ export const programActionStatus = {
   draft: 'draft',
   reschedule: 'reschedule',
   program_join_request_accepted: 'program_join_request_accepted',
+  program_assign: 'program_assign'
 };
 
 export const pipeUrls = {
@@ -685,6 +686,7 @@ export const programFilterUrls = {
   learning: `?type=${programActionStatus.learning}`,
   bookmark: '?is_bookmark=true',
   draft: `?type=${programActionStatus.draft}`,
+  programAssign: `?type=${programActionStatus.program_assign}`,
 };
 
 export const menteeCountStatus = {
@@ -736,13 +738,13 @@ export const programMenus = (page = 'dashboard') => {
       menteeStatus: 'ongoing',
       status: programActionStatus.inprogress,
     },
-    // {
-    //   name: "Curated Programs",
-    //   count: 0,
-    //   page: `${pipeUrl}${programFilterUrls.yettojoin}`,
-    //   for: ['mentor', 'mentee'],
-    //   status: programActionStatus.yettojoin
-    // },
+    {
+      name: "Assign Programs",
+      count: 0,
+      page: `${pipeUrl}${programFilterUrls.programAssign}`,
+      for: ['mentor'],
+      status: programActionStatus.program_assign
+    },
     {
       name: 'Drafted Programs',
       count: 0,

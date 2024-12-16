@@ -533,6 +533,45 @@ export const MenteeAssignColumns = [
   },
 ];
 
+export const MentorAssignColumns = [
+  {
+    field: 'name',
+    headerName: 'Mentor Name',
+    flex: 1,
+    id: 0,
+  },
+  {
+    field: 'category_name',
+    headerName: 'Professional',
+    flex: 1,
+    id: 1,
+  },
+  {
+    field: 'phone_number',
+    headerName: 'Phone Number',
+    flex: 1,
+    id: 2,
+  },
+  {
+    field: 'email',
+    headerName: 'Email',
+    flex: 1,
+    id: 3,
+  },
+  {
+    field: 'certificates',
+    headerName: 'Certificates',
+    flex: 1,
+    id: 4,
+  },
+  {
+    field: 'view',
+    headerName: 'View',
+    flex: 1,
+    id: 5,
+  },
+];
+
 function skillData(name, skills_desc, action) {
   return {
     name,

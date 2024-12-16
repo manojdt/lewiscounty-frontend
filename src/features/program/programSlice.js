@@ -6,6 +6,7 @@ import {
   editUpdateProgram,
   getAllCategories,
   getAllCertificates,
+  getAllMentors,
   getAllMaterials,
   getAllMembers,
   getallMenteeProgram,
@@ -34,6 +35,7 @@ const initialState = {
   materials: [],
   certificate: [],
   members: [],
+  mentor_assign: [],
   skills: [],
   categoryPrograms: [],
   programListByCategory: [],
@@ -188,8 +190,7 @@ export const programSlice = createSlice({
         };
       })
       .addCase(createNewPrograms.fulfilled, (state, action) => {
-        console.log("action ===>", action, "state ===>", state)
-        const responseStatus = action.payload.status;
+        const responseStatus = action.payload?.status;
         const status =
           (responseStatus === 200 || responseStatus === 400)
             ? programStatus.exist
@@ -206,8 +207,7 @@ export const programSlice = createSlice({
         };
       })
       .addCase(createNewPrograms.rejected, (state, action) => {
-        console.log("action ===>", action, "state ===>", state)
-        const responseStatus = action.payload.status;
+        const responseStatus = action.payload?.status;
         const status =
           (responseStatus === 200 || responseStatus === 400)
             ? programStatus.exist
@@ -476,6 +476,28 @@ export const programSlice = createSlice({
         };
       })
       .addCase(getAllMembers.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
+
+    builder
+      .addCase(getAllMentors.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(getAllMentors.fulfilled, (state, action) => {
+        return {
+          ...state,
+          mentor_assign: action.payload?.results,
+          loading: false,
+        };
+      })
+      .addCase(getAllMentors.rejected, (state, action) => {
         return {
           ...state,
           loading: false,

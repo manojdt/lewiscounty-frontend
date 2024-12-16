@@ -1354,10 +1354,61 @@ export const SessionCounts = () => {
 export const ProgramInformationFields = [
   {
     type: 'dropdown',
+    name: 'environment',
+    label: 'Program Environment',
+    placeholder: 'Select Environment',
+    inputRules: {
+      required: 'This field is required',
+    },
+    options: [
+      {
+        key: 'Mid School',
+        value: 'Mid School',
+      },
+      {
+        key: 'High School',
+        value: 'High School',
+      },
+      {
+        key: 'University',
+        value: 'University',
+      },
+      {
+        key: 'Own',
+        value: 'Own',
+      },
+    ],
+    width: 'width-32',
+    for: ['admin'],
+  },
+  {
+    type: 'dropdown',
+    name: 'type',
+    label: 'Program Type',
+    placeholder: 'Select Program Type',
+    inputRules: {
+      required: 'This field is required',
+    },
+    options: [
+      {
+        value: 'Short-term (within 3 months)',
+        key: 'Short term(within 3 months)',
+      },
+      {
+        value: 'Long-term (more than 3 months)',
+        key: 'Long term(more than 3 months)',
+      },
+    ],
+    width: 'width-32',
+    for: ['admin'],
+  },
+  {
+    type: 'dropdown',
     name: 'category',
     label: 'Category',
     placeholder: 'Select Category',
     inputRules: {
+      valueAsNumber: true,
       required: 'This field is required',
     },
     options: [
@@ -1375,6 +1426,201 @@ export const ProgramInformationFields = [
   },
   {
     type: 'input',
+    name: 'environment_name',
+    fieldtype: 'text',
+    label: 'Environment Name',
+    placeholder: 'Enter envirnoment Name',
+    inputRules: {
+      required: 'This field is required',
+    },
+    width: 'width-32',
+    for: ['admin'],
+  },
+  {
+    type: 'date',
+    name: 'start_date',
+    label: 'Program Start Date',
+    placeholder: 'Select Program Start Date',
+    inputRules: {
+      required: 'This field is required',
+    },
+    width: 'width-32',
+    for: ['admin'],
+  },
+  {
+    type: 'date',
+    name: 'end_date',
+    label: 'Program End Date',
+    placeholder: 'Select Program End Date',
+    inputRules: {
+      required: 'This field is required',
+    },
+    width: 'width-32',
+    for: ['admin'],
+  },
+  {
+    type: 'input',
+    name: 'address',
+    label: 'Address',
+    placeholder: 'Enter Address',
+    inputRules: {
+      required: 'This field is required',
+    },
+    width: 'width-32',
+    for: ['admin'],
+  },
+  {
+    type: 'input',
+    name: 'phone_number',
+    label: 'Phone Number',
+    placeholder: 'Enter Phone Number',
+    inputRules: {
+      required: 'This field is required',
+      pattern: {
+        value: /^\+[1-9]\d{1,14}$/,
+        message: 'Must start with a plus sign Followed by 1 to 14 digits and no spaces in-between',
+      },
+    },
+    width: 'width-32',
+    for: ['admin'],
+  },
+  {
+    type: 'dropdown',
+    name: 'no_of_subprograms',
+    label: 'No. of Sub Program',
+    placeholder: 'Select No. of Sub Program',
+    inputRules: {
+      valueAsNumber: true,
+      required: 'This field is required',
+    },
+    options: Array.from({ length: 6 }, (_, i) => i + 1).map((count) => (
+      {
+        key: count,
+        value: count,
+      }
+    )),
+    width: 'width-32',
+    for: ['admin'],
+  },
+  {
+    type: 'dynamicFields',
+    name: 'sub_programs',
+    label: '',
+    for: ['admin'],
+    width: 'w-full',
+    dynamicFields: [
+      {
+        type: 'input',
+        name: 'title',
+        fieldtype: 'text',
+        label: 'Title',
+        placeholder: 'Enter Title',
+        inputRules: {
+          required: 'Title is required',
+        },
+        width: 'w-full',
+        for: ['admin'],
+      },
+      {
+        type: 'textarea',
+        name: 'description',
+        label: 'Description',
+        placeholder: 'Enter Description',
+        inputRules: {
+          required: 'Description is required',
+        },
+        width: 'w-full',
+        for: ['admin'],
+      },
+      {
+        type: 'date',
+        name: 'start_date',
+        label: 'Start Date',
+        placeholder: 'Select Start Date',
+        inputRules: {
+          required: 'Start Date is required',
+        },
+        width: 'width-32',
+        for: ['admin'],
+      },
+      {
+        type: 'date',
+        name: 'end_date',
+        label: 'End Date',
+        placeholder: 'Select End Date',
+        inputRules: {
+          required: 'End Date is required',
+        },
+        width: 'width-32',
+        for: ['admin'],
+      },
+      // {
+      //   type: 'time',
+      //   name: 'start_time',
+      //   label: 'Start Time',
+      //   placeholder: 'Select Start Time',
+      //   inputRules: {
+      //     required: 'Start Time is required',
+      //   },
+      //   width: 'width-32',
+      //   for: ['admin'],
+      // },
+      // {
+      //   type: 'time',
+      //   name: 'end_time',
+      //   label: 'End Time',
+      //   placeholder: 'Select End Time',
+      //   inputRules: {
+      //     required: 'End Time is required',
+      //   },
+      //   width: 'width-32',
+      //   for: ['admin'],
+      // },
+      {
+        type: 'radio',
+        name: 'flexible_time',
+        label: 'Is Flexible?',
+        placeholder: '',
+        options: [
+          { key: "true", value: "Yes" },
+          { key: "false", value: "No" }
+        ],
+        inputRules: {
+          required: "This field is required",
+        },
+        size: true,
+        for: ["admin"]
+      },
+      {
+        type: 'popup-input',
+        name: 'mentor_id',
+        label: 'Select Mentor',
+        placeholder: 'Select Mentor',
+        fieldtype: 'text',
+        inputRules: {
+          // required: 'This field is required',
+        },
+        width: 'width-32',
+        icon: 'add',
+        for: ['admin'],
+      },
+    ],
+  },
+  // {
+  //   type: 'popup-input',
+  //   name: 'program_admin',
+  //   label: 'Select Admin Materials',
+  //   fieldtype: 'text',
+  //   placeholder: 'Select Admin Materials',
+  //   inputRules: {
+  //     // required: 'This field is required',
+  //   },
+  //   width: 'w-full',
+  //   icon: 'add',
+  //   for: ['admin'],
+  // },
+  {
+    type: 'input',
     name: 'program_name',
     fieldtype: 'text',
     label: 'Program Name',
@@ -1383,7 +1629,7 @@ export const ProgramInformationFields = [
       required: 'This field is required',
     },
     width: 'width-32',
-    for: ['admin', 'mentor'],
+    for: ['mentor'],
   },
   {
     type: 'dropdown',
@@ -1395,7 +1641,7 @@ export const ProgramInformationFields = [
     },
     options: SessionCounts(),
     width: 'width-32',
-    for: ['admin', 'mentor'],
+    for: ['mentor'],
   },
   {
     type: 'textbox',
@@ -1406,7 +1652,7 @@ export const ProgramInformationFields = [
       required: 'This field is required',
     },
     width: 'w-full',
-    for: ['admin', 'mentor'],
+    for: ['mentor'],
   },
   {
     type: 'textbox',
@@ -1417,7 +1663,7 @@ export const ProgramInformationFields = [
       required: 'This field is required',
     },
     width: 'w-full',
-    for: ['admin', 'mentor'],
+    for: ['mentor'],
   },
   {
     type: 'dropdown',
@@ -1440,7 +1686,7 @@ export const ProgramInformationFields = [
       required: 'This field is required',
     },
     width: 'width-32',
-    for: ['admin', 'mentor'],
+    for: ['mentor'],
   },
   {
     type: 'date',
@@ -1451,7 +1697,7 @@ export const ProgramInformationFields = [
       required: 'This field is required',
     },
     width: 'width-32',
-    for: ['admin', 'mentor'],
+    for: ['mentor'],
   },
   {
     type: 'popup-input',
@@ -1464,7 +1710,7 @@ export const ProgramInformationFields = [
     },
     width: 'w-full',
     icon: 'add',
-    for: ['admin', 'mentor'],
+    for: ['mentor'],
   },
   // {
   //   type: "checkbox",
@@ -1486,18 +1732,18 @@ export const ProgramInformationFields = [
   //   width: 'w-full',
   //   for: ['admin', 'mentor']
   // },
-  {
-    type: 'input',
-    name: 'max_mentor_count',
-    label: 'Maximum Mentor Limits',
-    fieldtype: 'number',
-    placeholder: 'Select Mentor Limits',
-    inputRules: {
-      required: 'This field is required',
-    },
-    width: 'width-32',
-    for: ['admin'],
-  },
+  // {
+  //   type: 'input',
+  //   name: 'max_mentor_count',
+  //   label: 'Maximum Mentor Limits',
+  //   fieldtype: 'number',
+  //   placeholder: 'Select Mentor Limits',
+  //   inputRules: {
+  //     required: 'This field is required',
+  //   },
+  //   width: 'width-32',
+  //   for: ['admin'],
+  // },
   {
     type: 'input',
     name: 'max_mentee_count',
@@ -1508,7 +1754,7 @@ export const ProgramInformationFields = [
       required: 'This field is required',
     },
     width: 'width-32',
-    for: ['admin', 'mentor'],
+    for: ['mentor'],
   },
   {
     type: 'dropdown',
@@ -1529,7 +1775,7 @@ export const ProgramInformationFields = [
       },
     ],
     width: 'width-32',
-    for: ['admin', 'mentor'],
+    for: ['mentor'],
   },
   {
     type: 'dropdown',
@@ -1550,32 +1796,32 @@ export const ProgramInformationFields = [
       },
     ],
     width: 'width-32',
-    for: ['admin', 'mentor'],
+    for: ['mentor'],
   },
-  {
-    type: 'dropdown',
-    name: 'program_auto_approval',
-    label: 'Auto Approval',
-    placeholder: 'Select',
-    inputRules: {
-      required: false,
-    },
-    options: [
-      {
-        key: true,
-        value: 'Yes',
-      },
-      {
-        key: false,
-        value: 'No',
-      },
-    ],
-    width: 'width-49',
-    for: ['admin'],
-  },
+  // {
+  //   type: 'dropdown',
+  //   name: 'program_auto_approval',
+  //   label: 'Auto Approval',
+  //   placeholder: 'Select',
+  //   inputRules: {
+  //     required: false,
+  //   },
+  //   options: [
+  //     {
+  //       key: true,
+  //       value: 'Yes',
+  //     },
+  //     {
+  //       key: false,
+  //       value: 'No',
+  //     },
+  //   ],
+  //   width: 'width-49',
+  //   for: ['admin'],
+  // },
   {
     type: 'input',
-    name: 'venue',
+    name: 'location',
     label: 'Add Location for this Program/Events',
     fieldtype: 'text',
     placeholder: 'Add Location',
@@ -1598,15 +1844,15 @@ export const AboutProgramFields = [
       required: 'This field is required',
     },
     width: 'width-82',
-    for: ['admin', 'mentor'],
+    for: ['mentor'],
   },
-  {
-    type: 'htmlbuilder',
-    name: 'html_builder',
-    text: 'Use HTML Builder',
-    width: 'width-17',
-    for: ['admin', 'mentor'],
-  },
+  // {
+  //   type: 'htmlbuilder',
+  //   name: 'html_builder',
+  //   text: 'Use HTML Builder',
+  //   width: 'width-17',
+  //   for: ['admin', 'mentor'],
+  // },
 
   {
     type: 'popup-input',
@@ -1619,25 +1865,53 @@ export const AboutProgramFields = [
     },
     width: 'w-full',
     icon: 'add',
-    for: ['admin', 'mentor'],
+    for: ['mentor'],
   },
   {
     type: 'file',
     name: 'program_image',
-    label: 'Program Related Image',
+    label: 'Program Banner',
     fieldtype: 'text',
     placeholder: 'Multiple Skills added',
     inputRules: {
       required: 'This field is required',
     },
     width: 'w-full',
-    for: ['admin', 'mentor'],
+    for: ['mentor'],
     is_image: true,
+  },
+  {
+    type: 'radio',
+    name: 'is_sponsored',
+    label: 'Sponsor Availability:',
+    placeholder: '',
+    options: [
+      { key: "true", value: "Yes" },
+      { key: "false", value: "No" }
+    ],
+    inputRules: {
+      // required: "This field is required",
+    },
+    size: true,
+    for: ['admin', 'mentor'],
+  },
+  {
+    type: 'input',
+    name: 'enrollment_fees',
+    label: 'Enrollment fees',
+    fieldtype: 'number',
+    placeholder: 'Enter Enrollment fees',
+    inputRules: {
+      valueAsNumber: true,
+      required: 'This field is required',
+    },
+    width: 'width-82',
+    for: ['admin', 'mentor'],
   },
   {
     type: 'file',
     name: 'image',
-    label: 'Add Sponsor Logo (Optional)',
+    label: 'Add Sponsor Logo',
     fieldtype: 'text',
     placeholder: 'Multiple Skills added',
     inputRules: {
@@ -1652,21 +1926,21 @@ export const ProgramOutcomesFields = [
   {
     type: 'textbox',
     name: 'benefits',
-    label: 'Outcome',
+    label: 'Benefits',
     placeholder: 'Enter benefits details',
     inputRules: {
       required: 'This field is required',
     },
-    width: 'width-82',
-    for: ['admin', 'mentor'],
+    width: 'w-full',
+    for: ['mentor'],
   },
-  {
-    type: 'htmlbuilder',
-    name: 'html_builder',
-    text: 'Use HTML Builder',
-    width: 'width-17',
-    for: ['admin', 'mentor'],
-  },
+  // {
+  //   type: 'htmlbuilder',
+  //   name: 'html_builder',
+  //   text: 'Use HTML Builder',
+  //   width: 'width-17',
+  //   for: ['admin', 'mentor'],
+  // },
 
   {
     type: 'popup-input',
@@ -1675,7 +1949,7 @@ export const ProgramOutcomesFields = [
     fieldtype: 'text',
     placeholder: 'Add Certificates',
     inputRules: {
-      required: 'This field is required',
+      // required: 'This field is required',
     },
     width: 'w-full',
     icon: 'add',
@@ -1687,7 +1961,7 @@ export const ProgramTestimonialsFields = [
   {
     type: 'popup-input',
     name: 'members',
-    label: 'Additional Testimonies',
+    label: 'Members',
     placeholder: 'Add request for testimonials',
     fieldtype: 'text',
     inputRules: {
@@ -1695,7 +1969,7 @@ export const ProgramTestimonialsFields = [
     },
     width: 'w-full',
     icon: 'add',
-    for: ['admin', 'mentor'],
+    for: ['mentor'],
   },
   {
     type: 'dropdown',
@@ -1707,20 +1981,31 @@ export const ProgramTestimonialsFields = [
     },
     options: [
       {
-        key: 'blog',
-        value: 'Blog',
+        key: 'video',
+        value: 'Video',
       },
       {
-        key: 'case_study',
-        value: 'Case Studies',
+        key: 'pdf',
+        value: 'PDF',
       },
       {
-        key: 'success_story',
-        value: 'Success Story',
+        key: 'image',
+        value: 'Image',
       },
     ],
     width: 'w-full',
-    for: ['admin', 'mentor'],
+    for: ['mentor'],
+  },
+  {
+    type: 'textbox',
+    name: 'test_description',
+    label: 'Description',
+    placeholder: '',
+    inputRules: {
+      required: 'This field is required',
+    },
+    width: 'w-full',
+    for: ['mentor'],
   },
 ];
 
