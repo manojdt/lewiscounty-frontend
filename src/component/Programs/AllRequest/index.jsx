@@ -720,7 +720,7 @@ export default function AllRequest() {
                                 </MenuItem>
 
                                 {((seletedItem.status === "new" ||
-                                    seletedItem.status === "pending") && (role === "admin" || role === "mentor")) && (
+                                    seletedItem.status === "pending") && (role === "admin")) && (
                                         <>
                                             <MenuItem
                                                 onClick={handleAcceptProgramRequest}
@@ -1598,6 +1598,8 @@ export default function AllRequest() {
             goalsRequest({
                 ...(filterStatus !== "all" && { status: filterStatus }),
                 // created_by: createdBy,
+                page: paginationModel?.page + 1,
+                limit: paginationModel?.pageSize,
                 ...(filter.search !== "" && { search: filter.search }),
                 ...(filter.filter_by !== ""
                     ? { filter_by: filter.filter_by }
@@ -1971,7 +1973,7 @@ export default function AllRequest() {
             });
         }
 
-        if (selectedRequestedtype === "goal_request") {
+        if (selectedRequestedtype === "new_goals_request") {
             setActiveTableDetails({
                 column: goalColumns,
                 data: goalsRequestInfo?.results,
@@ -2058,12 +2060,12 @@ export default function AllRequest() {
                 getResourceRequestApi();
             }
 
-            if (selectedRequestedtype === "goal_request") {
+            if (selectedRequestedtype === "new_goals_request") {
                 getGoalsRequestApi();
             }
-            if (selectedRequestedtype === "new_goals_request") {
-                handleNewGoalRequestApi();
-            }
+            // if (selectedRequestedtype === "new_goals_request") {
+            //     handleNewGoalRequestApi();
+            // }
 
             if (selectedRequestedtype === "certificate_request") {
                 getCerificateRequestAPi();

@@ -63,14 +63,14 @@ const MentorMenteeProfile = () => {
     if (state?.user_id !== '') {
       console.log(state,"state")
       dispatch(
-        getProfileInfo({ id: state?.user_id, follow_id: state?.row_id })
+        getProfileInfo({ id: state?.user_id })
       );
     }
   }, [state?.user_id]);
 
   const handleFollowMentee = () => {
     const payload = {
-      follow_id: state?.row_id,
+      // follow_id: state?.row_id,
       status: activity?.type,
     };
 
@@ -86,7 +86,7 @@ const MentorMenteeProfile = () => {
         setCreateMeetingLoading(false);
         dispatch(updateUserList({ status: '' }));
         dispatch(
-          getProfileInfo({ id: state?.user_id, follow_id: state?.row_id })
+          getProfileInfo({ id: state?.user_id })
         );
       }, [2000]);
     }
