@@ -446,7 +446,7 @@ export const MenteePersonalInformationFields = [
       required: 'This field is required',
     },
     size: true,
-    disable: true,
+    disabled: true,
     width: 'col-span-2',
   },
   {
@@ -459,7 +459,7 @@ export const MenteePersonalInformationFields = [
       required: 'This field is required',
     },
     size: true,
-    disable: true,
+    disabled: true,
     width: 'col-span-2',
   },
   {
@@ -472,7 +472,7 @@ export const MenteePersonalInformationFields = [
       required: 'This field is required',
     },
     size: true,
-    disable: true,
+    disabled: true,
     width: 'col-span-2',
   },
   {
@@ -512,8 +512,9 @@ export const MenteePersonalInformationFields = [
     label: 'Date Of Birth',
     placeholder: 'Select Program Start Date and Time',
     inputRules: {
-      required: 'This field is required',
+      // required: 'This field is required',
     },
+    disabled: true,
     size: true,
     width: 'col-span-2',
   },
@@ -2040,7 +2041,7 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       disabled: bool,
     },
     {
-      type: type === "new" ? "dropdown" : 'input',
+      type: type === 'new' ? 'dropdown' : 'input',
       name: 'program_id',
       fieldtype: 'text',
       label: 'Program Name',
@@ -2050,7 +2051,7 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       },
       width: 'width-32',
       disabled: bool,
-      options: []
+      options: [],
     },
     {
       type: 'input',
@@ -2063,7 +2064,7 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       },
       width: 'width-32',
       disabled: bool,
-      options: []
+      options: [],
     },
     {
       type: 'date',
@@ -2152,8 +2153,8 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       },
       width: 'w-full',
     },
-  ]
-}
+  ];
+};
 
 export const ReportFields = (bool = false) => [
   {
@@ -2916,7 +2917,7 @@ export const PersonalInfoFields = [
       required: 'This field is required',
     },
     size: true,
-    disable: true,
+    disabled: true,
     width: 'col-span-2',
   },
   {
@@ -2929,7 +2930,7 @@ export const PersonalInfoFields = [
       // required: "This field is required",
     },
     size: true,
-    disable: true,
+    disabled: true,
     width: 'col-span-2',
   },
   {
@@ -2942,7 +2943,7 @@ export const PersonalInfoFields = [
       required: 'This field is required',
     },
     size: true,
-    disable: true,
+    disabled: true,
     width: 'col-span-2',
   },
   {
@@ -3051,63 +3052,62 @@ export const PersonalInfoFields = [
   },
 ];
 
-
 export const reportAdminColumns = [
   {
     field: 'name',
     headerName: 'Report Name',
     flex: 1,
     id: 1,
-    status: ["all", "approved", "rejected"]
+    status: ['all', 'approved', 'rejected'],
   },
   {
     field: 'created_by_full_name',
     headerName: 'Mentor Name',
     flex: 1,
     id: 1,
-    status: ["approved", "rejected"]
+    status: ['approved', 'rejected'],
   },
   {
     field: 'category_name',
     headerName: 'Category',
     flex: 1,
     id: 1,
-    status: ["all", "approved", "rejected"]
+    status: ['all', 'approved', 'rejected'],
   },
   {
     field: 'program_name',
     headerName: 'Program Name',
     flex: 1,
     id: 1,
-    status: ["all", "approved", "rejected"]
+    status: ['all', 'approved', 'rejected'],
   },
   {
     field: 'created_at',
     headerName: 'Create Date',
     flex: 1,
     id: 1,
-    status: ["all"]
+    status: ['all'],
   },
   {
     field: 'participates_count',
     headerName: 'Mentees',
     flex: 1,
     id: 1,
-    status: ["all","approved", "rejected"]
+    status: ['all', 'approved', 'rejected'],
   },
   {
     field: 'updated_at',
     headerName: 'Last Updated Date',
     flex: 1,
     id: 1,
-    status: ["approved", "rejected"]
+    status: ['approved', 'rejected'],
   },
   {
     field: 'updated_by_full_name',
     headerName: 'Last Updated By',
     flex: 1,
     id: 1,
-    status: ["approved", "rejected"]
+    status: ['approved', 'rejected'],
   },
 
   // {
@@ -3128,4 +3128,4 @@ export const reportAdminColumns = [
   //   flex: 1,
   //   id: 1,
   // },
-]
+];

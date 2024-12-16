@@ -222,7 +222,7 @@ export const Navbar = () => {
     dispatch(userActivities({ limit: 10 }));
   }, []);
 
-  console.log(userInfo.data.role);
+  // console.log(userInfo.data.role);
 
   const [openSetting, setOpenSetting] = React.useState(false);
 

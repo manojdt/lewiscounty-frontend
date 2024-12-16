@@ -44,7 +44,7 @@ const PersonalInfoSection = ({ type }) => {
                 style={{ marginBottom: '16px' }}
               >
                 <label
-                  className='block tracking-wide  text-xs mb-2'
+                  className='block disabled:text-gray-100 tracking-wide  text-xs mb-2'
                   style={{ color: 'rgba(116, 116, 116, 1)' }}
                 >
                   {field.label}
@@ -64,7 +64,7 @@ const PersonalInfoSection = ({ type }) => {
                       <input
                         {...register(field.name, field.inputRules)}
                         type={field.fieldtype}
-                        className='w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none
+                        className='w-full border-none px-3 py-[0.32rem] disabled:bg-gray-100 leading-[2.15] input-bg focus:border-none focus-visible:border-none
                                                           focus-visible:outline-none text-[14px] h-[60px]'
                         placeholder={field.placeholder}
                         style={{
@@ -202,7 +202,7 @@ const PersonalInfoSection = ({ type }) => {
             return (
               <div className={`${field.width} relative`}>
                 <label
-                  className='block tracking-wide text-xs mb-2'
+                  className='block disabled:bg-gray-100 tracking-wide text-xs mb-2'
                   style={{ color: 'rgba(116, 116, 116, 1)' }}
                 >
                   {field.label}
@@ -217,7 +217,7 @@ const PersonalInfoSection = ({ type }) => {
                       name='date'
                       control={control}
                       defaultValue={null}
-                      rules={{ required: 'Date is required' }}
+                      // rules={{ required: 'Date is required' }}
                       render={({ field: dateField }) => {
                         const value = getValues(field.name)
                           ? new Date(getValues(field.name))
@@ -226,8 +226,9 @@ const PersonalInfoSection = ({ type }) => {
                         console.log(value);
                         return (
                           <Calendar
-                            className='calendar-control input-bg'
+                            className='calendar-control disabled:bg-gray-100 input-bg'
                             value={value}
+                            disabled={field.disabled}
                             onChange={(e) => dateField.onChange(e.value)}
                             dateFormat='dd/mm/yy'
                           />
