@@ -136,7 +136,10 @@ React.useEffect(() => {
       marked: !program.is_bookmark,
     };
     setLoading(true);
-
+    const filterDate = searchParams.get('datefilter');
+  const pay=  {
+      filter_by:filterDate
+    }
     const bookmark = await api.post('bookmark', payload);
     if (bookmark.status === 201 && bookmark.data) {
       setLoading(false);
@@ -191,7 +194,9 @@ React.useEffect(() => {
     const filterSearch = searchParams.get('search');
     const filterDate = searchParams.get('datefilter');
     const isBookmark = searchParams.get('is_bookmark');
-
+const pay={
+  filter_by:filterDate
+}
     let query = {};
 
     if (filterType && filterType !== '') {
@@ -223,8 +228,12 @@ React.useEffect(() => {
 
     if (role === 'mentee') {
       dispatch(getMenteePrograms(query));
+    dispatch(getMenteeProgramCount());
     }
-    if (role === 'mentor' || role === 'admin') dispatch(getUserPrograms(query));
+    if (role === 'mentor' || role === 'admin'){
+      dispatch(getProgramCounts());
+      dispatch(getUserPrograms(query));
+    } 
     // if (role === '') dispatch(getUserPrograms(query));
   };
   const getTableData = (search = '') => {
@@ -317,6 +326,7 @@ React.useEffect(() => {
     let query = {};
     const filterType = searchParams.get('type');
     const isBookmark = searchParams.get('is_bookmark');
+    const filterDate = searchParams.get('datefilter');
     if (filterType && filterType !== '') {
       query = { type: 'status', value: filterType };
     }
@@ -324,7 +334,12 @@ React.useEffect(() => {
     if (isBookmark && isBookmark !== '') {
       query = { type: 'is_bookmark', value: isBookmark };
     }
-
+    if (filterDate && filterDate !== '') {
+      query.date = { date: 'filter_by', value: filterDate };
+    }
+    if (!filterDate) {
+      query.date = { date: 'filter_by', value:programFilter.datefilter };
+    }
     if (action === 'prev') {
       query = { ...query, page: 'page', number: userprograms.current_page - 1 };
     }
@@ -435,6 +450,10 @@ React.useEffect(() => {
       let query = {};
       const filterType = searchParams.get('type');
       const isBookmark = searchParams.get('is_bookmark');
+      const filterDate = searchParams.get('datefilter');
+      const pay={
+        filter_by:filterDate
+      }
       if (filterType && filterType !== '') {
         query = { type: 'status', value: filterType };
       }

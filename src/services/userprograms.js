@@ -97,14 +97,33 @@ export const launchProgram = createAsyncThunk(
 
 
 export const getProgramCounts = createAsyncThunk(
-    "getProgramCounts",
-    async (id) => {
-        const getProgramAllCounts = await api.get('program_status_count');
-        if (getProgramAllCounts.status === 200 && getProgramAllCounts.data) {
-            return getProgramAllCounts.data;
-        }
-        return getProgramAllCounts;
+  "getProgramCounts",
+  async (query) => {
+    if (!query || Object.keys(query).length === 0) {
+      const getProgramAllCounts = await api.get(`program_status_count`);
+      if (getProgramAllCounts.status === 200 && getProgramAllCounts.data) {
+        return getProgramAllCounts.data;
+      }
+      return getProgramAllCounts;
+    } else {
+      let filteredQuery = Object.fromEntries(
+        Object.entries(query).filter(
+          ([key, value]) =>
+            !(key === "search" && value.trim().length === 0) &&
+            !(key === "status" && value === "all")
+        )
+      );
+      let queryString = new URLSearchParams(filteredQuery).toString();
+
+      const getProgramAllCounts = await api.get(
+        `program_status_count?${queryString}`
+      );
+      if (getProgramAllCounts.status === 200 && getProgramAllCounts.data) {
+        return getProgramAllCounts.data;
+      }
+      return getProgramAllCounts;
     }
+  }
 );
 
 export const getProgramDetails = createAsyncThunk(
@@ -303,12 +322,31 @@ export const menteeJoinProgram = createAsyncThunk(
 
 export const getMenteeProgramCount = createAsyncThunk(
     "getMenteeProgramCount",
-    async () => {
-        const menteeProgramCount = await api.get('mentee_program/count_program');
+    async (query) => {
+        if (!query || Object.keys(query).length === 0) {
+            const menteeProgramCount = await api.get(`mentee_program/count_program`);
+            if (menteeProgramCount.status === 200 && menteeProgramCount.data) {
+                return menteeProgramCount.data;
+            }
+            return menteeProgramCount;
+        }else{
+
+        
+        let filteredQuery = Object.fromEntries(
+            Object.entries(query).filter(
+              ([key, value]) =>
+                !(key === 'search' && value.trim().length === 0) &&
+                !(key === 'status' && value === 'all')
+            )
+          );
+          let queryString = new URLSearchParams(filteredQuery).toString();
+          
+        const menteeProgramCount = await api.get(`mentee_program/count_program?${queryString}`);
         if (menteeProgramCount.status === 200 && menteeProgramCount.data) {
             return menteeProgramCount.data;
         }
         return menteeProgramCount;
+    }
     }
 );
 

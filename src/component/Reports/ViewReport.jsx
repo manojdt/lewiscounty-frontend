@@ -145,7 +145,7 @@ const ViewReport = () => {
                                             Mentor Name
                                         </th>
                                         <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
-                                            {reportDetails.created_by_full_name}
+                                            {reportDetails.mentor_name}
                                         </td>
                                     </tr>
 
