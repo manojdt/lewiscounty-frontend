@@ -3,6 +3,7 @@ import {
 } from "@reduxjs/toolkit";
 
 import {
+  acceptProgram,
   assignProgramTask,
   chartProgramList,
   getMenteeJoinedInProgram,
@@ -82,13 +83,13 @@ export const userProgramSlice = createSlice({
 
         const {
           status_counts = {},
-            overall_count = 0,
-            programs = [],
-            filterType,
-            filterValue,
-            ...rest
+          overall_count = 0,
+          programs = [],
+          filterType,
+          filterValue,
+          results,
+          ...rest
         } = action.payload;
-
         let updateState = {
           ...state,
           status: programStatus.load,
@@ -112,9 +113,7 @@ export const userProgramSlice = createSlice({
         if (filterType !== "") {
           const filtertype =
             filterType !== "is_bookmark" ? filterValue : "bookmarked";
-
-            console.log('filtertype', filtertype, programs)
-          updateState[filtertype] = programs;
+          updateState[filtertype] = filterValue === "program_assign" ? results : programs;
         }
         return updateState;
       })
@@ -165,6 +164,29 @@ export const userProgramSlice = createSlice({
         };
       })
       .addCase(launchProgram.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
+    
+      builder
+      .addCase(acceptProgram.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(acceptProgram.fulfilled, (state, action) => {
+        return {
+          ...state,
+          programdetails: action.payload.programdetails,
+          status: action.payload.status,
+          loading: false,
+        };
+      })
+      .addCase(acceptProgram.rejected, (state, action) => {
         return {
           ...state,
           loading: false,
@@ -370,9 +392,9 @@ export const userProgramSlice = createSlice({
       .addCase(getMenteePrograms.fulfilled, (state, action) => {
         const {
           programs = [],
-            filterType,
-            filterValue,
-            ...rest
+          filterType,
+          filterValue,
+          ...rest
         } = action.payload;
 
         let updateState = {

@@ -34,7 +34,6 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
     const [programImage, setProgramImage] = useState(null)
     const [hoverIndex, setHoverIndex] = useState({ image: null, desc: null })
     const [programUploadAction, setProgramUploadAction] = useState({ loading: false, imageModal: false, successModal: false, error: '', selectedProgram: {} })
-
     const {
         register,
         formState: { errors },
@@ -262,7 +261,7 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                                                             {currentProgram.program_name}
                                                         </h4>
                                                         {
-                                                            currentProgram.categories.length > 0 &&
+                                                            currentProgram?.categories && currentProgram?.categories.length > 0 &&
                                                             <p className="py-1 px-1 text-[12px] text-center rounded-3xl w-[90px]"
                                                                 style={{ border: '1px solid rgba(238, 238, 238, 1)' }}>{currentProgram?.categories[0]?.name}</p>
                                                         }
@@ -285,8 +284,8 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                                                         <span style={{
                                                             textOverflow: 'ellipsis', overflow: 'hidden',
                                                             width: '215px', whiteSpace: 'nowrap', textTransform: "capitalize",
-                                                            
-                                                        }}>Instructor : <span style={{color: "#1D5BBF"}}>{currentProgram?.mentor_name} ({currentProgram?.role ?? ""})</span></span>
+
+                                                        }}>Instructor : <span style={{ color: "#1D5BBF" }}>{currentProgram?.mentor_name} ({currentProgram?.role ?? ""})</span></span>
                                                     </div>
                                                     <div className='flex justify-center pt-2'>
                                                         {

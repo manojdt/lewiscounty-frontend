@@ -41,8 +41,8 @@ export const getUserPrograms = createAsyncThunk(
         }
         queryParams = queryParams !== '' ? `${queryParams}&limit=6` : '?limit=6'
 
-        const getUserProgram = await api.get(`programs${queryParams}`);
-        if (getUserProgram.status === 200 && getUserProgram.data) {
+        const getUserProgram = await api.get(query?.value === "program_assign" ? `request${queryParams}` : `programs${queryParams}`);
+        if ((getUserProgram.status === 200 || getUserProgram.status === 301) && getUserProgram.data) {
             const response = {
                 ...getUserProgram.data,
                 filterType: updateQuery?.type || '',
@@ -94,6 +94,27 @@ export const launchProgram = createAsyncThunk(
         return updateUserProgram;
     }
 );
+export const acceptProgram = createAsyncThunk(
+    "acceptProgram",
+    async (data) => {
+        const {id,...restOfData} = data
+        const updateUserProgram = await api.patch(`request/${id}/`, restOfData);
+        if (updateUserProgram.status === 200 && updateUserProgram.data) {
+            let status = ''
+            // if (data.status && data.status !== '') {
+            //     status = data.status
+            // }
+            // if (data.hasOwnProperty('is_bookmark') && data.is_bookmark !== '') {
+            //     status = programActionStatus.bookmark
+            // }
+            return {
+                programdetails: updateUserProgram.data,
+                status
+            };
+        }
+        return updateUserProgram;
+    }
+);
 
 
 export const getProgramCounts = createAsyncThunk(
@@ -128,11 +149,12 @@ export const getProgramCounts = createAsyncThunk(
 
 export const getProgramDetails = createAsyncThunk(
     "getProgramDetails",
-    async (id) => {
+    async (data) => {
+        const { id, role } = data
 
-        const getDetailsofProgram = await api.get(`programs/${id}`);
-        if (getDetailsofProgram.status === 200 && getDetailsofProgram.data && getDetailsofProgram.data) {
-            return getDetailsofProgram.data;
+        const getDetailsofProgram = await api.get(role ? `program/admin-program/${id}` : `fetch_program_detail/${id}`);
+        if (getDetailsofProgram.status === 200 && getDetailsofProgram.data && getDetailsofProgram.data.program) {
+            return getDetailsofProgram.data.program;
         }
         return getDetailsofProgram;
     }
@@ -144,13 +166,9 @@ export const getSpecificProgramDetails = createAsyncThunk(
     "getSpecificProgramDetails",
     async (ids) => {
         const { id, requestId = '' } = ids
-        let queryString = id
-        if (requestId !== '' && requestId !== null) {
-            queryString = queryString + '?request_id=' + requestId
-        }
 
-      
-        const getDetailsofProgram = await api.get(`programs/${queryString}`);
+        const getDetailsofProgram = await api.get(`programs/${id}?request_id=${requestId}`);
+        // const getDetailsofProgram = await api.get(`fetch_program_detail/${queryString}`);
         if (getDetailsofProgram.status === 200 && getDetailsofProgram.data && getDetailsofProgram.data.program) {
             return getDetailsofProgram.data.program;
         }

@@ -76,10 +76,18 @@ export const createProgram = createAsyncThunk("createProgram", async (data) => {
 export const createNewPrograms = createAsyncThunk(
   "createNewPrograms",
   async (data) => {
+    const { bodyFormData, role } = data
+    console.log('FormData contents before edit update:');
+    Array.from(bodyFormData.entries()).forEach(([key, value]) => {
+      console.log(`Field: ${key}`);
+      console.log('Value:', value);
+      console.log('Type:', typeof value);
+      console.log('-------------------');
+    });
     const headers = {
       'Content-Type': 'multipart/form-data',
     }
-    const createProgram = await api.post("programs", data, {
+    const createProgram = await api.post(role ? "program/admin-program" : "programs", bodyFormData, {
       headers: headers
     });
     if (createProgram.status === 201) {
@@ -92,12 +100,22 @@ export const createNewPrograms = createAsyncThunk(
 export const editUpdateProgram = createAsyncThunk(
   "editUpdateProgram",
   async (data) => {
+    const { bodyFormData: { program_id, ...restOfData }, role } = data
     const headers = {
       'Content-Type': 'multipart/form-data',
     }
-    const editUpdateProgramInfo = await api.put("programs", data, {
-      headers: headers
-    });
+    let editUpdateProgramInfo
+    if (role) {
+      editUpdateProgramInfo = await api.put(`program/admin-program/${program_id}`, restOfData, {
+        headers: headers
+      });
+
+    } else {
+      editUpdateProgramInfo = await api.put("programs", data, {
+        headers: headers
+      });
+
+    }
     if (editUpdateProgramInfo.status === 201 || editUpdateProgramInfo.status === 200) {
       return editUpdateProgramInfo;
     }
@@ -195,6 +213,14 @@ export const getAllMembers = createAsyncThunk("getAllMembers", async (data) => {
     return allMembers.data;
   }
   return allMembers;
+});
+
+export const getAllMentors = createAsyncThunk("getAllMentors", async () => {
+  const allMentors = await api.get(`members/member-list?role_name=mentor&page=1&limit=100&status=active`);
+  if (allMentors.status === 200 && allMentors.data) {
+    return allMentors.data;
+  }
+  return allMentors;
 });
 
 export const getProgramsByCategory = createAsyncThunk(
