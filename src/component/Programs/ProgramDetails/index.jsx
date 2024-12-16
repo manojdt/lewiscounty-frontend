@@ -1051,7 +1051,7 @@ export default function ProgramDetails() {
 
                                                     {
                                                         // requestId !== '' && programdetails.mentor_join_request_status !== 'accept' && programdetails.mentor_join_request_status !== 'cancel'
-                                                        (programdetails.status === "yettoapprove" && role === "admin") ?
+                                                        ((programdetails.status === "yettoapprove" || programdetails.status === "inprogress")) ?
                                                             <div className='flex gap-4 pt-10'>
                                                                 <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
                                                                     border: "1px solid #E0382D",
@@ -1074,7 +1074,7 @@ export default function ProgramDetails() {
                                                             requestId !== '' ?
                                                                 <>
                                                                     {
-                                                                        programdetails.mentor_join_request_status === 'accept' &&
+                                                                        programdetails.status === 'accept' &&
 
                                                                         <button className='py-3 px-16 mt-7 text-white text-[14px] flex items-center' style={{
                                                                             background: "#16B681",
@@ -1086,7 +1086,7 @@ export default function ProgramDetails() {
                                                                     }
 
                                                                     {
-                                                                        programdetails.mentor_join_request_status === 'cancel' &&
+                                                                        programdetails.status === 'cancel' &&
 
                                                                         <button className='py-3 mt-7 px-16 text-white text-[14px] flex items-center' style={{
                                                                             border: "1px solid #E0382D",
@@ -1334,7 +1334,7 @@ export default function ProgramDetails() {
                                         {
                                             <Box mt={2}>
                                                 {
-                                                    (role === "admin" && (programdetails?.status === "yettoapprove" ||
+                                                    (role === "admin" && (programdetails?.status === "yettoapprove" || programdetails?.status === "inprogress" ||
                                                         ((programdetails?.request_data?.request_type === "program_reschedule" || programdetails?.request_data?.request_type === "program_cancel") &&
                                                             ["new", "pending"].includes(programdetails?.request_data?.status)
                                                         ))) &&
