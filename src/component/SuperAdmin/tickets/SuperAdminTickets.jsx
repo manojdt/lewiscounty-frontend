@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import SearchIcon from '../../../assets/images/search1x.png';
 import { useNavigate } from 'react-router-dom';
 
-const SuperAdminTickets = () => {
+const AdminTickets = () => {
   const navigate = useNavigate();
   const [requestTab, setRequestTab] = useState('all');
   const [paginationModel, setPaginationModel] = React.useState({
@@ -123,4 +123,4 @@ const SuperAdminTickets = () => {
   );
 };
 
-export default SuperAdminTickets;
+export default AdminTickets;

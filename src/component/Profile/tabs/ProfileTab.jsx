@@ -11,8 +11,8 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { profileStatus, view } from '../../../utils/constant';
-import { ProfileFields } from '../../../utils/formFields';
+import { profileStatus, user, view } from '../../../utils/constant';
+import { PersonalInfoFields, ProfileFields } from '../../../utils/formFields';
 import { Backdrop, CircularProgress } from '@mui/material';
 import PersonalInfoSection from '../section-edit/personal-info-section';
 import ProfessionalBakgroundSection from '../section-edit/ProfessionalBakgroundSection';
@@ -64,63 +64,10 @@ const ProfileTab = ({ setEditMode }) => {
     setValue,
   } = useForm();
 
-  // const profileSection = [
-  //   {
-  //     title: 'Professional Background',
-  //     component: (
-  //       <ProfessionalBakgroundSection
-  //         type={view.viewOnly}
-  //         // getValues={getValues}
-  //       />
-  //     ),
-  //   },
-  //   {
-  //     title: 'Educational Background',
-  //     component: <EducationalBackgroundSection type={view.viewOnly} />,
-  //   },
-  //   {
-  //     title: 'Area of expertise',
-  //     component: <AreaOfExpertiseSection type={view.viewOnly} />,
-  //   },
-  //   {
-  //     title: 'Mentorship Experience ',
-  //     component: <MentorshipExperienceSection type={view.viewOnly} />,
-  //   },
-  //   {
-  //     title: 'Document upload',
-  //     component: (
-  //       <DocumentUploadSection type={view.viewOnly} getValues={getValues} />
-  //     ),
-  //   },
-  //   {
-  //     title: 'Mentorship Preference',
-  //     component: <MentorshipPreferenceSection type={view.viewOnly} />,
-  //   },
-  //   {
-  //     title: 'Goals and Expectatons',
-  //     component: (
-  //       <GoalsAndExpectatonsSection
-  //         type={view.viewOnly}
-  //         getValues={getValues}
-  //       />
-  //     ),
-  //   },
-  //   {
-  //     title: 'Availability and Commitment',
-  //     component: <AvailabilityAndCommitmentSection type={view.viewOnly} />,
-  //   },
-  //   {
-  //     title: 'Additional Information',
-  //     component: <AdditionalInformationSection type={view.viewOnly} />,
-  //   },
-  // ];
-
   const allProfileSections = [
     {
       title: 'Personal Information',
-      component: (
-        <PersonalInfoSection type={view.viewOnly} getValues={getValues} />
-      ),
+      component: <PersonalInfoSection type={view.viewOnly} />,
     },
     {
       title: 'Current Status',
@@ -351,33 +298,36 @@ const ProfileTab = ({ setEditMode }) => {
             </div>
           </div>
 
-          <div className='grid grid-cols-6 gap-3 mt-12'>
-            {ProfileFields.map((profilefield, index) => (
-              <div className={`${profilefield.width}`} key={index}>
-                <div className='mb-5'>
-                  <label
-                    className='block tracking-wide  text-xs mb-2'
-                    style={{ color: 'rgba(116, 116, 116, 1)' }}
-                  >
-                    {profilefield.label}
-                  </label>
+          {/* <div className='grid grid-cols-6 gap-3 mt-12'>
+            {PersonalInfoFields.map((profilefield, index) => {
+              // console.log(getValues(profilefield.name));
+              return (
+                <div className={`${profilefield.width}`} key={index}>
+                  <div className='mb-5'>
+                    <label
+                      className='block tracking-wide  text-xs mb-2'
+                      style={{ color: 'rgba(116, 116, 116, 1)' }}
+                    >
+                      {profilefield.label}
+                    </label>
 
-                  <p className='text-[14px] flex flex-wrap items-center justify-start gap-4'>
-                    {getValues(profilefield.name)
-                      ? getValues(profilefield.name)
-                      : '-'}
-                  </p>
+                    <p className='text-[14px] flex flex-wrap items-center justify-start gap-4'>
+                      {getValues(profilefield.name)
+                        ? getValues(profilefield.name)
+                        : '-'}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              );
+            })}
+          </div> */}
 
           <div
             ref={contentRef}
             style={{
               maxHeight: showAll
                 ? `${contentRef.current.scrollHeight}px`
-                : '0px',
+                : '400px',
               overflow: 'hidden',
               transition: 'max-height 0.5s ease',
             }}
@@ -389,19 +339,21 @@ const ProfileTab = ({ setEditMode }) => {
             ))}
           </div>
 
-          <div
-            className='underline mt-3 flex items-center gap-2 text-blue-500 font-semibold text-lg cursor-pointer'
-            onClick={() => setShowAll(!showAll)}
-          >
-            {showAll ? 'View less' : 'View more'}
-            <img
-              className={`mt-1 transition-all duration-300 ${
-                showAll ? 'rotate-180' : ''
-              }`}
-              src={ArrowDown}
-              alt=''
-            />
-          </div>
+          {userRole !== user.admin && (
+            <div
+              className='underline mt-3 flex items-center gap-2 text-blue-500 font-semibold text-lg cursor-pointer'
+              onClick={() => setShowAll(!showAll)}
+            >
+              {showAll ? 'View less' : 'View more'}
+              <img
+                className={`mt-1 transition-all duration-300 ${
+                  showAll ? 'rotate-180' : ''
+                }`}
+                src={ArrowDown}
+                alt=''
+              />
+            </div>
+          )}
         </div>
       </div>
     </FormContextProvider>

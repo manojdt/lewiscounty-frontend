@@ -39,7 +39,7 @@ export const roleBasedSections = {
     'Long-term Vision',
     'Additional Information',
   ],
-  admin: [],
+  admin: ['Personal Information'],
 };
 
 export default function MyProfile() {
@@ -72,7 +72,7 @@ export default function MyProfile() {
         </p>
       </div>
       {!editMode ? (
-        <div className='border grid grid-cols-5 rounded-xl'>
+        <div className='border grid grid-cols-5 rounded-xl bg-white'>
           <div className='grid col-span-1 border-r pl-6 py-10'>
             <div className='flex flex-col gap-1'>
               {tabs.map((tab, index) => (

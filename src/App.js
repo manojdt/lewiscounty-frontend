@@ -76,12 +76,12 @@ import ProfileView from './component/Profile/ProfileView';
 import Category from './component/category';
 import CategoryView from './component/category/categoryView';
 import MenteeTaskList from './component/Tasks/MenteeTaskList';
-import { Ticks } from 'chart.js';
-import SuperAdminTickets from './component/SuperAdmin/tickets/SuperAdminTickets';
 import AddNewTicket from './component/SuperAdmin/tickets/AddNewTicket';
 import { AuthLayout } from './component/Login/AuthLayout';
 import { TestimonialView } from './component/testimonialView';
 import ViewTask from './component/Mentor/Task/viewTask';
+import AdminTickets from './component/SuperAdmin/tickets/SuperAdminTickets';
+import AdminMembers from './component/SuperAdmin/tickets/SuperAdminMembers';
 
 function App() {
   const PrivateRoute = () => {
@@ -118,7 +118,8 @@ function App() {
       <Route element={<PrivateRoute />}>
         <Route element={<Layout subheader={true} />}>
           <Route path='/super-members' element={<SuperMembers />} />
-          <Route path='/tickets' element={<SuperAdminTickets />} />
+          <Route path='/tickets' element={<AdminTickets />} />
+          <Route path='/members' element={<AdminMembers />} />
           <Route path='/add-new-ticket' element={<AddNewTicket />} />
           <Route path='/super-members/add' element={<AddSuperMember />} />
           <Route path='/my-profile-admin' element={<Profile />} />

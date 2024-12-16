@@ -10,8 +10,8 @@ const FormContextProvider = ({ children, onSubmit, initialValues }) => {
       const name = initialValues?.name?.split(' ');
       methods.reset({
         ...initialValues,
-        first_name: name[0] || '',
-        last_name: name[1] || '',
+        first_name: initialValues.first_name || '',
+        last_name: initialValues.last_name || '',
         phone_number: initialValues?.phone_number,
         secondary_phone_number: initialValues?.secondary_phone_number || '',
         email: initialValues?.email,

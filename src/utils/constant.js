@@ -153,7 +153,7 @@ export const requestStatus = {
   reportupdate: 'reportupdated',
   cancel: 'cancelled',
   autoapproval: 'autoapproval',
-  testimonialupdate: 'testimonialupdated'
+  testimonialupdate: 'testimonialupdated',
 };
 
 export const profileStatus = {
@@ -397,8 +397,8 @@ export const requestStatusText = {
   Wating_for_response: 'Wating for Response',
   active: 'Active',
   deactivated: 'Deactivated',
-  rejected: "Rejected",
-  approved: "Approved"
+  rejected: 'Rejected',
+  approved: 'Approved',
 };
 export const certificateRequestStatusText = {
   new: 'New',
@@ -409,8 +409,8 @@ export const certificateRequestStatusText = {
   Wating_for_response: 'Wating for your Response',
   active: 'Active',
   deactivated: 'Deactivated',
-  approved: "Approved",
-  rejected: "Rejected",
+  approved: 'Approved',
+  rejected: 'Rejected',
 };
 export const programStatusText = {
   inprogress: 'Ongoing',
@@ -595,9 +595,9 @@ export const reportStatus = {
   cancel: 'Cancel',
   draft: 'Draft',
   new: 'New',
-  deleted: "Deleted",
-  rejected: "Rejected",
-  approved: "Approved"
+  deleted: 'Deleted',
+  rejected: 'Rejected',
+  approved: 'Approved',
 };
 
 export const reportAllStatus = {
@@ -971,7 +971,6 @@ export const myRequestOverview = [
     status: RequestStatus.learningAccessRequests.key,
     for: ['mentee'],
   },
-
 ];
 
 export const menteesRequestOverview = [
@@ -1266,40 +1265,41 @@ export const followBtnText = {
 };
 
 export const taskStatus = {
-  completed: "Completed",
-  rejected: "Cancel",
-  pending: "Pending",
-  new: "New",
-  cancel: "Cancel",
-  inprogress: "In Progress"
-}
+  completed: 'Completed',
+  rejected: 'Cancel',
+  pending: 'Pending',
+  new: 'New',
+  cancel: 'Cancel',
+  inprogress: 'In Progress',
+};
 
 export const taskStatusColorNew = {
   completed: {
-    bg: "#EBFFF3",
-    color: "#16B681"
+    bg: '#EBFFF3',
+    color: '#16B681',
   },
   rejected: {
-    bg: "#FFE7E7",
-    color: "#E0382D"
+    bg: '#FFE7E7',
+    color: '#E0382D',
   },
   pending: {
-    bg: "#FFFBE9",
-    color: "#FFD500"
+    bg: '#FFFBE9',
+    color: '#FFD500',
   },
   new: {
-    bg: "#EEF5FF",
-    color: "#1D5BBF"
+    bg: '#EEF5FF',
+    color: '#1D5BBF',
   },
   cancel: {
-    bg: "#FFE7E7",
-    color: "#E0382D"
+    bg: '#FFE7E7',
+    color: '#E0382D',
   },
   inprogress: {
-    bg: "#FFFBE9",
-    color: "#FFD500"
+    bg: '#FFFBE9',
+    color: '#FFD500',
   },
-}
+};
+
 export const view = {
   viewOnly: 'viewOnly',
 };

@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import {
   createCalendarEvent,
   deleteCalendarEvent,
+  getCalendarEvent,
   getCalendarEvents,
   getCalendarFilterEvents,
   updateCalendarEvent,
@@ -76,13 +77,13 @@ export const schedulerSlice = createSlice({
     });
 
     builder
-      .addCase(updateCalendarEvent.pending, (state) => {
+      .addCase(getCalendarEvent.pending, (state) => {
         return {
           ...state,
           loading: true,
         };
       })
-      .addCase(updateCalendarEvent.fulfilled, (state, action) => {
+      .addCase(getCalendarEvent.fulfilled, (state, action) => {
         return {
           ...state,
           getEvent: action.payload,
@@ -90,7 +91,7 @@ export const schedulerSlice = createSlice({
           loading: false,
         };
       })
-      .addCase(updateCalendarEvent.rejected, (state, action) => {
+      .addCase(getCalendarEvent.rejected, (state, action) => {
         return {
           ...state,
           loading: false,

@@ -94,7 +94,11 @@ const MentorshipExperienceSection = ({ type }) => {
                 </label>
                 {type === view.viewOnly ? (
                   <p className='text-[14px] pt-3'>
-                    {getValues(field.name) ? getValues(field.name) : '-'}
+                    {getValues(field.name)
+                      ? getValues(field.name) === true
+                        ? 'Yes'
+                        : 'No'
+                      : '-'}
                   </p>
                 ) : (
                   <>

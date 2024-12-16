@@ -10,7 +10,7 @@ import {
   updateProfileImage,
 } from '../../services/profile';
 import { useDispatch, useSelector } from 'react-redux';
-import { profileStatus } from '../../utils/constant';
+import { profileStatus, user } from '../../utils/constant';
 import Accordian from '../../shared/Accordian';
 import PersonalInfoSection from './section-edit/personal-info-section';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -182,71 +182,170 @@ const EditProfile = ({ setEditMode }) => {
     const formData = new FormData();
 
     // Add documents to FormData (assumes documents is a file or array of files)
-    if (data.documents) {
-      if (Array.isArray(data.documents)) {
-        data.documents.forEach((file, index) => {
-          formData.append(`documents`, file);
-        });
-      } else {
-        formData.append('documents', data.documents);
+
+    if (userRole === user.mentee) {
+      const selectedFields = [
+        'full_name',
+        'first_name',
+        'last_name',
+        'email',
+        'phone_number',
+        'secondary_phone_number',
+        'dob',
+        'gender',
+        'location',
+        'current_education',
+        'career_goals',
+        'gain_skills',
+        'fields_of_interest',
+        'expectations_of_future',
+        'specialization_study',
+        'work_experience',
+        'extra_curricular_activities',
+        'mentoring_expectations',
+        'mentor_meet_frequency',
+        'mentor_communication_method',
+        'strongest_skills',
+        'areas_of_improvement',
+        'related_hobbies_interests',
+        'expectations_mentoring_relationship',
+        'goals_from_mentorship',
+        'mentee_thoughts_mentor',
+        'days_times_for_meetings',
+        'available_for_virtual_meeting',
+        'inspiration_for_current_field',
+        'projects_research_topics',
+        'dreams_career_path',
+        'preferred_companies_to_work',
+        'current_challenges_faced',
+        'obstacles_encountered',
+        'handle_setbacks',
+        'past_mentoring_exp',
+        'values_from_past_mentoring_exp',
+        'mentoring_relationship_expectations',
+        'feedback_preference',
+        'learning_style_preference',
+        'structured_sessions_preference',
+        'networking_opportunities_prefs',
+        'assistance_req',
+        'professional_resources_prefs',
+        'develop_skills_quality_prefs',
+        'personal_challenges_overcoming',
+        'stress_management_methods',
+        'mentor_qualities',
+        'interested_mentoring_activities',
+        'measures_mentoring_relationship',
+        'mentor_guidance_from_distance',
+        'long_term_aspirations',
+        'plans_giveback_community',
+        'legacy_from_life',
+        'additional_information',
+        'request_need_mentor_to_know',
+        'linked_in',
+        'socila_media',
+        'Professional_Bio',
+        'address',
+      ];
+
+      selectedFields.forEach((field) => {
+        if (data[field]) {
+          formData.append(field, data[field]);
+        }
+      });
+
+      if (data.documents) {
+        if (Array.isArray(data.documents)) {
+          data.documents.forEach((file, index) => {
+            formData.append(`documents`, file);
+          });
+        } else {
+          formData.append('documents', data.documents);
+        }
       }
+
+      formData.append('files_to_remove', removeFiles || []);
+
+      return dispatch(updateProfile(formData));
+    } else if (userRole === user.mentor) {
+      if (data.documents) {
+        if (Array.isArray(data.documents)) {
+          data.documents.forEach((file, index) => {
+            formData.append(`documents`, file);
+          });
+        } else {
+          formData.append('documents', data.documents);
+        }
+      }
+
+      formData.append('first_name', data.first_name || '');
+      formData.append('last_name', data.last_name || '');
+      formData.append('phone_number', data.phone_number || '');
+      formData.append(
+        'secondary_phone_number',
+        data.secondary_phone_number || ''
+      );
+      formData.append('job_title', data.job_title || '');
+      formData.append('current_employer', data.current_employer || '');
+      formData.append('industry_type', data.industry_type || '');
+      formData.append('linked_in', data.linked_in || '');
+      formData.append('highest_degree', data.highest_degree || '');
+      formData.append('field_of_study', data.field_of_study || '');
+      formData.append('areas_of_expertise', data.areas_of_expertise || '');
+      formData.append(
+        'confident_areas_of_expertise',
+        data.confident_areas_of_expertise || ''
+      );
+      formData.append('prev_mentorship', data.prev_mentorship || false);
+      formData.append('mentor_exp_desc', data.mentor_exp_desc || '');
+      formData.append(
+        'interested_mentee_type',
+        data.interested_mentee_type || ''
+      );
+      formData.append('communication_mode', data.communication_mode || '');
+      formData.append(
+        'availability_frequency',
+        data.availability_frequency || ''
+      );
+      formData.append(
+        'mentorship_achievement',
+        data.mentorship_achievement || ''
+      );
+      formData.append('mentor_expectations', data.mentor_expectations || '');
+      formData.append('max_mentee_count', data.max_mentee_count || null);
+      formData.append(
+        'pref_mentorship_duration',
+        data.pref_mentorship_duration || ''
+      );
+      formData.append('additional_info', data.additional_info || '');
+      formData.append('address', data.address || '');
+      formData.append('location', data.location || '');
+      formData.append('social_media', data.social_media || '');
+      formData.append('reviewandrating', data.reviewandrating || false);
+      formData.append('years_of_experience', data.years_of_experience || '');
+      formData.append('gender', data.gender || '');
+      formData.append('files_to_remove', removeFiles || []);
+
+      return dispatch(updateProfile(formData));
+    } else if (userRole === user.admin) {
+      const adminFields = [
+        'first_name',
+        'last_name',
+        'email',
+        'phone_number',
+        'secondary_phone_number',
+        'gender',
+        'location',
+        'linked_in',
+        'Professional_Bio',
+        'address',
+      ];
+      adminFields.forEach((field) => {
+        if (data[field]) {
+          formData.append(field, data[field]);
+        }
+      });
+      return dispatch(updateProfile(formData));
     }
-
-    // Add other fields to FormData
-    formData.append('phone_number', data.phone_number || '');
-    formData.append(
-      'secondary_phone_number',
-      data.secondary_phone_number || ''
-    );
-    formData.append('job_title', data.job_title || '');
-    formData.append('current_employer', data.current_employer || '');
-    formData.append('industry_type', data.industry_type || '');
-    formData.append('linked_in', data.linked_in || '');
-    formData.append('highest_degree', data.highest_degree || '');
-    formData.append('field_of_study', data.field_of_study || '');
-    formData.append('areas_of_expertise', data.areas_of_expertise || '');
-    formData.append(
-      'confident_areas_of_expertise',
-      data.confident_areas_of_expertise || ''
-    );
-    formData.append('prev_mentorship', data.prev_mentorship || false);
-    formData.append('mentor_exp_desc', data.mentor_exp_desc || '');
-    formData.append(
-      'interested_mentee_type',
-      data.interested_mentee_type || ''
-    );
-    formData.append('communication_mode', data.communication_mode || '');
-    formData.append(
-      'availability_frequency',
-      data.availability_frequency || ''
-    );
-    formData.append(
-      'mentorship_achievement',
-      data.mentorship_achievement || ''
-    );
-    formData.append('mentor_expectations', data.mentor_expectations || '');
-    formData.append('max_mentee_count', data.max_mentee_count || null);
-    formData.append(
-      'pref_mentorship_duration',
-      data.pref_mentorship_duration || ''
-    );
-    formData.append('additional_info', data.additional_info || '');
-    formData.append('address', data.address || '');
-    formData.append('location', data.location || '');
-    formData.append('social_media', data.social_media || '');
-    formData.append('reviewandrating', data.reviewandrating || false);
-    formData.append('years_of_experience', data.years_of_experience || '');
-    formData.append('gender', data.gender || '');
-    formData.append('files_to_remove', removeFiles || []);
-    // if (removeFiles && Array.isArray(removeFiles)) {
-    //   removeFiles.forEach((id) => {
-    //     formData.append('files_to_remove[]', id); // Ensure each ID is appended
-    //   });
-    // }
-
-    // Dispatch the form data
-    console.log(formData);
-    dispatch(updateProfile(formData));
   };
 
   return (
@@ -312,19 +411,21 @@ const EditProfile = ({ setEditMode }) => {
           ))}
         </div>
 
-        <div
-          className='underline mt-3 flex items-center gap-2 text-blue-500 font-semibold text-lg cursor-pointer'
-          onClick={() => setShowAll(!showAll)}
-        >
-          {showAll ? 'View less' : 'View more'}
-          <img
-            className={`mt-1 transition-all duration-300 ${
-              showAll ? 'rotate-180' : ''
-            }`}
-            src={ArrowDown}
-            alt=''
-          />
-        </div>
+        {userRole !== user.admin && (
+          <div
+            className='underline mt-3 flex items-center gap-2 text-blue-500 font-semibold text-lg cursor-pointer'
+            onClick={() => setShowAll(!showAll)}
+          >
+            {showAll ? 'View less' : 'View more'}
+            <img
+              className={`mt-1 transition-all duration-300 ${
+                showAll ? 'rotate-180' : ''
+              }`}
+              src={ArrowDown}
+              alt=''
+            />
+          </div>
+        )}
       </div>
     </FormContextProvider>
   );
