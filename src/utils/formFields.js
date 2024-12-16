@@ -2099,42 +2099,42 @@ export const reportColumns = [
     headerName: 'Report Name',
     flex: 1,
     id: 3,
-    status: ['all', 'new', 'pending', 'accept', 'cancel', 'draft'],
+    status: ['all', 'new', 'pending', 'approved', 'rejected', 'draft'],
   },
   {
     field: 'category_name',
     headerName: 'Category',
     flex: 1,
     id: 0,
-    status: ['all', 'new', 'pending', 'accept', 'cancel', 'draft'],
+    status: ['all', 'new', 'pending', 'approved', 'rejected', 'draft'],
   },
   {
     field: 'program_name',
     headerName: 'Program Name',
     flex: 1,
     id: 1,
-    status: ['all', 'new', 'pending', 'accept', 'cancel', 'draft'],
+    status: ['all', 'new', 'pending', 'approved', 'rejected', 'draft'],
   },
   {
     field: 'participates_count',
     headerName: 'Mentees',
     flex: 1,
     id: 2,
-    status: ['all', 'new', 'pending', 'accept', 'cancel', 'draft'],
+    status: ['all', 'new', 'pending', 'approved', 'rejected', 'draft'],
   },
   // {
   //   field: 'created_at',
   //   headerName: 'Create Time/ Date',
   //   flex: 1,
   //   id: 4,
-  //   status: ['all', 'new', 'pending', 'accept', 'cancel']
+  //   status: ['all', 'new', 'pending', 'approved', 'rejected']
   // },
   {
     field: 'created_at',
     headerName: 'Requested Date',
     flex: 1,
     id: 4,
-    status: ['all', 'new', 'pending', 'accept', 'cancel'],
+    status: ['all', 'new', 'pending', 'approved', 'rejected'],
     renderCell: (params) => <span>{dateFormat(params.row.created_at)}</span>,
   },
   {
@@ -2142,7 +2142,7 @@ export const reportColumns = [
     headerName: 'Approved Time/ Date',
     flex: 1,
     id: 5,
-    status: ['all', 'accept'],
+    status: ['all', 'approved'],
     renderCell: (params) => <span>{dateFormat(params.row.approved_date)}</span>,
   },
   {
@@ -2150,14 +2150,14 @@ export const reportColumns = [
     headerName: 'Approved by',
     flex: 1,
     id: 6,
-    status: ['all', 'accept'],
+    status: ['all', 'approved'],
   },
   {
     field: 'updated_at',
     headerName: 'Last updated Date',
     flex: 1,
     id: 5,
-    status: ['all', 'new', 'pending', 'accept', 'cancel'],
+    status: ['all', 'new', 'pending', 'approved', 'rejected'],
     renderCell: (params) => <span>{dateFormat(params.row.updated_at)}</span>,
   },
   {
@@ -2165,7 +2165,7 @@ export const reportColumns = [
     headerName: 'Last updated by',
     flex: 1,
     id: 6,
-    status: ['all', 'new', 'pending', 'accept', 'cancel'],
+    status: ['all', 'new', 'pending', 'approved', 'rejected'],
   },
   // {
   //   field: 'rejected_date',
@@ -2187,7 +2187,7 @@ export const reportColumns = [
   //   headerName: 'File',
   //   flex: 1,
   //   id: 9,
-  //   status: ['all', 'new', 'pending', 'accept', 'cancel', 'draft']
+  //   status: ['all', 'new', 'pending', 'approved', 'cancel', 'draft']
   // },
 ];
 

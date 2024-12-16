@@ -260,7 +260,7 @@ console.log("reportDetails ==>", reportDetails)
                         <nav className="flex px-7 pt-6 pb-5 mx-2 border-b-2 justify-between" aria-label="Breadcrumb">
                             <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
                                 <li className="inline-flex items-center">
-                                    <h2>{searchParams.has("type") && searchParams.get("type") === 're-open' ? 'Re-open' : 'Edit'} - {reportDetails.report_name} </h2>
+                                    <h2>{searchParams.has("type") && searchParams.get("type") === 're-open' ? 'Re-open' : 'Edit'} - {reportDetails.name} </h2>
                                 </li>
                             </ol>
                             <img className='cursor-pointer' onClick={() => navigate('/reports')}
@@ -580,13 +580,13 @@ console.log("reportDetails ==>", reportDetails)
                                 <div className="flex gap-6 justify-center align-middle py-16">
                                     <Button btnName='Cancel' btnCls="w-[13%]" btnCategory="secondary" onClick={() => navigate('/reports')} />
                                     {
-                                        (reportDetails.report_status === 'draft' || searchParams.get('type') === 're-open') &&
+                                        (reportDetails.status === 'draft' || searchParams.get('type') === 're-open') &&
                                         <Button btnName='Save To Draft'
                                             style={{ background: 'rgba(29, 91, 191, 1)', color: '#fff' }}
                                             btnCls="w-[13%]" btnCategory="secondary" onClick={handleSubmit((d) => onSubmit({ ...d, action: 'draft' }))} />
                                     }
 
-                                    <Button btnType="submit" btnCls="w-[13%]" btnName={searchParams.get('type') === 're-open'||reportDetails.report_status === 'draft'? 'Submit' : `Save Changes`} btnCategory="primary" />
+                                    <Button btnType="submit" btnCls="w-[13%]" btnName={searchParams.get('type') === 're-open'||reportDetails.status === 'draft'? 'Submit' : `Save Changes`} btnCategory="primary" />
                                 </div>
                             </form>
                         </div>

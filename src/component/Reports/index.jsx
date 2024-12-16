@@ -56,11 +56,11 @@ const Reports = () => {
         },
         {
             name: 'Completed Reports',
-            key: 'accept'
+            key: 'approved'
         },
         {
             name: 'Rejected Reports',
-            key: 'cancel'
+            key: 'rejected'
         },
         {
             name: 'Draft Reports',
