@@ -10,7 +10,7 @@ export const getAllReports = createAsyncThunk(
     "getAllReports",
     async (query = '') => {
         const queryString = query !== '' ? `?${new URLSearchParams(query).toString()}` : ''
-        const allReports = await api.get(`reports/reports${queryString}`);
+        const allReports = await api.get(`request/${queryString}`);
         if (allReports.status === 200 && allReports.data) {
             return allReports.data;
         }
@@ -45,17 +45,17 @@ export const getProgramsByCategoryId = createAsyncThunk(
 export const getReportProgramDetails = createAsyncThunk(
     "getReportProgramDetails",
     async (id) => {
-        if(id){
-        const getDetailsofProgram = await api.get(`programs/${id}`);
-        if (getDetailsofProgram.status === 200 && getDetailsofProgram.data && getDetailsofProgram.data.program) {
-            return getDetailsofProgram.data.program;
-        }
-        
-        return  getDetailsofProgram;
-    }else{
-        return  {};
+        if (id) {
+            const getDetailsofProgram = await api.get(`programs/${id}`);
+            if (getDetailsofProgram.status === 200 && getDetailsofProgram.data && getDetailsofProgram.data.program) {
+                return getDetailsofProgram.data.program;
+            }
 
-    }
+            return getDetailsofProgram;
+        } else {
+            return {};
+
+        }
     }
 );
 
@@ -63,7 +63,7 @@ export const getReportProgramDetails = createAsyncThunk(
 export const createReport = createAsyncThunk(
     "createReport",
     async (data) => {
-        const createRept = await api.post(`reports/create-report`, data);
+        const createRept = await api.post(`request/`, data);
         if (createRept.status === 200 && createRept.data) {
             return createRept.data;
         }
@@ -75,7 +75,7 @@ export const createReport = createAsyncThunk(
 export const getReportDetails = createAsyncThunk(
     "getReportDetails",
     async (reportId) => {
-        const reportDetails = await api.get(`reports/report/${reportId}`);
+        const reportDetails = await api.get(`request/${reportId}`);
         if (reportDetails.status === 200 && reportDetails.data) {
             return reportDetails.data;
         }
@@ -87,7 +87,10 @@ export const getReportDetails = createAsyncThunk(
 export const updateReportDetails = createAsyncThunk(
     "updateReportDetails",
     async (data) => {
-        const reportUpdate = await api.put(`reports/update-report`, data);
+        const payload = Object.fromEntries(
+            Object.entries(data).filter(([key]) => key !== "id")
+        );
+        const reportUpdate = await api.put(`request/${data?.id}/`, data);
         if (reportUpdate.status === 200 && reportUpdate.data) {
             return reportUpdate.data;
         }
@@ -99,7 +102,7 @@ export const updateReportDetails = createAsyncThunk(
 export const deleteReports = createAsyncThunk(
     "deleteReports",
     async (data) => {
-        const deleteReport = await api.delete('reports/delete-report', { data: data });
+        const deleteReport = await api.post('request/report-delete/', data);
         if (deleteReport.status === 200 && deleteReport.data) {
             return deleteReport.data;
         }

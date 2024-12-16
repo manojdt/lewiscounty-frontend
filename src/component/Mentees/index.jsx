@@ -526,9 +526,8 @@ if(reason){
                                setReason(e.target.value)
                                setReasonError(false)
                              }}
-                            id="message" rows="4" className={`block p-2.5 input-bg w-full rounded-lg text-sm text-gray-900  border
-                               focus-visible:outline-none focus-visible:border-none`}
-                            style={{ border: '1px solid black' }}
+                            id="message" rows="4" className={`block p-2.5 input-bg w-full text-sm text-gray-900  border
+                               focus-visible:outline-none focus-visible:border-none !border !border-[#E50027] w-[100%] !text-[#18283D] h-[130px]`}
                             placeholder={''}
                         ></textarea>
                        {reasonError && (

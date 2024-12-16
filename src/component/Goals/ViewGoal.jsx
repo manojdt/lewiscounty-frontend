@@ -24,7 +24,7 @@ import MuiModal from '../../shared/Modal';
 import { useDispatch, useSelector } from 'react-redux'
 import { Backdrop, CircularProgress, Stack, Typography } from '@mui/material'
 import { getGoalInfo, getGoalsHistory, updateGoalStatus, updateHistoryGoal } from '../../services/goalsInfo'
-import { goalDataStatus, goalHeadingStatus, goalPeriods, goalRequestStatus, goalStatus, requestStatus } from '../../utils/constant'
+import { goalDataStatus, goalHeadingStatus, goalPeriods, goalRequestStatus, goalStatus, requestStatus, user } from '../../utils/constant'
 import { getCategoryList, updateGoalRequest, updateLocalRequest } from '../../services/request'
 import DataTable from '../../shared/DataGrid'
 import { categoryColumns } from '../../mock'
@@ -520,7 +520,7 @@ const ViewGoal = ({ type = '' }) => {
                                     <div className='flex gap-5 items-center text-[20px]'>
                                         <p>{goalHeadingStatus[goalInfo.status]}</p>
                                         {
-                                            (goalInfo.status ==="new") &&
+                                            (goalInfo.status ==="new" && role !== user.admin) &&
                                             <div className="inset-y-0 end-0 flex items-center pe-3 cursor-pointer"
                                                 onClick={() => handleOpenEditForm()}
                                             >
@@ -691,7 +691,7 @@ const ViewGoal = ({ type = '' }) => {
 
                                                             :
 
-                                                            goalInfo.status === 'aborted' ?
+                                                            (goalInfo.status === 'aborted' || goalInfo.status === 'cancel') ?
                                                                 <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
                                                                     border: "1px solid #E0382D",
                                                                     borderRadius: '5px',
@@ -703,7 +703,7 @@ const ViewGoal = ({ type = '' }) => {
                                                                 </button>
                                                                 : <>
                                                                     {
-                                                                        !["new", "pending"].includes(goalInfo?.status) &&
+                                                                        !["new", "pending", "in_progress"].includes(goalInfo?.status) &&
                                                                         <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
                                                                             background: "#16B681",
                                                                             borderRadius: '5px',

@@ -367,7 +367,7 @@ export default function ProgramDetails() {
     }, [ratingModal.success])
 
     useEffect(() => {
-        if (Object.keys(programdetails)?.length && !programLoading) {
+        if (programdetails && Object.keys(programdetails)?.length && !programLoading) {
             const notAllowedCond = ['completed', 'yettoapprove', 'draft', 'cancelled']
 
 
@@ -899,7 +899,7 @@ export default function ProgramDetails() {
             }
 
             {
-                (!programLoading && Object.keys(programdetails)?.length) ?
+                ((!programLoading && programdetails)&& Object.keys(programdetails)?.length) ?
 
                     <div className='grid mb-10' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)', borderRadius: '5px' }}>
                         <div className='breadcrum'>
