@@ -184,7 +184,7 @@ export default function AssignMentees() {
                 task_details: "",
                 reference_links: "",
             })
-            menteeAllList([])
+            setAllMenteeList([])
             dispatch(getProgramListWithCategory(allFields?.category_id)).then((res) => {
                 if (res.meta.requestStatus === "fulfilled") {
                     const constructedData = res?.payload?.map((e) => {
@@ -544,7 +544,7 @@ export default function AssignMentees() {
                                                                                                         <p className='text-white flex items-center px-2 py-1' style={{
                                                                                                             background: 'rgb(29, 91, 191)', borderRadius: '50%',
 
-                                                                                                        }}>{menteeAllList.length - 6}</p>
+                                                                                                        }}>{menteeAllList?.length - 6}</p>
                                                                                                         Others</p>
 
                                                                                                 }
