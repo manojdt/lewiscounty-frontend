@@ -236,8 +236,8 @@ const ViewTask = () => {
                     </Stack>
                     <Stack spacing={3} className='px-[35px] py-[22px]'>
                         <Typography className='!text-[#18283D] !text-[16px]' sx={{ fontWeight: 500 }}>
-                            Reference Link:
-                            <span className='!text-[#1D5BBF] underline cursor-pointer'>
+                        {`Reference Book: `}
+                            <span className='!text-[#18283D] !text-[14px]'>
                                 {
                                     docs?.map((doc, index) => <span>{doc}</span>)
                                 }

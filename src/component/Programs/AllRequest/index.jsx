@@ -271,11 +271,11 @@ export default function AllRequest() {
         },
         {
             label: "Approved",
-            value: "accept",
+            value: "approved",
         },
         {
             label: "Rejected",
-            value: "cancel",
+            value: "rejected",
         },
     ];
 
@@ -1134,7 +1134,7 @@ export default function AllRequest() {
                                 <>
                                     <MenuItem
                                         onClick={() =>
-                                            navigate(`/view-report/${seletedItem.report_id}`)
+                                            navigate(`/view-report/${seletedItem?.id}`)
                                         }
                                         className="!text-[12px]"
                                     >
@@ -1626,7 +1626,7 @@ export default function AllRequest() {
     const getReportsRequestApi = () => {
         dispatch(
             getReportRequest({
-                ...(filterStatus !== "all" && { rep_status: filterStatus }),
+                ...(filterStatus !== "all" && { status: filterStatus }),
                 page: paginationModel?.page + 1,
                 limit: paginationModel?.pageSize,
                 request_type: "report",
@@ -2180,7 +2180,7 @@ export default function AllRequest() {
             default:
                 break;
         }
-        setActiveTab(currentTab)
+        setActiveTab(selectedRequestedtype === "member_join_request"?"mentor":currentTab)
         setRequestOverview(currentOveriew)
     }, [selectedTab])
 

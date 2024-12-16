@@ -367,7 +367,7 @@ React.useEffect(() => {
 
   const menuNavigate = () => {
     setSearch('');
-    setProgramFilter({ search: '', datefilter: '' });
+    setProgramFilter({ search: '', datefilter: 'month' });
   };
 
   useEffect(() => {
