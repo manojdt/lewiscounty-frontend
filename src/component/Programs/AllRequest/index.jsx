@@ -21,6 +21,7 @@ import {
     RequestStatusArray,
     requestStatusColor,
     requestStatusText,
+    user,
 } from "../../../utils/constant";
 import SearchIcon from "../../../assets/icons/search.svg";
 import CalendarIcon from "../../../assets/images/calender_1x.png";
@@ -722,35 +723,35 @@ export default function AllRequest() {
 
                                 {
                                     (
-                                        (["new", "pending"].includes(seletedItem.status)) 
+                                        (["new", "pending"].includes(seletedItem.status))
                                         // &&
                                         // (role === "mentor" && selectedTab !== "my")
-                                    ) && 
-                                        <>
-                                            {<MenuItem
-                                                onClick={handleAcceptProgramRequest}
-                                                className="!text-[12px]"
-                                            >
-                                                <img
-                                                    src={TickCircle}
-                                                    alt="AcceptIcon"
-                                                    className="pr-3 w-[27px]"
-                                                />
-                                                {actionTab === "program_cancel" ? "Accept" : "Approve"}
-                                            </MenuItem>}
-                                            <MenuItem
-                                                onClick={handleCancelProgramRequest}
-                                                className="!text-[12px]"
-                                            >
-                                                <img
-                                                    src={CloseCircle}
-                                                    alt="CancelIcon"
-                                                    className="pr-3 w-[27px]"
-                                                />
-                                                {actionTab === "program_cancel" ? "Continue" : "Reject"}
-                                            </MenuItem>
-                                        </>
-                                    }
+                                    ) &&
+                                    <>
+                                        {<MenuItem
+                                            onClick={handleAcceptProgramRequest}
+                                            className="!text-[12px]"
+                                        >
+                                            <img
+                                                src={TickCircle}
+                                                alt="AcceptIcon"
+                                                className="pr-3 w-[27px]"
+                                            />
+                                            {actionTab === "program_cancel" ? "Accept" : "Approve"}
+                                        </MenuItem>}
+                                        <MenuItem
+                                            onClick={handleCancelProgramRequest}
+                                            className="!text-[12px]"
+                                        >
+                                            <img
+                                                src={CloseCircle}
+                                                alt="CancelIcon"
+                                                className="pr-3 w-[27px]"
+                                            />
+                                            {actionTab === "program_cancel" ? "Continue" : "Reject"}
+                                        </MenuItem>
+                                    </>
+                                }
 
 
                                 {/* {
@@ -2163,31 +2164,35 @@ export default function AllRequest() {
         }
         setSearchParams(searchParams);
     }, [filter]);
-
+    console.log("myRequestOverview?.filter((e)=> e?.for.includes(role)) ===>", myRequestOverview?.filter((e) => e?.for.includes(role)))
     useEffect(() => {
         let currentOveriew = [];
         let currentTab = "";
-        switch (selectedTab) {
-            case "my":
-                currentOveriew = myRequestOverview
-                currentTab = role === "mentee" ? "program_join" : "program_new"
-                break;
-            case "mentees":
-                currentOveriew = menteesRequestOverview
-                currentTab = "program_join"
-                break;
-            case "admin":
-                currentOveriew = adminRequestOverview
-                currentTab = "program_request"
-                break;
+        if (role !== user.mentee) {
+            switch (selectedTab) {
+                case "my":
+                    currentOveriew = myRequestOverview
+                    currentTab = role === "mentee" ? "program_join" : "program_new"
+                    break;
+                case "mentees":
+                    currentOveriew = menteesRequestOverview
+                    currentTab = "program_join"
+                    break;
+                case "admin":
+                    currentOveriew = adminRequestOverview
+                    currentTab = "program_request"
+                    break;
 
-            default:
-                break;
+                default:
+                    break;
+            }
+        } else {
+            currentOveriew = myRequestOverview?.filter((e) => e?.for.includes(user?.mentee))
+            currentTab = "program_join"
         }
         setActiveTab(selectedRequestedtype === "member_join_request" ? "mentor" : currentTab)
         setRequestOverview(currentOveriew)
-    }, [selectedTab])
-
+    }, [selectedTab, selectedRequestedtype])
 
     const handleSelectCategory = (value) => {
         if (selectedRequestedtype === "member_join_request") {
