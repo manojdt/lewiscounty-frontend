@@ -82,7 +82,7 @@ export default function CreateCertificate() {
     }
 
     const handleProgramData = (programId) => {
-        dispatch(getReportProgramDetails(programId,""))
+        dispatch(getReportProgramDetails(programId,"type"))
     }
 
 
