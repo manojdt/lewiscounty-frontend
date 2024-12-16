@@ -31,6 +31,7 @@ export default function CreateCertificate() {
     const { programdetails, loading: programLoading, error, menteeList } = useSelector(state => state.userPrograms)
     const { category, loading: apiLoading } = useSelector(state => state.programInfo)
     const { categoryPrograms, loading: reportsLoading, programDetails } = useSelector(state => state.reports)
+    console.log(programDetails,"programDetails")
     const { status } = useSelector(state => state.certificates)
     const [certificateFields, setCertificateFields] = useState(CreateCertificateFields)
     const [dateFormat, setDateFormat] = useState({})
@@ -81,7 +82,7 @@ export default function CreateCertificate() {
     }
 
     const handleProgramData = (programId) => {
-        dispatch(getReportProgramDetails(programId))
+        dispatch(getReportProgramDetails(programId,"type"))
     }
 
 
@@ -106,20 +107,22 @@ export default function CreateCertificate() {
     }, [status])
 
     useEffect(() => {
-        if (!state?.type) {
+        // if (!state?.type) {
             if (programDetails && Object.keys(programDetails).length) {
                 reset({
-                    mentor_name: programDetails.mentor_full_name,
+                    mentor_name: programDetails.mentor_name,
                     course_level: CourseLevelOptions.find(level => level.key === programDetails.course_level)?.value,
-                    start_date: dateTimeFormat(programDetails.start_date),
-                    end_date: dateTimeFormat(programDetails.end_date),
+                    // start_date: dateTimeFormat(programDetails.start_date),
+                    // end_date: dateTimeFormat(programDetails.end_date),
+                    start_date: new Date(programDetails?.start_date) ?? "",
+                end_date: new Date(programDetails?.end_date) ?? '',
                     duration: programDetails.duration,
                     participated_mentees: programDetails.participated_mentees,
-                    pass_mentee_list: programDetails.pass_mentee_list,
-                    fail_mentee_list: programDetails.fail_mentee_list
+                    pass_mentee_list: programDetails.pass_participates,
+                    fail_mentee_list: programDetails.fail_participates
                 })
             }
-        }
+        // }
     }, [programDetails])
 
     useEffect(() => {
@@ -168,24 +171,24 @@ export default function CreateCertificate() {
     }, [])
 
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        const selectedProgram = categoryPrograms?.filter((e) => e?.id === Number(allFields?.program))?.[0]
+    //     const selectedProgram = categoryPrograms?.filter((e) => e?.id === Number(allFields?.program))?.[0]
 
-        if (allFields?.program) {
-            reset({
-                ...getValues(),
-                mentor_name: selectedProgram?.mentor_name,
-                course_level: selectedProgram?.course_level,
-                start_date: new Date(selectedProgram?.start_date) ?? "",
-                end_date: new Date(selectedProgram?.end_date) ?? '',
-                duration: `${selectedProgram?.duration} Days`,
-                participated_mentees: "",
-                pass_mentee_list: "",
-                fail_mentee_list: "",
-            })
-        }
-    }, [allFields?.program])
+    //     if (allFields?.program) {
+    //         reset({
+    //             ...getValues(),
+    //             mentor_name: selectedProgram?.mentor_name,
+    //             course_level: selectedProgram?.course_level,
+    //             start_date: new Date(selectedProgram?.start_date) ?? "",
+    //             end_date: new Date(selectedProgram?.end_date) ?? '',
+    //             duration: `${selectedProgram?.duration} Days`,
+    //             participated_mentees: "",
+    //             pass_mentee_list: "",
+    //             fail_mentee_list: "",
+    //         })
+    //     }
+    // }, [allFields?.program])
 
     useEffect(() => {
         if (allFields?.category) {
@@ -424,7 +427,7 @@ export default function CreateCertificate() {
 
                                                                                                         }}></p>
                                                                                                         {
-                                                                                                            popupfield.mentee_name
+                                                                                                            popupfield?.mentee_name||popupfield?.full_name
                                                                                                         }
                                                                                                     </p>
                                                                                                 </>

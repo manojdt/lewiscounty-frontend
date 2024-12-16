@@ -34,18 +34,18 @@ export default function CertificateMemberDetails() {
   const [menteeList, setMenteeList] = useState([]);
   const [loading, setLoading] = useState(false);
   const getCertificateDetails = async () => {
-    dispatch(getReportProgramDetails(id));
+    dispatch(getReportProgramDetails(id,"type"));
   };
   const role = userInfo.data.role
   const getMenteeList = async () => {
-    const constructedPassList = programDetails?.pass_mentee_list?.map((e) => {
+    const constructedPassList = programDetails?.pass_participates?.map((e) => {
       return {
         ...e,
         program_id: programDetails?.id
       }
     })
 
-    const constructedFailList = programDetails?.fail_mentee_list?.map((e) => {
+    const constructedFailList = programDetails?.fail_participates?.map((e) => {
       return {
         ...e,
         program_id: programDetails?.id
@@ -62,7 +62,7 @@ export default function CertificateMemberDetails() {
           program_name: programDetails?.program_name,
         }))
         : [];
-
+console.log(res,"res")
     setMenteeList(res);
   };
 
