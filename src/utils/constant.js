@@ -492,6 +492,10 @@ export const requestStatusColor = {
     bgColor: 'rgba(207, 225, 255, 1)',
     color: 'rgba(29, 91, 191, 1)',
   },
+  review: {
+    bgColor: 'rgba(207, 225, 255, 1)',
+    color: 'rgba(29, 91, 191, 1)',
+  },
   rejected: {
     bgColor: 'rgba(255, 231, 231, 1)',
     color: 'rgba(224, 56, 45, 1)',
@@ -500,6 +504,7 @@ export const requestStatusColor = {
     bgColor: 'rgba(235, 255, 243, 1)',
     color: 'rgba(22, 182, 129, 1)',
   },
+
 };
 
 export const memberStatusColor = {

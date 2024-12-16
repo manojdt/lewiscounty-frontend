@@ -44,9 +44,9 @@ export const LoginType = () => {
 
 
     return (
-        <div className="h-full" >
+        <div className="h-full">
             <div className="flex flex-wrap h-full">
-                <div className="w-full">
+                <div className="min-h-screen w-full">
                     <Backdrop
                         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                         open={userInfo.loading}
