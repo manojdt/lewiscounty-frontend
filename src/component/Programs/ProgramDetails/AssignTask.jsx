@@ -346,7 +346,7 @@ export default function AssignTask() {
     }, [params.id])
 
     useEffect(() => {
-        if (Object.keys(programdetails)?.length) {
+        if (programdetails && Object.keys(programdetails)?.length) {
             setLoading({ ...loading, initial: false })
 
             if (role === 'mentee' && window.location.href.includes('assign-task')) {
@@ -446,8 +446,8 @@ export default function AssignTask() {
         cancel_request_submitted: { status: 'cancel_request_submitted', text: 'Waiting for admin approval' },
     }
 
-    const dateStartField = moreMenuModal.reschedule ? register('reschedule_start_date', { required: "This field is required" }) : undefined
-    const dateEndField = moreMenuModal.reschedule ? register('reschedule_end_date', { required: "This field is required" }) : undefined
+    const dateStartField = moreMenuModal.reschedule ? register('reschedule_start_date', { required: "This field is required" }) : null
+    const dateEndField = moreMenuModal.reschedule ? register('reschedule_end_date', { required: "This field is required" }) : null
 
     const [completeProgram, setCompleteProgram] = React.useState({
         bool: false,
@@ -530,7 +530,7 @@ export default function AssignTask() {
             <Ratings open={ratingModal.modal} modalSuccess={ratingModalSuccess} modalClose={ratingModalClose} />
 
 
-            <MuiModal modalSize='md' modalOpen={viewMenteeModal} modalClose={undefined} noheader>
+            <MuiModal modalSize='md' modalOpen={viewMenteeModal} modalClose={() => false} noheader>
                 <div className='px-5 py-5'>
                     <div className='flex justify-center flex-col gap-5  mt-4 mb-4'
                         style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '10px', }}>
@@ -551,7 +551,7 @@ export default function AssignTask() {
             } */}
 
             {
-                Object.keys(programdetails)?.length && !programLoading ?
+                (programdetails && Object.keys(programdetails)?.length) && !programLoading ?
                     <div className='grid mb-10' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)', borderRadius: '5px' }}>
                         <div className='breadcrum'>
                             <nav className="flex px-7 pt-6 pb-5 mx-2 border-b-2 justify-between" aria-label="Breadcrumb">
@@ -816,7 +816,7 @@ export default function AssignTask() {
                                                                     color: '#E0382D',
                                                                     cursor: 'not-allowed'
                                                                 }}
-                                                                    onClick={() => undefined}
+                                                                    onClick={() => false}
                                                                 >
                                                                     <i className="pi pi-clock" style={{ color: 'red' }}></i>
                                                                     <span className='pl-3'>{programApprovalStage[programdetails.status]?.text}</span>
