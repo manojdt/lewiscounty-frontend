@@ -1,5 +1,5 @@
 import React from 'react'
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { getSpecificTask, updateCancelAllTask, updateSinglePassFail } from '../../../services/task';
 import { useDispatch, useSelector } from 'react-redux';
 import { dateTimeFormat, getFiles } from '../../../utils';
@@ -12,6 +12,7 @@ import SuccessTik from '../../../assets/images/blue_tik1x.png';
 import UploadIcon from "../../../assets/images/image_1x.png"
 import { styled } from '@mui/material/styles';
 import TickColorIcon from '../../../assets/icons/tickColorLatest.svg'
+import CloseIcon from '../../../assets/icons/closeIcon.svg';
 
 const CustomCheckbox = styled(Checkbox)({
     color: '#ccc',
@@ -27,6 +28,7 @@ const ViewTask = () => {
     const params = useParams();
     const dispatch = useDispatch()
     const navigate = useNavigate()
+    const state = useLocation()?.state
     const { task: taskDetails, loading } = useSelector(state => state.tasks)
     const [resultCheck, setResultCheck] = React.useState("")
     const [activity, setActivity] = React.useState({
@@ -147,7 +149,6 @@ const ViewTask = () => {
 
     }
 
-
     return (
         <div className="px-9 py-9">
             <Backdrop
@@ -157,17 +158,26 @@ const ViewTask = () => {
                 <CircularProgress color="inherit" />
             </Backdrop>
 
-            <Stack direction={"row"} alignItems={"center"} spacing={"14px"} mb={"30px"}>
+            {state?.type !== "certificate" && <Stack direction={"row"} alignItems={"center"} spacing={"14px"} mb={"30px"}>
                 <Typography className='!text-[#5975A2] !text-[14px] cursor-pointer' fontWeight={500}
                     onClick={() => navigate("/mentor-tasks?type=menteetask")}>MenteesTask</Typography>
                 <img src={BreadCrumbsArrow} alt="" />
                 <Typography className='!text-[#5975A2] !text-[14px] cursor-pointer' fontWeight={500}
                     onClick={() => navigate(-1)}>{taskDetails?.program_name}</Typography>
                 <img src={BreadCrumbsArrow} alt="" />
-                <Typography className='!text-[#18283D] !text-[14px] cursor-pointer' fontWeight={500}>View Task Name</Typography>
-            </Stack>
+                <Typography className='!text-[#18283D] !text-[14px] cursor-pointer' fontWeight={500}>View {taskDetails.task_name}</Typography>
+            </Stack>}
 
             <div className='px-3 py-5' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
+                {
+                    state?.type === "certificate" &&
+                    <Stack direction={"row"} justifyContent={"space-between"} width={"100%"} p={"4px 0px 16px 0px"} sx={{borderBottom: "1px solid #D9E4F2"}} mb={2}>
+                        <Typography className='!text-[18px]' fontWeight={600}>Task details</Typography>
+                        <Box className='cursor-pointer' onClick={() => navigate(-1)}>
+                            <img src={CloseIcon} alt='close' />
+                        </Box>
+                    </Stack>
+                }
                 <div className="relative flex gap-6 justify-between">
                     <table className="w-[50%] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                         <tbody style={{ border: '1px solid rgba(0, 174, 189, 1)' }}>
@@ -236,7 +246,7 @@ const ViewTask = () => {
                     </Stack>
                     <Stack spacing={3} className='px-[35px] py-[22px]'>
                         <Typography className='!text-[#18283D] !text-[16px]' sx={{ fontWeight: 500 }}>
-                        {`Reference Book: `}
+                            {`Reference Book: `}
                             <span className='!text-[#18283D] !text-[14px]'>
                                 {
                                     docs?.map((doc, index) => <span>{doc}</span>)
@@ -440,7 +450,7 @@ const ViewTask = () => {
                     }
 
                     {
-                        ["completed","cancel"].includes(taskDetails.status) &&
+                        ["completed", "cancel"].includes(taskDetails.status) &&
                         <Button
                             btnName='Close'
                             btnCategory='secondary'

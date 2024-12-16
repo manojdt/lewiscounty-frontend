@@ -71,7 +71,7 @@ export default function AssignMentees() {
                 task_id: state?.data?.task_id
             }
         }
-        
+
         if (type === "edit" && from_type !== "program") {
             dispatch(upateProgramTask(apiData)).then((res) => {
                 if (res.meta.requestStatus === "fulfilled") {
@@ -79,7 +79,7 @@ export default function AssignMentees() {
                     setTimeout(() => {
                         setTaskSuccess(false)
                         navigate('/mentor-tasks?type=menteetask')
-                    }, 2000);                    
+                    }, 2000);
                 }
             })
         } else {
@@ -173,8 +173,18 @@ export default function AssignMentees() {
         if (type === "new" && allFields?.category_id) {
             reset({
                 ...getValues(),
-                program_id: ""
+                program_id: "",
+                mentor: "",
+                duration: "",
+                start_date: "",
+                end_date: "",
+                mentees_list: [],
+                due_date: "",
+                task_name: "",
+                task_details: "",
+                reference_links: "",
             })
+            menteeAllList([])
             dispatch(getProgramListWithCategory(allFields?.category_id)).then((res) => {
                 if (res.meta.requestStatus === "fulfilled") {
                     const constructedData = res?.payload?.map((e) => {
@@ -516,7 +526,7 @@ export default function AssignMentees() {
                                                                                                                         //         background: 'rgba(223, 237, 255, 1)', borderRadius: '50%',
 
                                                                                                                         //     }}></p> :
-                                                                                                                            <img src={popupfield?.profile_image?popupfield?.profile_image:UserImage} alt='' className='h-[25px] w-[25px] rounded-[50%]' />
+                                                                                                                        <img src={popupfield?.profile_image ? popupfield?.profile_image : UserImage} alt='' className='h-[25px] w-[25px] rounded-[50%]' />
                                                                                                                     }
                                                                                                                     {
                                                                                                                         `${popupfield.first_name}`

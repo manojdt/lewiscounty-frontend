@@ -119,10 +119,11 @@ export default function MenteeTaskList() {
                         }}
                         onClick={() =>
                           navigate(
-                            `/mentor-tasks-details/${list.id}?mentee_id=${list.mentee_id}`,
+                            `/viewTask/${list.id}`,
                             {
                               state: {
-                                from: "program"
+                                from: "program",
+                                type: "certificate"
                               }
                             }
                           )
