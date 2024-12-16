@@ -26,7 +26,7 @@ export const CancelPopup = ({
                     <textarea
                         id='message'
                         rows='4'
-                        className={'!border !border-[#E50027] w-[100%] !text-[#18283D] h-[200px]'}
+                        className={'!border !border-[#E50027] w-[100%] !text-[#18283D] h-[130px]'}
                         value={reason}
                         onChange={(e) => setReason(e.target.value)}
                     ></textarea>

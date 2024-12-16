@@ -1051,25 +1051,25 @@ export default function ProgramDetails() {
 
                                                     {
                                                         // requestId !== '' && programdetails.mentor_join_request_status !== 'accept' && programdetails.mentor_join_request_status !== 'cancel'
-                                                        ((programdetails.status === "yettoapprove" || programdetails.status === "inprogress")) ?
-                                                            <div className='flex gap-4 pt-10'>
-                                                                <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                                    border: "1px solid #E0382D",
-                                                                    borderRadius: '5px',
-                                                                    color: '#E0382D'
-                                                                }}
-                                                                    onClick={() => handleMenteeAcceptCancelRequest('reject', requestId)}
-                                                                >Reject Request
-                                                                </button>
-                                                                <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                                    background: "#16B681",
-                                                                    borderRadius: '5px'
-                                                                }}
-                                                                    onClick={() => handleMenteeAcceptCancelRequest('approve', requestId)}
-                                                                >Approve Request
-                                                                </button>
-                                                            </div>
-                                                            :
+                                                        // ((programdetails.status === "yettoapprove" || programdetails.status === "inprogress")) ?
+                                                        //     <div className='flex gap-4 pt-10'>
+                                                        //         <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                        //             border: "1px solid #E0382D",
+                                                        //             borderRadius: '5px',
+                                                        //             color: '#E0382D'
+                                                        //         }}
+                                                        //             onClick={() => handleMenteeAcceptCancelRequest('reject', requestId)}
+                                                        //         >Reject Request
+                                                        //         </button>
+                                                        //         <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                        //             background: "#16B681",
+                                                        //             borderRadius: '5px'
+                                                        //         }}
+                                                        //             onClick={() => handleMenteeAcceptCancelRequest('approve', requestId)}
+                                                        //         >Approve Request
+                                                        //         </button>
+                                                        //     </div>
+                                                        //     :
 
                                                             requestId !== '' ?
                                                                 <>
