@@ -104,6 +104,7 @@ export default function AllRequest() {
         error,
         reopenRequest
     } = useSelector((state) => state.requestList);
+    const { goalsList } = useSelector(state => state.goals)
     const [currentRequestTab, setCurrentRequestTab] = useState(
         RequestStatus.programRequest
     );
@@ -141,7 +142,7 @@ export default function AllRequest() {
         pageSize: 10,
     });
 
-    const [selectedCategory, setSelectedCategory] = React.useState("");
+    const [selectedCategory, setSelectedCategory] = React.useState([]);
 
     const [selectedTab, setSelectedTab] = React.useState(role === "mentee" ? "mentees" : "my");
 
@@ -352,7 +353,7 @@ export default function AllRequest() {
         }
 
         dispatch(updateTestimonial(payload))
-        
+
     }
 
     // Cancel Accept Popup
@@ -616,7 +617,7 @@ export default function AllRequest() {
             );
             const payload = {
                 member_id: seletedItem.id,
-                categories_id: categoryId,
+                categories_id: selectedCategory,
             };
             dispatch(updateMemberRequest(payload));
         }
@@ -819,16 +820,16 @@ export default function AllRequest() {
                                 className="w-[80px] flex justify-center h-[30px] px-7"
                                 style={{
                                     background:
-                                        requestStatusColor[params.row.status]?.bgColor || "",
+                                        requestStatusColor[params.row.goal.status]?.bgColor || "",
                                     lineHeight: "30px",
                                     borderRadius: "3px",
                                     width: "110px",
                                     height: "34px",
-                                    color: requestStatusColor[params.row.status]?.color || "",
+                                    color: requestStatusColor[params.row.goal.status]?.color || "",
                                     fontSize: "12px",
                                 }}
                             >
-                                {requestStatusText[params.row.status] || ""}
+                                {requestStatusText[params.row.goal.status] || ""}
                             </span>
                         </div>
                     </>
@@ -841,7 +842,7 @@ export default function AllRequest() {
             flex: 1,
             id: 4,
             renderCell: (params) => {
-                if (params.row.status !== "new" && params.row.status !== "pending"&&params.row.status !== "accept")
+                if (params.row.status !== "new" && params.row.status !== "pending" && params.row.status !== "accept")
                     return <></>;
                 return (
                     <>
@@ -877,32 +878,32 @@ export default function AllRequest() {
 
                             {role === "admin" && (
                                 <>
-                                  {(seletedItem.status === "new" ||
+                                    {(seletedItem.status === "new" ||
                                         seletedItem.status === "pending") && (
                                             <>
-                                    <MenuItem
-                                        onClick={handleAcceptGoalRequest}
-                                        className="!text-[12px]"
-                                    >
-                                        <img
-                                            src={TickCircle}
-                                            alt="AcceptIcon"
-                                            className="pr-3 w-[27px]"
-                                        />
-                                        Approve
-                                    </MenuItem>
-                                    <MenuItem
-                                        onClick={handleCancelGoalRequest}
-                                        className="!text-[12px]"
-                                    >
-                                        <img
-                                            src={CloseCircle}
-                                            alt="CancelIcon"
-                                            className="pr-3 w-[27px]"
-                                        />
-                                        Reject
-                                    </MenuItem>
-                                    </>
+                                                <MenuItem
+                                                    onClick={handleAcceptGoalRequest}
+                                                    className="!text-[12px]"
+                                                >
+                                                    <img
+                                                        src={TickCircle}
+                                                        alt="AcceptIcon"
+                                                        className="pr-3 w-[27px]"
+                                                    />
+                                                    Approve
+                                                </MenuItem>
+                                                <MenuItem
+                                                    onClick={handleCancelGoalRequest}
+                                                    className="!text-[12px]"
+                                                >
+                                                    <img
+                                                        src={CloseCircle}
+                                                        alt="CancelIcon"
+                                                        className="pr-3 w-[27px]"
+                                                    />
+                                                    Reject
+                                                </MenuItem>
+                                            </>
                                         )}
                                 </>
                             )}
@@ -1609,7 +1610,17 @@ export default function AllRequest() {
         );
     };
     const handleNewGoalRequestApi = () => {
-        dispatch(getAllGoals({ filter_by: filter.filter_by, params: "request" }))
+        dispatch(getAllGoals({
+            ...(filter.filter_by !== ""
+                ? { filter_by: filter.filter_by }
+                : { filter_by: "month" }),
+            params: "request",
+            page: paginationModel?.page + 1,
+            limit: paginationModel?.pageSize,
+            ...(filterStatus !== "all" && { status: filterStatus }),
+            created_by: actionTab ?? "mentor",
+            ...(filter.search !== "" && { search: filter.search }),
+        }))
     }
 
     const getReportsRequestApi = () => {
@@ -1745,7 +1756,7 @@ export default function AllRequest() {
     };
 
     const handleSearchCategory = (e) => {
-        let catList = categoryList&&categoryList?.length>0&&categoryList.filter((list) =>
+        let catList = categoryList && categoryList?.length > 0 && categoryList.filter((list) =>
             list.name.toLowerCase().includes(e.target.value.toLowerCase())
         );
         if (e.target.value === "") catList = categoryList;
@@ -2027,6 +2038,13 @@ export default function AllRequest() {
                 rowCount: reopenRequest?.count,
             });
         }
+        if (selectedRequestedtype === "goal_request") {
+            setActiveTableDetails({
+                column: goalColumns,
+                data: goalsList?.results,
+                rowCount: goalsList?.count,
+            });
+        }
     }, [
         programTableInfo,
         memberRequest,
@@ -2037,7 +2055,8 @@ export default function AllRequest() {
         reportsRequestInfo,
         anchorEl,
         learningAccessRequests,
-        testimonialRequest
+        testimonialRequest,
+        goalsList
     ]);
 
     useEffect(() => {
@@ -2063,9 +2082,9 @@ export default function AllRequest() {
             if (selectedRequestedtype === "new_goals_request") {
                 getGoalsRequestApi();
             }
-            // if (selectedRequestedtype === "new_goals_request") {
-            //     handleNewGoalRequestApi();
-            // }
+            if (selectedRequestedtype === "goal_request") {
+                handleNewGoalRequestApi();
+            }
 
             if (selectedRequestedtype === "certificate_request") {
                 getCerificateRequestAPi();
@@ -2089,7 +2108,10 @@ export default function AllRequest() {
         return (
             <div className="flex gap-6 justify-center items-center py-4">
                 <button
-                    onClick={() => setCategoryPopup({ show: false, selectedItem: [] })}
+                    onClick={() => {
+                        setCategoryPopup({ show: false, selectedItem: [] })
+                        selectedCategory([])
+                    }}
                     className="py-3 px-6 w-[16%]"
                     style={{
                         border: "1px solid rgba(29, 91, 191, 1)",
@@ -2163,6 +2185,19 @@ export default function AllRequest() {
     }, [selectedTab])
 
 
+    const handleSelectCategory = (value) => {
+        if (selectedRequestedtype === "member_join_request") {
+            if (selectedCategory?.includes(value)) {
+                setSelectedCategory(selectedCategory.filter((e) => e !== value));
+            } else {
+                setSelectedCategory([...selectedCategory, value]);
+            }
+        } else {
+            setSelectedCategory(value);
+        }
+    };
+
+
     const categoryColumn = [
         {
             field: "checkbox",
@@ -2175,8 +2210,8 @@ export default function AllRequest() {
                 return (
                     <div>
                         <Checkbox
-                            checked={selectedCategory === params?.row?.categories_id}
-                            onChange={() => setSelectedCategory(params.row.categories_id)}
+                            checked={selectedRequestedtype === "member_join_request" ? selectedCategory.includes(params?.row?.categories_id) : selectedCategory === params?.row?.categories_id}
+                            onChange={() => handleSelectCategory(params.row.categories_id)}
                         />
                     </div>
                 );
@@ -2226,7 +2261,7 @@ export default function AllRequest() {
                 className="px-3 py-5"
                 style={{ boxShadow: role === 'admin' ? "4px 4px 25px 0px rgba(0, 0, 0, 0.15)" : undefined }}
             >
-                {role === 'admin' &&
+                {/* {role === 'admin' &&
                     <Breadcrumbs
                         className="pb-4"
                         separator={<NavigateNextIcon fontSize="small" />}
@@ -2234,7 +2269,7 @@ export default function AllRequest() {
                     >
                         {breadcrumbs}
                     </Breadcrumbs>
-                }
+                } */}
 
                 {/* {showToast.show && (
                     <ToastNotification
@@ -2483,12 +2518,13 @@ export default function AllRequest() {
                                 columns={
                                     categoryPopup.page === "goal_request"
                                         ? categoryColumn
-                                        : categoryColumns
+                                        : categoryColumn
                                 }
                                 height={"460px"}
                                 footerComponent={footerComponent}
-                                hideCheckbox={categoryPopup.page === "goal_request"}
-                                selectedAllRows={categoryPopup.selectedItem}
+                                hideCheckbox
+                            // hideCheckbox={categoryPopup.page === "goal_request"}
+                            // selectedAllRows={categoryPopup.selectedItem}
                             />
                         </div>
                     </div>

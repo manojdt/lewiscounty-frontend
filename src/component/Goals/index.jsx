@@ -60,15 +60,15 @@ const Goals = () => {
     const [requestTimeFrame, setRequestTimeFrame] = React.useState("month")
     const [requestPaginationModel, setRequestPaginationModel] = React.useState({
         page: 0,
-        pageSize: 5
+        pageSize: 10
     })
     const [historyPaginationModel, setHistoryPaginationModel] = React.useState({
         page: 0,
-        pageSize: 5
+        pageSize: 10
     })
     const [allGoalPaginationModel, setAllGoalPaginationModel] = React.useState({
         page: 0,
-        pageSize: 5
+        pageSize: 10
     })
     const [showAdmin, setShowAdmin] = React.useState(false)
     const [createdBy, setCreatedBy] = React.useState("")
@@ -88,6 +88,25 @@ const Goals = () => {
         activity: false,
         type: ""
     })
+
+    useEffect(()=>{
+        setRequestPaginationModel({
+            page: 0,
+            pageSize: 10
+        })
+        setHistoryPaginationModel({
+            page: 0,
+            pageSize: 10
+        })
+        setAllGoalPaginationModel({
+            page: 0,
+            pageSize: 10
+        })
+        setAdminTablePaginationModal({
+            page: 0,
+            pageSize: 10
+        })
+    },[filterType])
 
     const { goalsList, loading, status, createdGoal, goalsCount, goalRequest, goalHistory } = useSelector(state => state.goals)
 
@@ -179,16 +198,16 @@ const Goals = () => {
     }
 
     const getAllGoalData = (created_by = createdBy, user_id) => {
-        console.log(seletedItem,"select")
-        const res=seletedItem?.created_by?seletedItem?.created_by: user_id
-        dispatch(getGoalsCount({ time_frame: allTimeFrame, user_id: res}))
+        console.log(seletedItem, "select")
+        const res = seletedItem?.created_by ? seletedItem?.created_by : user_id
+        dispatch(getGoalsCount({ time_frame: allTimeFrame, user_id: res }))
         dispatch(getGoalsRequest({
             status: filterType,
             created_by: created_by,
             time_frame: requestTimeFrame,
             page: requestPaginationModel?.page + 1,
             limit: requestPaginationModel?.pageSize,
-            user_id:res
+            user_id: res
         }))
         dispatch(getGoalsHistory({
             status: filterType ?? "new",
@@ -212,7 +231,7 @@ const Goals = () => {
 
     const handleGetAllGoals = (timeframe = allTimeFrame) => {
         let payload = {}
-        
+
         if (role === "admin") {
             payload = {
                 page: allGoalPaginationModel?.page + 1,
@@ -220,7 +239,7 @@ const Goals = () => {
                 status: filterType,
                 time_frame: timeframe,
                 created_by: createdBy,
-                user_id:seletedItem.created_by
+                user_id: seletedItem.created_by
             }
         } else {
             payload = {
@@ -233,10 +252,9 @@ const Goals = () => {
 
             }
         }
-        console.log(payload,seletedItem,"select 2")
         dispatch(getAllGoals(payload))
         dispatch(getGoalsRequest(payload))
-        dispatch(getGoalsCount({ time_frame: timeframe ,  user_id:role === "admin"?seletedItem?.created_by:undefined}))
+        dispatch(getGoalsCount({ time_frame: timeframe, user_id: role === "admin" ? seletedItem?.created_by : undefined }))
     }
 
 
@@ -525,7 +543,7 @@ const Goals = () => {
                             </MenuItem>
                         }
                         {
-                            params?.row?.status === "new" ||  params?.row?.status === "pending" &&
+                            params?.row?.status === "new" || params?.row?.status === "pending" &&
                             <MenuItem onClick={handlEditGoal} className='!text-[12px]'>
                                 <img src={EditIcon} alt="EditIcon" className='pr-3 w-[30px]' />
                                 Edit
@@ -541,10 +559,10 @@ const Goals = () => {
                         }
 
                         {
-                            ["new","pending", "active"].includes(params?.row?.status) &&
+                            ["new", "pending", "active"].includes(params?.row?.status) &&
                             <MenuItem onClick={() => handleOpenConfirmPopup("cancel")} className='!text-[12px]'>
                                 <img src={CancelReqIcon} alt="CancelReqIcon" field={params.id} className='pr-3 w-[30px]' />
-                                Cancel { params?.row?.status === "new"|| params?.row?.status === "pending"?"Request":null}
+                                Cancel {params?.row?.status === "new" || params?.row?.status === "pending" ? "Request" : null}
                             </MenuItem>
                         }
                     </Menu>}
