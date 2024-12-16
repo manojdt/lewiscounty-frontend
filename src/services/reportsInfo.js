@@ -44,14 +44,14 @@ export const getProgramsByCategoryId = createAsyncThunk(
 
 export const getReportProgramDetails = createAsyncThunk(
     "getReportProgramDetails",
-    async (id) => {
+    async (id,type) => {
         if (id) {
             const getDetailsofProgram = await api.get(`programs/${id}`);
             if (getDetailsofProgram.status === 200 && getDetailsofProgram.data && getDetailsofProgram.data.program) {
                 return getDetailsofProgram.data.program;
             }
 
-            return getDetailsofProgram;
+            return type?getDetailsofProgram.data: getDetailsofProgram;
         } else {
             return {};
 
