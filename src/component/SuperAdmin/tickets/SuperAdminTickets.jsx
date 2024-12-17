@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import SearchIcon from '../../../assets/images/search1x.png';
 import { useNavigate } from 'react-router-dom';
+import DataTable from '../../../shared/DataGrid';
+import { useGetAllTicketQuery } from '../../../features/tickets/tickets-slice';
+import { TicketsColumns } from '../../../utils/super-admin-columns';
 
 const AdminTickets = () => {
   const navigate = useNavigate();
@@ -9,6 +12,15 @@ const AdminTickets = () => {
     page: 0,
     pageSize: 10,
   });
+
+  const { data, isLoading, error, isError, isSuccess } = useGetAllTicketQuery(
+    {}
+  );
+
+  const tableData = data?.map((item, index) => {
+    return { ...item, id: index + 1 };
+  });
+
   const taskMenuList = [
     {
       name: 'All  Tickets',
@@ -34,24 +46,10 @@ const AdminTickets = () => {
       name: 'Reject Tickets',
       key: 'reject_tickets',
     },
-    // {
-    //     name: 'Draft',
-    //     key: 'draft'
-    // },
   ];
 
   const handleTab = (key) => {
-    // let typeString = `?type=${key}`;
-    // if (key === 'all') {
-    //   typeString = '';
-    // }
-    // navigate(`${pipeUrls.menteetask}${typeString}`);
     setRequestTab(key);
-    // setPaginationModel({
-    //   page: 0,
-    //   pageSize: 10,
-    // });
-    // handleTaskSearch('');
   };
 
   return (
@@ -107,16 +105,16 @@ const AdminTickets = () => {
             ))}
           </div>
 
-          {/* {!loading && (
+          {!isLoading && (
             <DataTable
-              rows={taskList?.results ?? []}
-              columns={mentorColumn}
+              rows={tableData}
+              columns={TicketsColumns}
               hideCheckbox
-              rowCount={taskList?.count}
+              // rowCount={taskList?.count}
               paginationModel={paginationModel}
               setPaginationModel={setPaginationModel}
             />
-          )} */}
+          )}
         </div>
       </div>
     </div>
@@ -124,3 +122,7 @@ const AdminTickets = () => {
 };
 
 export default AdminTickets;
+
+// -------------------------------------------------------------------------------------------------------------------------------
+
+// Ticket Columns

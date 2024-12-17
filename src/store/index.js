@@ -17,6 +17,7 @@ import launchProgramReducer from '../features/launchProgram/launchProgramSlice';
 import memberReducer from '../features/members/memberSlice';
 import categoryReducer from '../features/category/categorySlice';
 import PaymentReducer from '../features/payment/paymentSlice';
+import { ticketsApi } from '../features/tickets/tickets-slice';
 
 const combinedReducer = combineReducers({
   userInfo: userReducer,
@@ -37,6 +38,7 @@ const combinedReducer = combineReducers({
   members: memberReducer,
   category: categoryReducer,
   payment: PaymentReducer,
+  [ticketsApi.reducerPath]: ticketsApi.reducer,
 });
 
 const rootReducer = (state, action) => {
@@ -49,4 +51,9 @@ const rootReducer = (state, action) => {
 
 export const store = configureStore({
   reducer: rootReducer,
+  // [ticketsApi.reducerPath]: ticketsApi.reducer,
+
+  middleware: (getDefaultMiddleware) => [
+    ...getDefaultMiddleware().concat(ticketsApi.middleware),
+  ],
 });

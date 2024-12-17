@@ -10,9 +10,14 @@ import UploadIcon from '../../../assets/images/image_1x.png';
 import { view } from '../../../utils/constant';
 import DeleteIcon from '../../../assets/images/delete_1x.png';
 import { Button } from '../../../shared';
+import { useCreateTicketMutation } from '../../../features/tickets/tickets-slice';
 
 const AddNewTicket = ({ type }) => {
   const navigate = useNavigate();
+
+  const [createTicket, { isLoading, isError, isSuccess, error }] =
+    useCreateTicketMutation();
+
   const [filePreviews, setFilePreviews] = useState({});
   const imageUploadRef = useRef(null);
   const {
@@ -76,6 +81,11 @@ const AddNewTicket = ({ type }) => {
     setValue(field, updatedFiles);
   };
 
+  const onSubmit = (data) => {
+    console.log(data);
+    createTicket(data);
+  };
+
   return (
     <div className='p-9'>
       <div>
@@ -87,7 +97,10 @@ const AddNewTicket = ({ type }) => {
           {breadcrumbs}
         </Breadcrumbs>
       </div>
-      <div className='border rounded-lg pb-8'>
+      <form
+        className='border rounded-lg pb-8'
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <div className='border-b py-4 px-2 mx-4'>
           <p className='text-lg font-semibold'>New ticket</p>
         </div>
@@ -180,7 +193,7 @@ const AddNewTicket = ({ type }) => {
                                   controllerField.onChange(e.target.value)
                                 }
                               />
-                              {option.value}
+                              {option.key}
                             </label>
                           ))}
                         </div>
@@ -417,7 +430,6 @@ const AddNewTicket = ({ type }) => {
             }
           })}
         </div>
-
         <div className='flex gap-6 justify-center align-middle'>
           <Button
             btnName='Cancel'
@@ -425,14 +437,13 @@ const AddNewTicket = ({ type }) => {
             onClick={() => navigate('/dashboard')}
           />
           <Button
-            btnType='button'
+            btnType='submit'
             btnCls='w-[110px]'
             btnName={'Save'}
             btnCategory='primary'
-            // onClick={handleDateSelection}
           />
         </div>
-      </div>
+      </form>
     </div>
   );
 };
