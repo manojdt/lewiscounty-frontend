@@ -41,20 +41,20 @@ export const NewTicketFields = [
   {
     type: 'radio',
     name: 'gender',
-    label: 'Gender',
+    label: 'Position',
     placeholder: '',
     options: [
       {
-        key: 'admin',
-        value: 'Admin',
+        key: 'Admin',
+        value: 'admin',
       },
       {
-        key: 'mentor',
-        value: 'Mentor',
+        key: 'Mentor',
+        value: 'mentor',
       },
       {
         key: 'Mentee',
-        value: 'Mentee',
+        value: 'mentee',
       },
     ],
     inputRules: {
@@ -90,7 +90,7 @@ export const NewTicketFields = [
   },
   {
     type: 'file',
-    name: 'documents',
+    name: 'assignee_attachment',
     fieldtype: 'file',
     label: 'Document Upload',
     placeholder: '',

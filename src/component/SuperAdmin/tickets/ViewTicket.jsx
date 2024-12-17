@@ -1,5 +1,5 @@
 import { Breadcrumbs, Typography } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import UserImage from '../../../assets/icons/user-image.svg';
 import ImageIcon from '../../../assets/icons/image-icon.svg';
@@ -7,8 +7,10 @@ import DocumentIcon from '../../../assets/icons/documents-icon.svg';
 import DownloadIcon from '../../../assets/icons/download-icon.svg';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { Button } from '../../../shared';
+import TicketDeleteModal from './ticket-delete-modal';
 
 const ViewTicket = () => {
+  const [isOpen, setIsOpen] = useState(false);
   const breadcrumbs = [
     <Link
       variant='body2'
@@ -101,7 +103,7 @@ const ViewTicket = () => {
                 </div>
 
                 <div className='border rounded-md p-3 w-[300px] flex items-center justify-between'>
-                  <img src={DownloadIcon} alt='' />
+                  <img src={DocumentIcon} alt='' />
                   <p>loripusum.jpg</p>
                   <img src={DownloadIcon} alt='' />
                 </div>
@@ -118,7 +120,7 @@ const ViewTicket = () => {
                 color: 'rgba(220, 53, 69, 1)', // Danger red text
               }}
               btnCategory='secondary'
-              // onClick={() => navigate('/calendar')}
+              onClick={() => setIsOpen(true)}
             />
 
             <Button
@@ -130,6 +132,7 @@ const ViewTicket = () => {
           </div>
         </div>
       </div>
+      {isOpen && <TicketDeleteModal isOpen={isOpen} setIsOpen={setIsOpen} />}
     </div>
   );
 };
