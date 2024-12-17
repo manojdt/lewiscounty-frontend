@@ -399,7 +399,7 @@ export const requestStatusText = {
   deactivated: 'Deactivated',
   rejected: 'Rejected',
   approved: 'Approved',
-  in_progress: "In Progress"
+  in_progress: "In Progress",
 };
 export const certificateRequestStatusText = {
   new: 'New',

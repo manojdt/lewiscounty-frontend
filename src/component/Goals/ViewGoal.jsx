@@ -306,7 +306,7 @@ const ViewGoal = ({ type = '' }) => {
                         activity: false,
                         type: ""
                     })
-                    navigate(payload?.status === "cancel"?"/goals?type=cancel":-1)
+                    navigate(payload?.status === "cancel" ? "/goals?type=cancel" : -1)
                 }, 2000)
 
             }
@@ -520,7 +520,7 @@ const ViewGoal = ({ type = '' }) => {
                                     <div className='flex gap-5 items-center text-[20px]'>
                                         <p>{goalHeadingStatus[goalInfo.status]}</p>
                                         {
-                                            (goalInfo.status ==="new" && role !== user.admin) &&
+                                            (goalInfo.status === "new" && role !== user.admin) &&
                                             <div className="inset-y-0 end-0 flex items-center pe-3 cursor-pointer"
                                                 onClick={() => handleOpenEditForm()}
                                             >
@@ -562,7 +562,7 @@ const ViewGoal = ({ type = '' }) => {
                                                         Start date:
                                                     </th>
                                                     <td className="px-0 py-2">
-                                                         {dateFormatRever(goalInfo.start_date)}
+                                                        {dateFormatRever(goalInfo.start_date)}
                                                     </td>
                                                 </tr>
                                                 <tr className="bg-white text-black">
@@ -570,15 +570,15 @@ const ViewGoal = ({ type = '' }) => {
                                                         Duration:
                                                     </th>
                                                     <td className="px-0 py-2">
-                                                         {goalPeriods.find(goalPeriod => parseInt(goalPeriod.value) === parseInt(goalInfo.period))?.name}
+                                                        {goalPeriods.find(goalPeriod => parseInt(goalPeriod.value) === parseInt(goalInfo.period))?.name}
                                                     </td>
                                                 </tr>
                                                 <tr className="bg-white text-black">
                                                     <th scope="row" className="px-0 pr-4 py-2 font-medium whitespace-nowrap w-[40px]">
-                                                        Status: 
+                                                        Status:
                                                     </th>
                                                     <td className="px-0 py-2">
-                                                         {goalRequestStatus[goalInfo.status]}&nbsp;&nbsp;Goal
+                                                        {goalRequestStatus[goalInfo.status]}&nbsp;&nbsp;Goal
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -651,8 +651,8 @@ const ViewGoal = ({ type = '' }) => {
                                                 {
                                                     (goalInfo.status === 'cancel' || goalInfo.status === 'accept' || goalInfo?.status === "completed") &&
                                                     <>
-                                                        <Button btnName={goalInfo?.status === "completed"?"Close":"Back"} style={{ border: '1px solid rgba(29, 91, 191, 1)', width: '180px', color: 'rgba(29, 91, 191, 1)' }}
-                                                            onClick={() => navigate( goalInfo?.status === "completed"?"/goals?type=completed":-1)}
+                                                        <Button btnName={goalInfo?.status === "completed" ? "Close" : "Back"} style={{ border: '1px solid rgba(29, 91, 191, 1)', width: '180px', color: 'rgba(29, 91, 191, 1)' }}
+                                                            onClick={() => navigate(goalInfo?.status === "completed" ? "/goals?type=completed" : -1)}
                                                         />
 
                                                         <Button
@@ -691,19 +691,20 @@ const ViewGoal = ({ type = '' }) => {
 
                                                             :
 
-                                                            (goalInfo.status === 'aborted' || goalInfo.status === 'cancel') ?
-                                                                <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                                    border: "1px solid #E0382D",
-                                                                    borderRadius: '5px',
-                                                                    color: '#E0382D',
-                                                                    cursor: 'not-allowed'
-                                                                }}
-                                                                    onClick={() => undefined}
-                                                                >Cancelled
-                                                                </button>
-                                                                : <>
+                                                            // (goalInfo.status === 'aborted' || goalInfo.status === 'cancel') ?
+                                                            //     <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                            //         border: "1px solid #E0382D",
+                                                            //         borderRadius: '5px',
+                                                            //         color: '#E0382D',
+                                                            //         cursor: 'not-allowed'
+                                                            //     }}
+                                                            //         onClick={() => undefined}
+                                                            //     >Cancelled
+                                                            //     </button>
+                                                            //     : 
+                                                                <>
                                                                     {
-                                                                        !["new", "pending", "in_progress"].includes(goalInfo?.status) &&
+                                                                        !["new", "pending", "in_progress", 'aborted', 'cancel'].includes(goalInfo?.status) &&
                                                                         <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
                                                                             background: "#16B681",
                                                                             borderRadius: '5px',
@@ -736,6 +737,7 @@ const ViewGoal = ({ type = '' }) => {
 
                                             </Stack>
                                         }
+
                                     </div>
                                 </div>
                             </div>

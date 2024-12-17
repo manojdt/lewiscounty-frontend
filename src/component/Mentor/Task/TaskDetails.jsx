@@ -1043,7 +1043,7 @@ const MentorTaskDetails = () => {
                         >
                             {(selectedTab !== "pending" && confirmPopup?.type === "pass") && "Successfully Marked as Pass"}
                             {(selectedTab !== "pending" && confirmPopup?.type === "cancel") && "Successfully marked as Fail"}
-                            {(selectedTab === "pending" && confirmPopup?.type === "cancel") && "All Mentee’s New task has been successfully cancelled"}
+                            {((selectedTab === "pending" || selectedTab === "new") && confirmPopup?.type === "cancel") && "All Mentee’s New task has been successfully cancelled"}
                             {(selectedTab === "pending" && confirmPopup?.type === "pass") && "All Mentee’s New task has been successfully passed"}
                         </p>
                     </div>
