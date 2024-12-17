@@ -868,7 +868,7 @@ export default function AllRequest() {
                         >
                             <MenuItem
                                 onClick={(e) => {
-                                    navigate(`/view-goal/${seletedItem?.goal?.id}`);
+                                    navigate(`/view-goal/${seletedItem?.goal?.id}?requestId=${seletedItem.id}`);
                                 }}
                                 className="!text-[12px]"
                             >

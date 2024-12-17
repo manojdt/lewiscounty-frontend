@@ -134,10 +134,10 @@ const ViewReport = () => {
                                     </tr>
                                     <tr className="bg-white border-b dark:bg-gray-800 ">
                                         <th style={{ border: '1px solid rgba(0, 174, 189, 1)' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
-                                            Program Creator
+                                        Course Level
                                         </th>
                                         <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
-                                            Admin
+                                        {reportDetails?.program_course_level}
                                         </td>
                                     </tr>
                                     <tr className="bg-white border-b  dark:bg-gray-800">
@@ -145,7 +145,7 @@ const ViewReport = () => {
                                             Mentor Name
                                         </th>
                                         <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
-                                            {reportDetails.mentor_name}
+                                            {reportDetails.created_by_full_name}
                                         </td>
                                     </tr>
 
@@ -175,7 +175,7 @@ const ViewReport = () => {
                                             Participated Mentees
                                         </th>
                                         <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
-                                            {reportDetails?.participated_mentees?.length} Member
+                                            {reportDetails?.participates?.length} Member
                                         </td>
                                     </tr>
 

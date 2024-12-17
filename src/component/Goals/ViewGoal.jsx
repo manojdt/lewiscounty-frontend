@@ -19,10 +19,10 @@ import BatchIcon from '../../assets/icons/GoalBatch.svg'
 import SearchIcon from '../../assets/icons/search.svg';
 import CancelColorIcon from '../../assets/icons/cancelCircle.svg'
 import { Button } from '../../shared'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import MuiModal from '../../shared/Modal';
 import { useDispatch, useSelector } from 'react-redux'
-import { Backdrop, CircularProgress, Stack, Typography } from '@mui/material'
+import { Backdrop, Checkbox, CircularProgress, Stack, Typography } from '@mui/material'
 import { getGoalInfo, getGoalsHistory, updateGoalStatus, updateHistoryGoal } from '../../services/goalsInfo'
 import { goalDataStatus, goalHeadingStatus, goalPeriods, goalRequestStatus, goalStatus, requestStatus, user } from '../../utils/constant'
 import { getCategoryList, updateGoalRequest, updateLocalRequest } from '../../services/request'
@@ -37,6 +37,13 @@ import { dateFormatRever } from '../../utils'
 const ViewGoal = ({ type = '' }) => {
     const navigate = useNavigate()
     const params = useParams();
+    console.log(params,"params")
+      const [reason,setReason] = useState('')
+      const [reasonError, setReasonError] = React.useState(false);
+    const location = useLocation(); // Provides access to the current URL
+    const queryParams = new URLSearchParams(location.search); // Parses the query string
+  
+    const requestId = queryParams.get('requestId');
     const dispatch = useDispatch()
     const [pageloading, setPageLoading] = useState(false)
     const [categoryPopup, setCategoryPopup] = useState({ show: false, selectedItem: [], page: '', tab: '' })
@@ -47,7 +54,8 @@ const ViewGoal = ({ type = '' }) => {
         type: ""
     })
     const [editActionModal, setEditActionModal] = React.useState(false)
-
+    const [selectedCategory, setSelectedCategory] = React.useState([]);
+    const [categoryInfo, setCategoryInfo] = useState({ search: "", list: [] });
     const { goalInfo, loading, status } = useSelector(state => state.goals)
     const userInfo = useSelector(state => state.userInfo)
     const { categoryList, loading: requestLoading, status: reqStatus, } = useSelector(state => state.requestList);
@@ -113,11 +121,17 @@ const ViewGoal = ({ type = '' }) => {
         setActionModal({ ...actionModal, cancel: true, cancelled: false })
     }
 
-    const handleCloseGoal = () => {
+    const handleCloseGoal = (e) => {
+        if(e) e.preventDefault();
         if (role === 'admin') {
+            if (!reason.trim()) {
+                setReasonError(true); // Set error if reason is empty
+                return; // Prevent further action
+              }
             dispatch(updateGoalRequest({
+                goal_request_ids: [requestId],
                 status: "cancel",
-                id: params.id
+                description:reason
             }))
         } else {
             dispatch(updateGoalStatus({ id: parseInt(goalInfo.id), status: 'cancel' })).then((res) => {
@@ -137,6 +151,8 @@ const ViewGoal = ({ type = '' }) => {
 
     const handleCloseActionModal = () => {
         resetActionModal()
+        setReason('')
+        setReasonError('')
     }
 
     // Category Popup Close
@@ -165,8 +181,8 @@ const ViewGoal = ({ type = '' }) => {
         data.selectedItem.forEach((selected) => categoryId.push(selected.categories_id))
         const payload = {
             status: "accept",
-            id: params.id,
-            categories: categoryId
+            goal_request_ids: [requestId],
+            category_id: selectedCategory
         }
         dispatch(updateGoalRequest(payload))
     }
@@ -282,6 +298,8 @@ const ViewGoal = ({ type = '' }) => {
             status: confirmPopup?.type === "complete" ? "completed" : "cancel",
             start_date: dayjs(new Date()).format("YYYY-MM-DD")
         }
+      
+
         dispatch(updateHistoryGoal(payload)).then((res) => {
             if (res?.meta?.requestStatus === "fulfilled") {
                 setConfirmPopup({
@@ -323,7 +341,45 @@ const ViewGoal = ({ type = '' }) => {
     const handleOpenEditForm = () => {
         setEditActionModal(true)
     }
-
+    const handleSelectCategory = (value) => {
+      
+            setSelectedCategory(value);
+        
+    };
+    const handleSearchCategory = (e) => {
+        let catList = categoryList && categoryList?.length > 0 && categoryList.filter((list) =>
+            list.name.toLowerCase().includes(e.target.value.toLowerCase())
+        );
+        if (e.target.value === "") catList = categoryList;
+        setCategoryInfo({ search: e.target.value, list: catList });
+    };
+    const categoryColumn = [
+        {
+            field: "checkbox",
+            headerName: "",
+            // flex: 1,
+            id: 0,
+            width: 100,
+            for: ["admin", "mentor"],
+            renderCell: (params) => {
+                return (
+                    <div>
+                        <Checkbox
+                            checked={selectedCategory === params?.row?.categories_id}
+                            onChange={() => handleSelectCategory(params.row.categories_id)}
+                        />
+                    </div>
+                );
+            },
+        },
+        ...categoryColumns,
+    ];
+    useEffect(() => {
+        if(categoryList){
+            setCategoryInfo({ search: '', list: categoryList });
+        }
+    }, [categoryList])
+    
     return (
         <div className="px-9 py-9">
             <Backdrop
@@ -397,11 +453,65 @@ const ViewGoal = ({ type = '' }) => {
             </Backdrop>
 
 
+            <MuiModal modalSize='md' modalOpen={actionModal.cancel&&role === 'admin'} modalClose={handleCloseActionModal} noheader>
+<div className='px-5 py-5'>
+    <div className='flex justify-center flex-col gap-5  mt-4 mb-4'
+        style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '10px', }}>
+        <div className='flex justify-between px-3 py-4 items-center' style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
+            <p className='text-[18px]' style={{ color: 'rgba(0, 0, 0, 1)' }}>Reject Request Reason </p>
+            <img className='cursor-pointer' onClick={handleCloseActionModal} src={CancelIcon} alt="CancelIcon" />
+        </div>
 
+        <div className='px-5'>
+
+            <form onSubmit={handleCloseGoal}>
+                <div className='relative pb-8'>
+                    <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
+                        Reject Reason <span style={{color: 'red'}}>{'*'}</span>
+                    </label>
+
+                    <div className='relative'>
+                        <textarea
+                             value={reason}
+                             onChange={(e)=>{
+                               setReason(e.target.value)
+                               setReasonError(false)
+                             }}
+                            id="message" rows="4" className={`block p-2.5 input-bg w-full text-sm text-black  border
+                               focus-visible:outline-none focus-visible:border-none h-[130px]`}
+                            placeholder={''}
+                            style={{ border: '1px solid black' }}
+                        ></textarea>
+                       {reasonError && (
+              <p className="text-red-500 text-xs mt-1">
+                Please provide a reason for rejection.
+              </p>
+            )}
+                    </div>
+                </div>
+
+                <div className='flex justify-center gap-5 items-center pt-5 pb-10'>
+                    <Button btnName='Cancel' btnCls="w-[18%]" btnCategory="secondary" onClick={handleCloseActionModal} />
+                    <button
+                        type='submit'
+                        className='text-white py-3 px-7 w-[18%]'
+                        style={{ background: 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)', borderRadius: '3px' }}>
+                        Submit
+                    </button>
+                </div>
+            </form>
+
+        </div>
+
+
+    </div>
+
+</div>
+</MuiModal>
 
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={actionModal.cancel}
+                open={actionModal.cancel&&role !== 'admin'}
             >
                 <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
 
@@ -482,7 +592,10 @@ const ViewGoal = ({ type = '' }) => {
                                         borderRadius: '50px',
                                         height: '60px',
                                         width: '100%'
-                                    }} />
+                                    }}
+                                    onChange={handleSearchCategory}
+                                    value={categoryInfo.search}
+                                    />
                                 <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
                                     <img src={SearchIcon} alt='SearchIcon' />
                                 </div>
@@ -491,10 +604,11 @@ const ViewGoal = ({ type = '' }) => {
 
 
                         <DataTable
-                            rows={categoryList}
-                            columns={categoryColumns}
+                            rows={categoryInfo.list}
+                            columns={categoryColumn}
                             height={'460px'}
                             footerComponent={footerComponent}
+                            hideCheckbox
                             selectedAllRows={categoryPopup.selectedItem}
                         />
 
@@ -663,7 +777,9 @@ const ViewGoal = ({ type = '' }) => {
 
                                             </>
                                         }
-
+{type&& <Button btnName={"Close"} style={{ border: '1px solid rgba(29, 91, 191, 1)', width: '180px', color: 'rgba(29, 91, 191, 1)' }}
+                                                            onClick={() => navigate(-1)}
+                                                        />}
                                         {
                                             (role === 'admin' && goalInfo.status !== 'completed') ?
 
