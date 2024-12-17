@@ -198,8 +198,8 @@ const ViewReport = () => {
                                         <th style={{ border: '1px solid rgba(0, 174, 189, 1)' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
                                             Course Level
                                         </th>
-                                        <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
-                                            {reportDetails?.program_course_level}
+                                        <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' ,textTransform:'capitalize'}}>
+                                        {reportDetails?.program_course_level}
                                         </td>
                                     </tr>
                                     <tr className="bg-white border-b  dark:bg-gray-800">

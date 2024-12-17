@@ -241,7 +241,7 @@ console.log(res,"res")
               btnName="Cancel"
               btnCls="w-[13%]"
               btnCategory="secondary"
-              onClick={() => navigate("/reports")}
+              onClick={() => navigate(-1)}
             />
             <Button
               btnType="button"
