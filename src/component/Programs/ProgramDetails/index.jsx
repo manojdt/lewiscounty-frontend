@@ -15,6 +15,7 @@ import {
   Stack,
 } from '@mui/material';
 import { useForm } from 'react-hook-form';
+import { postPayments } from '../../../services/payment';
 
 import {
   menteeNotJoinCondition,
@@ -612,9 +613,9 @@ export default function ProgramDetails() {
     'pk_test_51QThrEKalAFoHITwOWO9dbQ3kl8kUUfBANhS3U4dNzYvmRsXl8j196jDww2VCJGGehlc7XSBkhagvMVajsoGWfDo00KOCPJQiq'
   );
 
-  // useEffect(() => {
-  //   dispatch(postPayments(programDetailsId));
-  // }, [programDetailsId]);
+  useEffect(() => {
+    dispatch(postPayments(programDetailsId));
+  }, [programDetailsId]);
 
   // useEffect(() => {
   //   if (payment?.paymentData?.data?.client_secret) {
