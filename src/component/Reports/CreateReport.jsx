@@ -19,6 +19,8 @@ import { reportsStatus } from '../../utils/constant';
 import { createReport, getCompletedProgramsByCategoryId, getProgramsByCategoryId, getReportProgramDetails, updateReportLocalState } from '../../services/reportsInfo';
 import ToastNotification from '../../shared/Toast';
 import { dateTimeFormat } from '../../utils';
+import HtmlReport from '../../shared/htmlReport';
+import MuiModal from '../../shared/Modal';
 
 
 export default function CreateReport() {
@@ -34,7 +36,7 @@ export default function CreateReport() {
     const [notification, setNotification] = useState({ program: false })
     const [actionType, setActionType] = useState('')
     const [commonLoading, setCommonLoading] = useState(false)
-    const [loading, setLoading] = useState(false)
+    const [openReport, setOpenReport] = useState(false)
 
 
     const {
@@ -80,7 +82,7 @@ export default function CreateReport() {
     }
 
     const handleProgramData = (programId) => {
-        dispatch(getReportProgramDetails(programId,"type"))
+        dispatch(getReportProgramDetails(programId, "type"))
     }
 
 
@@ -245,11 +247,11 @@ export default function CreateReport() {
                                 <h2>Create New Report</h2>
                             </li>
                         </ol>
-                        <img className='cursor-pointer' onClick={() =>{
-                             reset();
-                             dispatch(updateReportLocalState({ programDetails: {} }))
-                             navigate('/reports')
-                            }}
+                        <img className='cursor-pointer' onClick={() => {
+                            reset();
+                            dispatch(updateReportLocalState({ programDetails: {} }))
+                            navigate('/reports')
+                        }}
                             src={CancelIcon} alt="CancelIcon" />
                     </nav>
 
@@ -442,7 +444,7 @@ export default function CreateReport() {
                                                                                             focus:visible:outline-none focus:visible:border-none ${field.width === 'width-82' ? 'h-[282px]' : ''}`}
                                                                                             placeholder={field.placeholder}
                                                                                             {...register(field.name, field.inputRules)}></textarea>
-                                                                                        <div className='flex flex-col gap-6 items-center justify-center input-bg w-[4%]' style={{ borderRadius: '3px' }}>
+                                                                                        <div className='flex flex-col gap-6 items-center justify-center input-bg w-[4%] cursor-pointer' style={{ borderRadius: '3px' }} onClick={() => setOpenReport(true)}>
                                                                                             <img src={TextIcon} alt="TextIcon" />
                                                                                             <img src={HTMLIcon} alt="HTMLIcon" />
                                                                                         </div>
@@ -462,11 +464,11 @@ export default function CreateReport() {
                                 }
                             </div>
                             <div className="flex gap-6 justify-center align-middle py-16">
-                                <Button btnName='Cancel' btnCls="w-[13%]" btnCategory="secondary" onClick={() =>{
+                                <Button btnName='Cancel' btnCls="w-[13%]" btnCategory="secondary" onClick={() => {
                                     reset()
                                     dispatch(updateReportLocalState({ programDetails: {} }))
                                     navigate('/reports')
-                                } 
+                                }
                                 } />
                                 {
                                     role !== "admin" &&
@@ -478,7 +480,14 @@ export default function CreateReport() {
                             </div>
                         </form>
 
-
+                        <MuiModal
+                            modalSize='md'
+                            modalOpen={openReport}
+                            noheader
+                            modalClose={() => setOpenReport(false)}
+                        >
+                            <HtmlReport onCancel={() => setOpenReport(false)} onSave={(data) => console.log(data)} />
+                        </MuiModal>
 
                     </div>
                 </div>

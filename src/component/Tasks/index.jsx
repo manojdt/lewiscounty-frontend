@@ -59,16 +59,16 @@ export const Tasks = () => {
       key: 'newtask',
     },
     {
-      name: 'Completed Task',
-      key: 'completed',
-    },
-    {
       name: 'Pending Task',
       key: 'pending',
     },
     {
       name: 'Waiting Task',
       key: 'waiting_for_approval',
+    },
+    {
+      name: 'Completed Task',
+      key: 'completed',
     },
     {
       name: 'Rejected Task',
@@ -441,7 +441,7 @@ export const Tasks = () => {
             {taskMenuList.map((actionBtn, index) => (
               <button
                 key={index}
-                className='px-5 py-4 text-[14px]'
+                className={`px-5 py-4 text-[14px] !border ${requestTab === actionBtn.key && '!border-[#88B2E8]'}`}
                 style={{
                   background:
                     requestTab === actionBtn.key
