@@ -488,7 +488,7 @@ export const TaskDetails = () => {
               </div>
               <div
                 className='task-desc flex mt-5 px-5 py-6'
-                style={{ border: '1px solid rgba(29, 91, 191, 0.5)', marginBottom: taskData.status === TaskAllStatus.pending ? "20px" : "0px" }}
+                style={{ border: '1px solid rgba(29, 91, 191, 0.5)', marginBottom: "20px" }}
               >
                 <p className='!text-[16px]' fontWeight={600}>Task Description : </p>
                 <p className='text-[14px]'>&nbsp;&nbsp;{taskData?.task_description}</p>
@@ -942,7 +942,7 @@ export const TaskDetails = () => {
               {taskData.result !== '' &&
                 taskData.result !== null &&
                 taskData.result !== '----' && (
-                  <div className='mark flex'>
+                  <Stack direction={"row"} alignItems={"center"} spacing={3}>
                     <div className='mr-96'>Result :</div>
                     <div
                       style={{
@@ -950,10 +950,9 @@ export const TaskDetails = () => {
                           taskData.result === 'Pass'
                             ? 'rgba(235, 255, 243, 1)'
                             : 'rgba(255, 231, 231, 1)',
-                        padding: '24px 0',
-                        width: '240px',
+                        padding: '8px 16px',
                         textAlign: 'center',
-                        fontSize: '40px',
+                        fontSize: '18px',
                       }}
                     >
                       <span
@@ -967,9 +966,9 @@ export const TaskDetails = () => {
                         {taskData.result}
                       </span>
                     </div>
-                  </div>
+                  </Stack>
                 )}
-              <div className='close-btn flex justify-center gap-7 pb-5' >
+              <div className='close-btn flex justify-center gap-7 pb-5'>
                 <Button
                   btnName='Cancel'
                   btnCls='w-[12%]'

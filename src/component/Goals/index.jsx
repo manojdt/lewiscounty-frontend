@@ -536,14 +536,14 @@ const Goals = () => {
                             View
                         </MenuItem>
                         {
-                            params.row.status === 'active' &&
+                            (params.row.status === 'active' && role !== "admin") &&
                             <MenuItem onClick={() => handleOpenAction("start")} className='!text-[12px]'>
                                 <img src={StartIcon} alt="EditIcon" className='pr-3 w-[30px]' />
                                 Start
                             </MenuItem>
                         }
                         {
-                            params?.row?.status === "new" || params?.row?.status === "pending" &&
+                            ((params?.row?.status === "new" || params?.row?.status === "pending") && role !== "admin") &&
                             <MenuItem onClick={handlEditGoal} className='!text-[12px]'>
                                 <img src={EditIcon} alt="EditIcon" className='pr-3 w-[30px]' />
                                 Edit
@@ -551,7 +551,7 @@ const Goals = () => {
                         }
 
                         {
-                            params?.row?.status === "in_progress" &&
+                            (params?.row?.status === "in_progress" && role !== "admin") &&
                             <MenuItem onClick={() => handleOpenConfirmPopup("complete")} className='!text-[12px]'>
                                 <img src={CompleteIcon} alt="CompleteIcon" field={params.id} className='pr-3 w-[30px]' />
                                 Complete
@@ -559,7 +559,7 @@ const Goals = () => {
                         }
 
                         {
-                            ["new", "pending", "active"].includes(params?.row?.status) &&
+                            (["new", "pending", "active"].includes(params?.row?.status) && role !== "admin") &&
                             <MenuItem onClick={() => handleOpenConfirmPopup("cancel")} className='!text-[12px]'>
                                 <img src={CancelReqIcon} alt="CancelReqIcon" field={params.id} className='pr-3 w-[30px]' />
                                 Cancel {params?.row?.status === "new" || params?.row?.status === "pending" ? "Request" : null}
@@ -944,7 +944,7 @@ const Goals = () => {
 
     const handleGetAdminTableData = (time_frame = adminTimeFrame, created_by = adminTab) => {
         dispatch(getAllGoals({
-            status: "new",
+            // status: "new",
             created_by: created_by,
             time_frame: time_frame,
             page: adminTablePaginationModal?.page + 1,
@@ -1237,44 +1237,6 @@ const Goals = () => {
                                         {
                                             searchParams.get('type') === null ?
                                                 <div>
-                                                    {/* <GoalPerformance /> */}
-
-                                                    {/* <div style={{ border: '1px solid rgba(29, 91, 191, 1)', padding: '20px', borderRadius: '10px', margin: '10px 0' }}>
-                                                        <div className='goal-title-container flex justify-between items-center mb-10'>
-                                                            <div className='flex gap-5 items-center '>
-                                                                <p className='text-[18px] font-semibold'>Goals Request</p>
-                                                            </div>
-                                                            <div className='flex gap-8 items-center'>
-                                                                <div className="relative flex gap-3 py-3 px-3"
-                                                                    style={{ border: '1px solid rgba(24, 40, 61, 0.25)', background: 'rgba(238, 245, 255, 1)', borderRadius: '3px' }}>
-                                                                    <img src={CalenderIcon} alt="CalenderIcon" />
-                                                                    <select className='focus:outline-none' style={{ background: 'rgba(238, 245, 255, 1)' }}
-                                                                        value={requestTimeFrame}
-                                                                        onChange={(e) => handleChangeRequestTimeFrame(e.target.value)}>
-                                                                        {
-                                                                            timeFrameList?.map((e) => {
-                                                                                return (
-                                                                                    <option value={e?.value}>{e?.label}</option>
-                                                                                )
-                                                                            })
-                                                                        }
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        <DataTable rows={goalRequest?.results}
-                                                            columns={goalRequestColumn}
-                                                            handleSelectedRow={handleSelectedRow}
-                                                            height={350}
-                                                            rowCount={goalRequest?.count}
-                                                            paginationModel={requestPaginationModel}
-                                                            setPaginationModel={setRequestPaginationModel}
-                                                        />
-                                                    </div> */}
-
-
-
                                                     <div style={{ border: '1px solid rgba(29, 91, 191, 1)', padding: '20px', borderRadius: '10px', margin: '60px 0' }}>
                                                         <div className='goal-title-container flex justify-between items-center mb-10'>
                                                             <div className='flex gap-5 items-center '>

@@ -271,12 +271,12 @@ export default function AllRequest() {
             value: "pending",
         },
         {
-            label: "Approved",
-            value: "approved",
+            label: (role === "admin" && selectedRequestedtype === "goal_request") ? "Accepted" : "Approved",
+            value: (role === "admin" && selectedRequestedtype === "goal_request") ? "accept" : "approved",
         },
         {
-            label: "Rejected",
-            value: "rejected",
+            label: (role === "admin" && selectedRequestedtype === "goal_request") ? "Cancelled" :"Rejected",
+            value: (role === "admin" && selectedRequestedtype === "goal_request") ? "cancel" : "rejected",
         },
     ];
 
@@ -825,16 +825,16 @@ export default function AllRequest() {
                                 className="w-[80px] flex justify-center h-[30px] px-7"
                                 style={{
                                     background:
-                                        requestStatusColor[params.row.goal.status]?.bgColor || "",
+                                        requestStatusColor[params.row.status]?.bgColor || "",
                                     lineHeight: "30px",
                                     borderRadius: "3px",
                                     width: "110px",
                                     height: "34px",
-                                    color: requestStatusColor[params.row.goal.status]?.color || "",
+                                    color: requestStatusColor[params.row.status]?.color || "",
                                     fontSize: "12px",
                                 }}
                             >
-                                {requestStatusText[params.row.goal.status] || ""}
+                                {requestStatusText[params.row.status] || ""}
                             </span>
                         </div>
                     </>
@@ -847,8 +847,8 @@ export default function AllRequest() {
             flex: 1,
             id: 4,
             renderCell: (params) => {
-                if (params.row.status !== "new" && params.row.status !== "pending" && params.row.status !== "accept")
-                    return <></>;
+                // if (params.row.status !== "new" && params.row.status !== "pending" && params.row.status !== "accept")
+                //     return <></>;
                 return (
                     <>
                         <div
@@ -1525,7 +1525,10 @@ export default function AllRequest() {
                     setActiveTab("program_join")
                 }
                 if (selectedRequestedtype === "program_request") {
-                    setActiveTab(tab === "program_new" ? "program_join" : tab ?? "program_join")
+                    setActiveTab(tab ?? "program_join")
+                }
+                if (selectedRequestedtype === "goal_request") {
+                    setActiveTab(tab === "program_new" ? "mentor" : tab ?? "mentor")
                 }
                 break;
             case 'mentees':
@@ -2164,7 +2167,7 @@ export default function AllRequest() {
         }
         setSearchParams(searchParams);
     }, [filter]);
-    console.log("myRequestOverview?.filter((e)=> e?.for.includes(role)) ===>", myRequestOverview?.filter((e) => e?.for.includes(role)))
+
     useEffect(() => {
         let currentOveriew = [];
         let currentTab = "";
@@ -2172,11 +2175,12 @@ export default function AllRequest() {
             switch (selectedTab) {
                 case "my":
                     currentOveriew = myRequestOverview
-                    currentTab = role === "mentee" ? "program_join" : "program_new"
+                    currentTab = (role === "admin" && selectedRequestedtype === "goal_request") ? "mentor" :
+                        role === "mentee" ? "program_join" : "program_new"
                     break;
                 case "mentees":
                     currentOveriew = menteesRequestOverview
-                    currentTab = "program_join"
+                    currentTab = (role === "admin" && selectedRequestedtype === "goal_request") ? "mentor" : "program_join"
                     break;
                 case "admin":
                     currentOveriew = adminRequestOverview

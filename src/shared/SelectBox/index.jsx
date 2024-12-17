@@ -6,6 +6,7 @@ export const SelectBox = ({
   value = "",
   handleChange = () => false,
   menuList = [],
+  width = "100px"
 }) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const selectRef = useRef(null);
@@ -34,7 +35,7 @@ export const SelectBox = ({
           height: "40px",
           border: "1px solid #1D5BBF",
           color: "#FFFFFF",
-          minWidth: "100px",
+          minWidth: width ?? "100px",
           background: "#1D5BBF",
           "& .MuiSelect-select": {
             fontSize: "14px",
