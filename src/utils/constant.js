@@ -742,7 +742,7 @@ export const programMenus = (page = 'dashboard') => {
       name: "Assign Programs",
       count: 0,
       page: `${pipeUrl}${programFilterUrls.programAssign}`,
-      for: ['mentor'],
+      for: ['mentor', 'admin'],
       status: programActionStatus.program_assign
     },
     {

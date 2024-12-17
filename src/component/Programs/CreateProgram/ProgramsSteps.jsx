@@ -72,17 +72,20 @@ const ProgramSteps = ({
     name: "sub_programs",
   });
 
-  const [subProgramCount, is_sponsored, sub_programs] = watch([
-    "no_of_subprograms",
-    "is_sponsored",
-    "sub_programs",
-  ]);
+  const [subProgramCount, is_sponsored, sub_programs, start_date, end_date] =
+    watch([
+      "no_of_subprograms",
+      "is_sponsored",
+      "sub_programs",
+      "start_date",
+      "end_date",
+    ]);
 
   const mentorFooterComponent = (props) => {
     return (
       <div className="flex gap-6 justify-center items-center py-4">
         <button
-          //   onClick={() => setActionModal("")}
+          onClick={() => setCurrentField("")}
           className="py-3 px-6 w-[16%]"
           style={{
             border: "1px solid rgba(29, 91, 191, 1)",
@@ -123,7 +126,7 @@ const ProgramSteps = ({
           title: "",
           description: "",
           start_date: "",
-          end_date: "",          
+          end_date: "",
           flexible_time: "",
           mentor_id: "",
         });
@@ -161,7 +164,7 @@ const ProgramSteps = ({
     if (Object.keys(stepData).length && params.id !== "") {
       handleLoadFieldValues();
     }
-  }, [stepData]);
+  }, [params.id, stepData]);
 
   useEffect(() => {
     if (currentStepData !== undefined && Object.keys(currentStepData).length) {
@@ -543,14 +546,6 @@ const ProgramSteps = ({
                                           )}
                                         ></textarea>
                                       ) : nestedField.type === "date" ? (
-                                        // <input
-                                        //   type={nestedField.type}
-                                        //   {...register(
-                                        //     `sub_programs.${index}.${nestedField.name}`,
-                                        //     nestedField.inputRules
-                                        //   )}
-                                        //   className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
-                                        // />
                                         <div className="relative">
                                           <Calendar
                                             className="calendar-control input-bg"
@@ -567,12 +562,15 @@ const ProgramSteps = ({
                                             }}
                                             {...(nestedField.name ===
                                             "start_date"
-                                              ? { minDate: new Date() }
+                                              ? {
+                                                  minDate: start_date,
+                                                  maxDate: end_date,
+                                                }
                                               : {})}
                                             {...(nestedField.name === "end_date"
                                               ? {
-                                                  minDate:
-                                                    getValues(`start_date`),
+                                                  minDate: start_date,
+                                                  maxDate: end_date,
                                                 }
                                               : {})}
                                             showTime
@@ -617,17 +615,7 @@ const ProgramSteps = ({
                                             </p>
                                           )}
                                         </div>
-                                      ) : //   : nestedField.type === "time" ? (
-                                      //     <input
-                                      //       type={nestedField.type}
-                                      //       {...register(
-                                      //         `sub_programs.${index}.${nestedField.name}`,
-                                      //         nestedField.inputRules
-                                      //       )}
-                                      //       className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
-                                      //     />
-                                      //   )
-                                      nestedField.type === "radio" ? (
+                                      ) : nestedField.type === "radio" ? (
                                         <FormControl
                                           component="fieldset"
                                           className={`my-3`}
@@ -702,8 +690,7 @@ const ProgramSteps = ({
                                             )
                                           }
                                         >
-                                          {sub_programs[index].mentor_id
-                                            ?.name && (
+                                          {sub_programs[index].mentor_id && (
                                             <p className="flex items-center gap-1">
                                               <p
                                                 className="flex items-center px-3 py-3"
@@ -713,24 +700,17 @@ const ProgramSteps = ({
                                                   borderRadius: "50%",
                                                 }}
                                               ></p>
-                                              {sub_programs[index].mentor_id}
+                                              {
+                                                mentor_assign?.find(
+                                                  (mentor) =>
+                                                    mentor?.id ===
+                                                    sub_programs[index]
+                                                      .mentor_id
+                                                )?.name
+                                              }
                                             </p>
                                           )}
 
-                                          {!sub_programs[index].mentor_id
-                                            ?.name && (
-                                            <p className="flex items-center gap-1">
-                                              <p
-                                                className="flex items-center px-3 py-3"
-                                                style={{
-                                                  background:
-                                                    "rgba(223, 237, 255, 1)",
-                                                  borderRadius: "50%",
-                                                }}
-                                              ></p>
-                                              {sub_programs[index].mentor_id}
-                                            </p>
-                                          )}
                                           <input
                                             {...register(
                                               nestedField.name,
@@ -770,18 +750,17 @@ const ProgramSteps = ({
                                         </div>
                                       )}
                                     </div>
-                                    {errors?.sub_programs?.length > 0 &&
-                                      errors?.sub_programs?.[index]?.[
-                                        nestedField.name
-                                      ]?.message && (
-                                        <p className="error" role="alert">
-                                          {
-                                            errors.sub_programs[index][
-                                              nestedField.name
-                                            ].message
-                                          }
-                                        </p>
-                                      )}
+                                    {errors?.sub_programs?.[index]?.[
+                                      nestedField.name
+                                    ]?.message && (
+                                      <p className="error" role="alert">
+                                        {
+                                          errors.sub_programs[index][
+                                            nestedField.name
+                                          ].message
+                                        }
+                                      </p>
+                                    )}
                                   </div>
                                 );
                               })}
@@ -793,7 +772,6 @@ const ProgramSteps = ({
                   ) : field.type === "textbox" ? (
                     <>
                       <textarea
-                        id="message"
                         rows="4"
                         className={`block p-2.5 input-bg w-full text-sm text-gray-900 border focus-visible:outline-none focus-visible:border-none ${
                           field.width === "width-82" ? "h-[282px]" : ""
@@ -833,15 +811,7 @@ const ProgramSteps = ({
                       <Calendar
                         className="calendar-control input-bg"
                         {...dateField}
-                        value={dateFormat[field.name]}
-                        onChange={(e) => {
-                          dateField.onChange(e);
-                          setDateFormat({
-                            ...dateFormat,
-                            [field.name]: e.value,
-                          });
-                          // calendarRef?.current[index]?.hide()
-                        }}
+                        value={getValues(field.name)}
                         {...(field.name === "start_date"
                           ? { minDate: new Date() }
                           : {})}

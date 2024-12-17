@@ -77,13 +77,6 @@ export const createNewPrograms = createAsyncThunk(
   "createNewPrograms",
   async (data) => {
     const { bodyFormData, role } = data
-    console.log('FormData contents before edit update:');
-    Array.from(bodyFormData.entries()).forEach(([key, value]) => {
-      console.log(`Field: ${key}`);
-      console.log('Value:', value);
-      console.log('Type:', typeof value);
-      console.log('-------------------');
-    });
     const headers = {
       'Content-Type': 'multipart/form-data',
     }
@@ -104,18 +97,11 @@ export const editUpdateProgram = createAsyncThunk(
     const headers = {
       'Content-Type': 'multipart/form-data',
     }
-    let editUpdateProgramInfo
-    if (role) {
-      editUpdateProgramInfo = await api.put(`program/admin-program/${program_id}`, restOfData, {
-        headers: headers
-      });
 
-    } else {
-      editUpdateProgramInfo = await api.put("programs", data, {
-        headers: headers
-      });
+    const editUpdateProgramInfo = await api.put(role ? `program/admin-program/${program_id}` : `programs/${program_id}`, restOfData, {
+      headers: headers
+    });
 
-    }
     if (editUpdateProgramInfo.status === 201 || editUpdateProgramInfo.status === 200) {
       return editUpdateProgramInfo;
     }

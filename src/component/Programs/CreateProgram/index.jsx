@@ -150,11 +150,11 @@ export default function CreatePrograms() {
         });
       }
     }
-// const saveDraft = (data)=> {
-//     let fieldData = {
-//         ...stepData, ...data,
-//     }
-//     setStepData(fieldData)
+    // const saveDraft = (data)=> {
+    //     let fieldData = {
+    //         ...stepData, ...data,
+    //     }
+    //     setStepData(fieldData)
 
     // Get allowed field names for current step
     const allowedFields = currentStepField.map((field) => field.name);
@@ -292,7 +292,9 @@ export default function CreatePrograms() {
               })
             );
           } else {
-            bodyFormData.append("status", "started");
+            if (toggleRole === "admin") {
+              bodyFormData.append("status", "started");
+            }
             bodyFormData.append("program_admin", userInfo.data?.user_id);
             dispatch(
               createNewPrograms({
@@ -790,8 +792,8 @@ export default function CreatePrograms() {
           let currentFieldValue = programdetails[currentField];
 
           if (currentField === "category") {
-            currentFieldValue = programdetails.categories[0].id;
-            fetchCategoryData(programdetails.categories[0].id);
+            currentFieldValue = programdetails.categories[0]?.id;
+            fetchCategoryData(programdetails.categories[0]?.id);
           }
 
           if (currentField === "start_date" || currentField === "end_date") {
