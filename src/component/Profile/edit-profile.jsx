@@ -350,7 +350,7 @@ const EditProfile = ({ setEditMode }) => {
 
   return (
     <FormContextProvider onSubmit={onSubmit} initialValues={profile}>
-      <div className='border px-12 py-6 rounded-lg'>
+      <div className='border px-12 py-6 rounded-lg bg-white'>
         <div className='flex items-center  justify-between'>
           <div className='py-4 relative w-[12%]'>
             <div className='upload-profile'>

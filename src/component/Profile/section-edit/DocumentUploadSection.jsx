@@ -26,6 +26,7 @@ const DocumentUploadSection = ({ type, setRemoveFiles }) => {
         'image/jpg',
         'image/webp',
         'image/heic',
+        'application/pdf',
       ].includes(filer.type)
     );
 
@@ -161,7 +162,7 @@ const DocumentUploadSection = ({ type, setRemoveFiles }) => {
                               id={field.name}
                               type='file'
                               multiple
-                              accept='image/png, image/jpeg, image/jpg, image/webp, image/heic'
+                              accept='image/png, image/jpeg, image/jpg, image/webp, image/heic, application/pdf'
                               onChange={(e) =>
                                 handleFileChange(field.name, e.target.files)
                               }

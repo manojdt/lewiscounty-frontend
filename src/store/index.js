@@ -16,6 +16,7 @@ import requestReducer from '../features/request/requestSlice';
 import launchProgramReducer from '../features/launchProgram/launchProgramSlice';
 import memberReducer from '../features/members/memberSlice';
 import categoryReducer from '../features/category/categorySlice';
+import PaymentReducer from '../features/payment/paymentSlice';
 
 const combinedReducer = combineReducers({
   userInfo: userReducer,
@@ -35,6 +36,7 @@ const combinedReducer = combineReducers({
   launchProgram: launchProgramReducer,
   members: memberReducer,
   category: categoryReducer,
+  payment: PaymentReducer,
 });
 
 const rootReducer = (state, action) => {
