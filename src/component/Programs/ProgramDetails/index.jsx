@@ -1492,7 +1492,7 @@ export default function ProgramDetails() {
                       </span>
                     )}
                   </div>
-                  {programdetails.status === 'yettoapprove' && (
+                  {/* {programdetails.status === 'yettoapprove' && (
                     <button
                       className='py-3 px-16 text-white mt-4'
                       style={{
@@ -1505,7 +1505,7 @@ export default function ProgramDetails() {
                     >
                       Accept this program
                     </button>
-                  )}
+                  )} */}
 
                   {programCompleted.includes(programdetails.status) && (
                     <div className='py-9'>
