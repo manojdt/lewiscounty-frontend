@@ -8,10 +8,8 @@ import UserImage from "../../../assets/icons/user-icon.svg";
 import LocationIcon from '../../../assets/images/Location1x.png';
 import CalendarIcon from '../../../assets/images/calender_1x.png';
 import RatingsIcon from '../../../assets/images/ratings1x.png';
-import SponsorIcon from '../../../assets/images/program_logo1x.png';
 import CertificateIcon from '../../../assets/images/certficate1x.png';
 import QuoteIcon from '../../../assets/images/quotes1x.png';
-import PlusIcon from '../../../assets/images/plus_temp.png';
 import MoreIcon from '../../../assets/images/more1x.png';
 import ShareIcon from '../../../assets/images/share1x.png';
 import DiscussionsIcon from '../../../assets/images/discussions1x.png';
@@ -22,10 +20,6 @@ import WaitingIcon from '../../../assets/images/waiting1x.png';
 import SuccessTik from '../../../assets/images/blue_tik1x.png';
 
 import LinkIcon from '../../../assets/images/link1x.png';
-import LinkedInIcon from '../../../assets/images/linked-in1x.png';
-import InstagramIcon from '../../../assets/images/instagram_1x.png';
-import FacebookOutlineIcon from '../../../assets/images/facebook-outline1x.png';
-import TwitterIcon from '../../../assets/images/twitter1x.png';
 import CancelIcon from '../../../assets/images/cancel-colour1x.png';
 import PauseIcon from '../../../assets/images/pause1x.png';
 import ResumeIcon from '../../../assets/images/resume1x.png';
@@ -35,27 +29,23 @@ import TimeHistoryIcon from '../../../assets/icons/time-history-icon.svg'
 import TickColorIcon from '../../../assets/icons/tickColorLatest.svg'
 
 import './program-details.css'
-import Carousel from '../../../shared/Carousel';
-import { curatedPrograms } from '../../../utils/mock';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import MuiModal from '../../../shared/Modal';
 import { Button } from '../../../shared';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { pipeUrls, programActionStatus, programStatus, requestStatus } from '../../../utils/constant';
-import { getProgramMentees, updateNewPrograms } from '../../../services/programInfo';
+import { programActionStatus, requestStatus } from '../../../utils/constant';
+import { getProgramMentees } from '../../../services/programInfo';
 import { getProgramDetails, launchProgram, updateProgram } from '../../../services/userprograms';
 import { Backdrop, CircularProgress } from '@mui/material';
 import useTimer from '../../../hooks/useTimer';
 import SkillsSet from '../../SkillsSet';
-import api from '../../../services/api';
 import { programCancelRequest, programRescheduleRequest, updateLocalRequest } from '../../../services/request';
 import './details.css'
 import { convertDateFormat, formatDateFunToAll, formatDateTimeISO, todatDateInfo } from '../../../utils';
-import ToastNotification from '../../../shared/Toast';
 import Ratings from '../Ratings';
 import { getUserProfile } from '../../../services/profile';
-import { JoinedMenteeColumn, JoinedProgramMenteeColumn } from '../../../mock';
+import { JoinedProgramMenteeColumn } from '../../../mock';
 import DataTable from '../../../shared/DataGrid';
 import PaymentButton from '../../../shared/paymentButton';
 
@@ -190,7 +180,7 @@ export default function AssignTask() {
         if (type === "join_program") {
             dispatch(launchProgram({ program: programdetails.id, request_type: "program_join" })).then((res) => {
                 if (res.meta.requestStatus === "fulfilled") {
-                    dispatch(getProgramDetails(parseInt(params.id)))
+                    dispatch(getProgramDetails({ id: parseInt(params.id) }))
                 }
             })
         } else if (programdetails.status === programActionStatus.yettostart) {
@@ -199,7 +189,7 @@ export default function AssignTask() {
             // if ((startProgramRequest.status === 201 || startProgramRequest.status === 200) && startProgramRequest.data) {
             // setLoading({ initial: false, task: false })
             dispatch(launchProgram({ program: programdetails.id, request_type: "program_start" })).then(() => {
-                dispatch(getProgramDetails(parseInt(params.id)))
+                dispatch(getProgramDetails({ id: parseInt(params.id) }))
             })
 
             // }
@@ -300,7 +290,7 @@ export default function AssignTask() {
             reset()
             setDateFormat({})
             setTimeout(() => {
-                dispatch(getProgramDetails(parseInt(params.id)))
+                dispatch(getProgramDetails({ id: parseInt(params.id) }))
                 dispatch(updateLocalRequest({ status: '' }))
 
             }, 3000)
@@ -336,7 +326,7 @@ export default function AssignTask() {
         const programId = params.id;
 
         if (programId && programId !== '') {
-            dispatch(getProgramDetails(programId))
+            dispatch(getProgramDetails({ id: programId }))
         }
 
         if (!Object.keys(profile)?.length) {

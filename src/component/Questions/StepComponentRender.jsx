@@ -82,7 +82,6 @@ const StepComponenRender = ({
   };
 
   useEffect(() => {
-    console.log(stepData, 'stepData');
     const fName = [];
     const f = {};
     stepFields.forEach((step) => fName.push(step.name));
@@ -209,11 +208,7 @@ const StepComponenRender = ({
                             onChange={(e) => {
                               // fileUpload.onChange(e);
 
-                              if (e.target.files && e.target.files[0]) {
-                                console.log(
-                                  'e.target.files[0].type',
-                                  e.target.files[0].type
-                                );
+                              if (e.target.files && e.target.files[0]) {                             
                                 let types = [
                                   'image/png',
                                   'image/jpeg',
