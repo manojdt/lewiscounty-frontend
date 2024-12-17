@@ -67,12 +67,12 @@ const MentorTaskDetails = () => {
             key: "new"
         },
         {
-            name: "Pending",
-            key: "pending"
+            name: "In Progress",
+            key: "inprogress"
         },
         {
-            name: "Mentee Task Status",
-            key: "inprogress"
+            name: "Pending",
+            key: "pending"
         },
         {
             name: "Completed",
