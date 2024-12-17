@@ -1684,7 +1684,7 @@ export default function AllRequest() {
         dispatch(
             getMemberRequest({
                 ...(filterStatus !== "all" && { status: filterStatus }),
-                user: actionTab,
+                user: actionTab === "program_new" ? "mentor" : actionTab,
                 page: paginationModel?.page + 1,
                 limit: paginationModel?.pageSize,
                 ...(filter.search !== "" && { search: filter.search }),
