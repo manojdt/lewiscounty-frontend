@@ -376,12 +376,16 @@ export default function CertificateMenteeList() {
           </div>}
           {role === "admin" && <Box className="flex flex-col items-center justify-center w-[full]" mt={3}>
             <Stack direction={"row"} alignItems={"center"} spacing={2}>
-              <Button
+              {/* <Button
                 btnName='Reject Request'
                 btnCls='w-[100%] !border !border-[#E50027] !text-[#E50027]'
                 btnCategory='secondary'
                 onClick={() => handleOpenActionPopup("reject")}
-              />
+              /> */}
+              <Button
+                btnName="Close"
+                btnCategory='secondary'
+                onClick={() => navigate(-1)} />
               <Button
                 btnName='Approve Request'
                 btnCls='w-[100%] whitespace-nowrap !bg-[#16B681] !text-[#FFFFFF] !border !border-[#16B681]'
