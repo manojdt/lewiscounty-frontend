@@ -21,6 +21,7 @@ import {
   Box,
   CircularProgress,
   Grid,
+  Stack,
   Typography,
 } from '@mui/material';
 import {
@@ -37,6 +38,7 @@ import ToastNotification from '../../shared/Toast';
 import { getSpecificTask } from '../../services/task';
 import { getFiles } from '../../utils';
 import api from '../../services/api';
+import HtmlReport from '../../shared/htmlReport';
 
 export const TaskDetails = () => {
   const navigate = useNavigate();
@@ -91,6 +93,12 @@ export const TaskDetails = () => {
 
   const docs = referenceView !== '' ? referenceView?.split(',') || [] : [];
 
+  useEffect(() => {
+    if (["pending", "new", "inprogress"].includes(taskData?.status)) {
+      setValue("task_solution", "")
+    }
+  }, [taskData?.status])
+
   const handleImageUpload = (field, e) => {
     if (e.target.files && e.target.files[0]) {
       setTaskFile([...taskFile, { ...e.target.files, row_id: uuidv4() }]);
@@ -103,7 +111,7 @@ export const TaskDetails = () => {
   };
 
   const handleDelete = (id) => {
-    const taskDocs = taskFile.filter((task) => task.id !== id);
+    const taskDocs = taskFile.filter((task) => task.row_id !== id);
     if (!taskDocs.length) {
       setValue('file', '');
     }
@@ -111,10 +119,26 @@ export const TaskDetails = () => {
     if (id) {
       setDelectedFile([
         ...deletedFile,
-        taskFile.filter((task) => task.id === id)?.[0]?.id,
+        taskFile.filter((task) => task.row_id === id)?.[0]?.id,
       ]);
     }
   };
+
+  const submitTask = (type = "", formData) => {
+    if (type === "draft") {
+      dispatch(updateTaskSubmission(formData)).then((res) => {
+        if (res.meta.requestStatus === "fulfilled") {
+          setValue("task_solution", "")
+        }
+      })
+    } else if (type === "submit") {
+      dispatch(submitProgramTaskDetails(formData)).then((res) => {
+        if (res.meta.requestStatus === "fulfilled") {
+          setValue("task_solution", "")
+        }
+      })
+    }
+  }
 
   const onSubmit = (data, type) => {
     if (!taskFile.length) {
@@ -141,13 +165,13 @@ export const TaskDetails = () => {
       }
 
       if (type === 'submit' && taskData?.status === 'draft') {
-        dispatch(updateTaskSubmission(bodyFormData));
+        submitTask("draft", bodyFormData)
       } else if (type === 'draft' && taskData?.status === 'draft') {
-        dispatch(updateTaskSubmission(bodyFormData));
-      } else if (type === 'submit' && taskData?.status === 'inprogress') {
-        dispatch(submitProgramTaskDetails(bodyFormData));
-      } else if (type === 'draft' && taskData?.status === 'inprogress') {
-        dispatch(submitProgramTaskDetails(bodyFormData));
+        submitTask("draft", bodyFormData)
+      } else if (type === 'submit' && ['inprogress', 'pending'].includes(taskData?.status)) {
+        submitTask("submit", bodyFormData)
+      } else if (type === 'draft' && ['inprogress', 'pending'].includes(taskData?.status)) {
+        submitTask("submit", bodyFormData)
       }
     }
   };
@@ -178,32 +202,6 @@ export const TaskDetails = () => {
 
   useEffect(() => {
     let allTaskDocuments = { img: [], video: [], doc: [] };
-    // if (taskData?.status === "draft") {
-    //     const imgData = getFiles(taskData?.files || [])
-    //     allTaskDocuments = {
-    //         ...imgData,
-    //         img: imgData?.image
-    //     }
-    // } else {
-    //     if (taskImages?.length) {
-    //         taskImages.forEach((img) => {
-    //             const fileName = img[0]?.name;
-    //             const fileNameSplit = fileName?.split('.')
-    //             const fileExtensionName = fileNameSplit?.pop().toLowerCase()
-    //             if (allowedImagesTypes.includes(fileExtensionName)) {
-    //                 allTaskDocuments.img = [...allTaskDocuments.img, img]
-    //             }
-    //             if (allowedDocTypes.includes(fileExtensionName)) {
-    //                 allTaskDocuments.doc = [...allTaskDocuments.doc, img]
-    //             }
-    //             if (allowedVideoTypes.includes(fileExtensionName)) {
-    //                 allTaskDocuments.video = [...allTaskDocuments.video, img]
-    //             }
-    //         })
-    //     } else {
-    //         allTaskDocuments = { img: [], video: [], doc: [] }
-    //     }
-    // }
     allTaskDocuments = getFiles(taskFile);
     setTaskSolutionDocs(allTaskDocuments);
   }, [taskFile]);
@@ -212,7 +210,13 @@ export const TaskDetails = () => {
     dispatch(getProgramTaskDetails(params.id));
     dispatch(getSpecificTask({ task_id: params.id })).then((res) => {
       if (res?.meta?.requestStatus === 'fulfilled') {
-        const files = res?.payload?.files;
+        const files = res?.payload?.files?.map((e) => {
+          return {
+            ...e,
+            row_id: uuidv4()
+          }
+        });
+
 
         setValue('file', files ?? [], {
           shouldValidate: taskData?.statue === 'draft' ? false : true,
@@ -234,7 +238,7 @@ export const TaskDetails = () => {
   getFiles(taskFile || []);
 
   return (
-    <div className='px-9 py-9'>
+    <div className='px-9 py-9'>      
       <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={status === programStatus.tasksubmitted}
@@ -479,15 +483,15 @@ export const TaskDetails = () => {
                 className='task-desc flex mt-5 px-5 py-6'
                 style={{ border: '1px solid rgba(29, 91, 191, 0.5)' }}
               >
-                <p className='w-[30%]'>Task Name : </p>
-                <p className='text-[14px]'>{taskData?.task_name}</p>
+                <p className='!text-[16px]' fontWeight={600}>Task Name : </p>
+                <p className='text-[14px]'>&nbsp;&nbsp;{taskData?.task_name}</p>
               </div>
               <div
                 className='task-desc flex mt-5 px-5 py-6'
-                style={{ border: '1px solid rgba(29, 91, 191, 0.5)' }}
+                style={{ border: '1px solid rgba(29, 91, 191, 0.5)', marginBottom: taskData.status === TaskAllStatus.pending ? "20px" : "0px" }}
               >
-                <p className='w-[30%]'>Task Description : </p>
-                <p className='text-[14px]'>{taskData?.task_description}</p>
+                <p className='!text-[16px]' fontWeight={600}>Task Description : </p>
+                <p className='text-[14px]'>&nbsp;&nbsp;{taskData?.task_description}</p>
               </div>
 
               {isPreview && (
@@ -507,147 +511,76 @@ export const TaskDetails = () => {
                     </Box>
                   </div>
 
-                  <div className='flex justify-between task-uploaded-images-container'>
-                    {allFiles?.files?.length > 0 ? (
-                      <div>
-                        <div
-                          className='text-[14px] pt-5'
-                          style={{ color: 'rgba(0, 0, 0, 1)' }}
-                        >
-                          Uploaded Image
-                        </div>
-                        {allFiles.image.map((imges, index) => (
+                  <div>
+                    <div className='flex justify-between task-uploaded-images-container'>
+                      {taskSolutionDocs?.image?.length > 0 && (
+                        <div>
                           <div
-                            className='uploaded-images task-image-list !mt-[2]'
-                            key={index}
-                            style={{ marginTop: '8px' }}
+                            className='text-[16px] pt-5'
+                            style={{ color: 'rgba(0, 0, 0, 1)', fontWeight: 600 }}
                           >
-                            .
-                            <a href={imges.fileurl} target='_blank'>
-                              <span className='text-[14px] image-name !text-[#18283D] underline'>
-                                {imges.name}
-                              </span>
-                            </a>
+                            Uploaded Image
                           </div>
-                        ))}
-                      </div>
-                    ) : null}
-
-                    {allFiles?.video?.length > 0 ? (
-                      <div>
-                        <div
-                          className='text-[14px] pt-5'
-                          style={{ color: 'rgba(0, 0, 0, 1)' }}
-                        >
-                          Uploaded Video
+                          <Stack>
+                            {taskSolutionDocs?.image.map((img, index) => (
+                              <a href={img.fileurl} target='_blank'>
+                                <span className='text-[14px] image-name !text-[#18283D] underline'>
+                                  {img.name}
+                                </span>
+                              </a>
+                            ))}
+                          </Stack>
                         </div>
+                      )}
 
-                        {allFiles.video.map((imges, index) => (
-                          <a href={imges.fileurl} target='_blank'>
-                            <span className='text-[14px] image-name !text-[#18283D] underline'>
-                              {imges.name}
-                            </span>
-                          </a>
-                        ))}
-                      </div>
-                    ) : null}
-
-                    {allFiles?.doc?.length > 0 ? (
-                      <div>
-                        <div
-                          className='text-[14px] pt-5'
-                          style={{ color: 'rgba(0, 0, 0, 1)' }}
-                        >
-                          Uploaded Files
-                        </div>
-
-                        {allFiles.doc.map((imges, index) => (
-                          <a href={imges.fileurl} target='_blank'>
-                            <span className='text-[14px] image-name !text-[#18283D] underline'>
-                              {imges.name}
-                            </span>
-                          </a>
-                        ))}
-                      </div>
-                    ) : null}
-                  </div>
-
-                  <div className='flex justify-between task-uploaded-images-container'>
-                    {taskSolutionDocs?.img?.length > 0 && (
-                      <div>
-                        <div
-                          className='text-[14px] pt-5'
-                          style={{ color: 'rgba(0, 0, 0, 1)' }}
-                        >
-                          Image
-                        </div>
-                        {taskSolutionDocs.img.map((imges, index) => (
-                          <a
-                            href={'#'}
-                            target='_blank'
-                            className='cursor-pointer'
+                      {taskSolutionDocs?.video?.length > 0 && (
+                        <div>
+                          <div
+                            className='text-[16px] pt-5'
+                            style={{ color: 'rgba(0, 0, 0, 1)', fontWeight: 600 }}
                           >
-                            <span className='text-[14px] image-name !text-[#18283D] underline'>
-                              {imges?.name}
-                            </span>
-                          </a>
-                        ))}
-                      </div>
-                    )}
-
-                    {taskSolutionDocs?.video?.length > 0 && (
-                      <div>
-                        <div
-                          className='text-[14px] pt-5'
-                          style={{ color: 'rgba(0, 0, 0, 1)' }}
-                        >
-                          Video
+                            Uploaded Video
+                          </div>
+                          <Stack>
+                            {taskSolutionDocs.video.map((img, index) => (
+                              <a href={img.fileurl} target='_blank'>
+                                <span className='text-[14px] image-name !text-[#18283D] underline'>
+                                  {img.name}
+                                </span>
+                              </a>
+                            ))}
+                          </Stack>
                         </div>
-
-                        {taskSolutionDocs.video.map((imges, index) => (
-                          <a
-                            href={'#'}
-                            target='_blank'
-                            className='cursor-pointer'
+                      )}
+                      {taskSolutionDocs?.doc?.length > 0 && (
+                        <div>
+                          <div
+                            className='text-[16px] pt-5'
+                            style={{ color: 'rgba(0, 0, 0, 1)', fontWeight: 600 }}
                           >
-                            <span className='text-[14px] image-name !text-[#18283D] underline'>
-                              {imges?.name}
-                            </span>
-                          </a>
-                        ))}
-                      </div>
-                    )}
-                    {taskSolutionDocs?.doc?.length > 0 && (
-                      <div>
-                        <div
-                          className='text-[14px] pt-5'
-                          style={{ color: 'rgba(0, 0, 0, 1)' }}
-                        >
-                          Files
+                            Uploaded Files
+                          </div>
+                          <Stack>
+                            {taskSolutionDocs.doc.map((img, index) => (
+                              <a href={img.fileurl} target='_blank'>
+                                <span className='text-[14px] image-name !text-[#18283D] underline'>
+                                  {img.name}
+                                </span>
+                              </a>
+                            ))}
+                          </Stack>
                         </div>
-
-                        {taskSolutionDocs.doc.map((imges, index) => (
-                          <a
-                            href={'#'}
-                            target='_blank'
-                            className='cursor-pointer'
-                          >
-                            <span className='text-[14px] image-name !text-[#18283D] underline'>
-                              {imges[0]?.name}
-                            </span>
-                          </a>
-                        ))}
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </div>
                 </Box>
               )}
 
-              {!isPreview && (
+              {(!isPreview && ["inprogress", "draft"].includes(taskData.status)) && (
                 <div className='py-6 mb-16'>
                   {taskData.status === TaskAllStatus.inprogress ||
-                  taskData.status === TaskAllStatus.pending ||
-                  taskData.status === TaskAllStatus.draft ? (
+                    taskData.status === TaskAllStatus.pending ||
+                    taskData.status === TaskAllStatus.draft ? (
                     <>
                       <div className='relative'>
                         <label className='block tracking-wide text-gray-700 text-xs font-bold mb-2'>
@@ -672,6 +605,8 @@ export const TaskDetails = () => {
                           {...register('task_solution', {
                             required: 'This field is required',
                           })}
+                          value={getValues("task_solution")}
+                          onChange={(e) => setValue("task_solution", e.target.value)}
                           disabled={
                             taskData.status === TaskAllStatus.rejected ||
                             taskData.status === TaskAllStatus.completed
@@ -699,9 +634,9 @@ export const TaskDetails = () => {
 
                               cursor:
                                 taskData.status === TaskAllStatus.newtask ||
-                                taskData.status === TaskAllStatus.pending ||
-                                taskData.status === TaskAllStatus.inprogress ||
-                                taskData.status === 'draft'
+                                  taskData.status === TaskAllStatus.pending ||
+                                  taskData.status === TaskAllStatus.inprogress ||
+                                  taskData.status === 'draft'
                                   ? 'pointer'
                                   : 'not-allowed',
                             }}
@@ -725,7 +660,7 @@ export const TaskDetails = () => {
                               onChange={(e) => {
                                 if (
                                   taskData.status ===
-                                    TaskAllStatus.inprogress ||
+                                  TaskAllStatus.inprogress ||
                                   taskData.status === TaskAllStatus.newtask ||
                                   taskData.status === TaskAllStatus.pending ||
                                   taskData.status === 'draft'
@@ -783,7 +718,7 @@ export const TaskDetails = () => {
                                       </div>
                                       <img
                                         className='w-[30px] cursor-pointer'
-                                        onClick={() => handleDelete(img.id)}
+                                        onClick={() => handleDelete(img?.row_id)}
                                         src={DeleteIcon}
                                         alt='DeleteIcon'
                                       />
@@ -823,7 +758,7 @@ export const TaskDetails = () => {
                                       </div>
                                       <img
                                         className='w-[30px] cursor-pointer'
-                                        onClick={() => handleDelete(img.id)}
+                                        onClick={() => handleDelete(img?.row_id)}
                                         src={DeleteIcon}
                                         alt='DeleteIcon'
                                       />
@@ -862,7 +797,7 @@ export const TaskDetails = () => {
                                       </div>
                                       <img
                                         className='w-[30px] cursor-pointer'
-                                        onClick={() => handleDelete(img.id)}
+                                        onClick={() => handleDelete(img?.row_id)}
                                         src={DeleteIcon}
                                         alt='DeleteIcon'
                                       />
@@ -1034,56 +969,56 @@ export const TaskDetails = () => {
                     </div>
                   </div>
                 )}
-              <div className='close-btn flex justify-center gap-7 pb-5'>
+              <div className='close-btn flex justify-center gap-7 pb-5' >
                 <Button
                   btnName='Cancel'
                   btnCls='w-[12%]'
                   btnCategory='secondary'
                   onClick={() => navigate('/mentee-tasks')}
                 />
-                {(taskData.status === TaskAllStatus.pending ||
-                  taskData.status === TaskAllStatus.draft ||
+                {(taskData.status === TaskAllStatus.draft ||
                   taskData.status === TaskAllStatus.inprogress) && (
-                  <>
-                    <Button
-                      btnType='submit'
-                      btnCls={`${startTask ? 'w-[14%]' : 'w-[12%]'}`}
-                      btnName='Draft'
-                      style={{
-                        background: 'rgba(217, 228, 242, 1)',
-                        color: 'rgba(29, 91, 191, 1)',
-                      }}
-                      onClick={() => setFormAction('draft')}
-                    />
+                    <>
+                      <Button
+                        btnType='submit'
+                        btnCls={`${startTask ? 'w-[14%]' : 'w-[12%]'}`}
+                        btnName='Draft'
+                        style={{
+                          background: 'rgba(217, 228, 242, 1)',
+                          color: 'rgba(29, 91, 191, 1)',
+                        }}
+                        onClick={() => setFormAction('draft')}
+                      />
+                      <Button
+                        btnType='button'
+                        btnCls={`${startTask ? 'w-[14%]' : 'w-[12%]'}`}
+                        onClick={() => setIsPreview(!isPreview)}
+                        btnName={isPreview ? 'Edit' : 'Preview'}
+                        style={{
+                          background: '#A7B5CA',
+                          color: '#18283D',
+                        }}
+                      />
+                      <Button
+                        btnType='submit'
+                        btnCls={`${startTask ? 'w-[14%]' : 'w-[12%]'}`}
+                        btnName='Submit to Mentor'
+                        btnCategory='primary'
+                        onClick={() => setFormAction('submit')}
+                      />
+                    </>
+                  )}
+                {(taskData?.status === TaskAllStatus.yettostart ||
+                  taskData.status === TaskAllStatus.pending ||
+                  taskData?.status === TaskAllStatus.newtask) && (
                     <Button
                       btnType='button'
                       btnCls={`${startTask ? 'w-[14%]' : 'w-[12%]'}`}
-                      onClick={() => setIsPreview(!isPreview)}
-                      btnName={isPreview ? 'Edit' : 'Preview'}
-                      style={{
-                        background: '#A7B5CA',
-                        color: '#18283D',
-                      }}
-                    />
-                    <Button
-                      btnType='submit'
-                      btnCls={`${startTask ? 'w-[14%]' : 'w-[12%]'}`}
-                      btnName='Submit to Mentor'
+                      onClick={handleTaskAction}
+                      btnName='Start Task'
                       btnCategory='primary'
-                      onClick={() => setFormAction('submit')}
                     />
-                  </>
-                )}
-                {(taskData?.status === TaskAllStatus.yettostart ||
-                  taskData?.status === TaskAllStatus.newtask) && (
-                  <Button
-                    btnType='button'
-                    btnCls={`${startTask ? 'w-[14%]' : 'w-[12%]'}`}
-                    onClick={handleTaskAction}
-                    btnName='Start Task'
-                    btnCategory='primary'
-                  />
-                )}
+                  )}
               </div>
             </form>
           </div>
