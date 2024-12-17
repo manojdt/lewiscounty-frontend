@@ -1502,7 +1502,7 @@ console.log(requestStatusParams,"requestStatusParams")
                       </span>
                     )}
                   </div>
-                  {programdetails.status === 'yettoapprove' && (
+                  {/* {programdetails.status === 'yettoapprove' && (
                     <button
                       className='py-3 px-16 text-white mt-4'
                       style={{
@@ -1515,7 +1515,7 @@ console.log(requestStatusParams,"requestStatusParams")
                     >
                       Accept this program
                     </button>
-                  )}
+                  )} */}
 
                   {programCompleted.includes(programdetails.status) && (
                     <div className='py-9'>

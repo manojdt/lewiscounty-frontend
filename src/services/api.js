@@ -34,8 +34,8 @@ api.interceptors.response.use(
   async (error) => {
     console.log("error ==>", error)
     const reasons = ["ERR_BAD_REQUEST", "ERR_NETWORK", "ERR_BAD_RESPONSE"]
-    if (error?.response?.data?.errors?.[0]?.length > 0) {
-      const errMsg = error?.response?.data?.errors?.[0]
+    const errMsg = error?.response?.data?.errors?.[0] ?? error?.response?.data?.error
+    if (errMsg?.length > 0) {      
       toast.error(errMsg); 
     }
     if (error.code && (error.code === "ERR_NETWORK" || error.code === "ERR_BAD_RESPONSE")) {
