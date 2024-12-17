@@ -1,4 +1,5 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 
 let refresh = false;
 
@@ -31,7 +32,12 @@ api.interceptors.response.use(
     return response;
   },
   async (error) => {
+    console.log("error ==>", error)
     const reasons = ["ERR_BAD_REQUEST", "ERR_NETWORK", "ERR_BAD_RESPONSE"]
+    if (error?.response?.data?.errors?.[0]?.length > 0) {
+      const errMsg = error?.response?.data?.errors?.[0]
+      toast.error(errMsg); 
+    }
     if (error.code && (error.code === "ERR_NETWORK" || error.code === "ERR_BAD_RESPONSE")) {
       error.message = "There is a Server Error. Please try again later."
     }
@@ -49,13 +55,13 @@ api.interceptors.response.use(
       try {
         const response = await axios.post(
           `${baseUrl}/token/refresh`, {
-            refresh: localStorage.getItem("refresh_token")
-          }, {
-            headers: {
-              "Content-Type": "application/json",
-            },
-            withCredentials: true,
-          }
+          refresh: localStorage.getItem("refresh_token")
+        }, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
         );
 
         if (response.status === 200) {

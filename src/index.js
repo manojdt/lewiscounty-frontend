@@ -13,6 +13,8 @@ import { ThemeProvider } from '@mui/material/styles';
 import MuiTheme from './theme/MuiTheme';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -20,6 +22,10 @@ root.render(
   <ThemeProvider theme={MuiTheme}>
     <Provider store={store}>
       <BrowserRouter>
+        <ToastContainer 
+        position="top-right"
+        autoClose={5000}
+      />
         <App />
       </BrowserRouter>
     </Provider>
