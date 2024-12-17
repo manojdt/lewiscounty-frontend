@@ -101,7 +101,7 @@ export default function EditReport() {
             }
             reset(updateFormValues)
         }
-    }, [programDetails])
+    }, [programDetails,])
 
     useEffect(() => {
         if (categoryPrograms.length) {
@@ -116,13 +116,13 @@ export default function EditReport() {
             })
             setReportFields(fields)
 
-            reset({
-                program: '',
-                mentor_name: '',
-                start_date: '',
-                end_date: '',
-                participated_mentees: [],
-            })
+            // reset({
+            //     program: '',
+            //     mentor_name: '',
+            //     start_date: '',
+            //     end_date: '',
+            //     participated_mentees: [],
+            // })
         }
 
         if (!categoryPrograms.length && getValues('category') && getValues('category') !== '') {
@@ -136,13 +136,13 @@ export default function EditReport() {
                 return field
             })
             setReportFields(fields)
-            reset({
-                program: '',
-                mentor_name: '',
-                start_date: '',
-                end_date: '',
-                participated_mentees: [],
-            })
+            // reset({
+            //     program: '',
+            //     mentor_name: '',
+            //     start_date: '',
+            //     end_date: '',
+            //     participated_mentees: [],
+            // })
             setNotification({ program: true })
         }
     }, [categoryPrograms])
