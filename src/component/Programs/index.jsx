@@ -30,6 +30,7 @@ import {
   statusAction,
 } from "../../utils/constant";
 import {
+  getAllProgramDetails,
   getMenteeProgramCount,
   getMenteePrograms,
   getProgramCounts,
@@ -81,6 +82,7 @@ export default function Programs() {
   const decoded = React.useMemo(() => jwtDecode(token), [token]);
   const [selectedCategory, setSelectedCategory] = React.useState([]);
   const [category, setCategory] = React.useState([]);
+
   const handleGetCategory = (searchText = "") => {
     const payload = {
       search: searchText,
@@ -134,17 +136,18 @@ export default function Programs() {
       marked: !program.is_bookmark,
     };
     setLoading(true);
-    const filterDate = searchParams.get('datefilter');
-  const pay=  {
-      filter_by:programFilter.datefilter?programFilter.datefilter:filterDate
-    }
-    const bookmark = await api.post('bookmark', payload);
+    const filterDate = searchParams.get("datefilter");
+    const pay = {
+      filter_by: programFilter.datefilter
+        ? programFilter.datefilter
+        : filterDate,
+    };
+    const bookmark = await api.post("bookmark", payload);
     if (bookmark.status === 201 && bookmark.data) {
       setLoading(false);
       getPrograms();
-      if (role === 'mentor') dispatch(getProgramCounts(pay));
-      console.log(pay,"programFilter.datefilter1")
-      if (role === 'mentee') dispatch(getMenteeProgramCount(pay));
+      if (role === "mentor") dispatch(getProgramCounts(pay));
+      if (role === "mentee") dispatch(getMenteeProgramCount(pay));
     }
 
     // dispatch(updateProgram({ id: program.id, is_bookmark: !program.is_bookmark }))
@@ -169,15 +172,17 @@ export default function Programs() {
       if (filterType === "inprogress") {
         navigate(
           `${baseUrl}/${programdetails.program || programdetails?.id}${
-            programdetails?.status !== "yettojoin" ?
-            `?request_id=${programdetails?.id}`:""
+            programdetails?.admin_program_request_id
+              ? `?request_id=${programdetails?.admin_program_request_id}`
+              : ""
           }`
         );
       } else {
         navigate(
           `${baseUrl}/${programdetails.program || programdetails?.id}${
-            programdetails?.status !== "yettojoin" ?
-            `?request_id=${programdetails?.id}`:""
+            programdetails?.admin_program_request_id
+              ? `?request_id=${programdetails?.admin_program_request_id}`
+              : ""
           }`
         );
       }
@@ -199,21 +204,19 @@ export default function Programs() {
   };
 
   const getPrograms = () => {
-    const filterType = searchParams.get('type');
-    const filterSearch = searchParams.get('search');
-    const filterDate = searchParams.get('datefilter');
-    const isBookmark = searchParams.get('is_bookmark');
-const pay={
-  filter_by:programFilter.datefilter?programFilter.datefilter:filterDate
-}
+    const filterType = searchParams.get("type");
+    const filterSearch = searchParams.get("search");
+    const filterDate = searchParams.get("datefilter");
+    const isBookmark = searchParams.get("is_bookmark");
+    const pay = {
+      filter_by: programFilter.datefilter
+        ? programFilter.datefilter
+        : filterDate,
+    };
     let query = {};
 
     if (filterType && filterType !== "") {
-      if (filterType === "program_assign") {
-        query = { type: "request_type", value: filterType };
-      } else {
-        query = { type: "status", value: filterType };
-      }
+      query = { type: "status", value: filterType };
     }
 
     if (
@@ -241,13 +244,17 @@ const pay={
 
     if (role === "mentee") {
       dispatch(getMenteePrograms(query));
-      console.log(programFilter.datefilter,"programFilter.datefilter2")
-    dispatch(getMenteeProgramCount(pay));
+      dispatch(getMenteeProgramCount(pay));
     }
-    if (role === 'mentor' || role === 'admin'){
+    if (role === "mentor" || role === "admin") {
       dispatch(getProgramCounts(pay));
-      dispatch(getUserPrograms(query));
-    } 
+      if (role === "admin" && filterType === programActionStatus.program_assign) {
+        dispatch(getAllProgramDetails());
+      } else {
+        dispatch(getUserPrograms(query));
+      }
+    }
+
     // if (role === '') dispatch(getUserPrograms(query));
   };
   const getTableData = (search = "") => {
@@ -334,24 +341,24 @@ const pay={
 
   const handlePagination = (action) => {
     let query = {};
-    const filterType = searchParams.get('type');
-    const isBookmark = searchParams.get('is_bookmark');
-    const filterDate = searchParams.get('datefilter');
-    if (filterType && filterType !== '') {
-      query = { type: 'status', value: filterType };
+    const filterType = searchParams.get("type");
+    const isBookmark = searchParams.get("is_bookmark");
+    const filterDate = searchParams.get("datefilter");
+    if (filterType && filterType !== "") {
+      query = { type: "status", value: filterType };
     }
 
     if (isBookmark && isBookmark !== "") {
       query = { type: "is_bookmark", value: isBookmark };
     }
-    if (filterDate && filterDate !== '') {
-      query.date = { date: 'filter_by', value: filterDate };
+    if (filterDate && filterDate !== "") {
+      query.date = { date: "filter_by", value: filterDate };
     }
     if (!filterDate) {
-      query.date = { date: 'filter_by', value:programFilter.datefilter };
+      query.date = { date: "filter_by", value: programFilter.datefilter };
     }
-    if (action === 'prev') {
-      query = { ...query, page: 'page', number: userprograms.current_page - 1 };
+    if (action === "prev") {
+      query = { ...query, page: "page", number: userprograms.current_page - 1 };
     }
 
     if (action === "next") {
@@ -458,25 +465,26 @@ const pay={
   useEffect(() => {
     if (userprograms.status === programStatus.bookmarked) {
       let query = {};
-      const filterType = searchParams.get('type');
-      const isBookmark = searchParams.get('is_bookmark');
-      const filterDate = searchParams.get('datefilter');
-      const pay={
-        filter_by:programFilter.datefilter?programFilter.datefilter:filterDate
-      }
-      if (filterType && filterType !== '') {
-        query = { type: 'status', value: filterType };
+      const filterType = searchParams.get("type");
+      const isBookmark = searchParams.get("is_bookmark");
+      const filterDate = searchParams.get("datefilter");
+      const pay = {
+        filter_by: programFilter.datefilter
+          ? programFilter.datefilter
+          : filterDate,
+      };
+      if (filterType && filterType !== "") {
+        query = { type: "status", value: filterType };
       }
 
       if (isBookmark && isBookmark !== "") {
         query = { type: "is_bookmark", value: isBookmark };
       }
 
-      if (role === 'mentee') {
-        if(programFilter.datefilter||filterDate){
-        dispatch(getMenteePrograms(query));
+      if (role === "mentee") {
+        if (programFilter.datefilter || filterDate) {
+          dispatch(getMenteePrograms(query));
         }
-        console.log(programFilter.datefilter,"programFilter.datefilter")
         dispatch(getMenteeProgramCount(pay));
       }
       if (role === "mentor" || role === "admin") {
@@ -507,7 +515,7 @@ const pay={
         loadProgram = userprograms.allprograms;
       }
 
-      if (filterType !== null && filterType !== "" && isBookmark === null) {
+      if (filterType && isBookmark === null) {
         if (filterType === "planned") {
           loadProgram = userprograms.yettojoin;
         } else {
@@ -519,16 +527,25 @@ const pay={
   }, [userprograms]);
 
   useEffect(() => {
-    if (role === 'mentor' || role === 'admin'){ dispatch(getProgramCounts({
-      filter_by:programFilter.datefilter?programFilter.datefilter:searchParams.get('datefilter')
-    }));}
-    if (role === 'mentee') {
-      dispatch(getMenteeProgramCount({
-      filter_by:programFilter.datefilter?programFilter.datefilter:searchParams.get('datefilter') 
-    }));
-  console.log(programFilter.datefilter,"programFilter.datefilter")
-}
-  }, [role,searchParams,programFilter]);
+    if (role === "mentor" || role === "admin") {
+      dispatch(
+        getProgramCounts({
+          filter_by: programFilter.datefilter
+            ? programFilter.datefilter
+            : searchParams.get("datefilter"),
+        })
+      );
+    }
+    if (role === "mentee") {
+      dispatch(
+        getMenteeProgramCount({
+          filter_by: programFilter.datefilter
+            ? programFilter.datefilter
+            : searchParams.get("datefilter"),
+        })
+      );
+    }
+  }, [role, searchParams, programFilter]);
 
   return (
     <div className="dashboard-content px-8 mt-10">

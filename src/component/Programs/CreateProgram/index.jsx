@@ -192,8 +192,13 @@ export default function CreatePrograms() {
     setStepData(fieldData);
 
     const totalSteps = filteredProgramTabs.length;
-    if (currentStep === 1 && role === "mentor") {
-      dispatch(getProgramNameValidate(data?.program_name)).then((res) => {
+    if (currentStep === 1 && role === "mentor" && !params?.id) {
+      dispatch(
+        getProgramNameValidate({
+          program_name: data?.program_name,
+          program_id: params?.id,
+        })
+      ).then((res) => {
         if (res?.meta?.requestStatus === "fulfilled") {
           if (!res?.payload?.is_available) {
             setCurrentStep((prevStep) => {
@@ -274,7 +279,7 @@ export default function CreatePrograms() {
           let status = fieldData.status === "draft" ? "draft" : "";
           setProgramApiStatus(status);
 
-          if (params.id) {
+          if (params?.id) {
             if (programdetails.status === "draft" && status !== "draft") {
               bodyFormData.append("status", "create");
             }
@@ -284,9 +289,10 @@ export default function CreatePrograms() {
             if (typeof fieldData?.image === "string") {
               bodyFormData.delete("image");
             }
-            bodyFormData.append("program_id", params.id);
+            // bodyFormData.append("program_id", params?.id);
             dispatch(
               editUpdateProgram({
+                program_id:params?.id,
                 bodyFormData,
                 role: toggleRole === "admin" ? toggleRole : "",
               })
@@ -367,7 +373,18 @@ export default function CreatePrograms() {
 
   const handleAddPopupData = (key, value) => {
     if (value.length) {
-      setStepData({ ...stepData, [key]: value });
+      // First, get current step data to ensure we have the latest state
+      setStepData((currentStepData) => {
+        // Ensure we keep all existing category fields and their values
+        const existingCategories = currentStepData.categories || [];
+
+        return {
+          ...currentStepData, // Keep all existing fields
+          categories: existingCategories, // Explicitly preserve categories
+          [key]: value, // Update learning_materials
+        };
+      });
+
       updateFormFields(key, value, currentStep - 1);
       setActionModal("");
     }
@@ -791,7 +808,10 @@ export default function CreatePrograms() {
           let currentField = fl.name;
           let currentFieldValue = programdetails[currentField];
 
-          if (currentField === "category") {
+          if (
+            currentField === "category" &&
+            programdetails.categories?.length
+          ) {
             currentFieldValue = programdetails.categories[0]?.id;
             fetchCategoryData(programdetails.categories[0]?.id);
           }

@@ -655,7 +655,7 @@ export const programActionStatus = {
   draft: 'draft',
   reschedule: 'reschedule',
   program_join_request_accepted: 'program_join_request_accepted',
-  program_assign: 'program_assign'
+  program_assign: 'assign_program'
 };
 
 export const pipeUrls = {
