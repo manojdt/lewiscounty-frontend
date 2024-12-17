@@ -1620,8 +1620,8 @@ export default function AllRequest() {
     const handleNewGoalRequestApi = () => {
         dispatch(getAllGoals({
             ...(filter.filter_by !== ""
-                ? { filter_by: filter.filter_by }
-                : { filter_by: "month" }),
+                ? { time_frame: filter.filter_by }
+                : { time_frame: "month" }),
             params: "request",
             page: paginationModel?.page + 1,
             limit: paginationModel?.pageSize,
