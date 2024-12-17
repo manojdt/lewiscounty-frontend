@@ -151,9 +151,19 @@ export default function ProgramDetails() {
       key: 'program_testimonials',
     },
   ];
-
+const reqStatus = {
+    approved:'Approved',
+    rejected:'Rejected',
+    new:'New',
+}
+const reqStatusColor = {
+    approved:'#16B681',
+    rejected:'#E0382D',
+    new:'#16B681',
+}
   const requestId = searchParams.get('request_id') || '';
-
+  const requestStatusParams = searchParams.get('status') || '';
+console.log(requestStatusParams,"requestStatusParams")
   const {
     register,
     formState: { errors },
@@ -1349,7 +1359,7 @@ export default function ProgramDetails() {
                       />
                       Share
                     </MenuItem>
-                    {!['yettoapprove', 'completed'].includes(
+                    {!requestStatusParams&&!['yettoapprove', 'completed'].includes(
                       programdetails?.status
                     ) &&
                       role !== 'admin' && (
@@ -1366,7 +1376,7 @@ export default function ProgramDetails() {
                         </MenuItem>
                       )}
 
-                    {!['yettoapprove', 'completed'].includes(
+                    {!requestStatusParams&&!['yettoapprove', 'completed'].includes(
                       programdetails?.status
                     ) &&
                       role !== 'admin' && (
@@ -1522,7 +1532,21 @@ export default function ProgramDetails() {
                       </div>
                     </div>
                   )}
-
+               
+                  {requestStatusParams&&role==="mentor" && 
+                    <div className='py-9'>
+                      <div
+                        className='py-3 px-16 text-white text-[14px] flex justify-center items-center'
+                        style={{
+                          background:reqStatusColor[requestStatusParams],
+                          borderRadius: '5px',
+                          width: '30%',
+                        }}
+                      >
+                        {reqStatus[requestStatusParams]}
+                      </div>
+                    </div>
+                   } 
                   {role === 'mentor' &&
                   !programCompleted.includes(programdetails.status) &&
                   !programCancelled.includes(programdetails.status) ? (
