@@ -190,7 +190,7 @@ const MentorTaskDetails = () => {
             flex: 1,
             id: 0,
             renderCell: (params) => {
-                return <div className='flex gap-2 items-center'>{`${params?.row?.completed_date ? dayjs(params?.row?.completed_date).format("DD-MM-YYYY") : "..."}`}</div>
+                return <div className='flex gap-2 items-center'>{`${params?.row?.submited_date ? dayjs(params?.row?.submited_date).format("DD-MM-YYYY") : "..."}`}</div>
             }
         },
         {

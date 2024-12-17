@@ -24,7 +24,8 @@ export default function Notification({ handleClose }) {
   };
 
   const handleVisitActivity = (data) => {
-    dispatch(userActivitiyVisited(data.id));
+    // dispatch(userActivitiyVisited(data.id));
+    console.log(data,"notification")
     const actionType = data?.notification_type;
     switch (actionType) {
       case 'program':
@@ -37,9 +38,17 @@ export default function Notification({ handleClose }) {
         const url =
           role === 'mentee'
             ? `mentee-tasks-details/${data.related_data.task_id}`
-            : `mentor-tasks-details/${data.related_data.task_id}?mentee_id=${data.related_data?.mentee_id}`;
+            : `/viewTask/${data.related_data.task_id}`;
         handleClose && handleClose();
         navigate(url);
+        break;
+      case 'goal':
+        const Goalurl =
+          role === 'mentee'|| role === 'mentor'
+            ? `/view-goal/${data.related_data.goal_id}`
+            : `/view-goal/${data.related_data.goal_id}?requestId=${data.related_data.goal_request_id}`;
+        handleClose && handleClose();
+        navigate(Goalurl);
         break;
       case 'report':
         const reporturl =
@@ -57,10 +66,10 @@ export default function Notification({ handleClose }) {
       case 'member':
         const memberurl =
           role === 'mentor'
-            ? `mentor-details/${data.related_data.member_id}`
+            ? `/mentee-details/${data.related_data.member_id}?type=mentee_request&request_id=${data.related_data?.program_request_id}`
             : `mentor-details/${data.related_data.member_id}?request_id=${data.related_data?.member_request_id}`;
         handleClose && handleClose();
-        navigate(memberurl);
+        navigate(memberurl,role === 'mentor'? { state: { data: {id:data.related_data?.program_request_id,status:"new"} } }:{});
         break;
       case 'certificate':
         const certificateurl =
