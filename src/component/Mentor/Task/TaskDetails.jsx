@@ -48,13 +48,14 @@ const MentorTaskDetails = () => {
     })
     const [newType, setNewType] = React.useState("")
 
-    const handleClose = () => {
-        setAnchorEl(null);
+    const handleClick = (event, row) => {
+        setAnchorEl(event.currentTarget);
+        setSelectedItem(row); 
     };
 
-    const handleClick = (event, data) => {
-        setAnchorEl(event.currentTarget);
-        setSelectedItem(data);
+    const handleClose = () => {
+        setAnchorEl(null);
+        setSelectedItem(null);
     };
 
     const tabsList = [
@@ -247,6 +248,74 @@ const MentorTaskDetails = () => {
             id: 0,
             renderCell: (params) => {
                 return (
+                    // <>
+                    //     <div
+                    //         className='cursor-pointer flex items-center h-full'
+                    //         onClick={(e) => handleClick(e, params.row)}
+                    //     >
+                    //         <img src={MoreIcon} alt='MoreIcon' />
+                    //     </div>
+                    //     <Menu
+                    //         id='basic-menu'
+                    //         anchorEl={anchorEl}
+                    //         open={open}
+                    //         onClose={handleClose}
+                    //         MenuListProps={{
+                    //             'aria-labelledby': 'basic-button',
+                    //         }}
+                    //     >
+                    //         <MenuItem
+                    //             onClick={() => navigate(`/viewTask/${selectedItem?.id}`)}
+                    //             className='!text-[12px]'
+                    //         >
+                    //             <img src={ViewIcon} alt='ViewIcon' className='pr-3 w-[30px]' />
+                    //             View
+                    //         </MenuItem>
+
+                    //         {
+                    //             params?.row?.status === "new" &&
+                    //             <MenuItem
+                    //                 onClick={() => handleOpenConfirmPopup("cancel", "Cancel Task Reason", "newTab")}
+                    //                 className='!text-[12px]'
+                    //             >
+                    //                 <img src={Cancel} alt='Cancel' className='pr-3 w-[30px]' />
+                    //                 Cancel Task
+                    //             </MenuItem>
+                    //         }
+                    //         {
+                    //             ["pending"].includes(params?.row?.status) && (
+                    //                 <>
+                    //                     <MenuItem
+                    //                         onClick={() => handleOpenConfirmPopup("pass")}
+                    //                         className='!text-[12px]'
+                    //                     >
+                    //                         <img src={TickCircle} alt='Cancel' className='pr-3 w-[30px]' />
+                    //                         Pass
+                    //                     </MenuItem>
+
+                    //                     <MenuItem
+                    //                         onClick={() => handleOpenConfirmPopup("cancel", "Task Fail Reason")}
+                    //                         className='!text-[12px]'
+                    //                     >
+                    //                         <img src={Cancel} alt='Cancel' className='pr-3 w-[30px]' />
+                    //                         No Pass
+                    //                     </MenuItem>
+                    //                 </>
+                    //             )
+                    //         }
+                    //         {
+                    //             params?.row?.status === "pending" &&
+                    //             <MenuItem
+                    //                 onClick={() => handleOpenConfirmPopup("cancel", "Task Fail Reason")}
+                    //                 className='!text-[12px]'
+                    //             >
+                    //                 <img src={Cancel} alt='Cancel' className='pr-3 w-[30px]' />
+                    //                 No Pass
+                    //             </MenuItem>
+                    //         }
+                    //     </Menu>
+                    // </>
+
                     <>
                         <div
                             className='cursor-pointer flex items-center h-full'
@@ -263,44 +332,49 @@ const MentorTaskDetails = () => {
                                 'aria-labelledby': 'basic-button',
                             }}
                         >
-                            <MenuItem
-                                onClick={() => navigate(`/viewTask/${selectedItem?.id}`)}
-                                className='!text-[12px]'
-                            >
-                                <img src={ViewIcon} alt='ViewIcon' className='pr-3 w-[30px]' />
-                                View
-                            </MenuItem>
+                            
+                            {selectedItem && (
+                                <>
+                                    <MenuItem
+                                        onClick={() => navigate(`/viewTask/${selectedItem?.id}`)}
+                                        className='!text-[12px]'
+                                    >
+                                        <img src={ViewIcon} alt='ViewIcon' className='pr-3 w-[30px]' />
+                                        View
+                                    </MenuItem>
 
-                            {
-                                params?.row?.status === "new" &&
-                                <MenuItem
-                                    onClick={() => handleOpenConfirmPopup("cancel", "Cancel Task Reason", "newTab")}
-                                    className='!text-[12px]'
-                                >
-                                    <img src={Cancel} alt='Cancel' className='pr-3 w-[30px]' />
-                                    Cancel Task
-                                </MenuItem>
-                            }
-                            {
-                                params?.row?.status === "pending" &&
-                                <MenuItem
-                                    onClick={() => handleOpenConfirmPopup("pass")}
-                                    className='!text-[12px]'
-                                >
-                                    <img src={TickCircle} alt='Cancel' className='pr-3 w-[30px]' />
-                                    Pass
-                                </MenuItem>
-                            }
-                            {
-                                params?.row?.status === "pending" &&
-                                <MenuItem
-                                    onClick={() => handleOpenConfirmPopup("cancel", "Task Fail Reason")}
-                                    className='!text-[12px]'
-                                >
-                                    <img src={Cancel} alt='Cancel' className='pr-3 w-[30px]' />
-                                    No Pass
-                                </MenuItem>
-                            }
+                                    
+                                    {selectedItem?.status === "new" && (
+                                        <MenuItem
+                                            onClick={() => handleOpenConfirmPopup("cancel", "Cancel Task Reason", "newTab")}
+                                            className='!text-[12px]'
+                                        >
+                                            <img src={Cancel} alt='Cancel' className='pr-3 w-[30px]' />
+                                            Cancel Task
+                                        </MenuItem>
+                                    )}
+
+                                    
+                                    {selectedItem?.status === "pending" && (
+                                        <>
+                                            <MenuItem
+                                                onClick={() => handleOpenConfirmPopup("pass")}
+                                                className='!text-[12px]'
+                                            >
+                                                <img src={TickCircle} alt='Cancel' className='pr-3 w-[30px]' />
+                                                Pass
+                                            </MenuItem>
+                                            <MenuItem
+                                                onClick={() => handleOpenConfirmPopup("cancel", "Task Fail Reason")}
+                                                className='!text-[12px]'
+                                            >
+                                                <img src={Cancel} alt='Cancel' className='pr-3 w-[30px]' />
+                                                No Pass
+                                            </MenuItem>
+                                        </>
+                                    )}
+                                </>
+                            )}
                         </Menu>
                     </>
                 );

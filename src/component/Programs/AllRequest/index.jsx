@@ -1392,7 +1392,7 @@ export default function AllRequest() {
                                                     />
                                                     Approve
                                                 </MenuItem>
-                                                <MenuItem
+                                                {/* <MenuItem
                                                     onClick={handleCancelCeritificateRequest}
                                                     className="!text-[12px]"
                                                 >
@@ -1402,7 +1402,7 @@ export default function AllRequest() {
                                                         className="pr-3 w-[27px]"
                                                     />
                                                     Reject
-                                                </MenuItem>
+                                                </MenuItem> */}
                                             </>
                                         )}
                                 </>

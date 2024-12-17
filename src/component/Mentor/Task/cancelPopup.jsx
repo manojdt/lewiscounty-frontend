@@ -22,7 +22,7 @@ export const CancelPopup = ({
                 </Stack>
                 <Box sx={{ borderBottom: "1px solid #1D5BBF", margin: "0px 8px" }}></Box>
                 <Box p={"40px 24px"}>
-                    <Typography className='!text-[#18283D] !text-[14px]' mb={1}>Cancel Reason</Typography>
+                    <Typography className='!text-[#18283D] !text-[14px]' mb={1}>{header}</Typography>
                     <textarea
                         id='message'
                         rows='4'
