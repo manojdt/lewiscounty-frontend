@@ -24,6 +24,8 @@ import { Button } from '../Button';
 import { updateProgramImage } from '../../services/userprograms';
 import { Backdrop, CircularProgress } from '@mui/material';
 import { getAllCategories } from '../../services/programInfo';
+import NoProgramImageBg from "../../assets/icons/noProgramImageBg.svg"
+import NoProgramImageIcon from "../../assets/icons/noProgramImageIcon.svg"
 
 
 export default function ProgramCard({ title, viewpage, handleNavigateDetails, handleBookmark, programs, height, action = [], noTitle = false, loadProgram }) {
@@ -225,7 +227,7 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                                     return (
                                         <div key={index} className={`curated-programs program-container flex gap-1 items-center py-5 px-5 w-[33%]`}
                                             style={{
-                                                ...(currentProgram.status === 'yettoapprove'&& !currentProgram?.mentor_id) ? {
+                                                ...(currentProgram.status === 'yettoapprove' && !currentProgram?.mentor_id) ? {
                                                     opacity: '0.5',
                                                     pointerEvents: 'none',
                                                     cursor: 'not-allowed',
@@ -237,9 +239,34 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                                             <div className="w-full" style={{ boxShadow: '4px 4px 15px 0px rgba(0, 0, 0, 0.1)', borderRadius: '10px' }}>
                                                 <div className="py-6 px-7 border-b-2 relative">
                                                     <div className="h-full relative" style={{ borderRadius: '10px' }}>
+                                                        {
+                                                        currentProgram?.program_image ? 
                                                         <img className="object-cover w-full h-[150px] cursor-pointer" src={currentProgram.program_image} alt="Program Logo"
                                                             onMouseEnter={() => setHoverIndex({ ...hoverIndex, image: index })} onMouseLeave={() => setHoverIndex({ ...hoverIndex, image: null })}
                                                         />
+                                                        :                                                            
+                                                            <div
+                                                                style={{
+                                                                    position: "relative",
+                                                                    display: "inline-block",
+                                                                }}
+                                                            >
+                                                                <img src={NoProgramImageBg} alt="Background" />
+                                                                <div
+                                                                    style={{
+                                                                        position: "absolute",
+                                                                        top: "50%",
+                                                                        left: "50%",
+                                                                        transform: "translate(-50%, -50%)",
+                                                                        display: "flex",
+                                                                        alignItems: "center",
+                                                                        justifyContent: "center",
+                                                                    }}
+                                                                >
+                                                                    <img src={NoProgramImageIcon} alt="Icon" />
+                                                                </div>
+                                                            </div>
+                                                        }
                                                         {
                                                             (currentProgram.program_edit && !programImageRestirct.includes(currentProgram.status)) &&
 
@@ -289,10 +316,10 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                                                     </div>
                                                     <div className='flex justify-center pt-2'>
                                                         {
-                                                            (currentProgram.status === 'yettoapprove'&& !currentProgram?.mentor_id) || currentProgram.status === 'draft' ?
+                                                            (currentProgram.status === 'yettoapprove' && !currentProgram?.mentor_id) || currentProgram.status === 'draft' ?
                                                                 <button className={`text-white text-[12px] py-3 ${currentProgram.status === 'draft' ? 'w-[110px]' : 'w-[170px]'}`}
                                                                     onClick={() => currentProgram.status === 'draft' ? navigate(`/update-program/${currentProgram.id}`) : undefined}
-                                                                    style={{ background: currentProgram.status === 'yettoapprove'&& !currentProgram?.mentor_id ? '#76818E' : 'rgba(29, 91, 191, 1)', borderRadius: '5px' }}>
+                                                                    style={{ background: currentProgram.status === 'yettoapprove' && !currentProgram?.mentor_id ? '#76818E' : 'rgba(29, 91, 191, 1)', borderRadius: '5px' }}>
                                                                     {currentProgram.status === 'draft' ? 'Continue' : 'Waiting for approval'}
 
                                                                 </button>

@@ -15,7 +15,9 @@ import { Backdrop, CircularProgress } from '@mui/material'
 import { getReportDetails } from '../../services/reportsInfo'
 import { dateTimeFormat } from '../../utils'
 import { reportAllStatus } from '../../utils/constant'
-
+import TickColorIcon from '../../assets/icons/tickColorLatest.svg';
+import { updateReportRequest } from '../../services/request'
+import { CancelPopup } from '../Mentor/Task/cancelPopup'
 
 const ViewReport = () => {
     const navigate = useNavigate()
@@ -24,6 +26,14 @@ const ViewReport = () => {
     const params = useParams();
     const dispatch = useDispatch()
     const { reportDetails, loading: reportsLoading } = useSelector(state => state.reports)
+    const userInfo = useSelector(state => state.userInfo);
+    const role = userInfo.data.role
+
+    const [confirmPopup, setConfirmPopup] = React.useState({
+        bool: false,
+        activity: false,
+        type: ""
+    })
 
     const handleSubmitTask = () => {
         if (!startTask) {
@@ -52,6 +62,58 @@ const ViewReport = () => {
             }, 3000)
         }
     }, [loading])
+
+    const handleOpenPopup = (type) => {
+        setConfirmPopup({
+            ...confirmPopup,
+            [type]: true,
+            type: type
+        })
+    }
+
+    const handleClosePopup = () => {
+        setConfirmPopup({
+            [confirmPopup?.type]: false,
+            activity: false,
+            type: ""
+        })
+    }
+
+    const handleReportRequest = (type = "", reason = "") => {
+        let payload = {}
+        if (type === "rejected") {
+            payload = {
+                id: reportDetails.id,
+                status: type,
+                rejection_reason: reason
+            }
+        } else {
+            payload = {
+                id: reportDetails.id,
+                status: type,
+            }
+        }
+        dispatch(updateReportRequest(payload)).then((res) => {
+            if (res?.meta?.requestStatus === "fulfilled") {
+                setConfirmPopup({
+                    ...confirmPopup,
+                    [type === "approved" ? "approve" : "reject"]: false,
+                    activity: true
+                })
+                setTimeout(() => {
+                    setConfirmPopup({
+                        ...confirmPopup,
+                        [type === "approved" ? "approve" : "reject"]: false,
+                        activity: false,
+                        type: ""
+                    })
+                    dispatch(getReportDetails(params.id))
+                }, 2000);
+            }
+        })
+    };
+
+
 
     return (
         <div className="px-9 py-9">
@@ -103,7 +165,7 @@ const ViewReport = () => {
                         <div className='flex gap-8 items-center'>
                             <div className="relative">
                                 <div className="inset-y-0 end-0 flex items-center pe-3 cursor-pointer"
-                                    onClick={() => navigate('/reports')}
+                                    onClick={() => navigate(-1)}
                                 >
                                     <img src={CancelIcon} alt='CancelIcon' />
                                 </div>
@@ -134,10 +196,10 @@ const ViewReport = () => {
                                     </tr>
                                     <tr className="bg-white border-b dark:bg-gray-800 ">
                                         <th style={{ border: '1px solid rgba(0, 174, 189, 1)' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
-                                        Course Level
+                                            Course Level
                                         </th>
                                         <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
-                                        {reportDetails?.program_course_level}
+                                            {reportDetails?.program_course_level}
                                         </td>
                                     </tr>
                                     <tr className="bg-white border-b  dark:bg-gray-800">
@@ -226,29 +288,62 @@ const ViewReport = () => {
 
 
 
-                            <div className='close-btn flex justify-center gap-7 pb-5'>
-
-                                <Button btnType="button" btnCls="w-[14%]"
-                                    onClick={() => { navigate('/reports') }} btnName='Cancel'
-                                    btnCategory="secondary"
-                                />
-
-                                {
-                                    // reportDetails.report_status === reportAllStatus.pending &&
-                                    ["new", "draft", "pending"].includes(reportDetails?.status) &&
+                            {
+                                role !== "admin" &&
+                                <div className='close-btn flex justify-center gap-7 pb-5'>
 
                                     <Button btnType="button" btnCls="w-[14%]"
-                                        onClick={() => { navigate(`/edit-report/${reportDetails.id}`) }} btnName='Edit'
+                                        onClick={() => { navigate('/reports') }} btnName='Cancel'
+                                        btnCategory="secondary"
+                                    />
 
-                                        btnStyle={{ background: 'rgba(0, 174, 189, 1)' }} />
-                                }
+                                    {
+                                        // reportDetails.report_status === reportAllStatus.pending &&
+                                        ["new", "draft", "pending"].includes(reportDetails?.status) &&
+
+                                        <Button btnType="button" btnCls="w-[14%]"
+                                            onClick={() => { navigate(`/edit-report/${reportDetails.id}`) }} btnName='Edit'
+
+                                            btnStyle={{ background: 'rgba(0, 174, 189, 1)' }} />
+                                    }
 
 
-                                {/* <Button btnType="button" btnCls="w-[14%]"
+                                    {/* <Button btnType="button" btnCls="w-[14%]"
                                     onClick={() => { navigate('/reports') }} btnName='Close'
                                     btnStyle={{ background: 'rgba(29, 91, 191, 1)' }}
                                 /> */}
-                            </div>
+                                </div>
+                            }
+
+                            {
+                                (role === "admin" && reportDetails?.status === "new") ?
+                                    <div className='close-btn flex justify-center gap-7 pb-5'>
+
+                                        <Button
+                                            btnType='button'
+                                            btnCategory='secondary'
+                                            btnName="Reject"
+                                            btnCls='!border !border-[#FFE7E7] !text-[#E0382D] !bg-[#FFE7E7] w-[120px]'
+                                            onClick={() => handleOpenPopup("reject")}
+                                        />
+
+                                        {
+                                            <Button
+                                                btnType="button"
+                                                btnCls="w-[120px]"
+                                                onClick={() => handleOpenPopup("approve")}
+                                                btnName='Approve' />
+                                        }
+
+                                    </div> :
+                                    <div className='close-btn flex justify-center gap-7 pb-5'>
+                                        <Button btnType="button" btnCls="w-[120px]"
+                                            onClick={() => { navigate(-1) }} btnName='Close'
+                                            btnCategory="secondary"
+                                        />
+                                    </div>
+
+                            }
                         </div>
 
 
@@ -258,7 +353,72 @@ const ViewReport = () => {
 
                     </div>
 
+                    <Backdrop
+                        sx={{ color: '#fff', zIndex: (theme) => 1 }}
+                        open={confirmPopup.approve}
+                    >
+                        <div className='popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center'>
+                            <img src={TickColorIcon} alt='TickColorIcon' />
 
+                            <div className='py-5'>
+                                <p
+                                    style={{
+                                        color: 'rgba(24, 40, 61, 1)',
+                                        fontWeight: 600,
+                                        fontSize: '18px',
+                                    }}
+                                >
+                                    Are you sure want to approve Report?
+                                </p>
+                            </div>
+                            <div className='flex justify-center'>
+                                <div className='flex gap-6 justify-center align-middle'>
+                                    <Button
+                                        btnCls='w-[110px]'
+                                        btnName={'Cancel'}
+                                        btnCategory='secondary'
+                                        onClick={() => handleClosePopup()}
+                                    />
+                                    <Button
+                                        btnType='button'
+                                        btnCls='w-[110px]'
+                                        btnName={'Approve'}
+                                        style={{ background: '#16B681' }}
+                                        btnCategory='primary'
+                                        onClick={() => handleReportRequest("approved")}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </Backdrop>
+
+
+                    <CancelPopup open={confirmPopup?.reject} handleClosePopup={() => handleClosePopup()}
+                        handleSubmit={(reason) => handleReportRequest("rejected", reason)} header='Reject Reason' />
+
+                    <Backdrop
+                        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                        open={confirmPopup?.activity}
+                    >
+                        <div className='px-5 py-1 flex justify-center items-center'>
+                            <div
+                                className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+                                style={{ background: '#fff', borderRadius: '10px' }}
+                            >
+                                <img src={SuccessTik} alt='SuccessTik' />
+                                <p
+                                    className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                                    style={{
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    {
+                                        confirmPopup?.type === "approve" ? "Report Succesfully Approved" : "Report Succesfully Rejected"
+                                    }
+                                </p>
+                            </div>
+                        </div>
+                    </Backdrop>
                 </div>
 
             }
