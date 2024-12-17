@@ -6,6 +6,7 @@ import {
   acceptProgram,
   assignProgramTask,
   chartProgramList,
+  getAllProgramDetails,
   getMenteeJoinedInProgram,
   getMenteeProgramCount,
   getMenteePrograms,
@@ -113,11 +114,34 @@ export const userProgramSlice = createSlice({
         if (filterType !== "") {
           const filtertype =
             filterType !== "is_bookmark" ? filterValue : "bookmarked";
-          updateState[filtertype] = filterValue === "program_assign" ? results : programs;
+          updateState[filtertype] = programs;
         }
         return updateState;
       })
       .addCase(getUserPrograms.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
+
+    builder
+      .addCase(getAllProgramDetails.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(getAllProgramDetails.fulfilled, (state, action) => {
+        return {
+          ...state,
+          assign_program: action.payload?.data,
+          status: action.payload.status,
+          loading: false,
+        };
+      })
+      .addCase(getAllProgramDetails.rejected, (state, action) => {
         return {
           ...state,
           loading: false,

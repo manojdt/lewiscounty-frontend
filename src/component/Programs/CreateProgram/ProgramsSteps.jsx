@@ -25,6 +25,7 @@ import {
 import DataTable from "../../../shared/DataGrid";
 import { MentorAssignColumns } from "../../../mock";
 import MuiModal from "../../../shared/Modal";
+import { useSelector } from "react-redux";
 
 const ProgramSteps = ({
   stepFields,
@@ -43,11 +44,11 @@ const ProgramSteps = ({
 }) => {
   const navigate = useNavigate();
   const params = useParams();
-  const [dateFormat, setDateFormat] = useState({});
   const [formData, setFormData] = useState({});
   const [logoImage, setLogoImage] = useState({});
   const [checkBoxValue, setCheckBoxValue] = useState({});
   const [currentField, setCurrentField] = useState();
+  const role = useSelector((state) => state.userInfo?.data?.role);
 
   const calendarRef = useRef([]);
   const startDateRefs = useRef([]);
@@ -254,6 +255,19 @@ const ProgramSteps = ({
               ) {
                 return null; // Skip rendering this field
               }
+              const disableFields =
+                params?.id &&
+                field.name === "program_name" &&
+                role === "mentor";
+
+              const disableSelectFields =
+                params?.id &&
+                (field.name === "course_level" || field.name === "category") &&
+                role === "mentor";
+              const disableDateFields =
+                params?.id &&
+                (field.name === "start_date" || field.name === "end_date") &&
+                role === "mentor";
               return (
                 <div
                   className={`relative mb-6  ${
@@ -317,9 +331,12 @@ const ProgramSteps = ({
                   ) : field.type === "input" ? (
                     <div className="relative">
                       <input
+                        disabled={disableFields}
                         {...register(field.name, field.inputRules)}
                         type={field.fieldtype}
-                        className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
+                        className={`w-full border-none px-3 py-[0.32rem] leading-[2.15] ${
+                          disableFields ? "bg-slate-300" : "input-bg"
+                        } focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]`}
                         placeholder={field.placeholder}
                         style={{
                           color: "#232323",
@@ -447,9 +464,11 @@ const ProgramSteps = ({
                   ) : field.type === "dropdown" ? (
                     <>
                       <select
+                        disabled={disableSelectFields}
                         {...dropdownimageField}
-                        className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg 
-                                                            focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
+                        className={`w-full border-none px-3 py-[0.32rem] leading-[2.15] ${
+                          disableSelectFields ? "bg-slate-300" : "input-bg"
+                        } focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]`}
                         placeholder={field.placeholder}
                         style={{
                           color: "#232323",
@@ -809,7 +828,10 @@ const ProgramSteps = ({
                   ) : field.type === "date" ? (
                     <div className="relative">
                       <Calendar
-                        className="calendar-control input-bg"
+                        disabled={disableDateFields}
+                        className={`calendar-control ${
+                          disableDateFields ? "bg-slate-300" : "input-bg"
+                        }`}
                         {...dateField}
                         value={getValues(field.name)}
                         {...(field.name === "start_date"

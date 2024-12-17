@@ -41,7 +41,7 @@ export const getUserPrograms = createAsyncThunk(
         }
         queryParams = queryParams !== '' ? `${queryParams}&limit=6` : '?limit=6'
 
-        const getUserProgram = await api.get(query?.value === "program_assign" ? `request${queryParams}` : `programs${queryParams}`);
+        const getUserProgram = await api.get(`programs${queryParams}`);
         if ((getUserProgram.status === 200 || getUserProgram.status === 301) && getUserProgram.data) {
             const response = {
                 ...getUserProgram.data,
@@ -53,6 +53,19 @@ export const getUserPrograms = createAsyncThunk(
         return getUserProgram;
     }
 );
+
+export const getAllProgramDetails = createAsyncThunk(
+    "getAllProgramDetails",
+    async () => {
+
+        const getDetailsofProgram = await api.get(`program/admin-program`);
+        if (getDetailsofProgram.status === 200 && getDetailsofProgram.data && getDetailsofProgram.data.program) {
+            return getDetailsofProgram.data.program;
+        }
+        return getDetailsofProgram;
+    }
+);
+
 
 export const updateProgram = createAsyncThunk(
     "updateProgram",
@@ -97,7 +110,7 @@ export const launchProgram = createAsyncThunk(
 export const acceptProgram = createAsyncThunk(
     "acceptProgram",
     async (data) => {
-        const {id,...restOfData} = data
+        const { id, ...restOfData } = data
         const updateUserProgram = await api.patch(`request/${id}/`, restOfData);
         if (updateUserProgram.status === 200 && updateUserProgram.data) {
             let status = ''
@@ -118,33 +131,33 @@ export const acceptProgram = createAsyncThunk(
 
 
 export const getProgramCounts = createAsyncThunk(
-  "getProgramCounts",
-  async (query) => {
-    if (!query || Object.keys(query).length === 0) {
-      const getProgramAllCounts = await api.get(`program_status_count`);
-      if (getProgramAllCounts.status === 200 && getProgramAllCounts.data) {
-        return getProgramAllCounts.data;
-      }
-      return getProgramAllCounts;
-    } else {
-      let filteredQuery = Object.fromEntries(
-        Object.entries(query).filter(
-          ([key, value]) =>
-            !(key === "search" && value.trim().length === 0) &&
-            !(key === "status" && value === "all")
-        )
-      );
-      let queryString = new URLSearchParams(filteredQuery).toString();
+    "getProgramCounts",
+    async (query) => {
+        if (!query || Object.keys(query).length === 0) {
+            const getProgramAllCounts = await api.get(`program_status_count`);
+            if (getProgramAllCounts.status === 200 && getProgramAllCounts.data) {
+                return getProgramAllCounts.data;
+            }
+            return getProgramAllCounts;
+        } else {
+            let filteredQuery = Object.fromEntries(
+                Object.entries(query).filter(
+                    ([key, value]) =>
+                        !(key === "search" && value.trim().length === 0) &&
+                        !(key === "status" && value === "all")
+                )
+            );
+            let queryString = new URLSearchParams(filteredQuery).toString();
 
-      const getProgramAllCounts = await api.get(
-        `program_status_count?${queryString}`
-      );
-      if (getProgramAllCounts.status === 200 && getProgramAllCounts.data) {
-        return getProgramAllCounts.data;
-      }
-      return getProgramAllCounts;
+            const getProgramAllCounts = await api.get(
+                `program_status_count?${queryString}`
+            );
+            if (getProgramAllCounts.status === 200 && getProgramAllCounts.data) {
+                return getProgramAllCounts.data;
+            }
+            return getProgramAllCounts;
+        }
     }
-  }
 );
 
 export const getProgramDetails = createAsyncThunk(
@@ -153,8 +166,8 @@ export const getProgramDetails = createAsyncThunk(
         const { id, role } = data
 
         const getDetailsofProgram = await api.get(role ? `program/admin-program/${id}` : `programs/${id}`);
-        if (getDetailsofProgram.status === 200 && getDetailsofProgram.data && getDetailsofProgram.data.program) {
-            return getDetailsofProgram.data.program;
+        if (getDetailsofProgram.status === 200 && getDetailsofProgram.data && getDetailsofProgram.data) {
+            return getDetailsofProgram.data;
         }
         return getDetailsofProgram;
     }
@@ -347,24 +360,24 @@ export const getMenteeProgramCount = createAsyncThunk(
                 return menteeProgramCount.data;
             }
             return menteeProgramCount;
-        }else{
+        } else {
 
-        
-        let filteredQuery = Object.fromEntries(
-            Object.entries(query).filter(
-              ([key, value]) =>
-                !(key === 'search' && value.trim().length === 0) &&
-                !(key === 'status' && value === 'all')
-            )
-          );
-          let queryString = new URLSearchParams(filteredQuery).toString();
-          
-        const menteeProgramCount = await api.get(`mentee_program/count_program?${queryString}`);
-        if (menteeProgramCount.status === 200 && menteeProgramCount.data) {
-            return menteeProgramCount.data;
+
+            let filteredQuery = Object.fromEntries(
+                Object.entries(query).filter(
+                    ([key, value]) =>
+                        !(key === 'search' && value.trim().length === 0) &&
+                        !(key === 'status' && value === 'all')
+                )
+            );
+            let queryString = new URLSearchParams(filteredQuery).toString();
+
+            const menteeProgramCount = await api.get(`mentee_program/count_program?${queryString}`);
+            if (menteeProgramCount.status === 200 && menteeProgramCount.data) {
+                return menteeProgramCount.data;
+            }
+            return menteeProgramCount;
         }
-        return menteeProgramCount;
-    }
     }
 );
 
