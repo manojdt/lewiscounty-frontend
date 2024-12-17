@@ -26,6 +26,7 @@ import SuccessIcon from '../../assets/images/Success_tic1x.png';
 import ToastNotification from '../../shared/Toast';
 import api from '../../services/api';
 import { jwtDecode } from 'jwt-decode';
+import { launchProgram } from '../../services/userprograms';
 
 export const Questions = () => {
   const navigate = useNavigate();
@@ -62,7 +63,7 @@ export const Questions = () => {
             ? apiData.gender[0]
             : apiData.gender
           : null,
-        dob: new Date(apiData.dob).toISOString().split('T')[0],
+        dob: apiData.dob && new Date(apiData.dob).toISOString().split('T')[0],
         phone_number: apiData.phone_number,
         documents: undefined,
       };
@@ -102,12 +103,17 @@ export const Questions = () => {
     });
     if (submitDocument.status === 201 || submitDocument.status === 200) {
       if (userInfo?.data?.role === 'mentee') {
-        const joinProgramAction = await api.post('join_program', {
-          id: searchParams.get('program_id'),
-        });
-        if (joinProgramAction.status === 200 && joinProgramAction.data) {
-          handleSubmitData(submitDocument);
-        }
+        dispatch(launchProgram({ program: searchParams.get('program_id') && parseInt(searchParams.get('program_id')), request_type: 'program_join' })).then((res) => {
+          if (res.meta.requestStatus === "fulfilled") {
+            handleSubmitData(submitDocument);
+          }
+        })
+        // const joinProgramAction = await api.post('join_program', {
+        //   id: searchParams.get('program_id'),
+        // });
+        // if (joinProgramAction.status === 200 && joinProgramAction.data) {
+        //   handleSubmitData(submitDocument);
+        // }
       } else {
         handleSubmitData(submitDocument);
       }
@@ -197,7 +203,7 @@ export const Questions = () => {
     }
   }, [actionInfo.modal]);
   const handleSubmit = (combinedData) => {
-    
+
     const allFields = formFields.flat(); // Flatten all fields for validation
     const errorMessages = validateRequiredFields(allFields, combinedData);
     const phoneField = allFields.find((field) => field.name === 'phone_number');
@@ -428,8 +434,8 @@ export const Questions = () => {
                     ? 'We are redirecting to programs page'
                     : 'Questions submitted Successfully'
                   : redirect
-                  ? 'We are redirecting to login page'
-                  : 'Questions submitted Successfully.'}
+                    ? 'We are redirecting to login page'
+                    : 'Questions submitted Successfully.'}
               </p>
             </div>
           </div>
