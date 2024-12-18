@@ -160,7 +160,6 @@ const reqStatusColor = {
 }
   const requestId = searchParams.get('request_id') || '';
   const requestStatusParams = searchParams.get('status') || '';
-console.log(requestStatusParams,"requestStatusParams")
   const {
     register,
     formState: { errors },
@@ -198,12 +197,12 @@ console.log(requestStatusParams,"requestStatusParams")
     const commonApproval = ['completed', 'cancelled'];
 
     const handleJoinProgram = async (programId) => {
-        // if (role === 'mentee' && !userdetails?.data?.is_registered) {
-        //     navigate(`/questions?program_id=${programdetails.id}`)
-        // }
-        // else if (role === 'mentee' && !userdetails?.data?.document_upload) {
-        //     navigate(`/mentee-doc-upload/${programdetails.id}`)
-        // } else {
+        if (role === 'mentee' && !userdetails?.data?.is_registered) {
+            navigate(`/questions?program_id=${programdetails.id}`)
+        }
+        else if (role === 'mentee' && !userdetails?.data?.document_upload) {
+            navigate(`/mentee-doc-upload/${programdetails.id}`)
+        } else {
         //     // setLoading({ initial: true, join: false })
         //     // const joinProgramAction = await api.post('join_program', { id: programId });
         //     // if (joinProgramAction.status === 200 && joinProgramAction.data) {
@@ -226,6 +225,7 @@ console.log(requestStatusParams,"requestStatusParams")
                 );
             }
         });
+      }
     };
 
     const handleAcceptProgram = () => {
@@ -1377,7 +1377,7 @@ console.log(requestStatusParams,"requestStatusParams")
                                             />
                                             Share
                                         </MenuItem>
-                                        {!['yettoapprove', 'completed'].includes(
+                                        {!requestStatusParams&&!['yettoapprove', 'completed'].includes(
                                             programdetails?.status
                                         ) &&
                                             role !== 'admin' && (
@@ -1394,7 +1394,7 @@ console.log(requestStatusParams,"requestStatusParams")
                                                 </MenuItem>
                                             )}
 
-                                        {!['yettoapprove', 'completed'].includes(
+                                        {!requestStatusParams&&!['yettoapprove', 'completed'].includes(
                                             programdetails?.status
                                         ) &&
                                             role !== 'admin' && (
@@ -1520,6 +1520,20 @@ console.log(requestStatusParams,"requestStatusParams")
                                             </span>
                                         )}
                                     </div>
+                                    {requestStatusParams&&programdetails?.request_data?.status==="approved"&&role==="mentor" && 
+                    <div className='py-9'>
+                      <div
+                        className='py-3 px-16 text-white text-[14px] flex justify-center items-center'
+                        style={{
+                          background:reqStatusColor[programdetails?.request_data?.status],
+                          borderRadius: '5px',
+                          width: '30%',
+                        }}
+                      >
+                        {reqStatus[programdetails?.request_data?.status]}
+                      </div>
+                    </div>
+                   } 
                                     {programdetails.status === 'yettoapprove' && programdetails?.admin_program && role === "mentor" && (
                                         <button
                                             className='py-3 px-16 text-white mt-4'
