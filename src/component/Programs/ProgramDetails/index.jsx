@@ -154,9 +154,16 @@ const reqStatus = {
     new:'New',
 }
 const reqStatusColor = {
-    approved:'#16B681',
-    rejected:'#E0382D',
-    new:'#16B681',
+    approved:{ background:'#16B681',
+      borderRadius: '5px',
+      width: '30%',
+      cursor: 'not-allowed'},
+    rejected:{ border: '1px solid #E0382D',
+      borderRadius: '5px',
+      color: '#E0382D',
+       width: '30%',
+      cursor: 'not-allowed'},
+    // new:'#16B681',
 }
   const requestId = searchParams.get('request_id') || '';
   const requestStatusParams = searchParams.get('status') || '';
@@ -1525,9 +1532,7 @@ const reqStatusColor = {
                       <div
                         className='py-3 px-16 text-white text-[14px] flex justify-center items-center'
                         style={{
-                          background:reqStatusColor[programdetails?.request_data?.status],
-                          borderRadius: '5px',
-                          width: '30%',
+                         ...reqStatusColor[programdetails?.request_data?.status],
                         }}
                       >
                         {reqStatus[programdetails?.request_data?.status]}

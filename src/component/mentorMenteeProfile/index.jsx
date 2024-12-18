@@ -46,6 +46,7 @@ const MentorMenteeProfile = () => {
   const { status, userDetails, loading } = useSelector(
     (state) => state.userList
   );
+  console.log(userDetails,"userDetails")
   const [createMeetingLoading, setCreateMeetingLoading] = React.useState(false);
   const [cancelPopup, setCancelPopup] = React.useState({
     bool: false,
