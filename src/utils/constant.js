@@ -399,7 +399,7 @@ export const requestStatusText = {
   deactivated: 'Deactivated',
   rejected: 'Rejected',
   approved: 'Approved',
-  in_progress: "In Progress",
+  in_progress: 'In Progress',
 };
 export const certificateRequestStatusText = {
   new: 'New',
@@ -508,7 +508,7 @@ export const requestStatusColor = {
   in_progress: {
     bgColor: 'rgba(255, 242, 231, 1)',
     color: 'rgba(255, 118, 0, 1)',
-  }
+  },
 };
 
 export const memberStatusColor = {
@@ -530,6 +530,46 @@ export const taskStatusText = {
   newtask: 'New',
   waiting_for_approval: 'Waiting',
   completed: 'Completed',
+};
+
+export const ticketStatusText = {
+  all: 'All',
+  new: 'New',
+  pending: 'Pending',
+  inprogress: 'In_Progress',
+  closed: 'Closed',
+  reject: 'Reject',
+};
+
+export const TicketStatusColor = {
+  all: {
+    color: 'rgba(255, 212, 27, 1)',
+    bg: 'rgba(255, 247, 216, 1)',
+  },
+  reject: {
+    color: 'rgba(224, 56, 45, 1)',
+    bg: 'rgba(255, 231, 231, 1)',
+  },
+  pending: {
+    color: 'rgba(255, 213, 0, 1)',
+    bg: 'rgba(255, 251, 233, 1)',
+  },
+  inprogress: {
+    color: 'rgba(29, 91, 191, 1)',
+    bg: 'rgba(207, 225, 255, 1)',
+  },
+  closed: {
+    color: 'rgba(255, 213, 0, 1)',
+    bg: 'rgba(255, 251, 233, 1)',
+  },
+  new: {
+    color: 'rgba(29, 91, 191, 1)',
+    bg: 'rgba(207, 225, 255, 1)',
+  },
+  // completed: {
+  //   color: 'rgba(22, 182, 129, 1)',
+  //   bg: 'rgba(235, 255, 243, 1)',
+  // },
 };
 
 export const taskStatusColor = {
@@ -655,7 +695,7 @@ export const programActionStatus = {
   draft: 'draft',
   reschedule: 'reschedule',
   program_join_request_accepted: 'program_join_request_accepted',
-  program_assign: 'assign_program'
+  program_assign: 'assign_program',
 };
 
 export const pipeUrls = {
@@ -739,11 +779,11 @@ export const programMenus = (page = 'dashboard') => {
       status: programActionStatus.inprogress,
     },
     {
-      name: "Assign Programs",
+      name: 'Assign Programs',
       count: 0,
       page: `${pipeUrl}${programFilterUrls.programAssign}`,
       for: ['mentor', 'admin'],
-      status: programActionStatus.program_assign
+      status: programActionStatus.program_assign,
     },
     {
       name: 'Drafted Programs',

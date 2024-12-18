@@ -86,6 +86,7 @@ import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import PaymentPage from './features/payments-page/payments';
 import ViewTicket from './component/SuperAdmin/tickets/ViewTicket';
+import TicketDetails from './component/SuperAdmin/tickets/TicketDetails';
 
 function App() {
   const PrivateRoute = () => {
@@ -156,7 +157,8 @@ function App() {
           <Route element={<Layout subheader={true} />}>
             <Route path='/super-members' element={<SuperMembers />} />
             <Route path='/tickets' element={<AdminTickets />} />
-            <Route path='/tickets/:id' element={<ViewTicket />} />
+            {/* <Route path='/tickets/:id' element={<ViewTicket />} /> */}
+            <Route path='/tickets/:id' element={<TicketDetails />} />
             {/* <Route path='/members' element={<AdminMembers />} /> */}
             <Route path='/add-new-ticket' element={<AddNewTicket />} />
             <Route path='/super-members/add' element={<AddSuperMember />} />

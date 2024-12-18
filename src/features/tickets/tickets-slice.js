@@ -24,10 +24,27 @@ export const ticketsApi = createApi({
         body: ticket,
       }),
     }),
-    getAllTicket: builder.query({
-      query: () => '/api/tickets/',
+    getAllTickets: builder.query({
+      query: ({ status, page, limit }) => {
+        let queryParams = `page=${page}&limit=${limit}`;
+
+        if (status !== 'all') {
+          queryParams = `status=${status}&${queryParams}`;
+        }
+
+        return {
+          url: `/api/filter_tickets?${queryParams}`,
+        };
+      },
+    }),
+    getTicket: builder.query({
+      query: (slug) => `/api/tickets/${slug}/`,
     }),
   }),
 });
 
-export const { useCreateTicketMutation, useGetAllTicketQuery } = ticketsApi;
+export const {
+  useCreateTicketMutation,
+  useGetAllTicketsQuery,
+  useGetTicketQuery,
+} = ticketsApi;

@@ -1479,7 +1479,8 @@ export const ProgramInformationFields = [
       required: 'This field is required',
       pattern: {
         value: /^\+[1-9]\d{1,14}$/,
-        message: 'Must start with a plus sign Followed by 1 to 14 digits and no spaces in-between',
+        message:
+          'Must start with a plus sign Followed by 1 to 14 digits and no spaces in-between',
       },
     },
     width: 'width-32',
@@ -1494,12 +1495,10 @@ export const ProgramInformationFields = [
       valueAsNumber: true,
       required: 'This field is required',
     },
-    options: Array.from({ length: 6 }, (_, i) => i + 1).map((count) => (
-      {
-        key: count,
-        value: count,
-      }
-    )),
+    options: Array.from({ length: 6 }, (_, i) => i + 1).map((count) => ({
+      key: count,
+      value: count,
+    })),
     width: 'width-32',
     for: ['admin'],
   },
@@ -1583,14 +1582,14 @@ export const ProgramInformationFields = [
         label: 'Is Flexible?',
         placeholder: '',
         options: [
-          { key: "true", value: "Yes" },
-          { key: "false", value: "No" }
+          { key: 'true', value: 'Yes' },
+          { key: 'false', value: 'No' },
         ],
         inputRules: {
-          required: "This field is required",
+          required: 'This field is required',
         },
         size: true,
-        for: ["admin"]
+        for: ['admin'],
       },
       {
         type: 'popup-input',
@@ -1887,8 +1886,8 @@ export const AboutProgramFields = [
     label: 'Sponsor Availability:',
     placeholder: '',
     options: [
-      { key: "true", value: "Yes" },
-      { key: "false", value: "No" }
+      { key: 'true', value: 'Yes' },
+      { key: 'false', value: 'No' },
     ],
     inputRules: {
       // required: "This field is required",

@@ -2,49 +2,161 @@ import React, { useState } from 'react';
 import SearchIcon from '../../../assets/images/search1x.png';
 import { useNavigate } from 'react-router-dom';
 import DataTable from '../../../shared/DataGrid';
-import { useGetAllTicketQuery } from '../../../features/tickets/tickets-slice';
+import { useGetAllTicketsQuery } from '../../../features/tickets/tickets-slice';
 import { TicketsColumns } from '../../../utils/super-admin-columns';
+import {
+  taskStatusColor,
+  taskStatusText,
+  TicketStatusColor,
+  ticketStatusText,
+} from '../../../utils/constant';
+import { Menu, MenuItem } from '@mui/material';
+import MoreIcon from '../../../assets/icons/moreIcon.svg';
+import StartIcon from '../../../assets/icons/start-icon.svg';
+import RejectIcon from '../../../assets/icons/reject-icon.svg';
+// import CloseIcon from '../../assets/icons/closeIcon.svg';
+import ViewIcon from '../../../assets/icons/eye-icon.svg';
+import { Pending } from '@mui/icons-material';
 
 const AdminTickets = () => {
   const navigate = useNavigate();
   const [requestTab, setRequestTab] = useState('all');
+  const [seletedItem, setSelectedItem] = useState({});
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+
   const [paginationModel, setPaginationModel] = React.useState({
     page: 0,
-    pageSize: 10,
+    limit: 10,
   });
 
-  const { data, isLoading, error, isError, isSuccess } = useGetAllTicketQuery(
-    {}
-  );
+  const { data, isLoading, error, isError, isSuccess } = useGetAllTicketsQuery({
+    status: requestTab,
+    page: paginationModel.page,
+    limit: paginationModel.limit,
+  });
 
-  const tableData = data?.map((item, index) => {
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleClick = (event, data) => {
+    setSelectedItem(data);
+    setAnchorEl(event.currentTarget);
+  };
+
+  const tableData = data?.results.map((item, index) => {
     return { ...item, id: index + 1 };
   });
 
+  const statusColumn = TicketsColumns.map((column) => {
+    if (column.field === 'status') {
+      return {
+        ...column,
+        renderCell: (params) => {
+          return (
+            <>
+              <div className='cursor-pointer flex items-center h-full relative'>
+                <span
+                  className='w-[80px] flex justify-center h-[30px] px-3'
+                  style={{
+                    background: TicketStatusColor[params.row.status]?.bg || '',
+                    lineHeight: '30px',
+                    borderRadius: '3px',
+                    width: '110px',
+                    height: '34px',
+                    color: TicketStatusColor[params.row.status]?.color || '',
+                    fontSize: '12px',
+                  }}
+                >
+                  {ticketStatusText[params.row.status]}
+                </span>
+              </div>
+            </>
+          );
+        },
+      };
+    }
+
+    return column;
+  });
+
+  const TicketsListColumns = [
+    ...statusColumn,
+    {
+      field: 'action',
+      headerName: 'Action',
+      flex: 1,
+      id: 4,
+      renderCell: (params) => {
+        return (
+          <>
+            <div
+              className='cursor-pointer flex items-center h-full'
+              onClick={(e) => handleClick(e, params.row)}
+            >
+              <img src={MoreIcon} alt='MoreIcon' />
+            </div>
+            <Menu
+              id='basic-menu'
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              MenuListProps={{
+                'aria-labelledby': 'basic-button',
+              }}
+            >
+              <MenuItem
+                onClick={() => navigate(`/tickets/${seletedItem.id}?type=view`)}
+                className='!text-[12px]'
+              >
+                <img src={ViewIcon} alt='ViewIcon' className='pr-3 w-[30px]' />
+                View
+              </MenuItem>
+              <MenuItem className='!text-[12px]'>
+                <img src={StartIcon} alt='ViewIcon' className='pr-3 w-[30px]' />{' '}
+                Start
+              </MenuItem>
+              <MenuItem className='!text-[12px]'>
+                <img
+                  src={RejectIcon}
+                  alt='ViewIcon'
+                  className='pr-3 w-[30px]'
+                />
+                Reject
+              </MenuItem>
+            </Menu>
+          </>
+        );
+      },
+    },
+  ];
+
   const taskMenuList = [
     {
-      name: 'All  Tickets',
+      name: 'All Tickets',
       key: 'all',
     },
     {
-      name: 'New  Tickets',
-      key: 'new_tickets',
+      name: 'New Tickets',
+      key: 'new',
     },
     {
-      name: 'Pending  Tickets',
-      key: 'pending_tickets',
+      name: 'Pending Tickets',
+      key: 'pending',
     },
     {
       name: 'In-progress Tickets',
-      key: 'in_progress_tickets',
+      key: 'in_progress',
     },
     {
       name: 'Closed Tickets',
-      key: 'closed_tickets',
+      key: 'closed',
     },
     {
       name: 'Reject Tickets',
-      key: 'reject_tickets',
+      key: 'reject',
     },
   ];
 
@@ -105,10 +217,11 @@ const AdminTickets = () => {
             ))}
           </div>
 
+          <div></div>
           {!isLoading && (
             <DataTable
               rows={tableData}
-              columns={TicketsColumns}
+              columns={TicketsListColumns}
               hideCheckbox
               // rowCount={taskList?.count}
               paginationModel={paginationModel}
