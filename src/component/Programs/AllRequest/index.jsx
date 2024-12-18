@@ -975,7 +975,9 @@ export default function AllRequest() {
                             <MenuItem
                                 onClick={(e) => {
                                     handleClose();
-                                    navigate(`/mentor-details/${seletedItem.id}`);
+                                    navigate(`/mentor-details/${seletedItem.id}`,{state:{
+                                        reqType:"member_join_request"
+                                    }});
                                 }}
                                 className="!text-[12px]"
                             >

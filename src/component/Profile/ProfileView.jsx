@@ -65,6 +65,8 @@ export default function ProfileView() {
     followInfo,
   } = useSelector((state) => state.userList);
   console.log(userDetails,"userDetails")
+  const pathe=state?.reqType?-1:'/all-request'
+
   const { profile, loading } = useSelector((state) => state.profileInfo);
   const userInfo = useSelector(state => state.userInfo)
   const role = userInfo.data.role
@@ -172,7 +174,7 @@ export default function ProfileView() {
     };
     dispatch(updateMemberRequest(payload)).then((res) => {
       if (res?.meta?.requestStatus === "fulfilled") {
-        navigate("/all-request")
+        navigate(pathe)
       }
     })
   };
@@ -183,7 +185,7 @@ export default function ProfileView() {
       dispatch(
         cancelMemberRequest({ member_id: params.id, })).then((res) => {
           if (res?.meta?.requestStatus === "fulfilled") {
-            navigate("/all-request")
+            navigate(pathe)
           }
         })
     }
@@ -196,7 +198,7 @@ export default function ProfileView() {
           status: "approved",
         })).then(() => {
           setTimeout(() => {
-            navigate('/all-request');
+            navigate(pathe);
           }, 100);
         });
       } else {
@@ -210,7 +212,7 @@ export default function ProfileView() {
             console.log('MMMM');
             dispatch(updateLocalRequest({ status: '' }));
             resetMenteeRequest();
-            navigate('/all-request');
+            navigate(pathe);
           }, 100);
         });
       }
@@ -264,7 +266,7 @@ export default function ProfileView() {
         reason: data.cancel_reason,
       })).then(() => {
         setTimeout(() => {
-          navigate('/all-request');
+          navigate(pathe);
         }, 100);
       });
     } else {
@@ -280,7 +282,7 @@ export default function ProfileView() {
             console.log('MMMM');
             dispatch(updateLocalRequest({ status: '' }));
             resetMenteeRequest();
-            navigate('/all-request');
+            navigate(pathe);
           }, 100);
         });
       }
@@ -307,7 +309,7 @@ export default function ProfileView() {
         resetMenteeRequest();
         dispatch(updateLocalRequest({ status: '' }));
         dispatch(getProfileInfo({ id: params.id }));
-        navigate('/all-request');
+        navigate(pathe);
       }, 3000);
     }
 
@@ -317,7 +319,7 @@ export default function ProfileView() {
     //         console.log('MMMM');
     //         // dispatch(updateLocalRequest({ status: '' }));
     //         // resetMenteeRequest()
-    //         navigate('/all-request')
+    //         navigate(pathe)
     //     }, 3000);
     // }
   }, [requeststatus]);
@@ -875,6 +877,8 @@ export default function ProfileView() {
                         </div>
                       ) : (
                         <>
+                        {role !== 'mentor'&&
+                        <>
                           <Button
                             onClick={handleShowPopup}
                             btnType='button'
@@ -887,6 +891,7 @@ export default function ProfileView() {
                             btnName='Chat'
                             btnCls={'w-[150px]'}
                           />
+                        </>}
                         </>
                       )}
                     </>
