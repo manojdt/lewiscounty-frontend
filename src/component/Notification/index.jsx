@@ -102,7 +102,7 @@ export default function Notification({ handleClose }) {
             : role === "admin"
             ? {
                 state: {
-                  rowId: data.related_data?.certificate_request_id,
+                  rowId: data.related_data?.certificate_id,
                   status: "new",
                 },
               }

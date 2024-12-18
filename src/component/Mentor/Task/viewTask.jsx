@@ -450,7 +450,7 @@ const ViewTask = () => {
                     }
 
                     {
-                        ["completed", "cancel"].includes(taskDetails.status) &&
+                        ["completed", "inprogress","pending","cancel"].includes(taskDetails.status) &&
                         <Button
                             btnName='Close'
                             btnCategory='secondary'

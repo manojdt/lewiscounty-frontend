@@ -1409,7 +1409,7 @@ export const ProgramInformationFields = [
     label: 'Category',
     placeholder: 'Select Category',
     inputRules: {
-      valueAsNumber: true,
+      // valueAsNumber: true,
       required: 'This field is required',
     },
     options: [
@@ -2112,7 +2112,7 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       type: 'input',
       name: 'reference_links',
       fieldtype: 'text',
-      label: 'Reference Link',
+      label: 'Reference Book',
       placeholder: 'Enter Reference Book with comma(,) seperators',
       inputRules: {
         required: 'This field is required',

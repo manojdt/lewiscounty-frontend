@@ -55,9 +55,8 @@ const MentorTaskDetails = () => {
 
     const handleClose = () => {
         setAnchorEl(null);
-        setSelectedItem(null);
+        // setSelectedItem(null);
     };
-
     const tabsList = [
         {
             name: "All",
@@ -500,7 +499,7 @@ const MentorTaskDetails = () => {
                     activity: true,
                     type: "cancel_all"
                 })
-                setNewType("")
+               
                 setTimeout(() => {
                     setConfirmPopup({
                         ...confirmPopup,
@@ -508,6 +507,7 @@ const MentorTaskDetails = () => {
                         cancel: false,
                         type: ""
                     })
+                    setNewType("")
                     getMenteeList()
                 }, 2000);
             }
@@ -1118,6 +1118,7 @@ const MentorTaskDetails = () => {
                             {(selectedTab !== "pending" && confirmPopup?.type === "pass") && "Successfully Marked as Pass"}
                             {(selectedTab !== "pending" && confirmPopup?.type === "cancel") && "Successfully marked as Fail"}
                             {((selectedTab === "pending" || selectedTab === "new") && confirmPopup?.type === "cancel") && "All Mentee’s New task has been successfully cancelled"}
+                            {((selectedTab === "pending" || selectedTab === "new"||newType === "newTab") && confirmPopup?.type === "cancel_all") && "All Mentee’s New task has been successfully cancelled"}
                             {(selectedTab === "pending" && confirmPopup?.type === "pass") && "All Mentee’s New task has been successfully passed"}
                         </p>
                     </div>

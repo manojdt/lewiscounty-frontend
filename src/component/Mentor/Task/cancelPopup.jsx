@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import MuiModal from '../../../shared/Modal'
 import { Box, Divider, Stack, Typography } from '@mui/material'
 import CancelIcon from '../../../assets/icons/blueCloseIcon.svg'
@@ -9,7 +9,11 @@ export const CancelPopup = ({
     handleSubmit = () => false,
     header = ""
 }) => {
-
+    useEffect(() => {
+        if (!open) {
+            setReason("")
+        }
+    }, [open])
     const [reason, setReason] = React.useState("")
     return (
         <MuiModal modalSize='md' modalOpen={open} modalClose={handleClosePopup} noheader>
