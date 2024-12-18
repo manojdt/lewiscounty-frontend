@@ -1520,7 +1520,7 @@ const reqStatusColor = {
                                             </span>
                                         )}
                                     </div>
-                                    {requestStatusParams&&programdetails?.request_data?.status==="approved"&&role==="mentor" && 
+                                    {requestStatusParams&&role==="mentor" && 
                     <div className='py-9'>
                       <div
                         className='py-3 px-16 text-white text-[14px] flex justify-center items-center'
@@ -2009,7 +2009,7 @@ const reqStatusColor = {
                                                         </button>
                                                     </Stack>
                                                 )}
-                                            {programdetails?.status ===
+                                            {!requestStatusParams&&programdetails?.status ===
                                                 'new_program_request_rejected' && (
                                                     <button
                                                         className='py-3 px-16 text-white text-[14px] flex items-center'

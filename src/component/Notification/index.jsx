@@ -68,12 +68,12 @@ export default function Notification({ handleClose }) {
       case "member":
         const memberurl =
           role === "mentor"
-            ? `/mentee-details/${data.related_data.member_id}?type=mentee_request&request_id=${data.related_data?.program_request_id}`
+            ?data.related_data?.program_request_id? `/mentee-details/${data.related_data.member_id}?type=mentee_request&request_id=${data.related_data?.program_request_id}`:`/mentee-details/${data.related_data.member_id}`
             : `mentor-details/${data.related_data.member_id}?request_id=${data.related_data?.member_request_id}`;
         handleClose && handleClose();
         navigate(
           memberurl,
-          role === "mentor"
+          role === "mentor"&&data.related_data?.program_request_id
             ? {
                 state: {
                   data: {
