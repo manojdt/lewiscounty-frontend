@@ -292,7 +292,7 @@ export default function CreatePrograms() {
             // bodyFormData.append("program_id", params?.id);
             dispatch(
               editUpdateProgram({
-                program_id:params?.id,
+                program_id: params?.id,
                 bodyFormData,
                 role: toggleRole === "admin" ? toggleRole : "",
               })
@@ -798,7 +798,11 @@ export default function CreatePrograms() {
   }, [tabActionInfo.error]);
 
   useEffect(() => {
-    if (Object.keys(programdetails).length && params.id !== "") {
+    if (
+      programdetails &&
+      Object.keys(programdetails).length &&
+      params.id !== ""
+    ) {
       let stepListData = {};
       let data = {};
 
@@ -899,7 +903,7 @@ export default function CreatePrograms() {
           />
         )}
 
-        <Backdrop
+        {/* <Backdrop
           sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={
             loading.create ||
@@ -950,7 +954,7 @@ export default function CreatePrograms() {
               </span>
             </div>
           ) : null}
-        </Backdrop>
+        </Backdrop> */}
 
         {!updateProgramInfo && (
           <div className="px-8 py-4">

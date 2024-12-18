@@ -165,7 +165,7 @@ const ProgramSteps = ({
     if (Object.keys(stepData).length && params.id !== "") {
       handleLoadFieldValues();
     }
-  }, [params.id, stepData]);
+  }, [stepData]);
 
   useEffect(() => {
     if (currentStepData !== undefined && Object.keys(currentStepData).length) {

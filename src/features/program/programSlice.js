@@ -125,7 +125,7 @@ export const programSlice = createSlice({
       .addCase(getProgramDetails.fulfilled, (state, action) => {
         return {
           ...state,
-          programDetails: action.payload.data,
+          programDetails: action.payload,
           status: userStatus.create,
           loading: false,
         };
