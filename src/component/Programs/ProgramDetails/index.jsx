@@ -198,35 +198,35 @@ const reqStatusColor = {
 
     const handleJoinProgram = async (programId) => {
         if (role === 'mentee' && !userdetails?.data?.is_registered) {
-            navigate(`/questions?program_id=${programdetails.id}`)
+          navigate(`/questions?program_id=${programdetails.id}`)
         }
         else if (role === 'mentee' && !userdetails?.data?.document_upload) {
-            navigate(`/mentee-doc-upload/${programdetails.id}`)
+          navigate(`/mentee-doc-upload/${programdetails.id}`)
         } else {
-        //     // setLoading({ initial: true, join: false })
-        //     // const joinProgramAction = await api.post('join_program', { id: programId });
-        //     // if (joinProgramAction.status === 200 && joinProgramAction.data) {
-        //     //     setLoading({ initial: false, join: role === 'mentee' })
-        //     if (role === 'mentor' || role === "mentee" || role === "admin") {
-        //         dispatch(launchProgram({ program: programId, request_type: "program_join" })).then((res) => {
-        //             if (res?.meta?.requestStatus === "fulfilled") {
-        //                 dispatch(getSpecificProgramDetails({ id: params?.id, requestId: requestId }))
-        //             }
-        //         })
-        //     }
-        //     // }
-        // }
-        dispatch(
+          // setLoading({ initial: true, join: false })
+          // const joinProgramAction = await api.post('join_program', { id: programId });
+          // if (joinProgramAction.status === 200 && joinProgramAction.data) {
+          //     setLoading({ initial: false, join: role === 'mentee' })
+          // if (role === 'mentor' || role === "mentee" || role === "admin") {
+          //     dispatch(launchProgram({ program: programId, request_type: "program_join" })).then((res) => {
+          //         if (res?.meta?.requestStatus === "fulfilled") {
+          //             dispatch(getSpecificProgramDetails({ id: params?.id, requestId: requestId }))
+          //         }
+          //     })
+          // }
+          // }
+          dispatch(
             launchProgram({ program: programId, request_type: 'program_join' })
-        ).then((res) => {
+          ).then((res) => {
             if (res?.meta?.requestStatus === 'fulfilled') {
-                dispatch(
-                    getSpecificProgramDetails({ id: params?.id, requestId: requestId })
-                );
+              dispatch(
+                getSpecificProgramDetails({ id: params?.id, requestId: requestId })
+              );
             }
-        });
-      }
-    };
+          });
+        }
+    
+      };
 
     const handleAcceptProgram = () => {
         dispatch(
