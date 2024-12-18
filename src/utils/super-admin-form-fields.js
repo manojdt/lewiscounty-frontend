@@ -113,3 +113,43 @@ export const NewTicketFields = [
     width: 'col-span-2',
   },
 ];
+
+export const UpdateTicketFields = [
+  {
+    type: 'textbox',
+    name: 'comment',
+    fieldtype: 'text',
+    placeholder: 'Enter comment',
+    label: 'Enter your comment',
+    placeholder: 'comments',
+    inputRules: {
+      // required: "This field is required",
+    },
+    size: true,
+    width: 'col-span-1',
+  },
+  {
+    type: 'date',
+    name: 'due_date',
+    fieldtype: 'text',
+    label: 'Due date',
+    placeholder: 'Enter Due date',
+    inputRules: {
+      // required: "This field is required",
+    },
+    size: true,
+    width: 'col-span-1',
+  },
+  {
+    type: 'file',
+    name: 'assignee_attachment',
+    fieldtype: 'file',
+    label: 'Document Upload',
+    placeholder: '',
+    inputRules: {
+      required: 'This field is required',
+    },
+    size: false,
+    width: 'col-span-1',
+  },
+];
