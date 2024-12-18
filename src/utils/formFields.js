@@ -3128,3 +3128,41 @@ export const reportAdminColumns = [
   //   id: 1,
   // },
 ];
+
+export const menteeTicketCreationField = [
+  {
+    type: 'input',
+    name: 'subject',
+    fieldtype: 'text',
+    label: 'Ticket Subject',
+    placeholder: 'Ticket Subject',
+    inputRules: {
+      // required: "This field is required",
+    },
+    size: true,
+    width: 'col-span-1',
+  },
+  {
+    type: 'file',
+    name: 'attachment',
+    fieldtype: 'file',
+    label: 'Document Upload',
+    placeholder: '',
+    inputRules: {
+      required: 'This field is required',
+    },
+    size: false,
+    width: 'col-span-1',
+  },
+  {
+    type: 'textarea',
+    name: 'description',
+    label: 'Description',
+    placeholder: 'Enter Description',
+    inputRules: {
+      // required: 'Description is required',
+    },
+    width: 'w-full',
+    for: ['admin'],
+  },
+];

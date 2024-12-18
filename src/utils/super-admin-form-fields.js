@@ -142,7 +142,7 @@ export const UpdateTicketFields = [
   },
   {
     type: 'file',
-    name: 'assignee_attachment',
+    name: 'attachment',
     fieldtype: 'file',
     label: 'Document Upload',
     placeholder: '',

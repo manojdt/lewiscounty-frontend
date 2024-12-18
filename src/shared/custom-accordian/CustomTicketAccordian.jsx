@@ -12,9 +12,11 @@ const CustomTicketAccordian = ({ title, children, defaultValue }) => {
         }`}
         onClick={() => setIsOpen(!isOpen)}
       >
-        <h2 className='text-lg font-semibold text-gray-800'>{title}</h2>
+        <h2 className='text-lg font-semibold text-gray-800 capitalize'>
+          {title}
+        </h2>
         <svg
-          className={`w-6 h-6 transform transition-transform duration-300 ${
+          className={`w-6 h-6 transform transition-transform duration-500 ${
             isOpen ? 'rotate-180' : ''
           }`}
           fill='none'

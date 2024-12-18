@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import UserImage from '../../../assets/icons/user-image.svg';
 import CalendarIcon from '../../../assets/images/calender_1x.png';
 import { Button } from '../../../shared';
@@ -9,10 +9,27 @@ import TicketDeleteModal from './ticket-delete-modal';
 import { UpdateTicketFields } from '../../../utils/super-admin-form-fields';
 import { Controller, useForm } from 'react-hook-form';
 import { Calendar } from 'primereact/calendar';
+import { usePostCommentMutation } from '../../../features/tickets/tickets-slice';
+import moment from 'moment';
+import { useNavigate } from 'react-router-dom';
+import SuccessGradientMessage from '../../success-gradient-message';
 
-const TicketUpdate = () => {
+const TicketUpdate = ({ ticket }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [filePreviews, setFilePreviews] = useState({});
+  const navigate = useNavigate();
+  const [isBackdropOpen, setIsBackdropOpen] = useState(false);
+
+  const [updateTicket, { isLoading, isSuccess, isError, error }] =
+    usePostCommentMutation();
+
+  if (isSuccess) {
+    console.log('Update Successful');
+  }
+
+  if (isError) {
+    console.error('Update Failed:', error);
+  }
 
   const {
     register,
@@ -23,6 +40,16 @@ const TicketUpdate = () => {
     getValues,
     setValue,
   } = useForm();
+
+  useEffect(() => {
+    if (isSuccess) {
+      setIsBackdropOpen(true);
+      setTimeout(() => {
+        setIsBackdropOpen(false);
+        navigate('/tickets');
+      }, 2000);
+    }
+  }, [isSuccess]);
 
   const handleFileChange = (field, files) => {
     const validFiles = Array.from(files).filter((filer) =>
@@ -57,13 +84,35 @@ const TicketUpdate = () => {
     setValue(field, updatedFiles);
   };
 
+  const onSubmit = (data) => {
+    console.log('update', data);
+    const formData = new FormData();
+
+    formData.append('comment', data.comment);
+    formData.append('due_date', moment(data.due_date).format('YYYY-MM-DD'));
+
+    if (data.attachment) {
+      if (Array.isArray(data.attachment)) {
+        data.attachment.forEach((doc, index) => {
+          formData.append(`attachment[${index}]`, doc);
+        });
+      } else {
+        formData.append('attachment', data.documents);
+      }
+    }
+
+    console.log(formData);
+    // updateTicket(formData);
+    updateTicket({ id: ticket.id, ticket: formData });
+  };
+
   return (
     <div>
-      {/* <div className='border rounded-lg'> */}
-      {/* <div className='p-4 bg-[#D9E4F2] rounded-t-lg'>
-        <p>New Ticket Update </p>
-      </div> */}
-      <form action='' className='p-9 grid grid-cols-1'>
+      <form
+        action=''
+        className='p-9 grid grid-cols-1'
+        onSubmit={handleSubmit(onSubmit)}
+      >
         {UpdateTicketFields.map((field) => {
           switch (field.type) {
             case 'date':
@@ -77,7 +126,7 @@ const TicketUpdate = () => {
                   </label>
                   <div className='relative'>
                     <Controller
-                      name='date'
+                      name={field.name}
                       control={control}
                       defaultValue={null}
                       // rules={{ required: 'Date is required' }}
@@ -241,40 +290,47 @@ const TicketUpdate = () => {
               );
           }
         })}
+
+        <div className='mx-9 my-9 space-y-8'>{/* form fields */}</div>
+
+        <div className='flex gap-6 justify-center align-middle'>
+          <Button
+            btnName='Reject'
+            btnCls='w-[170px]'
+            btnStyle={{
+              border: '1px solid rgba(220, 53, 69, 1)',
+              color: 'rgba(220, 53, 69, 1)',
+            }}
+            btnCategory='secondary'
+            onClick={() => setIsOpen(true)}
+          />
+          <Button
+            btnType='submit'
+            disabled={isLoading}
+            btnCls='w-[130px]'
+            btnName={`${isLoading ? 'Updateing...' : 'Update'}`}
+            btnCategory='primary'
+            btnStyle={{
+              background: 'rgba(217, 228, 242, 1)',
+              color: 'rgba(29, 91, 191, 1)',
+              border: 'none',
+            }}
+          />
+
+          <Button
+            // btnType='submit'
+            btnCls='w-[170px]'
+            btnName={'Closed Ticket'}
+            btnCategory='primary'
+          />
+        </div>
       </form>
-
-      <div className='mx-9 my-9 space-y-12'>{/* form fields */}</div>
-
-      <div className='flex gap-6 my-12 justify-center align-middle'>
-        <Button
-          btnName='Reject'
-          btnCls='w-[170px]'
-          btnStyle={{
-            border: '1px solid rgba(220, 53, 69, 1)',
-            color: 'rgba(220, 53, 69, 1)',
-          }}
-          btnCategory='secondary'
-          onClick={() => setIsOpen(true)}
-        />
-        <Button
-          btnName='Update '
-          btnCls='w-[170px]'
-          btnStyle={{
-            background: 'rgba(217, 228, 242, 1)',
-            color: 'rgba(29, 91, 191, 1)',
-            border: 'none',
-          }}
-          btnCategory='secondary'
-        />
-
-        <Button
-          btnType='submit'
-          btnCls='w-[170px]'
-          btnName={'Closed Ticket'}
-          btnCategory='primary'
-        />
-      </div>
       {isOpen && <TicketDeleteModal isOpen={isOpen} setIsOpen={setIsOpen} />}
+      <SuccessGradientMessage
+        message={'Your ticket has been Updated successfully'}
+        isBackdropOpen={isBackdropOpen}
+        setIsBackdropOpen={setIsBackdropOpen}
+      />
     </div>
   );
 };

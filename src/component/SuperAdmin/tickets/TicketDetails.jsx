@@ -1,14 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Breadcrumbs, Skeleton, Typography } from '@mui/material';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import CustomTicketAccordian from '../../../shared/custom-accordian/CustomTicketAccordian';
 import TicketUpdate from './ticket-update';
 import ViewTicket from './ViewTicket';
 import { useGetTicketQuery } from '../../../features/tickets/tickets-slice';
+import TicketComments from './ticket-comments';
+import { useSelector } from 'react-redux';
+import { user } from '../../../utils/constant';
 
 const TicketDetails = () => {
   const { id } = useParams();
+  const [searchParams] = useSearchParams();
+  const userInfo = useSelector((state) => state.userInfo);
+  const role = userInfo.data.role;
+
+  const type = searchParams.get('type');
+  console.log(type);
 
   const {
     data: ticket,
@@ -16,7 +25,14 @@ const TicketDetails = () => {
     isSuccess,
     isError,
     error,
+    refetch,
   } = useGetTicketQuery(id);
+
+  useEffect(() => {
+    if (id) {
+      refetch(); //
+    }
+  }, [id, refetch]);
 
   const breadcrumbs = [
     <Link
@@ -45,24 +61,50 @@ const TicketDetails = () => {
 
       <div className='bg-white p-9 rounded-xl space-y-12'>
         {isTicketLoading ? (
-          <Skeleton sx={{ height: '1000px' }} />
+          <div className='flex justify-center items-center'>
+            <Skeleton
+              variant='rectangular'
+              sx={{ width: '100%', height: '500px', borderRadius: '10px' }}
+            />
+          </div>
         ) : (
           <div>
             <CustomTicketAccordian
-              title={`Ticket Create by ${ticket?.created_by_detail?.full_name} (
-            ${ticket?.created_by_detail?.role}) - ${ticket?.ticket_id}`}
-              defaultValue={true}
+              title={`${ticket?.created_by_detail?.first_name} ${ticket?.created_by_detail?.last_name} (
+            ${ticket?.created_by_detail?.role}) - ${ticket?.id}`}
+              defaultValue={type === 'view' ? true : false}
             >
-              <ViewTicket ticket={ticket} />
+              <ViewTicket ticket={ticket} type={type} />
             </CustomTicketAccordian>
           </div>
         )}
 
-        <div>
-          <CustomTicketAccordian title={'Hi there'} defaultValue={true}>
-            <TicketUpdate />
-          </CustomTicketAccordian>
-        </div>
+        {role === user.super_admin && (
+          <div>
+            {ticket &&
+              ticket.comments &&
+              ticket.comments.length > 0 &&
+              ticket.comments.map((comment, index) => (
+                <CustomTicketAccordian
+                  title={`${comment?.created_by?.first_name} ${comment?.created_by?.last_name} (
+        ${comment?.created_by?.role})`}
+                >
+                  <TicketComments comment={comment} />
+                </CustomTicketAccordian>
+              ))}
+          </div>
+        )}
+
+        {type !== 'view' && (
+          <div>
+            <CustomTicketAccordian
+              title={'Enter your update'}
+              defaultValue={true}
+            >
+              <TicketUpdate ticket={ticket} />
+            </CustomTicketAccordian>
+          </div>
+        )}
       </div>
     </div>
   );
