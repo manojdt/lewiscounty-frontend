@@ -1,23 +1,23 @@
 import React, { useState } from 'react';
-import SearchIcon from '../../../assets/images/search1x.png';
+import SearchIcon from '../../assets/images/search1x.png';
 import { useNavigate } from 'react-router-dom';
-import DataTable from '../../../shared/DataGrid';
-import { useGetAllTicketsQuery } from '../../../features/tickets/tickets-slice';
-import { TicketsColumns } from '../../../utils/super-admin-columns';
+import DataTable from '../../shared/DataGrid';
+import { useGetAllTicketsQuery } from '../../features/tickets/tickets-slice';
+import { TicketsColumns } from '../../utils/super-admin-columns';
 import {
   taskStatusColor,
   taskStatusText,
   TicketStatusColor,
   ticketStatusText,
-} from '../../../utils/constant';
+} from '../../utils/constant';
 import { Menu, MenuItem, Skeleton } from '@mui/material';
-import MoreIcon from '../../../assets/icons/moreIcon.svg';
-import StartIcon from '../../../assets/icons/start-icon.svg';
-import RejectIcon from '../../../assets/icons/reject-icon.svg';
-// import CloseIcon from '../../assets/icons/closeIcon.svg';
-import ViewIcon from '../../../assets/icons/eye-icon.svg';
+import MoreIcon from '../../assets/icons/moreIcon.svg';
+import StartIcon from '../../assets/icons/start-icon.svg';
+import RejectIcon from '../../assets/icons/reject-icon.svg';
+// import CloseIcon from '../assets/icons/closeIcon.svg';
+import ViewIcon from '../../assets/icons/eye-icon.svg';
 
-const AdminTickets = () => {
+const TicketHistory = () => {
   const navigate = useNavigate();
   const [requestTab, setRequestTab] = useState('all');
   const [seletedItem, setSelectedItem] = useState({});
@@ -169,7 +169,6 @@ const AdminTickets = () => {
   const handleTab = (key) => {
     setRequestTab(key);
   };
-
   return (
     <div className='p-9'>
       <div
@@ -178,7 +177,7 @@ const AdminTickets = () => {
       >
         <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
           <div className='flex gap-5 items-center text-[20px]'>
-            <p>Tickets</p>
+            <p>Help Desk</p>
           </div>
 
           <div className='flex gap-8 items-center'>
@@ -223,7 +222,6 @@ const AdminTickets = () => {
             ))}
           </div>
 
-          <div></div>
           {isLoading ? (
             <div className='flex justify-center items-center'>
               <Skeleton
@@ -247,8 +245,4 @@ const AdminTickets = () => {
   );
 };
 
-export default AdminTickets;
-
-// -------------------------------------------------------------------------------------------------------------------------------
-
-// Ticket Columns
+export default TicketHistory;

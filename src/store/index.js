@@ -16,7 +16,7 @@ import requestReducer from '../features/request/requestSlice';
 import launchProgramReducer from '../features/launchProgram/launchProgramSlice';
 import memberReducer from '../features/members/memberSlice';
 import categoryReducer from '../features/category/categorySlice';
-import PaymentReducer from '../features/payment/paymentSlice';
+import { paymentApi } from '../features/payment/paymentSlice';
 import { ticketsApi } from '../features/tickets/tickets-slice';
 import { rtkQueryApiServices } from '../services/api';
 
@@ -40,6 +40,9 @@ const combinedReducer = combineReducers({
   category: categoryReducer,
   payment: PaymentReducer,
   [rtkQueryApiServices.reducerPath]: rtkQueryApiServices.reducer,
+  // payment: PaymentReducer,
+  [ticketsApi.reducerPath]: ticketsApi.reducer,
+  [paymentApi.reducerPath]: paymentApi.reducer,
 });
 
 const rootReducer = (state, action) => {
@@ -55,6 +58,8 @@ export const store = configureStore({
   // [ticketsApi.reducerPath]: ticketsApi.reducer,
 
   middleware: (getDefaultMiddleware) => [
-    ...getDefaultMiddleware().concat(ticketsApi.middleware),
+    ...getDefaultMiddleware()
+      .concat(ticketsApi.middleware)
+      .concat(paymentApi.middleware),
   ],
 });

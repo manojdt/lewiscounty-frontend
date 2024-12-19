@@ -1,41 +1,29 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { postPayments } from '../../services/payment';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-const initialState = {
-  paymentData: {},
-  loading: false,
-  status: '',
-  error: '',
-};
+const baseQuery = fetchBaseQuery({
+  baseUrl: process.env.REACT_APP_BASE_URL,
+  prepareHeaders: (headers) => {
+    const token = localStorage.getItem('access_token');
 
-export const paymentSlice = createSlice({
-  name: 'payment',
-  initialState,
-  reducers: {},
-  extraReducers: (builder) => {
-    builder
-      .addCase(postPayments.pending, (state) => {
-        return {
-          ...state,
-          loading: true,
-        };
-      })
-      .addCase(postPayments.fulfilled, (state, action) => {
-        return {
-          status: '',
-          loading: false,
-          paymentData: action.payload,
-          error: '',
-        };
-      })
-      .addCase(postPayments.rejected, (state, action) => {
-        return {
-          ...state,
-          loading: false,
-          error: action.error.message,
-        };
-      });
+    if (token) {
+      headers.set('Authorization', `Bearer ${token}`);
+    }
+
+    return headers;
   },
 });
 
-export default paymentSlice.reducer;
+export const paymentApi = createApi({
+  reducerPath: 'paymentApi',
+  baseQuery,
+  endpoints: (builder) => ({
+    paymentProcessing: builder.query({
+      query: (programId) => ({
+        url: `/api/payments/create-payment-intent/${programId}`,
+        method: 'POST',
+      }),
+    }),
+  }),
+});
+
+export const { usePaymentProcessingQuery } = paymentApi;

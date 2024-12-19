@@ -1,13 +1,17 @@
 import { Backdrop } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
 import SuccessTik from '../assets/images/blue_tik1x.png';
 
-const SuccessGradientMessage = ({ message }) => {
+const SuccessGradientMessage = ({
+  message,
+  isBackdropOpen,
+  setIsBackdropOpen,
+}) => {
   return (
     <Backdrop
       sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-      open={createMeetingLoading}
-      onClick={() => setCreateMeetingLoading(false)}
+      open={isBackdropOpen}
+      onClick={() => setIsBackdropOpen(false)}
     >
       <div className='px-5 py-1 flex justify-center items-center'>
         <div

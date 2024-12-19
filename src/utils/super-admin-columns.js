@@ -10,7 +10,7 @@ export const TicketsColumns = [
     flex: 1,
     id: 0,
     renderCell: (params) => {
-      return <div>{params.row.ticket_id}</div>;
+      return <div>{params.row.id}</div>;
     },
   },
   {
@@ -19,7 +19,7 @@ export const TicketsColumns = [
     flex: 1,
     id: 1,
     renderCell: (params) => {
-      return <div>{params.row.ticket_subject}</div>;
+      return <div>{params.row.subject}</div>;
     },
   },
   {
@@ -55,7 +55,12 @@ export const TicketsColumns = [
     flex: 1,
     id: 5,
     renderCell: (params) => {
-      return <div>{params.row.created_by_detail.full_name}</div>;
+      return (
+        <div>
+          {params.row.created_by_detail.first_name}{' '}
+          {params.row.created_by_detail.last_name}
+        </div>
+      );
     },
   },
   {

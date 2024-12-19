@@ -1,25 +1,25 @@
-import { Breadcrumbs, Typography } from '@mui/material';
-import React, { useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import { NewTicketFields } from '../../../utils/super-admin-form-fields';
+import React, { useEffect, useRef, useState } from 'react';
+import CustomCard from '../../shared/CustomCard/CustomCard';
+import { menteeTicketCreationField } from '../../utils/formFields';
+import DeleteIcon from '../../assets/images/delete_1x.png';
+import UploadIcon from '../../assets/images/image_1x.png';
 import { Controller, useForm } from 'react-hook-form';
 import { Calendar } from 'primereact/calendar';
-import AddPlusIcon from '../../../assets/icons/add-plus-icon.svg';
-import UploadIcon from '../../../assets/images/image_1x.png';
-import { view } from '../../../utils/constant';
-import DeleteIcon from '../../../assets/images/delete_1x.png';
-import { Button } from '../../../shared';
-import { useCreateTicketMutation } from '../../../features/tickets/tickets-slice';
+import AddPlusIcon from '../../assets/icons/add-plus-icon.svg';
+import { Button } from '../../shared';
+import {
+  useCreateTicketMutation,
+  useGetTicketQuery,
+  useMenteeTicketCreationMutation,
+  useTicketCreationMutation,
+  useUpdateTicketMutation,
+} from '../../features/tickets/tickets-slice';
+import { convertToFormData } from '../../utils/convert-to-form-data';
+import { useSelector } from 'react-redux';
+import SuccessGradientMessage from '../success-gradient-message';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
-const AddNewTicket = ({ type }) => {
-  const navigate = useNavigate();
-
-  // const [createTicket, { isLoading, isError, isSuccess, error }] =
-  //   useCreateTicketMutation();
-
-  const [filePreviews, setFilePreviews] = useState({});
-  const imageUploadRef = useRef(null);
+const TicketCreation = () => {
   const {
     register,
     formState: { errors },
@@ -29,21 +29,36 @@ const AddNewTicket = ({ type }) => {
     getValues,
     setValue,
   } = useForm();
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const [isBackdropOpen, setIsBackdropOpen] = useState(false);
+  const [searchParams] = useSearchParams();
 
-  const breadcrumbs = [
-    <Link
-      variant='body2'
-      underline='hover'
-      key='1'
-      color='inherit'
-      to='/dashboard'
-    >
-      Dashboard
-    </Link>,
-    <Typography key='2' variant='body2' color={'primary'}>
-      New Ticket
-    </Typography>,
-  ];
+  const [filePreviews, setFilePreviews] = useState({});
+  const imageUploadRef = useRef(null);
+  const userInfo = useSelector((state) => state.userInfo);
+
+  const [createTicket, { isLoading, isSuccess, isError, error }] =
+    useCreateTicketMutation();
+
+  const [updateTicket, { isLoading: isUpdateLoading }] =
+    useUpdateTicketMutation();
+
+  const {
+    data: ticket,
+    isLoading: isFetchLoading,
+    refetch,
+  } = useGetTicketQuery(id);
+
+  useEffect(() => {
+    if (id) {
+      reset({
+        ...ticket,
+        // attachment: setFilePreviews(),
+      });
+    }
+  }, [id]);
+  console.log('ticket', ticket);
 
   const imageClickHandler = () => {
     imageUploadRef.current.click();
@@ -83,30 +98,44 @@ const AddNewTicket = ({ type }) => {
 
   const onSubmit = (data) => {
     console.log(data);
-    // createTicket(data);
+
+    const formData = new FormData();
+
+    formData.append('subject', data.subject);
+    formData.append('description', data.description);
+    // formData.append('created_by', userInfo?.data?.user_id);
+    if (data.attachment) {
+      if (Array.isArray(data.attachment)) {
+        data.attachment.forEach((doc, index) => {
+          formData.append(`attachment`, doc);
+        });
+      } else {
+        formData.append('attachment', data.documents);
+      }
+    }
+
+    if (searchParams.get('type') === 'edit') {
+      createTicket(formData);
+    } else {
+      updateTicket(formData);
+    }
   };
 
-  return (
-    <div className='p-9'>
-      <div>
-        <Breadcrumbs
-          className='pb-4'
-          separator={<NavigateNextIcon fontSize='small' />}
-          aria-label='breadcrumb'
-        >
-          {breadcrumbs}
-        </Breadcrumbs>
-      </div>
-      <form
-        className='border rounded-lg pb-8'
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <div className='border-b py-4 px-2 mx-4'>
-          <p className='text-lg font-semibold'>New ticket</p>
-        </div>
+  useEffect(() => {
+    if (isSuccess) {
+      setIsBackdropOpen(true);
+      setTimeout(() => {
+        setIsBackdropOpen(false);
+        navigate('/help');
+      }, 2000);
+    }
+  }, [isSuccess]);
 
-        <div className='grid grid-cols-2 gap-4 p-6'>
-          {NewTicketFields.map((field) => {
+  return (
+    <div className='h-screen p-9'>
+      <CustomCard title={'New ticket'}>
+        <form action='' className='mt-6' onSubmit={handleSubmit(onSubmit)}>
+          {menteeTicketCreationField.map((field, index) => {
             switch (field.type) {
               case 'input':
                 return (
@@ -123,10 +152,10 @@ const AddNewTicket = ({ type }) => {
                       {field?.inputRules?.required && '*'}
                     </label>
                     {/* {type === view.viewOnly ? (
-                      <p className='text-[14px] pt-3'>
-                        {getValues(field.name)}
-                      </p>
-                    ) : ( */}
+                        <p className='text-[14px] pt-3'>
+                          {getValues(field.name)}
+                        </p>
+                      ) : ( */}
                     <Controller
                       name={field.name}
                       control={control}
@@ -137,7 +166,7 @@ const AddNewTicket = ({ type }) => {
                           {...register(field.name, field.inputRules)}
                           type={field.fieldtype}
                           className='w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none
-                                                                  focus-visible:outline-none text-[14px] h-[60px]'
+                                                                    focus-visible:outline-none text-[14px] h-[60px]'
                           placeholder={field.placeholder}
                           style={{
                             color: '#232323',
@@ -298,7 +327,7 @@ const AddNewTicket = ({ type }) => {
                     <select
                       {...register(field.name, field.inputRules)}
                       className='w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg h-11
-                             focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]'
+                               focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]'
                       placeholder={field.placeholder}
                       style={{
                         color: '#232323',
@@ -352,7 +381,7 @@ const AddNewTicket = ({ type }) => {
                       </label>
                       <div
                         className={`relative w-full rounded-lg border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none
-                                                                  focus-visible:outline-none text-[14px] h-[60px]`}
+                                                                    focus-visible:outline-none text-[14px] h-[60px]`}
                       >
                         <div
                           className='absolute border border-dashed rounded-lg border-blue-500  h-full w-48 right-0 top-0'
@@ -367,6 +396,71 @@ const AddNewTicket = ({ type }) => {
                           </div>
                         </div>
                       </div>
+                      <div className='flex flex-wrap gap-4 mt-4'>
+                        {filePreviews[field.name]?.map((preview, index) => (
+                          <div key={index} className='relative'>
+                            <img
+                              src={preview}
+                              alt={`Preview ${index}`}
+                              className='w-24 h-24 object-cover rounded-lg'
+                            />
+                            <img
+                              src={DeleteIcon}
+                              alt='Delete'
+                              className='absolute rounded-full top-1 right-1 w-6 h-6 cursor-pointer'
+                              onClick={() =>
+                                handleDeleteFile(field.name, index)
+                              }
+                            />
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* {getValues(field.name)?.length > 0 && (
+                        <>
+                          <div
+                            className='text-[14px] pt-5'
+                            style={{ color: 'rgba(0, 0, 0, 1)' }}
+                          >
+                            Uploaded Image{' '}
+                          </div>
+
+                          <div className='flex flex-wrap items-center justify-start gap-2'>
+                            {getValues(field.name) &&
+                              getValues(field.name).map((item, index) => {
+                                return (
+                                  <div
+                                    className='flex justify-between items-center w-[25%] mt-5 px-4 py-4'
+                                    style={{
+                                      border:
+                                        '1px solid rgba(29, 91, 191, 0.5)',
+                                      borderRadius: '3px',
+                                    }}
+                                  >
+                                    <div className='flex gap-3 items-center'>
+                                      <img src={UploadIcon} alt='altlogo' />
+                                      <span className='text-[12px] w-40 truncate'>
+                                        {item?.name || item}
+                                      </span>
+                                    </div>
+                                    <img
+                                      className='w-[30px] cursor-pointer'
+                                      onClick={() =>
+                                        handleDeleteFile(
+                                          field.name,
+                                          index,
+                                          item?.props?.id
+                                        )
+                                      }
+                                      src={DeleteIcon}
+                                      alt='DeleteIcon'
+                                    />
+                                  </div>
+                                );
+                              })}
+                          </div>
+                        </>
+                      )} */}
                     </div>
 
                     {errors[field.name] && (
@@ -377,11 +471,11 @@ const AddNewTicket = ({ type }) => {
                   </div>
                 );
 
-              case 'textbox':
+              case 'textarea':
                 return (
                   <div
                     key={field.name}
-                    className={`${field.width}`}
+                    className={`${field.width} mt-3`}
                     style={{ marginBottom: '16px' }}
                   >
                     <label
@@ -391,37 +485,26 @@ const AddNewTicket = ({ type }) => {
                       {field.label}
                       {field?.inputRules?.required && '*'}
                     </label>
-                    {type === view.viewOnly ? (
-                      <p className='text-[14px] pt-3'>
-                        {getValues(field.name) ? getValues(field.name) : '-'}
-                      </p>
-                    ) : (
-                      <Controller
-                        name={field.name}
-                        control={control}
-                        defaultValue=''
-                        rules={field.inputRules}
-                        render={({ field: controllerField }) => (
-                          <textarea
-                            id='message'
-                            rows='4'
-                            className={`block p-2.5 input-bg w-full text-sm text-gray-900  rounded-lg border
-                                      focus:visible:outline-none focus:visible:border-none ${
-                                        field.width === 'width-82'
-                                          ? 'h-[282px]'
-                                          : ''
-                                      }`}
-                            placeholder={field.placeholder}
-                            {...register(field.name, field.inputRules)}
-                          />
-                        )}
-                      />
-                    )}
-                    {errors[field.name] && (
-                      <p style={{ color: 'red', fontSize: '12px' }}>
-                        {errors[field.name]?.message}
-                      </p>
-                    )}
+                    <Controller
+                      name={field.name}
+                      control={control}
+                      defaultValue=''
+                      rules={field.inputRules}
+                      render={({ field: controllerField }) => (
+                        <textarea
+                          id='message'
+                          rows='4'
+                          className={`block p-2.5 input-bg w-full text-sm text-gray-900  rounded-lg border
+                                        focus:visible:outline-none focus:visible:border-none ${
+                                          field.width === 'width-82'
+                                            ? 'h-[282px]'
+                                            : ''
+                                        }`}
+                          placeholder={field.placeholder}
+                          {...register(field.name, field.inputRules)}
+                        />
+                      )}
+                    />
                   </div>
                 );
 
@@ -429,23 +512,46 @@ const AddNewTicket = ({ type }) => {
                 return null;
             }
           })}
-        </div>
-        <div className='flex gap-6 justify-center align-middle'>
-          <Button
-            btnName='Cancel'
-            btnCategory='secondary'
-            onClick={() => navigate('/dashboard')}
-          />
-          <Button
-            btnType='submit'
-            btnCls='w-[110px]'
-            btnName={'Save'}
-            btnCategory='primary'
-          />
-        </div>
-      </form>
+          {searchParams.get('type') === 'edit' ? (
+            <div className='flex gap-6 justify-center align-middle mt-6'>
+              <Button
+                btnName='Cancel'
+                btnCategory='secondary'
+                onClick={() => navigate('/help')}
+              />
+              <Button
+                btnType='submit'
+                disabled={isUpdateLoading}
+                btnCls='w-[130px]'
+                btnName={`${isUpdateLoading ? 'Updateing...' : 'Update'}`}
+                btnCategory='primary'
+              />
+            </div>
+          ) : (
+            <div className='flex gap-6 justify-center align-middle mt-6'>
+              <Button
+                btnName='Cancel'
+                btnCategory='secondary'
+                onClick={() => navigate('/help')}
+              />
+              <Button
+                btnType='submit'
+                disabled={isLoading}
+                btnCls='w-[130px]'
+                btnName={`${isLoading ? 'Creating...' : 'Create'}`}
+                btnCategory='primary'
+              />
+            </div>
+          )}
+        </form>
+      </CustomCard>
+      <SuccessGradientMessage
+        message={'Your ticket has been created successfully'}
+        isBackdropOpen={isBackdropOpen}
+        setIsBackdropOpen={setIsBackdropOpen}
+      />
     </div>
   );
 };
 
-export default AddNewTicket;
+export default TicketCreation;

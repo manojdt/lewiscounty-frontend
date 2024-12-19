@@ -303,7 +303,7 @@ export const Navbar = () => {
                     } items-center p-4 md:p-0 mt-4 h-full font-medium border border-gray-100
                     rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0`}
                   >
-                    {userInfo?.data?.is_registered && (
+                    {/* {userInfo?.data?.is_registered && (
                       <li
                         className={`transition-all duration-300 ${
                           pathname === '/dashboard'
@@ -334,7 +334,7 @@ export const Navbar = () => {
                           Members
                         </span>
                       </li>
-                    )}
+                    )} */}
 
                     {userInfo?.data?.is_registered && (
                       <li
@@ -541,7 +541,7 @@ export const Navbar = () => {
                             color='error'
                             badgeContent={activity.length}
                             variant='standard'
-                            sx={{cursor:'pointer'}}
+                            sx={{ cursor: 'pointer' }}
                             max={activity.length}
                           >
                             <img

@@ -214,7 +214,7 @@ const PersonalInfoSection = ({ type }) => {
                 ) : (
                   <div className='relative'>
                     <Controller
-                      name='date'
+                      name={field.name}
                       control={control}
                       defaultValue={null}
                       // rules={{ required: 'Date is required' }}
