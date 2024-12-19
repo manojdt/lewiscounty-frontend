@@ -96,11 +96,19 @@ export default function CreatePrograms() {
   // console.log("validationData", validationData);
   const [
     createProgram,
-    { isLoading: isProgramCreating, isSuccess: isProgramCreated },
+    {
+      isLoading: isProgramCreating,
+      isSuccess: isProgramCreated,
+      isError: IsErrorProgramCreating,
+    },
   ] = useCreateProgramMutation();
   const [
     updateProgram,
-    { isLoading: isProgramUpdating, isSuccess: isProgramUpdated },
+    {
+      isLoading: isProgramUpdating,
+      isSuccess: isProgramUpdated,
+      isError: IsErrorProgramUpdating,
+    },
   ] = useUpdateProgramMutation();
 
   const [stepData, setStepData] = useState({});
@@ -806,11 +814,19 @@ export default function CreatePrograms() {
       isProgramCreated ||
       status === programStatus.exist ||
       status === programStatus.error ||
+      IsErrorProgramCreating ||
+      IsErrorProgramUpdating ||
       isProgramUpdated
     ) {
       setTimeout(() => {
         dispatch(updateNewPrograms({ status: "" }));
-        if (isProgramCreated || isProgramUpdated) navigate("/dashboard");
+        if (
+          isProgramCreated ||
+          isProgramUpdated ||
+          IsErrorProgramCreating ||
+          IsErrorProgramUpdating
+        )
+          navigate("/dashboard");
       }, [3000]);
     }
   }, [isProgramCreated, isProgramUpdated, status]);
@@ -858,7 +874,9 @@ export default function CreatePrograms() {
               "individual_chat_requirement",
             ].includes(currentField)
           ) {
-            currentFieldValue = currentProgramDetail[currentField] ? "true" : "false";
+            currentFieldValue = currentProgramDetail[currentField]
+              ? "true"
+              : "false";
           }
 
           if (currentField === "certificates") {
@@ -883,8 +901,6 @@ export default function CreatePrograms() {
       });
 
       setStepData(data);
-
-    
     }
   }, [currentProgramDetail]);
 
@@ -959,6 +975,8 @@ export default function CreatePrograms() {
             isProgramCreating ||
             isProgramUpdating ||
             isDetailFetching ||
+            IsErrorProgramCreating ||
+            IsErrorProgramUpdating ||
             status === programStatus.update
           }
         >
@@ -969,11 +987,15 @@ export default function CreatePrograms() {
           {isProgramCreated ||
           status === programStatus.exist ||
           status === programStatus.error ||
-          isProgramUpdated ? (
+          isProgramUpdated ||
+          IsErrorProgramCreating ||
+          IsErrorProgramUpdating ? (
             <div className="w-2/6 bg-white flex flex-col gap-4 h-[330px] justify-center items-center">
               <img
                 src={
-                  status === programStatus.exist
+                  status === programStatus.exist ||
+                  IsErrorProgramCreating ||
+                  IsErrorProgramUpdating
                     ? FailedIcon
                     : isProgramCreated || isProgramUpdated
                     ? SuccessIcon
@@ -986,6 +1008,14 @@ export default function CreatePrograms() {
                   ? "Program already exist"
                   : status === programStatus.error
                   ? "There is a Server Error. Please try again later"
+                  : IsErrorProgramCreating || IsErrorProgramUpdating
+                  ? `Error ${
+                      IsErrorProgramCreating
+                        ? "Creating"
+                        : IsErrorProgramUpdating
+                        ? "Updating"
+                        : ""
+                    } program`
                   : `Program ${
                       programApiStatus === "draft"
                         ? "Drafed"

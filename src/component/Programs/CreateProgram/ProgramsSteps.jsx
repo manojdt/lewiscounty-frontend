@@ -745,11 +745,23 @@ const ProgramSteps = ({
                 </>
               ) : field.type === "textbox" ? (
                 <>
-                  <textarea                    
+                  <textarea
+                    id={field.name} // Add unique id
+                    key={field.name}
                     rows="4"
                     className={`block p-2.5 input-bg w-full text-sm text-gray-900 border focus-visible:outline-none focus-visible:border-none h-[182px]`}
                     placeholder={field.placeholder}
-                    {...register(field.name, field.inputRules)}
+                    {...register(field.name, {
+                      ...field.inputRules,
+                      onChange: (e) => {
+                        // Handle change specifically for this field
+                        setValue(field.name, e.target.value, {
+                          shouldValidate: true,
+                          shouldDirty: true,
+                          shouldTouch: true,
+                        });
+                      },
+                    })}
                   ></textarea>
                   {errors[field.name] && (
                     <p className="error" role="alert">
