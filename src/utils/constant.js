@@ -846,7 +846,7 @@ export const programMenus = (page = 'dashboard') => {
 export const RequestStatusArray = [
   {
     key: 'program_request',
-    name: 'Program Request',
+    name: 'Program Requests',
   },
   {
     key: 'member_join_request',
@@ -889,7 +889,7 @@ export const RequestStatusArray = [
 export const RequestStatus = {
   programRequest: {
     key: 'program_request',
-    name: 'Program Request',
+    name: 'Program Requests',
   },
   memberJoinRequest: {
     key: 'member_join_request',
