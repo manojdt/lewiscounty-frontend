@@ -52,10 +52,7 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
             query: ({ bodyFormData, role }) => ({
                 url: role ? 'program/admin-program' : 'programs',
                 method: 'POST',
-                body: bodyFormData,
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
+                body: bodyFormData,                
             }),
         }),
 
@@ -64,10 +61,7 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
             query: ({ program_id, bodyFormData, role }) => ({
                 url: role ? `program/admin-program/${program_id}` : `programs/${program_id}`,
                 method: 'PUT',
-                body: bodyFormData,
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
+                body: bodyFormData,                
             }),
         }),
 

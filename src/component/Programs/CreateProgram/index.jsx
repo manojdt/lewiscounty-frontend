@@ -75,7 +75,10 @@ export default function CreatePrograms() {
 
   const { handleSubmit, reset, setValue, watch } = methods;
   const { data: currentProgramDetail, isLoading: isDetailFetching } =
-    useGetProgramDetailsByIdQuery({ id: params.id }, { skip: !params?.id });
+    useGetProgramDetailsByIdQuery(
+      { id: params.id, role },
+      { skip: !params?.id && !role }
+    );
   // const [program_name] = watch(["program_name"]);
   // const { data: validationData, isFetching } = useValidateProgramNameQuery(
   //   {
@@ -308,10 +311,11 @@ export default function CreatePrograms() {
           }
 
           for (let key in fieldData) {
-            if (key === "program_image" && logo.program_image) {
-              bodyFormData.append(key, logo.program_image);
-            } else if (key === "image" && logo.image) {
-              bodyFormData.append(key, logo.image);
+            if (
+              (key === "program_image" || key === "image") &&
+              fieldData[key]?.[0] instanceof File
+            ) {
+              bodyFormData.append(key, fieldData[key][0]);
             } else if (["start_date", "end_date"].includes(key)) {
               bodyFormData.append(key, new Date(fieldData[key]).toISOString());
             } else if (!jsonFields.includes(key)) {
@@ -829,7 +833,13 @@ export default function CreatePrograms() {
           navigate("/dashboard");
       }, [3000]);
     }
-  }, [isProgramCreated, isProgramUpdated, status]);
+  }, [
+    IsErrorProgramCreating,
+    IsErrorProgramUpdating,
+    isProgramCreated,
+    isProgramUpdated,
+    status,
+  ]);
 
   useEffect(() => {
     if (tabActionInfo.error) {
@@ -921,11 +931,11 @@ export default function CreatePrograms() {
     // reset();
   };
 
-  useEffect(() => {
-    const sub = watch((values) => console.log("values", values));
+  // useEffect(() => {
+  //   const sub = watch((values) => console.log("values", values));
 
-    return () => sub.unsubscribe();
-  }, [watch]);
+  //   return () => sub.unsubscribe();
+  // }, [watch]);
 
   return (
     <div className="dashboard-content px-8 mt-10">
