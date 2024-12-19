@@ -89,7 +89,7 @@ const Goals = () => {
         type: ""
     })
 
-    useEffect(()=>{
+    useEffect(() => {
         setRequestPaginationModel({
             page: 0,
             pageSize: 10
@@ -106,7 +106,7 @@ const Goals = () => {
             page: 0,
             pageSize: 10
         })
-    },[filterType])
+    }, [filterType])
 
     const { goalsList, loading, status, createdGoal, goalsCount, goalRequest, goalHistory } = useSelector(state => state.goals)
 
@@ -744,14 +744,14 @@ const Goals = () => {
         setHistoryTimeFrame(value)
         setHistoryPaginationModel({
             page: 0,
-            pageSize: 5
+            pageSize: 10
         })
         dispatch(getGoalsHistory({
             status: "new",
             created_by: createdBy,
             time_frame: value,
             page: 1,
-            limit: 5
+            limit: 10
         }))
     }
 

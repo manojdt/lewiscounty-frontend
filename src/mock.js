@@ -502,34 +502,39 @@ export const MemberColumns = [
 
 export const MenteeAssignColumns = [
   {
-    field: 'first_name',
+    field: 'full_name',
     headerName: 'Full Name',
-    width: 400,
+    // width: 400,
     id: 0,
+    flex: 1,
   },
   {
     field: 'email',
     headerName: 'Email',
-    width: 250,
+    // width: 250,
     id: 1,
+    flex: 1,
   },
   {
     field: 'dob',
     headerName: 'DOB',
-    width: 200,
+    // width: 200,
     id: 2,
+    flex: 1,
   },
   {
     field: 'gender',
     headerName: 'Gender',
-    width: 200,
+    // width: 200,
     id: 3,
+    flex: 1,
   },
   {
     field: 'action',
     headerName: 'Action',
-    width: 200,
+    // width: 200,
     id: 4,
+    flex: 1,
   },
 ];
 

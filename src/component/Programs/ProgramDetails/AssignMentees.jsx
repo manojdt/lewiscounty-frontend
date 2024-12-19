@@ -486,7 +486,7 @@ export default function AssignMentees() {
                                                                                             //     : {}
                                                                                             // }
 
-                                                                                            minDate={type === "new" ? new Date(getValues('start_date')) : new Date()}
+                                                                                            minDate={new Date()}
                                                                                             maxDate={field.name === 'due_date' ? new Date(getValues('end_date')) : ""}
                                                                                             showTime={field.name !== 'due_date'}
                                                                                             hourFormat="12"
