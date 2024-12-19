@@ -83,10 +83,6 @@ const MentorTaskDetails = () => {
             key: "rejected"
         },
     ]
-useEffect(() => {
-console.log(selectedTab,"selectedTab")
-}, [selectedTab])
-
     const {
         register,
         formState: { errors },
@@ -519,7 +515,6 @@ console.log(selectedTab,"selectedTab")
     }
 
     const handleUpdateAllTask = (type, reason = "") => {
-        console.log("dell")
         let payload = {
             "result": type === "pass" ? true : false,
             "task_id": menteeTaskList?.assign_task_id,

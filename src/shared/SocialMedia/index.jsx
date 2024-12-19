@@ -1,7 +1,8 @@
 import React, { useCallback, useRef } from 'react'
 import {
     LoginSocialFacebook,
-    LoginSocialGoogle,LoginSocialInstagram,
+    LoginSocialGoogle,
+    // LoginSocialInstagram,
 } from "reactjs-social-login";
 import { userAccountLogin } from "../../services/loginInfo";
 // import FacebookLogin from 'react-facebook-login';
@@ -103,7 +104,7 @@ export default function SocialMediaLogin({ view = 'vertical' }) {
                                 Continue With Google
                             </Button>
                         </LoginSocialGoogle>
-                        <LoginSocialInstagram
+                        {/* <LoginSocialInstagram
                        client_id={process.env.REACT_APP_SOCIAL_AUTH_FACEBOOK_KEY} 
                        client_secret={process.env.REACT_APP_SOCIAL_AUTH_FACEBOOK_SECRET}
                     //    appId={"939158531445780"} 
@@ -113,11 +114,11 @@ export default function SocialMediaLogin({ view = 'vertical' }) {
                       onResolve={handleInstaLogin}
                       onReject={(error) => {
                         console.log('Facebook login failed:', error);
-                      }}>
+                      }}> */}
                         <Button fullWidth color='inherit' size='large' variant="outlined" startIcon={<img src={InstagramIcon} className='w-[20px]' alt='InstagramIcon' />}>
                             Continue with Instagram
                         </Button>
-                       </LoginSocialInstagram>
+                       {/* </LoginSocialInstagram> */}
                         <LoginSocialFacebook
                        appId={process.env.REACT_APP_SOCIAL_AUTH_FACEBOOK_KEY} 
                     //    appId={"939158531445780"} 
