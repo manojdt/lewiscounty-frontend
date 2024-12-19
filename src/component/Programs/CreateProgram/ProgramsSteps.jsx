@@ -1,6 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Controller, useFieldArray, useForm } from "react-hook-form";
+import {
+  Controller,
+  useFieldArray,
+  useForm,
+  useFormContext,
+} from "react-hook-form";
 import { Calendar } from "primereact/calendar";
 
 import { Button } from "../../../shared";
@@ -29,23 +34,15 @@ import { useSelector } from "react-redux";
 
 const ProgramSteps = ({
   stepFields,
-  currentStep,
-  handleNextStep,
-  handlePreviousStep,
   currentStepData,
   stepData,
   handleAction,
-  totalSteps,
   fetchCategoryData,
   setToggleRole,
   setCurrent,
-  currentOption,
   mentor_assign,
 }) => {
-  const navigate = useNavigate();
   const params = useParams();
-  const [formData, setFormData] = useState({});
-  const [logoImage, setLogoImage] = useState({});
   const [checkBoxValue, setCheckBoxValue] = useState({});
   const [currentField, setCurrentField] = useState();
   const role = useSelector((state) => state.userInfo?.data?.role);
@@ -53,6 +50,7 @@ const ProgramSteps = ({
   const calendarRef = useRef([]);
   const startDateRefs = useRef([]);
   const endDateRefs = useRef([]);
+
   const getCalendarRef = (index, fieldName) => {
     return fieldName === "start_date"
       ? startDateRefs.current[index]
@@ -61,26 +59,30 @@ const ProgramSteps = ({
   const {
     register,
     formState: { errors },
-    handleSubmit,
     reset,
     getValues,
     setValue,
     watch,
     control,
-  } = useForm();
+  } = useFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
     name: "sub_programs",
   });
 
-  const [subProgramCount, is_sponsored, sub_programs, start_date, end_date] =
-    watch([
-      "no_of_subprograms",
-      "is_sponsored",
-      "sub_programs",
-      "start_date",
-      "end_date",
-    ]);
+  const [
+    subProgramCount,
+    is_sponsored = false,
+    sub_programs,
+    start_date,
+    end_date,
+  ] = watch([
+    "no_of_subprograms",
+    "is_sponsored",
+    "sub_programs",
+    "start_date",
+    "end_date",
+  ]);
 
   const mentorFooterComponent = (props) => {
     return (
@@ -139,16 +141,6 @@ const ProgramSteps = ({
     }
   }, [subProgramCount, fields.length, append, remove]);
 
-  const onSubmit = (data) => {
-    const stData = {
-      ...formData,
-      [currentStep]: { ...formData[currentStep], ...data },
-    };
-    setFormData(stData);
-    handleNextStep(data, stData);
-    // reset();
-  };
-
   const handleLoadFieldValues = () => {
     const fName = [];
     const f = {};
@@ -174,11 +166,6 @@ const ProgramSteps = ({
     setValue("status", "");
   }, []);
 
-  const handleDraft = () => {
-    setValue("status", "draft");
-    document.getElementById("program-submit").click();
-  };
-
   function getWindowDimensions() {
     const { innerWidth: width, innerHeight: height } = window;
     return {
@@ -188,21 +175,12 @@ const ProgramSteps = ({
   }
 
   const handleDeleteImage = (key) => {
-    let image = { ...logoImage };
-    delete image[key];
     setValue(key, "");
-    setLogoImage(image);
   };
 
   const handleCheckbox = (e) => {
     setCheckBoxValue({ ...checkBoxValue, [e.target.name]: e.target.value });
   };
-
-  useEffect(() => {
-    const sub = watch((values) => console.log("values", values));
-
-    return () => sub.unsubscribe();
-  }, [watch]);
 
   const handleActionPopup = (fieldName) => {
     // Open popup and allow user to select an item
@@ -210,834 +188,775 @@ const ProgramSteps = ({
   };
 
   return (
-    <>
-      <div className="py-9">
-        <form id="program-form" onSubmit={handleSubmit(onSubmit)}>
-          <div className="flex flex-wrap gap-4">
-            {stepFields.map((field, index) => {
-              const dateField =
-                field.type === "date"
-                  ? register(field.name, field.inputRules)
-                  : undefined;
-              let imageField =
-                field.type === "file"
-                  ? register(field.name, field.inputRules)
-                  : undefined;
-              const dropdownimageField =
-                field.type === "dropdown"
-                  ? register(field.name, field.inputRules)
-                  : undefined;
-              const checkbox =
-                field.type === "checkbox"
-                  ? register(field.name, field.inputRules)
-                  : undefined;
-              let imageName = "";
-              if (field.type === "file" && params.id) {
-                const url = getValues(field.name);
-                if (
-                  url !== null &&
-                  url !== undefined &&
-                  typeof url === "string"
-                ) {
-                  imageName = url.substring(url.lastIndexOf("/") + 1);
-                  imageField = register(field.name, { required: false });
-                }
-              }
-              if (
-                field.name === "enrollment_fees" &&
-                is_sponsored // Replace with the name of your radio input
-              ) {
-                return null; // Skip rendering this field
-              }
-              if (
-                field.name === "image" &&
-                is_sponsored === false // Replace with the name of your radio input
-              ) {
-                return null; // Skip rendering this field
-              }
-              const disableFields =
-                params?.id &&
-                field.name === "program_name" &&
-                role === "mentor";
+    <div>
+      <div className="flex flex-wrap gap-4">
+        {stepFields.map((field, index) => {
+          const dateField =
+            field.type === "date"
+              ? register(field.name, field.inputRules)
+              : undefined;
+          let watchFile = field.type === "file" ? watch(field.name) : undefined;
+          const dropdownimageField =
+            field.type === "dropdown"
+              ? register(field.name, field.inputRules)
+              : undefined;
+          const checkbox =
+            field.type === "checkbox"
+              ? register(field.name, field.inputRules)
+              : undefined;
+          let imageName = "";
 
-              const disableSelectFields =
-                params?.id &&
-                (field.name === "course_level" || field.name === "category") &&
-                role === "mentor";
-              const disableDateFields =
-                params?.id &&
-                (field.name === "start_date" || field.name === "end_date") &&
-                role === "mentor";
-              return (
-                <div
-                  className={`relative mb-6  ${
-                    getWindowDimensions().width <= 1536 &&
-                    field.width === "width-82"
-                      ? "w-[81%]"
-                      : field.width
-                  }`}
-                  key={index}
-                >
-                  <label
-                    className="block tracking-wide text-gray-700 text-xs font-bold mb-2"
-                    htmlFor={field.label}
+          if (field.name === "enrollment_fees" && is_sponsored === true) {
+            return null;
+          }
+          if (field.name === "image" && is_sponsored === false) {
+            return null;
+          }
+          const disableFields =
+            params?.id && field.name === "program_name" && role === "mentor";
+
+          const disableSelectFields =
+            params?.id &&
+            (field.name === "course_level" || field.name === "category") &&
+            role === "mentor";
+          const disableDateFields =
+            params?.id &&
+            (field.name === "start_date" || field.name === "end_date") &&
+            role === "mentor";
+          return (
+            <div
+              className={`relative mb-6  ${
+                getWindowDimensions().width <= 1536 &&
+                field.width === "width-82"
+                  ? "w-[81%]"
+                  : field.width
+              }`}
+              key={index}
+            >
+              <label
+                className="block tracking-wide text-gray-700 text-xs font-bold mb-2"
+                htmlFor={field.label}
+              >
+                {field.label}{" "}
+                <span style={{ color: "red" }}>
+                  {field?.inputRules?.required ? "*" : ""}
+                </span>
+              </label>
+              {field.type === "radio" ? (
+                <FormControl component="fieldset" className="my-3">
+                  <Controller
+                    name={field.name}
+                    control={control}
+                    defaultValue={false}
+                    render={({ field: controllerField }) => (
+                      <RadioGroup
+                        {...controllerField}
+                        row
+                        aria-labelledby="radio-buttons-group"
+                        value={controllerField.value?.toString()}
+                        onChange={(e) => {
+                          const boolValue = e.target.value === "true";
+                          controllerField.onChange(boolValue);
+                          setValue(field.name, boolValue);
+                        }}
+                      >
+                        {field.options?.map((option) => (
+                          <FormControlLabel
+                            key={option.key}
+                            value={option.key}
+                            control={
+                              <Radio
+                                checked={
+                                  controllerField.value?.toString() ===
+                                  option.key
+                                }
+                                checkedIcon={<CheckBoxIcon />}
+                                icon={<CheckBoxOutlineBlankIcon />}
+                              />
+                            }
+                            label={option.value}
+                          />
+                        ))}
+                      </RadioGroup>
+                    )}
+                  />
+                </FormControl>
+              ) : field.type === "input" ? (
+                <div className="relative">
+                  <input
+                    disabled={disableFields}
+                    {...register(field.name, field.inputRules)}
+                    type={field.fieldtype}
+                    className={`w-full border-none px-3 py-[0.32rem] leading-[2.15] ${
+                      disableFields ? "bg-slate-300" : "input-bg"
+                    } focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]`}
+                    placeholder={field.placeholder}
+                    style={{
+                      color: "#232323",
+                      borderRadius: "3px",
+                    }}
+                    aria-invalid={!!errors[field.name]}
+                  />
+                  {field.icon && field.icon === "location" && (
+                    <img
+                      className="absolute top-4 right-4"
+                      src={LocationIcon}
+                      alt="LocationIcon"
+                    />
+                  )}
+
+                  {field.icon && field.icon === "add" && (
+                    <Tooltip title={field.placeholder}>
+                      <img
+                        className="absolute cursor-pointer top-4 right-4"
+                        onClick={() => handleAction(field.name)}
+                        src={PlusIcon}
+                        alt="PlusIcon"
+                      />
+                    </Tooltip>
+                  )}
+
+                  {errors[field.name] && (
+                    <p className="error" role="alert">
+                      {errors[field.name].message}
+                    </p>
+                  )}
+                </div>
+              ) : field.type === "popup-input" ? (
+                <div className="relative">
+                  <div
+                    className="input-bg h-[60px] w-full mt-2 flex items-center text-[12px] gap-2 cursor-pointer px-6"
+                    style={{ borderRadius: "3px" }}
+                    onClick={() => handleAction(field.name)}
                   >
-                    {field.label}{" "}
-                    <span style={{ color: "red" }}>
-                      {field?.inputRules?.required ? "*" : ""}
-                    </span>
-                  </label>
-                  {field.type === "radio" ? (
-                    <FormControl component="fieldset" className="my-3">
+                    {field?.value &&
+                      field.value.slice(0, 6).map((popupfield) => {
+                        return (
+                          <>
+                            <p className="flex items-center gap-1">
+                              <p
+                                className="flex items-center px-3 py-3"
+                                style={{
+                                  background: "rgba(223, 237, 255, 1)",
+                                  borderRadius: "50%",
+                                }}
+                              ></p>
+                              {popupfield.name ||
+                                `${popupfield.first_name} ${popupfield.last_name}` ||
+                                `${popupfield.full_name}`}
+                            </p>
+                          </>
+                        );
+                      })}
+
+                    {!field?.value &&
+                      stepData[field.name] &&
+                      stepData[field.name].slice(0, 6).map((popupfield) => {
+                        return (
+                          <>
+                            <p className="flex items-center gap-1">
+                              <p
+                                className="flex items-center px-3 py-3"
+                                style={{
+                                  background: "rgba(223, 237, 255, 1)",
+                                  borderRadius: "50%",
+                                }}
+                              ></p>
+                              {popupfield.name ||
+                                `${popupfield.first_name} ${popupfield.last_name}` ||
+                                `${popupfield.full_name}`}
+                            </p>
+                          </>
+                        );
+                      })}
+
+                    {field?.value && field?.value?.length > 6 && (
+                      <p className="flex items-center gap-1">
+                        <p
+                          className="text-white flex items-center px-2 py-1"
+                          style={{
+                            background: "rgb(29, 91, 191)",
+                            borderRadius: "50%",
+                          }}
+                        >
+                          {field?.value?.length - 6}
+                        </p>
+                        Others
+                      </p>
+                    )}
+                  </div>
+                  <input
+                    {...register(field.name, field.inputRules)}
+                    type={field.fieldtype}
+                    className="w-full hidden border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none 
+                                                            focus-visible:outline-none text-[14px] h-[60px]"
+                    placeholder={field.placeholder}
+                    style={{
+                      color: "#232323",
+                      borderRadius: "3px",
+                    }}
+                    aria-invalid={!!errors[field.name]}
+                  />
+                  {field.icon && field.icon === "add" && (
+                    <Tooltip title={field.placeholder}>
+                      <img
+                        className="absolute top-4 right-4 cursor-pointer"
+                        onClick={() => handleAction(field.name)}
+                        src={PlusIcon}
+                        alt="PlusIcon"
+                      />
+                    </Tooltip>
+                  )}
+
+                  {errors[field.name] && (
+                    <p className="error" role="alert">
+                      {errors[field.name].message}
+                    </p>
+                  )}
+                </div>
+              ) : field.type === "dropdown" ? (
+                <>
+                  <select
+                    disabled={disableSelectFields}
+                    {...dropdownimageField}
+                    className={`w-full border-none px-3 py-[0.32rem] leading-[2.15] ${
+                      disableSelectFields ? "bg-slate-300" : "input-bg"
+                    } focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]`}
+                    placeholder={field.placeholder}
+                    style={{
+                      color: "#232323",
+                      borderRadius: "3px",
+                      borderRight: "16px solid transparent",
+                    }}
+                    onChange={(e) => {
+                      dropdownimageField.onChange(e);
+                      if (field.name === "category") {
+                        fetchCategoryData(e.target.value);
+                      }
+                      if (field.name === "environment") {
+                        setToggleRole(
+                          e.target.value === "Own" ? "mentor" : "admin"
+                        );
+                        setCurrent(e.currentTarget.value);
+                      }
+                    }}
+                  >
+                    <option value="">Select</option>
+                    {field.options.map((option, index) => {
+                      return (
+                        <option value={option.key || option.id} key={index}>
+                          {option.value || option.name}
+                        </option>
+                      );
+                    })}
+                  </select>
+                  {errors[field.name] && (
+                    <p className="error" role="alert">
+                      {errors[field.name].message}
+                    </p>
+                  )}
+                </>
+              ) : field.type === "dynamicFields" ? (
+                <>
+                  {/* Dynamic Fields for Sub Programs */}
+
+                  {fields &&
+                    fields.length > 0 &&
+                    fields.map((item, index) => {
+                      return (
+                        <div
+                          key={item.id}
+                          className="border border-[#1D5BBF] rounded mb-3"
+                        >
+                          <div className="flex justify-between px-5 py-4 bg-[#F3F7FC] rounded">
+                            <div className="text-sm font-semibold text=[#1D5BBF]">{`Sub Program-${
+                              index + 1
+                            }`}</div>
+                            <div>
+                              <img
+                                src={DownArrowIcon}
+                                alt="DownArrowIcon"
+                                className="w-4"
+                              />
+                            </div>
+                          </div>
+                          <div
+                            key={item.id}
+                            className="flex flex-wrap justify-between p-4"
+                          >
+                            {field.dynamicFields.map((nestedField) => {
+                              const dateFields =
+                                nestedField === "date"
+                                  ? watch(
+                                      `sub_programs.${index}.${nestedField.name}`
+                                    )
+                                  : undefined;
+                              return (
+                                <div
+                                  key={nestedField.name}
+                                  className={nestedField.width}
+                                >
+                                  <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2 mt-5">
+                                    {nestedField.label}
+                                  </label>
+                                  <div>
+                                    {nestedField.type === "input" ? (
+                                      <input
+                                        {...register(
+                                          `sub_programs.${index}.${nestedField.name}`,
+                                          nestedField.inputRules
+                                        )}
+                                        className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
+                                        placeholder={nestedField.placeholder}
+                                        // aria-invalid={!!errors[nestedField.name]}
+                                      />
+                                    ) : nestedField.type === "textarea" ? (
+                                      <textarea
+                                        rows="4"
+                                        className={`block p-2.5 input-bg w-full text-sm text-gray-900  border focus-visible:outline-none focus-visible:border-none ${
+                                          nestedField.width === "width-82"
+                                            ? "h-[282px]"
+                                            : ""
+                                        }`}
+                                        placeholder={nestedField.placeholder}
+                                        {...register(
+                                          `sub_programs.${index}.${nestedField.name}`,
+                                          nestedField.inputRules
+                                        )}
+                                      ></textarea>
+                                    ) : nestedField.type === "date" ? (
+                                      <div className="relative">
+                                        <Calendar
+                                          value={dateFields}
+                                          className="calendar-control input-bg"
+                                          type={nestedField.type}
+                                          {...register(
+                                            `sub_programs.${index}.${nestedField.name}`,
+                                            nestedField.inputRules
+                                          )}
+                                          onChange={(e) => {
+                                            setValue(
+                                              `sub_programs.${index}.${nestedField.name}`,
+                                              new Date(e.value).toISOString()
+                                            );
+                                          }}
+                                          {...(nestedField.name === "start_date"
+                                            ? {
+                                                minDate: start_date,
+                                                maxDate: end_date,
+                                              }
+                                            : {})}
+                                          {...(nestedField.name === "end_date"
+                                            ? {
+                                                minDate: start_date,
+                                                maxDate: end_date,
+                                              }
+                                            : {})}
+                                          showTime
+                                          hourFormat="12"
+                                          dateFormat="dd/mm/yy"
+                                          ref={(el) => {
+                                            if (
+                                              nestedField.name === "start_date"
+                                            ) {
+                                              startDateRefs.current[index] = el;
+                                            } else if (
+                                              nestedField.name === "end_date"
+                                            ) {
+                                              endDateRefs.current[index] = el;
+                                            }
+                                          }}
+                                        />
+                                        <img
+                                          className="absolute top-5 right-2 cursor-pointer"
+                                          src={CalendarIcon}
+                                          alt="CalendarIcon"
+                                          onClick={() => {
+                                            const ref = getCalendarRef(
+                                              index,
+                                              nestedField.name
+                                            );
+                                            if (ref) {
+                                              ref.show();
+                                            }
+                                          }}
+                                        />
+
+                                        {errors?.sub_programs?.[index] && (
+                                          <p className="error" role="alert">
+                                            {
+                                              errors?.sub_programs?.[index]?.[
+                                                nestedField.name
+                                              ]?.message
+                                            }
+                                          </p>
+                                        )}
+                                      </div>
+                                    ) : nestedField.type === "radio" ? (
+                                      <FormControl
+                                        component="fieldset"
+                                        className={`my-3`}
+                                        error={
+                                          !!errors?.sub_programs?.[index]?.[
+                                            nestedField.name
+                                          ]?.message
+                                        }
+                                      >
+                                        <Controller
+                                          name={`sub_programs.${index}.${nestedField.name}`}
+                                          control={control}
+                                          defaultValue={
+                                            nestedField.options?.[0]?.key ===
+                                              "true" || false
+                                          }
+                                          render={({
+                                            field: nestedcontrollerField,
+                                          }) => (
+                                            <RadioGroup
+                                              {...nestedcontrollerField}
+                                              row
+                                              aria-labelledby="radio-buttons-group"
+                                              value={nestedcontrollerField.value?.toString()}
+                                              onChange={(e) => {
+                                                // Convert string value to boolean before setting
+                                                const boolValue =
+                                                  e.target.value === "true";
+                                                nestedcontrollerField.onChange(
+                                                  boolValue
+                                                );
+                                                setValue(
+                                                  `sub_programs.${index}.${nestedField.name}`,
+                                                  boolValue
+                                                ); // Sync with React Hook Form
+                                              }}
+                                            >
+                                              {nestedField.options.map(
+                                                (option) => (
+                                                  <FormControlLabel
+                                                    key={option.key}
+                                                    value={option.key}
+                                                    control={
+                                                      <Radio
+                                                        checked={
+                                                          nestedcontrollerField.value?.toString() ===
+                                                          option.key
+                                                        }
+                                                        checkedIcon={
+                                                          <CheckBoxIcon />
+                                                        }
+                                                        icon={
+                                                          <CheckBoxOutlineBlankIcon />
+                                                        }
+                                                      />
+                                                    }
+                                                    label={option.value}
+                                                  />
+                                                )
+                                              )}
+                                            </RadioGroup>
+                                          )}
+                                        />
+                                      </FormControl>
+                                    ) : (
+                                      <div
+                                        className="input-bg h-[60px] w-full mt-2 flex items-center relative text-[12px] gap-2 cursor-pointer px-6"
+                                        style={{ borderRadius: "3px" }}
+                                        onClick={() =>
+                                          handleActionPopup(
+                                            `sub_programs.${index}.mentor_id`
+                                          )
+                                        }
+                                      >
+                                        {sub_programs[index].mentor_id && (
+                                          <p className="flex items-center gap-1">
+                                            <p
+                                              className="flex items-center px-3 py-3"
+                                              style={{
+                                                background:
+                                                  "rgba(223, 237, 255, 1)",
+                                                borderRadius: "50%",
+                                              }}
+                                            ></p>
+                                            {
+                                              mentor_assign?.find(
+                                                (mentor) =>
+                                                  mentor?.id ===
+                                                  sub_programs[index].mentor_id
+                                              )?.name
+                                            }
+                                          </p>
+                                        )}
+
+                                        <input
+                                          {...register(
+                                            nestedField.name,
+                                            nestedField.inputRules
+                                          )}
+                                          type={nestedField.fieldtype}
+                                          className="w-full hidden border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none 
+                                                                                                                    focus-visible:outline-none text-[14px] h-[60px]"
+                                          placeholder={nestedField.placeholder}
+                                          style={{
+                                            color: "#232323",
+                                            borderRadius: "3px",
+                                          }}
+                                          aria-invalid={
+                                            !!errors[nestedField.name]
+                                          }
+                                        />
+                                        {nestedField.icon &&
+                                          nestedField.icon === "add" && (
+                                            <Tooltip
+                                              title={nestedField.placeholder}
+                                            >
+                                              <img
+                                                className="absolute top-4 right-4 cursor-pointer"
+                                                onClick={() =>
+                                                  handleActionPopup(
+                                                    `sub_programs.${index}.mentor_id`
+                                                  )
+                                                }
+                                                src={PlusIcon}
+                                                alt="PlusIcon"
+                                              />
+                                            </Tooltip>
+                                          )}
+                                      </div>
+                                    )}
+                                  </div>
+                                  {errors?.sub_programs?.[index]?.[
+                                    nestedField.name
+                                  ]?.message && (
+                                    <p className="error" role="alert">
+                                      {
+                                        errors.sub_programs[index][
+                                          nestedField.name
+                                        ].message
+                                      }
+                                    </p>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      );
+                    })}
+                </>
+              ) : field.type === "textbox" ? (
+                <>
+                  <textarea                    
+                    rows="4"
+                    className={`block p-2.5 input-bg w-full text-sm text-gray-900 border focus-visible:outline-none focus-visible:border-none h-[182px]`}
+                    placeholder={field.placeholder}
+                    {...register(field.name, field.inputRules)}
+                  ></textarea>
+                  {errors[field.name] && (
+                    <p className="error" role="alert">
+                      {errors[field.name].message}
+                    </p>
+                  )}
+                </>
+              ) : field.type === "checkbox" ? (
+                <div className="flex items-center me-4">
+                  {field.options.map((option, index) => (
+                    <div className="flex items-center me-4" key={index}>
+                      <input
+                        type="radio"
+                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                        {...checkbox}
+                        onChange={(e) => {
+                          checkbox.onChange(e);
+                          handleCheckbox(e);
+                        }}
+                        value={option.key}
+                        checked={checkBoxValue[field.name] === option.key}
+                      />
+                      <label className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                        {option.value}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              ) : field.type === "date" ? (
+                <div className="relative">
+                  <Calendar
+                    disabled={disableDateFields}
+                    className={`calendar-control ${
+                      disableDateFields ? "bg-slate-300" : "input-bg"
+                    }`}
+                    {...dateField}
+                    value={getValues(field.name)}
+                    {...(field.name === "start_date"
+                      ? { minDate: new Date() }
+                      : {})}
+                    {...(field.name === "end_date"
+                      ? { minDate: getValues("start_date") }
+                      : {})}
+                    showTime
+                    hourFormat="12"
+                    dateFormat="dd/mm/yy"
+                    ref={(el) => (calendarRef.current[index] = el)}
+                  />
+                  <img
+                    className="absolute top-5 right-2 cursor-pointer"
+                    src={CalendarIcon}
+                    alt="CalendarIcon"
+                    onClick={() => {
+                      calendarRef?.current[index]?.show();
+                    }}
+                  />
+
+                  {errors[field.name] && (
+                    <p className="error" role="alert">
+                      {errors[field.name].message}
+                    </p>
+                  )}
+                </div>
+              ) : field.type === "htmlbuilder" ? (
+                <div
+                  className="input-bg h-[282px] mt-6 flex items-center justify-center text-[12px] flex-col gap-2 cursor-pointer"
+                  style={{ borderRadius: "3px" }}
+                >
+                  <img src={HTMLIcon} alt="HTMLIcon" />
+                  <span>{field.text}</span>
+                </div>
+              ) : field.type === "file" ? (
+                <>
+                  <div className="flex items-center justify-center w-full">
+                    <label
+                      htmlFor={field.name}
+                      className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+                    >
+                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                        <svg
+                          className="w-8 h-8 mb-4 text-gray-200 dark:text-gray-400"
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 20 16"
+                        >
+                          <path
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                          />
+                        </svg>
+                        <p className="mb-2 text-sm text-gray-200 dark:text-gray-400">
+                          <span className="font-semibold">Add Logo/Image</span>
+                        </p>
+                        <p className="text-xs text-gray-200 dark:text-gray-400">
+                          (200*200 Pixels)
+                        </p>
+                      </div>
                       <Controller
                         name={field.name}
                         control={control}
-                        defaultValue={
-                          field.options?.[0]?.key === "true" || false
-                        }
-                        render={({ field: controllerField }) => (
-                          <RadioGroup
-                            {...controllerField}
-                            row
-                            aria-labelledby="radio-buttons-group"
-                            value={controllerField.value?.toString()}
-                            onChange={(e) => {
-                              const boolValue = e.target.value === "true";
-                              controllerField.onChange(boolValue);
-                              setValue(field.name, boolValue);
-                            }}
-                          >
-                            {field.options?.map((option) => (
-                              <FormControlLabel
-                                key={option.key}
-                                value={option.key}
-                                control={
-                                  <Radio
-                                    checked={
-                                      controllerField.value?.toString() ===
-                                      option.key
-                                    }
-                                    checkedIcon={<CheckBoxIcon />}
-                                    icon={<CheckBoxOutlineBlankIcon />}
-                                  />
-                                }
-                                label={option.value}
-                              />
-                            ))}
-                          </RadioGroup>
-                        )}
-                      />
-                    </FormControl>
-                  ) : field.type === "input" ? (
-                    <div className="relative">
-                      <input
-                        disabled={disableFields}
-                        {...register(field.name, field.inputRules)}
-                        type={field.fieldtype}
-                        className={`w-full border-none px-3 py-[0.32rem] leading-[2.15] ${
-                          disableFields ? "bg-slate-300" : "input-bg"
-                        } focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]`}
-                        placeholder={field.placeholder}
-                        style={{
-                          color: "#232323",
-                          borderRadius: "3px",
-                        }}
-                        aria-invalid={!!errors[field.name]}
-                      />
-                      {field.icon && field.icon === "location" && (
-                        <img
-                          className="absolute top-4 right-4"
-                          src={LocationIcon}
-                          alt="LocationIcon"
-                        />
-                      )}
-
-                      {field.icon && field.icon === "add" && (
-                        <Tooltip title={field.placeholder}>
-                          <img
-                            className="absolute cursor-pointer top-4 right-4"
-                            onClick={() => handleAction(field.name)}
-                            src={PlusIcon}
-                            alt="PlusIcon"
-                          />
-                        </Tooltip>
-                      )}
-
-                      {errors[field.name] && (
-                        <p className="error" role="alert">
-                          {errors[field.name].message}
-                        </p>
-                      )}
-                    </div>
-                  ) : field.type === "popup-input" ? (
-                    <div className="relative">
-                      <div
-                        className="input-bg h-[60px] w-full mt-2 flex items-center text-[12px] gap-2 cursor-pointer px-6"
-                        style={{ borderRadius: "3px" }}
-                        onClick={() => handleAction(field.name)}
-                      >
-                        {field?.value &&
-                          field.value.slice(0, 6).map((popupfield) => {
-                            return (
-                              <>
-                                <p className="flex items-center gap-1">
-                                  <p
-                                    className="flex items-center px-3 py-3"
-                                    style={{
-                                      background: "rgba(223, 237, 255, 1)",
-                                      borderRadius: "50%",
-                                    }}
-                                  ></p>
-                                  {popupfield.name ||
-                                    `${popupfield.first_name} ${popupfield.last_name}` ||
-                                    `${popupfield.full_name}`}
-                                </p>
-                              </>
-                            );
-                          })}
-
-                        {!field?.value &&
-                          stepData[field.name] &&
-                          stepData[field.name].slice(0, 6).map((popupfield) => {
-                            return (
-                              <>
-                                <p className="flex items-center gap-1">
-                                  <p
-                                    className="flex items-center px-3 py-3"
-                                    style={{
-                                      background: "rgba(223, 237, 255, 1)",
-                                      borderRadius: "50%",
-                                    }}
-                                  ></p>
-                                  {popupfield.name ||
-                                    `${popupfield.first_name} ${popupfield.last_name}` ||
-                                    `${popupfield.full_name}`}
-                                </p>
-                              </>
-                            );
-                          })}
-
-                        {field?.value && field?.value?.length > 6 && (
-                          <p className="flex items-center gap-1">
-                            <p
-                              className="text-white flex items-center px-2 py-1"
-                              style={{
-                                background: "rgb(29, 91, 191)",
-                                borderRadius: "50%",
-                              }}
-                            >
-                              {field?.value?.length - 6}
-                            </p>
-                            Others
-                          </p>
-                        )}
-                      </div>
-                      <input
-                        {...register(field.name, field.inputRules)}
-                        type={field.fieldtype}
-                        className="w-full hidden border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none 
-                                                            focus-visible:outline-none text-[14px] h-[60px]"
-                        placeholder={field.placeholder}
-                        style={{
-                          color: "#232323",
-                          borderRadius: "3px",
-                        }}
-                        aria-invalid={!!errors[field.name]}
-                      />
-                      {field.icon && field.icon === "add" && (
-                        <Tooltip title={field.placeholder}>
-                          <img
-                            className="absolute top-4 right-4 cursor-pointer"
-                            onClick={() => handleAction(field.name)}
-                            src={PlusIcon}
-                            alt="PlusIcon"
-                          />
-                        </Tooltip>
-                      )}
-
-                      {errors[field.name] && (
-                        <p className="error" role="alert">
-                          {errors[field.name].message}
-                        </p>
-                      )}
-                    </div>
-                  ) : field.type === "dropdown" ? (
-                    <>
-                      <select
-                        disabled={disableSelectFields}
-                        {...dropdownimageField}
-                        className={`w-full border-none px-3 py-[0.32rem] leading-[2.15] ${
-                          disableSelectFields ? "bg-slate-300" : "input-bg"
-                        } focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]`}
-                        placeholder={field.placeholder}
-                        style={{
-                          color: "#232323",
-                          borderRadius: "3px",
-                          borderRight: "16px solid transparent",
-                        }}
-                        onChange={(e) => {
-                          dropdownimageField.onChange(e);
-                          if (field.name === "category") {
-                            fetchCategoryData(e.target.value);
-                          }
-                          if (field.name === "environment") {
-                            setToggleRole(
-                              e.target.value === "Own" ? "mentor" : "admin"
-                            );
-                            setCurrent(e.currentTarget.value);
-                          }
-                        }}
-                      >
-                        <option value="">Select</option>
-                        {field.options.map((option, index) => {
-                          return (
-                            <option value={option.key || option.id} key={index}>
-                              {option.value || option.name}
-                            </option>
-                          );
-                        })}
-                      </select>
-                      {errors[field.name] && (
-                        <p className="error" role="alert">
-                          {errors[field.name].message}
-                        </p>
-                      )}
-                    </>
-                  ) : field.type === "dynamicFields" ? (
-                    <>
-                      {/* Dynamic Fields for Sub Programs */}
-
-                      {fields.map((item, index) => {
-                        return (
-                          <div
-                            key={item.id}
-                            className="border border-[#1D5BBF] rounded mb-3"
-                          >
-                            <div className="flex justify-between px-5 py-4 bg-[#F3F7FC] rounded">
-                              <div className="text-sm font-semibold text=[#1D5BBF]">{`Sub Program-${
-                                index + 1
-                              }`}</div>
-                              <div>
-                                <img
-                                  src={DownArrowIcon}
-                                  alt="DownArrowIcon"
-                                  className="w-4"
-                                />
-                              </div>
-                            </div>
-                            <div
-                              key={item.id}
-                              className="flex flex-wrap justify-between p-4"
-                            >
-                              {field.dynamicFields.map((nestedField) => {
-                                return (
-                                  <div
-                                    key={nestedField.name}
-                                    className={nestedField.width}
-                                  >
-                                    <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2 mt-5">
-                                      {nestedField.label}
-                                    </label>
-                                    <div>
-                                      {nestedField.type === "input" ? (
-                                        <input
-                                          {...register(
-                                            `sub_programs.${index}.${nestedField.name}`,
-                                            nestedField.inputRules
-                                          )}
-                                          className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
-                                          placeholder={nestedField.placeholder}
-                                          // aria-invalid={!!errors[nestedField.name]}
-                                        />
-                                      ) : nestedField.type === "textarea" ? (
-                                        <textarea
-                                          id="message"
-                                          rows="4"
-                                          className={`block p-2.5 input-bg w-full text-sm text-gray-900  border focus-visible:outline-none focus-visible:border-none ${
-                                            nestedField.width === "width-82"
-                                              ? "h-[282px]"
-                                              : ""
-                                          }`}
-                                          placeholder={nestedField.placeholder}
-                                          {...register(
-                                            `sub_programs.${index}.${nestedField.name}`,
-                                            nestedField.inputRules
-                                          )}
-                                        ></textarea>
-                                      ) : nestedField.type === "date" ? (
-                                        <div className="relative">
-                                          <Calendar
-                                            className="calendar-control input-bg"
-                                            type={nestedField.type}
-                                            {...register(
-                                              `sub_programs.${index}.${nestedField.name}`,
-                                              nestedField.inputRules
-                                            )}
-                                            onChange={(e) => {
-                                              setValue(
-                                                `sub_programs.${index}.${nestedField.name}`,
-                                                new Date(e.value).toISOString()
-                                              );
-                                            }}
-                                            {...(nestedField.name ===
-                                            "start_date"
-                                              ? {
-                                                  minDate: start_date,
-                                                  maxDate: end_date,
-                                                }
-                                              : {})}
-                                            {...(nestedField.name === "end_date"
-                                              ? {
-                                                  minDate: start_date,
-                                                  maxDate: end_date,
-                                                }
-                                              : {})}
-                                            showTime
-                                            hourFormat="12"
-                                            dateFormat="dd/mm/yy"
-                                            ref={(el) => {
-                                              if (
-                                                nestedField.name ===
-                                                "start_date"
-                                              ) {
-                                                startDateRefs.current[index] =
-                                                  el;
-                                              } else if (
-                                                nestedField.name === "end_date"
-                                              ) {
-                                                endDateRefs.current[index] = el;
-                                              }
-                                            }}
-                                          />
-                                          <img
-                                            className="absolute top-5 right-2 cursor-pointer"
-                                            src={CalendarIcon}
-                                            alt="CalendarIcon"
-                                            onClick={() => {
-                                              const ref = getCalendarRef(
-                                                index,
-                                                nestedField.name
-                                              );
-                                              if (ref) {
-                                                ref.show();
-                                              }
-                                            }}
-                                          />
-
-                                          {errors?.sub_programs?.[index] && (
-                                            <p className="error" role="alert">
-                                              {
-                                                errors?.sub_programs?.[index]?.[
-                                                  nestedField.name
-                                                ]?.message
-                                              }
-                                            </p>
-                                          )}
-                                        </div>
-                                      ) : nestedField.type === "radio" ? (
-                                        <FormControl
-                                          component="fieldset"
-                                          className={`my-3`}
-                                          error={
-                                            !!errors?.sub_programs?.[index]?.[
-                                              nestedField.name
-                                            ]?.message
-                                          }
-                                        >
-                                          <Controller
-                                            name={`sub_programs.${index}.${nestedField.name}`}
-                                            control={control}
-                                            defaultValue={
-                                              nestedField.options?.[0]?.key ===
-                                                "true" || false
-                                            }
-                                            render={({
-                                              field: nestedcontrollerField,
-                                            }) => (
-                                              <RadioGroup
-                                                {...nestedcontrollerField}
-                                                row
-                                                aria-labelledby="radio-buttons-group"
-                                                value={nestedcontrollerField.value?.toString()}
-                                                onChange={(e) => {
-                                                  // Convert string value to boolean before setting
-                                                  const boolValue =
-                                                    e.target.value === "true";
-                                                  nestedcontrollerField.onChange(
-                                                    boolValue
-                                                  );
-                                                  setValue(
-                                                    `sub_programs.${index}.${nestedField.name}`,
-                                                    boolValue
-                                                  ); // Sync with React Hook Form
-                                                }}
-                                              >
-                                                {nestedField.options.map(
-                                                  (option) => (
-                                                    <FormControlLabel
-                                                      key={option.key}
-                                                      value={option.key}
-                                                      control={
-                                                        <Radio
-                                                          checked={
-                                                            nestedcontrollerField.value?.toString() ===
-                                                            option.key
-                                                          }
-                                                          checkedIcon={
-                                                            <CheckBoxIcon />
-                                                          }
-                                                          icon={
-                                                            <CheckBoxOutlineBlankIcon />
-                                                          }
-                                                        />
-                                                      }
-                                                      label={option.value}
-                                                    />
-                                                  )
-                                                )}
-                                              </RadioGroup>
-                                            )}
-                                          />
-                                        </FormControl>
-                                      ) : (
-                                        <div
-                                          className="input-bg h-[60px] w-full mt-2 flex items-center relative text-[12px] gap-2 cursor-pointer px-6"
-                                          style={{ borderRadius: "3px" }}
-                                          onClick={() =>
-                                            handleActionPopup(
-                                              `sub_programs.${index}.mentor_id`
-                                            )
-                                          }
-                                        >
-                                          {sub_programs[index].mentor_id && (
-                                            <p className="flex items-center gap-1">
-                                              <p
-                                                className="flex items-center px-3 py-3"
-                                                style={{
-                                                  background:
-                                                    "rgba(223, 237, 255, 1)",
-                                                  borderRadius: "50%",
-                                                }}
-                                              ></p>
-                                              {
-                                                mentor_assign?.find(
-                                                  (mentor) =>
-                                                    mentor?.id ===
-                                                    sub_programs[index]
-                                                      .mentor_id
-                                                )?.name
-                                              }
-                                            </p>
-                                          )}
-
-                                          <input
-                                            {...register(
-                                              nestedField.name,
-                                              nestedField.inputRules
-                                            )}
-                                            type={nestedField.fieldtype}
-                                            className="w-full hidden border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none 
-                                                                                                                    focus-visible:outline-none text-[14px] h-[60px]"
-                                            placeholder={
-                                              nestedField.placeholder
-                                            }
-                                            style={{
-                                              color: "#232323",
-                                              borderRadius: "3px",
-                                            }}
-                                            aria-invalid={
-                                              !!errors[nestedField.name]
-                                            }
-                                          />
-                                          {nestedField.icon &&
-                                            nestedField.icon === "add" && (
-                                              <Tooltip
-                                                title={nestedField.placeholder}
-                                              >
-                                                <img
-                                                  className="absolute top-4 right-4 cursor-pointer"
-                                                  onClick={() =>
-                                                    handleActionPopup(
-                                                      `sub_programs.${index}.mentor_id`
-                                                    )
-                                                  }
-                                                  src={PlusIcon}
-                                                  alt="PlusIcon"
-                                                />
-                                              </Tooltip>
-                                            )}
-                                        </div>
-                                      )}
-                                    </div>
-                                    {errors?.sub_programs?.[index]?.[
-                                      nestedField.name
-                                    ]?.message && (
-                                      <p className="error" role="alert">
-                                        {
-                                          errors.sub_programs[index][
-                                            nestedField.name
-                                          ].message
-                                        }
-                                      </p>
-                                    )}
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </>
-                  ) : field.type === "textbox" ? (
-                    <>
-                      <textarea
-                        rows="4"
-                        className={`block p-2.5 input-bg w-full text-sm text-gray-900 border focus-visible:outline-none focus-visible:border-none ${
-                          field.width === "width-82" ? "h-[282px]" : ""
-                        }`}
-                        placeholder={field.placeholder}
-                        {...register(field.name, field.inputRules)}
-                      ></textarea>
-                      {errors[field.name] && (
-                        <p className="error" role="alert">
-                          {errors[field.name].message}
-                        </p>
-                      )}
-                    </>
-                  ) : field.type === "checkbox" ? (
-                    <div className="flex items-center me-4">
-                      {field.options.map((option, index) => (
-                        <div className="flex items-center me-4" key={index}>
+                        defaultValue=""
+                        render={({
+                          field: { onChange, value, ...inputProps },
+                        }) => (
                           <input
-                            type="radio"
-                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                            {...checkbox}
-                            onChange={(e) => {
-                              checkbox.onChange(e);
-                              handleCheckbox(e);
-                            }}
-                            value={option.key}
-                            checked={checkBoxValue[field.name] === option.key}
-                          />
-                          <label className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-                            {option.value}
-                          </label>
-                        </div>
-                      ))}
-                    </div>
-                  ) : field.type === "date" ? (
-                    <div className="relative">
-                      <Calendar
-                        disabled={disableDateFields}
-                        className={`calendar-control ${
-                          disableDateFields ? "bg-slate-300" : "input-bg"
-                        }`}
-                        {...dateField}
-                        value={getValues(field.name)}
-                        {...(field.name === "start_date"
-                          ? { minDate: new Date() }
-                          : {})}
-                        {...(field.name === "end_date"
-                          ? { minDate: getValues("start_date") }
-                          : {})}
-                        showTime
-                        hourFormat="12"
-                        dateFormat="dd/mm/yy"
-                        ref={(el) => (calendarRef.current[index] = el)}
-                      />
-                      <img
-                        className="absolute top-5 right-2 cursor-pointer"
-                        src={CalendarIcon}
-                        alt="CalendarIcon"
-                        onClick={() => {
-                          calendarRef?.current[index]?.show();
-                        }}
-                      />
-
-                      {errors[field.name] && (
-                        <p className="error" role="alert">
-                          {errors[field.name].message}
-                        </p>
-                      )}
-                    </div>
-                  ) : field.type === "htmlbuilder" ? (
-                    <div
-                      className="input-bg h-[282px] mt-6 flex items-center justify-center text-[12px] flex-col gap-2 cursor-pointer"
-                      style={{ borderRadius: "3px" }}
-                    >
-                      <img src={HTMLIcon} alt="HTMLIcon" />
-                      <span>{field.text}</span>
-                    </div>
-                  ) : field.type === "file" ? (
-                    <>
-                      <div className="flex items-center justify-center w-full">
-                        <label
-                          htmlFor={imageField.name}
-                          className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
-                        >
-                          <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                            <svg
-                              className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
-                              aria-hidden="true"
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 20 16"
-                            >
-                              <path
-                                stroke="currentColor"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                              />
-                            </svg>
-                            <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                              <span className="font-semibold">
-                                Add Logo/Image
-                              </span>
-                            </p>
-                            <p className="text-xs text-gray-500 dark:text-gray-400">
-                              (200*200 Pixels)
-                            </p>
-                          </div>
-                          <input
-                            multiple={imageField.name === "image"}
-                            id={imageField.name}
                             type="file"
-                            {...imageField}
+                            id={field.name}
+                            multiple={field.name === "image"}
                             accept="image/png, image/jpeg, image/jpg,image/webp,image/heic"
                             onChange={(e) => {
-                              if (e.target.files && e.target.files[0]) {
-                                let types = [
+                              if (e.target.files && e.target.files.length > 0) {
+                                const fileList = e.target.files; // Keep the FileList object
+                                const allowedTypes = [
                                   "image/png",
                                   "image/jpeg",
                                   "image/jpg",
                                   "image/webp",
                                   "image/heic",
                                 ];
-                                if (types.includes(e.target.files[0].type)) {
-                                  imageField.onChange(e);
-                                  setLogoImage({
-                                    ...logoImage,
-                                    [field.name]: URL.createObjectURL(
-                                      e.target.files[0]
-                                    ),
-                                  });
+
+                                // Validate each file in the FileList
+                                const isValid = Array.from(fileList).every(
+                                  (file) => allowedTypes.includes(file.type)
+                                );
+
+                                if (isValid) {
+                                  onChange(fileList); // Pass the FileList directly
+                                } else {
+                                  console.error(
+                                    "One or more files have an unsupported file type."
+                                  );
                                 }
                               }
                             }}
                             className="hidden"
+                            {...inputProps}
                           />
-                        </label>
-                      </div>
-                      {getValues(field.name)?.length > 0 && (
-                        <>
-                          <div
-                            className="text-[14px] pt-5"
-                            style={{ color: "rgba(0, 0, 0, 1)" }}
-                          >
-                            Uploaded Image{" "}
-                          </div>
+                        )}
+                      />
+                    </label>
+                  </div>
+                  {watchFile &&
+                    typeof watchFile === "object" &&
+                    watchFile[0]?.name && (
+                      <>
+                        <div
+                          className="text-[14px] pt-5"
+                          style={{ color: "rgba(0, 0, 0, 1)" }}
+                        >
+                          Uploaded Image{" "}
+                        </div>
 
-                          <div
-                            className="flex justify-between items-center w-[30%] mt-5 px-4 py-4"
-                            style={{
-                              border: "1px solid rgba(29, 91, 191, 0.5)",
-                              borderRadius: "3px",
-                            }}
-                          >
-                            <div className="flex w-[80%] gap-3 items-center">
-                              <img src={UploadIcon} alt="altlogo" />
-                              <span className="text-[12px]">
-                                {getValues(field.name) &&
-                                  getValues(field.name)[0]?.name}
-                                {params.id && imageName}
-                              </span>
-                            </div>
-                            <img
-                              className="w-[30px] cursor-pointer"
-                              onClick={() => handleDeleteImage(field.name)}
-                              src={DeleteIcon}
-                              alt="DeleteIcon"
-                            />
+                        <div
+                          className="flex justify-between items-center w-[30%] mt-5 px-4 py-4"
+                          style={{
+                            border: "1px solid rgba(29, 91, 191, 0.5)",
+                            borderRadius: "3px",
+                          }}
+                        >
+                          <div className="flex w-[80%] gap-3 items-center">
+                            <img src={UploadIcon} alt="altlogo" />
+                            <span className="text-[12px]">
+                              {getValues(field.name) &&
+                                getValues(field.name)[0]?.name}
+                              {params.id && imageName}
+                            </span>
                           </div>
-                        </>
-                      )}
-                      {errors[field.name] && (
-                        <p className="error" role="alert">
-                          {errors[field.name].message}
-                        </p>
-                      )}
-                    </>
-                  ) : null}
-                </div>
-              );
-            })}
-          </div>
-          <MuiModal
-            modalSize="lg"
-            modalOpen={!!currentField}
-            modalClose={() => setCurrentField("")}
-            noheader
-          >
-            <DataTable
-              rows={mentor_assign}
-              columns={MentorAssignColumns}
-              footerAction={() => setCurrentField("")}
-              footerComponent={(props) =>
-                mentorFooterComponent(props, currentField)
-              }
-            />
-          </MuiModal>
-          <div className="flex gap-6 justify-center align-middle">
-            {currentStep === 1 && (
-              <Button
-                btnName="Cancel"
-                btnCategory="secondary"
-                onClick={() => {
-                  if (currentOption !== "own") {
-                    navigate("/programs");
-                  }
-                  setToggleRole("admin");
-                  reset();
-                }}
-              />
-            )}
-            {currentStep > 1 && (
-              <Button
-                btnName="Back"
-                btnCategory="secondary"
-                onClick={handlePreviousStep}
-              />
-            )}
-            {currentStep === totalSteps && (
-              <Button
-                btnType="button"
-                onClick={handleDraft}
-                btnStyle={{
-                  background: "#787575",
-                  color: "#000",
-                }}
-                btnCls="w-[150px]"
-                btnName={"Save as Draft"}
-                btnCategory="primary"
-              />
-            )}
-            {/* {(currentStep !== '' &&
-                            (!Object.keys(programDetails).length)) || (Object.keys(programDetails).length && programDetails.status === 'draft') ? <Button btnType="button" onClick={handleDraft} btnStyle={{ background: 'rgba(197, 197, 197, 1)', color: '#000' }}
-                                btnCls="w-[150px]" btnName={'Save as Draft'} btnCategory="primary" /> : null} */}
-
-            <Button
-              btnType="submit"
-              id={"program-submit"}
-              btnCls="w-[100px]"
-              btnName={currentStep === totalSteps ? "Submit" : "Next"}
-              btnCategory="primary"
-            />
-          </div>
-        </form>
+                          <img
+                            className="w-[30px] cursor-pointer"
+                            onClick={() => handleDeleteImage(field.name)}
+                            src={DeleteIcon}
+                            alt="DeleteIcon"
+                          />
+                        </div>
+                      </>
+                    )}
+                  {errors[field.name] && (
+                    <p className="error" role="alert">
+                      {errors[field.name].message}
+                    </p>
+                  )}
+                </>
+              ) : null}
+            </div>
+          );
+        })}
       </div>
-    </>
+      <MuiModal
+        modalSize="lg"
+        modalOpen={!!currentField}
+        modalClose={() => setCurrentField("")}
+        noheader
+      >
+        <DataTable
+          rows={mentor_assign}
+          columns={MentorAssignColumns}
+          footerAction={() => setCurrentField("")}
+          footerComponent={(props) =>
+            mentorFooterComponent(props, currentField)
+          }
+        />
+      </MuiModal>
+    </div>
   );
 };
 

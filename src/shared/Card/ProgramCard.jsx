@@ -240,32 +240,32 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                                                 <div className="py-6 px-7 border-b-2 relative">
                                                     <div className="h-full relative" style={{ borderRadius: '10px' }}>
                                                         {
-                                                        currentProgram?.program_image ? 
-                                                        <img className="object-cover w-full h-[150px] cursor-pointer" src={currentProgram.program_image} alt="Program Logo"
-                                                            onMouseEnter={() => setHoverIndex({ ...hoverIndex, image: index })} onMouseLeave={() => setHoverIndex({ ...hoverIndex, image: null })}
-                                                        />
-                                                        :                                                            
-                                                            <div
-                                                                style={{
-                                                                    position: "relative",
-                                                                    display: "inline-block",
-                                                                }}
-                                                            >
-                                                                <img src={NoProgramImageBg} alt="Background" />
+                                                            currentProgram?.program_image ?
+                                                                <img className="object-cover w-full h-[150px] cursor-pointer" src={currentProgram.program_image} alt="Program Logo"
+                                                                    onMouseEnter={() => setHoverIndex({ ...hoverIndex, image: index })} onMouseLeave={() => setHoverIndex({ ...hoverIndex, image: null })}
+                                                                />
+                                                                :
                                                                 <div
                                                                     style={{
-                                                                        position: "absolute",
-                                                                        top: "50%",
-                                                                        left: "50%",
-                                                                        transform: "translate(-50%, -50%)",
-                                                                        display: "flex",
-                                                                        alignItems: "center",
-                                                                        justifyContent: "center",
+                                                                        position: "relative",
+                                                                        display: "inline-block",
                                                                     }}
                                                                 >
-                                                                    <img src={NoProgramImageIcon} alt="Icon" />
+                                                                    <img src={NoProgramImageBg} alt="Background" />
+                                                                    <div
+                                                                        style={{
+                                                                            position: "absolute",
+                                                                            top: "50%",
+                                                                            left: "50%",
+                                                                            transform: "translate(-50%, -50%)",
+                                                                            display: "flex",
+                                                                            alignItems: "center",
+                                                                            justifyContent: "center",
+                                                                        }}
+                                                                    >
+                                                                        <img src={NoProgramImageIcon} alt="Icon" />
+                                                                    </div>
                                                                 </div>
-                                                            </div>
                                                         }
                                                         {
                                                             (currentProgram.program_edit && !programImageRestirct.includes(currentProgram.status)) &&
@@ -293,8 +293,8 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                                                                 style={{ border: '1px solid rgba(238, 238, 238, 1)' }}>{currentProgram?.categories[0]?.name}</p>
                                                         }
                                                     </div>
-                                                    <div className='cursor-pointer flex justify-between'
-                                                        onClick={() => navigate(`/update-program/${currentProgram.id}`)}
+                                                    <div className={`${currentProgram?.program_edit ? "cursor-pointer" : "cursor-default"} flex justify-between`}
+                                                        onClick={() => currentProgram?.program_edit ? navigate(`/update-program/${currentProgram.id}`) : undefined}
                                                         onMouseOver={() => setHoverIndex({ ...hoverIndex, desc: index })} onMouseLeave={() => setHoverIndex({ ...hoverIndex, desc: null })}>
 
                                                         <span className="text-[12px] line-clamp-2 ">{currentProgram.description}</span>

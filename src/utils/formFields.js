@@ -1843,7 +1843,7 @@ export const AboutProgramFields = [
     inputRules: {
       required: 'This field is required',
     },
-    width: 'width-82',
+    width: 'w-full',
     for: ['mentor'],
   },
   // {

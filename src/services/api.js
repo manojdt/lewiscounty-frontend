@@ -1,14 +1,31 @@
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
 let refresh = false;
 
-// const baseUrl = "http://192.168.3.169:8000/api/";
-// const baseUrl = "http://192.168.3.56:8000/api/";
-
 const baseUrl = `${process.env.REACT_APP_BASE_URL}/api/`
 
-// const baseUrl = "https://b989-122-161-20-101.ngrok-free.app/api/"
+// const baseUrl = "https://62f8-202-83-25-55.ngrok-free.app/api/"
+
+
+export const rtkQueryApiServices = createApi({
+  reducerPath: 'rtkQueryApiServices',
+  baseQuery: fetchBaseQuery({
+    baseUrl,
+    prepareHeaders: (headers) => {
+      const token = localStorage.getItem('access_token');
+  
+      if (token) {
+        headers.set('Authorization', `Bearer ${token}`);
+      }
+  
+      return headers;
+    },
+  }),
+  tagTypes: [], // Define the necessary tags
+  endpoints: () => ({}),
+});
 
 const api = axios.create({
   baseURL: baseUrl,

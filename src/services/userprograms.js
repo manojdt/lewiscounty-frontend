@@ -165,7 +165,7 @@ export const getProgramDetails = createAsyncThunk(
     async (data) => {
         const { id, role } = data
 
-        const getDetailsofProgram = await api.get(role ? `program/admin-program/${id}` : `programs/${id}`);
+        const getDetailsofProgram = await api.get(role === "admin" ? `program/admin-program/${id}` : `programs/${id}`);
         if (getDetailsofProgram.status === 200 && getDetailsofProgram.data && getDetailsofProgram.data) {
             return getDetailsofProgram.data;
         }

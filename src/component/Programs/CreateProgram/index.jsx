@@ -38,13 +38,24 @@ import SuccessIcon from "../../../assets/images/Success_tic1x.png";
 import FailedIcon from "../../../assets/images/cancel3x.png";
 import ToastNotification from "../../../shared/Toast";
 import { getProgramDetails } from "../../../services/userprograms";
+import { FormProvider, useForm } from "react-hook-form";
+import { Button } from "../../../shared";
+import {
+  useCreateProgramMutation,
+  useUpdateProgramMutation,
+  useValidateProgramNameQuery,
+  useGetProgramDetailsByIdQuery,
+} from "../../../features/program/programApi.services";
 
 export default function CreatePrograms() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const params = useParams();
   const userInfo = useSelector((state) => state.userInfo);
+  const params = useParams();
   const [loading, setLoading] = useState({ create: false, success: false });
+  const [currentStep, setCurrentStep] = useState(1);
+
+  const role = userInfo.data.role || "";
   const {
     allPrograms,
     category,
@@ -57,12 +68,41 @@ export default function CreatePrograms() {
     status,
   } = useSelector((state) => state.programInfo);
 
-  const {
-    programdetails,
-    loading: programLoading,
-    status: userProgramStatus,
-  } = useSelector((state) => state.userPrograms);
-  const [currentStep, setCurrentStep] = useState(1);
+  const methods = useForm({
+    defaultValues:
+      role === "admin" ? { no_of_subprograms: 1, sub_programs: [] } : undefined,
+  });
+
+  const { handleSubmit, reset, setValue, watch } = methods;
+  const { data: currentProgramDetail, isLoading: isDetailFetching } =
+    useGetProgramDetailsByIdQuery({ id: params.id }, { skip: !params?.id });
+  // const [program_name] = watch(["program_name"]);
+  // const { data: validationData, isFetching } = useValidateProgramNameQuery(
+  //   {
+  //     program_name,
+  //     program_id: params?.id,
+  //   },
+  //   {
+  //     refetchOnMountOrArgChange: true,
+  //     // Only run the query when we're on step 1, user is mentor, and it's a new program
+  //     skip: !(
+  //       currentStep === 1 &&
+  //       role === "mentor" &&
+  //       !params?.id &&
+  //       program_name
+  //     ),
+  //   }
+  // );
+  // console.log("validationData", validationData);
+  const [
+    createProgram,
+    { isLoading: isProgramCreating, isSuccess: isProgramCreated },
+  ] = useCreateProgramMutation();
+  const [
+    updateProgram,
+    { isLoading: isProgramUpdating, isSuccess: isProgramUpdated },
+  ] = useUpdateProgramMutation();
+
   const [stepData, setStepData] = useState({});
   const [actionModal, setActionModal] = useState("");
   const [programAllFields, setProgramAllFields] = useState(ProgramFields);
@@ -78,7 +118,6 @@ export default function CreatePrograms() {
   const [logo, setLogo] = useState({});
   const [stepWiseData, setStepWiseData] = useState({});
   const [programApiStatus, setProgramApiStatus] = useState("");
-  const [updateProgramInfo, setUpdateProgramInfo] = useState(false);
 
   const [viewDetails, setViewDetails] = useState({
     material: false,
@@ -97,7 +136,6 @@ export default function CreatePrograms() {
 
   const resetViewInfo = { material: false, skills: false, certificate: false };
 
-  const role = userInfo.data.role || "";
   const [toggleRole, setToggleRole] = useState("");
   const filteredProgramTabs = ProgramTabs.filter((tab) => {
     // Exclude "program_testimonials" if role is "admin"
@@ -117,9 +155,7 @@ export default function CreatePrograms() {
     // }
   };
 
-  const handleNextStep = (data, stData) => {
-    setStepWiseData(stData);
-
+  const handleNextStep = async (data, stData) => {
     // Get the current step's allowed fields
     let currentStepField = ProgramFields[currentStep - 1];
 
@@ -190,7 +226,6 @@ export default function CreatePrograms() {
     }
 
     setStepData(fieldData);
-
     const totalSteps = filteredProgramTabs.length;
     if (currentStep === 1 && role === "mentor" && !params?.id) {
       dispatch(
@@ -280,7 +315,7 @@ export default function CreatePrograms() {
           setProgramApiStatus(status);
 
           if (params?.id) {
-            if (programdetails.status === "draft" && status !== "draft") {
+            if (currentProgramDetail.status === "draft" && status !== "draft") {
               bodyFormData.append("status", "create");
             }
             if (typeof fieldData?.program_image === "string") {
@@ -290,24 +325,20 @@ export default function CreatePrograms() {
               bodyFormData.delete("image");
             }
             // bodyFormData.append("program_id", params?.id);
-            dispatch(
-              editUpdateProgram({
-                program_id: params?.id,
-                bodyFormData,
-                role: toggleRole === "admin" ? toggleRole : "",
-              })
-            );
+            await updateProgram({
+              program_id: params?.id,
+              bodyFormData,
+              role: toggleRole === "admin" ? toggleRole : "",
+            });
           } else {
             if (toggleRole === "admin") {
               bodyFormData.append("status", "started");
             }
             bodyFormData.append("program_admin", userInfo.data?.user_id);
-            dispatch(
-              createNewPrograms({
-                bodyFormData,
-                role: toggleRole === "admin" ? toggleRole : "",
-              })
-            );
+            await createProgram({
+              bodyFormData,
+              role: toggleRole === "admin" ? toggleRole : "",
+            });
           }
         } else {
           setTabActionInfo({ ...tabActionInfo, error: true });
@@ -372,21 +403,15 @@ export default function CreatePrograms() {
   };
 
   const handleAddPopupData = (key, value) => {
-    if (value.length) {
-      // First, get current step data to ensure we have the latest state
-      setStepData((currentStepData) => {
-        // Ensure we keep all existing category fields and their values
-        const existingCategories = currentStepData.categories || [];
-
-        return {
-          ...currentStepData, // Keep all existing fields
-          categories: existingCategories, // Explicitly preserve categories
-          [key]: value, // Update learning_materials
-        };
-      });
-
-      updateFormFields(key, value, currentStep - 1);
-      setActionModal("");
+    try {
+      if (value.length) {
+        setValue(key, value);
+        updateFormFields(key, value, currentStep - 1);
+        setActionModal("");
+      }
+    } catch (error) {
+      console.error("Error updating form value:", error);
+      // Handle error appropriately
     }
   };
 
@@ -694,7 +719,9 @@ export default function CreatePrograms() {
   }, []);
 
   useEffect(() => {
-    setToggleRole(role);
+    if (role) {
+      setToggleRole(role);
+    }
     if (role === "mentee") navigate("/programs");
   }, [role]);
 
@@ -776,18 +803,17 @@ export default function CreatePrograms() {
 
   useEffect(() => {
     if (
-      status === programStatus.create ||
+      isProgramCreated ||
       status === programStatus.exist ||
       status === programStatus.error ||
-      status === programStatus.update
+      isProgramUpdated
     ) {
       setTimeout(() => {
         dispatch(updateNewPrograms({ status: "" }));
-        if (status === programStatus.create || status === programStatus.update)
-          navigate("/dashboard");
+        if (isProgramCreated || isProgramUpdated) navigate("/dashboard");
       }, [3000]);
     }
-  }, [status]);
+  }, [isProgramCreated, isProgramUpdated, status]);
 
   useEffect(() => {
     if (tabActionInfo.error) {
@@ -799,8 +825,8 @@ export default function CreatePrograms() {
 
   useEffect(() => {
     if (
-      programdetails &&
-      Object.keys(programdetails).length &&
+      currentProgramDetail &&
+      Object.keys(currentProgramDetail).length &&
       params.id !== ""
     ) {
       let stepListData = {};
@@ -810,39 +836,45 @@ export default function CreatePrograms() {
         let stepField = {};
         field.forEach((fl, i) => {
           let currentField = fl.name;
-          let currentFieldValue = programdetails[currentField];
+          let currentFieldValue = currentProgramDetail[currentField];
 
+          // Handle special cases
           if (
             currentField === "category" &&
-            programdetails.categories?.length
+            currentProgramDetail.categories?.length
           ) {
-            currentFieldValue = programdetails.categories[0]?.id;
-            fetchCategoryData(programdetails.categories[0]?.id);
+            currentFieldValue = currentProgramDetail.categories[0]?.id;
+            fetchCategoryData(currentProgramDetail.categories[0]?.id);
           }
 
           if (currentField === "start_date" || currentField === "end_date") {
-            currentFieldValue = new Date(programdetails[currentField]);
+            currentFieldValue = new Date(currentProgramDetail[currentField]);
           }
 
           if (
-            currentField === "mentee_upload_certificates" ||
-            currentField === "group_chat_requirement" ||
-            currentField === "individual_chat_requirement"
+            [
+              "mentee_upload_certificates",
+              "group_chat_requirement",
+              "individual_chat_requirement",
+            ].includes(currentField)
           ) {
-            currentFieldValue = programdetails[currentField] ? "true" : "false";
+            currentFieldValue = currentProgramDetail[currentField] ? "true" : "false";
           }
 
           if (currentField === "certificates") {
-            currentFieldValue = programdetails["certifications"];
+            currentFieldValue = currentProgramDetail["certifications"];
           }
 
           if (currentField === "testimonial_type") {
-            currentFieldValue = programdetails["testimonial_types"];
+            currentFieldValue = currentProgramDetail["testimonial_types"];
           }
 
           if (currentField === "program_image") {
-            currentFieldValue = programdetails["program_image"];
+            currentFieldValue = currentProgramDetail["program_image"];
           }
+
+          // Set value in React Hook Form
+          setValue(currentField, currentFieldValue);
 
           stepField[currentField] = currentFieldValue;
         });
@@ -852,23 +884,32 @@ export default function CreatePrograms() {
 
       setStepData(data);
 
-      setTimeout(() => {
-        setUpdateProgramInfo(false);
-      }, 1000);
+    
     }
-  }, [programdetails]);
+  }, [currentProgramDetail]);
+
+  const handleDraft = () => {
+    setValue("status", "draft");
+    document.getElementById("program-submit").click();
+  };
+  const onSubmit = (data) => {
+    // setStepWiseData(combinedData);
+    setStepWiseData((prevStData) => {
+      const newStepData = {
+        ...prevStData,
+        [currentStep]: { ...prevStData[currentStep], ...data },
+      };
+      return newStepData;
+    });
+    handleNextStep(data);
+    // reset();
+  };
 
   useEffect(() => {
-    if (params.id) {
-      setUpdateProgramInfo(true);
-      dispatch(
-        getProgramDetails({
-          id: params.id,
-          role: toggleRole === "admin" ? toggleRole : "",
-        })
-      );
-    }
-  }, [params]);
+    const sub = watch((values) => console.log("values", values));
+
+    return () => sub.unsubscribe();
+  }, [watch]);
 
   return (
     <div className="dashboard-content px-8 mt-10">
@@ -903,37 +944,38 @@ export default function CreatePrograms() {
           />
         )}
 
-        {/* <Backdrop
+        {/* {validationData && validationData?.is_available && (
+          <ToastNotification
+            openToaster={validationData && validationData?.is_available}
+            message={validationData?.message}
+            handleClose={handleClose}
+            toastType={"error"}
+          />
+        )} */}
+
+        <Backdrop
           sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={
-            loading.create ||
-            apiLoading ||
-            status === programStatus.create ||
-            status === programStatus.exist ||
-            status === programStatus.error ||
-            programLoading ||
-            updateProgramInfo ||
+            isProgramCreating ||
+            isProgramUpdating ||
+            isDetailFetching ||
             status === programStatus.update
           }
         >
-          {loading.create ||
-          apiLoading ||
-          programLoading ||
-          updateProgramInfo ? (
+          {isProgramCreating || isProgramUpdating || isDetailFetching ? (
             <CircularProgress color="inherit" />
           ) : null}
 
-          {status === programStatus.create ||
+          {isProgramCreated ||
           status === programStatus.exist ||
           status === programStatus.error ||
-          status === programStatus.update ? (
+          isProgramUpdated ? (
             <div className="w-2/6 bg-white flex flex-col gap-4 h-[330px] justify-center items-center">
               <img
                 src={
                   status === programStatus.exist
                     ? FailedIcon
-                    : status === programStatus.create ||
-                      status === programStatus.update
+                    : isProgramCreated || isProgramUpdated
                     ? SuccessIcon
                     : FailedIcon
                 }
@@ -947,16 +989,16 @@ export default function CreatePrograms() {
                   : `Program ${
                       programApiStatus === "draft"
                         ? "Drafed"
-                        : status === programStatus.update
+                        : isProgramUpdated
                         ? "Updated"
                         : "Created"
                     } Successfully!`}
               </span>
             </div>
           ) : null}
-        </Backdrop> */}
+        </Backdrop>
 
-        {!updateProgramInfo && (
+        {!isDetailFetching && (
           <div className="px-8 py-4">
             <div className="flex gap-3">
               {filteredProgramTabs.map((actionBtn, index) => (
@@ -982,24 +1024,74 @@ export default function CreatePrograms() {
                 </Tooltip>
               ))}
             </div>
-            <ProgramSteps
-              setToggleRole={setToggleRole}
-              setCurrent={setCurrent}
-              currentOption={current}
-              stepData={stepData}
-              currentStepData={
-                stepData[filteredProgramTabs[currentStep - 1].key]
-              }
-              stepFields={programAllFields[currentStep - 1]}
-              currentStep={currentStep}
-              handleNextStep={handleNextStep}
-              handlePreviousStep={handlePreviousStep}
-              handleAction={handleAction}
-              totalSteps={filteredProgramTabs.length}
-              fetchCategoryData={fetchCategoryData}
-              programDetails={programdetails}
-              mentor_assign={mentor_assign}
-            />
+            <FormProvider {...methods}>
+              <form id={"program-submit"} onSubmit={handleSubmit(onSubmit)}>
+                <div className="py-9">
+                  <ProgramSteps
+                    currentStepData={
+                      stepData[filteredProgramTabs[currentStep - 1].key]
+                    }
+                    setCurrent={setCurrent}
+                    setToggleRole={setToggleRole}
+                    fetchCategoryData={fetchCategoryData}
+                    handleAction={handleAction}
+                    stepData={stepData}
+                    stepFields={programAllFields[currentStep - 1]}
+                    mentor_assign={mentor_assign}
+                  />
+                </div>
+                <div className="flex gap-6 justify-center align-middle">
+                  {currentStep === 1 && (
+                    <Button
+                      btnName="Cancel"
+                      btnCategory="secondary"
+                      onClick={() => {
+                        if (current !== "own") {
+                          navigate("/programs");
+                        }
+                        setToggleRole("admin");
+                        reset();
+                      }}
+                    />
+                  )}
+                  {currentStep > 1 && (
+                    <Button
+                      btnName="Back"
+                      btnCategory="secondary"
+                      onClick={handlePreviousStep}
+                    />
+                  )}
+                  {currentStep === filteredProgramTabs.length && (
+                    <Button
+                      btnType="button"
+                      onClick={handleDraft}
+                      btnStyle={{
+                        background: "#787575",
+                        color: "#000",
+                      }}
+                      btnCls="w-[150px]"
+                      btnName={"Save as Draft"}
+                      btnCategory="primary"
+                    />
+                  )}
+                  {/* {(currentStep !== '' &&
+                            (!Object.keys(programDetails).length)) || (Object.keys(programDetails).length && programDetails.status === 'draft') ? <Button btnType="button" onClick={handleDraft} btnStyle={{ background: 'rgba(197, 197, 197, 1)', color: '#000' }}
+                                btnCls="w-[150px]" btnName={'Save as Draft'} btnCategory="primary" /> : null} */}
+
+                  <Button
+                    btnType="submit"
+                    id={"program-submit"}
+                    btnCls="w-[100px]"
+                    btnName={
+                      currentStep === filteredProgramTabs.length
+                        ? "Submit"
+                        : "Next"
+                    }
+                    btnCategory="primary"
+                  />
+                </div>
+              </form>
+            </FormProvider>
           </div>
         )}
 

@@ -134,45 +134,38 @@ export default function ProgramDetails() {
     const url = `${process.env.REACT_APP_SITE_URL}/program-details/${params.id}`;
     const state = useLocation()?.state;
 
-  const tabs = [
-    {
-      name: 'About Program',
-      key: 'about_program',
-    },
-    {
-      name: 'Program Outcomes',
-      key: 'program_outcomes',
-    },
-    {
-      name: 'Program Testimonials',
-      key: 'program_testimonials',
-    },
-  ];
-const reqStatus = {
-    approved:'Approved',
-    rejected:'Rejected',
-    new:'New',
-}
-const reqStatusColor = {
-    approved:{ background:'#16B681',
-      borderRadius: '5px',
-      width: '30%',
-      cursor: 'not-allowed'},
-    rejected:{ border: '1px solid #E0382D',
-      borderRadius: '5px',
-      color: '#E0382D',
-       width: '30%',
-      cursor: 'not-allowed'},
-    // new:'#16B681',
-}
-  const requestId = searchParams.get('request_id') || '';
-  const requestStatusParams = searchParams.get('status') || '';
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-    reset,
-  } = useForm();
+    const tabs = [
+        {
+            name: 'About Program',
+            key: 'about_program',
+        },
+        {
+            name: 'Program Outcomes',
+            key: 'program_outcomes',
+        },
+        {
+            name: 'Program Testimonials',
+            key: 'program_testimonials',
+        },
+    ];
+    const reqStatus = {
+        approved: 'Approved',
+        rejected: 'Rejected',
+        new: 'New',
+    }
+    const reqStatusColor = {
+        approved: '#16B681',
+        rejected: '#E0382D',
+        new: '#16B681',
+    }
+    const requestId = searchParams.get('request_id') || '';
+    const requestStatusParams = searchParams.get('status') || '';
+    const {
+        register,
+        formState: { errors },
+        handleSubmit,
+        reset,
+    } = useForm();
 
     const participatedTabs = [
         {
@@ -205,35 +198,23 @@ const reqStatusColor = {
 
     const handleJoinProgram = async (programId) => {
         if (role === 'mentee' && !userdetails?.data?.is_registered) {
-          navigate(`/questions?program_id=${programdetails.id}`)
+            navigate(`/questions?program_id=${programdetails.id}`)
         }
         else if (role === 'mentee' && !userdetails?.data?.document_upload) {
-          navigate(`/mentee-doc-upload/${programdetails.id}`)
+            navigate(`/mentee-doc-upload/${programdetails.id}`)
         } else {
-          // setLoading({ initial: true, join: false })
-          // const joinProgramAction = await api.post('join_program', { id: programId });
-          // if (joinProgramAction.status === 200 && joinProgramAction.data) {
-          //     setLoading({ initial: false, join: role === 'mentee' })
-          // if (role === 'mentor' || role === "mentee" || role === "admin") {
-          //     dispatch(launchProgram({ program: programId, request_type: "program_join" })).then((res) => {
-          //         if (res?.meta?.requestStatus === "fulfilled") {
-          //             dispatch(getSpecificProgramDetails({ id: params?.id, requestId: requestId }))
-          //         }
-          //     })
-          // }
-          // }
-          dispatch(
-            launchProgram({ program: programId, request_type: 'program_join' })
-          ).then((res) => {
-            if (res?.meta?.requestStatus === 'fulfilled') {
-              dispatch(
-                getSpecificProgramDetails({ id: params?.id, requestId: requestId })
-              );
-            }
-          });
+            dispatch(
+                launchProgram({ program: programId, request_type: 'program_join' })
+            ).then((res) => {
+                if (res?.meta?.requestStatus === 'fulfilled') {
+                    dispatch(
+                        getSpecificProgramDetails({ id: params?.id, requestId: requestId })
+                    );
+                }
+            });
         }
-    
-      };
+
+    };
 
     const handleAcceptProgram = () => {
         dispatch(
@@ -538,7 +519,7 @@ const reqStatusColor = {
         const programId = params.id;
         if (programId && programId !== '') {
             dispatch(
-                getSpecificProgramDetails({ id: programId, requestId: requestId })
+                getSpecificProgramDetails({ id: programId, requestId: requestId }) //mark
             );
             if (role === 'mentee') {
                 dispatch(getMenteeJoinedInProgram({ id: programId }));
@@ -1384,7 +1365,7 @@ const reqStatusColor = {
                                             />
                                             Share
                                         </MenuItem>
-                                        {!requestStatusParams&&!['yettoapprove', 'completed'].includes(
+                                        {!requestStatusParams && !['yettoapprove', 'completed'].includes(
                                             programdetails?.status
                                         ) &&
                                             role !== 'admin' && (
@@ -1401,7 +1382,7 @@ const reqStatusColor = {
                                                 </MenuItem>
                                             )}
 
-                                        {!requestStatusParams&&!['yettoapprove', 'completed'].includes(
+                                        {!requestStatusParams && !['yettoapprove', 'completed'].includes(
                                             programdetails?.status
                                         ) &&
                                             role !== 'admin' && (
@@ -1527,18 +1508,20 @@ const reqStatusColor = {
                                             </span>
                                         )}
                                     </div>
-                                    {requestStatusParams&&role==="mentor" && 
-                    <div className='py-9'>
-                      <div
-                        className='py-3 px-16 text-white text-[14px] flex justify-center items-center'
-                        style={{
-                         ...reqStatusColor[programdetails?.request_data?.status],
-                        }}
-                      >
-                        {reqStatus[programdetails?.request_data?.status]}
-                      </div>
-                    </div>
-                   } 
+                                    {requestStatusParams && role === "mentor" &&
+                                        <div className='py-9'>
+                                            <div
+                                                className='py-3 px-16 text-white text-[14px] flex justify-center items-center'
+                                                style={{
+                                                    background: reqStatusColor[programdetails?.request_data?.status],
+                                                    borderRadius: '5px',
+                                                    width: '30%',
+                                                }}
+                                            >
+                                                {reqStatus[programdetails?.request_data?.status]}
+                                            </div>
+                                        </div>
+                                    }
                                     {programdetails.status === 'yettoapprove' && programdetails?.admin_program && role === "mentor" && (
                                         <button
                                             className='py-3 px-16 text-white mt-4'
@@ -1619,30 +1602,10 @@ const reqStatusColor = {
                                         !programCancelled.includes(programdetails.status) ? (
                                         <>
                                             {
-                                                // requestId !== '' && programdetails.mentor_join_request_status !== 'accept' && programdetails.mentor_join_request_status !== 'cancel'
-                                                // ((programdetails.status === "yettoapprove" || programdetails.status === "inprogress")) ?
-                                                //     <div className='flex gap-4 pt-10'>
-                                                //         <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                //             border: "1px solid #E0382D",
-                                                //             borderRadius: '5px',
-                                                //             color: '#E0382D'
-                                                //         }}
-                                                //             onClick={() => handleMenteeAcceptCancelRequest('reject', requestId)}
-                                                //         >Reject Request
-                                                //         </button>
-                                                //         <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                //             background: "#16B681",
-                                                //             borderRadius: '5px'
-                                                //         }}
-                                                //             onClick={() => handleMenteeAcceptCancelRequest('approve', requestId)}
-                                                //         >Approve Request
-                                                //         </button>
-                                                //     </div>
-                                                //     :
 
                                                 requestId !== '' ? (
                                                     <>
-                                                        {programdetails.status === 'accept' && (
+                                                        {(programdetails.status === 'accept' || programdetails?.request_data?.status === "approved") && (
                                                             <button
                                                                 className='py-3 px-16 mt-7 text-white text-[14px] flex items-center'
                                                                 style={{
@@ -1669,24 +1632,7 @@ const reqStatusColor = {
                                                             </button>
                                                         )}
                                                     </>
-                                                ) : // (Object.keys(programdetails.cancel_reason).length || Object.keys(programdetails.reschedule_reason
-                                                    // ).length) ?
-
-                                                    //     <div className='flex gap-4 pt-10' >
-                                                    //         <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                    //             border: "1px solid #E0382D",
-                                                    //             borderRadius: '5px',
-                                                    //             color: '#E0382D',
-                                                    //             cursor: 'not-allowed'
-                                                    //         }}
-                                                    //             onClick={() => undefined}
-                                                    //         >
-                                                    //             <i className="pi pi-clock" style={{ color: 'red' }}></i>
-                                                    //             <span className='pl-3'>Waiting for admin approval</span>
-                                                    //         </button>
-                                                    //     </div>
-                                                    //     :
-
+                                                ) :
                                                     programApprovalStage[programdetails.status] && !programdetails?.admin_program ? (
                                                         <div className='flex gap-4 pt-10'>
                                                             <button
@@ -1762,20 +1708,7 @@ const reqStatusColor = {
                                             }
                                         </>
                                     ) : null}
-                                    {/* {
-                                            (role !== "admin" && programdetails.status === 'yettojoin') &&
 
-                                            <div className='py-9'>
-                                                <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                    background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
-                                                    borderRadius: '5px'
-                                                }}
-                                                    onClick={() => handleJoinProgram(programdetails.id)}
-                                                >Launch Program
-                                                    <span className='pl-8 pt-1'><img style={{ width: '15px', height: '13px' }} src={DoubleArrowIcon} alt="DoubleArrowIcon" /></span>
-                                                </button>
-                                            </div>
-                                        } */}
                                     {role === 'mentee' &&
                                         !programCompleted.includes(programdetails.status) &&
                                         !programCancelled.includes(programdetails.status) ? (
@@ -1849,130 +1782,19 @@ const reqStatusColor = {
                                             ) : null}
                                         </div>
                                     ) : null}
-                                    {/* {
-                                            
-                                            (role === 'admin' && !programCompleted?.includes(programdetails.status) && !programCancelled?.includes(programdetails.status)) ?
-                                                <>
-                                                    {
-                                                        <div className='flex gap-4 pt-10' >
-                                                            {
-                                                                (requestId !== '' && (programRequestApproval.includes(programdetails.status) ||
-                                                                    programWaitingActiveApproval.includes(programdetails.status) ||
-                                                                    (Object.keys(programdetails.cancel_reason)?.length && programdetails.cancel_reason?.id === parseInt(requestId)
-                                                                        && (programdetails.cancel_reason?.status === 'new' || programdetails.cancel_reason?.status === 'pending')) ||
-
-                                                                    (Object.keys(programdetails.reschedule_reason)?.length
-                                                                        && (programdetails.reschedule_reason?.status === 'new' || programdetails.reschedule_reason?.status === 'pending'))
-                                                                )
-                                                                ) ?
-
-                                                                    <>
-                                                                        <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                                            border: "1px solid #E0382D",
-                                                                            borderRadius: '5px',
-                                                                            color: '#E0382D'
-                                                                        }}
-                                                                            onClick={() => handleAcceptCancelProgramRequest('cancel', programdetails.id)}
-                                                                        >
-                                                                            {searchParams.has('type') && searchParams.get('type') === 'program_cancel' ? 'Continue' : 'Reject Request'}
-                                                                        </button>
-                                                                        <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                                            background: "#16B681",
-                                                                            borderRadius: '5px'
-                                                                        }}
-                                                                            onClick={() => handleAcceptCancelProgramRequest('accept', programdetails.id)}
-                                                                        >Approve Request
-                                                                        </button>
-                                                                    </>
-
-                                                                    :
-
-                                                                    programAdminRejected.includes(programdetails.status) ?
-
-                                                                        <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                                            border: "1px solid #E0382D",
-                                                                            borderRadius: '5px',
-                                                                            color: '#E0382D',
-                                                                            cursor: 'not-allowed'
-                                                                        }}
-                                                                            onClick={undefined}
-                                                                        >Rejected
-                                                                        </button>
-
-                                                                        :
-
-                                                                        programInProgress.includes(programdetails.status) ?
-                                                                            <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                                                background: "#16B681",
-                                                                                borderRadius: '5px',
-                                                                                cursor: 'not-allowed'
-                                                                            }}
-                                                                                onClick={undefined}
-                                                                            >In-Progress
-                                                                            </button>
-
-                                                                            :
-
-                                                                            programNotLaunched.includes(programdetails.status)
-                                                                                ?
-                                                                                <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                                                    background: "#16B681",
-                                                                                    borderRadius: '5px',
-                                                                                    cursor: 'not-allowed'
-                                                                                }}
-                                                                                    onClick={undefined}
-                                                                                >Mentor yet to launch
-                                                                                </button>
-
-                                                                                :
-
-
-                                                                                programNotStarted.includes(programdetails.status) ?
-                                                                                    <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                                                        background: "#16B681",
-                                                                                        borderRadius: '5px',
-                                                                                        cursor: 'not-allowed'
-                                                                                    }}
-                                                                                        onClick={undefined}
-                                                                                    >Mentor yet to start
-                                                                                    </button>
-
-                                                                                    :
-
-                                                                                    (!programRequestApproval.includes(programdetails.status) && !commonApproval.includes(programdetails.status)) ?
-
-                                                                                        <>
-                                                                                            <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                                                                background: "#16B681",
-                                                                                                borderRadius: '5px',
-                                                                                                cursor: 'not-allowed'
-                                                                                            }}
-                                                                                                onClick={undefined}
-                                                                                            >Approved
-                                                                                            </button>
-                                                                                        </>
-                                                                                        : null
-
-                                                            }
-                                                        </div>
-                                                    }
-
-                                                </>
-                                                : null
-                                        } */}
 
                                     {
                                         <Box mt={2}>
-                                            {role === 'admin' &&
-                                                (programdetails?.status !== 'yettoapprove' ||
+                                            {role === 'admin' && (
+                                                // Base program status conditions
+                                                (programdetails?.status === 'yettoapprove' ||
                                                     programdetails?.status === 'inprogress' ||
-                                                    ((programdetails?.request_data?.request_type ===
-                                                        'program_reschedule' ||
-                                                        programdetails?.request_data?.request_type ===
-                                                        'program_cancel') &&
-                                                        ['new', 'pending'].includes(
-                                                            programdetails?.request_data?.status
-                                                        ))) && (
+                                                    // Program reschedule request condition
+                                                    (programdetails?.request_data?.request_type === 'program_reschedule' &&
+                                                        programdetails?.request_data?.status === 'new') ||
+                                                    // Program cancel request condition
+                                                    (programdetails?.request_data?.request_type === 'program_cancel' &&
+                                                        programdetails?.request_data?.status === 'new')) && (
                                                     <Stack
                                                         direction={'row'}
                                                         alignItems={'center'}
@@ -1985,15 +1807,9 @@ const reqStatusColor = {
                                                                 borderRadius: '5px',
                                                                 color: '#E0382D',
                                                             }}
-                                                            onClick={() =>
-                                                                handleAcceptCancelProgramRequest(
-                                                                    'cancel',
-                                                                    programdetails.id
-                                                                )
-                                                            }
+                                                            onClick={() => handleAcceptCancelProgramRequest('cancel', programdetails.id)}
                                                         >
-                                                            {searchParams.has('type') &&
-                                                                searchParams.get('type') === 'program_cancel'
+                                                            {searchParams.has('type') && searchParams.get('type') === 'program_cancel'
                                                                 ? 'Continue'
                                                                 : 'Reject Request'}
                                                         </button>
@@ -2003,19 +1819,15 @@ const reqStatusColor = {
                                                                 background: '#16B681',
                                                                 borderRadius: '5px',
                                                             }}
-                                                            onClick={() =>
-                                                                handleAcceptCancelProgramRequest(
-                                                                    'accept',
-                                                                    programdetails.id
-                                                                )
-                                                            }
+                                                            onClick={() => handleAcceptCancelProgramRequest('accept', programdetails.id)}
                                                         >
                                                             Approve Request
                                                         </button>
                                                     </Stack>
-                                                )}
-                                            {!requestStatusParams&&programdetails?.status ===
-                                                'new_program_request_rejected' && (
+                                                )
+                                            )}
+                                            {(programdetails?.request_data?.status === "rejected" ||
+                                                (!requestStatusParams && programdetails?.status === 'new_program_request_rejected')) && (
                                                     <button
                                                         className='py-3 px-16 text-white text-[14px] flex items-center'
                                                         style={{
@@ -2029,7 +1841,9 @@ const reqStatusColor = {
                                                         Rejected
                                                     </button>
                                                 )}
+
                                         </Box>
+
                                     }
 
                                     {programdetails.status === 'cancelled' && (
@@ -2226,9 +2040,6 @@ const reqStatusColor = {
                                                         <CheckoutForm />
                                                     </Elements>
                                                 )}
-                                                {/* <span>
-                          <PaymentButton />
-                        </span> */}
                                             </li>
                                         </ul>
                                     </div>
@@ -2271,25 +2082,6 @@ const reqStatusColor = {
                                         </div>
                                     </div>
                                 )}
-
-                            {/* {
-                                    (role !== 'mentee' && ((role === 'admin' && requestId !== null && programdetails?.cancel_reason && Object.keys(programdetails?.cancel_reason)?.length &&
-                                        programdetails.cancel_reason.id === parseInt(requestId))
-                                        || (programdetails.status === programActionStatus.cancelled))) ?
-                                        <div className={`action-set action_cancelled`}>
-                                            <div className='reason-title'>
-                                                {programdetails.status === programActionStatus.cancelled ||
-
-                                                    (role === 'admin' && requestId !== null && programdetails?.cancel_reason && Object.keys(programdetails?.cancel_reason)?.length)
-
-                                                    ? 'Cancelled ' : ''} Reason
-                                            </div>
-                                            <div className='reason-content'>
-                                                {programdetails?.cancel_reason?.cancel_request_reason}
-                                            </div>
-                                        </div>
-                                        : null
-                                } */}
 
                             {role !== 'mentee' &&
                                 role === 'admin' &&
@@ -2504,45 +2296,6 @@ const reqStatusColor = {
                                                     </div>
                                                 </div>
 
-                                                {/* <div className='pt-16 pb-2 px-7 leading-5 relative' style={{ background: 'rgba(248, 249, 250, 1)', }}>
-                                                        <img src={QuoteIcon} className='absolute top-[-16px]' alt="QuoteIcon" />
-                                                        <div className='relative'>
-                                                            <p className='pb-7'>
-                                                                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                                                                ook.standard dummy text ever since the 1500s, ook.
-                                                            </p>
-                                                            <hr className='absolute' style={{ width: '496px', left: '-15px' }} />
-                                                        </div>
-
-                                                        <div className='flex gap-3 py-5'>
-                                                            <img src={UserImage} alt="user" style={{ borderRadius: '50%', width: '38px', height: '35px' }} />
-                                                            <div className='flex flex-col'>
-                                                                <span style={{ color: 'rgba(0, 174, 189, 1)' }}>Alexander Johnson</span>
-                                                                <span>Mentor</span>
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
-
-                                                    <div className='pt-16 pb-2 px-7 leading-5 relative' style={{ background: 'rgba(248, 249, 250, 1)', }}>
-                                                        <img src={QuoteIcon} className='absolute top-[-16px]' alt="QuoteIcon" />
-                                                        <div className='relative'>
-                                                            <p className='pb-7'>
-                                                                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                                                                ook.standard dummy text ever since the 1500s, ook.
-                                                            </p>
-                                                            <hr className='absolute' style={{ width: '496px', left: '-15px' }} />
-                                                        </div>
-
-                                                        <div className='flex gap-3 py-5'>
-                                                            <img src={UserImage} alt="user" style={{ borderRadius: '50%', width: '38px', height: '35px' }} />
-                                                            <div className='flex flex-col'>
-                                                                <span style={{ color: 'rgba(0, 174, 189, 1)' }}>Alexander Johnson</span>
-                                                                <span>Mentor</span>
-                                                            </div>
-                                                        </div>
-
-                                                    </div> */}
                                             </div>
                                         </div>
                                     </div>

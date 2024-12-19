@@ -93,12 +93,12 @@ export const createNewPrograms = createAsyncThunk(
 export const editUpdateProgram = createAsyncThunk(
   "editUpdateProgram",
   async (data) => {
-    const {program_id, bodyFormData, role } = data
+    const { bodyFormData: { program_id, ...restOfData }, role } = data
     const headers = {
       'Content-Type': 'multipart/form-data',
     }
 
-    const editUpdateProgramInfo = await api.put(role ? `program/admin-program/${program_id}` : `programs/${program_id}`, bodyFormData, {
+    const editUpdateProgramInfo = await api.put(role ? `program/admin-program/${program_id}` : `programs/${program_id}`, restOfData, {
       headers: headers
     });
 
@@ -236,10 +236,9 @@ export const getProgramMentees = createAsyncThunk(
 
 export const getProgramNameValidate = createAsyncThunk(
   "getProgramNameValidate",
-  async (data) => {
-    const { program_name, program_id } = data
+  async (program_name) => {
     const getProgramNameValidate = await api.get(
-      `programs/validate_program_name?program_name=${program_name}${program_id ? `program_id=${program_id}` : ""}`
+      `programs/validate_program_name?program_name=${program_name}`
     );
     if (getProgramNameValidate.status === 200 && getProgramNameValidate.data) {
       return getProgramNameValidate.data;

@@ -18,6 +18,7 @@ import memberReducer from '../features/members/memberSlice';
 import categoryReducer from '../features/category/categorySlice';
 import PaymentReducer from '../features/payment/paymentSlice';
 import { ticketsApi } from '../features/tickets/tickets-slice';
+import { rtkQueryApiServices } from '../services/api';
 
 const combinedReducer = combineReducers({
   userInfo: userReducer,
@@ -38,7 +39,7 @@ const combinedReducer = combineReducers({
   members: memberReducer,
   category: categoryReducer,
   payment: PaymentReducer,
-  [ticketsApi.reducerPath]: ticketsApi.reducer,
+  [rtkQueryApiServices.reducerPath]: rtkQueryApiServices.reducer,
 });
 
 const rootReducer = (state, action) => {
