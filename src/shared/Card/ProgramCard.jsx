@@ -56,7 +56,7 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
     const statusNotShow = ['yettoapprove', 'yettojoin', 'yettostart', 'draft', 'start_request_submitted']
 
     const programImageRestirct = ['yettoapprove', 'draft', 'cancelled', 'completed']
-    const programEditRestirct = ['yettoapprove', 'draft', 'new_program_request_rejected', 'completed']
+    const programEditRestirct = ['yettoapprove', 'draft', 'new_program_request_rejected',"cancelled",'completed']
 
     const handleClose = () => {
         setAnchorEl(null);

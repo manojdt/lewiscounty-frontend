@@ -1365,7 +1365,7 @@ export default function ProgramDetails() {
                                             />
                                             Share
                                         </MenuItem>
-                                        {!requestStatusParams && !['yettoapprove',"cancelled", 'completed'].includes(
+                                        {!requestStatusParams && !['yettoapprove',"cancelled","new_program_request_rejected", 'completed'].includes(
                                             programdetails?.status
                                         ) &&
                                             role !== 'admin' && (
@@ -1382,7 +1382,7 @@ export default function ProgramDetails() {
                                                 </MenuItem>
                                             )}
 
-                                        {!requestStatusParams && !['yettoapprove',"cancelled", 'completed'].includes(
+                                        {!requestStatusParams && !['yettoapprove',"cancelled","new_program_request_rejected", 'completed'].includes(
                                             programdetails?.status
                                         ) &&
                                             role !== 'admin' && (
