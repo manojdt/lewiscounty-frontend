@@ -1998,7 +1998,7 @@ export const ProgramTestimonialsFields = [
   },
   {
     type: 'textbox',
-    name: 'test_description',
+    name: 'testimonial_description',
     label: 'Description',
     placeholder: '',
     inputRules: {

@@ -54,6 +54,7 @@ export const TaskDetails = () => {
     status,
   } = useSelector((state) => state.userPrograms);
   const { task: taskData, loading } = useSelector((state) => state.tasks);
+  console.log(taskData,"taskData")
   const [startTask, setStartTask] = useState(true);
   const [taskStatus, setTaskStatus] = useState('');
   const params = useParams();
@@ -209,6 +210,7 @@ export const TaskDetails = () => {
   useEffect(() => {
     dispatch(getProgramTaskDetails(params.id));
     dispatch(getSpecificTask({ task_id: params.id })).then((res) => {
+      console.log(res,"res")
       if (res?.meta?.requestStatus === 'fulfilled') {
         const files = res?.payload?.files?.map((e) => {
           return {
@@ -234,9 +236,8 @@ export const TaskDetails = () => {
     }
   }, [task_submission]);
 
-  const allFiles = [];
-  getFiles(taskFile || []);
-
+  const allFiles = getFiles(taskFile || []);
+console.log(allFiles,"allfiles")
   return (
     <div className='px-9 py-9'>      
       <Backdrop
@@ -576,7 +577,7 @@ export const TaskDetails = () => {
                 </Box>
               )}
 
-              {(!isPreview && ["inprogress", "draft"].includes(taskData.status)) && (
+              {(!isPreview && ["inprogress","waiting_for_approval","completed","pending","draft"].includes(taskData.status)) && (
                 <div className='py-6 mb-16'>
                   {taskData.status === TaskAllStatus.inprogress ||
                     taskData.status === TaskAllStatus.pending ||
@@ -826,7 +827,7 @@ export const TaskDetails = () => {
                       )}
 
                       <div className='flex justify-between task-uploaded-images-container'>
-                        {allFiles?.files?.length > 0 ? (
+                        {allFiles?.files ? (
                           <div>
                             <div
                               className='text-[14px] pt-5'

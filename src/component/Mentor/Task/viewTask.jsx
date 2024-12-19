@@ -284,7 +284,7 @@ const ViewTask = () => {
 
 
                 {
-                    taskDetails?.status !== "new" &&
+                    taskDetails?.status !== "new" &&   taskDetails?.status !== "inprogress"&&
                     <div className='flex justify-between task-uploaded-images-container'>
                         {
                             allFiles.files ?

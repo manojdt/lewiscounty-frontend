@@ -512,14 +512,14 @@ console.log("reportDetails ==>", reportDetails)
                                                                                     field.type === 'editor' ?
                                                                                         <>
                                                                                             <div className='flex gap-3'>
-                                                                                                <textarea id="message" rows="4" className={`block p-2.5 input-bg w-[95%] h-[200px] text-sm text-gray-900  rounded-lg border
+                                                                                                <textarea id="message" rows="4" className={`block p-2.5 input-bg w-[100%] h-[200px] text-sm text-gray-900  rounded-lg border
                                                                                             focus:visible:outline-none focus:visible:border-none ${field.width === 'width-82' ? 'h-[282px]' : ''}`}
                                                                                                     placeholder={field.placeholder}
                                                                                                     {...register(field.name, field.inputRules)}></textarea>
-                                                                                                <div className='flex flex-col gap-6 items-center justify-center input-bg w-[4%]' style={{ borderRadius: '3px' }}>
+                                                                                                {/* <div className='flex flex-col gap-6 items-center justify-center input-bg w-[4%]' style={{ borderRadius: '3px' }}>
                                                                                                     <img src={TextIcon} alt="TextIcon" />
                                                                                                     <img src={HTMLIcon} alt="HTMLIcon" />
-                                                                                                </div>
+                                                                                                </div> */}
                                                                                             </div>
                                                                                             {errors[field.name] && (
                                                                                                 <p className="error" role="alert">

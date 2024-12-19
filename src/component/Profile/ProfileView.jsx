@@ -218,7 +218,22 @@ export default function ProfileView() {
       }
     }
   };
-
+  const reqStatus = {
+    approved:'Approved',
+    rejected:'Rejected',
+    new:'New',
+}
+const reqStatusColor = {
+    approved:{ background:'#16B681',
+      borderRadius: '5px',
+      width: '300px',
+      cursor: 'not-allowed'},
+    rejected:{ border: '1px solid #E0382D',
+      borderRadius: '5px',
+      color: '#E0382D',
+       width: '300px',
+      cursor: 'not-allowed'},
+    }
   const footerComponent = (props) => {
     return (
       <div className='flex gap-6 justify-center items-center py-4'>
@@ -844,7 +859,18 @@ export default function ProfileView() {
                           onClick={() => handleMemberAcceptRequest()}
                         />
                       </div>
-                    </> :
+                    </> : state?.data?.status === "approved"||state?.data?.status === "rejected"?<>
+                    <div className='py-9'>
+                      <div
+                        className='py-3 px-16 text-white text-[14px] flex justify-center items-center'
+                        style={{
+                         ...reqStatusColor[state?.data?.status],
+                        }}
+                      >
+                        {reqStatus[state?.data?.status]}
+                      </div>
+                    </div>
+                    </>:
                     <>
                       {role === 'mentor' &&
                         searchParams.has('type') &&

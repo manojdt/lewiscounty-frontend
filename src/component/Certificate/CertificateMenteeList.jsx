@@ -145,7 +145,7 @@ export default function CertificateMenteeList() {
                 {(searchParams.get('type') === 'approved' ||
                   searchParams.get('type') === 'waiting_for_response' ||
                   searchParams.get('type') === 'pending' ||
-                  role === 'admin') && (
+                  role === 'admin'||role==="mentor") && (
                     <MenuItem
                       onClick={() => {
                         let url =
@@ -354,7 +354,7 @@ export default function CertificateMenteeList() {
           paginationModel={paginationModel}
           setPaginationModel={setPaginationModel}
         />
-        {(state?.status !== "approved" && state?.status !== "rejected") && <>
+        {(state?.status !== "approved" && state?.status !== "rejected"&&state?.status !== "pending") && <>
           {role === "mentor" && <div>
             <div className='flex gap-6 justify-center align-middle py-16'>
               <Button
