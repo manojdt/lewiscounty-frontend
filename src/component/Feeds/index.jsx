@@ -9,7 +9,8 @@ import UserIcon from '../../assets/images/user.jpg';
 import SuccessTik from '../../assets/images/blue_tik1x.png';
 import MaleIcon from '../../assets/images/male-profile1x.png';
 import FemaleIcon from '../../assets/images/female-profile1x.png';
-
+import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
+import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { Button } from '../../shared';
 import SettingsModal from './SettingsModal';
 import CreatePostModal from './CreatePostModal';
@@ -17,8 +18,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createPost, getPost } from '../../services/feeds';
 import { Backdrop, CircularProgress } from '@mui/material';
 import { feedStatus } from '../../utils/constant';
+import { Icon } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 
 export default function Feeds() {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [previousPage, setPreviousPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(null)
+  const [pageSize, setPageSize] = useState(null)
+
+
   const defaultState = {
     create: false,
     settings: false,
@@ -46,6 +56,7 @@ export default function Feeds() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { feeds, loading, status } = useSelector((state) => state.feeds);
+  
   console.log(feeds);
   const {
     register,
@@ -56,28 +67,51 @@ export default function Feeds() {
     getValues,
   } = useForm();
 
-  const feedList = [
-    {
-      name: 'Lorem ipsum dolor sit amet, consectetur',
-      comment: '85M Views . 2 months ago',
-    },
-    {
-      name: 'Lorem ipsum dolor sit amet, consectetur',
-      comment: '85M Views . 2 months ago',
-    },
-    {
-      name: 'Lorem ipsum dolor sit amet, consectetur',
-      comment: '85M Views . 2 months ago',
-    },
-    {
-      name: 'Lorem ipsum dolor sit amet, consectetur',
-      comment: '85M Views . 2 months ago',
-    },
-    {
-      name: 'Lorem ipsum dolor sit amet, consectetur',
-      comment: '85M Views . 2 months ago',
-    },
-  ];
+useEffect(()=>{
+  if(feeds){
+    setCurrentPage((prevState)=>feeds.current_page)
+    setPreviousPage((prevState)=>feeds.previous)
+    setTotalPages((prevState)=>feeds.count)
+    setPageSize((prevState)=>feeds.page_size)
+  }
+},[feeds])
+
+
+useEffect(()=>{
+  let feedData = {
+    'page' : currentPage,
+    'pageSize': pageSize
+  }
+  dispatch(getPost(feedData))
+
+},[currentPage, pageSize])
+
+
+
+
+  // // console.log("---feeds---", feeds)
+  // const feedList = [
+  //   {
+  //     name: 'Lorem ipsum dolor sit amet, consectetur',
+  //     comment: '85M Views . 2 months ago',
+  //   },
+  //   {
+  //     name: 'Lorem ipsum dolor sit amet, consectetur',
+  //     comment: '85M Views . 2 months ago',
+  //   },
+  //   {
+  //     name: 'Lorem ipsum dolor sit amet, consectetur',
+  //     comment: '85M Views . 2 months ago',
+  //   },
+  //   {
+  //     name: 'Lorem ipsum dolor sit amet, consectetur',
+  //     comment: '85M Views . 2 months ago',
+  //   },
+  //   {
+  //     name: 'Lorem ipsum dolor sit amet, consectetur',
+  //     comment: '85M Views . 2 months ago',
+  //   },
+  // ];
 
   const handleClose = () => {
     setPostModal(defaultState);
@@ -125,6 +159,7 @@ export default function Feeds() {
   // console.log(formData);
 
   const onSubmit = (data) => {
+    console.log("POST---DATA", data)
     const formDatas = new FormData();
 
     if (data.image) {
@@ -147,6 +182,36 @@ export default function Feeds() {
     // console.log(formDatas);
     dispatch(createPost(formDatas));
   };
+  console.log("FEEDSSSS", feeds)
+
+  const handlePrevious = () => {
+    setCurrentPage((prevPage) => (prevPage > 1 ? prevPage - 1 : prevPage));
+  };
+
+  const handleNext = () => {
+
+    setCurrentPage((prevPage) => (prevPage < totalPages ? prevPage + 1 : prevPage));
+  };
+
+
+  const renderPagination = () => {
+    return (
+      <div style={{}} >
+        <Tooltip title="Previous">
+      <IconButton onClick={handlePrevious}  disabled={currentPage === 1} color="primary">
+        <ArrowLeftIcon />
+      </IconButton>
+    </Tooltip>
+    <Tooltip title="Next">
+      <IconButton onClick={handleNext}  disabled={currentPage === totalPages} color="primary">
+        <ArrowRightIcon />
+      </IconButton>
+    </Tooltip>
+          
+      </div>
+    )
+  }
+
 
   return (
     <div className='feed-container px-9 py-9'>
@@ -229,10 +294,9 @@ export default function Feeds() {
             handlePostData={handleSettingsData}
           />
         )}
-
         <div className='feeds-list'>
           <div className='grid grid-cols-3 gap-7'>
-            {/* {feeds.map((feed, index) => {
+            {feeds && feeds.results && feeds.results.length > 0 && feeds.results.map((feed, index) => {
               let imageUrl = feed?.image_url || '';
 
               if (imageUrl === '') {
@@ -269,10 +333,15 @@ export default function Feeds() {
                   </div>
                 </div>
               );
-            })} */}
+            })}
           </div>
         </div>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: 50 }}>
+        {renderPagination()}
+
+        </div>
       </div>
+      
     </div>
   );
 }

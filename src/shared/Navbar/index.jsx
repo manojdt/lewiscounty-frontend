@@ -687,7 +687,7 @@ export const Navbar = () => {
                   }}
                 >
                   {userInfo?.data?.is_registered && !documentUpload && (
-                    <>
+                    <div>
                       <MenuItem
                         onClick={() => {
                           handleClose();
@@ -717,7 +717,7 @@ export const Navbar = () => {
                         />
                         Profile
                       </MenuItem>
-                    </>
+                    </div>
                   )}
 
                   <MenuItem
