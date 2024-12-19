@@ -56,6 +56,7 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
     const statusNotShow = ['yettoapprove', 'yettojoin', 'yettostart', 'draft', 'start_request_submitted']
 
     const programImageRestirct = ['yettoapprove', 'draft', 'cancelled', 'completed']
+    const programEditRestirct = ['yettoapprove', 'draft', 'new_program_request_rejected', 'completed']
 
     const handleClose = () => {
         setAnchorEl(null);
@@ -294,12 +295,18 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                                                         }
                                                     </div>
                                                     <div className={`${currentProgram?.program_edit ? "cursor-pointer" : "cursor-default"} flex justify-between`}
-                                                        onClick={() => currentProgram?.program_edit ? navigate(`/update-program/${currentProgram.id}`) : undefined}
+                                                        onClick={() =>{
+                                                            if(currentProgram.program_edit && !programEditRestirct.includes(currentProgram.status)){
+
+                                                                navigate(`/update-program/${currentProgram.id}`) 
+                                                            }
+                                                        }
+                                                            }
                                                         onMouseOver={() => setHoverIndex({ ...hoverIndex, desc: index })} onMouseLeave={() => setHoverIndex({ ...hoverIndex, desc: null })}>
 
                                                         <span className="text-[12px] line-clamp-2 ">{currentProgram.description}</span>
                                                         {
-                                                            (currentProgram.program_edit && !programImageRestirct.includes(currentProgram.status)) &&
+                                                            (currentProgram.program_edit && !programEditRestirct.includes(currentProgram.status)) &&
                                                             <img className={`h-[18px] w-[15px] ${hoverIndex.desc === index ? 'show' : 'hidden'}`} src={EditIcon} alt="EditIcon" />
                                                         }
                                                     </div>
