@@ -4,14 +4,14 @@ export const ticketsApi = rtkQueryApiServices.injectEndpoints({
   endpoints: (builder) => ({
     createTicket: builder.mutation({
       query: (ticket) => ({
-        url: 'tickets/',
+        url: '/tickets/',
         method: 'POST',
         body: ticket,
       }),
     }),
     updateTicket: builder.mutation({
       query: ({ id, ticket }) => ({
-        url: `/api/tickets/${id}/`,
+        url: `/tickets/${id}/`,
         method: 'PUT',
         body: ticket,
       }),
@@ -25,13 +25,13 @@ export const ticketsApi = rtkQueryApiServices.injectEndpoints({
     // }),
     postComment: builder.mutation({
       query: ({ id, ticket }) => ({
-        url: `/api/tickets/${id}/comments/`,
+        url: `/tickets/${id}/comments/`,
         method: 'POST',
         body: ticket,
       }),
     }),
     getAllTickets: builder.query({
-      query: () => `/api/tickets/`,
+      query: () => `/tickets/`,
     }),
     // getAllTickets: builder.query({
     //   query: ({ status, page, limit }) => {
@@ -47,7 +47,7 @@ export const ticketsApi = rtkQueryApiServices.injectEndpoints({
     //   },
     // }),
     getTicket: builder.query({
-      query: (slug) => `/api/tickets/${slug}/`,
+      query: (slug) => `/tickets/${slug}/`,
     }),
   }),
 });

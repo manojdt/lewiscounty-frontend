@@ -79,23 +79,23 @@ const TicketDetails = () => {
           </div>
         )}
 
-        {role === user.super_admin && (
-          <div>
-            {ticket &&
-              ticket.comments &&
-              ticket.comments.length > 0 &&
-              ticket.comments.map((comment, index) => (
-                <CustomTicketAccordian
-                  title={`${comment?.created_by?.first_name} ${comment?.created_by?.last_name} (
+        {/* {role === user.super_admin && ( */}
+        <div>
+          {ticket &&
+            ticket.comments &&
+            ticket.comments.length > 0 &&
+            ticket.comments.map((comment, index) => (
+              <CustomTicketAccordian
+                title={`${comment?.created_by?.first_name} ${comment?.created_by?.last_name} (
         ${comment?.created_by?.role})`}
-                >
-                  <TicketComments comment={comment} />
-                </CustomTicketAccordian>
-              ))}
-          </div>
-        )}
+              >
+                <TicketComments comment={comment} />
+              </CustomTicketAccordian>
+            ))}
+        </div>
+        {/* )} */}
 
-        {type !== 'view' && (
+        {role === user.super_admin && (
           <div>
             <CustomTicketAccordian
               title={'Enter your update'}

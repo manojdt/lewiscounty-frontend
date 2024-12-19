@@ -2066,7 +2066,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                         )}
                       </li> */}
                     </ul>
-                    <div className='text-end'>
+                    <div className='text-end mt-3'>
                       <Button
                         btnType='button'
                         btnCls='w-[120px]'

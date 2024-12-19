@@ -38,7 +38,7 @@ const combinedReducer = combineReducers({
   launchProgram: launchProgramReducer,
   members: memberReducer,
   category: categoryReducer,
-  payment: PaymentReducer,
+  // payment: PaymentReducer,
   [rtkQueryApiServices.reducerPath]: rtkQueryApiServices.reducer,
   // payment: PaymentReducer,
   [ticketsApi.reducerPath]: ticketsApi.reducer,
