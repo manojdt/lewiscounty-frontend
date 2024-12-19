@@ -335,13 +335,13 @@ const ViewReport = () => {
                                                 btnName='Approve' />
                                         }
 
-                                    </div> :
+                                    </div> :role === "admin"?
                                     <div className='close-btn flex justify-center gap-7 pb-5'>
                                         <Button btnType="button" btnCls="w-[120px]"
                                             onClick={() => { navigate(-1) }} btnName='Close'
                                             btnCategory="secondary"
                                         />
-                                    </div>
+                                    </div>:null
 
                             }
                         </div>

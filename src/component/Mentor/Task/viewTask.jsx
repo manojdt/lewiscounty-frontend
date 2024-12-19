@@ -274,7 +274,7 @@ const ViewTask = () => {
                 {
                     ["completed", "pending", "completed"].includes(taskDetails?.status) &&
                     <div style={{ marginTop: "40px" }}>
-                        <Typography className='!text-[14px] !text-[#18283D]'>Task</Typography>
+                        <Typography className='!text-[14px] !text-[#18283D]'>Task Solution</Typography>
 
                         <Box className="bg-[#1D5BBF] px-[20px] py-[12px] rounded-[3px]" mt={1}>
                             <Typography className='!text-[14px] !text-[#fff]'>{taskDetails?.task_solution}</Typography>

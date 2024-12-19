@@ -83,6 +83,9 @@ const MentorTaskDetails = () => {
             key: "rejected"
         },
     ]
+useEffect(() => {
+console.log(selectedTab,"selectedTab")
+}, [selectedTab])
 
     const {
         register,
@@ -364,7 +367,7 @@ const MentorTaskDetails = () => {
                                                 Pass
                                             </MenuItem>
                                             <MenuItem
-                                                onClick={() => handleOpenConfirmPopup("cancel", "Task Fail Reason")}
+                                                onClick={() => handleOpenConfirmPopup("cancel", "Task Fail Reason","fail")}
                                                 className='!text-[12px]'
                                             >
                                                 <img src={Cancel} alt='Cancel' className='pr-3 w-[30px]' />
@@ -476,6 +479,7 @@ const MentorTaskDetails = () => {
                             type: ""
                         })
                         getMenteeList()
+                        setNewType('')
                     }, 2000);
                 }
             }
@@ -515,6 +519,7 @@ const MentorTaskDetails = () => {
     }
 
     const handleUpdateAllTask = (type, reason = "") => {
+        console.log("dell")
         let payload = {
             "result": type === "pass" ? true : false,
             "task_id": menteeTaskList?.assign_task_id,
@@ -1060,7 +1065,11 @@ const MentorTaskDetails = () => {
             <CancelPopup open={confirmPopup?.cancel} header={confirmPopup?.title} handleClosePopup={() => handleCloseConfirmPopup("cancel")}
                 handleSubmit={(reason) => {
                     if (selectedTab === "new" || selectedTab === "") {
-                        handleCancelAllMentee(reason)
+                        if(newType==="fail"){
+                            handleUpdateResult("fail", reason)
+                        }else{
+                            handleCancelAllMentee(reason)
+                        }
                     } else if (selectedTab === "pending") {
                         handleUpdateAllTask("cancel", reason)
                     } else {
@@ -1118,7 +1127,7 @@ const MentorTaskDetails = () => {
                             {(selectedTab !== "pending" && confirmPopup?.type === "pass") && "Successfully Marked as Pass"}
                             {(selectedTab !== "pending" && confirmPopup?.type === "cancel") && "Successfully marked as Fail"}
                             {((selectedTab === "pending" || selectedTab === "new") && confirmPopup?.type === "cancel") && "All Mentee’s New task has been successfully cancelled"}
-                            {((selectedTab === "pending" || selectedTab === "new"||newType === "newTab") && confirmPopup?.type === "cancel_all") && "All Mentee’s New task has been successfully cancelled"}
+                            {((selectedTab === "pending" || selectedTab === "new"||newType === "newTab") && confirmPopup?.type === "cancel_all") && "Task is cancelled successfully"}
                             {(selectedTab === "pending" && confirmPopup?.type === "pass") && "All Mentee’s New task has been successfully passed"}
                         </p>
                     </div>
