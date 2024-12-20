@@ -50,7 +50,7 @@ const MentorTaskDetails = () => {
 
     const handleClick = (event, row) => {
         setAnchorEl(event.currentTarget);
-        setSelectedItem(row); 
+        setSelectedItem(row);
     };
 
     const handleClose = () => {
@@ -330,7 +330,7 @@ const MentorTaskDetails = () => {
                                 'aria-labelledby': 'basic-button',
                             }}
                         >
-                            
+
                             {selectedItem && (
                                 <>
                                     <MenuItem
@@ -341,7 +341,7 @@ const MentorTaskDetails = () => {
                                         View
                                     </MenuItem>
 
-                                    
+
                                     {selectedItem?.status === "new" && (
                                         <MenuItem
                                             onClick={() => handleOpenConfirmPopup("cancel", "Cancel Task Reason", "newTab")}
@@ -352,7 +352,7 @@ const MentorTaskDetails = () => {
                                         </MenuItem>
                                     )}
 
-                                    
+
                                     {selectedItem?.status === "pending" && (
                                         <>
                                             <MenuItem
@@ -363,7 +363,7 @@ const MentorTaskDetails = () => {
                                                 Pass
                                             </MenuItem>
                                             <MenuItem
-                                                onClick={() => handleOpenConfirmPopup("cancel", "Task Fail Reason","fail")}
+                                                onClick={() => handleOpenConfirmPopup("cancel", "Task Fail Reason", "fail")}
                                                 className='!text-[12px]'
                                             >
                                                 <img src={Cancel} alt='Cancel' className='pr-3 w-[30px]' />
@@ -499,7 +499,7 @@ const MentorTaskDetails = () => {
                     activity: true,
                     type: "cancel_all"
                 })
-               
+
                 setTimeout(() => {
                     setConfirmPopup({
                         ...confirmPopup,
@@ -625,13 +625,16 @@ const MentorTaskDetails = () => {
                     <Typography className='!text-[#18283D] !text-[14px] cursor-pointer' fontWeight={500}>View {menteeTaskList?.program_name}</Typography>
                 </Stack>
 
-                <Button
-                    btnType='button'
-                    btnCls='w-[auto]'
-                    btnName={'Edit Task'}
-                    btnCategory='primary'
-                    onClick={() => handleEditTask()}
-                />
+                {
+                    menteeTaskList?.editable &&
+                    <Button
+                        btnType='button'
+                        btnCls='w-[auto]'
+                        btnName={'Edit Task'}
+                        btnCategory='primary'
+                        onClick={() => handleEditTask()}
+                    />
+                }
             </Stack>
 
 
@@ -1060,9 +1063,9 @@ const MentorTaskDetails = () => {
             <CancelPopup open={confirmPopup?.cancel} header={confirmPopup?.title} handleClosePopup={() => handleCloseConfirmPopup("cancel")}
                 handleSubmit={(reason) => {
                     if (selectedTab === "new" || selectedTab === "") {
-                        if(newType==="fail"){
+                        if (newType === "fail") {
                             handleUpdateResult("fail", reason)
-                        }else{
+                        } else {
                             handleCancelAllMentee(reason)
                         }
                     } else if (selectedTab === "pending") {
@@ -1122,7 +1125,7 @@ const MentorTaskDetails = () => {
                             {(selectedTab !== "pending" && confirmPopup?.type === "pass") && "Successfully Marked as Pass"}
                             {(selectedTab !== "pending" && confirmPopup?.type === "cancel") && "Successfully marked as Fail"}
                             {((selectedTab === "pending" || selectedTab === "new") && confirmPopup?.type === "cancel") && "All Mentee’s New task has been successfully cancelled"}
-                            {((selectedTab === "pending" || selectedTab === "new"||newType === "newTab") && confirmPopup?.type === "cancel_all") && "Task is cancelled successfully"}
+                            {((selectedTab === "pending" || selectedTab === "new" || newType === "newTab") && confirmPopup?.type === "cancel_all") && "Task is cancelled successfully"}
                             {(selectedTab === "pending" && confirmPopup?.type === "pass") && "All Mentee’s New task has been successfully passed"}
                         </p>
                     </div>
