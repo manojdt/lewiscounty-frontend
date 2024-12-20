@@ -105,7 +105,7 @@ export default function AllRequest() {
         error,
         reopenRequest
     } = useSelector((state) => state.requestList);
-    const { goalsList } = useSelector(state => state.goals)
+    const { goalsList, loading: goalLoading } = useSelector(state => state.goals)
     const [currentRequestTab, setCurrentRequestTab] = useState(
         RequestStatus.programRequest
     );
@@ -275,7 +275,7 @@ export default function AllRequest() {
             value: (role === "admin" && selectedRequestedtype === "goal_request") ? "accept" : "approved",
         },
         {
-            label: (role === "admin" && selectedRequestedtype === "goal_request") ? "Cancelled" :"Rejected",
+            label: (role === "admin" && selectedRequestedtype === "goal_request") ? "Cancelled" : "Rejected",
             value: (role === "admin" && selectedRequestedtype === "goal_request") ? "cancel" : "rejected",
         },
     ];
@@ -975,9 +975,11 @@ export default function AllRequest() {
                             <MenuItem
                                 onClick={(e) => {
                                     handleClose();
-                                    navigate(`/mentor-details/${seletedItem.id}`,{state:{
-                                        reqType:"member_join_request"
-                                    }});
+                                    navigate(`/mentor-details/${seletedItem.id}`, {
+                                        state: {
+                                            reqType: "member_join_request"
+                                        }
+                                    });
                                 }}
                                 className="!text-[12px]"
                             >
@@ -1560,7 +1562,7 @@ export default function AllRequest() {
         if (menu?.status === "goal_request") {
             setActiveTab("mentor");
         }
-        handleResetTab()
+        // handleResetTab()
     };
 
     const getProgramRequestApi = () => {
@@ -1584,7 +1586,7 @@ export default function AllRequest() {
         if (role === "admin") {
             payload.request_by = selectedTab === "mentees" ? "mentee" : "mentor"
         }
-        handleResetTab(actionTab)
+        // handleResetTab(actionTab)
         dispatch(getprogramRequest(payload));
     };
 
@@ -1619,6 +1621,7 @@ export default function AllRequest() {
             })
         );
     };
+
     const handleNewGoalRequestApi = () => {
         dispatch(getAllGoals({
             ...(filter.filter_by !== ""
@@ -1628,7 +1631,8 @@ export default function AllRequest() {
             page: paginationModel?.page + 1,
             limit: paginationModel?.pageSize,
             ...(filterStatus !== "all" && { status: filterStatus }),
-            created_by: actionTab ?? "mentor",
+            ...((actionTab !== "mentor" && role === "mentor") && { created_by: actionTab ?? "mentor" }),
+            ...((role === "admin") && { created_by: actionTab ?? "mentor" }),
             ...(filter.search !== "" && { search: filter.search }),
         }))
     }
@@ -2182,7 +2186,7 @@ export default function AllRequest() {
                     break;
                 case "mentees":
                     currentOveriew = menteesRequestOverview
-                    currentTab = (role === "admin" && selectedRequestedtype === "goal_request") ? "mentor" : "program_join"
+                    currentTab = ((role === "admin" || role === "mentor") && selectedRequestedtype === "goal_request") ? "mentor" : "program_join"
                     break;
                 case "admin":
                     currentOveriew = adminRequestOverview
@@ -2677,9 +2681,9 @@ export default function AllRequest() {
 
                                     <Backdrop
                                         sx={{ zIndex: (theme) => 999999999 }}
-                                        open={loading}
+                                        open={loading || goalLoading}
                                     >
-                                        <CircularProgress color="inherit" />
+                                        <CircularProgress sx={{ color: "white" }} />
                                     </Backdrop>
 
                                     <DataTable

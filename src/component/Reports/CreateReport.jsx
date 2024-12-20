@@ -444,10 +444,10 @@ export default function CreateReport() {
                                                                                             focus:visible:outline-none focus:visible:border-none ${field.width === 'width-82' ? 'h-[282px]' : ''}`}
                                                                                             placeholder={field.placeholder}
                                                                                             {...register(field.name, field.inputRules)}></textarea>
-                                                                                        {/* <div className='flex flex-col gap-6 items-center justify-center input-bg w-[4%] cursor-pointer' style={{ borderRadius: '3px' }} onClick={() => setOpenReport(true)}>
+                                                                                        <div className='flex flex-col gap-6 items-center justify-center input-bg w-[4%] cursor-pointer' style={{ borderRadius: '3px' }} onClick={() => setOpenReport(true)}>
                                                                                             <img src={TextIcon} alt="TextIcon" />
                                                                                             <img src={HTMLIcon} alt="HTMLIcon" />
-                                                                                        </div> */}
+                                                                                        </div>
                                                                                     </div>
                                                                                     {errors[field.name] && (
                                                                                         <p className="error" role="alert">

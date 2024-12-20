@@ -544,18 +544,21 @@ const MentorTask = () => {
                 />
                 View
               </MenuItem>
-              <MenuItem
-                onClick={() => handleEditTask()}
-                className='!text-[12px]'
-              >
-                <img
-                  src={EditIcon}
-                  alt='EditIcon'
-                  field={params.id}
-                  className='pr-3 w-[30px]'
-                />
-                Edit Task
-              </MenuItem>
+              {
+                params?.row?.editable &&
+                <MenuItem
+                  onClick={() => handleEditTask()}
+                  className='!text-[12px]'
+                >
+                  <img
+                    src={EditIcon}
+                    alt='EditIcon'
+                    field={params.id}
+                    className='pr-3 w-[30px]'
+                  />
+                  Edit Task
+                </MenuItem>
+              }
             </Menu>
           </>
         );
@@ -737,31 +740,31 @@ const MentorTask = () => {
 
 
 
-            <div className='px-3 py-5 !border !border-[#DBE0E5] rounded-[10px]'>
-                <div className='flex justify-between px-5 pb-4 mb-8 items-center'>
-                    <div className='flex gap-5 items-center text-[20px]'>
-                        <p className='text-[20px] text-[#18283D]' style={{ fontWeight: 500 }}>Mentees Task</p>
-                    </div>
-                    <Stack direction={"row"} alignItems={"center"} spacing={2}>
-                        <div className="relative">
-                            <input type="text" id="search-navbar" className="block w-full p-2 text-sm text-gray-900 border-none"
-                                placeholder="Search here..." style={{
-                                    border: '1px solid rgba(29, 91, 191, 1)',
-                                    borderRadius: '1px',
-                                    height: '45px',
-                                    width: '280px'
-                                }}
+      <div className='px-3 py-5 !border !border-[#DBE0E5] rounded-[10px]'>
+        <div className='flex justify-between px-5 pb-4 mb-8 items-center'>
+          <div className='flex gap-5 items-center text-[20px]'>
+            <p className='text-[20px] text-[#18283D]' style={{ fontWeight: 500 }}>Mentees Task</p>
+          </div>
+          <Stack direction={"row"} alignItems={"center"} spacing={2}>
+            <div className="relative">
+              <input type="text" id="search-navbar" className="block w-full p-2 text-sm text-gray-900 border-none"
+                placeholder="Search here..." style={{
+                  border: '1px solid rgba(29, 91, 191, 1)',
+                  borderRadius: '1px',
+                  height: '45px',
+                  width: '280px'
+                }}
 
-                                onChange={(e) => handleSearch(e.target.value)}
-                            />
-                            <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
-                                <img src={SearchIcon} alt='SearchIcon' />
-                            </div>
-                        </div>
-                        <Button btnType="button" btnCls="w-[150px]" btnName={'Create Task'} btnCategory="primary" onClick={() => navigate("/assign-mentees?type=new")} />
+                onChange={(e) => handleSearch(e.target.value)}
+              />
+              <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
+                <img src={SearchIcon} alt='SearchIcon' />
+              </div>
+            </div>
+            <Button btnType="button" btnCls="w-[150px]" btnName={'Create Task'} btnCategory="primary" onClick={() => navigate("/assign-mentees?type=new")} />
 
-                    </Stack>
-                </div>
+          </Stack>
+        </div>
 
         <Backdrop
           sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -825,11 +828,10 @@ const MentorTask = () => {
                       {tabs.map((participatedTab) => (
                         <li className='me-2' key={participatedTab.key}>
                           <p
-                            className={`inline-block p-4 border-b-2 cursor-pointer rounded-t-lg ${
-                              activeTab === participatedTab.key
+                            className={`inline-block p-4 border-b-2 cursor-pointer rounded-t-lg ${activeTab === participatedTab.key
                                 ? 'active  text-blue-600 border-blue-500'
                                 : ''
-                            } `}
+                              } `}
                             onClick={() => handleTab(participatedTab.key)}
                           >
                             {participatedTab.name}
