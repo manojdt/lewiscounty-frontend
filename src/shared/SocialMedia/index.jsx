@@ -2,6 +2,7 @@ import React, { useCallback, useRef } from 'react'
 import {
     LoginSocialFacebook,
     LoginSocialGoogle,
+    LoginSocialInstagram,
     // LoginSocialInstagram,
 } from "reactjs-social-login";
 import { userAccountLogin } from "../../services/loginInfo";
@@ -63,6 +64,7 @@ export default function SocialMediaLogin({ view = 'vertical' }) {
         }
       };
     const handleInstaLogin = async (response) => {
+        console.log('Insta response:', response);
         try {
           console.log('Insta response:', response);
         //   Handle the successful login here
@@ -81,7 +83,7 @@ export default function SocialMediaLogin({ view = 'vertical' }) {
           console.error('Facebook login error:', error);
         }
       };
-      console.log(process.env.REACT_APP_SOCIAL_AUTH_FACEBOOK_KEY,process.env.REACT_APP_SOCIAL_AUTH_FACEBOOK_SECRET)
+    //   console.log(process.env.REACT_APP_SOCIAL_AUTH_INSTA_KEY,process.env.REACT_APP_SOCIAL_AUTH_INSTA_SECRET)
     return (
         <div className={`flex gap-7 ${view === 'vertical' ? 'flex-col justify-center' : ''}`}>
             {
@@ -104,21 +106,20 @@ export default function SocialMediaLogin({ view = 'vertical' }) {
                                 Continue With Google
                             </Button>
                         </LoginSocialGoogle>
-                        {/* <LoginSocialInstagram
-                       client_id={process.env.REACT_APP_SOCIAL_AUTH_FACEBOOK_KEY} 
-                       client_secret={process.env.REACT_APP_SOCIAL_AUTH_FACEBOOK_SECRET}
-                    //    appId={"939158531445780"} 
-                       fieldsProfile={
+                        <LoginSocialInstagram
+                       client_id={process.env.REACT_APP_SOCIAL_AUTH_INSTA_KEY} 
+                       client_secret={process.env.REACT_APP_SOCIAL_AUTH_INSTA_SECRET}
+                       fields={
                         'id,first_name,last_name,middle_name,name,email,picture'
                       }
                       onResolve={handleInstaLogin}
                       onReject={(error) => {
                         console.log('Facebook login failed:', error);
-                      }}> */}
+                      }}>
                         <Button fullWidth color='inherit' size='large' variant="outlined" startIcon={<img src={InstagramIcon} className='w-[20px]' alt='InstagramIcon' />}>
                             Continue with Instagram
                         </Button>
-                       {/* </LoginSocialInstagram> */}
+                       </LoginSocialInstagram>
                         <LoginSocialFacebook
                        appId={process.env.REACT_APP_SOCIAL_AUTH_FACEBOOK_KEY} 
                     //    appId={"939158531445780"} 

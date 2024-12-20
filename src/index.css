@@ -12,7 +12,7 @@ p,
 }
 
 #root {
-  height: full;
+  min-height: 100vh;
   background-color: #fbfbfb;
 }
 

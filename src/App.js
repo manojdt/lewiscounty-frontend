@@ -84,9 +84,11 @@ import AdminTickets from './component/SuperAdmin/tickets/SuperAdminTickets';
 import AdminMembers from './component/SuperAdmin/tickets/SuperAdminMembers';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-import PaymentPage from './features/payments-page/payments';
 import ViewTicket from './component/SuperAdmin/tickets/ViewTicket';
 import TicketDetails from './component/SuperAdmin/tickets/TicketDetails';
+import PaymentPage from './component/payments-page/payments';
+import TicketHistory from './component/Help/TicketHistory';
+import TicketCreation from './component/Help/TicketCreation';
 
 function App() {
   const PrivateRoute = () => {
@@ -107,31 +109,7 @@ function App() {
     return loggedIn ? <Outlet /> : <Navigate to='/dashboard' />;
   };
 
-  const [clientSecret, setClientSecret] = useState();
-
-  // const stripePromise = loadStripe(
-  //   'pk_test_51BTUDGJAJfZb9HEBwDg86TN1KNprHjkfipXmEDMb0gSCassK5T3ZfxsAbcgKVmAIXF7oZ6ItlZZbXO6idTHE67IM007EwQ4uN3'
-  // );
-
-  // const [programDetailsId, setrogramDetailsId] = useState(null);
-  // console.log(programDetailsId);
-
-  // const [clientSecret, setClientSecret] = useState();
-  // useEffect(() => {
-  //   // Call backend to create payment intent and get the clientSecret
-  //   fetch(`/api/payments/create-payment-intent/${programDetailsId}`, {
-  //     method: 'POST',
-  //     headers: { 'Content-Type': 'application/json' },
-  //     body: JSON.stringify({ amount: 2000 }), // Example amount in cents
-  //   })
-  //     .then((res) => res.json())
-  //     .then((data) => setClientSecret(data.clientSecret))
-  //     .catch((error) => console.error('Error fetching client secret:', error));
-  // }, []);
-
-  // if (!clientSecret) {
-  //   return <div>Loading...</div>;
-  // }
+  const [programDetailsId, setProgramDetailsId] = useState(null);
 
   return (
     <>
@@ -180,11 +158,14 @@ function App() {
             <Route path='/programs' element={<Programs />} />
             <Route
               path='/program-details/:id'
-              element={<ProgramDetails setClientSecret={setClientSecret} />}
+              element={
+                <ProgramDetails setProgramDetailsId={setProgramDetailsId} />
+              }
             />
+            <Route path='/ticket-history' element={<TicketHistory />} />
             <Route
-              path='/payments'
-              element={<PaymentPage clientSecret={clientSecret} />}
+              path='/payment-checkout'
+              element={<PaymentPage programDetailsId={programDetailsId} />}
             />
             <Route path='/program-task/:id' element={<ProgramTask />} />
             <Route path='/assign-task/:id' element={<AssignTask />} />
@@ -263,6 +244,8 @@ function App() {
               element={<PreviewTaskDetails />}
             />
 
+            <Route path='/ticket-creation' element={<TicketCreation />} />
+            <Route path='/ticket-creation/:id' element={<TicketCreation />} />
             <Route path='/launch-program' element={<LaunchProgram />} />
             <Route path='/goals' element={<Goals />} />
             <Route

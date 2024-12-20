@@ -23,7 +23,7 @@ const CheckoutForm = () => {
       //`Elements` instance that was used to create the Payment Element
       elements,
       confirmParams: {
-        return_url: 'https://example.com/order/123/complete',
+        return_url: 'http://localhost:3000/dashboard',
       },
     });
 
@@ -38,9 +38,18 @@ const CheckoutForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <PaymentElement />
-      <button disabled={!stripe}>Submit</button>
+    <form onSubmit={handleSubmit} className='h-screen'>
+      <div className='flex items-center justify-center'>
+        <div className='border rounded-lg p-4 w-[40%] bg-white'>
+          <PaymentElement />
+          <button
+            className={`w-full bg-[#6772e5] cursor-pointer transition-all duration-300 ease-in disabled:bg-[#d3d3d3] disabled:cursor-not-allowed text-lg font-semibold hover:bg-[#5469d4] text-white p-3 rounded-xl mt-6`}
+            disabled={!stripe}
+          >
+            Submit
+          </button>
+        </div>
+      </div>
     </form>
   );
 };
