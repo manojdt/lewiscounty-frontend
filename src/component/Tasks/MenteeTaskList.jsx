@@ -104,7 +104,7 @@ export default function MenteeTaskList() {
                           <p
                             className={`px-7 py-1 task_action_${(list?.result ?? "fail")?.toLowerCase()}`}
                           >
-                            {list.result ?? "Fail"}
+                            {list.result ?? "No Pass"}
                           </p>
                         </p>
                         <p className='text-[13px] pt-4 leading-6'>

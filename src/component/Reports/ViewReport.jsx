@@ -18,6 +18,7 @@ import { reportAllStatus } from '../../utils/constant'
 import TickColorIcon from '../../assets/icons/tickColorLatest.svg';
 import { updateReportRequest } from '../../services/request'
 import { CancelPopup } from '../Mentor/Task/cancelPopup'
+import { Typography } from '@mui/material';
 
 const ViewReport = () => {
     const navigate = useNavigate()
@@ -28,6 +29,11 @@ const ViewReport = () => {
     const { reportDetails, loading: reportsLoading } = useSelector(state => state.reports)
     const userInfo = useSelector(state => state.userInfo);
     const role = userInfo.data.role
+
+
+    useEffect(()=>{
+        console.log("reportDetails", reportDetails)
+    },[reportDetails])
 
     const [confirmPopup, setConfirmPopup] = React.useState({
         bool: false,
@@ -314,7 +320,40 @@ const ViewReport = () => {
                                 /> */}
                                 </div>
                             }
+                                <div style={{ marginTop: 20, display: 'flex', flexDirection: 'row', width: "100%", justifyContent: 'center' }}>
+                                    {
+                                        role === "admin" &&
+                                            reportDetails?.status === "approved" ?
+                                            <Typography style={{
+                                                background: "#16B681",
+                                                borderRadius: "8px",
+                                                padding: "8px 16px",
+                                                color: "white",
+                                                display: "inline-block",
+                                                marginRight: 30
+                                            }}> Approved </Typography> :
+                                            reportDetails?.status === "rejected" ?
+                                                <Typography style={{
+                                                    lineHeight: "30px",
+                                                    borderRadius: "3px",
+                                                    width: "110px",
+                                                    height: "34px",
+                                                    color: "rgb(224, 56, 45)",
+                                                    fontSize: "12px",
+                                                    textAlign: "center",
+                                                    display: "flex",
+                                                    justifyContent: "center",
+                                                    alignItems: "center",
+                                                    background: "#fff",
+                                                }} color="error"> Rejected </Typography>
+                                                : null
 
+                                    }
+                                    <Button btnType="button" btnCls="w-[120px]"
+                                        onClick={() => { navigate(-1) }} btnName='Close'
+                                        btnCategory="secondary"
+                                    />
+                                </div>
                             {
                                 (role === "admin" && reportDetails?.status === "new") ?
                                     <div className='close-btn flex justify-center gap-7 pb-5'>
@@ -335,13 +374,7 @@ const ViewReport = () => {
                                                 btnName='Approve' />
                                         }
 
-                                    </div> :role === "admin"?
-                                    <div className='close-btn flex justify-center gap-7 pb-5'>
-                                        <Button btnType="button" btnCls="w-[120px]"
-                                            onClick={() => { navigate(-1) }} btnName='Close'
-                                            btnCategory="secondary"
-                                        />
-                                    </div>:null
+                                    </div> : null 
 
                             }
                         </div>

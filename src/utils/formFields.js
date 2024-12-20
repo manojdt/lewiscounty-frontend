@@ -2764,7 +2764,7 @@ export const CreateCertificateFields = [
   {
     type: 'popup-input',
     name: 'fail_mentee_list',
-    label: 'Fail  Mentees',
+    label: 'No Pass Mentees',
     placeholder: 'Select Meneteed',
     inputRules: {},
     options: [],

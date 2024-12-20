@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState , } from 'react';
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import Cancel from '../../assets/images/cancel-colour1x.png';
 import ArrowRightIcon from '../../assets/icons/arrowRightColor.svg';
@@ -26,7 +26,7 @@ import MuiModal from '../../shared/Modal';
 import { updateCertificateRequest } from '../../services/request';
 import TickColorIcon from '../../assets/icons/tickColorLatest.svg'
 import CancelColorIcon from '../../assets/icons/cancelCircle.svg'
-
+import { Typography } from '@mui/material';
 
 export default function CertificateMenteeList() {
   const navigate = useNavigate();
@@ -55,6 +55,10 @@ export default function CertificateMenteeList() {
     activity: false,
     type: ""
   })
+
+  useEffect(()=>{
+    console.log("state", state)
+  },[state])
 
   const getCertificateDetails = async () => {
     const type = searchParams.get('type')
@@ -354,6 +358,41 @@ export default function CertificateMenteeList() {
           paginationModel={paginationModel}
           setPaginationModel={setPaginationModel}
         />
+        <div style={{ display: 'flex', flexDirection: 'row', width: "100%", justifyContent: 'center', marginTop: 20 }}>
+          {
+            role === "admin" &&
+              state?.status === "approved" ?
+              <Typography style={{
+                background: "#16B681",
+                borderRadius: "8px",
+                padding: "8px 16px",
+                color: "white",
+                display: "inline-block",
+                marginRight: 30
+              }}> Approved </Typography> :
+              state?.status === "rejected" ?
+                <Typography style={{
+                  lineHeight: "30px",
+                  borderRadius: "3px",
+                  width: "110px",
+                  height: "34px",
+                  color: "rgb(224, 56, 45)",
+                  fontSize: "12px",
+                  textAlign: "center",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  background: "#fff",
+                }} color="error"> Rejected </Typography>
+                : null
+
+          }
+          <Button
+                btnName="Close"
+                btnCategory='secondary'
+                onClick={() => navigate(-1)} />
+        </div>
+        
         {(state?.status !== "approved" && state?.status !== "rejected"&&state?.status !== "pending") && <>
           {role === "mentor" && <div>
             <div className='flex gap-6 justify-center align-middle py-16'>

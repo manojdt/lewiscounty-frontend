@@ -547,6 +547,12 @@ export default function Programs() {
     }
   }, [role, searchParams, programFilter]);
 
+
+
+  const handleUpdateProgramList = (updatedProgramList) =>{
+    setProgramsList((prevState)=> updatedProgramList)
+  }
+
   return (
     <div className="dashboard-content px-8 mt-10">
       <div className="flex justify-between items-center mb-8">
@@ -672,6 +678,7 @@ export default function Programs() {
                   programs={programsList}
                   noTitle
                   loadProgram={getPrograms}
+                  handleUpdateProgramList={handleUpdateProgramList}
                 />
 
                 {userprograms.total_pages > 1 && (

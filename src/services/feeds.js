@@ -19,17 +19,19 @@ export const createPost = createAsyncThunk(
 
 export const getPost = createAsyncThunk(
     "getPost",
-    async (data) => {
-        let url = 'post/view-post'
-        if(data.page){
-            url = url + `?page=${data.page}`
-        }
-        if(data.pageSize){
-            url = url + `&limit=${data.pageSize}`
-        }
-        console.log("URLLL", url)
-        const getPostData = await api.get(url);
+    async (data = {}) => {
+        let url = 'post/view-post';
         
+        if (data.page) {
+            url += `?page=${data.page}`;
+        }
+        if (data.pageSize) {
+            url += `&limit=${data.pageSize}`;
+        }
+
+        console.log("URL:", url);
+
+        const getPostData = await api.get(url);
 
         if (getPostData.status === 200 && getPostData.data) {
             return getPostData.data;

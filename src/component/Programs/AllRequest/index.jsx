@@ -161,6 +161,34 @@ export default function AllRequest() {
     } = useForm();
 
 
+    const formatDate = (timestamp) => {
+        const date = new Date(timestamp);
+        return date.toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+        });
+    }
+
+    const changeDateTimeFormat = (newData = []) => {
+        if (newData && newData.length > 0) {
+            let updatedData = JSON.parse(JSON.stringify(newData))
+            updatedData.forEach(item => {
+                if ("created_at" in item && "updated_at" in item) {
+                    item.created_at = formatDate(item.created_at);
+                    item.updated_at = formatDate(item.updated_at);
+                }
+            });
+            return updatedData
+        }
+
+    }
+
+
+
+
+    
+
     let programRequestTab = [
 
         {
@@ -673,13 +701,53 @@ export default function AllRequest() {
             },
         },
         {
-            ...(role !== "mentee" && {
+            
                 field: "action",
                 headerName: "Action",
                 flex: 1,
                 id: 4,
-                renderCell: (params) => {
-                    return (
+                renderCell:(params)=>{
+                    if(role === "mentee"){
+                        return (
+                            <>
+                                <div
+                                    className="cursor-pointer flex items-center h-full"
+                                    onClick={(e) => handleMoreClick(e, params.row)}
+                                >
+                                    <img src={MoreIcon} alt="MoreIcon" />
+                                </div>
+                                <Menu
+                                    id="basic-menu"
+                                    anchorEl={anchorEl}
+                                    open={open}
+                                    onClose={handleClose}
+                                    MenuListProps={{
+                                        "aria-labelledby": "basic-button",
+                                    }}
+                                >
+                                    <MenuItem
+                                        onClick={(e) => {
+                                            const url = seletedItem?.status === "approved" ? `/program-details/${seletedItem.program}` 
+                                            : `/program-details/${seletedItem.program}?request_id=${seletedItem.id}&type=${actionTab}`
+                                            return navigate(url, { state: { data: seletedItem } });
+                                        }}
+                                        className="!text-[12px]"
+                                    >
+                                        <img
+                                            src={ViewIcon}
+                                            alt="ViewIcon"
+                                            className="pr-3 w-[30px]"
+                                        />
+                                        View
+                                    </MenuItem>
+    
+                                </Menu>
+                                
+    
+                            </>
+                        )
+                    }
+                    else {
                         <>
                             <div
                                 className="cursor-pointer flex items-center h-full"
@@ -774,9 +842,12 @@ export default function AllRequest() {
                                     </MenuItem>} */}
                             </Menu>
                         </>
-                    );
-                },
-            }),
+                    }
+                    
+                
+        
+        },
+       
         },
     ];
 
@@ -1978,7 +2049,7 @@ export default function AllRequest() {
         ) {
             setActiveTableDetails({
                 column: programRequestColumn,
-                data: programTableInfo.results,
+                data: changeDateTimeFormat(programTableInfo.results),
                 rowCount: programTableInfo?.count,
             });
         }
