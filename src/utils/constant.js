@@ -541,12 +541,21 @@ export const ticketStatusText = {
   reject: 'Reject',
 };
 
+// STATUS_CHOICES = [
+//   ('new', 'New'),
+//   ('in_progress', 'In Progress'),
+//   ('closed', 'Closed'),
+//   ('rejected', 'Rejected'),
+//   ('pending', 'Pending'),
+//   ('reopened', 'Reopened'),
+// ];
+
 export const TicketStatusColor = {
   all: {
     color: 'rgba(255, 212, 27, 1)',
     bg: 'rgba(255, 247, 216, 1)',
   },
-  reject: {
+  rejected: {
     color: 'rgba(224, 56, 45, 1)',
     bg: 'rgba(255, 231, 231, 1)',
   },
@@ -554,9 +563,9 @@ export const TicketStatusColor = {
     color: 'rgba(255, 213, 0, 1)',
     bg: 'rgba(255, 251, 233, 1)',
   },
-  inprogress: {
-    color: 'rgba(29, 91, 191, 1)',
-    bg: 'rgba(207, 225, 255, 1)',
+  in_progress: {
+    color: '#FF7600',
+    bg: '#FFF2E7',
   },
   closed: {
     color: 'rgba(255, 213, 0, 1)',

@@ -1,5 +1,5 @@
 import { Breadcrumbs, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import UserImage from '../../../assets/icons/user-image.svg';
 import ImageIcon from '../../../assets/icons/image-icon.svg';
@@ -11,14 +11,17 @@ import moment from 'moment';
 import { TicketStatusColor, user } from '../../../utils/constant';
 import CustomTicketAccordian from '../../../shared/custom-accordian/CustomTicketAccordian';
 import { useSelector } from 'react-redux';
+import { useUpdateStatusMutation } from '../../../features/tickets/tickets-slice';
+import SuccessGradientMessage from '../../success-gradient-message';
 
 const ViewTicket = ({ ticket, type }) => {
+  const [isBackdropOpen, setIsBackdropOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const userInfo = useSelector((state) => state.userInfo);
   const role = userInfo.data.role;
 
-  console.log('get specific data', ticket);
+  const [updateStatus, { isLoading, isSuccess }] = useUpdateStatusMutation();
 
   const breadcrumbs = [
     <Link
@@ -37,11 +40,20 @@ const ViewTicket = ({ ticket, type }) => {
 
   const handleNavigate = () => {
     if (role === user.super_admin) {
-      return navigate(`/tickets/${ticket.id}?type=start`);
+      return updateStatus({ id: ticket?.id, status: 'in_progress' });
     } else {
       return navigate(`/ticket-creation/${ticket.id}?type=edit`);
     }
   };
+  useEffect(() => {
+    if (isSuccess) {
+      setIsBackdropOpen(true);
+      setTimeout(() => {
+        setIsBackdropOpen(false);
+        navigate(`/tickets/${ticket.id}?type=start`);
+      }, 2000);
+    }
+  }, [isSuccess]);
 
   return (
     <div>
@@ -125,7 +137,7 @@ const ViewTicket = ({ ticket, type }) => {
         )}
       </div>
 
-      {type === 'view' && (
+      {type === 'view' && ticket?.status === 'new' && (
         <div className='flex gap-6 my-12 justify-center align-middle'>
           <Button
             btnName={`${
@@ -150,6 +162,11 @@ const ViewTicket = ({ ticket, type }) => {
           />
         </div>
       )}
+      <SuccessGradientMessage
+        message={'This ticket is in-progress'}
+        isBackdropOpen={isBackdropOpen}
+        setIsBackdropOpen={setIsBackdropOpen}
+      />
       {isOpen && <TicketDeleteModal isOpen={isOpen} setIsOpen={setIsOpen} />}
     </div>
   );

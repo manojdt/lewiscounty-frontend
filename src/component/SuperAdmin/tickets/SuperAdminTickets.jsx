@@ -56,11 +56,12 @@ const AdminTickets = () => {
       return {
         ...column,
         renderCell: (params) => {
+          console.log(params.row.status);
           return (
             <>
               <div className='cursor-pointer flex items-center h-full relative'>
                 <span
-                  className='w-[80px] flex justify-center h-[30px] px-3'
+                  className='w-[80px] capitalize flex justify-center h-[30px] px-3'
                   style={{
                     background: TicketStatusColor[params.row.status]?.bg || '',
                     lineHeight: '30px',
@@ -71,7 +72,7 @@ const AdminTickets = () => {
                     fontSize: '12px',
                   }}
                 >
-                  {ticketStatusText[params.row.status]}
+                  {params.row.status}
                 </span>
               </div>
             </>
@@ -93,11 +94,13 @@ const AdminTickets = () => {
       renderCell: (params) => {
         return (
           <>
-            <div
-              className='cursor-pointer flex items-center h-full'
-              onClick={(e) => handleClick(e, params.row)}
-            >
-              <img src={MoreIcon} alt='MoreIcon' />
+            <div className='flex items-center h-full'>
+              <img
+                src={MoreIcon}
+                alt='MoreIcon'
+                onClick={(e) => handleClick(e, params.row)}
+                className='w-8 cursor-pointer  h-8 p-2 rounded-full bg-gray-100'
+              />
             </div>
             <Menu
               id='basic-menu'
