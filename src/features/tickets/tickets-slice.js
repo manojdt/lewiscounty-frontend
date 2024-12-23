@@ -32,6 +32,7 @@ export const ticketsApi = rtkQueryApiServices.injectEndpoints({
     }),
     getAllTickets: builder.query({
       query: () => `/tickets/`,
+      providesTags: ['Tickets'],
     }),
     // getAllTickets: builder.query({
     //   query: ({ status, page, limit }) => {
@@ -48,6 +49,7 @@ export const ticketsApi = rtkQueryApiServices.injectEndpoints({
     // }),
     getTicket: builder.query({
       query: (slug) => `/tickets/${slug}/`,
+      providesTags: (result, error, slug) => [{ type: 'Ticket', id: slug }],
     }),
     updateStatus: builder.mutation({
       query: ({ id, status }) => ({
@@ -55,6 +57,11 @@ export const ticketsApi = rtkQueryApiServices.injectEndpoints({
         method: 'PUT',
         body: { status },
       }),
+
+      invalidatesTags: (result, error, { id }) => [
+        { type: 'Ticket', id },
+        'Tickets',
+      ],
     }),
   }),
 });

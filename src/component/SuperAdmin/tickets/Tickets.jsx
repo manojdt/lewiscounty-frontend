@@ -25,6 +25,7 @@ import RejectIcon from '../../../assets/icons/reject-icon.svg';
 import ViewIcon from '../../../assets/icons/eye-icon.svg';
 import SuccessGradientMessage from '../../success-gradient-message';
 import { useSelector } from 'react-redux';
+import CancelRequestModal from './cancel-request';
 
 const Tickets = () => {
   const navigate = useNavigate();
@@ -39,6 +40,7 @@ const Tickets = () => {
   const [menuAnchor, setMenuAnchor] = useState({ anchorEl: null, rowId: null });
   const [ticketId, setTicketId] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [isCancelRequestModal, setIsCancelRequestModal] = useState(false);
 
   const [
     updateStatus,
@@ -189,9 +191,17 @@ const Tickets = () => {
                   )}
                 </div>
               )}
-              {(role === user.mentee || role === user.mentor) && (
+              {(role === user.mentee ||
+                role === user.mentor ||
+                role === user.admin) && (
                 <div>
-                  <MenuItem onClick={() => {}} className='!text-[12px]'>
+                  <MenuItem
+                    onClick={() => {
+                      setTicketId(params.row.id);
+                      setIsCancelRequestModal(true);
+                    }}
+                    className='!text-[12px]'
+                  >
                     <img
                       src={CancelRequestIcon}
                       alt='ViewIcon'
@@ -343,6 +353,13 @@ const Tickets = () => {
         <TicketDeleteModal
           isOpen={isOpen}
           setIsOpen={setIsOpen}
+          ticketId={ticketId}
+        />
+      )}
+      {isCancelRequestModal && (
+        <CancelRequestModal
+          isOpen={isCancelRequestModal}
+          setIsOpen={setIsCancelRequestModal}
           ticketId={ticketId}
         />
       )}
