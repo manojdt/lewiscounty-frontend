@@ -8,22 +8,26 @@ const baseUrl = `${process.env.REACT_APP_BASE_URL}/api/`
 
 // const baseUrl = "https://62f8-202-83-25-55.ngrok-free.app/api/"
 
-
+export const rtkQueryServiceTags = {
+  PROGRAM_UPDATES: "program_updates",
+  PROGRAM_LAUNCH: 'program_launch'
+}
+const { PROGRAM_UPDATES, PROGRAM_LAUNCH } = rtkQueryServiceTags
 export const rtkQueryApiServices = createApi({
   reducerPath: 'rtkQueryApiServices',
   baseQuery: fetchBaseQuery({
     baseUrl,
     prepareHeaders: (headers) => {
       const token = localStorage.getItem('access_token');
-  
+
       if (token) {
         headers.set('Authorization', `Bearer ${token}`);
       }
-  
+
       return headers;
     },
   }),
-  tagTypes: [], // Define the necessary tags
+  tagTypes: [PROGRAM_UPDATES, PROGRAM_LAUNCH], // Define the necessary tags
   endpoints: () => ({}),
 });
 
@@ -53,8 +57,8 @@ api.interceptors.response.use(
     console.log("error ==>", error)
     const reasons = ["ERR_BAD_REQUEST", "ERR_NETWORK", "ERR_BAD_RESPONSE"]
     const errMsg = error?.response?.data?.errors?.[0] ?? error?.response?.data?.error ?? error?.response?.data?.message
-    if (errMsg?.length > 0) {      
-      toast.error(errMsg); 
+    if (errMsg?.length > 0) {
+      toast.error(errMsg);
     }
     if (error.code && (error.code === "ERR_NETWORK" || error.code === "ERR_BAD_RESPONSE")) {
       error.message = "There is a Server Error. Please try again later."

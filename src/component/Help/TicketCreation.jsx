@@ -50,14 +50,14 @@ const TicketCreation = () => {
     refetch,
   } = useGetTicketQuery(id);
 
-  useEffect(() => {
-    if (id) {
-      reset({
-        ...ticket,
-        // attachment: setFilePreviews(),
-      });
-    }
-  }, [id]);
+  // useEffect(() => {
+  //   if (id) {
+  //     reset({
+  //       ...ticket,
+  //       // attachment: setFilePreviews(),
+  //     });
+  //   }
+  // }, [id]);
   console.log('ticket', ticket);
 
   const imageClickHandler = () => {
@@ -115,9 +115,9 @@ const TicketCreation = () => {
     }
 
     if (searchParams.get('type') === 'edit') {
-      createTicket(formData);
-    } else {
       updateTicket(formData);
+    } else {
+      createTicket(formData);
     }
   };
 

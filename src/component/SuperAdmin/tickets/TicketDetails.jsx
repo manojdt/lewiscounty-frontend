@@ -79,7 +79,6 @@ const TicketDetails = () => {
           </div>
         )}
 
-        {/* {role === user.super_admin && ( */}
         <div>
           {ticket &&
             ticket.comments &&
@@ -93,7 +92,6 @@ const TicketDetails = () => {
               </CustomTicketAccordian>
             ))}
         </div>
-        {/* )} */}
 
         {role === user.super_admin && (
           <div>

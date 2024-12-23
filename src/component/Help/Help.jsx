@@ -150,7 +150,7 @@ export default function HelpPage() {
                     onClick={() => {
                       handleOpen(questionList.key);
                       if (index === 2) {
-                        navigate('/mentee-ticket-creation');
+                        navigate('/ticket-creation');
                       }
                     }}
                   >
