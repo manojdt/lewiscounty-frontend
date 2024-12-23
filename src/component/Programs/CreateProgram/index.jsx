@@ -856,6 +856,9 @@ export default function CreatePrograms() {
       }, 3000);
     }
   }, [tabActionInfo.error]);
+  useEffect(() => {
+  console.log(status,"status")
+  }, [status]);
 
   useEffect(() => {
     if (
@@ -991,11 +994,13 @@ export default function CreatePrograms() {
           sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={
             isProgramCreating ||
+            isProgramCreated||
             isProgramUpdating ||
             isDetailFetching ||
             IsErrorProgramCreating ||
             IsErrorProgramUpdating ||
             status === programStatus.update
+          
           }
         >
           {isProgramCreating || isProgramUpdating || isDetailFetching ? (
