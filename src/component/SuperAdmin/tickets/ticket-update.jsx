@@ -121,7 +121,7 @@ const TicketUpdate = ({ ticket }) => {
     await updateTicket({ id: ticket.id, ticket: formData });
 
     if (closeTicket) {
-      await updateStatus({ id: ticket.id, status: 'closed' });
+      await updateStatus({ id: ticket.id, status: 'resolved' });
     }
   };
 

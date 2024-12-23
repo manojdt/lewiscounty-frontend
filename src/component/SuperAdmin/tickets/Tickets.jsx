@@ -272,6 +272,10 @@ const Tickets = () => {
       name: 'Reject Tickets',
       key: 'rejected',
     },
+    {
+      name: 'Resolved Tickets',
+      key: 'resolved',
+    },
   ];
 
   const handleTab = (key) => {
