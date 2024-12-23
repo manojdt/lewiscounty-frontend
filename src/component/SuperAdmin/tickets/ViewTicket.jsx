@@ -178,29 +178,33 @@ const ViewTicket = ({ ticket, type }) => {
           </div>
         )}
 
-      {type === 'view' && (role === user.mentee || role === user.mentor) && (
-        <div className='flex gap-6 my-12 justify-center align-middle'>
-          <Button
-            btnName={'Cancel request'}
-            btnCls='w-[170px]'
-            btnStyle={{
-              border: '1px solid rgba(220, 53, 69, 1)', // Danger red border
-              color: 'rgba(220, 53, 69, 1)', // Danger red text
-            }}
-            btnCategory='secondary'
-            onClick={() => navigate(-1)}
-          />
+      {type === 'view' &&
+        (role === user.mentee || role === user.mentor) &&
+        (ticket.status === 'new' || ticket.status === 'pending') && (
+          <div className='flex gap-6 my-12 justify-center align-middle'>
+            <Button
+              btnName={'Cancel request'}
+              btnCls='w-[170px]'
+              btnStyle={{
+                border: '1px solid rgba(220, 53, 69, 1)', // Danger red border
+                color: 'rgba(220, 53, 69, 1)', // Danger red text
+              }}
+              btnCategory='secondary'
+              onClick={() => navigate(-1)}
+            />
 
-          <Button
-            btnType='submit'
-            btnCls='w-[170px]'
-            btnName={`Edit request`}
-            // onClick={() => navigate(`/tickets/${ticket.id}?type=start`)}
-            onClick={() => navigate(`/ticket-creation/${ticket.id}?type=edit`)}
-            btnCategory='primary'
-          />
-        </div>
-      )}
+            <Button
+              btnType='submit'
+              btnCls='w-[170px]'
+              btnName={`Edit request`}
+              // onClick={() => navigate(`/tickets/${ticket.id}?type=start`)}
+              onClick={() =>
+                navigate(`/ticket-creation/${ticket.id}?type=edit`)
+              }
+              btnCategory='primary'
+            />
+          </div>
+        )}
       <SuccessGradientMessage
         message={'This ticket is in-progress'}
         isBackdropOpen={isBackdropOpen}

@@ -8,6 +8,7 @@ export const ticketsApi = rtkQueryApiServices.injectEndpoints({
         method: 'POST',
         body: ticket,
       }),
+      invalidatesTags: ['Tickets'],
     }),
     updateTicket: builder.mutation({
       query: ({ id, ticket }) => ({
@@ -15,6 +16,10 @@ export const ticketsApi = rtkQueryApiServices.injectEndpoints({
         method: 'PUT',
         body: ticket,
       }),
+      invalidatesTags: (result, error, { id }) => [
+        { type: 'Ticket', id },
+        'Tickets',
+      ],
     }),
     // createTicket: builder.mutation({
     //   query: (ticket) => ({

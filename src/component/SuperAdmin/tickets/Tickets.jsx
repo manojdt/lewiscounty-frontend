@@ -195,33 +195,39 @@ const Tickets = () => {
                 role === user.mentor ||
                 role === user.admin) && (
                 <div>
-                  <MenuItem
-                    onClick={() => {
-                      setTicketId(params.row.id);
-                      setIsCancelRequestModal(true);
-                    }}
-                    className='!text-[12px]'
-                  >
-                    <img
-                      src={CancelRequestIcon}
-                      alt='ViewIcon'
-                      className='pr-3 w-[30px]'
-                    />
-                    Cancel Request
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() =>
-                      navigate(`/ticket-creation/${params.row.id}?type=edit`)
-                    }
-                    className='!text-[12px]'
-                  >
-                    <img
-                      src={EditTicketIcon}
-                      alt='ViewIcon'
-                      className='pr-3 w-[30px]'
-                    />
-                    Edit
-                  </MenuItem>
+                  {params.row.status === 'new' && (
+                    <div>
+                      <MenuItem
+                        onClick={() => {
+                          setTicketId(params.row.id);
+                          setIsCancelRequestModal(true);
+                        }}
+                        className='!text-[12px]'
+                      >
+                        <img
+                          src={CancelRequestIcon}
+                          alt='ViewIcon'
+                          className='pr-3 w-[30px]'
+                        />
+                        Cancel Request
+                      </MenuItem>
+                      <MenuItem
+                        onClick={() =>
+                          navigate(
+                            `/ticket-creation/${params.row.id}?type=edit`
+                          )
+                        }
+                        className='!text-[12px]'
+                      >
+                        <img
+                          src={EditTicketIcon}
+                          alt='ViewIcon'
+                          className='pr-3 w-[30px]'
+                        />
+                        Edit
+                      </MenuItem>
+                    </div>
+                  )}
 
                   <MenuItem onClick={() => {}} className='!text-[12px]'>
                     <img
