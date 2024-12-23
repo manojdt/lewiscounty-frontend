@@ -79,7 +79,10 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
         let bodyFormData = new FormData();
         bodyFormData.append('program_id', programUploadAction.selectedProgram.id)
         bodyFormData.append('program_image', programImage[0])
-        dispatch(updateProgramImage(bodyFormData)).then(() => {
+        dispatch(updateProgramImage({
+            id: programUploadAction.selectedProgram.id,
+            data: bodyFormData
+        })).then(() => {
             loadProgram && loadProgram()
             setProgramUploadAction({ loading: false, imageModal: false, successModal: true, error: '', selectedProgram: {} })
             setProgramImage(null)
@@ -421,13 +424,19 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                                                                 (200*200 Pixels)
                                                             </p>
                                                         </div>
-                                                        <input id={'program_image'} type="file"
+                                                        <input id={'program_image'} type="file"  accept="image/png, image/jpeg, image/jpg,image/webp,image/heic"
                                                             {...imageField}
 
                                                             onChange={(e) => {
                                                                 imageField.onChange(e);
                                                                 if (e.target.files && e.target.files[0]) {
-                                                                    let types = ['image/png', 'image/jpeg']
+                                                                    let types = [
+                                                                        "image/png",
+                                                                        "image/jpeg",
+                                                                        "image/jpg",
+                                                                        "image/webp",
+                                                                        "image/heic",
+                                                                      ]
                                                                     if (types.includes(e.target.files[0].type)) {
                                                                         setProgramImage(e.target.files);
                                                                     } else {

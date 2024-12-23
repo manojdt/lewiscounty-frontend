@@ -28,8 +28,8 @@ import {
   requestStatus,
 } from "../../../utils/constant";
 import {
-  acceptProgram,
   getMenteeJoinedInProgram,
+  getSpecificProgramDetails,
 } from "../../../services/userprograms";
 import {
   programCancelRequest,
@@ -77,6 +77,7 @@ import { Elements } from "@stripe/react-stripe-js";
 import ConfirmIcon from "../../../assets/icons/Popup-confirmation.svg";
 import CloseIcon from "../../../assets/icons/close_x.svg";
 import {
+  useAcceptProgramMutation,
   useGetProgramDetailsByIdQuery,
   useLaunchProgramMutation,
 } from "../../../features/program/programApi.services";
@@ -84,9 +85,11 @@ import {
 export default function ProgramDetails({ setProgramDetailsId }) {
   const params = useParams();
   const [searchParams] = useSearchParams();
-
+  const [acceptProgram, { isSuccess: isAccepted, reset: resetProgramAccept }] =
+    useAcceptProgramMutation();
   const requestId = searchParams.get("request_id") || "";
   const requestStatusParams = searchParams.get("status") || "";
+  const created_by = searchParams.get("created_by") || "";
 
   const userdetails = useSelector((state) => state.userInfo);
   const role = userdetails.data.role || "";
@@ -104,7 +107,6 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     share: false,
     reschedule: false,
   });
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -112,10 +114,18 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     launchProgram,
     { isSuccess: programLaunchedSuccessful, isLoading: isLaunchingProgram },
   ] = useLaunchProgramMutation();
+
   const { data: programdetails, isLoading: programLoading } =
     useGetProgramDetailsByIdQuery(
-      { id: params?.id, requestId: requestId, role },
-      { skip: !(params?.id && role), refetchOnMountOrArgChange: true }
+      {
+        id: params?.id,
+        requestId: requestId,
+        role: created_by.toLowerCase(),
+      },
+      {
+        skip: !params?.id,
+        refetchOnMountOrArgChange: true,
+      }
     );
 
   const [activeTab, setActiveTab] = useState("about_program");
@@ -227,19 +237,12 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     }
   }, [params.id, programLaunchedSuccessful]);
 
-  const handleAcceptProgram = () => {
-    dispatch(
-      acceptProgram({
-        id: requestId,
-        program: programdetails?.id,
-        request_type: "program_assign",
-        status: "approved",
-      })
-    ).then((res) => {
-      if (res?.meta?.requestStatus === "fulfilled") {
-        setIsSuccess(true);
-        navigate(`/update-program/${programdetails?.id}`);
-      }
+  const handleAcceptProgram = async () => {
+    await acceptProgram({
+      id: requestId,
+      program: programdetails?.id,
+      request_type: "program_assign",
+      status: "approved",
     });
   };
   // Handle Accept Program Popup
@@ -497,14 +500,18 @@ export default function ProgramDetails({ setProgramDetailsId }) {
 
         if ((role === "mentor" || role === "admin") && requestId === "") {
           if (programdetails.status === programActionStatus.yettostart) {
-            navigate(`${pipeUrls.startprogram}/${params.id}`);
+            navigate(
+              `${pipeUrls.startprogram}/${params.id}?created_by=${created_by}`
+            );
           } else if (
             programdetails.status === programActionStatus.inprogress ||
             programdetails.status === programActionStatus.assigned ||
             programdetails.status === programActionStatus.paused ||
             programdetails.status === programActionStatus.started
           ) {
-            navigate(`${pipeUrls.startprogram}/${params.id}`);
+            navigate(
+              `${pipeUrls.startprogram}/${params.id}?created_by=${created_by}`
+            );
           }
         }
       }
@@ -604,11 +611,13 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   // }, [programDetailsId]);
 
   useEffect(() => {
-    if (isSuccess) {
-      navigate(`/update-program/${programdetails?.id}`);
-      setIsSuccess(false);
+    if (isAccepted) {
+      setTimeout(() => {
+        resetProgramAccept();
+        navigate(`/update-program/${programdetails?.id}`);
+      }, 3000);
     }
-  }, [isSuccess, programdetails?.id]);
+  }, [isAccepted, programdetails?.id]);
 
   return (
     <div className="px-9 my-6 grid">
@@ -645,7 +654,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
 
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={isSuccess}
+        open={isAccepted}
       >
         <div className="px-5 py-1 flex justify-center items-center">
           <div

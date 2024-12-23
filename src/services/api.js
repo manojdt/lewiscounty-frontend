@@ -10,9 +10,10 @@ const baseUrl = `${process.env.REACT_APP_BASE_URL}/api/`
 
 export const rtkQueryServiceTags = {
   PROGRAM_UPDATES: "program_updates",
-  PROGRAM_LAUNCH: 'program_launch'
+  PROGRAM_LAUNCH: 'program_launch',
+  PROGRAM_ACCEPT: 'program_accept'
 }
-const { PROGRAM_UPDATES, PROGRAM_LAUNCH } = rtkQueryServiceTags
+const { PROGRAM_UPDATES, PROGRAM_LAUNCH, PROGRAM_ACCEPT } = rtkQueryServiceTags
 export const rtkQueryApiServices = createApi({
   reducerPath: 'rtkQueryApiServices',
   baseQuery: fetchBaseQuery({
@@ -27,7 +28,7 @@ export const rtkQueryApiServices = createApi({
       return headers;
     },
   }),
-  tagTypes: [PROGRAM_UPDATES, PROGRAM_LAUNCH], // Define the necessary tags
+  tagTypes: [PROGRAM_UPDATES, PROGRAM_LAUNCH, PROGRAM_ACCEPT], // Define the necessary tags
   endpoints: () => ({}),
 });
 
@@ -54,7 +55,6 @@ api.interceptors.response.use(
     return response;
   },
   async (error) => {
-    console.log("error ==>", error)
     const reasons = ["ERR_BAD_REQUEST", "ERR_NETWORK", "ERR_BAD_RESPONSE"]
     const errMsg = error?.response?.data?.errors?.[0] ?? error?.response?.data?.error ?? error?.response?.data?.message
     if (errMsg?.length > 0) {

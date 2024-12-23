@@ -1,8 +1,25 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import MuiModal from '../../../shared/Modal';
+import { useUpdateStatusMutation } from '../../../features/tickets/tickets-slice';
+import SuccessGradientMessage from '../../success-gradient-message';
+import { useNavigate } from 'react-router-dom';
 
-const TicketRejectModal = ({ setIsOpen, isOpen }) => {
+const TicketRejectModal = ({ setIsOpen, isOpen, ticketId }) => {
   // const [reason, setReason] = useState('');
+  const navigate = useNavigate();
+  const [isBackdropOpen, setIsBackdropOpen] = useState(false);
+
+  const [updateStatus, { isLoading, isSuccess }] = useUpdateStatusMutation();
+
+  useEffect(() => {
+    if (isSuccess) {
+      setIsBackdropOpen(true);
+      setTimeout(() => {
+        setIsBackdropOpen(false);
+        navigate(`/tickets`);
+      }, 2000);
+    }
+  }, [isSuccess]);
 
   return (
     <MuiModal
@@ -34,11 +51,17 @@ const TicketRejectModal = ({ setIsOpen, isOpen }) => {
           className='px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition transform duration-200 hover:scale-105'
           onClick={() => {
             // console.log('Reason:', reason);
+            updateStatus({ id: ticketId, status: 'rejected' });
           }}
         >
           Yes
         </button>
       </div>
+      <SuccessGradientMessage
+        message={'The ticket has been rejected successfully.'}
+        isBackdropOpen={isBackdropOpen}
+        setIsBackdropOpen={setIsBackdropOpen}
+      />
     </MuiModal>
   );
 };

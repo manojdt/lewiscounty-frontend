@@ -499,7 +499,7 @@ console.log(allFiles,"allfiles")
                 <Box mb={3}>
                   <div style={{ marginTop: '40px' }}>
                     <Typography className='!text-[14px] !text-[#18283D]'>
-                      Task
+                      Task Solution
                     </Typography>
 
                     <Box

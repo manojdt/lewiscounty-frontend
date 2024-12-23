@@ -29,7 +29,7 @@ import TimeHistoryIcon from '../../../assets/icons/time-history-icon.svg'
 import TickColorIcon from '../../../assets/icons/tickColorLatest.svg'
 
 import './program-details.css'
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import MuiModal from '../../../shared/Modal';
 import { Button } from '../../../shared';
 import { useForm } from 'react-hook-form';
@@ -54,19 +54,34 @@ import { JoinedProgramMenteeColumn } from '../../../mock';
 import DataTable from '../../../shared/DataGrid';
 import PaymentButton from '../../../shared/paymentButton';
 import { CancelPopup } from '../../Mentor/Task/cancelPopup';
+import { useGetProgramDetailsByIdQuery, useLaunchProgramMutation } from '../../../features/program/programApi.services';
 
 
 export default function AssignTask() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const params = useParams();
-
+    const [searchParams] = useSearchParams();
     const timerData = useTimer()
     const calendarRef = useRef([])
-
+    const created_by = searchParams.get("created_by") || "";
+    const { data: programdetails, isLoading: programLoading } =
+        useGetProgramDetailsByIdQuery(
+            {
+                id: params?.id,
+                // requestId: requestId,
+                role: created_by.toLowerCase(),
+            },
+            {
+                skip: !params?.id,
+                refetchOnMountOrArgChange: true,
+            }
+        );
+    const [
+        launchProgram
+    ] = useLaunchProgramMutation();
     const { allPrograms, programDetails, programMentees } = useSelector(state => state.programInfo)
     const userdetails = useSelector(state => state.userInfo)
-    const { programdetails, loading: programLoading, error, status } = useSelector(state => state.userPrograms)
     // const programdetails = programData
     const { profile, loading: profileLoading } = useSelector(state => state.profileInfo)
 
@@ -226,19 +241,14 @@ export default function AssignTask() {
         //     navigate(`${pipeUrls.assignmentess}/${programdetails.id}`)
         // }
         if (type === "join_program") {
-            dispatch(launchProgram({ program: programdetails.id, request_type: "program_join" })).then((res) => {
-                if (res.meta.requestStatus === "fulfilled") {
-                    dispatch(getProgramDetails({ id: parseInt(params.id) }))
-                }
-            })
+            await launchProgram({ program: programdetails.id, request_type: "program_join" });
+
         } else if (programdetails.status === programActionStatus.yettostart) {
             // setLoading({ initial: true, task: false })
             // const startProgramRequest = await api.post('start_program', { id: parseInt(params.id) });
             // if ((startProgramRequest.status === 201 || startProgramRequest.status === 200) && startProgramRequest.data) {
             // setLoading({ initial: false, task: false })
-            dispatch(launchProgram({ program: programdetails.id, request_type: "program_start" })).then(() => {
-                dispatch(getProgramDetails({ id: parseInt(params.id) }))
-            })
+            await launchProgram({ program: programdetails.id, request_type: "program_start" });
 
             // }
         }
@@ -338,7 +348,6 @@ export default function AssignTask() {
             reset()
             setDateFormat({})
             setTimeout(() => {
-                dispatch(getProgramDetails({ id: parseInt(params.id) }))
                 dispatch(updateLocalRequest({ status: '' }))
 
             }, 3000)
@@ -371,11 +380,6 @@ export default function AssignTask() {
     }, [startProgramModal])
 
     useEffect(() => {
-        const programId = params.id;
-
-        if (programId && programId !== '') {
-            dispatch(getProgramDetails({ id: programId }))
-        }
 
         if (!Object.keys(profile)?.length) {
             dispatch(getUserProfile())

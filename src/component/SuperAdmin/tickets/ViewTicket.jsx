@@ -1,5 +1,5 @@
 import { Breadcrumbs, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import UserImage from '../../../assets/icons/user-image.svg';
 import ImageIcon from '../../../assets/icons/image-icon.svg';
@@ -11,14 +11,18 @@ import moment from 'moment';
 import { TicketStatusColor, user } from '../../../utils/constant';
 import CustomTicketAccordian from '../../../shared/custom-accordian/CustomTicketAccordian';
 import { useSelector } from 'react-redux';
+import { useUpdateStatusMutation } from '../../../features/tickets/tickets-slice';
+import SuccessGradientMessage from '../../success-gradient-message';
 
 const ViewTicket = ({ ticket, type }) => {
+  const [isBackdropOpen, setIsBackdropOpen] = useState(false);
+  const [ticketId, setTicketId] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const userInfo = useSelector((state) => state.userInfo);
   const role = userInfo.data.role;
 
-  console.log('get specific data', ticket);
+  const [updateStatus, { isLoading, isSuccess }] = useUpdateStatusMutation();
 
   const breadcrumbs = [
     <Link
@@ -35,13 +39,31 @@ const ViewTicket = ({ ticket, type }) => {
     </Typography>,
   ];
 
-  const handleNavigate = () => {
-    if (role === user.super_admin) {
-      return navigate(`/tickets/${ticket.id}?type=start`);
-    } else {
-      return navigate(`/ticket-creation/${ticket.id}?type=edit`);
+  // const handleNavigate = () => {
+  //   if (role === user.super_admin) {
+  //     return updateStatus({ id: ticket?.id, status: 'in_progress' });
+  //   } else {
+  //     return navigate(`/ticket-creation/${ticket.id}?type=edit`);
+  //   }
+  // };
+
+  // const handleCancelRequest = () => {
+  //   if (role === user.super_admin) {
+  //     setIsOpen(true);
+  //     setTicketId(ticket?.id);
+  //   } else {
+  //     navigate(-1);
+  //   }
+  // };
+  useEffect(() => {
+    if (isSuccess) {
+      setIsBackdropOpen(true);
+      setTimeout(() => {
+        setIsBackdropOpen(false);
+        navigate(`/tickets/${ticket.id}?type=start`);
+      }, 2000);
     }
-  };
+  }, [isSuccess]);
 
   return (
     <div>
@@ -113,7 +135,7 @@ const ViewTicket = ({ ticket, type }) => {
             <Link
               to={ticket?.attachment}
               target='_blank'
-              className='border rounded-md p-3 w-[300px] flex items-center justify-between'
+              className='border rounded-md p-3 w-[300px] flex items-center justify-center'
               // key={index}
             >
               <img src={ImageIcon} alt='' />
@@ -125,32 +147,72 @@ const ViewTicket = ({ ticket, type }) => {
         )}
       </div>
 
-      {type === 'view' && (
+      {type === 'view' &&
+        ticket?.status === 'new' &&
+        role === user.super_admin && (
+          <div className='flex gap-6 my-12 justify-center align-middle'>
+            <Button
+              btnName={'Reject'}
+              btnCls='w-[170px]'
+              btnStyle={{
+                border: '1px solid rgba(220, 53, 69, 1)', // Danger red border
+                color: 'rgba(220, 53, 69, 1)', // Danger red text
+              }}
+              btnCategory='secondary'
+              onClick={() => {
+                setIsOpen(true);
+                setTicketId(ticket?.id);
+              }}
+            />
+
+            <Button
+              btnType='submit'
+              btnCls='w-[170px]'
+              btnName={'Start'}
+              // onClick={() => navigate(`/tickets/${ticket.id}?type=start`)}
+              onClick={() =>
+                updateStatus({ id: ticket?.id, status: 'in_progress' })
+              }
+              btnCategory='primary'
+            />
+          </div>
+        )}
+
+      {type === 'view' && (role === user.mentee || role === user.mentor) && (
         <div className='flex gap-6 my-12 justify-center align-middle'>
           <Button
-            btnName={`${
-              role === user.super_admin ? 'Reject' : 'Cancel request'
-            }`}
+            btnName={'Cancel request'}
             btnCls='w-[170px]'
             btnStyle={{
               border: '1px solid rgba(220, 53, 69, 1)', // Danger red border
               color: 'rgba(220, 53, 69, 1)', // Danger red text
             }}
             btnCategory='secondary'
-            onClick={() => setIsOpen(true)}
+            onClick={() => navigate(-1)}
           />
 
           <Button
             btnType='submit'
             btnCls='w-[170px]'
-            btnName={`${role === user.super_admin ? 'Start' : 'Edit request'}`}
+            btnName={`Edit request`}
             // onClick={() => navigate(`/tickets/${ticket.id}?type=start`)}
-            onClick={() => handleNavigate()}
+            onClick={() => navigate(`/ticket-creation/${ticket.id}?type=edit`)}
             btnCategory='primary'
           />
         </div>
       )}
-      {isOpen && <TicketDeleteModal isOpen={isOpen} setIsOpen={setIsOpen} />}
+      <SuccessGradientMessage
+        message={'This ticket is in-progress'}
+        isBackdropOpen={isBackdropOpen}
+        setIsBackdropOpen={setIsBackdropOpen}
+      />
+      {isOpen && (
+        <TicketDeleteModal
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          ticketId={ticketId}
+        />
+      )}
     </div>
   );
 };

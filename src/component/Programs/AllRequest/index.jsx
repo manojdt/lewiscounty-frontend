@@ -1786,19 +1786,18 @@ export default function AllRequest() {
     };
 
     const getGoalsRequestApi = (createdBy = actionTab) => {
-        dispatch(
-            goalsRequest({
-                ...(filterStatus !== "all" && { status: filterStatus }),
-                // created_by: createdBy,
-                page: paginationModel?.page + 1,
-                limit: paginationModel?.pageSize,
-                ...(filter.search !== "" && { search: filter.search }),
-                ...(filter.filter_by !== ""
-                    ? { filter_by: filter.filter_by }
-                    : { filter_by: "month" }),
-
-            })
-        );
+        dispatch(getAllGoals({
+            ...(filter.filter_by !== ""
+                ? { time_frame: filter.filter_by }
+                : { time_frame: "month" }),
+            params: "request",
+            page: paginationModel?.page + 1,
+            limit: paginationModel?.pageSize,
+            ...(filterStatus !== "all" && { status: filterStatus }),
+            ...((actionTab !== "mentor" && role === "mentor") && { created_by: actionTab ?? "mentor" }),
+            ...((role === "admin") && { created_by: actionTab ?? "mentor" }),
+            ...(filter.search !== "" && { search: filter.search }),
+        }))
     };
 
     const handleNewGoalRequestApi = () => {
@@ -1991,7 +1990,7 @@ export default function AllRequest() {
                 case RequestStatus.goalRequest.key:
                     tableDetails = { column: goalColumns, data: [] };
                     actionFilter = goalsRequestTab;
-                    activeTabName = "mentor";
+                    activeTabName =filter.search ? actionTab : actionTab || "mentor";
                     break;
                 case RequestStatus.resourceAccessRequest.key:
                     tableDetails = { column: resourceColumns, data: [] };

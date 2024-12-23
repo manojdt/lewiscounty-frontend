@@ -514,7 +514,7 @@ export const MenteePersonalInformationFields = [
     inputRules: {
       // required: 'This field is required',
     },
-    disabled: true,
+    // disabled: true,
     size: true,
     width: 'col-span-2',
   },
