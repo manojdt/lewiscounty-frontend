@@ -14,8 +14,13 @@ import CommentIcon from '../../assets/icons/feedbackComment.svg'
 import ShareFeedbackIcon from '../../assets/icons/ShareFeedback.svg'
 import ReplyFeedbackIcon from '../../assets/icons/ReplyFeedback.svg'
 import MoreIcon from '../../assets/icons/moreIcon.svg'
+import UserIcon from '../../assets/images/user.jpg';
 
-import { getPost, getRecentPosts } from '../../services/feeds';
+import { 
+  getPost, 
+  getRecentPosts,
+  getFeedTrack
+} from '../../services/feeds';
 
 import { PostList, RecentDiscussion } from '../../mock'
 import ReadableDate from '../../shared/ReadableDateTime';
@@ -25,7 +30,7 @@ export default function Feedback() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [activePost, setActivePost] = useState(0)
   const [activePostInfo, setActivePostInfo] = useState(null)
-  const { recentPosts, feeds, loading, status } = useSelector((state) => state.feeds);
+  const { recentPosts, feeds, feedTrack, loading, status  } = useSelector((state) => state.feeds);
   const [activePostComments, setActivePostComments] = useState({
     commentId: null
   })
@@ -38,8 +43,9 @@ export default function Feedback() {
   useEffect(() => {
     console.log("FEEDS", feeds)
     console.log("recentPosts", recentPosts)
+    console.log("FeedTrack", feedTrack)
 
-  }, [feeds, recentPosts])
+  }, [feeds, recentPosts, feedTrack])
 
   useEffect(() => {
     dispatch(getPost());
@@ -47,6 +53,15 @@ export default function Feedback() {
 
   }, []);
 
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (activePostInfo) {
+        console.log("activePost", activePostInfo);
+        dispatch(getFeedTrack(activePostInfo.id));
+      }
+    }, 300); 
+    return () => clearTimeout(timeout);
+  }, [activePostInfo, dispatch]);
 
   const handlePostClick = (list, index) => {
     setActivePost(index)
@@ -179,7 +194,7 @@ export default function Feedback() {
                         </div>
 
                         <div className='post-details'>
-                          <img className='user-img' src={activePostInfo.image_url} alt="Userimage" />
+                          <img className='user-img' src={activePostInfo.image_url? activePostInfo.image_url : UserIcon} alt="Userimage" />
                           <div style={{ width: 'calc(100% - 50px)' }}>
                             <div className='flex justify-between py-1'>
                               <p className='text-[14px]'><span style={{ fontWeight: 700 }}>Johnson</span> ({activePostInfo.type})</p>
@@ -215,7 +230,7 @@ export default function Feedback() {
                             <div className="comments-section">
                               {activePostInfo.comments && activePostInfo.comments.length > 0 && activePostInfo.comments.map((comment) => (
                                 <div key={comment.id} className="comment-details">
-                                  <img className='user-img' src={comment.image_url} alt="Userimage" />
+                                  <img className='user-img' src={comment.image_url ? comment.image_url : UserIcon} alt="Userimage" />
                                   <div style={{ width: 'calc(100% - 50px)' }}>
                                     <div className="flex justify-between py-1">
                                       <p className="text-[14px]">
@@ -252,7 +267,7 @@ export default function Feedback() {
                                       <div className="replies-section" style={{ marginLeft: '20px', marginTop: '10px' }}>
                                         {comment.replies && comment.replies.length > 0 && comment.replies.map((reply) => (
                                           <div key={reply.id} className="reply-details">
-                                            <img className="user-img" src={reply.image_url} alt="Reply User Image" />
+                                            <img className="user-img" src={reply.image_url ? reply.image_url : UserIcon} alt="Reply User Image" />
                                             <div style={{ width: 'calc(100% - 50px)' }}>
                                               <div className="flex justify-between py-1">
                                                 <p className="text-[14px]">
@@ -297,24 +312,23 @@ export default function Feedback() {
               <div className='col-span-2'>
                 <div className="recent-discussion pb-3" style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }}>
                   <div className="title flex justify-between py-3 px-4 border-b-2">
-                    <h4 className="text-base">Recent Discussion</h4>
+                    <h4 className="text-base">Recent View</h4>
                     <p className="text-sm leading-8">View All</p>
                   </div>
 
                   <div className='chat-discussions'>
                     {
-                      recentPosts && recentPosts.length > 0 && recentPosts.map(discussion =>
-                        <div className='chat-user-info' key={discussion.id}>
+                      feedTrack && feedTrack.results && feedTrack.results.length > 0 && feedTrack.results.map(ft =>
+                        <div className='chat-user-info' key={String(ft.id)}>
                           <div className='user-details gap-3'>
-                            <img src={discussion.image_url} alt="ChatImage" />
+                            <img src={ft.image_url ? ft.image_url : UserIcon} alt="ChatImage" />
                             <div>
-                              <p>{discussion.user_name}</p>
-                              <span className='text-[12px]'>{discussion.content}</span>
+                              <p>{ft.username}</p>
                             </div>
                           </div>
 
                           <div className='text-[12px]'>
-                            {discussion.created_at ? <ReadableDate timestamp={discussion.created_at} />  : null}
+                            {ft.viewed_at ? <ReadableDate timestamp={ft.viewed_at} />  : null}
                           </div>
                         </div>
                       )

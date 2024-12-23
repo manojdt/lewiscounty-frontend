@@ -1033,7 +1033,7 @@ export default function AssignTask() {
                                             }
 
                                         </div>
-                                        {role === 'mentee' &&
+                                        {role === ('mentee'|| 'mentor') &&
                                             <div style={{ display: 'flex', flexDirection: 'row', width: '100%', justifyContent: "flex-start" }}>
                                                 <Button
                                                     btnName='Cancel Program'

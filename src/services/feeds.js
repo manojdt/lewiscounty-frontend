@@ -63,6 +63,16 @@ export const getRecentPosts = createAsyncThunk(
     }
 );
 
+export const getFeedTrack = createAsyncThunk(
+    "getFeedTrack",
+    async (id) => {
+        const getFeedTrack = await api.get(`post/track-post?id=${id}`);
+        if (getFeedTrack.status === 200 && getFeedTrack.data) {
+            return getFeedTrack.data;
+        }
+        return getFeedTrack;
+    }
+);
 
 export const updateFeedTrack = createAsyncThunk(
     "updateFeedTrack",

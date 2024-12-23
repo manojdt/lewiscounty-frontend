@@ -27,6 +27,9 @@ import SearchIcon from "../../../assets/icons/search.svg";
 import CalendarIcon from "../../../assets/images/calender_1x.png";
 import MoreIcon from "../../../assets/icons/moreIcon.svg";
 import TickCircle from "../../../assets/icons/tickCircle.svg";
+import EditIcon from '../../../assets/icons/editIcon.svg';
+import ShareIcon from "../../../assets/icons/Share.svg";
+
 import CloseCircle from "../../../assets/icons/closeCircle.svg";
 import ViewIcon from "../../../assets/images/view1x.png";
 import CancelIcon from "../../../assets/images/cancel1x.png";
@@ -740,7 +743,112 @@ export default function AllRequest() {
                                         />
                                         View
                                     </MenuItem>
+                                    <MenuItem
+                                        onClick={handleCancelProgramRequest}
+                                        className="!text-[12px]"
+                                    >
+                                        <img
+                                            src={CloseCircle}
+                                            alt="CancelIcon"
+                                            className="pr-3 w-[27px]"
+                                        />
+                                        Cancel Request
+                                    </MenuItem>
+                                    {/* Just created Edit based on Figma Design  */}
+                                    {/* <MenuItem  
+                                        onClick={()=>console.log("EditBtn Clicked")}
+                                        className="!text-[12px]"
+                                    >
+                                        <img
+                                            src={EditIcon}
+                                            alt='EditIcon'
+                                            field={params.id}
+                                            className='pr-3 w-[30px]'
+                                        />
+                                        Edit
+                                    </MenuItem> */}
+                                    <MenuItem onClick={() => undefined} className='!text-[12px]'>
+                                        <img src={ShareIcon} alt="ShareIcon" className='pr-3 w-[27px]' />
+                                        Share
+                                    </MenuItem>
+                                </Menu>
+                                
     
+                            </>
+                        )
+                    }
+                    else if(role === "mentor"){ 
+                        // console.log("paramsssssss-----mentor", role,params)
+                        return (
+                            <>
+                                <div
+                                    className="cursor-pointer flex items-center h-full"
+                                    onClick={(e) => handleMoreClick(e, params.row)}
+                                >
+                                    <img src={MoreIcon} alt="MoreIcon" />
+                                </div>
+                                <Menu
+                                    id="basic-menu"
+                                    anchorEl={anchorEl}
+                                    open={open}
+                                    onClose={handleClose}
+                                    MenuListProps={{
+                                        "aria-labelledby": "basic-button",
+                                    }}
+                                >
+                                    <MenuItem
+                                        onClick={(e) => {
+                                            const url = seletedItem?.status === "approved" ? `/program-details/${seletedItem.program}` 
+                                            : `/program-details/${seletedItem.program}?request_id=${seletedItem.id}&type=${actionTab}`
+                                            return navigate(url, { state: { data: seletedItem } });
+                                        }}
+                                        className="!text-[12px]"
+                                    >
+                                        <img
+                                            src={ViewIcon}
+                                            alt="ViewIcon"
+                                            className="pr-3 w-[30px]"
+                                        />
+                                        View
+                                    </MenuItem>
+                                    <MenuItem
+                                        onClick={handleCancelProgramRequest}
+                                        className="!text-[12px]"
+                                    >
+                                        <img
+                                            src={CloseCircle}
+                                            alt="CancelIcon"
+                                            className="pr-3 w-[27px]"
+                                        />
+                                        Cancel Request
+                                    </MenuItem>
+                                    {/* Edit only approved requests  */}
+                                    {console.log("params.row--", params.row.id, params.row)}
+                                    {console.log("Selected Item", seletedItem)}
+
+                                    {/* Here we used seletedItem state becoz params does not reflect any change */}
+                                    {seletedItem?.status === "approved" && (
+                                        <MenuItem
+                                            onClick={(e) => { 
+                                                const url = seletedItem?.id && `/update-program/${seletedItem.id}`
+                                                return navigate(url, { state: { data: seletedItem } });
+                                            }}
+                                            className="!text-[12px]"
+                                        >
+                                            <img
+                                                src={EditIcon}
+                                                alt="EditIcon"
+                                                field={params.id}
+                                                className="pr-3 w-[30px]"
+                                            />
+                                            Edit
+                                        </MenuItem>
+                                    )}
+                                    
+                                    <MenuItem onClick={() => undefined} className='!text-[12px]'>
+                                        <img src={ShareIcon} alt="ShareIcon" className='pr-3 w-[27px]' />
+                                        Share
+                                    </MenuItem>
                                 </Menu>
                                 
     
