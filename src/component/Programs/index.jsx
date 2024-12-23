@@ -173,9 +173,13 @@ export default function Programs() {
         navigate(
           `${baseUrl}/${
             programdetails.program || programdetails?.id
-          }?created_by=${programdetails?.role}${
+          }?created_by=${
+            programdetails?.role && programdetails?.program_created_is_admin
+              ? "Mentor"
+              : programdetails?.role
+          }${
             programdetails?.admin_program_request_id
-              ? `?request_id=${programdetails?.admin_program_request_id}`
+              ? `&request_id=${programdetails?.admin_program_request_id}`
               : ""
           }`
         );
@@ -183,9 +187,13 @@ export default function Programs() {
         navigate(
           `${baseUrl}/${
             programdetails.program || programdetails?.id
-          }?created_by=${programdetails?.role}${
+          }?created_by=${
+            programdetails?.role && programdetails?.program_created_is_admin
+              ? "Mentor"
+              : programdetails?.role
+          }${
             programdetails?.admin_program_request_id
-              ? `?request_id=${programdetails?.admin_program_request_id}`
+              ? `&request_id=${programdetails?.admin_program_request_id}`
               : ""
           }`
         );
