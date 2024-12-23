@@ -115,7 +115,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     { isSuccess: programLaunchedSuccessful, isLoading: isLaunchingProgram },
   ] = useLaunchProgramMutation();
 
-  const { data: programdetails, isLoading: programLoading } =
+  const { data: programdetails, isLoading: programLoading,refetch } =
     useGetProgramDetailsByIdQuery(
       {
         id: params?.id,
@@ -259,6 +259,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
             ...confirmPopup,
             accept: false,
           });
+          refetch()
         }
       });
     }
@@ -289,6 +290,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                 ...confirmPopup,
                 cancel: false,
               });
+              refetch()
             }
           });
         }
