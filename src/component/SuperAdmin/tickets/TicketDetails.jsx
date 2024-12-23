@@ -95,16 +95,18 @@ const TicketDetails = () => {
             ))}
         </div>
 
-        {role === user.super_admin && type === 'start' && (
-          <div>
-            <CustomTicketAccordian
-              title={'Enter your update'}
-              defaultValue={true}
-            >
-              <TicketUpdate ticket={ticket} />
-            </CustomTicketAccordian>
-          </div>
-        )}
+        {role === user.super_admin &&
+          ticket?.status !== 'new' &&
+          ticket?.status !== 'rejected' && (
+            <div>
+              <CustomTicketAccordian
+                title={'Enter your update'}
+                defaultValue={true}
+              >
+                <TicketUpdate ticket={ticket} />
+              </CustomTicketAccordian>
+            </div>
+          )}
       </div>
     </div>
   );

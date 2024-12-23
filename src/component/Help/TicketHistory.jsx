@@ -32,6 +32,12 @@ const TicketHistory = () => {
 
   const { data, isLoading, error, isError, isSuccess } =
     useGetAllTicketsQuery();
+
+  const filteredData =
+    requestTab === 'all'
+      ? data
+      : data?.filter((ticket, index) => ticket.status === requestTab);
+
   // const { data, isLoading, error, isError, isSuccess } = useGetAllTicketsQuery({
   //   status: requestTab,
   //   page: paginationModel.page,
@@ -231,7 +237,7 @@ const TicketHistory = () => {
             </div>
           ) : (
             <DataTable
-              rows={data}
+              rows={filteredData}
               columns={TicketsListColumns}
               hideCheckbox
               // rowCount={taskList?.count}
