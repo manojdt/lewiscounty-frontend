@@ -54,7 +54,6 @@ api.interceptors.response.use(
     return response;
   },
   async (error) => {
-    console.log("error ==>", error)
     const reasons = ["ERR_BAD_REQUEST", "ERR_NETWORK", "ERR_BAD_RESPONSE"]
     const errMsg = error?.response?.data?.errors?.[0] ?? error?.response?.data?.error ?? error?.response?.data?.message
     if (errMsg?.length > 0) {

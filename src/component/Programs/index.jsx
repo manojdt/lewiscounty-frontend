@@ -171,7 +171,9 @@ export default function Programs() {
       // }
       if (filterType === "inprogress") {
         navigate(
-          `${baseUrl}/${programdetails.program || programdetails?.id}${
+          `${baseUrl}/${
+            programdetails.program || programdetails?.id
+          }?created_by=${programdetails?.role}${
             programdetails?.admin_program_request_id
               ? `?request_id=${programdetails?.admin_program_request_id}`
               : ""
@@ -179,7 +181,9 @@ export default function Programs() {
         );
       } else {
         navigate(
-          `${baseUrl}/${programdetails.program || programdetails?.id}${
+          `${baseUrl}/${
+            programdetails.program || programdetails?.id
+          }?created_by=${programdetails?.role}${
             programdetails?.admin_program_request_id
               ? `?request_id=${programdetails?.admin_program_request_id}`
               : ""
@@ -248,7 +252,10 @@ export default function Programs() {
     }
     if (role === "mentor" || role === "admin") {
       dispatch(getProgramCounts(pay));
-      if (role === "admin" && filterType === programActionStatus.program_assign) {
+      if (
+        role === "admin" &&
+        filterType === programActionStatus.program_assign
+      ) {
         dispatch(getAllProgramDetails());
       } else {
         dispatch(getUserPrograms(query));

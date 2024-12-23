@@ -30,6 +30,7 @@ import {
 import {
   acceptProgram,
   getMenteeJoinedInProgram,
+  getSpecificProgramDetails,
 } from "../../../services/userprograms";
 import {
   programCancelRequest,
@@ -87,6 +88,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
 
   const requestId = searchParams.get("request_id") || "";
   const requestStatusParams = searchParams.get("status") || "";
+  const created_by = searchParams.get("created_by") || "";
 
   const userdetails = useSelector((state) => state.userInfo);
   const role = userdetails.data.role || "";
@@ -104,7 +106,6 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     share: false,
     reschedule: false,
   });
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -112,10 +113,18 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     launchProgram,
     { isSuccess: programLaunchedSuccessful, isLoading: isLaunchingProgram },
   ] = useLaunchProgramMutation();
+
   const { data: programdetails, isLoading: programLoading } =
     useGetProgramDetailsByIdQuery(
-      { id: params?.id, requestId: requestId, role },
-      { skip: !(params?.id && role), refetchOnMountOrArgChange: true }
+      {
+        id: params?.id,
+        requestId: requestId,
+        role: created_by.toLowerCase(),
+      },
+      {
+        skip: !params?.id,
+        refetchOnMountOrArgChange: true,
+      }
     );
 
   const [activeTab, setActiveTab] = useState("about_program");
@@ -497,14 +506,14 @@ export default function ProgramDetails({ setProgramDetailsId }) {
 
         if ((role === "mentor" || role === "admin") && requestId === "") {
           if (programdetails.status === programActionStatus.yettostart) {
-            navigate(`${pipeUrls.startprogram}/${params.id}`);
+            navigate(`${pipeUrls.startprogram}/${params.id}?created_by=${created_by}`);
           } else if (
             programdetails.status === programActionStatus.inprogress ||
             programdetails.status === programActionStatus.assigned ||
             programdetails.status === programActionStatus.paused ||
             programdetails.status === programActionStatus.started
           ) {
-            navigate(`${pipeUrls.startprogram}/${params.id}`);
+            navigate(`${pipeUrls.startprogram}/${params.id}?created_by=${created_by}`);
           }
         }
       }
@@ -694,8 +703,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
               {requestProgramStatus === requestStatus.reschedule
                 ? "Rescheduled "
                 : requestProgramStatus === requestStatus.cancel
-                ? "Cancelled "
-                : ""}{" "}
+                  ? "Cancelled "
+                  : ""}{" "}
               Successfully
             </p>
           </div>
@@ -1119,7 +1128,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                         viewDate={
                           new Date(
                             dateFormatted.reschedule_start_date ??
-                              programdetails?.start_date
+                            programdetails?.start_date
                           )
                         }
                       />
@@ -1280,8 +1289,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       )}
 
       {!programLoading &&
-      programdetails &&
-      Object.keys(programdetails)?.length ? (
+        programdetails &&
+        Object.keys(programdetails)?.length ? (
         <div
           className="grid mb-10"
           style={{
@@ -1514,7 +1523,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                         style={{
                           background:
                             reqStatusColor[
-                              programdetails?.request_data?.status
+                            programdetails?.request_data?.status
                             ],
                           borderRadius: "5px",
                           width: "30%",
@@ -1551,7 +1560,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                       <div className="border border-[#E50027] rounded-[15px] h-[100%] w-[100%] justify-center items-center flex flex-col relative">
                         <div
                           className="absolute top-[12px] right-[12px]"
-                          // onClick={() => handleCloseCancelPopup()}
+                        // onClick={() => handleCloseCancelPopup()}
                         >
                           <img src={CloseIcon} alt="ConfirmIcon" />
                         </div>
@@ -1605,8 +1614,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   )}
 
                   {role === "mentor" &&
-                  !programCompleted.includes(programdetails.status) &&
-                  !programCancelled.includes(programdetails.status) ? (
+                    !programCompleted.includes(programdetails.status) &&
+                    !programCancelled.includes(programdetails.status) ? (
                     <>
                       {/* {requestId !== '' ? ( */}
                       <>
@@ -1614,17 +1623,17 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                           (programdetails?.request_data?.status ===
                             "approved" &&
                             programdetails.status !== "yettojoin")) && (
-                          <button
-                            className="py-3 px-16 mt-7 text-white text-[14px] flex items-center"
-                            style={{
-                              background: "#16B681",
-                              borderRadius: "5px",
-                            }}
-                            onClick={() => undefined}
-                          >
-                            Approved
-                          </button>
-                        )}
+                            <button
+                              className="py-3 px-16 mt-7 text-white text-[14px] flex items-center"
+                              style={{
+                                background: "#16B681",
+                                borderRadius: "5px",
+                              }}
+                              onClick={() => undefined}
+                            >
+                              Approved
+                            </button>
+                          )}
 
                         {programdetails.status === "cancel" && (
                           <button
@@ -1642,7 +1651,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                       </>
                       {/* ) :  */}
                       {programApprovalStage[programdetails.status] &&
-                      !programdetails?.admin_program ? (
+                        !programdetails?.admin_program ? (
                         <div className="flex gap-4 pt-10">
                           <button
                             className="py-3 px-16 text-white text-[14px] flex items-center"
@@ -1656,18 +1665,18 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                           >
                             {programApprovalStage[programdetails.status]
                               .type === "waiting" && (
-                              <i
-                                className="pi pi-clock"
-                                style={{ color: "red" }}
-                              ></i>
-                            )}
+                                <i
+                                  className="pi pi-clock"
+                                  style={{ color: "red" }}
+                                ></i>
+                              )}
                             {programApprovalStage[programdetails.status]
                               .type === "reject" && (
-                              <i
-                                className="pi pi-ban"
-                                style={{ color: "red" }}
-                              ></i>
-                            )}
+                                <i
+                                  className="pi pi-ban"
+                                  style={{ color: "red" }}
+                                ></i>
+                              )}
                             <span className="pl-3">
                               {
                                 programApprovalStage[programdetails.status]
@@ -1722,8 +1731,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   ) : null}
 
                   {role === "mentee" &&
-                  !programCompleted.includes(programdetails.status) &&
-                  !programCancelled.includes(programdetails.status) ? (
+                    !programCompleted.includes(programdetails.status) &&
+                    !programCancelled.includes(programdetails.status) ? (
                     <div className="py-9">
                       {menteeProgramStatus[
                         programdetails.mentee_join_status
@@ -1742,19 +1751,19 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             {menteeProgramStatus[
                               programdetails.mentee_join_status
                             ].type === "waiting" && (
-                              <i
-                                className="pi pi-clock"
-                                style={{ color: "red" }}
-                              ></i>
-                            )}
+                                <i
+                                  className="pi pi-clock"
+                                  style={{ color: "red" }}
+                                ></i>
+                              )}
                             {menteeProgramStatus[
                               programdetails.mentee_join_status
                             ].type === "reject" && (
-                              <i
-                                className="pi pi-ban"
-                                style={{ color: "red" }}
-                              ></i>
-                            )}
+                                <i
+                                  className="pi pi-ban"
+                                  style={{ color: "red" }}
+                                ></i>
+                              )}
                             <span className="pl-3">
                               {
                                 menteeProgramStatus[
@@ -1765,8 +1774,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                           </button>
                         </>
                       ) : !menteeNotJoinCondition.includes(
-                          programdetails.status
-                        ) ? (
+                        programdetails.status
+                      ) ? (
                         <>
                           <div className="py-9">
                             <button
@@ -1809,7 +1818,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                           (programdetails?.request_data?.request_type ===
                             "program_cancel" &&
                             programdetails?.request_data?.status ===
-                              "new")) && (
+                            "new")) && (
                           <Stack
                             direction={"row"}
                             alignItems={"center"}
@@ -1830,7 +1839,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                               }
                             >
                               {searchParams.has("type") &&
-                              searchParams.get("type") === "program_cancel"
+                                searchParams.get("type") === "program_cancel"
                                 ? "Continue"
                                 : "Reject Request"}
                             </button>
@@ -1854,20 +1863,20 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                       {(programdetails?.request_data?.status === "rejected" ||
                         (!requestStatusParams &&
                           programdetails?.status ===
-                            "new_program_request_rejected")) && (
-                        <button
-                          className="py-3 px-16 text-white text-[14px] flex items-center"
-                          style={{
-                            border: "1px solid #E0382D",
-                            borderRadius: "5px",
-                            color: "#E0382D",
-                            cursor: "not-allowed",
-                          }}
-                          onClick={undefined}
-                        >
-                          Rejected
-                        </button>
-                      )}
+                          "new_program_request_rejected")) && (
+                          <button
+                            className="py-3 px-16 text-white text-[14px] flex items-center"
+                            style={{
+                              border: "1px solid #E0382D",
+                              borderRadius: "5px",
+                              color: "#E0382D",
+                              cursor: "not-allowed",
+                            }}
+                            onClick={undefined}
+                          >
+                            Rejected
+                          </button>
+                        )}
                     </Box>
                   }
 
@@ -1891,7 +1900,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   {programdetails?.status === "yettojoin" &&
                     role === "admin" &&
                     programdetails?.request_data?.request_type ===
-                      "program_new" && (
+                    "program_new" && (
                       <button
                         className="py-3 px-16 text-white text-[14px] flex items-center"
                         style={{
@@ -2088,7 +2097,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
               {(programdetails?.request_data?.request_type ===
                 "program_reschedule" ||
                 programdetails?.request_data?.request_type ===
-                  "program_cancel") &&
+                "program_cancel") &&
                 ["new", "pending", "approved", "rejected"].includes(
                   programdetails?.request_data?.status
                 ) &&
@@ -2096,24 +2105,24 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   <div className={`action-set action_cancelled`}>
                     {programdetails?.request_data?.request_type !==
                       "program_cancel" && (
-                      <div className="reason-title">
-                        {programdetails.status ===
-                          programActionStatus.cancelled ||
-                        (role === "admin" &&
-                          requestId !== null &&
-                          programdetails?.request_data?.rejection_reason &&
-                          Object.keys(
-                            programdetails?.request_data?.rejection_reason
-                          )?.length)
-                          ? "Cancelled "
-                          : "Reschedule"}{" "}
-                        Reason
-                      </div>
-                    )}
+                        <div className="reason-title">
+                          {programdetails.status ===
+                            programActionStatus.cancelled ||
+                            (role === "admin" &&
+                              requestId !== null &&
+                              programdetails?.request_data?.rejection_reason &&
+                              Object.keys(
+                                programdetails?.request_data?.rejection_reason
+                              )?.length)
+                            ? "Cancelled "
+                            : "Reschedule"}{" "}
+                          Reason
+                        </div>
+                      )}
                     {programdetails?.request_data?.request_type ===
                       "program_cancel" && (
-                      <div className="reason-title">Cancelled Reason</div>
-                    )}
+                        <div className="reason-title">Cancelled Reason</div>
+                      )}
                     <div className="reason-content">
                       {programdetails?.request_data?.status === "rejected"
                         ? programdetails?.request_data?.rejection_reason
@@ -2123,11 +2132,11 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                 )}
 
               {role !== "mentee" &&
-              role === "admin" &&
-              requestId !== null &&
-              programdetails?.reschedule_reason &&
-              Object.keys(programdetails?.reschedule_reason)?.length &&
-              programdetails.reschedule_reason.id === parseInt(requestId) ? (
+                role === "admin" &&
+                requestId !== null &&
+                programdetails?.reschedule_reason &&
+                Object.keys(programdetails?.reschedule_reason)?.length &&
+                programdetails.reschedule_reason.id === parseInt(requestId) ? (
                 <div
                   className={`action-set action_cancelled`}
                   style={{
@@ -2140,10 +2149,10 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     style={{ color: "rgba(255, 118, 0, 1)" }}
                   >
                     {programdetails.status === programActionStatus.cancelled ||
-                    (role === "admin" &&
-                      requestId !== null &&
-                      programdetails?.reschedule_reason &&
-                      Object.keys(programdetails?.reschedule_reason)?.length)
+                      (role === "admin" &&
+                        requestId !== null &&
+                        programdetails?.reschedule_reason &&
+                        Object.keys(programdetails?.reschedule_reason)?.length)
                       ? "Rescheduled "
                       : ""}{" "}
                     Reason
@@ -2166,9 +2175,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   {tabs.map((tab) => (
                     <button
                       key={tab.key}
-                      className={`px-12 py-3 text-[12px] ${
-                        activeTab === tab.key ? "tab-active" : "tab"
-                      } `}
+                      className={`px-12 py-3 text-[12px] ${activeTab === tab.key ? "tab-active" : "tab"
+                        } `}
                       onClick={() => handleTab(tab.key)}
                     >
                       {tab.name}
@@ -2177,9 +2185,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                 </div>
                 <div className="tab-content px-6 pt-10 text-[12px]">
                   <div
-                    className={`about-programs ${
-                      activeTab === "about_program" ? "block" : "hidden"
-                    }`}
+                    className={`about-programs ${activeTab === "about_program" ? "block" : "hidden"
+                      }`}
                   >
                     <div className="learning">
                       <div className="font-semibold pb-3">
@@ -2227,9 +2234,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   </div>
 
                   <div
-                    className={`program-outcomes ${
-                      activeTab === "program_outcomes" ? "block" : "hidden"
-                    }`}
+                    className={`program-outcomes ${activeTab === "program_outcomes" ? "block" : "hidden"
+                      }`}
                   >
                     <div className="benefits">
                       <div className="font-semibold pb-3">Benefits</div>
@@ -2251,11 +2257,10 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                           {participatedTabs.map((participatedTab) => (
                             <li className="me-2" key={participatedTab.key}>
                               <p
-                                className={`inline-block p-4 border-b-2 cursor-pointer border-transparent rounded-t-lg ${
-                                  certificateActiveTab === participatedTab.key
+                                className={`inline-block p-4 border-b-2 cursor-pointer border-transparent rounded-t-lg ${certificateActiveTab === participatedTab.key
                                     ? "active  text-blue-600 border-blue-500"
                                     : ""
-                                } `}
+                                  } `}
                                 onClick={() =>
                                   handleCerificateTab(participatedTab.key)
                                 }
@@ -2269,11 +2274,10 @@ export default function ProgramDetails({ setProgramDetailsId }) {
 
                       {participatedTabs.map((participatedTab) => (
                         <div
-                          className={`certificate-tab-content flex items-center justify-between relative ${
-                            participatedTab.key === certificateActiveTab
+                          className={`certificate-tab-content flex items-center justify-between relative ${participatedTab.key === certificateActiveTab
                               ? "block"
                               : "hidden"
-                          }`}
+                            }`}
                           key={participatedTab.key}
                         >
                           <div className="px-9 py-16 w-4/6 leading-6">
@@ -2294,9 +2298,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   </div>
 
                   <div
-                    className={`program-outcomes ${
-                      activeTab === "program_testimonials" ? "block" : "hidden"
-                    }`}
+                    className={`program-outcomes ${activeTab === "program_testimonials" ? "block" : "hidden"
+                      }`}
                   >
                     <div className="testimonials bg-white px-5 py-7">
                       {/* <div className='flex justify-end'>

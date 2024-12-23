@@ -56,6 +56,7 @@ export default function CreatePrograms() {
   const [currentStep, setCurrentStep] = useState(1);
 
   const role = userInfo.data.role || "";
+  const [toggleRole, setToggleRole] = useState("");
   const {
     allPrograms,
     category,
@@ -70,10 +71,18 @@ export default function CreatePrograms() {
 
   const methods = useForm({
     defaultValues:
-      role === "admin" ? { no_of_subprograms: 1, sub_programs: [] } : undefined,
+      toggleRole === "admin"
+        ? { no_of_subprograms: 1, sub_programs: [] }
+        : undefined,
   });
 
-  const { handleSubmit, reset, setValue, watch } = methods;
+  const {
+    handleSubmit,
+    reset,
+    setValue,
+    watch,
+    formState: { errors },
+  } = methods;
   const { data: currentProgramDetail, isLoading: isDetailFetching } =
     useGetProgramDetailsByIdQuery(
       { id: params.id, role },
@@ -147,7 +156,6 @@ export default function CreatePrograms() {
 
   const resetViewInfo = { material: false, skills: false, certificate: false };
 
-  const [toggleRole, setToggleRole] = useState("");
   const filteredProgramTabs = ProgramTabs.filter((tab) => {
     // Exclude "program_testimonials" if role is "admin"
     if (tab.key === "program_testimonials" && toggleRole === "admin") {
@@ -156,7 +164,7 @@ export default function CreatePrograms() {
     // Add other conditions here if needed
     return true;
   });
-
+  
   const handleTab = (key) => {
     const tabIndex = filteredProgramTabs.findIndex((tab) => tab.key === key);
     // if (stepWiseData.hasOwnProperty(tabIndex + 1) || stepWiseData.hasOwnProperty(tabIndex)) {
