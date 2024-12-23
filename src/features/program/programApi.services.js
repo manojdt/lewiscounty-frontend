@@ -1,6 +1,6 @@
 import { rtkQueryApiServices, rtkQueryServiceTags } from "../../services/api";
 
-const { PROGRAM_LAUNCH } = rtkQueryServiceTags;
+const { PROGRAM_LAUNCH, PROGRAM_ACCEPT } = rtkQueryServiceTags;
 
 // Helper function to build query string
 const buildQueryString = (query) => {
@@ -123,8 +123,7 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
     // Validate program name
     validateProgramName: builder.query({
       query: ({ program_name, program_id }) =>
-        `programs/validate_program_name?program_name=${program_name}${
-          program_id ? `&program_id=${program_id}` : ""
+        `programs/validate_program_name?program_name=${program_name}${program_id ? `&program_id=${program_id}` : ""
         }`,
     }),
 
@@ -158,7 +157,7 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
             ? `program/admin-program/${id}`
             : `programs/${id}${requestId ? `?request_id=${requestId}` : ""}`,
       }),
-      providesTags: [PROGRAM_LAUNCH],
+      providesTags: [PROGRAM_LAUNCH, PROGRAM_ACCEPT],
     }),
 
     getSpecificProgramDetails: builder.query({
@@ -181,7 +180,7 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
         url: `request/${id}/`,
         method: "PATCH",
         body: data,
-      }),
+      }), invalidatesTags: [PROGRAM_ACCEPT]
     }),
 
     // Program Counts and Statistics
@@ -251,8 +250,7 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
 
     getProgramTaskDetails: builder.query({
       query: (taskId) =>
-        `program_task_assign/task_submission${
-          taskId ? `?task_id=${taskId}` : ""
+        `program_task_assign/task_submission${taskId ? `?task_id=${taskId}` : ""
         }`,
     }),
 
