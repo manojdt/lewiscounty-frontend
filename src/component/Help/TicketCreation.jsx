@@ -17,7 +17,12 @@ import {
 import { convertToFormData } from '../../utils/convert-to-form-data';
 import { useSelector } from 'react-redux';
 import SuccessGradientMessage from '../success-gradient-message';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import {
+  Link,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom';
 import { Skeleton } from '@mui/material';
 
 const TicketCreation = () => {
@@ -438,50 +443,59 @@ const TicketCreation = () => {
                         </div>
 
                         {/* {getValues(field.name)?.length > 0 && (
-                        <>
-                          <div
-                            className='text-[14px] pt-5'
-                            style={{ color: 'rgba(0, 0, 0, 1)' }}
-                          >
-                            Uploaded Image{' '}
-                          </div>
+                          <>
+                            <div
+                              className='text-[14px] pt-5'
+                              style={{ color: 'rgba(0, 0, 0, 1)' }}
+                            >
+                              Uploaded Image{' '}
+                            </div>
 
-                          <div className='flex flex-wrap items-center justify-start gap-2'>
-                            {getValues(field.name) &&
-                              getValues(field.name).map((item, index) => {
-                                return (
-                                  <div
-                                    className='flex justify-between items-center w-[25%] mt-5 px-4 py-4'
-                                    style={{
-                                      border:
-                                        '1px solid rgba(29, 91, 191, 0.5)',
-                                      borderRadius: '3px',
-                                    }}
-                                  >
-                                    <div className='flex gap-3 items-center'>
-                                      <img src={UploadIcon} alt='altlogo' />
-                                      <span className='text-[12px] w-40 truncate'>
-                                        {item?.name || item}
-                                      </span>
+                            <div className='flex flex-wrap items-center justify-start gap-2'>
+                              {
+                                <Link
+                                  className='text-violet-500 underline'
+                                  to={getValues(field.name)}
+                                  target='_blank'
+                                >
+                                  {getValues(field.name)}
+                                </Link>
+                              }
+                              {getValues(field.name) &&
+                                getValues(field.name).map((item, index) => {
+                                  return (
+                                    <div
+                                      className='flex justify-between items-center w-[25%] mt-5 px-4 py-4'
+                                      style={{
+                                        border:
+                                          '1px solid rgba(29, 91, 191, 0.5)',
+                                        borderRadius: '3px',
+                                      }}
+                                    >
+                                      <div className='flex gap-3 items-center'>
+                                        <img src={UploadIcon} alt='altlogo' />
+                                        <span className='text-[12px] w-40 truncate'>
+                                          {item?.name || item}
+                                        </span>
+                                      </div>
+                                      <img
+                                        className='w-[30px] cursor-pointer'
+                                        onClick={() =>
+                                          handleDeleteFile(
+                                            field.name,
+                                            index,
+                                            item?.props?.id
+                                          )
+                                        }
+                                        src={DeleteIcon}
+                                        alt='DeleteIcon'
+                                      />
                                     </div>
-                                    <img
-                                      className='w-[30px] cursor-pointer'
-                                      onClick={() =>
-                                        handleDeleteFile(
-                                          field.name,
-                                          index,
-                                          item?.props?.id
-                                        )
-                                      }
-                                      src={DeleteIcon}
-                                      alt='DeleteIcon'
-                                    />
-                                  </div>
-                                );
-                              })}
-                          </div>
-                        </>
-                      )} */}
+                                  );
+                                })}
+                            </div>
+                          </>
+                        )} */}
                       </div>
 
                       {errors[field.name] && (

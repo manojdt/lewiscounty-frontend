@@ -62,6 +62,7 @@ const TicketDetails = () => {
       </Breadcrumbs>
 
       <div className='bg-white p-9 rounded-xl space-y-12'>
+        {/* View Ticket Section */}
         {isTicketLoading ? (
           <div className='flex justify-center items-center'>
             <Skeleton
@@ -81,6 +82,7 @@ const TicketDetails = () => {
           </div>
         )}
 
+        {/* Comments Section */}
         <div>
           {ticket &&
             ticket.comments &&
@@ -95,6 +97,7 @@ const TicketDetails = () => {
             ))}
         </div>
 
+        {/* Update Ticket Section */}
         <div className='bg-white rounded-xl space-y-12'>
           {isTicketLoading ? (
             <div className='flex justify-center items-center'>

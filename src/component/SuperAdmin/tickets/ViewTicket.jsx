@@ -39,22 +39,22 @@ const ViewTicket = ({ ticket, type }) => {
     </Typography>,
   ];
 
-  const handleNavigate = () => {
-    if (role === user.super_admin) {
-      return updateStatus({ id: ticket?.id, status: 'in_progress' });
-    } else {
-      return navigate(`/ticket-creation/${ticket.id}?type=edit`);
-    }
-  };
+  // const handleNavigate = () => {
+  //   if (role === user.super_admin) {
+  //     return updateStatus({ id: ticket?.id, status: 'in_progress' });
+  //   } else {
+  //     return navigate(`/ticket-creation/${ticket.id}?type=edit`);
+  //   }
+  // };
 
-  const handleCancelRequest = () => {
-    if (role === user.super_admin) {
-      setIsOpen(true);
-      setTicketId(ticket?.id);
-    } else {
-      navigate(-1);
-    }
-  };
+  // const handleCancelRequest = () => {
+  //   if (role === user.super_admin) {
+  //     setIsOpen(true);
+  //     setTicketId(ticket?.id);
+  //   } else {
+  //     navigate(-1);
+  //   }
+  // };
   useEffect(() => {
     if (isSuccess) {
       setIsBackdropOpen(true);
@@ -147,27 +147,56 @@ const ViewTicket = ({ ticket, type }) => {
         )}
       </div>
 
-      {type === 'view' && ticket?.status === 'new' && (
+      {type === 'view' &&
+        ticket?.status === 'new' &&
+        role === user.super_admin && (
+          <div className='flex gap-6 my-12 justify-center align-middle'>
+            <Button
+              btnName={'Reject'}
+              btnCls='w-[170px]'
+              btnStyle={{
+                border: '1px solid rgba(220, 53, 69, 1)', // Danger red border
+                color: 'rgba(220, 53, 69, 1)', // Danger red text
+              }}
+              btnCategory='secondary'
+              onClick={() => {
+                setIsOpen(true);
+                setTicketId(ticket?.id);
+              }}
+            />
+
+            <Button
+              btnType='submit'
+              btnCls='w-[170px]'
+              btnName={'Start'}
+              // onClick={() => navigate(`/tickets/${ticket.id}?type=start`)}
+              onClick={() =>
+                updateStatus({ id: ticket?.id, status: 'in_progress' })
+              }
+              btnCategory='primary'
+            />
+          </div>
+        )}
+
+      {type === 'view' && (role === user.mentee || role === user.mentor) && (
         <div className='flex gap-6 my-12 justify-center align-middle'>
           <Button
-            btnName={`${
-              role === user.super_admin ? 'Reject' : 'Cancel request'
-            }`}
+            btnName={'Cancel request'}
             btnCls='w-[170px]'
             btnStyle={{
               border: '1px solid rgba(220, 53, 69, 1)', // Danger red border
               color: 'rgba(220, 53, 69, 1)', // Danger red text
             }}
             btnCategory='secondary'
-            onClick={() => handleCancelRequest()}
+            onClick={() => navigate(-1)}
           />
 
           <Button
             btnType='submit'
             btnCls='w-[170px]'
-            btnName={`${role === user.super_admin ? 'Start' : 'Edit request'}`}
+            btnName={`Edit request`}
             // onClick={() => navigate(`/tickets/${ticket.id}?type=start`)}
-            onClick={() => handleNavigate()}
+            onClick={() => navigate(`/ticket-creation/${ticket.id}?type=edit`)}
             btnCategory='primary'
           />
         </div>
