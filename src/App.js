@@ -80,7 +80,7 @@ import AddNewTicket from './component/SuperAdmin/tickets/AddNewTicket';
 import { AuthLayout } from './component/Login/AuthLayout';
 import { TestimonialView } from './component/testimonialView';
 import ViewTask from './component/Mentor/Task/viewTask';
-import AdminTickets from './component/SuperAdmin/tickets/SuperAdminTickets';
+import AdminTickets from './component/SuperAdmin/tickets/Tickets';
 import AdminMembers from './component/SuperAdmin/tickets/SuperAdminMembers';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
@@ -89,6 +89,7 @@ import TicketDetails from './component/SuperAdmin/tickets/TicketDetails';
 import PaymentPage from './component/payments-page/payments';
 import TicketHistory from './component/Help/TicketHistory';
 import TicketCreation from './component/Help/TicketCreation';
+import Tickets from './component/SuperAdmin/tickets/Tickets';
 
 function App() {
   const PrivateRoute = () => {
@@ -134,7 +135,7 @@ function App() {
         <Route element={<PrivateRoute />}>
           <Route element={<Layout subheader={true} />}>
             <Route path='/super-members' element={<SuperMembers />} />
-            <Route path='/tickets' element={<AdminTickets />} />
+            <Route path='/tickets' element={<Tickets />} />
             {/* <Route path='/tickets/:id' element={<ViewTicket />} /> */}
             <Route path='/tickets/:id' element={<TicketDetails />} />
             {/* <Route path='/members' element={<AdminMembers />} /> */}
@@ -162,7 +163,7 @@ function App() {
                 <ProgramDetails setProgramDetailsId={setProgramDetailsId} />
               }
             />
-            <Route path='/ticket-history' element={<TicketHistory />} />
+            <Route path='/ticket-history' element={<Tickets />} />
             <Route
               path='/payment-checkout'
               element={<PaymentPage programDetailsId={programDetailsId} />}

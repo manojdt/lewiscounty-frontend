@@ -16,6 +16,7 @@ import SuccessGradientMessage from '../../success-gradient-message';
 
 const ViewTicket = ({ ticket, type }) => {
   const [isBackdropOpen, setIsBackdropOpen] = useState(false);
+  const [ticketId, setTicketId] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const userInfo = useSelector((state) => state.userInfo);
@@ -43,6 +44,15 @@ const ViewTicket = ({ ticket, type }) => {
       return updateStatus({ id: ticket?.id, status: 'in_progress' });
     } else {
       return navigate(`/ticket-creation/${ticket.id}?type=edit`);
+    }
+  };
+
+  const handleCancelRequest = () => {
+    if (role === user.super_admin) {
+      setIsOpen(true);
+      setTicketId(ticket?.id);
+    } else {
+      navigate(-1);
     }
   };
   useEffect(() => {
@@ -125,7 +135,7 @@ const ViewTicket = ({ ticket, type }) => {
             <Link
               to={ticket?.attachment}
               target='_blank'
-              className='border rounded-md p-3 w-[300px] flex items-center justify-between'
+              className='border rounded-md p-3 w-[300px] flex items-center justify-center'
               // key={index}
             >
               <img src={ImageIcon} alt='' />
@@ -149,7 +159,7 @@ const ViewTicket = ({ ticket, type }) => {
               color: 'rgba(220, 53, 69, 1)', // Danger red text
             }}
             btnCategory='secondary'
-            onClick={() => setIsOpen(true)}
+            onClick={() => handleCancelRequest()}
           />
 
           <Button
@@ -167,7 +177,13 @@ const ViewTicket = ({ ticket, type }) => {
         isBackdropOpen={isBackdropOpen}
         setIsBackdropOpen={setIsBackdropOpen}
       />
-      {isOpen && <TicketDeleteModal isOpen={isOpen} setIsOpen={setIsOpen} />}
+      {isOpen && (
+        <TicketDeleteModal
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          ticketId={ticketId}
+        />
+      )}
     </div>
   );
 };

@@ -46,19 +46,21 @@ const TicketComments = ({ comment }) => {
       <div className='p-9'>
         {comment.attachments.length > 0 && (
           <CustomTicketAccordian title={'Documents'} defaultValue={true}>
-            {comment.attachments &&
-              comment.attachments.map((file, index) => (
-                <Link
-                  to={file.file}
-                  target='_blank'
-                  className='border rounded-md p-3 w-[300px] flex flex-wrap items-center justify-between'
-                  key={index}
-                >
-                  <img src={ImageIcon} alt='' />
-                  <p className='truncate p-2'>{file.file}</p>
-                  <img src={DownloadIcon} alt='' />
-                </Link>
-              ))}
+            <div className='flex items-center justify-start'>
+              {comment.attachments &&
+                comment.attachments.map((file, index) => (
+                  <Link
+                    to={file.file}
+                    target='_blank'
+                    className='flex border rounded-md p-2'
+                    key={index}
+                  >
+                    <img src={ImageIcon} alt='' />
+                    <p className='truncate p-2'>{file.file}</p>
+                    <img src={DownloadIcon} alt='' />
+                  </Link>
+                ))}
+            </div>
           </CustomTicketAccordian>
         )}
       </div>
