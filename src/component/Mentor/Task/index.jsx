@@ -545,7 +545,9 @@ const MentorTask = () => {
                 View
               </MenuItem>
               {
-                params?.row?.editable &&
+                seletedItem?.editable &&
+                <>
+                
                 <MenuItem
                   onClick={() => handleEditTask()}
                   className='!text-[12px]'
@@ -558,6 +560,7 @@ const MentorTask = () => {
                   />
                   Edit Task
                 </MenuItem>
+                </>
               }
             </Menu>
           </>

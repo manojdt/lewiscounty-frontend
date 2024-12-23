@@ -529,7 +529,7 @@ export default function AssignMentees() {
                                                                                                                         <img src={popupfield?.profile_image ? popupfield?.profile_image : UserImage} alt='' className='h-[25px] w-[25px] rounded-[50%]' />
                                                                                                                     }
                                                                                                                     {
-                                                                                                                        `${popupfield.first_name}`
+                                                                                                                        `${popupfield?.full_name||popupfield?.first_name}`
                                                                                                                     }
                                                                                                                 </p>
                                                                                                             </>

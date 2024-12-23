@@ -436,11 +436,11 @@ export const updateUserProgramInfo = createAction('update/userProgramInfo')
 
 export const updateProgramImage = createAsyncThunk(
     "updateProgramImage",
-    async (data) => {
+    async ({ id, data }) => {
         const headers = {
             'Content-Type': 'multipart/form-data',
         }
-        const updateProgramImageData = await api.patch("programs", data, {
+        const updateProgramImageData = await api.patch(`programs/${id}`, data, {
             headers: headers
         });
         if (updateProgramImageData.status === 201) {
