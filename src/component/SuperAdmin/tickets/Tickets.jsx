@@ -195,7 +195,8 @@ const Tickets = () => {
                 role === user.mentor ||
                 role === user.admin) && (
                 <div>
-                  {params.row.status === 'new' && (
+                  {(params.row.status === 'new' ||
+                    params.row.status === 'pending') && (
                     <div>
                       <MenuItem
                         onClick={() => {
