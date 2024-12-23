@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import SearchIcon from '../../../assets/images/search1x.png';
+import EditTicketIcon from '../../../assets/icons/edit-ticket-icon.svg';
+import CancelRequestIcon from '../../../assets/icons/cancel-request-icon.svg';
+import ShareIcon from '../../../assets/icons/share-ticket-icon.svg';
 import { useNavigate } from 'react-router-dom';
 import DataTable from '../../../shared/DataGrid';
+import TicketDeleteModal from './ticket-delete-modal';
 import {
   useGetAllTicketsQuery,
   useUpdateStatusMutation,
@@ -12,24 +16,29 @@ import {
   taskStatusText,
   TicketStatusColor,
   ticketStatusText,
+  user,
 } from '../../../utils/constant';
 import { Menu, MenuItem, Skeleton } from '@mui/material';
 import MoreIcon from '../../../assets/icons/moreIcon.svg';
 import StartIcon from '../../../assets/icons/start-icon.svg';
 import RejectIcon from '../../../assets/icons/reject-icon.svg';
-// import CloseIcon from '../../assets/icons/closeIcon.svg';
 import ViewIcon from '../../../assets/icons/eye-icon.svg';
 import SuccessGradientMessage from '../../success-gradient-message';
+import { useSelector } from 'react-redux';
 
-const AdminTickets = () => {
+const Tickets = () => {
   const navigate = useNavigate();
+
+  const userInfo = useSelector((state) => state.userInfo);
+
+  const role = userInfo?.data?.role;
+
   const [requestTab, setRequestTab] = useState('all');
   const [seletedItem, setSelectedItem] = useState({});
   const [isBackdropOpen, setIsBackdropOpen] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState({ anchorEl: null, rowId: null });
-
-  // const [anchorEl, setAnchorEl] = useState(null);
-  // const open = Boolean(anchorEl);
+  const [ticketId, setTicketId] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
 
   const [
     updateStatus,
@@ -60,8 +69,6 @@ const AdminTickets = () => {
   // });
 
   const handleClick = (event, data) => {
-    // setSelectedItem(data);
-    // setAnchorEl(event.currentTarget);
     setMenuAnchor({ anchorEl: event.currentTarget, rowId: data?.id });
   };
 
@@ -126,13 +133,6 @@ const AdminTickets = () => {
               />
             </div>
             <Menu
-              // id='basic-menu'
-              // anchorEl={anchorEl}
-              // open={open}
-              // onClose={handleClose}
-              // MenuListProps={{
-              //   'aria-labelledby': 'basic-button',
-              // }}
               id={`menu-${params.row.id}`}
               anchorEl={menuAnchor.anchorEl}
               open={menuAnchor.rowId === params.row.id}
@@ -148,38 +148,67 @@ const AdminTickets = () => {
                 <img src={ViewIcon} alt='ViewIcon' className='pr-3 w-[30px]' />
                 View
               </MenuItem>
-              {params.row.status === 'new' && (
-                <MenuItem
-                  className='!text-[12px]'
-                  onClick={() => {
-                    updateStatus({
-                      id: params.row.id,
-                      status: 'in_progress',
-                    });
-                  }}
-                  // onClick={() => {
-                  //   updateStatus({
-                  //     id: params.row.id,
-                  //     status: 'in_progress',
-                  //   });
-                  //   // navigate(`/tickets/${seletedItem.id}?type=start`);
-                  // }}
-                >
-                  <img
-                    src={StartIcon}
-                    alt='ViewIcon'
-                    className='pr-3 w-[30px]'
-                  />{' '}
-                  Start
-                </MenuItem>
+              {role === user.super_admin && (
+                <div>
+                  {params.row.status === 'new' && (
+                    <MenuItem
+                      className='!text-[12px]'
+                      onClick={() => {
+                        updateStatus({
+                          id: params.row.id,
+                          status: 'in_progress',
+                        });
+                      }}
+                    >
+                      <img
+                        src={StartIcon}
+                        alt='ViewIcon'
+                        className='pr-3 w-[30px]'
+                      />{' '}
+                      Start
+                    </MenuItem>
+                  )}
+                  <MenuItem
+                    className='!text-[12px]'
+                    onClick={() => {
+                      setIsOpen(true);
+                      setTicketId(params.row.id);
+                    }}
+                  >
+                    <img
+                      src={RejectIcon}
+                      alt='ViewIcon'
+                      className='pr-3 w-[30px]'
+                    />
+                    Reject
+                  </MenuItem>
+                </div>
               )}
-              <MenuItem className='!text-[12px]'>
+              <MenuItem onClick={() => {}} className='!text-[12px]'>
                 <img
-                  src={RejectIcon}
+                  src={CancelRequestIcon}
                   alt='ViewIcon'
                   className='pr-3 w-[30px]'
                 />
-                Reject
+                Cancel Request
+              </MenuItem>
+              <MenuItem
+                onClick={() =>
+                  navigate(`/ticket-creation/${params.row.id}?type=edit`)
+                }
+                className='!text-[12px]'
+              >
+                <img
+                  src={EditTicketIcon}
+                  alt='ViewIcon'
+                  className='pr-3 w-[30px]'
+                />
+                Edit
+              </MenuItem>
+
+              <MenuItem onClick={() => {}} className='!text-[12px]'>
+                <img src={ShareIcon} alt='ViewIcon' className='pr-3 w-[30px]' />
+                Share
               </MenuItem>
             </Menu>
           </>
@@ -211,7 +240,7 @@ const AdminTickets = () => {
     },
     {
       name: 'Reject Tickets',
-      key: 'reject',
+      key: 'rejected',
     },
   ];
 
@@ -300,11 +329,18 @@ const AdminTickets = () => {
         isBackdropOpen={isBackdropOpen}
         setIsBackdropOpen={setIsBackdropOpen}
       />
+      {isOpen && (
+        <TicketDeleteModal
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          ticketId={ticketId}
+        />
+      )}
     </div>
   );
 };
 
-export default AdminTickets;
+export default Tickets;
 
 // -------------------------------------------------------------------------------------------------------------------------------
 

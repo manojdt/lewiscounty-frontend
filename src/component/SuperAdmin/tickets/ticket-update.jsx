@@ -9,7 +9,10 @@ import TicketDeleteModal from './ticket-delete-modal';
 import { UpdateTicketFields } from '../../../utils/super-admin-form-fields';
 import { Controller, useForm } from 'react-hook-form';
 import { Calendar } from 'primereact/calendar';
-import { usePostCommentMutation } from '../../../features/tickets/tickets-slice';
+import {
+  usePostCommentMutation,
+  useUpdateStatusMutation,
+} from '../../../features/tickets/tickets-slice';
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
 import SuccessGradientMessage from '../../success-gradient-message';
@@ -19,17 +22,15 @@ const TicketUpdate = ({ ticket }) => {
   const [filePreviews, setFilePreviews] = useState({});
   const navigate = useNavigate();
   const [isBackdropOpen, setIsBackdropOpen] = useState(false);
+  const [
+    updateStatus,
+    { isLoading: isStatusLoading, isSuccess: isStatusSuccess },
+  ] = useUpdateStatusMutation();
 
-  const [updateTicket, { isLoading, isSuccess, isError, error }] =
-    usePostCommentMutation();
-
-  if (isSuccess) {
-    console.log('Update Successful');
-  }
-
-  if (isError) {
-    console.error('Update Failed:', error);
-  }
+  const [
+    updateTicket,
+    { isLoading: isUpdateLoading, isSuccess: isUpdateSuccess, isError, error },
+  ] = usePostCommentMutation();
 
   const {
     register,
@@ -42,14 +43,14 @@ const TicketUpdate = ({ ticket }) => {
   } = useForm();
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isUpdateSuccess || isStatusSuccess) {
       setIsBackdropOpen(true);
       setTimeout(() => {
         setIsBackdropOpen(false);
         navigate('/tickets');
       }, 2000);
     }
-  }, [isSuccess]);
+  }, [isUpdateSuccess || isStatusSuccess]);
 
   const handleFileChange = (field, files) => {
     const validFiles = Array.from(files).filter((filer) =>
@@ -80,30 +81,48 @@ const TicketUpdate = ({ ticket }) => {
 
     const updatedPreviews = filePreviews[field]?.filter((_, i) => i !== index);
     setFilePreviews((prev) => ({ ...prev, [field]: updatedPreviews }));
-    // setRemoveFiles((prev) => [...prev, itemId]);
     setValue(field, updatedFiles);
   };
 
-  const onSubmit = (data) => {
-    console.log('update', data);
-    const formData = new FormData();
+  // const onSubmit = (data) => {
+  //   const formData = new FormData();
 
+  //   formData.append('comment', data.comment);
+  //   formData.append('due_date', moment(data.due_date).format('YYYY-MM-DD'));
+
+  //   if (data.attachment) {
+  //     if (Array.isArray(data.attachment)) {
+  //       data.attachment.forEach((doc, index) => {
+  //         formData.append(`attachment`, doc);
+  //       });
+  //     } else {
+  //       formData.append('attachment', data.documents);
+  //     }
+  //   }
+
+  //   updateTicket({ id: ticket.id, ticket: formData });
+  // };
+
+  const handleFormSubmit = async (data, closeTicket = false) => {
+    const formData = new FormData();
     formData.append('comment', data.comment);
     formData.append('due_date', moment(data.due_date).format('YYYY-MM-DD'));
 
     if (data.attachment) {
       if (Array.isArray(data.attachment)) {
-        data.attachment.forEach((doc, index) => {
-          formData.append(`attachment[${index}]`, doc);
+        data.attachment.forEach((file) => {
+          formData.append('attachment', file);
         });
       } else {
-        formData.append('attachment', data.documents);
+        formData.append('attachment', data.attachment);
       }
     }
 
-    console.log(formData);
-    // updateTicket(formData);
-    updateTicket({ id: ticket.id, ticket: formData });
+    await updateTicket({ id: ticket.id, ticket: formData });
+
+    if (closeTicket) {
+      await updateStatus({ id: ticket.id, status: 'closed' });
+    }
   };
 
   return (
@@ -111,7 +130,7 @@ const TicketUpdate = ({ ticket }) => {
       <form
         action=''
         className='p-9 grid grid-cols-1'
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit((data) => handleFormSubmit(data))}
       >
         {UpdateTicketFields.map((field) => {
           switch (field.type) {
@@ -306,9 +325,9 @@ const TicketUpdate = ({ ticket }) => {
           />
           <Button
             btnType='submit'
-            disabled={isLoading}
+            disabled={isUpdateLoading}
             btnCls='w-[130px]'
-            btnName={`${isLoading ? 'Updateing...' : 'Update'}`}
+            btnName={`${isUpdateLoading ? 'Updateing...' : 'Update'}`}
             btnCategory='primary'
             btnStyle={{
               background: 'rgba(217, 228, 242, 1)',
@@ -319,8 +338,14 @@ const TicketUpdate = ({ ticket }) => {
 
           <Button
             // btnType='submit'
+            disabled={isUpdateLoading || isStatusLoading}
+            onClick={handleSubmit((data) => handleFormSubmit(data, true))}
             btnCls='w-[170px]'
-            btnName={'Closed Ticket'}
+            btnName={`${
+              isUpdateLoading || isStatusLoading
+                ? 'Closing...'
+                : 'Closed Ticket'
+            }`}
             btnCategory='primary'
           />
         </div>

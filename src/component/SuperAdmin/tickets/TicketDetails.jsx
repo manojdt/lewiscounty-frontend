@@ -95,18 +95,31 @@ const TicketDetails = () => {
             ))}
         </div>
 
-        {role === user.super_admin &&
-          ticket?.status !== 'new' &&
-          ticket?.status !== 'rejected' && (
-            <div>
-              <CustomTicketAccordian
-                title={'Enter your update'}
-                defaultValue={true}
-              >
-                <TicketUpdate ticket={ticket} />
-              </CustomTicketAccordian>
+        <div className='bg-white rounded-xl space-y-12'>
+          {isTicketLoading ? (
+            <div className='flex justify-center items-center'>
+              <Skeleton
+                variant='rectangular'
+                sx={{ width: '100%', height: '500px', borderRadius: '10px' }}
+              />
             </div>
+          ) : (
+            <>
+              {role === user.super_admin &&
+                ticket?.status !== 'new' &&
+                ticket?.status !== 'rejected' && (
+                  <div>
+                    <CustomTicketAccordian
+                      title={'Enter your update'}
+                      defaultValue={true}
+                    >
+                      <TicketUpdate ticket={ticket} />
+                    </CustomTicketAccordian>
+                  </div>
+                )}
+            </>
           )}
+        </div>
       </div>
     </div>
   );
