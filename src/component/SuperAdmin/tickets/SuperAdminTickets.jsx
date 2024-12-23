@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import SearchIcon from '../../../assets/images/search1x.png';
 import { useNavigate } from 'react-router-dom';
 import DataTable from '../../../shared/DataGrid';
-import { useGetAllTicketsQuery } from '../../../features/tickets/tickets-slice';
+import {
+  useGetAllTicketsQuery,
+  useUpdateStatusMutation,
+} from '../../../features/tickets/tickets-slice';
 import { TicketsColumns } from '../../../utils/super-admin-columns';
 import {
   taskStatusColor,
@@ -16,40 +19,61 @@ import StartIcon from '../../../assets/icons/start-icon.svg';
 import RejectIcon from '../../../assets/icons/reject-icon.svg';
 // import CloseIcon from '../../assets/icons/closeIcon.svg';
 import ViewIcon from '../../../assets/icons/eye-icon.svg';
+import SuccessGradientMessage from '../../success-gradient-message';
 
 const AdminTickets = () => {
   const navigate = useNavigate();
   const [requestTab, setRequestTab] = useState('all');
   const [seletedItem, setSelectedItem] = useState({});
+  const [isBackdropOpen, setIsBackdropOpen] = useState(false);
+  const [menuAnchor, setMenuAnchor] = useState({ anchorEl: null, rowId: null });
 
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
+  // const [anchorEl, setAnchorEl] = useState(null);
+  // const open = Boolean(anchorEl);
 
-  const [paginationModel, setPaginationModel] = React.useState({
-    page: 0,
-    limit: 10,
-  });
+  const [
+    updateStatus,
+    { isLoading: isUpdateLoading, isSuccess: isUpdateSuccess },
+  ] = useUpdateStatusMutation();
+
+  // const [paginationModel, setPaginationModel] = React.useState({
+  //   page: 0,
+  //   limit: 10,
+  // });
 
   const { data, isLoading, error, isError, isSuccess } =
     useGetAllTicketsQuery();
+
+  const handleClose = () => {
+    setMenuAnchor({ anchorEl: null, rowId: null });
+  };
+
+  const filteredData =
+    requestTab === 'all'
+      ? data
+      : data?.filter((ticket, index) => ticket.status === requestTab);
+
   // const { data, isLoading, error, isError, isSuccess } = useGetAllTicketsQuery({
   //   status: requestTab,
   //   page: paginationModel.page,
   //   limit: paginationModel.limit,
   // });
-  console.log(data);
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   const handleClick = (event, data) => {
-    setSelectedItem(data);
-    setAnchorEl(event.currentTarget);
+    // setSelectedItem(data);
+    // setAnchorEl(event.currentTarget);
+    setMenuAnchor({ anchorEl: event.currentTarget, rowId: data?.id });
   };
 
-  // const tableData = data?.results.map((item, index) => {
-  //   return { ...item, id: index + 1 };
-  // });
+  useEffect(() => {
+    if (isUpdateSuccess) {
+      setIsBackdropOpen(true);
+      setTimeout(() => {
+        setIsBackdropOpen(false);
+        navigate(`/tickets/${seletedItem.id}?type=start`);
+      }, 2000);
+    }
+  }, [isSuccess]);
 
   const statusColumn = TicketsColumns.map((column) => {
     if (column.field === 'status') {
@@ -60,7 +84,7 @@ const AdminTickets = () => {
             <>
               <div className='cursor-pointer flex items-center h-full relative'>
                 <span
-                  className='w-[80px] flex justify-center h-[30px] px-3'
+                  className='w-[80px] capitalize flex justify-center h-[30px] px-3'
                   style={{
                     background: TicketStatusColor[params.row.status]?.bg || '',
                     lineHeight: '30px',
@@ -71,7 +95,7 @@ const AdminTickets = () => {
                     fontSize: '12px',
                   }}
                 >
-                  {ticketStatusText[params.row.status]}
+                  {params.row.status}
                 </span>
               </div>
             </>
@@ -93,37 +117,62 @@ const AdminTickets = () => {
       renderCell: (params) => {
         return (
           <>
-            <div
-              className='cursor-pointer flex items-center h-full'
-              onClick={(e) => handleClick(e, params.row)}
-            >
-              <img src={MoreIcon} alt='MoreIcon' />
+            <div className='flex items-center h-full'>
+              <img
+                src={MoreIcon}
+                alt='MoreIcon'
+                onClick={(e) => handleClick(e, params.row)}
+                className='w-8 cursor-pointer  h-8 p-2 rounded-full bg-gray-100'
+              />
             </div>
             <Menu
-              id='basic-menu'
-              anchorEl={anchorEl}
-              open={open}
+              // id='basic-menu'
+              // anchorEl={anchorEl}
+              // open={open}
+              // onClose={handleClose}
+              // MenuListProps={{
+              //   'aria-labelledby': 'basic-button',
+              // }}
+              id={`menu-${params.row.id}`}
+              anchorEl={menuAnchor.anchorEl}
+              open={menuAnchor.rowId === params.row.id}
               onClose={handleClose}
               MenuListProps={{
                 'aria-labelledby': 'basic-button',
               }}
             >
               <MenuItem
-                onClick={() => navigate(`/tickets/${seletedItem.id}?type=view`)}
+                onClick={() => navigate(`/tickets/${params.row.id}?type=view`)}
                 className='!text-[12px]'
               >
                 <img src={ViewIcon} alt='ViewIcon' className='pr-3 w-[30px]' />
                 View
               </MenuItem>
-              <MenuItem
-                className='!text-[12px]'
-                onClick={() =>
-                  navigate(`/tickets/${seletedItem.id}?type=start`)
-                }
-              >
-                <img src={StartIcon} alt='ViewIcon' className='pr-3 w-[30px]' />{' '}
-                Start
-              </MenuItem>
+              {params.row.status === 'new' && (
+                <MenuItem
+                  className='!text-[12px]'
+                  onClick={() => {
+                    updateStatus({
+                      id: params.row.id,
+                      status: 'in_progress',
+                    });
+                  }}
+                  // onClick={() => {
+                  //   updateStatus({
+                  //     id: params.row.id,
+                  //     status: 'in_progress',
+                  //   });
+                  //   // navigate(`/tickets/${seletedItem.id}?type=start`);
+                  // }}
+                >
+                  <img
+                    src={StartIcon}
+                    alt='ViewIcon'
+                    className='pr-3 w-[30px]'
+                  />{' '}
+                  Start
+                </MenuItem>
+              )}
               <MenuItem className='!text-[12px]'>
                 <img
                   src={RejectIcon}
@@ -169,6 +218,9 @@ const AdminTickets = () => {
   const handleTab = (key) => {
     setRequestTab(key);
   };
+
+  console.log('requestTab', requestTab);
+  console.log('filteredData', filteredData);
 
   return (
     <div className='p-9'>
@@ -233,16 +285,21 @@ const AdminTickets = () => {
             </div>
           ) : (
             <DataTable
-              rows={data}
+              rows={filteredData}
               columns={TicketsListColumns}
               hideCheckbox
               // rowCount={taskList?.count}
-              paginationModel={paginationModel}
-              setPaginationModel={setPaginationModel}
+              // paginationModel={paginationModel}
+              // setPaginationModel={setPaginationModel}
             />
           )}
         </div>
       </div>
+      <SuccessGradientMessage
+        message={'This ticket is in-progress'}
+        isBackdropOpen={isBackdropOpen}
+        setIsBackdropOpen={setIsBackdropOpen}
+      />
     </div>
   );
 };

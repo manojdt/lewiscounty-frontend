@@ -49,6 +49,13 @@ export const ticketsApi = rtkQueryApiServices.injectEndpoints({
     getTicket: builder.query({
       query: (slug) => `/tickets/${slug}/`,
     }),
+    updateStatus: builder.mutation({
+      query: ({ id, status }) => ({
+        url: `/tickets/${id}/status/`,
+        method: 'PUT',
+        body: { status },
+      }),
+    }),
   }),
 });
 
@@ -59,4 +66,5 @@ export const {
   usePostCommentMutation,
   useGetAllTicketsQuery,
   useGetTicketQuery,
+  useUpdateStatusMutation,
 } = ticketsApi;

@@ -5,7 +5,10 @@ import { Link, useParams, useSearchParams } from 'react-router-dom';
 import CustomTicketAccordian from '../../../shared/custom-accordian/CustomTicketAccordian';
 import TicketUpdate from './ticket-update';
 import ViewTicket from './ViewTicket';
-import { useGetTicketQuery } from '../../../features/tickets/tickets-slice';
+import {
+  useGetTicketQuery,
+  useUpdateStatusMutation,
+} from '../../../features/tickets/tickets-slice';
 import TicketComments from './ticket-comments';
 import { useSelector } from 'react-redux';
 import { user } from '../../../utils/constant';
@@ -17,7 +20,6 @@ const TicketDetails = () => {
   const role = userInfo.data.role;
 
   const type = searchParams.get('type');
-  console.log(type);
 
   const {
     data: ticket,
@@ -30,7 +32,7 @@ const TicketDetails = () => {
 
   useEffect(() => {
     if (id) {
-      refetch(); //
+      refetch();
     }
   }, [id, refetch]);
 
@@ -93,16 +95,18 @@ const TicketDetails = () => {
             ))}
         </div>
 
-        {role === user.super_admin && (
-          <div>
-            <CustomTicketAccordian
-              title={'Enter your update'}
-              defaultValue={true}
-            >
-              <TicketUpdate ticket={ticket} />
-            </CustomTicketAccordian>
-          </div>
-        )}
+        {role === user.super_admin &&
+          ticket?.status !== 'new' &&
+          ticket?.status !== 'rejected' && (
+            <div>
+              <CustomTicketAccordian
+                title={'Enter your update'}
+                defaultValue={true}
+              >
+                <TicketUpdate ticket={ticket} />
+              </CustomTicketAccordian>
+            </div>
+          )}
       </div>
     </div>
   );
