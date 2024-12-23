@@ -46,7 +46,7 @@ const TicketComments = ({ comment }) => {
       <div className='p-9'>
         {comment.attachments.length > 0 && (
           <CustomTicketAccordian title={'Documents'} defaultValue={true}>
-            <div className='flex items-center justify-start'>
+            <div className='flex items-center justify-start gap-4'>
               {comment.attachments &&
                 comment.attachments.map((file, index) => (
                   <Link

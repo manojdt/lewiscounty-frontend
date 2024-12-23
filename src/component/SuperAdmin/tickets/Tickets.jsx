@@ -34,7 +34,7 @@ const Tickets = () => {
   const role = userInfo?.data?.role;
 
   const [requestTab, setRequestTab] = useState('all');
-  const [seletedItem, setSelectedItem] = useState({});
+  const [seletedItem, setSelectedItem] = useState();
   const [isBackdropOpen, setIsBackdropOpen] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState({ anchorEl: null, rowId: null });
   const [ticketId, setTicketId] = useState(null);
@@ -72,15 +72,23 @@ const Tickets = () => {
     setMenuAnchor({ anchorEl: event.currentTarget, rowId: data?.id });
   };
 
+  const handleStartTicket = (row) => {
+    setSelectedItem(row);
+    updateStatus({ id: row.id, status: 'in_progress' });
+  };
+
   useEffect(() => {
     if (isUpdateSuccess) {
       setIsBackdropOpen(true);
+
       setTimeout(() => {
         setIsBackdropOpen(false);
-        navigate(`/tickets/${seletedItem.id}?type=start`);
+        if (seletedItem?.id) {
+          navigate(`/tickets/${seletedItem.id}?type=start`);
+        }
       }, 2000);
     }
-  }, [isSuccess]);
+  }, [isUpdateSuccess, seletedItem, navigate]);
 
   const statusColumn = TicketsColumns.map((column) => {
     if (column.field === 'status') {
@@ -153,12 +161,7 @@ const Tickets = () => {
                   {params.row.status === 'new' && (
                     <MenuItem
                       className='!text-[12px]'
-                      onClick={() => {
-                        updateStatus({
-                          id: params.row.id,
-                          status: 'in_progress',
-                        });
-                      }}
+                      onClick={() => handleStartTicket(params.row)}
                     >
                       <img
                         src={StartIcon}
@@ -168,48 +171,58 @@ const Tickets = () => {
                       Start
                     </MenuItem>
                   )}
-                  <MenuItem
-                    className='!text-[12px]'
-                    onClick={() => {
-                      setIsOpen(true);
-                      setTicketId(params.row.id);
-                    }}
-                  >
+                  {params.row.status !== 'rejected' && (
+                    <MenuItem
+                      className='!text-[12px]'
+                      onClick={() => {
+                        setIsOpen(true);
+                        setTicketId(params.row.id);
+                      }}
+                    >
+                      <img
+                        src={RejectIcon}
+                        alt='ViewIcon'
+                        className='pr-3 w-[30px]'
+                      />
+                      Reject
+                    </MenuItem>
+                  )}
+                </div>
+              )}
+              {(role === user.mentee || role === user.mentee) && (
+                <div>
+                  <MenuItem onClick={() => {}} className='!text-[12px]'>
                     <img
-                      src={RejectIcon}
+                      src={CancelRequestIcon}
                       alt='ViewIcon'
                       className='pr-3 w-[30px]'
                     />
-                    Reject
+                    Cancel Request
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() =>
+                      navigate(`/ticket-creation/${params.row.id}?type=edit`)
+                    }
+                    className='!text-[12px]'
+                  >
+                    <img
+                      src={EditTicketIcon}
+                      alt='ViewIcon'
+                      className='pr-3 w-[30px]'
+                    />
+                    Edit
+                  </MenuItem>
+
+                  <MenuItem onClick={() => {}} className='!text-[12px]'>
+                    <img
+                      src={ShareIcon}
+                      alt='ViewIcon'
+                      className='pr-3 w-[30px]'
+                    />
+                    Share
                   </MenuItem>
                 </div>
               )}
-              <MenuItem onClick={() => {}} className='!text-[12px]'>
-                <img
-                  src={CancelRequestIcon}
-                  alt='ViewIcon'
-                  className='pr-3 w-[30px]'
-                />
-                Cancel Request
-              </MenuItem>
-              <MenuItem
-                onClick={() =>
-                  navigate(`/ticket-creation/${params.row.id}?type=edit`)
-                }
-                className='!text-[12px]'
-              >
-                <img
-                  src={EditTicketIcon}
-                  alt='ViewIcon'
-                  className='pr-3 w-[30px]'
-                />
-                Edit
-              </MenuItem>
-
-              <MenuItem onClick={() => {}} className='!text-[12px]'>
-                <img src={ShareIcon} alt='ViewIcon' className='pr-3 w-[30px]' />
-                Share
-              </MenuItem>
             </Menu>
           </>
         );
@@ -247,9 +260,6 @@ const Tickets = () => {
   const handleTab = (key) => {
     setRequestTab(key);
   };
-
-  console.log('requestTab', requestTab);
-  console.log('filteredData', filteredData);
 
   return (
     <div className='p-9'>
