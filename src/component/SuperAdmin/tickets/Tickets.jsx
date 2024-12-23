@@ -189,7 +189,7 @@ const Tickets = () => {
                   )}
                 </div>
               )}
-              {(role === user.mentee || role === user.mentee) && (
+              {(role === user.mentee || role === user.mentor) && (
                 <div>
                   <MenuItem onClick={() => {}} className='!text-[12px]'>
                     <img

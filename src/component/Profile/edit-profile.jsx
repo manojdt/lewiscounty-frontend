@@ -171,10 +171,10 @@ const EditProfile = ({ setEditMode }) => {
 
   useEffect(() => {
     if (status === profileStatus.update) {
-      setTimeout(() => {
-        setEditMode(false);
-        loadUserProfile();
-      }, 3000);
+      // setTimeout(() => {
+      setEditMode(false);
+      loadUserProfile();
+      // }, 3000);
     }
   }, [status]);
 
@@ -388,7 +388,7 @@ const EditProfile = ({ setEditMode }) => {
             />
             <Button
               btnType='submit'
-              btnName='Save Changes'
+              btnName={`${loading ? 'Saving...' : 'Save Changes'}`}
               btnCls={'w-[160px]'}
             />
           </div>

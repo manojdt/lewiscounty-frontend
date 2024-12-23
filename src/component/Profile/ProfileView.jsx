@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from '../../shared';
-import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import {
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom';
 import ProfileImageIcon from '../../assets/icons/profile-image-icon.svg';
 import CancelIcon from '../../assets/images/cancel1x.png';
 import TickColorIcon from '../../assets/icons/tickColorLatest.svg';
@@ -9,7 +14,13 @@ import CancelColorIcon from '../../assets/icons/cancelCircle.svg';
 import SuccessTik from '../../assets/images/blue_tik1x.png';
 import SearchIcon from '../../assets/icons/search.svg';
 import { useDispatch, useSelector } from 'react-redux';
-import { Backdrop, Checkbox, CircularProgress, Link, Stack } from '@mui/material';
+import {
+  Backdrop,
+  Checkbox,
+  CircularProgress,
+  Link,
+  Stack,
+} from '@mui/material';
 import { ProfileFields } from '../../utils/formFields';
 import {
   getFollowList,
@@ -38,9 +49,9 @@ import { CancelPopup } from '../Mentor/Task/cancelPopup';
 export default function ProfileView() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const state = useLocation()?.state
-  console.log("state ===>", state)
-  const { programRequest } = useSelector(state => state.requestList);
+  const state = useLocation()?.state;
+  console.log('state ===>', state);
+  const { programRequest } = useSelector((state) => state.requestList);
   const [confirmPopup, setConfirmPopup] = useState({
     show: false,
     category: false,
@@ -64,12 +75,12 @@ export default function ProfileView() {
     loading: userInfoLoading,
     followInfo,
   } = useSelector((state) => state.userList);
-  console.log(userDetails,"userDetails")
-  const pathe=state?.reqType?-1:'/all-request'
+  console.log(userDetails, 'userDetails');
+  const pathe = state?.reqType ? -1 : '/all-request';
 
   const { profile, loading } = useSelector((state) => state.profileInfo);
-  const userInfo = useSelector(state => state.userInfo)
-  const role = userInfo.data.role
+  const userInfo = useSelector((state) => state.userInfo);
+  const role = userInfo.data.role;
   const {
     categoryList,
     status: requeststatus,
@@ -81,9 +92,7 @@ export default function ProfileView() {
   const pageType = window.location.href.includes('mentor-details')
     ? 'Mentor'
     : 'Mentee';
-  const { requestData } = useSelector(
-    (state) => state.userList
-  );
+  const { requestData } = useSelector((state) => state.userList);
   const {
     register,
     formState: { errors },
@@ -173,30 +182,30 @@ export default function ProfileView() {
       categories_id: confirmPopup?.selectedItem,
     };
     dispatch(updateMemberRequest(payload)).then((res) => {
-      if (res?.meta?.requestStatus === "fulfilled") {
-        navigate(pathe)
+      if (res?.meta?.requestStatus === 'fulfilled') {
+        navigate(pathe);
       }
-    })
+    });
   };
 
   // Confirm Accept Popup
   const handleConfirmPopup = () => {
     if (role === 'admin') {
-      dispatch(
-        cancelMemberRequest({ member_id: params.id, })).then((res) => {
-          if (res?.meta?.requestStatus === "fulfilled") {
-            navigate(pathe)
-          }
-        })
+      dispatch(cancelMemberRequest({ member_id: params.id })).then((res) => {
+        if (res?.meta?.requestStatus === 'fulfilled') {
+          navigate(pathe);
+        }
+      });
     }
 
     if (role === 'mentor') {
       if (state?.data?.id) {
-
-        dispatch(updateProgramRequest({
-          id: state?.data?.id,
-          status: "approved",
-        })).then(() => {
+        dispatch(
+          updateProgramRequest({
+            id: state?.data?.id,
+            status: 'approved',
+          })
+        ).then(() => {
           setTimeout(() => {
             navigate(pathe);
           }, 100);
@@ -219,21 +228,25 @@ export default function ProfileView() {
     }
   };
   const reqStatus = {
-    approved:'Approved',
-    rejected:'Rejected',
-    new:'New',
-}
-const reqStatusColor = {
-    approved:{ background:'#16B681',
+    approved: 'Approved',
+    rejected: 'Rejected',
+    new: 'New',
+  };
+  const reqStatusColor = {
+    approved: {
+      background: '#16B681',
       borderRadius: '5px',
       width: '300px',
-      cursor: 'not-allowed'},
-    rejected:{ border: '1px solid #E0382D',
+      cursor: 'not-allowed',
+    },
+    rejected: {
+      border: '1px solid #E0382D',
       borderRadius: '5px',
       color: '#E0382D',
-       width: '300px',
-      cursor: 'not-allowed'},
-    }
+      width: '300px',
+      cursor: 'not-allowed',
+    },
+  };
   const footerComponent = (props) => {
     return (
       <div className='flex gap-6 justify-center items-center py-4'>
@@ -275,11 +288,13 @@ const reqStatusColor = {
 
   const handleCancelReasonPopupSubmit = (data) => {
     if (state?.data?.id) {
-      dispatch(updateProgramRequest({
-        id: state?.data?.id,
-        status: "rejected",
-        reason: data.cancel_reason,
-      })).then(() => {
+      dispatch(
+        updateProgramRequest({
+          id: state?.data?.id,
+          status: 'rejected',
+          reason: data.cancel_reason,
+        })
+      ).then(() => {
         setTimeout(() => {
           navigate(pathe);
         }, 100);
@@ -302,7 +317,6 @@ const reqStatusColor = {
         });
       }
     }
-
   };
 
   useEffect(() => {
@@ -345,20 +359,20 @@ const reqStatusColor = {
     }
   }, [params]);
   useEffect(() => {
-    console.log("role=>", role)
-    if (role === "admin") {
-
+    console.log('role=>', role);
+    if (role === 'admin') {
       dispatch(getRequestView(parseInt(searchParams.get('request_id'))));
     }
-  }, [role])
+  }, [role]);
 
   const handleSelectCategory = (value) => {
     setConfirmPopup({
       ...confirmPopup,
-      selectedItem: !confirmPopup?.selectedItem?.includes(value) ? [...confirmPopup?.selectedItem, value] : confirmPopup?.selectedItem?.filter((e) => e !== value)
-
-    })
-  }
+      selectedItem: !confirmPopup?.selectedItem?.includes(value)
+        ? [...confirmPopup?.selectedItem, value]
+        : confirmPopup?.selectedItem?.filter((e) => e !== value),
+    });
+  };
 
   const categoryColumn = [
     {
@@ -368,59 +382,62 @@ const reqStatusColor = {
       for: ['admin', 'mentor'],
       width: 100,
       renderCell: (params) => {
-        return <div>
-          <Checkbox checked={confirmPopup?.selectedItem?.includes(params?.row?.categories_id)}
-            onChange={() => handleSelectCategory(params?.row?.categories_id)} />
-        </div>
-      }
+        return (
+          <div>
+            <Checkbox
+              checked={confirmPopup?.selectedItem?.includes(
+                params?.row?.categories_id
+              )}
+              onChange={() => handleSelectCategory(params?.row?.categories_id)}
+            />
+          </div>
+        );
+      },
     },
-    ...categoryColumns
-  ]
+    ...categoryColumns,
+  ];
 
   const [adminPopup, setAdminPopup] = React.useState({
     bool: false,
     activity: false,
-    type: ""
-  })
+    type: '',
+  });
 
-
-  const handleOpenAdminApprove = (type = "") => {
+  const handleOpenAdminApprove = (type = '') => {
     setAdminPopup({
       ...adminPopup,
       bool: true,
-      type: type
-    })
-  }
+      type: type,
+    });
+  };
 
-  const handleCloseAdminApprove = (type = "") => {
+  const handleCloseAdminApprove = (type = '') => {
     setAdminPopup({
       ...adminPopup,
       bool: false,
       activity: false,
       close: false,
-      type: ""
-    })
-  }
+      type: '',
+    });
+  };
 
   const handleAdminProgram = (type, reason) => {
     let payload = {
       id: requestData?.id,
       status: type,
-
-    }
-    if (type === "rejected") {
+    };
+    if (type === 'rejected') {
       payload = {
         ...payload,
         rejection_reason: reason,
-      }
+      };
     }
     dispatch(updateProgramMenteeRequest(payload)).then((res) => {
-      if (res.meta.requestStatus === "fulfilled") {
-        navigate(-1)
+      if (res.meta.requestStatus === 'fulfilled') {
+        navigate(-1);
       }
-    })
-  }
-
+    });
+  };
 
   return (
     <div className='profile-container'>
@@ -435,7 +452,7 @@ const reqStatusColor = {
 
       <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={adminPopup?.bool && adminPopup?.type === "approved"}
+        open={adminPopup?.bool && adminPopup?.type === 'approved'}
       >
         <div className='popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center'>
           <img src={ConnectIcon} alt='ConnectIcon' />
@@ -466,18 +483,19 @@ const reqStatusColor = {
                 btnCls='w-[110px]'
                 btnName={'Yes'}
                 btnCategory='primary'
-                onClick={() => handleAdminProgram("approved")}
+                onClick={() => handleAdminProgram('approved')}
               />
             </div>
           </div>
         </div>
       </Backdrop>
 
-      <CancelPopup open={(adminPopup?.bool && adminPopup?.type === "rejected")} header="Rejection Reason"
+      <CancelPopup
+        open={adminPopup?.bool && adminPopup?.type === 'rejected'}
+        header='Rejection Reason'
         handleClosePopup={() => handleCloseAdminApprove()}
-        handleSubmit={(reason) => handleAdminProgram("rejected", reason)} />
-
-
+        handleSubmit={(reason) => handleAdminProgram('rejected', reason)}
+      />
 
       {/* Admin Popup end */}
 
@@ -530,16 +548,20 @@ const reqStatusColor = {
         }
       >
         <div className='px-5 py-1 flex justify-center items-center'>
-          <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
-            style={{ background: '#fff', borderRadius: '10px' }}>
-            <img src={SuccessTik} alt="SuccessTik" />
-            <p className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+          <div
+            className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+            style={{ background: '#fff', borderRadius: '10px' }}
+          >
+            <img src={SuccessTik} alt='SuccessTik' />
+            <p
+              className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
               style={{
-                fontWeight: 600
+                fontWeight: 600,
               }}
-            >Request updated successfully</p>
+            >
+              Request updated successfully
+            </p>
           </div>
-
         </div>
       </Backdrop>
 
@@ -548,18 +570,23 @@ const reqStatusColor = {
         open={activity.complete}
       >
         <div className='px-5 py-1 flex justify-center items-center'>
-          <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
-            style={{ background: '#fff', borderRadius: '10px' }}>
-            <img src={SuccessTik} alt="SuccessTik" />
-            <p className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+          <div
+            className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+            style={{ background: '#fff', borderRadius: '10px' }}
+          >
+            <img src={SuccessTik} alt='SuccessTik' />
+            <p
+              className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
               style={{
-                fontWeight: 600
+                fontWeight: 600,
               }}
-            > Successfully{' '}
+            >
+              {' '}
+              Successfully{' '}
               {followInfo.is_following ? 'followed ' : 'unfollowed '}{' '}
-              {pageType.toLowerCase()}</p>
+              {pageType.toLowerCase()}
+            </p>
           </div>
-
         </div>
       </Backdrop>
 
@@ -829,106 +856,18 @@ const reqStatusColor = {
             </div>
           </div>
           <div className='flex gap-5'>
-            {role !== 'admin' ?
+            {role !== 'admin' ? (
               <>
-                {
-                  state?.data?.status === "new" ?
-                    <>
-                      <div className='flex gap-4 pt-10'>
-                        <button
-                          // className='py-3 px-16 text-white text-[14px] flex items-center'
-                          // style={{
-                          //   border: '1px solid #E0382D',
-                          //   borderRadius: '5px',
-                          //   color: '#E0382D',
-                          // }}
-                          className='py-3 px-16 text-white text-[14px] flex items-center'
-                          style={{
-                            border: '1px solid #E0382D',
-                            borderRadius: '5px',
-                            color: '#E0382D',
-                          }}
-                          onClick={() => handleMemberCancelRequest()}
-                        >
-                          Reject
-                        </button>
-                        <Button
-                          btnType='button'
-                          btnName='Approve'
-                          btnCls={'w-[150px]'}
-                          onClick={() => handleMemberAcceptRequest()}
-                        />
-                      </div>
-                    </> : state?.data?.status === "approved"||state?.data?.status === "rejected"?<>
-                    <div className='py-9'>
-                      <div
-                        className='py-3 px-16 text-white text-[14px] flex justify-center items-center'
-                        style={{
-                         ...reqStatusColor[state?.data?.status],
-                        }}
-                      >
-                        {reqStatus[state?.data?.status]}
-                      </div>
-                    </div>
-                    </>:
-                    <>
-                      {role === 'mentor' &&
-                        searchParams.has('type') &&
-                        searchParams.get('type') === 'mentee_request' &&
-                        searchParams.has('request_id') &&
-                        searchParams.get('request_id') !== '' &&
-                        ["new", "pending"].includes(userDetails?.approve_status) ? (
-                        <div className='flex gap-4 pt-10'>
-                          <button
-                            className='py-3 px-16 text-white text-[14px] flex items-center'
-                            style={{
-                              border: '1px solid #E0382D',
-                              borderRadius: '5px',
-                              color: '#E0382D',
-                            }}
-                            onClick={() => handleMemberCancelRequest()}
-                          >
-                            Reject
-                          </button>
-                          <button
-                            className='py-3 px-16 text-white text-[14px] flex items-center'
-                            style={{
-                              background: '#16B681',
-                              borderRadius: '5px',
-                            }}
-                            onClick={() => handleMemberAcceptRequest()}
-                          >
-                            Approve
-                          </button>
-                        </div>
-                      ) : (
-                        <>
-                        {role !== 'mentor'&&
-                        <>
-                          <Button
-                            onClick={handleShowPopup}
-                            btnType='button'
-                            btnCategory='secondary'
-                            btnName={followInfo.is_following ? 'Unfollow' : 'Follow'}
-                            btnCls={'w-[150px]'}
-                          />
-                          <Button
-                            btnType='button'
-                            btnName='Chat'
-                            btnCls={'w-[150px]'}
-                          />
-                        </>}
-                        </>
-                      )}
-                    </>
-                }
-              </>
-              : role === 'admin' ? (
-                <>
-                  {(userDetails?.approve_status === 'new' ||
-                    userDetails?.approve_status === 'pending') ? (
+                {state?.data?.status === 'new' ? (
+                  <>
                     <div className='flex gap-4 pt-10'>
                       <button
+                        // className='py-3 px-16 text-white text-[14px] flex items-center'
+                        // style={{
+                        //   border: '1px solid #E0382D',
+                        //   borderRadius: '5px',
+                        //   color: '#E0382D',
+                        // }}
                         className='py-3 px-16 text-white text-[14px] flex items-center'
                         style={{
                           border: '1px solid #E0382D',
@@ -939,74 +878,168 @@ const reqStatusColor = {
                       >
                         Reject
                       </button>
-                      <button
-                        className='py-3 px-16 text-white text-[14px] flex items-center'
-                        style={{
-                          background: '#16B681',
-                          borderRadius: '5px',
-                        }}
+                      <Button
+                        btnType='button'
+                        btnName='Approve'
+                        btnCls={'w-[150px]'}
                         onClick={() => handleMemberAcceptRequest()}
-                      >
-                        Approve
-                      </button>
+                      />
                     </div>
-                  ) : // userDetails?.approve_status === 'accept' ?
+                  </>
+                ) : state?.data?.status === 'approved' ||
+                  state?.data?.status === 'rejected' ? (
+                  <>
+                    <div className='py-9'>
+                      <div
+                        className='py-3 px-16 text-white text-[14px] flex justify-center items-center'
+                        style={{
+                          ...reqStatusColor[state?.data?.status],
+                        }}
+                      >
+                        {reqStatus[state?.data?.status]}
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    {role === 'mentor' &&
+                    searchParams.has('type') &&
+                    searchParams.get('type') === 'mentee_request' &&
+                    searchParams.has('request_id') &&
+                    searchParams.get('request_id') !== '' &&
+                    ['new', 'pending'].includes(userDetails?.approve_status) ? (
+                      <div className='flex gap-4 pt-10'>
+                        <button
+                          className='py-3 px-16 text-white text-[14px] flex items-center'
+                          style={{
+                            border: '1px solid #E0382D',
+                            borderRadius: '5px',
+                            color: '#E0382D',
+                          }}
+                          onClick={() => handleMemberCancelRequest()}
+                        >
+                          Reject
+                        </button>
+                        <button
+                          className='py-3 px-16 text-white text-[14px] flex items-center'
+                          style={{
+                            background: '#16B681',
+                            borderRadius: '5px',
+                          }}
+                          onClick={() => handleMemberAcceptRequest()}
+                        >
+                          Approve
+                        </button>
+                      </div>
+                    ) : (
+                      <>
+                        {role !== 'mentor' && (
+                          <>
+                            <Button
+                              onClick={handleShowPopup}
+                              btnType='button'
+                              btnCategory='secondary'
+                              btnName={
+                                followInfo.is_following ? 'Unfollow' : 'Follow'
+                              }
+                              btnCls={'w-[150px]'}
+                            />
+                            <Button
+                              btnType='button'
+                              btnName='Chat'
+                              btnCls={'w-[150px]'}
+                            />
+                          </>
+                        )}
+                      </>
+                    )}
+                  </>
+                )}
+              </>
+            ) : role === 'admin' ? (
+              <>
+                {userDetails?.approve_status === 'new' ||
+                userDetails?.approve_status === 'pending' ? (
+                  <div className='flex gap-4 pt-10'>
+                    <button
+                      className='py-3 px-16 text-white text-[14px] flex items-center'
+                      style={{
+                        border: '1px solid #E0382D',
+                        borderRadius: '5px',
+                        color: '#E0382D',
+                      }}
+                      onClick={() => handleMemberCancelRequest()}
+                    >
+                      Reject
+                    </button>
+                    <button
+                      className='py-3 px-16 text-white text-[14px] flex items-center'
+                      style={{
+                        background: '#16B681',
+                        borderRadius: '5px',
+                      }}
+                      onClick={() => handleMemberAcceptRequest()}
+                    >
+                      Approve
+                    </button>
+                  </div>
+                ) : // userDetails?.approve_status === 'accept' ?
 
-                    //     <button className='py-3 px-16 mt-7 text-white text-[14px] flex items-center' style={{
-                    //         background: "#16B681",
-                    //         borderRadius: '5px'
-                    //     }}
-                    //         onClick={() => undefined}
-                    //     >Approved
-                    //     </button>
-                    //     :
+                //     <button className='py-3 px-16 mt-7 text-white text-[14px] flex items-center' style={{
+                //         background: "#16B681",
+                //         borderRadius: '5px'
+                //     }}
+                //         onClick={() => undefined}
+                //     >Approved
+                //     </button>
+                //     :
 
-                    //     userDetails?.approve_status === 'cancel' ?
-                    //         <div className='flex gap-4 pt-10' >
-                    //             <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                    //                 border: "1px solid #E0382D",
-                    //                 borderRadius: '5px',
-                    //                 color: '#E0382D',
-                    //                 cursor: 'not-allowed'
-                    //             }}
-                    //                 onClick={() => undefined}
-                    //             >Rejected
-                    //             </button>
-                    //         </div>
+                //     userDetails?.approve_status === 'cancel' ?
+                //         <div className='flex gap-4 pt-10' >
+                //             <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                //                 border: "1px solid #E0382D",
+                //                 borderRadius: '5px',
+                //                 color: '#E0382D',
+                //                 cursor: 'not-allowed'
+                //             }}
+                //                 onClick={() => undefined}
+                //             >Rejected
+                //             </button>
+                //         </div>
 
-                    // :
+                // :
 
-                    null}
-                </>
-              ) : null}
+                null}
+              </>
+            ) : null}
 
-            {
-              ((requestData?.request_type === "program_join" && ["new", "pening"].includes(requestData?.status) && role === "admin")) &&
-              <div className='flex gap-4 pt-10'>
-                <button
-                  className='py-3 px-16 text-white text-[14px] flex items-center'
-                  style={{
-                    border: '1px solid #E0382D',
-                    borderRadius: '5px',
-                    color: '#E0382D',
-                  }}
-                  onClick={() => handleOpenAdminApprove("rejected")}
-                >
-                  Reject
-                </button>
-                <button
-                  className='py-3 px-16 text-white text-[14px] flex items-center'
-                  style={{
-                    background: '#16B681',
-                    borderRadius: '5px',
-                  }}
-                  onClick={() => handleOpenAdminApprove("approved")}
-                >
-                  Approve
-                </button>
-              </div>
-            }
-
+            {requestData?.request_type === 'program_join' &&
+              ['new', 'pening'].includes(requestData?.status) &&
+              role === 'admin' && (
+                <div className='flex gap-4 pt-10'>
+                  <button
+                    className='py-3 px-16 text-white text-[14px] flex items-center'
+                    style={{
+                      border: '1px solid #E0382D',
+                      borderRadius: '5px',
+                      color: '#E0382D',
+                    }}
+                    onClick={() => handleOpenAdminApprove('rejected')}
+                  >
+                    Reject
+                  </button>
+                  <button
+                    className='py-3 px-16 text-white text-[14px] flex items-center'
+                    style={{
+                      background: '#16B681',
+                      borderRadius: '5px',
+                    }}
+                    onClick={() => handleOpenAdminApprove('approved')}
+                  >
+                    Approve
+                  </button>
+                </div>
+              )}
 
             {/* . */}
           </div>
@@ -1028,9 +1061,8 @@ const reqStatusColor = {
           ))}
         </div>
         <div className='col-span-2'>
-          {userDetails?.documents?.length > 0 &&
+          {userDetails?.documents?.length > 0 && (
             <Stack>
-
               <label
                 className='block tracking-wide  text-xs mb-2'
                 style={{ color: 'rgba(116, 116, 116, 1)' }}
@@ -1038,15 +1070,11 @@ const reqStatusColor = {
                 Documents
               </label>
 
-              <Stack
-                direction={'row'}
-                alignItems={'center'}
-                spacing={2}
-              >
+              <Stack direction={'row'} alignItems={'center'} spacing={2}>
                 {userDetails?.documents?.map((doc) => {
                   return (
                     <Link
-                      target="_blank"
+                      target='_blank'
                       href={doc?.file}
                       variant='body2'
                       className={'text-[18px]'}
@@ -1056,8 +1084,8 @@ const reqStatusColor = {
                   );
                 })}
               </Stack>
-
-            </Stack>}
+            </Stack>
+          )}
         </div>
       </div>
     </div>
