@@ -205,6 +205,7 @@ const ViewTicket = ({ ticket, type }) => {
             />
           </div>
         )}
+
       <SuccessGradientMessage
         message={'This ticket is in-progress'}
         isBackdropOpen={isBackdropOpen}

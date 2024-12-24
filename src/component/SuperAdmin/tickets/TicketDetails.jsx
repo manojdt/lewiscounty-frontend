@@ -1,7 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Breadcrumbs, Skeleton, Typography } from '@mui/material';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import {
+  Link,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom';
 import CustomTicketAccordian from '../../../shared/custom-accordian/CustomTicketAccordian';
 import TicketUpdate from './ticket-update';
 import ViewTicket from './ViewTicket';
@@ -12,12 +17,33 @@ import {
 import TicketComments from './ticket-comments';
 import { useSelector } from 'react-redux';
 import { user } from '../../../utils/constant';
+import { Button } from '../../../shared';
+import SuccessGradientMessage from '../../success-gradient-message';
 
 const TicketDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+
+  const [isBackdropOpen, setIsBackdropOpen] = useState(false);
+
   const [searchParams] = useSearchParams();
   const userInfo = useSelector((state) => state.userInfo);
   const role = userInfo.data.role;
+
+  const [
+    updateStatus,
+    { isLoading: isStatusLoading, isSuccess: isStatusSuccess },
+  ] = useUpdateStatusMutation();
+
+  useEffect(() => {
+    if (isStatusSuccess) {
+      setIsBackdropOpen(true);
+      setTimeout(() => {
+        setIsBackdropOpen(false);
+        navigate(`/ticket-history`);
+      }, 2000);
+    }
+  }, [isStatusSuccess]);
 
   const type = searchParams.get('type');
 
@@ -123,6 +149,43 @@ const TicketDetails = () => {
             </>
           )}
         </div>
+        {type === 'view' &&
+          (role === user.mentor ||
+            role === user.mentee ||
+            role === user.admin) &&
+          ticket?.status === 'resolved' && (
+            <div className='flex gap-6 my-12 justify-center align-middle'>
+              <Button
+                btnCls='w-[170px]'
+                btnName={`${isStatusLoading ? 'Reopening...' : 'Reopen'}`}
+                // btnStyle={{
+                //   border: '1px solid rgba(220, 53, 69, 1)', // Danger red border
+                //   color: 'rgba(220, 53, 69, 1)', // Danger red text
+                // }}
+                disabled={isStatusLoading}
+                btnCategory='secondary'
+                onClick={() => {
+                  updateStatus({ id: ticket.id, status: 'reopened' });
+                }}
+              />
+
+              <Button
+                btnType='submit'
+                btnCls='w-[170px]'
+                btnName={`${isStatusLoading ? 'Closing...' : 'Close'}`}
+                disabled={isStatusLoading}
+                onClick={() => {
+                  updateStatus({ id: ticket.id, status: 'closed' });
+                }}
+                btnCategory='primary'
+              />
+            </div>
+          )}
+        <SuccessGradientMessage
+          message={'This ticket has been closed successfully'}
+          isBackdropOpen={isBackdropOpen}
+          setIsBackdropOpen={setIsBackdropOpen}
+        />
       </div>
     </div>
   );
