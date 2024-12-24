@@ -512,7 +512,7 @@ export default function AssignMentees() {
                                                                                     <>
                                                                                         <div className='flex justify-between'>
                                                                                             <div className='input-bg h-[60px] w-[86%] mt-2 flex items-center 
-                                                                                                text-[12px] gap-2 cursor-pointer px-6'
+                                                                                                text-[12px] gap-2 px-6'
                                                                                                 style={{ borderRadius: '3px' }}>
 
                                                                                                 {
@@ -562,7 +562,7 @@ export default function AssignMentees() {
                                                                                                 }}
                                                                                                 aria-invalid={!!errors[field.name]}
                                                                                             />
-                                                                                            <button type='button' className='h-[60px] mt-2 w-[13%] text-[14px]'
+                                                                                            <button disabled={type === "edit"} type='button' className='h-[60px] mt-2 w-[13%] text-[14px]'
                                                                                                 style={{ border: '1px dashed rgba(29, 91, 191, 1)', color: 'rgba(29, 91, 191, 1)' }}
                                                                                                 onClick={handleAddMentee}>
                                                                                                 + Add Mentees

@@ -152,6 +152,7 @@ export default function CreatePrograms() {
   const [tabActionInfo, setTabActionInfo] = useState({
     activeTab: "program_information",
     error: false,
+    message:''
   });
 
   const resetViewInfo = { material: false, skills: false, certificate: false };
@@ -248,10 +249,9 @@ export default function CreatePrograms() {
     const totalSteps = filteredProgramTabs.length;
     if (currentStep === 1 && role === "mentor" && !params?.id) {
       dispatch(
-        getProgramNameValidate({
-          program_name: data?.program_name,
-          program_id: params?.id,
-        })
+        getProgramNameValidate(
+        data?.program_name,
+        )
       ).then((res) => {
         if (res?.meta?.requestStatus === "fulfilled") {
           if (!res?.payload?.is_available) {
@@ -264,7 +264,7 @@ export default function CreatePrograms() {
               return nextStep;
             });
           } else {
-            setTabActionInfo({ ...tabActionInfo, error: true });
+            setTabActionInfo({ ...tabActionInfo, error: true,message:'Program already exist' });
           }
         }
       });
@@ -361,7 +361,7 @@ export default function CreatePrograms() {
             });
           }
         } else {
-          setTabActionInfo({ ...tabActionInfo, error: true });
+          setTabActionInfo({ ...tabActionInfo, error: true ,message:''});
         }
       } else {
         let allLogo = { ...logo };
@@ -975,7 +975,7 @@ export default function CreatePrograms() {
         {tabActionInfo.error && (
           <ToastNotification
             openToaster={tabActionInfo.error}
-            message={"Please fill all mandatory fields"}
+            message={tabActionInfo?.message?tabActionInfo?.message:"Please fill all mandatory fields"}
             handleClose={handleClose}
             toastType={"error"}
           />

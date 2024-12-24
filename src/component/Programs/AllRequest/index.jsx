@@ -14,6 +14,10 @@ import MenuItem from "@mui/material/MenuItem";
 import Card from "../../../shared/Card";
 import {
     adminRequestOverview,
+    goalRequestColor,
+    goalRequestStatus,
+    goalStatus,
+    goalStatusColor,
     menteesRequestOverview,
     myRequestOverview,
     requestStatus,
@@ -25,6 +29,7 @@ import {
 } from "../../../utils/constant";
 import SearchIcon from "../../../assets/icons/search.svg";
 import CalendarIcon from "../../../assets/images/calender_1x.png";
+import EditIcon from '../../../assets/images/Edit1x.png'
 import MoreIcon from "../../../assets/icons/moreIcon.svg";
 import TickCircle from "../../../assets/icons/tickCircle.svg";
 import CloseCircle from "../../../assets/icons/closeCircle.svg";
@@ -80,7 +85,10 @@ import { useForm } from "react-hook-form";
 import { Button } from "../../../shared";
 import { SelectBox } from "../../../shared/SelectBox";
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import { getAllGoals } from "../../../services/goalsInfo";
+import { getAllGoals, updateHistoryGoal, updateLocalGoalInfo } from "../../../services/goalsInfo";
+import CreateGoal from "../../Goals/CreateGoal";
+import dayjs from "dayjs";
+import { updateReportLocalState } from "../../../services/reportsInfo";
 
 export default function AllRequest() {
     const navigate = useNavigate();
@@ -105,7 +113,7 @@ export default function AllRequest() {
         error,
         reopenRequest
     } = useSelector((state) => state.requestList);
-    const { goalsList, loading: goalLoading } = useSelector(state => state.goals)
+    const { goalsList,status:goalSta, loading: goalLoading } = useSelector(state => state.goals)
     const [currentRequestTab, setCurrentRequestTab] = useState(
         RequestStatus.programRequest
     );
@@ -115,7 +123,9 @@ export default function AllRequest() {
     const [filter, setFilter] = useState({ search: "", filter_by: "" });
     const open = Boolean(anchorEl);
     const selectedRequestedtype = searchParams.get("type");
+    const [popupModal, setPopupModal] = useState('')
     const [actionTab, setActiveTab] = useState(currentTab);
+     const [actionModal, setActionModal] = useState(false)
     const [actionTabFilter, setActionTabFilter] = useState([]);
     const [requestOverview, setRequestOverview] = useState([]);
     const [activeTableDetails, setActiveTableDetails] = useState({
@@ -288,6 +298,12 @@ export default function AllRequest() {
         setSelectedItem(data);
         setAnchorEl(event.currentTarget);
     };
+    const handleCloseModal = () => {
+        setActionModal(false)
+        // setSelectedItem({})
+        getNewGoalsRequestApi()
+        // handleGetAllGoals()
+    }
 
     // Reset Confirm Popup
     const resetConfirmPopup = () => {
@@ -345,6 +361,9 @@ export default function AllRequest() {
         if (confirmPopup.requestType === "testimonial_request") {
             handleTestimonialRequest()
         }
+        if (confirmPopup.requestType === "new_goals_request") {
+            handleCancelNewGoalRequest()
+        }
     };
 
     const handleTestimonialRequest = () => {
@@ -354,6 +373,30 @@ export default function AllRequest() {
         }
 
         dispatch(updateTestimonial(payload))
+
+    }
+    const handleCancelNewGoalRequest = () => {
+         const payload = {
+                   id: seletedItem?.goal?.id,
+                   status: "cancel",
+                   start_date: dayjs(new Date()).format("YYYY-MM-DD")
+               }
+               dispatch(updateHistoryGoal(payload)).then((res) => {
+                   if (res?.meta?.requestStatus === "fulfilled") {
+                       
+                    setShowToast({
+                        show: true,
+                        message: "Goal Request updated successfully",
+                    });
+                   getNewGoalsRequestApi()
+                    if (confirmPopup.show) resetConfirmPopup();
+                    if (cancelPopup.show) resetCancelReasonPopup();
+                    setTimeout(() => {
+                        setShowToast({ show: false, message: "" });
+                        dispatch(updateLocalRequest({ status: "" }));
+                    }, [3000]);
+                   }
+               })
 
     }
 
@@ -595,7 +638,25 @@ export default function AllRequest() {
         setCategoryPopup({ show: false, selectedItem: [], page: "", tab: "" });
         setSelectedCategory("");
     };
+useEffect(() => {
+ console.log(actionTab,actionTabFilter,activeTableDetails,"action")
+}, [actionTab,actionTabFilter,activeTableDetails])
+useEffect(() => {
 
+    if (goalSta === goalStatus.update) {
+        setActionModal(false)
+        setPopupModal('Updated')
+         dispatch(updateLocalGoalInfo({ status: '' }))
+        setTimeout(() => {
+            setPopupModal('')
+        }, [3000])
+    }
+}, [goalSta])
+ const handlEditGoal = () => {
+    dispatch(updateLocalGoalInfo({ error: '' }))
+    setActionModal(true)
+    handleClose();
+ }
     // Handle Selected Items for Category
     const handleSelectedItems = (selectedInfo) => {
         let data = { ...categoryPopup };
@@ -825,16 +886,16 @@ export default function AllRequest() {
                                 className="w-[80px] flex justify-center h-[30px] px-7"
                                 style={{
                                     background:
-                                        requestStatusColor[params.row.status]?.bgColor || "",
+                                    selectedRequestedtype === "new_goals_request"?goalRequestColor[params.row?.goal?.status]?.bg:requestStatusColor[params.row.status]?.bgColor || "",
                                     lineHeight: "30px",
                                     borderRadius: "3px",
                                     width: "110px",
                                     height: "34px",
-                                    color: requestStatusColor[params.row.status]?.color || "",
+                                    color: selectedRequestedtype === "new_goals_request"?goalRequestColor[params.row?.goal?.status].color: requestStatusColor[params.row.status]?.color || "",
                                     fontSize: "12px",
                                 }}
                             >
-                                {requestStatusText[params.row.status] || ""}
+                                {selectedRequestedtype === "new_goals_request"?goalRequestStatus[params.row?.goal?.status]:requestStatusText[params.row.status] || ""}
                             </span>
                         </div>
                     </>
@@ -910,6 +971,27 @@ export default function AllRequest() {
                                                 </MenuItem>
                                             </>
                                         )}
+                                </>
+                            )}
+                            {(selectedTab === "my"&&role==='mentor')||role==='mentee'&&(
+                                <>
+                                 {
+                            seletedItem?.goal?.status === 'new' &&
+                            <MenuItem onClick={handlEditGoal} className='!text-[12px]'>
+                                <img src={EditIcon} alt="EditIcon" className='pr-3 w-[30px]' />
+                                Edit
+                            </MenuItem>
+                        }
+                         {
+                            ["new"].includes(seletedItem?.goal?.status) &&
+                            <MenuItem onClick={() => {
+                                handleOpenConfirmPopup("Goal Request" ,currentRequestTab.key,actionTab,"cancel")
+                                handleClose();
+                                }} className='!text-[12px]'>
+                                <img src={CancelIcon} alt="CancelReqIcon" field={seletedItem.id} className='pr-3 w-[30px]' />
+                                Cancel
+                            </MenuItem>
+                        }
                                 </>
                             )}
                         </Menu>
@@ -1605,7 +1687,21 @@ export default function AllRequest() {
             })
         );
     };
+    const getNewGoalsRequestApi = (createdBy = actionTab) => {
+        dispatch(
+            goalsRequest({
+                ...(filterStatus !== "all" && { status: filterStatus }),
+                // created_by: createdBy,
+                page: paginationModel?.page + 1,
+                limit: paginationModel?.pageSize,
+                ...(filter.search !== "" && { search: filter.search }),
+                ...(filter.filter_by !== ""
+                    ? { filter_by: filter.filter_by }
+                    : { filter_by: "month" }),
 
+            })
+        );
+    };
     const getGoalsRequestApi = (createdBy = actionTab) => {
         dispatch(getAllGoals({
             ...(filter.filter_by !== ""
@@ -2093,7 +2189,7 @@ export default function AllRequest() {
             }
 
             if (selectedRequestedtype === "new_goals_request") {
-                getGoalsRequestApi();
+                getNewGoalsRequestApi();
             }
             if (selectedRequestedtype === "goal_request") {
                 handleNewGoalRequestApi();
@@ -2326,7 +2422,7 @@ export default function AllRequest() {
                                     ? TickColorIcon
                                     : confirmPopup.type === "reject"
                                         ? CancelColorIcon
-                                        : ""
+                                        : confirmPopup.type === "cancel"?CancelColorIcon:""
                             }
                             alt="TickColorIcon"
                         />
@@ -2337,7 +2433,7 @@ export default function AllRequest() {
                                 ? "Approve"
                                 : confirmPopup.type === "reject"
                                     ? "Reject"
-                                    : ""}
+                                    :confirmPopup.type === "cancel"?"Cancel": ""}
                         </span>
                         <div className="py-5">
                             <p
@@ -2359,7 +2455,7 @@ export default function AllRequest() {
                                             ? "Cancel"
                                             : confirmPopup.type === "reject"
                                                 ? "No"
-                                                : ""
+                                                :confirmPopup.type === "cancel"?"No" :""
                                     }
                                     btnCategory="secondary"
                                     onClick={handleCancelConfirmPopup}
@@ -2372,7 +2468,7 @@ export default function AllRequest() {
                                             ? "Approve"
                                             : confirmPopup.type === "reject"
                                                 ? "Yes"
-                                                : ""
+                                                :confirmPopup.type === "cancel"?"Yes" :""
                                     }
                                     style={{
                                         background:
@@ -2547,7 +2643,23 @@ export default function AllRequest() {
                         </div>
                     </div>
                 </MuiModal>
+                <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={popupModal !== ''}
+            >
+                <div className='px-5 py-1 flex justify-center items-center'>
+                    <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+                        style={{ background: '#fff', borderRadius: '10px' }}>
+                        <img src={SuccessTik} alt="SuccessTik" />
+                        <p className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                            style={{
+                                fontWeight: 600
+                            }}
+                        >Goal {popupModal} Successfully</p>
+                    </div>
 
+                </div>
+            </Backdrop>
                 <div className="px-4">
                     <div className="grid grid-cols-5 gap-3">
                         <div className="row-span-3 flex flex-col gap-8">
@@ -2693,6 +2805,7 @@ export default function AllRequest() {
                                         paginationModel={paginationModel}
                                         setPaginationModel={setPaginationModel}
                                     />
+                                    {actionModal&& <CreateGoal open={actionModal} handleCloseModal={handleCloseModal} editMode={Object.keys(seletedItem?.goal).length} seletedItem={seletedItem?.goal} />}
                                 </div>
                             </div>
                         </div>
