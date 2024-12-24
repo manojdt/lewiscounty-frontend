@@ -127,7 +127,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
         refetchOnMountOrArgChange: true,
       }
     );
-
+console.log(programdetails,role,"programdetails")
   const [activeTab, setActiveTab] = useState("about_program");
   const [ratingModal, setRatingModal] = useState({
     modal: false,
@@ -267,14 +267,22 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       dispatch(
         updateProgramMenteeRequest({
           id: parseInt(requestId),
-          status: "accept",
+          status: "approved",
         })
-      );
+      ).then((res) => {
+        if (res?.meta?.requestStatus === "fulfilled") {
+          setConfirmPopup({
+            ...confirmPopup,
+            accept: false,
+          });
+        }
+      });
     }
   };
 
   // Handle Submit Cancel Program Popup
   const handleCancelReasonPopupSubmit = (data) => {
+    console.log(data,"data")
     if (data.cancel_reason !== "") {
       if (confirmPopup.cancel) {
         if (role === "admin") {
@@ -299,10 +307,17 @@ export default function ProgramDetails({ setProgramDetailsId }) {
           dispatch(
             updateProgramMenteeRequest({
               id: parseInt(requestId),
-              status: "cancel",
-              cancelled_reason: data.cancel_reason,
+              status: "rejected",
+              rejection_reason: data.cancel_reason,
             })
-          );
+          ).then((res) => {
+            if (res?.meta?.requestStatus === "fulfilled") {
+              setConfirmPopup({
+                ...confirmPopup,
+                cancel: false,
+              });
+            }
+          });
         }
       }
     }
@@ -1808,12 +1823,12 @@ export default function ProgramDetails({ setProgramDetailsId }) {
 
                   {
                     <Box mt={2}>
-                      {role === "admin" &&
+                      {(role === "admin" || role==="mentor") &&
                         // Base program status conditions
-                        (programdetails?.status === "yettoapprove" ||
-                          programdetails?.status === "inprogress" ||
+                        (programdetails?.status === "yettoapprove" || programdetails?.status === "yettojoin"||
+                          programdetails?.status === "inprogress" )&&
                           // Program reschedule request condition
-                          (programdetails?.request_data?.request_type ===
+                         ( (programdetails?.request_data?.request_type ===
                             "program_reschedule" &&
                             programdetails?.request_data?.status === "new") ||
                           // Program cancel request condition
@@ -1865,24 +1880,36 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                       {(programdetails?.request_data?.status === "rejected" ||
                         (!requestStatusParams &&
                           programdetails?.status ===
-                            "new_program_request_rejected")) && (
-                        <button
-                          className="py-3 px-16 text-white text-[14px] flex items-center"
-                          style={{
-                            border: "1px solid #E0382D",
-                            borderRadius: "5px",
-                            color: "#E0382D",
-                            cursor: "not-allowed",
-                          }}
-                          onClick={undefined}
-                        >
-                          Rejected
-                        </button>
-                      )}
+                          "new_program_request_rejected")) && (
+                          <button
+                            className="py-3 px-16 text-white text-[14px] flex items-center"
+                            style={{
+                              border: "1px solid #E0382D",
+                              borderRadius: "5px",
+                              color: "#E0382D",
+                              cursor: "not-allowed",
+                            }}
+                            onClick={undefined}
+                          >
+                            Rejected
+                          </button>
+                        )}
+                      {(programdetails?.request_data?.status === "approved" && programdetails?.status ==="cancelled") && (
+                          <button
+                            className="py-3 px-16 text-white text-[14px] flex items-center"
+                            style={{
+                              background: "#16B681",
+                              borderRadius: "5px",
+                            }}
+                            onClick={undefined}
+                          >
+                            Approved
+                          </button>
+                        )}
                     </Box>
                   }
 
-                  {programdetails.status === "cancelled" && (
+                  {programdetails.status === "cancelled"&&!programdetails?.request_data?.status && (
                     <div className="flex gap-4 pt-10">
                       <button
                         className="py-3 px-16 text-white text-[14px] flex items-center"
@@ -2126,6 +2153,12 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                       <div className="reason-title">Cancelled Reason</div>
                     )}
                     <div className="reason-content">
+                      {programdetails?.request_data?.request_type ===
+                "program_reschedule"&&
+                      <div className="flex gap-2 text-[12px] pb-2">
+                        <div className="font-bold">Reschedule Start & End Date:</div>
+                        <div className="text-[11px]"> {`${dateFormat(programdetails?.request_data?.start_date)} - ${dateFormat(programdetails?.request_data?.end_date)}`}</div>
+                      </div>}
                       {programdetails?.request_data?.status === "rejected"
                         ? programdetails?.request_data?.rejection_reason
                         : programdetails?.request_data?.comments}
