@@ -342,15 +342,20 @@ const TicketUpdate = ({ ticket }) => {
             onClick={handleSubmit((data) => handleFormSubmit(data, true))}
             btnCls='w-[170px]'
             btnName={`${
-              isUpdateLoading || isStatusLoading
-                ? 'Closing...'
-                : 'Closed Ticket'
+              isUpdateLoading || isStatusLoading ? 'Resolving...' : 'Resolve '
             }`}
             btnCategory='primary'
           />
         </div>
       </form>
-      {isOpen && <TicketDeleteModal isOpen={isOpen} setIsOpen={setIsOpen} />}
+
+      {isOpen && (
+        <TicketDeleteModal
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          ticketId={ticket?.id}
+        />
+      )}
       <SuccessGradientMessage
         message={'Your ticket has been Updated successfully'}
         isBackdropOpen={isBackdropOpen}
