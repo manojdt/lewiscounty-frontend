@@ -25,6 +25,7 @@ const TicketDetails = () => {
   const navigate = useNavigate();
 
   const [isBackdropOpen, setIsBackdropOpen] = useState(false);
+  const [actionType, setActionType] = useState(null); // NEW: Track action type
 
   const [searchParams] = useSearchParams();
   const userInfo = useSelector((state) => state.userInfo);
@@ -134,18 +135,25 @@ const TicketDetails = () => {
             </div>
           ) : (
             <>
-              {role === user.super_admin &&
+              {
+                // role === user.super_admin &&
                 ticket?.status !== 'new' &&
-                ticket?.status !== 'rejected' && (
-                  <div>
-                    <CustomTicketAccordian
-                      title={'Enter your update'}
-                      defaultValue={true}
-                    >
-                      <TicketUpdate ticket={ticket} />
-                    </CustomTicketAccordian>
-                  </div>
-                )}
+                  ticket?.status !== 'rejected' &&
+                  ticket?.status !== 'reopened' && (
+                    <div>
+                      <CustomTicketAccordian
+                        title={
+                          role === user.super_admin
+                            ? 'Enter your update'
+                            : 'Additional Information'
+                        }
+                        defaultValue={true}
+                      >
+                        <TicketUpdate ticket={ticket} />
+                      </CustomTicketAccordian>
+                    </div>
+                  )
+              }
             </>
           )}
         </div>
@@ -158,14 +166,11 @@ const TicketDetails = () => {
               <Button
                 btnCls='w-[170px]'
                 btnName={`${isStatusLoading ? 'Reopening...' : 'Reopen'}`}
-                // btnStyle={{
-                //   border: '1px solid rgba(220, 53, 69, 1)', // Danger red border
-                //   color: 'rgba(220, 53, 69, 1)', // Danger red text
-                // }}
                 disabled={isStatusLoading}
                 btnCategory='secondary'
                 onClick={() => {
-                  updateStatus({ id: ticket.id, status: 'reopened' });
+                  setActionType('reopen');
+                  updateStatus({ id: ticket.id, status: 'in_progress' });
                 }}
               />
 
@@ -175,6 +180,7 @@ const TicketDetails = () => {
                 btnName={`${isStatusLoading ? 'Closing...' : 'Close'}`}
                 disabled={isStatusLoading}
                 onClick={() => {
+                  setActionType('close');
                   updateStatus({ id: ticket.id, status: 'closed' });
                 }}
                 btnCategory='primary'
@@ -182,7 +188,11 @@ const TicketDetails = () => {
             </div>
           )}
         <SuccessGradientMessage
-          message={'This ticket has been closed successfully'}
+          message={
+            actionType === 'reopen'
+              ? 'The ticket has been reopened successfully'
+              : 'This ticket has been closed successfully'
+          }
           isBackdropOpen={isBackdropOpen}
           setIsBackdropOpen={setIsBackdropOpen}
         />

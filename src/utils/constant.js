@@ -575,10 +575,10 @@ export const TicketStatusColor = {
     color: 'rgba(29, 91, 191, 1)',
     bg: 'rgba(207, 225, 255, 1)',
   },
-  // completed: {
-  //   color: 'rgba(22, 182, 129, 1)',
-  //   bg: 'rgba(235, 255, 243, 1)',
-  // },
+  resolved: {
+    color: '#16B681',
+    bg: '#EBFFF3',
+  },
 };
 
 export const taskStatusColor = {

@@ -26,6 +26,7 @@ import ViewIcon from '../../../assets/icons/eye-icon.svg';
 import SuccessGradientMessage from '../../success-gradient-message';
 import { useSelector } from 'react-redux';
 import CancelRequestModal from './cancel-request';
+import { Button } from '../../../shared';
 
 const Tickets = () => {
   const navigate = useNavigate();
@@ -82,7 +83,7 @@ const Tickets = () => {
   useEffect(() => {
     if (isUpdateSuccess) {
       setIsBackdropOpen(true);
-
+      setIsOpen(false);
       setTimeout(() => {
         setIsBackdropOpen(false);
         if (seletedItem?.id) {
@@ -173,22 +174,23 @@ const Tickets = () => {
                       Start
                     </MenuItem>
                   )}
-                  {params.row.status !== 'rejected' && (
-                    <MenuItem
-                      className='!text-[12px]'
-                      onClick={() => {
-                        setIsOpen(true);
-                        setTicketId(params.row.id);
-                      }}
-                    >
-                      <img
-                        src={RejectIcon}
-                        alt='ViewIcon'
-                        className='pr-3 w-[30px]'
-                      />
-                      Reject
-                    </MenuItem>
-                  )}
+                  {params.row.status !== 'rejected' &&
+                    params.row.status !== 'closed' && (
+                      <MenuItem
+                        className='!text-[12px]'
+                        onClick={() => {
+                          setIsOpen(true);
+                          setTicketId(params.row.id);
+                        }}
+                      >
+                        <img
+                          src={RejectIcon}
+                          alt='ViewIcon'
+                          className='pr-3 w-[30px]'
+                        />
+                        Reject
+                      </MenuItem>
+                    )}
                 </div>
               )}
               {(role === user.mentee ||
@@ -269,12 +271,12 @@ const Tickets = () => {
       key: 'closed',
     },
     {
-      name: 'Reject Tickets',
-      key: 'rejected',
-    },
-    {
       name: 'Resolved Tickets',
       key: 'resolved',
+    },
+    {
+      name: 'Reject Tickets',
+      key: 'rejected',
     },
   ];
 
@@ -284,6 +286,26 @@ const Tickets = () => {
 
   return (
     <div className='p-9'>
+      {(role === user.admin ||
+        role === user.mentee ||
+        role === user.mentor) && (
+        <div className='flex items-center justify-start gap-4 my-4'>
+          <Button
+            btnType='button'
+            btnCls='w-[110px]'
+            btnName={'Help'}
+            btnCategory='primary'
+            onClick={() => navigate('/help')}
+          />
+          <Button
+            btnType='button'
+            btnCls='w-[110px]'
+            btnName={'History'}
+            btnCategory='primary'
+            onClick={() => navigate('/ticket-history')}
+          />
+        </div>
+      )}
       <div
         className='px-3 py-5'
         style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}

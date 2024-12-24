@@ -16,16 +16,21 @@ import {
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
 import SuccessGradientMessage from '../../success-gradient-message';
+import { useSelector } from 'react-redux';
+import { user } from '../../../utils/constant';
 
 const TicketUpdate = ({ ticket }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [filePreviews, setFilePreviews] = useState({});
+  const userInfo = useSelector((state) => state.userInfo);
   const navigate = useNavigate();
   const [isBackdropOpen, setIsBackdropOpen] = useState(false);
   const [
     updateStatus,
     { isLoading: isStatusLoading, isSuccess: isStatusSuccess },
   ] = useUpdateStatusMutation();
+
+  const role = userInfo?.data?.role;
 
   const [
     updateTicket,
@@ -133,6 +138,9 @@ const TicketUpdate = ({ ticket }) => {
         onSubmit={handleSubmit((data) => handleFormSubmit(data))}
       >
         {UpdateTicketFields.map((field) => {
+          if (field.type === 'date' && role !== user.super_admin) {
+            return null;
+          }
           switch (field.type) {
             case 'date':
               return (
@@ -159,6 +167,7 @@ const TicketUpdate = ({ ticket }) => {
                             className='calendar-control disabled:bg-gray-100 input-bg'
                             value={value}
                             disabled={field.disabled}
+                            minDate={new Date()}
                             onChange={(e) => dateField.onChange(e.value)}
                             dateFormat='dd/mm/yy'
                           />
@@ -311,42 +320,57 @@ const TicketUpdate = ({ ticket }) => {
         })}
 
         <div className='mx-9 my-9 space-y-8'>{/* form fields */}</div>
+        {role === user.super_admin && (
+          <div className='flex gap-6 justify-center align-middle'>
+            <Button
+              btnName='Reject'
+              btnCls='w-[170px]'
+              btnStyle={{
+                border: '1px solid rgba(220, 53, 69, 1)',
+                color: 'rgba(220, 53, 69, 1)',
+              }}
+              btnCategory='secondary'
+              onClick={() => setIsOpen(true)}
+            />
+            <Button
+              btnType='submit'
+              disabled={isUpdateLoading}
+              btnCls='w-[130px]'
+              btnName={`${isUpdateLoading ? 'Updateing...' : 'Update'}`}
+              btnCategory='primary'
+              btnStyle={{
+                background: 'rgba(217, 228, 242, 1)',
+                color: 'rgba(29, 91, 191, 1)',
+                border: 'none',
+              }}
+            />
 
-        <div className='flex gap-6 justify-center align-middle'>
-          <Button
-            btnName='Reject'
-            btnCls='w-[170px]'
-            btnStyle={{
-              border: '1px solid rgba(220, 53, 69, 1)',
-              color: 'rgba(220, 53, 69, 1)',
-            }}
-            btnCategory='secondary'
-            onClick={() => setIsOpen(true)}
-          />
-          <Button
-            btnType='submit'
-            disabled={isUpdateLoading}
-            btnCls='w-[130px]'
-            btnName={`${isUpdateLoading ? 'Updateing...' : 'Update'}`}
-            btnCategory='primary'
-            btnStyle={{
-              background: 'rgba(217, 228, 242, 1)',
-              color: 'rgba(29, 91, 191, 1)',
-              border: 'none',
-            }}
-          />
-
-          <Button
-            // btnType='submit'
-            disabled={isUpdateLoading || isStatusLoading}
-            onClick={handleSubmit((data) => handleFormSubmit(data, true))}
-            btnCls='w-[170px]'
-            btnName={`${
-              isUpdateLoading || isStatusLoading ? 'Resolving...' : 'Resolve '
-            }`}
-            btnCategory='primary'
-          />
-        </div>
+            <Button
+              // btnType='submit'
+              disabled={isUpdateLoading || isStatusLoading}
+              onClick={handleSubmit((data) => handleFormSubmit(data, true))}
+              btnCls='w-[170px]'
+              btnName={`${
+                isUpdateLoading || isStatusLoading ? 'Resolving...' : 'Resolve '
+              }`}
+              btnCategory='primary'
+            />
+          </div>
+        )}
+        {(role === user.admin ||
+          role === user.mentee ||
+          role === user.mentor) && (
+          <div className='text-center'>
+            <Button
+              // btnType='submit'
+              disabled={isUpdateLoading}
+              onClick={handleSubmit((data) => handleFormSubmit(data))}
+              btnCls='w-[170px]'
+              btnName={`${isUpdateLoading ? 'Updateing...' : 'Update '}`}
+              btnCategory='primary'
+            />
+          </div>
+        )}
       </form>
 
       {isOpen && (
