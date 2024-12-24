@@ -88,7 +88,14 @@ export default function HelpPage() {
       >
         <CircularProgress color='inherit' />
       </Backdrop>
-      <div className='p-4'>
+      <div className='flex items-center justify-start gap-4 my-4'>
+        <Button
+          btnType='button'
+          btnCls='w-[110px]'
+          btnName={'Help'}
+          btnCategory='primary'
+          onClick={() => navigate('/help')}
+        />
         <Button
           btnType='button'
           btnCls='w-[110px]'
