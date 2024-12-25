@@ -181,7 +181,7 @@ export const ProfessionalBackgroundFields = [
     placeholder: 'LinkedIn Profile',
 
     inputRules: {
-      required: 'This field is required',
+      // required: 'This field is required',
     },
     size: true,
     width: 'col-span-2',
