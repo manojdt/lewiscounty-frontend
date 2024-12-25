@@ -38,6 +38,7 @@ const ProgramSteps = ({
   stepData,
   handleAction,
   fetchCategoryData,
+  handelProgramCheck,
   setToggleRole,
   setCurrent,
   mentor_assign,
@@ -291,6 +292,11 @@ const ProgramSteps = ({
                       disableFields ? "bg-slate-300" : "input-bg"
                     } focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]`}
                     placeholder={field.placeholder}
+                    onBlur={(e)=>{
+                      if(field.name==="program_name"){
+                        handelProgramCheck(e?.target?.value)
+                      }
+                    }}
                     style={{
                       color: "#232323",
                       borderRadius: "3px",

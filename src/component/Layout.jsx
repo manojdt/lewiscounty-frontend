@@ -246,7 +246,7 @@ export default function Layout({ subheader }) {
                   onClick={() => navigate('/all-request')}
                   className='block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer'
                 >
-                  My Request
+                  My Requests
                 </span>
               </li>
             )}
