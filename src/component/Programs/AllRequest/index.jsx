@@ -192,7 +192,7 @@ console.log(selectedTab,role,"selectedTab")
             forTabs: ["my"]
         },
         {
-            name: "Program Join",
+            name: role === "mentee"?"Program Join Request":"Program Join",
             key: "program_join",
             for: ["mentor", "mentee", "admin"],
             forTabs: role === "mentee" ? ["my"] : role === "admin" ? ["mentees"] : []
@@ -989,7 +989,7 @@ useEffect(() => {
                                 handleClose();
                                 }} className='!text-[12px]'>
                                 <img src={CancelIcon} alt="CancelReqIcon" field={seletedItem.id} className='pr-3 w-[30px]' />
-                                Cancel
+                                Cancel Request
                             </MenuItem>
                         }
                                 </>
@@ -2292,7 +2292,14 @@ useEffect(() => {
                     break;
             }
         } else {
-            currentOveriew = myRequestOverview?.filter((e) => e?.for.includes(user?.mentee))
+            currentOveriew = myRequestOverview
+            ?.map((e) => {
+                if (e.key === RequestStatus.programRequest.key && role === "mentee") {
+                    return { ...e, name: `My ${e.name}` }; // Add "My" to the name
+                }
+                return e;
+            })
+            .filter((e) => e?.for.includes(user?.mentee)) ;
             currentTab = "program_join"
         }
         setActiveTab(selectedRequestedtype === "member_join_request" ? "mentor" : currentTab)

@@ -127,7 +127,6 @@ export default function ProgramDetails({ setProgramDetailsId }) {
         refetchOnMountOrArgChange: true,
       }
     );
-console.log(programdetails,role,"programdetails")
   const [activeTab, setActiveTab] = useState("about_program");
   const [ratingModal, setRatingModal] = useState({
     modal: false,
@@ -1719,7 +1718,7 @@ console.log(programdetails,role,"programdetails")
                             Drafted
                           </div>
                         </div>
-                      ) : programdetails.status === "yettojoin" ? (
+                      ) : programdetails.status === "yettojoin" && !requestId? (
                         <div className="py-9">
                           <button
                             className="py-3 px-16 text-white text-[14px] flex items-center"
@@ -1829,11 +1828,14 @@ console.log(programdetails,role,"programdetails")
                       {(role === "admin" || role==="mentor") &&
                         // Base program status conditions
                         (programdetails?.status === "yettoapprove" || programdetails?.status === "yettojoin"||
-                          programdetails?.status === "inprogress" )&&
+                          programdetails?.status === "inprogress" || programdetails?.status === "yettostart" )&&
                           // Program reschedule request condition
                          ( (programdetails?.request_data?.request_type ===
                             "program_reschedule" &&
                             programdetails?.request_data?.status === "new") ||
+                          (programdetails?.request_data?.request_type ===
+                            "program_new" &&
+                            programdetails?.request_data?.status === "new") ||  
                           // Program cancel request condition
                           (programdetails?.request_data?.request_type ===
                             "program_cancel" &&
@@ -1897,7 +1899,8 @@ console.log(programdetails,role,"programdetails")
                             Rejected
                           </button>
                         )}
-                      {(programdetails?.request_data?.status === "approved" && programdetails?.status ==="cancelled") && (
+                      {(programdetails?.request_data?.status === "approved" && programdetails?.status ==="cancelled")||
+                      (programdetails?.request_data?.status === "approved" && programdetails?.request_data?.request_type ==="program_reschedule") && (
                           <button
                             className="py-3 px-16 text-white text-[14px] flex items-center"
                             style={{

@@ -59,7 +59,7 @@ export default function AssignTask() {
     const timerData = useTimer()
     const calendarRef = useRef([])
     const created_by = searchParams.get("created_by") || "";
-    const { data: programdetails, isLoading: programLoading } =
+    const { data: programdetails, isLoading: programLoading ,refetch} =
         useGetProgramDetailsByIdQuery(
             {
                 id: params?.id,
@@ -77,6 +77,7 @@ export default function AssignTask() {
     const { allPrograms, programDetails, programMentees } = useSelector(state => state.programInfo)
     const userdetails = useSelector(state => state.userInfo)
     // const programdetails = programData
+    console.log(programDetails,programdetails,"pro")
     const { profile, loading: profileLoading } = useSelector(state => state.profileInfo)
 
     const { loading: requestLoading, status: requestStatusInfo, error: requestError } = useSelector(state => state.requestList);
@@ -336,7 +337,10 @@ export default function AssignTask() {
         if (!Object.keys(profile)?.length) {
             dispatch(getUserProfile())
         }
+        if(params.id){
 
+            refetch()
+        }
     }, [params.id])
 
     useEffect(() => {
@@ -430,7 +434,6 @@ export default function AssignTask() {
             document.querySelector('.p-datepicker')?.classList.remove('program-time-picker')
         }
     }, [])
-
 
     const programApprovalStage = {
         yettoapprove: { status: 'yettoapprove', text: 'Waiting for admin approval' },
@@ -570,7 +573,7 @@ export default function AssignTask() {
 
                                 {
                                     (
-                                        ((role === 'mentor' || role === "admin") && programDetails.created_by === userdetails?.data?.user_id) ||
+                                        ((role === 'mentor' || role === "admin") && programdetails.created_by === userdetails?.data?.user_id) ||
                                         (role === 'mentee' &&
                                             (programdetails.status === programActionStatus.inprogress || programdetails.mentee_join_status === programActionStatus.program_join_request_accepted)
                                         )
@@ -966,10 +969,8 @@ export default function AssignTask() {
                                             {programdetails?.mentee_join_status === "program_join_request_submitted" &&
 
                                                 <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                    border: "1px solid #E0382D",
-                                                    borderRadius: "5px",
-                                                    color: "#E0382D",
-                                                    cursor: "not-allowed",
+                                                    background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
+                                                    borderRadius: '5px'
                                                 }}
                                                 >
                                                     Waiting for Mentor Approval

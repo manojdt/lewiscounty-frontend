@@ -363,6 +363,9 @@ export default function ProfileView() {
     if (role === 'admin') {
       dispatch(getRequestView(parseInt(searchParams.get('request_id'))));
     }
+    if (role === 'mentor') {
+      dispatch(getRequestView(parseInt(searchParams.get('request_id'))));
+    }
   }, [role]);
 
   const handleSelectCategory = (value) => {
@@ -438,7 +441,6 @@ export default function ProfileView() {
       }
     });
   };
-
   return (
     <div className='profile-container'>
       <Backdrop
@@ -858,16 +860,10 @@ export default function ProfileView() {
           <div className='flex gap-5'>
             {role !== 'admin' ? (
               <>
-                {state?.data?.status === 'new' ? (
+                {state?.data?.status === 'new'&&['new', 'pending'].includes(requestData?.status) ? (
                   <>
                     <div className='flex gap-4 pt-10'>
                       <button
-                        // className='py-3 px-16 text-white text-[14px] flex items-center'
-                        // style={{
-                        //   border: '1px solid #E0382D',
-                        //   borderRadius: '5px',
-                        //   color: '#E0382D',
-                        // }}
                         className='py-3 px-16 text-white text-[14px] flex items-center'
                         style={{
                           border: '1px solid #E0382D',
@@ -886,17 +882,17 @@ export default function ProfileView() {
                       />
                     </div>
                   </>
-                ) : state?.data?.status === 'approved' ||
-                  state?.data?.status === 'rejected' ? (
+                ) :( state?.data?.status === 'approved' ||
+                  state?.data?.status === 'rejected'||requestData?.status==="approved" ||requestData?.status==="rejected") ? (
                   <>
                     <div className='py-9'>
                       <div
                         className='py-3 px-16 text-white text-[14px] flex justify-center items-center'
                         style={{
-                          ...reqStatusColor[state?.data?.status],
+                          ...reqStatusColor[requestData?.status==="approved"?"approved":requestData?.status==="rejected"?"rejected":state?.data?.status],
                         }}
                       >
-                        {reqStatus[state?.data?.status]}
+                        {requestData?.status==="approved"?"Approved":requestData?.status==="rejected"?"Rejected":reqStatus[state?.data?.status]}
                       </div>
                     </div>
                   </>

@@ -494,7 +494,22 @@ console.log(allFiles,"allfiles")
                 <p className='!text-[16px]' fontWeight={600}>Task Description : </p>
                 <p className='text-[14px]'>&nbsp;&nbsp;{taskData?.task_description}</p>
               </div>
-
+              {taskData.status === "rejected"&&!isPreview && (
+                    <div className="flex gap-4 pt-10">
+                      <button
+                        className="py-3 px-16 text-white text-[14px] flex items-center"
+                        style={{
+                          border: "1px solid #E0382D",
+                          borderRadius: "5px",
+                          color: "#E0382D",
+                          cursor: "not-allowed",
+                        }}
+                        onClick={() => undefined}
+                      >
+                        Cancelled
+                      </button>
+                    </div>
+                  )}
               {isPreview && (
                 <Box mb={3}>
                   <div style={{ marginTop: '40px' }}>

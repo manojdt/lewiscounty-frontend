@@ -165,7 +165,26 @@ export default function CreatePrograms() {
     // Add other conditions here if needed
     return true;
   });
-  
+  const handelProgramChaeck = (data) => {
+    dispatch(
+      getProgramNameValidate(data)
+    ).then((res) => {
+      if (res?.meta?.requestStatus === "fulfilled") {
+        if (!res?.payload?.is_available) {
+          // setCurrentStep((prevStep) => {
+          //   const nextStep = prevStep + 1;
+          //   setTabActionInfo({
+          //     ...tabActionInfo,
+          //     activeTab: filteredProgramTabs[nextStep - 1]?.key || "",
+          //   });
+          //   return nextStep;
+          // });
+        } else {
+          setTabActionInfo({ ...tabActionInfo, error: true,message:'Program name already exists' });
+        }
+      }
+    });
+  }
   const handleTab = (key) => {
     const tabIndex = filteredProgramTabs.findIndex((tab) => tab.key === key);
     // if (stepWiseData.hasOwnProperty(tabIndex + 1) || stepWiseData.hasOwnProperty(tabIndex)) {
@@ -264,7 +283,7 @@ export default function CreatePrograms() {
               return nextStep;
             });
           } else {
-            setTabActionInfo({ ...tabActionInfo, error: true,message:'Program already exist' });
+            setTabActionInfo({ ...tabActionInfo, error: true,message:'Program name already exists' });
           }
         }
       });
@@ -1088,6 +1107,7 @@ export default function CreatePrograms() {
                     setToggleRole={setToggleRole}
                     fetchCategoryData={fetchCategoryData}
                     handleAction={handleAction}
+                    handelProgramCheck={handelProgramChaeck}
                     stepData={stepData}
                     stepFields={programAllFields[currentStep - 1]}
                     mentor_assign={mentor_assign}
