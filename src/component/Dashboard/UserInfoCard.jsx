@@ -39,6 +39,10 @@ export default function UserInfoCard() {
                 if (role === 'mentee') {
                     return { ...menu, count: totalCount[menu.menteeStatus] }
                 }
+                // Admin Response Count
+                if (role === 'admin') {
+                    return { ...menu, count: totalCount[menu.menteeStatus] }
+                }
 
                 return menu
 

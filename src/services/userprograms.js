@@ -134,7 +134,7 @@ export const getProgramCounts = createAsyncThunk(
     "getProgramCounts",
     async (query) => {
         if (!query || Object.keys(query).length === 0) {
-            const getProgramAllCounts = await api.get(`program_status_count`);
+            const getProgramAllCounts = await api.get(`programs/program-status-count`);
             if (getProgramAllCounts.status === 200 && getProgramAllCounts.data) {
                 return getProgramAllCounts.data;
             }
@@ -150,7 +150,7 @@ export const getProgramCounts = createAsyncThunk(
             let queryString = new URLSearchParams(filteredQuery).toString();
 
             const getProgramAllCounts = await api.get(
-                `program_status_count?${queryString}`
+                `programs/program-status-count?${queryString}`
             );
             if (getProgramAllCounts.status === 200 && getProgramAllCounts.data) {
                 return getProgramAllCounts.data;

@@ -187,7 +187,7 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
     getProgramCounts: builder.query({
       query: (query) => {
         if (!query || Object.keys(query).length === 0) {
-          return "program_status_count";
+          return "programs/program-status-count";
         }
         const filteredQuery = Object.fromEntries(
           Object.entries(query).filter(
@@ -197,7 +197,7 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
           )
         );
         const queryString = new URLSearchParams(filteredQuery).toString();
-        return `program_status_count?${queryString}`;
+        return `programs/program-status-count?${queryString}`;
       },
     }),
 

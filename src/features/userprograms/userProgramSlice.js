@@ -389,12 +389,12 @@ export const userProgramSlice = createSlice({
       .addCase(getProgramCounts.fulfilled, (state, action) => {
 
         const {
-          status_counts = {}, total_programs = 0
+          allprogram
         } = action.payload;
         return {
           ...state,
-          statusCounts: status_counts,
-          totalPrograms: total_programs,
+          statusCounts: action.payload,
+          totalPrograms: allprogram,
         };
       })
       .addCase(getProgramCounts.rejected, (state, action) => {

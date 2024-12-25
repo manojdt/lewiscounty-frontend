@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import UserImage from "../../assets/icons/user-icon.svg";
-import { activityStatusColor, empty, programActionStatus, programMenus } from '../../utils/constant';
+import { activityStatusColor, empty, programActionStatus, programMenus, statusAction } from '../../utils/constant';
 
 import RightArrow from '../../assets/icons/rightArrow.svg'
 import BlueStarIcon from '../../assets/icons/bluefilledStar.svg'
@@ -15,7 +15,7 @@ import ProgramPerformance from './ProgramPerformance';
 import ReportsInfo from './Admin/ReportsInfo';
 import Tooltip from '../../shared/Tooltip';
 import { programFeeds } from '../../utils/mock';
-import { chartProgramList } from '../../services/userprograms';
+import { chartProgramList, getProgramCounts } from '../../services/userprograms';
 import MemberRequest from './MemberRequest';
 import protectedApi from "../../services/api";
 
@@ -68,8 +68,30 @@ export default function Admin() {
       };
       useEffect(() => {
         fetchMembersCount();
+          dispatch(getProgramCounts())
       }, []); 
+      useEffect(() => {
 
+        const totalCount = userpragrams.statusCounts
+        if (Object.keys(totalCount).length) {
+            const programMenu = [...programMenus('dashboard')].filter(men => men.for.includes(role)).map(menu => {
+
+                if (menu.status === 'all') {
+                    return { ...menu, count: userpragrams.totalPrograms}
+                }
+               
+                // Admin Response Count
+                if (role === 'admin') {
+                    return { ...menu, count: totalCount[menu.adminStatus] }
+                }
+
+                return menu
+
+            })
+            setProgramMenusList(programMenu)
+        }
+
+    }, [userpragrams])
     const data =
         [
             { title: 'Ongoing Programs', value: 40, color: '#1D5BBF' },
@@ -132,12 +154,12 @@ export default function Admin() {
         };
     }
   
-    useEffect(() => {
-        const programMenu = [...programMenus('dashboard')].filter(men => men.for.includes(role)).map(menu => {
-            return { ...menu, count: 0 }
-        })
-        setProgramMenusList(programMenu)
-    }, [userpragrams])
+    // useEffect(() => {
+    //     const programMenu = [...programMenus('dashboard')].filter(men => men.for.includes(role)).map(menu => {
+    //         return { ...menu, count: 0 }
+    //     })
+    //     setProgramMenusList(programMenu)
+    // }, [userpragrams])
 
     useEffect(() => {
         chartData()
