@@ -275,6 +275,7 @@ console.log(programdetails,role,"programdetails")
             ...confirmPopup,
             accept: false,
           });
+          refetch()
         }
       });
     }
@@ -316,7 +317,9 @@ console.log(programdetails,role,"programdetails")
                 ...confirmPopup,
                 cancel: false,
               });
+              refetch()
             }
+
           });
         }
       }

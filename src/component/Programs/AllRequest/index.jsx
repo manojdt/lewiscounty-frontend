@@ -162,7 +162,7 @@ export default function AllRequest() {
         // handleResetTab()
         navigate(`/all-request?type=program_request`)
     };
-
+console.log(selectedTab,role,"selectedTab")
     const {
         register,
         formState: { errors },
@@ -973,7 +973,7 @@ useEffect(() => {
                                         )}
                                 </>
                             )}
-                            {(selectedTab === "my"&&role==='mentor')||role==='mentee'&&(
+                            {((selectedTab === "my"&&role==='mentor')||role==='mentee')&&(
                                 <>
                                  {
                             seletedItem?.goal?.status === 'new' &&
