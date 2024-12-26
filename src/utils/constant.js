@@ -400,6 +400,7 @@ export const requestStatusText = {
   rejected: 'Rejected',
   approved: 'Approved',
   in_progress: 'In Progress',
+  cancelled: 'Cancelled'
 };
 export const certificateRequestStatusText = {
   new: 'New',
@@ -509,6 +510,10 @@ export const requestStatusColor = {
     bgColor: 'rgba(255, 242, 231, 1)',
     color: 'rgba(255, 118, 0, 1)',
   },
+  cancelled: {
+    bgColor: 'rgba(255, 231, 231, 1)',
+    color: 'rgba(224, 56, 45, 1)',
+  }
 };
 
 export const memberStatusColor = {

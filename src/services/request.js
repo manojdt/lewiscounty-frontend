@@ -102,7 +102,7 @@ export const updateCertificateRequest = createAsyncThunk(
     "updateCertificateRequest",
     async (data) => {
 
-        const updateCertificateReq = await api.patch(`request/${data?.id}/`,{status: data?.status});
+        const updateCertificateReq = await api.patch(`request/${data?.id}/`,{status: data?.status, rejection_reason: data?.rejection_reason});
         if (updateCertificateReq.status === 200 && updateCertificateReq.data) {
             return updateCertificateReq.data;
         }

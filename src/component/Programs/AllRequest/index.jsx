@@ -14,10 +14,6 @@ import MenuItem from "@mui/material/MenuItem";
 import Card from "../../../shared/Card";
 import {
     adminRequestOverview,
-    goalRequestColor,
-    goalRequestStatus,
-    goalStatus,
-    goalStatusColor,
     menteesRequestOverview,
     myRequestOverview,
     requestStatus,
@@ -29,11 +25,8 @@ import {
 } from "../../../utils/constant";
 import SearchIcon from "../../../assets/icons/search.svg";
 import CalendarIcon from "../../../assets/images/calender_1x.png";
-import EditIcon from '../../../assets/images/Edit1x.png'
 import MoreIcon from "../../../assets/icons/moreIcon.svg";
 import TickCircle from "../../../assets/icons/tickCircle.svg";
-import ShareIcon from "../../../assets/icons/Share.svg";
-
 import CloseCircle from "../../../assets/icons/closeCircle.svg";
 import ViewIcon from "../../../assets/images/view1x.png";
 import CancelIcon from "../../../assets/images/cancel1x.png";
@@ -87,10 +80,7 @@ import { useForm } from "react-hook-form";
 import { Button } from "../../../shared";
 import { SelectBox } from "../../../shared/SelectBox";
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import { getAllGoals, updateHistoryGoal, updateLocalGoalInfo } from "../../../services/goalsInfo";
-import CreateGoal from "../../Goals/CreateGoal";
-import dayjs from "dayjs";
-import { updateReportLocalState } from "../../../services/reportsInfo";
+import { getAllGoals } from "../../../services/goalsInfo";
 
 export default function AllRequest() {
     const navigate = useNavigate();
@@ -115,7 +105,7 @@ export default function AllRequest() {
         error,
         reopenRequest
     } = useSelector((state) => state.requestList);
-    const { goalsList,status:goalSta, loading: goalLoading } = useSelector(state => state.goals)
+    const { goalsList, loading: goalLoading } = useSelector(state => state.goals)
     const [currentRequestTab, setCurrentRequestTab] = useState(
         RequestStatus.programRequest
     );
@@ -125,9 +115,7 @@ export default function AllRequest() {
     const [filter, setFilter] = useState({ search: "", filter_by: "" });
     const open = Boolean(anchorEl);
     const selectedRequestedtype = searchParams.get("type");
-    const [popupModal, setPopupModal] = useState('')
     const [actionTab, setActiveTab] = useState(currentTab);
-     const [actionModal, setActionModal] = useState(false)
     const [actionTabFilter, setActionTabFilter] = useState([]);
     const [requestOverview, setRequestOverview] = useState([]);
     const [activeTableDetails, setActiveTableDetails] = useState({
@@ -164,7 +152,7 @@ export default function AllRequest() {
         // handleResetTab()
         navigate(`/all-request?type=program_request`)
     };
-console.log(selectedTab,role,"selectedTab")
+
     const {
         register,
         formState: { errors },
@@ -172,34 +160,6 @@ console.log(selectedTab,role,"selectedTab")
         reset,
     } = useForm();
 
-
-    const formatDate = (timestamp) => {
-        const date = new Date(timestamp);
-        const day = String(date.getDate()).padStart(2, '0');  
-        const month = String(date.getMonth() + 1).padStart(2, '0'); 
-        const year = date.getFullYear();
-        
-        return `${day}/${month}/${year}`; 
-    }
-
-    const changeDateTimeFormat = (newData = []) => {
-        if (newData && newData.length > 0) {
-            let updatedData = JSON.parse(JSON.stringify(newData))
-            updatedData.forEach(item => {
-                if ("created_at" in item && "updated_at" in item) {
-                    item.created_at = formatDate(item.created_at);
-                    item.updated_at = formatDate(item.updated_at);
-                }
-            });
-            return updatedData
-        }
-
-    }
-
-
-
-
-    
 
     let programRequestTab = [
 
@@ -210,7 +170,7 @@ console.log(selectedTab,role,"selectedTab")
             forTabs: ['my']
         },
         {
-            name: role === "mentee"?"Program Join Request":"Joining Request",
+            name: "Joining Request",
             key: "program_join",
             for: ["mentee", "mentor"],
             forTabs: ['mentees']
@@ -222,7 +182,7 @@ console.log(selectedTab,role,"selectedTab")
             forTabs: ["my"]
         },
         {
-            name: role === "mentee"?"Program Join Request":"Program Join",
+            name: "Program Join",
             key: "program_join",
             for: ["mentor", "mentee", "admin"],
             forTabs: role === "mentee" ? ["my"] : role === "admin" ? ["mentees"] : []
@@ -311,12 +271,12 @@ console.log(selectedTab,role,"selectedTab")
             value: "pending",
         },
         {
-            label: (role === "admin" && selectedRequestedtype === "goal_request") ? "Accepted" : "Approved",
-            value: (role === "admin" && selectedRequestedtype === "goal_request") ? "accept" : "approved",
+            label: "Approved",
+            value: "approved",
         },
         {
-            label: (role === "admin" && selectedRequestedtype === "goal_request") ? "Cancelled" : "Rejected",
-            value: (role === "admin" && selectedRequestedtype === "goal_request") ? "cancel" : "rejected",
+            label: "Rejected",
+            value: "rejected",
         },
     ];
 
@@ -328,12 +288,6 @@ console.log(selectedTab,role,"selectedTab")
         setSelectedItem(data);
         setAnchorEl(event.currentTarget);
     };
-    const handleCloseModal = () => {
-        setActionModal(false)
-        // setSelectedItem({})
-        getNewGoalsRequestApi()
-        // handleGetAllGoals()
-    }
 
     // Reset Confirm Popup
     const resetConfirmPopup = () => {
@@ -391,9 +345,6 @@ console.log(selectedTab,role,"selectedTab")
         if (confirmPopup.requestType === "testimonial_request") {
             handleTestimonialRequest()
         }
-        if (confirmPopup.requestType === "new_goals_request") {
-            handleCancelNewGoalRequest()
-        }
     };
 
     const handleTestimonialRequest = () => {
@@ -403,30 +354,6 @@ console.log(selectedTab,role,"selectedTab")
         }
 
         dispatch(updateTestimonial(payload))
-
-    }
-    const handleCancelNewGoalRequest = () => {
-         const payload = {
-                   id: seletedItem?.goal?.id,
-                   status: "cancel",
-                   start_date: dayjs(new Date()).format("YYYY-MM-DD")
-               }
-               dispatch(updateHistoryGoal(payload)).then((res) => {
-                   if (res?.meta?.requestStatus === "fulfilled") {
-                       
-                    setShowToast({
-                        show: true,
-                        message: "Goal Request updated successfully",
-                    });
-                   getNewGoalsRequestApi()
-                    if (confirmPopup.show) resetConfirmPopup();
-                    if (cancelPopup.show) resetCancelReasonPopup();
-                    setTimeout(() => {
-                        setShowToast({ show: false, message: "" });
-                        dispatch(updateLocalRequest({ status: "" }));
-                    }, [3000]);
-                   }
-               })
 
     }
 
@@ -444,13 +371,18 @@ console.log(selectedTab,role,"selectedTab")
         );
     };
 
-    const handleCancelCertificateApiRequest = () => {
+    const handleCancelCertificateApiRequest = (reason ="") => {
         dispatch(
             updateCertificateRequest({
                 id: seletedItem.id,
-                status: "cancel",
+                status: "rejected",
+                rejection_reason: reason
             })
-        );
+        ).then((res) => {
+            if (res?.meta?.requestStatus === "fulfilled") {
+                handleCloseCancelReasonPopup();
+            }
+        });
     };
 
     // ACCEPT API CALLS
@@ -523,6 +455,8 @@ console.log(selectedTab,role,"selectedTab")
 
     // Cancel Reason Popup Submit
     const handleCancelReasonPopupSubmit = (data) => {
+        console.log("data from cancel Reason ===>", data)
+        debugger
         if (data.cancel_reason !== "") {
             if (cancelPopup.show) {
                 if (cancelPopup.page === "program_request") {
@@ -533,7 +467,11 @@ console.log(selectedTab,role,"selectedTab")
                                 status: "rejected",
                                 reason: data.cancel_reason,
                             })
-                        );
+                        ).then((res) => {
+                            if (res?.meta?.requestStatus === "fulfilled") {
+                                handleCloseCancelReasonPopup();
+                            }
+                        });
                     }
 
                     if (role === "mentor") {
@@ -543,7 +481,25 @@ console.log(selectedTab,role,"selectedTab")
                                 status: "rejected",
                                 rejection_reason: data.cancel_reason,
                             })
-                        );
+                        ).then((res) => {
+                            if (res?.meta?.requestStatus === "fulfilled") {
+                                handleCloseCancelReasonPopup();
+                            }
+                        });
+                    }
+
+                    if(role === "mentee"){
+                        dispatch(
+                            updateProgramRequest({
+                                id: seletedItem.id,
+                                status: "rejected",
+                                reason: data.cancel_reason,
+                            })
+                        ).then((res) => {
+                            if (res?.meta?.requestStatus === "fulfilled") {
+                                handleCloseCancelReasonPopup();
+                            }
+                        });
                     }
                 }
 
@@ -551,14 +507,22 @@ console.log(selectedTab,role,"selectedTab")
                     dispatch(
                         updateReportRequest({
                             id: seletedItem.id,
-                            report_status: "rejected",
-                            report_comment: data.cancel_reason,
+                            status: "rejected",
+                            rejection_reason: data.cancel_reason,
                         })
-                    );
+                    ).then((res) => {
+                        if (res?.meta?.requestStatus === "fulfilled") {
+                            handleCloseCancelReasonPopup();
+                        }
+                    });
                 }
 
-                if (cancelPopup.page === "goal_request") {
+                if (cancelPopup.page === "goal_request" || cancelPopup.page === "new_goals_request") {
                     handleCancelGoalApiRequest(data.cancel_reason);
+                }
+
+                if(cancelPopup.page === "certificate_request"){
+                    handleCancelCertificateApiRequest(data?.cancel_reason)
                 }
             }
         }
@@ -623,14 +587,16 @@ console.log(selectedTab,role,"selectedTab")
         handleClose();
     };
     const handleCancelCeritificateRequest = () => {
-        handleOpenConfirmPopup(
-            "Certificate Request",
-            currentRequestTab.key,
-            actionTab,
-            "reject"
-        );
+        // handleOpenConfirmPopup(
+        //     "Certificate Request",
+        //     currentRequestTab.key,
+        //     actionTab,
+        //     "reject"
+        // );
+        setCancelPopup({ show: true, page: currentRequestTab.key });
         handleClose();
     };
+
 
     const handleCancelTestimonialRequest = () => {
         handleOpenConfirmPopup(
@@ -668,25 +634,7 @@ console.log(selectedTab,role,"selectedTab")
         setCategoryPopup({ show: false, selectedItem: [], page: "", tab: "" });
         setSelectedCategory("");
     };
-useEffect(() => {
- console.log(actionTab,actionTabFilter,activeTableDetails,"action")
-}, [actionTab,actionTabFilter,activeTableDetails])
-useEffect(() => {
 
-    if (goalSta === goalStatus.update) {
-        setActionModal(false)
-        setPopupModal('Updated')
-         dispatch(updateLocalGoalInfo({ status: '' }))
-        setTimeout(() => {
-            setPopupModal('')
-        }, [3000])
-    }
-}, [goalSta])
- const handlEditGoal = () => {
-    dispatch(updateLocalGoalInfo({ error: '' }))
-    setActionModal(true)
-    handleClose();
- }
     // Handle Selected Items for Category
     const handleSelectedItems = (selectedInfo) => {
         let data = { ...categoryPopup };
@@ -764,158 +712,15 @@ useEffect(() => {
             },
         },
         {
-            
+            ...(
+                // role !== "mentee" &&
+                 {
                 field: "action",
                 headerName: "Action",
                 flex: 1,
                 id: 4,
-                renderCell:(params)=>{
-                    if(role === "mentee"){
-                        return (
-                            <>
-                                <div
-                                    className="cursor-pointer flex items-center h-full"
-                                    onClick={(e) => handleMoreClick(e, params.row)}
-                                >
-                                    <img src={MoreIcon} alt="MoreIcon" />
-                                </div>
-                                <Menu
-                                    id="basic-menu"
-                                    anchorEl={anchorEl}
-                                    open={open}
-                                    onClose={handleClose}
-                                    MenuListProps={{
-                                        "aria-labelledby": "basic-button",
-                                    }}
-                                >
-                                    <MenuItem
-                                        onClick={(e) => {
-                                            const url = seletedItem?.status === "approved" ? `/program-details/${seletedItem.program}` 
-                                            : `/program-details/${seletedItem.program}?request_id=${seletedItem.id}&type=${actionTab}`
-                                            return navigate(url, { state: { data: seletedItem } });
-                                        }}
-                                        className="!text-[12px]"
-                                    >
-                                        <img
-                                            src={ViewIcon}
-                                            alt="ViewIcon"
-                                            className="pr-3 w-[30px]"
-                                        />
-                                        View
-                                    </MenuItem>
-                                    <MenuItem
-                                        onClick={handleCancelProgramRequest}
-                                        className="!text-[12px]"
-                                    >
-                                        <img
-                                            src={CloseCircle}
-                                            alt="CancelIcon"
-                                            className="pr-3 w-[27px]"
-                                        />
-                                        Cancel Request
-                                    </MenuItem>
-                                    {/* Just created Edit based on Figma Design  */}
-                                    {/* <MenuItem  
-                                        onClick={()=>console.log("EditBtn Clicked")}
-                                        className="!text-[12px]"
-                                    >
-                                        <img
-                                            src={EditIcon}
-                                            alt='EditIcon'
-                                            field={params.id}
-                                            className='pr-3 w-[30px]'
-                                        />
-                                        Edit
-                                    </MenuItem> */}
-                                    <MenuItem onClick={() => undefined} className='!text-[12px]'>
-                                        <img src={ShareIcon} alt="ShareIcon" className='pr-3 w-[27px]' />
-                                        Share
-                                    </MenuItem>
-                                </Menu>
-                                
-    
-                            </>
-                        )
-                    }
-                    else if(role === "mentor"){ 
-                        // console.log("paramsssssss-----mentor", role,params)
-                        return (
-                            <>
-                                <div
-                                    className="cursor-pointer flex items-center h-full"
-                                    onClick={(e) => handleMoreClick(e, params.row)}
-                                >
-                                    <img src={MoreIcon} alt="MoreIcon" />
-                                </div>
-                                <Menu
-                                    id="basic-menu"
-                                    anchorEl={anchorEl}
-                                    open={open}
-                                    onClose={handleClose}
-                                    MenuListProps={{
-                                        "aria-labelledby": "basic-button",
-                                    }}
-                                >
-                                    <MenuItem
-                                        onClick={(e) => {
-                                            const url = seletedItem?.status === "approved" ? `/program-details/${seletedItem.program}` 
-                                            : `/program-details/${seletedItem.program}?request_id=${seletedItem.id}&type=${actionTab}`
-                                            return navigate(url, { state: { data: seletedItem } });
-                                        }}
-                                        className="!text-[12px]"
-                                    >
-                                        <img
-                                            src={ViewIcon}
-                                            alt="ViewIcon"
-                                            className="pr-3 w-[30px]"
-                                        />
-                                        View
-                                    </MenuItem>
-                                    <MenuItem
-                                        onClick={handleCancelProgramRequest}
-                                        className="!text-[12px]"
-                                    >
-                                        <img
-                                            src={CloseCircle}
-                                            alt="CancelIcon"
-                                            className="pr-3 w-[27px]"
-                                        />
-                                        Cancel Request
-                                    </MenuItem>
-                                    {/* Edit only approved requests  */}
-                                    {console.log("params.row--", params.row.id, params.row)}
-                                    {console.log("Selected Item", seletedItem)}
-
-                                    {/* Here we used seletedItem state becoz params does not reflect any change */}
-                                    {seletedItem?.status === "approved" && (
-                                        <MenuItem
-                                            onClick={(e) => { 
-                                                const url = seletedItem?.id && `/update-program/${seletedItem.id}`
-                                                return navigate(url, { state: { data: seletedItem } });
-                                            }}
-                                            className="!text-[12px]"
-                                        >
-                                            <img
-                                                src={EditIcon}
-                                                alt="EditIcon"
-                                                field={params.id}
-                                                className="pr-3 w-[30px]"
-                                            />
-                                            Edit
-                                        </MenuItem>
-                                    )}
-                                    
-                                    <MenuItem onClick={() => undefined} className='!text-[12px]'>
-                                        <img src={ShareIcon} alt="ShareIcon" className='pr-3 w-[27px]' />
-                                        Share
-                                    </MenuItem>
-                                </Menu>
-                                
-    
-                            </>
-                        )
-                    }
-                    else {
+                renderCell: (params) => {
+                    return (
                         <>
                             <div
                                 className="cursor-pointer flex items-center h-full"
@@ -960,8 +765,40 @@ useEffect(() => {
                                 {
                                     (
                                         (["new", "pending"].includes(seletedItem.status))
-                                        // &&
-                                        // (role === "mentor" && selectedTab !== "my")
+                                        &&
+                                        (role === "mentor" && selectedTab !== "my")
+                                    ) &&
+                                    <>
+                                        {<MenuItem
+                                            onClick={handleAcceptProgramRequest}
+                                            className="!text-[12px]"
+                                        >
+                                            <img
+                                                src={TickCircle}
+                                                alt="AcceptIcon"
+                                                className="pr-3 w-[27px]"
+                                            />
+                                            {actionTab === "program_cancel" ? "Accept" : "Approve"}
+                                        </MenuItem>}
+                                        <MenuItem
+                                            onClick={handleCancelProgramRequest}
+                                            className="!text-[12px]"
+                                        >
+                                            <img
+                                                src={CloseCircle}
+                                                alt="CancelIcon"
+                                                className="pr-3 w-[27px]"
+                                            />
+                                            {actionTab === "program_cancel" ? "Continue" : "Reject"}
+                                        </MenuItem>
+                                    </>
+                                }
+
+{
+                                    (
+                                        (["new", "pending"].includes(seletedItem.status))
+                                        &&
+                                        (role === "admin")
                                     ) &&
                                     <>
                                         {<MenuItem
@@ -990,14 +827,16 @@ useEffect(() => {
                                 }
 
 
-                                {/* {
-                                    (seletedItem.status === "new" && role === "mentor" && actionTab === "program_new") &&
+                                {
+                                    (["new", "pending"].includes(seletedItem.status) && (role === "mentor" || role === "mentee") && selectedTab === "my" && (actionTab === "program_new" || actionTab === "program_reschedule" || actionTab === "program_cancel" || actionTab === "program_join")) &&
                                     <MenuItem
                                         onClick={() =>{
-                                            setCancelPopup({
-                                                ...cancelPopup,
-                                                show: true
-                                            })
+                                            // setCancelPopup({
+                                            //     ...cancelPopup,
+                                            //     show: true,
+                                            //     page: actionTab
+                                            // })
+                                            handleCancelProgramRequest()
                                         }}
                                         className="!text-[12px]"
                                     >
@@ -1007,15 +846,34 @@ useEffect(() => {
                                             className="pr-3 w-[27px]"
                                         />
                                         Cancel Request
-                                    </MenuItem>} */}
+                                    </MenuItem>}
+                                    {/* mentee Cancel Request */}
+
+                                    {
+                                    (["new", "pending"].includes(seletedItem.status) && role === "mentee" && (actionTab === "program_cancel" || actionTab === "program_join")) &&
+                                    <MenuItem
+                                        onClick={() =>{
+                                            // setCancelPopup({
+                                            //     ...cancelPopup,
+                                            //     show: true,
+                                            //     page: actionTab
+                                            // })
+                                            handleCancelProgramRequest()
+                                        }}
+                                        className="!text-[12px]"
+                                    >
+                                        <img
+                                            src={CloseCircle}
+                                            alt="CancelIcon"
+                                            className="pr-3 w-[27px]"
+                                        />
+                                        Cancel Request
+                                    </MenuItem>}
                             </Menu>
                         </>
-                    }
-                    
-                
-        
-        },
-       
+                    );
+                },
+            }),
         },
     ];
 
@@ -1064,16 +922,16 @@ useEffect(() => {
                                 className="w-[80px] flex justify-center h-[30px] px-7"
                                 style={{
                                     background:
-                                    selectedRequestedtype === "new_goals_request"?goalRequestColor[params.row?.goal?.status]?.bg:requestStatusColor[params.row.status]?.bgColor || "",
+                                        requestStatusColor[params.row.status]?.bgColor || "",
                                     lineHeight: "30px",
                                     borderRadius: "3px",
                                     width: "110px",
                                     height: "34px",
-                                    color: selectedRequestedtype === "new_goals_request"?goalRequestColor[params.row?.goal?.status].color: requestStatusColor[params.row.status]?.color || "",
+                                    color: requestStatusColor[params.row.status]?.color || "",
                                     fontSize: "12px",
                                 }}
                             >
-                                {selectedRequestedtype === "new_goals_request"?goalRequestStatus[params.row?.goal?.status]:requestStatusText[params.row.status] || ""}
+                                {requestStatusText[params.row.status] || ""}
                             </span>
                         </div>
                     </>
@@ -1151,27 +1009,23 @@ useEffect(() => {
                                         )}
                                 </>
                             )}
-                            {((selectedTab === "my"&&role==='mentor')||role==='mentee')&&(
-                                <>
-                                 {
-                            seletedItem?.goal?.status === 'new' &&
-                            <MenuItem onClick={handlEditGoal} className='!text-[12px]'>
-                                <img src={EditIcon} alt="EditIcon" className='pr-3 w-[30px]' />
-                                Edit
-                            </MenuItem>
-                        }
-                         {
-                            ["new"].includes(seletedItem?.goal?.status) &&
-                            <MenuItem onClick={() => {
-                                handleOpenConfirmPopup("Goal Request" ,currentRequestTab.key,actionTab,"cancel")
-                                handleClose();
-                                }} className='!text-[12px]'>
-                                <img src={CancelIcon} alt="CancelReqIcon" field={seletedItem.id} className='pr-3 w-[30px]' />
-                                Cancel Request
-                            </MenuItem>
-                        }
-                                </>
-                            )}
+                            {
+                                role === "mentee" && (
+                                    <MenuItem
+                                        onClick={() =>
+                                            handleCancelGoalRequest()
+                                        }
+                                        className="!text-[12px]"
+                                    >
+                                        <img
+                                            src={CloseCircle}
+                                            alt="CancelIcon"
+                                            className="pr-3 w-[27px]"
+                                        />
+                                        Cancel Request
+                                    </MenuItem>
+                                )
+                            }
                         </Menu>
                     </>
                 );
@@ -1408,7 +1262,7 @@ useEffect(() => {
                                         className="!text-[12px]"
                                     >
                                         <img
-                                            src={TickCircle}
+                                            src={ViewIcon}
                                             alt="AcceptIcon"
                                             className="pr-3 w-[27px]"
                                         />
@@ -1443,6 +1297,38 @@ useEffect(() => {
                                         )}
                                 </>
                             )}
+                            {
+                                role === "mentor" && (
+                                    <>
+                                        <MenuItem
+                                        onClick={() =>
+                                            navigate(`/view-report/${seletedItem?.id}`)
+                                        }
+                                        className="!text-[12px]"
+                                    >
+                                        <img
+                                            src={ViewIcon}
+                                            alt="ViewIcon"
+                                            className="pr-3 w-[27px]"
+                                        />
+                                        View
+                                    </MenuItem>
+                                    <MenuItem
+                                        onClick={() =>
+                                            handleCancelReportRequest()
+                                        }
+                                        className="!text-[12px]"
+                                    >
+                                        <img
+                                            src={CloseCircle}
+                                            alt="CancelIcon"
+                                            className="pr-3 w-[27px]"
+                                        />
+                                        Cancel Request
+                                    </MenuItem>
+                                    </>
+                                )
+                            }
                         </Menu>
                     </>
                 );
@@ -1671,6 +1557,49 @@ useEffect(() => {
                                         )}
                                 </>
                             )}
+                            {
+                                role === "mentor" && (
+                                    <>
+                                    <MenuItem
+                                        onClick={() =>
+                                            navigate(`/certificate_mentees/${seletedItem.program}`, {
+                                                state: {
+                                                    rowId: seletedItem?.id,
+                                                    status: seletedItem?.status
+                                                }
+                                            })
+                                        }
+                                        className="!text-[12px]"
+                                    >
+                                        <img
+                                            src={ViewIcon}
+                                            alt="AcceptIcon"
+                                            className="pr-3 w-[27px]"
+                                        />
+                                        View
+                                    </MenuItem>
+                                    <MenuItem
+                                        onClick={() =>
+                                            // navigate(`/certificate_mentees/${seletedItem.program}`, {
+                                            //     state: {
+                                            //         rowId: seletedItem?.id,
+                                            //         status: seletedItem?.status
+                                            //     }
+                                            // })
+                                            handleCancelCeritificateRequest()
+                                        }
+                                        className="!text-[12px]"
+                                    >
+                                        <img
+                                            src={CloseCircle}
+                                            alt="CancelIcon"
+                                            className="pr-3 w-[27px]"
+                                        />
+                                        Cancel Request
+                                    </MenuItem>
+                                    </>
+                                )
+                            }
                         </Menu>
                     </>
                 );
@@ -1865,7 +1794,8 @@ useEffect(() => {
             })
         );
     };
-    const getNewGoalsRequestApi = (createdBy = actionTab) => {
+
+    const getGoalsRequestApi = (createdBy = actionTab) => {
         dispatch(
             goalsRequest({
                 ...(filterStatus !== "all" && { status: filterStatus }),
@@ -1879,20 +1809,6 @@ useEffect(() => {
 
             })
         );
-    };
-    const getGoalsRequestApi = (createdBy = actionTab) => {
-        dispatch(getAllGoals({
-            ...(filter.filter_by !== ""
-                ? { time_frame: filter.filter_by }
-                : { time_frame: "month" }),
-            params: "request",
-            page: paginationModel?.page + 1,
-            limit: paginationModel?.pageSize,
-            ...(filterStatus !== "all" && { status: filterStatus }),
-            ...((actionTab !== "mentor" && role === "mentor") && { created_by: actionTab ?? "mentor" }),
-            ...((role === "admin") && { created_by: actionTab ?? "mentor" }),
-            ...(filter.search !== "" && { search: filter.search }),
-        }))
     };
 
     const handleNewGoalRequestApi = () => {
@@ -2085,7 +2001,7 @@ useEffect(() => {
                 case RequestStatus.goalRequest.key:
                     tableDetails = { column: goalColumns, data: [] };
                     actionFilter = goalsRequestTab;
-                    activeTabName =filter.search ? actionTab : actionTab || "mentor";
+                    activeTabName = "mentor";
                     break;
                 case RequestStatus.resourceAccessRequest.key:
                     tableDetails = { column: resourceColumns, data: [] };
@@ -2255,7 +2171,7 @@ useEffect(() => {
         ) {
             setActiveTableDetails({
                 column: programRequestColumn,
-                data: changeDateTimeFormat(programTableInfo.results),
+                data: programTableInfo.results,
                 rowCount: programTableInfo?.count,
             });
         }
@@ -2367,7 +2283,7 @@ useEffect(() => {
             }
 
             if (selectedRequestedtype === "new_goals_request") {
-                getNewGoalsRequestApi();
+                getGoalsRequestApi();
             }
             if (selectedRequestedtype === "goal_request") {
                 handleNewGoalRequestApi();
@@ -2470,14 +2386,7 @@ useEffect(() => {
                     break;
             }
         } else {
-            currentOveriew = myRequestOverview
-            ?.map((e) => {
-                if (e.key === RequestStatus.programRequest.key && role === "mentee") {
-                    return { ...e, name: `My ${e.name}` }; // Add "My" to the name
-                }
-                return e;
-            })
-            .filter((e) => e?.for.includes(user?.mentee)) ;
+            currentOveriew = myRequestOverview?.filter((e) => e?.for.includes(user?.mentee))
             currentTab = "program_join"
         }
         setActiveTab(selectedRequestedtype === "member_join_request" ? "mentor" : currentTab)
@@ -2607,7 +2516,7 @@ useEffect(() => {
                                     ? TickColorIcon
                                     : confirmPopup.type === "reject"
                                         ? CancelColorIcon
-                                        : confirmPopup.type === "cancel"?CancelColorIcon:""
+                                        : ""
                             }
                             alt="TickColorIcon"
                         />
@@ -2618,7 +2527,7 @@ useEffect(() => {
                                 ? "Approve"
                                 : confirmPopup.type === "reject"
                                     ? "Reject"
-                                    :confirmPopup.type === "cancel"?"Cancel": ""}
+                                    : ""}
                         </span>
                         <div className="py-5">
                             <p
@@ -2640,7 +2549,7 @@ useEffect(() => {
                                             ? "Cancel"
                                             : confirmPopup.type === "reject"
                                                 ? "No"
-                                                :confirmPopup.type === "cancel"?"No" :""
+                                                : ""
                                     }
                                     btnCategory="secondary"
                                     onClick={handleCancelConfirmPopup}
@@ -2653,7 +2562,7 @@ useEffect(() => {
                                             ? "Approve"
                                             : confirmPopup.type === "reject"
                                                 ? "Yes"
-                                                :confirmPopup.type === "cancel"?"Yes" :""
+                                                : ""
                                     }
                                     style={{
                                         background:
@@ -2690,7 +2599,7 @@ useEffect(() => {
                                     className="text-[18px]"
                                     style={{ color: "rgba(0, 0, 0, 1)" }}
                                 >
-                                    Reject Request Reason{" "}
+                                    {role === "admin" ? 'Reject Request Reason' : "Cancel Reason"}
                                 </p>
                                 <img
                                     className="cursor-pointer"
@@ -2710,7 +2619,7 @@ useEffect(() => {
                                 <form onSubmit={handleSubmit(handleCancelReasonPopupSubmit)}>
                                     <div className="relative pb-8">
                                         <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
-                                            Reject Reason
+                                        {role === "admin" ? 'Reject Reason' : "Cancel Reason"}
                                         </label>
 
                                         <div className="relative">
@@ -2828,23 +2737,7 @@ useEffect(() => {
                         </div>
                     </div>
                 </MuiModal>
-                <Backdrop
-                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={popupModal !== ''}
-            >
-                <div className='px-5 py-1 flex justify-center items-center'>
-                    <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
-                        style={{ background: '#fff', borderRadius: '10px' }}>
-                        <img src={SuccessTik} alt="SuccessTik" />
-                        <p className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
-                            style={{
-                                fontWeight: 600
-                            }}
-                        >Goal {popupModal} Successfully</p>
-                    </div>
 
-                </div>
-            </Backdrop>
                 <div className="px-4">
                     <div className="grid grid-cols-5 gap-3">
                         <div className="row-span-3 flex flex-col gap-8">
@@ -2990,7 +2883,6 @@ useEffect(() => {
                                         paginationModel={paginationModel}
                                         setPaginationModel={setPaginationModel}
                                     />
-                                    {actionModal&& <CreateGoal open={actionModal} handleCloseModal={handleCloseModal} editMode={Object.keys(seletedItem?.goal).length} seletedItem={seletedItem?.goal} />}
                                 </div>
                             </div>
                         </div>
