@@ -1544,6 +1544,17 @@ export const ProgramInformationFields = [
         width: 'w-full',
         for: ['admin'],
       },
+      // {
+      //   type: 'textarea',
+      //   name: 'prerequisites',
+      //   label: 'Prerequisites',
+      //   placeholder: 'Enter prerequisites',
+      //   // inputRules: {
+      //   //   required: 'prerequisites is required',
+      //   // },
+      //   width: 'w-full',
+      //   for: ['admin'],
+      // },
       {
         type: 'date',
         name: 'start_date',
@@ -1810,26 +1821,62 @@ export const ProgramInformationFields = [
     width: 'width-32',
     for: ['mentor'],
   },
+  {
+    type: 'input',
+    name: 'address_line1',
+    label: 'Address 1',
+    placeholder: 'Enter Address 1',
+    inputRules: {
+      required: 'This field is required',
+    },
+    width: 'width-32',
+    for: ['admin', 'mentor'],
+  },
+  // {
+  //   type: 'input',
+  //   name: 'address_line2',
+  //   label: 'Address 2',
+  //   placeholder: 'Enter Address 2',
+  //   inputRules: {
+  //     required: 'This field is required',
+  //   },
+  //   width: 'width-32',
+  //   for: ['admin', 'mentor'],
+  // },
   // {
   //   type: 'dropdown',
-  //   name: 'program_auto_approval',
-  //   label: 'Auto Approval',
-  //   placeholder: 'Select',
+  //   name: 'state',
+  //   label: 'State',
+  //   placeholder: 'Enter State',
   //   inputRules: {
-  //     required: false,
+  //     required: 'This field is required',
   //   },
-  //   options: [
-  //     {
-  //       key: true,
-  //       value: 'Yes',
-  //     },
-  //     {
-  //       key: false,
-  //       value: 'No',
-  //     },
-  //   ],
-  //   width: 'width-49',
-  //   for: ['admin'],
+  //   options:[],
+  //   width: 'width-32',
+  //   for: ['admin', 'mentor'],
+  // },
+  // {
+  //   type: 'dropdown',
+  //   name: 'city',
+  //   label: 'City',
+  //   placeholder: 'Enter City',
+  //   inputRules: {
+  //     required: 'This field is required',
+  //   },
+  //   options:[],
+  //   width: 'width-32',
+  //   for: ['admin', 'mentor'],
+  // },
+  // {
+  //   type: 'input',
+  //   name: 'zip_code',
+  //   label: 'Zip code',
+  //   placeholder: 'Enter Zip code',
+  //   inputRules: {
+  //     required: 'This field is required',
+  //   },
+  //   width: 'width-32',
+  //   for: ['admin', 'mentor'],
   // },
   {
     type: 'input',
@@ -1848,6 +1895,20 @@ export const ProgramInformationFields = [
 
 export const AboutProgramFields = [
   {
+    type: 'popup-input',
+    name: 'goals',
+    label: 'Goals',
+    fieldtype: 'text',
+    placeholder: 'Multiple goals added',
+    // inputRules: {
+    //   required: 'This field is required',
+    // },
+    width: 'w-full',
+    icon: 'add',
+    for: ['mentor', 'admin'],
+  },
+
+  {
     type: 'textbox',
     name: 'about_program',
     label: 'About Program',
@@ -1858,13 +1919,6 @@ export const AboutProgramFields = [
     width: 'w-full',
     for: ['mentor'],
   },
-  // {
-  //   type: 'htmlbuilder',
-  //   name: 'html_builder',
-  //   text: 'Use HTML Builder',
-  //   width: 'width-17',
-  //   for: ['admin', 'mentor'],
-  // },
 
   {
     type: 'popup-input',
@@ -2016,6 +2070,17 @@ export const ProgramTestimonialsFields = [
     inputRules: {
       // required: 'This field is required',
     },
+    width: 'w-full',
+    for: ['mentor'],
+  },
+  {
+    type: 'textarea',
+    name: 'prerequisites',
+    label: 'Prerequisites',
+    placeholder: 'Enter prerequisites',
+    // inputRules: {
+    //   required: 'prerequisites is required',
+    // },
     width: 'w-full',
     for: ['mentor'],
   },

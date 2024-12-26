@@ -448,13 +448,16 @@ const ProgramSteps = ({
                     }}
                   >
                     <option value="">Select</option>
-                    {field.options.map((option, index) => {
-                      return (
-                        <option value={option.key || option.id} key={index}>
-                          {option.value || option.name}
-                        </option>
-                      );
-                    })}
+
+                    {field &&
+                      field.options?.length > 0 &&
+                      field.options.map((option, index) => {
+                        return (
+                          <option value={option.key || option.id} key={index}>
+                            {option.value || option.name}
+                          </option>
+                        );
+                      })}
                   </select>
                   {errors[field.name] && (
                     <p className="error" role="alert">
@@ -491,12 +494,16 @@ const ProgramSteps = ({
                             className="flex flex-wrap justify-between p-4"
                           >
                             {field.dynamicFields.map((nestedField) => {
-                              const dateFields =
-                                nestedField === "date"
-                                  ? watch(
-                                      `sub_programs.${index}.${nestedField.name}`
-                                    )
+                              const fieldValue = watch(
+                                `sub_programs.${index}.${nestedField.name}`
+                              );
+
+                              // Only use the date value when the field type is date
+                              const dateValue =
+                                nestedField.type === "date"
+                                  ? fieldValue
                                   : undefined;
+
                               return (
                                 <div
                                   key={nestedField.name}
@@ -533,7 +540,11 @@ const ProgramSteps = ({
                                     ) : nestedField.type === "date" ? (
                                       <div className="relative">
                                         <Calendar
-                                          value={dateFields}
+                                          value={
+                                            dateValue
+                                              ? new Date(dateValue)
+                                              : null
+                                          }
                                           className="calendar-control input-bg"
                                           type={nestedField.type}
                                           {...register(
@@ -543,7 +554,11 @@ const ProgramSteps = ({
                                           onChange={(e) => {
                                             setValue(
                                               `sub_programs.${index}.${nestedField.name}`,
-                                              new Date(e.value).toISOString()
+                                              e.value
+                                                ? new Date(
+                                                    e.value
+                                                  ).toISOString()
+                                                : null
                                             );
                                           }}
                                           {...(nestedField.name === "start_date"
@@ -960,12 +975,13 @@ const ProgramSteps = ({
         })}
       </div>
       <MuiModal
-        modalSize="lg"
+        modalSize="md"
         modalOpen={!!currentField}
         modalClose={() => setCurrentField("")}
         noheader
       >
         <DataTable
+          showToolbar={true}
           rows={mentor_assign}
           columns={MentorAssignColumns}
           footerAction={() => setCurrentField("")}
