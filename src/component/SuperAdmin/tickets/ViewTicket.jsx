@@ -13,6 +13,7 @@ import CustomTicketAccordian from '../../../shared/custom-accordian/CustomTicket
 import { useSelector } from 'react-redux';
 import { useUpdateStatusMutation } from '../../../features/tickets/tickets-slice';
 import SuccessGradientMessage from '../../success-gradient-message';
+import CancelRequestModal from './cancel-request';
 
 const ViewTicket = ({ ticket, type }) => {
   const [isBackdropOpen, setIsBackdropOpen] = useState(false);
@@ -21,40 +22,10 @@ const ViewTicket = ({ ticket, type }) => {
   const navigate = useNavigate();
   const userInfo = useSelector((state) => state.userInfo);
   const role = userInfo.data.role;
+  const [isCancelRequestModal, setIsCancelRequestModal] = useState(false);
 
   const [updateStatus, { isLoading, isSuccess }] = useUpdateStatusMutation();
 
-  const breadcrumbs = [
-    <Link
-      variant='body2'
-      underline='hover'
-      key='1'
-      color='inherit'
-      to='/tickets'
-    >
-      Tickets
-    </Link>,
-    <Typography key='2' variant='body2' color={'primary'}>
-      View New Ticket
-    </Typography>,
-  ];
-
-  // const handleNavigate = () => {
-  //   if (role === user.super_admin) {
-  //     return updateStatus({ id: ticket?.id, status: 'in_progress' });
-  //   } else {
-  //     return navigate(`/ticket-creation/${ticket.id}?type=edit`);
-  //   }
-  // };
-
-  // const handleCancelRequest = () => {
-  //   if (role === user.super_admin) {
-  //     setIsOpen(true);
-  //     setTicketId(ticket?.id);
-  //   } else {
-  //     navigate(-1);
-  //   }
-  // };
   useEffect(() => {
     if (isSuccess) {
       setIsBackdropOpen(true);
@@ -128,21 +99,22 @@ const ViewTicket = ({ ticket, type }) => {
         </div>
         {/* Documents Upload */}
 
-        {ticket?.attachment && (
+        {ticket?.attachments?.length > 0 && (
           <CustomTicketAccordian title={'Documents'} defaultValue={true}>
-            {/* {ticket?.assignee_attachment &&
-              ticket?.assignee_attachment.map((file, index) => ( */}
-            <Link
-              to={ticket?.attachment}
-              target='_blank'
-              className='border rounded-md p-3 w-[300px] flex items-center justify-center'
-              // key={index}
-            >
-              <img src={ImageIcon} alt='' />
-              <p className='truncate p-2'>{ticket?.attachment}</p>
-              <img src={DownloadIcon} alt='' />
-            </Link>
-            {/* ))} */}
+            <div className='flex items-center justify-start gap-4'>
+              {ticket.attachments.map((file, index) => (
+                <Link
+                  to={file.file}
+                  target='_blank'
+                  className='flex border rounded-md p-2'
+                  key={index}
+                >
+                  <img src={ImageIcon} alt='' />
+                  <p className='truncate p-2'>{file.file_name}</p>
+                  <img src={DownloadIcon} alt='' />
+                </Link>
+              ))}
+            </div>
           </CustomTicketAccordian>
         )}
       </div>
@@ -190,7 +162,10 @@ const ViewTicket = ({ ticket, type }) => {
                 color: 'rgba(220, 53, 69, 1)', // Danger red text
               }}
               btnCategory='secondary'
-              onClick={() => navigate(-1)}
+              onClick={() => {
+                setIsCancelRequestModal(true);
+                setTicketId(ticket?.id);
+              }}
             />
 
             <Button
@@ -215,6 +190,13 @@ const ViewTicket = ({ ticket, type }) => {
         <TicketDeleteModal
           isOpen={isOpen}
           setIsOpen={setIsOpen}
+          ticketId={ticketId}
+        />
+      )}
+      {isCancelRequestModal && (
+        <CancelRequestModal
+          isOpen={isCancelRequestModal}
+          setIsOpen={setIsCancelRequestModal}
           ticketId={ticketId}
         />
       )}

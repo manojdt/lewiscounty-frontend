@@ -69,9 +69,17 @@ const TicketDetails = () => {
       underline='hover'
       key='1'
       color='inherit'
-      to='/tickets'
+      to={`${
+        role === user.admin || role === user.mentee || role === user.mentor
+          ? '/ticket-history'
+          : '/tickets'
+      }`}
     >
-      Tickets
+      {`${
+        role === user.admin || role === user.mentee || role === user.mentor
+          ? 'History'
+          : 'Tickets kiler'
+      }`}
     </Link>,
     <Typography key='2' variant='body2' color={'primary'}>
       View New Ticket

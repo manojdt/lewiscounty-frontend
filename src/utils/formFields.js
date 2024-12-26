@@ -3156,7 +3156,7 @@ export const menteeTicketCreationField = [
   },
   {
     type: 'file',
-    name: 'attachment',
+    name: 'attachments',
     fieldtype: 'file',
     label: 'Document Upload',
     placeholder: '',
