@@ -1025,8 +1025,10 @@ export default function AssignTask() {
                                             {programdetails?.mentee_join_status === "program_join_request_submitted" &&
 
                                                 <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                    background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
-                                                    borderRadius: '5px'
+                                                    border: "1px solid #E0382D",
+                                                    borderRadius: '5px',
+                                                    color: '#E0382D',
+                                                    cursor: 'not-allowed'
                                                 }}
                                                 >
                                                     Waiting for Mentor Approval
