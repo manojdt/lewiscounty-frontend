@@ -304,7 +304,7 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
     getMenteeProgramCount: builder.query({
       query: (query) => {
         if (!query || Object.keys(query).length === 0) {
-          return "mentee_program/count_program";
+          return "programs/program-status-count";
         }
         const filteredQuery = Object.fromEntries(
           Object.entries(query).filter(
@@ -313,7 +313,7 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
               !(key === "status" && value === "all")
           )
         );
-        return `mentee_program/count_program?${new URLSearchParams(
+        return `programs/program-status-count?${new URLSearchParams(
           filteredQuery
         ).toString()}`;
       },

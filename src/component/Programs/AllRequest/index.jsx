@@ -210,7 +210,7 @@ console.log(selectedTab,role,"selectedTab")
             forTabs: ['my']
         },
         {
-            name: "Joining Request",
+            name: role === "mentee"?"Program Join Request":"Joining Request",
             key: "program_join",
             for: ["mentee", "mentor"],
             forTabs: ['mentees']
