@@ -172,20 +172,20 @@ export const ProfessionalBackgroundFields = [
       // required: "This field is required",
     },
     size: false,
-    width: 'col-span-2',
+    width: 'col-span-4',
   },
-  {
-    type: 'input',
-    name: 'linked_in',
-    label: 'LinkedIn Profile (if available)',
-    placeholder: 'LinkedIn Profile',
+  // {
+  //   type: 'input',
+  //   name: 'linked_in',
+  //   label: 'LinkedIn Profile (if available)',
+  //   placeholder: 'LinkedIn Profile',
 
-    inputRules: {
-      // required: 'This field is required',
-    },
-    size: true,
-    width: 'col-span-2',
-  },
+  //   inputRules: {
+  //     // required: 'This field is required',
+  //   },
+  //   size: true,
+  //   width: 'col-span-2',
+  // },
 ];
 
 export const EducationalBackgroundFields = [
@@ -199,7 +199,7 @@ export const EducationalBackgroundFields = [
       // required: "This field is required",
     },
     size: true,
-    width: 'col-span-1',
+    width: 'col-span-2',
   },
   {
     type: 'input',
@@ -211,19 +211,31 @@ export const EducationalBackgroundFields = [
       // required: "This field is required",
     },
     size: true,
-    width: 'col-span-1',
+    width: 'col-span-2',
   },
   {
     type: 'input',
-    name: 'industry1',
+    name: 'college_name',
     fieldtype: 'text',
-    label: 'Industry',
-    placeholder: 'Industry',
+    label: 'College name',
+    placeholder: 'College Name',
     inputRules: {
       // required: 'This field is required',
     },
     size: false,
-    width: 'col-span-1',
+    width: 'col-span-2',
+  },
+  {
+    type: 'input',
+    name: 'college_location',
+    fieldtype: 'text',
+    label: 'Location',
+    placeholder: 'College Location',
+    inputRules: {
+      // required: 'This field is required',
+    },
+    size: false,
+    width: 'col-span-2',
   },
 ];
 
@@ -396,7 +408,7 @@ export const MentorDocumentUplaod = [
     label: 'Document Upload',
     placeholder: '',
     inputRules: {
-      required: 'This field is required',
+      required: 'At least one file is required',
     },
     size: false,
     width: 'col-span-1',
