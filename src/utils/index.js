@@ -291,49 +291,44 @@ export const getFiles = (files) => {
     files: false
   };
 
-  const imageExtension = ['jpg', 'jpeg', 'png']
-  const docuementExtension = ['pdf', 'doc', 'docx', "txt"]
-  const videoExtension = ['mov', 'mp4', 'avi']
+  const imageExtension = ["jpg", "jpeg", "png", "gif"];
+  const documentExtension = ["pdf", "doc", "docx", "txt"];
+  const videoExtension = ["mp4", "mov", "avi"];
 
-  files?.forEach(file => {
-    let url = file?.files;
-    let fileName = url?.split('/')?.pop()?.split('.')[0];
-    let extension = url?.split('.')?.pop() || '';
+  files?.forEach((fileObj) => {
+    const file = fileObj["0"]; 
+    if (!file) return; 
 
-    if (file?.id) {
-      url = file?.files;
-      fileName = url?.split('/')?.pop()?.split('.')[0];
-      extension = url?.split('.')?.pop() || '';
-    } else {
-      url = file?.[0]?.name;
-      fileName = url?.split('/')?.pop()?.split('.')[0];
-      extension = url?.split('.')?.pop() || '';
-    }
+    let url = URL.createObjectURL(file); 
+    let fileName = file.name.split(".")[0] || "";
+    let extension = file.name.split(".").pop() || "";
 
+   
     if (imageExtension.includes(extension.toLowerCase())) {
       allFiles.image.push({
         ...file,
         name: fileName,
-        fileurl: url
+        fileurl: url,
       });
-      allFiles.files = true
-    } else if (docuementExtension.includes(extension.toLowerCase())) {
+      allFiles.files = true;
+    } else if (documentExtension.includes(extension.toLowerCase())) {
       allFiles.doc.push({
         ...file,
         name: fileName,
-        fileurl: url
+        fileurl: url,
       });
-      allFiles.files = true
+      allFiles.files = true;
     } else if (videoExtension.includes(extension.toLowerCase())) {
       allFiles.video.push({
         ...file,
         name: fileName,
-        fileurl: url
+        fileurl: url,
       });
-      allFiles.files = true
+      allFiles.files = true;
     }
   });
-  return allFiles
+
+  return allFiles;
 }
 
 export const fileNameFromUrl = (file) => {
