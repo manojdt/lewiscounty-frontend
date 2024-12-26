@@ -215,10 +215,10 @@ export const EducationalBackgroundFields = [
   },
   {
     type: 'input',
-    name: 'college_name',
+    name: 'institution_name',
     fieldtype: 'text',
-    label: 'College name',
-    placeholder: 'College Name',
+    label: 'Institution Name',
+    placeholder: 'Institution Name',
     inputRules: {
       // required: 'This field is required',
     },
@@ -227,10 +227,10 @@ export const EducationalBackgroundFields = [
   },
   {
     type: 'input',
-    name: 'college_location',
+    name: 'institution_location',
     fieldtype: 'text',
-    label: 'Location',
-    placeholder: 'College Location',
+    label: 'Institution Location',
+    placeholder: 'Institution Location',
     inputRules: {
       // required: 'This field is required',
     },
@@ -3002,7 +3002,7 @@ export const PersonalInfoFields = [
   },
   {
     type: 'input',
-    name: 'linkedin',
+    name: 'linked_in',
     fieldtype: 'text',
     label: 'LinkedIn Profile Link',
     placeholder: 'Enter LinkedIn Profile Link',

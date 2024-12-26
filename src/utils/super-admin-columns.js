@@ -72,19 +72,19 @@ export const TicketsColumns = [
       return <div>{params.row.created_by_detail.role}</div>;
     },
   },
-  {
-    field: 'ticket_attachment',
-    headerName: 'File size',
-    flex: 1,
-    id: 7,
-    renderCell: (params) => {
-      return (
-        <div>
-          {params.row.ticket_attachment ? 'Available' : 'Not Available'}
-        </div>
-      );
-    },
-  },
+  // {
+  //   field: 'ticket_attachment',
+  //   headerName: 'File size',
+  //   flex: 1,
+  //   id: 7,
+  //   renderCell: (params) => {
+  //     return (
+  //       <div>
+  //         {params.row.ticket_attachment ? 'Available' : 'Not Available'}
+  //       </div>
+  //     );
+  //   },
+  // },
   {
     field: 'due_date',
     headerName: 'Due date',
