@@ -1882,7 +1882,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             </button>
                           </Stack>
                         )}
-                      {(programdetails?.request_data?.status === "rejected" ||
+                      {/* {(programdetails?.request_data?.status === "rejected" ||
                         (!requestStatusParams &&
                           programdetails?.status ===
                           "new_program_request_rejected")) && (
@@ -1898,7 +1898,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                           >
                             Rejected
                           </button>
-                        )}
+                        )} */}
                       {(programdetails?.request_data?.status === "approved" && programdetails?.status ==="cancelled")||
                       (programdetails?.request_data?.status === "approved" && programdetails?.request_data?.request_type ==="program_reschedule") && (
                           <button
