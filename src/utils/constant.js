@@ -769,7 +769,7 @@ export const programMenus = (page = 'dashboard') => {
     {
       name: 'Active Programs',
       count: 0,
-      page: `${pipeUrl}${programFilterUrls.planned}`,
+      page: `${pipeUrl}${programFilterUrls.yettojoin}`,
       for: ['admin', 'mentor', 'mentee'],
       mentorStatus: programActionStatus.yettojoin,
       adminStatus:programActionStatus.yettojoin,
@@ -1126,6 +1126,16 @@ export const TaskApiStatus = {
 export const ProgramStatusInCard = {
   inprogress: {
     text: 'Ongoing',
+    color: '#FF8A00',
+    bg: '#FFE3C2',
+  },
+  yettojoin: {
+    text: 'Start',
+    color: '#FF8A00',
+    bg: '#FFE3C2',
+  },
+  yettoapprove: {
+    text: 'Waiting for Approval',
     color: '#FF8A00',
     bg: '#FFE3C2',
   },

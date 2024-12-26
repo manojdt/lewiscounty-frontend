@@ -4,7 +4,7 @@ import Backdrop from "@mui/material/Backdrop";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import ReactPlayer from "react-player";
-
+import MoreIcon from "../../../assets/icons/moreIcon.svg";
 import ProgramSteps from "./ProgramsSteps";
 import { ProgramTabs, ProgramFields } from "../../../utils/formFields";
 import {
@@ -14,38 +14,38 @@ import {
   getAllCertificates,
   getAllSkills,
   getAllMembers,
-  createNewPrograms,
-  editUpdateProgram,
   getProgramNameValidate,
   getAllMentors,
 } from "../../../services/programInfo";
 import {
   CertificateColumns,
+  GoalColumns,
   MaterialColumns,
   MemberColumns,
   SkillsColumns,
 } from "../../../mock";
 import DataTable from "../../../shared/DataGrid";
-import { programStatus } from "../../../utils/constant";
+import { goalStatus, programStatus } from "../../../utils/constant";
 import MuiModal from "../../../shared/Modal";
 import Tooltip from "../../../shared/Tooltip";
 
 import CancelIcon from "../../../assets/images/cancel-colour1x.png";
 import SuccessTik from "../../../assets/images/blue_tik1x.png";
-import SearchIcon from "../../../assets/images/search1x.png";
 import CertificateIcon from "../../../assets/images/dummy_certificate.png";
 import SuccessIcon from "../../../assets/images/Success_tic1x.png";
 import FailedIcon from "../../../assets/images/cancel3x.png";
 import ToastNotification from "../../../shared/Toast";
-import { getProgramDetails } from "../../../services/userprograms";
 import { FormProvider, useForm } from "react-hook-form";
 import { Button } from "../../../shared";
 import {
   useCreateProgramMutation,
   useUpdateProgramMutation,
-  useValidateProgramNameQuery,
   useGetProgramDetailsByIdQuery,
+  useGetProgramGoalsQuery,
+  // useGetCountryStatesQuery,
+  // useGetCitiesQuery,
 } from "../../../features/program/programApi.services";
+import { Menu, MenuItem } from "@mui/material";
 
 export default function CreatePrograms() {
   const navigate = useNavigate();
@@ -54,7 +54,7 @@ export default function CreatePrograms() {
   const params = useParams();
   const [loading, setLoading] = useState({ create: false, success: false });
   const [currentStep, setCurrentStep] = useState(1);
-
+  const [showBackdrop, setShowBackdrop] = useState(false);
   const role = userInfo.data.role || "";
   const [toggleRole, setToggleRole] = useState("");
   const {
@@ -86,26 +86,13 @@ export default function CreatePrograms() {
   const { data: currentProgramDetail, isLoading: isDetailFetching } =
     useGetProgramDetailsByIdQuery(
       { id: params.id, role },
-      { skip: !params?.id && !role }
+      { skip: !(params?.id && role) }
     );
-  // const [program_name] = watch(["program_name"]);
-  // const { data: validationData, isFetching } = useValidateProgramNameQuery(
-  //   {
-  //     program_name,
-  //     program_id: params?.id,
-  //   },
-  //   {
-  //     refetchOnMountOrArgChange: true,
-  //     // Only run the query when we're on step 1, user is mentor, and it's a new program
-  //     skip: !(
-  //       currentStep === 1 &&
-  //       role === "mentor" &&
-  //       !params?.id &&
-  //       program_name
-  //     ),
-  //   }
-  // );
-  // console.log("validationData", validationData);
+  const { data: goals } = useGetProgramGoalsQuery();
+  // const { data: countryStates } = useGetCountryStatesQuery();
+  // const { data: cities } = useGetCitiesQuery("");
+  // console.log("countryStates", countryStates);
+  // console.log("cities", cities);
   const [
     createProgram,
     {
@@ -133,12 +120,21 @@ export default function CreatePrograms() {
     skills: [],
     certificate: [],
     members: [],
+    goals: goals?.results,
   });
 
   const [logo, setLogo] = useState({});
   const [stepWiseData, setStepWiseData] = useState({});
   const [programApiStatus, setProgramApiStatus] = useState("");
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const handleMoreClick = (event, data) => {
+    setAnchorEl(event.currentTarget);
+  };
 
+  const handleMoreClose = () => {
+    setAnchorEl(null);
+  };
   const [viewDetails, setViewDetails] = useState({
     material: false,
     skills: false,
@@ -152,7 +148,7 @@ export default function CreatePrograms() {
   const [tabActionInfo, setTabActionInfo] = useState({
     activeTab: "program_information",
     error: false,
-    message:''
+    message: "",
   });
 
   const resetViewInfo = { material: false, skills: false, certificate: false };
@@ -166,9 +162,7 @@ export default function CreatePrograms() {
     return true;
   });
   const handelProgramChaeck = (data) => {
-    dispatch(
-      getProgramNameValidate(data)
-    ).then((res) => {
+    dispatch(getProgramNameValidate(data)).then((res) => {
       if (res?.meta?.requestStatus === "fulfilled") {
         if (!res?.payload?.is_available) {
           // setCurrentStep((prevStep) => {
@@ -180,11 +174,15 @@ export default function CreatePrograms() {
           //   return nextStep;
           // });
         } else {
-          setTabActionInfo({ ...tabActionInfo, error: true,message:'Program name already exists' });
+          setTabActionInfo({
+            ...tabActionInfo,
+            error: true,
+            message: "Program name already exists",
+          });
         }
       }
     });
-  }
+  };
   const handleTab = (key) => {
     const tabIndex = filteredProgramTabs.findIndex((tab) => tab.key === key);
     // if (stepWiseData.hasOwnProperty(tabIndex + 1) || stepWiseData.hasOwnProperty(tabIndex)) {
@@ -267,11 +265,7 @@ export default function CreatePrograms() {
     setStepData(fieldData);
     const totalSteps = filteredProgramTabs.length;
     if (currentStep === 1 && role === "mentor" && !params?.id) {
-      dispatch(
-        getProgramNameValidate(
-        data?.program_name,
-        )
-      ).then((res) => {
+      dispatch(getProgramNameValidate(data?.program_name)).then((res) => {
         if (res?.meta?.requestStatus === "fulfilled") {
           if (!res?.payload?.is_available) {
             setCurrentStep((prevStep) => {
@@ -283,7 +277,11 @@ export default function CreatePrograms() {
               return nextStep;
             });
           } else {
-            setTabActionInfo({ ...tabActionInfo, error: true,message:'Program name already exists' });
+            setTabActionInfo({
+              ...tabActionInfo,
+              error: true,
+              message: "Program name already exists",
+            });
           }
         }
       });
@@ -320,6 +318,7 @@ export default function CreatePrograms() {
             "skills",
             "certificates",
             "members",
+            "goals",
             "sub_programs",
           ];
 
@@ -380,7 +379,7 @@ export default function CreatePrograms() {
             });
           }
         } else {
-          setTabActionInfo({ ...tabActionInfo, error: true ,message:''});
+          setTabActionInfo({ ...tabActionInfo, error: true, message: "" });
         }
       } else {
         let allLogo = { ...logo };
@@ -454,153 +453,170 @@ export default function CreatePrograms() {
     }
   };
 
-  const footerComponent = (props) => {
+  const createUpdatedColumns = (originalColumns, type) => {
+    return originalColumns.map((col) => {
+      if (col.field === "action") {
+        if (type === "equipments") {
+          return {
+            ...col,
+            renderCell: (params) => {
+              return (
+                <div className="flex items-center h-full">
+                  <img
+                    src={MoreIcon}
+                    className="cursor-pointer"
+                    alt="MoreIcon"
+                    onClick={(e) => handleMoreClick(e, params.row)}
+                  />
+                </div>
+              );
+            },
+          };
+        } else {
+          return {
+            ...col,
+            renderCell: (params) => {
+              const handleClick = () => {
+                const updates = {
+                  viewDetailsInfo: { [type]: params.row },
+                  viewDetails: {
+                    material: type === "material",
+                    skills: type === "skills",
+                    certificate: type === "certificate",
+                  },
+                };
+
+                setViewDetailsInfo((prev) => ({
+                  ...prev,
+                  ...updates.viewDetailsInfo,
+                }));
+
+                setViewDetails(updates.viewDetails);
+              };
+
+              return <ViewDetailsButton onClick={handleClick} />;
+            },
+          };
+        }
+      }
+
+      if (col.field === "status") {
+        return {
+          ...col,
+          renderCell: (params) => {
+            const status = params.value;
+            const getColor = (status) => {
+              switch (status) {
+                case goalStatus.active:
+                  return "bg-yellow-300 text-yellow-500";
+                case "pending":
+                  return "bg-orange-300 text-orange-500";
+                default:
+                  return "bg-red-300 text-red-500";
+              }
+            };
+
+            return (
+              <span
+                className={`px-2 py-1 rounded text-sm font-medium ${getColor(
+                  status
+                )}`}
+              >
+                {status}
+              </span>
+            );
+          },
+        };
+      }
+
+      if (col.field === "level") {
+        return {
+          ...col,
+          renderCell: (params) => {
+            const level = params.value || 0; // Fallback to 0 if no level
+            return (
+              <div className="flex items-center gap-2">
+                <div className="relative w-full bg-gray-200 rounded h-2">
+                  <div
+                    className="absolute top-0 left-0 h-2 bg-blue-500 rounded"
+                    style={{ width: `${level}%` }}
+                  ></div>
+                </div>
+                <span className="text-sm font-medium">{`${level}%`}</span>
+              </div>
+            );
+          },
+        };
+      }
+
+      return col;
+    });
+  };
+
+  // Create updated columns using the helper function
+  const updatedMaterialColumn = createUpdatedColumns(
+    MaterialColumns,
+    "material"
+  );
+  const updatedSkillColumn = createUpdatedColumns(SkillsColumns, "skills");
+  const updatedCertificateColumn = createUpdatedColumns(
+    CertificateColumns,
+    "certificate"
+  );
+  const updatedMemberColumn = createUpdatedColumns(MemberColumns, "members");
+  const updatedGoalColumns = createUpdatedColumns(GoalColumns, "goals");
+
+  const MODAL_CONFIG = {
+    learning_materials: {
+      rows: "materials",
+      columns: updatedMaterialColumn,
+      btnName: "Submit",
+    },
+    skills: {
+      rows: "skills",
+      columns: updatedSkillColumn,
+      btnName: "Add Skills",
+    },
+    certificates: {
+      rows: "certificate",
+      columns: updatedCertificateColumn,
+      btnName: "Add Certificate",
+    },
+    members: {
+      rows: "members",
+      columns: updatedMemberColumn,
+      btnName: "Add Members",
+    },
+    goals: {
+      rows: "goals",
+      columns: updatedGoalColumns,
+      btnName: "Add Goals",
+    },
+  };
+
+  const FooterComponent = ({ selectedRows, action }) => {
+    const cancelButtonStyle = {
+      border: "1px solid rgba(29, 91, 191, 1)",
+      borderRadius: "3px",
+      color: "rgba(29, 91, 191, 1)",
+    };
+
     return (
       <div className="flex gap-6 justify-center items-center py-4">
         <button
           onClick={() => setActionModal("")}
-          className="py-3 px-6 w-[16%]"
-          style={{
-            border: "1px solid rgba(29, 91, 191, 1)",
-            borderRadius: "3px",
-            color: "rgba(29, 91, 191, 1)",
-          }}
+          className="py-3 px-6"
+          style={cancelButtonStyle}
         >
           Cancel
         </button>
-        <button
-          onClick={() =>
-            handleAddPopupData("learning_materials", props.selectedRows)
-          }
-          className="text-white py-3 px-6 w-[16%]"
-          style={{
-            background:
-              "linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)",
-            borderRadius: "3px",
-          }}
-        >
-          Add Material
-        </button>
+        <Button
+          btnCategory="primary"
+          btnName={MODAL_CONFIG[action]?.btnName}
+          onClick={() => handleAddPopupData(action, selectedRows)}
+        />
       </div>
     );
-  };
-
-  const skillsFooterComponent = (props) => {
-    return (
-      <div className="flex gap-6 justify-center items-center py-4">
-        <button
-          onClick={() => setActionModal("")}
-          className="py-3 px-6 w-[16%]"
-          style={{
-            border: "1px solid rgba(29, 91, 191, 1)",
-            borderRadius: "3px",
-            color: "rgba(29, 91, 191, 1)",
-          }}
-        >
-          Cancel
-        </button>
-        <button
-          onClick={() => handleAddPopupData("skills", props.selectedRows)}
-          className="text-white py-3 px-6 w-[16%]"
-          style={{
-            background:
-              "linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)",
-            borderRadius: "3px",
-          }}
-        >
-          Add Skills
-        </button>
-      </div>
-    );
-  };
-
-  const certificateFooterComponent = (props) => {
-    return (
-      <div className="flex gap-6 justify-center items-center py-4">
-        <button
-          onClick={() => setActionModal("")}
-          className="py-3 px-6 w-[16%]"
-          style={{
-            border: "1px solid rgba(29, 91, 191, 1)",
-            borderRadius: "3px",
-            color: "rgba(29, 91, 191, 1)",
-          }}
-        >
-          Cancel
-        </button>
-        <button
-          onClick={() => handleAddPopupData("certificates", props.selectedRows)}
-          className="text-white py-3 px-6 w-[16%]"
-          style={{
-            background:
-              "linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)",
-            borderRadius: "3px",
-          }}
-        >
-          Add Certificate
-        </button>
-      </div>
-    );
-  };
-
-  const memberFooterComponent = (props) => {
-    return (
-      <div className="flex gap-6 justify-center items-center py-4">
-        <button
-          onClick={() => setActionModal("")}
-          className="py-3 px-6 w-[16%]"
-          style={{
-            border: "1px solid rgba(29, 91, 191, 1)",
-            borderRadius: "3px",
-            color: "rgba(29, 91, 191, 1)",
-          }}
-        >
-          Cancel
-        </button>
-        <button
-          onClick={() => handleAddPopupData("members", props.selectedRows)}
-          className="text-white py-3 px-6 w-[16%]"
-          style={{
-            background:
-              "linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)",
-            borderRadius: "3px",
-          }}
-        >
-          Add Members
-        </button>
-      </div>
-    );
-  };
-
-  const handleModalSearch = (field) => {
-    switch (field.target.name) {
-      case "learning_materials":
-        const material = [...materials].filter((material) =>
-          material.name.toLowerCase().includes(field.target.value)
-        );
-        setFormDetails({ ...formDetails, materials: material });
-        break;
-      case "skills":
-        const skill = [...skills].filter((skils) =>
-          skils.name.toLowerCase().includes(field.target.value)
-        );
-        setFormDetails({ ...formDetails, skills: skill });
-        break;
-      case "certificates":
-        const certificates = [...certificate].filter((certificate) =>
-          certificate.name.toLowerCase().includes(field.target.value)
-        );
-        setFormDetails({ ...formDetails, certificate: certificates });
-        break;
-      case "members":
-        const member = [...members].filter((member) =>
-          member.first_name.toLowerCase().includes(field.target.value)
-        );
-        setFormDetails({ ...formDetails, members: member });
-        break;
-      default:
-        break;
-    }
   };
 
   const fetchCategoryData = (categoryId) => {
@@ -616,119 +632,23 @@ export default function CreatePrograms() {
     }
   }, [role]);
 
-  const updatedMaterialColumn = [...MaterialColumns].map((mcol) => {
-    if (mcol.field === "action") {
-      return {
-        ...mcol,
-        renderCell: (params) => {
-          return (
-            <button
-              style={{
-                background: "rgb(29, 91, 191)",
-                color: "rgb(255, 255, 255)",
-                padding: "2px 20px",
-                height: "32px",
-                margin: "9px 0px",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: "3px",
-              }}
-              onClick={() => {
-                setViewDetailsInfo({
-                  ...viewDetailsInfo,
-                  material: params.row,
-                });
-                setViewDetails({
-                  material: true,
-                  skills: false,
-                  certificate: false,
-                });
-              }}
-            >
-              View Details
-            </button>
-          );
-        },
-      };
-    }
-    return mcol;
-  });
+  const buttonStyle = {
+    background: "rgb(29, 91, 191)",
+    color: "rgb(255, 255, 255)",
+    padding: "2px 20px",
+    height: "32px",
+    margin: "9px 0px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: "3px",
+  };
 
-  const updatedSkillColumn = [...SkillsColumns].map((mcol) => {
-    if (mcol.field === "action") {
-      return {
-        ...mcol,
-        renderCell: (params) => {
-          return (
-            <button
-              style={{
-                background: "rgb(29, 91, 191)",
-                color: "rgb(255, 255, 255)",
-                padding: "2px 20px",
-                height: "32px",
-                margin: "9px 0px",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: "3px",
-              }}
-              onClick={() => {
-                setViewDetailsInfo({ ...viewDetailsInfo, skills: params.row });
-                setViewDetails({
-                  material: false,
-                  skills: true,
-                  certificate: false,
-                });
-              }}
-            >
-              View Details
-            </button>
-          );
-        },
-      };
-    }
-    return mcol;
-  });
-
-  const updatedCertificateColumn = [...CertificateColumns].map((mcol) => {
-    if (mcol.field === "action") {
-      return {
-        ...mcol,
-        renderCell: (params) => {
-          return (
-            <button
-              style={{
-                background: "rgb(29, 91, 191)",
-                color: "rgb(255, 255, 255)",
-                padding: "2px 20px",
-                height: "32px",
-                margin: "9px 0px",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: "3px",
-              }}
-              onClick={() => {
-                setViewDetailsInfo({
-                  ...viewDetailsInfo,
-                  certificate: params.row,
-                });
-                setViewDetails({
-                  material: false,
-                  skills: false,
-                  certificate: true,
-                });
-              }}
-            >
-              View Details
-            </button>
-          );
-        },
-      };
-    }
-    return mcol;
-  });
+  const ViewDetailsButton = ({ onClick }) => (
+    <button style={buttonStyle} onClick={onClick}>
+      View Details
+    </button>
+  );
 
   const handleClose = () => {
     setTabActionInfo({ ...tabActionInfo, error: false });
@@ -838,33 +758,40 @@ export default function CreatePrograms() {
     certificate,
     skills,
     members,
+    goals,
   ]);
 
   useEffect(() => {
+    // If any completion state (success or error) is true, show the backdrop
     if (
       isProgramCreated ||
-      status === programStatus.exist ||
-      status === programStatus.error ||
+      isProgramUpdated ||
       IsErrorProgramCreating ||
       IsErrorProgramUpdating ||
-      isProgramUpdated
+      status === programStatus.exist ||
+      status === programStatus.error
     ) {
-      setTimeout(() => {
+      setShowBackdrop(true);
+
+      // Set timeout to handle cleanup after 3 seconds
+      const timer = setTimeout(() => {
+        // Reset all states
         dispatch(updateNewPrograms({ status: "" }));
-        if (
-          isProgramCreated ||
-          isProgramUpdated ||
-          IsErrorProgramCreating ||
-          IsErrorProgramUpdating
-        )
+        setShowBackdrop(false);
+
+        // Only navigate on success cases
+        if (isProgramCreated || isProgramUpdated) {
           navigate("/dashboard");
-      }, [3000]);
+        }
+      }, 3000);
+
+      return () => clearTimeout(timer);
     }
   }, [
-    IsErrorProgramCreating,
-    IsErrorProgramUpdating,
     isProgramCreated,
     isProgramUpdated,
+    IsErrorProgramCreating,
+    IsErrorProgramUpdating,
     status,
   ]);
 
@@ -875,10 +802,7 @@ export default function CreatePrograms() {
       }, 3000);
     }
   }, [tabActionInfo.error]);
-  useEffect(() => {
-  console.log(status,"status")
-  }, [status]);
-
+ 
   useEffect(() => {
     if (
       currentProgramDetail &&
@@ -990,16 +914,18 @@ export default function CreatePrograms() {
             </Tooltip>
           </div>
         </div>
-
         {tabActionInfo.error && (
           <ToastNotification
             openToaster={tabActionInfo.error}
-            message={tabActionInfo?.message?tabActionInfo?.message:"Please fill all mandatory fields"}
+            message={
+              tabActionInfo?.message
+                ? tabActionInfo?.message
+                : "Please fill all mandatory fields"
+            }
             handleClose={handleClose}
             toastType={"error"}
           />
         )}
-
         {/* {validationData && validationData?.is_available && (
           <ToastNotification
             openToaster={validationData && validationData?.is_available}
@@ -1012,64 +938,45 @@ export default function CreatePrograms() {
         <Backdrop
           sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={
+            showBackdrop || // Control visibility with local state
             isProgramCreating ||
-            isProgramCreated||
             isProgramUpdating ||
-            isDetailFetching ||
-            IsErrorProgramCreating ||
-            IsErrorProgramUpdating ||
-            status === programStatus.update
-          
+            isDetailFetching
           }
         >
           {isProgramCreating || isProgramUpdating || isDetailFetching ? (
             <CircularProgress color="inherit" />
-          ) : null}
-
-          {isProgramCreated ||
-          status === programStatus.exist ||
-          status === programStatus.error ||
-          isProgramUpdated ||
-          IsErrorProgramCreating ||
-          IsErrorProgramUpdating ? (
+          ) : (
             <div className="w-2/6 bg-white flex flex-col gap-4 h-[330px] justify-center items-center">
               <img
                 src={
-                  status === programStatus.exist ||
-                  IsErrorProgramCreating ||
-                  IsErrorProgramUpdating
-                    ? FailedIcon
-                    : isProgramCreated || isProgramUpdated
+                  isProgramCreated || isProgramUpdated
                     ? SuccessIcon
                     : FailedIcon
                 }
-                alt="VerifyIcon"
+                alt="StatusIcon"
               />
               <span style={{ color: "#232323", fontWeight: 600 }}>
                 {status === programStatus.exist
-                  ? "Program already exist"
+                  ? "Program already exists"
                   : status === programStatus.error
                   ? "There is a Server Error. Please try again later"
                   : IsErrorProgramCreating || IsErrorProgramUpdating
                   ? `Error ${
-                      IsErrorProgramCreating
-                        ? "Creating"
-                        : IsErrorProgramUpdating
-                        ? "Updating"
-                        : ""
+                      IsErrorProgramCreating ? "Creating" : "Updating"
                     } program`
                   : `Program ${
                       programApiStatus === "draft"
-                        ? "Drafed"
+                        ? "Drafted"
                         : isProgramUpdated
                         ? "Updated"
                         : "Created"
                     } Successfully!`}
               </span>
             </div>
-          ) : null}
-        </Backdrop>
+          )}
 
+        </Backdrop>
         {!isDetailFetching && (
           <div className="px-8 py-4">
             <div className="flex gap-3">
@@ -1167,7 +1074,6 @@ export default function CreatePrograms() {
             </FormProvider>
           </div>
         )}
-
         <MuiModal
           modalSize="lg"
           modalOpen={viewDetails.material}
@@ -1244,7 +1150,6 @@ export default function CreatePrograms() {
             </div>
           </div>
         </MuiModal>
-
         <MuiModal
           modalSize="lg"
           modalOpen={viewDetails.skills}
@@ -1297,7 +1202,6 @@ export default function CreatePrograms() {
             </div>
           </div>
         </MuiModal>
-
         <MuiModal
           modalSize="lg"
           modalOpen={viewDetails.certificate}
@@ -1365,7 +1269,6 @@ export default function CreatePrograms() {
             </div>
           </div>
         </MuiModal>
-
         <Backdrop
           sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={loading.success}
@@ -1387,61 +1290,81 @@ export default function CreatePrograms() {
             </div>
           </div>
         </Backdrop>
-
         <MuiModal
-          modalSize="lg"
+          modalSize="md"
           modalOpen={actionModal !== ""}
           modalClose={() => setActionModal("")}
-          noheader
+          title={`Add ${actionModal
+            ?.charAt(0)
+            .toUpperCase()}${actionModal.slice(1)}`}
         >
-          <div className="relative">
-            <input
-              className="input-bg w-full h-[60px] px-5 mb-4 text-[14px]"
-              style={{ borderRadius: "50px" }}
-              placeholder="Search"
-              name={actionModal}
-              onChange={(e) => handleModalSearch(e)}
-            />
-            <img
-              className="absolute top-4 right-7"
-              src={SearchIcon}
-              alt="SearchIcon"
-            />
-          </div>
-          {actionModal === "learning_materials" ? (
+          {actionModal && MODAL_CONFIG[actionModal] && (
             <DataTable
-              rows={formDetails.materials}
-              columns={updatedMaterialColumn}
+              showToolbar={true}
+              rows={formDetails[MODAL_CONFIG[actionModal].rows]}
+              columns={MODAL_CONFIG[actionModal].columns}
               footerAction={() => setActionModal("")}
-              footerComponent={footerComponent}
-              selectedAllRows={stepData?.learning_materials || []}
+              footerComponent={(props) => (
+                <FooterComponent
+                  selectedRows={props.selectedRows}
+                  action={actionModal}
+                />
+              )}
+              selectedAllRows={stepData?.[actionModal] || []}
             />
-          ) : actionModal === "skills" ? (
-            <DataTable
-              rows={formDetails.skills}
-              columns={updatedSkillColumn}
-              footerAction={() => setActionModal("")}
-              footerComponent={skillsFooterComponent}
-              selectedAllRows={stepData?.skills || []}
-            />
-          ) : actionModal === "certificates" ? (
-            <DataTable
-              rows={formDetails.certificate}
-              columns={updatedCertificateColumn}
-              footerAction={() => setActionModal("")}
-              footerComponent={certificateFooterComponent}
-              selectedAllRows={stepData?.certificates || []}
-            />
-          ) : actionModal === "members" ? (
-            <DataTable
-              rows={formDetails.members}
-              columns={MemberColumns}
-              footerAction={() => setActionModal("")}
-              footerComponent={memberFooterComponent}
-              selectedAllRows={stepData?.members || []}
-            />
-          ) : null}
+          )}
         </MuiModal>
+        <Menu
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleMoreClose}
+          transformOrigin={{ horizontal: "left", vertical: "top" }}
+          anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+          slotProps={{
+            paper: {
+              elevation: 0,
+              sx: {
+                overflow: "visible",
+                mt: 1.5,
+                ml: -2,
+                border: "1px solid #D9D9D9",
+                "& .MuiAvatar-root": {
+                  width: 25,
+                  height: 25,
+                },
+                "&::before": {
+                  content: '""',
+                  display: "block",
+                  position: "absolute",
+                  border: "1px solid #D9D9D9",
+                  borderRight: 0,
+                  borderBottom: 0,
+                  top: 0,
+                  right: 35,
+                  width: 20,
+                  height: 20,
+                  bgcolor: "background.paper",
+                  transform: "translateY(-50%) rotate(45deg)",
+                  zIndex: 0,
+                },
+              },
+            },
+          }}
+        >
+          <MenuItem
+            onClick={(e) =>
+              navigate("/equipmentView", {
+                state: {
+                  id: params.row?.id,
+                  type: "view",
+                },
+              })
+            }
+            className="!text-[12px]"
+          >
+            View
+          </MenuItem>
+        </Menu>
       </div>
     </div>
   );

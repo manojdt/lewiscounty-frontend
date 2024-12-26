@@ -478,18 +478,45 @@ export const MaterialColumns = [
     },
   },
 ];
+export const GoalColumns = [
+  {
+    field: 'GoalName ',
+    headerName: 'Goal Name ',
+    flex: 1,
+    id: 0,
+  },
+  {
+    field: 'status',
+    headerName: 'Status',
+    flex: 1,
+    id: 1,
+  },
+  {
+    field: 'level',
+    headerName: 'Progress level',
+    flex: 1,
+    id: 2,
+  },
+  {
+    field: 'action',
+    headerName: 'Action',
+    flex: 1,
+    id: 3,
+    
+  },
+];
 
 export const MemberColumns = [
   {
     field: 'first_name',
     headerName: 'Full Name',
-    width: 600,
+    flex: 1,
     id: 0,
   },
   {
     field: 'email',
     headerName: 'Email',
-    width: 500,
+    flex: 1,
     id: 1,
   },
   // {
@@ -598,19 +625,19 @@ export const SkillsColumns = [
   {
     field: 'name',
     headerName: 'Skills Name',
-    width: 400,
+    flex: 1,
     id: 0,
   },
   {
     field: 'desc',
     headerName: 'Skills Description',
-    width: 400,
+    flex: 1,
     id: 1,
   },
   {
     field: 'action',
     headerName: 'Action',
-    width: 350,
+    flex: 1,
     id: 3,
     renderCell: (params) => {
       return (
