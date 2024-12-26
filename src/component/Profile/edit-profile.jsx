@@ -243,7 +243,7 @@ const EditProfile = ({ setEditMode }) => {
         'request_need_mentor_to_know',
         'linked_in',
         'socila_media',
-        'Professional_Bio',
+        'professional_bio',
         'address',
       ];
 
@@ -284,6 +284,8 @@ const EditProfile = ({ setEditMode }) => {
         'secondary_phone_number',
         data.secondary_phone_number || ''
       );
+      formData.append('professional_bio', data.professional_bio || '');
+
       formData.append('job_title', data.job_title || '');
       formData.append('current_employer', data.current_employer || '');
       formData.append('industry_type', data.industry_type || '');
@@ -341,7 +343,7 @@ const EditProfile = ({ setEditMode }) => {
         'gender',
         'location',
         'linked_in',
-        'Professional_Bio',
+        'professional_bio',
         'address',
       ];
       adminFields.forEach((field) => {
