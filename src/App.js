@@ -90,6 +90,7 @@ import PaymentPage from './component/payments-page/payments';
 import TicketHistory from './component/Help/TicketHistory';
 import TicketCreation from './component/Help/TicketCreation';
 import Tickets from './component/SuperAdmin/tickets/Tickets';
+import PaymentSuccessfull from './shared/paymentButton/payment-successfull';
 
 function App() {
   const PrivateRoute = () => {
@@ -157,6 +158,10 @@ function App() {
               element={<MenteeDocs />}
             />
             <Route path='/programs' element={<Programs />} />
+            <Route
+              path='/payment-successfull'
+              element={<PaymentSuccessfull />}
+            />
             <Route
               path='/program-details/:id'
               element={
