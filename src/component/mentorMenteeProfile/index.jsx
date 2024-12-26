@@ -25,12 +25,22 @@ import {
   mentorAcceptReq,
   updateUserList,
 } from '../../services/userList';
+import {
+  cancelMemberRequest,
+  getCategoryList,
+  getprogramRequest,
+  updateLocalRequest,
+  updateMemberRequest,
+  updateProgramMenteeRequest,
+  updateProgramRequest,
+} from '../../services/request';
 import { useLocation, useNavigate } from 'react-router-dom';
 import SuccessTik from '../../assets/images/blue_tik1x.png';
 import CloseReqPopup from '../../assets/icons/closeReqPopup.svg';
 import CancelReq from '../../assets/icons/cancelRequest.svg';
 import CancelIcon from '../../assets/images/cancel-colour1x.png'
 import ArrowRight from "../../assets/icons/breadCrumbsArrow.svg"
+import { CancelPopup } from '../Mentor/Task/cancelPopup';
 
 const MentorMenteeProfile = () => {
   const [activity, setActivity] = React.useState({
@@ -52,17 +62,64 @@ const MentorMenteeProfile = () => {
     bool: false,
     activity: false,
   });
-
+  const userInfo = useSelector(state => state.userInfo)
+  const role = userInfo.data.role
+  const { requestData } = useSelector(
+    (state) => state.userList
+  );
   const statusStyle = {
     rejected:
       'text-[16px] w-[auto] px-3 h-[40px] flex items-center justify-center !text-[#E0382D] border border-[#E0382D] rounded-[3px] whitespace-nowrap',
     connected:
       'text-[16px] w-[140px] h-[40px] flex items-center justify-center !text-[#1D5BBF] border border-[#1D5BBF] rounded-[3px]',
   };
+  const [adminPopup, setAdminPopup] = React.useState({
+    bool: false,
+    activity: false,
+    type: ""
+  })
+
+
+  const handleOpenAdminApprove = (type = "") => {
+    setAdminPopup({
+      ...adminPopup,
+      bool: true,
+      type: type
+    })
+  }
+
+  const handleCloseAdminApprove = (type = "") => {
+    setAdminPopup({
+      ...adminPopup,
+      bool: false,
+      activity: false,
+      close: false,
+      type: ""
+    })
+  }
+
+  const handleAdminProgram = (type, reason) => {
+    let payload = {
+      id: requestData?.id,
+      status: type,
+
+    }
+    if (type === "rejected") {
+      payload = {
+        ...payload,
+        rejection_reason: reason,
+      }
+    }
+    dispatch(updateProgramMenteeRequest(payload)).then((res) => {
+      if (res.meta.requestStatus === "fulfilled") {
+        navigate(-1)
+      }
+    })
+  }
 
   React.useEffect(() => {
     if (state?.user_id !== '') {
-      console.log(state,"state")
+      console.log(state, "state")
       dispatch(
         getProfileInfo({ id: state?.user_id })
       );
@@ -186,6 +243,32 @@ const MentorMenteeProfile = () => {
           <div className='text-[#353F4F] text-[20px] font-medium'>
             Profile
           </div>
+          {
+            ((role === "mentor")) &&
+            <div className='flex gap-4 pt-10'>
+              <button
+                className='py-3 px-16 text-white text-[14px] flex items-center'
+                style={{
+                  border: '1px solid #E0382D',
+                  borderRadius: '5px',
+                  color: '#E0382D',
+                }}
+                onClick={() => handleOpenAdminApprove("rejected")}
+              >
+                Reject
+              </button>
+              <button
+                className='py-3 px-16 text-white text-[14px] flex items-center'
+                style={{
+                  background: '#16B681',
+                  borderRadius: '5px',
+                }}
+                onClick={() => handleOpenAdminApprove("approved")}
+              >
+                Approve
+              </button>
+            </div>
+          }
           {state?.page !== 'requested_mentor' ? (
             // <Box
             //   className={
@@ -509,6 +592,51 @@ const MentorMenteeProfile = () => {
 
         </div>
       </Backdrop>
+
+
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={adminPopup?.bool && adminPopup?.type === "approved"}
+      >
+        <div className='popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center'>
+          <img src={ConnectIcon} alt='ConnectIcon' />
+          {/* <span style={{ color: '#232323', fontWeight: 600, fontSize: '24px' }}>
+            {followInfo.is_following ? 'Unfollow' : 'Follow'}
+          </span> */}
+
+          <div className='py-5'>
+            <p
+              style={{
+                color: 'rgba(24, 40, 61, 1)',
+                fontWeight: 600,
+                fontSize: '18px',
+              }}
+            >
+              Are you sure you want to approve request?
+            </p>
+          </div>
+          <div className='flex justify-center'>
+            <div className='flex gap-6 justify-center align-middle'>
+              <Button
+                btnName='Cancel'
+                btnCategory='secondary'
+                onClick={() => handleCloseAdminApprove()}
+              />
+              <Button
+                btnType='button'
+                btnCls='w-[110px]'
+                btnName={'Yes'}
+                btnCategory='primary'
+                onClick={() => handleAdminProgram("approved")}
+              />
+            </div>
+          </div>
+        </div>
+      </Backdrop>
+
+      <CancelPopup open={(adminPopup?.bool && adminPopup?.type === "rejected")} header="Rejection Reason"
+        handleClosePopup={() => handleCloseAdminApprove()}
+        handleSubmit={(reason) => handleAdminProgram("rejected", reason)} />
     </>
   );
 };

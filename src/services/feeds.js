@@ -19,8 +19,20 @@ export const createPost = createAsyncThunk(
 
 export const getPost = createAsyncThunk(
     "getPost",
-    async () => {
-        const getPostData = await api.get('post/view-post');
+    async (data = {}) => {
+        let url = 'post/view-post';
+        
+        if (data.page) {
+            url += `?page=${data.page}`;
+        }
+        if (data.pageSize) {
+            url += `&limit=${data.pageSize}`;
+        }
+
+        console.log("URL:", url);
+
+        const getPostData = await api.get(url);
+
         if (getPostData.status === 200 && getPostData.data) {
             return getPostData.data;
         }
@@ -51,6 +63,16 @@ export const getRecentPosts = createAsyncThunk(
     }
 );
 
+export const getFeedTrack = createAsyncThunk(
+    "getFeedTrack",
+    async (id) => {
+        const getFeedTrack = await api.get(`post/track-post?id=${id}`);
+        if (getFeedTrack.status === 200 && getFeedTrack.data) {
+            return getFeedTrack.data;
+        }
+        return getFeedTrack;
+    }
+);
 
 export const updateFeedTrack = createAsyncThunk(
     "updateFeedTrack",

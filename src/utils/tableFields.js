@@ -268,7 +268,7 @@ export const certificateColumns = [{
     },
     {
         field: 'fail_participates_count',
-        headerName: 'Fail',
+        headerName: 'No Pass',
         flex: 1,
         id: 1,
         for: ['mentor']

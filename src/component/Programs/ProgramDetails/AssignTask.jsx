@@ -36,11 +36,16 @@ import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { programActionStatus, requestStatus } from '../../../utils/constant';
 import { getProgramMentees } from '../../../services/programInfo';
-import { getProgramDetails, updateProgram } from '../../../services/userprograms';
-import { Backdrop, CircularProgress } from '@mui/material';
+import { getProgramDetails, launchProgram, updateProgram } from '../../../services/userprograms';
+import { Backdrop, CircularProgress, Typography } from '@mui/material';
 import useTimer from '../../../hooks/useTimer';
 import SkillsSet from '../../SkillsSet';
-import { programCancelRequest, programRescheduleRequest, updateLocalRequest } from '../../../services/request';
+import { 
+    programCancelRequest, 
+    programRescheduleRequest, 
+    updateLocalRequest, 
+    updateProgramRequest
+ } from '../../../services/request';
 import './details.css'
 import { convertDateFormat, formatDateFunToAll, formatDateTimeISO, todatDateInfo } from '../../../utils';
 import Ratings from '../Ratings';
@@ -48,6 +53,7 @@ import { getUserProfile } from '../../../services/profile';
 import { JoinedProgramMenteeColumn } from '../../../mock';
 import DataTable from '../../../shared/DataGrid';
 import PaymentButton from '../../../shared/paymentButton';
+import { CancelPopup } from '../../Mentor/Task/cancelPopup';
 import { useGetProgramDetailsByIdQuery, useLaunchProgramMutation } from '../../../features/program/programApi.services';
 
 
@@ -113,6 +119,48 @@ export default function AssignTask() {
         handleSubmit,
         reset
     } = useForm();
+
+    const [cancelPopup, setCancelPopup] = React.useState({
+        bool: false,
+        activity: false
+    })
+
+    const handleOpenPopup = () => {
+        setCancelPopup({
+            ...cancelPopup,
+            bool: true
+        })
+    }
+
+    const handleClosePopup = () => {
+        setCancelPopup({
+            bool: false,
+            activity: false
+        })
+    }
+
+    const handleCancelSubmit = (reason) => {
+        const payload ={
+            id: programdetails.id,
+            status: "rejected",
+            reason: reason
+        }
+        dispatch(updateProgramRequest(payload)).then((res) => {
+            if (res.meta.requestStatus === "fulfilled") {
+                navigate(-1)
+            }
+        })
+
+        setCancelPopup({
+            ...cancelPopup,
+            bool: false,
+            activity: true
+        })
+        setTimeout(() => {
+            handleClosePopup()
+        }, 2000);
+    }
+
 
 
     const dateInfo = todatDateInfo()
@@ -498,6 +546,8 @@ export default function AssignTask() {
 
     return (
         <div className="px-9 my-6 grid">
+            <CancelPopup open={cancelPopup?.bool} handleClosePopup={handleClosePopup} header="Cancel Task Reason"
+                            handleSubmit={(reason) => handleCancelSubmit(reason)} />
 
             <Backdrop
                 sx={{ color: '#fff', zIndex: 9999999 }}
@@ -782,6 +832,7 @@ export default function AssignTask() {
                                                 :
                                                 null
                                         }
+                                       
 
                                         {/* <div className='discussions pt-8 flex gap-6'>
                                             <button
@@ -989,10 +1040,35 @@ export default function AssignTask() {
                                             }
 
                                         </div>
-
-
+                                        {role === ('mentee'|| 'mentor') &&
+                                            <div style={{ display: 'flex', flexDirection: 'row', width: '100%', justifyContent: "flex-start" }}>
+                                                <Button
+                                                    btnName='Cancel Program'
+                                                    btnCategory='secondary'
+                                                    onClick={() => handleOpenPopup()}
+                                                    btnCls='w-[auto] !border !border-[#E0382D] rounded-[3px] !text-[#E0382D] h-[45px]'
+                                                />
+                                            </div>
+                                        }
 
                                     </div>
+                                    <Backdrop
+                                        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                                        open={cancelPopup?.activity}
+                                    >
+                                        <div className='px-5 py-1 flex justify-center items-center'>
+                                            <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+                                                style={{ background: '#fff', borderRadius: '10px' }}>
+                                                <img src={SuccessTik} alt="SuccessTik" />
+                                                <p className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                                                    style={{
+                                                        fontWeight: 600
+                                                    }}
+                                                >Cancelled Successfully</p>
+                                            </div>
+
+                                        </div>
+                                    </Backdrop>
 
 
                                     {/* Right Side Content */}

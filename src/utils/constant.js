@@ -317,12 +317,12 @@ export const certificateText = {
 
 export const resultText = {
   Pass: 'Pass',
-  Fail: 'fail',
+  Fail: 'No Pass',
 };
 
 export const certificateResultText = {
   pass: 'Pass',
-  fail: 'Fail',
+  fail: 'No Pass',
 };
 
 export const empty = [

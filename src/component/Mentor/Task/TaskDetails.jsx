@@ -418,7 +418,7 @@ const MentorTaskDetails = () => {
         setConfirmPopup({
             ...confirmPopup,
             cancel: true,
-            title: "Task Fail Reason"
+            title: "Task No Pass Reason"
         })
     }
 
@@ -817,7 +817,7 @@ const MentorTaskDetails = () => {
                             <Stack direction={"row"} alignItems={"center"} justifyContent={"center"} width={"100%"} mt={"50px"}>
                                 <Stack direction={"row"} alignItems={"center"} spacing={"20px"}>
                                     <Button
-                                        btnName='All Fail'
+                                        btnName='All No Pass'
                                         btnCategory='secondary'
                                         onClick={() => handleOpenAllPass()}
                                         btnCls='w-[225px] !border !border-[#E0382D] rounded-[3px] !text-[#E0382D] h-[45px]'

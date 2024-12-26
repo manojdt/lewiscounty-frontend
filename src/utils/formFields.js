@@ -1965,7 +1965,7 @@ export const ProgramTestimonialsFields = [
     placeholder: 'Add request for testimonials',
     fieldtype: 'text',
     inputRules: {
-      required: 'This field is required',
+      // required: 'This field is required',
     },
     width: 'w-full',
     icon: 'add',
@@ -1977,7 +1977,7 @@ export const ProgramTestimonialsFields = [
     label: 'Testimonials Type',
     placeholder: '',
     inputRules: {
-      required: 'This field is required',
+      // required: 'This field is required',
     },
     options: [
       {
@@ -2002,7 +2002,7 @@ export const ProgramTestimonialsFields = [
     label: 'Description',
     placeholder: '',
     inputRules: {
-      required: 'This field is required',
+      // required: 'This field is required',
     },
     width: 'w-full',
     for: ['mentor'],
@@ -2764,7 +2764,7 @@ export const CreateCertificateFields = [
   {
     type: 'popup-input',
     name: 'fail_mentee_list',
-    label: 'Fail  Mentees',
+    label: 'No Pass Mentees',
     placeholder: 'Select Meneteed',
     inputRules: {},
     options: [],
