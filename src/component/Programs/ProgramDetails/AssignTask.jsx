@@ -1045,7 +1045,7 @@ export default function AssignTask() {
                                             }
 
                                         </div>
-                                        {(role === 'mentee'|| role==='mentor') &&
+                                        {/* {(role === 'mentee'|| role==='mentor') &&
                                             <div style={{ display: 'flex', flexDirection: 'row', width: '100%', justifyContent: "flex-start" }}>
                                                 <Button
                                                     btnName='Cancel Program'
@@ -1054,7 +1054,7 @@ export default function AssignTask() {
                                                     btnCls='w-[auto] !border !border-[#E0382D] rounded-[3px] !text-[#E0382D] h-[45px]'
                                                 />
                                             </div>
-                                        }
+                                        } */}
 
                                     </div>
                                     <Backdrop

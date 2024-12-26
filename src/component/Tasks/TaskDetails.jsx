@@ -203,8 +203,9 @@ export const TaskDetails = () => {
 
   useEffect(() => {
     let allTaskDocuments = { img: [], video: [], doc: [] };
+    console.log("taskFile", taskFile)
     allTaskDocuments = getFiles(taskFile);
-    setTaskSolutionDocs(allTaskDocuments);
+    setTaskSolutionDocs((prevState)=>allTaskDocuments);
   }, [taskFile]);
 
   useEffect(() => {
@@ -539,7 +540,17 @@ console.log(allFiles,"allfiles")
                           </div>
                           <Stack>
                             {taskSolutionDocs?.image.map((img, index) => (
-                              <a href={img.fileurl} target='_blank'>
+                              <a
+                                key={index} 
+                                href={img.fileurl}  
+                                target="_blank"     
+                                rel="noopener noreferrer" 
+                                onClick={(e) => {
+                                  e.preventDefault(); 
+                                  window.open(img.fileurl, '_blank'); 
+                                }}
+                                className="text-[14px] image-name !text-[#18283D] underline"
+                              >
                                 <span className='text-[14px] image-name !text-[#18283D] underline'>
                                   {img.name}
                                 </span>
