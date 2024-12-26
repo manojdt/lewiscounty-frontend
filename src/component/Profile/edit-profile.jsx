@@ -290,6 +290,9 @@ const EditProfile = ({ setEditMode }) => {
       formData.append('linked_in', data.linked_in || '');
       formData.append('highest_degree', data.highest_degree || '');
       formData.append('field_of_study', data.field_of_study || '');
+      formData.append('institution_name', data.institution_name || '');
+      formData.append('institution_location', data.institution_location || '');
+
       formData.append('areas_of_expertise', data.areas_of_expertise || '');
       formData.append(
         'confident_areas_of_expertise',
@@ -325,6 +328,8 @@ const EditProfile = ({ setEditMode }) => {
       formData.append('gender', data.gender || '');
       formData.append('files_to_remove', removeFiles || []);
 
+      console.log('formData', formData);
+
       return dispatch(updateProfile(formData));
     } else if (userRole === user.admin) {
       const adminFields = [
@@ -344,6 +349,7 @@ const EditProfile = ({ setEditMode }) => {
           formData.append(field, data[field]);
         }
       });
+
       return dispatch(updateProfile(formData));
     }
   };
