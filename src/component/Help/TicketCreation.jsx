@@ -114,13 +114,13 @@ const TicketCreation = () => {
     formData.append('subject', data.subject);
     formData.append('description', data.description);
     // formData.append('created_by', userInfo?.data?.user_id);
-    if (data.attachment) {
-      if (Array.isArray(data.attachment)) {
-        data.attachment.forEach((doc, index) => {
-          formData.append(`attachment`, doc);
+    if (data.attachments) {
+      if (Array.isArray(data.attachments)) {
+        data.attachments.forEach((doc, index) => {
+          formData.append(`attachments`, doc);
         });
       } else {
-        formData.append('attachment', data.documents);
+        formData.append('attachments', data.attachments);
       }
     }
 

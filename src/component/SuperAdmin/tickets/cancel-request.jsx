@@ -15,7 +15,7 @@ const CancelRequestModal = ({ setIsOpen, isOpen, ticketId }) => {
       setIsBackdropOpen(true);
       setTimeout(() => {
         setIsBackdropOpen(false);
-        navigate(`/tickets`);
+        navigate(`/ticket-history`);
       }, 2000);
     }
   }, [isSuccess]);
@@ -43,14 +43,14 @@ const CancelRequestModal = ({ setIsOpen, isOpen, ticketId }) => {
           className='px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition transform duration-200 hover:scale-105'
           onClick={() => {
             // console.log('Reason:', reason);
-            updateStatus({ id: ticketId, status: 'rejected' });
+            updateStatus({ id: ticketId, status: 'closed' });
           }}
         >
           Yes
         </button>
       </div>
       <SuccessGradientMessage
-        message={'The ticket has been rejected successfully.'}
+        message={'The ticket has been closed successfully.'}
         isBackdropOpen={isBackdropOpen}
         setIsBackdropOpen={setIsBackdropOpen}
       />
