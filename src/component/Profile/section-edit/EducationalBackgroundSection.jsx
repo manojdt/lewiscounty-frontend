@@ -15,7 +15,7 @@ const EducationalBackgroundSection = ({ type }) => {
   } = useFormContext();
 
   return (
-    <div className='grid grid-cols-3 gap-6'>
+    <div className='grid grid-cols-4 gap-6'>
       {EducationalBackgroundFields.map((field) => {
         switch (field.type) {
           case 'input':

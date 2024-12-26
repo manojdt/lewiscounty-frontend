@@ -89,25 +89,6 @@ const TicketUpdate = ({ ticket }) => {
     setValue(field, updatedFiles);
   };
 
-  // const onSubmit = (data) => {
-  //   const formData = new FormData();
-
-  //   formData.append('comment', data.comment);
-  //   formData.append('due_date', moment(data.due_date).format('YYYY-MM-DD'));
-
-  //   if (data.attachment) {
-  //     if (Array.isArray(data.attachment)) {
-  //       data.attachment.forEach((doc, index) => {
-  //         formData.append(`attachment`, doc);
-  //       });
-  //     } else {
-  //       formData.append('attachment', data.documents);
-  //     }
-  //   }
-
-  //   updateTicket({ id: ticket.id, ticket: formData });
-  // };
-
   const handleFormSubmit = async (data, closeTicket = false) => {
     const formData = new FormData();
     formData.append('comment', data.comment);

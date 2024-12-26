@@ -15,6 +15,7 @@ const DocumentUploadSection = ({ type, setRemoveFiles }) => {
     reset,
     control,
     getValues,
+    clearErrors,
     setValue,
   } = useFormContext();
 
@@ -29,6 +30,10 @@ const DocumentUploadSection = ({ type, setRemoveFiles }) => {
         'application/pdf',
       ].includes(filer.type)
     );
+
+    if (validFiles.length > 0) {
+      clearErrors(field);
+    }
 
     const previews = validFiles.map((file) => URL.createObjectURL(file));
     setFilePreviews((prev) => ({
@@ -157,6 +162,7 @@ const DocumentUploadSection = ({ type, setRemoveFiles }) => {
                           name={field.name}
                           control={control}
                           defaultValue={[]}
+                          rules={field.inputRules}
                           render={({ field: controllerField }) => (
                             <input
                               id={field.name}
@@ -172,7 +178,7 @@ const DocumentUploadSection = ({ type, setRemoveFiles }) => {
                         />
                       </label>
                     </div>
-                    <div className='flex flex-wrap gap-4 mt-4'>
+                    {/* <div className='flex flex-wrap gap-4 mt-4'>
                       {filePreviews[field.name]?.map((preview, index) => (
                         <div key={index} className='relative'>
                           <img
@@ -188,7 +194,12 @@ const DocumentUploadSection = ({ type, setRemoveFiles }) => {
                           />
                         </div>
                       ))}
-                    </div>
+                      {errors[field.name] && (
+                        <p style={{ color: 'red', fontSize: '12px' }}>
+                          {errors[field.name]?.message}
+                        </p>
+                      )}
+                    </div> */}
 
                     {getValues(field.name)?.length > 0 && (
                       <>
@@ -235,8 +246,8 @@ const DocumentUploadSection = ({ type, setRemoveFiles }) => {
                       </>
                     )}
                     {errors[field.name] && (
-                      <p className='error' role='alert'>
-                        {errors[field.name].message}
+                      <p className='font-semibold text-red-500'>
+                        {errors[field.name]?.message}
                       </p>
                     )}
                   </>
