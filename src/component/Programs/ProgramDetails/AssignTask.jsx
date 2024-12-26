@@ -55,6 +55,7 @@ import DataTable from '../../../shared/DataGrid';
 import PaymentButton from '../../../shared/paymentButton';
 import { CancelPopup } from '../../Mentor/Task/cancelPopup';
 import { useGetProgramDetailsByIdQuery, useLaunchProgramMutation } from '../../../features/program/programApi.services';
+import { toast } from 'react-toastify';
 
 
 export default function AssignTask() {
@@ -249,7 +250,11 @@ export default function AssignTask() {
             // const startProgramRequest = await api.post('start_program', { id: parseInt(params.id) });
             // if ((startProgramRequest.status === 201 || startProgramRequest.status === 200) && startProgramRequest.data) {
             // setLoading({ initial: false, task: false })
-            await launchProgram({ program: programdetails.id, request_type: "program_start" });
+            await launchProgram({ program: programdetails.id, request_type: "program_start" }).then((res)=>{
+                if(res.error?.data?.errors&&res.error?.data?.errors?.length>0){
+          toast.error(res.error?.data?.errors[0]);
+                }
+            })
 
             // }
         }

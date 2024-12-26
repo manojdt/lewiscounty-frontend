@@ -35,6 +35,7 @@ const StepComponenRender = ({
 
   const [dateFormat, setDateFormat] = useState({});
   const [checkBoxValue, setCheckBoxValue] = useState('');
+  const [disabledFields, setDisabledFields] = useState({});
   const [errorNot, setErrorNot] = useState(false);
   const [idProof, setIdProof] = useState([]);
   const onSubmit = (data) => {
@@ -70,13 +71,22 @@ const StepComponenRender = ({
   const handleRadioBox = (e) => {
     const value = e.target.value;
     if (value === 'true') {
+      setDisabledFields((prev) => ({
+        ...prev,
+        mentor_exp_desc: false, // Disable the field if value is false
+      }));
       register('mentor_exp_desc', {
         required: 'This field is required',
       });
     } else {
+      setDisabledFields((prev) => ({
+        ...prev,
+        mentor_exp_desc: true, // Disable the field if value is false
+      }));
       register('mentor_exp_desc', {
         required: false,
       });
+      setValue("mentor_exp_desc","")
     }
     setCheckBoxValue(e.target.value);
   };
@@ -145,7 +155,7 @@ const StepComponenRender = ({
                         style={{
                           color: '#232323',
                         }}
-                        disabled={field.disable ? field.disable : false}
+                        disabled={field.name==="mentor_exp_desc"?disabledFields[field.name] : field.disable ? field.disable : false}
                         aria-invalid={!!errors[field.name]}
                       />
 

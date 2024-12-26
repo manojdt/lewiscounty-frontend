@@ -355,7 +355,7 @@ export const getMenteeProgramCount = createAsyncThunk(
     "getMenteeProgramCount",
     async (query) => {
         if (!query || Object.keys(query).length === 0) {
-            const menteeProgramCount = await api.get(`mentee_program/count_program`);
+            const menteeProgramCount = await api.get(`programs/program-status-count`);
             if (menteeProgramCount.status === 200 && menteeProgramCount.data) {
                 return menteeProgramCount.data;
             }
@@ -372,7 +372,7 @@ export const getMenteeProgramCount = createAsyncThunk(
             );
             let queryString = new URLSearchParams(filteredQuery).toString();
 
-            const menteeProgramCount = await api.get(`mentee_program/count_program?${queryString}`);
+            const menteeProgramCount = await api.get(`programs/program-status-count?${queryString}`);
             if (menteeProgramCount.status === 200 && menteeProgramCount.data) {
                 return menteeProgramCount.data;
             }
