@@ -32,7 +32,6 @@ import CalendarIcon from "../../../assets/images/calender_1x.png";
 import EditIcon from '../../../assets/images/Edit1x.png'
 import MoreIcon from "../../../assets/icons/moreIcon.svg";
 import TickCircle from "../../../assets/icons/tickCircle.svg";
-import EditIcon from '../../../assets/icons/editIcon.svg';
 import ShareIcon from "../../../assets/icons/Share.svg";
 
 import CloseCircle from "../../../assets/icons/closeCircle.svg";
