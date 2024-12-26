@@ -387,10 +387,10 @@ export default function CertificateMenteeList() {
                 : null
 
           }
-          <Button
+          {role !== "admin" && <Button
                 btnName="Close"
                 btnCategory='secondary'
-                onClick={() => navigate(-1)} />
+                onClick={() => navigate(-1)} />}
         </div>
         
         {(state?.status !== "approved" && state?.status !== "rejected"&&state?.status !== "pending") && <>

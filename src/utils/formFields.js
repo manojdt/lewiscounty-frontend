@@ -1961,7 +1961,7 @@ export const ProgramOutcomesFields = [
     fieldtype: 'text',
     placeholder: 'Add Certificates',
     inputRules: {
-      // required: 'This field is required',
+      required: 'This field is required',
     },
     width: 'w-full',
     icon: 'add',
