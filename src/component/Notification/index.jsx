@@ -32,7 +32,7 @@ export default function Notification({ handleClose }) {
         handleClose && handleClose();
         navigate(
           data.related_data?.type
-            ? `/program-details/${data.related_data.program_id}?request_id=${data.related_data.program_request_id}&status=${data.related_data?.type}`
+            ? `/program-details/${data.related_data.program_id}`
             : `/program-details/${data.related_data.program_id}?request_id=${data.related_data.program_request_id}`
         );
         break;

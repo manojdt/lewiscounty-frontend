@@ -46,22 +46,22 @@ const ProgramActions = ({
   };
 
   const renderRequestStatus = () => {
-    if (!requestStatusParams || role !== "mentor") return null;
+    // if (!requestStatusParams || role !== "mentor") return null;
 
-    return (
-      <div className="py-9">
-        <div
-          className="py-3 px-16 text-white text-[14px] flex justify-center items-center"
-          style={{
-            ...buttonStyles.base,
-            background: reqStatusColor[programdetails?.request_data?.status],
-            width: "30%",
-          }}
-        >
-          {reqStatus[programdetails?.request_data?.status]}
-        </div>
-      </div>
-    );
+    // return (
+    //   <div className="py-9">
+    //     <div
+    //       className="py-3 px-16 text-white text-[14px] flex justify-center items-center"
+    //       style={{
+    //         ...buttonStyles.base,
+    //         background: reqStatusColor[programdetails?.request_data?.status],
+    //         width: "30%",
+    //       }}
+    //     >
+    //       {reqStatus[programdetails?.request_data?.status]}
+    //     </div>
+    //   </div>
+    // );
   };
 
   // Helper to render completed status
@@ -230,7 +230,9 @@ const ProgramActions = ({
 
     return (
       <div className="py-9">
-        {menteeProgramStatus[programdetails.mentee_join_status] ? (
+        {menteeProgramStatus[programdetails.mentee_join_status]  ? (
+          <>
+          {programdetails.mentee_join_status!==menteeProgramStatus.program_join_request_accepted.status&&
           <button
             className="py-3 px-16 text-white text-[14px] flex items-center"
             style={{
@@ -251,7 +253,8 @@ const ProgramActions = ({
             <span className="pl-3">
               {menteeProgramStatus[programdetails.mentee_join_status]?.text}
             </span>
-          </button>
+          </button>}
+          </>
         ) : (
           !menteeNotJoinCondition.includes(programdetails.status) && (
             <button
