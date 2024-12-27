@@ -387,14 +387,14 @@ export default function CertificateMenteeList() {
                 : null
 
           }
-          {role !== "admin" && <Button
+          {role !== "admin" &&state?.status !== "Wating_for_response"&& <Button
                 btnName="Close"
                 btnCategory='secondary'
                 onClick={() => navigate(-1)} />}
         </div>
         
         {(state?.status !== "approved" && state?.status !== "rejected"&&state?.status !== "pending") && <>
-          {role === "mentor" && <div>
+          {role === "mentor"&&state?.status !== "new" && <div>
             <div className='flex gap-6 justify-center align-middle py-16'>
               <Button
                 btnName='Cancel'
