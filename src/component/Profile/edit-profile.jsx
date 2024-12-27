@@ -42,6 +42,7 @@ import MenteePersonalDevelopmentSection from './section-edit/MenteePersonalDevel
 import MenteeMentoringRelationshipDynamicsSection from './section-edit/MenteeMentoringRelationshipDynamicsSection';
 import MenteeLongTermVisionSection from './section-edit/MenteeLongTermVisionSection';
 import { roleBasedSections } from './MyProfile';
+import dayjs from 'dayjs';
 
 const EditProfile = ({ setEditMode }) => {
   const dispatch = useDispatch();
@@ -191,7 +192,7 @@ const EditProfile = ({ setEditMode }) => {
         'email',
         'phone_number',
         'secondary_phone_number',
-        'dob',
+        // 'dob',
         'gender',
         'location',
         'current_education',
@@ -252,6 +253,7 @@ const EditProfile = ({ setEditMode }) => {
           formData.append(field, data[field]);
         }
       });
+      formData.append('dob', dayjs(data.dob).format('YYYY-MM-DD'));
 
       if (data.documents) {
         if (Array.isArray(data.documents)) {
