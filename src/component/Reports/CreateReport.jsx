@@ -433,7 +433,7 @@ export default function CreateReport() {
                                                                                             placeholder={field.placeholder}
                                                                                             {...register(field.name, field.inputRules)}></textarea>
                                                                                         <div className='flex flex-col gap-6 items-center justify-center input-bg w-[4%]' style={{ borderRadius: '3px' }}>
-                                                                                            <img src={TextIcon} alt="TextIcon" />
+                                                                                            <img src={TextIcon} alt="TextIcon"  />
                                                                                             <img src={HTMLIcon} alt="HTMLIcon" />
                                                                                         </div>
                                                                                     </div>
