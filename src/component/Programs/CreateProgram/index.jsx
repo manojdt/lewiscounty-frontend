@@ -547,7 +547,7 @@ export default function CreatePrograms() {
         };
       }
 
-      if (col.field === "level") {
+      if (col.field === "progress") {
         return {
           ...col,
           renderCell: (params) => {

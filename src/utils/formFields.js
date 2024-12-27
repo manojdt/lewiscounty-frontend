@@ -1444,7 +1444,7 @@ export const ProgramInformationFields = [
     label: "Environment Name",
     placeholder: "Enter envirnoment Name",
     inputRules: {
-      // required: 'This field is required',
+      required: 'This field is required',
     },
     width: "width-32",
     for: ["admin"],
@@ -1520,22 +1520,22 @@ export const ProgramInformationFields = [
     label: "Program Description",
     placeholder: "",
     inputRules: {
-      // required: 'This field is required',
+      required: 'This field is required',
     },
     width: "w-full",
     for: ["admin"],
   },
-  {
-    type: "textbox",
-    name: "prerequisites",
-    label: "Prerequisites",
-    placeholder: "Enter prerequisites",
-    // inputRules: {
-    //   required: 'prerequisites is required',
-    // },
-    width: "w-full",
-    for: ["admin"],
-  },
+  // {
+  //   type: "textbox",
+  //   name: "prerequisites",
+  //   label: "Prerequisites",
+  //   placeholder: "Enter prerequisites",
+  //   inputRules: {
+  //     required: 'prerequisites is required',
+  //   },
+  //   width: "w-full",
+  //   for: ["admin"],
+  // },
   {
     type: "dynamicFields",
     name: "sub_programs",
@@ -1561,7 +1561,7 @@ export const ProgramInformationFields = [
         label: "Description",
         placeholder: "Enter Description",
         inputRules: {
-          // required: 'Description is required',
+          required: 'Description is required',
         },
         width: "w-full",
         for: ["admin"],
@@ -1632,7 +1632,7 @@ export const ProgramInformationFields = [
         placeholder: "Select Mentor",
         fieldtype: "text",
         inputRules: {
-          // required: 'This field is required',
+          required: 'This field is required',
         },
         width: "width-32",
         icon: "add",
@@ -1660,7 +1660,7 @@ export const ProgramInformationFields = [
     label: "Program Name",
     placeholder: "Enter Program Name",
     inputRules: {
-      // required: 'This field is required',
+      required: 'This field is required',
     },
     width: "width-32",
     for: ["mentor"],
@@ -1683,7 +1683,7 @@ export const ProgramInformationFields = [
     label: "Session Details",
     placeholder: "",
     inputRules: {
-      // required: 'This field is required',
+      required: 'This field is required',
     },
     width: "w-full",
     for: ["mentor"],
@@ -1694,22 +1694,22 @@ export const ProgramInformationFields = [
     label: "Description",
     placeholder: "",
     inputRules: {
-      // required: 'This field is required',
+      required: 'This field is required',
     },
     width: "w-full",
     for: ["mentor"],
   },
-  {
-    type: "textbox",
-    name: "prerequisites",
-    label: "Prerequisites",
-    placeholder: "Enter prerequisites",
-    // inputRules: {
-    //   required: 'prerequisites is required',
-    // },
-    width: "w-full",
-    for: ["mentor"],
-  },
+  // {
+  //   type: "textbox",
+  //   name: "prerequisites",
+  //   label: "Prerequisites",
+  //   placeholder: "Enter prerequisites",
+  //    inputRules: {
+  //    required: 'prerequisites is required',
+  //   },
+  //   width: "w-full",
+  //   for: ["mentor"],
+  // },
   {
     type: "dropdown",
     name: "course_level",
@@ -1796,7 +1796,7 @@ export const ProgramInformationFields = [
     fieldtype: "number",
     placeholder: "Select Mentee Limits",
     inputRules: {
-      // required: 'This field is required',
+      required: 'This field is required',
     },
     width: "width-32",
     for: ["mentor"],
@@ -1807,7 +1807,7 @@ export const ProgramInformationFields = [
     label: "If you need Group Chat Discussions for this Program",
     placeholder: "Select",
     inputRules: {
-      // required: 'This field is required',
+      required: 'This field is required',
     },
     options: [
       {
@@ -1828,7 +1828,7 @@ export const ProgramInformationFields = [
     label: "If you need Individual chat discussions for this Program",
     placeholder: "Select",
     inputRules: {
-      // required: 'This field is required',
+      required: 'This field is required',
     },
     options: [
       {
@@ -1920,19 +1920,19 @@ export const ProgramInformationFields = [
 ];
 
 export const AboutProgramFields = [
-  {
-    type: "popup-input",
-    name: "goals",
-    label: "Goals",
-    fieldtype: "text",
-    placeholder: "Multiple goals added",
-    // inputRules: {
-    //   required: 'This field is required',
-    // },
-    width: "w-full",
-    icon: "add",
-    for: ["mentor", "admin"],
-  },
+  // {
+  //   type: "popup-input",
+  //   name: "goals",
+  //   label: "Goals",
+  //   fieldtype: "text",
+  //   placeholder: "Multiple goals added",
+  //   inputRules: {
+  //     required: 'This field is required',
+  //   },
+  //   width: "w-full",
+  //   icon: "add",
+  //   for: ["mentor", "admin"],
+  // },
 
   {
     type: "textbox",
@@ -1940,7 +1940,7 @@ export const AboutProgramFields = [
     label: "About Program",
     placeholder: "Enter this about program details",
     inputRules: {
-      // required: 'This field is required',
+      required: 'This field is required',
     },
     width: "w-full",
     for: ["mentor"],
@@ -1966,7 +1966,7 @@ export const AboutProgramFields = [
     fieldtype: "text",
     placeholder: "Multiple Skills added",
     inputRules: {
-      // required: 'This field is required',
+      required: 'This field is required',
     },
     width: "w-full",
     for: ["mentor"],
@@ -2021,7 +2021,7 @@ export const ProgramOutcomesFields = [
     label: "Benefits",
     placeholder: "Enter benefits details",
     inputRules: {
-      // required: 'This field is required',
+      required: 'This field is required',
     },
     width: "w-full",
     for: ["mentor"],
