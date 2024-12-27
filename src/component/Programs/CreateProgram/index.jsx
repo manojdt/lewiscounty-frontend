@@ -914,7 +914,7 @@ export default function CreatePrograms() {
     handleNextStep(data);
     // reset();
   };
-
+console.log("errors", errors);
   useEffect(() => {
     const sub = watch((values) => console.log("values", values));
 
@@ -1383,11 +1383,7 @@ export default function CreatePrograms() {
         >
           <MenuItem
             onClick={(e) =>
-              navigate("/goals", {
-                state: {
-                  id: selectedItem?.id,                 
-                },
-              })
+              navigate(`/view-goal/${selectedItem?.id}`)
             }
             className="!text-[12px]"
           >

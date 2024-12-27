@@ -374,13 +374,13 @@ const Goals = () => {
                             </MenuItem>
                         }
 
-                        {
+                        {/* {
                             params.row.status === 'active' &&
                             <MenuItem onClick={() => handleOpenAction("start")} className='!text-[12px]'>
                                 <img src={StartIcon} alt="EditIcon" className='pr-3 w-[30px]' />
                                 Start
                             </MenuItem>
-                        }
+                        } */}
                         {
                             ["in_progress"].includes(params?.row?.status) &&
                             <MenuItem onClick={() => handleOpenConfirmPopup("complete")} className='!text-[12px]'>
@@ -535,13 +535,13 @@ const Goals = () => {
                             <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
                             View
                         </MenuItem>
-                        {
+                        {/* {
                             (params.row.status === 'active' && role !== "admin") &&
                             <MenuItem onClick={() => handleOpenAction("start")} className='!text-[12px]'>
                                 <img src={StartIcon} alt="EditIcon" className='pr-3 w-[30px]' />
                                 Start
                             </MenuItem>
-                        }
+                        } */}
                         {
                             ((params?.row?.status === "new" || params?.row?.status === "pending") && role !== "admin") &&
                             <MenuItem onClick={handlEditGoal} className='!text-[12px]'>
