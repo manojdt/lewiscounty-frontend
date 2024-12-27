@@ -66,6 +66,7 @@ export const getProfileInfo = createAsyncThunk(
       ? `/user/${data?.id}?follow_id=${data?.follow_id}`
       : `/user/${data?.id}`;
     const myProfile = await api.get(url);
+    console.log(myProfile,"myProfile")
     if (myProfile.status === 200 && myProfile.data) {
       return myProfile.data.mentor || myProfile.data;
     }

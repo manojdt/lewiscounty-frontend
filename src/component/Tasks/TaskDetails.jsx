@@ -123,7 +123,11 @@ export const TaskDetails = () => {
         taskFile.filter((task) => task.row_id === id)?.[0]?.id,
       ]);
     }
+    console.log(id,taskDocs,taskFile)
   };
+useEffect(() => {
+ console.log(taskSolutionDocs,"taskSolutionDocs")
+}, [taskSolutionDocs])
 
   const submitTask = (type = "", formData) => {
     if (type === "draft") {

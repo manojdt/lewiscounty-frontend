@@ -296,19 +296,19 @@ export const getFiles = (files) => {
   const videoExtension = ["mp4", "mov", "avi"];
 
   files?.forEach((fileObj) => {
-    const file = fileObj["0"]; 
+    const file = fileObj["0"]?fileObj["0"]:fileObj; 
     if (!file) return; 
-
-    let url = URL.createObjectURL(file); 
+    let url =file?.id?file?.files: URL.createObjectURL(file); 
     let fileName = file.name.split(".")[0] || "";
     let extension = file.name.split(".").pop() || "";
-
+    let rowId= fileObj?.row_id?fileObj?.row_id:undefined
    
     if (imageExtension.includes(extension.toLowerCase())) {
       allFiles.image.push({
         ...file,
         name: fileName,
         fileurl: url,
+        row_id:rowId
       });
       allFiles.files = true;
     } else if (documentExtension.includes(extension.toLowerCase())) {
@@ -316,6 +316,7 @@ export const getFiles = (files) => {
         ...file,
         name: fileName,
         fileurl: url,
+        row_id:rowId
       });
       allFiles.files = true;
     } else if (videoExtension.includes(extension.toLowerCase())) {
@@ -323,11 +324,12 @@ export const getFiles = (files) => {
         ...file,
         name: fileName,
         fileurl: url,
+        row_id:rowId
       });
       allFiles.files = true;
     }
   });
-
+console.log(allFiles)
   return allFiles;
 }
 
