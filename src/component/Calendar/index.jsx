@@ -3,7 +3,7 @@ import InlineCalendar from '../../shared/Calendar/InlineCalendar';
 import './calendar.css';
 import PlusWhiteIcon from '../../assets/icons/PlusWhite.svg';
 import CalendarMain from '../Calendar/CalendarMain';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   getCalendarEvents,
@@ -12,6 +12,7 @@ import {
 import { Backdrop, CircularProgress } from '@mui/material';
 
 export default function Scheduler() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { events, filteredEvents, loading } = useSelector(
@@ -157,7 +158,12 @@ export default function Scheduler() {
                     className={`action-btn flex justify-between cursor-pointer ${
                       actionActionBtn === calendarevent.key ? 'active' : ''
                     }`}
-                    onClick={() => setActionActionBtn(calendarevent.key)}
+                    onClick={() => {
+                      const currentParams = new URLSearchParams(searchParams);
+                      currentParams.set('status', calendarevent.key);
+                      setSearchParams(currentParams);
+                      setActionActionBtn(calendarevent.key);
+                    }}
                   >
                     <div className='flex gap-2 items-center'>
                       <div

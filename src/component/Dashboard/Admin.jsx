@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import UserImage from "../../assets/images/user.jpg";
-import { activityStatusColor, empty, programActionStatus, programMenus } from '../../utils/constant';
+import UserImage from "../../assets/icons/user-icon.svg";
+import { activityStatusColor, empty, programActionStatus, programMenus, statusAction } from '../../utils/constant';
 
 import RightArrow from '../../assets/icons/rightArrow.svg'
 import BlueStarIcon from '../../assets/icons/bluefilledStar.svg'
@@ -15,7 +15,7 @@ import ProgramPerformance from './ProgramPerformance';
 import ReportsInfo from './Admin/ReportsInfo';
 import Tooltip from '../../shared/Tooltip';
 import { programFeeds } from '../../utils/mock';
-import { chartProgramList } from '../../services/userprograms';
+import { chartProgramList, getProgramCounts } from '../../services/userprograms';
 import MemberRequest from './MemberRequest';
 import protectedApi from "../../services/api";
 
@@ -68,8 +68,30 @@ export default function Admin() {
       };
       useEffect(() => {
         fetchMembersCount();
+          dispatch(getProgramCounts())
       }, []); 
+      useEffect(() => {
 
+        const totalCount = userpragrams.statusCounts
+        if (Object.keys(totalCount).length) {
+            const programMenu = [...programMenus('dashboard')].filter(men => men.for.includes(role)).map(menu => {
+
+                if (menu.status === 'all') {
+                    return { ...menu, count: userpragrams.totalPrograms}
+                }
+               
+                // Admin Response Count
+                if (role === 'admin') {
+                    return { ...menu, count: totalCount[menu.adminStatus] }
+                }
+
+                return menu
+
+            })
+            setProgramMenusList(programMenu)
+        }
+
+    }, [userpragrams])
     const data =
         [
             { title: 'Ongoing Programs', value: 40, color: '#1D5BBF' },
@@ -132,12 +154,12 @@ export default function Admin() {
         };
     }
   
-    useEffect(() => {
-        const programMenu = [...programMenus('dashboard')].filter(men => men.for.includes(role)).map(menu => {
-            return { ...menu, count: 0 }
-        })
-        setProgramMenusList(programMenu)
-    }, [userpragrams])
+    // useEffect(() => {
+    //     const programMenu = [...programMenus('dashboard')].filter(men => men.for.includes(role)).map(menu => {
+    //         return { ...menu, count: 0 }
+    //     })
+    //     setProgramMenusList(programMenu)
+    // }, [userpragrams])
 
     useEffect(() => {
         chartData()
@@ -164,7 +186,7 @@ export default function Admin() {
                         <div className="flex flex-col items-center pb-10 pt-14 border-b-2">
                             <img className="w-24 h-24 mb-3 rounded-full shadow-lg object-cover" src={UserImage} alt="User logo" />
                             <h5 className="mb-1 text-xl font-medium text-gray-900 ">{userInfo?.data?.first_name} {userInfo?.data?.last_name}</h5>
-                            <span className="text-sm text-gray-500 " style={{ textTransform: 'capitalize' }}>{userInfo.data.role} | Teaching Professional</span>
+                            <span className="text-sm text-gray-500 " style={{ textTransform: 'capitalize' }}>{userInfo.data.role} | {role === 'mentee'?"Student":role === 'mentor'?"Teaching Professional":role === 'admin'?"Organizational Admin":""}</span>
                         </div>
 
                         <ul className="flex flex-col gap-2 p-4 md:p-0 mt-4 font-medium">

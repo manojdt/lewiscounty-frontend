@@ -72,7 +72,7 @@ export default function CreateMeeting() {
         repeat_time: getEvent.interval || '',
         repeat_type: getEvent.req || '',
       });
-      setSelectedDays(getEvent.byday);
+      setSelectedDays(getEvent.byday ? getEvent.byday.split(',') : []);
     }
   }, [getEvent, id]);
 
@@ -126,11 +126,43 @@ export default function CreateMeeting() {
       // Object.keys(getEvent).forEach((key) => {
       //   setValue(key, getEvent[key]);
       // });
-      reset({
-        ...getEvent,
+      const resetFields = {
+        id: getEvent.id || '',
+        date: getEvent.date || '',
+        created_by: getEvent.created_by || '',
+        updated_by: getEvent.updated_by || '',
+        attendees: getEvent.attendees?.join(', ') || '', // Convert array to comma-separated string
+        title: getEvent.title || '',
+        start_date: getEvent.start_date || '',
+        date_category: getEvent.date_category || '',
+        start: getEvent.start || '',
+        end: getEvent.end || '',
+        end_date: getEvent.end_date || '',
+        notification_time: getEvent.notification_time || '',
+        notification_type: getEvent.notification_type || '',
+        guests: getEvent.guests?.join(', ') || '', // Convert array to comma-separated string
+        meet: getEvent.meet || '',
+        // status: getEvent.status || '',
+        calendar_event_id: getEvent.calendar_event_id || '',
+        is_deleted: getEvent.is_deleted || false,
+        meeting_type: getEvent.meeting_type || '',
+        meeting_active: getEvent.meeting_active || false,
+        req: getEvent.req || '',
+        interval: getEvent.interval || '',
+        byday: getEvent.byday || '',
+        recurrence: getEvent.recurrence || '',
+        created_at: getEvent.created_at || '',
+        updated_at: getEvent.updated_at || '',
+        mentee: getEvent.attendees?.join(','), // Convert mentee field appropriately if needed
+      };
 
-        mentee: getEvent.attendees?.join(','),
-      });
+      reset(resetFields);
+
+      // reset({
+      //   ...getEvent,
+
+      //   mentee: getEvent.attendees?.join(','),
+      // });
       setDateFormat({
         ...dateFormat,
         start: formatTimeToDate(getEvent?.start),
@@ -143,8 +175,6 @@ export default function CreateMeeting() {
       }
     }
   }, [getEvent, reset]);
-  console.log(dateFormat);
-  console.log(getEvent);
 
   const timeFormat = (utcTimestamp) => {
     let timeString = '';
@@ -163,16 +193,11 @@ export default function CreateMeeting() {
 
     const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
     const dayOfWeekStart = startOfMonth.getDay();
-    // console.log(startOfMonth, dayOfWeekStart);
 
     const adjustedDate = currentDayOfMonth + dayOfWeekStart;
-    // console.log(adjustedDate);
 
-    // Determine the week number
     const weekNumber = Math.ceil(adjustedDate / 7);
-    // console.log(weekNumber);
 
-    // Map day index to day name
     const daysOfWeek = [
       'Sunday',
       'Monday',
@@ -183,7 +208,6 @@ export default function CreateMeeting() {
       'Saturday',
     ];
     const currentDayName = daysOfWeek[currentDayOfWeek];
-    // console.log(currentDayName);
 
     return { weekNumber, currentDayName };
   }
@@ -229,6 +253,8 @@ export default function CreateMeeting() {
       });
     }
 
+    const validSelectedDays = Array.isArray(selectedDays) ? selectedDays : [];
+
     let apiData = {
       ...data,
       start: timeFormat(data.start),
@@ -240,16 +266,23 @@ export default function CreateMeeting() {
         !customSelect.end_date || datePopup.type === 'do_not_repeat'
           ? todayDate(customSelect.start_date)
           : todayDate(customSelect.end_date),
-      byday: selectedDays.join(','),
+      byday: validSelectedDays.join(','),
       req: customSelect.repeat_type,
       interval: customSelect.repeat_time,
       monthly_day: monthlyOn,
     };
 
-    // console.log(apiData);
+    console.log(data.event);
 
-    if (apiData && eventSelect && id) {
-      return dispatch(updateCalendarEvent({ apiData, eventSelect, id }));
+    if (apiData && id) {
+      return dispatch(
+        updateCalendarEvent({
+          apiData,
+          eventSelect: data.event,
+          id,
+          status: searchParams.get('status'),
+        })
+      );
     }
 
     return dispatch(createCalendarEvent(apiData));
@@ -269,6 +302,8 @@ export default function CreateMeeting() {
       });
     }
 
+    const validSelectedDays = Array.isArray(selectedDays) ? selectedDays : [];
+
     let apiData = {
       ...data,
       start: timeFormat(data.start),
@@ -281,17 +316,24 @@ export default function CreateMeeting() {
         !customSelect.end_date || datePopup.type === 'do_not_repeat'
           ? todayDate(customSelect.start_date)
           : todayDate(customSelect.end_date),
-      byday: selectedDays.join(','),
+      byday: validSelectedDays.join(','),
       req: customSelect.repeat_type,
       interval: customSelect.repeat_time,
       monthly_day: monthlyOn,
     };
 
-    // console.log(apiData);
+    console.log(apiData);
 
-    // if (apiData && eventSelect && id) {
-    //   dispatch(updateCalendarEvent({ apiData, eventSelect, id }));
-    // }
+    if (apiData && eventSelect && id) {
+      dispatch(
+        updateCalendarEvent({
+          apiData,
+          eventSelect,
+          id,
+          status: searchParams.get('status'),
+        })
+      );
+    }
 
     dispatch(createCalendarEvent(apiData));
   };
@@ -304,7 +346,7 @@ export default function CreateMeeting() {
 
   useEffect(() => {
     if (location.pathname === '/edit-meeting' && id) {
-      dispatch(getCalendarEvent(id));
+      dispatch(getCalendarEvent({ id, status: searchParams.get('status') }));
     }
   }, [id]);
 
@@ -562,7 +604,7 @@ export default function CreateMeeting() {
                             start_date: selectedStartDate,
                             end_date:
                               prevState.end_date &&
-                                prevState.end_date < selectedStartDate
+                              prevState.end_date < selectedStartDate
                                 ? selectedStartDate
                                 : prevState.end_date,
                           }));
@@ -694,10 +736,11 @@ export default function CreateMeeting() {
                             {daysOfWeek.map((day, index) => (
                               <label
                                 key={day.key}
-                                className={`w-8 h-8 flex items-center justify-center rounded-full font-semibold text-xs cursor-pointer ${selectedDays.includes(day.key)
+                                className={`w-8 h-8 flex items-center justify-center rounded-full font-semibold text-xs cursor-pointer ${
+                                  selectedDays.includes(day.key)
                                     ? 'bg-blue-500 text-white'
                                     : 'bg-gray-300'
-                                  }`}
+                                }`}
                               >
                                 <input
                                   type='checkbox'
@@ -782,16 +825,20 @@ export default function CreateMeeting() {
           onClick={() => setCreateMeetingLoading(false)}
         >
           <div className='px-5 py-1 flex justify-center items-center'>
-            <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
-              style={{ background: '#fff', borderRadius: '10px' }}>
-              <img src={SuccessTik} alt="SuccessTik" />
-              <p className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+            <div
+              className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+              style={{ background: '#fff', borderRadius: '10px' }}
+            >
+              <img src={SuccessTik} alt='SuccessTik' />
+              <p
+                className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
                 style={{
-                  fontWeight: 600
+                  fontWeight: 600,
                 }}
-              >Meeting created successfully to Mentees</p>
+              >
+                Meeting created successfully to Mentees
+              </p>
             </div>
-
           </div>
         </Backdrop>
 
@@ -814,6 +861,14 @@ export default function CreateMeeting() {
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className='flex flex-wrap gap-4'>
               {CreateMeetingFields.map((field, index) => {
+                if (
+                  field.name === 'event' &&
+                  (location.pathname === '/create-meeting' ||
+                    searchParams.get('status') === 'draft')
+                ) {
+                  return null;
+                }
+
                 const dateField =
                   field.type === 'time'
                     ? register(field.name, field.inputRules)
@@ -825,11 +880,12 @@ export default function CreateMeeting() {
 
                 return (
                   <div
-                    className={`relative mb-6  ${getWindowDimensions().width <= 1536 &&
-                        field.width === 'width-82'
+                    className={`relative mb-6  ${
+                      getWindowDimensions().width <= 1536 &&
+                      field.width === 'width-82'
                         ? 'w-[81%]'
                         : field.width
-                      }`}
+                    }`}
                     key={index}
                   >
                     <label
@@ -1007,33 +1063,35 @@ export default function CreateMeeting() {
                 );
               })}
             </div>
-            {location.pathname === '/edit-meeting' && id && (
-              <div className='flex flex-col'>
-                <label className='text-xs mb-1 font-semibold' htmlFor=''>
-                  Event
-                </label>
-                <select
-                  className='w-[500px] border-none px-3 py-[0.32rem] leading-[2.15] input-bg 
+            {/* {location.pathname === '/edit-meeting' &&
+              id &&
+              searchParams.get('status') !== 'draft' && (
+                <div className='flex flex-col'>
+                  <label className='text-xs mb-1 font-semibold' htmlFor=''>
+                    Event
+                  </label>
+                  <select
+                    className='w-[500px] border-none px-3 py-[0.32rem] leading-[2.15] input-bg 
                                                                         focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[50px]'
-                  style={{
-                    color: '#232323',
-                    borderRadius: '3px',
-                    borderRight: '16px solid transparent',
-                  }}
-                  name='Event'
-                  onChange={(e) => {
-                    setEventSelect(e.target.value);
-                  }}
-                >
-                  <option value=''>Select</option>
-                  <option value='all_event'>All Event</option>
-                  <option value='this_event'>This Event</option>
-                  <option value='this_event_and_following_events'>
-                    This Event And Following Events
-                  </option>
-                </select>
-              </div>
-            )}
+                    style={{
+                      color: '#232323',
+                      borderRadius: '3px',
+                      borderRight: '16px solid transparent',
+                    }}
+                    name='Event'
+                    onChange={(e) => {
+                      setEventSelect(e.target.value);
+                    }}
+                  >
+                    <option value=''>Select</option>
+                    <option value='all_event'>All Event</option>
+                    <option value='this_event'>This Event</option>
+                    <option value='this_event_and_following_events'>
+                      This Event And Following Events
+                    </option>
+                  </select>
+                </div>
+              )} */}
             <div className='flex gap-6 justify-center align-middle'>
               <Button
                 btnName='Cancel'
@@ -1045,17 +1103,20 @@ export default function CreateMeeting() {
                 btnCategory='secondary'
                 onClick={() => navigate('/calendar')}
               />
-              <Button
-                btnName='Draft'
-                btnCls='w-[170px]'
-                btnStyle={{
-                  background: 'rgba(217, 228, 242, 1)',
-                  color: 'rgba(29, 91, 191, 1)',
-                  border: 'none',
-                }}
-                btnCategory='secondary'
-                onClick={handleSubmit(onDraftSubmit)}
-              />
+              {(searchParams.get('status') === 'draft' ||
+                location.pathname === '/create-meeting') && (
+                <Button
+                  btnName='Draft'
+                  btnCls='w-[170px]'
+                  btnStyle={{
+                    background: 'rgba(217, 228, 242, 1)',
+                    color: 'rgba(29, 91, 191, 1)',
+                    border: 'none',
+                  }}
+                  btnCategory='secondary'
+                  onClick={handleSubmit(onDraftSubmit)}
+                />
+              )}
               <Button
                 btnType='submit'
                 btnCls='w-[170px]'

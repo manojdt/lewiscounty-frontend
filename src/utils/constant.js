@@ -153,6 +153,7 @@ export const requestStatus = {
   reportupdate: 'reportupdated',
   cancel: 'cancelled',
   autoapproval: 'autoapproval',
+  testimonialupdate: 'testimonialupdated',
 };
 
 export const profileStatus = {
@@ -248,6 +249,17 @@ export const goalRequestStatus = {
   in_progress: 'In Progress',
   completed: 'Completed',
 };
+export const goalHeadingStatus = {
+  inactive: 'Inactive Goal',
+  active: 'Active Goal',
+  new: 'New Goal',
+  pending: 'Pending Goal',
+  accept: 'Accept Goal',
+  decline: 'Declined Goal',
+  cancel: 'Cancelled Goal',
+  in_progress: 'Goal In Progress',
+  completed: 'Completed Goal',
+};
 
 export const goalRequestColor = {
   inactive: {
@@ -305,12 +317,12 @@ export const certificateText = {
 
 export const resultText = {
   Pass: 'Pass',
-  Fail: 'fail',
+  Fail: 'No Pass',
 };
 
 export const certificateResultText = {
   pass: 'Pass',
-  fail: 'Fail',
+  fail: 'No Pass',
 };
 
 export const empty = [
@@ -385,6 +397,10 @@ export const requestStatusText = {
   Wating_for_response: 'Wating for Response',
   active: 'Active',
   deactivated: 'Deactivated',
+  rejected: 'Rejected',
+  approved: 'Approved',
+  in_progress: 'In Progress',
+  cancelled: 'Cancelled'
 };
 export const certificateRequestStatusText = {
   new: 'New',
@@ -395,16 +411,18 @@ export const certificateRequestStatusText = {
   Wating_for_response: 'Wating for your Response',
   active: 'Active',
   deactivated: 'Deactivated',
+  approved: 'Approved',
+  rejected: 'Rejected',
 };
 export const programStatusText = {
-  inprogress: "Ongoing",
-  completed: "Completed",
-  cancelled: "Cancelled",
-  new_program_request_rejected: "Rejected",
-  yettojoin: "Yet to Launch",
-  yettostart: "Yet to Start",
-  draft: "Draft",
-  yettoapprove: "Waiting for Approval",
+  inprogress: 'Ongoing',
+  completed: 'Completed',
+  cancelled: 'Cancelled',
+  new_program_request_rejected: 'Rejected',
+  yettojoin: 'Yet to Launch',
+  yettostart: 'Yet to Start',
+  draft: 'Draft',
+  yettoapprove: 'Waiting for Approval',
 };
 
 export const programStatusColor = {
@@ -424,7 +442,7 @@ export const programStatusColor = {
     bgColor: 'rgba(255, 231, 231, 1)',
     color: 'rgba(224, 56, 45, 1)',
   },
- 
+
   draft: {
     bgColor: 'rgba(207, 225, 255, 1)',
     color: 'rgba(29, 91, 191, 1)',
@@ -438,7 +456,7 @@ export const programStatusColor = {
     color: 'rgba(224, 56, 45, 1)',
   },
   inprogress: {
-    bgColor: 'rgba(235, 255, 243, 1)',
+    bgColor: '#ffead1',
     color: '#ffb155',
   },
 };
@@ -476,6 +494,26 @@ export const requestStatusColor = {
     bgColor: 'rgba(207, 225, 255, 1)',
     color: 'rgba(29, 91, 191, 1)',
   },
+  review: {
+    bgColor: 'rgba(207, 225, 255, 1)',
+    color: 'rgba(29, 91, 191, 1)',
+  },
+  rejected: {
+    bgColor: 'rgba(255, 231, 231, 1)',
+    color: 'rgba(224, 56, 45, 1)',
+  },
+  approved: {
+    bgColor: 'rgba(235, 255, 243, 1)',
+    color: 'rgba(22, 182, 129, 1)',
+  },
+  in_progress: {
+    bgColor: 'rgba(255, 242, 231, 1)',
+    color: 'rgba(255, 118, 0, 1)',
+  },
+  cancelled: {
+    bgColor: 'rgba(255, 231, 231, 1)',
+    color: 'rgba(224, 56, 45, 1)',
+  }
 };
 
 export const memberStatusColor = {
@@ -497,6 +535,55 @@ export const taskStatusText = {
   newtask: 'New',
   waiting_for_approval: 'Waiting',
   completed: 'Completed',
+};
+
+export const ticketStatusText = {
+  all: 'All',
+  new: 'New',
+  pending: 'Pending',
+  inprogress: 'In_Progress',
+  closed: 'Closed',
+  reject: 'Reject',
+};
+
+// STATUS_CHOICES = [
+//   ('new', 'New'),
+//   ('in_progress', 'In Progress'),
+//   ('closed', 'Closed'),
+//   ('rejected', 'Rejected'),
+//   ('pending', 'Pending'),
+//   ('reopened', 'Reopened'),
+// ];
+
+export const TicketStatusColor = {
+  all: {
+    color: 'rgba(255, 212, 27, 1)',
+    bg: 'rgba(255, 247, 216, 1)',
+  },
+  rejected: {
+    color: 'rgba(224, 56, 45, 1)',
+    bg: 'rgba(255, 231, 231, 1)',
+  },
+  pending: {
+    color: 'rgba(255, 213, 0, 1)',
+    bg: 'rgba(255, 251, 233, 1)',
+  },
+  in_progress: {
+    color: '#FF7600',
+    bg: '#FFF2E7',
+  },
+  closed: {
+    color: 'rgba(255, 213, 0, 1)',
+    bg: 'rgba(255, 251, 233, 1)',
+  },
+  new: {
+    color: 'rgba(29, 91, 191, 1)',
+    bg: 'rgba(207, 225, 255, 1)',
+  },
+  resolved: {
+    color: '#16B681',
+    bg: '#EBFFF3',
+  },
 };
 
 export const taskStatusColor = {
@@ -551,6 +638,18 @@ export const reportStatusColor = {
     color: 'rgba(224, 56, 45, 1)',
     bg: 'rgba(255, 231, 231, 1)',
   },
+  deleted: {
+    color: 'rgba(224, 56, 45, 1)',
+    bg: 'rgba(255, 231, 231, 1)',
+  },
+  rejected: {
+    color: 'rgba(224, 56, 45, 1)',
+    bg: 'rgba(255, 231, 231, 1)',
+  },
+  approved: {
+    color: 'rgba(22, 182, 129, 1)',
+    bg: 'rgba(235, 255, 243, 1)',
+  },
 };
 
 export const reportStatus = {
@@ -559,6 +658,9 @@ export const reportStatus = {
   cancel: 'Cancel',
   draft: 'Draft',
   new: 'New',
+  deleted: 'Deleted',
+  rejected: 'Rejected',
+  approved: 'Approved',
 };
 
 export const reportAllStatus = {
@@ -607,6 +709,7 @@ export const programActionStatus = {
   draft: 'draft',
   reschedule: 'reschedule',
   program_join_request_accepted: 'program_join_request_accepted',
+  program_assign: 'assign_program',
 };
 
 export const pipeUrls = {
@@ -637,6 +740,7 @@ export const programFilterUrls = {
   learning: `?type=${programActionStatus.learning}`,
   bookmark: '?is_bookmark=true',
   draft: `?type=${programActionStatus.draft}`,
+  programAssign: `?type=${programActionStatus.program_assign}`,
 };
 
 export const menteeCountStatus = {
@@ -650,112 +754,119 @@ export const menteeCountStatus = {
 };
 
 export const programMenus = (page = 'dashboard') => {
-  const pipeUrl = page === 'program' ? pipeUrls.programs : pipeUrls.dashboard
-  return [{
-    name: "All Programs",
-    count: 0,
-    page: pipeUrls.programs,
-    for: ['mentor', 'mentee', 'admin'],
-    mentorStatus: 'all',
-    menteeStatus: 'allprogram',
-    status: 'all'
-  },
-  {
-    name: "Active Programs",
-    count: 0,
-    page: `${pipeUrl}${programFilterUrls.planned}`,
-    for: ['admin', 'mentor', 'mentee'],
-    mentorStatus: programActionStatus.yettojoin,
-    menteeStatus: 'planned',
-    status: programActionStatus.yettojoin
-  },
-  {
-    name: "Recently Joined Programs",
-    count: 0,
-    page: `${pipeUrl}${programFilterUrls.yettostart}`,
-    for: ['mentor', 'admin', 'mentee'],
-    mentorStatus: programActionStatus.yettostart,
-    menteeStatus: 'recently_joined',
-    status: programActionStatus.yettostart
-  },
-  {
-    name: "Ongoing Programs",
-    count: 0,
-    page: `${pipeUrl}${programFilterUrls.inprogress}`,
-    for: ['mentor', 'admin', 'mentee'],
-    mentorStatus: programActionStatus.inprogress,
-    menteeStatus: 'ongoing',
-    status: programActionStatus.inprogress
-  },
-  // {
-  //   name: "Curated Programs",
-  //   count: 0,
-  //   page: `${pipeUrl}${programFilterUrls.yettojoin}`,
-  //   for: ['mentor', 'mentee'],
-  //   status: programActionStatus.yettojoin
-  // },
-  {
-    name: "Drafted Programs",
-    count: 0,
-    page: `${pipeUrl}${programFilterUrls.draft}`,
-    for: ['mentor'],
-    mentorStatus: 'draft',
-    menteeStatus: '',
-    status: programActionStatus.draft
-  },
-  // {
-  //   name: "My Learning Programs",
-  //   count: 0,
-  //   page: `${pipeUrl}${programFilterUrls.learning}`,
-  //   for: ['mentee'],
-  //   mentorStatus: '',
-  //   menteeStatus: 'learning',
-  //   status: programActionStatus.learning
-  // },
+  const pipeUrl = page === 'program' ? pipeUrls.programs : pipeUrls.dashboard;
+  return [
+    {
+      name: 'All Programs',
+      count: 0,
+      page: pipeUrls.programs,
+      for: ['mentor', 'mentee', 'admin'],
+      mentorStatus: 'all',
+      menteeStatus: 'allprogram',
+      adminStatus:'all',
+      status: 'all',
+    },
+    {
+      name: 'Active Programs',
+      count: 0,
+      page: `${pipeUrl}${programFilterUrls.yettojoin}`,
+      for: ['admin', 'mentor', 'mentee'],
+      mentorStatus: programActionStatus.yettojoin,
+      adminStatus:programActionStatus.yettojoin,
+      menteeStatus: 'planned',
+      status: programActionStatus.yettojoin,
+    },
+    {
+      name: 'Recently Joined Programs',
+      count: 0,
+      page: `${pipeUrl}${programFilterUrls.yettostart}`,
+      for: ['mentor', 'admin', 'mentee'],
+      mentorStatus: programActionStatus.yettostart,
+      adminStatus:programActionStatus.yettostart,
+      menteeStatus: 'recently_joined',
+      status: programActionStatus.yettostart,
+    },
+    {
+      name: 'Ongoing Programs',
+      count: 0,
+      page: `${pipeUrl}${programFilterUrls.inprogress}`,
+      for: ['mentor', 'admin', 'mentee'],
+      mentorStatus: programActionStatus.inprogress,
+      adminStatus:programActionStatus.inprogress,
+      menteeStatus: 'ongoing',
+      status: programActionStatus.inprogress,
+    },
+    {
+      name: 'Assign Programs',
+      count: 0,
+      page: `${pipeUrl}${programFilterUrls.programAssign}`,
+      for: ['mentor', 'admin'],
+      mentorStatus: programActionStatus.program_assign,
+      adminStatus:programActionStatus.program_assign,
+      status: programActionStatus.program_assign,
+    },
+    {
+      name: 'Drafted Programs',
+      count: 0,
+      page: `${pipeUrl}${programFilterUrls.draft}`,
+      for: ['mentor'],
+      mentorStatus: 'draft',
+      menteeStatus: '',
+      status: programActionStatus.draft,
+    },
+    // {
+    //   name: "My Learning Programs",
+    //   count: 0,
+    //   page: `${pipeUrl}${programFilterUrls.learning}`,
+    //   for: ['mentee'],
+    //   mentorStatus: '',
+    //   menteeStatus: 'learning',
+    //   status: programActionStatus.learning
+    // },
 
-  {
-    name: "Bookmarked Programs",
-    count: 0,
-    page: `${pipeUrl}${programFilterUrls.bookmark}`,
-    for: ['mentor', 'mentee'],
-    mentorStatus: 'bookmarked',
-    menteeStatus: 'bookmark',
-    status: programActionStatus.bookmark
-  },
-  {
-    name: "Rescheduled Programs",
-    count: 0,
-    page: `${pipeUrl}${programFilterUrls.reschedule}`,
-    for: ['mentor', 'mentee'],
-    mentorStatus: 'reschedule',
-    menteeStatus: 'reschedule',
-    status: programActionStatus.reschedule
-  },
-  {
-    name: "Completed Programs",
-    count: 0,
-    page: `${pipeUrl}${programFilterUrls.completed}`,
-    for: ['mentor', 'mentee'],
-    mentorStatus: 'completed',
-    menteeStatus: 'completed',
-    status: programActionStatus.completed
-  },
-  {
-    name: "Cancelled Programs",
-    count: 0,
-    page: `${pipeUrl}${programFilterUrls.cancelled}`,
-    for: ['mentee', 'mentor'],
-    mentorStatus: 'cancelled',
-    menteeStatus: 'cancel',
-    status: programActionStatus.cancelled
-  }
-  ]
-}
+    {
+      name: 'Bookmarked Programs',
+      count: 0,
+      page: `${pipeUrl}${programFilterUrls.bookmark}`,
+      for: ['mentor', 'mentee'],
+      mentorStatus: 'bookmarked',
+      menteeStatus: 'bookmark',
+      status: programActionStatus.bookmark,
+    },
+    {
+      name: 'Rescheduled Programs',
+      count: 0,
+      page: `${pipeUrl}${programFilterUrls.reschedule}`,
+      for: ['mentor', 'mentee'],
+      mentorStatus: 'reschedule',
+      menteeStatus: 'reschedule',
+      status: programActionStatus.reschedule,
+    },
+    {
+      name: 'Completed Programs',
+      count: 0,
+      page: `${pipeUrl}${programFilterUrls.completed}`,
+      for: ['mentor', 'mentee'],
+      mentorStatus: 'completed',
+      menteeStatus: 'completed',
+      status: programActionStatus.completed,
+    },
+    {
+      name: 'Cancelled Programs',
+      count: 0,
+      page: `${pipeUrl}${programFilterUrls.cancelled}`,
+      for: ['mentee', 'mentor'],
+      mentorStatus: 'cancelled',
+      menteeStatus: 'cancel',
+      status: programActionStatus.cancelled,
+    },
+  ];
+};
 
 export const RequestStatusArray = [
   {
     key: 'program_request',
-    name: 'Program Request',
+    name: 'Program Requests',
   },
   {
     key: 'member_join_request',
@@ -798,7 +909,7 @@ export const RequestStatusArray = [
 export const RequestStatus = {
   programRequest: {
     key: 'program_request',
-    name: 'Program Request',
+    name: 'Program Requests',
   },
   memberJoinRequest: {
     key: 'member_join_request',
@@ -836,29 +947,23 @@ export const RequestStatus = {
     key: 'new_goals_request',
     name: 'New Goals Requests',
   },
+  extendedRequests: {
+    key: 'extended_request',
+    name: 'Extended Requests',
+  },
+  reOpenRequests: {
+    key: 're_open_request',
+    name: 'Re-open Requests',
+  },
 };
 
-export const requestOverview = [
+export const myRequestOverview = [
   {
     name: 'Program Requests',
     key: RequestStatus.programRequest.key,
     count: 0,
     status: RequestStatus.programRequest.key,
     for: ['admin', 'mentor', 'mentee'],
-  },
-  {
-    name: 'Member Join Requests',
-    key: RequestStatus.memberJoinRequest,
-    count: 0,
-    status: RequestStatus.memberJoinRequest.key,
-    for: ['admin'],
-  },
-  {
-    name: 'Goal Requests',
-    key: RequestStatus.goalRequest,
-    count: 0,
-    status: RequestStatus.goalRequest.key,
-    for: ['admin'],
   },
   {
     name: 'Resource Access Requests',
@@ -868,18 +973,11 @@ export const requestOverview = [
     for: ['admin', 'mentor'],
   },
   {
-    name: 'Technical Support Requests',
-    key: RequestStatus.technicalSupportRequest,
+    name: 'New Goals Requests',
+    key: RequestStatus.newGoalsRequests.key,
     count: 0,
-    status: RequestStatus.technicalSupportRequest.key,
-    for: ['admin', 'mentor'],
-  },
-  {
-    name: 'Testimonial Requests',
-    key: RequestStatus.testimonicalRequest,
-    count: 0,
-    status: RequestStatus.testimonicalRequest.key,
-    for: ['admin', 'mentor'],
+    status: RequestStatus.newGoalsRequests.key,
+    for: ['mentee', 'mentor'],
   },
   {
     name: 'Certificate Requests',
@@ -896,18 +994,87 @@ export const requestOverview = [
     for: ['admin', 'mentor'],
   },
   {
+    name: 'Testimonial Requests',
+    key: RequestStatus.testimonicalRequest,
+    count: 0,
+    status: RequestStatus.testimonicalRequest.key,
+    for: ['admin', 'mentor'],
+  },
+  // {
+  //   name: 'Technical Support Requests',
+  //   key: RequestStatus.technicalSupportRequest,
+  //   count: 0,
+  //   status: RequestStatus.technicalSupportRequest.key,
+  //   for: ['admin'],
+  // },
+  {
+    name: 'Member Join Requests',
+    key: RequestStatus.memberJoinRequest,
+    count: 0,
+    status: RequestStatus.memberJoinRequest.key,
+    for: ['admin'],
+  },
+  {
+    name: 'Goal Requests',
+    key: RequestStatus.goalRequest,
+    count: 0,
+    status: RequestStatus.goalRequest.key,
+    for: ['admin'],
+  },
+  {
+    name: 'Extended Requests',
+    key: RequestStatus.extendedRequests,
+    count: 0,
+    status: RequestStatus.extendedRequests.key,
+    for: ['admin', 'mentor'],
+  },
+  {
+    name: 'Re-open Requests',
+    key: RequestStatus.reOpenRequests,
+    count: 0,
+    status: RequestStatus.reOpenRequests.key,
+    for: ['mentor'],
+  },
+  {
     name: 'Learning Access Requests',
     key: RequestStatus.learningAccessRequests.key,
     count: 0,
     status: RequestStatus.learningAccessRequests.key,
     for: ['mentee'],
   },
+];
+
+export const menteesRequestOverview = [
   {
-    name: 'New Goals Requests',
-    key: RequestStatus.newGoalsRequests.key,
+    name: 'Program Requests',
+    key: RequestStatus.programRequest.key,
     count: 0,
-    status: RequestStatus.newGoalsRequests.key,
-    for: ['mentee'],
+    status: RequestStatus.programRequest.key,
+    for: ['mentor', 'admin'],
+  },
+  {
+    name: 'Resource Access Requests',
+    key: RequestStatus.resourceAccessRequest,
+    count: 0,
+    status: RequestStatus.resourceAccessRequest.key,
+    for: ['mentor', 'admin'],
+  },
+  {
+    name: 'Goal Requests',
+    key: RequestStatus.goalRequest,
+    count: 0,
+    status: RequestStatus.goalRequest.key,
+    for: ['mentor', 'admin'],
+  },
+];
+
+export const adminRequestOverview = [
+  {
+    name: 'Mentor Changes request',
+    key: RequestStatus.programRequest.key,
+    count: 0,
+    status: RequestStatus.programRequest.key,
+    for: ['mentor'],
   },
 ];
 
@@ -959,6 +1126,16 @@ export const TaskApiStatus = {
 export const ProgramStatusInCard = {
   inprogress: {
     text: 'Ongoing',
+    color: '#FF8A00',
+    bg: '#FFE3C2',
+  },
+  yettojoin: {
+    text: 'Start',
+    color: '#FF8A00',
+    bg: '#FFE3C2',
+  },
+  yettoapprove: {
+    text: 'Waiting for Approval',
     color: '#FF8A00',
     bg: '#FFE3C2',
   },
@@ -1150,7 +1327,7 @@ export const MentorMenteeProfileViewList = (hide) => {
     },
     {
       label: 'Professional Bio',
-      value: 'professional_bio',
+      value: 'Professional_Bio',
       grid: 12,
     },
     {
@@ -1166,4 +1343,77 @@ export const followBtnText = {
   new: 'Follow',
   waiting: 'Requested',
   accepted: 'Unfollow',
+};
+
+export const taskStatus = {
+  completed: 'Completed',
+  rejected: 'Cancel',
+  pending: 'Pending',
+  new: 'New',
+  cancel: 'Cancel',
+  inprogress: 'In Progress',
+};
+
+export const taskStatusColorNew = {
+  completed: {
+    bg: '#EBFFF3',
+    color: '#16B681',
+  },
+  rejected: {
+    bg: '#FFE7E7',
+    color: '#E0382D',
+  },
+  pending: {
+    bg: '#FFFBE9',
+    color: '#FFD500',
+  },
+  new: {
+    bg: '#EEF5FF',
+    color: '#1D5BBF',
+  },
+  cancel: {
+    bg: '#FFE7E7',
+    color: '#E0382D',
+  },
+  inprogress: {
+    bg: '#FFFBE9',
+    color: '#FFD500',
+  },
+};
+
+export const view = {
+  viewOnly: 'viewOnly',
+};
+
+export function getCurrentWeekAndDay(date = new Date()) {
+  const currentDayOfMonth = date.getDate();
+  const currentDayOfWeek = date.getDay();
+  // console.log(currentDayOfMonth, currentDayOfWeek);
+
+  const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+  const dayOfWeekStart = startOfMonth.getDay();
+
+  const adjustedDate = currentDayOfMonth + dayOfWeekStart;
+
+  const weekNumber = Math.ceil(adjustedDate / 7);
+
+  const daysOfWeek = [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+  ];
+  const currentDayName = daysOfWeek[currentDayOfWeek];
+
+  return { weekNumber, currentDayName };
+}
+
+export const user = {
+  mentor: 'mentor',
+  mentee: 'mentee',
+  admin: 'admin',
+  super_admin: 'super_admin',
 };

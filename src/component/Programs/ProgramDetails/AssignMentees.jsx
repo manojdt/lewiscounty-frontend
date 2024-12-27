@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { Calendar } from 'primereact/calendar';
 import { useForm } from 'react-hook-form';
-import { Backdrop, CircularProgress } from '@mui/material';
+import { Backdrop, CircularProgress, Stack, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { AssignMenteesFields } from '../../../utils/formFields'
 import CalendarIcon from '../../../assets/images/calender_1x.png'
+import UserImage from '../../../assets/icons/user-icon.svg';
 import HTMLIcon from '../../../assets/images/html1x.png'
 import TextIcon from "../../../assets/images/text1x.png";
 
@@ -16,62 +17,95 @@ import MuiModal from '../../../shared/Modal';
 import { MenteeAssignColumns } from '../../../mock';
 import DataTable from '../../../shared/DataGrid';
 import SuccessTik from '../../../assets/images/blue_tik1x.png';
-import { getAllCategories } from '../../../services/programInfo';
+import { getAllCategories, getProgramListWithCategory } from '../../../services/programInfo';
 import './program.css'
 
-import { assignProgramTask, getProgramDetails, getProgramMentees, getProgramTaskMentees, updateProgram } from '../../../services/userprograms';
+import { assignProgramTask, getMenteeDetails, getProgramDetails, getProgramMentees, getProgramTaskMentees, upateProgramTask, updateProgram } from '../../../services/userprograms';
 import { pipeUrls, programActionStatus, programStatus } from '../../../utils/constant';
 import dayjs from 'dayjs';
+import CloseIcon from "../../../assets/icons/closeIcon.svg"
 
 
 export default function AssignMentees() {
-    const navigate = useNavigate()
-    const [addMenteeModal, setMentalModal] = useState(false)
-    const [taskSuccess, setTaskSuccess] = useState(false)
-
-    const params = useParams();
-    const calendarRef = useRef([])
-    const dispatch = useDispatch()
-    const { programdetails, loading: programLoading, error, status, programMenteeList } = useSelector(state => state.userPrograms)
-    const { category, loading: apiLoading } = useSelector(state => state.programInfo)
-    const [menteeFields, setMenteeFields] = useState(AssignMenteesFields)
-    const [dateFormat, setDateFormat] = useState({})
-    const [menteeAllList, setAllMenteeList] = useState([])
-    const [loading, setLoading] = useState(false)
-    const [updatedMemberColumn, setUpdatedMemberColumn] = useState(MenteeAssignColumns)
-
     const {
         register,
         formState: { errors },
         handleSubmit,
         reset,
         getValues,
-        setValue
+        setValue,
+        watch
     } = useForm();
+    const navigate = useNavigate()
+    const state = useLocation()?.state
+    const [addMenteeModal, setMentalModal] = useState(false)
+    const [taskSuccess, setTaskSuccess] = useState(false)
+    const [searchParams, setSearchParams] = useSearchParams();
+    const params = useParams();
+    const calendarRef = useRef([])
+    const dispatch = useDispatch()
+    const type = searchParams.get('type')
+    const from_type = searchParams.get('from')
+    const { programdetails, loading: programLoading, error, status, programMenteeList } = useSelector(state => state.userPrograms)
+    const { category, loading: apiLoading, programListByCategory } = useSelector(state => state.programInfo)
+    const [menteeFields, setMenteeFields] = useState(AssignMenteesFields(type === "new" ? false : true, type, getValues))
+    const [dateFormat, setDateFormat] = useState({})
+    const [menteeAllList, setAllMenteeList] = useState([])
+    const [loading, setLoading] = useState(false)
+    const [updatedMemberColumn, setUpdatedMemberColumn] = useState(MenteeAssignColumns)
+    const allFields = watch()
+
 
     const onSubmit = (data) => {
-        const apiData = {
+        let apiData = {
             ...data,
-            program_id: programdetails.id,
+            program_id: type === "new" ? allFields?.program_id : state?.data?.program_id,
             start_date: new Date(data.start_date).toISOString(),
             end_date: new Date(data.end_date).toISOString(),
-            mentor: programdetails?.mentor_info?.id,
+            mentor: type === "new" ? allFields?.mentor_id : state?.data?.mentor_id,
             due_date: dayjs(data.due_date).format("YYYY-MM-DDTHH:mm:ss")
         }
-        dispatch(assignProgramTask(apiData))
+        if (type === "edit" && from_type !== "program") {
+            apiData = {
+                ...apiData,
+                task_id: state?.data?.task_id
+            }
+        }
+
+        if (type === "edit" && from_type !== "program") {
+            dispatch(upateProgramTask(apiData)).then((res) => {
+                if (res.meta.requestStatus === "fulfilled") {
+                    setTaskSuccess(true)
+                    setTimeout(() => {
+                        setTaskSuccess(false)
+                        navigate('/mentor-tasks?type=menteetask')
+                    }, 2000);
+                }
+            })
+        } else {
+            dispatch(assignProgramTask(apiData)).then((res) => {
+                if (res.meta.requestStatus === "fulfilled") {
+                    setTaskSuccess(true)
+                    setTimeout(() => {
+                        setTaskSuccess(false)
+                        navigate('/mentor-tasks?type=menteetask')
+                    }, 2000);
+                }
+            })
+        }
     }
 
-    useEffect(() => {
-        if (status === programStatus.taskassigned) {
-            if (programdetails.status === programActionStatus.yettostart) {
-                dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.assigned }))
-            }
-            setTaskSuccess(true)
-            setTimeout(() => {
-                navigate(`${pipeUrls.startprogram}/${programdetails.id}`)
-            }, [3000])
-        }
-    }, [status])
+    // useEffect(() => {
+    //     if (status === programStatus.taskassigned) {
+    //         if (programdetails.status === programActionStatus.yettostart) {
+    //             dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.assigned }))
+    //         }
+    //         setTaskSuccess(true)
+    //         // setTimeout(() => {
+    //         //     navigate(`${pipeUrls.startprogram}/${programdetails.id}`)
+    //         // }, [3000])
+    //     }
+    // }, [status])
 
 
     const handleAddMentee = () => {
@@ -130,8 +164,88 @@ export default function AssignMentees() {
             }
             return field
         })
+
         setMenteeFields(fields)
     }, [category])
+
+
+    useEffect(() => {
+        if (type === "new" && allFields?.category_id) {
+            reset({
+                ...getValues(),
+                program_id: "",
+                mentor: "",
+                duration: "",
+                start_date: "",
+                end_date: "",
+                mentees_list: [],
+                due_date: "",
+                task_name: "",
+                task_details: "",
+                reference_links: "",
+            })
+            setAllMenteeList([])
+            dispatch(getProgramListWithCategory(allFields?.category_id)).then((res) => {
+                if (res.meta.requestStatus === "fulfilled") {
+                    const constructedData = res?.payload?.map((e) => {
+                        return {
+                            ...e,
+                            name: e?.program_name
+                        }
+                    })
+                    const fields = [...menteeFields].map(field => {
+                        if (field.name === 'program_id') {
+                            return {
+                                ...field,
+                                options: constructedData ?? []
+                            }
+                        }
+                        return field
+                    })
+
+                    setMenteeFields(fields)
+                }
+            })
+        }
+    }, [allFields?.category_id])
+    useEffect(() => {
+        if (type === "new" && allFields?.program_id) {
+            const programOption = menteeFields?.filter((e) => e?.name === "program_id")?.[0]?.options
+            const filteredData = programOption?.filter((e) => e?.id === Number(allFields?.program_id))?.[0]
+            reset({
+                ...getValues(),
+                mentor: filteredData?.mentor_name,
+                duration: filteredData?.duration + " Days",
+                start_date: new Date(filteredData?.start_date),
+                end_date: new Date(filteredData?.end_date)
+            });
+            dispatch(getProgramTaskMentees(allFields?.program_id)).then((res) => {
+                if (res?.meta?.requestStatus === "fulfilled") {
+                    const constructedData = res?.payload?.map((e) => {
+                        return {
+                            ...e,
+                            name: `${e?.first_name} ${e?.last_name}`
+                        }
+                    })
+                    const fields = [...menteeFields].map(field => {
+                        if (field.name === 'mentor') {
+                            return {
+                                ...field,
+                                options: constructedData ?? []
+                            }
+                        }
+                        return field
+                    })
+
+                    setMenteeFields(fields)
+                }
+
+            })
+        }
+    }, [allFields?.program_id])
+
+    // selectedProgram
+    // getProgramMentees
 
 
     useEffect(() => {
@@ -144,18 +258,22 @@ export default function AssignMentees() {
     }, [params.id])
 
     useEffect(() => {
-        if (Object.keys(programdetails).length) {
+        if (state?.data && Object.keys(state?.data).length) {
             let fieldValue = {
-                category_id: programdetails.categories.length ? programdetails.categories[0].id : '',
-                program_id: programdetails.program_name,
-                mentor: `${programdetails?.mentor_info?.first_name} ${programdetails?.mentor_info?.last_name}`,
-                start_date: new Date(programdetails.start_date),
-                end_date: new Date(programdetails.end_date),
-                duration: `${programdetails.duration} days`,
-                mentees_list: '',
-                task_details: '',
-                due_date: ''
+                category_id: state?.data?.category_id,
+                program_id: state?.data?.program_name,
+                mentor: state?.data?.mentor_name,
+                start_date: new Date(state?.data?.program_startdate),
+                end_date: new Date(state?.data?.program_enddate),
+                duration: `${state?.data?.program_duration} days`,
+                mentees_list: state?.data?.list_mentees ?? [],
+                due_date: new Date(state?.data?.due_date),
+                task_name: state?.data?.task_name,
+                task_details: state?.data?.task_details,
+                reference_links: state?.data?.reference_link,
+                mentor_id: state?.data?.mentor_id
             }
+            setAllMenteeList(state?.data?.list_mentees ?? [])
             reset(fieldValue)
         }
     }, [programdetails])
@@ -164,7 +282,9 @@ export default function AssignMentees() {
         if (!category.length) {
             dispatch(getAllCategories())
         }
-        dispatch(getProgramTaskMentees(params.id))
+        if (type !== "new") {
+            dispatch(getProgramTaskMentees(state?.data?.program_id))
+        }
 
     }, [])
 
@@ -200,37 +320,46 @@ export default function AssignMentees() {
             </Backdrop>
 
             {
-                Object.keys(programdetails).length ?
+                (type === "new" || type === "edit") ?
                     <div className='grid mb-10' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)', borderRadius: '5px' }}>
-                        <div className='breadcrum'>
-                            <nav className="flex px-7 pt-6 pb-5 mx-2 border-b-2 justify-between" aria-label="Breadcrumb">
-                                <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
-                                    <li className="inline-flex items-center">
-                                        <span className="inline-flex items-center text-sm font-medium cursor-pointer" style={{ color: 'rgba(89, 117, 162, 1)' }}>
-                                            Program
-                                        </span>
-                                        <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
-                                        </svg>
-                                    </li>
-                                    <li>
-                                        <div className="flex items-center">
-                                            <span className="ms-1 text-sm font-medium cursor-pointer" style={{ color: 'rgba(89, 117, 162, 1)' }} onClick={() => navigate(-1)}>
-                                                {programdetails?.program_name} </span>
-                                            <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
-                                            </svg>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div className="flex items-center">
-                                            <span className="ms-1 text-sm font-medium cursor-pointer text-gray-700">
-                                                Assign Task to Mentees </span>
-                                        </div>
-                                    </li>
-                                </ol>
-                            </nav>
-                        </div>
+                        {
+                            (type === "new" || type === "edit") ?
+                                <Stack direction={"row"} alignItems={"center"} justifyContent={"space-between"} className='border-b-2 pt-8 pr-6 pb-6 pl-6'>
+                                    <Typography className='!text-[20px] !text-[#18283D]' sx={{ fontWeight: 600 }}>{type === "new" ? "Create New Task" : from_type === "program" ? "Create New Task" : "Edit Task"}</Typography>
+                                    <div className='cursor-pointer' onClick={() => navigate(-1)}>
+                                        <img src={CloseIcon} alt='CloseIcon' />
+                                    </div>
+                                </Stack> :
+                                <div className='breadcrum'>
+                                    <nav className="flex px-7 pt-6 pb-5 mx-2 border-b-2 justify-between" aria-label="Breadcrumb">
+                                        <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+                                            <li className="inline-flex items-center">
+                                                <span className="inline-flex items-center text-sm font-medium cursor-pointer" style={{ color: 'rgba(89, 117, 162, 1)' }}>
+                                                    Program
+                                                </span>
+                                                <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
+                                                </svg>
+                                            </li>
+                                            <li>
+                                                <div className="flex items-center">
+                                                    <span className="ms-1 text-sm font-medium cursor-pointer" style={{ color: 'rgba(89, 117, 162, 1)' }} onClick={() => navigate(-1)}>
+                                                        {programdetails?.program_name} </span>
+                                                    <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
+                                                    </svg>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div className="flex items-center">
+                                                    <span className="ms-1 text-sm font-medium cursor-pointer text-gray-700">
+                                                        Assign Task to Mentees </span>
+                                                </div>
+                                            </li>
+                                        </ol>
+                                    </nav>
+                                </div>
+                        }
                         <div className='content px-8'>
                             <div className="py-9">
                                 <form onSubmit={handleSubmit(onSubmit)}>
@@ -281,7 +410,7 @@ export default function AssignMentees() {
                                                                         >
                                                                             <option value="">Select</option>
                                                                             {
-                                                                                field.options.map((option, index) =>
+                                                                                field?.options.map((option, index) =>
                                                                                     <option
                                                                                         value={option.id}
                                                                                         key={index}
@@ -341,7 +470,8 @@ export default function AssignMentees() {
                                                                                             className='calendar-control w-full'
                                                                                             {...dateField}
                                                                                             {...register(field.name, field.inputRules)}
-                                                                                            value={field.disabled ? new Date(programdetails[field.name]) : dateFormat[field.name]}
+                                                                                            value={getValues(field.name)}
+                                                                                            // value={field.disabled ? new Date(state?.data[field.name]) : dateFormat[field.name]}
                                                                                             onChange={(e) => {
                                                                                                 dateField.onChange(e)
                                                                                                 setDateFormat({ ...dateFormat, [field.name]: e.value })
@@ -357,7 +487,7 @@ export default function AssignMentees() {
                                                                                             // }
 
                                                                                             minDate={new Date()}
-                                                                                            maxDate={field.name === 'due_date' ? getValues('end_date') : ""}
+                                                                                            maxDate={field.name === 'due_date' ? new Date(getValues('end_date')) : ""}
                                                                                             showTime={field.name !== 'due_date'}
                                                                                             hourFormat="12"
                                                                                             dateFormat="dd/mm/yy"
@@ -382,7 +512,7 @@ export default function AssignMentees() {
                                                                                     <>
                                                                                         <div className='flex justify-between'>
                                                                                             <div className='input-bg h-[60px] w-[86%] mt-2 flex items-center 
-                                                                                                text-[12px] gap-2 cursor-pointer px-6'
+                                                                                                text-[12px] gap-2 px-6'
                                                                                                 style={{ borderRadius: '3px' }}>
 
                                                                                                 {
@@ -390,14 +520,16 @@ export default function AssignMentees() {
                                                                                                         return (
                                                                                                             <>
                                                                                                                 <p className='flex items-center gap-1'>
-                                                                                                                    <p className='flex items-center px-3 py-3' style={{
-                                                                                                                        background: 'rgba(223, 237, 255, 1)', borderRadius: '50%',
-
-                                                                                                                    }}></p>
                                                                                                                     {
+                                                                                                                        // popupfield?.profile_image?.length === 0 ?
+                                                                                                                        //     <p className='flex items-center px-3 py-3' style={{
+                                                                                                                        //         background: 'rgba(223, 237, 255, 1)', borderRadius: '50%',
 
-
-                                                                                                                        `${popupfield.first_name}`
+                                                                                                                        //     }}></p> :
+                                                                                                                        <img src={popupfield?.profile_image ? popupfield?.profile_image : UserImage} alt='' className='h-[25px] w-[25px] rounded-[50%]' />
+                                                                                                                    }
+                                                                                                                    {
+                                                                                                                        `${popupfield?.full_name||popupfield?.first_name}`
                                                                                                                     }
                                                                                                                 </p>
                                                                                                             </>
@@ -412,7 +544,7 @@ export default function AssignMentees() {
                                                                                                         <p className='text-white flex items-center px-2 py-1' style={{
                                                                                                             background: 'rgb(29, 91, 191)', borderRadius: '50%',
 
-                                                                                                        }}>{menteeAllList.length - 6}</p>
+                                                                                                        }}>{menteeAllList?.length - 6}</p>
                                                                                                         Others</p>
 
                                                                                                 }
@@ -430,10 +562,10 @@ export default function AssignMentees() {
                                                                                                 }}
                                                                                                 aria-invalid={!!errors[field.name]}
                                                                                             />
-                                                                                            <button type='button' className='h-[60px] mt-2 w-[13%] text-[14px]'
-                                                                                                style={{ border: '1px dotted rgba(29, 91, 191, 1)', color: 'rgba(29, 91, 191, 1)' }}
+                                                                                            <button disabled={type === "edit"&&from_type !== "program"} type='button' className='h-[60px] mt-2 w-[13%] text-[14px]'
+                                                                                                style={{ border: '1px dashed rgba(29, 91, 191, 1)', color: 'rgba(29, 91, 191, 1)' }}
                                                                                                 onClick={handleAddMentee}>
-                                                                                                Add Mentees
+                                                                                                + Add Mentees
                                                                                             </button>
                                                                                         </div>
                                                                                         {errors[field.name] && (
@@ -496,14 +628,14 @@ export default function AssignMentees() {
                                                                                         field.type === 'editor' ?
                                                                                             <>
                                                                                                 <div className='flex gap-3'>
-                                                                                                    <textarea id="message" rows="4" className={`block p-2.5 input-bg w-[95%] h-[200px] text-sm text-gray-900  rounded-lg border
+                                                                                                    <textarea id="message" rows="4" className={`block p-2.5 input-bg w-[100%] h-[200px] text-sm text-gray-900  rounded-lg border
                                                                                             focus:visible:outline-none focus:visible:border-none ${field.width === 'width-82' ? 'h-[282px]' : ''}`}
                                                                                                         placeholder={field.placeholder}
                                                                                                         {...register(field.name, field.inputRules)}></textarea>
-                                                                                                    <div className='flex flex-col gap-6 items-center justify-center input-bg w-[4%]' style={{ borderRadius: '3px' }}>
+                                                                                                    {/* <div className='flex flex-col gap-6 items-center justify-center input-bg w-[4%]' style={{ borderRadius: '3px' }}>
                                                                                                         <img src={TextIcon} alt="TextIcon" />
                                                                                                         <img src={HTMLIcon} alt="HTMLIcon" />
-                                                                                                    </div>
+                                                                                                    </div> */}
                                                                                                 </div>
                                                                                                 {errors[field.name] && (
                                                                                                     <p className="error" role="alert">
@@ -521,8 +653,8 @@ export default function AssignMentees() {
                                         }
                                     </div>
                                     <div className="flex gap-6 justify-center align-middle py-16">
-                                        <Button btnName='Cancel' btnCls="w-[13%]" btnCategory="secondary" onClick={() => navigate('/assign-task/1')} />
-                                        <Button btnType="submit" btnName='Create Task for Mentees' btnCategory="primary" />
+                                        <Button btnName='Cancel' btnCls="w-[15%]" btnCategory="secondary" onClick={() => navigate(-1)} />
+                                        <Button btnType="submit" btnCls="w-[15%]" btnName={"Submit"} btnCategory="primary" />
                                     </div>
                                 </form>
                                 <MuiModal modalSize='lg' modalOpen={addMenteeModal} title="Select Mentees" modalClose={() => setMentalModal(false)}>
@@ -542,11 +674,16 @@ export default function AssignMentees() {
                                                 style={{
                                                     fontWeight: 600
                                                 }}
-                                            >Successfully task assigned to Mentees</p>
+                                            >
+                                                {
+                                                    type === "new" ? "New task for Mentee has been successfully created" : from_type === "program" ? "New task for Mentee has been successfully created" : "Mentee’s task has been Successfully re-edited"
+                                                }
+                                            </p>
                                         </div>
 
                                     </div>
                                 </Backdrop>
+
                             </div>
                         </div>
                     </div>

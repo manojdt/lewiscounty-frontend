@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from '../../shared';
-import {  useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import {
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom';
 import ProfileImageIcon from '../../assets/icons/profile-image-icon.svg';
 import CancelIcon from '../../assets/images/cancel1x.png';
 import TickColorIcon from '../../assets/icons/tickColorLatest.svg';
@@ -9,11 +14,18 @@ import CancelColorIcon from '../../assets/icons/cancelCircle.svg';
 import SuccessTik from '../../assets/images/blue_tik1x.png';
 import SearchIcon from '../../assets/icons/search.svg';
 import { useDispatch, useSelector } from 'react-redux';
-import { Backdrop, Checkbox, CircularProgress, Link, Stack } from '@mui/material';
+import {
+  Backdrop,
+  Checkbox,
+  CircularProgress,
+  Link,
+  Stack,
+} from '@mui/material';
 import { ProfileFields } from '../../utils/formFields';
 import {
   getFollowList,
   getProfileInfo,
+  getRequestView,
   userFollow,
   userUnFollow,
 } from '../../services/userList';
@@ -21,19 +33,25 @@ import ConnectIcon from '../../assets/images/Connectpop1x.png';
 import {
   cancelMemberRequest,
   getCategoryList,
+  getprogramRequest,
   updateLocalRequest,
   updateMemberRequest,
   updateProgramMenteeRequest,
+  updateProgramRequest,
 } from '../../services/request';
 import MuiModal from '../../shared/Modal';
 import DataTable from '../../shared/DataGrid';
 import { categoryColumns } from '../../mock';
 import { requestStatus } from '../../utils/constant';
 import { useForm } from 'react-hook-form';
+import { CancelPopup } from '../Mentor/Task/cancelPopup';
 
 export default function ProfileView() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const state = useLocation()?.state;
+  console.log('state ===>', state);
+  const { programRequest } = useSelector((state) => state.requestList);
   const [confirmPopup, setConfirmPopup] = useState({
     show: false,
     category: false,
@@ -57,8 +75,12 @@ export default function ProfileView() {
     loading: userInfoLoading,
     followInfo,
   } = useSelector((state) => state.userList);
+  console.log(userDetails, 'userDetails');
+  const pathe = state?.reqType ? -1 : '/all-request';
+
   const { profile, loading } = useSelector((state) => state.profileInfo);
-  const { data } = useSelector((state) => state.userInfo);
+  const userInfo = useSelector((state) => state.userInfo);
+  const role = userInfo.data.role;
   const {
     categoryList,
     status: requeststatus,
@@ -70,8 +92,7 @@ export default function ProfileView() {
   const pageType = window.location.href.includes('mentor-details')
     ? 'Mentor'
     : 'Mentee';
-  const role = data?.role || '';
-
+  const { requestData } = useSelector((state) => state.userList);
   const {
     register,
     formState: { errors },
@@ -161,40 +182,71 @@ export default function ProfileView() {
       categories_id: confirmPopup?.selectedItem,
     };
     dispatch(updateMemberRequest(payload)).then((res) => {
-      if (res?.meta?.requestStatus === "fulfilled") {
-        navigate("/all-request")
+      if (res?.meta?.requestStatus === 'fulfilled') {
+        navigate(pathe);
       }
-    })
+    });
   };
 
   // Confirm Accept Popup
   const handleConfirmPopup = () => {
     if (role === 'admin') {
-      dispatch(
-        cancelMemberRequest({ member_id: params.id, })).then((res) => {
-          if (res?.meta?.requestStatus === "fulfilled") {
-            navigate("/all-request")
-          }
-        })
+      dispatch(cancelMemberRequest({ member_id: params.id })).then((res) => {
+        if (res?.meta?.requestStatus === 'fulfilled') {
+          navigate(pathe);
+        }
+      });
     }
 
     if (role === 'mentor') {
-      dispatch(
-        updateProgramMenteeRequest({
-          id: parseInt(searchParams.get('request_id')),
-          action: 'accept',
-        })
-      ).then(() => {
-        setTimeout(() => {
-          console.log('MMMM');
-          dispatch(updateLocalRequest({ status: '' }));
-          resetMenteeRequest();
-          navigate('/all-request');
-        }, 100);
-      });
+      if (state?.data?.id) {
+        dispatch(
+          updateProgramRequest({
+            id: state?.data?.id,
+            status: 'approved',
+          })
+        ).then(() => {
+          setTimeout(() => {
+            navigate(pathe);
+          }, 100);
+        });
+      } else {
+        dispatch(
+          updateProgramMenteeRequest({
+            id: parseInt(searchParams.get('request_id')),
+            status: 'accept',
+          })
+        ).then(() => {
+          setTimeout(() => {
+            console.log('MMMM');
+            dispatch(updateLocalRequest({ status: '' }));
+            resetMenteeRequest();
+            navigate(pathe);
+          }, 100);
+        });
+      }
     }
   };
-
+  const reqStatus = {
+    approved: 'Approved',
+    rejected: 'Rejected',
+    new: 'New',
+  };
+  const reqStatusColor = {
+    approved: {
+      background: '#16B681',
+      borderRadius: '5px',
+      width: '300px',
+      cursor: 'not-allowed',
+    },
+    rejected: {
+      border: '1px solid #E0382D',
+      borderRadius: '5px',
+      color: '#E0382D',
+      width: '300px',
+      cursor: 'not-allowed',
+    },
+  };
   const footerComponent = (props) => {
     return (
       <div className='flex gap-6 justify-center items-center py-4'>
@@ -235,21 +287,35 @@ export default function ProfileView() {
   };
 
   const handleCancelReasonPopupSubmit = (data) => {
-    if (data.cancel_reason !== '') {
+    if (state?.data?.id) {
       dispatch(
-        updateProgramMenteeRequest({
-          id: parseInt(searchParams.get('request_id')),
-          action: 'cancel',
-          cancelled_reason: data.cancel_reason,
+        updateProgramRequest({
+          id: state?.data?.id,
+          status: 'rejected',
+          reason: data.cancel_reason,
         })
       ).then(() => {
         setTimeout(() => {
-          console.log('MMMM');
-          dispatch(updateLocalRequest({ status: '' }));
-          resetMenteeRequest();
-          navigate('/all-request');
+          navigate(pathe);
         }, 100);
       });
+    } else {
+      if (data.cancel_reason !== '') {
+        dispatch(
+          updateProgramMenteeRequest({
+            id: parseInt(searchParams.get('request_id')),
+            status: 'rejected',
+            rejection_reason: data.cancel_reason,
+          })
+        ).then(() => {
+          setTimeout(() => {
+            console.log('MMMM');
+            dispatch(updateLocalRequest({ status: '' }));
+            resetMenteeRequest();
+            navigate(pathe);
+          }, 100);
+        });
+      }
     }
   };
 
@@ -272,7 +338,7 @@ export default function ProfileView() {
         resetMenteeRequest();
         dispatch(updateLocalRequest({ status: '' }));
         dispatch(getProfileInfo({ id: params.id }));
-        navigate('/all-request');
+        navigate(pathe);
       }, 3000);
     }
 
@@ -282,7 +348,7 @@ export default function ProfileView() {
     //         console.log('MMMM');
     //         // dispatch(updateLocalRequest({ status: '' }));
     //         // resetMenteeRequest()
-    //         navigate('/all-request')
+    //         navigate(pathe)
     //     }, 3000);
     // }
   }, [requeststatus]);
@@ -292,14 +358,24 @@ export default function ProfileView() {
       loadUserProfile();
     }
   }, [params]);
+  useEffect(() => {
+    console.log('role=>', role);
+    if (role === 'admin') {
+      dispatch(getRequestView(parseInt(searchParams.get('request_id'))));
+    }
+    if (role === 'mentor') {
+      dispatch(getRequestView(parseInt(searchParams.get('request_id'))));
+    }
+  }, [role]);
 
   const handleSelectCategory = (value) => {
     setConfirmPopup({
       ...confirmPopup,
-      selectedItem: !confirmPopup?.selectedItem?.includes(value) ? [...confirmPopup?.selectedItem, value] : confirmPopup?.selectedItem?.filter((e) => e !== value)
-
-    })
-  }
+      selectedItem: !confirmPopup?.selectedItem?.includes(value)
+        ? [...confirmPopup?.selectedItem, value]
+        : confirmPopup?.selectedItem?.filter((e) => e !== value),
+    });
+  };
 
   const categoryColumn = [
     {
@@ -309,16 +385,62 @@ export default function ProfileView() {
       for: ['admin', 'mentor'],
       width: 100,
       renderCell: (params) => {
-        return <div>
-          <Checkbox checked={confirmPopup?.selectedItem?.includes(params?.row?.categories_id)}
-            onChange={() => handleSelectCategory(params?.row?.categories_id)} />
-        </div>
-      }
+        return (
+          <div>
+            <Checkbox
+              checked={confirmPopup?.selectedItem?.includes(
+                params?.row?.categories_id
+              )}
+              onChange={() => handleSelectCategory(params?.row?.categories_id)}
+            />
+          </div>
+        );
+      },
     },
-    ...categoryColumns
-  ]
+    ...categoryColumns,
+  ];
 
+  const [adminPopup, setAdminPopup] = React.useState({
+    bool: false,
+    activity: false,
+    type: '',
+  });
 
+  const handleOpenAdminApprove = (type = '') => {
+    setAdminPopup({
+      ...adminPopup,
+      bool: true,
+      type: type,
+    });
+  };
+
+  const handleCloseAdminApprove = (type = '') => {
+    setAdminPopup({
+      ...adminPopup,
+      bool: false,
+      activity: false,
+      close: false,
+      type: '',
+    });
+  };
+
+  const handleAdminProgram = (type, reason) => {
+    let payload = {
+      id: requestData?.id,
+      status: type,
+    };
+    if (type === 'rejected') {
+      payload = {
+        ...payload,
+        rejection_reason: reason,
+      };
+    }
+    dispatch(updateProgramMenteeRequest(payload)).then((res) => {
+      if (res.meta.requestStatus === 'fulfilled') {
+        navigate(-1);
+      }
+    });
+  };
   return (
     <div className='profile-container'>
       <Backdrop
@@ -327,6 +449,57 @@ export default function ProfileView() {
       >
         <CircularProgress color='inherit' />
       </Backdrop>
+
+      {/* Admin Popup start*/}
+
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={adminPopup?.bool && adminPopup?.type === 'approved'}
+      >
+        <div className='popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center'>
+          <img src={ConnectIcon} alt='ConnectIcon' />
+          {/* <span style={{ color: '#232323', fontWeight: 600, fontSize: '24px' }}>
+            {followInfo.is_following ? 'Unfollow' : 'Follow'}
+          </span> */}
+
+          <div className='py-5'>
+            <p
+              style={{
+                color: 'rgba(24, 40, 61, 1)',
+                fontWeight: 600,
+                fontSize: '18px',
+              }}
+            >
+              Are you sure you want to approve request?
+            </p>
+          </div>
+          <div className='flex justify-center'>
+            <div className='flex gap-6 justify-center align-middle'>
+              <Button
+                btnName='Cancel'
+                btnCategory='secondary'
+                onClick={() => handleCloseAdminApprove()}
+              />
+              <Button
+                btnType='button'
+                btnCls='w-[110px]'
+                btnName={'Yes'}
+                btnCategory='primary'
+                onClick={() => handleAdminProgram('approved')}
+              />
+            </div>
+          </div>
+        </div>
+      </Backdrop>
+
+      <CancelPopup
+        open={adminPopup?.bool && adminPopup?.type === 'rejected'}
+        header='Rejection Reason'
+        handleClosePopup={() => handleCloseAdminApprove()}
+        handleSubmit={(reason) => handleAdminProgram('rejected', reason)}
+      />
+
+      {/* Admin Popup end */}
 
       <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -377,16 +550,20 @@ export default function ProfileView() {
         }
       >
         <div className='px-5 py-1 flex justify-center items-center'>
-          <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
-            style={{ background: '#fff', borderRadius: '10px' }}>
-            <img src={SuccessTik} alt="SuccessTik" />
-            <p className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+          <div
+            className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+            style={{ background: '#fff', borderRadius: '10px' }}
+          >
+            <img src={SuccessTik} alt='SuccessTik' />
+            <p
+              className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
               style={{
-                fontWeight: 600
+                fontWeight: 600,
               }}
-            >Request updated successfully</p>
+            >
+              Request updated successfully
+            </p>
           </div>
-
         </div>
       </Backdrop>
 
@@ -395,18 +572,23 @@ export default function ProfileView() {
         open={activity.complete}
       >
         <div className='px-5 py-1 flex justify-center items-center'>
-          <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
-            style={{ background: '#fff', borderRadius: '10px' }}>
-            <img src={SuccessTik} alt="SuccessTik" />
-            <p className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+          <div
+            className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+            style={{ background: '#fff', borderRadius: '10px' }}
+          >
+            <img src={SuccessTik} alt='SuccessTik' />
+            <p
+              className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
               style={{
-                fontWeight: 600
+                fontWeight: 600,
               }}
-            > Successfully{' '}
-            {followInfo.is_following ? 'followed ' : 'unfollowed '}{' '}
-            {pageType.toLowerCase()}</p>
+            >
+              {' '}
+              Successfully{' '}
+              {followInfo.is_following ? 'followed ' : 'unfollowed '}{' '}
+              {pageType.toLowerCase()}
+            </p>
           </div>
-
         </div>
       </Backdrop>
 
@@ -678,55 +860,102 @@ export default function ProfileView() {
           <div className='flex gap-5'>
             {role !== 'admin' ? (
               <>
-                {role === 'mentor' &&
-                  searchParams.has('type') &&
-                  searchParams.get('type') === 'mentee_request' &&
-                  searchParams.has('request_id') &&
-                  searchParams.get('request_id') !== '' ? (
-                  <div className='flex gap-4 pt-10'>
-                    <button
-                      className='py-3 px-16 text-white text-[14px] flex items-center'
-                      style={{
-                        border: '1px solid #E0382D',
-                        borderRadius: '5px',
-                        color: '#E0382D',
-                      }}
-                      onClick={() => handleMemberCancelRequest()}
-                    >
-                      Reject
-                    </button>
-                    <button
-                      className='py-3 px-16 text-white text-[14px] flex items-center'
-                      style={{
-                        background: '#16B681',
-                        borderRadius: '5px',
-                      }}
-                      onClick={() => handleMemberAcceptRequest()}
-                    >
-                      Approve
-                    </button>
-                  </div>
+                {state?.data?.status === 'new'&&['new', 'pending'].includes(requestData?.status) ? (
+                  <>
+                    <div className='flex gap-4 pt-10'>
+                      <button
+                        className='py-3 px-16 text-white text-[14px] flex items-center'
+                        style={{
+                          border: '1px solid #E0382D',
+                          borderRadius: '5px',
+                          color: '#E0382D',
+                        }}
+                        onClick={() => handleMemberCancelRequest()}
+                      >
+                        Reject
+                      </button>
+                      <Button
+                        btnType='button'
+                        btnName='Approve'
+                        btnCls={'w-[150px]'}
+                        onClick={() => handleMemberAcceptRequest()}
+                      />
+                    </div>
+                  </>
+                ) :( state?.data?.status === 'approved' ||
+                  state?.data?.status === 'rejected'||requestData?.status==="approved" ||requestData?.status==="rejected") ? (
+                  <>
+                    <div className='py-9'>
+                      <div
+                        className='py-3 px-16 text-white text-[14px] flex justify-center items-center'
+                        style={{
+                          ...reqStatusColor[requestData?.status==="approved"?"approved":requestData?.status==="rejected"?"rejected":state?.data?.status],
+                        }}
+                      >
+                        {requestData?.status==="approved"?"Approved":requestData?.status==="rejected"?"Rejected":reqStatus[state?.data?.status]}
+                      </div>
+                    </div>
+                  </>
                 ) : (
                   <>
-                    <Button
-                      onClick={handleShowPopup}
-                      btnType='button'
-                      btnCategory='secondary'
-                      btnName={followInfo.is_following ? 'Unfollow' : 'Follow'}
-                      btnCls={'w-[150px]'}
-                    />
-                    <Button
-                      btnType='button'
-                      btnName='Chat'
-                      btnCls={'w-[150px]'}
-                    />
+                    {role === 'mentor' &&
+                    searchParams.has('type') &&
+                    searchParams.get('type') === 'mentee_request' &&
+                    searchParams.has('request_id') &&
+                    searchParams.get('request_id') !== '' &&
+                    ['new', 'pending'].includes(userDetails?.approve_status) ? (
+                      <div className='flex gap-4 pt-10'>
+                        <button
+                          className='py-3 px-16 text-white text-[14px] flex items-center'
+                          style={{
+                            border: '1px solid #E0382D',
+                            borderRadius: '5px',
+                            color: '#E0382D',
+                          }}
+                          onClick={() => handleMemberCancelRequest()}
+                        >
+                          Reject
+                        </button>
+                        <button
+                          className='py-3 px-16 text-white text-[14px] flex items-center'
+                          style={{
+                            background: '#16B681',
+                            borderRadius: '5px',
+                          }}
+                          onClick={() => handleMemberAcceptRequest()}
+                        >
+                          Approve
+                        </button>
+                      </div>
+                    ) : (
+                      <>
+                        {role !== 'mentor' && (
+                          <>
+                            <Button
+                              onClick={handleShowPopup}
+                              btnType='button'
+                              btnCategory='secondary'
+                              btnName={
+                                followInfo.is_following ? 'Unfollow' : 'Follow'
+                              }
+                              btnCls={'w-[150px]'}
+                            />
+                            <Button
+                              btnType='button'
+                              btnName='Chat'
+                              btnCls={'w-[150px]'}
+                            />
+                          </>
+                        )}
+                      </>
+                    )}
                   </>
                 )}
               </>
             ) : role === 'admin' ? (
               <>
                 {userDetails?.approve_status === 'new' ||
-                  userDetails?.approve_status === 'pending' ? (
+                userDetails?.approve_status === 'pending' ? (
                   <div className='flex gap-4 pt-10'>
                     <button
                       className='py-3 px-16 text-white text-[14px] flex items-center'
@@ -752,33 +981,63 @@ export default function ProfileView() {
                   </div>
                 ) : // userDetails?.approve_status === 'accept' ?
 
-                  //     <button className='py-3 px-16 mt-7 text-white text-[14px] flex items-center' style={{
-                  //         background: "#16B681",
-                  //         borderRadius: '5px'
-                  //     }}
-                  //         onClick={() => undefined}
-                  //     >Approved
-                  //     </button>
-                  //     :
+                //     <button className='py-3 px-16 mt-7 text-white text-[14px] flex items-center' style={{
+                //         background: "#16B681",
+                //         borderRadius: '5px'
+                //     }}
+                //         onClick={() => undefined}
+                //     >Approved
+                //     </button>
+                //     :
 
-                  //     userDetails?.approve_status === 'cancel' ?
-                  //         <div className='flex gap-4 pt-10' >
-                  //             <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                  //                 border: "1px solid #E0382D",
-                  //                 borderRadius: '5px',
-                  //                 color: '#E0382D',
-                  //                 cursor: 'not-allowed'
-                  //             }}
-                  //                 onClick={() => undefined}
-                  //             >Rejected
-                  //             </button>
-                  //         </div>
+                //     userDetails?.approve_status === 'cancel' ?
+                //         <div className='flex gap-4 pt-10' >
+                //             <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                //                 border: "1px solid #E0382D",
+                //                 borderRadius: '5px',
+                //                 color: '#E0382D',
+                //                 cursor: 'not-allowed'
+                //             }}
+                //                 onClick={() => undefined}
+                //             >Rejected
+                //             </button>
+                //         </div>
 
-                  // :
+                // :
 
-                  null}
+                null}
               </>
             ) : null}
+
+            {requestData?.request_type === 'program_join' &&
+              ['new', 'pening'].includes(requestData?.status) &&
+              role === 'admin' && (
+                <div className='flex gap-4 pt-10'>
+                  <button
+                    className='py-3 px-16 text-white text-[14px] flex items-center'
+                    style={{
+                      border: '1px solid #E0382D',
+                      borderRadius: '5px',
+                      color: '#E0382D',
+                    }}
+                    onClick={() => handleOpenAdminApprove('rejected')}
+                  >
+                    Reject
+                  </button>
+                  <button
+                    className='py-3 px-16 text-white text-[14px] flex items-center'
+                    style={{
+                      background: '#16B681',
+                      borderRadius: '5px',
+                    }}
+                    onClick={() => handleOpenAdminApprove('approved')}
+                  >
+                    Approve
+                  </button>
+                </div>
+              )}
+
+            {/* . */}
           </div>
         </div>
 
@@ -792,42 +1051,37 @@ export default function ProfileView() {
                 >
                   {profilefield.label}
                 </label>
-                <p className='text-[14px]'>{userDetails[profilefield.name]}</p>
+                <p className='text-[14px]'>{userDetails[profilefield?.name]}</p>
               </div>
             </div>
           ))}
         </div>
         <div className='col-span-2'>
-          {userDetails?.documents?.length>0&&
-        <Stack>
-          
-                      <label
-                        className='block tracking-wide  text-xs mb-2'
-                        style={{ color: 'rgba(116, 116, 116, 1)' }}
-                      >
-                        Documents
-                      </label>
-                    
-                        <Stack
-                         direction={'row'}
-                         alignItems={'center'}
-                          spacing={2}
-                        >
-                          {userDetails?.documents?.map((doc) => {
-                            return (
-                              <Link
-                                target="_blank"
-                                href={doc?.file}
-                                variant='body2'
-                                className={'text-[18px]'}
-                              >
-                                {doc?.file_display_name}
-                              </Link>
-                            );
-                          })}
-                        </Stack>
-                    
-                    </Stack>}
+          {userDetails?.documents?.length > 0 && (
+            <Stack>
+              <label
+                className='block tracking-wide  text-xs mb-2'
+                style={{ color: 'rgba(116, 116, 116, 1)' }}
+              >
+                Documents
+              </label>
+
+              <Stack direction={'row'} alignItems={'center'} spacing={2}>
+                {userDetails?.documents?.map((doc) => {
+                  return (
+                    <Link
+                      target='_blank'
+                      href={doc?.file}
+                      variant='body2'
+                      className={'text-[18px]'}
+                    >
+                      {doc?.file_display_name}
+                    </Link>
+                  );
+                })}
+              </Stack>
+            </Stack>
+          )}
         </div>
       </div>
     </div>

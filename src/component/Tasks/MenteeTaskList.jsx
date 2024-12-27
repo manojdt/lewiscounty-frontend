@@ -63,7 +63,7 @@ export default function MenteeTaskList() {
           </div>
           <div
             className='cursor-pointer'
-            onClick={() => navigate(state?.from === "program" ? -1 : '/certificates')}
+            onClick={() => navigate(-1)}
           >
             <img src={Cancel} alt='link' className='w-[20px] h[10px]' />
           </div>
@@ -104,7 +104,7 @@ export default function MenteeTaskList() {
                           <p
                             className={`px-7 py-1 task_action_${(list?.result ?? "fail")?.toLowerCase()}`}
                           >
-                            {list.result ?? "Fail"}
+                            {list.result ?? "No Pass"}
                           </p>
                         </p>
                         <p className='text-[13px] pt-4 leading-6'>
@@ -119,10 +119,11 @@ export default function MenteeTaskList() {
                         }}
                         onClick={() =>
                           navigate(
-                            `/mentor-tasks-details/${list.id}?mentee_id=${list.mentee_id}`,
+                            `/viewTask/${list.id}`,
                             {
                               state: {
-                                from: "program"
+                                from: "program",
+                                type: "certificate"
                               }
                             }
                           )

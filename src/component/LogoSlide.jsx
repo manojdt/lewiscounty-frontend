@@ -3,7 +3,7 @@ import React from 'react'
 const LogoSlide = () => {
     return (
         <div
-        className="flex items-center"
+        className="flex items-center w-3/4"
         style={{
           background: "linear-gradient(to right, #1D5BBF, #00AEBD)",
         }}

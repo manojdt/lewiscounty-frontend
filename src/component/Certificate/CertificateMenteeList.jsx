@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState , } from 'react';
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import Cancel from '../../assets/images/cancel-colour1x.png';
 import ArrowRightIcon from '../../assets/icons/arrowRightColor.svg';
@@ -26,7 +26,7 @@ import MuiModal from '../../shared/Modal';
 import { updateCertificateRequest } from '../../services/request';
 import TickColorIcon from '../../assets/icons/tickColorLatest.svg'
 import CancelColorIcon from '../../assets/icons/cancelCircle.svg'
-
+import { Typography } from '@mui/material';
 
 export default function CertificateMenteeList() {
   const navigate = useNavigate();
@@ -56,15 +56,19 @@ export default function CertificateMenteeList() {
     type: ""
   })
 
+  useEffect(()=>{
+    console.log("state", state)
+  },[state])
+
   const getCertificateDetails = async () => {
     const type = searchParams.get('type')
     dispatch(
       getCertificateMember(
         (type === 'approved' || type === 'pending')
-          ? `?id=${id}&page=${paginationModel?.page + 1}&limit=${paginationModel?.pageSize
-          }`
+          ? `?certificate_id=${id}&page=${paginationModel?.page + 1}&limit=${paginationModel?.pageSize
+          }&request_type=certificate`
           : `?program_id=${id}&page=${paginationModel?.page + 1}&limit=${paginationModel?.pageSize
-          }`
+          }&request_type=certificate`
       )
     );
   };
@@ -144,13 +148,14 @@ export default function CertificateMenteeList() {
               >
                 {(searchParams.get('type') === 'approved' ||
                   searchParams.get('type') === 'waiting_for_response' ||
-                  role === 'admin') && (
+                  searchParams.get('type') === 'pending' ||
+                  role === 'admin'||role==="mentor") && (
                     <MenuItem
                       onClick={() => {
                         let url =
                           searchParams.get('type') === 'approved'
-                            ? `/certificate-view/${id}?mentee_id=${seletedItem?.mentee_id}`
-                            : `/mentee-task_list/${id}?mentee_id=${seletedItem?.mentee_id}&program_id=${seletedItem.program_id}`;
+                            ? `/certificate-view/${id}?mentee_id=${seletedItem?.mentee_id_task}`
+                            : `/mentee-task_list/${id}?mentee_id=${seletedItem?.mentee_id_task}&program_id=${seletedItem.program_id}`;
                         return navigate(url);
                       }}
                       className='!text-[12px]'
@@ -182,10 +187,12 @@ export default function CertificateMenteeList() {
   const handleSubmit = () => {
     dispatch(
       createCertificate({
-        id:
-          certificatesMembers &&
-          certificatesMembers.length > 0 &&
-          certificatesMembers[0].program_id,
+        // id:
+        //   certificatesMembers &&
+        //   certificatesMembers.length > 0 &&
+        //   certificatesMembers[0].program_id,
+        program: id,
+        request_type: "certificate"
       })
     );
   };
@@ -211,7 +218,7 @@ export default function CertificateMenteeList() {
   const handleApproveCertificateApiRequest = () => {
     dispatch(updateCertificateRequest({
       "id": state?.rowId,
-      "status": "accept"
+      "status": "approved"
     })).then((res) => {
       if (res.meta.requestStatus === "fulfilled") {
         setActionPopup({
@@ -224,6 +231,7 @@ export default function CertificateMenteeList() {
             type: "",
             activity: false
           })
+          navigate(-1)
         }, 2000);
       }
     })
@@ -232,7 +240,7 @@ export default function CertificateMenteeList() {
   const handleCancelCertificateApiRequest = () => {
     dispatch(updateCertificateRequest({
       "id": state?.rowId,
-      "status": "cancel"
+      "status": "rejected"
     })).then((res) => {
       if (res.meta.requestStatus === "fulfilled") {
         setActionPopup({
@@ -245,6 +253,7 @@ export default function CertificateMenteeList() {
             type: "",
             activity: false
           })
+          navigate(-1)
         }, 2000);
       }
     })
@@ -267,7 +276,7 @@ export default function CertificateMenteeList() {
         className='px-3 py-5'
         style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}
       >
-        <MuiModal
+        {/* <MuiModal
           modalOpen={status === certificateStatus.create}
           modalClose={() => setLoading(false)}
           noheader
@@ -288,7 +297,31 @@ export default function CertificateMenteeList() {
             </div>
           </div>
 
-        </MuiModal>
+        </MuiModal> */}
+
+
+        <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={status === certificateStatus.create}
+          onClick={() => setLoading(false)}
+        >
+          <div className='px-5 py-1 flex justify-center items-center'>
+            <div
+              className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+              style={{ background: '#fff', borderRadius: '10px' }}
+            >
+              <img src={SuccessTik} alt='SuccessTik' />
+              <p
+                className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                style={{
+                  fontWeight: 600,
+                }}
+              >
+                Certificate request is successfully created
+              </p>
+            </div>
+          </div>
+        </Backdrop>
         <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
           <div className='flex gap-5 items-center text-[14px]'>
             <p style={{ color: 'rgba(89, 117, 162, 1)', fontWeight: 500 }}>
@@ -311,7 +344,7 @@ export default function CertificateMenteeList() {
           </div>
           <div
             className='cursor-pointer'
-            onClick={() => navigate('/certificates')}
+            onClick={() => navigate(-1)}
           >
             <img src={Cancel} alt='link' className='w-[20px] h[10px]' />
           </div>
@@ -325,34 +358,73 @@ export default function CertificateMenteeList() {
           paginationModel={paginationModel}
           setPaginationModel={setPaginationModel}
         />
-        {searchParams.get('type') !== 'approved' && (
-          // <div>
-          //   <div className='flex gap-6 justify-center align-middle py-16'>
-          //     <Button
-          //       btnName='Cancel'
-          //       btnCls='w-[13%]'
-          //       btnCategory='secondary'
-          //       onClick={() => navigate('/certificates')}
-          //     />
-          //     {certificatesMembers && certificatesMembers?.length > 0 && (
-          //       <Button
-          //         btnType='button'
-          //         btnCls='w-[13%]'
-          //         onClick={() => handleSubmit()}
-          //         btnName='Submit'
-          //         btnCategory='primary'
-          //       />
-          //     )}
-          //   </div>
-          // </div>
-          <Box className="flex flex-col items-center justify-center w-[full]" mt={3}>
-            <Stack direction={"row"} alignItems={"center"} spacing={2}>
+        <div style={{ display: 'flex', flexDirection: 'row', width: "100%", justifyContent: 'center', marginTop: 20 }}>
+          {
+            role === "admin" &&
+              state?.status === "approved" ?
+              <Typography style={{
+                background: "#16B681",
+                borderRadius: "8px",
+                padding: "8px 16px",
+                color: "white",
+                display: "inline-block",
+                marginRight: 30
+              }}> Approved </Typography> :
+              state?.status === "rejected" ?
+                <Typography style={{
+                  lineHeight: "30px",
+                  borderRadius: "3px",
+                  width: "110px",
+                  height: "34px",
+                  color: "rgb(224, 56, 45)",
+                  fontSize: "12px",
+                  textAlign: "center",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  background: "#fff",
+                }} color="error"> Rejected </Typography>
+                : null
+
+          }
+          {role !== "admin" && <Button
+                btnName="Close"
+                btnCategory='secondary'
+                onClick={() => navigate(-1)} />}
+        </div>
+        
+        {(state?.status !== "approved" && state?.status !== "rejected"&&state?.status !== "pending") && <>
+          {role === "mentor" && <div>
+            <div className='flex gap-6 justify-center align-middle py-16'>
               <Button
+                btnName='Cancel'
+                btnCls='w-[16%]'
+                btnCategory='secondary'
+                onClick={() => navigate('/certificates')}
+              />
+              {certificatesMembers && certificatesMembers?.results?.length > 0 && (
+                <Button
+                  btnType='button'
+                  btnCls='w-[16%]'
+                  onClick={() => handleSubmit()}
+                  btnName='Submit Request to Admin'
+                  btnCategory='primary'
+                />
+              )}
+            </div>
+          </div>}
+          {role === "admin" && <Box className="flex flex-col items-center justify-center w-[full]" mt={3}>
+            <Stack direction={"row"} alignItems={"center"} spacing={2}>
+              {/* <Button
                 btnName='Reject Request'
                 btnCls='w-[100%] !border !border-[#E50027] !text-[#E50027]'
                 btnCategory='secondary'
                 onClick={() => handleOpenActionPopup("reject")}
-              />
+              /> */}
+              <Button
+                btnName="Close"
+                btnCategory='secondary'
+                onClick={() => navigate(-1)} />
               <Button
                 btnName='Approve Request'
                 btnCls='w-[100%] whitespace-nowrap !bg-[#16B681] !text-[#FFFFFF] !border !border-[#16B681]'
@@ -360,8 +432,9 @@ export default function CertificateMenteeList() {
                 onClick={() => handleOpenActionPopup("approve")}
               />
             </Stack>
-          </Box>
-        )}
+          </Box>}
+        </>
+        }
       </div>
 
       <Backdrop

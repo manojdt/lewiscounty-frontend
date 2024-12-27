@@ -26,11 +26,21 @@ export const createCalendarEvent = createAsyncThunk(
 
 export const updateCalendarEvent = createAsyncThunk(
   'updateCalendarEvent',
-  async ({ apiData, eventSelect, id }) => {
-    const updateEvent = await api.put(
-      `/calendar_meeting/meeting?option=${eventSelect}&id=${id}`,
-      apiData
-    );
+  async ({ apiData, eventSelect, id, status }) => {
+    const params = new URLSearchParams({
+      id: id,
+    });
+
+    if (status !== 'draft') {
+      params.append('option', eventSelect);
+    }
+
+    console.log(params.toString());
+
+    const method = status === 'draft' ? 'post' : 'put';
+    const endpoint = `/calendar_meeting/meeting?${params.toString()}`;
+
+    const updateEvent = await api[method](endpoint, apiData);
     if (updateEvent.status === 200 && updateEvent.data) {
       return updateEvent.data;
     }
@@ -52,9 +62,17 @@ export const deleteCalendarEvent = createAsyncThunk(
 );
 
 export const getCalendarEvent = createAsyncThunk(
-  'updateCalendarEvent',
-  async (id) => {
-    const getEvent = await api.get(`/calendar_meeting/meeting?id=${id}`);
+  'getCalendarEvent',
+  async ({ id, status }) => {
+    const params = new URLSearchParams({
+      id: id,
+    });
+    if (status === 'draft') {
+      params.append('status', status);
+    }
+    const getEvent = await api.get(
+      `/calendar_meeting/meeting?${params.toString()}`
+    );
     if (getEvent.status === 200 && getEvent.data) {
       return getEvent.data;
     }

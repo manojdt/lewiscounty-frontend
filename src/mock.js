@@ -478,18 +478,45 @@ export const MaterialColumns = [
     },
   },
 ];
+export const GoalColumns = [
+  {
+    field: 'GoalName ',
+    headerName: 'Goal Name ',
+    flex: 1,
+    id: 0,
+  },
+  {
+    field: 'status',
+    headerName: 'Status',
+    flex: 1,
+    id: 1,
+  },
+  {
+    field: 'level',
+    headerName: 'Progress level',
+    flex: 1,
+    id: 2,
+  },
+  {
+    field: 'action',
+    headerName: 'Action',
+    flex: 1,
+    id: 3,
+    
+  },
+];
 
 export const MemberColumns = [
   {
     field: 'first_name',
     headerName: 'Full Name',
-    width: 600,
+    flex: 1,
     id: 0,
   },
   {
     field: 'email',
     headerName: 'Email',
-    width: 500,
+    flex: 1,
     id: 1,
   },
   // {
@@ -502,34 +529,78 @@ export const MemberColumns = [
 
 export const MenteeAssignColumns = [
   {
-    field: 'first_name',
+    field: 'full_name',
     headerName: 'Full Name',
-    width: 400,
+    // width: 400,
     id: 0,
+    flex: 1,
   },
   {
     field: 'email',
     headerName: 'Email',
-    width: 250,
+    // width: 250,
     id: 1,
+    flex: 1,
   },
   {
     field: 'dob',
     headerName: 'DOB',
-    width: 200,
+    // width: 200,
     id: 2,
+    flex: 1,
   },
   {
     field: 'gender',
     headerName: 'Gender',
-    width: 200,
+    // width: 200,
     id: 3,
+    flex: 1,
   },
   {
     field: 'action',
     headerName: 'Action',
-    width: 200,
+    // width: 200,
     id: 4,
+    flex: 1,
+  },
+];
+
+export const MentorAssignColumns = [
+  {
+    field: 'name',
+    headerName: 'Mentor Name',
+    flex: 1,
+    id: 0,
+  },
+  {
+    field: 'category_name',
+    headerName: 'Professional',
+    flex: 1,
+    id: 1,
+  },
+  {
+    field: 'phone_number',
+    headerName: 'Phone Number',
+    flex: 1,
+    id: 2,
+  },
+  {
+    field: 'email',
+    headerName: 'Email',
+    flex: 1,
+    id: 3,
+  },
+  {
+    field: 'certificates',
+    headerName: 'Certificates',
+    flex: 1,
+    id: 4,
+  },
+  {
+    field: 'view',
+    headerName: 'View',
+    flex: 1,
+    id: 5,
   },
 ];
 
@@ -554,19 +625,19 @@ export const SkillsColumns = [
   {
     field: 'name',
     headerName: 'Skills Name',
-    width: 400,
+    flex: 1,
     id: 0,
   },
   {
     field: 'desc',
     headerName: 'Skills Description',
-    width: 400,
+    flex: 1,
     id: 1,
   },
   {
     field: 'action',
     headerName: 'Action',
-    width: 350,
+    flex: 1,
     id: 3,
     renderCell: (params) => {
       return (
@@ -1371,7 +1442,122 @@ export const programRequestColumns = [
     for: ['admin', 'mentor', 'mentee'],
   },
   {
-    field: 'requested_by_name',
+    field: 'created_by_full_name',
+    headerName: 'Requested By',
+    flex: 1,
+    id: 2,
+    for: ['admin', 'mentee'],
+  },
+  {
+    field: 'position',
+    headerName: 'Position',
+    flex: 1,
+    id: 3,
+    for: ['admin'],
+  },
+  // {
+  //   field: 'to_request',
+  //   headerName: 'Requeste To',
+  //   flex: 1,
+  //   id: 4,
+  //   for: ['mentor'],
+  // },
+  {
+    field: 'created_at',
+    headerName: 'Requested Date',
+    flex: 1,
+    id: 5,
+    for: ['admin', 'mentor', 'mentee'],
+  },
+  // {
+  //   field: 'cancelled_reason',
+  //   headerName: 'Cancel Reason',
+  //   flex: 1,
+  //   id: 6,
+  //   for: ['mentor'],
+  // },
+  {
+    field: 'updated_at',
+    headerName: 'Last Updated Date',
+    flex: 1,
+    id: 7,
+    for: ['admin', 'mentee', "mentor"],
+  },
+  {
+    field: 'updated_by_full_name',
+    headerName: 'Last Updated By',
+    flex: 1,
+    id: 8,
+    for: ['admin', 'mentee', "mentor"],
+  },
+  {
+    field: 'auto_approval',
+    headerName: 'Auto Approval',
+    flex: 1,
+    id: 8,
+    for: ['admin'],
+  },
+  // {
+  //   field: 'approved_date_time',
+  //   headerName: 'Approved Date & Time',
+  //   flex: 1,
+  //   id: 9,
+  //   for: ['mentor'],
+  // },
+  // {
+  //   field: 'approved_by',
+  //   headerName: 'Aborted By',
+  //   flex: 1,
+  //   id: 10,
+  //   for: ['mentor'],
+  // },
+  // {
+  //   field: 'rejected_date_time',
+  //   headerName: 'Rejected Date & Time',
+  //   flex: 1,
+  //   id: 11,
+  //   for: ['mentor'],
+  // },
+  // {
+  //   field: 'rejected_by',
+  //   headerName: 'Rejected By',
+  //   flex: 1,
+  //   id: 12,
+  //   for: ['mentor'],
+  // },
+
+  // {
+  //   field: 'aborted_date',
+  //   headerName: 'Aborted Date',
+  //   flex: 1,
+  //   id: 13,
+  //   for: ['mentor'],
+  // },
+  // {
+  //   field: 'aborted_by',
+  //   headerName: 'Aborted By',
+  //   flex: 1,
+  //   id: 14,
+  //   for: ['mentor'],
+  // },
+];
+export const programExtendRequestColumns = [
+  {
+    field: 'category_name',
+    headerName: 'Category',
+    flex: 1,
+    id: 0,
+    for: ['admin', 'mentor', 'mentee'],
+  },
+  {
+    field: 'program_name',
+    headerName: 'Program Name',
+    flex: 1,
+    id: 1,
+    for: ['admin', 'mentor', 'mentee'],
+  },
+  {
+    field: 'created_by_full_name',
     headerName: 'Requested By',
     flex: 1,
     id: 2,
@@ -1392,32 +1578,25 @@ export const programRequestColumns = [
     for: ['mentor'],
   },
   {
-    field: 'requested_date_and_time',
+    field: 'created_at',
     headerName: 'Request Date',
     flex: 1,
     id: 5,
     for: ['admin', 'mentor', 'mentee'],
   },
   {
-    field: 'cancelled_reason',
-    headerName: 'Cancel Reason',
-    flex: 1,
-    id: 6,
-    for: ['mentor'],
-  },
-  {
-    field: 'last_updated_date',
+    field: 'updated_at',
     headerName: 'Last Updated Date',
     flex: 1,
     id: 7,
-    for: ['admin', 'mentee'],
+    for: ['admin', 'mentee', "mentor"],
   },
   {
-    field: 'last_updated_by',
+    field: 'updated_by_full_name',
     headerName: 'Last Updated By',
     flex: 1,
     id: 8,
-    for: ['admin', 'mentee'],
+    for: ['admin', 'mentee', "mentor"],
   },
   {
     field: 'auto_approval',
@@ -1425,49 +1604,6 @@ export const programRequestColumns = [
     flex: 1,
     id: 8,
     for: ['admin'],
-  },
-  {
-    field: 'approved_date_time',
-    headerName: 'Approved Date & Time',
-    flex: 1,
-    id: 9,
-    for: ['mentor'],
-  },
-  {
-    field: 'approved_by',
-    headerName: 'Aborted By',
-    flex: 1,
-    id: 10,
-    for: ['mentor'],
-  },
-  {
-    field: 'rejected_date_time',
-    headerName: 'Rejected Date & Time',
-    flex: 1,
-    id: 11,
-    for: ['mentor'],
-  },
-  {
-    field: 'rejected_by',
-    headerName: 'Rejected By',
-    flex: 1,
-    id: 12,
-    for: ['mentor'],
-  },
-
-  {
-    field: 'aborted_date',
-    headerName: 'Aborted Date',
-    flex: 1,
-    id: 13,
-    for: ['mentor'],
-  },
-  {
-    field: 'aborted_by',
-    headerName: 'Aborted By',
-    flex: 1,
-    id: 14,
-    for: ['mentor'],
   },
 ];
 
@@ -1551,7 +1687,7 @@ export const newGoalsRequestsColumns = [
     headerName: 'Goal Name',
     flex: 1,
     id: 0,
-    for: ['mentee'],
+    for: ['mentee', "mentor"],
     minWidth: 150,
   },
   {
@@ -1559,7 +1695,7 @@ export const newGoalsRequestsColumns = [
     headerName: 'Description',
     flex: 1,
     id: 1,
-    for: ['mentee'],
+    for: ['mentee', "mentor"],
     minWidth: 150,
   },
   {
@@ -1567,7 +1703,7 @@ export const newGoalsRequestsColumns = [
     headerName: 'Request Date ',
     flex: 1,
     id: 2,
-    for: ['mentee'],
+    for: ['mentee', "mentor"],
     minWidth: 150,
   },
   {
@@ -1575,7 +1711,7 @@ export const newGoalsRequestsColumns = [
     headerName: 'Requested to',
     flex: 1,
     id: 3,
-    for: ['mentee'],
+    for: ['mentee', "mentor"],
     minWidth: 150,
   },
   {
@@ -1583,7 +1719,7 @@ export const newGoalsRequestsColumns = [
     headerName: 'Last Updated Date',
     flex: 1,
     id: 4,
-    for: ['mentee'],
+    for: ['mentee', "mentor"],
     minWidth: 150,
   },
   {
@@ -1591,7 +1727,7 @@ export const newGoalsRequestsColumns = [
     headerName: 'Last Update by',
     flex: 1,
     id: 5,
-    for: ['mentee'],
+    for: ['mentee', "mentor"],
     minWidth: 150,
   },
   {
@@ -1599,7 +1735,7 @@ export const newGoalsRequestsColumns = [
     headerName: 'Status',
     flex: 1,
     id: 6,
-    for: ['mentee'],
+    for: ['mentee', "mentor"],
     minWidth: 150,
   },
   {
@@ -1607,7 +1743,7 @@ export const newGoalsRequestsColumns = [
     headerName: 'Action',
     flex: 1,
     id: 8,
-    for: ['mentee'],
+    for: ['mentee', "mentor"],
     minWidth: 150,
   },
 ];
@@ -1763,54 +1899,80 @@ export const goalsRequestColumns = [
 
 export const resourceAccessRequestColumns = [
   {
-    field: 'name',
+    field: 'material_name',
     headerName: 'Material Name',
-    flex: 1,
-    id: 0,
-    for: ['admin', 'mentor'],
-  },
-  {
-    field: 'program_name',
-    headerName: 'Program Name',
     flex: 1,
     id: 1,
     for: ['admin', 'mentor'],
   },
   {
-    field: 'created_at',
-    headerName: 'Request Date',
+    field: 'category_name',
+    headerName: 'Category',
     flex: 1,
-    id: 2,
+    id: 12,
+    for: ['admin', 'mentor', 'mentee'],
+  },
+  {
+    field: 'comments',
+    headerName: 'Reason',
+    flex: 1,
+    id: 3,
+    for: ['mentor'],
+  },
+  {
+    field: 'program_name',
+    headerName: 'Program Name',
+    flex: 1,
+    id: 14,
     for: ['admin'],
   },
   {
-    field: 'created_by',
-    headerName: 'Requested By',
+    field: 'created_at',
+    headerName: 'Request Date ',
     flex: 1,
-    id: 3,
-    for: ['admin'],
+    id: 5,
+    for: ['mentee', "mentor", 'admin'],
+    minWidth: 150,
+  },
+  {
+    field: 'created_by_full_name',
+    headerName: 'Requested to',
+    flex: 1,
+    id: 6,
+    for: ['mentee', "mentor", 'admin'],
+    minWidth: 150,
   },
   {
     field: 'updated_at',
     headerName: 'Last Updated Date',
     flex: 1,
-    id: 4,
-    for: ['mentor'],
+    id: 7,
+    for: ['mentee', "mentor", 'admin'],
+    minWidth: 150,
   },
   {
-    field: 'updated_by',
-    headerName: 'Last Updated By',
+    field: 'updated_by_full_name',
+    headerName: 'Last Update by',
     flex: 1,
-    id: 5,
-    for: ['admin', 'mentor'],
+    id: 8,
+    for: ['mentee', "mentor", 'admin'],
+    minWidth: 150,
   },
   {
-    field: 'file',
-    headerName: 'File MB',
+    field: 'material_url',
+    headerName: 'Material Link',
     flex: 1,
-    id: 5,
+    id: 9,
     for: ['admin', 'mentor'],
-  },
+  },  
+  {
+    field: 'url',
+    headerName: 'Document',
+    flex: 1,
+    id: 11,
+    for: ['mentee', 'mentor'],
+    minWidth: 150,
+  },  
 ];
 
 export const techinicalSupportRequestColumns = [
@@ -1846,49 +2008,49 @@ export const techinicalSupportRequestColumns = [
 
 export const testimonialRequestColumns = [
   {
-    field: 'name',
+    field: 'program_name',
     headerName: 'Program Name',
     flex: 1,
     id: 0,
     for: ['admin', 'mentor'],
   },
   {
-    field: 'reason',
+    field: 'testimonial_type',
     headerName: 'Testimonial Type',
     flex: 1,
     id: 1,
     for: ['admin', 'mentor'],
   },
   {
-    field: 'dob',
+    field: 'requested_to',
     headerName: 'To Request',
     flex: 1,
     id: 2,
     for: ['admin'],
   },
   {
-    field: 'phone',
+    field: 'request_date',
     headerName: 'Requested Date',
     flex: 1,
     id: 3,
     for: ['admin'],
   },
   {
-    field: 'phone',
+    field: 'requested_by',
     headerName: 'Requested By',
     flex: 1,
     id: 3,
     for: ['admin'],
   },
   {
-    field: 'phone',
+    field: 'updated_at',
     headerName: 'Last Updated Date',
     flex: 1,
     id: 3,
     for: ['admin'],
   },
   {
-    field: 'phone',
+    field: 'updated_by',
     headerName: 'Last Updated By',
     flex: 1,
     id: 3,
@@ -1912,21 +2074,21 @@ export const certificateRequestColumns = [
     for: ['admin', 'mentor'],
   },
   {
-    field: 'Mentee_count',
+    field: 'participates_count',
     headerName: 'Mentees',
     flex: 1,
     id: 2,
     for: ['admin'],
   },
   {
-    field: 'requested_by',
+    field: 'created_by_full_name',
     headerName: 'Requested By',
     flex: 1,
     id: 3,
     for: ['admin'],
   },
   {
-    field: 'requested_date',
+    field: 'created_at',
     headerName: 'Requested Date',
     flex: 1,
     id: 3,
@@ -1950,21 +2112,21 @@ export const certificateRequestColumns = [
 
 export const reportRequestColumns = [
   {
-    field: 'report_name',
+    field: 'name',
     headerName: 'Report Name',
     flex: 1,
     id: 0,
     for: ['admin', 'mentor'],
   },
   {
-    field: 'mentor_name',
+    field: 'created_by_full_name',
     headerName: 'Mentor Name',
     flex: 1,
     id: 1,
     for: ['admin', 'mentor'],
   },
   {
-    field: 'category',
+    field: 'category_name',
     headerName: 'Category',
     flex: 1,
     id: 2,
@@ -1978,21 +2140,21 @@ export const reportRequestColumns = [
     for: ['admin'],
   },
   {
-    field: 'mentees',
+    field: 'participates_count',
     headerName: 'Mentees',
     flex: 1,
     id: 2,
     for: ['admin'],
   },
   {
-    field: 'updated_date',
+    field: 'updated_at',
     headerName: 'Last Updated Date',
     flex: 1,
     id: 3,
     for: ['admin'],
   },
   {
-    field: 'updated_by',
+    field: 'updated_by_full_name',
     headerName: 'Last Updated By',
     flex: 1,
     id: 3,
@@ -2386,24 +2548,24 @@ export const JoinedProgramMenteeColumn = [
 ];
 
 export const AdminCategory = [
-    {
-        field: 'mentor_count',
-        headerName: 'Mentors',
-        flex: 1,
-        id: 0,
-    },
-    {
-        field: 'mentee_count',
-        headerName: 'Mentees',
-        flex: 1,
-        id: 0,
-    },
-    {
-        field: 'program_count',
-        headerName: 'Programs',
-        flex: 1,
-        id: 0,
-    },
+  {
+    field: 'mentor_count',
+    headerName: 'Mentors',
+    flex: 1,
+    id: 0,
+  },
+  {
+    field: 'mentee_count',
+    headerName: 'Mentees',
+    flex: 1,
+    id: 0,
+  },
+  {
+    field: 'program_count',
+    headerName: 'Programs',
+    flex: 1,
+    id: 0,
+  },
 ]
 
 export const categoryViewMentors = [
@@ -2534,3 +2696,59 @@ export const categoryViewProgram = [
     id: 0,
   },
 ];
+
+
+export const mentorTaskListColumns = [
+  {
+    field: 'category_name',
+    headerName: 'Category',
+    flex: 1,
+    id: 0,
+  },
+  {
+    field: 'prgrame_name',
+    headerName: 'Program Name',
+    flex: 1,
+    id: 0,
+  },
+  {
+    field: 'task_name',
+    headerName: 'Task Name',
+    flex: 1,
+    id: 0,
+  },
+  {
+    field: 'task_details',
+    headerName: 'Task Description',
+    flex: 1,
+    id: 0,
+  },
+  {
+    field: 'total_mentees',
+    headerName: 'Total Mentees',
+    flex: 1,
+    id: 0,
+  }
+]
+
+
+export const menteeTaskListFromMentor = [
+  {
+    field: 'mentee_name',
+    headerName: 'Mentee Name',
+    flex: 1,
+    id: 0,
+  },
+  {
+    field: 'phone_number',
+    headerName: 'Phone Number',
+    flex: 1,
+    id: 0,
+  },
+  {
+    field: 'email',
+    headerName: 'Email',
+    flex: 1,
+    id: 0,
+  },
+]

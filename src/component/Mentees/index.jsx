@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { Button as Btn } from '@mui/material';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Backdrop, CircularProgress } from '@mui/material';
 
 import DataTable from '../../shared/DataGrid';
 import FilterIcon from '../../assets/icons/Filter.svg';
 import MoreIcon from '../../assets/icons/moreIcon.svg';
+import CancelIcon from '../../assets/images/cancel1x.png'
 import ViewIcon from '../../assets/images/view1x.png';
 import ConnectIcon from '../../assets/images/connect1x.png';
 import ConnectPopupIcon from '../../assets/images/Connectpop1x.png';
@@ -32,20 +33,23 @@ import {
 } from '../../utils/constant';
 import { Button } from '../../shared';
 import SuccessTik from '../../assets/images/blue_tik1x.png';
+import MuiModal from '../../shared/Modal';
 
 export const Mentees = () => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const state = useLocation()?.state;
-
+  const [reason,setReason] = useState('')
+  const [reasonError, setReasonError] = React.useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
   const dispatch = useDispatch();
   const { menteeList, loading, status } = useSelector(
     (state) => state.userList
   );
 
   const [mentorType, setMentorType] = useState(
-    state?.type === 'new_req_mentee' ? 'new-request-mentees' : 'my-mentee'
+    state?.type === 'new_req_mentee' ? 'new-request-mentees' :searchParams.get('req')==="new-request-mentees"?"new-request-mentees": 'my-mentee'
   );
   const [requestTab, setRequestTab] = useState('all');
   const [selectedMentee, setSelectedMentee] = useState({});
@@ -67,7 +71,7 @@ export const Mentees = () => {
       value: 'my-mentee',
     },
     {
-      name: 'New Request Mentees',
+      name: 'New Follow Requests',
       value: 'new-request-mentees',
     },
   ];
@@ -109,7 +113,9 @@ export const Mentees = () => {
       follow_id: id,
       status: status,
     };
-
+if(reason){
+  payload.cancelled_reason=reason
+}
     dispatch(mentorAcceptReq(payload));
   };
 
@@ -120,6 +126,7 @@ export const Mentees = () => {
         activity: false,
         bool: true,
       });
+      setReason('')
       setTimeout(() => {
         closeConfirmation();
         getTableData();
@@ -228,7 +235,7 @@ export const Mentees = () => {
                   navigate(`/profileView`, {
                     state: {
                       row_id: selectedMentee?.id,
-                      user_id: selectedMentee?.requested_by,
+                      user_id: selectedMentee?.follower,
                       is_approved: selectedMentee?.is_approved,
                     },
                   })
@@ -306,6 +313,11 @@ export const Mentees = () => {
   useEffect(() => {
     getTableData();
   }, [paginationModel, mentorType, requestTab]);
+  useEffect(() => {
+   if(searchParams.get('req')){
+    setMentorType(searchParams.get('req'))
+   }
+  }, [searchParams]);
 
   const handleOpenActivityPopup = (id, type) => {
     handleClose();
@@ -317,8 +329,15 @@ export const Mentees = () => {
     });
   };
 
-  const handleConfirmBtn = () => {
-    handleConnectionReq(confirmation?.id, confirmation?.type);
+  const handleConfirmBtn = (e) => {
+    if(e) e.preventDefault();
+    if (confirmation?.type === 'reject' && !reason.trim()) {
+      setReasonError(true); // Set error if reason is empty
+      return; // Prevent further action
+    }
+      setReasonError(false);
+      handleConnectionReq(confirmation?.id, confirmation?.type);
+   
   };
 
   const closeConfirmation = () => {
@@ -330,6 +349,7 @@ export const Mentees = () => {
       type: '',
       id: '',
     });
+    setReason('')
   };
 
   const handleSearch = (searchText) => {
@@ -353,7 +373,7 @@ export const Mentees = () => {
           <div className='flex gap-5 items-center '>
             <p>{title}</p>
             <p>
-              <img src={FilterIcon} alt='FilterIcon' />
+              {/* <img src={FilterIcon} alt='FilterIcon' /> */}
             </p>
           </div>
           <div className='flex gap-8 items-center'>
@@ -379,7 +399,10 @@ export const Mentees = () => {
               label={'My Mentee'}
               options={menteeOption}
               value={mentorType}
-              handleDropdown={(event) => setMentorType(event.target.value)}
+              handleDropdown={(event) =>{ 
+                setMentorType(event.target.value)
+                navigate(`/mentees?req=${event.target.value}`)
+              }}
             />
           </div>
         </div>
@@ -422,7 +445,7 @@ export const Mentees = () => {
 
           <Backdrop
             sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-            open={confirmation?.activity}
+            open={confirmation?.activity&&confirmation?.type !== 'reject' }
           >
             <div className='popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center'>
               <img
@@ -438,7 +461,8 @@ export const Mentees = () => {
               >
                 {confirmation?.type === 'reject' ? 'Reject' : 'Connect'}
               </span>
-
+<div>
+</div>
               <div className='py-5'>
                 <p
                   style={{
@@ -455,7 +479,7 @@ export const Mentees = () => {
                   Mentee?
                 </p>
               </div>
-              <div className='flex justify-center'>
+              <div className='flex justify-center p-4'>
                 <div className='flex gap-6 justify-center align-middle'>
                   <Button
                     btnName='Cancel'
@@ -478,7 +502,60 @@ export const Mentees = () => {
               </div>
             </div>
           </Backdrop>
+          <MuiModal modalSize='md' modalOpen={confirmation?.activity&&confirmation?.type === 'reject'} modalClose={closeConfirmation} noheader>
+<div className='px-5 py-5'>
+    <div className='flex justify-center flex-col gap-5  mt-4 mb-4'
+        style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '10px', }}>
+        <div className='flex justify-between px-3 py-4 items-center' style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
+            <p className='text-[18px]' style={{ color: 'rgba(0, 0, 0, 1)' }}>Reject Request Reason </p>
+            <img className='cursor-pointer' onClick={closeConfirmation} src={CancelIcon} alt="CancelIcon" />
+        </div>
 
+        <div className='px-5'>
+
+            <form onSubmit={handleConfirmBtn}>
+                <div className='relative pb-8'>
+                    <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
+                        Reject Reason <span style={{color: 'red'}}>{'*'}</span>
+                    </label>
+
+                    <div className='relative'>
+                        <textarea
+                             value={reason}
+                             onChange={(e)=>{
+                               setReason(e.target.value)
+                               setReasonError(false)
+                             }}
+                            id="message" rows="4" className={`block p-2.5 input-bg w-full text-sm text-gray-900  border
+                               focus-visible:outline-none focus-visible:border-none !border !border-[#E50027] w-[100%] !text-[#18283D] h-[130px]`}
+                            placeholder={''}
+                        ></textarea>
+                       {reasonError && (
+              <p className="text-red-500 text-xs mt-1">
+                Please provide a reason for rejection.
+              </p>
+            )}
+                    </div>
+                </div>
+
+                <div className='flex justify-center gap-5 items-center pt-5 pb-10'>
+                    <Button btnName='Cancel' btnCls="w-[18%]" btnCategory="secondary" onClick={closeConfirmation} />
+                    <button
+                        type='submit'
+                        className='text-white py-3 px-7 w-[18%]'
+                        style={{ background: 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)', borderRadius: '3px' }}>
+                        Submit
+                    </button>
+                </div>
+            </form>
+
+        </div>
+
+
+    </div>
+
+</div>
+</MuiModal>
           <Backdrop
             sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
             open={confirmation?.bool}

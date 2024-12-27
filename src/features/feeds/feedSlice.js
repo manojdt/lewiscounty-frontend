@@ -10,7 +10,8 @@ import {
     getUserPost,
     postComment,
     postCommentLike,
-    updateFeedTrack
+    updateFeedTrack,
+    getFeedTrack
 } from "../../services/feeds";
 import {
     feedStatus
@@ -21,6 +22,7 @@ const initialState = {
     feedDetails: {},
     recentPosts: [],
     userPost: [],
+    feedTrack:[],
     loading: false,
     status: "",
     error: "",
@@ -124,7 +126,29 @@ export const feedSlice = createSlice({
                     error: action.error.message,
                 };
             });
-
+        
+        builder
+            .addCase(getFeedTrack.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(getFeedTrack.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    feedTrack: action.payload,
+                    status: feedStatus.load,
+                    loading: false,
+                };
+            })
+            .addCase(getFeedTrack.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
 
         builder
             .addCase(updateFeedTrack.pending, (state) => {

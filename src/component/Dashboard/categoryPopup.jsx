@@ -77,6 +77,7 @@ export const CategoryPopup = ({
                         btnCls='w-[140px]'
                         btnName={'Continue'}
                         btnCategory='primary'
+                        disabled={!selectedCategory?.length>0}
                         onClick={() => handleUpdate("update")}
                     />
                 </Stack>

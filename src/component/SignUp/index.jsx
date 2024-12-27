@@ -4,9 +4,6 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
-
-import LogoSlide from "../LogoSlide";
-
 import { userAccountCreate, resetUserInfo, updateInfo, updateUserInfo } from '../../services/loginInfo'
 import { ReactComponent as EyeCloseIcon } from "../../assets/icons/eyeClose.svg";
 import { ReactComponent as EyeOpenIcon } from "../../assets/icons/eyeOpen.svg";
@@ -41,6 +38,13 @@ export const Signup = () => {
   const onSubmit = (data) => {
     const { first_name, last_name, email, password } = data;
     if (first_name !== "" && last_name !== '' && email !== "" && password !== "") {
+      if (/\s/.test(password)) {
+        setError("password", {
+          type: "manual",
+          message: "Password must not contain spaces",
+        });
+        return; // Stop further execution if the password contains spaces
+      }
       if (!verifyPasswordRule[PasswordRulesSet.character] || !verifyPasswordRule[PasswordRulesSet.upperlowercase] ||
         !verifyPasswordRule[PasswordRulesSet.number] || !verifyPasswordRule[PasswordRulesSet.email] ||
         !verifyPasswordRule[PasswordRulesSet.common]) {
@@ -110,208 +114,195 @@ export const Signup = () => {
     }
   }, [userData])
 
-
   return (
-    <div className="h-full">
-      <div className="flex flex-wrap h-full">
-        <div className="w-full">
-          <div className="block bg-white shadow-lg h-full">
-            <div className="g-0 lg:flex lg:flex-row h-full">
-              <LogoSlide />
-              <Backdrop
-                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={userData.loading || userData.status === userStatus.create}
-              >
+    <React.Fragment>
+
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={userData.loading || userData.status === userStatus.create}
+      >
+        {
+          userData.status === userStatus.create ?
+            <div className="w-2/6 bg-white flex flex-col gap-4 h-[330px] justify-center items-center">
+              <img src={SuccessIcon} alt="VerifyIcon" />
+              <span style={{ color: '#232323', fontWeight: 600 }}>Account Created Successfully!</span>
+            </div>
+            :
+            <CircularProgress color="inherit" />
+        }
+      </Backdrop>
+
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={userData.loading || userData.status === userStatus.login || userData.status === userStatus.pending}
+      >
+        {
+          (userData.status === userStatus.login || userData.status === userStatus.pending) ?
+            <div className="popup-content w-2/6 bg-white flex flex-col gap-4 h-[330px] justify-center items-center">
+              <img src={userData.status === userStatus.pending ? FailedIcon : SuccessIcon} alt="VerifyIcon" />
+              <span style={{ color: '#232323', fontWeight: 600 }}>
                 {
-                  userData.status === userStatus.create ?
-                    <div className="w-2/6 bg-white flex flex-col gap-4 h-[330px] justify-center items-center">
-                      <img src={SuccessIcon} alt="VerifyIcon" />
-                      <span style={{ color: '#232323', fontWeight: 600 }}>Account Created Successfully!</span>
-                    </div>
-                    :
-                    <CircularProgress color="inherit" />
+                  userData.status === userStatus.pending ? 'Waiting for admin approval' : ' Login  Successful!'
                 }
-              </Backdrop>
+              </span>
+            </div>
+            :
+            <CircularProgress color="inherit" />
+        }
+      </Backdrop>
 
-              <Backdrop
-                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={userData.loading || userData.status === userStatus.login || userData.status === userStatus.pending}
-              >
-                {
-                  (userData.status === userStatus.login || userData.status === userStatus.pending) ?
-                    <div className="popup-content w-2/6 bg-white flex flex-col gap-4 h-[330px] justify-center items-center">
-                      <img src={userData.status === userStatus.pending ? FailedIcon : SuccessIcon} alt="VerifyIcon" />
-                      <span style={{ color: '#232323', fontWeight: 600 }}>
-                        {
-                          userData.status === userStatus.pending ? 'Waiting for admin approval' : ' Login  Successful!'
-                        }
-                      </span>
-                    </div>
-                    :
-                    <CircularProgress color="inherit" />
-                }
-              </Backdrop>
-              <div className="signup-content px-4 md:px-0 lg:w-7/12 text-black">
-                <div className="md:mx-4 md:p-8">
-                  <div className="text-left">
-                    <div className="flex items-center logo">
-                      <h4 className="mt-1 pb-1 text-xl font-semibold logoColor">
-                        My Logo
-                      </h4>
-                    </div>
+      <div className="w-full flex items-center justify-center">
+        <div className="w-4/5 max-w-md">
+          <h4 className="pb-1 text-xl font-semibold logoColor">
+            My Logo
+          </h4>
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">
+            Welcome to Create Account
+          </h2>
+          <p className="text-[12px] pb-10">Already have an account?
+            <span className="cursor-pointer pl-1" onClick={() => navigate('/login')}
+              style={{ color: 'rgba(29, 91, 191, 1)', textDecoration: 'underline', fontWeight: 600 }}>Log in</span>
+          </p>
 
-                    <h4 className="mt-3 pb-1 text-xl font-semibold defaultTextColor">
-                      Welcome to logo.com
-                    </h4>
-                    <p className="text-[12px] pb-10">Already have an account?
-                      <span className="cursor-pointer pl-1" onClick={() => navigate('/login')}
-                        style={{ color: 'rgba(29, 91, 191, 1)', textDecoration: 'underline', fontWeight: 600 }}>Log in</span>
-                    </p>
-                  </div>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <SocialMediaLogin />
 
-                  <form onSubmit={handleSubmit(onSubmit)}>
-                    <SocialMediaLogin view={'horizontal'} />
-
-                    <div className="mb-8 mt-8 flex items-center before:mt-0.5 before:flex-1 before:border-t
+            <div className="mb-8 mt-8 flex items-center before:mt-0.5 before:flex-1 before:border-t
                      before:border-neutral-300 after:mt-0.5 after:flex-1 after:border-t
                       after:border-neutral-300 dark:before:border-neutral-500
                        dark:after:border-neutral-500">
-                      <p
-                        className="mx-4 mb-0 text-center font-semibold dark:text-neutral-200"
+              <p
+                className="mx-4 mb-0 text-center font-semibold dark:text-neutral-200"
+                style={{
+                  color: "#232323",
+                }}
+              >
+                OR
+              </p>
+            </div>
+            {
+              userData.error !== '' ? <div className="pb-7">
+                <p className="error" role="alert">
+                  {userData.error}
+                </p></div> : null
+            }
+            <div className="flex flex-wrap gap-2">
+              {
+                SignupFields.map((field, index) =>
+                  <>
+                    <div className={`relative mb-6 ${field.size ? 'width-49' : 'w-full'}`} key={index}>
+                      <label className="block tracking-wide text-gray-700 mb-2 text-[14px]">
+                        {field.label}  <span style={{color: 'red'}}>{field?.inputRules?.required ? '*' : ''}</span>
+                      </label>
+                      <input
+                        type={field.fieldtype === 'password' ? (passwordVisibility ? 'text' : field.fieldtype) : field.fieldtype}
+                        className={`w-full rounded px-3 py-[0.32rem] text-[14px] leading-[2.15] h-[60px] ${errors[field.name] ? 'focus:border-teal focus:outline-none focus:ring-0' : ''}`}
+                        placeholder={field.placeholder}
                         style={{
                           color: "#232323",
+                          border: `1px solid ${errors[field.name] ? 'rgb(239 68 68)' : '#3E3E3E'}`,
                         }}
-                      >
-                        OR
-                      </p>
-                    </div>
-                    {
-                      userData.error !== '' ? <div className="pb-7">
-                        <p className="error" role="alert">
-                          {userData.error}
-                        </p></div> : null
-                    }
-                    <div className="flex flex-wrap gap-2">
+                        {...register(field.name, field.inputRules)}
+                        {...field.fieldtype === 'password' ? { onKeyUp: (e) => handleField(field.fieldtype, e.target.value) } : {}}
+                        // onBlur={(e) => handleField(field.fieldtype, e.target.value)}
+                        aria-invalid={errors[field.name] ? "true" : "false"}
+                        tabIndex={index + 1}
+                      />
                       {
-                        SignupFields.map((field, index) =>
-                          <>
-                            <div className={`relative mb-6 ${field.size ? 'width-49' : 'w-full'}`} key={index}>
-                              <label className="block tracking-wide text-gray-700 mb-2 text-[14px]">
-                                {field.label} *
-                              </label>
-                              <input
-                                type={field.fieldtype === 'password' ? (passwordVisibility ? 'text' : field.fieldtype) : field.fieldtype}
-                                className={`w-full rounded px-3 py-[0.32rem] text-[14px] leading-[2.15] h-[60px] ${errors[field.name] ? 'focus:border-teal focus:outline-none focus:ring-0' : ''}`}
-                                placeholder={field.placeholder}
-                                style={{
-                                  color: "#232323",
-                                  border: `1px solid ${errors[field.name] ? 'rgb(239 68 68)' : '#3E3E3E'}`,
-                                }}
-                                {...register(field.name, field.inputRules)}
-                                {...field.fieldtype === 'password' ? { onKeyUp: (e) => handleField(field.fieldtype, e.target.value) } : {}}
-                                // onBlur={(e) => handleField(field.fieldtype, e.target.value)}
-                                aria-invalid={errors[field.name] ? "true" : "false"}
-                                tabIndex={index + 1}
-                              />
-                              {
-                                field.fieldtype === 'password' &&
-                                <button
-                                  type="button"
-                                  className="absolute top-9 end-0 p-3.5 rounded-e-md"
-                                  onClick={() =>
-                                    setPasswordVisibility(!passwordVisibility)
-                                  }
-                                >
-                                  {passwordVisibility ? (
-                                    <EyeOpenIcon />
-                                  ) : (
-                                    <EyeCloseIcon />
-                                  )}
-                                </button>
-                              }
-
-                              {errors[field.name] && (
-                                <p className="error" role="alert">
-                                  {errors[field.name].message}
-                                </p>
-                              )}
-                            </div>
-                            {
-                              field.fieldtype === 'password' && getValues('password') !== undefined && getValues('password') !== '' &&
-                              <div className="pb-3 leading-6">
-                                <p className="text-[14px] pb-1">Create a password That:</p>
-                                <ul className="">
-                                  {
-                                    PasswordRules.map((rule, index) => {
-                                      let icon = '\\2022'
-                                      let pd = 3
-                                      let textColor = '#000'
-                                      if (verifyPasswordRule[rule.key]) {
-                                        icon = '\\2714\\0020'
-                                        pd = 2
-                                        textColor = '#00AEBD'
-                                      }
-                                      return (
-                                        <li key={index} className={`text-[12px] list-none before:content-['${icon}'] before:pr-${pd} before:text-[10px]`}
-                                          style={{ color: textColor }}>{rule.name}</li>)
-                                    })
-                                  }
-                                </ul>
-                              </div>
-                            }
-                          </>
-                        )
-                      }
-                    </div>
-                    <div className="mb-6 flex justify-between flex-col">
-                      <div className="mb-[0.125rem] block min-h-[1.5rem] ps-[1.5rem] flex items-center">
-                        <input
-                          className="relative float-left -ms-[1.5rem] me-[6px] mt-[0.15rem] h-[1.125rem] w-[1.125rem] text-[12px]"
-                          type="checkbox"
-                          {
-                          ...register("user_agree_terms", { required: true })
+                        field.fieldtype === 'password' &&
+                        <button
+                          type="button"
+                          className="absolute top-9 end-0 p-3.5 rounded-e-md"
+                          onClick={() =>
+                            setPasswordVisibility(!passwordVisibility)
                           }
-                          tabIndex={SignupFields.length + 1}
-                        />
-                        <label className="inline-block ps-[0.15rem] hover:cursor-pointer defaultTextColor text-[14px]">
-                          I agree to the
-                          <span className="cursor-pointer px-1" onClick={() => navigate('/login')}
-                            style={{ color: 'rgba(29, 91, 191, 1)', textDecoration: 'underline', fontWeight: 600 }}>Terms & Service</span>
-                          and
-                          <span className="cursor-pointer pl-1" onClick={() => navigate('/login')}
-                            style={{ color: 'rgba(29, 91, 191, 1)', textDecoration: 'underline', fontWeight: 600 }}>Privacy Policy</span>
-                        </label>
+                        >
+                          {passwordVisibility ? (
+                            <EyeOpenIcon />
+                          ) : (
+                            <EyeCloseIcon />
+                          )}
+                        </button>
+                      }
 
-                      </div>
-                      {errors['user_agree_terms'] && (
+                      {errors[field.name] && (
                         <p className="error" role="alert">
-                          Please agree to the terms and conditions
+                          {errors[field.name].message}
                         </p>
                       )}
                     </div>
-
-                    <div className="flex create-button justify-center text-center lg:text-left">
-                      <button
-                        type="submit"
-                        className="inline-block rounded px-7 pb-3 pt-3 text-sm font-medium text-white w-2/5"
-                        data-twe-ripple-init
-                        data-twe-ripple-color="light"
-                        style={{
-                          background:
-                            "linear-gradient(to right, #00AEBD, #1D5BBF)"
-                        }}
-                        tabIndex={SignupFields.length + 2}
-                      >
-                        Create Account
-                      </button>
-                    </div>
-                  </form>
-                </div>
+                    {
+                      field.fieldtype === 'password' && getValues('password') !== undefined && getValues('password') !== '' &&
+                      <div className="pb-3 leading-6">
+                        <p className="text-[14px] pb-1">Create a password That:</p>
+                        <ul className="">
+                          {
+                            PasswordRules.map((rule, index) => {
+                              let icon = '\\2022'
+                              let pd = 3
+                              let textColor = '#000'
+                              if (verifyPasswordRule[rule.key]) {
+                                icon = '\\2714\\0020'
+                                pd = 2
+                                textColor = '#00AEBD'
+                              }
+                              return (
+                                <li key={index} className={`text-[12px] list-none before:content-['${icon}'] before:pr-${pd} before:text-[10px]`}
+                                  style={{ color: textColor }}>{rule.name}</li>)
+                            })
+                          }
+                        </ul>
+                      </div>
+                    }
+                  </>
+                )
+              }
+            </div>
+            <div className="mb-6 flex items-center justify-between">
+              <div className="mb-[0.125rem] block min-h-[1.5rem] ps-[1.5rem]">
+                <input
+                  className="relative float-left -ms-[1.5rem] me-[6px] mt-[0.15rem] h-[1.125rem] w-[1.125rem] text-[12px]"
+                  type="checkbox"
+                  {
+                  ...register("user_agree_terms", { required: true })
+                  }
+                  tabIndex={SignupFields.length + 1}
+                />
+                <label className="inline-block ps-[0.15rem] hover:cursor-pointer defaultTextColor text-[14px]">
+                  I agree to the
+                  <span className="cursor-pointer px-1" onClick={() => navigate('/login')}
+                    style={{ color: 'rgba(29, 91, 191, 1)', textDecoration: 'underline', fontWeight: 600 }}>Terms & Conditions</span>
+                  and
+                  <span className="cursor-pointer pl-1" onClick={() => navigate('/login')}
+                    style={{ color: 'rgba(29, 91, 191, 1)', textDecoration: 'underline', fontWeight: 600 }}>Privacy Policy</span>
+                </label>
               </div>
             </div>
-          </div>
+
+            {errors['user_agree_terms'] && (
+              <p className="error mb-4" role="alert">
+                Please agree terms & Conditions
+              </p>
+            )}
+
+            <div className="flex create-button justify-center text-center lg:text-left">
+              <button
+                type="submit"
+                className="inline-block rounded px-7 pb-3 pt-3 text-sm font-medium text-white w-2/5"
+                data-twe-ripple-init
+                data-twe-ripple-color="light"
+                style={{
+                  background:
+                    "linear-gradient(to right, #00AEBD, #1D5BBF)"
+                }}
+                tabIndex={SignupFields.length + 2}
+              >
+                Create Account
+              </button>
+            </div>
+          </form>
         </div>
       </div>
-    </div>
+    </React.Fragment>
   );
 };

@@ -180,7 +180,7 @@ export default function DashboardCard({ title, viewpage, handleNavigateDetails, 
                                                         </div>
                                                         <div className="flex flex-col gap-3">
                                                             {
-                                                                currentProgram.categories.length &&
+                                                                currentProgram?.categories.length &&
                                                                 <p className="py-1 px-1 text-[12px] text-center rounded-3xl w-[90px]"
                                                                     style={{ border: '1px solid rgba(238, 238, 238, 1)' }}>{currentProgram?.categories[0]?.name}</p>
                                                             }

@@ -14,12 +14,14 @@ import { certificateColumns } from '../../utils/tableFields';
 import { useNavigate } from 'react-router-dom';
 import { certificateDownload, getCertificateList, getCertificates } from '../../services/certificate';
 import { certificateColor, certificateRequestStatusText, certificateText, requestStatusColor, requestStatusText } from '../../utils/constant';
+import Ratings from '../Programs/Ratings';
 
 
 export default function Certificate() {
     const navigate = useNavigate()
     const [actionTab, setActiveTab] = useState('waiting_for_response')
     const [requestTab, setRequestTab] = useState('all')
+    const [ratingModal, setRatingModal] = useState({ modal: false, success: false })
     const userInfo = useSelector(state => state.userInfo)
     const { certificatesList, certificateHTML, loading } = useSelector(state => state.certificates)
     const [anchorEl, setAnchorEl] = useState(null);
@@ -31,12 +33,25 @@ export default function Certificate() {
     });
     const role = userInfo.data.role
     const dispatch = useDispatch()
+    const ratingModalSuccess = () => {
+        if (role) {
+            dispatch(getCertificateList(role === "admin" ? `?status=${role === "admin" ? "approved" : requestTab}&request_type=certificate${(role === "admin" && requestTab !== 'all') ? '&request_by=mentor' : ''}` : role === "mentor" ? `?status=${actionTab}&page=${paginationModel?.page + 1}&limit=${paginationModel?.pageSize}&request_type=certificate` : `?page=${paginationModel?.page + 1}&limit=${paginationModel?.pageSize}&request_type=certificate`))
+        }
+        setRatingModal({ modal: false, success: true })
+    }
+
+    const ratingModalClose = () => {
+        setRatingModal({ modal: false, success: false })
+    }
+
     const handleSearch = (value) => {
         let query = ''
         if (value !== '') {
             query = `?search=${value}`
         }
-        dispatch(getCertificateList(query + `&page=${paginationModel?.page + 1}&limit=${paginationModel?.pageSize}`))
+        dispatch(getCertificateList(query +
+            role === "admin" ? `&page=${paginationModel?.page + 1}&limit=${paginationModel?.pageSize}&request_type=certificate${(role === "admin" && requestTab !== 'all') ? '&request_by=mentor' : ''}`
+            : `&page=${paginationModel?.page + 1}&limit=${paginationModel?.pageSize}&request_type=certificate`))
     }
     const handleClose = () => {
         setAnchorEl(null);
@@ -77,11 +92,11 @@ export default function Certificate() {
                     <div className='cursor-pointer flex items-center justify-center h-full relative'>
                         <span className='w-[80px] flex justify-center h-[30px] px-3'
                             style={{
-                                background: requestStatusColor[params.row.status]?.bg || '', lineHeight: '30px',
-                                borderRadius: '3px', width: '110px', height: '34px', color: requestStatusColor[params.row.status]?.color || '',
+                                background: requestStatusColor[role === 'mentee'&&!params.row?.certificate_rating?"review":params.row.status]?.bg || '', lineHeight: '30px',
+                                borderRadius: '3px', width: '110px', height: '34px', color: requestStatusColor[role === 'mentee'&&!params.row?.certificate_rating?"review":params.row.status]?.color || '',
                                 fontSize: '12px'
                             }}
-                        > {certificateRequestStatusText[params.row.status]}</span>
+                        > {!params.row?.certificate_rating&&role === 'mentee'?"Please provide your rating": certificateRequestStatusText[params.row.status]}</span>
                     </div>
                 </>
             }
@@ -105,16 +120,38 @@ export default function Certificate() {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
-                        {role === 'mentee' && seletedItem.status === "accept" ?
-                            <MenuItem onClick={() => navigate(`/certificate-view/${seletedItem.id}`)} className='!text-[12px]'>
+                        {role === 'mentee'&& (seletedItem.status === "accept" || seletedItem.status === "approved") ?
+                            <MenuItem onClick={() => {
+                                if(seletedItem?.certificate_rating){
+
+                                    navigate(`/certificate-view/${seletedItem.id}`)
+                                }else{
+                                    setRatingModal({ modal: true, success: false })
+                                }
+                                }} className='!text-[12px]'>
                                 <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
                                 View
                             </MenuItem> : null}
-                        {role === 'mentor' ?
-                            <MenuItem onClick={() => navigate(`/certificate_mentees/${seletedItem.id}?type=${actionTab}`)} className='!text-[12px]'>
+                        {(role === 'mentor') ?
+                            <MenuItem onClick={() => navigate(`/certificate_mentees/${seletedItem.id}?type=${actionTab}`,{
+                                state: {
+                                    rowId: seletedItem?.id,
+                                    status: seletedItem?.status
+                                }
+                            })} className='!text-[12px]'>
                                 <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
                                 View
                             </MenuItem> : null}
+                        {role === "admin" &&
+                            <MenuItem onClick={() => navigate(`/certificate_mentees/${seletedItem.id}?type=approved`, {
+                                state: {
+                                    rowId: seletedItem?.id,
+                                    status: seletedItem?.status
+                                }
+                            })} className='!text-[12px]'>
+                                <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
+                                View
+                            </MenuItem>}
 
 
 
@@ -163,7 +200,7 @@ export default function Certificate() {
 
     useEffect(() => {
         if (role) {
-            dispatch(getCertificateList(role === "admin" ? `?status=${requestTab}` : role === "mentor" ? `?status=${actionTab}&page=${paginationModel?.page + 1}&limit=${paginationModel?.pageSize}` : `?page=${paginationModel?.page + 1}&limit=${paginationModel?.pageSize}`))
+            dispatch(getCertificateList(role === "admin" ? `?status=${role === "admin" ? "approved" : requestTab}&request_type=certificate${(role === "admin" && requestTab !== 'all') ? '&request_by=mentor' : ''}` : role === "mentor" ? `?status=${actionTab}&page=${paginationModel?.page + 1}&limit=${paginationModel?.pageSize}&request_type=certificate` : `?page=${paginationModel?.page + 1}&limit=${paginationModel?.pageSize}&request_type=certificate`))
         }
         // dispatch(getCertificates({search: role === "admin" ? requestTab : actionTab}))
     }, [requestTab, role, actionTab, paginationModel])
@@ -176,7 +213,7 @@ export default function Certificate() {
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
-
+            <Ratings open={ratingModal.modal} modalSuccess={ratingModalSuccess} id={seletedItem?.program} modalClose={ratingModalClose} />
             <div className='px-3 py-5' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
                 <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
                     <div className='flex gap-5 items-center text-[18px] font-semibold'>
@@ -200,7 +237,7 @@ export default function Certificate() {
                             </div>
                         </div>
                         {role !== 'mentee' &&
-                            <Button btnName="Create Certificate" onClick={() => navigate('/create-certificate', {state: {type : "new"}})} />}
+                            <Button btnName="Create Certificate" onClick={() => navigate('/create-certificate', { state: { type: "new" } })} />}
                     </div>
 
                 </div>

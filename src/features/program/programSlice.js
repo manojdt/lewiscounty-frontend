@@ -6,6 +6,7 @@ import {
   editUpdateProgram,
   getAllCategories,
   getAllCertificates,
+  getAllMentors,
   getAllMaterials,
   getAllMembers,
   getallMenteeProgram,
@@ -13,6 +14,7 @@ import {
   getAllPrograms,
   getAllSkills,
   getProgramDetails,
+  getProgramListWithCategory,
   getProgramMentees,
   getProgramNameValidate,
   getProgramsByCategory,
@@ -33,8 +35,10 @@ const initialState = {
   materials: [],
   certificate: [],
   members: [],
+  mentor_assign: [],
   skills: [],
   categoryPrograms: [],
+  programListByCategory: [],
   loading: false,
   status: "",
   error: "",
@@ -186,8 +190,7 @@ export const programSlice = createSlice({
         };
       })
       .addCase(createNewPrograms.fulfilled, (state, action) => {
-        console.log("action ===>", action, "state ===>", state)
-        const responseStatus = action.payload.status;
+        const responseStatus = action.payload?.status;
         const status =
           (responseStatus === 200 || responseStatus === 400)
             ? programStatus.exist
@@ -204,8 +207,7 @@ export const programSlice = createSlice({
         };
       })
       .addCase(createNewPrograms.rejected, (state, action) => {
-        console.log("action ===>", action, "state ===>", state)
-        const responseStatus = action.payload.status;
+        const responseStatus = action.payload?.status;
         const status =
           (responseStatus === 200 || responseStatus === 400)
             ? programStatus.exist
@@ -481,6 +483,28 @@ export const programSlice = createSlice({
         };
       });
 
+    builder
+      .addCase(getAllMentors.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(getAllMentors.fulfilled, (state, action) => {
+        return {
+          ...state,
+          mentor_assign: action.payload?.results,
+          loading: false,
+        };
+      })
+      .addCase(getAllMentors.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
+
     // builder.addCase(updateLocalProgram)builder
     builder.addCase(getProgramNameValidate.pending, (state) => {
       return {
@@ -502,8 +526,29 @@ export const programSlice = createSlice({
           error: action.error.message,
         };
       });
-  },
 
+
+      builder.addCase(getProgramListWithCategory.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+        .addCase(getProgramListWithCategory.fulfilled, (state, action) => {
+          return {
+            ...state,
+            programListByCategory: action.payload,
+            loading: false,
+          };
+        })
+        .addCase(getProgramListWithCategory.rejected, (state, action) => {
+          return {
+            ...state,
+            loading: false,
+            error: action.error.message,
+          };
+        });
+  },
 
 });
 

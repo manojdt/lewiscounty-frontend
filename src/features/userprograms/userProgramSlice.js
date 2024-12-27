@@ -3,8 +3,10 @@ import {
 } from "@reduxjs/toolkit";
 
 import {
+  acceptProgram,
   assignProgramTask,
   chartProgramList,
+  getAllProgramDetails,
   getMenteeJoinedInProgram,
   getMenteeProgramCount,
   getMenteePrograms,
@@ -15,10 +17,14 @@ import {
   getProgramTaskMentees,
   getSpecificProgramDetails,
   getUserPrograms,
+  launchProgram,
+  requestProgram,
   startProgramTask,
   submitProgramTaskDetails,
+  upateProgramTask,
   updateProgram,
   updateProgramImage,
+  updateTaskSubmission,
   updateUserProgramInfo,
 } from "../../services/userprograms";
 import {
@@ -78,13 +84,13 @@ export const userProgramSlice = createSlice({
 
         const {
           status_counts = {},
-            overall_count = 0,
-            programs = [],
-            filterType,
-            filterValue,
-            ...rest
+          overall_count = 0,
+          programs = [],
+          filterType,
+          filterValue,
+          results,
+          ...rest
         } = action.payload;
-
         let updateState = {
           ...state,
           status: programStatus.load,
@@ -108,13 +114,34 @@ export const userProgramSlice = createSlice({
         if (filterType !== "") {
           const filtertype =
             filterType !== "is_bookmark" ? filterValue : "bookmarked";
-
-            console.log('filtertype', filtertype, programs)
           updateState[filtertype] = programs;
         }
         return updateState;
       })
       .addCase(getUserPrograms.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
+
+    builder
+      .addCase(getAllProgramDetails.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(getAllProgramDetails.fulfilled, (state, action) => {
+        return {
+          ...state,
+          assign_program: action.payload?.data,
+          status: action.payload.status,
+          loading: false,
+        };
+      })
+      .addCase(getAllProgramDetails.rejected, (state, action) => {
         return {
           ...state,
           loading: false,
@@ -144,6 +171,53 @@ export const userProgramSlice = createSlice({
           error: action.error.message,
         };
       });
+
+    builder
+      .addCase(launchProgram.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(launchProgram.fulfilled, (state, action) => {
+        return {
+          ...state,
+          programdetails: action.payload.programdetails,
+          status: action.payload.status,
+          loading: false,
+        };
+      })
+      .addCase(launchProgram.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
+    
+      builder
+      .addCase(acceptProgram.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(acceptProgram.fulfilled, (state, action) => {
+        return {
+          ...state,
+          programdetails: action.payload.programdetails,
+          status: action.payload.status,
+          loading: false,
+        };
+      })
+      .addCase(acceptProgram.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
+
     builder
       .addCase(getProgramDetails.pending, (state) => {
         return {
@@ -180,7 +254,7 @@ export const userProgramSlice = createSlice({
       .addCase(getSpecificProgramDetails.fulfilled, (state, action) => {
         return {
           ...state,
-          programdetails: action.payload,
+          programdetails: action?.payload?.data,
           status: '',
           loading: false,
         };
@@ -283,6 +357,29 @@ export const userProgramSlice = createSlice({
         };
       });
 
+
+      builder
+      .addCase(upateProgramTask.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(upateProgramTask.fulfilled, (state, action) => {
+        return {
+          ...state,
+          status: programStatus.taskassigned,
+          loading: false,
+        };
+      })
+      .addCase(upateProgramTask.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
+
     builder
       .addCase(getProgramCounts.pending, (state) => {
         return {
@@ -292,12 +389,12 @@ export const userProgramSlice = createSlice({
       .addCase(getProgramCounts.fulfilled, (state, action) => {
 
         const {
-          status_counts = {}, total_programs = 0
+          allprogram
         } = action.payload;
         return {
           ...state,
-          statusCounts: status_counts,
-          totalPrograms: total_programs,
+          statusCounts: action.payload,
+          totalPrograms: allprogram,
         };
       })
       .addCase(getProgramCounts.rejected, (state, action) => {
@@ -319,9 +416,9 @@ export const userProgramSlice = createSlice({
       .addCase(getMenteePrograms.fulfilled, (state, action) => {
         const {
           programs = [],
-            filterType,
-            filterValue,
-            ...rest
+          filterType,
+          filterValue,
+          ...rest
         } = action.payload;
 
         let updateState = {
@@ -559,6 +656,30 @@ export const userProgramSlice = createSlice({
           loading: false,
           error: action.error.message,
         };
+      });
+
+
+      
+      builder
+      .addCase(updateTaskSubmission.pending, (state) => {
+          return {
+              ...state,
+              loading: true,
+          };
+      })
+      .addCase(updateTaskSubmission.fulfilled, (state, action) => {
+          return {
+              ...state,
+              status: programStatus.tasksubmitted,
+              loading: false,
+          };
+      })
+      .addCase(updateTaskSubmission.rejected, (state, action) => {
+          return {
+              ...state,
+              loading: false,
+              error: action.error.message,
+          };
       });
 
   },

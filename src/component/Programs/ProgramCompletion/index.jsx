@@ -57,7 +57,7 @@ export default function ProgramCompletion() {
         if (params.id) {
             const programId = params.id;
             if (programId && programId !== '') {
-                dispatch(getProgramDetails(programId))
+                dispatch(getProgramDetails({id: programId}))
             }
         }
     }, [params.id])

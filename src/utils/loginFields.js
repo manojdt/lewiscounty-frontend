@@ -10,6 +10,10 @@ export const SignupFields = [
     placeholder: "Enter your first name",
     inputRules: {
       required: "First name is required",
+      pattern:{
+        value:/^[A-Za-z]+$/i,
+        message:"Only alphabets are allowed"
+      }
     },
     size: true,
   },
@@ -21,6 +25,10 @@ export const SignupFields = [
     placeholder: "Enter your last name",
     inputRules: {
       required: "Last name is required",
+      pattern:{
+        value:/^[A-Za-z]+$/i,
+        message:"Only alphabets are allowed"
+      }
     },
     size: true,
   },

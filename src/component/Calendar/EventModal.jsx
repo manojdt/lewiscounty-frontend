@@ -3,12 +3,13 @@ import MuiModal from '../../shared/Modal';
 import { Button } from '../../shared';
 import EditIcon from '../../assets/icons/editIcon.svg'; // Assuming this is an SVG file
 import { IconButton } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import DeleteModal from './delete-modal';
 import DoubleAvatar from '../../assets/icons/double-avatar.svg';
 import DummyAvatar from '../../assets/icons/dummy-avatar.svg';
 import BellIcon from '../../assets/icons/bell-icon.svg';
 import GMeetModal from './GMeetModal';
+import { createCalendarEvent } from '../../services/scheduler';
 
 const EventModal = ({ open, closeModal, actionActionBtn, event = [] }) => {
   const [deleteModal, setDeleteModal] = useState(false);
@@ -34,11 +35,43 @@ const EventModal = ({ open, closeModal, actionActionBtn, event = [] }) => {
     if (['all', 'upcoming', 'reschedule'].includes(actionActionBtn)) {
       setShowGoogleMeetModal(true);
     } else if (['completed', 'cancelled', 'draft'].includes(actionActionBtn)) {
-      navigate('/create-meeting');
+      // navigate('/create-meeting');
+      // console.log(event);
+      // let attendees = [];
+      // data.attendees.forEach((attendee) => {
+      //   attendees.push(attendee.email);
+      // });
+      // let allGuest = [];
+      // if (data.guests !== '') {
+      //   let guestList = data.guests.split(',') || [];
+      //   guestList.forEach((guest) => {
+      //     allGuest.push(guest);
+      //   });
+      // }
+      // let apiData = {
+      //   ...data,
+      //   start: timeFormat(data.start),
+      //   end: timeFormat(data.end),
+      //   attendees: attendees,
+      //   guests: allGuest,
+      //   start_date: todayDate(customSelect.start_date),
+      //   end_date:
+      //     !customSelect.end_date || datePopup.type === 'do_not_repeat'
+      //       ? todayDate(customSelect.start_date)
+      //       : todayDate(customSelect.end_date),
+      //   byday: selectedDays.join(','),
+      //   req: customSelect.repeat_type,
+      //   interval: customSelect.repeat_time,
+      //   monthly_day: monthlyOn,
+      // };
+      // console.log(apiData);
+      // if (apiData && eventSelect && id) {
+      //   return dispatch(updateCalendarEvent({ apiData, eventSelect, id }));
+      // }
+      // return dispatch(createCalendarEvent(apiData));
+      // };
     }
   };
-
-  // console.log(event);
 
   return (
     <MuiModal
@@ -46,7 +79,9 @@ const EventModal = ({ open, closeModal, actionActionBtn, event = [] }) => {
       modalClose={closeModal}
       title={event.title}
       rightIcon={EditIcon}
-      onClick={() => navigate(`/edit-meeting?id=${event.id}`)}
+      onClick={() =>
+        navigate(`/edit-meeting?id=${event.id}&status=${actionActionBtn}`)
+      }
     >
       <div className='p-6 space-y-8'>
         <div className='flex flex-col'>

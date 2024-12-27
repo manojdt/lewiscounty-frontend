@@ -60,15 +60,15 @@ const Goals = () => {
     const [requestTimeFrame, setRequestTimeFrame] = React.useState("month")
     const [requestPaginationModel, setRequestPaginationModel] = React.useState({
         page: 0,
-        pageSize: 5
+        pageSize: 10
     })
     const [historyPaginationModel, setHistoryPaginationModel] = React.useState({
         page: 0,
-        pageSize: 5
+        pageSize: 10
     })
     const [allGoalPaginationModel, setAllGoalPaginationModel] = React.useState({
         page: 0,
-        pageSize: 5
+        pageSize: 10
     })
     const [showAdmin, setShowAdmin] = React.useState(false)
     const [createdBy, setCreatedBy] = React.useState("")
@@ -88,6 +88,25 @@ const Goals = () => {
         activity: false,
         type: ""
     })
+
+    useEffect(() => {
+        setRequestPaginationModel({
+            page: 0,
+            pageSize: 10
+        })
+        setHistoryPaginationModel({
+            page: 0,
+            pageSize: 10
+        })
+        setAllGoalPaginationModel({
+            page: 0,
+            pageSize: 10
+        })
+        setAdminTablePaginationModal({
+            page: 0,
+            pageSize: 10
+        })
+    }, [filterType])
 
     const { goalsList, loading, status, createdGoal, goalsCount, goalRequest, goalHistory } = useSelector(state => state.goals)
 
@@ -122,7 +141,7 @@ const Goals = () => {
             key: 'completed',
         },
         {
-            name: 'Cancel Goals',
+            name: 'Cancelled Goals',
             key: 'cancel',
         }
     ]
@@ -179,14 +198,16 @@ const Goals = () => {
     }
 
     const getAllGoalData = (created_by = createdBy, user_id) => {
-        dispatch(getGoalsCount({ time_frame: allTimeFrame, user_id: user_id }))
+        console.log(seletedItem, "select")
+        const res = seletedItem?.created_by ? seletedItem?.created_by : user_id
+        dispatch(getGoalsCount({ time_frame: allTimeFrame, user_id: res }))
         dispatch(getGoalsRequest({
             status: filterType,
             created_by: created_by,
             time_frame: requestTimeFrame,
             page: requestPaginationModel?.page + 1,
             limit: requestPaginationModel?.pageSize,
-            user_id: user_id
+            user_id: res
         }))
         dispatch(getGoalsHistory({
             status: filterType ?? "new",
@@ -194,7 +215,7 @@ const Goals = () => {
             time_frame: historyTimeFrame,
             page: historyPaginationModel?.page + 1,
             limit: historyPaginationModel?.pageSize,
-            user_id: user_id
+            user_id: res
         }))
     }
 
@@ -210,13 +231,15 @@ const Goals = () => {
 
     const handleGetAllGoals = (timeframe = allTimeFrame) => {
         let payload = {}
+
         if (role === "admin") {
             payload = {
                 page: allGoalPaginationModel?.page + 1,
                 limit: allGoalPaginationModel?.pageSize,
                 status: filterType,
                 time_frame: timeframe,
-                created_by: createdBy
+                created_by: createdBy,
+                user_id: seletedItem.created_by
             }
         } else {
             payload = {
@@ -224,12 +247,14 @@ const Goals = () => {
                 limit: allGoalPaginationModel?.pageSize,
                 status: filterType,
                 time_frame: timeframe,
-                created_by: createdBy
+                created_by: createdBy,
+                // user_id:seletedItem.created_by
+
             }
         }
         dispatch(getAllGoals(payload))
         dispatch(getGoalsRequest(payload))
-        dispatch(getGoalsCount({ time_frame: timeframe }))
+        dispatch(getGoalsCount({ time_frame: timeframe, user_id: role === "admin" ? seletedItem?.created_by : undefined }))
     }
 
 
@@ -328,7 +353,7 @@ const Goals = () => {
                         {
                             params.row.goal_status === 'active' &&
                             <MenuItem onClick={handlEditGoal} className='!text-[12px]'>
-                                <img src={EditIcon} alt="EditIcon" className='pr-3 w-[27px]' />
+                                <img src={EditIcon} alt="EditIcon" className='pr-3 w-[30px]' />
                                 Edit
                             </MenuItem>
                         }
@@ -344,7 +369,7 @@ const Goals = () => {
                         {
                             params.row.goal_status === 'inactive' &&
                             <MenuItem onClick={handleDelete} className='!text-[12px]'>
-                                <img src={DeleteIcon} alt="DeleteIcon" className='pr-3 w-[27px]' />
+                                <img src={DeleteIcon} alt="DeleteIcon" className='pr-3 w-[30px]' />
                                 Delete
                             </MenuItem>
                         }
@@ -352,7 +377,7 @@ const Goals = () => {
                         {
                             params.row.status === 'active' &&
                             <MenuItem onClick={() => handleOpenAction("start")} className='!text-[12px]'>
-                                <img src={StartIcon} alt="EditIcon" className='pr-3 w-[27px]' />
+                                <img src={StartIcon} alt="EditIcon" className='pr-3 w-[30px]' />
                                 Start
                             </MenuItem>
                         }
@@ -471,7 +496,7 @@ const Goals = () => {
             renderCell: (params) => {
                 return <>
                     <div className='cursor-pointer flex items-center h-full relative'>
-                        <span className='w-[80px] flex justify-center h-[30px] px-7'
+                        <span className='w-[80px] flex justify-center h-[30px] px-4'
                             style={{
                                 background: goalRequestColor[params.row.status]?.bg, lineHeight: '30px',
                                 borderRadius: '3px', width: '110px', height: '34px', color: goalRequestColor[params.row.status]?.color,
@@ -510,27 +535,34 @@ const Goals = () => {
                             <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
                             View
                         </MenuItem>
-
                         {
-                            params?.row?.status === "new" &&
+                            (params.row.status === 'active' && role !== "admin") &&
+                            <MenuItem onClick={() => handleOpenAction("start")} className='!text-[12px]'>
+                                <img src={StartIcon} alt="EditIcon" className='pr-3 w-[30px]' />
+                                Start
+                            </MenuItem>
+                        }
+                        {
+                            ((params?.row?.status === "new" || params?.row?.status === "pending") && role !== "admin") &&
                             <MenuItem onClick={handlEditGoal} className='!text-[12px]'>
-                                <img src={EditIcon} alt="EditIcon" className='pr-3 w-[27px]' />
+                                <img src={EditIcon} alt="EditIcon" className='pr-3 w-[30px]' />
                                 Edit
                             </MenuItem>
                         }
 
                         {
-                            params?.row?.status === "in_progress" &&
+                            (params?.row?.status === "in_progress" && role !== "admin") &&
                             <MenuItem onClick={() => handleOpenConfirmPopup("complete")} className='!text-[12px]'>
                                 <img src={CompleteIcon} alt="CompleteIcon" field={params.id} className='pr-3 w-[30px]' />
                                 Complete
                             </MenuItem>
                         }
+
                         {
-                            ["new", "active"].includes(params?.row?.status) &&
+                            (["new", "pending", "active"].includes(params?.row?.status) && role !== "admin") &&
                             <MenuItem onClick={() => handleOpenConfirmPopup("cancel")} className='!text-[12px]'>
                                 <img src={CancelReqIcon} alt="CancelReqIcon" field={params.id} className='pr-3 w-[30px]' />
-                                Cancel
+                                Cancel {params?.row?.status === "new" || params?.row?.status === "pending" ? "Request" : null}
                             </MenuItem>
                         }
                     </Menu>}
@@ -637,7 +669,7 @@ const Goals = () => {
                         {
                             params.row.goal_status === 'inactive' &&
                             <MenuItem onClick={handleDelete} className='!text-[12px]'>
-                                <img src={DeleteIcon} alt="DeleteIcon" className='pr-3 w-[27px]' />
+                                <img src={DeleteIcon} alt="DeleteIcon" className='pr-3 w-[30px]' />
                                 Delete
                             </MenuItem>
                         }
@@ -712,14 +744,14 @@ const Goals = () => {
         setHistoryTimeFrame(value)
         setHistoryPaginationModel({
             page: 0,
-            pageSize: 5
+            pageSize: 10
         })
         dispatch(getGoalsHistory({
-            status: "new1",
+            status: "new",
             created_by: createdBy,
             time_frame: value,
             page: 1,
-            limit: 5
+            limit: 10
         }))
     }
 
@@ -912,7 +944,7 @@ const Goals = () => {
 
     const handleGetAdminTableData = (time_frame = adminTimeFrame, created_by = adminTab) => {
         dispatch(getAllGoals({
-            status: "new",
+            // status: "new",
             created_by: created_by,
             time_frame: time_frame,
             page: adminTablePaginationModal?.page + 1,
@@ -944,6 +976,7 @@ const Goals = () => {
         setCreatedBy("")
         setAdminTab("mentor")
         handleGetAdminTableData("month", "mentor")
+        navigate('/goals')
     }
 
     const resetActionModal = (type) => {
@@ -1107,7 +1140,7 @@ const Goals = () => {
                                     requestBtns?.map((e) => {
                                         return (
                                             <Tab value={e?.key} label={
-                                                <Typography className={`!text-[14px] text-[${requestTab === e.key ? '#1D5BBF' : '#18283D'}] 
+                                                <Typography className={`!text-[14px] px-10 text-[${requestTab === e.key ? '#1D5BBF' : '#18283D'}] 
                                                     capitalize -pb-[8px]`} sx={{ fontWeight: 500 }}>{e?.name}</Typography>
                                             } />
                                         )
@@ -1204,44 +1237,6 @@ const Goals = () => {
                                         {
                                             searchParams.get('type') === null ?
                                                 <div>
-                                                    {/* <GoalPerformance /> */}
-
-                                                    <div style={{ border: '1px solid rgba(29, 91, 191, 1)', padding: '20px', borderRadius: '10px', margin: '10px 0' }}>
-                                                        <div className='goal-title-container flex justify-between items-center mb-10'>
-                                                            <div className='flex gap-5 items-center '>
-                                                                <p className='text-[18px] font-semibold'>Goals Request</p>
-                                                            </div>
-                                                            <div className='flex gap-8 items-center'>
-                                                                <div className="relative flex gap-3 py-3 px-3"
-                                                                    style={{ border: '1px solid rgba(24, 40, 61, 0.25)', background: 'rgba(238, 245, 255, 1)', borderRadius: '3px' }}>
-                                                                    <img src={CalenderIcon} alt="CalenderIcon" />
-                                                                    <select className='focus:outline-none' style={{ background: 'rgba(238, 245, 255, 1)' }}
-                                                                        value={requestTimeFrame}
-                                                                        onChange={(e) => handleChangeRequestTimeFrame(e.target.value)}>
-                                                                        {
-                                                                            timeFrameList?.map((e) => {
-                                                                                return (
-                                                                                    <option value={e?.value}>{e?.label}</option>
-                                                                                )
-                                                                            })
-                                                                        }
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        <DataTable rows={goalRequest?.results}
-                                                            columns={goalRequestColumn}
-                                                            handleSelectedRow={handleSelectedRow}
-                                                            height={350}
-                                                            rowCount={goalRequest?.count}
-                                                            paginationModel={requestPaginationModel}
-                                                            setPaginationModel={setRequestPaginationModel}
-                                                        />
-                                                    </div>
-
-
-
                                                     <div style={{ border: '1px solid rgba(29, 91, 191, 1)', padding: '20px', borderRadius: '10px', margin: '60px 0' }}>
                                                         <div className='goal-title-container flex justify-between items-center mb-10'>
                                                             <div className='flex gap-5 items-center '>
@@ -1267,7 +1262,7 @@ const Goals = () => {
                                                         </div>
                                                         <DataTable rows={goalHistory?.results}
                                                             columns={goalHistoryColumn} handleSelectedRow={handleSelectedRow}
-                                                            height={350}
+                                                            height={650}
                                                             rowCount={goalHistory?.count}
                                                             paginationModel={historyPaginationModel}
                                                             setPaginationModel={setHistoryPaginationModel}
@@ -1469,7 +1464,7 @@ const Goals = () => {
                     </div>
                     <div className='flex justify-center'>
                         <div className="flex gap-6 justify-center align-middle">
-                            <Button btnCls="w-[130px]" btnName='Cancel' btnCategory="secondary" onClick={() => resetActionModal} />
+                            <Button btnCls="w-[130px]" btnName='Cancel' btnCategory="secondary" onClick={() => resetActionModal()} />
                             <Button btnCls="w-[130px]" btnType="button" btnName='Start goal' btnCategory="primary"
                                 onClick={() => actionButtonFunction(actionPopup?.type)}
                             />

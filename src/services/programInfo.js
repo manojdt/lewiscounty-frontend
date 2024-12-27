@@ -76,10 +76,11 @@ export const createProgram = createAsyncThunk("createProgram", async (data) => {
 export const createNewPrograms = createAsyncThunk(
   "createNewPrograms",
   async (data) => {
+    const { bodyFormData, role } = data
     const headers = {
       'Content-Type': 'multipart/form-data',
     }
-    const createProgram = await api.post("programs", data, {
+    const createProgram = await api.post(role ? "program/admin-program" : "programs", bodyFormData, {
       headers: headers
     });
     if (createProgram.status === 201) {
@@ -92,12 +93,15 @@ export const createNewPrograms = createAsyncThunk(
 export const editUpdateProgram = createAsyncThunk(
   "editUpdateProgram",
   async (data) => {
+    const { bodyFormData: { program_id, ...restOfData }, role } = data
     const headers = {
       'Content-Type': 'multipart/form-data',
     }
-    const editUpdateProgramInfo = await api.put("programs", data, {
+
+    const editUpdateProgramInfo = await api.put(role ? `program/admin-program/${program_id}` : `programs/${program_id}`, restOfData, {
       headers: headers
     });
+
     if (editUpdateProgramInfo.status === 201 || editUpdateProgramInfo.status === 200) {
       return editUpdateProgramInfo;
     }
@@ -197,6 +201,14 @@ export const getAllMembers = createAsyncThunk("getAllMembers", async (data) => {
   return allMembers;
 });
 
+export const getAllMentors = createAsyncThunk("getAllMentors", async () => {
+  const allMentors = await api.get(`members/member-list?role_name=mentor&page=1&limit=100&status=active`);
+  if (allMentors.status === 200 && allMentors.data) {
+    return allMentors.data;
+  }
+  return allMentors;
+});
+
 export const getProgramsByCategory = createAsyncThunk(
   "getProgramsByCategory",
   async (categoryId) => {
@@ -232,5 +244,19 @@ export const getProgramNameValidate = createAsyncThunk(
       return getProgramNameValidate.data;
     }
     return getProgramNameValidate;
+  }
+);
+
+
+export const getProgramListWithCategory = createAsyncThunk(
+  "getProgramListWithCategory",
+  async (category_id) => {
+    const getProgramListWithCategory = await api.get(
+      `/program/completed-program-list?category_id=${category_id}&type=task`
+    );
+    if (getProgramListWithCategory.status === 200 && getProgramListWithCategory.data) {
+      return getProgramListWithCategory.data;
+    }
+    return getProgramListWithCategory;
   }
 );

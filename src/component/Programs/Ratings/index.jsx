@@ -5,7 +5,7 @@ import { Button } from '../../../shared'
 import api from '../../../services/api';
 import { useParams } from 'react-router-dom';
 
-export default function Ratings({ open, modalClose, modalSuccess }) {
+export default function Ratings({ open, modalClose, modalSuccess,id }) {
     const [formInfo, setFormInfo] = useState({ rating: '', reason: '' })
     const [error, setError] = useState({ rating: '', reason: '' })
     const params = useParams()
@@ -23,16 +23,22 @@ export default function Ratings({ open, modalClose, modalSuccess }) {
         const payload = {
             "description": formInfo.reason,
             "rating": formInfo.rating,
-            "program_id": params.id
+            "program_id": params.id||id
         }
 
         const submitReview = await api.post('rating/review', payload);
         if ((submitReview.status === 201 || submitReview.status === 200) && submitReview.data) {
             modalSuccess && modalSuccess()
+            setError({ rating: '', reason: '' })
+            setFormInfo({ rating: '', reason: '' })
         }
     }
     return (
-        <MuiModal modalOpen={open} modalClose={modalClose} noheader>
+        <MuiModal modalOpen={open} modalClose={()=>{
+            modalClose()
+            setError({ rating: '', reason: '' })
+            setFormInfo({ rating: '', reason: '' })
+            }} noheader>
             <div className='px-10 py-1 flex w-full' style={{ border: '1px solid rgba(29, 91, 191, 1)' }}>
                 <div className='flex w-full  flex-col gap-5 py-5 mt-3 mb-20'
                 >

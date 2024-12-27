@@ -24,6 +24,8 @@ import { Button } from '../Button';
 import { updateProgramImage } from '../../services/userprograms';
 import { Backdrop, CircularProgress } from '@mui/material';
 import { getAllCategories } from '../../services/programInfo';
+import NoProgramImageBg from "../../assets/icons/noProgramImageBg.svg"
+import NoProgramImageIcon from "../../assets/icons/noProgramImageIcon.svg"
 
 
 export default function ProgramCard({ title, viewpage, handleNavigateDetails, handleBookmark, programs, height, action = [], noTitle = false, loadProgram }) {
@@ -34,7 +36,6 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
     const [programImage, setProgramImage] = useState(null)
     const [hoverIndex, setHoverIndex] = useState({ image: null, desc: null })
     const [programUploadAction, setProgramUploadAction] = useState({ loading: false, imageModal: false, successModal: false, error: '', selectedProgram: {} })
-
     const {
         register,
         formState: { errors },
@@ -55,6 +56,7 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
     const statusNotShow = ['yettoapprove', 'yettojoin', 'yettostart', 'draft', 'start_request_submitted']
 
     const programImageRestirct = ['yettoapprove', 'draft', 'cancelled', 'completed']
+    const programEditRestirct = ['yettoapprove', 'draft', 'new_program_request_rejected',"cancelled",'completed']
 
     const handleClose = () => {
         setAnchorEl(null);
@@ -77,7 +79,10 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
         let bodyFormData = new FormData();
         bodyFormData.append('program_id', programUploadAction.selectedProgram.id)
         bodyFormData.append('program_image', programImage[0])
-        dispatch(updateProgramImage(bodyFormData)).then(() => {
+        dispatch(updateProgramImage({
+            id: programUploadAction.selectedProgram.id,
+            data: bodyFormData
+        })).then(() => {
             loadProgram && loadProgram()
             setProgramUploadAction({ loading: false, imageModal: false, successModal: true, error: '', selectedProgram: {} })
             setProgramImage(null)
@@ -226,7 +231,7 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                                     return (
                                         <div key={index} className={`curated-programs program-container flex gap-1 items-center py-5 px-5 w-[33%]`}
                                             style={{
-                                                ...currentProgram.status === 'yettoapprove' ? {
+                                                ...(currentProgram.status === 'yettoapprove' && !currentProgram?.mentor_id) ? {
                                                     opacity: '0.5',
                                                     pointerEvents: 'none',
                                                     cursor: 'not-allowed',
@@ -238,9 +243,34 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                                             <div className="w-full" style={{ boxShadow: '4px 4px 15px 0px rgba(0, 0, 0, 0.1)', borderRadius: '10px' }}>
                                                 <div className="py-6 px-7 border-b-2 relative">
                                                     <div className="h-full relative" style={{ borderRadius: '10px' }}>
-                                                        <img className="object-cover w-full h-[150px] cursor-pointer" src={currentProgram.program_image} alt="Program Logo"
-                                                            onMouseEnter={() => setHoverIndex({ ...hoverIndex, image: index })} onMouseLeave={() => setHoverIndex({ ...hoverIndex, image: null })}
-                                                        />
+                                                        {
+                                                            currentProgram?.program_image ?
+                                                                <img className="object-cover w-full h-[150px] cursor-pointer" src={currentProgram.program_image} alt="Program Logo"
+                                                                    onMouseEnter={() => setHoverIndex({ ...hoverIndex, image: index })} onMouseLeave={() => setHoverIndex({ ...hoverIndex, image: null })}
+                                                                />
+                                                                :
+                                                                <div
+                                                                    style={{
+                                                                        position: "relative",
+                                                                        display: "inline-block",
+                                                                    }}
+                                                                >
+                                                                    <img src={NoProgramImageBg} alt="Background" />
+                                                                    <div
+                                                                        style={{
+                                                                            position: "absolute",
+                                                                            top: "50%",
+                                                                            left: "50%",
+                                                                            transform: "translate(-50%, -50%)",
+                                                                            display: "flex",
+                                                                            alignItems: "center",
+                                                                            justifyContent: "center",
+                                                                        }}
+                                                                    >
+                                                                        <img src={NoProgramImageIcon} alt="Icon" />
+                                                                    </div>
+                                                                </div>
+                                                        }
                                                         {
                                                             (currentProgram.program_edit && !programImageRestirct.includes(currentProgram.status)) &&
 
@@ -262,18 +292,24 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                                                             {currentProgram.program_name}
                                                         </h4>
                                                         {
-                                                            currentProgram.categories.length > 0 &&
+                                                            currentProgram?.categories && currentProgram?.categories.length > 0 &&
                                                             <p className="py-1 px-1 text-[12px] text-center rounded-3xl w-[90px]"
                                                                 style={{ border: '1px solid rgba(238, 238, 238, 1)' }}>{currentProgram?.categories[0]?.name}</p>
                                                         }
                                                     </div>
-                                                    <div className='cursor-pointer flex justify-between'
-                                                        onClick={() => navigate(`/update-program/${currentProgram.id}`)}
+                                                    <div className={`${currentProgram?.program_edit ? "cursor-pointer" : "cursor-default"} flex justify-between`}
+                                                        onClick={() =>{
+                                                            if(currentProgram.program_edit && !programEditRestirct.includes(currentProgram.status)){
+
+                                                                navigate(`/update-program/${currentProgram.id}`) 
+                                                            }
+                                                        }
+                                                            }
                                                         onMouseOver={() => setHoverIndex({ ...hoverIndex, desc: index })} onMouseLeave={() => setHoverIndex({ ...hoverIndex, desc: null })}>
 
                                                         <span className="text-[12px] line-clamp-2 ">{currentProgram.description}</span>
                                                         {
-                                                            (currentProgram.program_edit && !programImageRestirct.includes(currentProgram.status)) &&
+                                                            (currentProgram.program_edit && !programEditRestirct.includes(currentProgram.status)) &&
                                                             <img className={`h-[18px] w-[15px] ${hoverIndex.desc === index ? 'show' : 'hidden'}`} src={EditIcon} alt="EditIcon" />
                                                         }
                                                     </div>
@@ -285,15 +321,15 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                                                         <span style={{
                                                             textOverflow: 'ellipsis', overflow: 'hidden',
                                                             width: '215px', whiteSpace: 'nowrap', textTransform: "capitalize",
-                                                            
-                                                        }}>Instructor : <span style={{color: "#1D5BBF"}}>{currentProgram?.mentor_name} ({currentProgram?.role ?? ""})</span></span>
+
+                                                        }}>Instructor : <span style={{ color: "#1D5BBF" }}>{currentProgram?.mentor_name} ({currentProgram?.role ?? ""})</span></span>
                                                     </div>
                                                     <div className='flex justify-center pt-2'>
                                                         {
-                                                            currentProgram.status === 'yettoapprove' || currentProgram.status === 'draft' ?
+                                                            (currentProgram.status === 'yettoapprove' && !currentProgram?.mentor_id) || currentProgram.status === 'draft' ?
                                                                 <button className={`text-white text-[12px] py-3 ${currentProgram.status === 'draft' ? 'w-[110px]' : 'w-[170px]'}`}
                                                                     onClick={() => currentProgram.status === 'draft' ? navigate(`/update-program/${currentProgram.id}`) : undefined}
-                                                                    style={{ background: currentProgram.status === 'yettoapprove' ? '#76818E' : 'rgba(29, 91, 191, 1)', borderRadius: '5px' }}>
+                                                                    style={{ background: currentProgram.status === 'yettoapprove' && !currentProgram?.mentor_id ? '#76818E' : 'rgba(29, 91, 191, 1)', borderRadius: '5px' }}>
                                                                     {currentProgram.status === 'draft' ? 'Continue' : 'Waiting for approval'}
 
                                                                 </button>
@@ -388,13 +424,19 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                                                                 (200*200 Pixels)
                                                             </p>
                                                         </div>
-                                                        <input id={'program_image'} type="file"
+                                                        <input id={'program_image'} type="file"  accept="image/png, image/jpeg, image/jpg,image/webp,image/heic"
                                                             {...imageField}
 
                                                             onChange={(e) => {
                                                                 imageField.onChange(e);
                                                                 if (e.target.files && e.target.files[0]) {
-                                                                    let types = ['image/png', 'image/jpeg']
+                                                                    let types = [
+                                                                        "image/png",
+                                                                        "image/jpeg",
+                                                                        "image/jpg",
+                                                                        "image/webp",
+                                                                        "image/heic",
+                                                                      ]
                                                                     if (types.includes(e.target.files[0].type)) {
                                                                         setProgramImage(e.target.files);
                                                                     } else {

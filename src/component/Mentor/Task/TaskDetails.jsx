@@ -8,12 +8,20 @@ import UploadIcon from "../../../assets/images/image_1x.png"
 import { Button } from '../../../shared'
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { Backdrop, CircularProgress } from '@mui/material'
-import { getSpecificTask, updateTaskMark } from '../../../services/task'
-import { dateFormat, dateTimeFormat, getFiles } from '../../../utils'
-import { TaskApiStatus, TaskStatus } from '../../../utils/constant'
+import { Backdrop, Box, CircularProgress, Grid, Menu, MenuItem, Stack, Tab, Tabs, Typography } from '@mui/material'
+import { getMenteeTaskfromMentor, getMenteeTaskListFromMentor, getSpecificTask, updateAllPassFail, updateCancelAllTask, updateSinglePassFail, updateTaskMark } from '../../../services/task'
+import { dateFormat, dateFormatRever, dateTimeFormat, getFiles } from '../../../utils'
+import { TaskApiStatus, taskStatus, TaskStatus, taskStatusColorNew } from '../../../utils/constant'
 import { useForm } from 'react-hook-form'
-
+import dayjs from 'dayjs';
+import DataTable from '../../../shared/DataGrid';
+import MoreIcon from '../../../assets/icons/moreIcon.svg';
+import ViewIcon from '../../../assets/images/view1x.png';
+import Cancel from "../../../assets/icons/cancelCircleIcon.svg"
+import { CancelPopup } from './cancelPopup';
+import BreadCrumbsArrow from "../../../assets/icons/breadCrumbsArrow.svg"
+import TickColorIcon from '../../../assets/icons/tickColorLatest.svg'
+import TickCircle from "../../../assets/icons/tickCircle.svg"
 
 const MentorTaskDetails = () => {
     const navigate = useNavigate()
@@ -21,9 +29,60 @@ const MentorTaskDetails = () => {
     const params = useParams();
     const [searchParams] = useSearchParams()
     const dispatch = useDispatch()
-    const { task: taskDetails, loading: taskDetailsLoading, status } = useSelector(state => state.tasks)
+    const { task: taskDetails, loading: taskDetailsLoading, status, menteeTaskList } = useSelector(state => state.tasks)
     const state = useLocation()?.state
+    const [selectedTab, setSelectedTab] = React.useState("")
+    const [paginationModel, setPaginationModel] = React.useState({
+        page: 0,
+        pageSize: 10
+    })
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [selectedItem, setSelectedItem] = useState({});
+    const open = Boolean(anchorEl);
+    const [confirmPopup, setConfirmPopup] = React.useState({
+        cancel: false,
+        type: "",
+        activity: false,
+        title: "Cancel Task Reason",
+        pass: false
+    })
+    const [newType, setNewType] = React.useState("")
 
+    const handleClick = (event, row) => {
+        setAnchorEl(event.currentTarget);
+        setSelectedItem(row);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+        // setSelectedItem(null);
+    };
+    const tabsList = [
+        {
+            name: "All",
+            key: ""
+        },
+        {
+            name: "New",
+            key: "new"
+        },
+        {
+            name: "In Progress",
+            key: "inprogress"
+        },
+        {
+            name: "Pending",
+            key: "pending"
+        },
+        {
+            name: "Completed",
+            key: "completed"
+        },
+        {
+            name: "Cancel",
+            key: "rejected"
+        },
+    ]
     const {
         register,
         formState: { errors },
@@ -55,7 +114,6 @@ const MentorTaskDetails = () => {
     }, [status])
 
     useEffect(() => {
-        console.log('taskDetails', taskDetails)
         if (taskDetails.status === 'waiting_for_approval' && !editTask) {
             setEditTask(true)
         } else {
@@ -64,12 +122,12 @@ const MentorTaskDetails = () => {
     }, [taskDetails])
 
 
-    useEffect(() => {
-        if (params && params.id && searchParams && searchParams.get("mentee_id")) {
-            const menteeId = searchParams.get("mentee_id");
-            dispatch(getSpecificTask({ task_id: params.id, mentee_id: menteeId }))
-        }
-    }, [params, searchParams])
+    // useEffect(() => {
+    //     if (params && params.id && searchParams) {
+    //         const menteeId = searchParams.get("mentee_id");
+    //         dispatch(getSpecificTask({ task_id: params.id }))
+    //     }
+    // }, [params, searchParams])
 
 
     const referenceView = taskDetails?.reference_link || ''
@@ -80,6 +138,455 @@ const MentorTaskDetails = () => {
 
     const allFiles = getFiles(taskDetails?.files || [])
 
+
+    const handleTab = (event, newValue) => {
+        setSelectedTab(newValue)
+    }
+
+    const handleOpenConfirmPopup = (type, title = confirmPopup?.title, new_type = "") => {
+        setNewType(new_type)
+        handleClose()
+        setConfirmPopup({
+            ...confirmPopup,
+            [type]: true,
+            type: type,
+            title: title
+        })
+    }
+
+    const handleCloseConfirmPopup = (type = confirmPopup?.type) => {
+        setConfirmPopup({
+            ...confirmPopup,
+            [type]: false,
+            type: "",
+            title: ""
+        })
+    }
+
+
+    const menteeTaskListFromMentor = [
+        {
+            field: 'mentee_name',
+            headerName: 'Mentee Name',
+            flex: 1,
+            id: 0,
+        },
+        {
+            field: 'phone_number',
+            headerName: 'Phone Number',
+            flex: 1,
+            id: 0,
+        },
+        {
+            field: 'mentee_email',
+            headerName: 'Email',
+            flex: 1,
+            id: 0,
+        },
+        {
+            field: 'sub_date',
+            headerName: 'Sub.Date',
+            flex: 1,
+            id: 0,
+            renderCell: (params) => {
+                return <div className='flex gap-2 items-center'>{`${params?.row?.submited_date ? dayjs(params?.row?.submited_date).format("DD-MM-YYYY") : "..."}`}</div>
+            }
+        },
+        {
+            field: 'cancel_date',
+            headerName: 'Cancel Date',
+            flex: 1,
+            id: 0,
+            renderCell: (params) => {
+                return <div className='flex gap-2 items-center'>{`${params?.row?.cancel_date ? dayjs(params?.row?.cancel_date).format("DD-MM-YYYY") : "..."}`}</div>
+            }
+        },
+        {
+            field: 'last_update_date',
+            headerName: 'Last Update Date',
+            flex: 1,
+            id: 0,
+            renderCell: (params) => {
+                return <div className='flex gap-2 items-center'>{`${params?.row?.completed_date ? dayjs(params?.row?.completed_date).format("DD-MM-YYYY") : "..."}`}</div>
+            }
+        },
+        {
+            field: 'status',
+            headerName: 'Task status',
+            flex: 1,
+            id: 0,
+            renderCell: (params) => {
+                return <>
+                    <div className='cursor-pointer flex items-center h-full relative'>
+
+                        <span className='w-[80px] flex justify-center h-[30px] px-7'
+                            style={{
+                                background: taskStatusColorNew[params?.row?.status]?.bg, lineHeight: '30px',
+                                borderRadius: '3px', width: '110px', height: '34px', color: taskStatusColorNew?.[params?.row?.status]?.color
+                            }}>
+                            {taskStatus?.[params?.row?.status]}
+                        </span>
+                    </div>
+                </>
+            }
+        },
+        {
+            field: 'result',
+            headerName: 'Result',
+            flex: 1,
+            id: 0,
+            renderCell: (params) => {
+                return <div className='flex gap-2 items-center'>{`${params?.row?.result ?? "..."}`}</div>
+            }
+        },
+        {
+            field: 'action',
+            headerName: 'Action',
+            flex: 1,
+            id: 0,
+            renderCell: (params) => {
+                return (
+                    // <>
+                    //     <div
+                    //         className='cursor-pointer flex items-center h-full'
+                    //         onClick={(e) => handleClick(e, params.row)}
+                    //     >
+                    //         <img src={MoreIcon} alt='MoreIcon' />
+                    //     </div>
+                    //     <Menu
+                    //         id='basic-menu'
+                    //         anchorEl={anchorEl}
+                    //         open={open}
+                    //         onClose={handleClose}
+                    //         MenuListProps={{
+                    //             'aria-labelledby': 'basic-button',
+                    //         }}
+                    //     >
+                    //         <MenuItem
+                    //             onClick={() => navigate(`/viewTask/${selectedItem?.id}`)}
+                    //             className='!text-[12px]'
+                    //         >
+                    //             <img src={ViewIcon} alt='ViewIcon' className='pr-3 w-[30px]' />
+                    //             View
+                    //         </MenuItem>
+
+                    //         {
+                    //             params?.row?.status === "new" &&
+                    //             <MenuItem
+                    //                 onClick={() => handleOpenConfirmPopup("cancel", "Cancel Task Reason", "newTab")}
+                    //                 className='!text-[12px]'
+                    //             >
+                    //                 <img src={Cancel} alt='Cancel' className='pr-3 w-[30px]' />
+                    //                 Cancel Task
+                    //             </MenuItem>
+                    //         }
+                    //         {
+                    //             ["pending"].includes(params?.row?.status) && (
+                    //                 <>
+                    //                     <MenuItem
+                    //                         onClick={() => handleOpenConfirmPopup("pass")}
+                    //                         className='!text-[12px]'
+                    //                     >
+                    //                         <img src={TickCircle} alt='Cancel' className='pr-3 w-[30px]' />
+                    //                         Pass
+                    //                     </MenuItem>
+
+                    //                     <MenuItem
+                    //                         onClick={() => handleOpenConfirmPopup("cancel", "Task Fail Reason")}
+                    //                         className='!text-[12px]'
+                    //                     >
+                    //                         <img src={Cancel} alt='Cancel' className='pr-3 w-[30px]' />
+                    //                         No Pass
+                    //                     </MenuItem>
+                    //                 </>
+                    //             )
+                    //         }
+                    //         {
+                    //             params?.row?.status === "pending" &&
+                    //             <MenuItem
+                    //                 onClick={() => handleOpenConfirmPopup("cancel", "Task Fail Reason")}
+                    //                 className='!text-[12px]'
+                    //             >
+                    //                 <img src={Cancel} alt='Cancel' className='pr-3 w-[30px]' />
+                    //                 No Pass
+                    //             </MenuItem>
+                    //         }
+                    //     </Menu>
+                    // </>
+
+                    <>
+                        <div
+                            className='cursor-pointer flex items-center h-full'
+                            onClick={(e) => handleClick(e, params.row)}
+                        >
+                            <img src={MoreIcon} alt='MoreIcon' />
+                        </div>
+                        <Menu
+                            id='basic-menu'
+                            anchorEl={anchorEl}
+                            open={open}
+                            onClose={handleClose}
+                            MenuListProps={{
+                                'aria-labelledby': 'basic-button',
+                            }}
+                        >
+
+                            {selectedItem && (
+                                <>
+                                    <MenuItem
+                                        onClick={() => navigate(`/viewTask/${selectedItem?.id}`)}
+                                        className='!text-[12px]'
+                                    >
+                                        <img src={ViewIcon} alt='ViewIcon' className='pr-3 w-[30px]' />
+                                        View
+                                    </MenuItem>
+
+
+                                    {selectedItem?.status === "new" && (
+                                        <MenuItem
+                                            onClick={() => handleOpenConfirmPopup("cancel", "Cancel Task Reason", "newTab")}
+                                            className='!text-[12px]'
+                                        >
+                                            <img src={Cancel} alt='Cancel' className='pr-3 w-[30px]' />
+                                            Cancel Task
+                                        </MenuItem>
+                                    )}
+
+
+                                    {selectedItem?.status === "pending" && (
+                                        <>
+                                            <MenuItem
+                                                onClick={() => handleOpenConfirmPopup("pass")}
+                                                className='!text-[12px]'
+                                            >
+                                                <img src={TickCircle} alt='Cancel' className='pr-3 w-[30px]' />
+                                                Pass
+                                            </MenuItem>
+                                            <MenuItem
+                                                onClick={() => handleOpenConfirmPopup("cancel", "Task Fail Reason", "fail")}
+                                                className='!text-[12px]'
+                                            >
+                                                <img src={Cancel} alt='Cancel' className='pr-3 w-[30px]' />
+                                                No Pass
+                                            </MenuItem>
+                                        </>
+                                    )}
+                                </>
+                            )}
+                        </Menu>
+                    </>
+                );
+            },
+        },
+    ]
+
+
+    const getMenteeList = () => {
+        const payload = {
+            task_id: params.id,
+            status: selectedTab
+        }
+        dispatch(getMenteeTaskListFromMentor(payload))
+    }
+
+
+    React.useEffect(() => {
+        getMenteeList()
+    }, [selectedTab, paginationModel])
+
+    const handleEditTask = () => {
+        const keysToExclude = ["results", "count", "next", "total_pages", "previous", "next", "page_size", "current_page"];
+
+        const data = Object.fromEntries(
+            Object.entries(menteeTaskList).filter(([key]) => !keysToExclude.includes(key))
+        );
+
+        const constructedData = {
+            ...data,
+            task_id: menteeTaskList?.assign_task_id,
+            state_date: data?.program_startdate
+        }
+
+        navigate(`/assign-mentees/?type=edit`, {
+            state: {
+                data: constructedData
+            }
+        })
+    }
+
+    const handleOpenAllPass = () => {
+        setConfirmPopup({
+            ...confirmPopup,
+            cancel: true,
+            title: "Task No Pass Reason"
+        })
+    }
+
+
+    const handleCancelAllTask = () => {
+        setConfirmPopup({
+            ...confirmPopup,
+            cancel: true,
+            title: "Cancel Task Reason"
+        })
+    }
+
+
+    const handleUpdateResult = async (type, reason = "") => {
+        let payload = {
+            "result": type === "pass" ? true : false,
+            "task_id": selectedItem?.id,
+            "type": "single_result"
+        }
+        if (type === "fail") {
+            payload = {
+                ...payload,
+                reason: reason
+            }
+        }
+        dispatch(updateSinglePassFail(payload)).then(async (res) => {
+            if (res.meta.requestStatus === "fulfilled") {
+                if (type === "pass") {
+                    setConfirmPopup({
+                        ...confirmPopup,
+                        pass: false,
+                        activity: true
+                    })
+                    setTimeout(() => {
+                        setConfirmPopup({
+                            ...confirmPopup,
+                            pass: false,
+                            activity: false,
+                            type: ""
+                        })
+                        getMenteeList()
+                    }, 2000);
+                } else {
+                    setConfirmPopup({
+                        ...confirmPopup,
+                        cancel: false,
+                        activity: true
+                    })
+                    setTimeout(() => {
+                        setConfirmPopup({
+                            ...confirmPopup,
+                            cancel: false,
+                            activity: false,
+                            type: ""
+                        })
+                        getMenteeList()
+                        setNewType('')
+                    }, 2000);
+                }
+            }
+        })
+    }
+
+
+    const handleCancelAllMentee = (reason = "") => {
+        // updateCancelAllTask
+        const payload = {
+            task_id: (selectedTab === "new" && newType === "newTab") ? selectedItem?.id : selectedTab === "" ? selectedItem?.id : menteeTaskList?.assign_task_id,
+            type: (selectedTab === "new" && newType === "newTab") ? "cancel_one_task" : selectedTab === "" ? "cancel_one_task" : "cancel_all_tasks",
+            reason: reason
+        }
+        dispatch(updateCancelAllTask(payload)).then((res) => {
+            if (res.meta.requestStatus === "fulfilled") {
+
+                setConfirmPopup({
+                    ...confirmPopup,
+                    cancel: false,
+                    activity: true,
+                    type: "cancel_all"
+                })
+
+                setTimeout(() => {
+                    setConfirmPopup({
+                        ...confirmPopup,
+                        activity: false,
+                        cancel: false,
+                        type: ""
+                    })
+                    setNewType("")
+                    getMenteeList()
+                }, 2000);
+            }
+        })
+    }
+
+    const handleUpdateAllTask = (type, reason = "") => {
+        let payload = {
+            "result": type === "pass" ? true : false,
+            "task_id": menteeTaskList?.assign_task_id,
+            "type": "all_result"
+        }
+        if (type === "cancel") {
+            payload = {
+                ...payload,
+                reason: reason
+            }
+        }
+        dispatch(updateAllPassFail(payload)).then((res) => {
+            if (res.meta.requestStatus === "fulfilled") {
+                if (type === "pass") {
+                    setConfirmPopup({
+                        ...confirmPopup,
+                        pass: false,
+                        activity: true
+                    })
+                    setTimeout(() => {
+                        setConfirmPopup({
+                            ...confirmPopup,
+                            pass: false,
+                            activity: false,
+                            type: ""
+                        })
+                        getMenteeList()
+                    }, 2000);
+                } else {
+                    setConfirmPopup({
+                        ...confirmPopup,
+                        cancel: false,
+                        activity: true,
+                        type: type
+                    })
+                    setTimeout(() => {
+                        setConfirmPopup({
+                            ...confirmPopup,
+                            cancel: false,
+                            activity: false,
+                            type: ""
+                        })
+                    }, 2000);
+                }
+            }
+        })
+
+
+
+    }
+
+    const leftGridData = [
+        {
+            title: "Category",
+            value: menteeTaskList?.program_category_name ?? ''
+        },
+        {
+            title: "Program Start Date",
+            value: dateFormatRever(menteeTaskList?.program_startdate)
+        },
+    ]
+
+    const rightGridData = [
+        {
+            title: "Program Name",
+            value: menteeTaskList?.program_name
+        },
+        {
+            title: "Program End Date",
+            value: dateFormatRever(menteeTaskList?.program_enddate)
+        }
+    ]
 
     return (
         <div className="px-9 py-9">
@@ -95,7 +602,8 @@ const MentorTaskDetails = () => {
                             style={{
                                 fontWeight: 600
                             }}
-                        >Result Updated Successfully</p>
+                        >
+                            Result Updated Successfully</p>
                     </div>
 
                 </div>
@@ -109,21 +617,31 @@ const MentorTaskDetails = () => {
                 <CircularProgress color="inherit" />
             </Backdrop>
 
+            <Stack direction={"row"} alignItems={"center"} justifyContent={"space-between"} mb={"30px"}>
+                <Stack direction={"row"} alignItems={"center"} spacing={"14px"}>
+                    <Typography className='!text-[#5975A2] !text-[14px] cursor-pointer' fontWeight={500}
+                        onClick={() => navigate(-1)}>MenteesTask</Typography>
+                    <img src={BreadCrumbsArrow} alt="" />
+                    <Typography className='!text-[#18283D] !text-[14px] cursor-pointer' fontWeight={500}>View {menteeTaskList?.program_name}</Typography>
+                </Stack>
+
+                {
+                    menteeTaskList?.editable &&
+                    <Button
+                        btnType='button'
+                        btnCls='w-[auto]'
+                        btnName={'Edit Task'}
+                        btnCategory='primary'
+                        onClick={() => handleEditTask()}
+                    />
+                }
+            </Stack>
+
 
             <div className='px-3 py-5' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
-                <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
+                {/* <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
                     <div className='flex gap-5 items-center text-[20px]'>
                         <p>Task - {taskDetails.task_name}</p>
-                        {/* {
-                            (taskDetails.status === 'waiting_for_approval' && !editTask) &&
-
-
-                            <div className="inset-y-0 end-0 flex items-center pe-3 cursor-pointer"
-                                onClick={() => setEditTask(true)}
-                            >
-                                <img src={EditIcon} alt='EditIcon' />
-                            </div>
-                        } */}
                     </div>
 
                     <div className='flex gap-8 items-center'>
@@ -135,89 +653,88 @@ const MentorTaskDetails = () => {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> */}
 
 
                 <div className='px-4'>
-                    <div className="relative flex gap-6 justify-between">
-                        <table className="w-[50%] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                            <tbody style={{ border: '1px solid rgba(0, 174, 189, 1)' }}>
-                                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" style={{ border: '1px solid rgba(0, 174, 189, 1)', background: '#fff', color: '#000' }} className="px-6 py-4 font-medium whitespace-nowrap ">
-                                        Category
-                                    </th>
-                                    <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
-                                        {taskDetails.program_category || ''}
-                                    </td>
-                                </tr>
-                                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th style={{ border: '1px solid rgba(0, 174, 189, 1)', background: '#fff', color: '#000' }} scope="row" className="px-6 py-4 font-medium  whitespace-nowrap ">
-                                        Program Name
-                                    </th>
-                                    <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
-                                        {taskDetails.program_name}
-                                    </td>
-                                </tr>
-                                <tr className="bg-white border-b dark:bg-gray-800 ">
-                                    <th style={{ border: '1px solid rgba(0, 174, 189, 1)', background: '#fff', color: '#000' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
-                                        Mentor Name
-                                    </th>
-                                    <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
-                                        {taskDetails.mentor_name}
-                                    </td>
-                                </tr>
-                                <tr className="bg-white border-b  dark:bg-gray-800">
-                                    <th style={{ border: '1px solid rgba(0, 174, 189, 1)', background: '#fff', color: '#000' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
-                                        Program Start Date and Time
-                                    </th>
-                                    <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
-                                        {dateTimeFormat(taskDetails.program_startdate)}
-                                    </td>
-                                </tr>
+                    <Grid container spacing={3}>
+                        <Grid item xs={6}>
+                            <Grid container>
+                                {
+                                    leftGridData?.map((e, i, len) => {
+                                        return (
+                                            <Grid item xs={12}>
+                                                <Grid container>
+                                                    <Grid item xs={5} style={{
+                                                        borderTop: '1px solid #1D5BBF',
+                                                        borderLeft: '1px solid #1D5BBF',
+                                                        borderRight: '1px solid #1D5BBF',
+                                                        borderBottom: len.length - 1 !== i ? "none" : '1px solid #1D5BBF',
+                                                        borderTopLeftRadius: i === 0 && '3px',
+                                                        borderBottomLeftRadius: len?.length - 1 === i && '3px',
+                                                    }}>
+                                                        <Typography className="px-6 py-4 font-medium whitespace-nowrap !text-[#18283D] !text-[14px]">{e?.title}</Typography>
+                                                    </Grid>
+                                                    <Grid item xs={7} sx={{
+                                                        borderBottom: len?.length - 1 === i && "1px solid #00AEBD",
+                                                        borderTopRightRadius: i === 0 && '3px',
+                                                        borderBottomRightRadius: len?.length - 1 === i && '3px',
+                                                    }}>
+                                                        <Typography className="px-6 py-4 text-white !text-[14px] !bg-[#00AEBD]"
+                                                            sx={{
+                                                                borderBottom: len?.length - 1 === i && "1px solid #00AEBD",
+                                                                borderTopRightRadius: i === 0 && '3px',
+                                                                borderBottomRightRadius: len?.length - 1 === i && '3px',
+                                                            }}>{e?.value}</Typography>
+                                                    </Grid>
+                                                </Grid>
+                                            </Grid>
+                                        )
+                                    })
+                                }
 
-                            </tbody>
-                        </table>
+                            </Grid>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Grid container>
+                                {
+                                    rightGridData?.map((e, i, len) => {
+                                        return (
+                                            <Grid item xs={12}>
+                                                <Grid container>
+                                                    <Grid item xs={5} style={{
+                                                        borderTop: '1px solid #00AEBD',
+                                                        borderLeft: '1px solid #00AEBD',
+                                                        borderRight: '1px solid #00AEBD',
+                                                        borderBottom: len.length - 1 !== i ? "none" : '1px solid #00AEBD',
+                                                        borderTopLeftRadius: i === 0 && '3px',
+                                                        borderBottomLeftRadius: len?.length - 1 === i && '3px',
+                                                    }}>
+                                                        <Typography className="px-6 py-4 font-medium whitespace-nowrap !text-[#18283D] !text-[14px]">{e?.title}</Typography>
+                                                    </Grid>
+                                                    <Grid item xs={7} sx={{
+                                                        borderBottom: len?.length - 1 === i && "1px solid #1D5BBF",
+                                                        borderTopRightRadius: i === 0 && '3px',
+                                                        borderBottomRightRadius: len?.length - 1 === i && '3px',
+                                                    }}>
+                                                        <Typography className="px-6 py-4 text-white !text-[14px] !bg-[#1D5BBF]"
+                                                            sx={{
+                                                                borderBottom: len?.length - 1 === i && "1px solid #1D5BBF",
+                                                                borderTopRightRadius: i === 0 && '3px',
+                                                                borderBottomRightRadius: len?.length - 1 === i && '3px',
+                                                            }}>{e?.value}</Typography>
+                                                    </Grid>
+                                                </Grid>
+                                            </Grid>
+                                        )
+                                    })
+                                }
 
-                        <table className="w-[50%] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                            <tbody style={{ border: '1px solid rgba(29, 91, 191, 1)' }}>
-                                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" style={{ border: '1px solid rgba(29, 91, 191, 1)', background: '#fff', color: '#000' }} className="px-6 py-4 font-medium whitespace-nowrap ">
-                                        Program End Date and Time
-                                    </th>
-                                    <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
-                                        {dateTimeFormat(taskDetails.program_enddate) || ''}
-                                    </td>
-                                </tr>
-                                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th style={{ border: '1px solid rgba(29, 91, 191, 1)', background: '#fff', color: '#000' }} scope="row" className="px-6 py-4 font-medium  whitespace-nowrap ">
-                                        Program Duration
-                                    </th>
-                                    <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
-                                        {taskDetails.program_duration} {taskDetails.program_duration>1?"Days": "Day"}
-                                    </td>
-                                </tr>
-                                <tr className="bg-white border-b dark:bg-gray-800 ">
-                                    <th style={{ border: '1px solid rgba(29, 91, 191, 1)', background: '#fff', color: '#000' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
-                                        Due Date
-                                    </th>
-                                    <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
-                                        {dateFormat(taskDetails.due_date)}
-                                    </td>
-                                </tr>
-                                <tr className="bg-white border-b  dark:bg-gray-800">
-                                    <th style={{ border: '1px solid rgba(29, 91, 191, 1)', background: '#fff', color: '#000' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
-                                        Status
-                                    </th>
-                                    <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
-                                        {TaskStatus[taskDetails?.status] || ''}
-                                    </td>
-                                </tr>
+                            </Grid>
+                        </Grid>
+                    </Grid>
 
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div className='task-desc flex mt-5 px-5 py-6' style={{ border: '1px solid rgba(29, 91, 191, 0.5)' }}>
+                    {/* <div className='task-desc flex mt-5 px-5 py-6' style={{ border: '1px solid rgba(29, 91, 191, 0.5)' }}>
 
                         <p className='text-[14px]'>Task</p>  :
                         <p className='text-[14px] pl-6'>{taskDetails.task_name}</p>
@@ -233,9 +750,125 @@ const MentorTaskDetails = () => {
 
                         <p className='text-[14px]'>Task Solution</p>  :
                         <p className='text-[14px] pl-6'>{taskDetails.task_solution}</p>
-                    </div>
+                    </div> */}
 
-                    <div className='flex justify-between task-uploaded-images-container'>
+                    <Box className="!border !border-[#1D5BBF80] rounded-[3px] mt-5">
+                        <Stack direction={"row"} alignItems={"center"} justifyContent={"space-between"} className='!border-b-2 !border-[#1D5BBF80] px-[35px] py-[22px]'>
+                            <Typography className='!text-[#18283D] !text-[16px]' fontWeight={600}>{menteeTaskList?.task_name}</Typography>
+                            <Typography className='!text-[#18283D] !text-[14px]'>Due date: {dayjs(menteeTaskList.due_date).format("DD/MM/YYYY")}</Typography>
+                        </Stack>
+                        <Stack spacing={3} className='px-[35px] py-[22px]'>
+                            <Typography className='!text-[#18283D] !text-[16px]' sx={{ fontWeight: 500 }}>
+                                {`Reference Book: `}
+                                <span className='!text-[#18283D] !text-[14px]'>
+                                    {
+                                        menteeTaskList?.reference_link
+                                    }
+                                </span>
+                            </Typography>
+                            <Typography className='!text-[#18283D] !text-[16px]' sx={{ fontWeight: 500 }}>
+                                {`Task Details: `}
+                                <span>
+                                    {menteeTaskList?.task_details}
+                                </span>
+                            </Typography>
+                        </Stack>
+                    </Box>
+
+                    <Box mt={"48px"}>
+                        <Box sx={{ borderBottom: "1px solid #D9E4F2" }}>
+                            <Tabs
+                                value={selectedTab}
+                                onChange={handleTab}
+                                sx={{
+                                    "& .MuiTabs-indicator": {
+                                        height: "5px",
+                                        background: "linear-gradient(to right, #1D5BBF, #00AEBD)",
+                                        borderRadius: "12px 12px 0px 0px"
+                                    }
+                                }}
+                            >
+                                {
+                                    tabsList?.map((e) => {
+                                        return (
+                                            <Tab value={e?.key} label={
+                                                <Typography className={`!text-[14px] text-[${selectedTab === e.key ? '#1D5BBF' : '#18283D'}] 
+                                                    capitalize -pb-[8px]`} sx={{ fontWeight: 400 }}>{e?.name}</Typography>
+                                            } />
+                                        )
+                                    })
+                                }
+                            </Tabs>
+                        </Box>
+
+                        <Box mt={"48px"}>
+                            <DataTable rows={menteeTaskList?.results ?? []}
+                                columns={menteeTaskListFromMentor}
+                                rowCount={menteeTaskList?.count}
+                                paginationModel={paginationModel}
+                                hideCheckbox
+                                setPaginationModel={setPaginationModel}
+                                hideFooter={menteeTaskList?.results?.length === 0}
+                            />
+                        </Box>
+
+                        {
+                            (selectedTab === "pending" && menteeTaskList?.results?.length > 0) &&
+                            <Stack direction={"row"} alignItems={"center"} justifyContent={"center"} width={"100%"} mt={"50px"}>
+                                <Stack direction={"row"} alignItems={"center"} spacing={"20px"}>
+                                    <Button
+                                        btnName='All No Pass'
+                                        btnCategory='secondary'
+                                        onClick={() => handleOpenAllPass()}
+                                        btnCls='w-[225px] !border !border-[#E0382D] rounded-[3px] !text-[#E0382D] h-[45px]'
+                                    />
+                                    <Button
+                                        btnType='button'
+                                        btnCls='w-[225px] h-[45px]'
+                                        btnName={'All Pass'}
+                                        btnCategory='primary'
+                                        onClick={() => handleOpenConfirmPopup("pass")}
+                                    />
+                                </Stack>
+                            </Stack>
+                        }
+
+                        {
+                            (selectedTab === "new" && menteeTaskList?.results?.length > 0) &&
+                            <Stack direction={"row"} alignItems={"center"} justifyContent={"center"} width={"100%"} mt={"50px"}>
+                                <Stack direction={"row"} alignItems={"center"} spacing={"20px"}>
+                                    <Button
+                                        btnName='Cancel all mentees task'
+                                        btnCategory='secondary'
+                                        onClick={() => handleCancelAllTask()}
+                                        btnCls='w-[225px] !border !border-[#E0382D] rounded-[3px] !text-[#E0382D] h-[45px]'
+                                    />
+                                    <Button
+                                        btnType='button'
+                                        btnCls='w-[225px] h-[45px]'
+                                        btnName={'Edit Task'}
+                                        btnCategory='primary'
+                                        onClick={() => handleEditTask()}
+                                    />
+                                </Stack>
+                            </Stack>
+                        }
+
+                        {
+                            ["", "completed", "rejected"].includes(selectedTab) &&
+                            <Stack direction={"row"} alignItems={"center"} justifyContent={"center"} width={"100%"} mt={"50px"}>
+                                <Button
+                                    btnType='button'
+                                    btnCls='w-[225px] h-[45px]'
+                                    btnName={'Close'}
+                                    btnCategory='primary'
+                                    onClick={() => navigate(-1)}
+                                />
+                            </Stack>
+                        }
+                    </Box>
+
+                    {/* <div className='flex justify-between task-uploaded-images-container'>
                         {
                             allFiles.files ?
 
@@ -317,8 +950,8 @@ const MentorTaskDetails = () => {
                                 : null
                         }
 
-                    </div>
-
+                    </div> */}
+                    {/* 
                     <form onSubmit={handleSubmit(onSubmit)}>
 
 
@@ -343,83 +976,163 @@ const MentorTaskDetails = () => {
                                 <div className='mark flex'>
                                     <div className='mr-96'>
                                         Result :
-                                    </div>
-                                    <div style={{ background: taskDetails.result === 'Pass' ? 'rgba(235, 255, 243, 1)' : 'rgba(255, 231, 231, 1)', padding: '24px 0', width: '240px', textAlign: 'center', fontSize: '40px' }}>
-                                        <span style={{ color: taskDetails.result === 'Pass' ? 'rgba(22, 182, 129, 1)' : 'rgba(224, 56, 45, 1)' }}>{taskDetails.result}</span>
+
+                                        <span style={{
+                                            background: taskDetails.result === 'Pass' ? 'rgba(235, 255, 243, 1)' : 'rgba(255, 231, 231, 1)',
+                                            color: taskDetails.result === 'Pass' ? 'rgba(22, 182, 129, 1)' : 'rgba(224, 56, 45, 1)',
+                                            borderRadius: "6px",
+                                            padding: "4px 22px",
+                                            marginLeft: "15px"
+                                        }}>
+                                            {taskDetails.result}
+                                        </span>
                                     </div>
                                 </div>
                             }
 
-                            {
-                                taskDetails.status === 'waiting_for_approval' &&
-                                <>
-                                    <div className='relative py-5'>
-                                        <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2" >
-                                            Result
-                                        </label>
-                                        <div className='relative '>
+                        {
+                            taskDetails.status === 'waiting_for_approval' &&
+                            <>
+                                <div className='relative py-5'>
+                                    <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2" >
+                                        Result
+                                    </label>
+                                    <div className='relative '>
+                                        <div className="flex items-center me-4">
                                             <div className="flex items-center me-4">
                                                 <div className="flex items-center me-4">
-                                                    <div className="flex items-center me-4">
-                                                        <input type="radio" className="w-4 h-4 text-blue-600 bg-gray-100
+                                                    <input type="radio" className="w-4 h-4 text-blue-600 bg-gray-100
                                                                                     border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 
                                                                                     dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700
                                                                                     dark:border-gray-600"
-                                                            {...radiobox}
-                                                            onChange={e => {
-                                                                radiobox.onChange(e);
-                                                            }}
-                                                            value={true}
-                                                        />
-                                                        <label className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{"Pass"}</label>
-                                                    </div>
+                                                        {...radiobox}
+                                                        onChange={e => {
+                                                            radiobox.onChange(e);
+                                                        }}
+                                                        value={true}
+                                                    />
+                                                    <label className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{"Pass"}</label>
+                                                </div>
 
-                                                    <div className="flex items-center me-4">
-                                                        <input type="radio" className="w-4 h-4 text-blue-600 bg-gray-100
+                                                <div className="flex items-center me-4">
+                                                    <input type="radio" className="w-4 h-4 text-blue-600 bg-gray-100
                                                                                     border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 
                                                                                     dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700
                                                                                     dark:border-gray-600"
-                                                            {...radiobox}
-                                                            onChange={e => {
-                                                                radiobox.onChange(e);
-                                                            }}
-                                                            value={false}
-                                                        />
-                                                        <label className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{'Fail'}</label>
-                                                    </div>
+                                                        {...radiobox}
+                                                        onChange={e => {
+                                                            radiobox.onChange(e);
+                                                        }}
+                                                        value={false}
+                                                    />
+                                                    <label className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{'Fail'}</label>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                </div>
 
-                                    {errors['result'] && (
-                                        <p className="error" role="alert">
-                                            {errors['result'].message}
-                                        </p>
-                                    )}
-                                </>
-                            }
-                        </div>
+                                {errors['result'] && (
+                                    <p className="error" role="alert">
+                                        {errors['result'].message}
+                                    </p>
+                                )}
+                            </>
+                        }
+                </div>
 
-                        <div className='close-btn flex justify-center gap-7 pb-5'>
-                            {
-                                editTask ?
-                                    <>
-                                        <Button btnName='Close' btnCls="w-[12%]" btnCategory="secondary" onClick={() => navigate('/mentor-tasks')} />
-                                        <Button btnType="submit" btnCls={`${editTask ? 'w-[14%]' : 'w-[12%]'}`}
-                                            btnName='Submit' btnCategory="primary" />
-                                    </>
-                                    :
-                                    <Button btnType="button" btnCls="w-[10%]" onClick={() => { navigate('/mentor-tasks?type=menteetask') }} btnName='Close' btnCategory="primary" />
-                            }
+                <div className='close-btn flex justify-center gap-7 pb-5'>
+                    {
+                        editTask ?
+                            <>
+                                <Button btnName='Close' btnCls="w-[12%]" btnCategory="secondary" onClick={() => navigate('/mentor-tasks')} />
+                                <Button btnType="submit" btnCls={`${editTask ? 'w-[14%]' : 'w-[12%]'}`}
+                                    btnName='Submit' btnCategory="primary" />
+                            </>
+                            :
+                            <Button btnType="button" btnCls="w-[10%]" onClick={() => { navigate('/mentor-tasks?type=menteetask') }} btnName='Close' btnCategory="primary" />
+                    }
 
-                        </div>
-                    </form>
+                </div>
+            </form> */}
                 </div>
 
 
-            </div>
-        </div>
+            </div >
+
+            <CancelPopup open={confirmPopup?.cancel} header={confirmPopup?.title} handleClosePopup={() => handleCloseConfirmPopup("cancel")}
+                handleSubmit={(reason) => {
+                    if (selectedTab === "new" || selectedTab === "") {
+                        if (newType === "fail") {
+                            handleUpdateResult("fail", reason)
+                        } else {
+                            handleCancelAllMentee(reason)
+                        }
+                    } else if (selectedTab === "pending") {
+                        handleUpdateAllTask("cancel", reason)
+                    } else {
+                        handleUpdateResult("fail", reason)
+                    }
+
+                }} />
+
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => 1 }}
+                open={confirmPopup?.pass}
+            >
+                <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
+                    <img src={TickColorIcon} alt="TickColorIcon" />
+
+                    <div className='py-5'>
+                        <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 600, fontSize: '18px' }}>
+                            Are you sure you want to mark as pass?
+                        </p>
+                    </div>
+                    <div className='flex justify-center' mt={4}>
+                        <div className="flex gap-6 justify-center align-middle">
+                            <Button btnCls="w-[200px] !border !border-[#18283D80] !text-[#18283D]" btnName={'Cancel'} btnCategory="secondary" onClick={() => handleCloseConfirmPopup("pass")} />
+                            <Button btnType="button" btnCls="w-[200px]" btnName={'Pass'}
+                                style={{ background: '#16B681', color: "#fff" }} btnCategory="secondary"
+                                onClick={() => {
+                                    if (selectedTab === "pending") {
+                                        handleUpdateAllTask("pass")
+                                    } else {
+                                        handleUpdateResult("pass")
+                                    }
+                                }}
+                            />
+                        </div>
+                    </div>
+                </div>
+
+            </Backdrop>
+
+
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={confirmPopup?.activity}
+            // onClick={() => setCreateMeetingLoading(false)}
+            >
+                <div className='px-5 py-1 flex justify-center items-center'>
+                    <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+                        style={{ background: '#fff', borderRadius: '10px' }}>
+                        <img src={SuccessTik} alt="SuccessTik" />
+                        <p className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                            style={{
+                                fontWeight: 600
+                            }}
+                        >
+                            {(selectedTab !== "pending" && confirmPopup?.type === "pass") && "Successfully Marked as Pass"}
+                            {(selectedTab !== "pending" && confirmPopup?.type === "cancel") && "Successfully marked as Fail"}
+                            {((selectedTab === "pending" || selectedTab === "new") && confirmPopup?.type === "cancel") && "All Mentee’s New task has been successfully cancelled"}
+                            {((selectedTab === "pending" || selectedTab === "new" || newType === "newTab") && confirmPopup?.type === "cancel_all") && "Task is cancelled successfully"}
+                            {(selectedTab === "pending" && confirmPopup?.type === "pass") && "All Mentee’s New task has been successfully passed"}
+                        </p>
+                    </div>
+
+                </div>
+            </Backdrop>
+        </div >
     )
 }
 

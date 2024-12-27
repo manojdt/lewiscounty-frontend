@@ -11,6 +11,7 @@ import HelpIcon from '../../assets/icons/Help.svg';
 import ProfileIcon from '../../assets/icons/Profile.svg';
 import LogoutIcon from '../../assets/icons/Logout.svg';
 import LogoutColorIcon from '../../assets/icons/Logoutpop.svg';
+import AddTicketIcon from '../../assets/icons/add-ticket-icon.svg';
 import {
   Backdrop,
   Badge,
@@ -31,6 +32,7 @@ import SettingIcon from '../../assets/icons/settingIcon.svg';
 import { styled } from '@mui/material/styles';
 import CategoryIcon from '../../assets/icons/category.svg';
 import PermissionIcon from '../../assets/icons/permissionIcon.svg';
+import { user } from '../../utils/constant';
 
 const HtmlTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} arrow />
@@ -220,6 +222,8 @@ export const Navbar = () => {
     dispatch(userActivities({ limit: 10 }));
   }, []);
 
+  // console.log(userInfo.data.role);
+
   const [openSetting, setOpenSetting] = React.useState(false);
 
   const handleTooltipClose = () => {
@@ -278,7 +282,7 @@ export const Navbar = () => {
       {!questionUpload && !documentUpload && (
         <nav className='bg-white border-gray-200'>
           <div className='flex justify-between'>
-            <div className='contain flex justify-between w-3/12 p-4'>
+            <div className='contain gap-24 flex justify-between w-3/12 p-4'>
               <div
                 className='site-logo cursor-pointer flex items-center space-x-3 rtl:space-x-reverse'
                 onClick={handleLogoClick}
@@ -287,6 +291,69 @@ export const Navbar = () => {
                   My Logo
                 </span>
               </div>
+              {userInfo?.data?.role === user.super_admin && (
+                <div>
+                  <ul
+                    // className='flex items-center justify-between h-full'
+                    style={{ gap: '40px' }}
+                    className={`flex flex-col ${
+                      !userInfo?.data?.is_registered
+                        ? 'ml-[150px]'
+                        : 'justify-center'
+                    } items-center p-4 md:p-0 mt-4 h-full font-medium border border-gray-100
+                    rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0`}
+                  >
+                    {/* {userInfo?.data?.is_registered && (
+                      <li
+                        className={`transition-all duration-300 ${
+                          pathname === '/dashboard'
+                            ? 'dashboard-menu-active'
+                            : ''
+                        }`}
+                      >
+                        <span
+                          onClick={() => navigate('/dashboard')}
+                          className='block py-2 px-3 rounded md:p-0 cursor-pointer'
+                          aria-current='page'
+                        >
+                          Dashboard
+                        </span>
+                      </li>
+                    )}
+                    {userInfo?.data?.is_registered && (
+                      <li
+                        className={`transition-all duration-300 ${
+                          pathname === '/members' ? 'dashboard-menu-active' : ''
+                        }`}
+                      >
+                        <span
+                          onClick={() => navigate('/members')}
+                          className='block py-2 px-3 rounded md:p-0 cursor-pointer'
+                          aria-current='page'
+                        >
+                          Members
+                        </span>
+                      </li>
+                    )} */}
+
+                    {userInfo?.data?.is_registered && (
+                      <li
+                        className={`transition-all duration-300 ${
+                          pathname === '/tickets' ? 'dashboard-menu-active' : ''
+                        }`}
+                      >
+                        <span
+                          onClick={() => navigate('/tickets')}
+                          className='block py-2 px-3 rounded md:p-0 cursor-pointer'
+                          aria-current='page'
+                        >
+                          Tickets
+                        </span>
+                      </li>
+                    )}
+                  </ul>
+                </div>
+              )}
               <div className='navbar-mobile-menu' onClick={handleLeftSidebar}>
                 <div className='user-image'>
                   <img
@@ -316,15 +383,83 @@ export const Navbar = () => {
             </div>
 
             <div
-              className={`navbar-icons flex items-center ${
-                userInfo?.data?.is_registered && !documentUpload
-                  ? 'justify-between'
-                  : 'justify-end'
-              } ${getWindowDimensions().width <= 1536 ? 'w-3/6' : 'w-2/5'} p-4`}
+              className='flex items-center justify-center p-4 gap-4'
+              // className={`navbar-icons flex items-center ${
+              //   userInfo?.data?.is_registered && !documentUpload
+              //     ? 'justify-between'
+              //     : 'justify-end'
+              // } ${getWindowDimensions().width <= 1536 ? 'w-3/6' : 'w-2/5'} p-4`}
             >
               {userInfo?.data?.is_registered && !documentUpload && (
                 <div className='relative mt-1 search-container'>
-                  {userInfo?.data?.role === 'super_admin' ? null : (
+                  {userInfo?.data?.role === 'super_admin' ? (
+                    <div>
+                      <input
+                        type='text'
+                        id='search-navbar'
+                        className='block w-full p-2 text-sm text-gray-900 border-none rounded-lg'
+                        placeholder='Search...'
+                        style={{
+                          backgroundColor: '#F5F9FF',
+                          width: '430px',
+                          height: '50px',
+                          borderRadius: '3px',
+                        }}
+                        onClick={(e) => handleOpenSearchBar(e)}
+                        onChange={(e) => handleGlobalChange(e.target.value)}
+                      />
+                      <div className='absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none'>
+                        <img src={SearchIcon} alt='SearchIcon' />
+                      </div>
+
+                      <OverlayPanel
+                        ref={searchBar}
+                        id='search_overlay_panel'
+                        style={{ width: '430px', top: '63px !important' }}
+                        className='notification-container searchbar-container'
+                        onClose={() => console.log('Close')}
+                      >
+                        <div className='flex gap-4'>
+                          {filterBtn.map((fBtn) => (
+                            <button
+                              key={fBtn.key}
+                              onClick={() => handleSelectFilter(fBtn.key)}
+                              className={`${
+                                searchProps.searchType === fBtn.key
+                                  ? 'active-info'
+                                  : ''
+                              }`}
+                            >
+                              {fBtn.name}
+                            </button>
+                          ))}
+                        </div>
+                        <div>
+                          <ul>
+                            {searchProps.searchData.map((sData, i) => {
+                              let name =
+                                searchProps.searchType === 'program'
+                                  ? sData.program_name
+                                  : sData.name;
+                              let url =
+                                searchProps.searchType === 'program'
+                                  ? `program-details/${sData.id}`
+                                  : `mentor-details/${sData.id}`;
+                              return (
+                                <li
+                                  key={i}
+                                  className='cursor-pointer'
+                                  onClick={() => searchNavigation(url)}
+                                >
+                                  {name}
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        </div>
+                      </OverlayPanel>
+                    </div>
+                  ) : (
                     <div>
                       <input
                         type='text'
@@ -401,21 +536,27 @@ export const Navbar = () => {
                   {userInfo?.data?.role === 'super_admin' ? null : (
                     <div className='notitification-group'>
                       <div className='bg-[#EEF5FF] rounded-[3px] h-[40px] w-[40px] flex items-center justify-center'>
-                      
-                      {activity?.length > 0?
-                      <Badge color="error" badgeContent={activity.length} variant='standard' max={activity.length}>
-                        <img
-                          src={NotificationIcon}
-                          className='cursor-pointer notification-image'
-                          alt='NotificationIcon'
-                        />
-                        </Badge>
-                        : 
-                        <img
-                          src={NotificationIcon}
-                          className='cursor-pointer notification-image'
-                          alt='NotificationIcon'
-                        />}
+                        {activity?.length > 0 ? (
+                          <Badge
+                            color='error'
+                            badgeContent={activity.length}
+                            variant='standard'
+                            sx={{ cursor: 'pointer' }}
+                            max={activity.length}
+                          >
+                            <img
+                              src={NotificationIcon}
+                              className='cursor-pointer notification-image'
+                              alt='NotificationIcon'
+                            />
+                          </Badge>
+                        ) : (
+                          <img
+                            src={NotificationIcon}
+                            className='cursor-pointer notification-image'
+                            alt='NotificationIcon'
+                          />
+                        )}
                       </div>
                       {/* {activity.length > 0 ? (
                         <span
@@ -447,6 +588,19 @@ export const Navbar = () => {
                       </OverlayPanel>
                     </div>
                   )}
+                </div>
+              )}
+
+              {userInfo?.data.role === user.super_admin && (
+                <div className='flex items-center relative'>
+                  <img className='absolute ml-4' src={AddTicketIcon} alt='' />
+                  <Button
+                    btnType='button'
+                    btnCls='w-[160px] h-12 pl-12'
+                    btnName={'Add Ticket'}
+                    btnCategory='primary'
+                    onClick={() => navigate('/add-new-ticket')}
+                  />
                 </div>
               )}
 
@@ -497,7 +651,11 @@ export const Navbar = () => {
                         </React.Fragment>
                       }
                     >
-                      <img src={SettingIcon} onClick={handleTooltipOpen} className='cursor-pointer' />
+                      <img
+                        src={SettingIcon}
+                        onClick={handleTooltipOpen}
+                        className='cursor-pointer'
+                      />
                     </HtmlTooltip>
                   </div>
                 </ClickAwayListener>
@@ -529,7 +687,7 @@ export const Navbar = () => {
                   }}
                 >
                   {userInfo?.data?.is_registered && !documentUpload && (
-                    <>
+                    <div>
                       <MenuItem
                         onClick={() => {
                           handleClose();
@@ -559,7 +717,7 @@ export const Navbar = () => {
                         />
                         Profile
                       </MenuItem>
-                    </>
+                    </div>
                   )}
 
                   <MenuItem

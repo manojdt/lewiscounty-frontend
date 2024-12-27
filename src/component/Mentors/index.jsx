@@ -45,6 +45,7 @@ export const Mentors = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [searchParams] = useSearchParams();
   const mentortype = searchParams.get('type');
+  const mentortypereq = searchParams.get('req');
   const state = useLocation()?.state;
 
   const { mentorList, loading, status } = useSelector(
@@ -52,7 +53,7 @@ export const Mentors = () => {
   );
 
   const [mentorType, setMentorType] = useState(
-    mentortype ?? state?.type === 'requestmentor' ? 'requestmentor' : 'mymentor'
+    mentortypereq?mentortypereq: mentortype ?? state?.type === 'requestmentor' ?  'requestmentor' : 'mymentor'
   );
   const [requestTab, setRequestTab] = useState('all');
   const [selectedItem, setSelectedItem] = useState({});
@@ -85,7 +86,7 @@ export const Mentors = () => {
       value: 'topmentor',
     },
     {
-      name: 'Request  Mentors',
+      name: 'New Follow Requests',
       value: 'requestmentor',
     },
   ];
@@ -328,7 +329,7 @@ export const Mentors = () => {
                   navigate(`/profileView`, {
                     state: {
                       row_id: selectedItem?.id,
-                      user_id: selectedItem?.requested_to,
+                      user_id: selectedItem?.following,
                       page: 'requested_mentor',
                     },
                   })
@@ -340,7 +341,7 @@ export const Mentors = () => {
               </MenuItem>
               <MenuItem
                 onClick={() => {
-                  handleOpenCancelPopup(params?.row);
+                  handleOpenCancelPopup(selectedItem);
                 }}
                 className='!text-[12px]'
               >
@@ -378,7 +379,12 @@ export const Mentors = () => {
       dispatch(getMyMentors(paginationModel));
     }
   };
-
+  useEffect(() => {
+    if(searchParams.get('req')){
+     setMentorType(searchParams.get('req'))
+     getMentorDatas(searchParams.get('req'))
+    }
+   }, [searchParams]);
   useEffect(() => {
     getMentorDatas();
   }, [paginationModel]);
@@ -413,6 +419,7 @@ export const Mentors = () => {
       page: 0,
       pageSize: 10,
     });
+    navigate(`/mentors?req=${value}`)
   };
 
   const handleSearch = (value) => {
@@ -550,7 +557,7 @@ export const Mentors = () => {
           <div className='flex gap-5 items-center '>
             <p>{title}</p>
             <p>
-              <img src={FilterIcon} alt='FilterIcon' />
+              {/* <img src={FilterIcon} alt='FilterIcon' /> */}
             </p>
           </div>
           <div className='flex gap-8 items-center'>
