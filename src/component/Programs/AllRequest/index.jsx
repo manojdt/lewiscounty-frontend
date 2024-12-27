@@ -1313,6 +1313,10 @@ export default function AllRequest() {
                                         />
                                         View
                                     </MenuItem>
+                                    {(seletedItem.status === "new" ||
+                                        seletedItem.status === "pending") &&
+                                    <>
+                                    
                                     <MenuItem
                                         onClick={() =>
                                             handleCancelReportRequest()
@@ -1326,6 +1330,7 @@ export default function AllRequest() {
                                         />
                                         Cancel Request
                                     </MenuItem>
+                                    </>}
                                     </>
                                 )
                             }
