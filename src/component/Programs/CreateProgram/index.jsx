@@ -42,6 +42,8 @@ import {
   useUpdateProgramMutation,
   useGetProgramDetailsByIdQuery,
   useGetProgramGoalsQuery,
+  useGetCountryStatesQuery,
+  useGetCitiesQuery,
   // useGetCountryStatesQuery,
   // useGetCitiesQuery,
 } from "../../../features/program/programApi.services";
@@ -83,16 +85,24 @@ export default function CreatePrograms() {
     watch,
     formState: { errors },
   } = methods;
+  const state = watch("state");
   const { data: currentProgramDetail, isLoading: isDetailFetching } =
     useGetProgramDetailsByIdQuery(
       { id: params.id, role },
       { skip: !(params?.id && role) }
     );
-  const { data: goals } = useGetProgramGoalsQuery();
-  // const { data: countryStates } = useGetCountryStatesQuery();
-  // const { data: cities } = useGetCitiesQuery("");
-  // console.log("countryStates", countryStates);
-  // console.log("cities", cities);
+  const { data: goals } = useGetProgramGoalsQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
+  const { data: countryStates } = useGetCountryStatesQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
+  const { data: cities } = useGetCitiesQuery(
+    {
+      ...(state && { state_id: +state }),
+    },
+    { refetchOnMountOrArgChange: true, skip: !state }
+  );
   const [
     createProgram,
     {
@@ -120,15 +130,17 @@ export default function CreatePrograms() {
     skills: [],
     certificate: [],
     members: [],
-    goals: goals?.results,
+    goals: [],
   });
 
   const [logo, setLogo] = useState({});
   const [stepWiseData, setStepWiseData] = useState({});
+  const [selectedItem, setSelectedItem] = React.useState({});
   const [programApiStatus, setProgramApiStatus] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleMoreClick = (event, data) => {
+    setSelectedItem(data);
     setAnchorEl(event.currentTarget);
   };
 
@@ -443,20 +455,26 @@ export default function CreatePrograms() {
   const handleAddPopupData = (key, value) => {
     try {
       if (value.length) {
-        setValue(key, value);
-        updateFormFields(key, value, currentStep - 1);
+        if (key === "goals") {
+          // Extract only the IDs from the goals array
+          const goalIds = value.map((goal) => goal.id);
+          setValue(key, goalIds);
+          updateFormFields(key, goalIds, currentStep - 1);
+        } else {
+          setValue(key, value);
+          updateFormFields(key, value, currentStep - 1);
+        }
         setActionModal("");
       }
     } catch (error) {
       console.error("Error updating form value:", error);
-      // Handle error appropriately
     }
   };
 
   const createUpdatedColumns = (originalColumns, type) => {
     return originalColumns.map((col) => {
       if (col.field === "action") {
-        if (type === "equipments") {
+        if (type === "goals") {
           return {
             ...col,
             renderCell: (params) => {
@@ -720,36 +738,47 @@ export default function CreatePrograms() {
         }
       }
 
-      // Update category options
+      // Update fields with dynamic options
       const updatedFields = currentStepField.map((field) => {
-        if (field.name === "category") {
-          return {
-            ...field,
-            options: category, // Set category options
-          };
+        switch (field.name) {
+          case "category":
+            return {
+              ...field,
+              options: category,
+            };
+          case "state":
+            return {
+              ...field,
+              options: countryStates,
+            };
+          case "city":
+            return {
+              ...field,
+              options: cities || [], // Ensure cities is never undefined
+            };
+          default:
+            return field;
         }
-        return field;
       });
 
-      // Update programAllFields while preserving other steps
-      const fields = programAllFields.map((field, i) => {
-        if (i === currentStep - 1) {
-          return updatedFields; // Update only current step
-        }
-        return field; // Preserve other steps
-      });
+      // Preserve existing step data while updating current step
+      setProgramAllFields((prevFields) =>
+        prevFields.map((fields, i) =>
+          i === currentStep - 1 ? updatedFields : fields
+        )
+      );
 
-      setProgramAllFields(fields);
+      // Update form details
+      setFormDetails((prev) => ({
+        ...prev,
+        category,
+        materials,
+        certificate,
+        skills,
+        members,
+        goals: goals?.results,
+      }));
     }
-
-    // Update form details
-    setFormDetails({
-      category,
-      materials,
-      certificate,
-      skills,
-      members,
-    });
   }, [
     currentStep,
     toggleRole,
@@ -759,6 +788,7 @@ export default function CreatePrograms() {
     skills,
     members,
     goals,
+    cities,
   ]);
 
   useEffect(() => {
@@ -802,7 +832,7 @@ export default function CreatePrograms() {
       }, 3000);
     }
   }, [tabActionInfo.error]);
- 
+
   useEffect(() => {
     if (
       currentProgramDetail &&
@@ -885,11 +915,11 @@ export default function CreatePrograms() {
     // reset();
   };
 
-  // useEffect(() => {
-  //   const sub = watch((values) => console.log("values", values));
+  useEffect(() => {
+    const sub = watch((values) => console.log("values", values));
 
-  //   return () => sub.unsubscribe();
-  // }, [watch]);
+    return () => sub.unsubscribe();
+  }, [watch]);
 
   return (
     <div className="dashboard-content px-8 mt-10">
@@ -975,7 +1005,6 @@ export default function CreatePrograms() {
               </span>
             </div>
           )}
-
         </Backdrop>
         {!isDetailFetching && (
           <div className="px-8 py-4">
@@ -1018,6 +1047,7 @@ export default function CreatePrograms() {
                     stepData={stepData}
                     stepFields={programAllFields[currentStep - 1]}
                     mentor_assign={mentor_assign}
+                    goalData={formDetails.goals}
                   />
                 </div>
                 <div className="flex gap-6 justify-center align-middle">
@@ -1353,10 +1383,9 @@ export default function CreatePrograms() {
         >
           <MenuItem
             onClick={(e) =>
-              navigate("/equipmentView", {
+              navigate("/goals", {
                 state: {
-                  id: params.row?.id,
-                  type: "view",
+                  id: selectedItem?.id,                 
                 },
               })
             }
