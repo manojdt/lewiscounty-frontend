@@ -125,10 +125,6 @@ export const TaskDetails = () => {
     }
     console.log(id,taskDocs,taskFile)
   };
-useEffect(() => {
- console.log(taskSolutionDocs,"taskSolutionDocs")
-}, [taskSolutionDocs])
-
   const submitTask = (type = "", formData) => {
     if (type === "draft") {
       dispatch(updateTaskSubmission(formData)).then((res) => {

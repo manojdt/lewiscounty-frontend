@@ -329,7 +329,6 @@ export const getFiles = (files) => {
       allFiles.files = true;
     }
   });
-console.log(allFiles)
   return allFiles;
 }
 
