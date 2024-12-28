@@ -1703,7 +1703,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     <div className="flex gap-2 items-center">
                       <img src={LocationIcon} alt="LocationIcon" />
                       <span className="text-[12px]">
-                        {`${programdetails.city_details?.name}, ${programdetails.state_details?.abbreviation}`}
+                        {programdetails.venue}
+                        {/* {`${programdetails.city_details?.name}, ${programdetails.state_details?.abbreviation}`} */}
                       </span>
                     </div>
 
@@ -2214,7 +2215,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                         ))}
                       </div>
                     </div>
-                  )}                
+                  )}
 
                 <div className="tab-content px-6 pt-10 text-[12px]">
                   <div
