@@ -1632,7 +1632,7 @@ export const ProgramInformationFields = [
         placeholder: "Select Mentor",
         fieldtype: "text",
         inputRules: {
-          required: 'This field is required',
+          // required: 'This field is required',
         },
         width: "width-32",
         icon: "add",
@@ -1920,19 +1920,19 @@ export const ProgramInformationFields = [
 ];
 
 export const AboutProgramFields = [
-  // {
-  //   type: "popup-input",
-  //   name: "goals",
-  //   label: "Goals",
-  //   fieldtype: "text",
-  //   placeholder: "Multiple goals added",
-  //   inputRules: {
-  //     required: 'This field is required',
-  //   },
-  //   width: "w-full",
-  //   icon: "add",
-  //   for: ["mentor", "admin"],
-  // },
+  {
+    type: "popup-input",
+    name: "goals",
+    label: "Goals",
+    fieldtype: "text",
+    placeholder: "Multiple goals added",
+    inputRules: {
+      required: 'This field is required',
+    },
+    width: "w-full",
+    icon: "add",
+    for: ["mentor", "admin"],
+  },
 
   {
     type: "textbox",

@@ -69,6 +69,7 @@ import {
 import SubprogramsDataGrid from "./SubProgramTable";
 import ProgramActions from "./ProgramActions";
 import { toast } from "react-toastify";
+import SkillsSet from "../../SkillsSet";
 
 export default function ProgramDetails({ setProgramDetailsId }) {
   const dateInfo = todatDateInfo();
@@ -1689,13 +1690,23 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     {programdetails.description}
                   </div>
 
+                  {programdetails.prerequisite && (
+                    <div className="text-[12px] my-3">
+                      <span className="font-semibold text-background-primary-main">
+                        Prerequisite:{" "}
+                      </span>
+                      {programdetails.prerequisite}
+                    </div>
+                  )}
+
                   <div className="flex gap-6 py-6">
                     <div className="flex gap-2 items-center">
                       <img src={LocationIcon} alt="LocationIcon" />
                       <span className="text-[12px]">
-                        {programdetails.venue}
+                        {`${programdetails.city_details?.name}, ${programdetails.state_details?.abbreviation}`}
                       </span>
                     </div>
+
                     <div
                       style={{ borderRight: "1px solid rgba(24, 40, 61, 1)" }}
                     ></div>
@@ -2142,7 +2153,12 @@ export default function ProgramDetails({ setProgramDetailsId }) {
               {"sub_program" in programdetails &&
                 programdetails?.sub_program?.length > 0 && (
                   <SubprogramsDataGrid data={programdetails?.sub_program} />
-                )}              
+                )}
+              {role === "mentee" &&
+                (programdetails.status === programActionStatus.inprogress ||
+                  programdetails.status === programActionStatus.paused) && (
+                  <SkillsSet programdetails={programdetails} />
+                )}
               {/* Detail Section */}
               <div
                 className="details-section px-6 py-11 mb-10"
@@ -2164,6 +2180,42 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     </button>
                   ))}
                 </div>
+
+                {Array.isArray(programdetails?.goals) &&
+                  programdetails?.goals?.length > 0 && (
+                    <div className="px-6 pt-10">
+                      <p className="text-[12px] mb-2">Goals:</p>
+                      <div className="flex items-center gap-x-3">
+                        {programdetails?.goals.map((goal) => (
+                          <button
+                            key={goal.id}
+                            className={`px-6 py-3 text-[12px] bg-gray-200 text-black rounded-full`}
+                            onClick={() => navigate(`/view-goal/${goal.id}`)}
+                          >
+                            {goal.goal_name}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                {Array.isArray(programdetails?.admin_goals) &&
+                  programdetails?.admin_goals?.length > 0 && (
+                    <div className="px-6 pt-10">
+                      <p className="text-[12px] mb-2">Admin Goals:</p>
+                      <div className="flex items-center gap-x-3">
+                        {programdetails?.admin_goals.map((goal) => (
+                          <button
+                            key={goal.id}
+                            className={`px-6 py-3 text-[12px] bg-gray-200 text-black rounded-full`}
+                            onClick={() => navigate(`/view-goal/${goal.id}`)}
+                          >
+                            {goal.goal_name}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}                
+
                 <div className="tab-content px-6 pt-10 text-[12px]">
                   <div
                     className={`about-programs ${
