@@ -12,7 +12,12 @@ export default function Card({ cardTitle, cardContent, cardFilter = [], cardCoun
         if (menuNavigate) {
             menuNavigate()
         }
-        navigate(menu.page)
+        if(role==='mentee'&&menu?.menteePage){
+            navigate(menu.menteePage)
+        }else{
+            navigate(menu.page)
+
+        }
     }
     return (
         <div className="pb-3" style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }}>
@@ -37,7 +42,7 @@ export default function Card({ cardTitle, cardContent, cardFilter = [], cardCoun
                     cardContent.map((menu, index) => <li className="" key={index}>
                         <div onClick={() => menu.page ? handleNavigate(menu) : handleClick ? handleClick(menu) : undefined}
                             className={`flex justify-between py-2 px-6 rounded cursor-pointer menu-content 
-                            ${searchParams.get("type") === menu.status || activeItem === menu.status || searchParams.get("type") === menu?.key ||
+                            ${searchParams.get("type") === menu.status || activeItem === menu.status || searchParams.get("type") === menu?.key ||(role==="mentee" &&(searchParams.get("type") === menu?.menteeStatus))||
                                     (searchParams.get("is_bookmark") !== null && menu.status === programActionStatus.bookmark) ||
                                     (searchParams.get("type") === 'planned' && menu.status === 'yettojoin') ||
                                     (searchParams.get("type") === null && searchParams.get("is_bookmark") === null && menu.status === 'all' && userInfo?.data?.is_registered) ||
