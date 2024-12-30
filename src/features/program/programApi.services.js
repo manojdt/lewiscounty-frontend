@@ -121,10 +121,11 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
     }),
 
     getCities: builder.query({
-      query: (id) => ({
-        url: `program/cities${id?`/${id}`:""}`,
+      query: (params) => ({
+          url: `program/cities`,
+          params
       }),
-    }),
+  }),
 
     getAllAdminProgramDetails: builder.query({
       query: (params) => ({ url: 'program/admin-program', params }),

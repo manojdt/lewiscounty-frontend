@@ -237,6 +237,7 @@ if(reason){
                       row_id: selectedMentee?.id,
                       user_id: selectedMentee?.follower,
                       is_approved: selectedMentee?.is_approved,
+                      status:selectedMentee?.status
                     },
                   })
                 }

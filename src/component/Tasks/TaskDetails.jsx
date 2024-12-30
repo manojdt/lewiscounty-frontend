@@ -123,8 +123,8 @@ export const TaskDetails = () => {
         taskFile.filter((task) => task.row_id === id)?.[0]?.id,
       ]);
     }
+    console.log(id,taskDocs,taskFile)
   };
-
   const submitTask = (type = "", formData) => {
     if (type === "draft") {
       dispatch(updateTaskSubmission(formData)).then((res) => {

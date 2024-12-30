@@ -339,6 +339,9 @@ export const Mentors = () => {
                 <img src={ViewIcon} alt='ViewIcon' className='pr-3 w-[30px]' />
                 View
               </MenuItem>
+              {(selectedItem.status === "new" ||
+                                        selectedItem.status === "pending") &&
+                                    <>
               <MenuItem
                 onClick={() => {
                   handleOpenCancelPopup(selectedItem);
@@ -352,6 +355,7 @@ export const Mentors = () => {
                 />
                 Cancel Request
               </MenuItem>
+              </>}
             </Menu>
           </>
         );

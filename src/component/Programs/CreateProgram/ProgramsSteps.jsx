@@ -42,6 +42,7 @@ const ProgramSteps = ({
   setToggleRole,
   setCurrent,
   mentor_assign,
+  goalData,
 }) => {
   const params = useParams();
   const [checkBoxValue, setCheckBoxValue] = useState({});
@@ -77,12 +78,14 @@ const ProgramSteps = ({
     sub_programs,
     start_date,
     end_date,
+    goals,
   ] = watch([
     "no_of_subprograms",
     "is_sponsored",
     "sub_programs",
     "start_date",
     "end_date",
+    "goals",
   ]);
 
   const mentorFooterComponent = (props) => {
@@ -292,9 +295,9 @@ const ProgramSteps = ({
                       disableFields ? "bg-slate-300" : "input-bg"
                     } focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]`}
                     placeholder={field.placeholder}
-                    onBlur={(e)=>{
-                      if(field.name==="program_name"){
-                        handelProgramCheck(e?.target?.value)
+                    onBlur={(e) => {
+                      if (field.name === "program_name") {
+                        handelProgramCheck(e?.target?.value);
                       }
                     }}
                     style={{
@@ -335,10 +338,50 @@ const ProgramSteps = ({
                     style={{ borderRadius: "3px" }}
                     onClick={() => handleAction(field.name)}
                   >
-                    {field?.value &&
-                      field.value.slice(0, 6).map((popupfield) => {
-                        return (
-                          <>
+                    {field.name === "goals" ? (
+                      // Goals field specific display
+                      <>
+                        {Array.isArray(goals) &&
+                          goals?.slice(0, 6).map((goalId) => {
+                            const goal = goalData?.find((g) => g.id === goalId);
+                            return (
+                              goal && (
+                                <p
+                                  key={goalId}
+                                  className="flex items-center gap-1"
+                                >
+                                  <p
+                                    className="flex items-center px-3 py-3"
+                                    style={{
+                                      background: "rgba(223, 237, 255, 1)",
+                                      borderRadius: "50%",
+                                    }}
+                                  ></p>
+                                  {goal.goal_name}
+                                </p>
+                              )
+                            );
+                          })}
+                        {Array.isArray(goals) && goals?.length > 6 && (
+                          <p className="flex items-center gap-1">
+                            <p
+                              className="text-white flex items-center px-2 py-1"
+                              style={{
+                                background: "rgb(29, 91, 191)",
+                                borderRadius: "50%",
+                              }}
+                            >
+                              {Array.isArray(goals) && goals.length - 6}
+                            </p>
+                            Others
+                          </p>
+                        )}
+                      </>
+                    ) : (
+                      // Original display logic for all other popup-input fields
+                      <>
+                        {field?.value &&
+                          field.value.slice(0, 6).map((popupfield) => (
                             <p className="flex items-center gap-1">
                               <p
                                 className="flex items-center px-3 py-3"
@@ -351,15 +394,11 @@ const ProgramSteps = ({
                                 `${popupfield.first_name} ${popupfield.last_name}` ||
                                 `${popupfield.full_name}`}
                             </p>
-                          </>
-                        );
-                      })}
+                          ))}
 
-                    {!field?.value &&
-                      stepData[field.name] &&
-                      stepData[field.name].slice(0, 6).map((popupfield) => {
-                        return (
-                          <>
+                        {!field?.value &&
+                          stepData[field.name] &&
+                          stepData[field.name].slice(0, 6).map((popupfield) => (
                             <p className="flex items-center gap-1">
                               <p
                                 className="flex items-center px-3 py-3"
@@ -372,23 +411,23 @@ const ProgramSteps = ({
                                 `${popupfield.first_name} ${popupfield.last_name}` ||
                                 `${popupfield.full_name}`}
                             </p>
-                          </>
-                        );
-                      })}
+                          ))}
 
-                    {field?.value && field?.value?.length > 6 && (
-                      <p className="flex items-center gap-1">
-                        <p
-                          className="text-white flex items-center px-2 py-1"
-                          style={{
-                            background: "rgb(29, 91, 191)",
-                            borderRadius: "50%",
-                          }}
-                        >
-                          {field?.value?.length - 6}
-                        </p>
-                        Others
-                      </p>
+                        {field?.value && field?.value?.length > 6 && (
+                          <p className="flex items-center gap-1">
+                            <p
+                              className="text-white flex items-center px-2 py-1"
+                              style={{
+                                background: "rgb(29, 91, 191)",
+                                borderRadius: "50%",
+                              }}
+                            >
+                              {field?.value?.length - 6}
+                            </p>
+                            Others
+                          </p>
+                        )}
+                      </>
                     )}
                   </div>
                   <input

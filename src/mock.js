@@ -480,7 +480,7 @@ export const MaterialColumns = [
 ];
 export const GoalColumns = [
   {
-    field: 'GoalName ',
+    field: 'goal_name',
     headerName: 'Goal Name ',
     flex: 1,
     id: 0,
@@ -492,7 +492,7 @@ export const GoalColumns = [
     id: 1,
   },
   {
-    field: 'level',
+    field: 'progress',
     headerName: 'Progress level',
     flex: 1,
     id: 2,
