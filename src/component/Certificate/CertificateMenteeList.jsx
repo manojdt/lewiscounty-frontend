@@ -33,6 +33,7 @@ export default function CertificateMenteeList() {
   const state = useLocation()?.state
   const { id } = useParams();
   const [searchParams] = useSearchParams();
+  const requestId=searchParams.get('request_id')
   const { data } = useSelector((state) => state.userInfo);
   const role = data?.role || '';
 
@@ -217,7 +218,7 @@ export default function CertificateMenteeList() {
 
   const handleApproveCertificateApiRequest = () => {
     dispatch(updateCertificateRequest({
-      "id": state?.rowId,
+      "id": state?.rowId||requestId,
       "status": "approved"
     })).then((res) => {
       if (res.meta.requestStatus === "fulfilled") {
@@ -239,7 +240,7 @@ export default function CertificateMenteeList() {
 
   const handleCancelCertificateApiRequest = () => {
     dispatch(updateCertificateRequest({
-      "id": state?.rowId,
+      "id": state?.rowId||requestId,
       "status": "rejected"
     })).then((res) => {
       if (res.meta.requestStatus === "fulfilled") {
