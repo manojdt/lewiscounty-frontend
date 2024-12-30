@@ -562,7 +562,9 @@ export default function AssignMentees() {
                                                                                                 }}
                                                                                                 aria-invalid={!!errors[field.name]}
                                                                                             />
-                                                                                            <button disabled={type === "edit"&&from_type !== "program"} type='button' className='h-[60px] mt-2 w-[13%] text-[14px]'
+                                                                                            <button 
+                                                                                            // disabled={type === "edit"&&from_type !== "program"} 
+                                                                                            type='button' className='h-[60px] mt-2 w-[13%] text-[14px]'
                                                                                                 style={{ border: '1px dashed rgba(29, 91, 191, 1)', color: 'rgba(29, 91, 191, 1)' }}
                                                                                                 onClick={handleAddMentee}>
                                                                                                 + Add Mentees

@@ -70,8 +70,8 @@ const ProgramActions = ({
 
     return (
       <div className='py-9'>
-        <div
-          className='py-3 px-16 text-white text-[14px] flex justify-center items-center'
+        <button
+          className='py-3 px-10 text-white text-[14px] flex justify-center items-center'
           style={{
             ...buttonStyles.base,
             ...buttonStyles.gradient,
@@ -79,7 +79,7 @@ const ProgramActions = ({
           }}
         >
           Program Completed
-        </div>
+        </button>
       </div>
     );
   };

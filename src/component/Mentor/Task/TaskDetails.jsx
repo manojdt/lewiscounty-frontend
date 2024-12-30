@@ -356,7 +356,7 @@ const MentorTaskDetails = () => {
                                     {selectedItem?.status === "pending" && (
                                         <>
                                             <MenuItem
-                                                onClick={() => handleOpenConfirmPopup("pass")}
+                                                onClick={() => handleOpenConfirmPopup("pass","","pass")}
                                                 className='!text-[12px]'
                                             >
                                                 <img src={TickCircle} alt='Cancel' className='pr-3 w-[30px]' />
@@ -1068,7 +1068,7 @@ const MentorTaskDetails = () => {
                         } else {
                             handleCancelAllMentee(reason)
                         }
-                    } else if (selectedTab === "pending") {
+                    } else if (selectedTab === "pending"&&!newType) {
                         handleUpdateAllTask("cancel", reason)
                     } else {
                         handleUpdateResult("fail", reason)
@@ -1094,7 +1094,7 @@ const MentorTaskDetails = () => {
                             <Button btnType="button" btnCls="w-[200px]" btnName={'Pass'}
                                 style={{ background: '#16B681', color: "#fff" }} btnCategory="secondary"
                                 onClick={() => {
-                                    if (selectedTab === "pending") {
+                                    if (selectedTab === "pending"&&!newType) {
                                         handleUpdateAllTask("pass")
                                     } else {
                                         handleUpdateResult("pass")

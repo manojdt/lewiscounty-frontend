@@ -767,6 +767,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
               className='text-[16px] font-semibold bg-clip-text text-font-primary-main'
               style={{
                 fontWeight: 600,
+                color: "#232323",
               }}
             >
               Thank you for providing the rating for this program
@@ -818,6 +819,28 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                 onClick={() => handleComplete(programdetails?.id)}
               />
             </div>
+          </div>
+        </div>
+      </Backdrop>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={completeProgram.activity}
+      >
+       <div className="px-5 py-1 flex justify-center items-center">
+          <div
+            className="flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20"
+            style={{ background: "#fff", borderRadius: "10px" }}
+          >
+            <img src={SuccessTik} alt="SuccessTik" />
+            <p
+              className="text-[16px] font-semibold bg-clip-text text-font-primary-main"
+              style={{
+                fontWeight: 600,
+                color: "#232323",
+              }}
+            >
+              Program Completed successfully
+            </p>
           </div>
         </div>
       </Backdrop>
@@ -895,6 +918,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
             <p
               className='text-[16px] font-semibold bg-clip-text text-font-primary-main'
               style={{
+                color: "#232323",
                 fontWeight: 600,
               }}
             >
