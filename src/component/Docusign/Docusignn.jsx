@@ -17,7 +17,7 @@ const BlockTypes = {
     TEXT_IMAGE: 'text_image',
 };
 
-const ArticleCustom = ({ onSave, onCancel }) => {
+const HtmlReport = ({ onSave = () =>false, onCancel = () => false }) => {
     const navigate =useNavigate();
     const [url,setUrl]=useState()
     const [videoUrl, setVideoUrl] = useState('');
@@ -128,7 +128,8 @@ const ArticleCustom = ({ onSave, onCancel }) => {
         );
     };    
 const handleCancel = () => {
-    navigate('/create-report');
+    // navigate('/create-report');
+    onCancel()
 };
 
   
@@ -944,5 +945,5 @@ setBlocks([
     );
 };
 
-export default ArticleCustom;
+export default HtmlReport;
 

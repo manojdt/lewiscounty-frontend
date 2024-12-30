@@ -19,8 +19,8 @@ import { reportsStatus } from '../../utils/constant';
 import { createReport, getCompletedProgramsByCategoryId, getProgramsByCategoryId, getReportProgramDetails, updateReportLocalState } from '../../services/reportsInfo';
 import ToastNotification from '../../shared/Toast';
 import { dateTimeFormat } from '../../utils';
-import HtmlReport from '../../shared/htmlReport';
 import MuiModal from '../../shared/Modal';
+import HtmlReport from '../Docusign/Docusignn';
 
 
 export default function CreateReport() {
@@ -37,7 +37,7 @@ export default function CreateReport() {
     const [actionType, setActionType] = useState('')
     const [commonLoading, setCommonLoading] = useState(false)
     const [openReport, setOpenReport] = useState(false)
-
+    const [reportData, setReportData] = React.useState({})
 
     const {
         register,
@@ -45,7 +45,9 @@ export default function CreateReport() {
         handleSubmit,
         reset,
         getValues,
-        setValue
+        setValue,
+        trigger,
+        clearErrors
     } = useForm();
 
     React.useEffect(() => {
@@ -56,16 +58,24 @@ export default function CreateReport() {
     }, [state])
 
     const onSubmit = (data) => {
-        console.log("data ===>", data)
-        const apiData = {
+        let apiData = {
             // "category": parseInt(data.category),
             request_type: "report",
             "program": parseInt(data.program),
             "name": data.report_name,
             "participated_mentees": data.participated_mentees,
             "comments": data.description,
-            "status": data?.action ?? "new"
+            "status": data?.action ?? "new",
+            is_active: true
         }
+        if(reportData?.id){
+            apiData = {
+                ...apiData,
+                id: reportData?.id,
+                is_active: false
+            }
+        }
+
         dispatch(createReport(apiData)).then((res) => {
             if (res?.meta?.requestStatus === "fulfilled") {
                 dispatch(updateReportLocalState({ programDetails: {} }))
@@ -205,6 +215,51 @@ export default function CreateReport() {
     }, [searchParams])
 
 
+
+    const handleOpenHtmlReport = async () => {
+
+        const isValid = await trigger([
+            'category',
+            'program',
+            'mentor_name',
+            'start_date',
+            'end_date',
+            'participated_mentees',
+            'report_name'
+        ]);
+
+        if (isValid) {
+            // setOpenReport(true);
+            const apiData = {
+                // "category": parseInt(data.category),
+                request_type: "report",
+                "program": parseInt(getValues("program")),
+                "name": getValues("report_name"),
+                "participated_mentees": getValues("participated_mentees"),
+                "comments": getValues("description"),
+                "status": "new",
+                is_active: true
+            }
+            dispatch(createReport(apiData)).then((res) => {
+                if (res?.meta?.requestStatus === "fulfilled") {
+                    // dispatch(updateReportLocalState({ programDetails: {} }))
+                    setReportData(res?.payload)
+                    setOpenReport(true)
+                }
+            })
+        } else {
+            const firstErrorField = Object.keys(errors)[0];
+            if (firstErrorField) {
+                document.querySelector(`[name="${firstErrorField}"]`)?.focus();
+            }
+        }
+    }
+
+    const handleInputChange = (field_name) => {
+        // Clears the error when the user starts typing
+        clearErrors(field_name);
+    };
+
     return (
         <div className="px-9 my-6 grid">
 
@@ -285,6 +340,7 @@ export default function CreateReport() {
                                                                 }}
                                                                 disabled={field.disabled}
                                                                 aria-invalid={!!errors[field.name]}
+                                                                onChange={()=>handleInputChange(field.name)} 
                                                             />
 
                                                             {errors[field.name] && (
@@ -310,6 +366,7 @@ export default function CreateReport() {
                                                                         dropdownField.onChange(e)
                                                                         if (field.name === 'category') getProgramInfo(e.target.value)
                                                                         if (field.name === 'program') handleProgramData(e.target.value)
+                                                                        handleInputChange(field.name)
                                                                     }}
                                                                 >
                                                                     <option value="">Select</option>
@@ -343,7 +400,8 @@ export default function CreateReport() {
                                                                     <textarea id="message" rows="4" className={`block p-2.5 input-bg w-full text-sm text-gray-900  rounded-lg border
                                                                                 focus:visible:outline-none focus:visible:border-none ${field.width === 'width-82' ? 'h-[282px]' : ''}`}
                                                                         placeholder={field.placeholder}
-                                                                        {...register(field.name, field.inputRules)}></textarea>
+                                                                        {...register(field.name, field.inputRules)}
+                                                                        onChange={()=>handleInputChange(field.name)} ></textarea>
                                                                     {errors[field.name] && (
                                                                         <p className="error" role="alert">
                                                                             {errors[field.name].message}
@@ -361,6 +419,7 @@ export default function CreateReport() {
                                                                                             dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700
                                                                                             dark:border-gray-600"
                                                                                         {...register(field.name, field.inputRules)}
+                                                                                        onChange={()=>handleInputChange(field.name)} 
                                                                                     />
                                                                                     <label className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{option.value}</label>
                                                                                 </div>
@@ -384,6 +443,7 @@ export default function CreateReport() {
                                                                                     }}
                                                                                     disabled={field.disabled}
                                                                                     aria-invalid={!!errors[field.name]}
+                                                                                    onChange={()=>handleInputChange(field.name)} 
                                                                                 />
                                                                                 <img className='absolute top-5 right-2' src={CalendarIcon} alt="CalendarIcon" />
                                                                             </div>
@@ -443,8 +503,9 @@ export default function CreateReport() {
                                                                                         <textarea id="message" rows="4" className={`block p-2.5 input-bg w-[100%] h-[200px] text-sm text-gray-900  rounded-lg border
                                                                                             focus:visible:outline-none focus:visible:border-none ${field.width === 'width-82' ? 'h-[282px]' : ''}`}
                                                                                             placeholder={field.placeholder}
-                                                                                            {...register(field.name, field.inputRules)}></textarea>
-                                                                                        <div className='flex flex-col gap-6 items-center justify-center input-bg w-[4%] cursor-pointer' style={{ borderRadius: '3px' }} onClick={() => setOpenReport(true)}>
+                                                                                            {...register(field.name, field.inputRules)}
+                                                                                            onChange={()=>handleInputChange(field.name)} ></textarea>
+                                                                                        <div className='flex flex-col gap-6 items-center justify-center input-bg w-[4%] cursor-pointer' style={{ borderRadius: '3px' }} onClick={() => handleOpenHtmlReport()}>
                                                                                             <img src={TextIcon} alt="TextIcon" />
                                                                                             <img src={HTMLIcon} alt="HTMLIcon" />
                                                                                         </div>
@@ -486,7 +547,10 @@ export default function CreateReport() {
                             noheader
                             modalClose={() => setOpenReport(false)}
                         >
-                            <HtmlReport onCancel={() => setOpenReport(false)} onSave={(data) => console.log(data)} />
+                            <HtmlReport onCancel={() => {
+                                console.log("abcd")
+                                setOpenReport(false)
+                            }} onSave={(data) => console.log(data)} />
                         </MuiModal>
 
                     </div>
