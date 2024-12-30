@@ -450,7 +450,7 @@ export default function Programs() {
     if (programFilter.search !== "") query.search = programFilter.search;
     if (programFilter.filter_by !== "")
       query.filter_by = programFilter.filter_by;
-
+console.log(query,"query")
     return query;
   };
 

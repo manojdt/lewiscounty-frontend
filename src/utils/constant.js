@@ -710,6 +710,8 @@ export const programActionStatus = {
   reschedule: 'reschedule',
   program_join_request_accepted: 'program_join_request_accepted',
   program_assign: 'assign_program',
+  recent_join: 'recently_joined',
+  ongoing: 'ongoing',
 };
 
 export const pipeUrls = {
@@ -731,6 +733,8 @@ export const pipeUrls = {
 export const programFilterUrls = {
   yettoapprove: `?type=${programActionStatus.yettoapprove}`,
   yettojoin: `?type=${programActionStatus.yettojoin}`,
+  recent_join: `?type=${programActionStatus.recent_join}`,
+  ongoing: `?type=${programActionStatus.ongoing}`,
   planned: `?type=${programActionStatus.planned}`,
   yettostart: `?type=${programActionStatus.yettostart}`,
   inprogress: `?type=${programActionStatus.inprogress}`,
@@ -770,6 +774,7 @@ export const programMenus = (page = 'dashboard') => {
       name: 'Active Programs',
       count: 0,
       page: `${pipeUrl}${programFilterUrls.yettojoin}`,
+      menteePage:`${pipeUrl}${programFilterUrls.planned}`,
       for: ['admin', 'mentor', 'mentee'],
       mentorStatus: programActionStatus.yettojoin,
       adminStatus:programActionStatus.yettojoin,
@@ -780,6 +785,7 @@ export const programMenus = (page = 'dashboard') => {
       name: 'Recently Joined Programs',
       count: 0,
       page: `${pipeUrl}${programFilterUrls.yettostart}`,
+      menteePage:`${pipeUrl}${programFilterUrls.recent_join}`,
       for: ['mentor', 'admin', 'mentee'],
       mentorStatus: programActionStatus.yettostart,
       adminStatus:programActionStatus.yettostart,
@@ -790,6 +796,7 @@ export const programMenus = (page = 'dashboard') => {
       name: 'Ongoing Programs',
       count: 0,
       page: `${pipeUrl}${programFilterUrls.inprogress}`,
+      menteePage:`${pipeUrl}${programFilterUrls.ongoing}`,
       for: ['mentor', 'admin', 'mentee'],
       mentorStatus: programActionStatus.inprogress,
       adminStatus:programActionStatus.inprogress,
