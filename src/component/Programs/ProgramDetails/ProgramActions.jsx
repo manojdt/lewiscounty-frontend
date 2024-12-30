@@ -1,5 +1,5 @@
-import React from "react";
-import { Box, Stack } from "@mui/material";
+import React from 'react';
+import { Box, Stack } from '@mui/material';
 import {
   menteeNotJoinCondition,
   menteeProgramStatus,
@@ -7,9 +7,9 @@ import {
   programApprovalStage,
   programCancelled,
   programCompleted,
-} from "../../../utils/constant";
-import DoubleArrowIcon from "../../../assets/images/double_arrow 1x.png";
-import { useSearchParams } from "react-router-dom";
+} from '../../../utils/constant';
+import DoubleArrowIcon from '../../../assets/images/double_arrow 1x.png';
+import { useSearchParams } from 'react-router-dom';
 
 const ProgramActions = ({
   role,
@@ -22,32 +22,32 @@ const ProgramActions = ({
   reqStatus,
   handleAcceptCancelProgramRequest,
   setOpenPopup,
+  setCancelPopup,
 }) => {
   const [searchParams] = useSearchParams();
   // Common status button styles
   const buttonStyles = {
     base: {
-      borderRadius: "5px",
-      padding: "12px 64px",
-      fontSize: "14px",
-      display: "flex",
-      alignItems: "center",
+      borderRadius: '5px',
+      padding: '12px 64px',
+      fontSize: '14px',
+      display: 'flex',
+      alignItems: 'center',
     },
     gradient: {
-      background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
+      background: 'linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)',
     },
     success: {
-      background: "#16B681",
+      background: '#16B681',
     },
     danger: {
-      border: "1px solid #E0382D",
-      color: "#E0382D",
+      border: '1px solid #E0382D',
+      color: '#E0382D',
     },
   };
 
   const renderRequestStatus = () => {
     // if (!requestStatusParams || role !== "mentor") return null;
-
     // return (
     //   <div className="py-9">
     //     <div
@@ -69,9 +69,9 @@ const ProgramActions = ({
     if (!programCompleted.includes(programdetails.status)) return null;
 
     return (
-      <div className="py-9">
+      <div className='py-9'>
         <div
-          className="py-3 px-16 text-white text-[14px] flex justify-center items-center"
+          className='py-3 px-16 text-white text-[14px] flex justify-center items-center'
           style={{
             ...buttonStyles.base,
             ...buttonStyles.gradient,
@@ -86,16 +86,16 @@ const ProgramActions = ({
 
   // Render mentor specific actions
   const renderMentorActions = () => {
-    if (role !== "mentor") return null;
+    if (role !== 'mentor') return null;
 
     // Accept Program button for admin programs
     if (
-      programdetails.status === "yettoapprove" &&
+      programdetails.status === 'yettoapprove' &&
       programdetails?.admin_program
     ) {
       return (
         <button
-          className="py-3 px-16 text-white mt-4"
+          className='py-3 px-16 text-white mt-4'
           style={{
             ...buttonStyles.base,
             ...buttonStyles.gradient,
@@ -115,14 +115,14 @@ const ProgramActions = ({
       return null;
 
     // Handle request based actions
-    if (requestId !== "") {
+    if (requestId !== '') {
       if (
-        programdetails.status === "accept" ||
-        programdetails?.request_data?.status === "approved"
+        programdetails.status === 'accept' ||
+        programdetails?.request_data?.status === 'approved'
       ) {
         return (
           <button
-            className="py-3 px-16 mt-7 text-white text-[14px] flex items-center"
+            className='py-3 px-16 mt-7 text-white text-[14px] flex items-center'
             style={{ ...buttonStyles.base, ...buttonStyles.success }}
             onClick={() => undefined}
           >
@@ -131,10 +131,10 @@ const ProgramActions = ({
         );
       }
 
-      if (programdetails.status === "cancel") {
+      if (programdetails.status === 'cancel') {
         return (
           <button
-            className="py-3 mt-7 px-16 text-white text-[14px] flex items-center"
+            className='py-3 mt-7 px-16 text-white text-[14px] flex items-center'
             style={{ ...buttonStyles.base, ...buttonStyles.danger }}
             onClick={() => undefined}
           >
@@ -150,36 +150,51 @@ const ProgramActions = ({
       !programdetails?.admin_program
     ) {
       return (
-        <div className="flex gap-4 pt-10">
+        <div className='space-y-4 pt-10'>
           <button
-            className="py-3 px-16 text-white text-[14px] flex items-center"
+            className='py-3 px-16 text-white text-[14px] flex items-center'
             style={{
               ...buttonStyles.base,
               ...buttonStyles.danger,
-              cursor: "not-allowed",
+              cursor: 'not-allowed',
             }}
             onClick={() => undefined}
           >
-            {programApprovalStage[programdetails.status].type === "waiting" && (
-              <i className="pi pi-clock" style={{ color: "red" }}></i>
+            {programApprovalStage[programdetails.status].type === 'waiting' && (
+              <i className='pi pi-clock' style={{ color: 'red' }}></i>
             )}
-            {programApprovalStage[programdetails.status].type === "reject" && (
-              <i className="pi pi-ban" style={{ color: "red" }}></i>
+            {programApprovalStage[programdetails.status].type === 'reject' && (
+              <i className='pi pi-ban' style={{ color: 'red' }}></i>
             )}
-            <span className="pl-3">
+            <span className='pl-3'>
               {programApprovalStage[programdetails.status]?.text}
             </span>
           </button>
+
+          {['new', 'pending'].includes(
+            programdetails?.request_data?.status
+          ) && (
+            <button
+              onClick={() => setCancelPopup(true)}
+              className='py-3 px-16 text-white text-[14px] flex items-center'
+              style={{
+                ...buttonStyles.base,
+                ...buttonStyles.danger,
+              }}
+            >
+              Cancel Request
+            </button>
+          )}
         </div>
       );
     }
 
     // Draft status
-    if (programdetails.status === "draft") {
+    if (programdetails.status === 'draft') {
       return (
-        <div className="py-9">
+        <div className='py-9'>
           <div
-            className="py-3 px-16 text-white text-[14px] flex justify-center items-center"
+            className='py-3 px-16 text-white text-[14px] flex justify-center items-center'
             style={{
               ...buttonStyles.base,
               ...buttonStyles.gradient,
@@ -193,22 +208,22 @@ const ProgramActions = ({
     }
 
     // Launch program button
-    if (programdetails.status === "yettojoin") {
+    if (programdetails.status === 'yettojoin') {
       return (
-        <div className="py-9">
+        <div className='py-9'>
           <button
-            className="py-3 px-16 text-white text-[14px] flex items-center"
+            className='py-3 px-16 text-white text-[14px] flex items-center'
             style={{ ...buttonStyles.base, ...buttonStyles.gradient }}
             onClick={() =>
-              !isLaunchingProgram && handleJoinProgram("program_join")
+              !isLaunchingProgram && handleJoinProgram('program_join')
             }
           >
-            {isLaunchingProgram ? "loading..." : "Launch Program"}
-            <span className="pl-8 pt-1">
+            {isLaunchingProgram ? 'loading...' : 'Launch Program'}
+            <span className='pl-8 pt-1'>
               <img
-                style={{ width: "15px", height: "13px" }}
+                style={{ width: '15px', height: '13px' }}
                 src={DoubleArrowIcon}
-                alt="DoubleArrowIcon"
+                alt='DoubleArrowIcon'
               />
             </span>
           </button>
@@ -222,54 +237,56 @@ const ProgramActions = ({
   // Render mentee specific actions
   const renderMenteeActions = () => {
     if (
-      role !== "mentee" ||
+      role !== 'mentee' ||
       programCompleted.includes(programdetails.status) ||
       programCancelled.includes(programdetails.status)
     )
       return null;
 
     return (
-      <div className="py-9">
-        {menteeProgramStatus[programdetails.mentee_join_status]  ? (
+      <div className='py-9'>
+        {menteeProgramStatus[programdetails.mentee_join_status] ? (
           <>
-          {programdetails.mentee_join_status!==menteeProgramStatus.program_join_request_accepted.status&&
-          <button
-            className="py-3 px-16 text-white text-[14px] flex items-center"
-            style={{
-              ...buttonStyles.base,
-              ...buttonStyles.danger,
-              cursor: "not-allowed",
-            }}
-            onClick={() => undefined}
-          >
-            {menteeProgramStatus[programdetails.mentee_join_status].type ===
-              "waiting" && (
-              <i className="pi pi-clock" style={{ color: "red" }}></i>
+            {programdetails.mentee_join_status !==
+              menteeProgramStatus.program_join_request_accepted.status && (
+              <button
+                className='py-3 px-16 text-white text-[14px] flex items-center'
+                style={{
+                  ...buttonStyles.base,
+                  ...buttonStyles.danger,
+                  cursor: 'not-allowed',
+                }}
+                onClick={() => undefined}
+              >
+                {menteeProgramStatus[programdetails.mentee_join_status].type ===
+                  'waiting' && (
+                  <i className='pi pi-clock' style={{ color: 'red' }}></i>
+                )}
+                {menteeProgramStatus[programdetails.mentee_join_status].type ===
+                  'reject' && (
+                  <i className='pi pi-ban' style={{ color: 'red' }}></i>
+                )}
+                <span className='pl-3'>
+                  {menteeProgramStatus[programdetails.mentee_join_status]?.text}
+                </span>
+              </button>
             )}
-            {menteeProgramStatus[programdetails.mentee_join_status].type ===
-              "reject" && (
-              <i className="pi pi-ban" style={{ color: "red" }}></i>
-            )}
-            <span className="pl-3">
-              {menteeProgramStatus[programdetails.mentee_join_status]?.text}
-            </span>
-          </button>}
           </>
         ) : (
           !menteeNotJoinCondition.includes(programdetails.status) && (
             <button
-              className="py-3 px-16 text-white text-[14px] flex items-center"
+              className='py-3 px-16 text-white text-[14px] flex items-center'
               style={{ ...buttonStyles.base, ...buttonStyles.gradient }}
               onClick={() =>
-                !isLaunchingProgram && handleJoinProgram("program_join")
+                !isLaunchingProgram && handleJoinProgram('program_join')
               }
             >
-              {isLaunchingProgram ? "Loading..." : "Join Program"}
-              <span className="pl-8 pt-1">
+              {isLaunchingProgram ? 'Loading...' : 'Join Program'}
+              <span className='pl-8 pt-1'>
                 <img
-                  style={{ width: "15px", height: "13px" }}
+                  style={{ width: '15px', height: '13px' }}
                   src={DoubleArrowIcon}
-                  alt="DoubleArrowIcon"
+                  alt='DoubleArrowIcon'
                 />
               </span>
             </button>
@@ -281,37 +298,37 @@ const ProgramActions = ({
 
   // Render admin specific actions
   const renderAdminActions = () => {
-    if (role !== "admin") return null;
+    if (role !== 'admin') return null;
 
     const showRequestButtons =
-      programdetails?.status === "yettoapprove" ||
-      programdetails?.status === "inprogress" ||
-      (programdetails?.request_data?.request_type === "program_reschedule" &&
-        programdetails?.request_data?.status === "new") ||
-      (programdetails?.request_data?.request_type === "program_cancel" &&
-        programdetails?.request_data?.status === "new");
+      programdetails?.status === 'yettoapprove' ||
+      programdetails?.status === 'inprogress' ||
+      (programdetails?.request_data?.request_type === 'program_reschedule' &&
+        programdetails?.request_data?.status === 'new') ||
+      (programdetails?.request_data?.request_type === 'program_cancel' &&
+        programdetails?.request_data?.status === 'new');
 
     if (showRequestButtons) {
       return (
         <Box mt={2}>
-          <Stack direction="row" alignItems="center" spacing="20px">
+          <Stack direction='row' alignItems='center' spacing='20px'>
             <button
-              className="py-3 px-16 text-white text-[14px] flex items-center"
+              className='py-3 px-16 text-white text-[14px] flex items-center'
               style={{ ...buttonStyles.base, ...buttonStyles.danger }}
               onClick={() =>
-                handleAcceptCancelProgramRequest("cancel", programdetails.id)
+                handleAcceptCancelProgramRequest('cancel', programdetails.id)
               }
             >
-              {searchParams.has("type") &&
-              searchParams.get("type") === "program_cancel"
-                ? "Continue"
-                : "Reject Request"}
+              {searchParams.has('type') &&
+              searchParams.get('type') === 'program_cancel'
+                ? 'Continue'
+                : 'Reject Request'}
             </button>
             <button
-              className="py-3 px-16 text-white text-[14px] flex items-center"
+              className='py-3 px-16 text-white text-[14px] flex items-center'
               style={{ ...buttonStyles.base, ...buttonStyles.success }}
               onClick={() =>
-                handleAcceptCancelProgramRequest("accept", programdetails.id)
+                handleAcceptCancelProgramRequest('accept', programdetails.id)
               }
             >
               Approve Request
@@ -322,18 +339,18 @@ const ProgramActions = ({
     }
 
     if (
-      programdetails?.request_data?.status === "rejected" ||
+      programdetails?.request_data?.status === 'rejected' ||
       (!requestStatusParams &&
-        programdetails?.status === "new_program_request_rejected")
+        programdetails?.status === 'new_program_request_rejected')
     ) {
       return (
         <Box mt={2}>
           <button
-            className="py-3 px-16 text-white text-[14px] flex items-center"
+            className='py-3 px-16 text-white text-[14px] flex items-center'
             style={{
               ...buttonStyles.base,
               ...buttonStyles.danger,
-              cursor: "not-allowed",
+              cursor: 'not-allowed',
             }}
             onClick={() => undefined}
           >
@@ -344,16 +361,16 @@ const ProgramActions = ({
     }
 
     if (
-      programdetails?.status === "yettojoin" &&
-      programdetails?.request_data?.request_type === "program_new"
+      programdetails?.status === 'yettojoin' &&
+      programdetails?.request_data?.request_type === 'program_new'
     ) {
       return (
         <button
-          className="py-3 px-16 text-white text-[14px] flex items-center"
+          className='py-3 px-16 text-white text-[14px] flex items-center'
           style={{
             ...buttonStyles.base,
             ...buttonStyles.success,
-            cursor: "not-allowed",
+            cursor: 'not-allowed',
           }}
           onClick={() => undefined}
         >
@@ -370,32 +387,32 @@ const ProgramActions = ({
     // Start Program button
     if (
       programdetails.status === programActionStatus.yettostart &&
-      (role === "mentor" || role === "admin")
+      (role === 'mentor' || role === 'admin')
     ) {
       return (
-        <div className="my-8">
+        <div className='my-8'>
           <button
-            className="py-3 px-16 text-white text-[14px] flex items-center"
+            className='py-3 px-16 text-white text-[14px] flex items-center'
             style={{ ...buttonStyles.base, ...buttonStyles.gradient }}
             onClick={() =>
-              !isLaunchingProgram && handleJoinProgram("program_start")
+              !isLaunchingProgram && handleJoinProgram('program_start')
             }
           >
-            {isLaunchingProgram ? "Loading..." : "Start Program"}
+            {isLaunchingProgram ? 'Loading...' : 'Start Program'}
           </button>
         </div>
       );
     }
     // Cancelled status
-    if (programdetails.status === "cancelled") {
+    if (programdetails.status === 'cancelled') {
       return (
-        <div className="flex gap-4 pt-10">
+        <div className='flex gap-4 pt-10'>
           <button
-            className="py-3 px-16 text-white text-[14px] flex items-center"
+            className='py-3 px-16 text-white text-[14px] flex items-center'
             style={{
               ...buttonStyles.base,
               ...buttonStyles.danger,
-              cursor: "not-allowed",
+              cursor: 'not-allowed',
             }}
             onClick={() => undefined}
           >
