@@ -249,27 +249,46 @@ const ProgramActions = ({
           <>
             {programdetails.mentee_join_status !==
               menteeProgramStatus.program_join_request_accepted.status && (
-              <button
-                className='py-3 px-16 text-white text-[14px] flex items-center'
-                style={{
-                  ...buttonStyles.base,
-                  ...buttonStyles.danger,
-                  cursor: 'not-allowed',
-                }}
-                onClick={() => undefined}
-              >
-                {menteeProgramStatus[programdetails.mentee_join_status].type ===
-                  'waiting' && (
-                  <i className='pi pi-clock' style={{ color: 'red' }}></i>
+              <div className='space-y-4'>
+                <button
+                  className='py-3 px-16 text-white text-[14px] flex items-center'
+                  style={{
+                    ...buttonStyles.base,
+                    ...buttonStyles.danger,
+                    cursor: 'not-allowed',
+                  }}
+                  onClick={() => undefined}
+                >
+                  {menteeProgramStatus[programdetails.mentee_join_status]
+                    .type === 'waiting' && (
+                    <i className='pi pi-clock' style={{ color: 'red' }}></i>
+                  )}
+                  {menteeProgramStatus[programdetails.mentee_join_status]
+                    .type === 'reject' && (
+                    <i className='pi pi-ban' style={{ color: 'red' }}></i>
+                  )}
+                  <span className='pl-3'>
+                    {
+                      menteeProgramStatus[programdetails.mentee_join_status]
+                        ?.text
+                    }
+                  </span>
+                </button>
+                {['new', 'pending'].includes(
+                  programdetails?.request_data?.status
+                ) && (
+                  <button
+                    onClick={() => setCancelPopup(true)}
+                    className='py-3 px-16 text-white text-[14px] flex items-center'
+                    style={{
+                      ...buttonStyles.base,
+                      ...buttonStyles.danger,
+                    }}
+                  >
+                    Cancel Request
+                  </button>
                 )}
-                {menteeProgramStatus[programdetails.mentee_join_status].type ===
-                  'reject' && (
-                  <i className='pi pi-ban' style={{ color: 'red' }}></i>
-                )}
-                <span className='pl-3'>
-                  {menteeProgramStatus[programdetails.mentee_join_status]?.text}
-                </span>
-              </button>
+              </div>
             )}
           </>
         ) : (
