@@ -91,6 +91,16 @@ export default function CreatePrograms() {
       { id: params.id, role },
       { skip: !(params?.id && role) }
     );
+
+  // useEffect(() => {
+  //   reset({
+  //     ...currentProgramDetail,
+  //     state: currentProgramDetail?.state_details?.id,
+  //     city: currentProgramDetail?.city_details?.id,
+  //   });
+  // }, [currentProgramDetail, params.id]);
+
+  // console.log(currentProgramDetail);
   const { data: goals } = useGetProgramGoalsQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
@@ -335,9 +345,11 @@ export default function CreatePrograms() {
           ];
 
           jsonFields.forEach((field) => {
-            console.log('fieldData', fieldData);
             if (fieldData[field]) {
-              bodyFormData.append(field, JSON.stringify(fieldData[field]));
+              // bodyFormData.append(field, JSON.stringify(fieldData[field]));
+              const idsOnly = fieldData[field].map((item) => item.id);
+              console.log('idsOnly', idsOnly);
+              bodyFormData.append(field, JSON.stringify(idsOnly));
             }
           });
 
@@ -464,7 +476,6 @@ export default function CreatePrograms() {
         } else {
           const ids = value.map((data) => data.id);
           setValue(key, ids);
-          console.log('value', ids);
 
           updateFormFields(key, value, currentStep - 1);
         }
@@ -837,6 +848,8 @@ export default function CreatePrograms() {
     }
   }, [tabActionInfo.error]);
 
+  console.log('currentProgramDetail', currentProgramDetail);
+
   useEffect(() => {
     if (
       currentProgramDetail &&
@@ -881,12 +894,26 @@ export default function CreatePrograms() {
             currentFieldValue = currentProgramDetail['certifications'];
           }
 
+          // if (currentField === 'certificates') {
+          //   currentFieldValue =
+          //     currentProgramDetail['certifications']?.map((cert) => cert.id) ||
+          //     [];
+          // }
+
           if (currentField === 'testimonial_type') {
             currentFieldValue = currentProgramDetail['testimonial_types'];
           }
 
           if (currentField === 'program_image') {
             currentFieldValue = currentProgramDetail['program_image'];
+          }
+
+          if (currentField === 'state') {
+            currentFieldValue = currentProgramDetail?.state_details?.id;
+          }
+
+          if (currentField === 'city') {
+            currentFieldValue = currentProgramDetail.city_details.id;
           }
 
           // Set value in React Hook Form
@@ -908,7 +935,6 @@ export default function CreatePrograms() {
   };
   const onSubmit = (data) => {
     // setStepWiseData(combinedData);
-    console.log('ProgramData', data);
     setStepWiseData((prevStData) => {
       const newStepData = {
         ...prevStData,
