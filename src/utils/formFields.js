@@ -1860,7 +1860,7 @@ export const ProgramInformationFields = [
     label: 'Address 2',
     placeholder: 'Enter Address 2',
     inputRules: {
-      required: 'This field is required',
+      // required: 'This field is required',
     },
     width: 'width-32',
     for: ['admin', 'mentor'],

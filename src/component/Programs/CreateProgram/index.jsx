@@ -95,15 +95,6 @@ export default function CreatePrograms() {
       { skip: !(params?.id && role) }
     );
 
-  // useEffect(() => {
-  //   reset({
-  //     ...currentProgramDetail,
-  //     state: currentProgramDetail?.state_details?.id,
-  //     city: currentProgramDetail?.city_details?.id,
-  //   });
-  // }, [currentProgramDetail, params.id]);
-
-  // console.log(currentProgramDetail);
   const { data: goals } = useGetProgramGoalsQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
