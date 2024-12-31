@@ -294,6 +294,7 @@ useEffect(()=>{
             handlePostData={handleSettingsData}
           />
         )}
+        {console.log("postModal ===>", postModal)}
         <div className='feeds-list'>
           <div className='grid grid-cols-3 gap-7'>
             {feeds && feeds.results && feeds.results.length > 0 && feeds.results.map((feed, index) => {

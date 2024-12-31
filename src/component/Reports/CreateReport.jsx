@@ -71,8 +71,8 @@ export default function CreateReport() {
         if(reportData?.id){
             apiData = {
                 ...apiData,
-                id: reportData?.id,
-                is_active: false
+                report_id: reportData?.id,
+                is_active: true
             }
         }
 
@@ -106,19 +106,20 @@ export default function CreateReport() {
         }
     }, [actionType])
 
-    useEffect(() => {
-        if (status === reportsStatus.create) {
-            setTimeout(() => {
-                if (searchParams.get('program_id') && searchParams.get('program_id') !== '' && searchParams.get('program_id') !== null) {
-                    dispatch(updateReportLocalState({ programDetails: {} }))
-                    navigate(`/generate_certificate/${searchParams.get('program_id')}`)
-                } else {
-                    dispatch(updateReportLocalState({ programDetails: {} }))
-                    navigate('/reports')
-                }
-            }, 3000)
-        }
-    }, [status])
+    // useEffect(() => {
+    //     if (status === reportsStatus.create) {
+    //         setTimeout(() => {
+    //             if (searchParams.get('program_id') && searchParams.get('program_id') !== '' && searchParams.get('program_id') !== null) {
+    //                 dispatch(updateReportLocalState({ programDetails: {} }))
+    //                 navigate(`/generate_certificate/${searchParams.get('program_id')}`)
+    //             } else {
+    //                 dispatch(updateReportLocalState({ programDetails: {} }))
+    //                 navigate('/reports')
+    //             }
+    //         }, 3000)
+    //     }
+    // }, [status])
+    
     console.log("programDetails===>", programDetails)
     useEffect(() => {
         // if (!state?.type) {
@@ -236,9 +237,10 @@ export default function CreateReport() {
                 "program": parseInt(getValues("program")),
                 "name": getValues("report_name"),
                 "participated_mentees": getValues("participated_mentees"),
-                "comments": getValues("description"),
+                // "comments": getValues("description"),
                 "status": "new",
-                is_active: true
+                is_active: false,
+                report: "none"
             }
             dispatch(createReport(apiData)).then((res) => {
                 if (res?.meta?.requestStatus === "fulfilled") {

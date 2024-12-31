@@ -472,7 +472,7 @@ const ViewReport = () => {
                     Rejected{" "}
                   </Typography>
                 ) : null}
-                <Button
+                {/* <Button
                   btnType="button"
                   btnCls="w-[120px]"
                   onClick={() => {
@@ -480,7 +480,7 @@ const ViewReport = () => {
                   }}
                   btnName="Close"
                   btnCategory="secondary"
-                />
+                /> */}
               </div>
               {role === "admin" && reportDetails?.status === "new" ? (
                 <div className="close-btn flex justify-center gap-7 pb-5">
