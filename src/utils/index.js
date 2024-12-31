@@ -299,7 +299,7 @@ export const getFiles = (files) => {
     const file = fileObj["0"]?fileObj["0"]:fileObj; 
     if (!file) return; 
     let url =file?.id?file?.files: URL.createObjectURL(file); 
-    let fileName = file.name.split(".")[0] || "";
+    let fileName =file.file_name || file.name.split(".")[0] || "";
     let extension = file.name.split(".").pop() || "";
     let rowId= fileObj?.row_id?fileObj?.row_id:undefined
    

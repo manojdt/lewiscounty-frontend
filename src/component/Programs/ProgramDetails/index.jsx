@@ -1583,6 +1583,11 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   </div>
                 </li>
               </ol>
+              {(role === "mentor" || role === "admin" || 
+  (role === "mentee" && (
+    programdetails.status === programActionStatus.inprogress || 
+    programdetails.mentee_join_status === programActionStatus.program_join_request_accepted
+  ))) &&
               <>
                 <div className='cursor-pointer' onClick={handleClick}>
                   <img src={MoreIcon} alt='MoreIcon' />
@@ -1702,7 +1707,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     </>
                   )}
                 </Menu>
-              </>
+              </>}
             </nav>
 
             <div className='content px-8'>
