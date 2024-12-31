@@ -642,7 +642,7 @@ const ProgramSteps = ({
                                           }}
                                         />
 
-                                        {errors?.sub_programs?.[index] && (
+                                        {/* {errors?.sub_programs?.[index] && (
                                           <p className="error" role="alert">
                                             {
                                               errors?.sub_programs?.[index]?.[
@@ -650,7 +650,7 @@ const ProgramSteps = ({
                                               ]?.message
                                             }
                                           </p>
-                                        )}
+                                        )} */}
                                       </div>
                                     ) : nestedField.type === "radio" ? (
                                       <FormControl
@@ -884,6 +884,7 @@ const ProgramSteps = ({
                       {errors[field.name].message}
                     </p>
                   )}
+                  
                 </div>
               ) : field.type === "htmlbuilder" ? (
                 <div
