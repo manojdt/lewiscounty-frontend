@@ -1953,7 +1953,7 @@ export const AboutProgramFields = [
     fieldtype: 'text',
     placeholder: 'Multiple Skills added',
     inputRules: {
-      // required: 'This field is required',
+      required: 'This field is required',
     },
     width: 'w-full',
     icon: 'add',
@@ -1966,7 +1966,7 @@ export const AboutProgramFields = [
     fieldtype: 'text',
     placeholder: 'Multiple Skills added',
     inputRules: {
-      required: 'This field is required',
+      // required: 'This field is required',
     },
     width: 'w-full',
     for: ['mentor'],

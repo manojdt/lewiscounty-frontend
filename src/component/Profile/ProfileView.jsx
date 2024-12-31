@@ -75,7 +75,6 @@ export default function ProfileView() {
     loading: userInfoLoading,
     followInfo,
   } = useSelector((state) => state.userList);
-  console.log(userDetails, 'userDetails');
   const pathe = state?.reqType ? -1 : '/all-request';
 
   const { profile, loading } = useSelector((state) => state.profileInfo);
@@ -935,8 +934,9 @@ export default function ProfileView() {
                               onClick={handleShowPopup}
                               btnType='button'
                               btnCategory='secondary'
+                              disabled={followInfo.is_follow==="waiting"}
                               btnName={
-                                followInfo.is_following ? 'Unfollow' : 'Follow'
+                                followInfo.is_follow==="waiting" ? "Requested" : followInfo.is_following ? 'Unfollow' : 'Follow'
                               }
                               btnCls={'w-[150px]'}
                             />

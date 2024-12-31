@@ -462,6 +462,10 @@ export default function Programs() {
   };
 
   const menuNavigate = () => {
+    setPaginationModel({
+      page: 1,
+      pageSize: 6,
+    });
     setProgramFilter({ search: '', filter_by: 'month' });
   };
 

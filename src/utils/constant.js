@@ -864,7 +864,7 @@ export const programMenus = (page = 'dashboard') => {
       page: `${pipeUrl}${programFilterUrls.cancelled}`,
       for: ['mentee', 'mentor'],
       mentorStatus: 'cancelled',
-      menteeStatus: 'cancel',
+      menteeStatus: 'cancelled',
       status: programActionStatus.cancelled,
     },
   ];
