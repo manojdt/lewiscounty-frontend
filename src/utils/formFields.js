@@ -1860,7 +1860,7 @@ export const ProgramInformationFields = [
     label: 'Address 2',
     placeholder: 'Enter Address 2',
     inputRules: {
-      // required: 'This field is required',
+      required: 'This field is required',
     },
     width: 'width-32',
     for: ['admin', 'mentor'],
@@ -1871,7 +1871,7 @@ export const ProgramInformationFields = [
     label: 'State',
     placeholder: 'Enter State',
     inputRules: {
-      // required: 'This field is required',
+      required: 'This field is required',
     },
     options: [],
     width: 'width-32',
@@ -1883,7 +1883,7 @@ export const ProgramInformationFields = [
     label: 'City',
     placeholder: 'Enter City',
     inputRules: {
-      // required: 'This field is required',
+      required: 'This field is required',
     },
     options: [],
     width: 'width-32',
