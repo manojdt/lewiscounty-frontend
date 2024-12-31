@@ -1895,7 +1895,7 @@ export const ProgramInformationFields = [
     label: 'Zip code',
     placeholder: 'Enter Zip code',
     inputRules: {
-      // required: 'This field is required',
+      required: 'This field is required',
       pattern: {
         value: /^\d{5}(-\d{4})?$/,
         message: 'ZIP code must be in the format XXXXX or XXXXX-XXXX.',

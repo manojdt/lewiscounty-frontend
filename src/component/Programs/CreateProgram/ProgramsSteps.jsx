@@ -52,7 +52,6 @@ const ProgramSteps = ({
   const [stateId, setStateId] = useState(null);
   const { data: states } = useGetStatesQuery();
   const { data: cities } = useGetCitiesQuery(stateId);
-  console.log('Cities', cities);
   const role = useSelector((state) => state.userInfo?.data?.role);
 
   const calendarRef = useRef([]);
