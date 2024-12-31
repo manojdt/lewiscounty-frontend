@@ -1,19 +1,19 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import axios from "axios";
-import { toast } from "react-toastify";
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 let refresh = false;
 
-const baseUrl = `${process.env.REACT_APP_BASE_URL}/api/`
+const baseUrl = `${process.env.REACT_APP_BASE_URL}/api/`;
 
 // const baseUrl = "https://62f8-202-83-25-55.ngrok-free.app/api/"
 //comments
 export const rtkQueryServiceTags = {
-  PROGRAM_UPDATES: "program_updates",
+  PROGRAM_UPDATES: 'program_updates',
   PROGRAM_LAUNCH: 'program_launch',
-  PROGRAM_ACCEPT: 'program_accept'
-}
-const { PROGRAM_UPDATES, PROGRAM_LAUNCH, PROGRAM_ACCEPT } = rtkQueryServiceTags
+  PROGRAM_ACCEPT: 'program_accept',
+};
+const { PROGRAM_UPDATES, PROGRAM_LAUNCH, PROGRAM_ACCEPT } = rtkQueryServiceTags;
 export const rtkQueryApiServices = createApi({
   reducerPath: 'rtkQueryApiServices',
   baseQuery: fetchBaseQuery({
@@ -46,56 +46,83 @@ api.interceptors.request.use(function (config) {
 
 api.interceptors.response.use(
   (response) => {
-    if (response.status && (response.status === 200 || response.status === 201)) {
+    if (
+      response.status &&
+      (response.status === 200 || response.status === 201)
+    ) {
       return {
         data: response.data,
-        status: response.status
+        status: response.status,
       };
     }
     return response;
   },
   async (error) => {
-    const reasons = ["ERR_BAD_REQUEST", "ERR_NETWORK", "ERR_BAD_RESPONSE"]
-    const errMsg = error?.response?.data?.errors?.[0] ?? error?.response?.data?.error ?? error?.response?.data?.message
+    const reasons = ['ERR_BAD_REQUEST', 'ERR_NETWORK', 'ERR_BAD_RESPONSE'];
+    const errMsg =
+      error?.response?.data?.errors?.[0] ??
+      error?.response?.data?.error ??
+      error?.response?.data?.message;
     if (errMsg?.length > 0) {
       toast.error(errMsg);
     }
-    if (error.code && (error.code === "ERR_NETWORK" || error.code === "ERR_BAD_RESPONSE")) {
-      error.message = "There is a Server Error. Please try again later."
+    if (
+      error.code &&
+      (error.code === 'ERR_NETWORK' || error.code === 'ERR_BAD_RESPONSE')
+    ) {
+      error.message = 'There is a Server Error. Please try again later.';
     }
-    if (error.code && error.code === "ERR_BAD_REQUEST" && error.response.status === 401) {
+    if (
+      error.code &&
+      error.code === 'ERR_BAD_REQUEST' &&
+      error.response.status === 401
+    ) {
       if (localStorage.getItem('access_token')) {
-        window.location.replace(window.location.origin + '/logout')
+        window.location.replace(window.location.origin + '/logout');
       }
-      error.message = error.response.data?.error || error.response.data?.message
+      error.message =
+        error.response.data?.error || error.response.data?.message;
     }
-    if (error.code && error.code === "ERR_BAD_REQUEST" && error.response.status === 400) {
-      error.message = error.response.data?.error || error.response.data?.message || error.response.data?.email[0]
+    if (
+      error.code &&
+      error.code === 'ERR_BAD_REQUEST' &&
+      error.response.status === 400
+    ) {
+      error.message =
+        error.response.data?.error ||
+        error.response.data?.message ||
+        error.response.data?.email[0];
     }
-    if (!reasons.includes(error.code) && error.response.status === 401 && !refresh) {
+    if (
+      !reasons.includes(error.code) &&
+      error.response.status === 401 &&
+      !refresh
+    ) {
       refresh = true;
       try {
         const response = await axios.post(
-          `${baseUrl}/token/refresh`, {
-          refresh: localStorage.getItem("refresh_token")
-        }, {
-          headers: {
-            "Content-Type": "application/json",
+          `${baseUrl}/token/refresh`,
+          {
+            refresh: localStorage.getItem('refresh_token'),
           },
-          withCredentials: true,
-        }
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            withCredentials: true,
+          }
         );
 
         if (response.status === 200) {
           axios.defaults.headers.common[
-            "Authorization"
-          ] = `Bearer ${response.data["access"]}`;
-          localStorage.setItem("access_token", response.data.access);
-          localStorage.setItem("refresh_token", response.data.refresh);
+            'Authorization'
+          ] = `Bearer ${response.data['access']}`;
+          localStorage.setItem('access_token', response.data.access);
+          localStorage.setItem('refresh_token', response.data.refresh);
           return axios(error.config);
         }
       } catch (error) {
-        console.error("Token refresh error:", error);
+        console.error('Token refresh error:', error);
       }
     }
     refresh = false;
