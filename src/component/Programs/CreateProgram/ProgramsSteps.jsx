@@ -31,8 +31,8 @@ import DataTable from '../../../shared/DataGrid';
 import { MentorAssignColumns } from '../../../mock';
 import MuiModal from '../../../shared/Modal';
 import { useSelector } from 'react-redux';
-import { useGetStatesQuery } from '../../../features/programs/program-slice';
-import { useGetCitiesQuery } from '../../../features/program/programApi.services';
+// import { useGetStatesQuery } from '../../../features/programs/program-slice';
+// import { useGetCitiesQuery } from '../../../features/program/programApi.services';
 
 const ProgramSteps = ({
   stepFields,
@@ -49,9 +49,13 @@ const ProgramSteps = ({
   const params = useParams();
   const [checkBoxValue, setCheckBoxValue] = useState({});
   const [currentField, setCurrentField] = useState();
-  const [stateId, setStateId] = useState(null);
-  const { data: states } = useGetStatesQuery();
-  const { data: cities } = useGetCitiesQuery(stateId);
+  // const [stateId, setStateId] = useState(null);
+  // const { data: states } = useGetStatesQuery();
+  // const { data: cities } = useGetCitiesQuery(stateId, {
+  //   skip: !stateId,
+  // });
+
+  // console.log('cities', cities);
   const role = useSelector((state) => state.userInfo?.data?.role);
 
   const calendarRef = useRef([]);
@@ -92,6 +96,8 @@ const ProgramSteps = ({
     'end_date',
     'goals',
   ]);
+
+  // console.log('stepFields', stepFields);
 
   const mentorFooterComponent = (props) => {
     return (
@@ -196,15 +202,15 @@ const ProgramSteps = ({
     setCurrentField(fieldName);
   };
 
-  const statesOptions = states?.map((state, index) => ({
-    key: state.id,
-    value: state.name,
-  }));
+  // const statesOptions = states?.map((state, index) => ({
+  //   key: state.id,
+  //   value: state.name,
+  // }));
 
-  const citiesOptions = cities?.map((city, index) => ({
-    key: city.id,
-    value: city.name,
-  }));
+  // const citiesOptions = cities?.map((city, index) => ({
+  //   key: city.id,
+  //   value: city.name,
+  // }));
 
   return (
     <div>
@@ -490,7 +496,10 @@ const ProgramSteps = ({
                     }}
                     onChange={(e) => {
                       dropdownimageField.onChange(e);
-                      setStateId(e.target.value);
+
+                      // if (field.name === 'state') {
+                      //   setStateId(e.target.value);
+                      // }
                       if (field.name === 'category') {
                         fetchCategoryData(e.target.value);
                       }
@@ -504,18 +513,18 @@ const ProgramSteps = ({
                   >
                     <option value=''>Select</option>
 
-                    {(field.name === 'state'
+                    {/* {(field.name === 'state'
                       ? statesOptions
-                      : field.name === 'city'
-                      ? citiesOptions
-                      : field.options || []
+                      : // : field.name === 'city'
+                        // ? citiesOptions
+                        field.options || []
                     )?.map((option, index) => (
                       <option value={option.key || option.id} key={index}>
                         {option.value || option.name}
                       </option>
-                    ))}
+                    ))} */}
 
-                    {/* {field &&
+                    {field &&
                       field.options?.length > 0 &&
                       field.options.map((option, index) => {
                         return (
@@ -523,7 +532,7 @@ const ProgramSteps = ({
                             {option.value || option.name}
                           </option>
                         );
-                      })} */}
+                      })}
                   </select>
                   {errors[field.name] && (
                     <p className='error' role='alert'>
