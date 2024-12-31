@@ -109,7 +109,6 @@ const Goals = () => {
     }, [filterType])
 
     const { goalsList, loading, status, createdGoal, goalsCount, goalRequest, goalHistory } = useSelector(state => state.goals)
-
     const dispatch = useDispatch()
 
     const requestBtns = [
@@ -218,10 +217,6 @@ const Goals = () => {
             user_id: res
         }))
     }
-
-    // useEffect(() => {
-    //     getAllGoalData()
-    // }, [filterType])
 
     useEffect(() => {
         if (role === "admin") {
@@ -529,7 +524,13 @@ const Goals = () => {
                         }}
                     >
                         <MenuItem onClick={(e) => {
-                            navigate(`/view-goal/${seletedItem.id}`);
+                            if(role==="admin"){
+
+                                navigate(`/view-goal/${seletedItem.id}?requestId=${seletedItem?.goal_request_id}`);
+                            }else{
+
+                                navigate(`/view-goal/${seletedItem.id}`);
+                            }
                         }
                         } className='!text-[12px]'>
                             <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
