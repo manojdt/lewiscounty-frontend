@@ -100,6 +100,8 @@ export const Questions = () => {
     const headers = {
       'Content-Type': 'multipart/form-data',
     };
+
+    setCustomLoading(true);
     const submitDocument = await api.post('user/documents', bodyFormData, {
       headers: headers,
     });
@@ -124,6 +126,7 @@ export const Questions = () => {
               localStorage.setItem('access_token', updateToken.data.access);
               localStorage.setItem('refresh_token', updateToken.data.refresh);
               handleSubmitData(updateToken);
+              setCustomLoading(false);
             }
           }
         });
@@ -428,7 +431,7 @@ export const Questions = () => {
         )}
         <Backdrop
           sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          open={userInfo.loading || customLoading}
+          open={userInfo.loading || customLoading || actionInfo.loading}
         >
           <CircularProgress color='inherit' />
         </Backdrop>
