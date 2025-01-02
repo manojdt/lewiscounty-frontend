@@ -39,7 +39,7 @@ import DataTable from '../../shared/DataGrid';
 import { programListColumns } from '../../utils/tableFields';
 import api from '../../services/api';
 import { getUserProfile } from '../../services/profile';
-import { getallMenteeProgram } from '../../services/programInfo';
+import { getallMenteeProgram, getallMyProgram } from '../../services/programInfo';
 import { jwtDecode } from 'jwt-decode';
 import MuiModal from '../../shared/Modal';
 import { CategoryPopup } from '../Dashboard/categoryPopup';
@@ -149,6 +149,10 @@ export default function Programs() {
     page: 1,
     pageSize: 6,
   });
+  const [paginationModel1, setPaginationModel1] = React.useState({
+    page: 0,
+    pageSize: 5,
+  });
   // console.log("paginationModel", paginationModel);
   const [programMenusList, setProgramMenusList] = useState([]);
   const [programView, setProgramView] = useState('grid');
@@ -173,8 +177,8 @@ export default function Programs() {
   // console.log("isBookmark", isBookmark);
   const { data, isLoading, refetch, isFetching } = useGetAllProgramsQuery(
     {
-      limit: paginationModel.pageSize,
-      page: paginationModel.page,
+      limit:programView==="list"?  paginationModel1.pageSize: paginationModel.pageSize,
+      page:programView==="list"? paginationModel1.page+1: paginationModel.page,
       ...(filterType && {
         status:
           !filterType &&
@@ -354,8 +358,8 @@ export default function Programs() {
   };
   const getTableData = (search = '') => {
     const payload = {
-      page: paginationModel?.page + 1,
-      limit: paginationModel?.pageSize,
+      page: paginationModel1?.page + 1,
+      limit: paginationModel1?.pageSize,
     };
     if (filterType && filterType !== '') {
       payload.status = filterType;
@@ -381,17 +385,21 @@ export default function Programs() {
       payload.is_bookmark = isBookmark;
     }
     if (role === 'mentee') {
-      dispatch(getallMenteeProgram(payload));
+      // dispatch(getallMenteeProgram(payload));
+      refetch()
     } else {
-      // if (role === "mentor" || role === "admin") {
-      //   dispatch(getallMyProgram(payload));
-      // }
+      if (role === "mentor" || role === "admin") {
+        // dispatch(getallMyProgram(payload));
+        refetch()
+      }
     }
   };
 
   useEffect(() => {
+    if(programView==="list"){
     getTableData();
-  }, [paginationModel, searchParams, role]);
+    }
+  }, [paginationModel1,programView, searchParams, role]);
 
   const programTableFields = [
     ...programListColumns,
@@ -748,8 +756,8 @@ export default function Programs() {
                   columns={programTableFields}
                   hideCheckbox
                   rowCount={data?.count}
-                  paginationModel={paginationModel}
-                  setPaginationModel={setPaginationModel}
+                  paginationModel={paginationModel1}
+                  setPaginationModel={setPaginationModel1}
                 />
               </div>
             )}

@@ -764,7 +764,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
           >
             <img src={SuccessTik} alt='SuccessTik' />
             <p
-              className='text-[16px] font-semibold bg-clip-text text-font-primary-main'
+             className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
               style={{
                 fontWeight: 600,
                 color: "#232323",
@@ -833,10 +833,9 @@ export default function ProgramDetails({ setProgramDetailsId }) {
           >
             <img src={SuccessTik} alt="SuccessTik" />
             <p
-              className="text-[16px] font-semibold bg-clip-text text-font-primary-main"
+              className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
               style={{
                 fontWeight: 600,
-                color: "#232323",
               }}
             >
               Program Completed successfully
@@ -856,7 +855,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
           >
             <img src={SuccessTik} alt='SuccessTik' />
             <p
-              className='text-[16px] font-semibold bg-clip-text text-font-primary-main'
+              className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
               style={{
                 fontWeight: 600,
               }}
@@ -887,7 +886,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
           >
             <img src={SuccessTik} alt='SuccessTik' />
             <p
-              className='text-[16px] font-semibold bg-clip-text text-font-primary-main'
+              className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
               style={{
                 fontWeight: 600,
               }}
@@ -916,9 +915,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
           >
             <img src={SuccessTik} alt='SuccessTik' />
             <p
-              className='text-[16px] font-semibold bg-clip-text text-font-primary-main'
+              className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
               style={{
-                color: "#232323",
                 fontWeight: 600,
               }}
             >
@@ -1113,7 +1111,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
           >
             <img src={SuccessTik} alt='SuccessTik' />
             <p
-              className='text-[16px] font-semibold bg-clip-text text-font-primary-main'
+              className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
               style={{
                 fontWeight: 600,
               }}
@@ -1135,7 +1133,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
           >
             <img src={SuccessTik} alt='SuccessTik' />
             <p
-              className='text-[16px] font-semibold bg-clip-text text-font-primary-main'
+               className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
               style={{
                 fontWeight: 600,
               }}
