@@ -356,7 +356,23 @@ const ProgramActions = ({
         </Box>
       );
     }
-
+    if (programdetails?.request_data?.status === 'approved') {
+      return (
+        <Box mt={2}>
+          <button
+            className='py-3 px-16 text-white text-[14px] flex items-center'
+            style={{
+              ...buttonStyles.base,
+              ...buttonStyles.success,
+              cursor: 'not-allowed',
+            }}
+            onClick={() => undefined}
+          >
+            Approved
+          </button>
+        </Box>
+      );
+    }
     if (
       programdetails?.request_data?.status === 'rejected' ||
       (!requestStatusParams &&
@@ -405,7 +421,7 @@ const ProgramActions = ({
   const renderCommonStatus = () => {
     // Start Program button
     if (
-      programdetails.status === programActionStatus.yettostart &&
+      programdetails.status === programActionStatus.yettostart && !requestId &&
       (role === 'mentor' || role === 'admin')
     ) {
       return (
@@ -435,7 +451,7 @@ const ProgramActions = ({
             }}
             onClick={() => undefined}
           >
-            Cancelled
+          {requestId ? "Program Cancelled":"Cancelled"}
           </button>
         </div>
       );

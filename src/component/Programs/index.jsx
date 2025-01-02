@@ -470,10 +470,19 @@ export default function Programs() {
   };
 
   const menuNavigate = () => {
-    setPaginationModel({
-      page: 1,
-      pageSize: 6,
-    });
+    if(programView==="list"){
+
+      setPaginationModel1({
+        page: 0,
+        pageSize: 5,
+      });
+    }else{
+
+      setPaginationModel({
+        page: 1,
+        pageSize: 6,
+      });
+    }
     setProgramFilter({ search: '', filter_by: 'month' });
   };
 
