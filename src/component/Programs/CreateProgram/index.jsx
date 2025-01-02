@@ -186,7 +186,7 @@ export default function CreatePrograms() {
     // Add other conditions here if needed
     return true;
   });
-  const handelProgramChaeck = (data) => {
+  const handleProgramCheck = (data) => {
     dispatch(getProgramNameValidate(data)).then((res) => {
       if (res?.meta?.requestStatus === 'fulfilled') {
         if (!res?.payload?.is_available) {
@@ -1205,7 +1205,7 @@ export default function CreatePrograms() {
                     setToggleRole={setToggleRole}
                     fetchCategoryData={fetchCategoryData}
                     handleAction={handleAction}
-                    handelProgramCheck={handelProgramChaeck}
+                    handleProgramCheck={handleProgramCheck}
                     stepData={stepData}
                     stepFields={programAllFields[currentStep - 1]}
                     mentor_assign={mentor_assign}

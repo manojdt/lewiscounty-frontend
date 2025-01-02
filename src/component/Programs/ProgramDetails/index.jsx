@@ -109,7 +109,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     bool: false,
     activity: false,
   });
-  const navigate = useNavigate();
+    
   const dispatch = useDispatch();
 
   const [
@@ -1622,7 +1622,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             'new_program_request_rejected',
                             'completed',
                           ].includes(programdetails?.status) &&
-                          role !== 'admin' && (
+                          // role !== 'admin' && (
                             <MenuItem
                               onClick={() => handleMenu('reschedule')}
                               className='!text-[12px]'
@@ -1634,7 +1634,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                               />
                               Reschedule
                             </MenuItem>
-                          )}
+                          // )
+                          }
 
                         {!requestStatusParams &&
                           ![
@@ -1643,7 +1644,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             'new_program_request_rejected',
                             'completed',
                           ].includes(programdetails?.status) &&
-                          role !== 'admin' && (
+                          // role !== 'admin' && (
                             <MenuItem
                               onClick={() => handleMenu('cancel')}
                               className='!text-[12px]'
@@ -1655,7 +1656,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                               />
                               Cancel
                             </MenuItem>
-                          )}
+                          // )
+                          }
                         {(programdetails.status ===
                           programActionStatus.inprogress ||
                           programdetails.status ===
