@@ -373,17 +373,10 @@ export default function CertificateMenteeList() {
               }}> Approved </Typography> :
               state?.status === "rejected" ?
                 <Typography style={{
-                  lineHeight: "30px",
+                  padding: "8px 16px",
                   borderRadius: "3px",
-                  width: "110px",
-                  height: "34px",
-                  color: "rgb(224, 56, 45)",
-                  fontSize: "12px",
-                  textAlign: "center",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  background: "#fff",
+                  border: '1px solid #E0382D',
+                  color: '#E0382D',
                 }} color="error"> Rejected </Typography>
                 : null
 

@@ -54,6 +54,7 @@ const Goals = () => {
     const [actionModal, setActionModal] = useState(false)
     const [goals, setGoals] = useState([])
     const [seletedItem, setSelectedItem] = useState({})
+    const [recentActivityCheck, setRecentActivityCheck] = useState(false)
     const [popupModal, setPopupModal] = useState('')
     const [allTimeFrame, setAllTimeFrame] = React.useState("month")
     const [historyTimeFrame, setHistoryTimeFrame] = React.useState("month")
@@ -694,6 +695,7 @@ const Goals = () => {
     }
 
     const handleCloseModal = () => {
+        setRecentActivityCheck(!recentActivityCheck)
         setActionModal(false)
         setSelectedItem({})
         handleGetAllGoals()
@@ -782,6 +784,7 @@ const Goals = () => {
         }
         dispatch(updateHistoryGoal(payload)).then((res) => {
             if (res?.meta?.requestStatus === "fulfilled") {
+                setRecentActivityCheck(!recentActivityCheck)
                 setConfirmPopup({
                     ...confirmPopup,
                     bool: false,
@@ -1018,6 +1021,7 @@ const Goals = () => {
         }
         dispatch(updateHistoryGoal(payload)).then((res) => {
             if (res?.meta?.requestStatus === "fulfilled") {
+                setRecentActivityCheck(!recentActivityCheck)
                 handleOpenActivity()
                 handleGetAllGoals()
             }
@@ -1298,7 +1302,7 @@ const Goals = () => {
                                             searchParams.get('type') === null && <GoalProgress />
                                         } */}
 
-                                        <RecentActivities />
+                                        <RecentActivities key={recentActivityCheck}/>
                                     </div>
 
                                 </div>
