@@ -513,7 +513,7 @@ const ViewReport = () => {
                       btnName="Approve"
                     />
                   }
-                   <Button
+                   {/* <Button
                   btnType="button"
                   btnCls="w-[120px]"
                   onClick={() => {
@@ -521,7 +521,7 @@ const ViewReport = () => {
                   }}
                   btnName="Close"
                   btnCategory="secondary"
-                />
+                /> */}
                 </div>
               ) : null}
             </div>

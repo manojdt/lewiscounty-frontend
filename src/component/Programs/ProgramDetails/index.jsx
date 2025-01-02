@@ -1780,8 +1780,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     <div className='flex gap-2 items-center'>
                       <img src={LocationIcon} alt='LocationIcon' />
                       <span className='text-[12px]'>
-                        {programdetails.venue}
-                        {/* {`${programdetails.city_details?.name}, ${programdetails.state_details?.abbreviation}`} */}
+                        {/* {programdetails.venue} */}
+                        {`${programdetails.city_details?.name}, ${programdetails.state_details?.abbreviation}`}
                       </span>
                     </div>
 
@@ -2127,6 +2127,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                         )}
                       </li> */}
                     </ul>
+                    {role==="mentee"&&
                     <div className='text-end mt-3'>
                       <Button
                         btnType='button'
@@ -2141,6 +2142,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                         }}
                       />
                     </div>
+}
                   </div>
                 </div>
               </div>
