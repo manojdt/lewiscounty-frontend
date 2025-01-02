@@ -238,7 +238,7 @@ export default function CreateGoal({
                       {...dateField}
                       value={
                         recreate
-                          ? new Date()
+                          ?dateFormat['start_date']?dateFormat['start_date']: new Date()
                           : dateFormat['start_date'] ||
                             new Date(seletedItem.start_date)
                       }

@@ -385,41 +385,6 @@ const ViewReport = () => {
                 <div>Report Description : {reportDetails.comments}</div>
               </div>
 
-              {role !== "admin" && (
-                <div className="close-btn flex justify-center gap-7 pb-5">
-                  <Button
-                    btnType="button"
-                    btnCls="w-[14%]"
-                    onClick={() => {
-                      navigate("/reports");
-                    }}
-                    btnName="Cancel"
-                    btnCategory="secondary"
-                  />
-
-                  {
-                    // reportDetails.report_status === reportAllStatus.pending &&
-                    ["new", "draft", "pending"].includes(
-                      reportDetails?.status
-                    ) && (
-                      <Button
-                        btnType="button"
-                        btnCls="w-[14%]"
-                        onClick={() => {
-                          navigate(`/edit-report/${reportDetails.id}`);
-                        }}
-                        btnName="Edit"
-                        btnStyle={{ background: "rgba(0, 174, 189, 1)" }}
-                      />
-                    )
-                  }
-
-                  {/* <Button btnType="button" btnCls="w-[14%]"
-                                    onClick={() => { navigate('/reports') }} btnName='Close'
-                                    btnStyle={{ background: 'rgba(29, 91, 191, 1)' }}
-                                /> */}
-                </div>
-              )}
               <div
                 style={{
                   marginTop: 20,
@@ -430,6 +395,7 @@ const ViewReport = () => {
                 }}
               >
                 {role === "admin" && reportDetails?.status === "approved" ? (
+                  <>
                   <Typography
                     style={{
                       background: "#16B681",
@@ -443,35 +409,81 @@ const ViewReport = () => {
                     {" "}
                     Approved{" "}
                   </Typography>
-                ) : reportDetails?.status === "rejected" ||
-                  reportDetails?.status === "cancelled" ? (
+                  <Button
+                  btnType="button"
+                  btnCls="w-[120px]"
+                  onClick={() => {
+                    navigate(-1);
+                  }}
+                  btnName="Close"
+                  btnCategory="secondary"
+                />
+                  </>
+                ) :role === "admin" && (reportDetails?.status === "rejected" ||
+                  reportDetails?.status === "cancelled") ? (
+                    <>
                   <Typography
                     style={{
-                      background: "rgb(224, 56, 45)",
+                      border: '1px solid #E0382D',
+                      color: '#E0382D',  
                       borderRadius: "3px",
                       padding: "8px 16px",
-                      color: "white",
                       display: "inline-block",
                       marginRight: 30,
-
-                      // lineHeight: "30px",
-                      // borderRadius: "3px",
-                      // width: "110px",
-                      // height: "34px",
-                      // color: "rgb(224, 56, 45)",
-                      // fontSize: "12px",
-                      // textAlign: "center",
-                      // display: "flex",
-                      // justifyContent: "center",
-                      // alignItems: "center",
-                      // background: "#fff",
                     }}
                     color="error"
                   >
                     {" "}
                     Rejected{" "}
                   </Typography>
+                  <Button
+                  btnType="button"
+                  btnCls="w-[120px]"
+                  onClick={() => {
+                    navigate(-1);
+                  }}
+                  btnName="Close"
+                  btnCategory="secondary"
+                />
+                    </>
                 ) : null}
+                
+              {role !== "admin" && (
+                <span className="pr-2">
+                  {/* <Button
+                    btnType="button"
+                    btnCls="w-[14%]"
+                    onClick={() => {
+                      navigate("/reports");
+                    }}
+                    btnName="Cancel"
+                    btnCategory="secondary"
+                  /> */}
+
+                  {
+                    // reportDetails.report_status === reportAllStatus.pending &&
+                    ["new", "draft", "pending"].includes(
+                      reportDetails?.status
+                    ) && (
+                      <Button
+                        btnType="button"
+                        btnCls="w-[120px]"
+                        onClick={() => {
+                          navigate(`/edit-report/${reportDetails.id}`);
+                        }}
+                        btnName="Edit"
+                        btnStyle={{ background: "rgba(0, 174, 189, 1)" }}
+                      />
+                    )
+                  }
+
+                  {/* <Button btnType="button" btnCls="w-[14%]"
+                                    onClick={() => { navigate('/reports') }} btnName='Close'
+                                    btnStyle={{ background: 'rgba(29, 91, 191, 1)' }}
+                                /> */}
+                </span>
+              )}
+              {role !== "admin"&&
                 <Button
                   btnType="button"
                   btnCls="w-[120px]"
@@ -481,9 +493,10 @@ const ViewReport = () => {
                   btnName="Close"
                   btnCategory="secondary"
                 />
+}
               </div>
               {role === "admin" && reportDetails?.status === "new" ? (
-                <div className="close-btn flex justify-center gap-7 pb-5">
+                <div className="close-btn flex justify-center gap-7 pb-5 pt-2">
                   <Button
                     btnType="button"
                     btnCategory="secondary"
@@ -500,6 +513,15 @@ const ViewReport = () => {
                       btnName="Approve"
                     />
                   }
+                   <Button
+                  btnType="button"
+                  btnCls="w-[120px]"
+                  onClick={() => {
+                    navigate(-1);
+                  }}
+                  btnName="Close"
+                  btnCategory="secondary"
+                />
                 </div>
               ) : null}
             </div>
