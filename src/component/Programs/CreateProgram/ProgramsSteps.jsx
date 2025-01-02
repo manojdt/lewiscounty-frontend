@@ -76,6 +76,7 @@ const ProgramSteps = ({
     watch,
     control,
   } = useFormContext();
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'sub_programs',
