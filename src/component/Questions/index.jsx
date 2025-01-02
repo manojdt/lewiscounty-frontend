@@ -20,6 +20,7 @@ import {
   updateInfo,
   updateMenteeQuestions,
   updateQuestions,
+  updateToken,
   updateUserInfo,
 } from '../../services/loginInfo';
 import SuccessIcon from '../../assets/images/Success_tic1x.png';
@@ -67,6 +68,7 @@ export const Questions = () => {
         phone_number: apiData.phone_number,
         documents: undefined,
       };
+
       dispatch(updateMenteeQuestions(menteeApiData)).then((res) => {
         docUpload(apiData);
       });
@@ -101,13 +103,30 @@ export const Questions = () => {
     const submitDocument = await api.post('user/documents', bodyFormData, {
       headers: headers,
     });
+
     if (submitDocument.status === 201 || submitDocument.status === 200) {
       if (userInfo?.data?.role === 'mentee') {
-        dispatch(launchProgram({ program: searchParams.get('program_id') && parseInt(searchParams.get('program_id')), request_type: 'program_join' })).then((res) => {
-          if (res.meta.requestStatus === "fulfilled") {
-            handleSubmitData(submitDocument);
+        dispatch(
+          launchProgram({
+            program:
+              searchParams.get('program_id') &&
+              parseInt(searchParams.get('program_id')),
+            request_type: 'program_join',
+          })
+        ).then(async (res) => {
+          if (res.meta.requestStatus === 'fulfilled') {
+            const updateToken = await api.post('generate_new_token', {
+              headers: headers,
+            });
+
+            if (updateToken.status === 200) {
+              console.log('updateToken', updateToken);
+              localStorage.setItem('access_token', updateToken.data.access);
+              localStorage.setItem('refresh_token', updateToken.data.refresh);
+              handleSubmitData(updateToken);
+            }
           }
-        })
+        });
         // const joinProgramAction = await api.post('join_program', {
         //   id: searchParams.get('program_id'),
         // });
@@ -117,6 +136,8 @@ export const Questions = () => {
       } else {
         handleSubmitData(submitDocument);
       }
+
+      // dispatch(updateToken());
     }
   };
 
@@ -203,7 +224,6 @@ export const Questions = () => {
     }
   }, [actionInfo.modal]);
   const handleSubmit = (combinedData) => {
-
     const allFields = formFields.flat(); // Flatten all fields for validation
     const errorMessages = validateRequiredFields(allFields, combinedData);
     const phoneField = allFields.find((field) => field.name === 'phone_number');
@@ -434,8 +454,8 @@ export const Questions = () => {
                     ? 'We are redirecting to programs page'
                     : 'Questions submitted Successfully'
                   : redirect
-                    ? 'We are redirecting to login page'
-                    : 'Questions submitted Successfully.'}
+                  ? 'We are redirecting to login page'
+                  : 'Questions submitted Successfully.'}
               </p>
             </div>
           </div>

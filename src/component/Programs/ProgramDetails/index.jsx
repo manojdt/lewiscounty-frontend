@@ -90,6 +90,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   const userdetails = useSelector((state) => state.userInfo);
   const role = userdetails.data.role || '';
 
+  console.log(userdetails);
+
   const [loading, setLoading] = useState({ initial: true, join: false });
   const calendarRef = useRef([]);
   const [taskJoined, setTaskJoined] = useState(false);
@@ -764,10 +766,10 @@ export default function ProgramDetails({ setProgramDetailsId }) {
           >
             <img src={SuccessTik} alt='SuccessTik' />
             <p
-             className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
+              className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
               style={{
                 fontWeight: 600,
-                color: "#232323",
+                color: '#232323',
               }}
             >
               Thank you for providing the rating for this program
@@ -823,17 +825,17 @@ export default function ProgramDetails({ setProgramDetailsId }) {
         </div>
       </Backdrop>
       <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={completeProgram.activity}
       >
-       <div className="px-5 py-1 flex justify-center items-center">
+        <div className='px-5 py-1 flex justify-center items-center'>
           <div
-            className="flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20"
-            style={{ background: "#fff", borderRadius: "10px" }}
+            className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+            style={{ background: '#fff', borderRadius: '10px' }}
           >
-            <img src={SuccessTik} alt="SuccessTik" />
+            <img src={SuccessTik} alt='SuccessTik' />
             <p
-              className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
+              className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
               style={{
                 fontWeight: 600,
               }}
@@ -855,7 +857,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
           >
             <img src={SuccessTik} alt='SuccessTik' />
             <p
-              className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
+              className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
               style={{
                 fontWeight: 600,
               }}
@@ -886,7 +888,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
           >
             <img src={SuccessTik} alt='SuccessTik' />
             <p
-              className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
+              className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
               style={{
                 fontWeight: 600,
               }}
@@ -915,7 +917,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
           >
             <img src={SuccessTik} alt='SuccessTik' />
             <p
-              className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
+              className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
               style={{
                 fontWeight: 600,
               }}
@@ -1111,7 +1113,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
           >
             <img src={SuccessTik} alt='SuccessTik' />
             <p
-              className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
+              className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
               style={{
                 fontWeight: 600,
               }}
@@ -1133,7 +1135,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
           >
             <img src={SuccessTik} alt='SuccessTik' />
             <p
-               className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
+              className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
               style={{
                 fontWeight: 600,
               }}
@@ -1581,131 +1583,133 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   </div>
                 </li>
               </ol>
-              {(role === "mentor" || role === "admin" || 
-  (role === "mentee" && (
-    programdetails.status === programActionStatus.inprogress || 
-    programdetails.mentee_join_status === programActionStatus.program_join_request_accepted
-  ))) &&
-              <>
-                <div className='cursor-pointer' onClick={handleClick}>
-                  <img src={MoreIcon} alt='MoreIcon' />
-                </div>
-                <Menu
-                  id='basic-menu'
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={handleClose}
-                  MenuListProps={{
-                    'aria-labelledby': 'basic-button',
-                  }}
-                >
-                  {(role === 'mentor' || role === 'admin') && (
-                    <>
-                      <MenuItem
-                        onClick={() => handleMenu('share')}
-                        className='!text-[12px]'
-                      >
-                        <img
-                          src={ShareIcon}
-                          alt='ShareIcon'
-                          className='pr-3 w-[25px]'
-                        />
-                        Share
-                      </MenuItem>
-                      {!requestStatusParams &&
-                        ![
-                          'yettoapprove',
-                          'cancelled',
-                          'new_program_request_rejected',
-                          'completed',
-                        ].includes(programdetails?.status) &&
-                        role !== 'admin' && (
-                          <MenuItem
-                            onClick={() => handleMenu('reschedule')}
-                            className='!text-[12px]'
-                          >
-                            <img
-                              src={RescheduleIcon}
-                              alt='RescheduleIcon'
-                              className='pr-3 w-[25px]'
-                            />
-                            Reschedule
-                          </MenuItem>
-                        )}
+              {(role === 'mentor' ||
+                role === 'admin' ||
+                (role === 'mentee' &&
+                  (programdetails.status === programActionStatus.inprogress ||
+                    programdetails.mentee_join_status ===
+                      programActionStatus.program_join_request_accepted))) && (
+                <>
+                  <div className='cursor-pointer' onClick={handleClick}>
+                    <img src={MoreIcon} alt='MoreIcon' />
+                  </div>
+                  <Menu
+                    id='basic-menu'
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                    MenuListProps={{
+                      'aria-labelledby': 'basic-button',
+                    }}
+                  >
+                    {(role === 'mentor' || role === 'admin') && (
+                      <>
+                        <MenuItem
+                          onClick={() => handleMenu('share')}
+                          className='!text-[12px]'
+                        >
+                          <img
+                            src={ShareIcon}
+                            alt='ShareIcon'
+                            className='pr-3 w-[25px]'
+                          />
+                          Share
+                        </MenuItem>
+                        {!requestStatusParams &&
+                          ![
+                            'yettoapprove',
+                            'cancelled',
+                            'new_program_request_rejected',
+                            'completed',
+                          ].includes(programdetails?.status) &&
+                          role !== 'admin' && (
+                            <MenuItem
+                              onClick={() => handleMenu('reschedule')}
+                              className='!text-[12px]'
+                            >
+                              <img
+                                src={RescheduleIcon}
+                                alt='RescheduleIcon'
+                                className='pr-3 w-[25px]'
+                              />
+                              Reschedule
+                            </MenuItem>
+                          )}
 
-                      {!requestStatusParams &&
-                        ![
-                          'yettoapprove',
-                          'cancelled',
-                          'new_program_request_rejected',
-                          'completed',
-                        ].includes(programdetails?.status) &&
-                        role !== 'admin' && (
+                        {!requestStatusParams &&
+                          ![
+                            'yettoapprove',
+                            'cancelled',
+                            'new_program_request_rejected',
+                            'completed',
+                          ].includes(programdetails?.status) &&
+                          role !== 'admin' && (
+                            <MenuItem
+                              onClick={() => handleMenu('cancel')}
+                              className='!text-[12px]'
+                            >
+                              <img
+                                src={AbortIcon}
+                                alt='Cancel'
+                                className='pr-3 w-[25px]'
+                              />
+                              Cancel
+                            </MenuItem>
+                          )}
+                        {(programdetails.status ===
+                          programActionStatus.inprogress ||
+                          programdetails.status ===
+                            programActionStatus.assigned) && (
+                          <>
+                            <MenuItem
+                              onClick={() => handleOpenConfirmPopup()}
+                              className='!text-[12px]'
+                            >
+                              <img
+                                src={CompleteIcon}
+                                alt='AbortIcon'
+                                className='pr-3 w-[25px]'
+                              />
+                              Complete
+                            </MenuItem>
+                            <MenuItem
+                              onClick={() => handleNewTaskFromAdmin()}
+                              className='!text-[12px]'
+                            >
+                              <img
+                                src={PlusCircle}
+                                alt='PlusCircle'
+                                className='pr-3 w-[25px]'
+                              />
+                              Assign Task to Mentees
+                            </MenuItem>
+                          </>
+                        )}
+                      </>
+                    )}
+                    {role === 'mentee' && (
+                      <>
+                        {(programdetails.status ===
+                          programActionStatus.inprogress ||
+                          programdetails.mentee_join_status ===
+                            programActionStatus.program_join_request_accepted) && (
                           <MenuItem
                             onClick={() => handleMenu('cancel')}
                             className='!text-[12px]'
                           >
                             <img
                               src={AbortIcon}
-                              alt='Cancel'
+                              alt='AbortIcon'
                               className='pr-3 w-[25px]'
                             />
                             Cancel
                           </MenuItem>
                         )}
-                      {(programdetails.status ===
-                        programActionStatus.inprogress ||
-                        programdetails.status ===
-                          programActionStatus.assigned) && (
-                        <>
-                          <MenuItem
-                            onClick={() => handleOpenConfirmPopup()}
-                            className='!text-[12px]'
-                          >
-                            <img
-                              src={CompleteIcon}
-                              alt='AbortIcon'
-                              className='pr-3 w-[25px]'
-                            />
-                            Complete
-                          </MenuItem>
-                          <MenuItem
-                            onClick={() => handleNewTaskFromAdmin()}
-                            className='!text-[12px]'
-                          >
-                            <img
-                              src={PlusCircle}
-                              alt='PlusCircle'
-                              className='pr-3 w-[25px]'
-                            />
-                            Assign Task to Mentees
-                          </MenuItem>
-                        </>
-                      )}
-                    </>
-                  )}
-                  {role === 'mentee' && (
-                    <>
-                      {(programdetails.status ===
-                        programActionStatus.inprogress ||
-                        programdetails.mentee_join_status ===
-                          programActionStatus.program_join_request_accepted) && (
-                        <MenuItem
-                          onClick={() => handleMenu('cancel')}
-                          className='!text-[12px]'
-                        >
-                          <img
-                            src={AbortIcon}
-                            alt='AbortIcon'
-                            className='pr-3 w-[25px]'
-                          />
-                          Cancel
-                        </MenuItem>
-                      )}
-                    </>
-                  )}
-                </Menu>
-              </>}
+                      </>
+                    )}
+                  </Menu>
+                </>
+              )}
             </nav>
 
             <div className='content px-8'>
