@@ -202,7 +202,7 @@ export const getAllMembers = createAsyncThunk("getAllMembers", async (data) => {
 });
 
 export const getAllMentors = createAsyncThunk("getAllMentors", async () => {
-  const allMentors = await api.get(`members/member-list?role_name=mentor&page=1&limit=150&status=active`);
+  const allMentors = await api.get(`members/member-list?role_name=mentor&page=1&limit=100&status=active`);
   if (allMentors.status === 200 && allMentors.data) {
     return allMentors.data;
   }
