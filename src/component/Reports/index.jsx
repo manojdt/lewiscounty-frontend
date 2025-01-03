@@ -245,6 +245,9 @@ const Reports = () => {
         if (role === "admin") {
             query.request_by = "mentor"
         }
+        if (role === "admin"&&requestTab === "all") {
+           delete query.request_by
+        }
         dispatch(getAllReports({ ...query, page: paginationModel?.page + 1, limit: paginationModel?.pageSize }));
     }
 
