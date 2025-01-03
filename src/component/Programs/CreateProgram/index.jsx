@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import ReactPlayer from 'react-player';
 import MoreIcon from '../../../assets/icons/moreIcon.svg';
 import ProgramSteps from './ProgramsSteps';
+
 import { ProgramTabs, ProgramFields } from '../../../utils/formFields';
 import {
   updateNewPrograms,
@@ -58,6 +59,8 @@ export default function CreatePrograms() {
   const [currentStep, setCurrentStep] = useState(1);
   const [showBackdrop, setShowBackdrop] = useState(false);
   const role = userInfo.data.role || '';
+  const [search, setSearch] = useState('');
+  console.log(search);
   const [toggleRole, setToggleRole] = useState('');
   const {
     allPrograms,
@@ -670,11 +673,21 @@ export default function CreatePrograms() {
     dispatch(getAllMembers(categoryId));
   };
 
+  // useEffect(() => {
+  //   if (role === 'admin') {
+  //     dispatch(getAllMentors());
+  //   }
+  // }, [role]);
+
+  const handleSearchChange = (value) => {
+    setSearch(value);
+  };
+
   useEffect(() => {
-    if (role === 'admin') {
-      dispatch(getAllMentors());
+    if (role === 'admin' || search.trim() !== '') {
+      dispatch(getAllMentors(search));
     }
-  }, [role]);
+  }, [role, search, dispatch]);
 
   const buttonStyle = {
     background: 'rgb(29, 91, 191)',
@@ -1201,6 +1214,7 @@ export default function CreatePrograms() {
                     currentStepData={
                       stepData[filteredProgramTabs[currentStep - 1].key]
                     }
+                    handleSearchChange={handleSearchChange}
                     setCurrent={setCurrent}
                     setToggleRole={setToggleRole}
                     fetchCategoryData={fetchCategoryData}
@@ -1210,6 +1224,8 @@ export default function CreatePrograms() {
                     stepFields={programAllFields[currentStep - 1]}
                     mentor_assign={mentor_assign}
                     goalData={formDetails.goals}
+                    setSearch={setSearch}
+                    search={search}
                   />
                 </div>
                 <div className='flex gap-6 justify-center align-middle'>
