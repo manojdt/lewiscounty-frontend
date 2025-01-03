@@ -89,8 +89,8 @@ export const certificateRequest = createAsyncThunk(
         // request_type: "certificate",
         //         requested_by: "mentor",
         const url = query?.filterStatus?.length ? 
-        `request/?status=${query?.filterStatus}&type=request&page=${query?.page}&limit=${query?.limit}&request_type=${query?.request_type}${query?.request_by ? `&request_by=${query?.request_by}`: ""}${query?.filter_by ? `&filter_by=${query?.filter_by}` : ""}` :
-        `request/?type=request&page=${query?.page}&limit=${query?.limit}&request_type=${query?.request_type}${query?.request_by ? `&request_by=${query?.request_by}` : ''}${query?.filter_by ? `&filter_by=${query?.filter_by}` : ""}`
+        `request/?status=${query?.filterStatus}&type=request&page=${query?.page}&limit=${query?.limit}&request_type=${query?.request_type}${query?.request_by ? `&request_by=${query?.request_by}`: ""}${query?.filter_by ? `&filter_by=${query?.filter_by}` : ""}${query?.search ? `&search=${query?.search}` : ""}` :
+        `request/?type=request&page=${query?.page}&limit=${query?.limit}&request_type=${query?.request_type}${query?.request_by ? `&request_by=${query?.request_by}` : ''}${query?.filter_by ? `&filter_by=${query?.filter_by}` : ""}${query?.search ? `&search=${query?.search}` : ""}`
         const certificateReq = await api.get(url);
         if (certificateReq.status === 200 && certificateReq.data) {
             return certificateReq.data;

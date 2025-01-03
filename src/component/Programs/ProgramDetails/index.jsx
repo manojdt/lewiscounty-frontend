@@ -2086,7 +2086,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                         <span>Schedule</span>
                         <span>Flexible schedule</span>
                       </li>
-                      {role === 'mentor' && (
+                      {(role === 'mentor' || role === 'admin')  && (
                         <li
                           className='flex justify-between text-[12px]'
                           style={{ paddingTop: '14px' }}

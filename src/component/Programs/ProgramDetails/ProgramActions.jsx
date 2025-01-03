@@ -155,7 +155,40 @@ const ProgramActions = ({
         );
       }
     }
+    const showRequestButtons =
+      programdetails?.status === "inprogress" ||// Explicit check for "inprogress"
+      (programdetails?.request_data?.request_type === "program_cancel" &&
+        programdetails?.request_data?.status === "new");
 
+  if (showRequestButtons) {
+    return (
+      <Box mt={2}>
+        <Stack direction="row" alignItems="center" spacing="20px">
+          <button
+            className="py-3 px-16 text-white text-[14px] flex items-center"
+            style={{ ...buttonStyles.base, ...buttonStyles.danger }}
+            onClick={() =>
+              handleAcceptCancelProgramRequest("cancel", programdetails.id)
+            }
+          >
+            {searchParams.has("type") &&
+            searchParams.get("type") === "program_cancel"
+              ? "Continue"
+              : "Reject Request"}
+          </button>
+          <button
+            className="py-3 px-16 text-white text-[14px] flex items-center"
+            style={{ ...buttonStyles.base, ...buttonStyles.success }}
+            onClick={() =>
+              handleAcceptCancelProgramRequest("accept", programdetails.id)
+            }
+          >
+            Approve Request
+          </button>
+        </Stack>
+      </Box>
+    );
+  }
     // Program approval stage
     if (
       programApprovalStage[programdetails.status] &&
