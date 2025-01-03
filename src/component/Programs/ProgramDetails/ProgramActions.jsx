@@ -20,6 +20,7 @@ const ProgramActions = ({
   requestStatusParams,
   reqStatusColor,
   reqStatus,
+  type,
   handleAcceptCancelProgramRequest,
   setOpenPopup,
   setCancelPopup,
@@ -118,8 +119,8 @@ const ProgramActions = ({
     // Handle request based actions
     if (requestId !== "") {
       if (
-        programdetails.status === "accept" ||
-        programdetails?.request_data?.status === "approved"
+        (programdetails.status === "accept" ||
+        programdetails?.request_data?.status === "approved")&&programdetails.status === "assign_program_accepted"
       ) {
         return (
           <div className="flex item-center gap-x-3">
@@ -459,8 +460,10 @@ const ProgramActions = ({
   const renderCommonStatus = () => {
     // Start Program button
     if (
-      programdetails.status === programActionStatus.yettostart && !requestId &&
-      (role === 'mentor' || role === 'admin')
+     (programdetails.status === programActionStatus.yettostart && !requestId &&
+      (role === 'mentor' || role === 'admin'))|| (type === 'admin_assign_program' && requestId && 
+        programdetails.status === programActionStatus.yettostart && 
+        (role === 'mentor' || role === 'admin'))
     ) {
       return (
         <div className="my-8">

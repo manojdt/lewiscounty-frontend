@@ -11,10 +11,10 @@ import ReportVideoIcon from "../../assets/images/report1.png";
 import { Button } from "../../shared";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Backdrop, CircularProgress } from "@mui/material";
+import { Backdrop, Box, CircularProgress } from "@mui/material";
 import { getReportDetails } from "../../services/reportsInfo";
 import { dateTimeFormat } from "../../utils";
-import { reportAllStatus } from "../../utils/constant";
+import { reportAllStatus, StatusbuttonStyles } from "../../utils/constant";
 import TickColorIcon from "../../assets/icons/tickColorLatest.svg";
 import { updateReportRequest } from "../../services/request";
 import { CancelPopup } from "../Mentor/Task/cancelPopup";
@@ -303,22 +303,7 @@ const ViewReport = () => {
               </table>
             </div>
 
-            {reportDetails?.rejection_reason && (
-              <div className="border border-[#E0382D] rounded-[5px] bg-[#FFE7E7] mt-[20px]">
-                <Typography
-                  className="text-[#E0382D] !text-[18px] border border-b-[#E0382D]"
-                  p={"12px 20px"}
-                >
-                  Cancelled Reason
-                </Typography>
-                <Typography
-                  className="text-[#18283D] !text-[14px]"
-                  p={"12px 20px"}
-                >
-                  {reportDetails?.rejection_reason}
-                </Typography>
-              </div>
-            )}
+          
 
             <div
               className="task-desc  mt-5 px-5 py-6"
@@ -384,7 +369,22 @@ const ViewReport = () => {
 
                 <div>Report Description : {reportDetails.comments}</div>
               </div>
-
+              {reportDetails?.rejection_reason && (
+              <div className="border border-[#E0382D] rounded-[5px] bg-[#FFE7E7] mt-[20px]">
+                <Typography
+                  className="text-[#E0382D] !text-[18px] border border-b-[#E0382D]"
+                  p={"12px 20px"}
+                >
+                  Cancelled Reason
+                </Typography>
+                <Typography
+                  className="text-[#18283D] !text-[14px]"
+                  p={"12px 20px"}
+                >
+                  {reportDetails?.rejection_reason}
+                </Typography>
+              </div>
+            )}
               <div
                 style={{
                   marginTop: 20,
@@ -396,19 +396,20 @@ const ViewReport = () => {
               >
                 {role === "admin" && reportDetails?.status === "approved" ? (
                   <>
-                  <Typography
-                    style={{
-                      background: "#16B681",
-                      borderRadius: "3px",
-                      padding: "8px 16px",
-                      color: "white",
-                      display: "inline-block",
-                      marginRight: 30,
-                    }}
-                  >
-                    {" "}
-                    Approved{" "}
-                  </Typography>
+                  <Box className="pr-2">
+
+                  <button
+            className='py-3 px-16 text-white text-[14px] flex items-center'
+            style={{
+              ...StatusbuttonStyles.base,
+              ...StatusbuttonStyles.success,
+              cursor: 'not-allowed',
+            }}
+            onClick={() => undefined}
+          >
+            Approved
+          </button>
+                  </Box>
                   <Button
                   btnType="button"
                   btnCls="w-[120px]"
@@ -422,20 +423,19 @@ const ViewReport = () => {
                 ) :role === "admin" && (reportDetails?.status === "rejected" ||
                   reportDetails?.status === "cancelled") ? (
                     <>
-                  <Typography
-                    style={{
-                      border: '1px solid #E0382D',
-                      color: '#E0382D',  
-                      borderRadius: "3px",
-                      padding: "8px 16px",
-                      display: "inline-block",
-                      marginRight: 30,
-                    }}
-                    color="error"
-                  >
-                    {" "}
-                    Rejected{" "}
-                  </Typography>
+                   <Box pr={2}>
+                            <button
+                              className="py-3 px-16 text-white text-[14px] flex items-center"
+                              style={{
+                                ...StatusbuttonStyles.base,
+                                ...StatusbuttonStyles.danger,
+                                cursor: "not-allowed",
+                              }}
+                              onClick={() => undefined}
+                            >
+                              Rejected
+                            </button>
+                          </Box>
                   <Button
                   btnType="button"
                   btnCls="w-[120px]"

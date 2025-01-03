@@ -929,7 +929,7 @@ export default function CreatePrograms() {
           }
 
           if (currentField === 'city') {
-            currentFieldValue = currentProgramDetail.city_details.id;
+            currentFieldValue = currentProgramDetail?.city_details?.id;
           }
 
           // Set value in React Hook Form

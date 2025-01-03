@@ -180,6 +180,25 @@ export const goalPeriods = [
     value: 12,
   },
 ];
+export const StatusbuttonStyles = {
+  base: {
+    borderRadius: "5px",
+    padding: "12px 64px",
+    fontSize: "14px",
+    display: "flex",
+    alignItems: "center",
+  },
+  gradient: {
+    background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
+  },
+  success: {
+    background: "#16B681",
+  },
+  danger: {
+    border: "1px solid #E0382D",
+    color: "#E0382D",
+  },
+};
 
 export const activityStatusColor = {
   create: 'rgba(29, 91, 191, 1)',
