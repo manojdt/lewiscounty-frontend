@@ -81,6 +81,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
 
   const params = useParams();
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [acceptProgram, { isSuccess: isAccepted, reset: resetProgramAccept }] =
     useAcceptProgramMutation();
   const requestId = searchParams.get('request_id') || '';
