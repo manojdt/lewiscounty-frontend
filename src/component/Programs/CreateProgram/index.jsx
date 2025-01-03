@@ -943,7 +943,16 @@ export default function CreatePrograms() {
 
       setStepData(data);
     }
-  }, [currentProgramDetail]);
+  }, [
+    currentStep,
+    role,
+    category?.length,
+    // programTypes?.length,
+    countryStates?.length,
+    cities?.length,
+    currentProgramDetail?.id,
+    params.id,
+  ]);
 
   // useEffect(() => {
   //   if (currentStep === 1 || role !== '') {
