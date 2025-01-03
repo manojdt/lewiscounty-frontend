@@ -52,11 +52,11 @@ export const Mentor = () => {
     const handleNavigateDetails = (program) => {
         let baseUrl = pipeUrls.programdetails
         if (Object.keys(program).length) {
-            if (program.status === programActionStatus.yettostart) baseUrl = pipeUrls.startprogram
+            // if (program.status === programActionStatus.yettostart) baseUrl = pipeUrls.startprogram
             if (program.status === programActionStatus.assigned
                 || program.status === programActionStatus.inprogress
             ) baseUrl = pipeUrls.startprogram
-            navigate(`${baseUrl}/${program.id}`)
+            navigate(`${baseUrl}/${program.id}${program?.admin_program_request_id?`?request_id=${program?.admin_program_request_id}&type=admin_assign_program`:''}`)
         }
     }
 

@@ -65,6 +65,7 @@ export default function ProfileView() {
     modal: false,
     cancel: false,
   });
+    const [cancelPopup, setCancelPopup] = useState(false);
   const [activity, setActivity] = useState({
     modal: false,
     following: false,
@@ -317,7 +318,23 @@ export default function ProfileView() {
       }
     }
   };
-
+  const handleCloseConfirmPopup = () =>{
+    setCancelPopup(false);
+  }
+const handleCancelSubmit = (reas) =>{
+    if (role === 'admin') {
+      dispatch(
+        cancelMemberRequest({
+          member_id: params.id,
+          reason: reas,
+        })
+      ).then((res) => {
+        if (res?.meta?.requestStatus === 'fulfilled') {
+          navigate(pathe);
+        }
+      });
+    }
+}
   useEffect(() => {
     // Category load action
     if (requeststatus === requestStatus.categoryload) {
@@ -358,11 +375,13 @@ export default function ProfileView() {
   }, [params]);
   useEffect(() => {
     console.log('role=>', role);
-    if (role === 'admin') {
-      dispatch(getRequestView(parseInt(searchParams.get('request_id'))));
-    }
-    if (role === 'mentor') {
-      dispatch(getRequestView(parseInt(searchParams.get('request_id'))));
+    if(searchParams.get('request_id')){
+      if (role === 'admin') {
+        dispatch(getRequestView(parseInt(searchParams.get('request_id'))));
+      }
+      if (role === 'mentor') {
+        dispatch(getRequestView(parseInt(searchParams.get('request_id'))));
+      }
     }
   }, [role]);
 
@@ -963,7 +982,11 @@ export default function ProfileView() {
                         borderRadius: '5px',
                         color: '#E0382D',
                       }}
-                      onClick={() => handleMemberCancelRequest()}
+                      onClick={() =>{
+                        setCancelPopup(true)
+                        // handleMemberCancelRequest()
+                      } 
+                    }
                     >
                       Reject
                     </button>
@@ -1082,6 +1105,14 @@ export default function ProfileView() {
             </Stack>
           )}
         </div>
+           <CancelPopup
+                open={cancelPopup}
+                header={'Reject Reason'}
+                handleClosePopup={() => handleCloseConfirmPopup('cancel')}
+                handleSubmit={(reason) => {
+                  handleCancelSubmit(reason);
+                }}
+              />
       </div>
     </div>
   );

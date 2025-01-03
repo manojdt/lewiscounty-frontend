@@ -1961,6 +1961,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     handleAcceptCancelProgramRequest={
                       handleAcceptCancelProgramRequest
                     }
+                    type={searchParams.get("type")}
                     setCancelPopup={setCancelPopup}
                     reqStatusColor={reqStatusColor}
                     reqStatus={reqStatus}

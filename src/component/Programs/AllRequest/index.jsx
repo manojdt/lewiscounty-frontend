@@ -517,6 +517,18 @@ export default function AllRequest() {
             }
           });
         }
+        if (cancelPopup.page === 'member_join_request') {
+            dispatch(
+                cancelMemberRequest({
+                  member_id: seletedItem.id,
+                  reason: data.cancel_reason,
+                })
+              ).then((res) => {
+            if (res?.meta?.requestStatus === 'fulfilled') {
+              handleCloseCancelReasonPopup();
+            }
+          });
+        }
 
         if (
           cancelPopup.page === 'goal_request' ||
@@ -561,12 +573,13 @@ export default function AllRequest() {
 
   // Member Drodown Cancel
   const handleMemberCancelRequest = () => {
-    handleOpenConfirmPopup(
-      `${actionTab === 'mentor' ? 'Mentor ' : 'Mentee '} Request`,
-      currentRequestTab.key,
-      actionTab,
-      'reject'
-    );
+    // handleOpenConfirmPopup(
+    //   `${actionTab === 'mentor' ? 'Mentor ' : 'Mentee '} Request`,
+    //   currentRequestTab.key,
+    //   actionTab,
+    //   'reject'
+    // );
+    setCancelPopup({ show: true, page: currentRequestTab.key });
     handleClose();
   };
 
@@ -1222,7 +1235,7 @@ export default function AllRequest() {
               <span
                 className='w-[80px] flex justify-center h-[30px] px-7'
                 style={{
-                  background: requestStatusColor[params.row.status]?.bg || '',
+                  background: requestStatusColor[params.row.status]?.bgColor || '',
                   lineHeight: '30px',
                   borderRadius: '3px',
                   width: '110px',
@@ -2838,6 +2851,12 @@ export default function AllRequest() {
                           setFilter({ ...filter, filter_by: e.target.value })
                         }
                       >
+                        {/* <option
+                          value='year'
+                          selected={filter.filter_by === 'year'}
+                        >
+                          Year
+                        </option> */}
                         <option
                           value='month'
                           selected={filter.filter_by === 'month'}

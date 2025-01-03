@@ -289,7 +289,7 @@ export default function Programs() {
       navigate(
         `${baseUrl}/${programdetails.program || programdetails?.id}${
           programdetails?.admin_program_request_id
-            ? `?request_id=${programdetails?.admin_program_request_id}`
+            ? `?request_id=${programdetails?.admin_program_request_id}&type=admin_assign_program`
             : 'admin_assign_program' in programdetails
             ? `?program_create_type=admin_program`
             : ''
