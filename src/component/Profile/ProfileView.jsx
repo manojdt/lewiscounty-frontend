@@ -342,7 +342,6 @@ export default function ProfileView() {
     }
 
     // if (requestStatus === requestStatus.programupdate) {
-    //     console.log('llll');
     //     setTimeout(() => {
     //         console.log('MMMM');
     //         // dispatch(updateLocalRequest({ status: '' }));
