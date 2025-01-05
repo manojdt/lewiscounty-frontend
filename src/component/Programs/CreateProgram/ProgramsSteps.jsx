@@ -312,7 +312,7 @@ const ProgramSteps = ({
                 </FormControl>
               ) : field.type === 'input' ? (
                 <div className='relative'>
-                  <input
+                  {/* <input
                     disabled={disableFields}
                     {...register(field.name, field.inputRules)}
                     type={field.fieldtype}
@@ -330,6 +330,33 @@ const ProgramSteps = ({
                       borderRadius: '3px',
                     }}
                     aria-invalid={!!errors[field.name]}
+                  /> */}
+                  <Controller
+                    name={field.name}
+                    control={control}
+                    defaultValue=''
+                    rules={field.inputRules}
+                    render={({ field: controlledField }) => (
+                      <input
+                        disabled={disableFields}
+                        {...controlledField}
+                        type={field.fieldtype}
+                        className={`w-full border-none px-3 py-[0.32rem] leading-[2.15] ${
+                          disableFields ? 'bg-slate-300' : 'input-bg'
+                        } focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]`}
+                        placeholder={field.placeholder}
+                        onBlur={(e) => {
+                          controlledField.onBlur();
+                          if (field.name === 'program_name') {
+                            // handelProgramCheck(e?.target?.value);
+                          }
+                        }}
+                        style={{
+                          color: '#232323',
+                          borderRadius: '3px',
+                        }}
+                      />
+                    )}
                   />
                   {field.icon && field.icon === 'location' && (
                     <img
