@@ -188,6 +188,7 @@ export default function Programs() {
             : filterType,
       }),
       ...(filterDate && { filter_by: filterDate }),
+      ...(isBookmark && { is_bookmark: isBookmark }),
       ...(filterSearch && { search: filterSearch }),
     },
     {
