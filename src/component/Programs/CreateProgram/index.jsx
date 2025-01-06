@@ -766,29 +766,29 @@ export default function CreatePrograms() {
   //     let currentStepField = ProgramFields[currentStep - 1];
 
   //     // Filter fields based on toggleRole
-  //     if (toggleRole !== '') {
-  //       currentStepField = currentStepField.filter((curfields) =>
-  //         curfields.for?.includes(toggleRole)
-  //       );
+  // if (toggleRole !== '') {
+  //   currentStepField = currentStepField.filter((curfields) =>
+  //     curfields.for?.includes(toggleRole)
+  //   );
 
-  //       if (toggleRole === 'admin') {
-  //         currentStepField = currentStepField.map((programfield) => {
-  //           if (widthAdjustMentField1.includes(programfield.name)) {
-  //             return {
-  //               ...programfield,
-  //               width: 'w-[24%]',
-  //             };
-  //           }
-  //           if (widthAdjustMentField2.includes(programfield.name)) {
-  //             return {
-  //               ...programfield,
-  //               width: 'w-[49%]',
-  //             };
-  //           }
-  //           return programfield;
-  //         });
+  //   if (toggleRole === 'admin') {
+  //     currentStepField = currentStepField.map((programfield) => {
+  //       if (widthAdjustMentField1.includes(programfield.name)) {
+  //         return {
+  //           ...programfield,
+  //           width: 'w-[24%]',
+  //         };
   //       }
-  //     }
+  //       if (widthAdjustMentField2.includes(programfield.name)) {
+  //         return {
+  //           ...programfield,
+  //           width: 'w-[49%]',
+  //         };
+  //       }
+  //       return programfield;
+  //     });
+  //   }
+  // }
 
   //     // Update fields with dynamic options
   //     const updatedFields = currentStepField.map((field) => {
@@ -967,6 +967,8 @@ export default function CreatePrograms() {
   //   params.id,
   // ]);
 
+  console.log('role', toggleRole);
+
   useEffect(() => {
     if (currentStep === 1 || role !== '') {
       const widthAdjustMentField1 = [
@@ -979,17 +981,24 @@ export default function CreatePrograms() {
       let currentStepField = ProgramFields[currentStep - 1];
 
       // Filter fields based on role
-      if (role !== '') {
+      if (toggleRole !== '') {
         currentStepField = currentStepField.filter((curfields) =>
-          curfields.for?.includes(role)
+          curfields.for?.includes(toggleRole)
         );
-        if (role === 'admin') {
+
+        if (toggleRole === 'admin') {
           currentStepField = currentStepField.map((programfield) => {
             if (widthAdjustMentField1.includes(programfield.name)) {
-              return { ...programfield, width: 'w-[24%]' };
+              return {
+                ...programfield,
+                width: 'w-[24%]',
+              };
             }
             if (widthAdjustMentField2.includes(programfield.name)) {
-              return { ...programfield, width: 'w-[49%]' };
+              return {
+                ...programfield,
+                width: 'w-[49%]',
+              };
             }
             return programfield;
           });
@@ -997,39 +1006,18 @@ export default function CreatePrograms() {
       }
 
       // Update fields with dynamic options
-      // const updatedFields = currentStepField.map((field) => {
-      //   switch (field.name) {
-      //     case 'category':
-      //     case 'incident_type':
-      //       return { ...field, options: category };
-      //     // case 'program_type':
-      //     // case 'type':
-      //     //   return { ...field, options: programTypes };
-      //     case 'state':
-      //       return { ...field, options: countryStates };
-      //     case 'city':
-      //       return { ...field, options: cities || [] };
-      //     default:
-      //       return field;
-      //   }
-      // });
       const updatedFields = currentStepField.map((field) => {
         switch (field.name) {
           case 'category':
-            return {
-              ...field,
-              options: category,
-            };
+          case 'incident_type':
+            return { ...field, options: category };
+          // case 'program_type':
+          // case 'type':
+          //   return { ...field, options: programTypes };
           case 'state':
-            return {
-              ...field,
-              options: countryStates,
-            };
+            return { ...field, options: countryStates };
           case 'city':
-            return {
-              ...field,
-              options: cities || [],
-            };
+            return { ...field, options: cities || [] };
           default:
             return field;
         }
@@ -1055,12 +1043,27 @@ export default function CreatePrograms() {
             fieldName === 'category' &&
             currentProgramDetail.categories?.length
           ) {
-            setValue(fieldName, currentProgramDetail.categories[0]?.id);
+            methods.reset({
+              fieldName: currentProgramDetail.categories[0]?.id,
+            });
             fetchCategoryData(currentProgramDetail.categories[0]?.id);
-          } else if (fieldName === 'state' && currentProgramDetail.state) {
-            setValue(fieldName, currentProgramDetail.state);
-          } else if (fieldName === 'city' && currentProgramDetail.city) {
-            setValue(fieldName, currentProgramDetail.city);
+            if (fieldName === 'state' && currentProgramDetail?.state_details) {
+              methods.reset({
+                fieldName: currentProgramDetail?.state_details?.id,
+              });
+            } else if (
+              fieldName === 'city' &&
+              currentProgramDetail?.city_details
+            ) {
+              methods.reset({
+                fieldName: currentProgramDetail?.city_details?.id,
+              });
+            }
+
+            // } else if (fieldName === 'state' && currentProgramDetail.state) {
+            //   setValue(fieldName, currentProgramDetail.state);
+            // } else if (fieldName === 'city' && currentProgramDetail.city) {
+            //   setValue(fieldName, currentProgramDetail.city);
           } else {
             let value = currentProgramDetail[fieldName];
 
@@ -1082,7 +1085,7 @@ export default function CreatePrograms() {
               value = currentProgramDetail['program_image'];
             }
 
-            setValue(fieldName, value);
+            methods.reset({ fieldName: value });
           }
         });
       }
@@ -1099,7 +1102,7 @@ export default function CreatePrograms() {
     }
   }, [
     currentStep,
-    role,
+    toggleRole,
     category?.length,
     // programTypes?.length,
     countryStates?.length,
@@ -1107,6 +1110,19 @@ export default function CreatePrograms() {
     currentProgramDetail?.id,
     params.id,
   ]);
+
+  useEffect(() => {
+    if (params.id && currentProgramDetail) {
+      // console.log('print');
+      methods.reset({
+        ...currentProgramDetail,
+        state: currentProgramDetail?.state_details?.id,
+        city: currentProgramDetail?.city_details?.id,
+        start_date: new Date(currentProgramDetail.start_date),
+        end_date: new Date(currentProgramDetail.end_date),
+      });
+    }
+  }, [params.id, currentProgramDetail]);
 
   useEffect(() => {
     if (materials?.length > 0) {
@@ -1135,7 +1151,7 @@ export default function CreatePrograms() {
   };
 
   useEffect(() => {
-    const sub = watch((values) => values);
+    const sub = watch((values) => console.log(values));
 
     return () => sub.unsubscribe();
   }, [watch]);
