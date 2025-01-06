@@ -1039,108 +1039,108 @@ export default function CreatePrograms() {
     status,
   ]);
 
-  // useEffect(() => {
-  //   if (tabActionInfo.error) {
-  //     setTimeout(() => {
-  //       setTabActionInfo({ ...tabActionInfo, error: false });
-  //     }, 3000);
-  //   }
-  // }, [tabActionInfo.error]);
+  useEffect(() => {
+    if (tabActionInfo.error) {
+      setTimeout(() => {
+        setTabActionInfo({ ...tabActionInfo, error: false });
+      }, 3000);
+    }
+  }, [tabActionInfo.error]);
 
-  // useEffect(() => {
-  //   if (
-  //     currentProgramDetail &&
-  //     Object.keys(currentProgramDetail).length &&
-  //     params.id !== ''
-  //   ) {
-  //     let stepListData = {};
-  //     let data = {};
+  useEffect(() => {
+    if (
+      currentProgramDetail &&
+      Object.keys(currentProgramDetail).length &&
+      params.id !== ''
+    ) {
+      let stepListData = {};
+      let data = {};
 
-  //     programAllFields.forEach((field, index) => {
-  //       let stepField = {};
-  //       field.forEach((fl, i) => {
-  //         let currentField = fl.name;
-  //         let currentFieldValue = currentProgramDetail[currentField];
+      programAllFields.forEach((field, index) => {
+        let stepField = {};
+        field.forEach((fl, i) => {
+          let currentField = fl.name;
+          let currentFieldValue = currentProgramDetail[currentField];
 
-  //         // Handle special cases
-  //         if (
-  //           currentField === 'category' &&
-  //           currentProgramDetail.categories?.length
-  //         ) {
-  //           currentFieldValue = currentProgramDetail.categories[0]?.id;
-  //           fetchCategoryData(currentProgramDetail.categories[0]?.id);
-  //         }
+          // Handle special cases
+          if (
+            currentField === 'category' &&
+            currentProgramDetail.categories?.length
+          ) {
+            currentFieldValue = currentProgramDetail.categories[0]?.id;
+            fetchCategoryData(currentProgramDetail.categories[0]?.id);
+          }
 
-  //         if (currentField === 'start_date' || currentField === 'end_date') {
-  //           currentFieldValue = new Date(currentProgramDetail[currentField]);
-  //         }
+          if (currentField === 'start_date' || currentField === 'end_date') {
+            currentFieldValue = new Date(currentProgramDetail[currentField]);
+          }
 
-  //         if (
-  //           [
-  //             'mentee_upload_certificates',
-  //             'group_chat_requirement',
-  //             'individual_chat_requirement',
-  //           ].includes(currentField)
-  //         ) {
-  //           currentFieldValue = currentProgramDetail[currentField]
-  //             ? 'true'
-  //             : 'false';
-  //         }
+          if (
+            [
+              'mentee_upload_certificates',
+              'group_chat_requirement',
+              'individual_chat_requirement',
+            ].includes(currentField)
+          ) {
+            currentFieldValue = currentProgramDetail[currentField]
+              ? 'true'
+              : 'false';
+          }
 
-  //         if (currentField === 'certificates') {
-  //           currentFieldValue = currentProgramDetail['certifications'];
-  //         }
+          if (currentField === 'certificates') {
+            currentFieldValue = currentProgramDetail['certifications'];
+          }
 
-  //         if (currentField === 'testimonial_types') {
-  //           currentFieldValue = currentProgramDetail['testimonial_types'];
-  //         }
+          if (currentField === 'testimonial_types') {
+            currentFieldValue = currentProgramDetail['testimonial_types'];
+          }
 
-  //         if (currentField === 'program_image') {
-  //           currentFieldValue = currentProgramDetail['program_image'];
-  //         }
+          if (currentField === 'program_image') {
+            currentFieldValue = currentProgramDetail['program_image'];
+          }
 
-  //         if (currentField === 'state') {
-  //           currentFieldValue = currentProgramDetail?.state_details?.id;
-  //         }
+          if (currentField === 'state') {
+            currentFieldValue = currentProgramDetail?.state_details?.id;
+          }
 
-  //         if (currentField === 'city') {
-  //           currentFieldValue = currentProgramDetail?.city_details?.id;
-  //         }
+          if (currentField === 'city') {
+            currentFieldValue = currentProgramDetail?.city_details?.id;
+          }
 
-  //         // Set value in React Hook Form
-  //         setValue(currentField, currentFieldValue);
+          // Set value in React Hook Form
+          setValue(currentField, currentFieldValue);
 
-  //         stepField[currentField] = currentFieldValue;
-  //       });
-  //       stepListData = { ...stepListData, [index]: stepField };
-  //       data = { ...data, ...stepField };
-  //     });
+          stepField[currentField] = currentFieldValue;
+        });
+        stepListData = { ...stepListData, [index]: stepField };
+        data = { ...data, ...stepField };
+      });
 
-  //     setStepData(data);
-  //   }
-  // }, [
-  //   currentStep,
-  //   role,
-  //   category?.length,
-  //   // programTypes?.length,
-  //   countryStates?.length,
-  //   cities?.length,
-  //   currentProgramDetail?.id,
-  //   params.id,
-  // ]);
+      setStepData(data);
+    }
+  }, [
+    currentStep,
+    role,
+    category?.length,
+    // programTypes?.length,
+    countryStates?.length,
+    cities?.length,
+    currentProgramDetail?.id,
+    params.id,
+  ]);
 
-  // useEffect(() => {
-  //   if (params.id && currentProgramDetail) {
-  //     // console.log('print');
-  //     methods.reset({
-  //       ...currentProgramDetail,
-  //       state: currentProgramDetail?.state_details?.id,
-  //       city: currentProgramDetail?.city_details?.id,
-  //       start_date: new Date(currentProgramDetail.start_date),
-  //       end_date: new Date(currentProgramDetail.end_date),
-  //     });
-  //   }
-  // }, [params.id, currentProgramDetail]);
+  useEffect(() => {
+    if (params.id && currentProgramDetail) {
+      // console.log('print');
+      methods.reset({
+        ...currentProgramDetail,
+        state: currentProgramDetail?.state_details?.id,
+        city: currentProgramDetail?.city_details?.id,
+        start_date: new Date(currentProgramDetail.start_date),
+        end_date: new Date(currentProgramDetail.end_date),
+      });
+    }
+  }, [params.id, currentProgramDetail]);
 
   const handleDraft = () => {
     setValue('status', 'draft');
