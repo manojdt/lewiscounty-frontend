@@ -1043,21 +1043,15 @@ export default function CreatePrograms() {
             fieldName === 'category' &&
             currentProgramDetail.categories?.length
           ) {
-            methods.reset({
-              fieldName: currentProgramDetail.categories[0]?.id,
-            });
+            setValue(fieldName, currentProgramDetail.categories[0]?.id);
             fetchCategoryData(currentProgramDetail.categories[0]?.id);
             if (fieldName === 'state' && currentProgramDetail?.state_details) {
-              methods.reset({
-                fieldName: currentProgramDetail?.state_details?.id,
-              });
+              setValue(fieldName, currentProgramDetail?.state_details?.id);
             } else if (
               fieldName === 'city' &&
               currentProgramDetail?.city_details
             ) {
-              methods.reset({
-                fieldName: currentProgramDetail?.city_details?.id,
-              });
+              setValue(fieldName, currentProgramDetail?.city_details?.id);
             }
 
             // } else if (fieldName === 'state' && currentProgramDetail.state) {
@@ -1085,7 +1079,7 @@ export default function CreatePrograms() {
               value = currentProgramDetail['program_image'];
             }
 
-            methods.reset({ fieldName: value });
+            setValue(fieldName, value);
           }
         });
       }
@@ -1151,7 +1145,7 @@ export default function CreatePrograms() {
   };
 
   useEffect(() => {
-    const sub = watch((values) => console.log(values));
+    const sub = watch((values) => values);
 
     return () => sub.unsubscribe();
   }, [watch]);
