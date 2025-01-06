@@ -13,6 +13,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
 import { getProgramDetails } from '../../../services/userprograms';
 import { Backdrop, CircularProgress } from '@mui/material';
+import { dateFormatRever } from '../../../utils';
 
 export default function ProgramCompletion() {
     const navigate = useNavigate()
@@ -47,8 +48,6 @@ export default function ProgramCompletion() {
 
             setCompletedProgram({
                 ...programdetails,
-                start_date: actualStartDate,
-                end_date: actualEndDate
             })
         }
     }, [programdetails])
@@ -134,7 +133,7 @@ export default function ProgramCompletion() {
                                                     Start Date | End Date
                                                 </th>
                                                 <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
-                                                    {completedProgram.start_date} | {completedProgram.end_date}
+                                                    {`${dateFormatRever(completedProgram?.start_date)}`} | {`${dateFormatRever(completedProgram?.end_date)}`}
                                                 </td>
                                             </tr>
                                             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -158,7 +157,7 @@ export default function ProgramCompletion() {
                                                     Location
                                                 </th>
                                                 <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
-                                                    {completedProgram.venue}
+                                                    {`${completedProgram?.city_details?.name}, ${completedProgram?.state_details?.abbreviation}`}
                                                 </td>
                                             </tr>
                                             <tr className="bg-white border-b dark:bg-gray-800">

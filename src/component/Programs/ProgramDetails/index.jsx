@@ -87,9 +87,9 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   const requestId = searchParams.get('request_id') || '';
   const requestStatusParams = searchParams.get('status') || '';
   const program_create_type = searchParams.get('program_create_type') || '';
-
   const userdetails = useSelector((state) => state.userInfo);
   const role = userdetails.data.role || '';
+  const reqRole=requestId&&userdetails.data.role==="admin"
 
   console.log(userdetails);
 
@@ -1622,7 +1622,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             'cancelled',
                             'new_program_request_rejected',
                             'completed',
-                          ].includes(programdetails?.status) &&
+                          ].includes(programdetails?.status) &&!reqRole&&
                           // role !== 'admin' && (
                             <MenuItem
                               onClick={() => handleMenu('reschedule')}
@@ -1644,7 +1644,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             'cancelled',
                             'new_program_request_rejected',
                             'completed',
-                          ].includes(programdetails?.status) &&
+                          ].includes(programdetails?.status)&&!reqRole &&
                           // role !== 'admin' && (
                             <MenuItem
                               onClick={() => handleMenu('cancel')}
@@ -1662,7 +1662,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                         {(programdetails.status ===
                           programActionStatus.inprogress ||
                           programdetails.status ===
-                            programActionStatus.assigned) && (
+                            programActionStatus.assigned)&&!reqRole && (
                           <>
                             <MenuItem
                               onClick={() => handleOpenConfirmPopup()}
@@ -2154,7 +2154,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
               {(programdetails?.request_data?.request_type ===
                 'program_reschedule' ||
                 programdetails?.request_data?.request_type ===
-                  'program_cancel') &&
+                  'program_cancel'||programdetails?.request_data?.request_type ===
+                  'program_new') &&
                 ['new', 'pending', 'approved', 'rejected'].includes(
                   programdetails?.request_data?.status
                 ) &&

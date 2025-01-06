@@ -350,7 +350,7 @@ export default function Programs() {
     }
     if (role === 'mentor' || role === 'admin') {
       dispatch(getProgramCounts(pay));
-      // refetch()
+      refetch()
       // dispatch(getUserPrograms(query));
     }
 
