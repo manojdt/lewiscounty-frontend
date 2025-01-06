@@ -156,7 +156,7 @@ const ProgramActions = ({
       }
     }
     const showRequestButtons =
-    programdetails?.status === "inprogress" && 
+   ( programdetails?.status === "inprogress"|| programdetails?.status === "yettostart") && 
       programdetails?.request_data?.request_type === "program_cancel" &&
         programdetails?.request_data?.status === "new"
 
