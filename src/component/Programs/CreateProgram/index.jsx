@@ -754,94 +754,94 @@ export default function CreatePrograms() {
     if (role === 'mentee') navigate('/programs');
   }, [role]);
 
-  // useEffect(() => {
-  //   if (currentStep === 1 || toggleRole !== '') {
-  //     const widthAdjustMentField1 = [
-  //       'max_mentor_count',
-  //       'max_mentee_count',
-  //       'group_chat_requirement',
-  //       'individual_chat_requirement',
-  //     ];
-  //     const widthAdjustMentField2 = ['auto_approval', 'venue'];
-  //     let currentStepField = ProgramFields[currentStep - 1];
+  useEffect(() => {
+    if (currentStep === 1 || toggleRole !== '') {
+      const widthAdjustMentField1 = [
+        'max_mentor_count',
+        'max_mentee_count',
+        'group_chat_requirement',
+        'individual_chat_requirement',
+      ];
+      const widthAdjustMentField2 = ['auto_approval', 'venue'];
+      let currentStepField = ProgramFields[currentStep - 1];
 
-  //     // Filter fields based on toggleRole
-  // if (toggleRole !== '') {
-  //   currentStepField = currentStepField.filter((curfields) =>
-  //     curfields.for?.includes(toggleRole)
-  //   );
+      // Filter fields based on toggleRole
+      if (toggleRole !== '') {
+        currentStepField = currentStepField.filter((curfields) =>
+          curfields.for?.includes(toggleRole)
+        );
 
-  //   if (toggleRole === 'admin') {
-  //     currentStepField = currentStepField.map((programfield) => {
-  //       if (widthAdjustMentField1.includes(programfield.name)) {
-  //         return {
-  //           ...programfield,
-  //           width: 'w-[24%]',
-  //         };
-  //       }
-  //       if (widthAdjustMentField2.includes(programfield.name)) {
-  //         return {
-  //           ...programfield,
-  //           width: 'w-[49%]',
-  //         };
-  //       }
-  //       return programfield;
-  //     });
-  //   }
-  // }
+        if (toggleRole === 'admin') {
+          currentStepField = currentStepField.map((programfield) => {
+            if (widthAdjustMentField1.includes(programfield.name)) {
+              return {
+                ...programfield,
+                width: 'w-[24%]',
+              };
+            }
+            if (widthAdjustMentField2.includes(programfield.name)) {
+              return {
+                ...programfield,
+                width: 'w-[49%]',
+              };
+            }
+            return programfield;
+          });
+        }
+      }
 
-  //     // Update fields with dynamic options
-  //     const updatedFields = currentStepField.map((field) => {
-  //       switch (field.name) {
-  //         case 'category':
-  //           return {
-  //             ...field,
-  //             options: category,
-  //           };
-  //         case 'state':
-  //           return {
-  //             ...field,
-  //             options: countryStates,
-  //           };
-  //         case 'city':
-  //           return {
-  //             ...field,
-  //             options: cities || [],
-  //           };
-  //         default:
-  //           return field;
-  //       }
-  //     });
+      // Update fields with dynamic options
+      const updatedFields = currentStepField.map((field) => {
+        switch (field.name) {
+          case 'category':
+            return {
+              ...field,
+              options: category,
+            };
+          case 'state':
+            return {
+              ...field,
+              options: countryStates,
+            };
+          case 'city':
+            return {
+              ...field,
+              options: cities || [],
+            };
+          default:
+            return field;
+        }
+      });
 
-  //     // Preserve existing step data while updating current step
-  //     setProgramAllFields((prevFields) =>
-  //       prevFields.map((fields, i) =>
-  //         i === currentStep - 1 ? updatedFields : fields
-  //       )
-  //     );
+      // Preserve existing step data while updating current step
+      setProgramAllFields((prevFields) =>
+        prevFields.map((fields, i) =>
+          i === currentStep - 1 ? updatedFields : fields
+        )
+      );
 
-  //     // Update form details
-  //     setFormDetails((prev) => ({
-  //       ...prev,
-  //       category,
-  //       materials,
-  //       certificate,
-  //       skills,
-  //       members,
-  //       goals: goals?.results,
-  //     }));
-  //   }
-  // }, [
-  //   currentStep,
-  //   toggleRole,
-  //   category,
-  //   materials,
-  //   certificate,
-  //   skills,
-  //   members,
-  //   goals,
-  //   cities,
-  // ]);
+      // Update form details
+      setFormDetails((prev) => ({
+        ...prev,
+        category,
+        materials,
+        certificate,
+        skills,
+        members,
+        goals: goals?.results,
+      }));
+    }
+  }, [
+    currentStep,
+    toggleRole,
+    category,
+    materials,
+    certificate,
+    skills,
+    members,
+    goals,
+    cities,
+  ]);
 
   useEffect(() => {
     // If any completion state (success or error) is true, show the backdrop
@@ -885,218 +885,80 @@ export default function CreatePrograms() {
     }
   }, [tabActionInfo.error]);
 
-  // useEffect(() => {
-  //   if (
-  //     currentProgramDetail &&
-  //     Object.keys(currentProgramDetail).length &&
-  //     params.id !== ''
-  //   ) {
-  //     let stepListData = {};
-  //     let data = {};
-
-  //     programAllFields.forEach((field, index) => {
-  //       let stepField = {};
-  //       field.forEach((fl, i) => {
-  //         let currentField = fl.name;
-  //         let currentFieldValue = currentProgramDetail[currentField];
-
-  //         // Handle special cases
-  //         if (
-  //           currentField === 'category' &&
-  //           currentProgramDetail.categories?.length
-  //         ) {
-  //           currentFieldValue = currentProgramDetail.categories[0]?.id;
-  //           fetchCategoryData(currentProgramDetail.categories[0]?.id);
-  //         }
-
-  //         if (currentField === 'start_date' || currentField === 'end_date') {
-  //           currentFieldValue = new Date(currentProgramDetail[currentField]);
-  //         }
-
-  //         if (
-  //           [
-  //             'mentee_upload_certificates',
-  //             'group_chat_requirement',
-  //             'individual_chat_requirement',
-  //           ].includes(currentField)
-  //         ) {
-  //           currentFieldValue = currentProgramDetail[currentField]
-  //             ? 'true'
-  //             : 'false';
-  //         }
-
-  //         if (currentField === 'certificates') {
-  //           currentFieldValue = currentProgramDetail['certifications'];
-  //         }
-
-  //         if (currentField === 'testimonial_type') {
-  //           currentFieldValue = currentProgramDetail['testimonial_types'];
-  //         }
-
-  //         if (currentField === 'program_image') {
-  //           currentFieldValue = currentProgramDetail['program_image'];
-  //         }
-
-  //         if (currentField === 'state') {
-  //           currentFieldValue = currentProgramDetail?.state_details?.id;
-  //         }
-
-  //         if (currentField === 'city') {
-  //           currentFieldValue = currentProgramDetail?.city_details?.id;
-  //         }
-
-  //         // Set value in React Hook Form
-  //         setValue(currentField, currentFieldValue);
-
-  //         stepField[currentField] = currentFieldValue;
-  //       });
-  //       stepListData = { ...stepListData, [index]: stepField };
-  //       data = { ...data, ...stepField };
-  //     });
-
-  //     setStepData(data);
-  //   }
-  // }, [
-  //   currentStep,
-  //   role,
-  //   category?.length,
-  //   // programTypes?.length,
-  //   countryStates?.length,
-  //   cities?.length,
-  //   currentProgramDetail?.id,
-  //   params.id,
-  // ]);
-
-  console.log('role', toggleRole);
-
   useEffect(() => {
-    if (currentStep === 1 || role !== '') {
-      const widthAdjustMentField1 = [
-        'max_mentor_count',
-        'max_mentee_count',
-        'group_chat_requirement',
-        'individual_chat_requirement',
-      ];
-      const widthAdjustMentField2 = ['auto_approval', 'venue'];
-      let currentStepField = ProgramFields[currentStep - 1];
+    if (
+      currentProgramDetail &&
+      Object.keys(currentProgramDetail).length &&
+      params.id !== ''
+    ) {
+      let stepListData = {};
+      let data = {};
 
-      // Filter fields based on role
-      if (toggleRole !== '') {
-        currentStepField = currentStepField.filter((curfields) =>
-          curfields.for?.includes(toggleRole)
-        );
+      programAllFields.forEach((field, index) => {
+        let stepField = {};
+        field.forEach((fl, i) => {
+          let currentField = fl.name;
+          let currentFieldValue = currentProgramDetail[currentField];
 
-        if (toggleRole === 'admin') {
-          currentStepField = currentStepField.map((programfield) => {
-            if (widthAdjustMentField1.includes(programfield.name)) {
-              return {
-                ...programfield,
-                width: 'w-[24%]',
-              };
-            }
-            if (widthAdjustMentField2.includes(programfield.name)) {
-              return {
-                ...programfield,
-                width: 'w-[49%]',
-              };
-            }
-            return programfield;
-          });
-        }
-      }
-
-      // Update fields with dynamic options
-      const updatedFields = currentStepField.map((field) => {
-        switch (field.name) {
-          case 'category':
-          case 'incident_type':
-            return { ...field, options: category };
-          // case 'program_type':
-          // case 'type':
-          //   return { ...field, options: programTypes };
-          case 'state':
-            return { ...field, options: countryStates };
-          case 'city':
-            return { ...field, options: cities || [] };
-          default:
-            return field;
-        }
-      });
-
-      // Update program fields
-      setProgramAllFields((prevFields) =>
-        prevFields.map((fields, i) =>
-          i === currentStep - 1 ? updatedFields : fields
-        )
-      );
-
-      // Set form values in edit mode
-      const isEditMode =
-        currentProgramDetail &&
-        Object.keys(currentProgramDetail).length &&
-        params.id;
-      if (isEditMode) {
-        updatedFields.forEach((field) => {
-          const fieldName = field.name;
-
+          // Handle special cases
           if (
-            fieldName === 'category' &&
+            currentField === 'category' &&
             currentProgramDetail.categories?.length
           ) {
-            setValue(fieldName, currentProgramDetail.categories[0]?.id);
+            currentFieldValue = currentProgramDetail.categories[0]?.id;
             fetchCategoryData(currentProgramDetail.categories[0]?.id);
-            if (fieldName === 'state' && currentProgramDetail?.state_details) {
-              setValue(fieldName, currentProgramDetail?.state_details?.id);
-            } else if (
-              fieldName === 'city' &&
-              currentProgramDetail?.city_details
-            ) {
-              setValue(fieldName, currentProgramDetail?.city_details?.id);
-            }
-
-            // } else if (fieldName === 'state' && currentProgramDetail.state) {
-            //   setValue(fieldName, currentProgramDetail.state);
-            // } else if (fieldName === 'city' && currentProgramDetail.city) {
-            //   setValue(fieldName, currentProgramDetail.city);
-          } else {
-            let value = currentProgramDetail[fieldName];
-
-            if (fieldName === 'start_date' || fieldName === 'end_date') {
-              value = new Date(value);
-            } else if (
-              [
-                'mentee_upload_certificates',
-                'group_chat_requirement',
-                'individual_chat_requirement',
-              ].includes(fieldName)
-            ) {
-              value = value ? 'true' : 'false';
-            } else if (fieldName === 'certificates') {
-              value = currentProgramDetail['certifications'];
-            } else if (fieldName === 'testimonial_type') {
-              value = currentProgramDetail['testimonial_types'];
-            } else if (fieldName === 'program_image') {
-              value = currentProgramDetail['program_image'];
-            }
-
-            setValue(fieldName, value);
           }
-        });
-      }
 
-      // Update form details
-      setFormDetails((prev) => ({
-        ...prev,
-        category,
-        certificate,
-        skills,
-        members,
-        goals: goals?.results,
-      }));
+          if (currentField === 'start_date' || currentField === 'end_date') {
+            currentFieldValue = new Date(currentProgramDetail[currentField]);
+          }
+
+          if (
+            [
+              'mentee_upload_certificates',
+              'group_chat_requirement',
+              'individual_chat_requirement',
+            ].includes(currentField)
+          ) {
+            currentFieldValue = currentProgramDetail[currentField]
+              ? 'true'
+              : 'false';
+          }
+
+          if (currentField === 'certificates') {
+            currentFieldValue = currentProgramDetail['certifications'];
+          }
+
+          if (currentField === 'testimonial_type') {
+            currentFieldValue = currentProgramDetail['testimonial_types'];
+          }
+
+          if (currentField === 'program_image') {
+            currentFieldValue = currentProgramDetail['program_image'];
+          }
+
+          if (currentField === 'state') {
+            currentFieldValue = currentProgramDetail?.state_details?.id;
+          }
+
+          if (currentField === 'city') {
+            currentFieldValue = currentProgramDetail?.city_details?.id;
+          }
+
+          // Set value in React Hook Form
+          setValue(currentField, currentFieldValue);
+
+          stepField[currentField] = currentFieldValue;
+        });
+        stepListData = { ...stepListData, [index]: stepField };
+        data = { ...data, ...stepField };
+      });
+
+      setStepData(data);
     }
   }, [
     currentStep,
-    toggleRole,
+    role,
     category?.length,
     // programTypes?.length,
     countryStates?.length,
@@ -1105,27 +967,163 @@ export default function CreatePrograms() {
     params.id,
   ]);
 
-  useEffect(() => {
-    if (params.id && currentProgramDetail) {
-      // console.log('print');
-      methods.reset({
-        ...currentProgramDetail,
-        state: currentProgramDetail?.state_details?.id,
-        city: currentProgramDetail?.city_details?.id,
-        start_date: new Date(currentProgramDetail.start_date),
-        end_date: new Date(currentProgramDetail.end_date),
-      });
-    }
-  }, [params.id, currentProgramDetail]);
+  // useEffect(() => {
+  //   if (currentStep === 1 || role !== '') {
+  //     const widthAdjustMentField1 = [
+  //       'max_mentor_count',
+  //       'max_mentee_count',
+  //       'group_chat_requirement',
+  //       'individual_chat_requirement',
+  //     ];
+  //     const widthAdjustMentField2 = ['auto_approval', 'venue'];
+  //     let currentStepField = ProgramFields[currentStep - 1];
 
-  useEffect(() => {
-    if (materials?.length > 0) {
-      setFormDetails((prev) => ({
-        ...prev,
-        materials: materials,
-      }));
-    }
-  }, [materials]);
+  //     // Filter fields based on role
+  //     if (toggleRole !== '') {
+  //       currentStepField = currentStepField.filter((curfields) =>
+  //         curfields.for?.includes(toggleRole)
+  //       );
+
+  //       if (toggleRole === 'admin') {
+  //         currentStepField = currentStepField.map((programfield) => {
+  //           if (widthAdjustMentField1.includes(programfield.name)) {
+  //             return {
+  //               ...programfield,
+  //               width: 'w-[24%]',
+  //             };
+  //           }
+  //           if (widthAdjustMentField2.includes(programfield.name)) {
+  //             return {
+  //               ...programfield,
+  //               width: 'w-[49%]',
+  //             };
+  //           }
+  //           return programfield;
+  //         });
+  //       }
+  //     }
+
+  //     // Update fields with dynamic options
+  //     const updatedFields = currentStepField.map((field) => {
+  //       switch (field.name) {
+  //         case 'category':
+  //         case 'incident_type':
+  //           return { ...field, options: category };
+  //         // case 'program_type':
+  //         // case 'type':
+  //         //   return { ...field, options: programTypes };
+  //         case 'state':
+  //           return { ...field, options: countryStates };
+  //         case 'city':
+  //           return { ...field, options: cities || [] };
+  //         default:
+  //           return field;
+  //       }
+  //     });
+
+  //     // Update program fields
+  //     setProgramAllFields((prevFields) =>
+  //       prevFields.map((fields, i) =>
+  //         i === currentStep - 1 ? updatedFields : fields
+  //       )
+  //     );
+
+  //     // Set form values in edit mode
+  //     const isEditMode =
+  //       currentProgramDetail &&
+  //       Object.keys(currentProgramDetail).length &&
+  //       params.id;
+  //     if (isEditMode) {
+  //       updatedFields.forEach((field) => {
+  //         const fieldName = field.name;
+
+  //         if (
+  //           fieldName === 'category' &&
+  //           currentProgramDetail.categories?.length
+  //         ) {
+  //           setValue(fieldName, currentProgramDetail.categories[0]?.id);
+  //           fetchCategoryData(currentProgramDetail.categories[0]?.id);
+  //           if (fieldName === 'state' && currentProgramDetail?.state_details) {
+  //             setValue(fieldName, currentProgramDetail?.state_details?.id);
+  //           } else if (
+  //             fieldName === 'city' &&
+  //             currentProgramDetail?.city_details
+  //           ) {
+  //             setValue(fieldName, currentProgramDetail?.city_details?.id);
+  //           }
+
+  //           // } else if (fieldName === 'state' && currentProgramDetail.state) {
+  //           //   setValue(fieldName, currentProgramDetail.state);
+  //           // } else if (fieldName === 'city' && currentProgramDetail.city) {
+  //           //   setValue(fieldName, currentProgramDetail.city);
+  //         } else {
+  //           let value = currentProgramDetail[fieldName];
+
+  //           if (fieldName === 'start_date' || fieldName === 'end_date') {
+  //             value = new Date(value);
+  //           } else if (
+  //             [
+  //               'mentee_upload_certificates',
+  //               'group_chat_requirement',
+  //               'individual_chat_requirement',
+  //             ].includes(fieldName)
+  //           ) {
+  //             value = value ? 'true' : 'false';
+  //           } else if (fieldName === 'certificates') {
+  //             value = currentProgramDetail['certifications'];
+  //           } else if (fieldName === 'testimonial_type') {
+  //             value = currentProgramDetail['testimonial_types'];
+  //           } else if (fieldName === 'program_image') {
+  //             value = currentProgramDetail['program_image'];
+  //           }
+
+  //           setValue(fieldName, value);
+  //         }
+  //       });
+  //     }
+
+  //     // Update form details
+  //     setFormDetails((prev) => ({
+  //       ...prev,
+  //       category,
+  //       certificate,
+  //       skills,
+  //       members,
+  //       goals: goals?.results,
+  //     }));
+  //   }
+  // }, [
+  //   currentStep,
+  //   toggleRole,
+  //   category?.length,
+  //   // programTypes?.length,
+  //   countryStates?.length,
+  //   cities?.length,
+  //   currentProgramDetail?.id,
+  //   params.id,
+  // ]);
+
+  // useEffect(() => {
+  //   if (params.id && currentProgramDetail) {
+  //     // console.log('print');
+  //     methods.reset({
+  //       ...currentProgramDetail,
+  //       state: currentProgramDetail?.state_details?.id,
+  //       city: currentProgramDetail?.city_details?.id,
+  //       start_date: new Date(currentProgramDetail.start_date),
+  //       end_date: new Date(currentProgramDetail.end_date),
+  //     });
+  //   }
+  // }, [params.id, currentProgramDetail]);
+
+  // useEffect(() => {
+  //   if (materials?.length > 0) {
+  //     setFormDetails((prev) => ({
+  //       ...prev,
+  //       materials: materials,
+  //     }));
+  //   }
+  // }, [materials]);
 
   const handleDraft = () => {
     setValue('status', 'draft');
