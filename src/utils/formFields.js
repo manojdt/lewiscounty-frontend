@@ -2065,7 +2065,7 @@ export const ProgramTestimonialsFields = [
   },
   {
     type: 'dropdown',
-    name: 'testimonial_type',
+    name: 'testimonial_types',
     label: 'Testimonials Type',
     placeholder: '',
     inputRules: {

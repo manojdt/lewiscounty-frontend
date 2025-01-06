@@ -396,6 +396,7 @@ const ProgramSteps = ({
                         {Array.isArray(goals) &&
                           goals?.slice(0, 6).map((goalId) => {
                             const goal = goalData?.find((g) => g.id === goalId);
+                            console.log('goal', goal);
                             return (
                               goal && (
                                 <p
