@@ -855,8 +855,8 @@ export const programMenus = (page = 'dashboard') => {
       count: 0,
       page: `${pipeUrl}${programFilterUrls.bookmark}`,
       for: ['mentor', 'mentee'],
-      mentorStatus: 'bookmarked',
-      menteeStatus: 'bookmark',
+      mentorStatus: 'is_bookmark',
+      menteeStatus: 'is_bookmark',
       status: programActionStatus.bookmark,
     },
     {
