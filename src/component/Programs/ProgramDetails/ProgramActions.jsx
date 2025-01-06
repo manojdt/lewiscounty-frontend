@@ -368,7 +368,7 @@ const ProgramActions = ({
       programdetails?.status !== "started" && // Exclude "started" status
       (programdetails?.status === "yettoapprove" ||
         (programdetails?.status === "inprogress" && 
-          programdetails?.request_data?.status !== "approved" && 
+          programdetails?.request_data?.status&& programdetails?.request_data?.status !== "approved" && 
           programdetails?.request_data?.status !== "rejected") || // Explicit check for "inprogress"
         (programdetails?.request_data?.request_type === "program_reschedule" &&
           programdetails?.request_data?.status === "new") ||
