@@ -255,7 +255,9 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                                                                         display: "inline-block",
                                                                     }}
                                                                 >
-                                                                    <img src={NoProgramImageBg} alt="Background" />
+                                                                    <img src={NoProgramImageBg} alt="Background"
+                                                                    //   onMouseEnter={() => setHoverIndex({ ...hoverIndex, image: index })} onMouseLeave={() => setHoverIndex({ ...hoverIndex, image: null })} 
+                                                                      />
                                                                     <div
                                                                         style={{
                                                                             position: "absolute",
