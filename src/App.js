@@ -91,6 +91,7 @@ import TicketHistory from './component/Help/TicketHistory';
 import TicketCreation from './component/Help/TicketCreation';
 import Tickets from './component/SuperAdmin/tickets/Tickets';
 import PaymentSuccessfull from './shared/paymentButton/payment-successfull';
+import BgVerify from './component/BackgroundVerification/BgVerify';
 
 function App() {
   const PrivateRoute = () => {
@@ -144,6 +145,7 @@ function App() {
             <Route path='/super-members/add' element={<AddSuperMember />} />
             <Route path='/my-profile-admin' element={<Profile />} />
             <Route path='/help-admin' element={<HelpPage />} />
+            <Route path="/bgVerify" element={<BgVerify />} />
           </Route>
 
           <Route path='/login-type' element={<LoginType />} />
