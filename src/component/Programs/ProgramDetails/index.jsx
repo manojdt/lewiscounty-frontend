@@ -72,6 +72,7 @@ import { toast } from 'react-toastify';
 import SkillsSet from '../../SkillsSet';
 import { CancelPopup } from '../../Mentor/Task/cancelPopup';
 import SuccessGradientMessage from '../../success-gradient-message';
+import ProgramReasons from './ProgramReasons';
 
 export default function ProgramDetails({ setProgramDetailsId }) {
   const dateInfo = todatDateInfo();
@@ -2150,12 +2151,17 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   </div>
                 </div>
               </div>
-
+              <ProgramReasons
+  programdetails={programdetails}
+  role={role}
+  requestId={requestId}
+  programActionStatus={programActionStatus}
+/>
+{/* <div>/............................................................................../ </div>
               {(programdetails?.request_data?.request_type ===
                 'program_reschedule' ||
                 programdetails?.request_data?.request_type ===
-                  'program_cancel'||programdetails?.request_data?.request_type ===
-                  'program_new') &&
+                  'program_cancel') &&
                 ['new', 'pending', 'approved', 'rejected'].includes(
                   programdetails?.request_data?.status
                 ) &&
@@ -2235,7 +2241,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     {programdetails?.reschedule_reason?.reason}
                   </div>
                 </div>
-              ) : null}
+              ) : null} */}
               {'sub_program' in programdetails &&
                 programdetails?.sub_program?.length > 0 && (
                   <SubprogramsDataGrid data={programdetails?.sub_program} />

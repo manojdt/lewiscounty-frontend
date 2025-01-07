@@ -387,6 +387,7 @@ export default function CertificateMenteeList() {
               Approved
             </button>
           ) : state?.status === "rejected" ? (
+            <div className="pr-2">
             <button
               className="py-3 px-16 text-white text-[14px] flex items-center"
               style={{
@@ -398,6 +399,7 @@ export default function CertificateMenteeList() {
             >
               Rejected
             </button>
+            </div>
           ) : null}
           {role !== "admin" && state?.status !== "Wating_for_response" && (
             <Button
