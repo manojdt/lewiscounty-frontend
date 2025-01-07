@@ -991,13 +991,13 @@ export const myRequestOverview = [
     status: RequestStatus.programRequest.key,
     for: ['admin', 'mentor', 'mentee'],
   },
-  {
-    name: 'Resource Access Requests',
-    key: RequestStatus.resourceAccessRequest,
-    count: 0,
-    status: RequestStatus.resourceAccessRequest.key,
-    for: ['admin', 'mentor'],
-  },
+  // {
+  //   name: 'Resource Access Requests',
+  //   key: RequestStatus.resourceAccessRequest,
+  //   count: 0,
+  //   status: RequestStatus.resourceAccessRequest.key,
+  //   for: ['admin', 'mentor'],
+  // },
   {
     name: 'New Goals Requests',
     key: RequestStatus.newGoalsRequests.key,
