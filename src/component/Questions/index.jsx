@@ -233,7 +233,7 @@ export const Questions = () => {
     const phoneNumber = combinedData['phone_number'];
 
     if (phoneField && phoneNumber) {
-      const phoneRegex = /^[0-9]{10}$/;
+      const phoneRegex = /^\+[1-9]\d{1,14}$/;
       if (!phoneRegex.test(phoneNumber)) {
         errorMessages.push({
           name: 'phone_number',

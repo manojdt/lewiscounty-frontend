@@ -43,14 +43,15 @@ export const PersonalInformationFields = [
   {
     type: 'input',
     name: 'phone_number',
-    fieldtype: 'number',
+    // fieldtype: 'number',
     label: 'Primary Contact Number',
     placeholder: 'Enter Primary Contact Number',
     inputRules: {
       required: 'This field is required',
       pattern: {
-        value: /^[0-9]{10}$/,
-        message: 'Enter valid phone number',
+        value: /^\+[1-9]\d{1,14}$/,
+        message:
+          'Must start with a plus sign Followed by 1 to 14 digits and no spaces in-between',
       },
     },
     size: true,
@@ -490,14 +491,15 @@ export const MenteePersonalInformationFields = [
   {
     type: 'input',
     name: 'phone_number',
-    fieldtype: 'number',
+    // fieldtype: 'number',
     label: 'Primary Contact Number',
     placeholder: 'Enter Primary Contact Number',
     inputRules: {
       required: 'This field is required',
       pattern: {
-        value: /^[0-9]{10}$/,
-        message: 'Enter valid phone number',
+        value: /^\+[1-9]\d{1,14}$/,
+        message:
+          'Must start with a plus sign Followed by 1 to 14 digits and no spaces in-between',
       },
     },
     size: true,
