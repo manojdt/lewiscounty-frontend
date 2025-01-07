@@ -59,14 +59,15 @@ export const PersonalInformationFields = [
   {
     type: 'input',
     name: 'secondary_phone_number',
-    fieldtype: 'number',
+    // fieldtype: 'number',
     label: 'Secondary Contact Number',
     placeholder: 'Enter Secondary Number',
     inputRules: {
       // required: "This field is required",
       pattern: {
-        value: /^[0-9]{10}$/,
-        message: 'Enter valid phone number',
+        value: /^\+[1-9]\d{1,14}$/,
+        message:
+          'Must start with a plus sign Followed by 1 to 14 digits and no spaces in-between',
       },
     },
     size: true,
@@ -508,13 +509,14 @@ export const MenteePersonalInformationFields = [
   {
     type: 'input',
     name: 'secondary_phone_number',
-    fieldtype: 'number',
+    // fieldtype: 'number',
     label: 'Secondary Contact Number',
     placeholder: 'Enter Secondary Contact Number',
     inputRules: {
       pattern: {
-        value: /^[0-9]{10}$/,
-        message: 'Enter valid phone number',
+        value: /^\+[1-9]\d{1,14}$/,
+        message:
+          'Must start with a plus sign Followed by 1 to 14 digits and no spaces in-between',
       },
     },
     size: true,
@@ -2417,11 +2419,16 @@ export const EditProfileFields = [
   {
     type: 'input',
     name: 'phone_number',
-    fieldtype: 'number',
+    // fieldtype: 'number',
     label: 'Phone Number',
     placeholder: 'Enter Phone Number',
     inputRules: {
       required: 'This field is required',
+      pattern: {
+        value: /^\+[1-9]\d{1,14}$/,
+        message:
+          'Must start with a plus sign Followed by 1 to 14 digits and no spaces in-between',
+      },
     },
     width: 'width-49',
   },
