@@ -11,7 +11,8 @@ const ProgramReasons = ({
   const getRequestTypeHeading = (requestType) => {
     const headings = {
       'program_reschedule': 'Reschedule Reason',
-      'program_cancel': 'Program Cancellation Reason',
+      'program_cancel': 'Cancelled Reason',
+    //   'program_join': 'Cancelled Reason',
       'program_new': 'New Program Request'
     };
     return headings[requestType] || requestType?.replace('_', ' ')?.toUpperCase();
@@ -130,7 +131,7 @@ const ProgramReasons = ({
   };
 
   const renderMenteeView = () => {
-    const validRequestTypes = ['program_reschedule', 'program_cancel', 'program_new'];
+    const validRequestTypes = ['program_reschedule', 'program_cancel','program_join', 'program_new'];
     
     if (role !== 'mentee' || !requestId) return null;
 
