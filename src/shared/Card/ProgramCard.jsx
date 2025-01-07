@@ -256,7 +256,7 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                                                                     }}
                                                                 >
                                                                     <img src={NoProgramImageBg} alt="Background"
-                                                                    //   onMouseEnter={() => setHoverIndex({ ...hoverIndex, image: index })} onMouseLeave={() => setHoverIndex({ ...hoverIndex, image: null })} 
+                                                                      onMouseEnter={() => setHoverIndex({ ...hoverIndex, image: index })} onMouseLeave={() => setHoverIndex({ ...hoverIndex, image: null })} 
                                                                       />
                                                                     <div
                                                                         style={{
@@ -274,7 +274,7 @@ export default function ProgramCard({ title, viewpage, handleNavigateDetails, ha
                                                                 </div>
                                                         }
                                                         {
-                                                            (currentProgram.program_edit && !programImageRestirct.includes(currentProgram.status)) &&
+                                                            (!currentProgram?.admin_assign_program&&currentProgram.program_edit && !programImageRestirct.includes(currentProgram.status)) &&
 
                                                             <div className={`absolute top-2 left-3 cursor-pointer  ${hoverIndex.image === index ? 'show' : 'hidden'}`} style={{ background: '#fff', borderRadius: '50%', padding: '13px 15px' }}
                                                                 onClick={() => handleProgramImageUpdate(currentProgram)} onMouseEnter={() => setHoverIndex({ ...hoverIndex, image: index })} onMouseLeave={() => setHoverIndex({ ...hoverIndex, image: null })}
