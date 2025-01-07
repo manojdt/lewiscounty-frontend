@@ -45,6 +45,7 @@ export default function CreatePostModal({
         'image/heic',
       ].includes(filer.type)
     );
+
     const showNames = validFiles.map((file) => file);
     setImageView(showNames);
 
@@ -147,7 +148,7 @@ export default function CreatePostModal({
                 <img
                   src={DeleteIcon}
                   className='w-6 h-6 cursor-pointer'
-                  onClick={() => handleImagesDelete('image', index)}
+                  onClick={() => handleImagesDelete('uploaded_files', index)}
                 />
               </div>
             ))}
@@ -163,10 +164,12 @@ export default function CreatePostModal({
                 onClick={handleImageClick}
               />
               <input
-                {...register('image')}
+                {...register('uploaded_files')}
                 ref={imageInputRef}
                 multiple
-                onChange={(e) => handleImageChange('image', e.target.files)}
+                onChange={(e) =>
+                  handleImageChange('uploaded_files', e.target.files)
+                }
                 type='file'
                 className='hidden'
               />

@@ -14,6 +14,7 @@ import {
   programActionStatus,
   programCompleted,
   requestStatus,
+  user,
 } from '../../../utils/constant';
 import {
   getMenteeJoinedInProgram,
@@ -89,7 +90,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   const program_create_type = searchParams.get('program_create_type') || '';
   const userdetails = useSelector((state) => state.userInfo);
   const role = userdetails.data.role || '';
-  const reqRole=requestId&&userdetails.data.role==="admin"
+  const reqRole = requestId && userdetails.data.role === 'admin';
 
   console.log(userdetails);
 
@@ -110,7 +111,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     bool: false,
     activity: false,
   });
-    
+
   const dispatch = useDispatch();
 
   const [
@@ -715,6 +716,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       }, 3000);
     }
   }, [isAccepted, programdetails?.id]);
+
+  console.log('programdetails', programdetails);
 
   const handleNewTaskFromAdmin = (data) => {
     const constructedData = {
@@ -1616,78 +1619,85 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                           />
                           Share
                         </MenuItem>
-                        {!requestStatusParams &&
-                          ![
-                            'yettoapprove',
-                            'cancelled',
-                            'new_program_request_rejected',
-                            'completed',
-                          ].includes(programdetails?.status) &&!reqRole&&
-                          // role !== 'admin' && (
-                            <MenuItem
-                              onClick={() => handleMenu('reschedule')}
-                              className='!text-[12px]'
-                            >
-                              <img
-                                src={RescheduleIcon}
-                                alt='RescheduleIcon'
-                                className='pr-3 w-[25px]'
-                              />
-                              Reschedule
-                            </MenuItem>
+                        {
+                          !requestStatusParams &&
+                            ![
+                              'yettoapprove',
+                              'cancelled',
+                              'new_program_request_rejected',
+                              'completed',
+                            ].includes(programdetails?.status) &&
+                            !reqRole && (
+                              // role !== 'admin' && (
+                              <MenuItem
+                                onClick={() => handleMenu('reschedule')}
+                                className='!text-[12px]'
+                              >
+                                <img
+                                  src={RescheduleIcon}
+                                  alt='RescheduleIcon'
+                                  className='pr-3 w-[25px]'
+                                />
+                                Reschedule
+                              </MenuItem>
+                            )
                           // )
-                          }
+                        }
 
-                        {!requestStatusParams &&
-                          ![
-                            'yettoapprove',
-                            'cancelled',
-                            'new_program_request_rejected',
-                            'completed',
-                          ].includes(programdetails?.status)&&!reqRole &&
-                          // role !== 'admin' && (
-                            <MenuItem
-                              onClick={() => handleMenu('cancel')}
-                              className='!text-[12px]'
-                            >
-                              <img
-                                src={AbortIcon}
-                                alt='Cancel'
-                                className='pr-3 w-[25px]'
-                              />
-                              Cancel
-                            </MenuItem>
+                        {
+                          !requestStatusParams &&
+                            ![
+                              'yettoapprove',
+                              'cancelled',
+                              'new_program_request_rejected',
+                              'completed',
+                            ].includes(programdetails?.status) &&
+                            !reqRole && (
+                              // role !== 'admin' && (
+                              <MenuItem
+                                onClick={() => handleMenu('cancel')}
+                                className='!text-[12px]'
+                              >
+                                <img
+                                  src={AbortIcon}
+                                  alt='Cancel'
+                                  className='pr-3 w-[25px]'
+                                />
+                                Cancel
+                              </MenuItem>
+                            )
                           // )
-                          }
+                        }
                         {(programdetails.status ===
                           programActionStatus.inprogress ||
                           programdetails.status ===
-                            programActionStatus.assigned)&&!reqRole && (
-                          <>
-                            <MenuItem
-                              onClick={() => handleOpenConfirmPopup()}
-                              className='!text-[12px]'
-                            >
-                              <img
-                                src={CompleteIcon}
-                                alt='AbortIcon'
-                                className='pr-3 w-[25px]'
-                              />
-                              Complete
-                            </MenuItem>
-                            <MenuItem
-                              onClick={() => handleNewTaskFromAdmin()}
-                              className='!text-[12px]'
-                            >
-                              <img
-                                src={PlusCircle}
-                                alt='PlusCircle'
-                                className='pr-3 w-[25px]'
-                              />
-                              Assign Task to Mentees
-                            </MenuItem>
-                          </>
-                        )}
+                            programActionStatus.assigned) &&
+                          !reqRole && (
+                            <>
+                              <MenuItem
+                                onClick={() => handleOpenConfirmPopup()}
+                                className='!text-[12px]'
+                              >
+                                <img
+                                  src={CompleteIcon}
+                                  alt='AbortIcon'
+                                  className='pr-3 w-[25px]'
+                                />
+                                Complete
+                              </MenuItem>
+                              <MenuItem
+                                onClick={() => handleNewTaskFromAdmin()}
+                                className='!text-[12px]'
+                              >
+                                <img
+                                  src={PlusCircle}
+                                  alt='PlusCircle'
+                                  className='pr-3 w-[25px]'
+                                />
+                                Assign Task to Mentees
+                              </MenuItem>
+                            </>
+                          )}
                       </>
                     )}
                     {role === 'mentee' && (
@@ -1961,7 +1971,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     handleAcceptCancelProgramRequest={
                       handleAcceptCancelProgramRequest
                     }
-                    type={searchParams.get("type")}
+                    type={searchParams.get('type')}
                     setCancelPopup={setCancelPopup}
                     reqStatusColor={reqStatusColor}
                     reqStatus={reqStatus}
@@ -2086,7 +2096,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                         <span>Schedule</span>
                         <span>Flexible schedule</span>
                       </li>
-                      {(role === 'mentor' || role === 'admin')  && (
+                      {(role === 'mentor' || role === 'admin') && (
                         <li
                           className='flex justify-between text-[12px]'
                           style={{ paddingTop: '14px' }}
@@ -2103,6 +2113,25 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                           </span>
                         </li>
                       )}
+
+                      {role === user.mentee && (
+                        <li
+                          className='flex justify-between text-[12px]'
+                          style={{ paddingTop: '14px' }}
+                        >
+                          {' '}
+                          <span>Fees</span>
+                          <span
+                            className='cursor-pointer'
+                            // onClick={() =>
+                            //   handleViewJoinedMentees(programdetails)
+                            // }
+                          >
+                            $ {programdetails.enrollment_fees}
+                          </span>
+                        </li>
+                      )}
+
                       {/* <li
                         className='flex justify-between text-[12px]'
                         style={{ paddingBottom: '10px', paddingTop: '14px' }}
@@ -2131,22 +2160,22 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                         )}
                       </li> */}
                     </ul>
-                    {role==="mentee"&&
-                    <div className='text-end mt-3'>
-                      <Button
-                        btnType='button'
-                        btnCls='w-[120px]'
-                        btnName={'Checkout'}
-                        btnCategory='primary'
-                        onClick={() => {
-                          if (programdetails?.id) {
-                            setProgramDetailsId(programdetails?.id);
-                            navigate('/payment-checkout');
-                          }
-                        }}
-                      />
-                    </div>
-}
+                    {role === 'mentee' && (
+                      <div className='text-end mt-3'>
+                        <Button
+                          btnType='button'
+                          btnCls='w-[120px]'
+                          btnName={'Pay'}
+                          btnCategory='primary'
+                          onClick={() => {
+                            if (programdetails?.id) {
+                              setProgramDetailsId(programdetails?.id);
+                              navigate('/payment-checkout');
+                            }
+                          }}
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -2154,8 +2183,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
               {(programdetails?.request_data?.request_type ===
                 'program_reschedule' ||
                 programdetails?.request_data?.request_type ===
-                  'program_cancel'||programdetails?.request_data?.request_type ===
-                  'program_new') &&
+                  'program_cancel' ||
+                programdetails?.request_data?.request_type === 'program_new') &&
                 ['new', 'pending', 'approved', 'rejected'].includes(
                   programdetails?.request_data?.status
                 ) &&
