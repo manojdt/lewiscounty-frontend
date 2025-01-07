@@ -101,7 +101,9 @@ export default function Layout({ subheader }) {
       ),
       command: () => navigate('/feeds'),
     },
-    {
+  ];
+  if(role === 'admin'){
+    moreitems.push({
       label: (
         <div className='flex gap-4 items-center'>
           <img src={ReportIcon} alt='FeedIcon' />
@@ -109,8 +111,8 @@ export default function Layout({ subheader }) {
         </div>
       ),
       command: () => navigate('/bgVerify'),
-    },
-  ];
+    })
+  }
 
   if (role !== 'mentee') {
     moreitems.unshift({
