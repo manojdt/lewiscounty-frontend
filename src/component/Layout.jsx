@@ -101,6 +101,15 @@ export default function Layout({ subheader }) {
       ),
       command: () => navigate('/feeds'),
     },
+    {
+      label: (
+        <div className='flex gap-4 items-center'>
+          <img src={ReportIcon} alt='FeedIcon' />
+          <p>BG Verification</p>
+        </div>
+      ),
+      command: () => navigate('/bgVerify'),
+    },
   ];
 
   if (role !== 'mentee') {
