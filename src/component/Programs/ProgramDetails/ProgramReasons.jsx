@@ -11,7 +11,7 @@ const ProgramReasons = ({
   const getRequestTypeHeading = (requestType) => {
     const headings = {
       'program_reschedule': 'Reschedule Reason',
-      'program_cancel': 'Cancelled Reason',
+      'program_cancel': 'Cancel Reason',
     //   'program_join': 'Cancelled Reason',
       'program_new': 'New Program Request'
     };

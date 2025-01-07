@@ -100,6 +100,9 @@ const StepComponenRender = ({
     }
     reset(f);
   }, [stepFields, stepData]);
+  useEffect(() => {
+   console.log(errors)
+  }, [errors]);
 
   return (
     <>
