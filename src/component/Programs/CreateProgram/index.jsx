@@ -86,6 +86,7 @@ export default function CreatePrograms() {
     reset,
     setValue,
     watch,
+    unregister,
     formState: { errors },
   } = methods;
   // const state = watch('state');
@@ -1146,8 +1147,39 @@ export default function CreatePrograms() {
     setValue('status', 'draft');
     document.getElementById('program-submit').click();
   };
+
+  useEffect(() => {
+    const isAddressField = [
+      'address_line1',
+      'address_line2',
+      'state',
+      'city',
+      'zip_code',
+    ];
+
+    if (formValues?.program_mode !== 'physical_location') {
+      isAddressField.forEach((field) => unregister(field));
+    }
+  }, [formValues?.program_mode, unregister]);
+
   const onSubmit = (data) => {
     // setStepWiseData(combinedData);
+
+    // if (formValues.program_mode !== 'physical_location') {
+    //   const filteredData = Object.fromEntries(
+    //     Object.entries(data).filter(
+    //       ([key]) =>
+    //         ![
+    //           'address_line1',
+    //           'address_line2',
+    //           'state',
+    //           'city',
+    //           'zip_code',
+    //         ].includes(key)
+    //     )
+    //   );
+    //   console.log('Filtered Data:', filteredData);
+    // }
     setStepWiseData((prevStData) => {
       const newStepData = {
         ...prevStData,

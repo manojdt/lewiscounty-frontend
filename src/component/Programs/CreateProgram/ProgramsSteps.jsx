@@ -92,6 +92,7 @@ const ProgramSteps = ({
     start_date,
     end_date,
     goals,
+    program_mode,
   ] = watch([
     'no_of_subprograms',
     'is_sponsored',
@@ -99,6 +100,7 @@ const ProgramSteps = ({
     'start_date',
     'end_date',
     'goals',
+    'program_mode',
   ]);
 
   // console.log('stepFields', stepFields);
@@ -220,6 +222,22 @@ const ProgramSteps = ({
     <div>
       <div className='flex flex-wrap gap-4'>
         {stepFields.map((field, index) => {
+          const isAddressField =
+            field.name === 'address_line1' ||
+            field.name === 'address_line2' ||
+            field.name === 'state' ||
+            field.name === 'city' ||
+            field.name === 'zip_code';
+
+          if (isAddressField && program_mode !== 'physical_location') {
+            return null;
+          }
+
+          // const validationRules =
+          //   program_mode !== 'physical_location' && isAddressField
+          //     ? {}
+          //     : field.inputRules;
+
           const dateField =
             field.type === 'date'
               ? register(field.name, field.inputRules)
@@ -241,6 +259,7 @@ const ProgramSteps = ({
           if (field.name === 'image' && is_sponsored === false) {
             return null;
           }
+
           const disableFields =
             params?.id && field.name === 'program_name' && role === 'mentor';
 
