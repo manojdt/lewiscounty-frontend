@@ -11,7 +11,6 @@ import MaleIcon from '../../assets/images/male-profile1x.png';
 import FemaleIcon from '../../assets/images/female-profile1x.png';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
-import { Button } from '../../shared';
 import SettingsModal from './SettingsModal';
 import CreatePostModal from './CreatePostModal';
 import { useDispatch, useSelector } from 'react-redux';
@@ -21,13 +20,13 @@ import { feedStatus } from '../../utils/constant';
 import { Icon } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
+import { Button } from '../../shared';
 
 export default function Feeds() {
   const [currentPage, setCurrentPage] = useState(1);
   const [previousPage, setPreviousPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(null)
-  const [pageSize, setPageSize] = useState(null)
-
+  const [totalPages, setTotalPages] = useState(null);
+  const [pageSize, setPageSize] = useState(null);
 
   const defaultState = {
     create: false,
@@ -56,8 +55,7 @@ export default function Feeds() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { feeds, loading, status } = useSelector((state) => state.feeds);
-  
-  console.log(feeds);
+
   const {
     register,
     formState: { errors },
@@ -67,27 +65,22 @@ export default function Feeds() {
     getValues,
   } = useForm();
 
-useEffect(()=>{
-  if(feeds){
-    setCurrentPage((prevState)=>feeds.current_page)
-    setPreviousPage((prevState)=>feeds.previous)
-    setTotalPages((prevState)=>feeds.count)
-    setPageSize((prevState)=>feeds.page_size)
-  }
-},[feeds])
+  useEffect(() => {
+    if (feeds) {
+      setCurrentPage((prevState) => feeds.current_page);
+      setPreviousPage((prevState) => feeds.previous);
+      setTotalPages((prevState) => feeds.count);
+      setPageSize((prevState) => feeds.page_size);
+    }
+  }, [feeds]);
 
-
-useEffect(()=>{
-  let feedData = {
-    'page' : currentPage,
-    'pageSize': pageSize
-  }
-  dispatch(getPost(feedData))
-
-},[currentPage, pageSize])
-
-
-
+  useEffect(() => {
+    let feedData = {
+      page: currentPage,
+      pageSize: pageSize,
+    };
+    dispatch(getPost(feedData));
+  }, [currentPage, pageSize]);
 
   // // console.log("---feeds---", feeds)
   // const feedList = [
@@ -159,16 +152,17 @@ useEffect(()=>{
   // console.log(formData);
 
   const onSubmit = (data) => {
-    console.log("POST---DATA", data)
     const formDatas = new FormData();
 
-    if (data.image) {
-      if (Array.isArray(data.image)) {
-        data.image.forEach((file, index) => {
-          formDatas.append('image', file);
+    console.log('data', data);
+
+    if (data?.uploaded_files) {
+      if (Array.isArray(data.uploaded_files)) {
+        data.uploaded_files.forEach((file, index) => {
+          formDatas.append('uploaded_files', file);
         });
       } else {
-        formDatas.append('image', data.image);
+        formDatas.append('uploaded_files', data.uploaded_files[0]);
       }
     }
 
@@ -179,39 +173,27 @@ useEffect(()=>{
     formDatas.append('visibility', formData.visibility);
     formDatas.append('is_published', formData.is_published);
 
-    // console.log(formDatas);
+    console.log('formData', formDatas);
+
+    console.log(formDatas);
     dispatch(createPost(formDatas));
   };
-  console.log("FEEDSSSS", feeds)
 
   const handlePrevious = () => {
     setCurrentPage((prevPage) => (prevPage > 1 ? prevPage - 1 : prevPage));
   };
 
   const handleNext = () => {
-
-    setCurrentPage((prevPage) => (prevPage < totalPages ? prevPage + 1 : prevPage));
+    setCurrentPage((prevPage) =>
+      prevPage < totalPages ? prevPage + 1 : prevPage
+    );
   };
 
+  // const renderPagination = () => {
+  //   return (
 
-  const renderPagination = () => {
-    return (
-      <div style={{}} >
-        <Tooltip title="Previous">
-      <IconButton onClick={handlePrevious}  disabled={currentPage === 1} color="primary">
-        <ArrowLeftIcon />
-      </IconButton>
-    </Tooltip>
-    <Tooltip title="Next">
-      <IconButton onClick={handleNext}  disabled={currentPage === totalPages} color="primary">
-        <ArrowRightIcon />
-      </IconButton>
-    </Tooltip>
-          
-      </div>
-    )
-  }
-
+  //   );
+  // };
 
   return (
     <div className='feed-container px-9 py-9'>
@@ -296,52 +278,76 @@ useEffect(()=>{
         )}
         <div className='feeds-list'>
           <div className='grid grid-cols-3 gap-7'>
-            {feeds && feeds.results && feeds.results.length > 0 && feeds.results.map((feed, index) => {
-              let imageUrl = feed?.image_url || '';
+            {feeds &&
+              feeds.results &&
+              feeds.results.length > 0 &&
+              feeds.results.map((feed, index) => {
+                let imageUrl = feed?.image_url || '';
 
-              if (imageUrl === '') {
-                imageUrl = feed.gender === 'male' ? MaleIcon : FemaleIcon;
-              }
+                if (imageUrl === '') {
+                  imageUrl = feed.gender === 'male' ? MaleIcon : FemaleIcon;
+                }
 
-              return (
-                <div
-                  className='feed-card cursor-pointer'
-                  key={index}
-                  onClick={() => navigate(`/feed-details/${feed.id}`)}
-                >
-                  <img className='feed-image' src={FeedImage} alt='FeedImage' />
-                  <div className='feed-content flex justify-between pt-5'>
-                    <div className='flex gap-4 items-center'>
-                      <img
-                        className='user-image'
-                        src={imageUrl}
-                        alt='UserIcon'
-                      />
-                      <div>
-                        <p className='text-[14px]'>{feed.content}</p>
-                        <p className='text-[12px]'>
-                          {feed.post_view_count} {' . '}{' '}
-                          {feed.time_since_action}
-                        </p>
-                      </div>
-                    </div>
+                return (
+                  <div
+                    className='feed-card cursor-pointer'
+                    key={index}
+                    onClick={() => navigate(`/feed-details/${feed.id}`)}
+                  >
                     <img
-                      src={MoreIcon}
-                      className='cursor-pointer'
-                      alt='MoreIcon'
+                      className='feed-image'
+                      src={
+                        (feed?.media_files?.length > 0 &&
+                          feed.media_files[0].media_files) ||
+                        FeedImage
+                      }
+                      alt='FeedImage'
                     />
+                    <div className='feed-content flex justify-between pt-5'>
+                      <div className='flex gap-4 items-center'>
+                        <img
+                          className='user-image'
+                          src={imageUrl}
+                          alt='UserIcon'
+                        />
+                        <div>
+                          <p className='text-[14px]'>{feed.title}</p>
+                          <p className='text-[12px]'>
+                            {feed.post_view_count} {' . '}{' '}
+                            {feed.time_since_action}
+                          </p>
+                        </div>
+                      </div>
+                      <img
+                        src={MoreIcon}
+                        className='cursor-pointer'
+                        alt='MoreIcon'
+                      />
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
           </div>
         </div>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: 50 }}>
-        {renderPagination()}
-
+        <div className='flex items-center justify-end mt-12'>
+          <div className='flex items-center gap-4'>
+            <button
+              onClick={handlePrevious}
+              disabled={currentPage === 1}
+              className='py-3 px-6  border border-blue-500 rounded-lg text-blue-500 disabled:border-gray-400 disabled:text-gray-400'
+            >
+              Previous
+            </button>
+            <button
+              onClick={handleNext}
+              disabled={currentPage === totalPages}
+              className='py-3 px-6  border border-blue-500 rounded-lg text-blue-500 disabled:border-gray-400 disabled:text-gray-400'
+            >
+              Next
+            </button>
+          </div>
         </div>
       </div>
-      
     </div>
   );
 }
