@@ -1848,6 +1848,27 @@ export const ProgramInformationFields = [
     for: ['mentor'],
   },
   {
+    type: 'dropdown',
+    name: 'program_mode',
+    label: 'Program Mode',
+    placeholder: 'Select',
+    inputRules: {
+      required: 'This field is required',
+    },
+    options: [
+      {
+        key: 'physical_location',
+        value: 'Physical Loction',
+      },
+      {
+        key: 'virtual_meeting',
+        value: 'Virtual Meeting',
+      },
+    ],
+    width: 'w-full',
+    for: ['mentor', 'admin'],
+  },
+  {
     type: 'input',
     name: 'address_line1',
     label: 'Address 1',
