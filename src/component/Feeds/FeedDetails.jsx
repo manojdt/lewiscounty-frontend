@@ -139,7 +139,7 @@ export default function FeedDetails() {
               <div className='grid grid-cols-6 gap-7'>
                 <div className='col-span-4'>
                   <div className='feed-info'>
-                    {feedDetails?.media_files?.length > 0 ? (
+                    {feedDetails?.related_request?.html_content_link ? (
                       <a
                         href={feedDetails?.related_request?.html_content_link}
                         target='_blank'
@@ -153,7 +153,7 @@ export default function FeedDetails() {
                     ) : (
                       <img
                       className='feed-detail-image'
-                      src={feedDetails.media_files[0].media_files}
+                      src={feedDetails?.media_files?.[0]?.media_files ?? FeedImage}
                       alt='FeedImage'
                       />
                     )}
