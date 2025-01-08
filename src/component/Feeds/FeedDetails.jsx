@@ -56,12 +56,9 @@ export default function FeedDetails() {
     );
   };
 
-  const handleCommentLike = (commentId) => {
-    dispatch(
-      postCommentLike({
-        comment_id: commentId,
-      })
-    );
+  const handleCommentLike = (type, id) => {
+    const payload = type === 'post' ? { post_id: id } : { comment_id: id };
+    dispatch(postCommentLike(payload));
   };
 
   const handleReply = (commendId) => {
@@ -102,6 +99,8 @@ export default function FeedDetails() {
       dispatch(getPostDetails(params.id));
     }
   }, [status]);
+
+  console.log(feedDetails);
 
   return (
     <>
@@ -158,7 +157,12 @@ export default function FeedDetails() {
                       />
                     )}
                     <div className='feed-action-info'>
-                      <div className='list-item'>
+                      <div
+                        className='list-item'
+                        onClick={() =>
+                          handleCommentLike('post', feedDetails.id)
+                        }
+                      >
                         <img src={LikeBlackIcon} alt='LikeBlackIcon' />
                         <p>
                           Like{' '}
@@ -279,7 +283,10 @@ export default function FeedDetails() {
                                   <div
                                     className='count-content cursor-pointer'
                                     onClick={() =>
-                                      handleCommentLike(postComment.id)
+                                      handleCommentLike(
+                                        'comment',
+                                        postComment.id
+                                      )
                                     }
                                   >
                                     <img src={LikeIcon} alt='likeicon' />
@@ -407,7 +414,10 @@ export default function FeedDetails() {
                                             <div
                                               className='count-content cursor-pointer'
                                               onClick={() =>
-                                                handleCommentLike(replyData.id)
+                                                handleCommentLike(
+                                                  'comment',
+                                                  replyData.id
+                                                )
                                               }
                                             >
                                               <img
