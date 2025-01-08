@@ -278,7 +278,7 @@ export default function AllRequest() {
       value: 'approved',
     },
     {
-      label: 'Rejected',
+      label: selectedRequestedtype === "report_request" ? "Reviewed" : 'Rejected',
       value: 'rejected',
     },
   ];
@@ -1243,7 +1243,7 @@ export default function AllRequest() {
                   fontSize: '12px',
                 }}
               >
-                {requestStatusText[params.row.status] || ''}
+                {params.row.status === "rejected" ? "Reviewed" : requestStatusText[params.row.status] || ''}
               </span>
             </div>
           </>
@@ -1309,7 +1309,7 @@ export default function AllRequest() {
                           alt='CancelIcon'
                           className='pr-3 w-[27px]'
                         />
-                        Reject
+                        Review
                       </MenuItem>
                     </>
                   )}
@@ -2646,7 +2646,7 @@ export default function AllRequest() {
                   className='text-[18px]'
                   style={{ color: 'rgba(0, 0, 0, 1)' }}
                 >
-                  {role === 'admin' ? 'Reject Request Reason' : 'Cancel Reason'}
+                  {role === 'admin' ? selectedRequestedtype === "report_request" ? "Review Reason" : 'Reject Request Reason' : 'Cancel Reason'}
                 </p>
                 <img
                   className='cursor-pointer'
@@ -2666,7 +2666,7 @@ export default function AllRequest() {
                 <form onSubmit={handleSubmit(handleCancelReasonPopupSubmit)}>
                   <div className='relative pb-8'>
                     <label className='block tracking-wide text-gray-700 text-xs font-bold mb-2'>
-                      {role === 'admin' ? 'Reject Reason' : 'Cancel Reason'}
+                      {role === 'admin' ? selectedRequestedtype === "report_request" ? "Review Reason" : 'Reject Reason' : 'Cancel Reason'}
                     </label>
 
                     <div className='relative'>

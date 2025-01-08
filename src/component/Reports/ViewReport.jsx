@@ -383,7 +383,7 @@ const ViewReport = () => {
                         className="text-[#E0382D] !text-[18px] border border-b-[#E0382D]"
                         p={"12px 20px"}
                       >
-                        Cancelled Reason
+                        Reviewed Reason
                       </Typography>
                       <Typography
                         className="text-[#18283D] !text-[14px]"
@@ -454,7 +454,7 @@ const ViewReport = () => {
                             }}
                             onClick={() => undefined}
                           >
-                            Rejected
+                            Reviewed
                           </button>
                         </Box>
                         <Button
@@ -521,7 +521,7 @@ const ViewReport = () => {
                       <Button
                         btnType="button"
                         btnCategory="secondary"
-                        btnName="Cancel Request"
+                        btnName="Review"
                         btnCls="!border !border-[#E0382D] !text-[#E0382D] w-[200px]"
                         onClick={() => handleOpenPopup("reject")}
                       />
@@ -531,7 +531,7 @@ const ViewReport = () => {
                           btnType="button"
                           btnCls="w-[200px]"
                           onClick={() => handleOpenPopup("approve")}
-                          btnName="Approve Request"
+                          btnName="Approve"
                         />
                       }
                       {/* <Button
@@ -590,7 +590,7 @@ const ViewReport = () => {
             open={confirmPopup?.reject}
             handleClosePopup={() => handleClosePopup()}
             handleSubmit={(reason) => handleReportRequest("rejected", reason)}
-            header="Cancel Reason"
+            header="Review Reason"
           />
 
           <Backdrop
@@ -611,7 +611,7 @@ const ViewReport = () => {
                 >
                   {confirmPopup?.type === "approve"
                     ? "Report Succesfully Approved"
-                    : "Report Succesfully Rejected"}
+                    : "Report Succesfully Reviewed"}
                 </p>
               </div>
             </div>
