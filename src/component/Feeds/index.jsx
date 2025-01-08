@@ -26,7 +26,7 @@ export default function Feeds() {
   const [currentPage, setCurrentPage] = useState(1);
   const [previousPage, setPreviousPage] = useState(0);
   const [totalPages, setTotalPages] = useState(null);
-  const [pageSize, setPageSize] = useState(null);
+  const [pageSize, setPageSize] = useState(6);
 
   const defaultState = {
     create: false,
@@ -77,7 +77,7 @@ export default function Feeds() {
   useEffect(() => {
     let feedData = {
       page: currentPage,
-      pageSize: pageSize,
+      pageSize: 6,
     };
     dispatch(getPost(feedData));
   }, [currentPage, pageSize]);
@@ -145,9 +145,9 @@ export default function Feeds() {
     }
   }, [status]);
 
-  useEffect(() => {
-    dispatch(getPost());
-  }, []);
+  // useEffect(() => {
+  //   dispatch(getPost());
+  // }, []);
 
   // console.log(formData);
 
@@ -296,7 +296,7 @@ export default function Feeds() {
                     onClick={() => navigate(`/feed-details/${feed.id}`)}
                   >
                     <img
-                      className='feed-image'
+                      className='feed-image !h-[250px] !w-full object-cover'
                       src={
                         (feed?.media_files?.length > 0 &&
                           feed.media_files[0].media_files) ||

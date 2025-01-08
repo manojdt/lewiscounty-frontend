@@ -23,11 +23,11 @@ import {
   postComment,
   postCommentLike,
   updateFeedTrack,
-} from "../../services/feeds";
-import ProgramFeeds from "../../shared/ProgramFeeds";
-import { Button } from "../../shared";
-import { feedStatus } from "../../utils/constant";
-import NoImage from "../../assets/images/noimage.jpg"
+} from '../../services/feeds';
+import ProgramFeeds from '../../shared/ProgramFeeds';
+import { Button } from '../../shared';
+import { feedStatus } from '../../utils/constant';
+import NoImage from '../../assets/images/noimage.jpg';
 
 export default function FeedDetails() {
   const navigate = useNavigate();
@@ -145,16 +145,21 @@ export default function FeedDetails() {
                         target='_blank'
                       >
                         <img
-                          className="feed-detail-image"
-                          src={feedDetails?.related_request?.thumbnail ?? NoImage}
-                          alt="FeedImage"
+                          className='feed-detail-image !h-[400px] object-cover'
+                          src={
+                            feedDetails?.related_request?.thumbnail ?? NoImage
+                          }
+                          alt='FeedImage'
                         />
                       </a>
                     ) : (
                       <img
-                      className='feed-detail-image'
-                      src={feedDetails?.media_files?.[0]?.media_files ?? FeedImage}
-                      alt='FeedImage'
+                        className='feed-detail-image !h-[400px] object-cover'
+                        src={
+                          feedDetails?.media_files?.[0]?.media_files ??
+                          FeedImage
+                        }
+                        alt='FeedImage'
                       />
                     )}
                     <div className='feed-action-info'>
