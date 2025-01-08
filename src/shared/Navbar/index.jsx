@@ -536,13 +536,34 @@ export const Navbar = () => {
                   {userInfo?.data?.role === 'super_admin' ? null : (
                     <div className='notitification-group'>
                       <div className='bg-[#EEF5FF] rounded-[3px] h-[40px] w-[40px] flex items-center justify-center'>
-                        {activity?.length > 0 ? (
+                        {/* {activity?.length > 0 ? (
                           <Badge
                             color='error'
                             badgeContent={activity.length}
                             variant='standard'
                             sx={{ cursor: 'pointer' }}
                             max={activity.length}
+                          >
+                            <img
+                              src={NotificationIcon}
+                              className='cursor-pointer notification-image'
+                              alt='NotificationIcon'
+                            />
+                          </Badge>
+                        ) : (
+                          <img
+                            src={NotificationIcon}
+                            className='cursor-pointer notification-image'
+                            alt='NotificationIcon'
+                          />
+                        )} */}
+                        {activity?.notifications_count > 0 ? (
+                          <Badge
+                            color='error'
+                            badgeContent={activity?.notifications_count}
+                            variant='standard'
+                            sx={{ cursor: 'pointer' }}
+                            max={999}
                           >
                             <img
                               src={NotificationIcon}
