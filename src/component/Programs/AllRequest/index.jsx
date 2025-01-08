@@ -1077,7 +1077,7 @@ export default function AllRequest() {
                   fontSize: '12px',
                 }}
               >
-                {requestStatusText[params.row.status] || ''}
+                {requestStatusText[params?.row?.status==="accept"?"approved":params?.row?.status==="cancel"?"rejected":params?.row?.status] || ''}
               </span>
             </div>
           </>
