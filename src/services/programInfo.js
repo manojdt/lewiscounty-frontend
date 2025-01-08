@@ -286,3 +286,45 @@ export const getProgramListWithCategory = createAsyncThunk(
     return getProgramListWithCategory;
   }
 );
+
+
+export const insertProgramNotes = createAsyncThunk(
+  "insertProgramNotes",
+  async (data) => {
+    const notes = await api.post("program/program-notes/", data);
+    if (notes.status === 200) {
+      return notes;
+    }
+    return notes;
+  }
+);
+
+
+export const getProgramNotes = createAsyncThunk(
+  "getProgramNotes",
+  async (data) => {
+    const notes = await api.get(`program/program-notes?program_id=${data?.id}${data?.created_by ? `&created_by=${data?.created_by}` : ""}`);
+    if (notes.status === 200) {
+      return notes?.data;
+    }
+    return notes;
+  }
+);
+
+export const getProgramNotesUserList = createAsyncThunk(
+  "getProgramNotesUserList",
+  async (id) => {
+    const notes = await api.get(`program/program-notes/users/${id}/`);
+    if (notes.status === 200) {
+      const constructedData = notes?.data?.map((e)=>{
+        return{
+          ...e,
+          label: e?.full_name,
+          value: e?.id
+        }
+      })
+      return constructedData;
+    }
+    return notes;
+  }
+);
