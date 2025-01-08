@@ -480,26 +480,27 @@ export const MaterialColumns = [
 ];
 export const GoalColumns = [
   {
-    field: 'goal_name',
+    field: 'description',
     headerName: 'Goal Name ',
-    flex: 1,
+    flex: 3,
     id: 0,
   },
-  {
-    field: 'status',
-    headerName: 'Status',
-    flex: 1,
-    id: 1,
-  },
-  {
-    field: 'progress',
-    headerName: 'Progress level',
-    flex: 1,
-    id: 2,
-  },
+  // {
+  //   field: 'status',
+  //   headerName: 'Status',
+  //   flex: 1,
+  //   id: 1,
+  // },
+  // {
+  //   field: 'progress',
+  //   headerName: 'Progress level',
+  //   flex: 1,
+  //   id: 2,
+  // },
   {
     field: 'action',
     headerName: 'Action',
+    align: 'center',
     flex: 1,
     id: 3,
     
