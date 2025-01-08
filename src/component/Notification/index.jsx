@@ -152,9 +152,9 @@ export default function Notification({ handleClose }) {
           {activity?.notifications?.length ? (
             <div className='py-4 w-full'>
               <button
-                className='py-3 px-16 text-white text-[14px] w-full flex items-center justify-center'
+                className='py-3 px-16 bg-gradient-to-br from-[#1D5BBF] to-[#00AEBD] text-white text-[14px] w-full flex items-center justify-center'
                 style={{
-                  background: '#FE634E',
+                  // background: '#EEF5FF',
                   borderRadius: '5px',
                 }}
                 onClick={handleNavigation}

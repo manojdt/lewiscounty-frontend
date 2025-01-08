@@ -537,7 +537,7 @@ export const Navbar = () => {
                     >
                       {userInfo?.data?.role === 'super_admin' ? null : (
                         <div className='notitification-group'>
-                          <div className='bg-[#FFF8F2] rounded-[3px] h-[40px] w-[40px] flex items-center justify-center'>
+                          <div className='bg-[#EEF5FF] rounded-[3px] h-[40px] w-[40px] flex items-center justify-center'>
                             {activity?.notifications_count > 0 ? (
                               <Badge
                                 color='error'
