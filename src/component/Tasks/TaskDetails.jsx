@@ -455,7 +455,7 @@ console.log(allFiles,"allfiles")
                       className='px-6 py-4 text-white'
                       style={{ background: 'rgba(29, 91, 191, 1)' }}
                     >
-                      {taskData.program_duration} hours
+                      {taskData.program_duration} Days
                     </td>
                   </tr>
                   <tr className='bg-white border-b  dark:bg-gray-800'>

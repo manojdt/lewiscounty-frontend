@@ -148,7 +148,7 @@ console.log(res,"res")
                 "aria-labelledby": "basic-button",
               }}
             >
-              {role === "mentor" ? (
+              {role === "mentor" || role === "admin" ? (
                 <MenuItem
                   onClick={() =>
                     navigate(
