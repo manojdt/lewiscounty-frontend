@@ -43,14 +43,15 @@ export const PersonalInformationFields = [
   {
     type: 'input',
     name: 'phone_number',
-    fieldtype: 'number',
+    // fieldtype: 'number',
     label: 'Primary Contact Number',
     placeholder: 'Enter Primary Contact Number',
     inputRules: {
       required: 'This field is required',
       pattern: {
-        value: /^[0-9]{10}$/,
-        message: 'Enter valid phone number',
+        value: /^\+[1-9]\d{1,14}$/,
+        message:
+          'Must start with a plus sign Followed by 1 to 14 digits and no spaces in-between',
       },
     },
     size: true,
@@ -58,14 +59,15 @@ export const PersonalInformationFields = [
   {
     type: 'input',
     name: 'secondary_phone_number',
-    fieldtype: 'number',
+    // fieldtype: 'number',
     label: 'Secondary Contact Number',
     placeholder: 'Enter Secondary Number',
     inputRules: {
       // required: "This field is required",
       pattern: {
-        value: /^[0-9]{10}$/,
-        message: 'Enter valid phone number',
+        value: /^\+[1-9]\d{1,14}$/,
+        message:
+          'Must start with a plus sign Followed by 1 to 14 digits and no spaces in-between',
       },
     },
     size: true,
@@ -91,7 +93,7 @@ export const PersonalInformationFields = [
   // },
   {
     type: 'input',
-    name: 'linkedin',
+    name: 'linked_in',
     fieldtype: 'text',
     label: 'LinkedIn Profile Link',
     placeholder: 'Enter LinkedIn Profile Link',
@@ -490,14 +492,15 @@ export const MenteePersonalInformationFields = [
   {
     type: 'input',
     name: 'phone_number',
-    fieldtype: 'number',
+    // fieldtype: 'number',
     label: 'Primary Contact Number',
     placeholder: 'Enter Primary Contact Number',
     inputRules: {
       required: 'This field is required',
       pattern: {
-        value: /^[0-9]{10}$/,
-        message: 'Enter valid phone number',
+        value: /^\+[1-9]\d{1,14}$/,
+        message:
+          'Must start with a plus sign Followed by 1 to 14 digits and no spaces in-between',
       },
     },
     size: true,
@@ -506,13 +509,14 @@ export const MenteePersonalInformationFields = [
   {
     type: 'input',
     name: 'secondary_phone_number',
-    fieldtype: 'number',
+    // fieldtype: 'number',
     label: 'Secondary Contact Number',
     placeholder: 'Enter Secondary Contact Number',
     inputRules: {
       pattern: {
-        value: /^[0-9]{10}$/,
-        message: 'Enter valid phone number',
+        value: /^\+[1-9]\d{1,14}$/,
+        message:
+          'Must start with a plus sign Followed by 1 to 14 digits and no spaces in-between',
       },
     },
     size: true,
@@ -1515,6 +1519,28 @@ export const ProgramInformationFields = [
     for: ['admin'],
   },
   {
+    type: 'textbox',
+    name: 'description',
+    label: 'Program Description',
+    placeholder: '',
+    inputRules: {
+      required: 'This field is required',
+    },
+    width: 'w-full',
+    for: ['admin'],
+  },
+  // {
+  //   type: "textbox",
+  //   name: "prerequisites",
+  //   label: "Prerequisites",
+  //   placeholder: "Enter prerequisites",
+  //   inputRules: {
+  //     required: 'prerequisites is required',
+  //   },
+  //   width: "w-full",
+  //   for: ["admin"],
+  // },
+  {
     type: 'dynamicFields',
     name: 'sub_programs',
     label: '',
@@ -1544,17 +1570,6 @@ export const ProgramInformationFields = [
         width: 'w-full',
         for: ['admin'],
       },
-      // {
-      //   type: 'textarea',
-      //   name: 'prerequisites',
-      //   label: 'Prerequisites',
-      //   placeholder: 'Enter prerequisites',
-      //   // inputRules: {
-      //   //   required: 'prerequisites is required',
-      //   // },
-      //   width: 'w-full',
-      //   for: ['admin'],
-      // },
       {
         type: 'date',
         name: 'start_date',
@@ -1688,6 +1703,17 @@ export const ProgramInformationFields = [
     width: 'w-full',
     for: ['mentor'],
   },
+  // {
+  //   type: "textbox",
+  //   name: "prerequisites",
+  //   label: "Prerequisites",
+  //   placeholder: "Enter prerequisites",
+  //    inputRules: {
+  //    required: 'prerequisites is required',
+  //   },
+  //   width: "w-full",
+  //   for: ["mentor"],
+  // },
   {
     type: 'dropdown',
     name: 'course_level',
@@ -1822,6 +1848,27 @@ export const ProgramInformationFields = [
     for: ['mentor'],
   },
   {
+    type: 'dropdown',
+    name: 'program_mode',
+    label: 'Program Mode',
+    placeholder: 'Select',
+    inputRules: {
+      required: 'This field is required',
+    },
+    options: [
+      {
+        key: 'physical_location',
+        value: 'Physical Loction',
+      },
+      {
+        key: 'virtual_meeting',
+        value: 'Virtual Meeting',
+      },
+    ],
+    width: 'w-full',
+    for: ['mentor', 'admin'],
+  },
+  {
     type: 'input',
     name: 'address_line1',
     label: 'Address 1',
@@ -1832,65 +1879,69 @@ export const ProgramInformationFields = [
     width: 'width-32',
     for: ['admin', 'mentor'],
   },
-  // {
-  //   type: 'input',
-  //   name: 'address_line2',
-  //   label: 'Address 2',
-  //   placeholder: 'Enter Address 2',
-  //   inputRules: {
-  //     required: 'This field is required',
-  //   },
-  //   width: 'width-32',
-  //   for: ['admin', 'mentor'],
-  // },
-  // {
-  //   type: 'dropdown',
-  //   name: 'state',
-  //   label: 'State',
-  //   placeholder: 'Enter State',
-  //   inputRules: {
-  //     required: 'This field is required',
-  //   },
-  //   options:[],
-  //   width: 'width-32',
-  //   for: ['admin', 'mentor'],
-  // },
-  // {
-  //   type: 'dropdown',
-  //   name: 'city',
-  //   label: 'City',
-  //   placeholder: 'Enter City',
-  //   inputRules: {
-  //     required: 'This field is required',
-  //   },
-  //   options:[],
-  //   width: 'width-32',
-  //   for: ['admin', 'mentor'],
-  // },
-  // {
-  //   type: 'input',
-  //   name: 'zip_code',
-  //   label: 'Zip code',
-  //   placeholder: 'Enter Zip code',
-  //   inputRules: {
-  //     required: 'This field is required',
-  //   },
-  //   width: 'width-32',
-  //   for: ['admin', 'mentor'],
-  // },
   {
     type: 'input',
-    name: 'location',
-    label: 'Add Location for this Program/Events',
-    fieldtype: 'text',
-    placeholder: 'Add Location',
+    name: 'address_line2',
+    label: 'Address 2',
+    placeholder: 'Enter Address 2',
+    inputRules: {
+      // required: 'This field is required',
+    },
+    width: 'width-32',
+    for: ['admin', 'mentor'],
+  },
+  {
+    type: 'dropdown',
+    name: 'state',
+    label: 'State',
+    placeholder: 'Enter State',
     inputRules: {
       required: 'This field is required',
     },
-    width: 'w-full',
-    icon: 'location',
+    options: [],
+    width: 'width-32',
     for: ['admin', 'mentor'],
   },
+  {
+    type: 'dropdown',
+    name: 'city',
+    label: 'City',
+    placeholder: 'Enter City',
+    inputRules: {
+      required: 'This field is required',
+    },
+    options: [],
+    width: 'width-32',
+    for: ['admin', 'mentor'],
+  },
+  {
+    type: 'input',
+    name: 'zip_code',
+    label: 'Zip code',
+    placeholder: 'Enter Zip code',
+    inputRules: {
+      required: 'This field is required',
+      pattern: {
+        value: /^\d{5}(-\d{4})?$/,
+        message: 'ZIP code must be in the format XXXXX or XXXXX-XXXX.',
+      },
+    },
+    width: 'width-32',
+    for: ['admin', 'mentor'],
+  },
+  // {
+  //   type: 'input',
+  //   name: 'location',
+  //   label: 'Add Location for this Program/Events',
+  //   fieldtype: 'text',
+  //   placeholder: 'Add Location',
+  //   inputRules: {
+  //     required: 'This field is required',
+  //   },
+  //   width: 'w-full',
+  //   icon: 'location',
+  //   for: ['admin', 'mentor'],
+  // },
 ];
 
 export const AboutProgramFields = [
@@ -1900,9 +1951,9 @@ export const AboutProgramFields = [
     label: 'Goals',
     fieldtype: 'text',
     placeholder: 'Multiple goals added',
-    // inputRules: {
-    //   required: 'This field is required',
-    // },
+    inputRules: {
+      required: 'This field is required',
+    },
     width: 'w-full',
     icon: 'add',
     for: ['mentor', 'admin'],
@@ -1940,7 +1991,7 @@ export const AboutProgramFields = [
     fieldtype: 'text',
     placeholder: 'Multiple Skills added',
     inputRules: {
-      required: 'This field is required',
+      // required: 'This field is required',
     },
     width: 'w-full',
     for: ['mentor'],
@@ -2039,7 +2090,7 @@ export const ProgramTestimonialsFields = [
   },
   {
     type: 'dropdown',
-    name: 'testimonial_type',
+    name: 'testimonial_types',
     label: 'Testimonials Type',
     placeholder: '',
     inputRules: {
@@ -2070,17 +2121,6 @@ export const ProgramTestimonialsFields = [
     inputRules: {
       // required: 'This field is required',
     },
-    width: 'w-full',
-    for: ['mentor'],
-  },
-  {
-    type: 'textarea',
-    name: 'prerequisites',
-    label: 'Prerequisites',
-    placeholder: 'Enter prerequisites',
-    // inputRules: {
-    //   required: 'prerequisites is required',
-    // },
     width: 'w-full',
     for: ['mentor'],
   },
@@ -2400,11 +2440,16 @@ export const EditProfileFields = [
   {
     type: 'input',
     name: 'phone_number',
-    fieldtype: 'number',
+    // fieldtype: 'number',
     label: 'Phone Number',
     placeholder: 'Enter Phone Number',
     inputRules: {
       required: 'This field is required',
+      pattern: {
+        value: /^\+[1-9]\d{1,14}$/,
+        message:
+          'Must start with a plus sign Followed by 1 to 14 digits and no spaces in-between',
+      },
     },
     width: 'width-49',
   },

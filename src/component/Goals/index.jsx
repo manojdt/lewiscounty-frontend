@@ -54,6 +54,7 @@ const Goals = () => {
     const [actionModal, setActionModal] = useState(false)
     const [goals, setGoals] = useState([])
     const [seletedItem, setSelectedItem] = useState({})
+    const [recentActivityCheck, setRecentActivityCheck] = useState(false)
     const [popupModal, setPopupModal] = useState('')
     const [allTimeFrame, setAllTimeFrame] = React.useState("month")
     const [historyTimeFrame, setHistoryTimeFrame] = React.useState("month")
@@ -109,7 +110,6 @@ const Goals = () => {
     }, [filterType])
 
     const { goalsList, loading, status, createdGoal, goalsCount, goalRequest, goalHistory } = useSelector(state => state.goals)
-
     const dispatch = useDispatch()
 
     const requestBtns = [
@@ -218,10 +218,6 @@ const Goals = () => {
             user_id: res
         }))
     }
-
-    // useEffect(() => {
-    //     getAllGoalData()
-    // }, [filterType])
 
     useEffect(() => {
         if (role === "admin") {
@@ -374,13 +370,13 @@ const Goals = () => {
                             </MenuItem>
                         }
 
-                        {
+                        {/* {
                             params.row.status === 'active' &&
                             <MenuItem onClick={() => handleOpenAction("start")} className='!text-[12px]'>
                                 <img src={StartIcon} alt="EditIcon" className='pr-3 w-[30px]' />
                                 Start
                             </MenuItem>
-                        }
+                        } */}
                         {
                             ["in_progress"].includes(params?.row?.status) &&
                             <MenuItem onClick={() => handleOpenConfirmPopup("complete")} className='!text-[12px]'>
@@ -529,19 +525,25 @@ const Goals = () => {
                         }}
                     >
                         <MenuItem onClick={(e) => {
-                            navigate(`/view-goal/${seletedItem.id}`);
+                            if(role==="admin"){
+
+                                navigate(`/view-goal/${seletedItem.id}?requestId=${seletedItem?.goal_request_id}`);
+                            }else{
+
+                                navigate(`/view-goal/${seletedItem.id}`);
+                            }
                         }
                         } className='!text-[12px]'>
                             <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
                             View
                         </MenuItem>
-                        {
+                        {/* {
                             (params.row.status === 'active' && role !== "admin") &&
                             <MenuItem onClick={() => handleOpenAction("start")} className='!text-[12px]'>
                                 <img src={StartIcon} alt="EditIcon" className='pr-3 w-[30px]' />
                                 Start
                             </MenuItem>
-                        }
+                        } */}
                         {
                             ((params?.row?.status === "new" || params?.row?.status === "pending") && role !== "admin") &&
                             <MenuItem onClick={handlEditGoal} className='!text-[12px]'>
@@ -693,6 +695,7 @@ const Goals = () => {
     }
 
     const handleCloseModal = () => {
+        setRecentActivityCheck(!recentActivityCheck)
         setActionModal(false)
         setSelectedItem({})
         handleGetAllGoals()
@@ -781,6 +784,7 @@ const Goals = () => {
         }
         dispatch(updateHistoryGoal(payload)).then((res) => {
             if (res?.meta?.requestStatus === "fulfilled") {
+                setRecentActivityCheck(!recentActivityCheck)
                 setConfirmPopup({
                     ...confirmPopup,
                     bool: false,
@@ -1017,6 +1021,7 @@ const Goals = () => {
         }
         dispatch(updateHistoryGoal(payload)).then((res) => {
             if (res?.meta?.requestStatus === "fulfilled") {
+                setRecentActivityCheck(!recentActivityCheck)
                 handleOpenActivity()
                 handleGetAllGoals()
             }
@@ -1297,7 +1302,7 @@ const Goals = () => {
                                             searchParams.get('type') === null && <GoalProgress />
                                         } */}
 
-                                        <RecentActivities />
+                                        <RecentActivities key={recentActivityCheck}/>
                                     </div>
 
                                 </div>

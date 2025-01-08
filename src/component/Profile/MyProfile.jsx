@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ProfileIcon from '../../assets/icons/profile-icon.svg';
 import SecurityIcon from '../../assets/icons/security-icon.svg';
 import PermissionIcon from '../../assets/icons/permission-icon.svg';
@@ -45,6 +45,8 @@ export const roleBasedSections = {
 export default function MyProfile() {
   const [activeTab, setActiveTab] = useState(0);
   const [editMode, setEditMode] = useState(false);
+  const [contentHeights, setContentHeights] = useState([]);
+  const contentRefs = useRef([]);
 
   const tabs = [
     {
@@ -64,6 +66,12 @@ export default function MyProfile() {
     },
   ];
 
+  useEffect(() => {
+    setContentHeights(
+      tabs.map((_, i) => contentRefs.current[i]?.offsetHeight || 0)
+    );
+  }, [tabs]);
+
   return (
     <div className='profile-container'>
       <div className='flex justify-between items-center mb-6'>
@@ -73,12 +81,13 @@ export default function MyProfile() {
       </div>
       {!editMode ? (
         <div className='border grid grid-cols-5 rounded-xl bg-white'>
+          {/* Sidebar */}
           <div className='grid col-span-1 border-r pl-6 py-10'>
             <div className='flex flex-col gap-1'>
               {tabs.map((tab, index) => (
                 <div
                   key={index}
-                  className={`p-4 font-semibold pl-6 flex items-start cursor-pointer gap-4 ${
+                  className={`p-4 font-semibold pl-6 flex items-start cursor-pointer gap-4 transition-all duration-300 ease-in-out ${
                     activeTab === index
                       ? 'text-blue-500 bg-[#F0F5FF] border-r-4 rounded-tl-lg rounded-bl-lg border-blue-500'
                       : 'text-gray-500 hover:text-blue-500'
@@ -91,13 +100,30 @@ export default function MyProfile() {
               ))}
             </div>
           </div>
+
+          {/* Tab Content */}
           <div className='grid col-span-4'>
-            <div className='p-12'>
-              {tabs[activeTab] && (
-                <div className='text-sm text-gray-700'>
-                  {tabs[activeTab].content}
-                </div>
-              )}
+            <div
+              className='p-12 transition-[height] duration-300 ease-in-out overflow-hidden'
+              style={{
+                height: contentHeights[activeTab] || 'auto',
+              }}
+            >
+              <div className='relative'>
+                {tabs.map((tab, index) => (
+                  <div
+                    key={index}
+                    ref={(el) => (contentRefs.current[index] = el)}
+                    className={`text-sm text-gray-700 transition-transform duration-500 ease-in-out ${
+                      activeTab === index
+                        ? 'translate-x-0 opacity-100'
+                        : 'translate-x-full opacity-0 absolute'
+                    }`}
+                  >
+                    {tab.content}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

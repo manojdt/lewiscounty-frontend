@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Backdrop,
   CircularProgress,
@@ -9,19 +9,19 @@ import {
   MenuItem,
   Stack,
   Typography,
-} from "@mui/material";
-import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
+} from '@mui/material';
+import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
 
-import Card from "../../shared/Card";
-import CloseIcon from "../../assets/icons/blueCloseIcon.svg";
-import ProgramCard from "../../shared/Card/ProgramCard";
-import SearchIcon from "../../assets/icons/search.svg";
-import CalendarIcon from "../../assets/images/calender_1x.png";
-import GridViewIcon from "../../assets/icons/gridviewIcon.svg";
-import ListViewIcon from "../../assets/icons/listviewIcon.svg";
-import MoreIcon from "../../assets/icons/moreIcon.svg";
-import ViewIcon from "../../assets/images/view1x.png";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import Card from '../../shared/Card';
+import CloseIcon from '../../assets/icons/blueCloseIcon.svg';
+import ProgramCard from '../../shared/Card/ProgramCard';
+import SearchIcon from '../../assets/icons/search.svg';
+import CalendarIcon from '../../assets/images/calender_1x.png';
+import GridViewIcon from '../../assets/icons/gridviewIcon.svg';
+import ListViewIcon from '../../assets/icons/listviewIcon.svg';
+import MoreIcon from '../../assets/icons/moreIcon.svg';
+import ViewIcon from '../../assets/images/view1x.png';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 import {
   pipeUrls,
@@ -29,22 +29,22 @@ import {
   programMenus,
   programStatus,
   statusAction,
-} from "../../utils/constant";
+} from '../../utils/constant';
 import {
   getMenteeProgramCount,
   getMenteePrograms,
   getProgramCounts,
-} from "../../services/userprograms";
-import DataTable from "../../shared/DataGrid";
-import { programListColumns } from "../../utils/tableFields";
-import api from "../../services/api";
-import { getUserProfile } from "../../services/profile";
-import { getallMenteeProgram } from "../../services/programInfo";
-import { jwtDecode } from "jwt-decode";
-import MuiModal from "../../shared/Modal";
-import { CategoryPopup } from "../Dashboard/categoryPopup";
-import { acceptMember, getCategory } from "../../services/category";
-import { useGetAllProgramsQuery } from "../../features/program/programApi.services";
+} from '../../services/userprograms';
+import DataTable from '../../shared/DataGrid';
+import { programListColumns } from '../../utils/tableFields';
+import api from '../../services/api';
+import { getUserProfile } from '../../services/profile';
+import { getallMenteeProgram, getallMyProgram } from '../../services/programInfo';
+import { jwtDecode } from 'jwt-decode';
+import MuiModal from '../../shared/Modal';
+import { CategoryPopup } from '../Dashboard/categoryPopup';
+import { acceptMember, getCategory } from '../../services/category';
+import { useGetAllProgramsQuery } from '../../features/program/programApi.services';
 
 const CustomPagination = ({
   totalItems = 200,
@@ -70,8 +70,8 @@ const CustomPagination = ({
     const value = e.target.value;
 
     // Allow empty input for clearing
-    if (value === "") {
-      setInputValue("");
+    if (value === '') {
+      setInputValue('');
       return;
     }
 
@@ -84,7 +84,7 @@ const CustomPagination = ({
   };
 
   const handleInputBlur = () => {
-    if (inputValue === "") {
+    if (inputValue === '') {
       // Reset to current page if input is empty on blur
       setInputValue(currentPage.toString());
       return;
@@ -100,40 +100,40 @@ const CustomPagination = ({
   };
 
   const handleInputKeyDown = (e) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       handleInputBlur();
     }
   };
 
   return (
-    <div className="flex items-center justify-end gap-2">
-      <div className="flex items-center">
+    <div className='flex items-center justify-end gap-2'>
+      <div className='flex items-center'>
         <input
-          type="text"
+          type='text'
           value={inputValue}
           onChange={handleInputChange}
           onBlur={handleInputBlur}
           onKeyDown={handleInputKeyDown}
-          className="w-12 h-8 border border-gray-300 rounded px-2 text-center"
+          className='w-12 h-8 border border-gray-300 rounded px-2 text-center'
         />
-        <span className="ml-2 text-gray-600">of {totalPages}</span>
+        <span className='ml-2 text-gray-600'>of {totalPages}</span>
       </div>
 
-      <div className="flex gap-1">
+      <div className='flex gap-1'>
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="p-1 rounded bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          className='p-1 rounded bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed'
         >
-          <ChevronLeft className="w-5 h-5" />
+          <ChevronLeft className='w-5 h-5' />
         </button>
 
         <button
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="p-1 rounded bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          className='p-1 rounded bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed'
         >
-          <ChevronRight className="w-5 h-5" />
+          <ChevronRight className='w-5 h-5' />
         </button>
       </div>
     </div>
@@ -149,41 +149,46 @@ export default function Programs() {
     page: 1,
     pageSize: 6,
   });
+  const [paginationModel1, setPaginationModel1] = React.useState({
+    page: 0,
+    pageSize: 5,
+  });
   // console.log("paginationModel", paginationModel);
   const [programMenusList, setProgramMenusList] = useState([]);
-  const [programView, setProgramView] = useState("grid");
+  const [programView, setProgramView] = useState('grid');
   const [seletedItem, setSelectedItem] = useState({});
   const [programFilter, setProgramFilter] = useState({
-    search: "",
-    filter_by: "month",
+    search: '',
+    filter_by: 'month',
   });
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const userInfo = useSelector((state) => state.userInfo);
   const { profile } = useSelector((state) => state.profileInfo);
   const userprograms = useSelector((state) => state.userPrograms);
-  const role = userInfo.data.role || "";
-  const filterType = searchParams.get("type");
-  const filterSearch = searchParams.get("search");
-  const filterDate = searchParams.get("filter_by");
-  const isBookmark = searchParams.get("is_bookmark");
+  const role = userInfo.data.role || '';
+  const filterType = searchParams.get('type');
+  const filterSearch = searchParams.get('search');
+  const filterDate = searchParams.get('filter_by');
+  const isBookmark = searchParams.get('is_bookmark');
   // console.log("filterType", filterType);
   // console.log("filterSearch", filterSearch);
   // console.log("filterDate", filterDate);
   // console.log("isBookmark", isBookmark);
   const { data, isLoading, refetch, isFetching } = useGetAllProgramsQuery(
     {
-      limit: paginationModel.pageSize,
-      page: paginationModel.page,
+      limit:programView==="list"?  paginationModel1.pageSize: paginationModel.pageSize,
+      page:programView==="list"? paginationModel1.page+1: paginationModel.page,
       ...(filterType && {
         status:
           !filterType &&
-          (role === "mentee" || role === "admin") &&
+          (role === 'mentee' || role === 'admin') &&
           !userInfo?.data?.is_registered
-            ? "planned"
+            ? 'planned'
             : filterType,
       }),
       ...(filterDate && { filter_by: filterDate }),
+      ...(isBookmark && { is_bookmark: isBookmark }),
       ...(filterSearch && { search: filterSearch }),
     },
     {
@@ -194,40 +199,40 @@ export default function Programs() {
   );
 
   const [openCategory, setOpenCategory] = React.useState(false);
-  const token = localStorage.getItem("access_token");
+  const token = localStorage.getItem('access_token');
   const decoded = React.useMemo(() => jwtDecode(token), [token]);
   const [selectedCategory, setSelectedCategory] = React.useState([]);
   const [category, setCategory] = React.useState([]);
 
-  const handleGetCategory = (searchText = "") => {
+  const handleGetCategory = (searchText = '') => {
     const payload = {
       search: searchText,
     };
     dispatch(getCategory(payload)).then((res) => {
-      if (res?.meta?.requestStatus === "fulfilled") {
+      if (res?.meta?.requestStatus === 'fulfilled') {
         setCategory(res?.payload ?? []);
       }
     });
   };
 
-  const handleUpdateGategory = (type = "") => {
+  const handleUpdateGategory = (type = '') => {
     let payload = {};
-    if (type === "update") {
+    if (type === 'update') {
       payload = {
-        type: "mentee_category",
+        type: 'mentee_category',
         categories_id: selectedCategory,
       };
     } else {
       payload = {
-        type: "mentee_category",
+        type: 'mentee_category',
       };
     }
     dispatch(acceptMember(payload)).then((res) => {
-      if (res.meta.requestStatus === "fulfilled") {
+      if (res.meta.requestStatus === 'fulfilled') {
         setOpenCategory(false);
         setCategory([]);
-        localStorage.setItem("access_token", res?.payload?.access);
-        localStorage.setItem("refresh_token", res?.payload?.refresh);
+        localStorage.setItem('access_token', res?.payload?.access);
+        localStorage.setItem('refresh_token', res?.payload?.refresh);
         refetch();
       }
     });
@@ -243,7 +248,7 @@ export default function Programs() {
     }
   };
   React.useEffect(() => {
-    if (!decoded?.category_added && role === "mentee") {
+    if (!decoded?.category_added && role === 'mentee') {
       setOpenCategory(true);
     }
   }, [role]);
@@ -257,12 +262,12 @@ export default function Programs() {
     const pay = {
       filter_by: programFilter.filter_by ? programFilter.filter_by : filterDate,
     };
-    const bookmark = await api.post("bookmark", payload);
+    const bookmark = await api.post('bookmark', payload);
     if (bookmark.status === 201 && bookmark.data) {
       // setLoading(false);
       refetch();
-      if (role === "mentor") dispatch(getProgramCounts(pay));
-      if (role === "mentee") dispatch(getMenteeProgramCount(pay));
+      if (role === 'mentor') dispatch(getProgramCounts(pay));
+      if (role === 'mentee') dispatch(getMenteeProgramCount(pay));
     }
 
     // dispatch(updateProgram({ id: program.id, is_bookmark: !program.is_bookmark }))
@@ -285,17 +290,17 @@ export default function Programs() {
       navigate(
         `${baseUrl}/${programdetails.program || programdetails?.id}${
           programdetails?.admin_program_request_id
-            ? `?request_id=${programdetails?.admin_program_request_id}`
-            : "admin_assign_program" in programdetails
+            ? `?request_id=${programdetails?.admin_program_request_id}&type=admin_assign_program`
+            : 'admin_assign_program' in programdetails
             ? `?program_create_type=admin_program`
-            : ""
+            : ''
         }`
       );
     }
   };
 
   const handleViewChange = () => {
-    setProgramView(programView === "grid" ? "list" : "grid");
+    setProgramView(programView === 'grid' ? 'list' : 'grid');
   };
 
   const handleMoreClick = (event, data) => {
@@ -313,116 +318,120 @@ export default function Programs() {
     };
     let query = {};
 
-    if (filterType && filterType !== "") {
-      query = { type: "status", value: filterType };
+    if (filterType && filterType !== '') {
+      query = { type: 'status', value: filterType };
     }
 
     if (
       !filterType &&
-      (role === "mentee" || role === "admin") &&
+      (role === 'mentee' || role === 'admin') &&
       !userInfo?.data?.is_registered
     ) {
-      query = { type: "status", value: "planned" };
+      query = { type: 'status', value: 'planned' };
     }
 
-    if (filterSearch && filterSearch !== "") {
-      query.search = { search: "search", value: filterSearch };
+    if (filterSearch && filterSearch !== '') {
+      query.search = { search: 'search', value: filterSearch };
     }
 
-    if (filterDate && filterDate !== "") {
-      query.date = { date: "filter_by", value: filterDate };
+    if (filterDate && filterDate !== '') {
+      query.date = { date: 'filter_by', value: filterDate };
     }
     if (!filterDate) {
-      query.date = { date: "filter_by", value: programFilter.filter_by };
+      query.date = { date: 'filter_by', value: programFilter.filter_by };
     }
 
-    if (isBookmark && isBookmark !== "") {
-      query = { type: "is_bookmark", value: isBookmark };
+    if (isBookmark && isBookmark !== '') {
+      query = { type: 'is_bookmark', value: isBookmark };
     }
 
-    if (role === "mentee") {
+    if (role === 'mentee') {
       dispatch(getMenteePrograms(query));
       dispatch(getMenteeProgramCount(pay));
     }
-    if (role === "mentor" || role === "admin") {
+    if (role === 'mentor' || role === 'admin') {
       dispatch(getProgramCounts(pay));
-
+      refetch()
       // dispatch(getUserPrograms(query));
     }
 
     // if (role === '') dispatch(getUserPrograms(query));
   };
-  const getTableData = (search = "") => {
+  const getTableData = (search = '') => {
     const payload = {
-      page: paginationModel?.page + 1,
-      limit: paginationModel?.pageSize,
+      page: paginationModel1?.page + 1,
+      limit: paginationModel1?.pageSize,
     };
-    if (filterType && filterType !== "") {
+    if (filterType && filterType !== '') {
       payload.status = filterType;
     }
 
     if (
       !filterType &&
-      (role === "mentee" || role === "admin") &&
+      (role === 'mentee' || role === 'admin') &&
       !userInfo?.data?.is_registered
     ) {
-      payload.status = "planned";
+      payload.status = 'planned';
     }
 
-    if (filterSearch && filterSearch !== "") {
+    if (filterSearch && filterSearch !== '') {
       payload.search = filterSearch;
     }
 
-    if (filterDate && filterDate !== "") {
+    if (filterDate && filterDate !== '') {
       payload.filter_by = filterDate;
     }
 
-    if (isBookmark && isBookmark !== "") {
+    if (isBookmark && isBookmark !== '') {
       payload.is_bookmark = isBookmark;
     }
-    if (role === "mentee") {
-      dispatch(getallMenteeProgram(payload));
+    if (role === 'mentee') {
+      // dispatch(getallMenteeProgram(payload));
+      refetch()
     } else {
-      // if (role === "mentor" || role === "admin") {
-      //   dispatch(getallMyProgram(payload));
-      // }
+      if (role === "mentor" || role === "admin") {
+        // dispatch(getallMyProgram(payload));
+        refetch()
+      }
     }
   };
 
   useEffect(() => {
+    if(programView==="list"){
     getTableData();
-  }, [paginationModel, searchParams, role]);
+    }
+  }, [paginationModel1,programView, searchParams, role]);
 
   const programTableFields = [
     ...programListColumns,
     {
-      field: "action",
-      headerName: "Action",
+      field: 'action',
+      headerName: 'Action',
       flex: 1,
       id: 0,
       renderCell: (params) => {
         return (
           <>
             <div
-              className="cursor-pointer flex items-center h-full"
+              className='cursor-pointer flex items-center h-full'
               onClick={(e) => handleMoreClick(e, params.row)}
             >
-              <img src={MoreIcon} alt="MoreIcon" />
+              <img src={MoreIcon} alt='MoreIcon' />
             </div>
             <Menu
-              id="basic-menu"
+              id='basic-menu'
               anchorEl={anchorEl}
               open={open}
               onClose={handleClose}
               MenuListProps={{
-                "aria-labelledby": "basic-button",
+                'aria-labelledby': 'basic-button',
               }}
             >
               <MenuItem
                 onClick={(e) => handleNavigation(seletedItem)}
-                className="!text-[12px]"
+                className='!text-[12px]'
               >
-                <img src={ViewIcon} alt="ViewIcon" className="pr-3 w-[30px]" />
+                <img src={ViewIcon} alt='ViewIcon' className='pr-3 w-[30px]' />
                 View
               </MenuItem>
             </Menu>
@@ -441,16 +450,15 @@ export default function Programs() {
 
   const getQueryString = () => {
     let query = {};
-    if (filterType && filterType !== "") {
+    if (filterType && filterType !== '') {
       query = { type: filterType };
     }
-    if (isBookmark && isBookmark !== "") {
+    if (isBookmark && isBookmark !== '') {
       query.is_bookmark = true;
     }
-    if (programFilter.search !== "") query.search = programFilter.search;
-    if (programFilter.filter_by !== "")
+    if (programFilter.search !== '') query.search = programFilter.search;
+    if (programFilter.filter_by !== '')
       query.filter_by = programFilter.filter_by;
-
     return query;
   };
 
@@ -463,7 +471,20 @@ export default function Programs() {
   };
 
   const menuNavigate = () => {
-    setProgramFilter({ search: "", filter_by: "month" });
+    if(programView==="list"){
+
+      setPaginationModel1({
+        page: 0,
+        pageSize: 5,
+      });
+    }else{
+
+      setPaginationModel({
+        page: 1,
+        pageSize: 6,
+      });
+    }
+    setProgramFilter({ search: '', filter_by: 'month' });
   };
 
   useEffect(() => {
@@ -472,17 +493,17 @@ export default function Programs() {
   }, [programFilter]);
 
   useEffect(() => {
-    let listPrograms = programMenus("program").filter((programs) =>
+    let listPrograms = programMenus('program').filter((programs) =>
       programs.for.includes(role)
     );
 
     const totalCount =
-      role === "mentor" || role === "admin"
+      role === 'mentor' || role === 'admin'
         ? userprograms.statusCounts
         : userprograms.programsCounts;
 
     if (
-      (role === "mentee" || role === "admin") &&
+      (role === 'mentee' || role === 'admin') &&
       !userInfo?.data?.is_registered
     ) {
       listPrograms = listPrograms.filter(
@@ -491,25 +512,25 @@ export default function Programs() {
     }
 
     const programMenu = [...listPrograms].map((menu) => {
-      if (menu.status === "all") {
+      if (menu.status === 'all') {
         return {
           ...menu,
           count:
-            role === "mentor" || role === "admin"
+            role === 'mentor' || role === 'admin'
               ? userprograms.totalPrograms
               : totalCount?.allprogram,
         };
       }
       // Mentor Response Count
       if (
-        (role === "mentor" || role === "admin") &&
+        (role === 'mentor' || role === 'admin') &&
         statusAction.includes(menu.status)
       ) {
         return { ...menu, count: totalCount[menu.mentorStatus] };
       }
 
       // Mentee Response Count
-      if (role === "mentee" || role === "admin") {
+      if (role === 'mentee' || role === 'admin') {
         return { ...menu, count: totalCount[menu.menteeStatus] };
       }
       return menu;
@@ -531,21 +552,21 @@ export default function Programs() {
           ? programFilter.filter_by
           : filterDate,
       };
-      if (filterType && filterType !== "") {
-        query = { type: "status", value: filterType };
+      if (filterType && filterType !== '') {
+        query = { type: 'status', value: filterType };
       }
 
-      if (isBookmark && isBookmark !== "") {
-        query = { type: "is_bookmark", value: isBookmark };
+      if (isBookmark && isBookmark !== '') {
+        query = { type: 'is_bookmark', value: isBookmark };
       }
 
-      if (role === "mentee") {
+      if (role === 'mentee') {
         if (programFilter.filter_by || filterDate) {
           dispatch(getMenteePrograms(query));
         }
         dispatch(getMenteeProgramCount(pay));
       }
-      if (role === "mentor" || role === "admin") {
+      if (role === 'mentor' || role === 'admin') {
         // dispatch(getUserPrograms(query));
         dispatch(getProgramCounts(pay));
         refetch();
@@ -584,7 +605,7 @@ export default function Programs() {
   // }, [userprograms]);
 
   useEffect(() => {
-    if (role === "mentor" || role === "admin") {
+    if (role === 'mentor' || role === 'admin') {
       dispatch(
         getProgramCounts({
           filter_by: programFilter.filter_by
@@ -593,7 +614,7 @@ export default function Programs() {
         })
       );
     }
-    if (role === "mentee") {
+    if (role === 'mentee') {
       dispatch(
         getMenteeProgramCount({
           filter_by: programFilter.filter_by
@@ -605,29 +626,29 @@ export default function Programs() {
   }, [role, searchParams, programFilter]);
 
   return (
-    <div className="dashboard-content px-8 mt-10">
-      <div className="flex justify-between items-center mb-8">
+    <div className='dashboard-content px-8 mt-10'>
+      <div className='flex justify-between items-center mb-8'>
         <Backdrop
-          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={isLoading || isFetching}
         >
           {isLoading || isFetching ? (
-            <CircularProgress color="inherit" />
+            <CircularProgress color='inherit' />
           ) : null}
         </Backdrop>
         {userInfo?.data?.is_registered && <div> Programs </div>}
         {userInfo &&
           userInfo.data &&
-          (userInfo.data.role === "mentor" ||
-            userInfo.data.role === "admin") && (
+          (userInfo.data.role === 'mentor' ||
+            userInfo.data.role === 'admin') && (
             <div>
               <button
-                onClick={() => navigate("/create-programs")}
-                className="text-[13px] px-4 py-4 !text-white rounded-[6px]"
+                onClick={() => navigate('/create-programs')}
+                className='text-[13px] px-4 py-4 !text-white rounded-[6px]'
                 style={{
                   background:
-                    "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
-                  borderRadius: "5px",
+                    'linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)',
+                  borderRadius: '5px',
                 }}
               >
                 Create New Program
@@ -636,69 +657,69 @@ export default function Programs() {
           )}
       </div>
 
-      <div className="grid grid-cols-5 gap-3">
-        <div className="row-span-3 flex flex-col gap-8">
+      <div className='grid grid-cols-5 gap-3'>
+        <div className='row-span-3 flex flex-col gap-8'>
           <Card
-            cardTitle={"Program Types"}
+            cardTitle={'Program Types'}
             cardContent={programMenusList}
             menuNavigate={menuNavigate}
           />
         </div>
 
-        <div className="col-span-4">
+        <div className='col-span-4'>
           <div
             style={{
-              boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.05)",
-              borderRadius: "10px",
+              boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)',
+              borderRadius: '10px',
             }}
           >
-            <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
-              <div className="flex gap-4">
+            <div className='title flex justify-between py-3 px-4 border-b-2 items-center'>
+              <div className='flex gap-4'>
                 <div>
                   {programMenusList.find((menu) => menu.status === filterType)
                     ?.name ||
-                    ((filterType === "planned" ||
+                    ((filterType === 'planned' ||
                       (filterType === null &&
-                        (role === "mentee" || role === "admin") &&
+                        (role === 'mentee' || role === 'admin') &&
                         !userInfo?.data?.is_registered)) &&
-                      "Active Programs") ||
-                    (isBookmark ? "Bookmarked Programs" : "All Programs")}
+                      'Active Programs') ||
+                    (isBookmark ? 'Bookmarked Programs' : 'All Programs')}
                 </div>
                 <img
-                  src={programView === "grid" ? ListViewIcon : GridViewIcon}
-                  className="cursor-pointer"
-                  alt="viewicon"
+                  src={programView === 'grid' ? ListViewIcon : GridViewIcon}
+                  className='cursor-pointer'
+                  alt='viewicon'
                   onClick={handleViewChange}
                 />
               </div>
-              <div className="flex gap-8 items-center">
-                <div className="relative">
+              <div className='flex gap-8 items-center'>
+                <div className='relative'>
                   <input
-                    type="text"
-                    id="search-navbar"
-                    className="block w-full p-2 text-sm text-gray-900 border border-background-primary-main h-[40px] w-[345px]"
-                    placeholder="Search here..."
+                    type='text'
+                    id='search-navbar'
+                    className='block w-full p-2 text-sm text-gray-900 border border-background-primary-main h-[40px] w-[345px]'
+                    placeholder='Search here...'
                     value={programFilter.search}
                     onChange={handleProgramSearch}
                   />
-                  <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
+                  <div className='absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none'>
                     <img
                       src={SearchIcon}
-                      className="w-[15px]"
-                      alt="SearchIcon"
+                      className='w-[15px]'
+                      alt='SearchIcon'
                     />
                   </div>
                 </div>
                 <p
-                  className="text-[12px] py-2 pl-5 pr-4 flex gap-4 !border !border-border-black rounded-[5px]"
+                  className='text-[12px] py-2 pl-5 pr-4 flex gap-4 !border !border-border-black rounded-[5px]'
                   // style={{
                   //   background: "rgba(223, 237, 255, 1)",
                   //   borderRadius: "5px",
                   // }}
                 >
-                  <img src={CalendarIcon} alt="CalendarIcon" />
+                  <img src={CalendarIcon} alt='CalendarIcon' />
                   <select
-                    className="focus:outline-none"
+                    className='focus:outline-none'
                     // style={{
                     //   background: "rgba(223, 237, 255, 1)",
                     //   border: "none",
@@ -706,18 +727,18 @@ export default function Programs() {
                     onChange={handleDateFilter}
                     value={programFilter?.filter_by}
                   >
-                    <option value="day">Day</option>
-                    <option value="month">Month</option>
-                    <option value="year">Year</option>
+                    <option value='day'>Day</option>
+                    <option value='month'>Month</option>
+                    <option value='year'>Year</option>
                   </select>
                 </p>
               </div>
             </div>
-            {programView === "grid" && (
+            {programView === 'grid' && (
               <>
                 <ProgramCard
-                  title="Active Programs"
-                  viewpage="/programs?type=yettojoin"
+                  title='Active Programs'
+                  viewpage='/programs?type=yettojoin'
                   handleNavigateDetails={handleNavigation}
                   handleBookmark={handleBookmark}
                   programs={data?.programs}
@@ -726,7 +747,7 @@ export default function Programs() {
                 />
 
                 {data?.total_pages > 1 && (
-                  <div className="p-4">
+                  <div className='p-4'>
                     <CustomPagination
                       totalItems={data?.count}
                       pageSize={paginationModel.pageSize}
@@ -737,16 +758,16 @@ export default function Programs() {
                 )}
               </>
             )}
-            {programView === "list" && (
-              <div className="py-6 px-6">
+            {programView === 'list' && (
+              <div className='py-6 px-6'>
                 <DataTable
                   loading={isLoading || isFetching}
                   rows={data?.programs || []}
                   columns={programTableFields}
                   hideCheckbox
                   rowCount={data?.count}
-                  paginationModel={paginationModel}
-                  setPaginationModel={setPaginationModel}
+                  paginationModel={paginationModel1}
+                  setPaginationModel={setPaginationModel1}
                 />
               </div>
             )}
@@ -759,15 +780,15 @@ export default function Programs() {
           padding={0}
         >
           <Stack
-            p={"12px 18px"}
-            className="border-b border-[#D9E4F2]"
-            direction={"row"}
-            alignItems={"center"}
-            justifyContent={"space-between"}
+            p={'12px 18px'}
+            className='border-b border-[#D9E4F2]'
+            direction={'row'}
+            alignItems={'center'}
+            justifyContent={'space-between'}
           >
             <Typography>Select Category's</Typography>
             <div onClick={() => setOpenCategory(false)}>
-              <img src={CloseIcon} alt="" />
+              <img src={CloseIcon} alt='' />
             </div>
           </Stack>
           <CategoryPopup

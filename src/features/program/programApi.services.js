@@ -12,19 +12,28 @@ const buildQueryString = (query) => {
 
   if (query && Object.keys(query).length) {
     if (query.type) {
-      queryParams = (queryParams === '' ? '?' : '&') + `${query.type}=${query.value}`;
+      queryParams =
+        (queryParams === '' ? '?' : '&') + `${query.type}=${query.value}`;
     }
     if (query.page) {
-      queryParams = (queryParams === '' ? '?' : `${queryParams}&`) + `${query.page}=${query.number}`;
+      queryParams =
+        (queryParams === '' ? '?' : `${queryParams}&`) +
+        `${query.page}=${query.number}`;
     }
     if (query.search) {
-      queryParams = (queryParams === '' ? '?' : `${queryParams}&`) + `${query.search.search}=${query.search.value}`;
+      queryParams =
+        (queryParams === '' ? '?' : `${queryParams}&`) +
+        `${query.search.search}=${query.search.value}`;
     }
     if (query.date) {
-      queryParams = (queryParams === '' ? '?' : `${queryParams}&`) + `${query.date.date}=${query.date.value}`;
+      queryParams =
+        (queryParams === '' ? '?' : `${queryParams}&`) +
+        `${query.date.date}=${query.date.value}`;
     }
     if (query.category_id) {
-      queryParams = (queryParams === '' ? '?' : `${queryParams}&`) + `category_id=${query.category_id}`;
+      queryParams =
+        (queryParams === '' ? '?' : `${queryParams}&`) +
+        `category_id=${query.category_id}`;
     }
   }
 
@@ -45,10 +54,13 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
     // Update program
     updateProgram: builder.mutation({
       query: ({ program_id, bodyFormData, role }) => ({
-        url: role ? `program/admin-program/${program_id}` : `programs/${program_id}`,
+        url: role
+          ? `program/admin-program/${program_id}`
+          : `programs/${program_id}`,
         method: 'PUT',
         body: bodyFormData,
-      }), invalidatesTags: [PROGRAM_UPDATES]
+      }),
+      invalidatesTags: [PROGRAM_UPDATES],
     }),
 
     // Get all categories
@@ -83,12 +95,14 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
 
     // Get all mentors
     getAllMentors: builder.query({
-      query: () => 'members/member-list?role_name=mentor&page=1&limit=100&status=active',
+      query: () =>
+        'members/member-list?role_name=mentor&page=1&limit=100&status=active',
     }),
 
     // Get programs by category
     getProgramsByCategory: builder.query({
-      query: (categoryId) => `program_task_assign/list_program?id=${categoryId}`,
+      query: (categoryId) =>
+        `program_task_assign/list_program?id=${categoryId}`,
     }),
 
     // Get program mentees
@@ -99,7 +113,9 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
     // Validate program name
     validateProgramName: builder.query({
       query: ({ program_name, program_id }) =>
-        `programs/validate_program_name?program_name=${program_name}${program_id ? `&program_id=${program_id}` : ''}`,
+        `programs/validate_program_name?program_name=${program_name}${
+          program_id ? `&program_id=${program_id}` : ''
+        }`,
     }),
 
     // Get program list with category
@@ -110,19 +126,21 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
     // Programs
     getAllPrograms: builder.query({
       query: (params) => ({
-        url: `programs`, params
+        url: `programs`,
+        params,
       }),
     }),
 
     getCountryStates: builder.query({
       query: () => ({
-        url: `program/states`
+        url: `program/states`,
       }),
     }),
 
     getCities: builder.query({
-      query: (id) => ({
-        url: `program/cities${id?`/${id}`:""}`,
+      query: (params) => ({
+        url: `program/cities`,
+        params,
       }),
     }),
 
@@ -135,21 +153,27 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
     getProgramDetailsById: builder.query({
       query: ({ id, requestId, role }) => ({
         url:
-          role === "admin"
+          role === 'admin'
             ? `program/admin-program/${id}`
-            : `programs/${id}${requestId ? `?request_id=${requestId}` : ""}`,
+            : `programs/${id}${requestId ? `?request_id=${requestId}` : ''}`,
       }),
       providesTags: [PROGRAM_LAUNCH, PROGRAM_ACCEPT],
     }),
 
     getSpecificProgramDetails: builder.query({
-      query: ({ id, requestId = '', program_create_type }) => `programs/${id}${requestId ? `?request_id=${requestId}` : ""}${program_create_type ? `?program_create_type=${program_create_type}` : ""}`, providesTags: [PROGRAM_LAUNCH, PROGRAM_ACCEPT],
+      query: ({ id, requestId = '', program_create_type }) =>
+        `programs/${id}${requestId ? `?request_id=${requestId}` : ''}${
+          program_create_type
+            ? `?program_create_type=${program_create_type}`
+            : ''
+        }`,
+      providesTags: [PROGRAM_LAUNCH, PROGRAM_ACCEPT],
     }),
 
     launchProgram: builder.mutation({
       query: (data) => ({
-        url: "request/",
-        method: "POST",
+        url: 'request/',
+        method: 'POST',
         body: data,
       }),
       invalidatesTags: [PROGRAM_LAUNCH],
@@ -158,9 +182,10 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
     acceptProgram: builder.mutation({
       query: ({ id, ...data }) => ({
         url: `request/${id}/`,
-        method: "PATCH",
+        method: 'PATCH',
         body: data,
-      }), invalidatesTags: [PROGRAM_ACCEPT]
+      }),
+      invalidatesTags: [PROGRAM_ACCEPT],
     }),
 
     // Program Counts and Statistics
@@ -172,8 +197,8 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
         const filteredQuery = Object.fromEntries(
           Object.entries(query).filter(
             ([key, value]) =>
-              !(key === "search" && value.trim().length === 0) &&
-              !(key === "status" && value === "all")
+              !(key === 'search' && value.trim().length === 0) &&
+              !(key === 'status' && value === 'all')
           )
         );
         const queryString = new URLSearchParams(filteredQuery).toString();
@@ -196,7 +221,7 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
         transformResponse: (response) => ({
           ...response,
           filterType: query?.type || '',
-          filterValue: query?.value || ''
+          filterValue: query?.value || '',
         }),
       }),
     }),
@@ -229,7 +254,10 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
     }),
 
     getProgramTaskDetails: builder.query({
-      query: (taskId) => `program_task_assign/task_submission${taskId ? `?task_id=${taskId}` : ''}`,
+      query: (taskId) =>
+        `program_task_assign/task_submission${
+          taskId ? `?task_id=${taskId}` : ''
+        }`,
     }),
 
     submitProgramTask: builder.mutation({
@@ -282,7 +310,7 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
     getMenteeProgramCount: builder.query({
       query: (query) => {
         if (!query || Object.keys(query).length === 0) {
-          return "programs/program-status-count";
+          return 'programs/program-status-count';
         }
         const filteredQuery = Object.fromEntries(
           Object.entries(query).filter(

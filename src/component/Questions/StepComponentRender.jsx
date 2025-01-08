@@ -100,7 +100,6 @@ const StepComponenRender = ({
     }
     reset(f);
   }, [stepFields, stepData]);
-
   return (
     <>
       <div className='form-container'>

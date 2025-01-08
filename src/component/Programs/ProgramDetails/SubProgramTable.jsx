@@ -14,10 +14,13 @@ import { useNavigate } from "react-router-dom";
 const ActionMenu = ({ params }) => {
     const navigate=useNavigate()
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [selectedItem, setSelectedItem] = React.useState({});
+  
   const open = Boolean(anchorEl);
 
-  const handleClick = (event) => {
+  const handleClick = (event,row) => {
     setAnchorEl(event.currentTarget);
+    setSelectedItem(row)
   };
 
   const handleClose = () => {
@@ -27,7 +30,7 @@ const ActionMenu = ({ params }) => {
   const handleMenuClick = (action) => {
     switch (action) {
       case "view":
-        navigate(`${pipeUrls.programdetails}/${1}`)
+        navigate(`${pipeUrls.programdetails}/${selectedItem.id}`)
         break;
       case "changeMentor":
         // Handle change mentor action
@@ -51,7 +54,7 @@ const ActionMenu = ({ params }) => {
         aria-controls={open ? "action-menu" : undefined}
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
-        onClick={handleClick}
+        onClick={(e)=>handleClick(e,params.row)}
       >
         <MoreVertIcon />
       </IconButton>

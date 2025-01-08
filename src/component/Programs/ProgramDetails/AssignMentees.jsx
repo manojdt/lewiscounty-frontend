@@ -470,7 +470,13 @@ export default function AssignMentees() {
                                                                                             className='calendar-control w-full'
                                                                                             {...dateField}
                                                                                             {...register(field.name, field.inputRules)}
-                                                                                            value={getValues(field.name)}
+                                                                                            value={(() => {
+                                                                                                const value = getValues(field.name);
+                                                                                                if (!value) return null;
+                                                                                                // Ensure we're working with a valid date
+                                                                                                const date = new Date(value);
+                                                                                                return isNaN(date.getTime()) ? null : date;
+                                                                                            })()}
                                                                                             // value={field.disabled ? new Date(state?.data[field.name]) : dateFormat[field.name]}
                                                                                             onChange={(e) => {
                                                                                                 dateField.onChange(e)
@@ -478,7 +484,7 @@ export default function AssignMentees() {
                                                                                                 calendarRef?.current[index]?.hide()
                                                                                             }}
                                                                                             disabled={field.disabled}
-                                                                                            // {...field.name === 'due_date' ?
+                                                                                            // {...field.name === 'due_date' ?  
                                                                                             //     {
                                                                                             //         minDate: getValues('start_date'),
                                                                                             //         maxDate: getValues('end_date')
@@ -487,7 +493,13 @@ export default function AssignMentees() {
                                                                                             // }
 
                                                                                             minDate={new Date()}
-                                                                                            maxDate={field.name === 'due_date' ? new Date(getValues('end_date')) : ""}
+                                                                                            maxDate={(() => {
+                                                                                                if (field.name !== 'due_date') return undefined;
+                                                                                                const endDate = getValues('end_date');
+                                                                                                if (!endDate) return undefined;
+                                                                                                const date = new Date(endDate);
+                                                                                                return isNaN(date.getTime()) ? undefined : date;
+                                                                                            })()}
                                                                                             showTime={field.name !== 'due_date'}
                                                                                             hourFormat="12"
                                                                                             dateFormat="dd/mm/yy"
@@ -562,7 +574,9 @@ export default function AssignMentees() {
                                                                                                 }}
                                                                                                 aria-invalid={!!errors[field.name]}
                                                                                             />
-                                                                                            <button disabled={type === "edit"&&from_type !== "program"} type='button' className='h-[60px] mt-2 w-[13%] text-[14px]'
+                                                                                            <button 
+                                                                                            // disabled={type === "edit"&&from_type !== "program"} 
+                                                                                            type='button' className='h-[60px] mt-2 w-[13%] text-[14px]'
                                                                                                 style={{ border: '1px dashed rgba(29, 91, 191, 1)', color: 'rgba(29, 91, 191, 1)' }}
                                                                                                 onClick={handleAddMentee}>
                                                                                                 + Add Mentees

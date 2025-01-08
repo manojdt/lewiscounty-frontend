@@ -411,7 +411,7 @@ export const programListColumns = [
       flex: 1,
       id: 7,
       renderCell : (params) => {
-          return <div className="pl-4">{params.row.members.length}</div>
+          return <div className="pl-4">{params.row?.members?.length}</div>
       }
   },
   {

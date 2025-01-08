@@ -180,6 +180,25 @@ export const goalPeriods = [
     value: 12,
   },
 ];
+export const StatusbuttonStyles = {
+  base: {
+    borderRadius: "5px",
+    padding: "12px 64px",
+    fontSize: "14px",
+    display: "flex",
+    alignItems: "center",
+  },
+  gradient: {
+    background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
+  },
+  success: {
+    background: "#16B681",
+  },
+  danger: {
+    border: "1px solid #E0382D",
+    color: "#E0382D",
+  },
+};
 
 export const activityStatusColor = {
   create: 'rgba(29, 91, 191, 1)',
@@ -710,6 +729,8 @@ export const programActionStatus = {
   reschedule: 'reschedule',
   program_join_request_accepted: 'program_join_request_accepted',
   program_assign: 'assign_program',
+  recent_join: 'recently_joined',
+  ongoing: 'ongoing',
 };
 
 export const pipeUrls = {
@@ -731,6 +752,8 @@ export const pipeUrls = {
 export const programFilterUrls = {
   yettoapprove: `?type=${programActionStatus.yettoapprove}`,
   yettojoin: `?type=${programActionStatus.yettojoin}`,
+  recent_join: `?type=${programActionStatus.recent_join}`,
+  ongoing: `?type=${programActionStatus.ongoing}`,
   planned: `?type=${programActionStatus.planned}`,
   yettostart: `?type=${programActionStatus.yettostart}`,
   inprogress: `?type=${programActionStatus.inprogress}`,
@@ -770,6 +793,7 @@ export const programMenus = (page = 'dashboard') => {
       name: 'Active Programs',
       count: 0,
       page: `${pipeUrl}${programFilterUrls.yettojoin}`,
+      menteePage:`${pipeUrl}${programFilterUrls.planned}`,
       for: ['admin', 'mentor', 'mentee'],
       mentorStatus: programActionStatus.yettojoin,
       adminStatus:programActionStatus.yettojoin,
@@ -780,6 +804,7 @@ export const programMenus = (page = 'dashboard') => {
       name: 'Recently Joined Programs',
       count: 0,
       page: `${pipeUrl}${programFilterUrls.yettostart}`,
+      menteePage:`${pipeUrl}${programFilterUrls.recent_join}`,
       for: ['mentor', 'admin', 'mentee'],
       mentorStatus: programActionStatus.yettostart,
       adminStatus:programActionStatus.yettostart,
@@ -790,6 +815,7 @@ export const programMenus = (page = 'dashboard') => {
       name: 'Ongoing Programs',
       count: 0,
       page: `${pipeUrl}${programFilterUrls.inprogress}`,
+      menteePage:`${pipeUrl}${programFilterUrls.ongoing}`,
       for: ['mentor', 'admin', 'mentee'],
       mentorStatus: programActionStatus.inprogress,
       adminStatus:programActionStatus.inprogress,
@@ -829,8 +855,8 @@ export const programMenus = (page = 'dashboard') => {
       count: 0,
       page: `${pipeUrl}${programFilterUrls.bookmark}`,
       for: ['mentor', 'mentee'],
-      mentorStatus: 'bookmarked',
-      menteeStatus: 'bookmark',
+      mentorStatus: 'is_bookmark',
+      menteeStatus: 'is_bookmark',
       status: programActionStatus.bookmark,
     },
     {
@@ -857,7 +883,7 @@ export const programMenus = (page = 'dashboard') => {
       page: `${pipeUrl}${programFilterUrls.cancelled}`,
       for: ['mentee', 'mentor'],
       mentorStatus: 'cancelled',
-      menteeStatus: 'cancel',
+      menteeStatus: 'cancelled',
       status: programActionStatus.cancelled,
     },
   ];
@@ -965,13 +991,13 @@ export const myRequestOverview = [
     status: RequestStatus.programRequest.key,
     for: ['admin', 'mentor', 'mentee'],
   },
-  {
-    name: 'Resource Access Requests',
-    key: RequestStatus.resourceAccessRequest,
-    count: 0,
-    status: RequestStatus.resourceAccessRequest.key,
-    for: ['admin', 'mentor'],
-  },
+  // {
+  //   name: 'Resource Access Requests',
+  //   key: RequestStatus.resourceAccessRequest,
+  //   count: 0,
+  //   status: RequestStatus.resourceAccessRequest.key,
+  //   for: ['admin', 'mentor'],
+  // },
   {
     name: 'New Goals Requests',
     key: RequestStatus.newGoalsRequests.key,

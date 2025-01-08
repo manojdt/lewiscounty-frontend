@@ -755,9 +755,9 @@ const ViewGoal = ({ type = '' }) => {
                                                             btnName={'Cancel'} btnCategory="secondary"
                                                             btnCls="border !border-[#E0382D] !text-[#E0382D] w-[140px] bg-[#fff]" />
 
-                                                        <Button
+                                                        {/* <Button
                                                             onClick={handleActionBtn}
-                                                            btnName={'Start'} btnCatergory="primary" style={{ background: 'linear-gradient(to right, #00AEBD, #1D5BBF)', borderRadius: '4px', width: '140px' }} />
+                                                            btnName={'Start'} btnCatergory="primary" style={{ background: 'linear-gradient(to right, #00AEBD, #1D5BBF)', borderRadius: '4px', width: '140px' }} /> */}
                                                     </>
                                                 }
 

@@ -226,12 +226,20 @@ const Reports = () => {
         const filterSearch = searchParams.get("search");
         const filterDate = searchParams.get("filter_by");
         let query = {}
-        if (filterType && filterType !== '') {
-            query.status =  (role === "admin" && requestTab === "all") ? "approved" : filterType === "cancel" ? "rejected" : filterType
-        }
-
-        if(role === "admin" && requestTab === "all"){
-            query.status = "approved"
+        if (role === "admin") {
+            if (requestTab === "all") {
+                query.status = "approved";
+                query.request_type = "report";
+            } else {
+                query.status = requestTab === "cancel" ? "rejected" : requestTab;
+                query.request_type = "report";
+                query.request_by = "mentor";
+            }
+        } else {
+            if (filterType && filterType !== '') {
+                query.status = filterType;
+            }
+            query.request_type = "report";
         }
 
         if (filterSearch && filterSearch !== '') {
@@ -241,11 +249,15 @@ const Reports = () => {
         if (filterDate && filterDate !== '') {
             query.filter_by = filterDate
         }
-        query.request_type = "report"
-        if (role === "admin") {
-            query.request_by = "mentor"
+        // if (role === "admin") {
+        //     query.request_by = "mentor"
+        // }
+        if (role === "admin"&&requestTab === "all") {
+           delete query.request_by
         }
-        dispatch(getAllReports({ ...query, page: paginationModel?.page + 1, limit: paginationModel?.pageSize }));
+        if(query.status){
+            dispatch(getAllReports({ ...query, page: paginationModel?.page + 1, limit: paginationModel?.pageSize }));
+        }
     }
 
     const handleCancelDelete = () => {
@@ -274,8 +286,8 @@ const Reports = () => {
     }, [filter])
 
     useEffect(() => {
-        getReports()
-    }, [searchParams, paginationModel])
+            getReports()
+    }, [searchParams,role, paginationModel,requestTab])
 
 
     useEffect(() => {
@@ -283,7 +295,7 @@ const Reports = () => {
             setDeleteModal(false)
             getReports()
         }
-    }, [status])
+    }, [status,role])
 
     return (
         <div className="reports px-9 py-9">

@@ -16,7 +16,10 @@ import {
   requestStatus,
   user,
 } from '../../../utils/constant';
-import { getMenteeJoinedInProgram } from '../../../services/userprograms';
+import {
+  getMenteeJoinedInProgram,
+  updateProgram,
+} from '../../../services/userprograms';
 import {
   programCancelRequest,
   programRescheduleRequest,
@@ -24,7 +27,7 @@ import {
   updateProgramMenteeRequest,
   updateProgramRequest,
 } from '../../../services/request';
-
+import PlusCircle from '../../../assets/icons/Pluscircle.svg';
 import UserImage from '../../../assets/icons/user-icon.svg';
 import ShareIcon from '../../../assets/images/share1x.png';
 import RescheduleIcon from '../../../assets/images/reschedule1x.png';
@@ -41,7 +44,7 @@ import LinkIcon from '../../../assets/images/link1x.png';
 import TickColorIcon from '../../../assets/icons/tickColorLatest.svg';
 import TimeHistoryIcon from '../../../assets/icons/time-history-icon.svg';
 import CancelIcon from '../../../assets/images/cancel1x.png';
-
+import CompleteIcon from '../../../assets/images/completed1x.png';
 import { Button } from '../../../shared';
 import {
   convertDateFormat,
@@ -67,20 +70,30 @@ import {
 import SubprogramsDataGrid from './SubProgramTable';
 import ProgramActions from './ProgramActions';
 import { toast } from 'react-toastify';
+import SkillsSet from '../../SkillsSet';
+import { CancelPopup } from '../../Mentor/Task/cancelPopup';
+import SuccessGradientMessage from '../../success-gradient-message';
+import ProgramReasons from './ProgramReasons';
 
 export default function ProgramDetails({ setProgramDetailsId }) {
   const dateInfo = todatDateInfo();
 
+  const [cancelPopup, setCancelPopup] = useState(false);
+  const [cancelPopupConfirmation, setCancelPopupConfirmation] = useState(false);
+
   const params = useParams();
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [acceptProgram, { isSuccess: isAccepted, reset: resetProgramAccept }] =
     useAcceptProgramMutation();
   const requestId = searchParams.get('request_id') || '';
   const requestStatusParams = searchParams.get('status') || '';
   const program_create_type = searchParams.get('program_create_type') || '';
-
   const userdetails = useSelector((state) => state.userInfo);
   const role = userdetails.data.role || '';
+  const reqRole = requestId && userdetails.data.role === 'admin';
+
+  console.log(userdetails);
 
   const [loading, setLoading] = useState({ initial: true, join: false });
   const calendarRef = useRef([]);
@@ -94,7 +107,12 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     share: false,
     reschedule: false,
   });
-  const navigate = useNavigate();
+
+  const [completeProgram, setCompleteProgram] = React.useState({
+    bool: false,
+    activity: false,
+  });
+
   const dispatch = useDispatch();
 
   const [
@@ -205,6 +223,44 @@ export default function ProgramDetails({ setProgramDetailsId }) {
 
   const handleCerificateTab = (key) => {
     setCertificateActiveTab(key);
+  };
+  const handleOpenConfirmPopup = () => {
+    handleClose();
+    setCompleteProgram({
+      ...completeProgram,
+      bool: true,
+    });
+  };
+
+  const handleCloseConfirmPopup = () => {
+    setCompleteProgram({
+      bool: false,
+      activity: false,
+    });
+  };
+
+  const handleComplete = (programId) => {
+    handleClose();
+    dispatch(
+      updateProgram({
+        id: programdetails.id,
+        status: programActionStatus.completed,
+      })
+    ).then((res) => {
+      if (res?.meta?.requestStatus === 'fulfilled') {
+        setCompleteProgram({
+          bool: false,
+          activity: true,
+        });
+        setTimeout(() => {
+          setCompleteProgram({
+            bool: false,
+            activity: false,
+          });
+          navigate(`/program-completion/${programId}`);
+        }, 2000);
+      }
+    });
   };
 
   const handleJoinProgram = async (request_type) => {
@@ -527,6 +583,47 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     }
   }, [programdetails, menteeJoined]);
 
+  const handleCancelSubmit = (reason) => {
+    if (role === 'mentor') {
+      dispatch(
+        updateProgramMenteeRequest({
+          id: programdetails?.request_data?.id,
+          status: 'rejected',
+          rejection_reason: reason,
+        })
+      ).then((res) => {
+        if (res?.meta?.requestStatus === 'fulfilled') {
+          // handleCloseCancelReasonPopup();
+          setCancelPopup(false);
+          setCancelPopupConfirmation(true);
+          setTimeout(() => {
+            setCancelPopupConfirmation(false);
+            refetch();
+          }, 2000);
+        }
+      });
+    }
+
+    if (role === 'mentee') {
+      dispatch(
+        updateProgramRequest({
+          id: programdetails?.request_data?.id,
+          status: 'rejected',
+          reason: reason,
+        })
+      ).then((res) => {
+        if (res?.meta?.requestStatus === 'fulfilled') {
+          setCancelPopup(false);
+          setCancelPopupConfirmation(true);
+          setTimeout(() => {
+            setCancelPopupConfirmation(false);
+            refetch();
+          }, 2000);
+        }
+      });
+    }
+  };
+
   useEffect(() => {
     const programId = params.id;
     if (programId && programId !== '') {
@@ -597,6 +694,15 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     ? register('reschedule_end_date', { required: 'This field is required' })
     : undefined;
 
+  // const payment = useSelector((state) => state.payment);
+
+  // const [programDetailsId, setProgramDetailsId] = useState(null);
+  //   const [clientSecret, setClientSecret] = useState();
+
+  // const stripePromise = loadStripe(
+  //   'pk_test_51QThrEKalAFoHITwOWO9dbQ3kl8kUUfBANhS3U4dNzYvmRsXl8j196jDww2VCJGGehlc7XSBkhagvMVajsoGWfDo00KOCPJQiq'
+  // );
+
   useEffect(() => {
     if (isError) {
       toast.error(actionError?.data?.errors[0]);
@@ -612,6 +718,37 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     }
   }, [isAccepted, programdetails?.id]);
 
+  console.log('programdetails', programdetails);
+
+  const handleNewTaskFromAdmin = (data) => {
+    const constructedData = {
+      ...data,
+
+      program_category_name: programdetails?.category_name,
+      program_name: programdetails?.program_name,
+      program_startdate: programdetails?.start_date,
+      program_enddate: programdetails?.end_date,
+      task_name: programdetails?.task_name ?? '',
+      reference_link: programdetails?.reference_links ?? '',
+      task_details: programdetails?.task_details ?? '',
+      due_date: programdetails?.due_date,
+      // "assign_task_id": null,
+      list_mentees: programdetails?.participated_mentees,
+      program_id: programdetails?.id,
+      program_duration: programdetails?.duration,
+      category_id: programdetails?.categories?.[0]?.id,
+      // "mentor_id": programdetails?.created_by,
+      mentor_name: programdetails?.mentor_name,
+      // "task_id": null,
+      state_date: programdetails?.start_date,
+    };
+
+    navigate(`/assign-mentees/?type=edit&from=program`, {
+      state: {
+        data: constructedData,
+      },
+    });
+  };
   return (
     <div className='px-9 my-6 grid'>
       <Backdrop
@@ -637,9 +774,78 @@ export default function ProgramDetails({ setProgramDetailsId }) {
               className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
               style={{
                 fontWeight: 600,
+                color: '#232323',
               }}
             >
               Thank you for providing the rating for this program
+            </p>
+          </div>
+        </div>
+      </Backdrop>
+
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={completeProgram.bool}
+      >
+        <div className='popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center'>
+          <img src={TickColorIcon} alt='TickColorIcon' />
+          <span
+            style={{
+              color: '#232323',
+              fontWeight: 600,
+              fontSize: '24px',
+            }}
+          >
+            Complete
+          </span>
+          <div className='py-5'>
+            <p
+              style={{
+                color: 'rgba(24, 40, 61, 1)',
+                fontWeight: 600,
+                fontSize: '18px',
+              }}
+            >
+              Are you sure want to complete the program?
+            </p>
+          </div>
+          <div className='flex justify-center'>
+            <div className='flex gap-6 justify-center align-middle'>
+              <Button
+                btnCls='w-[110px]'
+                btnName={'No'}
+                btnCategory='secondary'
+                onClick={handleCloseConfirmPopup}
+              />
+              <Button
+                btnType='button'
+                btnCls='w-[110px]'
+                btnName={'Yes'}
+                style={{ background: '#16B681' }}
+                btnCategory='primary'
+                onClick={() => handleComplete(programdetails?.id)}
+              />
+            </div>
+          </div>
+        </div>
+      </Backdrop>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={completeProgram.activity}
+      >
+        <div className='px-5 py-1 flex justify-center items-center'>
+          <div
+            className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+            style={{ background: '#fff', borderRadius: '10px' }}
+          >
+            <img src={SuccessTik} alt='SuccessTik' />
+            <p
+              className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+              style={{
+                fontWeight: 600,
+              }}
+            >
+              Program Completed successfully
             </p>
           </div>
         </div>
@@ -1382,7 +1588,12 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   </div>
                 </li>
               </ol>
-              {(role === 'mentor' || role === 'admin') && (
+              {(role === 'mentor' ||
+                role === 'admin' ||
+                (role === 'mentee' &&
+                  (programdetails.status === programActionStatus.inprogress ||
+                    programdetails.mentee_join_status ===
+                      programActionStatus.program_join_request_accepted))) && (
                 <>
                   <div className='cursor-pointer' onClick={handleClick}>
                     <img src={MoreIcon} alt='MoreIcon' />
@@ -1396,58 +1607,120 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                       'aria-labelledby': 'basic-button',
                     }}
                   >
-                    <MenuItem
-                      onClick={() => handleMenu('share')}
-                      className='!text-[12px]'
-                    >
-                      <img
-                        src={ShareIcon}
-                        alt='ShareIcon'
-                        className='pr-3 w-[25px]'
-                      />
-                      Share
-                    </MenuItem>
-                    {!requestStatusParams &&
-                      ![
-                        'yettoapprove',
-                        'cancelled',
-                        'new_program_request_rejected',
-                        'completed',
-                      ].includes(programdetails?.status) &&
-                      role !== 'admin' && (
+                    {(role === 'mentor' || role === 'admin') && (
+                      <>
                         <MenuItem
-                          onClick={() => handleMenu('reschedule')}
+                          onClick={() => handleMenu('share')}
                           className='!text-[12px]'
                         >
                           <img
-                            src={RescheduleIcon}
-                            alt='RescheduleIcon'
+                            src={ShareIcon}
+                            alt='ShareIcon'
                             className='pr-3 w-[25px]'
                           />
-                          Reschedule
+                          Share
                         </MenuItem>
-                      )}
+                        {
+                          !requestStatusParams &&
+                            ![
+                              'yettoapprove',
+                              'cancelled',
+                              'new_program_request_rejected',
+                              'completed',
+                            ].includes(programdetails?.status) &&
+                            !reqRole && (
+                              // role !== 'admin' && (
+                              <MenuItem
+                                onClick={() => handleMenu('reschedule')}
+                                className='!text-[12px]'
+                              >
+                                <img
+                                  src={RescheduleIcon}
+                                  alt='RescheduleIcon'
+                                  className='pr-3 w-[25px]'
+                                />
+                                Reschedule
+                              </MenuItem>
+                            )
+                          // )
+                        }
 
-                    {!requestStatusParams &&
-                      ![
-                        'yettoapprove',
-                        'cancelled',
-                        'new_program_request_rejected',
-                        'completed',
-                      ].includes(programdetails?.status) &&
-                      role !== 'admin' && (
-                        <MenuItem
-                          onClick={() => handleMenu('cancel')}
-                          className='!text-[12px]'
-                        >
-                          <img
-                            src={AbortIcon}
-                            alt='Cancel'
-                            className='pr-3 w-[25px]'
-                          />
-                          Cancel
-                        </MenuItem>
-                      )}
+                        {
+                          !requestStatusParams &&
+                            ![
+                              'yettoapprove',
+                              'cancelled',
+                              'new_program_request_rejected',
+                              'completed',
+                            ].includes(programdetails?.status) &&
+                            !reqRole && (
+                              // role !== 'admin' && (
+                              <MenuItem
+                                onClick={() => handleMenu('cancel')}
+                                className='!text-[12px]'
+                              >
+                                <img
+                                  src={AbortIcon}
+                                  alt='Cancel'
+                                  className='pr-3 w-[25px]'
+                                />
+                                Cancel
+                              </MenuItem>
+                            )
+                          // )
+                        }
+                        {(programdetails.status ===
+                          programActionStatus.inprogress ||
+                          programdetails.status ===
+                            programActionStatus.assigned) &&
+                          !reqRole && (
+                            <>
+                              <MenuItem
+                                onClick={() => handleOpenConfirmPopup()}
+                                className='!text-[12px]'
+                              >
+                                <img
+                                  src={CompleteIcon}
+                                  alt='AbortIcon'
+                                  className='pr-3 w-[25px]'
+                                />
+                                Complete
+                              </MenuItem>
+                              <MenuItem
+                                onClick={() => handleNewTaskFromAdmin()}
+                                className='!text-[12px]'
+                              >
+                                <img
+                                  src={PlusCircle}
+                                  alt='PlusCircle'
+                                  className='pr-3 w-[25px]'
+                                />
+                                Assign Task to Mentees
+                              </MenuItem>
+                            </>
+                          )}
+                      </>
+                    )}
+                    {role === 'mentee' && (
+                      <>
+                        {(programdetails.status ===
+                          programActionStatus.inprogress ||
+                          programdetails.mentee_join_status ===
+                            programActionStatus.program_join_request_accepted) && (
+                          <MenuItem
+                            onClick={() => handleMenu('cancel')}
+                            className='!text-[12px]'
+                          >
+                            <img
+                              src={AbortIcon}
+                              alt='AbortIcon'
+                              className='pr-3 w-[25px]'
+                            />
+                            Cancel
+                          </MenuItem>
+                        )}
+                      </>
+                    )}
                   </Menu>
                 </>
               )}
@@ -1508,13 +1781,24 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     {programdetails.description}
                   </div>
 
+                  {programdetails.prerequisite && (
+                    <div className='text-[12px] my-3'>
+                      <span className='font-semibold text-background-primary-main'>
+                        Prerequisite:{' '}
+                      </span>
+                      {programdetails.prerequisite}
+                    </div>
+                  )}
+
                   <div className='flex gap-6 py-6'>
                     <div className='flex gap-2 items-center'>
                       <img src={LocationIcon} alt='LocationIcon' />
                       <span className='text-[12px]'>
-                        {programdetails.venue}
+                        {/* {programdetails.venue} */}
+                        {`${programdetails.city_details?.name}, ${programdetails.state_details?.abbreviation}`}
                       </span>
                     </div>
+
                     <div
                       style={{ borderRight: '1px solid rgba(24, 40, 61, 1)' }}
                     ></div>
@@ -1688,6 +1972,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     handleAcceptCancelProgramRequest={
                       handleAcceptCancelProgramRequest
                     }
+                    type={searchParams.get('type')}
+                    setCancelPopup={setCancelPopup}
                     reqStatusColor={reqStatusColor}
                     reqStatus={reqStatus}
                     requestStatusParams={requestStatusParams}
@@ -1811,7 +2097,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                         <span>Schedule</span>
                         <span>Flexible schedule</span>
                       </li>
-                      {role === 'mentor' && (
+                      {(role === 'mentor' || role === 'admin')&&!programdetails?.admin_assign_program && (
                         <li
                           className='flex justify-between text-[12px]'
                           style={{ paddingTop: '14px' }}
@@ -1828,13 +2114,59 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                           </span>
                         </li>
                       )}
+
+                      {role === user.mentee && (
+                        <li
+                          className='flex justify-between text-[12px]'
+                          style={{ paddingTop: '14px' }}
+                        >
+                          {' '}
+                          <span>Fees</span>
+                          <span
+                            className='cursor-pointer'
+                            // onClick={() =>
+                            //   handleViewJoinedMentees(programdetails)
+                            // }
+                          >
+                            $ {programdetails.enrollment_fees}
+                          </span>
+                        </li>
+                      )}
+
+                      {/* <li
+                        className='flex justify-between text-[12px]'
+                        style={{ paddingBottom: '10px', paddingTop: '14px' }}
+                      >
+                        <span
+                          className='cursor-pointer'
+                          onClick={() => {
+                            setProgramDetailsId(programdetails?.id);
+                            // navigate('/payment');
+                          }}
+                        >
+                          Buy
+                        </span>
+                        {payment?.paymentData?.data?.client_secret && (
+                          <Elements
+                            stripe={stripePromise}
+                            options={{
+                              clientSecret:
+                                payment?.paymentData?.data?.client_secret,
+                              theme: 'stripe',
+                              loader: 'auto',
+                            }}
+                          >
+                            <CheckoutForm />
+                          </Elements>
+                        )}
+                      </li> */}
                     </ul>
-                    {role === user.mentee && (
+                    {role === 'mentee' && (
                       <div className='text-end mt-3'>
                         <Button
                           btnType='button'
                           btnCls='w-[120px]'
-                          btnName={'Checkout'}
+                          btnName={'Pay'}
                           btnCategory='primary'
                           onClick={() => {
                             if (programdetails?.id) {
@@ -1848,10 +2180,18 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   </div>
                 </div>
               </div>
-
+              <ProgramReasons
+                programdetails={programdetails}
+                role={role}
+                requestId={requestId}
+                programActionStatus={programActionStatus}
+              />
+              {/* <div>/............................................................................../ </div>
               {(programdetails?.request_data?.request_type ===
                 'program_reschedule' ||
                 programdetails?.request_data?.request_type ===
+                  'program_cancel' ||
+                programdetails?.request_data?.request_type === 'program_new') &&
                   'program_cancel') &&
                 ['new', 'pending', 'approved', 'rejected'].includes(
                   programdetails?.request_data?.status
@@ -1932,10 +2272,15 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     {programdetails?.reschedule_reason?.reason}
                   </div>
                 </div>
-              ) : null}
+              ) : null} */}
               {'sub_program' in programdetails &&
                 programdetails?.sub_program?.length > 0 && (
                   <SubprogramsDataGrid data={programdetails?.sub_program} />
+                )}
+              {role === 'mentee' &&
+                (programdetails.status === programActionStatus.inprogress ||
+                  programdetails.status === programActionStatus.paused) && (
+                  <SkillsSet programdetails={programdetails} />
                 )}
               {/* Detail Section */}
               <div
@@ -1958,6 +2303,42 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     </button>
                   ))}
                 </div>
+
+                {Array.isArray(programdetails?.goals) &&
+                  programdetails?.goals?.length > 0 && (
+                    <div className='px-6 pt-10'>
+                      <p className='text-[12px] mb-2'>Goals:</p>
+                      <div className='flex items-center gap-x-3'>
+                        {programdetails?.goals.map((goal) => (
+                          <button
+                            key={goal.id}
+                            className={`px-6 py-3 text-[12px] bg-gray-200 text-black rounded-full`}
+                            onClick={() => navigate(`/view-goal/${goal.id}`)}
+                          >
+                            {goal.goal_name}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                {Array.isArray(programdetails?.admin_goals) &&
+                  programdetails?.admin_goals?.length > 0 && (
+                    <div className='px-6 pt-10'>
+                      <p className='text-[12px] mb-2'>Admin Goals:</p>
+                      <div className='flex items-center gap-x-3'>
+                        {programdetails?.admin_goals.map((goal) => (
+                          <button
+                            key={goal.id}
+                            className={`px-6 py-3 text-[12px] bg-gray-200 text-black rounded-full`}
+                            onClick={() => navigate(`/view-goal/${goal.id}`)}
+                          >
+                            {goal.goal_name}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                 <div className='tab-content px-6 pt-10 text-[12px]'>
                   <div
                     className={`about-programs ${
@@ -2132,6 +2513,19 @@ export default function ProgramDetails({ setProgramDetailsId }) {
           </div>
         </div>
       ) : null}
+      <CancelPopup
+        open={cancelPopup}
+        header={'Cancel Reason'}
+        handleClosePopup={() => handleCloseConfirmPopup('cancel')}
+        handleSubmit={(reason) => {
+          handleCancelSubmit(reason);
+        }}
+      />
+      <SuccessGradientMessage
+        message={'Program Cancelled successfully'}
+        cancelPopupConfirmation={cancelPopupConfirmation}
+        setCancelPopupConfirmation={setCancelPopupConfirmation}
+      />
     </div>
   );
 }

@@ -11,10 +11,10 @@ import ReportVideoIcon from "../../assets/images/report1.png";
 import { Button } from "../../shared";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Backdrop, CircularProgress } from "@mui/material";
+import { Backdrop, Box, CircularProgress } from "@mui/material";
 import { getReportDetails } from "../../services/reportsInfo";
 import { dateTimeFormat } from "../../utils";
-import { reportAllStatus } from "../../utils/constant";
+import { reportAllStatus, StatusbuttonStyles } from "../../utils/constant";
 import TickColorIcon from "../../assets/icons/tickColorLatest.svg";
 import { updateReportRequest } from "../../services/request";
 import { CancelPopup } from "../Mentor/Task/cancelPopup";
@@ -303,22 +303,7 @@ const ViewReport = () => {
               </table>
             </div>
 
-            {reportDetails?.rejection_reason && (
-              <div className="border border-[#E0382D] rounded-[5px] bg-[#FFE7E7] mt-[20px]">
-                <Typography
-                  className="text-[#E0382D] !text-[18px] border border-b-[#E0382D]"
-                  p={"12px 20px"}
-                >
-                  Cancelled Reason
-                </Typography>
-                <Typography
-                  className="text-[#18283D] !text-[14px]"
-                  p={"12px 20px"}
-                >
-                  {reportDetails?.rejection_reason}
-                </Typography>
-              </div>
-            )}
+          
 
             <div
               className="task-desc  mt-5 px-5 py-6"
@@ -384,10 +369,88 @@ const ViewReport = () => {
 
                 <div>Report Description : {reportDetails.comments}</div>
               </div>
+              {reportDetails?.rejection_reason && (
+              <div className="border border-[#E0382D] rounded-[5px] bg-[#FFE7E7] mt-[20px]">
+                <Typography
+                  className="text-[#E0382D] !text-[18px] border border-b-[#E0382D]"
+                  p={"12px 20px"}
+                >
+                  Cancelled Reason
+                </Typography>
+                <Typography
+                  className="text-[#18283D] !text-[14px]"
+                  p={"12px 20px"}
+                >
+                  {reportDetails?.rejection_reason}
+                </Typography>
+              </div>
+            )}
+              <div
+                style={{
+                  marginTop: 20,
+                  display: "flex",
+                  flexDirection: "row",
+                  width: "100%",
+                  justifyContent: "center",
+                }}
+              >
+                {role === "admin" && reportDetails?.status === "approved" ? (
+                  <>
+                  <Box className="pr-2">
 
-              {role !== "admin" && (
-                <div className="close-btn flex justify-center gap-7 pb-5">
+                  <button
+            className='py-3 px-16 text-white text-[14px] flex items-center'
+            style={{
+              ...StatusbuttonStyles.base,
+              ...StatusbuttonStyles.success,
+              cursor: 'not-allowed',
+            }}
+            onClick={() => undefined}
+          >
+            Approved
+          </button>
+                  </Box>
                   <Button
+                  btnType="button"
+                  btnCls="w-[120px]"
+                  onClick={() => {
+                    navigate(-1);
+                  }}
+                  btnName="Close"
+                  btnCategory="secondary"
+                />
+                  </>
+                ) :role === "admin" && (reportDetails?.status === "rejected" ||
+                  reportDetails?.status === "cancelled") ? (
+                    <>
+                   <Box pr={2}>
+                            <button
+                              className="py-3 px-16 text-white text-[14px] flex items-center"
+                              style={{
+                                ...StatusbuttonStyles.base,
+                                ...StatusbuttonStyles.danger,
+                                cursor: "not-allowed",
+                              }}
+                              onClick={() => undefined}
+                            >
+                              Rejected
+                            </button>
+                          </Box>
+                  <Button
+                  btnType="button"
+                  btnCls="w-[120px]"
+                  onClick={() => {
+                    navigate(-1);
+                  }}
+                  btnName="Close"
+                  btnCategory="secondary"
+                />
+                    </>
+                ) : null}
+                
+              {role !== "admin" && (
+                <span className="pr-2">
+                  {/* <Button
                     btnType="button"
                     btnCls="w-[14%]"
                     onClick={() => {
@@ -395,7 +458,7 @@ const ViewReport = () => {
                     }}
                     btnName="Cancel"
                     btnCategory="secondary"
-                  />
+                  /> */}
 
                   {
                     // reportDetails.report_status === reportAllStatus.pending &&
@@ -404,7 +467,7 @@ const ViewReport = () => {
                     ) && (
                       <Button
                         btnType="button"
-                        btnCls="w-[14%]"
+                        btnCls="w-[120px]"
                         onClick={() => {
                           navigate(`/edit-report/${reportDetails.id}`);
                         }}
@@ -418,60 +481,9 @@ const ViewReport = () => {
                                     onClick={() => { navigate('/reports') }} btnName='Close'
                                     btnStyle={{ background: 'rgba(29, 91, 191, 1)' }}
                                 /> */}
-                </div>
+                </span>
               )}
-              <div
-                style={{
-                  marginTop: 20,
-                  display: "flex",
-                  flexDirection: "row",
-                  width: "100%",
-                  justifyContent: "center",
-                }}
-              >
-                {role === "admin" && reportDetails?.status === "approved" ? (
-                  <Typography
-                    style={{
-                      background: "#16B681",
-                      borderRadius: "3px",
-                      padding: "8px 16px",
-                      color: "white",
-                      display: "inline-block",
-                      marginRight: 30,
-                    }}
-                  >
-                    {" "}
-                    Approved{" "}
-                  </Typography>
-                ) : reportDetails?.status === "rejected" ||
-                  reportDetails?.status === "cancelled" ? (
-                  <Typography
-                    style={{
-                      background: "rgb(224, 56, 45)",
-                      borderRadius: "3px",
-                      padding: "8px 16px",
-                      color: "white",
-                      display: "inline-block",
-                      marginRight: 30,
-
-                      // lineHeight: "30px",
-                      // borderRadius: "3px",
-                      // width: "110px",
-                      // height: "34px",
-                      // color: "rgb(224, 56, 45)",
-                      // fontSize: "12px",
-                      // textAlign: "center",
-                      // display: "flex",
-                      // justifyContent: "center",
-                      // alignItems: "center",
-                      // background: "#fff",
-                    }}
-                    color="error"
-                  >
-                    {" "}
-                    Rejected{" "}
-                  </Typography>
-                ) : null}
+              {role !== "admin"&&
                 <Button
                   btnType="button"
                   btnCls="w-[120px]"
@@ -481,9 +493,10 @@ const ViewReport = () => {
                   btnName="Close"
                   btnCategory="secondary"
                 />
+}
               </div>
               {role === "admin" && reportDetails?.status === "new" ? (
-                <div className="close-btn flex justify-center gap-7 pb-5">
+                <div className="close-btn flex justify-center gap-7 pb-5 pt-2">
                   <Button
                     btnType="button"
                     btnCategory="secondary"
@@ -500,6 +513,15 @@ const ViewReport = () => {
                       btnName="Approve"
                     />
                   }
+                   {/* <Button
+                  btnType="button"
+                  btnCls="w-[120px]"
+                  onClick={() => {
+                    navigate(-1);
+                  }}
+                  btnName="Close"
+                  btnCategory="secondary"
+                /> */}
                 </div>
               ) : null}
             </div>

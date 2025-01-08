@@ -21,6 +21,7 @@ import ConnectIcon from '../../assets/images/Connectpop1x.png';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   getProfileInfo,
+  getRequestView,
   menteeCancelReq,
   mentorAcceptReq,
   updateUserList,
@@ -58,6 +59,7 @@ const MentorMenteeProfile = () => {
   );
   console.log(userDetails,"userDetails")
   const [createMeetingLoading, setCreateMeetingLoading] = React.useState(false);
+  const [message, setMessage] = React.useState(false);
   const [cancelPopup, setCancelPopup] = React.useState({
     bool: false,
     activity: false,
@@ -99,22 +101,35 @@ const MentorMenteeProfile = () => {
   }
 
   const handleAdminProgram = (type, reason) => {
-    let payload = {
-      id: requestData?.id,
-      status: type,
+  try {
+      let payload = {
+        follow_id: requestData?.id,
+        status: type,
+  
+      }
+      if (type === "reject") {
+        payload = {
+          ...payload,
+          cancelled_reason: reason,
+        }
+      }
+      dispatch(mentorAcceptReq(payload)).then((res) => {
+        if (res?.meta?.requestStatus === 'fulfilled') {
+          setAdminPopup({
+            ...adminPopup,
+            bool: false,
+          })
+          setMessage(true)
 
-    }
-    if (type === "rejected") {
-      payload = {
-        ...payload,
-        rejection_reason: reason,
-      }
-    }
-    dispatch(updateProgramMenteeRequest(payload)).then((res) => {
-      if (res.meta.requestStatus === "fulfilled") {
-        navigate(-1)
-      }
-    })
+        }
+      });
+    } catch (error) {
+      setAdminPopup({
+        ...adminPopup,
+        bool: false,
+      })
+      setMessage(false)
+  }
   }
 
   React.useEffect(() => {
@@ -123,8 +138,19 @@ const MentorMenteeProfile = () => {
       dispatch(
         getProfileInfo({ id: state?.user_id })
       );
+       if (role === 'mentor'&&state?.row_id) {
+            dispatch(getRequestView(parseInt(state?.row_id)));
+          }
     }
   }, [state?.user_id]);
+  React.useEffect(() => {
+    if (message) {
+      setTimeout(() => {
+        setMessage(false)
+        navigate(-1)
+      }, [2000]);
+    }
+  }, [message]);
 
   const handleFollowMentee = () => {
     const payload = {
@@ -233,7 +259,28 @@ const MentorMenteeProfile = () => {
               : 'View New Request Mentor Profile'}
         </Typography>
       </Stack>
+      <Backdrop
+            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            open={message}
+            onClick={() => setMessage(false)}
+          >
 
+            <div className='px-5 py-1 flex justify-center items-center'>
+              <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+                style={{ background: '#fff', borderRadius: '10px' }}>
+                <img src={SuccessTik} alt="SuccessTik" />
+                <p className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                  style={{
+                    fontWeight: 600
+                  }}
+                >{adminPopup?.type === "accept" &&
+                  'Mentee has been successfully connected'}
+                {adminPopup?.type === 'reject' &&
+                  'Mentee has been successfully deleted'}</p>
+              </div>
+
+            </div>
+          </Backdrop>
       <div className='border border-[#DBE0E5] rounded-[6px] bg-[#fff] m-[32px] p-[32px]'>
         <Stack
           direction={'row'}
@@ -244,7 +291,7 @@ const MentorMenteeProfile = () => {
             Profile
           </div>
           {
-            ((role === "mentor")) &&
+            ((role === "mentor")) &&state?.status !=="accept"&&state?.status !=="cancel"&&
             <div className='flex gap-4 pt-10'>
               <button
                 className='py-3 px-16 text-white text-[14px] flex items-center'
@@ -253,7 +300,7 @@ const MentorMenteeProfile = () => {
                   borderRadius: '5px',
                   color: '#E0382D',
                 }}
-                onClick={() => handleOpenAdminApprove("rejected")}
+                onClick={() => handleOpenAdminApprove("reject")}
               >
                 Reject
               </button>
@@ -263,9 +310,9 @@ const MentorMenteeProfile = () => {
                   background: '#16B681',
                   borderRadius: '5px',
                 }}
-                onClick={() => handleOpenAdminApprove("approved")}
+                onClick={() => handleOpenAdminApprove("accept")}
               >
-                Approve
+                Connect
               </button>
             </div>
           }
@@ -596,7 +643,7 @@ const MentorMenteeProfile = () => {
 
       <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={adminPopup?.bool && adminPopup?.type === "approved"}
+        open={adminPopup?.bool && adminPopup?.type === "accept"}
       >
         <div className='popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center'>
           <img src={ConnectIcon} alt='ConnectIcon' />
@@ -627,16 +674,16 @@ const MentorMenteeProfile = () => {
                 btnCls='w-[110px]'
                 btnName={'Yes'}
                 btnCategory='primary'
-                onClick={() => handleAdminProgram("approved")}
+                onClick={() => handleAdminProgram("accept")}
               />
             </div>
           </div>
         </div>
       </Backdrop>
 
-      <CancelPopup open={(adminPopup?.bool && adminPopup?.type === "rejected")} header="Rejection Reason"
+      <CancelPopup open={(adminPopup?.bool && adminPopup?.type === "reject")} header="Rejection Reason"
         handleClosePopup={() => handleCloseAdminApprove()}
-        handleSubmit={(reason) => handleAdminProgram("rejected", reason)} />
+        handleSubmit={(reason) => handleAdminProgram("reject", reason)} />
     </>
   );
 };
