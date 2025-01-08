@@ -1331,11 +1331,7 @@ export const ProgramTabs = [
   {
     name: 'About Program',
     key: 'about_program',
-  },
-  {
-    name: 'Program Outcomes',
-    key: 'program_outcomes',
-  },
+  },  
   {
     name: 'Program Testimonials',
     key: 'program_testimonials',
@@ -1946,6 +1942,18 @@ export const ProgramInformationFields = [
 
 export const AboutProgramFields = [
   {
+    type: 'textbox',
+    name: 'benefits',
+    label: 'Benefits',
+    placeholder: 'Enter benefits details',
+    inputRules: {
+      required: 'This field is required',
+    },
+    width: 'w-full',
+    for: ['mentor'],
+  },
+
+  {
     type: 'popup-input',
     name: 'goals',
     label: 'Goals',
@@ -1957,6 +1965,20 @@ export const AboutProgramFields = [
     width: 'w-full',
     icon: 'add',
     for: ['mentor', 'admin'],
+  },
+
+  {
+    type: 'popup-input',
+    name: 'certifications',
+    label: 'Program Certificates',
+    fieldtype: 'text',
+    placeholder: 'Add Certificates',
+    inputRules: {
+      required: 'This field is required',
+    },
+    width: 'w-full',
+    icon: 'add',
+    for: ['admin', 'mentor'],
   },
 
   {
@@ -2039,41 +2061,6 @@ export const AboutProgramFields = [
   },
 ];
 
-export const ProgramOutcomesFields = [
-  {
-    type: 'textbox',
-    name: 'benefits',
-    label: 'Benefits',
-    placeholder: 'Enter benefits details',
-    inputRules: {
-      required: 'This field is required',
-    },
-    width: 'w-full',
-    for: ['mentor'],
-  },
-  // {
-  //   type: 'htmlbuilder',
-  //   name: 'html_builder',
-  //   text: 'Use HTML Builder',
-  //   width: 'width-17',
-  //   for: ['admin', 'mentor'],
-  // },
-
-  {
-    type: 'popup-input',
-    name: 'certificates',
-    label: 'Program Certificates',
-    fieldtype: 'text',
-    placeholder: 'Add Certificates',
-    inputRules: {
-      required: 'This field is required',
-    },
-    width: 'w-full',
-    icon: 'add',
-    for: ['admin', 'mentor'],
-  },
-];
-
 export const ProgramTestimonialsFields = [
   {
     type: 'popup-input',
@@ -2098,16 +2085,28 @@ export const ProgramTestimonialsFields = [
     },
     options: [
       {
-        key: 'video',
-        value: 'Video',
+        key: "video",
+        value: "Video",
       },
       {
-        key: 'pdf',
-        value: 'PDF',
+        key: "pdf",
+        value: "PDF",
       },
       {
-        key: 'image',
-        value: 'Image',
+        key: "image",
+        value: "Image",
+      },
+      {
+        key: "blog",
+        value: "Blog",
+      },
+      {
+        key: "case_study",
+        value: "Case Studies",
+      },
+      {
+        key: "success_story",
+        value: "Success Story",
       },
     ],
     width: 'w-full',
@@ -2129,7 +2128,6 @@ export const ProgramTestimonialsFields = [
 export const ProgramFields = [
   ProgramInformationFields,
   AboutProgramFields,
-  ProgramOutcomesFields,
   ProgramTestimonialsFields,
 ];
 
