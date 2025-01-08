@@ -276,6 +276,7 @@ export default function Feeds() {
             handlePostData={handleSettingsData}
           />
         )}
+        {console.log("postModal ===>", postModal)}
         <div className='feeds-list'>
           <div className='grid grid-cols-3 gap-7'>
             {feeds &&
