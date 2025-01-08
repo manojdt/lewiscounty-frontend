@@ -1376,7 +1376,7 @@ export default function CreatePrograms() {
                       onClick={handlePreviousStep}
                     />
                   )}
-                  {currentStep === filteredProgramTabs.length && (
+                  {/* {currentStep === filteredProgramTabs.length && (
                     <Button
                       btnType="button"
                       onClick={handleDraft}
@@ -1388,7 +1388,7 @@ export default function CreatePrograms() {
                       btnName={"Save as Draft"}
                       btnCategory="primary"
                     />
-                  )}
+                  )} */}
                   {/* {(currentStep !== '' &&
                             (!Object.keys(programDetails).length)) || (Object.keys(programDetails).length && programDetails.status === 'draft') ? <Button btnType="button" onClick={handleDraft} btnStyle={{ background: 'rgba(197, 197, 197, 1)', color: '#000' }}
                                 btnCls="w-[150px]" btnName={'Save as Draft'} btnCategory="primary" /> : null} */}
