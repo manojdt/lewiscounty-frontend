@@ -494,7 +494,7 @@ const HtmlReport = ({
             <input
               type="file"
               ref={(el) => (fileInputRefs.current[index] = el)}
-              accept={block.type === BlockTypes.IMAGE ? "image/*" : "video/*"}
+              accept={block.type === BlockTypes.IMAGE ? "image/*" : "video/mp4"}
               className="hidden"
               onChange={(e) => handleFileChange(index, e)}
             />

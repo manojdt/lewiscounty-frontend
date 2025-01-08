@@ -1,14 +1,11 @@
 import { Box, Stack, Typography } from "@mui/material";
 import React from "react";
-import CircleArrowDown from "../../assets/icons/vmAccordianIcon.svg";
-import AccordionCloseIcon from "../../assets/icons/accordionCloseIcon.svg";
+import CircleArrowDown from "../../assets/icons/circle-arrow-down.svg";
 
 const CustomAccordian = ({
   title,
   children,
   defaultValue,
-  isCloseBtn = false,
-  handleCloseBtn = () => false,
   titleColor = "#232323"
 }) => {
   const [isOpen, setIsOpen] = React.useState(defaultValue);
@@ -57,12 +54,7 @@ const CustomAccordian = ({
         >
           {title}
         </Typography>
-        <Stack direction={"row"} alignItems={"center"} spacing={2}>
-          {isCloseBtn && (
-            <Box onClick={(e) => handleCloseBtn(e)}>
-              <img src={AccordionCloseIcon} alt="AccordionCloseIcon" />
-            </Box>
-          )}
+        <Stack direction={"row"} alignItems={"center"} spacing={2}>      
           <Box
             component="span"
             sx={{

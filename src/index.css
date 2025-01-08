@@ -796,6 +796,8 @@ input[type='range']::-ms-thumb {
 
 .feed-details .feed-info .feed-detail-image {
   border-radius: 10px;
+  height: 200px;
+  width: 100%;
 }
 
 .feed-details .feed-info .feed-action-info {
