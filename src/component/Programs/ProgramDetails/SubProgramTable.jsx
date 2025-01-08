@@ -12,15 +12,15 @@ import { pipeUrls, ProgramStatusInCard } from "../../../utils/constant";
 import { useNavigate } from "react-router-dom";
 
 const ActionMenu = ({ params }) => {
-    const navigate=useNavigate()
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selectedItem, setSelectedItem] = React.useState({});
-  
+
   const open = Boolean(anchorEl);
 
-  const handleClick = (event,row) => {
+  const handleClick = (event, row) => {
     setAnchorEl(event.currentTarget);
-    setSelectedItem(row)
+    setSelectedItem(row);
   };
 
   const handleClose = () => {
@@ -30,7 +30,7 @@ const ActionMenu = ({ params }) => {
   const handleMenuClick = (action) => {
     switch (action) {
       case "view":
-        navigate(`${pipeUrls.programdetails}/${selectedItem.id}`)
+        navigate(`${pipeUrls.programdetails}/${selectedItem.id}`);
         break;
       case "changeMentor":
         // Handle change mentor action
@@ -54,7 +54,7 @@ const ActionMenu = ({ params }) => {
         aria-controls={open ? "action-menu" : undefined}
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
-        onClick={(e)=>handleClick(e,params.row)}
+        onClick={(e) => handleClick(e, params.row)}
       >
         <MoreVertIcon />
       </IconButton>
@@ -89,6 +89,8 @@ const ActionMenu = ({ params }) => {
 };
 
 const SubprogramsDataGrid = ({ data }) => {
+  const programPending = ["yettoapprove"];
+
   const columns = [
     { field: "mentor_name", headerName: "Mentor Name", flex: 1 },
     { field: "subprogram", headerName: "Sub program", flex: 1 },
@@ -101,19 +103,22 @@ const SubprogramsDataGrid = ({ data }) => {
       field: "status",
       headerName: "Status",
       flex: 1,
-      renderCell: (params) => (
-        <span
-          style={{
-            backgroundColor: ProgramStatusInCard[params.row?.status].bg,
-            color: ProgramStatusInCard[params.row?.status].color,
-            padding: "6px 12px",
-            fontSize: "0.875rem",
-            borderRadius: 4,
-          }}
-        >
-          {ProgramStatusInCard[params.row?.status].text}
-        </span>
-      ),
+      renderCell: (params) => {
+        const isProgramPending = programPending.includes(params.row?.status);
+        return (
+          <span
+            style={{
+              backgroundColor: isProgramPending ? "#ffead1" : "rgba(235, 255, 243, 1)",
+              color: isProgramPending ? "#ffb155" : "#33bc93",
+              padding: "6px 12px",
+              fontSize: "0.875rem",
+              borderRadius: 4,
+            }}
+          >
+            {isProgramPending ? "Pending" : "Accepted"}
+          </span>
+        );
+      },
     },
     {
       field: "actions",

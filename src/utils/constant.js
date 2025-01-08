@@ -708,6 +708,7 @@ export const statusAction = [
   'bookmarked',
   'draft',
   'reschedule',
+  'assign_program'
 ];
 
 export const programActionStatus = {
