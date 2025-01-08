@@ -6,7 +6,7 @@ import {
   useLocation,
 } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Backdrop, CircularProgress, Menu, MenuItem } from '@mui/material';
+import { Backdrop, Box, CircularProgress, Menu, MenuItem, Stack } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import PauseIcon from '../../../assets/images/pause1x.png';
 import ResumeIcon from '../../../assets/images/resume1x.png';
@@ -59,7 +59,7 @@ import DataTable from '../../../shared/DataGrid';
 import { JoinedProgramMenteeColumn } from '../../../mock';
 import ToastNotification from '../../../shared/Toast';
 import { Calendar } from 'primereact/calendar';
-import { getProgramMentees } from '../../../services/programInfo';
+import { getProgramMentees, insertProgramNotes } from '../../../services/programInfo';
 import ConfirmIcon from '../../../assets/icons/Popup-confirmation.svg';
 import CloseIcon from '../../../assets/icons/close_x.svg';
 import {
@@ -74,6 +74,11 @@ import SkillsSet from '../../SkillsSet';
 import { CancelPopup } from '../../Mentor/Task/cancelPopup';
 import SuccessGradientMessage from '../../success-gradient-message';
 import ProgramReasons from './ProgramReasons';
+import { CustomFormFields } from '../../../shared/CustomFormFields/CustomFormFields';
+import ColorLocation from '../../../assets/icons/colorLocation.svg'
+import Accordian from '../../../shared/Accordian';
+import moment from 'moment';
+import ProgramHistoryIcon from "../../../assets/icons/historyIcon.svg"
 
 export default function ProgramDetails({ setProgramDetailsId }) {
   const dateInfo = todatDateInfo();
@@ -749,6 +754,118 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       },
     });
   };
+
+
+  const notesFields = [
+    {
+      type: "date",
+      label: "Date",
+      isRequired: true,
+      col: 4,
+      key: "date",
+    },
+    {
+      type: "time",
+      label: "Time",
+      isRequired: true,
+      col: 4,
+      key: "time",
+    },
+    {
+      type: "textbox",
+      label: "Location",
+      isRequired: true,
+      col: 4,
+      key: "location",
+      endAdornment: <img src={ColorLocation} alt="color_location" />,
+      background: "#FFF8F2",
+    },
+    {
+      type: "textarea",
+      label: "Comment",
+      isRequired: true,
+      col: 12,
+      key: "comment",
+      background: "#FFF8F2",
+    },
+  ];
+  const [notesActivity, setNotesActivity] = React.useState(false);
+  const [notesForm, setNotesForm] = React.useState({
+    date: "",
+    time: "",
+    location: "",
+    comment: "",
+    error: {
+      date: "",
+      time: "",
+      location: "",
+      comment: "",
+    },
+  });
+
+  const updateState = (key, value) => {
+    setNotesForm({
+      ...notesForm,
+      [key]: value,
+      error: {
+        ...notesForm?.error,
+        [key]: "",
+      },
+    });
+  };
+
+  const handleValidate = () => {
+    let error = notesForm.error;
+    let isValid = true;
+    if (notesForm?.date === "") {
+      isValid = false;
+      error.date = "Date is Required";
+    }
+    if (notesForm?.time === "") {
+      isValid = false;
+      error.time = "Time is Required";
+    }
+    if (notesForm?.location === "") {
+      isValid = false;
+      error.location = "Location is Required";
+    }
+    if (notesForm?.comment === "") {
+      isValid = false;
+      error.comment = "Comment is Required";
+    }
+    setNotesForm({
+      ...notesForm,
+      error: error,
+    });
+    return isValid;
+  };
+
+  const handleSubmitNotes = () => {
+    if (handleValidate()) {
+      const payload = {
+        post_date: moment(notesForm?.date).format("yyyy-MM-DD"),
+        post_time: moment(notesForm?.time).format("hh:mm"),
+        address: notesForm?.location,
+        description: notesForm?.comment,
+        program: params.id,
+      };
+      dispatch(insertProgramNotes(payload)).then((res) => {
+        if (res?.meta?.requestStatus === "fulfilled") {
+          setNotesForm({
+            date: "",
+            time: "",
+            location: "",
+            comment: "",
+          });
+          setNotesActivity(true);
+          setTimeout(() => {
+            setNotesActivity(false);
+          }, 2000);
+        }
+      });
+    }
+  };
+
   return (
     <div className='px-9 my-6 grid'>
       <Backdrop
@@ -902,8 +1019,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
               {requestProgramStatus === requestStatus.reschedule
                 ? 'Rescheduled '
                 : requestProgramStatus === requestStatus.cancel
-                ? 'Cancelled '
-                : ''}{' '}
+                  ? 'Cancelled '
+                  : ''}{' '}
               Successfully
             </p>
           </div>
@@ -1162,7 +1279,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
           <div className='border border-[#E50027] rounded-[15px] h-[100%] w-[100%] justify-center items-center flex flex-col relative'>
             <div
               className='absolute top-[12px] right-[12px]'
-              // onClick={() => handleCloseCancelPopup()}
+            // onClick={() => handleCloseCancelPopup()}
             >
               <img src={CloseIcon} alt='ConfirmIcon' />
             </div>
@@ -1376,7 +1493,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                         viewDate={
                           new Date(
                             dateFormatted.reschedule_start_date ??
-                              programdetails?.start_date
+                            programdetails?.start_date
                           )
                         }
                       />
@@ -1537,8 +1654,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       )}
 
       {!programLoading &&
-      programdetails &&
-      Object.keys(programdetails)?.length ? (
+        programdetails &&
+        Object.keys(programdetails)?.length ? (
         <div
           className='grid mb-10'
           style={{
@@ -1593,35 +1710,35 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                 (role === 'mentee' &&
                   (programdetails.status === programActionStatus.inprogress ||
                     programdetails.mentee_join_status ===
-                      programActionStatus.program_join_request_accepted))) && (
-                <>
-                  <div className='cursor-pointer' onClick={handleClick}>
-                    <img src={MoreIcon} alt='MoreIcon' />
-                  </div>
-                  <Menu
-                    id='basic-menu'
-                    anchorEl={anchorEl}
-                    open={open}
-                    onClose={handleClose}
-                    MenuListProps={{
-                      'aria-labelledby': 'basic-button',
-                    }}
-                  >
-                    {(role === 'mentor' || role === 'admin') && (
-                      <>
-                        <MenuItem
-                          onClick={() => handleMenu('share')}
-                          className='!text-[12px]'
-                        >
-                          <img
-                            src={ShareIcon}
-                            alt='ShareIcon'
-                            className='pr-3 w-[25px]'
-                          />
-                          Share
-                        </MenuItem>
-                        {
-                          !requestStatusParams &&
+                    programActionStatus.program_join_request_accepted))) && (
+                  <>
+                    <div className='cursor-pointer' onClick={handleClick}>
+                      <img src={MoreIcon} alt='MoreIcon' />
+                    </div>
+                    <Menu
+                      id='basic-menu'
+                      anchorEl={anchorEl}
+                      open={open}
+                      onClose={handleClose}
+                      MenuListProps={{
+                        'aria-labelledby': 'basic-button',
+                      }}
+                    >
+                      {(role === 'mentor' || role === 'admin') && (
+                        <>
+                          <MenuItem
+                            onClick={() => handleMenu('share')}
+                            className='!text-[12px]'
+                          >
+                            <img
+                              src={ShareIcon}
+                              alt='ShareIcon'
+                              className='pr-3 w-[25px]'
+                            />
+                            Share
+                          </MenuItem>
+                          {
+                            !requestStatusParams &&
                             ![
                               'yettoapprove',
                               'cancelled',
@@ -1642,11 +1759,11 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                 Reschedule
                               </MenuItem>
                             )
-                          // )
-                        }
+                            // )
+                          }
 
-                        {
-                          !requestStatusParams &&
+                          {
+                            !requestStatusParams &&
                             ![
                               'yettoapprove',
                               'cancelled',
@@ -1667,63 +1784,93 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                 Cancel
                               </MenuItem>
                             )
-                          // )
-                        }
-                        {(programdetails.status ===
-                          programActionStatus.inprogress ||
-                          programdetails.status ===
+                            // )
+                          }
+                          {(programdetails.status ===
+                            programActionStatus.inprogress ||
+                            programdetails.status ===
                             programActionStatus.assigned) &&
-                          !reqRole && (
-                            <>
+                            !reqRole && (
+                              <>
+                                <MenuItem
+                                  onClick={() => handleOpenConfirmPopup()}
+                                  className='!text-[12px]'
+                                >
+                                  <img
+                                    src={CompleteIcon}
+                                    alt='AbortIcon'
+                                    className='pr-3 w-[25px]'
+                                  />
+                                  Complete
+                                </MenuItem>
+                                <MenuItem
+                                  onClick={() => handleNewTaskFromAdmin()}
+                                  className='!text-[12px]'
+                                >
+                                  <img
+                                    src={PlusCircle}
+                                    alt='PlusCircle'
+                                    className='pr-3 w-[25px]'
+                                  />
+                                  Assign Task to Mentees
+                                </MenuItem>
+                                {["cancelled", "inprogress", "completed"].includes(
+                                  programdetails?.status
+                                ) && (
+                                    <MenuItem
+                                      onClick={() => navigate(`/historyNotes/${params.id}`)}
+                                      className="!text-[12px]"
+                                    >
+                                      <img
+                                        src={ProgramHistoryIcon}
+                                        alt="ProgramHistoryIcon"
+                                        className="pr-3 w-[25px]"
+                                      />
+                                      Program Notes History
+                                    </MenuItem>
+                                  )}
+                              </>
+                            )}
+                        </>
+                      )}
+                      {role === 'mentee' && (
+                        <>
+                          {(programdetails.status ===
+                            programActionStatus.inprogress ||
+                            programdetails.mentee_join_status ===
+                            programActionStatus.program_join_request_accepted) && (
                               <MenuItem
-                                onClick={() => handleOpenConfirmPopup()}
+                                onClick={() => handleMenu('cancel')}
                                 className='!text-[12px]'
                               >
                                 <img
-                                  src={CompleteIcon}
+                                  src={AbortIcon}
                                   alt='AbortIcon'
                                   className='pr-3 w-[25px]'
                                 />
-                                Complete
+                                Cancel
                               </MenuItem>
+                            )}
+                          {["cancelled", "inprogress", "completed"].includes(
+                            programdetails?.status
+                          ) && (
                               <MenuItem
-                                onClick={() => handleNewTaskFromAdmin()}
-                                className='!text-[12px]'
+                                onClick={() => navigate(`/historyNotes/${params.id}`)}
+                                className="!text-[12px]"
                               >
                                 <img
-                                  src={PlusCircle}
-                                  alt='PlusCircle'
-                                  className='pr-3 w-[25px]'
+                                  src={ProgramHistoryIcon}
+                                  alt="ProgramHistoryIcon"
+                                  className="pr-3 w-[25px]"
                                 />
-                                Assign Task to Mentees
+                                Program Notes History
                               </MenuItem>
-                            </>
-                          )}
-                      </>
-                    )}
-                    {role === 'mentee' && (
-                      <>
-                        {(programdetails.status ===
-                          programActionStatus.inprogress ||
-                          programdetails.mentee_join_status ===
-                            programActionStatus.program_join_request_accepted) && (
-                          <MenuItem
-                            onClick={() => handleMenu('cancel')}
-                            className='!text-[12px]'
-                          >
-                            <img
-                              src={AbortIcon}
-                              alt='AbortIcon'
-                              className='pr-3 w-[25px]'
-                            />
-                            Cancel
-                          </MenuItem>
-                        )}
-                      </>
-                    )}
-                  </Menu>
-                </>
-              )}
+                            )}
+                        </>
+                      )}
+                    </Menu>
+                  </>
+                )}
             </nav>
 
             <div className='content px-8'>
@@ -1843,8 +1990,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     )}
                   </div>
                   {programdetails.status === programActionStatus.inprogress ||
-                  programdetails.status === programActionStatus.paused ||
-                  programdetails.status === programActionStatus.started ? (
+                    programdetails.status === programActionStatus.paused ||
+                    programdetails.status === programActionStatus.started ? (
                     <div className='flex gap-9 my-4'>
                       <div className='flex gap-2 items-center justify-center'>
                         <p className='flex flex-col gap-2 items-center justify-center'>
@@ -1920,7 +2067,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                               color:
                                 programdetails.status !==
                                   programActionStatus.paused &&
-                                programdetails.status !==
+                                  programdetails.status !==
                                   programActionStatus.assigned
                                   ? 'rgba(29, 91, 191, 1)'
                                   : '#fff',
@@ -1930,7 +2077,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                               background:
                                 programdetails.status ===
                                   programActionStatus.paused ||
-                                programdetails.status ===
+                                  programdetails.status ===
                                   programActionStatus.assigned
                                   ? 'linear-gradient(97.32deg, #1D5BBF -32.84%, #00AEBD 128.72%)'
                                   : 'transparent',
@@ -1940,20 +2087,20 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             <img
                               src={
                                 programdetails.status !==
-                                programActionStatus.inprogress
+                                  programActionStatus.inprogress
                                   ? ResumeIcon
                                   : PauseIcon
                               }
                               alt={
                                 programdetails.status !==
-                                programActionStatus.inprogress
+                                  programActionStatus.inprogress
                                   ? 'ResumeIcon'
                                   : 'PauseIcon'
                               }
                               className='pr-4'
                             />
                             {programdetails.status ===
-                            programActionStatus.inprogress
+                              programActionStatus.inprogress
                               ? 'Pause'
                               : 'Start'}
                           </button>
@@ -2097,7 +2244,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                         <span>Schedule</span>
                         <span>Flexible schedule</span>
                       </li>
-                      {(role === 'mentor' || role === 'admin')&&!programdetails?.admin_assign_program && (
+                      {(role === 'mentor' || role === 'admin') && !programdetails?.admin_assign_program && (
                         <li
                           className='flex justify-between text-[12px]'
                           style={{ paddingTop: '14px' }}
@@ -2124,9 +2271,9 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                           <span>Fees</span>
                           <span
                             className='cursor-pointer'
-                            // onClick={() =>
-                            //   handleViewJoinedMentees(programdetails)
-                            // }
+                          // onClick={() =>
+                          //   handleViewJoinedMentees(programdetails)
+                          // }
                           >
                             $ {programdetails.enrollment_fees}
                           </span>
@@ -2273,6 +2420,70 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   </div>
                 </div>
               ) : null} */}
+
+              {/* Notes Section */}
+              {["cancelled", "inprogress", "completed"].includes(
+                programdetails?.status
+              ) &&
+                role !== "admin" && (
+                  <Box>
+                    <Accordian
+                      title={"Program Notes:"}
+                      titleColor={"#FE634E"}
+                      children={
+                        <>
+                          <CustomFormFields
+                            fields={notesFields}
+                            formData={notesForm}
+                            handleChange={updateState}
+                          />
+                          <Stack
+                            justifyContent={"end"}
+                            direction={"row"}
+                            alignItems={"end"}
+                            width={"100%"}
+                            mt={"12px"}
+                          >
+                            <Button
+                              btnCategory="primary"
+                              btnName="Save"
+                              btnCls=" w-[150px]"
+                              onClick={() => handleSubmitNotes()}
+                            />
+                          </Stack>
+                        </>
+                      }
+                      defaultValue={true}
+                    />
+
+                    <Backdrop
+                      sx={{
+                        color: "#fff",
+                        zIndex: (theme) => theme.zIndex.drawer + 1,
+                      }}
+                      open={notesActivity}
+                    >
+                      <div className="px-5 py-1 flex justify-center items-center">
+                        <div
+                          className="flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20"
+                          style={{ background: "#fff", borderRadius: "10px" }}
+                        >
+                          <img src={SuccessTik} alt="SuccessTik" />
+                          <p
+                            className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                            style={{
+                              fontWeight: 600,
+                            }}
+                          >
+                            Program Notes added successfully
+                          </p>
+                        </div>
+                      </div>
+                    </Backdrop>
+                  </Box>
+                )}
+              {/* Notes Section End */}
+
               {'sub_program' in programdetails &&
                 programdetails?.sub_program?.length > 0 && (
                   <SubprogramsDataGrid data={programdetails?.sub_program} />
@@ -2294,9 +2505,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   {tabs.map((tab) => (
                     <button
                       key={tab.key}
-                      className={`px-12 py-3 text-[12px] ${
-                        activeTab === tab.key ? 'tab-active' : 'tab'
-                      } `}
+                      className={`px-12 py-3 text-[12px] ${activeTab === tab.key ? 'tab-active' : 'tab'
+                        } `}
                       onClick={() => handleTab(tab.key)}
                     >
                       {tab.name}
@@ -2341,9 +2551,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
 
                 <div className='tab-content px-6 pt-10 text-[12px]'>
                   <div
-                    className={`about-programs ${
-                      activeTab === 'about_program' ? 'block' : 'hidden'
-                    }`}
+                    className={`about-programs ${activeTab === 'about_program' ? 'block' : 'hidden'
+                      }`}
                   >
                     <div className='learning'>
                       <div className='font-semibold pb-3'>
@@ -2391,9 +2600,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   </div>
 
                   <div
-                    className={`program-outcomes ${
-                      activeTab === 'program_outcomes' ? 'block' : 'hidden'
-                    }`}
+                    className={`program-outcomes ${activeTab === 'program_outcomes' ? 'block' : 'hidden'
+                      }`}
                   >
                     <div className='benefits'>
                       <div className='font-semibold pb-3'>Benefits</div>
@@ -2415,11 +2623,10 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                           {participatedTabs.map((participatedTab) => (
                             <li className='me-2' key={participatedTab.key}>
                               <p
-                                className={`inline-block p-4 border-b-2 cursor-pointer border-transparent rounded-t-lg ${
-                                  certificateActiveTab === participatedTab.key
-                                    ? 'active  text-blue-600 border-blue-500'
-                                    : ''
-                                } `}
+                                className={`inline-block p-4 border-b-2 cursor-pointer border-transparent rounded-t-lg ${certificateActiveTab === participatedTab.key
+                                  ? 'active  text-blue-600 border-blue-500'
+                                  : ''
+                                  } `}
                                 onClick={() =>
                                   handleCerificateTab(participatedTab.key)
                                 }
@@ -2433,11 +2640,10 @@ export default function ProgramDetails({ setProgramDetailsId }) {
 
                       {participatedTabs.map((participatedTab) => (
                         <div
-                          className={`certificate-tab-content flex items-center justify-between relative ${
-                            participatedTab.key === certificateActiveTab
-                              ? 'block'
-                              : 'hidden'
-                          }`}
+                          className={`certificate-tab-content flex items-center justify-between relative ${participatedTab.key === certificateActiveTab
+                            ? 'block'
+                            : 'hidden'
+                            }`}
                           key={participatedTab.key}
                         >
                           <div className='px-9 py-16 w-4/6 leading-6'>
@@ -2458,9 +2664,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   </div>
 
                   <div
-                    className={`program-outcomes ${
-                      activeTab === 'program_testimonials' ? 'block' : 'hidden'
-                    }`}
+                    className={`program-outcomes ${activeTab === 'program_testimonials' ? 'block' : 'hidden'
+                      }`}
                   >
                     <div className='testimonials bg-white px-5 py-7'>
                       {/* <div className='flex justify-end'>

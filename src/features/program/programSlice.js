@@ -22,14 +22,17 @@ import {
   updateAllPrograms,
   updateNewPrograms,
   updateProgramDetails,
+  getProgramNotesUserList,
+  getProgramNotes,
+  insertProgramNotes,
 } from "../../services/programInfo";
 import { programStatus, userStatus } from "../../utils/constant";
 
 const initialState = {
   allPrograms: [],
   programDetails: {},
-  programMentees:[],
-  allProgramsList:{},
+  programMentees: [],
+  allProgramsList: {},
   createdPrograms: [],
   category: [],
   materials: [],
@@ -192,13 +195,13 @@ export const programSlice = createSlice({
       .addCase(createNewPrograms.fulfilled, (state, action) => {
         const responseStatus = action.payload?.status;
         const status =
-          (responseStatus === 200 || responseStatus === 400)
+          responseStatus === 200 || responseStatus === 400
             ? programStatus.exist
             : responseStatus === 500
-              ? programStatus.error
-              : responseStatus === 201
-                ? programStatus.create
-                : "";
+            ? programStatus.error
+            : responseStatus === 201
+            ? programStatus.create
+            : "";
 
         return {
           ...state,
@@ -209,13 +212,13 @@ export const programSlice = createSlice({
       .addCase(createNewPrograms.rejected, (state, action) => {
         const responseStatus = action.payload?.status;
         const status =
-          (responseStatus === 200 || responseStatus === 400)
+          responseStatus === 200 || responseStatus === 400
             ? programStatus.exist
             : responseStatus === 500
-              ? programStatus.error
-              : responseStatus === 201
-                ? programStatus.create
-                : "";
+            ? programStatus.error
+            : responseStatus === 201
+            ? programStatus.create
+            : "";
 
         return {
           ...state,
@@ -224,9 +227,6 @@ export const programSlice = createSlice({
           error: action.error.message,
         };
       });
-
-
-
 
     builder
       .addCase(editUpdateProgram.pending, (state) => {
@@ -241,8 +241,8 @@ export const programSlice = createSlice({
           responseStatus === 200 || responseStatus === 201
             ? programStatus.update
             : responseStatus === 500
-              ? programStatus.error
-              : "";
+            ? programStatus.error
+            : "";
 
         return {
           ...state,
@@ -257,9 +257,6 @@ export const programSlice = createSlice({
           error: action.error.message,
         };
       });
-
-
-
 
     builder
       .addCase(loadAllPrograms.pending, (state) => {
@@ -506,12 +503,13 @@ export const programSlice = createSlice({
       });
 
     // builder.addCase(updateLocalProgram)builder
-    builder.addCase(getProgramNameValidate.pending, (state) => {
-      return {
-        ...state,
-        loading: true,
-      };
-    })
+    builder
+      .addCase(getProgramNameValidate.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
       .addCase(getProgramNameValidate.fulfilled, (state, action) => {
         return {
           ...state,
@@ -527,29 +525,96 @@ export const programSlice = createSlice({
         };
       });
 
-
-      builder.addCase(getProgramListWithCategory.pending, (state) => {
+    builder
+      .addCase(getProgramListWithCategory.pending, (state) => {
         return {
           ...state,
           loading: true,
         };
       })
-        .addCase(getProgramListWithCategory.fulfilled, (state, action) => {
-          return {
-            ...state,
-            programListByCategory: action.payload,
-            loading: false,
-          };
-        })
-        .addCase(getProgramListWithCategory.rejected, (state, action) => {
-          return {
-            ...state,
-            loading: false,
-            error: action.error.message,
-          };
-        });
-  },
+      .addCase(getProgramListWithCategory.fulfilled, (state, action) => {
+        return {
+          ...state,
+          programListByCategory: action.payload,
+          loading: false,
+        };
+      })
+      .addCase(getProgramListWithCategory.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
 
+    builder
+      .addCase(insertProgramNotes.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(insertProgramNotes.fulfilled, (state, action) => {
+        return {
+          ...state,
+          status: "done",
+          loading: false,
+        };
+      })
+      .addCase(insertProgramNotes.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
+
+    builder
+      .addCase(getProgramNotes.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(getProgramNotes.fulfilled, (state, action) => {
+        return {
+          ...state,
+          status: "done",
+          historyNotes: action?.payload,
+          loading: false,
+        };
+      })
+      .addCase(getProgramNotes.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
+
+    builder
+      .addCase(getProgramNotesUserList.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(getProgramNotesUserList.fulfilled, (state, action) => {
+        return {
+          ...state,
+          status: "done",
+          noteUserList: action?.payload,
+          loading: false,
+        };
+      })
+      .addCase(getProgramNotesUserList.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
+  },
 });
 
 export default programSlice.reducer;

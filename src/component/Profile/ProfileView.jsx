@@ -45,6 +45,7 @@ import { categoryColumns } from '../../mock';
 import { requestStatus } from '../../utils/constant';
 import { useForm } from 'react-hook-form';
 import { CancelPopup } from '../Mentor/Task/cancelPopup';
+import { updateProfile } from '../../services/profile';
 
 export default function ProfileView() {
   const navigate = useNavigate();
@@ -65,7 +66,7 @@ export default function ProfileView() {
     modal: false,
     cancel: false,
   });
-    const [cancelPopup, setCancelPopup] = useState(false);
+  const [cancelPopup, setCancelPopup] = useState(false);
   const [activity, setActivity] = useState({
     modal: false,
     following: false,
@@ -77,6 +78,11 @@ export default function ProfileView() {
     followInfo,
   } = useSelector((state) => state.userList);
   const pathe = state?.reqType ? -1 : '/all-request';
+  const [noteData, setNoteData] = React.useState({
+    text: "",
+    error: "",
+  });
+  const [notesActivity, setNotesActivity] = React.useState(false);
 
   const { profile, loading } = useSelector((state) => state.profileInfo);
   const userInfo = useSelector((state) => state.userInfo);
@@ -318,10 +324,10 @@ export default function ProfileView() {
       }
     }
   };
-  const handleCloseConfirmPopup = () =>{
+  const handleCloseConfirmPopup = () => {
     setCancelPopup(false);
   }
-const handleCancelSubmit = (reas) =>{
+  const handleCancelSubmit = (reas) => {
     if (role === 'admin') {
       dispatch(
         cancelMemberRequest({
@@ -334,7 +340,7 @@ const handleCancelSubmit = (reas) =>{
         }
       });
     }
-}
+  }
   useEffect(() => {
     // Category load action
     if (requeststatus === requestStatus.categoryload) {
@@ -375,7 +381,7 @@ const handleCancelSubmit = (reas) =>{
   }, [params]);
   useEffect(() => {
     console.log('role=>', role);
-    if(searchParams.get('request_id')){
+    if (searchParams.get('request_id')) {
       if (role === 'admin') {
         dispatch(getRequestView(parseInt(searchParams.get('request_id'))));
       }
@@ -458,6 +464,33 @@ const handleCancelSubmit = (reas) =>{
       }
     });
   };
+
+  const handleSaveNotes = () => {
+    if (noteData?.text !== "") {
+      const notesForm = new FormData();
+      notesForm.append("id", userDetails?.id);
+      notesForm.append("profile_notes", noteData?.text);
+      dispatch(updateProfile(notesForm)).then((res) => {
+        if (res?.meta?.requestStatus === "fulfilled") {
+          setNotesActivity(true);
+          setTimeout(() => {
+            setNotesActivity(false);
+            loadUserProfile();
+            setNoteData({
+              text: "",
+              error: "",
+            });
+          }, 2000);
+        }
+      });
+    } else {
+      setNoteData({
+        ...noteData,
+        error: "Notes is required",
+      });
+    }
+  };
+
   return (
     <div className='profile-container'>
       <Backdrop
@@ -877,7 +910,7 @@ const handleCancelSubmit = (reas) =>{
           <div className='flex gap-5'>
             {role !== 'admin' ? (
               <>
-                {state?.data?.status === 'new'&&['new', 'pending'].includes(requestData?.status) ? (
+                {state?.data?.status === 'new' && ['new', 'pending'].includes(requestData?.status) ? (
                   <>
                     <div className='flex gap-4 pt-10'>
                       <button
@@ -899,28 +932,28 @@ const handleCancelSubmit = (reas) =>{
                       />
                     </div>
                   </>
-                ) :( state?.data?.status === 'approved' ||
-                  state?.data?.status === 'rejected'||requestData?.status==="approved" ||requestData?.status==="rejected") ? (
+                ) : (state?.data?.status === 'approved' ||
+                  state?.data?.status === 'rejected' || requestData?.status === "approved" || requestData?.status === "rejected") ? (
                   <>
                     <div className='py-9'>
                       <div
                         className='py-3 px-16 text-white text-[14px] flex justify-center items-center'
                         style={{
-                          ...reqStatusColor[requestData?.status==="approved"?"approved":requestData?.status==="rejected"?"rejected":state?.data?.status],
+                          ...reqStatusColor[requestData?.status === "approved" ? "approved" : requestData?.status === "rejected" ? "rejected" : state?.data?.status],
                         }}
                       >
-                        {requestData?.status==="approved"?"Approved":requestData?.status==="rejected"?"Rejected":reqStatus[state?.data?.status]}
+                        {requestData?.status === "approved" ? "Approved" : requestData?.status === "rejected" ? "Rejected" : reqStatus[state?.data?.status]}
                       </div>
                     </div>
                   </>
                 ) : (
                   <>
                     {role === 'mentor' &&
-                    searchParams.has('type') &&
-                    searchParams.get('type') === 'mentee_request' &&
-                    searchParams.has('request_id') &&
-                    searchParams.get('request_id') !== '' &&
-                    ['new', 'pending'].includes(userDetails?.approve_status) ? (
+                      searchParams.has('type') &&
+                      searchParams.get('type') === 'mentee_request' &&
+                      searchParams.has('request_id') &&
+                      searchParams.get('request_id') !== '' &&
+                      ['new', 'pending'].includes(userDetails?.approve_status) ? (
                       <div className='flex gap-4 pt-10'>
                         <button
                           className='py-3 px-16 text-white text-[14px] flex items-center'
@@ -952,9 +985,9 @@ const handleCancelSubmit = (reas) =>{
                               onClick={handleShowPopup}
                               btnType='button'
                               btnCategory='secondary'
-                              disabled={followInfo.is_follow==="waiting"}
+                              disabled={followInfo.is_follow === "waiting"}
                               btnName={
-                                followInfo.is_follow==="waiting" ? "Requested" : followInfo.is_following ? 'Unfollow' : 'Follow'
+                                followInfo.is_follow === "waiting" ? "Requested" : followInfo.is_following ? 'Unfollow' : 'Follow'
                               }
                               btnCls={'w-[150px]'}
                             />
@@ -973,7 +1006,7 @@ const handleCancelSubmit = (reas) =>{
             ) : role === 'admin' ? (
               <>
                 {userDetails?.approve_status === 'new' ||
-                userDetails?.approve_status === 'pending' ? (
+                  userDetails?.approve_status === 'pending' ? (
                   <div className='flex gap-4 pt-10'>
                     <button
                       className='py-3 px-16 text-white text-[14px] flex items-center'
@@ -982,11 +1015,11 @@ const handleCancelSubmit = (reas) =>{
                         borderRadius: '5px',
                         color: '#E0382D',
                       }}
-                      onClick={() =>{
+                      onClick={() => {
                         setCancelPopup(true)
                         // handleMemberCancelRequest()
-                      } 
-                    }
+                      }
+                      }
                     >
                       Reject
                     </button>
@@ -1003,31 +1036,31 @@ const handleCancelSubmit = (reas) =>{
                   </div>
                 ) : // userDetails?.approve_status === 'accept' ?
 
-                //     <button className='py-3 px-16 mt-7 text-white text-[14px] flex items-center' style={{
-                //         background: "#16B681",
-                //         borderRadius: '5px'
-                //     }}
-                //         onClick={() => undefined}
-                //     >Approved
-                //     </button>
-                //     :
+                  //     <button className='py-3 px-16 mt-7 text-white text-[14px] flex items-center' style={{
+                  //         background: "#16B681",
+                  //         borderRadius: '5px'
+                  //     }}
+                  //         onClick={() => undefined}
+                  //     >Approved
+                  //     </button>
+                  //     :
 
-                //     userDetails?.approve_status === 'cancel' ?
-                //         <div className='flex gap-4 pt-10' >
-                //             <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                //                 border: "1px solid #E0382D",
-                //                 borderRadius: '5px',
-                //                 color: '#E0382D',
-                //                 cursor: 'not-allowed'
-                //             }}
-                //                 onClick={() => undefined}
-                //             >Rejected
-                //             </button>
-                //         </div>
+                  //     userDetails?.approve_status === 'cancel' ?
+                  //         <div className='flex gap-4 pt-10' >
+                  //             <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                  //                 border: "1px solid #E0382D",
+                  //                 borderRadius: '5px',
+                  //                 color: '#E0382D',
+                  //                 cursor: 'not-allowed'
+                  //             }}
+                  //                 onClick={() => undefined}
+                  //             >Rejected
+                  //             </button>
+                  //         </div>
 
-                // :
+                  // :
 
-                null}
+                  null}
               </>
             ) : null}
 
@@ -1104,16 +1137,65 @@ const handleCancelSubmit = (reas) =>{
               </Stack>
             </Stack>
           )}
+
+          {role === "admin" && (
+            <>
+              <p className="mt-6">Notes:</p>
+              <div className="flex flex-col gap-2 mt-4">
+                <textarea
+                  className={`!bg-[#1D5BBF0D] min-h-[100px] p-2`}
+                  placeholder={"Enter text"}
+                  value={noteData?.text}
+                  onChange={(e) =>
+                    setNoteData({
+                      ...noteData,
+                      text: e.target.value,
+                      error: "",
+                    })
+                  }
+                ></textarea>
+                {noteData?.error?.length > 0 && (
+                  <p className="!text-[#FF0000] !text-[12px] mt-1">
+                    {noteData?.error}
+                  </p>
+                )}
+                <div className="flex justify-end">
+                  <Button btnName="Submit" onClick={() => handleSaveNotes()} />
+                </div>
+              </div>
+            </>
+          )}
         </div>
-           <CancelPopup
-                open={cancelPopup}
-                header={'Reject Reason'}
-                handleClosePopup={() => handleCloseConfirmPopup('cancel')}
-                handleSubmit={(reason) => {
-                  handleCancelSubmit(reason);
-                }}
-              />
+        <CancelPopup
+          open={cancelPopup}
+          header={'Reject Reason'}
+          handleClosePopup={() => handleCloseConfirmPopup('cancel')}
+          handleSubmit={(reason) => {
+            handleCancelSubmit(reason);
+          }}
+        />
       </div>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={notesActivity}
+      >
+        <div className="px-5 py-1 flex justify-center items-center">
+          <div
+            className="flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20"
+            style={{ background: "#fff", borderRadius: "10px" }}
+          >
+            <img src={SuccessTik} alt="SuccessTik" />
+            <p
+              className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+              style={{
+                fontWeight: 600,
+              }}
+            >
+              Profile Notes added successfully
+            </p>
+          </div>
+        </div>
+      </Backdrop>
     </div>
   );
 }
