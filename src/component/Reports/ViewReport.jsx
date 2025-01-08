@@ -19,6 +19,7 @@ import TickColorIcon from "../../assets/icons/tickColorLatest.svg";
 import { updateReportRequest } from "../../services/request";
 import { CancelPopup } from "../Mentor/Task/cancelPopup";
 import { Typography } from "@mui/material";
+import CustomAccordian from "../../shared/CustomAccordian/CustomAccordian";
 
 const ViewReport = () => {
   const navigate = useNavigate();
@@ -32,9 +33,6 @@ const ViewReport = () => {
   const userInfo = useSelector((state) => state.userInfo);
   const role = userInfo.data.role;
 
-  useEffect(() => {
-    console.log("reportDetails", reportDetails);
-  }, [reportDetails]);
 
   const [confirmPopup, setConfirmPopup] = React.useState({
     bool: false,
@@ -181,280 +179,299 @@ const ViewReport = () => {
           </div>
 
           <div className="px-4">
-            <div className="relative flex gap-6 justify-between">
-              <table className="w-[50%] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                <tbody style={{ border: "1px solid rgba(0, 174, 189, 1)" }}>
-                  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                    <th
-                      scope="row"
-                      style={{ border: "1px solid rgba(0, 174, 189, 1)" }}
-                      className="px-6 py-4 font-medium whitespace-nowrap "
-                    >
-                      Category
-                    </th>
-                    <td
-                      className="px-6 py-4 text-white"
-                      style={{ background: "rgba(0, 174, 189, 1)" }}
-                    >
-                      {reportDetails.category_name}
-                    </td>
-                  </tr>
-                  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                    <th
-                      style={{ border: "1px solid rgba(0, 174, 189, 1)" }}
-                      scope="row"
-                      className="px-6 py-4 font-medium  whitespace-nowrap "
-                    >
-                      Program Name
-                    </th>
-                    <td
-                      className="px-6 py-4 text-white"
-                      style={{ background: "rgba(0, 174, 189, 1)" }}
-                    >
-                      {reportDetails.program_name}
-                    </td>
-                  </tr>
-                  <tr className="bg-white border-b dark:bg-gray-800 ">
-                    <th
-                      style={{ border: "1px solid rgba(0, 174, 189, 1)" }}
-                      scope="row"
-                      className="px-6 py-4 font-medium whitespace-nowrap "
-                    >
-                      Course Level
-                    </th>
-                    <td
-                      className="px-6 py-4 text-white"
-                      style={{
-                        background: "rgba(0, 174, 189, 1)",
-                        textTransform: "capitalize",
-                      }}
-                    >
-                      {reportDetails?.program_course_level}
-                    </td>
-                  </tr>
-                  <tr className="bg-white border-b  dark:bg-gray-800">
-                    <th
-                      style={{ border: "1px solid rgba(0, 174, 189, 1)" }}
-                      scope="row"
-                      className="px-6 py-4 font-medium whitespace-nowrap "
-                    >
-                      Mentor Name
-                    </th>
-                    <td
-                      className="px-6 py-4 text-white"
-                      style={{ background: "rgba(0, 174, 189, 1)" }}
-                    >
-                      {reportDetails.created_by_full_name}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+            <CustomAccordian
+              defaultValue={true}
+              title={"Report Details"}
+              children={
+                <div className="relative flex gap-6 justify-between">
+                  <table className="w-[50%] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                    <tbody style={{ border: "1px solid rgba(0, 174, 189, 1)" }}>
+                      <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <th
+                          scope="row"
+                          style={{ border: "1px solid rgba(0, 174, 189, 1)" }}
+                          className="px-6 py-4 font-medium whitespace-nowrap "
+                        >
+                          Category
+                        </th>
+                        <td
+                          className="px-6 py-4 text-white"
+                          style={{ background: "rgba(0, 174, 189, 1)" }}
+                        >
+                          {reportDetails.category_name}
+                        </td>
+                      </tr>
+                      <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <th
+                          style={{ border: "1px solid rgba(0, 174, 189, 1)" }}
+                          scope="row"
+                          className="px-6 py-4 font-medium  whitespace-nowrap "
+                        >
+                          Program Name
+                        </th>
+                        <td
+                          className="px-6 py-4 text-white"
+                          style={{ background: "rgba(0, 174, 189, 1)" }}
+                        >
+                          {reportDetails.program_name}
+                        </td>
+                      </tr>
+                      <tr className="bg-white border-b dark:bg-gray-800 ">
+                        <th
+                          style={{ border: "1px solid rgba(0, 174, 189, 1)" }}
+                          scope="row"
+                          className="px-6 py-4 font-medium whitespace-nowrap "
+                        >
+                          Course Level
+                        </th>
+                        <td
+                          className="px-6 py-4 text-white"
+                          style={{
+                            background: "rgba(0, 174, 189, 1)",
+                            textTransform: "capitalize",
+                          }}
+                        >
+                          {reportDetails?.program_course_level}
+                        </td>
+                      </tr>
+                      <tr className="bg-white border-b  dark:bg-gray-800">
+                        <th
+                          style={{ border: "1px solid rgba(0, 174, 189, 1)" }}
+                          scope="row"
+                          className="px-6 py-4 font-medium whitespace-nowrap "
+                        >
+                          Mentor Name
+                        </th>
+                        <td
+                          className="px-6 py-4 text-white"
+                          style={{ background: "rgba(0, 174, 189, 1)" }}
+                        >
+                          {reportDetails.created_by_full_name}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
 
-              <table className="w-[50%] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                <tbody style={{ border: "1px solid rgba(29, 91, 191, 1)" }}>
-                  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                    <th
-                      scope="row"
-                      style={{ border: "1px solid rgba(29, 91, 191, 1)" }}
-                      className="px-6 py-4 font-medium whitespace-nowrap "
-                    >
-                      Program Start Date and Time
-                    </th>
-                    <td
-                      className="px-6 py-4 text-white"
-                      style={{ background: "rgba(29, 91, 191, 1)" }}
-                    >
-                      {dateTimeFormat(
-                        reportDetails.program_start_date_and_time
-                      )}
-                    </td>
-                  </tr>
-                  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                    <th
-                      style={{ border: "1px solid rgba(29, 91, 191, 1)" }}
-                      scope="row"
-                      className="px-6 py-4 font-medium  whitespace-nowrap "
-                    >
-                      Program End Date and Time
-                    </th>
-                    <td
-                      className="px-6 py-4 text-white"
-                      style={{ background: "rgba(29, 91, 191, 1)" }}
-                    >
-                      {dateTimeFormat(reportDetails.program_end_date_and_time)}
-                    </td>
-                  </tr>
-                  <tr className="bg-white border-b dark:bg-gray-800 ">
-                    <th
-                      style={{ border: "1px solid rgba(29, 91, 191, 1)" }}
-                      scope="row"
-                      className="px-6 py-4 font-medium whitespace-nowrap "
-                    >
-                      Participated Mentees
-                    </th>
-                    <td
-                      className="px-6 py-4 text-white"
-                      style={{ background: "rgba(29, 91, 191, 1)" }}
-                    >
-                      {reportDetails?.participates?.length} Member
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-          
-
-            <div
-              className="task-desc  mt-5 px-5 py-6"
-              style={{ border: "1px solid rgba(29, 91, 191, 0.5)" }}
-            >
-              <div
-                className="flex items-center hidden"
-                style={{ background: "rgba(248, 249, 250, 1)" }}
-              >
-                <p className="text-[20px] w-[50%] px-20 leading-10">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                  incididunt ut labore et dolore magna aliqua.{" "}
-                </p>
-                <img
-                  style={{ width: "50%" }}
-                  src={ReportUserIcon}
-                  alt="ReportUserIcon"
-                />
-              </div>
-
-              <div className="leading-10 py-6 hidden">
-                any organizations rely on PL/SQL for data integration, but
-                Informatica ETL offers a more efficient approach. This migration
-                unlocks significant benefits, including streamlined workflows,
-                improved scalability, and easier maintenance. Let's explore why
-                migrating to Informatica ETL can be the key to unlocking your
-                data's full potential.
-              </div>
-
-              <img
-                className="w-full hidden"
-                src={ReportVideoIcon}
-                alt="ReportVideoIcon"
-              />
-
-              <div className="py-8 leading-9 hidden">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-                sunt in culpa qui officia deserunt mollit anim id est
-                laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                sed do eiusmod tempor incididunt ut labore et dolore magna
-                aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis
-                aute irure dolor in reprehenderit in voluptate velit esse cillum
-                dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                cupidatat non proident, sunt in culpa qui officia deserunt
-                mollit anim id est laborum.Lorem ipsum dolor sit amet,
-                consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-                nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                commodo consequat. Duis aute irure dolor in reprehenderit in
-                voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                Excepteur sint occaecat cupidatat non proident, sunt in culpa
-                qui officia deserunt mollit anim id est laborum."
-              </div>
-
-              <div className="flex flex-col gap-3 mb-10">
-                <div>Report Name : {reportDetails.name}</div>
-
-                <div>Report Description : {reportDetails.comments}</div>
-              </div>
-              {reportDetails?.rejection_reason && (
-                <div className="border border-[#E0382D] rounded-[5px] bg-[#FFE7E7] mt-[20px]">
-                  <Typography
-                    className="text-[#E0382D] !text-[18px] border border-b-[#E0382D]"
-                    p={"12px 20px"}
-                  >
-                    Cancelled Reason
-                  </Typography>
-                  <Typography
-                    className="text-[#18283D] !text-[14px]"
-                    p={"12px 20px"}
-                  >
-                    {reportDetails?.rejection_reason}
-                  </Typography>
+                  <table className="w-[50%] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                    <tbody style={{ border: "1px solid rgba(29, 91, 191, 1)" }}>
+                      <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <th
+                          scope="row"
+                          style={{ border: "1px solid rgba(29, 91, 191, 1)" }}
+                          className="px-6 py-4 font-medium whitespace-nowrap "
+                        >
+                          Program Start Date and Time
+                        </th>
+                        <td
+                          className="px-6 py-4 text-white"
+                          style={{ background: "rgba(29, 91, 191, 1)" }}
+                        >
+                          {dateTimeFormat(
+                            reportDetails.program_start_date_and_time
+                          )}
+                        </td>
+                      </tr>
+                      <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <th
+                          style={{ border: "1px solid rgba(29, 91, 191, 1)" }}
+                          scope="row"
+                          className="px-6 py-4 font-medium  whitespace-nowrap "
+                        >
+                          Program End Date and Time
+                        </th>
+                        <td
+                          className="px-6 py-4 text-white"
+                          style={{ background: "rgba(29, 91, 191, 1)" }}
+                        >
+                          {dateTimeFormat(
+                            reportDetails.program_end_date_and_time
+                          )}
+                        </td>
+                      </tr>
+                      <tr className="bg-white border-b dark:bg-gray-800 ">
+                        <th
+                          style={{ border: "1px solid rgba(29, 91, 191, 1)" }}
+                          scope="row"
+                          className="px-6 py-4 font-medium whitespace-nowrap "
+                        >
+                          Participated Mentees
+                        </th>
+                        <td
+                          className="px-6 py-4 text-white"
+                          style={{ background: "rgba(29, 91, 191, 1)" }}
+                        >
+                          {reportDetails?.participates?.length} Member
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
-              )}
-
-              {reportDetails?.html_content && (
-                <div dangerouslySetInnerHTML={{__html: reportDetails?.html_content}}></div>
-              )}
-              <div
-                style={{
-                  marginTop: 20,
-                  display: "flex",
-                  flexDirection: "row",
-                  width: "100%",
-                  justifyContent: "center",
-                }}
-              >
-                {role === "admin" && reportDetails?.status === "approved" ? (
-                  <>
-                    <Box className="pr-2">
-                      <button
-                        className="py-3 px-16 text-white text-[14px] flex items-center"
-                        style={{
-                          ...StatusbuttonStyles.base,
-                          ...StatusbuttonStyles.success,
-                          cursor: "not-allowed",
-                        }}
-                        onClick={() => undefined}
-                      >
-                        Approved
-                      </button>
-                    </Box>
-                    <Button
-                      btnType="button"
-                      btnCls="w-[120px]"
-                      onClick={() => {
-                        navigate(-1);
-                      }}
-                      btnName="Close"
-                      btnCategory="secondary"
+              }
+            />
+            <CustomAccordian
+              defaultValue={true}
+              title={"Report Info"}
+              children={
+                <div
+                  className="task-desc  mt-5 px-5 py-6"
+                  style={{ border: "1px solid rgba(29, 91, 191, 0.5)" }}
+                >
+                  <div
+                    className="flex items-center hidden"
+                    style={{ background: "rgba(248, 249, 250, 1)" }}
+                  >
+                    <p className="text-[20px] w-[50%] px-20 leading-10">
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                      incididunt ut labore et dolore magna aliqua.{" "}
+                    </p>
+                    <img
+                      style={{ width: "50%" }}
+                      src={ReportUserIcon}
+                      alt="ReportUserIcon"
                     />
-                  </>
-                ) : role === "admin" &&
-                  (reportDetails?.status === "rejected" ||
-                    reportDetails?.status === "cancelled") ? (
-                  <>
-                    <Box pr={2}>
-                      <button
-                        className="py-3 px-16 text-white text-[14px] flex items-center"
-                        style={{
-                          ...StatusbuttonStyles.base,
-                          ...StatusbuttonStyles.danger,
-                          cursor: "not-allowed",
-                        }}
-                        onClick={() => undefined}
-                      >
-                        Rejected
-                      </button>
-                    </Box>
-                    <Button
-                      btnType="button"
-                      btnCls="w-[120px]"
-                      onClick={() => {
-                        navigate(-1);
-                      }}
-                      btnName="Close"
-                      btnCategory="secondary"
-                    />
-                  </>
-                ) : null}
+                  </div>
 
-                {role !== "admin" && (
-                  <span className="pr-2">
-                    {/* <Button
+                  <div className="leading-10 py-6 hidden">
+                    any organizations rely on PL/SQL for data integration, but
+                    Informatica ETL offers a more efficient approach. This
+                    migration unlocks significant benefits, including
+                    streamlined workflows, improved scalability, and easier
+                    maintenance. Let's explore why migrating to Informatica ETL
+                    can be the key to unlocking your data's full potential.
+                  </div>
+
+                  <img
+                    className="w-full hidden"
+                    src={ReportVideoIcon}
+                    alt="ReportVideoIcon"
+                  />
+
+                  <div className="py-8 leading-9 hidden">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                    do eiusmod tempor incididunt ut labore et dolore magna
+                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                    ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    Duis aute irure dolor in reprehenderit in voluptate velit
+                    esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+                    occaecat cupidatat non proident, sunt in culpa qui officia
+                    deserunt mollit anim id est laborum.Lorem ipsum dolor sit
+                    amet, consectetur adipiscing elit, sed do eiusmod tempor
+                    incididunt ut labore et dolore magna aliqua. Ut enim ad
+                    minim veniam, quis nostrud exercitation ullamco laboris nisi
+                    ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+                    reprehenderit in voluptate velit esse cillum dolore eu
+                    fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                    proident, sunt in culpa qui officia deserunt mollit anim id
+                    est laborum.Lorem ipsum dolor sit amet, consectetur
+                    adipiscing elit, sed do eiusmod tempor incididunt ut labore
+                    et dolore magna aliqua. Ut enim ad minim veniam, quis
+                    nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+                    commodo consequat. Duis aute irure dolor in reprehenderit in
+                    voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                    Excepteur sint occaecat cupidatat non proident, sunt in
+                    culpa qui officia deserunt mollit anim id est laborum."
+                  </div>
+
+                  <div className="flex flex-col gap-3 mb-10">
+                    <div>Report Name : {reportDetails.name}</div>
+
+                    <div>Report Description : {reportDetails.comments}</div>
+                  </div>
+                  {reportDetails?.rejection_reason && (
+                    <div className="border border-[#E0382D] rounded-[5px] bg-[#FFE7E7] mt-[20px]">
+                      <Typography
+                        className="text-[#E0382D] !text-[18px] border border-b-[#E0382D]"
+                        p={"12px 20px"}
+                      >
+                        Cancelled Reason
+                      </Typography>
+                      <Typography
+                        className="text-[#18283D] !text-[14px]"
+                        p={"12px 20px"}
+                      >
+                        {reportDetails?.rejection_reason}
+                      </Typography>
+                    </div>
+                  )}
+
+                  {reportDetails?.html_content && (
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: reportDetails?.html_content,
+                      }}
+                    ></div>
+                  )}                  
+                </div>
+              }
+            />
+
+<div
+                    style={{
+                      marginTop: 20,
+                      display: "flex",
+                      flexDirection: "row",
+                      width: "100%",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {role === "admin" &&
+                    reportDetails?.status === "approved" ? (
+                      <>
+                        <Box className="pr-2">
+                          <button
+                            className="py-3 px-16 text-white text-[14px] flex items-center"
+                            style={{
+                              ...StatusbuttonStyles.base,
+                              ...StatusbuttonStyles.success,
+                              cursor: "not-allowed",
+                            }}
+                            onClick={() => undefined}
+                          >
+                            Approved
+                          </button>
+                        </Box>
+                        <Button
+                          btnType="button"
+                          btnCls="w-[120px]"
+                          onClick={() => {
+                            navigate(-1);
+                          }}
+                          btnName="Close"
+                          btnCategory="secondary"
+                        />
+                      </>
+                    ) : role === "admin" &&
+                      (reportDetails?.status === "rejected" ||
+                        reportDetails?.status === "cancelled") ? (
+                      <>
+                        <Box pr={2}>
+                          <button
+                            className="py-3 px-16 text-white text-[14px] flex items-center"
+                            style={{
+                              ...StatusbuttonStyles.base,
+                              ...StatusbuttonStyles.danger,
+                              cursor: "not-allowed",
+                            }}
+                            onClick={() => undefined}
+                          >
+                            Rejected
+                          </button>
+                        </Box>
+                        <Button
+                          btnType="button"
+                          btnCls="w-[120px]"
+                          onClick={() => {
+                            navigate(-1);
+                          }}
+                          btnName="Close"
+                          btnCategory="secondary"
+                        />
+                      </>
+                    ) : null}
+
+                    {role !== "admin" && (
+                      <span className="pr-2">
+                        {/* <Button
                     btnType="button"
                     btnCls="w-[14%]"
                     onClick={() => {
@@ -464,60 +481,60 @@ const ViewReport = () => {
                     btnCategory="secondary"
                   /> */}
 
-                    {
-                      // reportDetails.report_status === reportAllStatus.pending &&
-                      ["new", "draft", "pending"].includes(
-                        reportDetails?.status
-                      ) && (
-                        <Button
-                          btnType="button"
-                          btnCls="w-[120px]"
-                          onClick={() => {
-                            navigate(`/edit-report/${reportDetails.id}`);
-                          }}
-                          btnName="Edit"
-                          btnStyle={{ background: "rgba(0, 174, 189, 1)" }}
-                        />
-                      )
-                    }
+                        {
+                          // reportDetails.report_status === reportAllStatus.pending &&
+                          ["new", "draft", "pending"].includes(
+                            reportDetails?.status
+                          ) && (
+                            <Button
+                              btnType="button"
+                              btnCls="w-[120px]"
+                              onClick={() => {
+                                navigate(`/edit-report/${reportDetails.id}`);
+                              }}
+                              btnName="Edit"
+                              btnStyle={{ background: "rgba(0, 174, 189, 1)" }}
+                            />
+                          )
+                        }
 
-                    {/* <Button btnType="button" btnCls="w-[14%]"
+                        {/* <Button btnType="button" btnCls="w-[14%]"
                                     onClick={() => { navigate('/reports') }} btnName='Close'
                                     btnStyle={{ background: 'rgba(29, 91, 191, 1)' }}
                                 /> */}
-                  </span>
-                )}
-                {role !== "admin" && (
-                  <Button
-                    btnType="button"
-                    btnCls="w-[120px]"
-                    onClick={() => {
-                      navigate(-1);
-                    }}
-                    btnName="Close"
-                    btnCategory="secondary"
-                  />
-                )}
-              </div>
-              {role === "admin" && reportDetails?.status === "new" ? (
-                <div className="close-btn flex justify-center gap-7 pb-5 pt-2">
-                  <Button
-                    btnType="button"
-                    btnCategory="secondary"
-                    btnName="Reject"
-                    btnCls="!border !border-[#FFE7E7] !text-[#E0382D] !bg-[#FFE7E7] w-[120px]"
-                    onClick={() => handleOpenPopup("reject")}
-                  />
+                      </span>
+                    )}
+                    {role !== "admin" && (
+                      <Button
+                        btnType="button"
+                        btnCls="w-[120px]"
+                        onClick={() => {
+                          navigate(-1);
+                        }}
+                        btnName="Close"
+                        btnCategory="secondary"
+                      />
+                    )}
+                  </div>
+                  {role === "admin" && reportDetails?.status === "new" ? (
+                    <div className="close-btn flex justify-center gap-7 pb-5 pt-2">
+                      <Button
+                        btnType="button"
+                        btnCategory="secondary"
+                        btnName="Cancel Request"
+                        btnCls="!border !border-[#E0382D] !text-[#E0382D] w-[200px]"
+                        onClick={() => handleOpenPopup("reject")}
+                      />
 
-                  {
-                    <Button
-                      btnType="button"
-                      btnCls="w-[120px]"
-                      onClick={() => handleOpenPopup("approve")}
-                      btnName="Approve"
-                    />
-                  }
-                  {/* <Button
+                      {
+                        <Button
+                          btnType="button"
+                          btnCls="w-[200px]"
+                          onClick={() => handleOpenPopup("approve")}
+                          btnName="Approve Request"
+                        />
+                      }
+                      {/* <Button
                   btnType="button"
                   btnCls="w-[120px]"
                   onClick={() => {
@@ -526,9 +543,8 @@ const ViewReport = () => {
                   btnName="Close"
                   btnCategory="secondary"
                 /> */}
-                </div>
-              ) : null}
-            </div>
+                    </div>
+                  ) : null}
           </div>
 
           <Backdrop
@@ -574,7 +590,7 @@ const ViewReport = () => {
             open={confirmPopup?.reject}
             handleClosePopup={() => handleClosePopup()}
             handleSubmit={(reason) => handleReportRequest("rejected", reason)}
-            header="Reject Reason"
+            header="Cancel Reason"
           />
 
           <Backdrop
