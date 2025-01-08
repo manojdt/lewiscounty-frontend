@@ -327,7 +327,7 @@ const ProfileTab = ({ setEditMode }) => {
             style={{
               maxHeight: showAll
                 ? `${contentRef.current.scrollHeight}px`
-                : '400px',
+                : '350px',
               overflow: 'hidden',
               transition: 'max-height 0.5s ease',
             }}
@@ -352,6 +352,17 @@ const ProfileTab = ({ setEditMode }) => {
                 src={ArrowDown}
                 alt=''
               />
+            </div>
+          )}
+
+          {(userRole === 'mentee' || userRole === 'mentor') && (
+            <div className='mt-6 h-40'>
+              <p className='text-[#2260D9] text-[16px] font-bold border-b border-border-main pb-4'>
+                Admin Notes
+              </p>
+              <p className='text-[#232323] text-[14px] pt-3'>
+                {profile?.profile_notes ?? '-'}
+              </p>
             </div>
           )}
         </div>

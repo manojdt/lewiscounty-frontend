@@ -92,6 +92,7 @@ import TicketCreation from './component/Help/TicketCreation';
 import Tickets from './component/SuperAdmin/tickets/Tickets';
 import PaymentSuccessfull from './shared/paymentButton/payment-successfull';
 import BgVerify from './component/BackgroundVerification/BgVerify';
+import HistoryNotes from './component/Programs/ProgramDetails/notesHistory';
 
 function App() {
   const PrivateRoute = () => {
@@ -271,6 +272,7 @@ function App() {
             <Route path='/categoryView' element={<CategoryView />} />
             <Route path='/viewTask/:id' element={<ViewTask />} />
             <Route path='/testimonialView/:id' element={<TestimonialView />} />
+            <Route path='/historyNotes/:id' element={<HistoryNotes />} />
           </Route>
         </Route>
 

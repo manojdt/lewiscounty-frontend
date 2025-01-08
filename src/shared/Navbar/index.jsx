@@ -33,6 +33,7 @@ import { styled } from '@mui/material/styles';
 import CategoryIcon from '../../assets/icons/category.svg';
 import PermissionIcon from '../../assets/icons/permissionIcon.svg';
 import { user } from '../../utils/constant';
+import NavHead from './NavHead';
 
 const HtmlTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} arrow />
@@ -283,14 +284,10 @@ export const Navbar = () => {
         <nav className='bg-white border-gray-200'>
           <div className='flex justify-between'>
             <div className='contain gap-24 flex justify-between w-3/12 p-4'>
-              <div
-                className='site-logo cursor-pointer flex items-center space-x-3 rtl:space-x-reverse'
-                onClick={handleLogoClick}
-              >
-                <span className='self-center text-2xl font-semibold whitespace-nowrap'>
-                  My Logo
-                </span>
-              </div>
+              <NavHead
+                role={userInfo?.data?.role}
+                handleLogoClick={handleLogoClick}
+              />
               {userInfo?.data?.role === user.super_admin && (
                 <div>
                   <ul
@@ -533,32 +530,37 @@ export const Navbar = () => {
               {/* <img className='search-icon hidden' src={SearchIcon} alt="SearchIcon" /> */}
               {userInfo?.data?.is_registered && !documentUpload && (
                 <div className='relative' onClick={(e) => op.current.toggle(e)}>
-                  {userInfo?.data?.role === 'super_admin' ? null : (
-                    <div className='notitification-group'>
-                      <div className='bg-[#EEF5FF] rounded-[3px] h-[40px] w-[40px] flex items-center justify-center'>
-                        {activity?.length > 0 ? (
-                          <Badge
-                            color='error'
-                            badgeContent={activity.length}
-                            variant='standard'
-                            sx={{ cursor: 'pointer' }}
-                            max={activity.length}
-                          >
-                            <img
-                              src={NotificationIcon}
-                              className='cursor-pointer notification-image'
-                              alt='NotificationIcon'
-                            />
-                          </Badge>
-                        ) : (
-                          <img
-                            src={NotificationIcon}
-                            className='cursor-pointer notification-image'
-                            alt='NotificationIcon'
-                          />
-                        )}
-                      </div>
-                      {/* {activity.length > 0 ? (
+                  {userInfo?.data?.is_registered && !documentUpload && (
+                    <div
+                      className='relative'
+                      onClick={(e) => op.current.toggle(e)}
+                    >
+                      {userInfo?.data?.role === 'super_admin' ? null : (
+                        <div className='notitification-group'>
+                          <div className='bg-[#FFF8F2] rounded-[3px] h-[40px] w-[40px] flex items-center justify-center'>
+                            {activity?.notifications_count > 0 ? (
+                              <Badge
+                                color='error'
+                                badgeContent={activity?.notifications_count}
+                                variant='standard'
+                                sx={{ cursor: 'pointer' }}
+                                max={999}
+                              >
+                                <img
+                                  src={NotificationIcon}
+                                  className='cursor-pointer notification-image'
+                                  alt='NotificationIcon'
+                                />
+                              </Badge>
+                            ) : (
+                              <img
+                                src={NotificationIcon}
+                                className='cursor-pointer notification-image'
+                                alt='NotificationIcon'
+                              />
+                            )}
+                          </div>
+                          {/* {activity.length > 0 ? (
                         <span
                           style={{
                             position: 'absolute',
@@ -578,14 +580,18 @@ export const Navbar = () => {
                         </span>
                       ) : null} */}
 
-                      <OverlayPanel
-                        ref={op}
-                        id='overlay_panel'
-                        style={{ width: '450px' }}
-                        className='notification-container'
-                      >
-                        <Notification handleClose={handleCloseNotification} />
-                      </OverlayPanel>
+                          <OverlayPanel
+                            ref={op}
+                            id='overlay_panel'
+                            style={{ width: '450px' }}
+                            className='notification-container'
+                          >
+                            <Notification
+                              handleClose={handleCloseNotification}
+                            />
+                          </OverlayPanel>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
