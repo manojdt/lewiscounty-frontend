@@ -86,6 +86,7 @@ import ColorLocation from "../../../assets/icons/colorLocation.svg";
 import Accordian from "../../../shared/Accordian";
 import moment from "moment";
 import ProgramHistoryIcon from "../../../assets/icons/historyIcon.svg";
+import RescheduleIcon from "../../../assets/images/reschedule1x.png";
 
 export default function ProgramDetails({ setProgramDetailsId }) {
   const dateInfo = todatDateInfo();
@@ -1738,7 +1739,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                           />
                           Share
                         </MenuItem>
-                        {/* {
+                        {
                           !requestStatusParams &&
                             ![
                               "yettoapprove",
@@ -1746,7 +1747,10 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                               "new_program_request_rejected",
                               "completed",
                             ].includes(programdetails?.status) &&
-                            !reqRole && (
+                            !reqRole &&
+                            !programdetails.hasOwnProperty(
+                              "admin_assign_program"
+                            ) && (
                               // role !== 'admin' && (
                               <MenuItem
                                 onClick={() => handleMenu("reschedule")}
@@ -1761,7 +1765,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                               </MenuItem>
                             )
                           // )
-                        } */}
+                        }
 
                         {
                           !requestStatusParams &&
@@ -2247,7 +2251,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                               {programdetails.duration} {" days"}
                             </span>
                           </li>
-                          <li
+                          {/* <li
                             className="flex justify-between text-[12px]"
                             style={{
                               borderBottom: "1px solid rgba(217, 217, 217, 1)",
@@ -2264,7 +2268,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                 programdetails?.end_date
                               ).format("hh:mm A")}`}</span>
                             </span>
-                          </li>
+                          </li> */}
                           {!programdetails.is_sponsored && (
                             <li
                               className="flex justify-between text-[12px]"
@@ -2285,7 +2289,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                               style={{ paddingTop: "14px" }}
                             >
                               {" "}
-                              <span>Joined Volunteers</span>
+                              <span>Joined Mentees</span>
                               <span
                                 className="underline cursor-pointer"
                                 onClick={() =>
