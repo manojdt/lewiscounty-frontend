@@ -17,10 +17,14 @@ import CancelIcon from '../../assets/images/cancel1x.png'
 import { Button } from '../../shared';
 import { deleteReports, getAllReports } from '../../services/reportsInfo';
 import { useDispatch, useSelector } from 'react-redux';
-import { pipeUrls, reportAllStatus, reportsStatus, reportStatus, reportStatusColor } from '../../utils/constant';
+import { feedStatus, pipeUrls, reportAllStatus, reportsStatus, reportStatus, reportStatusColor } from '../../utils/constant';
 import { reportAdminColumns, reportColumns } from '../../utils/formFields';
 import api from '../../services/api';
-
+import { useForm } from 'react-hook-form';
+import { createPost, updateFeedRequest } from '../../services/feeds';
+import CreatePostModal from '../Feeds/CreatePostModal';
+import SettingsModal from '../Feeds/SettingsModal';
+import SuccessTik from '../../assets/images/blue_tik1x.png';
 
 
 const Reports = () => {
@@ -40,6 +44,96 @@ const Reports = () => {
         page: 0,
         pageSize: 10,
     });
+
+    // feed State start
+
+    const [postModal, setPostModal] = useState({
+        create: false,
+        settings: false,
+        control: false,
+        visibility: false,
+        activity: false
+    });
+    const [formData, setFormData] = useState({
+        visibility: 'anyone',
+        comment_control: 'anyone',
+        brand_partnership: false,
+        is_published: true,
+    });
+
+    const {
+        register,
+        formState: { errors },
+        handleSubmit,
+        reset,
+        setValue,
+        getValues,
+    } = useForm();
+
+    const handleCreatePostPopup = () => {
+        setPostModal({ ...postModal, create: true, visibility: false });
+        handleClose()
+    };
+
+    const handleClosePostPopup = () => {
+        setPostModal({ ...postModal, create: false})
+    }
+
+    const handleVisibilty = () => {
+        setPostModal({ ...postModal, settings: true });
+    };
+
+    const handleSettingsBack = () => {
+        setPostModal({ ...postModal, settings: false, create: true });
+    };
+
+    const handleSettingsData = (data) => {
+        setFormData({ ...formData, ...data });
+        setPostModal({ ...postModal, settings: false, create: true });
+    };
+
+    const onSubmit = (data) => {
+        const formDatas = new FormData();
+
+        if (data.image) {
+            if (Array.isArray(data.image)) {
+                data.image.forEach((file, index) => {
+                    formDatas.append('image', file);
+                });
+            } else {
+                formDatas.append('image', data.image);
+            }
+        }
+
+        formDatas.append('title', data.title);
+        formDatas.append('content', data.content);
+        formDatas.append('brand_partnership', formData.brand_partnership);
+        formDatas.append('comment_control', formData.comment_control);
+        formDatas.append('visibility', formData.visibility);
+        formDatas.append('is_published', formData.is_published);
+        formDatas.append("request", reportData?.selectedItem?.[0]?.id)
+
+        // console.log(formDatas);
+        dispatch(createPost(formDatas)).then((res) => {
+            if (res?.meta?.requestStatus === "fulfilled") {
+                setPostModal({
+                    ...postModal,
+                    create: false,
+                    activity: true
+                })
+                setTimeout(() => {
+                    setPostModal({
+                        ...postModal,
+                        create: false,
+                        activity: false
+                    })
+                    dispatch(updateFeedRequest({ status: '' }))
+                }, 2000);
+            }
+        })
+    };
+
+    // feed State end
 
     const requestBtns = [
         {
@@ -184,6 +278,13 @@ const Reports = () => {
                                         Delete
                                     </MenuItem>
                                 }
+                                {
+                                    params?.row?.status === "approved" &&
+                                    <MenuItem onClick={handleCreatePostPopup} className='!text-[12px]'>
+                                        <img src={ViewIcon} alt="ViewIcon" className='pr-3 w-[27px]' />
+                                        Post to Feed
+                                    </MenuItem>
+                                }
                             </Menu>
                         </>
                     }
@@ -256,6 +357,8 @@ const Reports = () => {
            delete query.request_by
         }
         if(query.status){
+            dispatch(getAllReports({ ...query, page: paginationModel?.page + 1, limit: paginationModel?.pageSize }));
+        }else{
             dispatch(getAllReports({ ...query, page: paginationModel?.page + 1, limit: paginationModel?.pageSize }));
         }
     }
@@ -410,7 +513,7 @@ const Reports = () => {
                                 </div>
                             </div>
                         </div>
-                        <DataTable rows={allreports?.results ?? []} columns={ (role === "admin" && requestTab === "all") ? reportColumn?.filter((e)=> e?.field !== "report_status") : reportColumn} handleSelectedRow={handleSelectedRow}
+                        <DataTable rows={allreports?.results ?? []} columns={(role === "admin" && requestTab === "all") ? reportColumn?.filter((e) => e?.field !== "report_status") : reportColumn} handleSelectedRow={handleSelectedRow}
                             rowCount={allreports?.count}
                             paginationModel={paginationModel} setPaginationModel={setPaginationModel}
                             hideFooter={allreports?.results?.length === 0} />
@@ -418,6 +521,62 @@ const Reports = () => {
 
                 </div>
             </div>
+
+            {/* Create Feed */}
+            {postModal.create && (
+                <CreatePostModal
+                    register={register}
+                    handleSubmit={handleSubmit}
+                    formData={formData}
+                    errors={errors}
+                    reset={reset}
+                    setValue={setValue}
+                    getValues={getValues}
+                    open={postModal.create}
+                    handlePostData={onSubmit}
+                    handleClose={handleClosePostPopup}
+                    handleVisibilty={handleVisibilty}
+                    isReport={true}
+                    reportData={reportData?.selectedItem}
+                />
+            )}
+
+            {postModal.settings && (
+                <SettingsModal
+                    formData={formData}
+                    register={register}
+                    errors={errors}
+                    reset={reset}
+                    handleSubmit={handleSubmit}
+                    handleSettingsData={onSubmit}
+                    open={postModal.settings}
+                    handleClose={handleClose}
+                    handleSettingsBack={handleSettingsBack}
+                    handlePostData={handleSettingsData}
+                />
+            )}
+
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={postModal?.activity}
+            >
+                <div className='px-5 py-1 flex justify-center items-center'>
+                    <div
+                        className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+                        style={{ background: '#fff', borderRadius: '10px' }}
+                    >
+                        <img src={SuccessTik} alt='SuccessTik' />
+                        <p
+                            className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                            style={{
+                                fontWeight: 600,
+                            }}
+                        >
+                            Your post is successfully uploaded
+                        </p>
+                    </div>
+                </div>
+            </Backdrop>
         </div>
     )
 }

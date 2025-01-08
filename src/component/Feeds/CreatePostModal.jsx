@@ -9,6 +9,7 @@ import DeleteIcon from '../../assets/icons/delete-icon.svg';
 import ArrowDown from '../../assets/icons/arrowDownDark.svg';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
+import { Stack } from '@mui/material';
 
 export default function CreatePostModal({
   formData,
@@ -22,6 +23,8 @@ export default function CreatePostModal({
   setValue,
   getValues,
   handleSubmit,
+  isReport = false,
+  reportData = []
 }) {
   const { data } = useSelector((state) => state.userInfo);
   const imageInputRef = useRef();
@@ -122,6 +125,15 @@ export default function CreatePostModal({
               </p>
             )}
           </div>
+
+          {
+            (isReport && reportData?.[0]?.html_content_link) && 
+            <Stack direction={"row"} alignItems={"center"} spacing={2}>
+              <img src={reportData?.[0]?.thumbnail} alt="" className='h-[100px] w-[100px] rounded-[3px]' />
+              <p className='text-blue-500'>{reportData?.[0]?.html_content_link}</p>
+            </Stack>
+          }
+
           <div className='space-y-1'>
             <label htmlFor='' className='text-sm'>
               Description
