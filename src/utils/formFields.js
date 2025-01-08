@@ -1981,17 +1981,17 @@ export const AboutProgramFields = [
     for: ['admin', 'mentor'],
   },
 
-  {
-    type: 'textbox',
-    name: 'about_program',
-    label: 'About Program',
-    placeholder: 'Enter this about program details',
-    inputRules: {
-      required: 'This field is required',
-    },
-    width: 'w-full',
-    for: ['mentor'],
-  },
+  // {
+  //   type: 'textbox',
+  //   name: 'about_program',
+  //   label: 'About Program',
+  //   placeholder: 'Enter this about program details',
+  //   inputRules: {
+  //     required: 'This field is required',
+  //   },
+  //   width: 'w-full',
+  //   for: ['mentor'],
+  // },
 
   {
     type: 'popup-input',

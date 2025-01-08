@@ -1,6 +1,6 @@
 import { rtkQueryApiServices, rtkQueryServiceTags } from '../../services/api';
 
-const { PROGRAM_LAUNCH, PROGRAM_ACCEPT, PROGRAM_UPDATES } = rtkQueryServiceTags;
+const { PROGRAM_LAUNCH, PROGRAM_ACCEPT, PROGRAM_UPDATES, GOALS } = rtkQueryServiceTags;
 
 // Helper function to build query string
 const buildQueryString = (query) => {
@@ -75,7 +75,7 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
 
     // Get Program Goals
     getProgramGoals: builder.query({
-      query: () => `goals/program-goals`,
+      query: () => `goals/program-goals`, providesTags: [GOALS],
     }),
 
     // Get certificates by category
@@ -113,8 +113,7 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
     // Validate program name
     validateProgramName: builder.query({
       query: ({ program_name, program_id }) =>
-        `programs/validate_program_name?program_name=${program_name}${
-          program_id ? `&program_id=${program_id}` : ''
+        `programs/validate_program_name?program_name=${program_name}${program_id ? `&program_id=${program_id}` : ''
         }`,
     }),
 
@@ -162,10 +161,9 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
 
     getSpecificProgramDetails: builder.query({
       query: ({ id, requestId = '', program_create_type }) =>
-        `programs/${id}${requestId ? `?request_id=${requestId}` : ''}${
-          program_create_type
-            ? `?program_create_type=${program_create_type}`
-            : ''
+        `programs/${id}${requestId ? `?request_id=${requestId}` : ''}${program_create_type
+          ? `?program_create_type=${program_create_type}`
+          : ''
         }`,
       providesTags: [PROGRAM_LAUNCH, PROGRAM_ACCEPT],
     }),
@@ -255,8 +253,7 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
 
     getProgramTaskDetails: builder.query({
       query: (taskId) =>
-        `program_task_assign/task_submission${
-          taskId ? `?task_id=${taskId}` : ''
+        `program_task_assign/task_submission${taskId ? `?task_id=${taskId}` : ''
         }`,
     }),
 

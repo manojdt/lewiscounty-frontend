@@ -48,7 +48,10 @@ import {
   // useGetCountryStatesQuery,
   // useGetCitiesQuery,
 } from "../../../features/program/programApi.services";
-import { Menu, MenuItem } from "@mui/material";
+import { MuiMenuDropDown } from "../../../shared/Dropdown/MuiMenuDropDown";
+import GoalCreationModal from "./GoalCreationModal";
+
+const EquipMentListMenuItems = [{ label: "View", action: "view" }];
 
 export default function CreatePrograms() {
   const navigate = useNavigate();
@@ -81,13 +84,7 @@ export default function CreatePrograms() {
         : undefined,
   });
 
-  const {
-    handleSubmit,
-    reset,
-    setValue,
-    watch,
-    unregister,
-  } = methods;
+  const { handleSubmit, reset, setValue, watch, unregister } = methods;
   // const state = watch('state');
   const formValues = watch();
 
@@ -101,12 +98,6 @@ export default function CreatePrograms() {
     refetchOnMountOrArgChange: true,
   });
 
-  // const { data: cities } = useGetCitiesQuery(
-  //   {
-  //     ...(state && { state_id: +state }),
-  //   },
-  //   { refetchOnMountOrArgChange: true, skip: !state }
-  // );
   const { data: cities } = useGetCitiesQuery(
     {
       ...(formValues?.state && { state_id: +formValues?.state }),
@@ -132,6 +123,8 @@ export default function CreatePrograms() {
 
   const [stepData, setStepData] = useState({});
   const [actionModal, setActionModal] = useState("");
+  const [openEquipmentModal, setOpenEquipmentModal] = React.useState(false);
+
   const [programAllFields, setProgramAllFields] = useState(ProgramFields);
   const [current, setCurrent] = useState("");
   const [formDetails, setFormDetails] = useState({
@@ -152,6 +145,7 @@ export default function CreatePrograms() {
   const [programApiStatus, setProgramApiStatus] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+
   const handleMoreClick = (event, data) => {
     setSelectedItem(data);
     setAnchorEl(event.currentTarget);
@@ -159,6 +153,25 @@ export default function CreatePrograms() {
 
   const handleMoreClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleClickOpen = () => {
+    setOpenEquipmentModal(true);
+  };
+
+  const handleMenuClick = async (action) => {
+    switch (action) {
+      case "view":
+        handleViewOptionClick();
+        break;
+      default:
+        break;
+    }
+    handleClose();
+  };
+
+  const handleCloseEquipmentModal = () => {
+    setOpenEquipmentModal(false);
   };
   const [viewDetails, setViewDetails] = useState({
     material: false,
@@ -186,6 +199,24 @@ export default function CreatePrograms() {
     // Add other conditions here if needed
     return true;
   });
+
+  const handleViewOptionClick = () => {
+    switch (actionModal) {
+      case "goals":
+        navigate(`/view-goal/${selectedItem?.id}`, {
+          state: {
+            id: selectedItem?.id,
+            type: "view",
+          },
+        });
+        break;
+
+      default:
+        break;
+    }
+    handleMoreClose();
+  };
+
   const handleProgramCheck = (data) => {
     dispatch(getProgramNameValidate(data)).then((res) => {
       if (res?.meta?.requestStatus === "fulfilled") {
@@ -599,7 +630,7 @@ export default function CreatePrograms() {
           renderCell: (params) => {
             const level = params.value || 0; // Fallback to 0 if no level
             return (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 h-full">
                 <div className="relative w-full bg-gray-200 rounded h-2">
                   <div
                     className="absolute top-0 left-0 h-2 bg-blue-500 rounded"
@@ -1242,11 +1273,10 @@ export default function CreatePrograms() {
           open={
             showBackdrop || // Control visibility with local state
             isProgramCreating ||
-            isProgramUpdating ||
-            isDetailFetching
+            isProgramUpdating
           }
         >
-          {isProgramCreating || isProgramUpdating || isDetailFetching ? (
+          {isProgramCreating || isProgramUpdating ? (
             <CircularProgress color="inherit" />
           ) : (
             <div className="w-2/6 bg-white flex flex-col gap-4 h-[330px] justify-center items-center">
@@ -1305,7 +1335,7 @@ export default function CreatePrograms() {
               ))}
             </div>
             <FormProvider {...methods}>
-              <form id={"program-submit"} onSubmit={handleSubmit(onSubmit)}>
+              <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="py-9">
                   <ProgramSteps
                     currentStepData={
@@ -1606,6 +1636,15 @@ export default function CreatePrograms() {
           {actionModal && MODAL_CONFIG[actionModal] && (
             <DataTable
               showToolbar={true}
+              toolBarComponent={
+                actionModal === "goals" && (
+                  <Button
+                    btnName="Create Goal"
+                    btnCategory="primary"
+                    onClick={handleClickOpen}
+                  />
+                )
+              }
               rows={formDetails[MODAL_CONFIG[actionModal].rows]}
               columns={MODAL_CONFIG[actionModal].columns}
               footerAction={() => setActionModal("")}
@@ -1619,50 +1658,17 @@ export default function CreatePrograms() {
             />
           )}
         </MuiModal>
-        <Menu
+        <MuiMenuDropDown
           anchorEl={anchorEl}
           open={open}
           onClose={handleMoreClose}
-          transformOrigin={{ horizontal: "left", vertical: "top" }}
-          anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-          slotProps={{
-            paper: {
-              elevation: 0,
-              sx: {
-                overflow: "visible",
-                mt: 1.5,
-                ml: -2,
-                border: "1px solid #D9D9D9",
-                "& .MuiAvatar-root": {
-                  width: 25,
-                  height: 25,
-                },
-                "&::before": {
-                  content: '""',
-                  display: "block",
-                  position: "absolute",
-                  border: "1px solid #D9D9D9",
-                  borderRight: 0,
-                  borderBottom: 0,
-                  top: 0,
-                  right: 35,
-                  width: 20,
-                  height: 20,
-                  bgcolor: "background.paper",
-                  transform: "translateY(-50%) rotate(45deg)",
-                  zIndex: 0,
-                },
-              },
-            },
-          }}
-        >
-          <MenuItem
-            onClick={(e) => navigate(`/view-goal/${selectedItem?.id}`)}
-            className="!text-[12px]"
-          >
-            View
-          </MenuItem>
-        </Menu>
+          menuItems={EquipMentListMenuItems}
+          handleMenuClick={handleMenuClick}
+        />
+        <GoalCreationModal
+          isOpen={openEquipmentModal}
+          handleCloseModal={handleCloseEquipmentModal}
+        />
       </div>
     </div>
   );

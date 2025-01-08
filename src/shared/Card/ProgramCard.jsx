@@ -28,6 +28,9 @@ import NoProgramImageBg from '../../assets/icons/noProgramImageBg.svg';
 import NoProgramImageIcon from '../../assets/icons/noProgramImageIcon.svg';
 import Balck_Heart_Icon from '../../assets/icons/gray-heart.svg';
 import Crown_Icon from '../../assets/icons/cronwn.svg';
+import NoProgramImageBg from '../../assets/icons/noProgramImageBg.svg';
+import NoProgramImageIcon from '../../assets/icons/noProgramImageIcon.svg';
+import { Crown } from 'lucide-react';
 
 export default function ProgramCard({
   title,
@@ -62,6 +65,38 @@ export default function ProgramCard({
     setValue,
     getValues,
   } = useForm();
+
+  const Badge = ({ type }) => {
+    const styles = {
+      free: {
+        container:
+          'inline-flex items-center gap-1 px-2 py-0.5 bg-gray-100 rounded',
+        text: 'text-gray-600 text-sm',
+        icon: '♥',
+      },
+      premium: {
+        container:
+          'inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-500 rounded',
+        text: 'text-white text-sm',
+        icon: <Crown className='w-3 h-3' />,
+      },
+    };
+
+    const style = styles[type.toLowerCase()] || styles.free;
+
+    return (
+      <div className={style.container}>
+        {typeof style.icon === 'string' ? (
+          <span className='text-xs'>{style.icon}</span>
+        ) : (
+          style.icon
+        )}
+        <span className={style.text}>
+          {type.charAt(0).toUpperCase() + type.slice(1).toLowerCase()}
+        </span>
+      </div>
+    );
+  };
 
   const [categoryPopup, setCategoryPopup] = useState({
     show: false,

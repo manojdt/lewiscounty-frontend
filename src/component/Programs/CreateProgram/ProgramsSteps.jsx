@@ -417,47 +417,95 @@ const ProgramSteps = ({
                         return null;
                       }
 
-                      // Handle other popup-input fields
-                      if (Array.isArray(fieldValue)) {
-                        return (
-                          <>
-                            {fieldValue.slice(0, 6).map((item, index) => (
-                              <p
-                                key={index}
-                                className="flex items-center gap-1"
-                              >
-                                <span
-                                  className="flex items-center px-3 py-3"
-                                  style={{
-                                    background: "rgba(223, 237, 255, 1)",
-                                    borderRadius: "50%",
-                                  }}
-                                ></span>
-                                {item.name ||
-                                  item.goal_name ||
-                                  `${item.first_name || ""} ${
-                                    item.last_name || ""
-                                  }`.trim() ||
-                                  item.full_name ||
-                                  item}
-                              </p>
-                            ))}
-                            {fieldValue.length > 6 && (
-                              <p className="flex items-center gap-1">
-                                <span
-                                  className="text-white flex items-center px-2 py-1"
-                                  style={{
-                                    background: "rgb(29, 91, 191)",
-                                    borderRadius: "50%",
-                                  }}
+                      if (field.name === "goals") {
+                        // Handle goals and equipments fields
+                        if (Array.isArray(fieldValue)) {
+                          return (
+                            <>
+                              {fieldValue.slice(0, 6).map((id) => {
+                                const dataSource = goalData;
+                                const item = dataSource?.find(
+                                  (g) => g.id === id
+                                );
+
+                                if (item) {
+                                  return (
+                                    <p
+                                      key={id}
+                                      className="flex items-center gap-1"
+                                    >
+                                      <span
+                                        className="flex items-center px-3 py-3"
+                                        style={{
+                                          background: "rgba(223, 237, 255, 1)",
+                                          borderRadius: "50%",
+                                        }}
+                                      ></span>
+                                      {item.description}
+                                    </p>
+                                  );
+                                }
+                                return null;
+                              })}
+                              {fieldValue.length > 6 && (
+                                <p className="flex items-center gap-1">
+                                  <span
+                                    className="text-white flex items-center px-2 py-1"
+                                    style={{
+                                      background: "rgb(29, 91, 191)",
+                                      borderRadius: "50%",
+                                    }}
+                                  >
+                                    +{fieldValue.length - 6}
+                                  </span>
+                                  Others
+                                </p>
+                              )}
+                            </>
+                          );
+                        }
+                      } else {
+                        // Handle other popup-input fields
+                        if (Array.isArray(fieldValue)) {
+                          return (
+                            <>
+                              {fieldValue.slice(0, 6).map((item, index) => (
+                                <p
+                                  key={index}
+                                  className="flex items-center gap-1"
                                 >
-                                  +{fieldValue.length - 6}
-                                </span>
-                                Others
-                              </p>
-                            )}
-                          </>
-                        );
+                                  <span
+                                    className="flex items-center px-3 py-3"
+                                    style={{
+                                      background: "rgba(223, 237, 255, 1)",
+                                      borderRadius: "50%",
+                                    }}
+                                  ></span>
+                                  {item.name ||
+                                    `${item.first_name || ""} ${
+                                      item.last_name || ""
+                                    }`.trim() ||
+                                    item.full_name ||
+                                    item}
+                                </p>
+                              ))}
+                              {fieldValue.length > 6 && (
+                                <p className="flex items-center gap-1">
+                                  <span
+                                    className="text-white flex items-center px-2 py-1"
+                                    style={{
+                                      background: "rgb(29, 91, 191)",
+                                      borderRadius: "50%",
+                                    }}
+                                  >
+                                    +{fieldValue.length - 6}
+                                  </span>
+                                  Others
+                                </p>
+                              )}
+                            </>
+                          );
+                        }
                       }
                     })()}
                   </div>
