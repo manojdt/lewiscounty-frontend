@@ -33,6 +33,7 @@ import { styled } from '@mui/material/styles';
 import CategoryIcon from '../../assets/icons/category.svg';
 import PermissionIcon from '../../assets/icons/permissionIcon.svg';
 import { user } from '../../utils/constant';
+import NavHead from './NavHead';
 
 const HtmlTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} arrow />
@@ -283,14 +284,10 @@ export const Navbar = () => {
         <nav className='bg-white border-gray-200'>
           <div className='flex justify-between'>
             <div className='contain gap-24 flex justify-between w-3/12 p-4'>
-              <div
-                className='site-logo cursor-pointer flex items-center space-x-3 rtl:space-x-reverse'
-                onClick={handleLogoClick}
-              >
-                <span className='self-center text-2xl font-semibold whitespace-nowrap'>
-                  My Logo
-                </span>
-              </div>
+            <NavHead 
+  role={userInfo?.data?.role} 
+  handleLogoClick={handleLogoClick}
+/>
               {userInfo?.data?.role === user.super_admin && (
                 <div>
                   <ul

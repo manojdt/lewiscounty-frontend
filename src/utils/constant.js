@@ -1079,13 +1079,13 @@ export const menteesRequestOverview = [
     status: RequestStatus.programRequest.key,
     for: ['mentor', 'admin'],
   },
-  {
-    name: 'Resource Access Requests',
-    key: RequestStatus.resourceAccessRequest,
-    count: 0,
-    status: RequestStatus.resourceAccessRequest.key,
-    for: ['mentor', 'admin'],
-  },
+  // {
+  //   name: 'Resource Access Requests',
+  //   key: RequestStatus.resourceAccessRequest,
+  //   count: 0,
+  //   status: RequestStatus.resourceAccessRequest.key,
+  //   for: ['mentor', 'admin'],
+  // },
   {
     name: 'Goal Requests',
     key: RequestStatus.goalRequest,

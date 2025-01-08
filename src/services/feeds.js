@@ -119,3 +119,6 @@ export const postCommentLike = createAsyncThunk(
         return createCommentLike;
     }
 );
+
+
+export const updateFeedRequest = createAction('update/updateRequest')

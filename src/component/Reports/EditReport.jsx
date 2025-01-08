@@ -97,7 +97,7 @@ export default function EditReport() {
                 end_date: dateTimeFormat(programDetails.end_date),
                 participated_mentees: programDetails.participated_mentees,
                 report_name: reportDetails.name,
-                description: reportDetails.comments
+                description: reportDetails.html_content_link
             }
             reset(updateFormValues)
         }
@@ -156,7 +156,6 @@ export default function EditReport() {
         dispatch(getReportProgramDetails(programId,"type"))
     }
 
-console.log("reportDetails ==>", reportDetails)
     useEffect(() => {
         if (Object.keys(reportDetails).length) {
             getCategoryPrograms(reportDetails.category)
@@ -357,7 +356,8 @@ console.log("reportDetails ==>", reportDetails)
                                                                         <textarea id="message" rows="4" className={`block p-2.5 input-bg w-full text-sm text-gray-900  rounded-lg border
                                                                                 focus:visible:outline-none focus:visible:border-none ${field.width === 'width-82' ? 'h-[282px]' : ''}`}
                                                                             placeholder={field.placeholder}
-                                                                            {...register(field.name, field.inputRules)}></textarea>
+                                                                            {...register(field.name, field.inputRules)}
+                                                                            disabled={field.disabled}></textarea>
                                                                         {errors[field.name] && (
                                                                             <p className="error" role="alert">
                                                                                 {errors[field.name].message}

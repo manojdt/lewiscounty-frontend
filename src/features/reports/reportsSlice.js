@@ -14,7 +14,11 @@ import {
     getReportDetails,
     getReportProgramDetails,
     updateReportDetails,
-    updateReportLocalState
+    updateReportImage,
+    updateReportLocalState,
+    uploadVideoFiles,
+    handlehtmlsend,
+    handleCancelReport,
 } from "../../services/reportsInfo";
 
 const initialState = {
@@ -25,6 +29,9 @@ const initialState = {
     loading: false,
     status: "",
     error: "",
+    uploadedImageUrl : "",
+    uploadedVideoUrl:"",
+
 };
 
 export const reportsSlice = createSlice({
@@ -223,6 +230,89 @@ export const reportsSlice = createSlice({
                 ...action.payload
             }
         })
+        
+        builder
+            .addCase(updateReportImage.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(updateReportImage.fulfilled, (state, action) => {
+                if (action.payload?.message === "Created successfully.")
+                return {
+
+                    ...state,
+                    status: "done",
+                    loading: false,
+                    uploadedImageUrl: action.payload.data[0].image
+                };
+                return state;
+            })
+            .addCase(updateReportImage.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
+
+            builder
+            .addCase(uploadVideoFiles.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(handlehtmlsend.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    status: "done",
+                    loading: false,
+                 
+
+                };
+                return state;
+            })
+            .addCase(handlehtmlsend.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+            builder
+            .addCase(handlehtmlsend.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+
+
+            builder
+            .addCase(handleCancelReport.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    status: "done",
+                    loading: false,                
+                }
+            })
+            .addCase(handleCancelReport.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+            builder
+            .addCase(handleCancelReport.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
     }
 })
 

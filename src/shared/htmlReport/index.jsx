@@ -12,7 +12,7 @@ const BlockTypes = {
     TEXT_IMAGE: 'text_image',
 };
 
-const HtmlReport = ({ onSave = () => false, onCancel = () => false }) => {
+const HtmlReport1 = ({ onSave = () => false, onCancel = () => false }) => {
     const [blocks, setBlocks] = useState([
         { id: '1', type: BlockTypes.TEXT_IMAGE, content: { text: '', image: null }, imagePosition: 'right' },
     ]);
@@ -642,4 +642,4 @@ const HtmlReport = ({ onSave = () => false, onCancel = () => false }) => {
     );
 };
 
-export default HtmlReport;
+export default HtmlReport1;

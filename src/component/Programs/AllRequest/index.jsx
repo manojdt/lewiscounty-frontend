@@ -457,7 +457,6 @@ export default function AllRequest() {
 
   // Cancel Reason Popup Submit
   const handleCancelReasonPopupSubmit = (data) => {
-    console.log('data from cancel Reason ===>', data);
     if (data.cancel_reason !== '') {
       if (cancelPopup.show) {
         if (cancelPopup.page === 'program_request') {
@@ -548,7 +547,7 @@ export default function AllRequest() {
 
   // Program Dropwdowm Accept
   const handleAcceptProgramRequest = () => {
-    handleOpenConfirmPopup(
+        handleOpenConfirmPopup(
       'Program Request',
       currentRequestTab.key,
       actionTab,
@@ -1077,7 +1076,7 @@ export default function AllRequest() {
                   fontSize: '12px',
                 }}
               >
-                {requestStatusText[params.row.status] || ''}
+                {requestStatusText[params?.row?.status==="accept"?"approved":params?.row?.status==="cancel"?"rejected":params?.row?.status] || ''}
               </span>
             </div>
           </>

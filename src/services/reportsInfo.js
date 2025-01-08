@@ -111,4 +111,51 @@ export const deleteReports = createAsyncThunk(
 );
 
 
+export const updateReportImage = createAsyncThunk(
+    "updateReportImage",
+    async (data) => {
+        const updateReportImage = await api.post(`request/content_request/images/${data?.id}`, data?.data);
+        if (updateReportImage.status === 200 && updateReportImage.data) {
+            return updateReportImage.data;
+        }
+        return updateReportImage
+
+    }
+);
+
+export const uploadVideoFiles = createAsyncThunk(
+    "uploadVideoFiles",
+    async (data) => {
+        const uploadVideoFiles = await api.post(`request/content_request/videos/${data?.id}`, data?.data);
+        if (uploadVideoFiles.status === 200 && uploadVideoFiles.data) {
+            return uploadVideoFiles.data;
+        }
+        return uploadVideoFiles
+    }
+
+);
+
+export const handlehtmlsend = createAsyncThunk(
+    "handlehtmlsend",
+    async (data) => {
+        const handlehtmlsend = await api.post(`request/content_request/html/${data?.id}`, data?.data);
+        if (handlehtmlsend.status === 200 && handlehtmlsend.data) {
+            return handlehtmlsend.data;
+        }
+        return handlehtmlsend
+    }
+
+);
+
+export const handleCancelReport = createAsyncThunk(
+    "handleCancelReport",
+    async (id) => {
+        const handleCancelReport = await api.post(`request/confirm_save_html_content/${id}/false`);
+        if (handleCancelReport.status === 200 && handleCancelReport.data) {
+            return handleCancelReport.data;
+        }
+        return handleCancelReport
+    }
+
+);
 

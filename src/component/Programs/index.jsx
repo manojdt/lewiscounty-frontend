@@ -313,7 +313,9 @@ export default function Programs() {
 
   const getPrograms = () => {
     const pay = {
-      filter_by: programFilter.filter_by ? programFilter.filter_by : filterDate,
+      ...((programFilter.filter_by||filterDate)&&{ filter_by: programFilter.filter_by
+        ? programFilter.filter_by
+        : filterDate})
     };
     let query = {};
 
@@ -545,9 +547,9 @@ export default function Programs() {
     if (userprograms.status === programStatus.bookmarked) {
       let query = {};
       const pay = {
-        filter_by: programFilter.filter_by
+        ...((programFilter.filter_by||filterDate)&&{ filter_by: programFilter.filter_by
           ? programFilter.filter_by
-          : filterDate,
+          : filterDate})
       };
       if (filterType && filterType !== "") {
         query = { type: "status", value: filterType };
@@ -605,18 +607,18 @@ export default function Programs() {
     if (role === "mentor" || role === "admin") {
       dispatch(
         getProgramCounts({
-          filter_by: programFilter.filter_by
+          ...((programFilter.filter_by||filterDate)&&{ filter_by: programFilter.filter_by
             ? programFilter.filter_by
-            : filterDate,
+            : filterDate})
         })
       );
     }
     if (role === "mentee") {
       dispatch(
         getMenteeProgramCount({
-          filter_by: programFilter.filter_by
+          ...((programFilter.filter_by||filterDate)&&{ filter_by: programFilter.filter_by
             ? programFilter.filter_by
-            : filterDate,
+            : filterDate})
         })
       );
     }
@@ -724,6 +726,7 @@ export default function Programs() {
                     onChange={handleDateFilter}
                     value={programFilter?.filter_by}
                   >
+                    <option value="">All</option>
                     <option value="day">Day</option>
                     <option value="month">Month</option>
                     <option value="year">Year</option>

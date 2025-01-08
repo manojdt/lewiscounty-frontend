@@ -934,7 +934,8 @@ export default function ProfileView() {
           <div className='flex gap-5'>
             {role !== 'admin' ? (
               <>
-                {state?.data?.status === 'new' &&
+                {(state?.data?.status === 'new' ||
+                  requestData?.status === 'new') &&
                 ['new', 'pending'].includes(requestData?.status) ? (
                   <>
                     <div className='flex gap-4 pt-10'>
