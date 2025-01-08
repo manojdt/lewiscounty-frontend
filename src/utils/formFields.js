@@ -2370,12 +2370,13 @@ export const ReportFields = (bool = false) => [
     type: 'editor',
     name: 'description',
     fieldtype: 'text',
-    label: 'Descriptions',
-    placeholder: 'Description',
-    inputRules: {
-      required: 'This field is required',
-    },
+    label: 'Report Link',
+    placeholder: 'Report Link',
+    // inputRules: {
+    //   required: 'This field is required',
+    // },
     width: 'w-full',
+    disabled: bool
   },
 ];
 

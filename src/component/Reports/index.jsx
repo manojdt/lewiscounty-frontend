@@ -111,6 +111,7 @@ const Reports = () => {
         formDatas.append('comment_control', formData.comment_control);
         formDatas.append('visibility', formData.visibility);
         formDatas.append('is_published', formData.is_published);
+        formDatas.append("request", reportData?.selectedItem?.[0]?.id)
 
         // console.log(formDatas);
         dispatch(createPost(formDatas)).then((res) => {
@@ -278,8 +279,9 @@ const Reports = () => {
                                     </MenuItem>
                                 }
                                 {
+                                    params?.row?.status === "approved" &&
                                     <MenuItem onClick={handleCreatePostPopup} className='!text-[12px]'>
-                                        <img src={DeleteIcon} alt="DeleteIcon" className='pr-3 w-[27px]' />
+                                        <img src={ViewIcon} alt="ViewIcon" className='pr-3 w-[27px]' />
                                         Post to Feed
                                     </MenuItem>
                                 }
@@ -355,6 +357,8 @@ const Reports = () => {
            delete query.request_by
         }
         if(query.status){
+            dispatch(getAllReports({ ...query, page: paginationModel?.page + 1, limit: paginationModel?.pageSize }));
+        }else{
             dispatch(getAllReports({ ...query, page: paginationModel?.page + 1, limit: paginationModel?.pageSize }));
         }
     }
@@ -532,6 +536,8 @@ const Reports = () => {
                     handlePostData={onSubmit}
                     handleClose={handleClosePostPopup}
                     handleVisibilty={handleVisibilty}
+                    isReport={true}
+                    reportData={reportData?.selectedItem}
                 />
             )}
 

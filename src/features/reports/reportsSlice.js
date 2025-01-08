@@ -18,6 +18,7 @@ import {
     updateReportLocalState,
     uploadVideoFiles,
     handlehtmlsend,
+    handleCancelReport,
 } from "../../services/reportsInfo";
 
 const initialState = {
@@ -283,6 +284,30 @@ export const reportsSlice = createSlice({
             });
             builder
             .addCase(handlehtmlsend.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+
+
+            builder
+            .addCase(handleCancelReport.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    status: "done",
+                    loading: false,                
+                }
+            })
+            .addCase(handleCancelReport.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+            builder
+            .addCase(handleCancelReport.pending, (state) => {
                 return {
                     ...state,
                     loading: true,
