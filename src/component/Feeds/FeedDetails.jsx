@@ -27,6 +27,7 @@ import {
 import ProgramFeeds from "../../shared/ProgramFeeds";
 import { Button } from "../../shared";
 import { feedStatus } from "../../utils/constant";
+import NoImage from "../../assets/images/noimage.jpg"
 
 export default function FeedDetails() {
   const navigate = useNavigate();
@@ -144,7 +145,7 @@ export default function FeedDetails() {
                       <a href={feedDetails?.related_request?.html_content_link} target="_blank">
                         <img
                           className="feed-detail-image"
-                          src={feedDetails?.related_request?.thumbnail}
+                          src={feedDetails?.related_request?.thumbnail ?? NoImage}
                           alt="FeedImage"
                         />
                       </a>

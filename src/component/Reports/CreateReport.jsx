@@ -62,9 +62,8 @@ export default function CreateReport() {
     getValues,
     setValue,
     trigger,
-    clearErrors
+    clearErrors,
   } = useForm();
-
 
   React.useEffect(() => {
     if (state?.type === "new") {
@@ -96,7 +95,9 @@ export default function CreateReport() {
 
     dispatch(createReport(apiData)).then((res) => {
       if (res?.meta?.requestStatus === "fulfilled") {
-        dispatch(updateReportLocalState({ status: "" }));
+        dispatch(updateReportLocalState({ programDetails: {}, status: "" }));
+        reset();
+        navigate("/reports");
       }
     });
   };
@@ -278,6 +279,7 @@ export default function CreateReport() {
         if (res?.meta?.requestStatus === "fulfilled") {
           setReportData(res?.payload);
           setOpenReport(true);
+          dispatch(updateReportLocalState({ status: "" }));
         }
       });
     } else {
@@ -287,7 +289,7 @@ export default function CreateReport() {
       }
     }
   };
-
+console.log("reportData ===>", reportData)
   const handleInputChange = (field_name) => {
     // Clears the error when the user starts typing
     clearErrors(field_name);
@@ -656,7 +658,7 @@ export default function CreateReport() {
                   setOpenReport(false);
                 }}
                 onSave={(data) => {
-                  setOpenReport(false);                  
+                  setOpenReport(false);
                   setValue("description", data?.data?.data?.html_content_link);
                 }}
                 reportId={reportData?.data?.request_id}

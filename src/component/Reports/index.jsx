@@ -279,7 +279,7 @@ const Reports = () => {
                                     </MenuItem>
                                 }
                                 {
-                                    params?.row?.status === "approved" &&
+                                    reportData?.selectedItem?.[0]?.status === "approved" &&
                                     <MenuItem onClick={handleCreatePostPopup} className='!text-[12px]'>
                                         <img src={ViewIcon} alt="ViewIcon" className='pr-3 w-[27px]' />
                                         Post to Feed
