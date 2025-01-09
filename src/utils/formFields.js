@@ -459,6 +459,7 @@ export const MenteePersonalInformationFields = [
     },
     size: true,
     disabled: true,
+    disable: true,
     width: 'col-span-2',
   },
   {
@@ -472,6 +473,7 @@ export const MenteePersonalInformationFields = [
     },
     size: true,
     disabled: true,
+    disable: true,
     width: 'col-span-2',
   },
   {
@@ -485,6 +487,7 @@ export const MenteePersonalInformationFields = [
     },
     size: true,
     disabled: true,
+    disable: true,
     width: 'col-span-2',
   },
   {

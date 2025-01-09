@@ -23,6 +23,7 @@ import {
   requestStatusText,
   user,
 } from '../../../utils/constant';
+import { requestPageBreadcrumbs, tabQuertyData } from '../../Breadcrumbs/BreadcrumbsCommonData';
 import SearchIcon from '../../../assets/icons/search.svg';
 import Edit_Icon from '../../../assets/icons/editIcon.svg';
 import CalendarIcon from '../../../assets/images/calender_1x.png';
@@ -122,6 +123,8 @@ export default function AllRequest() {
   const [filter, setFilter] = useState({ search: '', filter_by: '' });
   const open = Boolean(anchorEl);
   const selectedRequestedtype = searchParams.get('type');
+  const selectedRequestedTab = searchParams.get('tabType');
+  const selectedMainRequestedTab = searchParams.get('mainTab');
   const [actionTab, setActiveTab] = useState(currentTab);
   const [actionTabFilter, setActionTabFilter] = useState([]);
   const [requestOverview, setRequestOverview] = useState([]);
@@ -558,6 +561,8 @@ export default function AllRequest() {
     }
   };
 
+
+
   // PROGRAM
 
   // Program Dropwdowm Accept
@@ -769,12 +774,13 @@ export default function AllRequest() {
                 <MenuItem
                   onClick={(e) => {
                     const requestQuery = `&request_id=${seletedItem.id}`;
+                    const tabQuery = selectedTab==="mentees"?`&breadcrumbsType=${requestPageBreadcrumbs.program_mentee_cancel}`:`&breadcrumbsType=${tabQuertyData(role,actionTab)}`;
                     const url =
                       (role === 'mentor' || role === 'admin') &&
                       actionTab === 'program_join'
-                        ? `/mentee-details/${seletedItem.created_by}?type=mentee_request${requestQuery}`
+                        ? `/mentee-details/${seletedItem.created_by}?type=mentee_request${requestQuery}&breadcrumbsType=${requestPageBreadcrumbs.program_join_request_admin}`
                         : role === 'admin'
-                        ? `/program-details/${seletedItem.program}?request_id=${seletedItem.id}&type=${actionTab}`
+                        ? `/program-details/${seletedItem.program}?request_id=${seletedItem.id}&type=${actionTab}${tabQuery}`
                         : seletedItem?.status === 'approved'
                         ? `/program-details/${seletedItem.program}`
                         : `/program-details/${seletedItem.program}?request_id=${seletedItem.id}&type=${actionTab}`;
@@ -1017,8 +1023,9 @@ export default function AllRequest() {
             >
               <MenuItem
                 onClick={(e) => {
+                  const tabQuery =selectedTab==="mentees"? `&breadcrumbsType=${tabQuertyData(role,actionTab)}&goalType=${requestPageBreadcrumbs?.goal_request}`: `&breadcrumbsType=${tabQuertyData(role,actionTab)}`;
                   navigate(
-                    `/view-goal/${seletedItem?.goal?.id}?requestId=${seletedItem.id}`
+                    `/view-goal/${seletedItem?.goal?.id}?requestId=${seletedItem.id}${tabQuery}`
                   );
                 }}
                 className='!text-[12px]'
@@ -1145,7 +1152,7 @@ export default function AllRequest() {
               <MenuItem
                 onClick={(e) => {
                   handleClose();
-                  navigate(`/mentor-details/${seletedItem.id}`, {
+                  navigate(`/mentor-details/${seletedItem.id}?breadcrumbsType=${requestPageBreadcrumbs.member_join_request}`, {
                     state: {
                       reqType: 'member_join_request',
                     },
@@ -1333,7 +1340,7 @@ export default function AllRequest() {
               {role === 'admin' && (
                 <>
                   <MenuItem
-                    onClick={() => navigate(`/view-report/${seletedItem?.id}`)}
+                    onClick={() => navigate(`/view-report/${seletedItem?.id}?breadcrumbsType=${requestPageBreadcrumbs.report_request}`)}
                     className='!text-[12px]'
                   >
                     <img
@@ -1587,7 +1594,7 @@ export default function AllRequest() {
                 <>
                   <MenuItem
                     onClick={() =>
-                      navigate(`/certificate_mentees/${seletedItem.program}`, {
+                      navigate(`/certificate_mentees/${seletedItem.program}?breadcrumbsType=${requestPageBreadcrumbs.certificate_request}`, {
                         state: {
                           rowId: seletedItem?.id,
                           status: seletedItem?.status,
@@ -1738,7 +1745,7 @@ export default function AllRequest() {
                 <>
                   <MenuItem
                     onClick={() =>
-                      navigate(`/testimonialView/${seletedItem.request_id}`)
+                      navigate(`/testimonialView/${seletedItem.request_id}?breadcrumbsType=${requestPageBreadcrumbs.testimonial_request}`)
                     }
                     className='!text-[12px]'
                   >
@@ -2530,6 +2537,17 @@ export default function AllRequest() {
       All Request
     </Typography>,
   ];
+  useEffect(() => {
+    if(selectedMainRequestedTab===requestPageBreadcrumbs.main_mentee_tab){
+     setSelectedTab("mentees")
+     }
+   }, [selectedMainRequestedTab])
+  useEffect(() => {
+    if(selectedRequestedTab){
+     setActiveTab(selectedRequestedTab)
+    
+    }
+   }, [selectedRequestedTab,selectedTab])
 
   return (
     <div className='program-request px-8 mt-10'>

@@ -33,6 +33,8 @@ import { updateCertificateRequest } from "../../services/request";
 import TickColorIcon from "../../assets/icons/tickColorLatest.svg";
 import CancelColorIcon from "../../assets/icons/cancelCircle.svg";
 import { Typography } from "@mui/material";
+import { request_certificate, requestPageBreadcrumbs } from "../Breadcrumbs/BreadcrumbsCommonData";
+import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
 
 export default function CertificateMenteeList() {
   const navigate = useNavigate();
@@ -42,7 +44,8 @@ export default function CertificateMenteeList() {
   const requestId = searchParams.get("request_id");
   const { data } = useSelector((state) => state.userInfo);
   const role = data?.role || "";
-
+  const breadcrumbsType = searchParams.get("breadcrumbsType") || "";
+  const [breadcrumbsArray, setBreadcrumbsArray] = useState([]);
   const { status, certificatesMembers } = useSelector(
     (state) => state.certificates
   );
@@ -280,7 +283,12 @@ export default function CertificateMenteeList() {
       handleCancelCertificateApiRequest();
     }
   };
-
+  useEffect(() => {
+    if(breadcrumbsType===requestPageBreadcrumbs.certificate_request){
+      console.log(request_certificate())
+    setBreadcrumbsArray(request_certificate())
+   }
+   }, [breadcrumbsType])
   return (
     <div className="px-8 mt-10 pb-5">
       <div
@@ -333,6 +341,8 @@ export default function CertificateMenteeList() {
           </div>
         </Backdrop>
         <div className="flex justify-between px-5 pb-4 mb-8 items-center border-b-2">
+        {breadcrumbsType===requestPageBreadcrumbs.certificate_request&& <Breadcrumbs items={breadcrumbsArray}/>}
+         {breadcrumbsType!==requestPageBreadcrumbs.certificate_request&&
           <div className="flex gap-5 items-center text-[14px]">
             <p style={{ color: "rgba(89, 117, 162, 1)", fontWeight: 500 }}>
               Generate Certificates Request
@@ -351,7 +361,7 @@ export default function CertificateMenteeList() {
                 <p>View Member List</p>
               </>
             )}
-          </div>
+          </div>}
           <div className="cursor-pointer" onClick={() => navigate(-1)}>
             <img src={Cancel} alt="link" className="w-[20px] h[10px]" />
           </div>

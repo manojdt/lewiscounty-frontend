@@ -73,20 +73,22 @@ import {
   useAcceptProgramMutation,
   useGetSpecificProgramDetailsQuery,
   useLaunchProgramMutation,
-} from '../../../features/program/programApi.services';
-import SubprogramsDataGrid from './SubProgramTable';
-import ProgramActions from './ProgramActions';
-import { toast } from 'react-toastify';
-import SkillsSet from '../../SkillsSet';
-import { CancelPopup } from '../../Mentor/Task/cancelPopup';
-import SuccessGradientMessage from '../../success-gradient-message';
-import ProgramReasons from './ProgramReasons';
-import { CustomFormFields } from '../../../shared/CustomFormFields/CustomFormFields';
-import ColorLocation from '../../../assets/icons/colorLocation.svg';
-import Accordian from '../../../shared/Accordian';
-import moment from 'moment';
-import ProgramHistoryIcon from '../../../assets/icons/historyIcon.svg';
-import RescheduleIcon from '../../../assets/images/reschedule1x.png';
+} from "../../../features/program/programApi.services";
+import SubprogramsDataGrid from "./SubProgramTable";
+import ProgramActions from "./ProgramActions";
+import { toast } from "react-toastify";
+import SkillsSet from "../../SkillsSet";
+import { CancelPopup } from "../../Mentor/Task/cancelPopup";
+import SuccessGradientMessage from "../../success-gradient-message";
+import ProgramReasons from "./ProgramReasons";
+import { CustomFormFields } from "../../../shared/CustomFormFields/CustomFormFields";
+import ColorLocation from "../../../assets/icons/colorLocation.svg";
+import Accordian from "../../../shared/Accordian";
+import moment from "moment";
+import ProgramHistoryIcon from "../../../assets/icons/historyIcon.svg";
+import RescheduleIcon from "../../../assets/images/reschedule1x.png";
+import Breadcrumbs from "../../Breadcrumbs/Breadcrumbs";
+import { program_details, request_newProgramRequest, request_programCancel, request_programMenteeCancel, request_programReschedule, requestPageBreadcrumbs } from "../../Breadcrumbs/BreadcrumbsCommonData";
 
 export default function ProgramDetails({ setProgramDetailsId }) {
   const dateInfo = todatDateInfo();
@@ -99,9 +101,10 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   const navigate = useNavigate();
   const [acceptProgram, { isSuccess: isAccepted, reset: resetProgramAccept }] =
     useAcceptProgramMutation();
-  const requestId = searchParams.get('request_id') || '';
-  const requestStatusParams = searchParams.get('status') || '';
-  const program_create_type = searchParams.get('program_create_type') || '';
+  const requestId = searchParams.get("request_id") || "";
+  const requestStatusParams = searchParams.get("status") || "";
+  const program_create_type = searchParams.get("program_create_type") || "";
+  const breadcrumbsType = searchParams.get("breadcrumbsType") || "";
   const userdetails = useSelector((state) => state.userInfo);
   const role = userdetails.data.role || '';
   const reqRole = requestId && userdetails.data.role === 'admin';
@@ -113,6 +116,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   const [message, setMessage] = useState(false);
   const [dateFormatted, setDateFormat] = useState({});
   const [taskJoinedRequest, setTaskJoinedRequest] = useState(false);
+  const [breadcrumbsArray, setBreadcrumbsArray] = useState([]);
   const [moreMenuModal, setMoreMenuModal] = useState({
     share: false,
     reschedule: false,
@@ -466,12 +470,47 @@ export default function ProgramDetails({ setProgramDetailsId }) {
         setMoreMenuModal({ ...moreMenuModal, reschedule: false, cancel: true });
         handleClose();
         break;
-      case 'discussion':
+      case "discussion":
         break;
       default:
         break;
     }
   };
+  const handleBreadcrumbs = (key) => {
+    const program_detailsData=program_details(state?.from)
+    const program_New=request_newProgramRequest(programdetails?.program_name)
+    const program_re=request_programReschedule(programdetails?.program_name)
+    const program_cancel=request_programCancel(programdetails?.program_name)
+    const program_mentee_cancel=request_programMenteeCancel(programdetails?.program_name)
+    switch (key) {
+      case "program":
+        setBreadcrumbsArray(program_detailsData)
+        break;
+      case requestPageBreadcrumbs.program_new:
+        setBreadcrumbsArray(program_New)
+        break;
+        case requestPageBreadcrumbs.program_reschedule:
+        setBreadcrumbsArray(program_re)
+        break;
+        case requestPageBreadcrumbs.program_cancel:
+        setBreadcrumbsArray(program_cancel)
+        break;
+        case requestPageBreadcrumbs.program_mentee_cancel:
+        setBreadcrumbsArray(program_mentee_cancel)
+        break;
+      case "discussion":
+        break;
+      default:
+        break;
+    }
+  };
+useEffect(() => {
+ if(breadcrumbsType&&programdetails?.program_name){
+  handleBreadcrumbs(breadcrumbsType)
+}else{
+   handleBreadcrumbs("program")
+ }
+}, [breadcrumbsType,programdetails])
 
   const handleMoreMenuClosePopup = () => {
     setMoreMenuModal({ share: false, reschedule: false, cancel: false });
@@ -1671,8 +1710,9 @@ export default function ProgramDetails({ setProgramDetailsId }) {
               className='flex justify-between px-7 pt-6 pb-5 mx-2 border-b-2'
               aria-label='Breadcrumb'
             >
-              <ol className='inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse'>
-                <li className='inline-flex items-center'>
+              <Breadcrumbs items={breadcrumbsArray}/>
+              {/* <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+                <li className="inline-flex items-center">
                   <p
                     href='#'
                     className='inline-flex items-center text-sm font-medium cursor-pointer'
@@ -1707,69 +1747,68 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     </p>
                   </div>
                 </li>
-              </ol>
-              {searchParams.get('type') !== 'program_new' && (
+              </ol> */}
+                {searchParams.get('type') !== 'program_new' && (
                 <>
-                  {(role === 'mentor' ||
-                    role === 'admin' ||
-                    (role === 'mentee' &&
-                      (programdetails.status ===
-                        programActionStatus.inprogress ||
-                        programdetails.mentee_join_status ===
-                          programActionStatus.program_join_request_accepted))) && (
-                    <>
-                      <div className='cursor-pointer' onClick={handleClick}>
-                        <img src={MoreIcon} alt='MoreIcon' />
-                      </div>
-                      <Menu
-                        id='basic-menu'
-                        anchorEl={anchorEl}
-                        open={open}
-                        onClose={handleClose}
-                        MenuListProps={{
-                          'aria-labelledby': 'basic-button',
-                        }}
-                      >
-                        {(role === 'mentor' || role === 'admin') && (
-                          <>
-                            <MenuItem
-                              onClick={() => handleMenu('share')}
-                              className='!text-[12px]'
-                            >
-                              <img
-                                src={ShareIcon}
-                                alt='ShareIcon'
-                                className='pr-3 w-[25px]'
-                              />
-                              Share
-                            </MenuItem>
-                            {
-                              !requestStatusParams &&
-                                ![
-                                  'yettoapprove',
-                                  'cancelled',
-                                  'new_program_request_rejected',
-                                  'completed',
-                                ].includes(programdetails?.status) &&
-                                !reqRole &&
-                                !programdetails.hasOwnProperty(
-                                  'admin_assign_program'
-                                ) && (
-                                  // role !== 'admin' && (
-                                  <MenuItem
-                                    onClick={() => handleMenu('reschedule')}
-                                    className='!text-[12px]'
-                                  >
-                                    <img
-                                      src={RescheduleIcon}
-                                      alt='RescheduleIcon'
-                                      className='pr-3 w-[25px]'
-                                    />
-                                    Reschedule
-                                  </MenuItem>
-                                )
-                              // )
-                            }
+              {(role === "mentor" ||
+                role === "admin" ||
+                (role === "mentee" &&
+                  (programdetails.status === programActionStatus.inprogress ||
+                    programdetails.mentee_join_status ===
+                      programActionStatus.program_join_request_accepted))) && (
+                <>
+                  <div className="cursor-pointer" onClick={handleClick}>
+                    <img src={MoreIcon} alt="MoreIcon" />
+                  </div>
+                  <Menu
+                    id="basic-menu"
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                    MenuListProps={{
+                      "aria-labelledby": "basic-button",
+                    }}
+                  >
+                    {(role === "mentor" || role === "admin") && (
+                      <>
+                        <MenuItem
+                          onClick={() => handleMenu("share")}
+                          className="!text-[12px]"
+                        >
+                          <img
+                            src={ShareIcon}
+                            alt="ShareIcon"
+                            className="pr-3 w-[25px]"
+                          />
+                          Share
+                        </MenuItem>
+                        {
+                          !requestStatusParams &&
+                            ![
+                              "yettoapprove",
+                              "cancelled",
+                              "new_program_request_rejected",
+                              "completed",
+                            ].includes(programdetails?.status) &&
+                            !reqRole &&
+                            !programdetails.hasOwnProperty(
+                              "admin_assign_program"
+                            ) && (
+                              // role !== 'admin' && (
+                              <MenuItem
+                                onClick={() => handleMenu("reschedule")}
+                                className="!text-[12px]"
+                              >
+                                <img
+                                  src={RescheduleIcon}
+                                  alt="RescheduleIcon"
+                                  className="pr-3 w-[25px]"
+                                />
+                                Reschedule
+                              </MenuItem>
+                            )
+                          // )
+                        }
 
                             {
                               !requestStatusParams &&
