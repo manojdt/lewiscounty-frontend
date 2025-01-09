@@ -201,14 +201,14 @@ const Goals = () => {
         console.log(seletedItem, "select")
         const res = seletedItem?.created_by ? seletedItem?.created_by : user_id
         dispatch(getGoalsCount({ time_frame: allTimeFrame, user_id: res }))
-        dispatch(getGoalsRequest({
-            status: filterType,
-            created_by: created_by,
-            time_frame: requestTimeFrame,
-            page: requestPaginationModel?.page + 1,
-            limit: requestPaginationModel?.pageSize,
-            user_id: res
-        }))
+        // dispatch(getGoalsRequest({
+        //     status: filterType,
+        //     created_by: created_by,
+        //     time_frame: requestTimeFrame,
+        //     page: requestPaginationModel?.page + 1,
+        //     limit: requestPaginationModel?.pageSize,
+        //     user_id: res
+        // }))
         dispatch(getGoalsHistory({
             status: filterType ?? "new",
             created_by: created_by,
@@ -249,7 +249,7 @@ const Goals = () => {
             }
         }
         dispatch(getAllGoals(payload))
-        dispatch(getGoalsRequest(payload))
+        // dispatch(getGoalsRequest(payload))
         dispatch(getGoalsCount({ time_frame: timeframe, user_id: role === "admin" ? seletedItem?.created_by : undefined }))
     }
 
@@ -575,113 +575,113 @@ const Goals = () => {
         },
     ]
 
-    const goalRequestColumn = [
-        {
-            field: 'goal_name',
-            headerName: 'Goals Name',
-            id: 0,
-            flex: 1,
-            renderCell: (params) => {
-                return <div className='flex gap-2 items-center'>{params?.row?.goal?.goal_name ?? "..."}</div>
-            }
-        },
-        {
-            field: 'goal_designation',
-            headerName: 'Goals Designation',
-            flex: 1,
-            id: 1,
-            renderCell: (params) => {
-                return <div className='flex gap-2 items-center'>{params?.row?.goal?.designation ?? "..."}</div>
-            }
-        },
-        {
-            field: 'goal_description',
-            headerName: 'Goals Description',
-            flex: 1,
-            id: 2,
-            renderCell: (params) => {
-                return <div className='flex gap-2 items-center'>{params?.row?.goal?.description?.length ? params?.row?.goal?.description : "..."}</div>
-            }
-        },
-        {
-            field: 'request_date',
-            headerName: 'Request Date',
-            flex: 1,
-            id: 3,
-            renderCell: (params) => {
-                return <div className='flex gap-2 items-center'>{params?.row?.requested_date ? dayjs(params?.row?.requested_date).format("DD-MM-YYYY") : "..."}</div>
-            }
-        },
-        {
-            field: 'approved_date',
-            headerName: 'Approved Date',
-            flex: 1,
-            id: 4,
-            renderCell: (params) => {
-                return <div className='flex gap-2 items-center'>{params?.row?.approved_date ? dayjs(params?.row?.approved_date).format("DD-MM-YYYY") : "..."}</div>
-            }
-        },
-        {
-            field: 'status',
-            headerName: 'Status',
-            flex: 1,
-            id: 5,
-            renderCell: (params) => {
-                return <>
-                    <div className='cursor-pointer flex items-center h-full relative'>
+    // const goalRequestColumn = [
+    //     {
+    //         field: 'goal_name',
+    //         headerName: 'Goals Name',
+    //         id: 0,
+    //         flex: 1,
+    //         renderCell: (params) => {
+    //             return <div className='flex gap-2 items-center'>{params?.row?.goal?.goal_name ?? "..."}</div>
+    //         }
+    //     },
+    //     {
+    //         field: 'goal_designation',
+    //         headerName: 'Goals Designation',
+    //         flex: 1,
+    //         id: 1,
+    //         renderCell: (params) => {
+    //             return <div className='flex gap-2 items-center'>{params?.row?.goal?.designation ?? "..."}</div>
+    //         }
+    //     },
+    //     {
+    //         field: 'goal_description',
+    //         headerName: 'Goals Description',
+    //         flex: 1,
+    //         id: 2,
+    //         renderCell: (params) => {
+    //             return <div className='flex gap-2 items-center'>{params?.row?.goal?.description?.length ? params?.row?.goal?.description : "..."}</div>
+    //         }
+    //     },
+    //     {
+    //         field: 'request_date',
+    //         headerName: 'Request Date',
+    //         flex: 1,
+    //         id: 3,
+    //         renderCell: (params) => {
+    //             return <div className='flex gap-2 items-center'>{params?.row?.requested_date ? dayjs(params?.row?.requested_date).format("DD-MM-YYYY") : "..."}</div>
+    //         }
+    //     },
+    //     {
+    //         field: 'approved_date',
+    //         headerName: 'Approved Date',
+    //         flex: 1,
+    //         id: 4,
+    //         renderCell: (params) => {
+    //             return <div className='flex gap-2 items-center'>{params?.row?.approved_date ? dayjs(params?.row?.approved_date).format("DD-MM-YYYY") : "..."}</div>
+    //         }
+    //     },
+    //     {
+    //         field: 'status',
+    //         headerName: 'Status',
+    //         flex: 1,
+    //         id: 5,
+    //         renderCell: (params) => {
+    //             return <>
+    //                 <div className='cursor-pointer flex items-center h-full relative'>
 
-                        <span className='w-[80px] flex justify-center h-[30px] px-7'
-                            style={{
-                                background: goalRequestColor[params?.row?.goal?.status].bg, lineHeight: '30px',
-                                borderRadius: '3px', width: '110px', height: '34px', color: goalRequestColor[params?.row?.goal?.status].color
-                            }}>
-                            {goalRequestStatus[params?.row?.goal?.status]}
-                        </span>
-                    </div>
-                </>
-            }
-        },
-        {
-            field: 'action',
-            headerName: 'Action',
-            flex: 1,
-            id: 4,
-            renderCell: (params) => {
-                return <>
-                    <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleRequest(e, params.row)}>
-                        <img src={MoreIcon} alt='MoreIcon' />
-                    </div>
-                    <Menu
-                        id="basic-menu"
-                        anchorEl={requestEl}
-                        open={requestOpen}
-                        onClose={() => setRequestEl(null)}
-                        MenuListProps={{
-                            'aria-labelledby': 'basic-button',
-                        }}
-                    >
-                        <MenuItem onClick={(e) => {
-                            navigate(`/view-goal/${seletedItem?.goal?.id}`);
-                        }
-                        } className='!text-[12px]'>
-                            <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
-                            View
-                        </MenuItem>
+    //                     <span className='w-[80px] flex justify-center h-[30px] px-7'
+    //                         style={{
+    //                             background: goalRequestColor[params?.row?.goal?.status].bg, lineHeight: '30px',
+    //                             borderRadius: '3px', width: '110px', height: '34px', color: goalRequestColor[params?.row?.goal?.status].color
+    //                         }}>
+    //                         {goalRequestStatus[params?.row?.goal?.status]}
+    //                     </span>
+    //                 </div>
+    //             </>
+    //         }
+    //     },
+    //     {
+    //         field: 'action',
+    //         headerName: 'Action',
+    //         flex: 1,
+    //         id: 4,
+    //         renderCell: (params) => {
+    //             return <>
+    //                 <div className='cursor-pointer flex items-center h-full' onClick={(e) => handleRequest(e, params.row)}>
+    //                     <img src={MoreIcon} alt='MoreIcon' />
+    //                 </div>
+    //                 <Menu
+    //                     id="basic-menu"
+    //                     anchorEl={requestEl}
+    //                     open={requestOpen}
+    //                     onClose={() => setRequestEl(null)}
+    //                     MenuListProps={{
+    //                         'aria-labelledby': 'basic-button',
+    //                     }}
+    //                 >
+    //                     <MenuItem onClick={(e) => {
+    //                         navigate(`/view-goal/${seletedItem?.goal?.id}`);
+    //                     }
+    //                     } className='!text-[12px]'>
+    //                         <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
+    //                         View
+    //                     </MenuItem>
 
-                        {
-                            params.row.goal_status === 'inactive' &&
-                            <MenuItem onClick={handleDelete} className='!text-[12px]'>
-                                <img src={DeleteIcon} alt="DeleteIcon" className='pr-3 w-[30px]' />
-                                Delete
-                            </MenuItem>
-                        }
-                    </Menu>
-                </>
-            }
+    //                     {
+    //                         params.row.goal_status === 'inactive' &&
+    //                         <MenuItem onClick={handleDelete} className='!text-[12px]'>
+    //                             <img src={DeleteIcon} alt="DeleteIcon" className='pr-3 w-[30px]' />
+    //                             Delete
+    //                         </MenuItem>
+    //                     }
+    //                 </Menu>
+    //             </>
+    //         }
 
 
-        },
-    ]
+    //     },
+    // ]
 
     const title = role === "admin" ? (adminTab === "mentor" ? "Mentor Goal" : "Mentee Goal") :
         goalsListMenu.find(option => option.key === searchParams.get("type"))?.name || (role === 'mentee' ? 'Mentee Goals' : 'My Goals')
@@ -813,13 +813,13 @@ const Goals = () => {
             page: 0,
             pageSize: 5
         })
-        dispatch(getGoalsRequest({
-            status: "new2",
-            created_by: createdBy,
-            time_frame: value,
-            page: 1,
-            limit: 5
-        }))
+        // dispatch(getGoalsRequest({
+        //     status: "new2",
+        //     created_by: createdBy,
+        //     time_frame: value,
+        //     page: 1,
+        //     limit: 5
+        // }))
     }
 
 

@@ -28,8 +28,6 @@ import NoProgramImageBg from '../../assets/icons/noProgramImageBg.svg';
 import NoProgramImageIcon from '../../assets/icons/noProgramImageIcon.svg';
 import Balck_Heart_Icon from '../../assets/icons/gray-heart.svg';
 import Crown_Icon from '../../assets/icons/cronwn.svg';
-import NoProgramImageBg from '../../assets/icons/noProgramImageBg.svg';
-import NoProgramImageIcon from '../../assets/icons/noProgramImageIcon.svg';
 import { Crown } from 'lucide-react';
 
 export default function ProgramCard({

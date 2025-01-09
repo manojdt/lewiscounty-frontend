@@ -15,7 +15,7 @@ const NavHead = ({ role, handleLogoClick }) => {
         };
       case "admin":
         return {
-          text: "Org Admin",
+          text: "Admin",
           color:
             "bg-gradient-to-r from-[#00AEBD] to-[#1D5BBF] text-transparent bg-clip-text",
         };

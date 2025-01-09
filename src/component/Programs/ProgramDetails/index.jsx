@@ -247,6 +247,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       bool: false,
       activity: false,
     });
+    setCancelPopup(false)
   };
 
   const handleComplete = (programId) => {
