@@ -1,6 +1,11 @@
 import { createTheme, responsiveFontSizes } from "@mui/material";
 
 let MuiTheme = createTheme({
+  palette: {
+    primary: {
+      main: "#1D5BBF"
+    }
+  },
   typography: {
     fontFamily: ["Plus Jakarta Sans", "sans-serif"].join(","),
   },
@@ -23,6 +28,21 @@ let MuiTheme = createTheme({
         disableElevation: true,
         disableTouchRipple: true,
       },
+    },
+    MuiInputBase: {
+      defaultProps: {
+        variant: "outlined",
+        fullWidth: true,
+      },
+      styleOverrides: {
+        root: {
+          background: "#1D5BBF0D",
+          border: "none",
+          "& .MuiOutlinedInput-notchedOutline": {
+            border: "none"
+          }
+        },
+      }
     },
   },
 });

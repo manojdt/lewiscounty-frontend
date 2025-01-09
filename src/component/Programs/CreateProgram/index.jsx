@@ -6,12 +6,9 @@ import { useDispatch, useSelector } from "react-redux";
 import ReactPlayer from "react-player";
 import MoreIcon from "../../../assets/icons/moreIcon.svg";
 import ProgramSteps from "./ProgramsSteps";
-
 import { ProgramTabs, ProgramFields } from "../../../utils/formFields";
 import {
   updateNewPrograms,
-  getAllCategories,
-  getAllMaterials,
   getAllCertificates,
   getAllSkills,
   getAllMembers,
@@ -45,11 +42,14 @@ import {
   useGetCountryStatesQuery,
   useGetCitiesQuery,
   useGetSpecificProgramDetailsQuery,
+  useGetAllCategoriesQuery,
   // useGetCountryStatesQuery,
   // useGetCitiesQuery,
 } from "../../../features/program/programApi.services";
 import { MuiMenuDropDown } from "../../../shared/Dropdown/MuiMenuDropDown";
 import GoalCreationModal from "./GoalCreationModal";
+import MaterialsCreationModal from "./MaterialsCreationModal";
+import { useGetAllMaterialsQuery } from "../../../features/materials/materialApis.services";
 
 const EquipMentListMenuItems = [{ label: "View", action: "view" }];
 
@@ -67,8 +67,6 @@ export default function CreatePrograms() {
   const [toggleRole, setToggleRole] = useState("");
   const {
     allPrograms,
-    category,
-    materials,
     certificate,
     skills,
     members,
@@ -88,7 +86,9 @@ export default function CreatePrograms() {
   // const state = watch('state');
   const formValues = watch();
 
-  // console.log(state);
+  const { data: category, isLoading: isCategoryFetching } =
+    useGetAllCategoriesQuery();
+
   const { data: currentProgramDetail, isLoading: isDetailFetching } =
     useGetSpecificProgramDetailsQuery({ id: params.id }, { skip: !params?.id });
   const { data: goals } = useGetProgramGoalsQuery(undefined, {
@@ -104,6 +104,19 @@ export default function CreatePrograms() {
     },
     { refetchOnMountOrArgChange: true, skip: !formValues?.state }
   );
+
+  const { data: materials } = useGetAllMaterialsQuery(
+    {
+      ...(formValues?.category && {
+        category_id: formValues?.category,
+      }),
+    },
+    {
+      refetchOnMountOrArgChange: true,
+      skip: !formValues?.category,
+    }
+  );
+
   const [
     createProgram,
     {
@@ -123,7 +136,8 @@ export default function CreatePrograms() {
 
   const [stepData, setStepData] = useState({});
   const [actionModal, setActionModal] = useState("");
-  const [openEquipmentModal, setOpenEquipmentModal] = React.useState(false);
+  const [openMaterialModal, setOpenMaterialModal] = React.useState(false);
+  const [openGoalsModal, setOpenGoalsModal] = React.useState(false);
 
   const [programAllFields, setProgramAllFields] = useState(ProgramFields);
   const [current, setCurrent] = useState("");
@@ -155,8 +169,12 @@ export default function CreatePrograms() {
     setAnchorEl(null);
   };
 
+  const handleMaterialCreateBtnClick = () => {
+    setOpenMaterialModal(true);
+  };
+
   const handleClickOpen = () => {
-    setOpenEquipmentModal(true);
+    setOpenGoalsModal(true);
   };
 
   const handleMenuClick = async (action) => {
@@ -170,9 +188,11 @@ export default function CreatePrograms() {
     handleClose();
   };
 
-  const handleCloseEquipmentModal = () => {
-    setOpenEquipmentModal(false);
+  const handleCloseModal = () => {
+    setOpenMaterialModal(false);
+    setOpenGoalsModal(false);
   };
+
   const [viewDetails, setViewDetails] = useState({
     material: false,
     skills: false,
@@ -663,29 +683,38 @@ export default function CreatePrograms() {
 
   const MODAL_CONFIG = {
     learning_materials: {
+      modalTitle: "Add study materials",
       rows: "materials",
       columns: updatedMaterialColumn,
       btnName: "Submit",
+      createBtnName: "Add Materials",
+      onCreateBtnClick: handleMaterialCreateBtnClick,
     },
     skills: {
+      modalTitle: "Add skills",
       rows: "skills",
       columns: updatedSkillColumn,
       btnName: "Add Skills",
     },
     certifications: {
+      modalTitle: "Add certificate",
       rows: "certificate",
       columns: updatedCertificateColumn,
       btnName: "Add Certificate",
     },
     members: {
+      modalTitle: "Add members",
       rows: "members",
       columns: updatedMemberColumn,
       btnName: "Add Members",
     },
     goals: {
+      modalTitle: "Add goals",
       rows: "goals",
       columns: updatedGoalColumns,
       btnName: "Add Goals",
+      createBtnName: "Create Goals",
+      onCreateBtnClick: handleClickOpen,
     },
   };
 
@@ -715,7 +744,6 @@ export default function CreatePrograms() {
   };
 
   const fetchCategoryData = (categoryId) => {
-    dispatch(getAllMaterials(categoryId));
     dispatch(getAllCertificates(categoryId));
     dispatch(getAllSkills(categoryId));
     dispatch(getAllMembers(categoryId));
@@ -777,10 +805,6 @@ export default function CreatePrograms() {
       }, [3000]);
     }
   }, [allPrograms]);
-
-  useEffect(() => {
-    dispatch(getAllCategories());
-  }, []);
 
   useEffect(() => {
     if (role) {
@@ -1629,19 +1653,17 @@ export default function CreatePrograms() {
           modalSize="md"
           modalOpen={actionModal !== ""}
           modalClose={() => setActionModal("")}
-          title={`Add ${actionModal
-            ?.charAt(0)
-            .toUpperCase()}${actionModal.slice(1)}`}
+          title={MODAL_CONFIG[actionModal]?.modalTitle}
         >
           {actionModal && MODAL_CONFIG[actionModal] && (
             <DataTable
               showToolbar={true}
               toolBarComponent={
-                actionModal === "goals" && (
+                MODAL_CONFIG[actionModal].createBtnName && (
                   <Button
-                    btnName="Create Goal"
+                    btnName={MODAL_CONFIG[actionModal].createBtnName}
                     btnCategory="primary"
-                    onClick={handleClickOpen}
+                    onClick={MODAL_CONFIG[actionModal].onCreateBtnClick}
                   />
                 )
               }
@@ -1665,9 +1687,14 @@ export default function CreatePrograms() {
           menuItems={EquipMentListMenuItems}
           handleMenuClick={handleMenuClick}
         />
+        <MaterialsCreationModal
+          categoryData={category}
+          isOpen={openMaterialModal}
+          handleCloseModal={handleCloseModal}
+        />
         <GoalCreationModal
-          isOpen={openEquipmentModal}
-          handleCloseModal={handleCloseEquipmentModal}
+          isOpen={openGoalsModal}
+          handleCloseModal={handleCloseModal}
         />
       </div>
     </div>
