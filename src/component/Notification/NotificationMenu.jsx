@@ -80,7 +80,7 @@ export default function NotificationMenu() {
             ? data.related_data?.program_request_id
               ? `/mentee-details/${data.related_data.member_id}?type=mentee_request&request_id=${data.related_data?.program_request_id}`
               : `/mentee-details/${data.related_data.member_id}`
-            : `mentor-details/${data.related_data.member_id}?request_id=${data.related_data?.member_request_id}`;
+            : `/mentor-details/${data.related_data.member_id}?request_id=${data.related_data?.member_request_id}`;
         //handleClose && handleClose();
         navigate(
           memberurl,

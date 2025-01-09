@@ -89,6 +89,8 @@ import ProgramHistoryIcon from "../../../assets/icons/historyIcon.svg";
 import RescheduleIcon from "../../../assets/images/reschedule1x.png";
 import Breadcrumbs from "../../Breadcrumbs/Breadcrumbs";
 import { program_details, request_newProgramRequest, request_programCancel, request_programMenteeCancel, request_programReschedule, requestPageBreadcrumbs } from "../../Breadcrumbs/BreadcrumbsCommonData";
+import EditIcon from "../../../assets/icons/editIcon.svg"
+import PaidTickIcon from "../../../assets/icons/paidTickIcon.svg"
 
 export default function ProgramDetails({ setProgramDetailsId }) {
   const dateInfo = todatDateInfo();
@@ -189,11 +191,12 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     //   name: "Program Outcomes",
     //   key: "program_outcomes",
     // },
-    {
+    ((role !== "admin" && !programdetails?.admin_assign_program) &&  {
       name: 'Program Testimonials',
       key: 'program_testimonials',
-    },
-  ];
+    }),
+  ].filter(Boolean)
+
   const reqStatus = {
     approved: 'Approved',
     rejected: 'Rejected',
@@ -909,6 +912,27 @@ useEffect(() => {
       });
     }
   };
+
+// payment status start
+  const start_date = moment(programdetails?.start_date); 
+  const current_date = moment(); 
+  const daysDifference = start_date.diff(current_date, 'days'); 
+
+  let statusMessage;
+
+  if (daysDifference > 3) {
+    statusMessage = `${daysDifference} more days left`;
+  } else if (daysDifference === 0) {
+    statusMessage = "Program is started today!";
+  } else if (daysDifference < 0) {
+    const absDifference = Math.abs(daysDifference);
+    statusMessage = `Program started ${absDifference} day${absDifference > 1 ? 's' : ''} ago`;
+  } else {
+    statusMessage = `${daysDifference} day${daysDifference > 1 ? 's' : ''} left for the program to start`;
+  }
+
+  // payment status end
+
 
   return (
     <div className='px-9 my-6 grid'>
@@ -1773,7 +1797,8 @@ useEffect(() => {
                   >
                     {(role === "mentor" || role === "admin") && (
                       <>
-                        <MenuItem
+                      {/* programdetails.participated_mentees_count */}
+                      <MenuItem
                           onClick={() => handleMenu("share")}
                           className="!text-[12px]"
                         >
@@ -1784,6 +1809,17 @@ useEffect(() => {
                           />
                           Share
                         </MenuItem>
+                        {programdetails.participated_mentees_count === 0 &&  <MenuItem
+                          onClick={() => handleMenu("share")}
+                          className="!text-[12px]"
+                        >
+                          <img
+                            src={EditIcon}
+                            alt="EditIcon"
+                            className="pr-3 w-[25px]"
+                          />
+                          Edit
+                        </MenuItem>}
                         {
                           !requestStatusParams &&
                             ![
@@ -1985,13 +2021,12 @@ useEffect(() => {
                   <div className='text-[12px]'>
                     {programdetails.description}
                   </div>
-
-                  {programdetails.prerequisite && (
+                  {programdetails?.prerequisites && (
                     <div className='text-[12px] my-3'>
                       <span className='font-semibold text-background-primary-main'>
-                        Prerequisite:{' '}
+                      Prerequisites:{' '}
                       </span>
-                      {programdetails.prerequisite}
+                      {programdetails.prerequisites}
                     </div>
                   )}
 
@@ -2224,7 +2259,7 @@ useEffect(() => {
                   (programdetails?.mentee_join_status === "program_join_payment_initiate" || 
                   programdetails?.mentee_join_status === "program_join_payment_pending")) && (
                       <div className="mt-3">
-                        {programdetails?.mentee_join_status === "program_join_payment_initiate" && <p className="text-font-error-main text-[14px] font-semibold mb-2">3 more days left </p>}
+                        {programdetails?.mentee_join_status === "program_join_payment_initiate" && <p className="text-font-error-main text-[14px] font-semibold mb-2">{statusMessage}</p>}
                         <Button
                           btnType="button"
                           btnCls={programdetails?.mentee_join_status === "program_join_payment_pending" ? "w-[200px] !bg-[#FFE3C2] !text-[#FF8A00] !border-none" : "w-[120px]"}
@@ -2449,7 +2484,7 @@ useEffect(() => {
                               ).format("hh:mm A")}`}</span>
                             </span>
                           </li> */}
-                          {!programdetails.is_sponsored && (
+                          {(!programdetails.is_sponsored && programdetails?.mentee_join_status !== "program_join_request_accepted") && (
                             <li
                               className='flex justify-between text-[12px]'
                               style={{
@@ -2482,6 +2517,18 @@ useEffect(() => {
                               </span>
                             </li>
                           )}
+                          {programdetails?.mentee_join_status === "program_join_request_accepted" && <li
+                              className='flex justify-between text-[12px]'
+                              style={{
+                                paddingBottom: '10px',
+                                paddingTop: '14px',
+                              }}
+                            >
+                              <span className='flex gap-2'>Paid <span><img src={PaidTickIcon} alt='' /></span></span>
+                              <span className="text-[#1D5BBF]">
+                                $ {programdetails?.enrollment_fees}
+                              </span>
+                            </li>}
                         </>
                       )}
 
@@ -2755,25 +2802,12 @@ useEffect(() => {
                       </div>
                       {programdetails?.benefits || '-'}
                     </div> */}
-                    {programdetails?.skills?.length ? (
+                    {programdetails?.skill_details?.length ? (
                       <div className='skills pt-8'>
                         <div className='font-semibold pb-5'>
                           Skills you'll gain
                         </div>
-                        <ul className='flex gap-3'>
-                          {programdetails.skills.map((skills) => (
-                            <li
-                              key={skills.id}
-                              className='px-8 py-3'
-                              style={{
-                                background: 'rgba(234, 237, 240, 1)',
-                                borderRadius: '30px',
-                              }}
-                            >
-                              {skills.name}
-                            </li>
-                          ))}
-                        </ul>
+                        {programdetails?.skill_details}
                       </div>
                     ) : null}
 
@@ -2792,7 +2826,7 @@ useEffect(() => {
                           </ul>
                         </div>
                       )}
-                    <div className='benefits py-3'>
+                    {(role !== "admin" && !programdetails?.admin_assign_program) && <div className='benefits py-3'>
                       <div className='font-semibold pb-3'>Benefits</div>
                       {programdetails.benefits}
                       {/* <ul className='leading-9 list-disc ml-4'>
@@ -2800,7 +2834,7 @@ useEffect(() => {
                                                     <li>Lorem Ipsum is simply dummy text of the printing and typesetting industry. </li>
                                                     <li>Lorem Ipsum is simply dummy text of the printing and typesetting industry. </li>
                                                 </ul> */}
-                    </div>
+                    </div>}
                     <div className='program-certificate pt-8'>
                       <div className='font-semibold pb-3'>
                         Types of Certificates

@@ -125,11 +125,10 @@ const Login = () => {
     }
   };
 
-  console.log('errors', errors);
 
   return (
     <React.Fragment>
-      <Backdrop
+      {/* <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={userData.loading || userData.status === userStatus.pending}
       >
@@ -152,7 +151,7 @@ const Login = () => {
         ) : (
           <CircularProgress color='inherit' />
         )}
-      </Backdrop>
+      </Backdrop> */}
 
       {/* Right Section */}
       <div className='w-full flex items-center justify-center'>

@@ -387,7 +387,7 @@ export const Navbar = () => {
               //     : 'justify-end'
               // } ${getWindowDimensions().width <= 1536 ? 'w-3/6' : 'w-2/5'} p-4`}
             >
-              {userInfo?.data?.is_registered && !documentUpload && (
+              {userInfo?.data?.is_registered && (userInfo?.data?.userinfo?.approve_status === "accept" || role === "admin") && (
                 <div className='relative mt-1 search-container'>
                   {userInfo?.data?.role === 'super_admin' ? (
                     <div>
@@ -528,9 +528,9 @@ export const Navbar = () => {
               )}
 
               {/* <img className='search-icon hidden' src={SearchIcon} alt="SearchIcon" /> */}
-              {userInfo?.data?.is_registered && !documentUpload && (
+              {userInfo?.data?.is_registered && (userInfo?.data?.userinfo?.approve_status === "accept" || role === "admin") && (
                 <div className='relative' onClick={(e) => op.current.toggle(e)}>
-                  {userInfo?.data?.is_registered && !documentUpload && (
+                  {userInfo?.data?.is_registered && (userInfo?.data?.userinfo?.approve_status === "accept" || role === "admin") && (
                     <div
                       className='relative'
                       onClick={(e) => op.current.toggle(e)}

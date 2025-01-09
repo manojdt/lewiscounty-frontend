@@ -71,7 +71,7 @@ const ActionMenu = ({ params }) => {
           <VisibilityIcon sx={{ mr: 1 }} fontSize="small" />
           View
         </MenuItem>
-        <MenuItem onClick={() => handleMenuClick("changeMentor")}>
+        {/* <MenuItem onClick={() => handleMenuClick("changeMentor")}>
           <PeopleIcon sx={{ mr: 1 }} fontSize="small" />
           Change Mentor
         </MenuItem>
@@ -82,7 +82,7 @@ const ActionMenu = ({ params }) => {
         <MenuItem onClick={() => handleMenuClick("share")}>
           <ShareIcon sx={{ mr: 1 }} fontSize="small" />
           Share
-        </MenuItem>
+        </MenuItem> */}
       </Menu>
     </div>
   );

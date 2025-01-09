@@ -37,9 +37,9 @@ export const userAccountLogin = createAsyncThunk('userLogin', async (data) => {
   if (userlogin.status) {
     if (userlogin.status === 200) {
       let decoded = jwtDecode(userlogin.data.access);
-      if (decoded?.userinfo?.approve_status === 'new') {
-        return {};
-      }
+      // if (decoded?.userinfo?.approve_status === 'new') {
+      //   return {};
+      // }
       localStorage.setItem('access_token', userlogin.data.access);
       localStorage.setItem('refresh_token', userlogin.data.refresh);
       return decoded;

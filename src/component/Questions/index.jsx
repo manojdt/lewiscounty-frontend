@@ -137,7 +137,18 @@ export const Questions = () => {
         //   handleSubmitData(submitDocument);
         // }
       } else {
-        handleSubmitData(submitDocument);
+        // handleSubmitData(submitDocument);
+        const updateToken = await api.post('generate_new_token', {
+          headers: headers,
+        });
+
+        if (updateToken.status === 200) {
+          console.log('updateToken', updateToken);
+          localStorage.setItem('access_token', updateToken.data.access);
+          localStorage.setItem('refresh_token', updateToken.data.refresh);
+          handleSubmitData(updateToken);
+          // setCustomLoading(false);
+        }
       }
 
       // dispatch(updateToken());
@@ -221,7 +232,7 @@ export const Questions = () => {
           navigate(`/program-details/${searchParams.get('program_id')}`);
         }
         if (userRole === 'mentor') {
-          navigate('/logout');
+          navigate('/dashboard');
         }
       }, 1000);
     }
