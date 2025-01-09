@@ -182,21 +182,21 @@ export const goalPeriods = [
 ];
 export const StatusbuttonStyles = {
   base: {
-    borderRadius: "5px",
-    padding: "12px 64px",
-    fontSize: "14px",
-    display: "flex",
-    alignItems: "center",
+    borderRadius: '5px',
+    padding: '12px 64px',
+    fontSize: '14px',
+    display: 'flex',
+    alignItems: 'center',
   },
   gradient: {
-    background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
+    background: 'linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)',
   },
   success: {
-    background: "#16B681",
+    background: '#16B681',
   },
   danger: {
-    border: "1px solid #E0382D",
-    color: "#E0382D",
+    border: '1px solid #E0382D',
+    color: '#E0382D',
   },
 };
 
@@ -419,7 +419,7 @@ export const requestStatusText = {
   rejected: 'Rejected',
   approved: 'Approved',
   in_progress: 'In Progress',
-  cancelled: 'Cancelled'
+  cancelled: 'Cancelled',
 };
 export const certificateRequestStatusText = {
   new: 'New',
@@ -532,7 +532,7 @@ export const requestStatusColor = {
   cancelled: {
     bgColor: 'rgba(255, 231, 231, 1)',
     color: 'rgba(224, 56, 45, 1)',
-  }
+  },
 };
 
 export const memberStatusColor = {
@@ -708,7 +708,7 @@ export const statusAction = [
   'bookmarked',
   'draft',
   'reschedule',
-  'assign_program'
+  'assign_program',
 ];
 
 export const programActionStatus = {
@@ -787,17 +787,17 @@ export const programMenus = (page = 'dashboard') => {
       for: ['mentor', 'mentee', 'admin'],
       mentorStatus: 'all',
       menteeStatus: 'allprogram',
-      adminStatus:'all',
+      adminStatus: 'all',
       status: 'all',
     },
     {
       name: 'Active Programs',
       count: 0,
       page: `${pipeUrl}${programFilterUrls.yettojoin}`,
-      menteePage:`${pipeUrl}${programFilterUrls.planned}`,
+      menteePage: `${pipeUrl}${programFilterUrls.planned}`,
       for: ['admin', 'mentor', 'mentee'],
       mentorStatus: programActionStatus.yettojoin,
-      adminStatus:programActionStatus.yettojoin,
+      adminStatus: programActionStatus.yettojoin,
       menteeStatus: 'planned',
       status: programActionStatus.yettojoin,
     },
@@ -805,10 +805,10 @@ export const programMenus = (page = 'dashboard') => {
       name: 'Recently Joined Programs',
       count: 0,
       page: `${pipeUrl}${programFilterUrls.yettostart}`,
-      menteePage:`${pipeUrl}${programFilterUrls.recent_join}`,
+      menteePage: `${pipeUrl}${programFilterUrls.recent_join}`,
       for: ['mentor', 'admin', 'mentee'],
       mentorStatus: programActionStatus.yettostart,
-      adminStatus:programActionStatus.yettostart,
+      adminStatus: programActionStatus.yettostart,
       menteeStatus: 'recently_joined',
       status: programActionStatus.yettostart,
     },
@@ -816,10 +816,10 @@ export const programMenus = (page = 'dashboard') => {
       name: 'Ongoing Programs',
       count: 0,
       page: `${pipeUrl}${programFilterUrls.inprogress}`,
-      menteePage:`${pipeUrl}${programFilterUrls.ongoing}`,
+      menteePage: `${pipeUrl}${programFilterUrls.ongoing}`,
       for: ['mentor', 'admin', 'mentee'],
       mentorStatus: programActionStatus.inprogress,
-      adminStatus:programActionStatus.inprogress,
+      adminStatus: programActionStatus.inprogress,
       menteeStatus: 'ongoing',
       status: programActionStatus.inprogress,
     },
@@ -829,7 +829,7 @@ export const programMenus = (page = 'dashboard') => {
       page: `${pipeUrl}${programFilterUrls.programAssign}`,
       for: ['mentor', 'admin'],
       mentorStatus: programActionStatus.program_assign,
-      adminStatus:programActionStatus.program_assign,
+      adminStatus: programActionStatus.program_assign,
       status: programActionStatus.program_assign,
     },
     {
