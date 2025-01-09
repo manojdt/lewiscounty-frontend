@@ -9,7 +9,7 @@ import ReportUserIcon from "../../assets/images/report.png";
 import SuccessTik from "../../assets/images/blue_tik1x.png";
 import ReportVideoIcon from "../../assets/images/report1.png";
 import { Button } from "../../shared";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Backdrop, Box, CircularProgress } from "@mui/material";
 import { getReportDetails } from "../../services/reportsInfo";
@@ -20,6 +20,8 @@ import { updateReportRequest } from "../../services/request";
 import { CancelPopup } from "../Mentor/Task/cancelPopup";
 import { Typography } from "@mui/material";
 import CustomAccordian from "../../shared/CustomAccordian/CustomAccordian";
+import { request_report, requestPageBreadcrumbs } from "../Breadcrumbs/BreadcrumbsCommonData";
+import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
 
 const ViewReport = () => {
   const navigate = useNavigate();
@@ -27,6 +29,11 @@ const ViewReport = () => {
   const [startTask, setStartTask] = useState(false);
   const params = useParams();
   const dispatch = useDispatch();
+  const [searchParams] = useSearchParams();	 
+
+  const breadcrumbsType = searchParams.get("breadcrumbsType") || "";
+    const [breadcrumbsArray, setBreadcrumbsArray] = useState([]);
+  
   const { reportDetails, loading: reportsLoading } = useSelector(
     (state) => state.reports
   );
@@ -117,7 +124,11 @@ const ViewReport = () => {
       }
     });
   };
-
+  useEffect(() => {
+    if(breadcrumbsType===requestPageBreadcrumbs.report_request&&reportDetails.name){
+    setBreadcrumbsArray(request_report(reportDetails.name))
+   }
+   }, [breadcrumbsType,reportDetails])	
   return (
     <div className="px-9 py-9">
       <Backdrop
@@ -154,8 +165,8 @@ const ViewReport = () => {
         >
           <div className="flex justify-between px-5 pb-4 mb-8 items-center border-b-2">
             <div className="flex gap-5 items-center text-[20px]">
-              <p>View {reportDetails?.report_name} </p>
-
+             {breadcrumbsType!==requestPageBreadcrumbs.report_request&& <p>View {reportDetails?.report_name} </p>}
+             {breadcrumbsType===requestPageBreadcrumbs.report_request&&<Breadcrumbs items={breadcrumbsArray}/>}
               {reportDetails?.report_status === "pending" && (
                 <div
                   className="inset-y-0 end-0 flex items-center pe-3 cursor-pointer"
