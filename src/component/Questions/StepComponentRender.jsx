@@ -9,6 +9,7 @@ import FileUploadIcon from '../../assets/icons/Upload.svg';
 import UploadIcon from '../../assets/images/image_1x.png';
 import DeleteIcon from '../../assets/images/delete_1x.png';
 import ToastNotification from '../../shared/Toast';
+import { formatPhoneNumber } from '../../utils/formFields';
 
 const StepComponenRender = ({
   stepFields,
@@ -41,6 +42,20 @@ const StepComponenRender = ({
   const onSubmit = (data) => {
     handleNextStep(data);
     reset();
+  };
+
+  const handleInputChange = (e, field) => {
+    const { value } = e.target;
+
+    if (
+      field.name === 'phone_number' ||
+      field.name === 'secondary_phone_number'
+    ) {
+      const formattedValue = formatPhoneNumber(value);
+      setValue(field.name, formattedValue);
+    } else {
+      setValue(field.name, value);
+    }
   };
 
   const handleDeleteImage = (index) => {
@@ -86,7 +101,7 @@ const StepComponenRender = ({
       register('mentor_exp_desc', {
         required: false,
       });
-      setValue("mentor_exp_desc","")
+      setValue('mentor_exp_desc', '');
     }
     setCheckBoxValue(e.target.value);
   };
@@ -103,14 +118,14 @@ const StepComponenRender = ({
   return (
     <>
       <div className='form-container'>
-        {errorNot && (
+        {/* {errorNot && (
           <ToastNotification
             openToaster={errorNot}
             message={'Please fill all mandatory fields'}
             handleClose={() => setErrorNot(false)}
             toastType={'error'}
           />
-        )}
+        )} */}
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className='flex flex-wrap gap-4'>
             {stepFields.map((field, index) => {
@@ -151,10 +166,17 @@ const StepComponenRender = ({
                         className='w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none 
                                                             focus-visible:outline-none text-[14px] h-[60px]'
                         placeholder={field.placeholder}
+                        onChange={(e) => handleInputChange(e, field)}
                         style={{
                           color: '#232323',
                         }}
-                        disabled={field.name==="mentor_exp_desc"?disabledFields[field.name] : field.disable ? field.disable : false}
+                        disabled={
+                          field.name === 'mentor_exp_desc'
+                            ? disabledFields[field.name]
+                            : field.disable
+                            ? field.disable
+                            : false
+                        }
                         aria-invalid={!!errors[field.name]}
                       />
 
@@ -217,7 +239,7 @@ const StepComponenRender = ({
                             onChange={(e) => {
                               // fileUpload.onChange(e);
 
-                              if (e.target.files && e.target.files[0]) {                             
+                              if (e.target.files && e.target.files[0]) {
                                 let types = [
                                   'image/png',
                                   'image/jpeg',
