@@ -1773,7 +1773,7 @@ export const ProgramInformationFields = [
     fieldtype: 'text',
     placeholder: 'Add Learning Materials',
     inputRules: {
-      required: 'This field is required',
+      // required: 'This field is required',
     },
     width: 'w-full',
     icon: 'add',
@@ -1818,7 +1818,7 @@ export const ProgramInformationFields = [
     fieldtype: 'number',
     placeholder: 'Select Mentee Limits',
     inputRules: {
-      required: 'This field is required',
+      // required: 'This field is required',
     },
     width: 'width-32',
     for: ['mentor'],
@@ -1829,7 +1829,7 @@ export const ProgramInformationFields = [
     label: 'If you need Group Chat Discussions for this Program',
     placeholder: 'Select',
     inputRules: {
-      required: 'This field is required',
+      // required: 'This field is required',
     },
     options: [
       {
@@ -1850,7 +1850,7 @@ export const ProgramInformationFields = [
     label: 'If you need Individual chat discussions for this Program',
     placeholder: 'Select',
     inputRules: {
-      required: 'This field is required',
+      // required: 'This field is required',
     },
     options: [
       {

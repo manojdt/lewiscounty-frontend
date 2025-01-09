@@ -34,6 +34,13 @@ const materialTypeOptions = [
   },
 ];
 
+const defaultValues = {
+  name: "",
+  category: "",
+  material_type: "",
+  file: null,
+};
+
 export const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
   clipPath: "inset(50%)",
@@ -47,7 +54,8 @@ export const VisuallyHiddenInput = styled("input")({
 });
 
 const MaterialsCreationModal = (props) => {
-  const { isOpen, handleCloseModal, categoryData } = props;
+  const { isOpen, handleCloseModal, categoryData, categoryId } = props;
+
   const {
     setValue,
     watch,
@@ -56,7 +64,7 @@ const MaterialsCreationModal = (props) => {
     reset,
     clearErrors,
     formState: { errors },
-  } = useForm();
+  } = useForm({ defaultValues });
   const formValues = watch();
   const [showBackdrop, setShowBackdrop] = React.useState(false);
 
@@ -95,6 +103,13 @@ const MaterialsCreationModal = (props) => {
     }
   };
 
+  const handleCancel = () => {
+    reset(defaultValues); // Reset form values
+    clearErrors(); // Clear any form errors
+    resetCreateMaterialState(); // Reset mutation state
+    handleCloseModal(); // Close the modal
+  };
+
   useEffect(() => {
     if (isMaterialsCreated || IsErrorMaterialsCreating) {
       setShowBackdrop(true);
@@ -106,14 +121,13 @@ const MaterialsCreationModal = (props) => {
 
         // Only navigate on success cases
         if (isMaterialsCreated) {
-          handleCloseModal();
-          reset();
+          handleCancel();
         }
       }, 3000);
       return () => {
         clearTimeout(timer);
         resetCreateMaterialState();
-        setValue("file", null);
+        reset(defaultValues);
         clearErrors();
       };
     }
@@ -127,13 +141,19 @@ const MaterialsCreationModal = (props) => {
     return () => sub.unsubscribe();
   }, [watch]);
 
+  useEffect(() => {
+    if (categoryId && isOpen) {
+      setValue("category", +categoryId);
+    }
+  }, [categoryId, isOpen]);
+
   return (
     <>
       <MuiCustomModal
         hideBackdrop
         dialogTitle={"Add Materials"}
         open={isOpen}
-        handleClose={handleCloseModal}
+        handleClose={handleCancel}
         maxWidth="sm"
         actionButtons={[
           {
@@ -141,7 +161,7 @@ const MaterialsCreationModal = (props) => {
             variant: "outlined",
             children: "Cancel",
             disabled: isMaterialsCreating,
-            onClick: handleCloseModal,
+            onClick: handleCancel,
           },
           {
             color: "primary",
@@ -171,13 +191,12 @@ const MaterialsCreationModal = (props) => {
           Category
         </label>
         <TextField
+          disabled
           select
           fullWidth
+          value={formValues.category || ""}
           placeholder="Category"
           margin="normal"
-          {...register("category", {
-            required: "Category is required",
-          })}
           error={!!errors.category}
           helperText={errors.category?.message}
         >
@@ -292,7 +311,7 @@ const MaterialsCreationModal = (props) => {
           pb-4 text-center font-normal text-md`}
             role="alert"
           >
-            {"data?.message"}
+            {data?.message}
           </p>
         </div>
       </MuiCustomModal>

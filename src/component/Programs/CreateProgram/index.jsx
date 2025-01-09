@@ -695,7 +695,7 @@ export default function CreatePrograms() {
 
   const MODAL_CONFIG = {
     learning_materials: {
-      modalTitle: "Add study materials",
+      modalTitle: "Add learning materials",
       rows: "materials",
       columns: updatedMaterialColumn,
       btnName: "Submit",
@@ -850,6 +850,16 @@ export default function CreatePrograms() {
       // Filter fields based on toggleRole
       if (toggleRole !== "") {
         currentStepField = currentStepField.filter((curfields) => {
+          // Special handling for environment field to show for both admin and mentor toggleRoles
+          if (curfields.name === "environment") {
+            // Only check actual role - show if not mentor
+            return (
+              role !== "mentor" &&
+              (toggleRole === "admin" || toggleRole === "mentor")
+            );
+          }
+
+          // For all other fields, use normal filtering based on toggleRole and their 'for' array
           return curfields.for?.includes(toggleRole);
         });
 
@@ -1661,6 +1671,7 @@ export default function CreatePrograms() {
           handleMenuClick={handleMenuClick}
         />
         <MaterialsCreationModal
+          categoryId={formValues.category}
           categoryData={category}
           isOpen={openMaterialModal}
           handleCloseModal={handleCloseModal}
