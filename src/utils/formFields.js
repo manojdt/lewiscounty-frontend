@@ -1416,35 +1416,7 @@ export const ProgramInformationFields = [
     width: 'width-32',
     for: ['admin'],
   },
-  {
-    type: 'dropdown',
-    name: 'environment',
-    label: 'Program Environment',
-    placeholder: 'Select Environment',
-    inputRules: {
-      required: 'This field is required',
-    },
-    options: [
-      {
-        key: 'Mid School',
-        value: 'Mid School',
-      },
-      {
-        key: 'High School',
-        value: 'High School',
-      },
-      {
-        key: 'University',
-        value: 'University',
-      },
-      {
-        key: 'Own',
-        value: 'Own',
-      },
-    ],
-    width: 'width-49',
-    for: ['mentor'],
-  },
+  
   {
     type: 'dropdown',
     name: 'type',
@@ -1486,29 +1458,7 @@ export const ProgramInformationFields = [
       },
     ],
     width: 'width-32',
-    for: ['admin'],
-  },
-  {
-    type: 'dropdown',
-    name: 'category',
-    label: 'Category',
-    placeholder: 'Select Category',
-    inputRules: {
-      // valueAsNumber: true,
-      required: 'This field is required',
-    },
-    options: [
-      {
-        key: 'Category 1',
-        value: 'Category 1',
-      },
-      {
-        key: 'Category 2',
-        value: 'Category 2',
-      },
-    ],
-    width: 'width-49',
-    for: ['mentor'],
+    for: ['admin','mentor'],
   },
   {
     type: 'input',
@@ -1734,7 +1684,7 @@ export const ProgramInformationFields = [
     inputRules: {
       required: 'This field is required',
     },
-    width: 'width-49',
+    width: 'width-32',
     for: ['mentor'],
   },
   {
@@ -1746,7 +1696,7 @@ export const ProgramInformationFields = [
       required: 'This field is required',
     },
     options: SessionCounts(),
-    width: 'width-49',
+    width: 'width-32',
     for: ['mentor'],
   },
   {
@@ -2055,7 +2005,7 @@ export const AboutProgramFields = [
 
   {
     type: 'textbox',
-    name: 'skills',
+    name: 'skill_details',
     label: 'Skills gain description',
     placeholder: 'Enter skills gain description',
     inputRules: {

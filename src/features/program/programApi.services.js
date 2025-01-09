@@ -75,17 +75,17 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
 
     // Get certificates by category
     getCertificates: builder.query({
-      query: (categoryId) => `certificate?category_id=${categoryId}`,
+      query: (params) => ({url:`certificate`,params}),
     }),
 
     // Get skills by category
     getSkills: builder.query({
-      query: (categoryId) => `skills?category_id=${categoryId}`,
+      query: (params) => ({url:`skills`,params}),
     }),
 
     // Get members by category
     getMembers: builder.query({
-      query: (categoryId) => `members?category_id=${categoryId}`,
+      query: (params) => ({url:`members`,params}),
     }),
 
     // Get all mentors
