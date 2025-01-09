@@ -229,18 +229,18 @@ export const Questions = () => {
   const handleSubmit = (combinedData) => {
     const allFields = formFields.flat(); // Flatten all fields for validation
     const errorMessages = validateRequiredFields(allFields, combinedData);
-    const phoneField = allFields.find((field) => field.name === 'phone_number');
-    const phoneNumber = combinedData['phone_number'];
+    // const phoneField = allFields.find((field) => field.name === 'phone_number');
+    // const phoneNumber = combinedData['phone_number'];
 
-    if (phoneField && phoneNumber) {
-      const phoneRegex = /^\+[1-9]\d{1,14}$/;
-      if (!phoneRegex.test(phoneNumber)) {
-        errorMessages.push({
-          name: 'phone_number',
-          message: 'Phone number must be exactly 10 digits.',
-        });
-      }
-    }
+    // if (phoneField && phoneNumber) {
+    //   const phoneRegex = /^\+[1-9]\d{1,14}$/;
+    //   if (!phoneRegex.test(phoneNumber)) {
+    //     errorMessages.push({
+    //       name: 'phone_number',
+    //       message: 'Phone number must be exactly 10 digits.',
+    //     });
+    //   }
+    // }
     if (errorMessages.length > 0) {
       // Redirect to the first error field
       const firstErrorField = errorMessages[0]; // Get the first error field

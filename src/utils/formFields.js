@@ -1,6 +1,29 @@
 import { dateFormat } from '.';
 import { getCurrentWeekAndDay } from './constant';
 
+export const formatPhoneNumber = (value) => {
+  // Remove all non-numeric characters
+  const numericValue = value.replace(/\D/g, '');
+
+  // Format based on length
+  if (numericValue.length <= 3) {
+    return numericValue;
+  } else if (numericValue.length <= 6) {
+    return `(${numericValue.slice(0, 3)}) ${numericValue.slice(3)}`;
+  } else {
+    return `(${numericValue.slice(0, 3)}) ${numericValue.slice(
+      3,
+      6
+    )}-${numericValue.slice(6, 10)}`;
+  }
+};
+
+// export const handleChange = (e) => {
+//   const value = e.target.value;
+//   const formattedValue = formatPhoneNumber(value);
+//   setPhone(formattedValue);
+// };
+
 const { currentDayName } = getCurrentWeekAndDay();
 
 export const PersonalInformationFields = [
