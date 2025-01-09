@@ -133,7 +133,9 @@ export default function Layout({ subheader }) {
 
   const documentUpload =
     window.location.href.includes('mentor-doc-upload') ||
-    window.location.href.includes('mentee-doc-upload');
+    window.location.href.includes('mentee-doc-upload') || userInfo?.data?.document_upload;
+
+    // console.log("documentUpload ===>", documentUpload)
 
   useEffect(() => {
     // if ((userInfo?.data?.userinfo?.approve_status === 'new' || notValidUser(userInfo)) && role !== 'mentee') {
@@ -146,9 +148,9 @@ export default function Layout({ subheader }) {
       if (!userInfo.data.is_registered) {
         navigate('/questions');
       }
-      if (!userInfo.data.document_upload) {
-        navigate('/mentor-doc-upload');
-      }
+      // if (!userInfo.data.document_upload) {
+      //   navigate('/mentor-doc-upload');
+      // }
     }
 
     if (role === 'mentee' && !userInfo?.data?.is_registered) {
@@ -156,12 +158,12 @@ export default function Layout({ subheader }) {
     }
   }, [userInfo]);
 
-  return (
+    return (
     <div>
       <Navbar />
-      {!subheader &&
+      {(!subheader &&
       userInfo?.data?.is_registered &&
-      !documentUpload &&
+      (userInfo?.data?.userinfo?.approve_status === "accept" || role === "admin")) &&
       userInfo.data.role !== user.super_admin ? (
         <div
           className='secondary-menu py-8'

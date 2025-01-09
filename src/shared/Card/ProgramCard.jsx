@@ -450,11 +450,11 @@ export default function ProgramCard({
                               </div>
                             </div>
                           )}
-                          {!currentProgram?.admin_assign_program &&
+                          {(!currentProgram?.admin_assign_program &&
                             currentProgram.program_edit &&
                             !programImageRestirct.includes(
                               currentProgram.status
-                            ) && (
+                            ) && currentProgram?.participated_mentees_count === 0) && (
                               <div
                                 className={`absolute top-2 left-3 cursor-pointer  ${
                                   hoverIndex.image === index ? 'show' : 'hidden'
@@ -583,7 +583,7 @@ export default function ProgramCard({
                         </div>
                         <div className='flex gap-2 items-center py-3 text-[12px]'>
                           {currentProgram?.mentor_rating > 0 && 
-                          <div>
+                          <div className='flex gap-2 items-center'>
                           <img src={StarColorIcon} alt='StarColorIcon' />
                           <span>{rating}</span>
                           
