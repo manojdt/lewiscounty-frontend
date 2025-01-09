@@ -14,8 +14,9 @@ export const rtkQueryServiceTags = {
   PROGRAM_LAUNCH: 'program_launch',
   PROGRAM_ACCEPT: 'program_accept',
   GOALS: 'Goals',
+  MATERIAL: 'Material',
 };
-const { PROGRAM_UPDATES, PROGRAM_LAUNCH, PROGRAM_ACCEPT , GOALS} = rtkQueryServiceTags;
+const { PROGRAM_UPDATES, PROGRAM_LAUNCH, PROGRAM_ACCEPT, GOALS, MATERIAL } = rtkQueryServiceTags;
 export const rtkQueryApiServices = createApi({
   reducerPath: 'rtkQueryApiServices',
   baseQuery: fetchBaseQuery({
@@ -30,7 +31,7 @@ export const rtkQueryApiServices = createApi({
       return headers;
     },
   }),
-  tagTypes: [PROGRAM_UPDATES, PROGRAM_LAUNCH, PROGRAM_ACCEPT, GOALS], // Define the necessary tags
+  tagTypes: [PROGRAM_UPDATES, PROGRAM_LAUNCH, PROGRAM_ACCEPT, GOALS, MATERIAL], // Define the necessary tags
   endpoints: () => ({}),
 });
 

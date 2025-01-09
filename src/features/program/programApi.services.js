@@ -66,12 +66,7 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
     // Get all categories
     getAllCategories: builder.query({
       query: () => 'category',
-    }),
-
-    // Get materials by category
-    getMaterials: builder.query({
-      query: (categoryId) => `materials?category_id=${categoryId}`,
-    }),
+    }),   
 
     // Get Program Goals
     getProgramGoals: builder.query({
@@ -351,7 +346,6 @@ export const {
   useGetAllProgramsQuery,
   useCreateProgramMutation,
   useGetAllCategoriesQuery,
-  useGetMaterialsQuery,
   useGetCertificatesQuery,
   useGetSkillsQuery,
   useGetMembersQuery,
