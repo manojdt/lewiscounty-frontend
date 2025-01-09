@@ -1,10 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
-import {
-  Controller,
-  useFieldArray,
-  useFormContext,
-} from "react-hook-form";
+import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import { Calendar } from "primereact/calendar";
 import SearchIcon from "../../../assets/icons/search.svg";
 import CalendarIcon from "../../../assets/icons/calendar_icon.svg";
@@ -28,6 +24,7 @@ import DataTable from "../../../shared/DataGrid";
 import { MentorAssignColumns } from "../../../mock";
 import MuiModal from "../../../shared/Modal";
 import { useSelector } from "react-redux";
+import { Button } from "../../../shared";
 // import { useGetStatesQuery } from '../../../features/programs/program-slice';
 // import { useGetCitiesQuery } from '../../../features/program/programApi.services';
 
@@ -36,7 +33,6 @@ const ProgramSteps = ({
   currentStepData,
   stepData,
   handleAction,
-  fetchCategoryData,
   handleProgramCheck,
   handleSearchChange,
   search,
@@ -48,13 +44,11 @@ const ProgramSteps = ({
   const params = useParams();
   const [checkBoxValue, setCheckBoxValue] = useState({});
   const [currentField, setCurrentField] = useState();
-  // const [stateId, setStateId] = useState(null);
-  // const { data: states } = useGetStatesQuery();
-  // const { data: cities } = useGetCitiesQuery(stateId, {
-  //   skip: !stateId,
-  // });
+  const [selectedRows, setSelectedRows] = useState([]);
 
-  // console.log('cities', cities);
+  const getRowIdentifier = (row) => {
+    return row.id;
+  };
   const role = useSelector((state) => state.userInfo?.data?.role);
 
   const calendarRef = useRef([]);
@@ -99,37 +93,48 @@ const ProgramSteps = ({
 
   // console.log('stepFields', stepFields);
 
-  const mentorFooterComponent = (props) => {
+  const handleSelectedRow = (newSelectedRows) => {
+    // For mentor_id, allow single selection/deselection
+    // If the new selection is empty or different from current, update it
+    // If clicking the same row again, clear the selection
+    const currentSelection = selectedRows[0];
+    const newSelection = newSelectedRows[newSelectedRows.length - 1];
+
+    if (!newSelection) {
+      // Handle deselection
+      setSelectedRows([]);
+    } else if (!currentSelection || currentSelection.id !== newSelection.id) {
+      // New selection
+      setSelectedRows([newSelection]);
+    } else {
+      // Clicking the same row again - deselect
+      setSelectedRows([]);
+    }
+  };
+
+  const mentorFooterComponent = ({ selectedRows }) => {
+    const handleActionPopupData = () => {
+      // For mentor_id, store just the ID of the single selected row
+      const selectedId =
+        selectedRows.length > 0 ? getRowIdentifier(selectedRows[0]) : null;
+      setValue(currentField, selectedId);
+      setCurrentField("");
+    };
+
     return (
       <div className="flex gap-6 justify-center items-center py-4">
         <button
           onClick={() => setCurrentField("")}
-          className="py-3 px-6 w-[16%]"
-          style={{
-            border: "1px solid rgba(29, 91, 191, 1)",
-            borderRadius: "3px",
-            color: "rgba(29, 91, 191, 1)",
-          }}
+          className="py-3 px-6 rounded-sm border border-background-primary-main text-background-primary-main"
         >
           Cancel
         </button>
-        <button
-          onClick={() => {
-            setValue(
-              currentField,
-              props.selectedRows?.find((item) => item)?.id
-            );
-            setCurrentField("");
-          }}
-          className="text-white py-3 px-6 w-[16%]"
-          style={{
-            background:
-              "linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)",
-            borderRadius: "3px",
-          }}
-        >
-          Add Members
-        </button>
+        <Button
+          btnCategory="primary"
+          btnName="Add"
+          onClick={handleActionPopupData}
+          disabled={selectedRows.length === 0}
+        />
       </div>
     );
   };
@@ -201,16 +206,6 @@ const ProgramSteps = ({
     // Open popup and allow user to select an item
     setCurrentField(fieldName);
   };
-
-  // const statesOptions = states?.map((state, index) => ({
-  //   key: state.id,
-  //   value: state.name,
-  // }));
-
-  // const citiesOptions = cities?.map((city, index) => ({
-  //   key: city.id,
-  //   value: city.name,
-  // }));
 
   return (
     <div>
@@ -324,26 +319,7 @@ const ProgramSteps = ({
                   />
                 </FormControl>
               ) : field.type === "input" ? (
-                <div className="relative">
-                  {/* <input
-                    disabled={disableFields}
-                    {...register(field.name, field.inputRules)}
-                    type={field.fieldtype}
-                    className={`w-full border-none px-3 py-[0.32rem] leading-[2.15] ${
-                      disableFields ? 'bg-slate-300' : 'input-bg'
-                    } focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]`}
-                    placeholder={field.placeholder}
-                    onBlur={(e) => {
-                      if (field.name === 'program_name') {
-                        handleProgramCheck(e?.target?.value);
-                      }
-                    }}
-                    style={{
-                      color: '#232323',
-                      borderRadius: '3px',
-                    }}
-                    aria-invalid={!!errors[field.name]}
-                  /> */}
+                <div className="relative">                  
                   <Controller
                     name={field.name}
                     control={control}
@@ -552,9 +528,6 @@ const ProgramSteps = ({
                       // if (field.name === 'state') {
                       //   setStateId(e.target.value);
                       // }
-                      if (field.name === "category") {
-                        fetchCategoryData(e.target.value);
-                      }
                       if (field.name === "environment") {
                         setToggleRole(
                           e.target.value === "Own" ? "mentor" : "admin"
@@ -1134,12 +1107,28 @@ const ProgramSteps = ({
           </div>
         </div>
         <DataTable
-          showToolbar={false}
+          showToolbar={true}
+          disableMultipleSelection={true}
+          disableSelectionOnClick={false} // Add this line
           rows={mentor_assign}
           columns={MentorAssignColumns}
+          checkboxSelection
+          selectedAllRows={
+            selectedRows.length > 0
+              ? selectedRows
+              : (() => {
+                  const currentValue = getValues(currentField);
+                  if (!currentValue) return [];
+                  const selectedMentor = mentor_assign.find(
+                    (m) => m.id === currentValue
+                  );
+                  return selectedMentor ? [selectedMentor] : [];
+                })()
+          }
+          handleSelectedRow={handleSelectedRow}
           footerAction={() => setCurrentField("")}
           footerComponent={(props) =>
-            mentorFooterComponent(props, currentField)
+            mentorFooterComponent({ ...props, selectedRows })
           }
         />
       </MuiModal>
