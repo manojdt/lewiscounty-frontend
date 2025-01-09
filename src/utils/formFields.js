@@ -49,9 +49,8 @@ export const PersonalInformationFields = [
     inputRules: {
       required: 'This field is required',
       pattern: {
-        value: /^\+[1-9]\d{1,14}$/,
-        message:
-          'Must start with a plus sign Followed by 1 to 14 digits and no spaces in-between',
+        value: /^(\(\d{3}\) \d{3}-\d{4}|\d{3}-\d{3}-\d{4})$/,
+        message: 'Invalid phone number format',
       },
     },
     size: true,
@@ -65,9 +64,8 @@ export const PersonalInformationFields = [
     inputRules: {
       // required: "This field is required",
       pattern: {
-        value: /^\+[1-9]\d{1,14}$/,
-        message:
-          'Must start with a plus sign Followed by 1 to 14 digits and no spaces in-between',
+        value: /^(\(\d{3}\) \d{3}-\d{4}|\d{3}-\d{3}-\d{4})$/,
+        message: 'Invalid phone number format',
       },
     },
     size: true,
@@ -498,9 +496,8 @@ export const MenteePersonalInformationFields = [
     inputRules: {
       required: 'This field is required',
       pattern: {
-        value: /^\+[1-9]\d{1,14}$/,
-        message:
-          'Must start with a plus sign Followed by 1 to 14 digits and no spaces in-between',
+        value: /^(\(\d{3}\) \d{3}-\d{4}|\d{3}-\d{3}-\d{4})$/,
+        message: 'Invalid phone number format',
       },
     },
     size: true,
@@ -514,9 +511,8 @@ export const MenteePersonalInformationFields = [
     placeholder: 'Enter Secondary Contact Number',
     inputRules: {
       pattern: {
-        value: /^\+[1-9]\d{1,14}$/,
-        message:
-          'Must start with a plus sign Followed by 1 to 14 digits and no spaces in-between',
+        value: /^(\(\d{3}\) \d{3}-\d{4}|\d{3}-\d{3}-\d{4})$/,
+        message: 'Invalid phone number format',
       },
     },
     size: true,
@@ -1331,7 +1327,7 @@ export const ProgramTabs = [
   {
     name: 'About Program',
     key: 'about_program',
-  },  
+  },
   {
     name: 'Program Testimonials',
     key: 'program_testimonials',
@@ -1490,9 +1486,8 @@ export const ProgramInformationFields = [
     inputRules: {
       required: 'This field is required',
       pattern: {
-        value: /^\+[1-9]\d{1,14}$/,
-        message:
-          'Must start with a plus sign Followed by 1 to 14 digits and no spaces in-between',
+        value: /^(\(\d{3}\) \d{3}-\d{4}|\d{3}-\d{3}-\d{4})$/,
+        message: 'Invalid phone number format',
       },
     },
     width: 'width-32',
@@ -2085,28 +2080,28 @@ export const ProgramTestimonialsFields = [
     },
     options: [
       {
-        key: "video",
-        value: "Video",
+        key: 'video',
+        value: 'Video',
       },
       {
-        key: "pdf",
-        value: "PDF",
+        key: 'pdf',
+        value: 'PDF',
       },
       {
-        key: "image",
-        value: "Image",
+        key: 'image',
+        value: 'Image',
       },
       {
-        key: "blog",
-        value: "Blog",
+        key: 'blog',
+        value: 'Blog',
       },
       {
-        key: "case_study",
-        value: "Case Studies",
+        key: 'case_study',
+        value: 'Case Studies',
       },
       {
-        key: "success_story",
-        value: "Success Story",
+        key: 'success_story',
+        value: 'Success Story',
       },
     ],
     width: 'w-full',
@@ -2374,7 +2369,7 @@ export const ReportFields = (bool = false) => [
     //   required: 'This field is required',
     // },
     width: 'w-full',
-    disabled: bool
+    disabled: bool,
   },
 ];
 
@@ -2445,9 +2440,8 @@ export const EditProfileFields = [
     inputRules: {
       required: 'This field is required',
       pattern: {
-        value: /^\+[1-9]\d{1,14}$/,
-        message:
-          'Must start with a plus sign Followed by 1 to 14 digits and no spaces in-between',
+        value: /^(\(\d{3}\) \d{3}-\d{4}|\d{3}-\d{3}-\d{4})$/,
+        message: 'Invalid phone number format',
       },
     },
     width: 'width-49',
@@ -2923,8 +2917,8 @@ export const ProfileFields = [
     inputRules: {
       required: 'This field is required',
       pattern: {
-        value: /^[0-9]{10}$/,
-        message: 'Enter valid phone number',
+        value: /^(\(\d{3}\) \d{3}-\d{4}|\d{3}-\d{3}-\d{4})$/,
+        message: 'Invalid phone number format',
       },
     },
     width: 'col-span-2',
@@ -2937,8 +2931,8 @@ export const ProfileFields = [
     placeholder: 'Enter Secondary Contact Number',
     inputRules: {
       pattern: {
-        value: /^[0-9]{10}$/,
-        message: 'Enter valid phone number',
+        value: /^(\(\d{3}\) \d{3}-\d{4}|\d{3}-\d{3}-\d{4})$/,
+        message: 'Invalid phone number format',
       },
     },
     width: 'col-span-2',
@@ -3075,8 +3069,8 @@ export const PersonalInfoFields = [
     inputRules: {
       required: 'This field is required',
       pattern: {
-        value: /^[0-9]{10}$/,
-        message: 'Enter valid phone number',
+        value: /^(\(\d{3}\) \d{3}-\d{4}|\d{3}-\d{3}-\d{4})$/,
+        message: 'Invalid phone number format',
       },
     },
     size: true,
@@ -3091,8 +3085,8 @@ export const PersonalInfoFields = [
     inputRules: {
       // required: "This field is required",
       pattern: {
-        value: /^[0-9]{10}$/,
-        message: 'Enter valid phone number',
+        value: /^(\(\d{3}\) \d{3}-\d{4}|\d{3}-\d{3}-\d{4})$/,
+        message: 'Invalid phone number format',
       },
     },
     size: true,
