@@ -1,23 +1,27 @@
 import { Backdrop, Box, Divider, Stack, Typography } from '@mui/material'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from '../../shared'
 import { CancelPopup } from '../Mentor/Task/cancelPopup';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTestimonialView, updateTestimonial } from '../../services/request';
 import ConnectIcon from '../../assets/images/Connectpop1x.png';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import BlueCloseIcon from '../../assets/icons/blue-close-icon.svg';
 import SuccessTik from '../../assets/images/blue_tik1x.png';
 import CancelColorIcon from '../../assets/icons/cancelCircle.svg'
+import { request_testimonial, requestPageBreadcrumbs } from '../Breadcrumbs/BreadcrumbsCommonData';
+import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 
 export const TestimonialView = () => {
     const params = useParams();
     const navigate = useNavigate()
+    const [searchParams] = useSearchParams();
     const userInfo = useSelector(state => state.userInfo);
     const { testimonialData } = useSelector((state) => state.requestList);
     const role = userInfo.data.role
     const dispatch = useDispatch()
-
+    const breadcrumbsType = searchParams.get("breadcrumbsType") || "";
+    const [breadcrumbsArray, setBreadcrumbsArray] = useState([]);
     console.log(testimonialData)
 
     const [open, setOpen] = React.useState({
@@ -80,11 +84,21 @@ export const TestimonialView = () => {
     useEffect(() => {
         getTestimonialData()
     }, [])
+useEffect(() => {
+ if(breadcrumbsType===requestPageBreadcrumbs.testimonial_request){
+ setBreadcrumbsArray(request_testimonial())
+}else{
+    // setBreadcrumbsArray(request_testimonial())
 
+}
+}, [breadcrumbsType])
     return (
         <Box className="!border !border-[#DBE0E5] rounded-[10px] m-[20px] p-[20px]">
             <Stack direction={"row"} alignItems={"center"} justifyContent={"space-between"} sx={{ borderBottom: "1px solid #D5E4F2", mb: "20px" }}>
-                <Typography p={"20px 0px"} className='!text-[18px]' fontWeight={600}>View Testimonials</Typography>
+          <div className='pb-2'>
+
+            <Breadcrumbs items={breadcrumbsArray}/>
+          </div>
                 <div onClick={() => navigate(-1)} className='cursor-pointer'>
                     <img src={BlueCloseIcon} alt='' />
                 </div>

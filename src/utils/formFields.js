@@ -1,6 +1,29 @@
 import { dateFormat } from '.';
 import { getCurrentWeekAndDay } from './constant';
 
+export const formatPhoneNumber = (value) => {
+  // Remove all non-numeric characters
+  const numericValue = value.replace(/\D/g, '');
+
+  // Format based on length
+  if (numericValue.length <= 3) {
+    return numericValue;
+  } else if (numericValue.length <= 6) {
+    return `(${numericValue.slice(0, 3)}) ${numericValue.slice(3)}`;
+  } else {
+    return `(${numericValue.slice(0, 3)}) ${numericValue.slice(
+      3,
+      6
+    )}-${numericValue.slice(6, 10)}`;
+  }
+};
+
+// export const handleChange = (e) => {
+//   const value = e.target.value;
+//   const formattedValue = formatPhoneNumber(value);
+//   setPhone(formattedValue);
+// };
+
 const { currentDayName } = getCurrentWeekAndDay();
 
 export const PersonalInformationFields = [
@@ -49,9 +72,8 @@ export const PersonalInformationFields = [
     inputRules: {
       required: 'This field is required',
       pattern: {
-        value: /^\+[1-9]\d{1,14}$/,
-        message:
-          'Must start with a plus sign Followed by 1 to 14 digits and no spaces in-between',
+        value: /^(\(\d{3}\) \d{3}-\d{4}|\d{3}-\d{3}-\d{4})$/,
+        message: 'Invalid phone number format',
       },
     },
     size: true,
@@ -65,9 +87,8 @@ export const PersonalInformationFields = [
     inputRules: {
       // required: "This field is required",
       pattern: {
-        value: /^\+[1-9]\d{1,14}$/,
-        message:
-          'Must start with a plus sign Followed by 1 to 14 digits and no spaces in-between',
+        value: /^(\(\d{3}\) \d{3}-\d{4}|\d{3}-\d{3}-\d{4})$/,
+        message: 'Invalid phone number format',
       },
     },
     size: true,
@@ -461,6 +482,7 @@ export const MenteePersonalInformationFields = [
     },
     size: true,
     disabled: true,
+    disable: true,
     width: 'col-span-2',
   },
   {
@@ -474,6 +496,7 @@ export const MenteePersonalInformationFields = [
     },
     size: true,
     disabled: true,
+    disable: true,
     width: 'col-span-2',
   },
   {
@@ -487,6 +510,7 @@ export const MenteePersonalInformationFields = [
     },
     size: true,
     disabled: true,
+    disable: true,
     width: 'col-span-2',
   },
   {
@@ -498,9 +522,8 @@ export const MenteePersonalInformationFields = [
     inputRules: {
       required: 'This field is required',
       pattern: {
-        value: /^\+[1-9]\d{1,14}$/,
-        message:
-          'Must start with a plus sign Followed by 1 to 14 digits and no spaces in-between',
+        value: /^(\(\d{3}\) \d{3}-\d{4}|\d{3}-\d{3}-\d{4})$/,
+        message: 'Invalid phone number format',
       },
     },
     size: true,
@@ -514,9 +537,8 @@ export const MenteePersonalInformationFields = [
     placeholder: 'Enter Secondary Contact Number',
     inputRules: {
       pattern: {
-        value: /^\+[1-9]\d{1,14}$/,
-        message:
-          'Must start with a plus sign Followed by 1 to 14 digits and no spaces in-between',
+        value: /^(\(\d{3}\) \d{3}-\d{4}|\d{3}-\d{3}-\d{4})$/,
+        message: 'Invalid phone number format',
       },
     },
     size: true,
@@ -1331,7 +1353,7 @@ export const ProgramTabs = [
   {
     name: 'About Program',
     key: 'about_program',
-  },  
+  },
   {
     name: 'Program Testimonials',
     key: 'program_testimonials',
@@ -1396,6 +1418,35 @@ export const ProgramInformationFields = [
   },
   {
     type: 'dropdown',
+    name: 'environment',
+    label: 'Program Environment',
+    placeholder: 'Select Environment',
+    inputRules: {
+      required: 'This field is required',
+    },
+    options: [
+      {
+        key: 'Mid School',
+        value: 'Mid School',
+      },
+      {
+        key: 'High School',
+        value: 'High School',
+      },
+      {
+        key: 'University',
+        value: 'University',
+      },
+      {
+        key: 'Own',
+        value: 'Own',
+      },
+    ],
+    width: 'width-49',
+    for: ['mentor'],
+  },
+  {
+    type: 'dropdown',
     name: 'type',
     label: 'Program Type',
     placeholder: 'Select Program Type',
@@ -1435,7 +1486,29 @@ export const ProgramInformationFields = [
       },
     ],
     width: 'width-32',
-    for: ['admin', 'mentor'],
+    for: ['admin'],
+  },
+  {
+    type: 'dropdown',
+    name: 'category',
+    label: 'Category',
+    placeholder: 'Select Category',
+    inputRules: {
+      // valueAsNumber: true,
+      required: 'This field is required',
+    },
+    options: [
+      {
+        key: 'Category 1',
+        value: 'Category 1',
+      },
+      {
+        key: 'Category 2',
+        value: 'Category 2',
+      },
+    ],
+    width: 'width-49',
+    for: ['mentor'],
   },
   {
     type: 'input',
@@ -1490,9 +1563,8 @@ export const ProgramInformationFields = [
     inputRules: {
       required: 'This field is required',
       pattern: {
-        value: /^\+[1-9]\d{1,14}$/,
-        message:
-          'Must start with a plus sign Followed by 1 to 14 digits and no spaces in-between',
+        value: /^(\(\d{3}\) \d{3}-\d{4}|\d{3}-\d{3}-\d{4})$/,
+        message: 'Invalid phone number format',
       },
     },
     width: 'width-32',
@@ -1525,17 +1597,17 @@ export const ProgramInformationFields = [
     width: 'w-full',
     for: ['admin'],
   },
-  // {
-  //   type: "textbox",
-  //   name: "prerequisites",
-  //   label: "Prerequisites",
-  //   placeholder: "Enter prerequisites",
-  //   inputRules: {
-  //     required: 'prerequisites is required',
-  //   },
-  //   width: "w-full",
-  //   for: ["admin"],
-  // },
+  {
+    type: "textbox",
+    name: "prerequisites",
+    label: "Prerequisites",
+    placeholder: "Enter prerequisites",
+    inputRules: {
+      required: 'prerequisites is required',
+    },
+    width: "w-full",
+    for: ["admin"],
+  },
   {
     type: 'dynamicFields',
     name: 'sub_programs',
@@ -1662,19 +1734,19 @@ export const ProgramInformationFields = [
     inputRules: {
       required: 'This field is required',
     },
-    width: 'width-32',
+    width: 'width-49',
     for: ['mentor'],
   },
   {
     type: 'dropdown',
     name: 'session_count',
-    label: 'Add Sessions',
+    label: 'Sessions',
     placeholder: 'Select Sessions',
     inputRules: {
       required: 'This field is required',
     },
     options: SessionCounts(),
-    width: 'width-32',
+    width: 'width-49',
     for: ['mentor'],
   },
   {
@@ -1699,17 +1771,17 @@ export const ProgramInformationFields = [
     width: 'w-full',
     for: ['mentor'],
   },
-  // {
-  //   type: "textbox",
-  //   name: "prerequisites",
-  //   label: "Prerequisites",
-  //   placeholder: "Enter prerequisites",
-  //    inputRules: {
-  //    required: 'prerequisites is required',
-  //   },
-  //   width: "w-full",
-  //   for: ["mentor"],
-  // },
+  {
+    type: "textbox",
+    name: "prerequisites",
+    label: "Prerequisites",
+    placeholder: "Enter prerequisites",
+    inputRules: {
+      required: 'prerequisites is required',
+    },
+    width: "w-full",
+    for: ["mentor"],
+  },
   {
     type: 'dropdown',
     name: 'course_level',
@@ -1947,7 +2019,7 @@ export const AboutProgramFields = [
     label: 'Benefits',
     placeholder: 'Enter benefits details',
     inputRules: {
-      required: 'This field is required',
+      // required: 'This field is required',
     },
     width: 'w-full',
     for: ['mentor'],
@@ -1960,7 +2032,7 @@ export const AboutProgramFields = [
     fieldtype: 'text',
     placeholder: 'Multiple goals added',
     inputRules: {
-      required: 'This field is required',
+      // required: 'This field is required',
     },
     width: 'w-full',
     icon: 'add',
@@ -1981,31 +2053,31 @@ export const AboutProgramFields = [
     for: ['admin', 'mentor'],
   },
 
-  // {
-  //   type: 'textbox',
-  //   name: 'about_program',
-  //   label: 'About Program',
-  //   placeholder: 'Enter this about program details',
-  //   inputRules: {
-  //     required: 'This field is required',
-  //   },
-  //   width: 'w-full',
-  //   for: ['mentor'],
-  // },
-
   {
-    type: 'popup-input',
+    type: 'textbox',
     name: 'skills',
-    label: 'Skills Gained',
-    fieldtype: 'text',
-    placeholder: 'Multiple Skills added',
+    label: 'Skills gain description',
+    placeholder: 'Enter skills gain description',
     inputRules: {
-      required: 'This field is required',
+      // required: 'This field is required',
     },
     width: 'w-full',
-    icon: 'add',
     for: ['mentor'],
   },
+
+  // {
+  //   type: 'popup-input',
+  //   name: 'skills',
+  //   label: 'Skills Gained',
+  //   fieldtype: 'text',
+  //   placeholder: 'Multiple Skills added',
+  //   inputRules: {
+  //     // required: 'This field is required',
+  //   },
+  //   width: 'w-full',
+  //   icon: 'add',
+  //   for: ['mentor'],
+  // },
   {
     type: 'file',
     name: 'program_image',
@@ -2085,28 +2157,28 @@ export const ProgramTestimonialsFields = [
     },
     options: [
       {
-        key: "video",
-        value: "Video",
+        key: 'video',
+        value: 'Video',
       },
       {
-        key: "pdf",
-        value: "PDF",
+        key: 'pdf',
+        value: 'PDF',
       },
       {
-        key: "image",
-        value: "Image",
+        key: 'image',
+        value: 'Image',
       },
       {
-        key: "blog",
-        value: "Blog",
+        key: 'blog',
+        value: 'Blog',
       },
       {
-        key: "case_study",
-        value: "Case Studies",
+        key: 'case_study',
+        value: 'Case Studies',
       },
       {
-        key: "success_story",
-        value: "Success Story",
+        key: 'success_story',
+        value: 'Success Story',
       },
     ],
     width: 'w-full',
@@ -2374,7 +2446,7 @@ export const ReportFields = (bool = false) => [
     //   required: 'This field is required',
     // },
     width: 'w-full',
-    disabled: bool
+    disabled: bool,
   },
 ];
 
@@ -2445,9 +2517,8 @@ export const EditProfileFields = [
     inputRules: {
       required: 'This field is required',
       pattern: {
-        value: /^\+[1-9]\d{1,14}$/,
-        message:
-          'Must start with a plus sign Followed by 1 to 14 digits and no spaces in-between',
+        value: /^(\(\d{3}\) \d{3}-\d{4}|\d{3}-\d{3}-\d{4})$/,
+        message: 'Invalid phone number format',
       },
     },
     width: 'width-49',
@@ -2923,8 +2994,8 @@ export const ProfileFields = [
     inputRules: {
       required: 'This field is required',
       pattern: {
-        value: /^[0-9]{10}$/,
-        message: 'Enter valid phone number',
+        value: /^(\(\d{3}\) \d{3}-\d{4}|\d{3}-\d{3}-\d{4})$/,
+        message: 'Invalid phone number format',
       },
     },
     width: 'col-span-2',
@@ -2937,8 +3008,8 @@ export const ProfileFields = [
     placeholder: 'Enter Secondary Contact Number',
     inputRules: {
       pattern: {
-        value: /^[0-9]{10}$/,
-        message: 'Enter valid phone number',
+        value: /^(\(\d{3}\) \d{3}-\d{4}|\d{3}-\d{3}-\d{4})$/,
+        message: 'Invalid phone number format',
       },
     },
     width: 'col-span-2',
@@ -3075,8 +3146,8 @@ export const PersonalInfoFields = [
     inputRules: {
       required: 'This field is required',
       pattern: {
-        value: /^[0-9]{10}$/,
-        message: 'Enter valid phone number',
+        value: /^(\(\d{3}\) \d{3}-\d{4}|\d{3}-\d{3}-\d{4})$/,
+        message: 'Invalid phone number format',
       },
     },
     size: true,
@@ -3091,8 +3162,8 @@ export const PersonalInfoFields = [
     inputRules: {
       // required: "This field is required",
       pattern: {
-        value: /^[0-9]{10}$/,
-        message: 'Enter valid phone number',
+        value: /^(\(\d{3}\) \d{3}-\d{4}|\d{3}-\d{3}-\d{4})$/,
+        message: 'Invalid phone number format',
       },
     },
     size: true,

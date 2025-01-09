@@ -47,23 +47,25 @@ const MuiCustomModal = (props) => {
         } items-center pr-6`}
       >
         {dialogTitle && (
-          <DialogTitle
-            component={Typography}
-            fontWeight={500}
-            variant="body1"
-            id="scroll-dialog-title"
-          >
-            {dialogTitle}
-          </DialogTitle>
+          <>
+            <DialogTitle
+              component={Typography}
+              fontWeight={500}
+              variant="body1"
+              id="scroll-dialog-title"
+            >
+              {dialogTitle}
+            </DialogTitle>
+            <IconButton size="small" onClick={handleClose}>
+              <Avatar
+                sx={{ width: 20, height: 20 }}
+                src={modal_close_icon}
+                color="primary"
+                fontSize="small"
+              />
+            </IconButton>
+          </>
         )}
-        <IconButton size="small" onClick={handleClose}>
-          <Avatar
-            sx={{ width: 20, height: 20 }}
-            src={modal_close_icon}
-            color="primary"
-            fontSize="small"
-          />
-        </IconButton>
       </div>
       {dialogTitle && (
         <div className="px-4">

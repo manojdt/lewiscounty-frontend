@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { MuiCustomModal } from "../../../shared/Modal/MuiCustomModal";
 import { useCreateGoalMutation } from "../../../features/goals/goalsApi.services";
-import { Backdrop } from "@mui/material";
 
 const GoalCreationModal = (props) => {
   const [description, setDescription] = React.useState("");
@@ -42,7 +41,7 @@ const GoalCreationModal = (props) => {
       };
     }
   }, [IsErrorGoalsCreating, isGoalsCreated]);
-  console.log("data", data);
+
   return (
     <>
       <MuiCustomModal
@@ -56,11 +55,13 @@ const GoalCreationModal = (props) => {
             color: "inherit",
             variant: "outlined",
             children: "Cancel",
+            disabled: isGoalsCreating,
             onClick: handleCloseModal,
           },
           {
             color: "primary",
             variant: "contained",
+            disabled: isGoalsCreating,
             children: isGoalsCreating ? "Creating..." : "Create",
             onClick: handleGoalCreate,
           },

@@ -66,12 +66,6 @@ export default function MyProfile() {
     },
   ];
 
-  useEffect(() => {
-    setContentHeights(
-      tabs.map((_, i) => contentRefs.current[i]?.offsetHeight || 0)
-    );
-  }, [tabs]);
-
   return (
     <div className='profile-container'>
       <div className='flex justify-between items-center mb-6'>
@@ -102,29 +96,8 @@ export default function MyProfile() {
           </div>
 
           {/* Tab Content */}
-          <div className='grid col-span-4'>
-            <div
-              className='p-12 transition-[height] duration-300 ease-in-out overflow-hidden'
-              style={{
-                height: contentHeights[activeTab] || 'auto',
-              }}
-            >
-              <div className='relative'>
-                {tabs.map((tab, index) => (
-                  <div
-                    key={index}
-                    ref={(el) => (contentRefs.current[index] = el)}
-                    className={`text-sm text-gray-700 transition-transform duration-500 ease-in-out ${
-                      activeTab === index
-                        ? 'translate-x-0 opacity-100'
-                        : 'translate-x-full opacity-0 absolute'
-                    }`}
-                  >
-                    {tab.content}
-                  </div>
-                ))}
-              </div>
-            </div>
+          <div className='grid col-span-4 p-12 overflow-hidden'>
+            <div className='relative'>{tabs[activeTab].content}</div>
           </div>
         </div>
       ) : (

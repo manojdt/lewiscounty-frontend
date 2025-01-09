@@ -19,7 +19,7 @@ import BatchIcon from '../../assets/icons/GoalBatch.svg'
 import SearchIcon from '../../assets/icons/search.svg';
 import CancelColorIcon from '../../assets/icons/cancelCircle.svg'
 import { Button } from '../../shared'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import MuiModal from '../../shared/Modal';
 import { useDispatch, useSelector } from 'react-redux'
 import { Backdrop, Checkbox, CircularProgress, Stack, Typography } from '@mui/material'
@@ -33,16 +33,21 @@ import CancelReq from "../../assets/icons/cancelRequest.svg"
 import dayjs from 'dayjs'
 import CreateGoal from './CreateGoal'
 import { dateFormatRever } from '../../utils'
+import { request_goalMentee, request_goalMentor, requestPageBreadcrumbs } from '../Breadcrumbs/BreadcrumbsCommonData'
+import Breadcrumbs from '../Breadcrumbs/Breadcrumbs'
 
 const ViewGoal = ({ type = '' }) => {
     const navigate = useNavigate()
     const params = useParams();
+    const [searchParams] = useSearchParams();
     console.log(params,"params")
       const [reason,setReason] = useState('')
       const [reasonError, setReasonError] = React.useState(false);
     const location = useLocation(); // Provides access to the current URL
     const queryParams = new URLSearchParams(location.search); // Parses the query string
-  
+    const breadcrumbsType = searchParams.get("breadcrumbsType") || "";
+    const goalType = searchParams.get("goalType") || "";
+    const [breadcrumbsArray, setBreadcrumbsArray] = useState([]);
     const requestId = queryParams.get('requestId');
     const dispatch = useDispatch()
     const [pageloading, setPageLoading] = useState(false)
@@ -251,7 +256,27 @@ const ViewGoal = ({ type = '' }) => {
     useEffect(() => {
         dispatch(getGoalInfo(params.id))
     }, [])
-
+      const handleBreadcrumbs = (key) => {
+        const goal_menter=request_goalMentor(goalInfo.goal_name,goalType)
+        const goal_mentee=request_goalMentee(goalInfo.goal_name,goalType)
+        switch (key) {
+          case requestPageBreadcrumbs.mentee:
+            setBreadcrumbsArray(goal_mentee)
+            break;
+            case requestPageBreadcrumbs.mentor:
+            setBreadcrumbsArray(goal_menter)
+            break;
+          case "discussion":
+            break;
+          default:
+            break;
+        }
+      };
+useEffect(() => {
+ if(breadcrumbsType&&goalInfo.goal_name){
+    handleBreadcrumbs(breadcrumbsType)
+}
+}, [breadcrumbsType,goalInfo])
     if (Object.keys(goalInfo).length) {
         switch (goalInfo.status) {
             case 'inactive':
@@ -626,7 +651,10 @@ const ViewGoal = ({ type = '' }) => {
                                 <p>Goals </p>
                             </div>
                         </div> */}
-
+{role==="admin"&&
+<div className='pb-2'>
+    <Breadcrumbs items={breadcrumbsArray}/>
+    </div>}
                         <div className='px-4' style={{ border: '1px solid rgba(223, 237, 255, 1)', borderRadius: '10px' }}>
 
                             <div className=''>

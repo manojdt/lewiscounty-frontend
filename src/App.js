@@ -146,7 +146,7 @@ function App() {
             <Route path='/super-members/add' element={<AddSuperMember />} />
             <Route path='/my-profile-admin' element={<Profile />} />
             <Route path='/help-admin' element={<HelpPage />} />
-            <Route path="/bgVerify" element={<BgVerify />} />
+            <Route path='/bgVerify' element={<BgVerify />} />
           </Route>
 
           <Route path='/login-type' element={<LoginType />} />
@@ -199,6 +199,7 @@ function App() {
             <Route path='/assignMentor' element={<AssignMentor />} />
 
             <Route path='/discussions' element={<Discussions />} />
+            <Route path='/discussions/:id' element={<DiscussionDetails />} />
 
             <Route path='/mentor-profile/:id' element={<ProfileView />} />
 

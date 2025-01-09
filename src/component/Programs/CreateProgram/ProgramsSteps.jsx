@@ -1,20 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
   Controller,
   useFieldArray,
-  useForm,
   useFormContext,
 } from "react-hook-form";
 import { Calendar } from "primereact/calendar";
 import SearchIcon from "../../../assets/icons/search.svg";
-
-import { Button } from "../../../shared";
-
-import CalendarIcon from "../../../assets/images/calender_1x.png";
+import CalendarIcon from "../../../assets/icons/calendar_icon.svg";
 import HTMLIcon from "../../../assets/images/html1x.png";
 import LocationIcon from "../../../assets/images/Location1x.png";
-import PlusIcon from "../../../assets/images/plus_temp.png";
+import PlusIcon from "../../../assets/icons/add_popup_icon.svg";
 import UploadIcon from "../../../assets/images/image_1x.png";
 import DeleteIcon from "../../../assets/images/delete_1x.png";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
@@ -91,7 +87,6 @@ const ProgramSteps = ({
     sub_programs,
     start_date,
     end_date,
-    goals,
     program_mode,
   ] = watch([
     "no_of_subprograms",
@@ -99,7 +94,6 @@ const ProgramSteps = ({
     "sub_programs",
     "start_date",
     "end_date",
-    "goals",
     "program_mode",
   ]);
 
@@ -405,9 +399,9 @@ const ProgramSteps = ({
               ) : field.type === "popup-input" ? (
                 <div className="relative">
                   <div
-                    className="input-bg h-[60px] w-full mt-2 flex items-center text-[12px] gap-2 cursor-pointer px-6"
+                    className="input-bg h-[60px] w-full mt-2 flex items-center text-[12px] gap-2 px-6"
                     style={{ borderRadius: "3px" }}
-                    onClick={() => handleAction(field.name)}
+                    // onClick={() => handleAction(field.name)}
                   >
                     {(() => {
                       // Get the current field value from watch
@@ -1072,16 +1066,15 @@ const ProgramSteps = ({
                     </label>
                   </div>
                   {watchFile &&
-                    typeof watchFile === "object" &&
-                    watchFile[0]?.name && (
+                    ((typeof watchFile === "object" && watchFile[0]?.name) ||
+                      (typeof watchFile === "string" && watchFile)) && (
                       <>
                         <div
-                          className="text-[14px] pt-5"
+                          className="text-sm pt-5"
                           style={{ color: "rgba(0, 0, 0, 1)" }}
                         >
                           Uploaded Image{" "}
                         </div>
-
                         <div
                           className="flex justify-between items-center w-[30%] mt-5 px-4 py-4"
                           style={{
@@ -1089,19 +1082,19 @@ const ProgramSteps = ({
                             borderRadius: "3px",
                           }}
                         >
-                          <div className="flex w-[80%] gap-3 items-center">
-                            <img src={UploadIcon} alt="altlogo" />
-                            <span className="text-[12px]">
-                              {getValues(field.name) &&
-                                getValues(field.name)[0]?.name}
-                              {params.id && imageName}
+                          <div className="flex w-4/5 gap-3 items-center">
+                            <img src={UploadIcon} alt="upload icon" />
+                            <span className="text-xs">
+                              {typeof watchFile === "object"
+                                ? watchFile[0]?.name
+                                : watchFile}
                             </span>
                           </div>
                           <img
-                            className="w-[30px] cursor-pointer"
+                            className="w-8 cursor-pointer"
                             onClick={() => handleDeleteImage(field.name)}
                             src={DeleteIcon}
-                            alt="DeleteIcon"
+                            alt="delete icon"
                           />
                         </div>
                       </>
