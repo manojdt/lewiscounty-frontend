@@ -24,10 +24,13 @@ import {
   user,
 } from '../../../utils/constant';
 import SearchIcon from '../../../assets/icons/search.svg';
+import Edit_Icon from '../../../assets/icons/editIcon.svg';
 import CalendarIcon from '../../../assets/images/calender_1x.png';
 import MoreIcon from '../../../assets/icons/moreIcon.svg';
 import TickCircle from '../../../assets/icons/tickCircle.svg';
 import CloseCircle from '../../../assets/icons/closeCircle.svg';
+import Bg_verificatin_icon from '../../../assets/icons/bg-verification-icon.svg';
+import DocuSign_icon from '../../../assets/icons/docu-sign-icon.svg';
 import ViewIcon from '../../../assets/images/view1x.png';
 import CancelIcon from '../../../assets/images/cancel1x.png';
 import TickColorIcon from '../../../assets/icons/tickColorLatest.svg';
@@ -81,6 +84,8 @@ import { Button } from '../../../shared';
 import { SelectBox } from '../../../shared/SelectBox';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { getAllGoals } from '../../../services/goalsInfo';
+import { EditIcon } from 'lucide-react';
+import { docuSign } from '../../../services/activities';
 
 export default function AllRequest() {
   const navigate = useNavigate();
@@ -150,6 +155,15 @@ export default function AllRequest() {
   const [selectedTab, setSelectedTab] = React.useState(
     role === 'mentee' ? 'mentees' : 'my'
   );
+
+  const handleRedirectDocuSign = () => {
+    dispatch(docuSign()).then((res) => {
+      if (res?.meta?.requestStatus === 'fulfilled') {
+        const url = res?.payload?.url ?? '#';
+        window.open(url, '_blank');
+      }
+    });
+  };
 
   const handleChange = (newAlignment) => () => {
     setSelectedTab(newAlignment);
@@ -278,7 +292,8 @@ export default function AllRequest() {
       value: 'approved',
     },
     {
-      label: selectedRequestedtype === "report_request" ? "Reviewed" : 'Rejected',
+      label:
+        selectedRequestedtype === 'report_request' ? 'Reviewed' : 'Rejected',
       value: 'rejected',
     },
   ];
@@ -517,12 +532,12 @@ export default function AllRequest() {
           });
         }
         if (cancelPopup.page === 'member_join_request') {
-            dispatch(
-                cancelMemberRequest({
-                  member_id: seletedItem.id,
-                  reason: data.cancel_reason,
-                })
-              ).then((res) => {
+          dispatch(
+            cancelMemberRequest({
+              member_id: seletedItem.id,
+              reason: data.cancel_reason,
+            })
+          ).then((res) => {
             if (res?.meta?.requestStatus === 'fulfilled') {
               handleCloseCancelReasonPopup();
             }
@@ -547,7 +562,7 @@ export default function AllRequest() {
 
   // Program Dropwdowm Accept
   const handleAcceptProgramRequest = () => {
-        handleOpenConfirmPopup(
+    handleOpenConfirmPopup(
       'Program Request',
       currentRequestTab.key,
       actionTab,
@@ -847,24 +862,39 @@ export default function AllRequest() {
                     actionTab === 'program_reschedule' ||
                     actionTab === 'program_cancel' ||
                     actionTab === 'program_join') && (
-                    <MenuItem
-                      onClick={() => {
-                        // setCancelPopup({
-                        //     ...cancelPopup,
-                        //     show: true,
-                        //     page: actionTab
-                        // })
-                        handleCancelProgramRequest();
-                      }}
-                      className='!text-[12px]'
-                    >
-                      <img
-                        src={CloseCircle}
-                        alt='CancelIcon'
-                        className='pr-3 w-[27px]'
-                      />
-                      Cancel Request
-                    </MenuItem>
+                    <div>
+                      <MenuItem
+                        onClick={() => {
+                          navigate(`/update-program/${params?.row?.program}`);
+                        }}
+                        className='!text-[12px]'
+                      >
+                        <img
+                          src={Edit_Icon}
+                          alt='CancelIcon'
+                          className='pr-3 w-[27px]'
+                        />
+                        Edit
+                      </MenuItem>
+                      <MenuItem
+                        onClick={() => {
+                          // setCancelPopup({
+                          //     ...cancelPopup,
+                          //     show: true,
+                          //     page: actionTab
+                          // })
+                          handleCancelProgramRequest();
+                        }}
+                        className='!text-[12px]'
+                      >
+                        <img
+                          src={CloseCircle}
+                          alt='CancelIcon'
+                          className='pr-3 w-[27px]'
+                        />
+                        Cancel Request
+                      </MenuItem>
+                    </div>
                   )}
                 {/* mentee Cancel Request */}
 
@@ -1076,7 +1106,13 @@ export default function AllRequest() {
                   fontSize: '12px',
                 }}
               >
-                {requestStatusText[params?.row?.status==="accept"?"approved":params?.row?.status==="cancel"?"rejected":params?.row?.status] || ''}
+                {requestStatusText[
+                  params?.row?.status === 'accept'
+                    ? 'approved'
+                    : params?.row?.status === 'cancel'
+                    ? 'rejected'
+                    : params?.row?.status
+                ] || ''}
               </span>
             </div>
           </>
@@ -1153,13 +1189,31 @@ export default function AllRequest() {
                         />
                         Reject
                       </MenuItem>
+
+                      <MenuItem
+                        onClick={() => navigate('/bgVerify')}
+                        className='!text-[12px]'
+                      >
+                        <img
+                          src={Bg_verificatin_icon}
+                          alt='AcceptIcon'
+                          className='pr-3 w-[27px]'
+                        />
+                        BG verification
+                      </MenuItem>
+                      <MenuItem
+                        onClick={handleRedirectDocuSign}
+                        className='!text-[12px]'
+                      >
+                        <img
+                          src={DocuSign_icon}
+                          alt='AcceptIcon'
+                          className='pr-3 w-[27px]'
+                        />
+                        DocuSign
+                      </MenuItem>
                     </>
                   )}
-
-                  {/* <MenuItem onClick={() => undefined} className='!text-[12px]'>
-                                    <img src={ShareIcon} alt="ShareIcon" className='pr-3 w-[27px]' />
-                                    Share
-                                </MenuItem> */}
                 </>
               )}
             </Menu>
@@ -1234,7 +1288,8 @@ export default function AllRequest() {
               <span
                 className='w-[80px] flex justify-center h-[30px] px-7'
                 style={{
-                  background: requestStatusColor[params.row.status]?.bgColor || '',
+                  background:
+                    requestStatusColor[params.row.status]?.bgColor || '',
                   lineHeight: '30px',
                   borderRadius: '3px',
                   width: '110px',
@@ -1243,7 +1298,9 @@ export default function AllRequest() {
                   fontSize: '12px',
                 }}
               >
-                {params.row.status === "rejected" ? "Reviewed" : requestStatusText[params.row.status] || ''}
+                {params.row.status === 'rejected'
+                  ? 'Reviewed'
+                  : requestStatusText[params.row.status] || ''}
               </span>
             </div>
           </>
@@ -1993,6 +2050,7 @@ export default function AllRequest() {
       const requestTabDetails = RequestStatusArray.find(
         (request) => request.key === tab
       );
+
       let tableDetails = { ...activeTableDetails };
       let actionFilter = [];
       let activeTabName = '';
@@ -2018,7 +2076,7 @@ export default function AllRequest() {
           break;
         case RequestStatus.memberJoinRequest.key:
           tableDetails = { column: memberMentorRequestColumns, data: [] };
-          actionFilter = memberJoinRequestTab;
+          // actionFilter = memberJoinRequestTab;
           activeTabName = 'mentor';
           break;
         case RequestStatus.goalRequest.key:
@@ -2646,7 +2704,11 @@ export default function AllRequest() {
                   className='text-[18px]'
                   style={{ color: 'rgba(0, 0, 0, 1)' }}
                 >
-                  {role === 'admin' ? selectedRequestedtype === "report_request" ? "Review Reason" : 'Reject Request Reason' : 'Cancel Reason'}
+                  {role === 'admin'
+                    ? selectedRequestedtype === 'report_request'
+                      ? 'Review Reason'
+                      : 'Reject Request Reason'
+                    : 'Cancel Reason'}
                 </p>
                 <img
                   className='cursor-pointer'
@@ -2666,7 +2728,11 @@ export default function AllRequest() {
                 <form onSubmit={handleSubmit(handleCancelReasonPopupSubmit)}>
                   <div className='relative pb-8'>
                     <label className='block tracking-wide text-gray-700 text-xs font-bold mb-2'>
-                      {role === 'admin' ? selectedRequestedtype === "report_request" ? "Review Reason" : 'Reject Reason' : 'Cancel Reason'}
+                      {role === 'admin'
+                        ? selectedRequestedtype === 'report_request'
+                          ? 'Review Reason'
+                          : 'Reject Reason'
+                        : 'Cancel Reason'}
                     </label>
 
                     <div className='relative'>
@@ -2905,12 +2971,6 @@ export default function AllRequest() {
                               // setFilter({ search: '', filter_by: '' })
                             }}
                           >
-                            {/* <div className='flex justify-center pb-1'>
-                                                                    <div className={`total-proram-count relative ${actionTab === discussion.key ? 'active' : ''}`}>10
-
-                                                                        <p className='notify-icon'></p>
-                                                                    </div>
-                                                                </div> */}
                             <div className='text-[13px]'>
                               {' '}
                               {`${discussion.name}`}
