@@ -28,8 +28,6 @@ import NoProgramImageBg from '../../assets/icons/noProgramImageBg.svg';
 import NoProgramImageIcon from '../../assets/icons/noProgramImageIcon.svg';
 import Balck_Heart_Icon from '../../assets/icons/gray-heart.svg';
 import Crown_Icon from '../../assets/icons/cronwn.svg';
-import NoProgramImageBg from '../../assets/icons/noProgramImageBg.svg';
-import NoProgramImageIcon from '../../assets/icons/noProgramImageIcon.svg';
 import { Crown } from 'lucide-react';
 
 export default function ProgramCard({
@@ -378,7 +376,7 @@ export default function ProgramCard({
 
                 const rating =
                   currentProgram?.mentor_rating === 0
-                    ? 3
+                    ? 0
                     : currentProgram?.mentor_rating;
 
                 return (
@@ -504,7 +502,7 @@ export default function ProgramCard({
                             />
                           </div>
                         </div>
-                        {role === user.mentee && (
+                        { (
                           <div className='py-2'>
                             {currentProgram?.is_sponsored ? (
                               <div className='bg-[#DADADA] inline-flex gap-2 px-2 py-1 rounded-md'>
@@ -584,14 +582,20 @@ export default function ProgramCard({
                             )}
                         </div>
                         <div className='flex gap-2 items-center py-3 text-[12px]'>
+                          {currentProgram?.mentor_rating > 0 && 
+                          <div>
                           <img src={StarColorIcon} alt='StarColorIcon' />
                           <span>{rating}</span>
+                          
+                          
                           <span
                             style={{
                               borderRight: '1px solid #18283D',
                               height: '20px',
                             }}
                           ></span>
+                          </div>
+                          }
                           <img
                             className='w-6 h-6 rounded-full shadow-lg object-cover'
                             src={

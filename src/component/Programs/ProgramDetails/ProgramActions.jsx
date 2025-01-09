@@ -530,6 +530,7 @@ const ProgramActions = ({
           <div className="my-8">
             <a
               href={programdetails?.meeting_link}
+              target="_blank"
               className="py-3 px-16 text-white text-[14px] rounded-sm cursor-pointer"
               style={{ ...buttonStyles.gradient }}
             >
