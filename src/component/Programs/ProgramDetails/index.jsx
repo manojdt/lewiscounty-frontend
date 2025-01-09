@@ -755,7 +755,7 @@ useEffect(() => {
 
   useEffect(() => {
     if (isError) {
-      toast.error(actionError?.data?.errors[0]);
+      toast.error(actionError?.data?.errors?.[0]);
     }
   }, [actionError, isError]);
 
@@ -804,7 +804,9 @@ useEffect(() => {
       label: 'Date',
       isRequired: true,
       col: 4,
-      key: 'date',
+      key: "date",
+      minDate: programdetails?.start_date,
+      maxDate: programdetails?.end_date,
     },
     {
       type: 'time',
@@ -1998,7 +2000,9 @@ useEffect(() => {
                       <img src={LocationIcon} alt='LocationIcon' />
                       <span className='text-[12px]'>
                         {/* {programdetails.venue} */}
-                        {`${programdetails.city_details?.name}, ${programdetails.state_details?.abbreviation}`}
+                        {programdetails?.program_mode === "virtual_meeting"
+                          ? "Online"
+                          : `${programdetails.city_details?.name}, ${programdetails.state_details?.abbreviation}`}
                       </span>
                     </div>
 
@@ -2012,9 +2016,10 @@ useEffect(() => {
                         {formatDateTimeISO(programdetails?.start_date)}
                       </span>
                     </div>
-                  </div>
-
-                  <div className='flex items-center gap-3 text-[12px]'>
+                    <div
+                      style={{ borderRight: "1px solid rgba(24, 40, 61, 1)" }}
+                    ></div>
+                    <div className="flex items-center gap-3 text-[12px]">
                     {!profileLoading && (
                       <img
                         src={programdetails?.mentor_profile_image || UserImage}
@@ -2045,126 +2050,199 @@ useEffect(() => {
                       </span>
                     )}
                   </div>
+                  </div>
+
+                  
+
+                  {Array.isArray(programdetails?.learning_materials) &&
+                    programdetails?.learning_materials?.length > 0 && (
+                      <div className="py-10">
+                        <p className="text-[14px] font-normal mb-2">
+                          Our Learning Meterials
+                        </p>
+                        <div className="flex items-center gap-x-3">
+                          {programdetails?.learning_materials.map(
+                            (material) => (
+                              <button
+                                key={material.id}
+                                className={`px-6 py-3 text-[12px] bg-gray-200 text-black rounded-full`}
+                              >
+                                {material.name}
+                              </button>
+                            )
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                  <div className="flex gap-2">
+                    {programdetails?.group_chat_requirement &&<p
+                      onClick={() => navigate("/discussions")}
+                      className="text-[14px] font-semibold text-font-primary-main px-4 py-2 border border-dashed border-background-primary-main rounded-[3px] bg-background-primary-light cursor-pointer"
+                    >
+                      Group Discussions
+                    </p>}
+                    {programdetails?.individual_chat_requirement && <p
+                      onClick={() => navigate("/discussions")}
+                      className="text-[14px] font-semibold text-font-primary-main px-4 py-2 border border-dashed border-background-primary-main rounded-[3px] bg-background-primary-light cursor-pointer"
+                    >
+                      Individual Discussions
+                    </p>}
+                  </div>                  
+
+                  {/* Time Stamp */}
                   {(programdetails.status === programActionStatus.inprogress ||
                     programdetails.status === programActionStatus.paused ||
                     programdetails.status === programActionStatus.started) &&
-                  !programdetails.hasOwnProperty('sub_program') ? (
-                    <div className='flex gap-9 my-4'>
-                      <div className='flex gap-2 items-center justify-center'>
-                        <p className='flex flex-col gap-2 items-center justify-center'>
-                          <span
-                            className='px-2 py-1 text-[20px] w-[40px] flex justify-center items-center'
-                            style={{
-                              background: 'rgba(231, 241, 242, 1)',
-                              color: 'rgba(0, 174, 189, 1)',
-                              borderRadius: '5px',
-                              fontWeight: 700,
-                            }}
-                          >
-                            {dateInfo.month}
-                          </span>
-                          <span
-                            className='text-[12px]'
-                            style={{ color: 'rgba(118, 118, 118, 1)' }}
-                          >
-                            Month
-                          </span>
-                        </p>
-                        <p className='flex justify-center items-baseline pt-2 h-full w-full font-bold'>
-                          -
-                        </p>
-                        <p className='flex flex-col gap-2 items-center justify-center'>
-                          <span
-                            className='px-2 py-1 text-[20px] w-[40px] flex justify-center items-center'
-                            style={{
-                              background: 'rgba(231, 241, 242, 1)',
-                              color: 'rgba(0, 174, 189, 1)',
-                              borderRadius: '5px',
-                              fontWeight: 700,
-                            }}
-                          >
-                            {dateInfo.date}
-                          </span>
-                          <span
-                            className='text-[12px]'
-                            style={{ color: 'rgba(118, 118, 118, 1)' }}
-                          >
-                            Day
-                          </span>
-                        </p>
-                        <p className='flex justify-center items-baseline pt-2 h-full w-full font-bold'>
-                          -
-                        </p>
-                        <p className='flex flex-col gap-2 items-center justify-center'>
-                          <span
-                            className='px-2 py-1 text-[20px] w-[70px] flex justify-center items-center'
-                            style={{
-                              background: 'rgba(231, 241, 242, 1)',
-                              color: 'rgba(0, 174, 189, 1)',
-                              borderRadius: '5px',
-                              fontWeight: 700,
-                            }}
-                          >
-                            {dateInfo.year}
-                          </span>
-                          <span
-                            className='text-[12px]'
-                            style={{ color: 'rgba(118, 118, 118, 1)' }}
-                          >
-                            Year
-                          </span>
-                        </p>
+                  !programdetails.hasOwnProperty("sub_program") ? (
+                    <div className="flex flex-col mt-5">
+                      <p className="text-[12px] text-font-error-main">
+                        Date Tracker
+                      </p>
+                      <div className="flex gap-9 mb-4 mt-2">
+                        <div className="flex gap-2 items-center justify-center">
+                          <p className="flex flex-col gap-2 items-center justify-center">
+                            <span
+                              className="px-2 py-1 text-[20px] w-[40px] flex justify-center items-center"
+                              style={{
+                                background: "rgba(231, 241, 242, 1)",
+                                color: "rgba(0, 174, 189, 1)",
+                                borderRadius: "5px",
+                                fontWeight: 700,
+                              }}
+                            >
+                              {dateInfo.month}
+                            </span>
+                            <span
+                              className="text-[12px]"
+                              style={{ color: "rgba(118, 118, 118, 1)" }}
+                            >
+                              Month
+                            </span>
+                          </p>
+                          <p className="flex justify-center items-baseline pt-2 h-full w-full font-bold">
+                            -
+                          </p>
+                          <p className="flex flex-col gap-2 items-center justify-center">
+                            <span
+                              className="px-2 py-1 text-[20px] w-[40px] flex justify-center items-center"
+                              style={{
+                                background: "rgba(231, 241, 242, 1)",
+                                color: "rgba(0, 174, 189, 1)",
+                                borderRadius: "5px",
+                                fontWeight: 700,
+                              }}
+                            >
+                              {dateInfo.date}
+                            </span>
+                            <span
+                              className="text-[12px]"
+                              style={{ color: "rgba(118, 118, 118, 1)" }}
+                            >
+                              Day
+                            </span>
+                          </p>
+                          <p className="flex justify-center items-baseline pt-2 h-full w-full font-bold">
+                            -
+                          </p>
+                          <p className="flex flex-col gap-2 items-center justify-center">
+                            <span
+                              className="px-2 py-1 text-[20px] w-[70px] flex justify-center items-center"
+                              style={{
+                                background: "rgba(231, 241, 242, 1)",
+                                color: "rgba(0, 174, 189, 1)",
+                                borderRadius: "5px",
+                                fontWeight: 700,
+                              }}
+                            >
+                              {dateInfo.year}
+                            </span>
+                            <span
+                              className="text-[12px]"
+                              style={{ color: "rgba(118, 118, 118, 1)" }}
+                            >
+                              Year
+                            </span>
+                          </p>
+                        </div>
+                        <>
+                          {role === "mentor" && (
+                            <button
+                              className="py-3 px-10 text-white text-[14px] flex items-center w-[200px] justify-center"
+                              title="Pause"
+                              style={{
+                                color:
+                                  programdetails.status !==
+                                    programActionStatus.paused &&
+                                  programdetails.status !==
+                                    programActionStatus.assigned
+                                    ? "rgba(29, 91, 191, 1)"
+                                    : "#fff",
+                                borderRadius: "5px",
+                                border: "1px solid rgba(29, 91, 191, 1)",
+                                display: "none",
+                                background:
+                                  programdetails.status ===
+                                    programActionStatus.paused ||
+                                  programdetails.status ===
+                                    programActionStatus.assigned
+                                    ? "linear-gradient(97.32deg, #1D5BBF -32.84%, #00AEBD 128.72%)"
+                                    : "transparent",
+                              }}
+                              onClick={() => handleJoinProgram()}
+                            >
+                              <img
+                                src={
+                                  programdetails.status !==
+                                  programActionStatus.inprogress
+                                    ? ResumeIcon
+                                    : PauseIcon
+                                }
+                                alt={
+                                  programdetails.status !==
+                                  programActionStatus.inprogress
+                                    ? "ResumeIcon"
+                                    : "PauseIcon"
+                                }
+                                className="pr-4"
+                              />
+                              {programdetails.status ===
+                              programActionStatus.inprogress
+                                ? "Pause"
+                                : "Start"}
+                            </button>
+                          )}
+                        </>
                       </div>
-                      <>
-                        {role === 'mentor' && (
-                          <button
-                            className='py-3 px-10 text-white text-[14px] flex items-center w-[200px] justify-center'
-                            title='Pause'
-                            style={{
-                              color:
-                                programdetails.status !==
-                                  programActionStatus.paused &&
-                                programdetails.status !==
-                                  programActionStatus.assigned
-                                  ? 'rgba(29, 91, 191, 1)'
-                                  : '#fff',
-                              borderRadius: '5px',
-                              border: '1px solid rgba(29, 91, 191, 1)',
-                              display: 'none',
-                              background:
-                                programdetails.status ===
-                                  programActionStatus.paused ||
-                                programdetails.status ===
-                                  programActionStatus.assigned
-                                  ? 'linear-gradient(97.32deg, #1D5BBF -32.84%, #00AEBD 128.72%)'
-                                  : 'transparent',
-                            }}
-                            onClick={() => handleJoinProgram()}
-                          >
-                            <img
-                              src={
-                                programdetails.status !==
-                                programActionStatus.inprogress
-                                  ? ResumeIcon
-                                  : PauseIcon
-                              }
-                              alt={
-                                programdetails.status !==
-                                programActionStatus.inprogress
-                                  ? 'ResumeIcon'
-                                  : 'PauseIcon'
-                              }
-                              className='pr-4'
-                            />
-                            {programdetails.status ===
-                            programActionStatus.inprogress
-                              ? 'Pause'
-                              : 'Start'}
-                          </button>
-                        )}
-                      </>
                     </div>
                   ) : null}
+
+
+                  {/* payment button section */}
+
+                  {(role === "mentee" && !programdetails?.is_sponsored && 
+                  (programdetails?.mentee_join_status === "program_join_payment_initiate" || 
+                  programdetails?.mentee_join_status === "program_join_payment_pending")) && (
+                      <div className="mt-3">
+                        {programdetails?.mentee_join_status === "program_join_payment_initiate" && <p className="text-font-error-main text-[14px] font-semibold mb-2">3 more days left </p>}
+                        <Button
+                          btnType="button"
+                          btnCls={programdetails?.mentee_join_status === "program_join_payment_pending" ? "w-[200px] !bg-[#FFE3C2] !text-[#FF8A00] !border-none" : "w-[120px]"}
+                          btnName={programdetails?.mentee_join_status === "program_join_payment_pending" ? "Pending Payment" :`Pay Now $ ${programdetails?.enrollment_fees}`}
+                          btnCategory={programdetails?.mentee_join_status === "program_join_payment_pending" ? "secondary" : "primary"}
+                          onClick={() => {
+                            if (programdetails?.id) {
+                              setProgramDetailsId(programdetails?.id);
+                              navigate("/payment-checkout");
+                            }
+                          }}
+                          disabled={programdetails?.mentee_join_status === "program_join_payment_pending"}
+                        />
+                        {
+                          programdetails?.mentee_join_status === "program_join_payment_pending" && <p className="text-font-error-main text-[14px] font-semibold mt-2">Please Contact Administrator</p>
+                        }
+                      </div>
+                    )}
 
                   <ProgramActions
                     role={role}
@@ -2194,8 +2272,8 @@ useEffect(() => {
                     }}
                     className='px-6 pt-6 pb-3'
                   >
-                    <ul className='flex flex-col gap-3'>
-                      {role !== 'admin' && (
+                    <ul className="flex flex-col gap-3">
+                      {/* {role !== "admin" && (
                         <li
                           className='flex justify-between text-[12px]'
                           style={{
@@ -2214,7 +2292,7 @@ useEffect(() => {
                             {rating}
                           </span>
                         </li>
-                      )}
+                      )} */}
                       <li
                         className='flex justify-between text-[12px]'
                         style={{
@@ -2255,8 +2333,8 @@ useEffect(() => {
                         </li>
                       ) : (
                         <>
-                          <li
-                            className='flex justify-between text-[12px]'
+                          {/* <li
+                            className="flex justify-between text-[12px]"
                             style={{
                               borderBottom: '1px solid rgba(217, 217, 217, 1)',
                               paddingBottom: '10px',
@@ -2265,7 +2343,7 @@ useEffect(() => {
                           >
                             <span>Session</span>
                             <span>{programdetails.session_count}</span>
-                          </li>
+                          </li> */}
 
                           <li
                             className='flex justify-between text-[12px]'
@@ -2275,12 +2353,14 @@ useEffect(() => {
                               paddingTop: '14px',
                             }}
                           >
-                            <span>Start Date & End Date</span>
-                            <span>{`${moment(programdetails?.start_date).format(
-                              'Do MMMM YYYY'
-                            )} - ${moment(programdetails?.end_date).format(
-                              'Do MMMM YYYY'
-                            )}`}</span>
+                            <span>Start Date</span>
+                            <span>
+                              {programdetails?.start_date
+                                ? moment(programdetails?.start_date).format(
+                                    "MM-DD-YYYY"
+                                  )
+                                : "-"}
+                            </span>
                           </li>
                           <li
                             className='flex justify-between text-[12px]'
@@ -2290,7 +2370,62 @@ useEffect(() => {
                               paddingTop: '14px',
                             }}
                           >
-                            {' '}
+                            <span>End Date</span>
+                            <span>
+                              {programdetails?.end_date
+                                ? moment(programdetails?.end_date).format(
+                                    "MM-DD-YYYY"
+                                  )
+                                : "-"}
+                            </span>
+                          </li>
+
+                          {/* time */}
+
+                          <li
+                            className="flex justify-between text-[12px]"
+                            style={{
+                              borderBottom: "1px solid rgba(217, 217, 217, 1)",
+                              paddingBottom: "10px",
+                              paddingTop: "14px",
+                            }}
+                          >
+                            <span>Start Time</span>
+                            <span>
+                              {programdetails?.start_date
+                                ? moment(programdetails?.start_date).format(
+                                    "hh:mm A"
+                                  )
+                                : "-"}
+                            </span>
+                          </li>
+                          <li
+                            className="flex justify-between text-[12px]"
+                            style={{
+                              borderBottom: "1px solid rgba(217, 217, 217, 1)",
+                              paddingBottom: "10px",
+                              paddingTop: "14px",
+                            }}
+                          >
+                            <span>End Time</span>
+                            <span>
+                              {programdetails?.end_date
+                                ? moment(programdetails?.end_date).format(
+                                    "hh:mm A"
+                                  )
+                                : "-"}
+                            </span>
+                          </li>
+
+                          <li
+                            className="flex justify-between text-[12px]"
+                            style={{
+                              borderBottom: "1px solid rgba(217, 217, 217, 1)",
+                              paddingBottom: "10px",
+                              paddingTop: "14px",
+                            }}
+                          >
+                            {" "}
                             <span>Duration</span>
                             <span>
                               {programdetails.duration} {' days'}
@@ -2324,11 +2459,13 @@ useEffect(() => {
                                 paddingTop: '14px',
                               }}
                             >
-                              <span>Enrollement Fees</span>
-                              <span>{programdetails?.enrollment_fees}</span>
+                              <span>Fees</span>
+                              <span className="text-[#1D5BBF]">
+                                $ {programdetails?.enrollment_fees}
+                              </span>
                             </li>
                           )}
-                          {role === 'mentor' && (
+                          {(role === "mentor" || role === "admin") && (
                             <li
                               className='flex justify-between text-[12px]'
                               style={{ paddingTop: '14px' }}
@@ -2375,23 +2512,7 @@ useEffect(() => {
                           </Elements>
                         )}
                       </li> */}
-                    </ul>
-                    {role === 'mentee' && (
-                      <div className='text-end mt-3'>
-                        <Button
-                          btnType='button'
-                          btnCls='w-[120px]'
-                          btnName={'Pay'}
-                          btnCategory='primary'
-                          onClick={() => {
-                            if (programdetails?.id) {
-                              setProgramDetailsId(programdetails?.id);
-                              navigate('/payment-checkout');
-                            }
-                          }}
-                        />
-                      </div>
-                    )}
+                    </ul>                    
                   </div>
                 </div>
               </div>
@@ -2628,12 +2749,12 @@ useEffect(() => {
                           </div>
                         </div>
                       )}
-                    <div className='learning'>
-                      <div className='font-semibold pb-3'>
+                    {/* <div className="learning">
+                      <div className="font-semibold pb-3">
                         What you'll learn
                       </div>
-                      {programdetails.about_program}
-                    </div>
+                      {programdetails?.benefits || '-'}
+                    </div> */}
                     {programdetails?.skills?.length ? (
                       <div className='skills pt-8'>
                         <div className='font-semibold pb-5'>
@@ -2750,44 +2871,52 @@ useEffect(() => {
                       {/* <div className='flex justify-end'>
                                                     <button className='py-2 px-6 mb-10' style={{ color: 'rgba(29, 91, 191, 1)', border: '1px dotted rgba(29, 91, 191, 1)', borderRadius: '3px' }}>Request Testimonials</button>
                                                 </div> */}
-                      <div className='grid grid-cols-3 gap-8'>
-                        <div
-                          className='pt-16 pb-2 px-7 leading-5 relative'
-                          style={{ background: 'rgba(248, 249, 250, 1)' }}
-                        >
-                          <img
-                            src={QuoteIcon}
-                            className='absolute top-[-16px]'
-                            alt='QuoteIcon'
-                          />
-                          <div className='relative'>
-                            <p className='pb-7'>
-                              {programdetails.testimonial_types}
-                            </p>
-                            <hr
-                              className='absolute'
-                              style={{ width: '496px', left: '-15px' }}
-                            />
-                          </div>
-
-                          <div className='flex gap-3 py-5'>
-                            <img
-                              src={UserImage}
-                              alt='user'
+                      <div className="grid grid-cols-3 gap-8">
+                        {programdetails?.testimonial_content?.map((e) => {
+                          return (
+                            <div
+                              className="pt-16 pb-2 px-7 leading-5 relative"
                               style={{
-                                borderRadius: '50%',
-                                width: '38px',
-                                height: '35px',
+                                background: "rgba(248, 249, 250, 1)",
                               }}
-                            />
-                            <div className='flex flex-col'>
-                              <span style={{ color: 'rgba(0, 174, 189, 1)' }}>
-                                Alexander Johnson
-                              </span>
-                              <span>Mentor</span>
+                            >
+                              <img
+                                src={e?.profile_image ?? QuoteIcon}
+                                className="absolute top-[-16px]"
+                                alt="QuoteIcon"
+                              />
+                              <div className="relative">
+                                <p className="pb-7">{e?.comments ?? "-"}</p>
+                                <hr
+                                  className="absolute"
+                                  style={{ width: "100%" }}
+                                />
+                              </div>
+
+                              <div className="flex gap-3 py-5">
+                                <img
+                                  src={UserImage}
+                                  alt="user"
+                                  style={{
+                                    borderRadius: "50%",
+                                    width: "38px",
+                                    height: "35px",
+                                  }}
+                                />
+                                <div className="flex flex-col">
+                                  <span
+                                    style={{
+                                      color: "rgba(0, 174, 189, 1)",
+                                    }}
+                                  >
+                                    {e?.name}
+                                  </span>
+                                  <span className="capitalize">{e?.role}</span>
+                                </div>
+                              </div>
                             </div>
-                          </div>
-                        </div>
+                          );
+                        })}
                       </div>
                     </div>
                   </div>

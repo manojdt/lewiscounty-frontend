@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getProgramDetails } from '../../../services/userprograms';
 import { Backdrop, CircularProgress } from '@mui/material';
 import { dateFormatRever } from '../../../utils';
+import moment from 'moment';
 
 export default function ProgramCompletion() {
     const navigate = useNavigate()
@@ -128,44 +129,47 @@ export default function ProgramCompletion() {
                                 <div className="relative ">
                                     <table className="w-[800px] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                         <tbody style={{ border: '1px solid rgba(29, 91, 191, 1)' }}>
-                                            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                                <th scope="row" style={{ border: '1px solid rgba(29, 91, 191, 1)' }} className="px-6 py-4 font-medium whitespace-nowrap ">
+                                            <tr className="bg-white border-b">
+                                                <th scope="row" style={{ border: '1px solid rgba(29, 91, 191, 1)' }} className="px-6 py-4 font-medium whitespace-nowrap text-font-secondary-black">
                                                     Start Date | End Date
                                                 </th>
                                                 <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
-                                                    {`${dateFormatRever(completedProgram?.start_date)}`} | {`${dateFormatRever(completedProgram?.end_date)}`}
+                                                    {completedProgram?.start_date ? `${moment(completedProgram?.start_date).format("MM-DD-YYYY")}` : "-"} | {completedProgram?.end_date ? `${moment(completedProgram?.end_date).format("MM-DD-YYYY")}`: "-"}
                                                 </td>
                                             </tr>
-                                            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                                <th style={{ border: '1px solid rgba(29, 91, 191, 1)' }} scope="row" className="px-6 py-4 font-medium  whitespace-nowrap ">
+                                            <tr className="bg-white border-b">
+                                                <th style={{ border: '1px solid rgba(29, 91, 191, 1)' }} scope="row" className="px-6 py-4 font-medium  whitespace-nowrap text-font-secondary-black">
                                                     Durations
                                                 </th>
                                                 <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
                                                     {completedProgram.duration} {' Days'}
                                                 </td>
                                             </tr>
-                                            <tr className="bg-white border-b dark:bg-gray-800 ">
-                                                <th style={{ border: '1px solid rgba(29, 91, 191, 1)' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
+                                            <tr className="bg-white border-b ">
+                                                <th style={{ border: '1px solid rgba(29, 91, 191, 1)' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap text-font-secondary-black">
                                                     Attended Mentees
                                                 </th>
                                                 <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
                                                     {completedProgram?.participated_mentees_count}
                                                 </td>
                                             </tr>
-                                            <tr className="bg-white border-b  dark:bg-gray-800">
-                                                <th style={{ border: '1px solid rgba(29, 91, 191, 1)' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
-                                                    Location
-                                                </th>
-                                                <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
-                                                    {`${completedProgram?.city_details?.name}, ${completedProgram?.state_details?.abbreviation}`}
-                                                </td>
-                                            </tr>
-                                            <tr className="bg-white border-b dark:bg-gray-800">
-                                                <th style={{ border: '1px solid rgba(29, 91, 191, 1)' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
+                                            {
+                                                completedProgram?.program_mode !== "virtual_meeting" &&
+                                                <tr className="bg-white border-b ">
+                                                    <th style={{ border: '1px solid rgba(29, 91, 191, 1)' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap text-font-secondary-black">
+                                                        Location
+                                                    </th>
+                                                    <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
+                                                        {`${completedProgram?.city_details?.name}, ${completedProgram?.state_details?.abbreviation}`}
+                                                    </td>
+                                                </tr>
+                                            }
+                                            <tr className="bg-white border-b">
+                                                <th style={{ border: '1px solid rgba(29, 91, 191, 1)' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap text-font-secondary-black">
                                                     Program status
                                                 </th>
                                                 <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
-                                                    Offline
+                                                    {completedProgram?.program_mode === "virtual_meeting" ? "Online" : "Offline"}
                                                 </td>
                                             </tr>
                                         </tbody>

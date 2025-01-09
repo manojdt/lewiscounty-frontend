@@ -104,8 +104,8 @@ const HistoryNotes = () => {
               className="grid items-start grid-cols-3 gap-4 px-4 text-sm text-gray-700 min-h-32"
             >
               <div className="flex flex-col items-start justify-start h-full py-4 text-left w-fit">
-                <div>Date: {moment(item?.created_at).format("MM/DD/YYYY")}</div>
-                <div>Time: {moment(item?.created_at).format("h:mm A")}</div>
+                <div>Date: {item?.post_date ? moment(item?.post_date).format("MM-DD-YYYY") : ""}</div>
+                <div>Time: {item?.post_time ? moment(new Date(`${item?.post_date} ${item?.post_time}`)).format("h:mm A") : ""}</div>
               </div>
 
               <div className={`text-center relative flex h-full w-full`}>
