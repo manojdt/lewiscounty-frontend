@@ -73,24 +73,31 @@ import {
   useAcceptProgramMutation,
   useGetSpecificProgramDetailsQuery,
   useLaunchProgramMutation,
-} from "../../../features/program/programApi.services";
-import SubprogramsDataGrid from "./SubProgramTable";
-import ProgramActions from "./ProgramActions";
-import { toast } from "react-toastify";
-import SkillsSet from "../../SkillsSet";
-import { CancelPopup } from "../../Mentor/Task/cancelPopup";
-import SuccessGradientMessage from "../../success-gradient-message";
-import ProgramReasons from "./ProgramReasons";
-import { CustomFormFields } from "../../../shared/CustomFormFields/CustomFormFields";
-import ColorLocation from "../../../assets/icons/colorLocation.svg";
-import Accordian from "../../../shared/Accordian";
-import moment from "moment";
-import ProgramHistoryIcon from "../../../assets/icons/historyIcon.svg";
-import RescheduleIcon from "../../../assets/images/reschedule1x.png";
-import Breadcrumbs from "../../Breadcrumbs/Breadcrumbs";
-import { program_details, request_newProgramRequest, request_programCancel, request_programMenteeCancel, request_programReschedule, requestPageBreadcrumbs } from "../../Breadcrumbs/BreadcrumbsCommonData";
-import EditIcon from "../../../assets/icons/editIcon.svg"
-import PaidTickIcon from "../../../assets/icons/paidTickIcon.svg"
+} from '../../../features/program/programApi.services';
+import SubprogramsDataGrid from './SubProgramTable';
+import ProgramActions from './ProgramActions';
+import { toast } from 'react-toastify';
+import SkillsSet from '../../SkillsSet';
+import { CancelPopup } from '../../Mentor/Task/cancelPopup';
+import SuccessGradientMessage from '../../success-gradient-message';
+import ProgramReasons from './ProgramReasons';
+import { CustomFormFields } from '../../../shared/CustomFormFields/CustomFormFields';
+import ColorLocation from '../../../assets/icons/colorLocation.svg';
+import Accordian from '../../../shared/Accordian';
+import moment from 'moment';
+import ProgramHistoryIcon from '../../../assets/icons/historyIcon.svg';
+import RescheduleIcon from '../../../assets/images/reschedule1x.png';
+import Breadcrumbs from '../../Breadcrumbs/Breadcrumbs';
+import {
+  program_details,
+  request_newProgramRequest,
+  request_programCancel,
+  request_programMenteeCancel,
+  request_programReschedule,
+  requestPageBreadcrumbs,
+} from '../../Breadcrumbs/BreadcrumbsCommonData';
+import EditIcon from '../../../assets/icons/editIcon.svg';
+import PaidTickIcon from '../../../assets/icons/paidTickIcon.svg';
 
 export default function ProgramDetails({ setProgramDetailsId }) {
   const dateInfo = todatDateInfo();
@@ -103,10 +110,10 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   const navigate = useNavigate();
   const [acceptProgram, { isSuccess: isAccepted, reset: resetProgramAccept }] =
     useAcceptProgramMutation();
-  const requestId = searchParams.get("request_id") || "";
-  const requestStatusParams = searchParams.get("status") || "";
-  const program_create_type = searchParams.get("program_create_type") || "";
-  const breadcrumbsType = searchParams.get("breadcrumbsType") || "";
+  const requestId = searchParams.get('request_id') || '';
+  const requestStatusParams = searchParams.get('status') || '';
+  const program_create_type = searchParams.get('program_create_type') || '';
+  const breadcrumbsType = searchParams.get('breadcrumbsType') || '';
   const userdetails = useSelector((state) => state.userInfo);
   const role = userdetails.data.role || '';
   const reqRole = requestId && userdetails.data.role === 'admin';
@@ -191,11 +198,12 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     //   name: "Program Outcomes",
     //   key: "program_outcomes",
     // },
-    ((role !== "admin" && !programdetails?.admin_assign_program) &&  {
-      name: 'Program Testimonials',
-      key: 'program_testimonials',
-    }),
-  ].filter(Boolean)
+    role !== 'admin' &&
+      !programdetails?.admin_assign_program && {
+        name: 'Program Testimonials',
+        key: 'program_testimonials',
+      },
+  ].filter(Boolean);
 
   const reqStatus = {
     approved: 'Approved',
@@ -254,7 +262,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       bool: false,
       activity: false,
     });
-    setCancelPopup(false)
+    setCancelPopup(false);
   };
 
   const handleComplete = (programId) => {
@@ -473,47 +481,49 @@ export default function ProgramDetails({ setProgramDetailsId }) {
         setMoreMenuModal({ ...moreMenuModal, reschedule: false, cancel: true });
         handleClose();
         break;
-      case "discussion":
+      case 'discussion':
         break;
       default:
         break;
     }
   };
   const handleBreadcrumbs = (key) => {
-    const program_detailsData=program_details(state?.from)
-    const program_New=request_newProgramRequest(programdetails?.program_name)
-    const program_re=request_programReschedule(programdetails?.program_name)
-    const program_cancel=request_programCancel(programdetails?.program_name)
-    const program_mentee_cancel=request_programMenteeCancel(programdetails?.program_name)
+    const program_detailsData = program_details(state?.from);
+    const program_New = request_newProgramRequest(programdetails?.program_name);
+    const program_re = request_programReschedule(programdetails?.program_name);
+    const program_cancel = request_programCancel(programdetails?.program_name);
+    const program_mentee_cancel = request_programMenteeCancel(
+      programdetails?.program_name
+    );
     switch (key) {
-      case "program":
-        setBreadcrumbsArray(program_detailsData)
+      case 'program':
+        setBreadcrumbsArray(program_detailsData);
         break;
       case requestPageBreadcrumbs.program_new:
-        setBreadcrumbsArray(program_New)
+        setBreadcrumbsArray(program_New);
         break;
-        case requestPageBreadcrumbs.program_reschedule:
-        setBreadcrumbsArray(program_re)
+      case requestPageBreadcrumbs.program_reschedule:
+        setBreadcrumbsArray(program_re);
         break;
-        case requestPageBreadcrumbs.program_cancel:
-        setBreadcrumbsArray(program_cancel)
+      case requestPageBreadcrumbs.program_cancel:
+        setBreadcrumbsArray(program_cancel);
         break;
-        case requestPageBreadcrumbs.program_mentee_cancel:
-        setBreadcrumbsArray(program_mentee_cancel)
+      case requestPageBreadcrumbs.program_mentee_cancel:
+        setBreadcrumbsArray(program_mentee_cancel);
         break;
-      case "discussion":
+      case 'discussion':
         break;
       default:
         break;
     }
   };
-useEffect(() => {
- if(breadcrumbsType&&programdetails?.program_name){
-  handleBreadcrumbs(breadcrumbsType)
-}else{
-   handleBreadcrumbs("program")
- }
-}, [breadcrumbsType,programdetails])
+  useEffect(() => {
+    if (breadcrumbsType && programdetails?.program_name) {
+      handleBreadcrumbs(breadcrumbsType);
+    } else {
+      handleBreadcrumbs('program');
+    }
+  }, [breadcrumbsType, programdetails]);
 
   const handleMoreMenuClosePopup = () => {
     setMoreMenuModal({ share: false, reschedule: false, cancel: false });
@@ -807,7 +817,7 @@ useEffect(() => {
       label: 'Date',
       isRequired: true,
       col: 4,
-      key: "date",
+      key: 'date',
       minDate: programdetails?.start_date,
       maxDate: programdetails?.end_date,
     },
@@ -913,26 +923,29 @@ useEffect(() => {
     }
   };
 
-// payment status start
-  const start_date = moment(programdetails?.start_date); 
-  const current_date = moment(); 
-  const daysDifference = start_date.diff(current_date, 'days'); 
+  // payment status start
+  const start_date = moment(programdetails?.start_date);
+  const current_date = moment();
+  const daysDifference = start_date.diff(current_date, 'days');
 
   let statusMessage;
 
   if (daysDifference > 3) {
     statusMessage = `${daysDifference} more days left`;
   } else if (daysDifference === 0) {
-    statusMessage = "Program is started today!";
+    statusMessage = 'Program is started today!';
   } else if (daysDifference < 0) {
     const absDifference = Math.abs(daysDifference);
-    statusMessage = `Program started ${absDifference} day${absDifference > 1 ? 's' : ''} ago`;
+    statusMessage = `Program started ${absDifference} day${
+      absDifference > 1 ? 's' : ''
+    } ago`;
   } else {
-    statusMessage = `${daysDifference} day${daysDifference > 1 ? 's' : ''} left for the program to start`;
+    statusMessage = `${daysDifference} day${
+      daysDifference > 1 ? 's' : ''
+    } left for the program to start`;
   }
 
   // payment status end
-
 
   return (
     <div className='px-9 my-6 grid'>
@@ -1736,7 +1749,7 @@ useEffect(() => {
               className='flex justify-between px-7 pt-6 pb-5 mx-2 border-b-2'
               aria-label='Breadcrumb'
             >
-              <Breadcrumbs items={breadcrumbsArray}/>
+              <Breadcrumbs items={breadcrumbsArray} />
               {/* <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
                 <li className="inline-flex items-center">
                   <p
@@ -1774,197 +1787,204 @@ useEffect(() => {
                   </div>
                 </li>
               </ol> */}
-                {searchParams.get('type') !== 'program_new' && (
-                <>
-              {(role === "mentor" ||
-                role === "admin" ||
-                (role === "mentee" &&
-                  (programdetails.status === programActionStatus.inprogress ||
-                    programdetails.mentee_join_status ===
-                      programActionStatus.program_join_request_accepted))) && (
-                <>
-                  <div className="cursor-pointer" onClick={handleClick}>
-                    <img src={MoreIcon} alt="MoreIcon" />
-                  </div>
-                  <Menu
-                    id="basic-menu"
-                    anchorEl={anchorEl}
-                    open={open}
-                    onClose={handleClose}
-                    MenuListProps={{
-                      "aria-labelledby": "basic-button",
-                    }}
-                  >
-                    {(role === "mentor" || role === "admin") && (
-                      <>
-                      {/* programdetails.participated_mentees_count */}
-                      <MenuItem
-                          onClick={() => handleMenu("share")}
-                          className="!text-[12px]"
-                        >
-                          <img
-                            src={ShareIcon}
-                            alt="ShareIcon"
-                            className="pr-3 w-[25px]"
-                          />
-                          Share
-                        </MenuItem>
-                        {programdetails.participated_mentees_count === 0 &&  <MenuItem
-                          onClick={() => handleMenu("share")}
-                          className="!text-[12px]"
-                        >
-                          <img
-                            src={EditIcon}
-                            alt="EditIcon"
-                            className="pr-3 w-[25px]"
-                          />
-                          Edit
-                        </MenuItem>}
-                        {
-                          !requestStatusParams &&
-                            ![
-                              "yettoapprove",
-                              "cancelled",
-                              "new_program_request_rejected",
-                              "completed",
-                            ].includes(programdetails?.status) &&
-                            !reqRole &&
-                            !programdetails.hasOwnProperty(
-                              "admin_assign_program"
-                            ) && (
-                              // role !== 'admin' && (
-                              <MenuItem
-                                onClick={() => handleMenu("reschedule")}
-                                className="!text-[12px]"
-                              >
-                                <img
-                                  src={RescheduleIcon}
-                                  alt="RescheduleIcon"
-                                  className="pr-3 w-[25px]"
-                                />
-                                Reschedule
-                              </MenuItem>
-                            )
-                          // )
-                        }
 
-                            {
-                              !requestStatusParams &&
-                                ![
-                                  'yettoapprove',
-                                  'cancelled',
-                                  'new_program_request_rejected',
-                                  'completed',
-                                ].includes(programdetails?.status) &&
-                                !reqRole && (
-                                  // role !== 'admin' && (
-                                  <MenuItem
-                                    onClick={() => handleMenu('cancel')}
-                                    className='!text-[12px]'
-                                  >
-                                    <img
-                                      src={AbortIcon}
-                                      alt='Cancel'
-                                      className='pr-3 w-[25px]'
-                                    />
-                                    Cancel
-                                  </MenuItem>
-                                )
-                              // )
-                            }
-                            {(programdetails.status ===
-                              programActionStatus.inprogress ||
-                              programdetails.status ===
-                                programActionStatus.assigned) &&
+              <>
+                {(role === 'mentor' ||
+                  (role === 'admin' &&
+                    [
+                      'program_new',
+                      'program_join',
+                      'program_reschedule',
+                      'program_cancel',
+                    ].includes(searchParams.get('type')) === false) ||
+                  (role === 'mentee' &&
+                    (programdetails.status === programActionStatus.inprogress ||
+                      programdetails.mentee_join_status ===
+                        programActionStatus.program_join_request_accepted))) && (
+                  <>
+                    <div className='cursor-pointer' onClick={handleClick}>
+                      <img src={MoreIcon} alt='MoreIcon' />
+                    </div>
+                    <Menu
+                      id='basic-menu'
+                      anchorEl={anchorEl}
+                      open={open}
+                      onClose={handleClose}
+                      MenuListProps={{
+                        'aria-labelledby': 'basic-button',
+                      }}
+                    >
+                      {(role === 'mentor' || role === 'admin') && (
+                        <>
+                          {/* programdetails.participated_mentees_count */}
+                          <MenuItem
+                            onClick={() => handleMenu('share')}
+                            className='!text-[12px]'
+                          >
+                            <img
+                              src={ShareIcon}
+                              alt='ShareIcon'
+                              className='pr-3 w-[25px]'
+                            />
+                            Share
+                          </MenuItem>
+                          {programdetails.participated_mentees_count === 0 && (
+                            <MenuItem
+                              onClick={() => handleMenu('share')}
+                              className='!text-[12px]'
+                            >
+                              <img
+                                src={EditIcon}
+                                alt='EditIcon'
+                                className='pr-3 w-[25px]'
+                              />
+                              Edit
+                            </MenuItem>
+                          )}
+                          {
+                            !requestStatusParams &&
+                              ![
+                                'yettoapprove',
+                                'cancelled',
+                                'new_program_request_rejected',
+                                'completed',
+                              ].includes(programdetails?.status) &&
+                              !reqRole &&
+                              !programdetails.hasOwnProperty(
+                                'admin_assign_program'
+                              ) && (
+                                // role !== 'admin' && (
+                                <MenuItem
+                                  onClick={() => handleMenu('reschedule')}
+                                  className='!text-[12px]'
+                                >
+                                  <img
+                                    src={RescheduleIcon}
+                                    alt='RescheduleIcon'
+                                    className='pr-3 w-[25px]'
+                                  />
+                                  Reschedule
+                                </MenuItem>
+                              )
+                            // )
+                          }
+
+                          {
+                            !requestStatusParams &&
+                              ![
+                                'yettoapprove',
+                                'cancelled',
+                                'new_program_request_rejected',
+                                'completed',
+                              ].includes(programdetails?.status) &&
                               !reqRole && (
-                                <>
+                                // role !== 'admin' && (
+                                <MenuItem
+                                  onClick={() => handleMenu('cancel')}
+                                  className='!text-[12px]'
+                                >
+                                  <img
+                                    src={AbortIcon}
+                                    alt='Cancel'
+                                    className='pr-3 w-[25px]'
+                                  />
+                                  Cancel
+                                </MenuItem>
+                              )
+                            // )
+                          }
+                          {(programdetails.status ===
+                            programActionStatus.inprogress ||
+                            programdetails.status ===
+                              programActionStatus.assigned) &&
+                            !reqRole && (
+                              <>
+                                <MenuItem
+                                  onClick={() => handleOpenConfirmPopup()}
+                                  className='!text-[12px]'
+                                >
+                                  <img
+                                    src={CompleteIcon}
+                                    alt='AbortIcon'
+                                    className='pr-3 w-[25px]'
+                                  />
+                                  Complete
+                                </MenuItem>
+                                <MenuItem
+                                  onClick={() => handleNewTaskFromAdmin()}
+                                  className='!text-[12px]'
+                                >
+                                  <img
+                                    src={PlusCircle}
+                                    alt='PlusCircle'
+                                    className='pr-3 w-[25px]'
+                                  />
+                                  Assign Task to Mentees
+                                </MenuItem>
+                                {[
+                                  'cancelled',
+                                  'inprogress',
+                                  'completed',
+                                ].includes(programdetails?.status) && (
                                   <MenuItem
-                                    onClick={() => handleOpenConfirmPopup()}
+                                    onClick={() =>
+                                      navigate(`/historyNotes/${params.id}`)
+                                    }
                                     className='!text-[12px]'
                                   >
                                     <img
-                                      src={CompleteIcon}
-                                      alt='AbortIcon'
+                                      src={ProgramHistoryIcon}
+                                      alt='ProgramHistoryIcon'
                                       className='pr-3 w-[25px]'
                                     />
-                                    Complete
+                                    Program Notes History
                                   </MenuItem>
-                                  <MenuItem
-                                    onClick={() => handleNewTaskFromAdmin()}
-                                    className='!text-[12px]'
-                                  >
-                                    <img
-                                      src={PlusCircle}
-                                      alt='PlusCircle'
-                                      className='pr-3 w-[25px]'
-                                    />
-                                    Assign Task to Mentees
-                                  </MenuItem>
-                                  {[
-                                    'cancelled',
-                                    'inprogress',
-                                    'completed',
-                                  ].includes(programdetails?.status) && (
-                                    <MenuItem
-                                      onClick={() =>
-                                        navigate(`/historyNotes/${params.id}`)
-                                      }
-                                      className='!text-[12px]'
-                                    >
-                                      <img
-                                        src={ProgramHistoryIcon}
-                                        alt='ProgramHistoryIcon'
-                                        className='pr-3 w-[25px]'
-                                      />
-                                      Program Notes History
-                                    </MenuItem>
-                                  )}
-                                </>
-                              )}
-                          </>
-                        )}
-                        {role === 'mentee' && (
-                          <>
-                            {(programdetails.status ===
-                              programActionStatus.inprogress ||
-                              programdetails.mentee_join_status ===
-                                programActionStatus.program_join_request_accepted) && (
-                              <MenuItem
-                                onClick={() => handleMenu('cancel')}
-                                className='!text-[12px]'
-                              >
-                                <img
-                                  src={AbortIcon}
-                                  alt='AbortIcon'
-                                  className='pr-3 w-[25px]'
-                                />
-                                Cancel
-                              </MenuItem>
+                                )}
+                              </>
                             )}
-                            {['cancelled', 'inprogress', 'completed'].includes(
-                              programdetails?.status
-                            ) && (
-                              <MenuItem
-                                onClick={() =>
-                                  navigate(`/historyNotes/${params.id}`)
-                                }
-                                className='!text-[12px]'
-                              >
-                                <img
-                                  src={ProgramHistoryIcon}
-                                  alt='ProgramHistoryIcon'
-                                  className='pr-3 w-[25px]'
-                                />
-                                Program Notes History
-                              </MenuItem>
-                            )}
-                          </>
-                        )}
-                      </Menu>
-                    </>
-                  )}
-                </>
-              )}
+                        </>
+                      )}
+                      {role === 'mentee' && (
+                        <>
+                          {(programdetails.status ===
+                            programActionStatus.inprogress ||
+                            programdetails.mentee_join_status ===
+                              programActionStatus.program_join_request_accepted) && (
+                            <MenuItem
+                              onClick={() => handleMenu('cancel')}
+                              className='!text-[12px]'
+                            >
+                              <img
+                                src={AbortIcon}
+                                alt='AbortIcon'
+                                className='pr-3 w-[25px]'
+                              />
+                              Cancel
+                            </MenuItem>
+                          )}
+                          {['cancelled', 'inprogress', 'completed'].includes(
+                            programdetails?.status
+                          ) && (
+                            <MenuItem
+                              onClick={() =>
+                                navigate(`/historyNotes/${params.id}`)
+                              }
+                              className='!text-[12px]'
+                            >
+                              <img
+                                src={ProgramHistoryIcon}
+                                alt='ProgramHistoryIcon'
+                                className='pr-3 w-[25px]'
+                              />
+                              Program Notes History
+                            </MenuItem>
+                          )}
+                        </>
+                      )}
+                    </Menu>
+                  </>
+                )}
+              </>
             </nav>
 
             <div className='content px-8'>
@@ -2024,7 +2044,7 @@ useEffect(() => {
                   {programdetails?.prerequisites && (
                     <div className='text-[12px] my-3'>
                       <span className='font-semibold text-background-primary-main'>
-                      Prerequisites:{' '}
+                        Prerequisites:{' '}
                       </span>
                       {programdetails.prerequisites}
                     </div>
@@ -2035,8 +2055,8 @@ useEffect(() => {
                       <img src={LocationIcon} alt='LocationIcon' />
                       <span className='text-[12px]'>
                         {/* {programdetails.venue} */}
-                        {programdetails?.program_mode === "virtual_meeting"
-                          ? "Online"
+                        {programdetails?.program_mode === 'virtual_meeting'
+                          ? 'Online'
                           : `${programdetails.city_details?.name}, ${programdetails.state_details?.abbreviation}`}
                       </span>
                     </div>
@@ -2052,50 +2072,50 @@ useEffect(() => {
                       </span>
                     </div>
                     <div
-                      style={{ borderRight: "1px solid rgba(24, 40, 61, 1)" }}
+                      style={{ borderRight: '1px solid rgba(24, 40, 61, 1)' }}
                     ></div>
-                    <div className="flex items-center gap-3 text-[12px]">
-                    {!profileLoading && (
-                      <img
-                        src={programdetails?.mentor_profile_image || UserImage}
-                        style={{
-                          borderRadius: '50%',
-                          width: '35px',
-                          height: '35px',
-                        }}
-                        alt='UserImage'
-                      />
-                    )}
+                    <div className='flex items-center gap-3 text-[12px]'>
+                      {!profileLoading && (
+                        <img
+                          src={
+                            programdetails?.mentor_profile_image || UserImage
+                          }
+                          style={{
+                            borderRadius: '50%',
+                            width: '35px',
+                            height: '35px',
+                          }}
+                          alt='UserImage'
+                        />
+                      )}
 
-                    <span>Instructor :</span>
-                    {role !== 'mentor' ? (
-                      <span
-                        style={{
-                          color: 'rgba(29, 91, 191, 1)',
-                          textDecoration: 'underline',
-                          cursor: 'pointer',
-                        }}
-                        onClick={() => handleInstructor(programdetails)}
-                      >
-                        {programdetails?.mentor_name}
-                      </span>
-                    ) : (
-                      <span style={{ color: 'rgba(29, 91, 191, 1)' }}>
-                        {programdetails?.mentor_name}
-                      </span>
-                    )}
+                      <span>Instructor :</span>
+                      {role !== 'mentor' ? (
+                        <span
+                          style={{
+                            color: 'rgba(29, 91, 191, 1)',
+                            textDecoration: 'underline',
+                            cursor: 'pointer',
+                          }}
+                          onClick={() => handleInstructor(programdetails)}
+                        >
+                          {programdetails?.mentor_name}
+                        </span>
+                      ) : (
+                        <span style={{ color: 'rgba(29, 91, 191, 1)' }}>
+                          {programdetails?.mentor_name}
+                        </span>
+                      )}
+                    </div>
                   </div>
-                  </div>
-
-                  
 
                   {Array.isArray(programdetails?.learning_materials) &&
                     programdetails?.learning_materials?.length > 0 && (
-                      <div className="py-10">
-                        <p className="text-[14px] font-normal mb-2">
+                      <div className='py-10'>
+                        <p className='text-[14px] font-normal mb-2'>
                           Our Learning Meterials
                         </p>
-                        <div className="flex items-center gap-x-3">
+                        <div className='flex items-center gap-x-3'>
                           {programdetails?.learning_materials.map(
                             (material) => (
                               <button
@@ -2110,119 +2130,123 @@ useEffect(() => {
                       </div>
                     )}
 
-                  <div className="flex gap-2">
-                    {programdetails?.group_chat_requirement &&<p
-                      onClick={() => navigate("/discussions")}
-                      className="text-[14px] font-semibold text-font-primary-main px-4 py-2 border border-dashed border-background-primary-main rounded-[3px] bg-background-primary-light cursor-pointer"
-                    >
-                      Group Discussions
-                    </p>}
-                    {programdetails?.individual_chat_requirement && <p
-                      onClick={() => navigate("/discussions")}
-                      className="text-[14px] font-semibold text-font-primary-main px-4 py-2 border border-dashed border-background-primary-main rounded-[3px] bg-background-primary-light cursor-pointer"
-                    >
-                      Individual Discussions
-                    </p>}
-                  </div>                  
+                  <div className='flex gap-2'>
+                    {programdetails?.group_chat_requirement && (
+                      <p
+                        onClick={() => navigate('/discussions')}
+                        className='text-[14px] font-semibold text-font-primary-main px-4 py-2 border border-dashed border-background-primary-main rounded-[3px] bg-background-primary-light cursor-pointer'
+                      >
+                        Group Discussions
+                      </p>
+                    )}
+                    {programdetails?.individual_chat_requirement && (
+                      <p
+                        onClick={() => navigate(`/discussions/${6}`)}
+                        className='text-[14px] font-semibold text-font-primary-main px-4 py-2 border border-dashed border-background-primary-main rounded-[3px] bg-background-primary-light cursor-pointer'
+                      >
+                        Individual Discussions
+                      </p>
+                    )}
+                  </div>
 
                   {/* Time Stamp */}
                   {(programdetails.status === programActionStatus.inprogress ||
                     programdetails.status === programActionStatus.paused ||
                     programdetails.status === programActionStatus.started) &&
-                  !programdetails.hasOwnProperty("sub_program") ? (
-                    <div className="flex flex-col mt-5">
-                      <p className="text-[12px] text-font-error-main">
+                  !programdetails.hasOwnProperty('sub_program') ? (
+                    <div className='flex flex-col mt-5'>
+                      <p className='text-[12px] text-font-error-main'>
                         Date Tracker
                       </p>
-                      <div className="flex gap-9 mb-4 mt-2">
-                        <div className="flex gap-2 items-center justify-center">
-                          <p className="flex flex-col gap-2 items-center justify-center">
+                      <div className='flex gap-9 mb-4 mt-2'>
+                        <div className='flex gap-2 items-center justify-center'>
+                          <p className='flex flex-col gap-2 items-center justify-center'>
                             <span
-                              className="px-2 py-1 text-[20px] w-[40px] flex justify-center items-center"
+                              className='px-2 py-1 text-[20px] w-[40px] flex justify-center items-center'
                               style={{
-                                background: "rgba(231, 241, 242, 1)",
-                                color: "rgba(0, 174, 189, 1)",
-                                borderRadius: "5px",
+                                background: 'rgba(231, 241, 242, 1)',
+                                color: 'rgba(0, 174, 189, 1)',
+                                borderRadius: '5px',
                                 fontWeight: 700,
                               }}
                             >
                               {dateInfo.month}
                             </span>
                             <span
-                              className="text-[12px]"
-                              style={{ color: "rgba(118, 118, 118, 1)" }}
+                              className='text-[12px]'
+                              style={{ color: 'rgba(118, 118, 118, 1)' }}
                             >
                               Month
                             </span>
                           </p>
-                          <p className="flex justify-center items-baseline pt-2 h-full w-full font-bold">
+                          <p className='flex justify-center items-baseline pt-2 h-full w-full font-bold'>
                             -
                           </p>
-                          <p className="flex flex-col gap-2 items-center justify-center">
+                          <p className='flex flex-col gap-2 items-center justify-center'>
                             <span
-                              className="px-2 py-1 text-[20px] w-[40px] flex justify-center items-center"
+                              className='px-2 py-1 text-[20px] w-[40px] flex justify-center items-center'
                               style={{
-                                background: "rgba(231, 241, 242, 1)",
-                                color: "rgba(0, 174, 189, 1)",
-                                borderRadius: "5px",
+                                background: 'rgba(231, 241, 242, 1)',
+                                color: 'rgba(0, 174, 189, 1)',
+                                borderRadius: '5px',
                                 fontWeight: 700,
                               }}
                             >
                               {dateInfo.date}
                             </span>
                             <span
-                              className="text-[12px]"
-                              style={{ color: "rgba(118, 118, 118, 1)" }}
+                              className='text-[12px]'
+                              style={{ color: 'rgba(118, 118, 118, 1)' }}
                             >
                               Day
                             </span>
                           </p>
-                          <p className="flex justify-center items-baseline pt-2 h-full w-full font-bold">
+                          <p className='flex justify-center items-baseline pt-2 h-full w-full font-bold'>
                             -
                           </p>
-                          <p className="flex flex-col gap-2 items-center justify-center">
+                          <p className='flex flex-col gap-2 items-center justify-center'>
                             <span
-                              className="px-2 py-1 text-[20px] w-[70px] flex justify-center items-center"
+                              className='px-2 py-1 text-[20px] w-[70px] flex justify-center items-center'
                               style={{
-                                background: "rgba(231, 241, 242, 1)",
-                                color: "rgba(0, 174, 189, 1)",
-                                borderRadius: "5px",
+                                background: 'rgba(231, 241, 242, 1)',
+                                color: 'rgba(0, 174, 189, 1)',
+                                borderRadius: '5px',
                                 fontWeight: 700,
                               }}
                             >
                               {dateInfo.year}
                             </span>
                             <span
-                              className="text-[12px]"
-                              style={{ color: "rgba(118, 118, 118, 1)" }}
+                              className='text-[12px]'
+                              style={{ color: 'rgba(118, 118, 118, 1)' }}
                             >
                               Year
                             </span>
                           </p>
                         </div>
                         <>
-                          {role === "mentor" && (
+                          {role === 'mentor' && (
                             <button
-                              className="py-3 px-10 text-white text-[14px] flex items-center w-[200px] justify-center"
-                              title="Pause"
+                              className='py-3 px-10 text-white text-[14px] flex items-center w-[200px] justify-center'
+                              title='Pause'
                               style={{
                                 color:
                                   programdetails.status !==
                                     programActionStatus.paused &&
                                   programdetails.status !==
                                     programActionStatus.assigned
-                                    ? "rgba(29, 91, 191, 1)"
-                                    : "#fff",
-                                borderRadius: "5px",
-                                border: "1px solid rgba(29, 91, 191, 1)",
-                                display: "none",
+                                    ? 'rgba(29, 91, 191, 1)'
+                                    : '#fff',
+                                borderRadius: '5px',
+                                border: '1px solid rgba(29, 91, 191, 1)',
+                                display: 'none',
                                 background:
                                   programdetails.status ===
                                     programActionStatus.paused ||
                                   programdetails.status ===
                                     programActionStatus.assigned
-                                    ? "linear-gradient(97.32deg, #1D5BBF -32.84%, #00AEBD 128.72%)"
-                                    : "transparent",
+                                    ? 'linear-gradient(97.32deg, #1D5BBF -32.84%, #00AEBD 128.72%)'
+                                    : 'transparent',
                               }}
                               onClick={() => handleJoinProgram()}
                             >
@@ -2236,15 +2260,15 @@ useEffect(() => {
                                 alt={
                                   programdetails.status !==
                                   programActionStatus.inprogress
-                                    ? "ResumeIcon"
-                                    : "PauseIcon"
+                                    ? 'ResumeIcon'
+                                    : 'PauseIcon'
                                 }
-                                className="pr-4"
+                                className='pr-4'
                               />
                               {programdetails.status ===
                               programActionStatus.inprogress
-                                ? "Pause"
-                                : "Start"}
+                                ? 'Pause'
+                                : 'Start'}
                             </button>
                           )}
                         </>
@@ -2252,30 +2276,58 @@ useEffect(() => {
                     </div>
                   ) : null}
 
-
                   {/* payment button section */}
 
-                  {(role === "mentee" && !programdetails?.is_sponsored && 
-                  (programdetails?.mentee_join_status === "program_join_payment_initiate" || 
-                  programdetails?.mentee_join_status === "program_join_payment_pending")) && (
-                      <div className="mt-3">
-                        {programdetails?.mentee_join_status === "program_join_payment_initiate" && <p className="text-font-error-main text-[14px] font-semibold mb-2">{statusMessage}</p>}
+                  {role === 'mentee' &&
+                    !programdetails?.is_sponsored &&
+                    (programdetails?.mentee_join_status ===
+                      'program_join_payment_initiate' ||
+                      programdetails?.mentee_join_status ===
+                        'program_join_payment_pending') && (
+                      <div className='mt-3'>
+                        {programdetails?.mentee_join_status ===
+                          'program_join_payment_initiate' && (
+                          <p className='text-font-error-main text-[14px] font-semibold mb-2'>
+                            {statusMessage}
+                          </p>
+                        )}
                         <Button
-                          btnType="button"
-                          btnCls={programdetails?.mentee_join_status === "program_join_payment_pending" ? "w-[200px] !bg-[#FFE3C2] !text-[#FF8A00] !border-none" : "w-[120px]"}
-                          btnName={programdetails?.mentee_join_status === "program_join_payment_pending" ? "Pending Payment" :`Pay Now $ ${programdetails?.enrollment_fees}`}
-                          btnCategory={programdetails?.mentee_join_status === "program_join_payment_pending" ? "secondary" : "primary"}
+                          btnType='button'
+                          btnCls={
+                            programdetails?.mentee_join_status ===
+                            'program_join_payment_pending'
+                              ? 'w-[200px] !bg-[#FFE3C2] !text-[#FF8A00] !border-none'
+                              : 'w-[120px]'
+                          }
+                          btnName={
+                            programdetails?.mentee_join_status ===
+                            'program_join_payment_pending'
+                              ? 'Pending Payment'
+                              : `Pay Now $ ${programdetails?.enrollment_fees}`
+                          }
+                          btnCategory={
+                            programdetails?.mentee_join_status ===
+                            'program_join_payment_pending'
+                              ? 'secondary'
+                              : 'primary'
+                          }
                           onClick={() => {
                             if (programdetails?.id) {
                               setProgramDetailsId(programdetails?.id);
-                              navigate("/payment-checkout");
+                              navigate('/payment-checkout');
                             }
                           }}
-                          disabled={programdetails?.mentee_join_status === "program_join_payment_pending"}
+                          disabled={
+                            programdetails?.mentee_join_status ===
+                            'program_join_payment_pending'
+                          }
                         />
-                        {
-                          programdetails?.mentee_join_status === "program_join_payment_pending" && <p className="text-font-error-main text-[14px] font-semibold mt-2">Please Contact Administrator</p>
-                        }
+                        {programdetails?.mentee_join_status ===
+                          'program_join_payment_pending' && (
+                          <p className='text-font-error-main text-[14px] font-semibold mt-2'>
+                            Please Contact Administrator
+                          </p>
+                        )}
                       </div>
                     )}
 
@@ -2307,7 +2359,7 @@ useEffect(() => {
                     }}
                     className='px-6 pt-6 pb-3'
                   >
-                    <ul className="flex flex-col gap-3">
+                    <ul className='flex flex-col gap-3'>
                       {/* {role !== "admin" && (
                         <li
                           className='flex justify-between text-[12px]'
@@ -2392,9 +2444,9 @@ useEffect(() => {
                             <span>
                               {programdetails?.start_date
                                 ? moment(programdetails?.start_date).format(
-                                    "MM-DD-YYYY"
+                                    'MM-DD-YYYY'
                                   )
-                                : "-"}
+                                : '-'}
                             </span>
                           </li>
                           <li
@@ -2409,58 +2461,58 @@ useEffect(() => {
                             <span>
                               {programdetails?.end_date
                                 ? moment(programdetails?.end_date).format(
-                                    "MM-DD-YYYY"
+                                    'MM-DD-YYYY'
                                   )
-                                : "-"}
+                                : '-'}
                             </span>
                           </li>
 
                           {/* time */}
 
                           <li
-                            className="flex justify-between text-[12px]"
+                            className='flex justify-between text-[12px]'
                             style={{
-                              borderBottom: "1px solid rgba(217, 217, 217, 1)",
-                              paddingBottom: "10px",
-                              paddingTop: "14px",
+                              borderBottom: '1px solid rgba(217, 217, 217, 1)',
+                              paddingBottom: '10px',
+                              paddingTop: '14px',
                             }}
                           >
                             <span>Start Time</span>
                             <span>
                               {programdetails?.start_date
                                 ? moment(programdetails?.start_date).format(
-                                    "hh:mm A"
+                                    'hh:mm A'
                                   )
-                                : "-"}
+                                : '-'}
                             </span>
                           </li>
                           <li
-                            className="flex justify-between text-[12px]"
+                            className='flex justify-between text-[12px]'
                             style={{
-                              borderBottom: "1px solid rgba(217, 217, 217, 1)",
-                              paddingBottom: "10px",
-                              paddingTop: "14px",
+                              borderBottom: '1px solid rgba(217, 217, 217, 1)',
+                              paddingBottom: '10px',
+                              paddingTop: '14px',
                             }}
                           >
                             <span>End Time</span>
                             <span>
                               {programdetails?.end_date
                                 ? moment(programdetails?.end_date).format(
-                                    "hh:mm A"
+                                    'hh:mm A'
                                   )
-                                : "-"}
+                                : '-'}
                             </span>
                           </li>
 
                           <li
-                            className="flex justify-between text-[12px]"
+                            className='flex justify-between text-[12px]'
                             style={{
-                              borderBottom: "1px solid rgba(217, 217, 217, 1)",
-                              paddingBottom: "10px",
-                              paddingTop: "14px",
+                              borderBottom: '1px solid rgba(217, 217, 217, 1)',
+                              paddingBottom: '10px',
+                              paddingTop: '14px',
                             }}
                           >
-                            {" "}
+                            {' '}
                             <span>Duration</span>
                             <span>
                               {programdetails.duration} {' days'}
@@ -2484,23 +2536,25 @@ useEffect(() => {
                               ).format("hh:mm A")}`}</span>
                             </span>
                           </li> */}
-                          {(!programdetails.is_sponsored && programdetails?.mentee_join_status !== "program_join_request_accepted") && (
-                            <li
-                              className='flex justify-between text-[12px]'
-                              style={{
-                                borderBottom:
-                                  '1px solid rgba(217, 217, 217, 1)',
-                                paddingBottom: '10px',
-                                paddingTop: '14px',
-                              }}
-                            >
-                              <span>Fees</span>
-                              <span className="text-[#1D5BBF]">
-                                $ {programdetails?.enrollment_fees}
-                              </span>
-                            </li>
-                          )}
-                          {(role === "mentor" || role === "admin") && (
+                          {!programdetails.is_sponsored &&
+                            programdetails?.mentee_join_status !==
+                              'program_join_request_accepted' && (
+                              <li
+                                className='flex justify-between text-[12px]'
+                                style={{
+                                  borderBottom:
+                                    '1px solid rgba(217, 217, 217, 1)',
+                                  paddingBottom: '10px',
+                                  paddingTop: '14px',
+                                }}
+                              >
+                                <span>Fees</span>
+                                <span className='text-[#1D5BBF]'>
+                                  $ {programdetails?.enrollment_fees}
+                                </span>
+                              </li>
+                            )}
+                          {(role === 'mentor' || role === 'admin') && (
                             <li
                               className='flex justify-between text-[12px]'
                               style={{ paddingTop: '14px' }}
@@ -2517,18 +2571,26 @@ useEffect(() => {
                               </span>
                             </li>
                           )}
-                          {programdetails?.mentee_join_status === "program_join_request_accepted" && <li
+                          {programdetails?.mentee_join_status ===
+                            'program_join_request_accepted' && (
+                            <li
                               className='flex justify-between text-[12px]'
                               style={{
                                 paddingBottom: '10px',
                                 paddingTop: '14px',
                               }}
                             >
-                              <span className='flex gap-2'>Paid <span><img src={PaidTickIcon} alt='' /></span></span>
-                              <span className="text-[#1D5BBF]">
+                              <span className='flex gap-2'>
+                                Paid{' '}
+                                <span>
+                                  <img src={PaidTickIcon} alt='' />
+                                </span>
+                              </span>
+                              <span className='text-[#1D5BBF]'>
                                 $ {programdetails?.enrollment_fees}
                               </span>
-                            </li>}
+                            </li>
+                          )}
                         </>
                       )}
 
@@ -2559,7 +2621,7 @@ useEffect(() => {
                           </Elements>
                         )}
                       </li> */}
-                    </ul>                    
+                    </ul>
                   </div>
                 </div>
               </div>
@@ -2826,15 +2888,18 @@ useEffect(() => {
                           </ul>
                         </div>
                       )}
-                    {(role !== "admin" && !programdetails?.admin_assign_program) && <div className='benefits py-3'>
-                      <div className='font-semibold pb-3'>Benefits</div>
-                      {programdetails.benefits}
-                      {/* <ul className='leading-9 list-disc ml-4'>
+                    {role !== 'admin' &&
+                      !programdetails?.admin_assign_program && (
+                        <div className='benefits py-3'>
+                          <div className='font-semibold pb-3'>Benefits</div>
+                          {programdetails.benefits}
+                          {/* <ul className='leading-9 list-disc ml-4'>
                                                     <li>Lorem Ipsum is simply dummy text of the printing and typesetting industry. </li>
                                                     <li>Lorem Ipsum is simply dummy text of the printing and typesetting industry. </li>
                                                     <li>Lorem Ipsum is simply dummy text of the printing and typesetting industry. </li>
                                                 </ul> */}
-                    </div>}
+                        </div>
+                      )}
                     <div className='program-certificate pt-8'>
                       <div className='font-semibold pb-3'>
                         Types of Certificates
@@ -2905,47 +2970,47 @@ useEffect(() => {
                       {/* <div className='flex justify-end'>
                                                     <button className='py-2 px-6 mb-10' style={{ color: 'rgba(29, 91, 191, 1)', border: '1px dotted rgba(29, 91, 191, 1)', borderRadius: '3px' }}>Request Testimonials</button>
                                                 </div> */}
-                      <div className="grid grid-cols-3 gap-8">
+                      <div className='grid grid-cols-3 gap-8'>
                         {programdetails?.testimonial_content?.map((e) => {
                           return (
                             <div
-                              className="pt-16 pb-2 px-7 leading-5 relative"
+                              className='pt-16 pb-2 px-7 leading-5 relative'
                               style={{
-                                background: "rgba(248, 249, 250, 1)",
+                                background: 'rgba(248, 249, 250, 1)',
                               }}
                             >
                               <img
                                 src={e?.profile_image ?? QuoteIcon}
-                                className="absolute top-[-16px]"
-                                alt="QuoteIcon"
+                                className='absolute top-[-16px]'
+                                alt='QuoteIcon'
                               />
-                              <div className="relative">
-                                <p className="pb-7">{e?.comments ?? "-"}</p>
+                              <div className='relative'>
+                                <p className='pb-7'>{e?.comments ?? '-'}</p>
                                 <hr
-                                  className="absolute"
-                                  style={{ width: "100%" }}
+                                  className='absolute'
+                                  style={{ width: '100%' }}
                                 />
                               </div>
 
-                              <div className="flex gap-3 py-5">
+                              <div className='flex gap-3 py-5'>
                                 <img
                                   src={UserImage}
-                                  alt="user"
+                                  alt='user'
                                   style={{
-                                    borderRadius: "50%",
-                                    width: "38px",
-                                    height: "35px",
+                                    borderRadius: '50%',
+                                    width: '38px',
+                                    height: '35px',
                                   }}
                                 />
-                                <div className="flex flex-col">
+                                <div className='flex flex-col'>
                                   <span
                                     style={{
-                                      color: "rgba(0, 174, 189, 1)",
+                                      color: 'rgba(0, 174, 189, 1)',
                                     }}
                                   >
                                     {e?.name}
                                   </span>
-                                  <span className="capitalize">{e?.role}</span>
+                                  <span className='capitalize'>{e?.role}</span>
                                 </div>
                               </div>
                             </div>
