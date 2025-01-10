@@ -2,7 +2,7 @@ import {
   useStripe,
   useElements,
   PaymentElement,
-} from '@stripe/react-stripe-js';
+} from "@stripe/react-stripe-js";
 
 const CheckoutForm = () => {
   const stripe = useStripe();
@@ -24,7 +24,7 @@ const CheckoutForm = () => {
       elements,
       confirmParams: {
         return_url:
-          'https://mentor-frontend.dataterrain-dev.net/payment-successfull',
+          "https://mentor-frontend.dataterrain-dev.net/payment-successfull",
       },
     });
 

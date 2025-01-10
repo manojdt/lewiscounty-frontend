@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { Routes, Route, Navigate, Outlet, useLocation } from "react-router-dom";
 import {
   ChangePassword,
   Dashboard,
@@ -9,107 +9,113 @@ import {
   Signup,
   VerifyOTP,
   Mentees,
-} from './component';
-import Layout from './component/Layout';
-import { useSelector, useDispatch } from 'react-redux';
-import { updateInfo } from './services/loginInfo';
-import { useEffect, useState } from 'react';
-import Programs from './component/Programs';
-import ProgramData from './component/ProgramData';
-import ProgramsData from './component/ProgramsData';
-import CreatePrograms from './component/Programs/CreateProgram';
-import UserGuard from './component/UserGuard';
-import ProgramDetails from './component/Programs/ProgramDetails';
-import ProgramTask from './component/Programs/ProgramDetails/ProgramTask';
-import AssignTask from './component/Programs/ProgramDetails/AssignTask';
-import AssignMentees from './component/Programs/ProgramDetails/AssignMentees';
-import ProgramCompletion from './component/Programs/ProgramCompletion';
-import Loader from './shared/Loader';
-import Logout from './component/Logout';
-import MentorDetails from './component/MentorDetails';
-import { Mentor } from './component/Dashboard/Mentor';
-import { Mentors } from './component/Mentors';
-import { Tasks } from './component/Tasks';
-import { TaskDetails } from './component/Tasks/TaskDetails';
-import MentorTask from './component/Mentor/Task';
-import MentorTaskDetails from './component/Mentor/Task/TaskDetails';
-import PreviewTaskDetails from './component/Tasks/PreviewTaskDetails';
-import Reports from './component/Reports';
-import CreateReport from './component/Reports/CreateReport';
-import ViewReport from './component/Reports/ViewReport';
-import EditReport from './component/Reports/EditReport';
-import Goals from './component/Goals';
-import ViewGoal from './component/Goals/ViewGoal';
-import Feedback from './component/Feedback';
-import Certificate from './component/Certificate';
-import CertificateDetails from './component/Certificate/CertificateDetails';
-import MentorViewMenteeGoal from './component/Goals/MentorViewMenteeGoal';
-import Profile from './component/Profile';
-import MyProfile from './component/Profile/MyProfile';
-import EditProfile from './component/Profile/EditProfile';
-import NotificationMenu from './component/Notification/NotificationMenu';
-import Feeds from './component/Feeds';
-import FeedDetails from './component/Feeds/FeedDetails';
-import HelpPage from './component/Help/Help';
-import CalendarMain from './component/Calendar/CalendarMain';
-import CreateMeeting from './component/Calendar/CreateMeeting';
-import { Calendar } from 'primereact/calendar';
-import Scheduler from './component/Calendar';
-import Discussions from './component/Discussions';
-import DiscussionDetails from './component/Discussions/DiscussionDetails';
-import AllRequest from './component/Programs/AllRequest';
-import Members from './component/Members';
-import LaunchProgram from './component/Programs/LaunchProgram';
-import MentorProfile from './component/MentorProfile/MentorProfile';
-import CreateCertificate from './component/Certificate/CreateCertificate';
-import GenerateCertificate from './component/Certificate/GenerateCertificate';
-import CertificateMemberDetails from './component/Certificate/CertificateMemberDetails';
-import CertificateMenteeList from './component/Certificate/CertificateMenteeList';
-import AssignMentor from './component/Members/AssignMentor';
-import MentorChangeRequest from './component/MentorDetails/MentorChangeRequest';
-import MenteeDocs from './component/Programs/ProgramDetails/MenteeDocs';
-import SuperMembers from './component/SuperAdmin/Members/SuperMembers';
-import AddSuperMember from './component/SuperAdmin/Members/AddSuperMember';
-import DocumentUpload from './component/Mentees/DocumentUpload';
-import MentorMenteeProfile from './component/mentorMenteeProfile';
-import ProfileView from './component/Profile/ProfileView';
-import Category from './component/category';
-import CategoryView from './component/category/categoryView';
-import MenteeTaskList from './component/Tasks/MenteeTaskList';
-import AddNewTicket from './component/SuperAdmin/tickets/AddNewTicket';
-import { AuthLayout } from './component/Login/AuthLayout';
-import { TestimonialView } from './component/testimonialView';
-import ViewTask from './component/Mentor/Task/viewTask';
-import AdminTickets from './component/SuperAdmin/tickets/Tickets';
-import AdminMembers from './component/SuperAdmin/tickets/SuperAdminMembers';
-import { Elements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
-import ViewTicket from './component/SuperAdmin/tickets/ViewTicket';
-import TicketDetails from './component/SuperAdmin/tickets/TicketDetails';
-import PaymentPage from './component/payments-page/payments';
-import TicketHistory from './component/Help/TicketHistory';
-import TicketCreation from './component/Help/TicketCreation';
-import Tickets from './component/SuperAdmin/tickets/Tickets';
-import PaymentSuccessfull from './shared/paymentButton/payment-successfull';
-import BgVerify from './component/BackgroundVerification/BgVerify';
-import HistoryNotes from './component/Programs/ProgramDetails/notesHistory';
+} from "./component";
+import Layout from "./component/Layout";
+import { useSelector, useDispatch } from "react-redux";
+import { updateInfo } from "./services/loginInfo";
+import { useEffect, useState } from "react";
+import Programs from "./component/Programs";
+import ProgramData from "./component/ProgramData";
+import ProgramsData from "./component/ProgramsData";
+import CreatePrograms from "./component/Programs/CreateProgram";
+import UserGuard from "./component/UserGuard";
+import ProgramDetails from "./component/Programs/ProgramDetails";
+import ProgramTask from "./component/Programs/ProgramDetails/ProgramTask";
+import AssignTask from "./component/Programs/ProgramDetails/AssignTask";
+import AssignMentees from "./component/Programs/ProgramDetails/AssignMentees";
+import ProgramCompletion from "./component/Programs/ProgramCompletion";
+import Loader from "./shared/Loader";
+import Logout from "./component/Logout";
+import MentorDetails from "./component/MentorDetails";
+import { Mentor } from "./component/Dashboard/Mentor";
+import { Mentors } from "./component/Mentors";
+import { Tasks } from "./component/Tasks";
+import { TaskDetails } from "./component/Tasks/TaskDetails";
+import MentorTask from "./component/Mentor/Task";
+import MentorTaskDetails from "./component/Mentor/Task/TaskDetails";
+import PreviewTaskDetails from "./component/Tasks/PreviewTaskDetails";
+import Reports from "./component/Reports";
+import CreateReport from "./component/Reports/CreateReport";
+import ViewReport from "./component/Reports/ViewReport";
+import EditReport from "./component/Reports/EditReport";
+import Goals from "./component/Goals";
+import ViewGoal from "./component/Goals/ViewGoal";
+import Feedback from "./component/Feedback";
+import Certificate from "./component/Certificate";
+import CertificateDetails from "./component/Certificate/CertificateDetails";
+import MentorViewMenteeGoal from "./component/Goals/MentorViewMenteeGoal";
+import Profile from "./component/Profile";
+import MyProfile from "./component/Profile/MyProfile";
+import EditProfile from "./component/Profile/EditProfile";
+import NotificationMenu from "./component/Notification/NotificationMenu";
+import Feeds from "./component/Feeds";
+import FeedDetails from "./component/Feeds/FeedDetails";
+import HelpPage from "./component/Help/Help";
+import CalendarMain from "./component/Calendar/CalendarMain";
+import CreateMeeting from "./component/Calendar/CreateMeeting";
+import { Calendar } from "primereact/calendar";
+import Scheduler from "./component/Calendar";
+import Discussions from "./component/Discussions";
+import DiscussionDetails from "./component/Discussions/DiscussionDetails";
+import AllRequest from "./component/Programs/AllRequest";
+import Members from "./component/Members";
+import LaunchProgram from "./component/Programs/LaunchProgram";
+import MentorProfile from "./component/MentorProfile/MentorProfile";
+import CreateCertificate from "./component/Certificate/CreateCertificate";
+import GenerateCertificate from "./component/Certificate/GenerateCertificate";
+import CertificateMemberDetails from "./component/Certificate/CertificateMemberDetails";
+import CertificateMenteeList from "./component/Certificate/CertificateMenteeList";
+import AssignMentor from "./component/Members/AssignMentor";
+import MentorChangeRequest from "./component/MentorDetails/MentorChangeRequest";
+import MenteeDocs from "./component/Programs/ProgramDetails/MenteeDocs";
+import SuperMembers from "./component/SuperAdmin/Members/SuperMembers";
+import AddSuperMember from "./component/SuperAdmin/Members/AddSuperMember";
+import DocumentUpload from "./component/Mentees/DocumentUpload";
+import MentorMenteeProfile from "./component/mentorMenteeProfile";
+import ProfileView from "./component/Profile/ProfileView";
+import Category from "./component/category";
+import CategoryView from "./component/category/categoryView";
+import MenteeTaskList from "./component/Tasks/MenteeTaskList";
+import AddNewTicket from "./component/SuperAdmin/tickets/AddNewTicket";
+import { AuthLayout } from "./component/Login/AuthLayout";
+import { TestimonialView } from "./component/testimonialView";
+import ViewTask from "./component/Mentor/Task/viewTask";
+import AdminTickets from "./component/SuperAdmin/tickets/Tickets";
+import AdminMembers from "./component/SuperAdmin/tickets/SuperAdminMembers";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import ViewTicket from "./component/SuperAdmin/tickets/ViewTicket";
+import TicketDetails from "./component/SuperAdmin/tickets/TicketDetails";
+import PaymentPage from "./component/payments-page/payments";
+import TicketHistory from "./component/Help/TicketHistory";
+import TicketCreation from "./component/Help/TicketCreation";
+import Tickets from "./component/SuperAdmin/tickets/Tickets";
+import PaymentSuccessfull from "./shared/paymentButton/payment-successfull";
+import BgVerify from "./component/BackgroundVerification/BgVerify";
+import HistoryNotes from "./component/Programs/ProgramDetails/notesHistory";
 
 function App() {
   const PrivateRoute = () => {
     const dispatch = useDispatch();
     const userData = useSelector((state) => state.userInfo);
-    const loggedIn = localStorage.getItem('access_token');
+    const loggedIn = localStorage.getItem("access_token");
     useEffect(() => {
       if (userData.data && !Object.keys(userData.data).length) {
         dispatch(updateInfo());
       }
     }, []);
-    // return <Outlet />
-    return loggedIn ? <Outlet /> : <Navigate to='/login' />;
+
+    const location = useLocation();
+    const redirectPath = `${location.pathname}${location.search}`;
+    return loggedIn ? (
+      <Outlet />
+    ) : (
+      <Navigate to={`/login?redirect=${redirectPath}`} />
+    );
   };
 
   const PubicRoutes = () => {
-    const loggedIn = !localStorage.getItem('access_token');
+    const loggedIn = !localStorage.getItem("access_token");
     return loggedIn ? <Outlet /> : <Navigate to='/dashboard' />;
   };
 

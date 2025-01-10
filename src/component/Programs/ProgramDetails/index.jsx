@@ -88,9 +88,18 @@ import moment from "moment";
 import ProgramHistoryIcon from "../../../assets/icons/historyIcon.svg";
 import RescheduleIcon from "../../../assets/images/reschedule1x.png";
 import Breadcrumbs from "../../Breadcrumbs/Breadcrumbs";
-import { program_details, program_details_main, programStatusBreadcrumbs, request_newProgramRequest, request_programCancel, request_programMenteeCancel, request_programReschedule, requestPageBreadcrumbs } from "../../Breadcrumbs/BreadcrumbsCommonData";
-import EditIcon from "../../../assets/icons/editIcon.svg"
-import PaidTickIcon from "../../../assets/icons/paidTickIcon.svg"
+import {
+  program_details,
+  program_details_main,
+  programStatusBreadcrumbs,
+  request_newProgramRequest,
+  request_programCancel,
+  request_programMenteeCancel,
+  request_programReschedule,
+  requestPageBreadcrumbs,
+} from "../../Breadcrumbs/BreadcrumbsCommonData";
+import EditIcon from "../../../assets/icons/editIcon.svg";
+import PaidTickIcon from "../../../assets/icons/paidTickIcon.svg";
 import CustomAccordian from "../../../shared/CustomAccordian/CustomAccordian";
 
 export default function ProgramDetails({ setProgramDetailsId }) {
@@ -98,16 +107,16 @@ export default function ProgramDetails({ setProgramDetailsId }) {
 
   const [cancelPopup, setCancelPopup] = useState(false);
   const [cancelPopupConfirmation, setCancelPopupConfirmation] = useState(false);
-
+  const location = useLocation();
   const params = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [acceptProgram, { isSuccess: isAccepted, reset: resetProgramAccept }] =
     useAcceptProgramMutation();
-  const requestId = searchParams.get('request_id') || '';
-  const requestStatusParams = searchParams.get('status') || '';
-  const program_create_type = searchParams.get('program_create_type') || '';
-  const breadcrumbsType = searchParams.get('breadcrumbsType') || '';
+  const requestId = searchParams.get("request_id") || "";
+  const requestStatusParams = searchParams.get("status") || "";
+  const program_create_type = searchParams.get("program_create_type") || "";
+  const breadcrumbsType = searchParams.get("breadcrumbsType") || "";
   const userdetails = useSelector((state) => state.userInfo);
   const role = userdetails.data.role || "";
   const reqRole = requestId && userdetails.data.role === "admin";
@@ -131,6 +140,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   });
 
   const dispatch = useDispatch();
+
+  // console.log(location.pathname, searchParams);
 
   const [
     launchProgram,
@@ -192,12 +203,11 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     //   name: "Program Outcomes",
     //   key: "program_outcomes",
     // },
-      !programdetails?.sub_program && {
-        name: "Program Testimonials",
-        key: "program_testimonials",
-      },
+    !programdetails?.sub_program && {
+      name: "Program Testimonials",
+      key: "program_testimonials",
+    },
   ].filter(Boolean);
-
 
   const reqStatus = {
     approved: "Approved",
@@ -475,7 +485,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
         setMoreMenuModal({ ...moreMenuModal, reschedule: false, cancel: true });
         handleClose();
         break;
-      case 'discussion':
+      case "discussion":
         break;
       case "edit":
         navigate(`/update-program/${params?.id}`);
@@ -486,15 +496,19 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   };
   const handleBreadcrumbs = (key) => {
     const decodedKey = decodeURIComponent(key);
-    const program_detailsData=program_details(state?.from)
-    const program_New=request_newProgramRequest(programdetails?.program_name)
-    const program_re=request_programReschedule(programdetails?.program_name)
-    const program_cancel=request_programCancel(programdetails?.program_name)
-    const program_mentee_cancel=request_programMenteeCancel(programdetails?.program_name)
+    const program_detailsData = program_details(state?.from);
+    const program_New = request_newProgramRequest(programdetails?.program_name);
+    const program_re = request_programReschedule(programdetails?.program_name);
+    const program_cancel = request_programCancel(programdetails?.program_name);
+    const program_mentee_cancel = request_programMenteeCancel(
+      programdetails?.program_name
+    );
     if (programStatusBreadcrumbs.includes(decodedKey)) {
-      setBreadcrumbsArray(program_details_main(programdetails?.program_name, decodedKey))
+      setBreadcrumbsArray(
+        program_details_main(programdetails?.program_name, decodedKey)
+      );
       return;
-  }
+    }
     switch (key) {
       case "program":
         setBreadcrumbsArray(program_detailsData);
@@ -511,7 +525,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       case requestPageBreadcrumbs.program_mentee_cancel:
         setBreadcrumbsArray(program_mentee_cancel);
         break;
-      case 'discussion':
+      case "discussion":
         break;
       default:
         break;
@@ -817,7 +831,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       label: "Date",
       isRequired: true,
       col: 4,
-      key: 'date',
+      key: "date",
       minDate: programdetails?.start_date,
       maxDate: programdetails?.end_date,
     },
@@ -834,7 +848,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       isRequired: true,
       col: 4,
       key: "location",
-      endAdornment: <img src={ColorLocation} alt="color_location" />,
+      endAdornment: <img src={ColorLocation} alt='color_location' />,
       background: "#FFF8F2",
     },
     {
@@ -933,7 +947,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   if (daysDifference > 3) {
     statusMessage = `${daysDifference} more days left`;
   } else if (daysDifference === 0) {
-    statusMessage = 'Program is started today!';
+    statusMessage = "Program is started today!";
   } else if (daysDifference < 0) {
     const absDifference = Math.abs(daysDifference);
     statusMessage = `Program started ${absDifference} day${
@@ -948,28 +962,28 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   // payment status end
 
   return (
-    <div className="px-9 my-6 grid">
+    <div className='px-9 my-6 grid'>
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={
           loading.initial || loading.join || programLoading || requestLoading
         }
       >
-        <CircularProgress color="inherit" />
+        <CircularProgress color='inherit' />
       </Backdrop>
 
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={ratingModal.success}
       >
-        <div className="px-5 py-1 flex justify-center items-center">
+        <div className='px-5 py-1 flex justify-center items-center'>
           <div
-            className="flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20"
+            className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
             style={{ background: "#fff", borderRadius: "10px" }}
           >
-            <img src={SuccessTik} alt="SuccessTik" />
+            <img src={SuccessTik} alt='SuccessTik' />
             <p
-              className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
+              className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
               style={{
                 fontWeight: 600,
                 color: "#232323",
@@ -985,8 +999,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={completeProgram.bool}
       >
-        <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
-          <img src={TickColorIcon} alt="TickColorIcon" />
+        <div className='popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center'>
+          <img src={TickColorIcon} alt='TickColorIcon' />
           <span
             style={{
               color: "#232323",
@@ -996,7 +1010,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
           >
             Complete
           </span>
-          <div className="py-5">
+          <div className='py-5'>
             <p
               style={{
                 color: "rgba(24, 40, 61, 1)",
@@ -1007,20 +1021,20 @@ export default function ProgramDetails({ setProgramDetailsId }) {
               Are you sure want to complete the program?
             </p>
           </div>
-          <div className="flex justify-center">
-            <div className="flex gap-6 justify-center align-middle">
+          <div className='flex justify-center'>
+            <div className='flex gap-6 justify-center align-middle'>
               <Button
-                btnCls="w-[110px]"
+                btnCls='w-[110px]'
                 btnName={"No"}
-                btnCategory="secondary"
+                btnCategory='secondary'
                 onClick={handleCloseConfirmPopup}
               />
               <Button
-                btnType="button"
-                btnCls="w-[110px]"
+                btnType='button'
+                btnCls='w-[110px]'
                 btnName={"Yes"}
                 style={{ background: "#16B681" }}
-                btnCategory="primary"
+                btnCategory='primary'
                 onClick={() => handleComplete(programdetails?.id)}
               />
             </div>
@@ -1031,14 +1045,14 @@ export default function ProgramDetails({ setProgramDetailsId }) {
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={completeProgram.activity}
       >
-        <div className="px-5 py-1 flex justify-center items-center">
+        <div className='px-5 py-1 flex justify-center items-center'>
           <div
-            className="flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20"
+            className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
             style={{ background: "#fff", borderRadius: "10px" }}
           >
-            <img src={SuccessTik} alt="SuccessTik" />
+            <img src={SuccessTik} alt='SuccessTik' />
             <p
-              className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
+              className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
               style={{
                 fontWeight: 600,
               }}
@@ -1053,14 +1067,14 @@ export default function ProgramDetails({ setProgramDetailsId }) {
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={isAccepted}
       >
-        <div className="px-5 py-1 flex justify-center items-center">
+        <div className='px-5 py-1 flex justify-center items-center'>
           <div
-            className="flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20"
+            className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
             style={{ background: "#fff", borderRadius: "10px" }}
           >
-            <img src={SuccessTik} alt="SuccessTik" />
+            <img src={SuccessTik} alt='SuccessTik' />
             <p
-              className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
+              className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
               style={{
                 fontWeight: 600,
               }}
@@ -1084,14 +1098,14 @@ export default function ProgramDetails({ setProgramDetailsId }) {
           requestProgramStatus === requestStatus.cancel
         }
       >
-        <div className="px-5 py-1 flex justify-center items-center">
+        <div className='px-5 py-1 flex justify-center items-center'>
           <div
-            className="flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20"
+            className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
             style={{ background: "#fff", borderRadius: "10px" }}
           >
-            <img src={SuccessTik} alt="SuccessTik" />
+            <img src={SuccessTik} alt='SuccessTik' />
             <p
-              className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
+              className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
               style={{
                 fontWeight: 600,
               }}
@@ -1113,14 +1127,14 @@ export default function ProgramDetails({ setProgramDetailsId }) {
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={requestProgramStatus === requestStatus.programupdate}
       >
-        <div className="px-5 py-1 flex justify-center items-center">
+        <div className='px-5 py-1 flex justify-center items-center'>
           <div
-            className="flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20"
+            className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
             style={{ background: "#fff", borderRadius: "10px" }}
           >
-            <img src={SuccessTik} alt="SuccessTik" />
+            <img src={SuccessTik} alt='SuccessTik' />
             <p
-              className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
+              className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
               style={{
                 fontWeight: 600,
               }}
@@ -1132,34 +1146,34 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       </Backdrop>
 
       <MuiModal
-        modalSize="md"
+        modalSize='md'
         modalOpen={viewMenteeModal}
         modalClose={undefined}
         noheader
       >
-        <div className="px-5 py-5">
+        <div className='px-5 py-5'>
           <div
-            className="flex justify-center flex-col gap-5  mt-4 mb-4"
+            className='flex justify-center flex-col gap-5  mt-4 mb-4'
             style={{
               border: "1px solid rgba(29, 91, 191, 1)",
               borderRadius: "10px",
             }}
           >
             <div
-              className="flex justify-between px-3 py-4 items-center"
+              className='flex justify-between px-3 py-4 items-center'
               style={{ borderBottom: "1px solid rgba(29, 91, 191, 1)" }}
             >
-              <p className="text-[18px]" style={{ color: "rgba(0, 0, 0, 1)" }}>
+              <p className='text-[18px]' style={{ color: "rgba(0, 0, 0, 1)" }}>
                 Joining Mentees{" "}
               </p>
               <img
-                className="cursor-pointer"
+                className='cursor-pointer'
                 onClick={() => setViewMenteeModal(false)}
                 src={CancelIcon}
-                alt="CancelIcon"
+                alt='CancelIcon'
               />
             </div>
-            <div className="px-5">
+            <div className='px-5'>
               <DataTable
                 rows={programMentees?.length > 0 && programMentees}
                 columns={JoinMenteeColumn}
@@ -1175,12 +1189,12 @@ export default function ProgramDetails({ setProgramDetailsId }) {
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={confirmPopup.accept}
       >
-        <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
-          <img src={TickColorIcon} alt="TickColorIcon" />
+        <div className='popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center'>
+          <img src={TickColorIcon} alt='TickColorIcon' />
           <span style={{ color: "#232323", fontWeight: 600, fontSize: "24px" }}>
             Approve
           </span>
-          <div className="py-5">
+          <div className='py-5'>
             <p
               style={{
                 color: "rgba(24, 40, 61, 1)",
@@ -1191,20 +1205,20 @@ export default function ProgramDetails({ setProgramDetailsId }) {
               Are you sure want to approve Program Request?
             </p>
           </div>
-          <div className="flex justify-center">
-            <div className="flex gap-6 justify-center align-middle">
+          <div className='flex justify-center'>
+            <div className='flex gap-6 justify-center align-middle'>
               <Button
-                btnCls="w-[110px]"
+                btnCls='w-[110px]'
                 btnName={"Cancel"}
-                btnCategory="secondary"
+                btnCategory='secondary'
                 onClick={resetAcceptCancelPopup}
               />
               <Button
-                btnType="button"
-                btnCls="w-[110px]"
+                btnType='button'
+                btnCls='w-[110px]'
                 btnName={"Approve"}
                 style={{ background: "#16B681" }}
-                btnCategory="primary"
+                btnCategory='primary'
                 onClick={handleConfirmPopup}
               />
             </div>
@@ -1215,80 +1229,80 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       {/* Program Cancel Popup */}
       {confirmPopup.cancel && (
         <MuiModal
-          modalSize="md"
+          modalSize='md'
           modalOpen={confirmPopup.cancel}
           modalClose={resetAcceptCancelPopup}
           noheader
         >
-          <div className="px-5 py-5">
+          <div className='px-5 py-5'>
             <div
-              className="flex justify-center flex-col gap-5  mt-4 mb-4"
+              className='flex justify-center flex-col gap-5  mt-4 mb-4'
               style={{
                 border: "1px solid rgba(29, 91, 191, 1)",
                 borderRadius: "10px",
               }}
             >
               <div
-                className="flex justify-between px-3 py-4 items-center"
+                className='flex justify-between px-3 py-4 items-center'
                 style={{ borderBottom: "1px solid rgba(29, 91, 191, 1)" }}
               >
                 <p
-                  className="text-[18px]"
+                  className='text-[18px]'
                   style={{ color: "rgba(0, 0, 0, 1)" }}
                 >
                   Reject Reason{" "}
                 </p>
                 <img
-                  className="cursor-pointer"
+                  className='cursor-pointer'
                   onClick={resetAcceptCancelPopup}
                   src={CancelIcon}
-                  alt="CancelIcon"
+                  alt='CancelIcon'
                 />
               </div>
 
-              <div className="px-5">
+              <div className='px-5'>
                 {requestError !== "" ? (
-                  <p className="error" role="alert">
+                  <p className='error' role='alert'>
                     {requestError}
                   </p>
                 ) : null}
 
                 <form onSubmit={handleSubmit(handleCancelReasonPopupSubmit)}>
-                  <div className="relative pb-8">
-                    <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
+                  <div className='relative pb-8'>
+                    <label className='block tracking-wide text-gray-700 text-xs font-bold mb-2'>
                       Reject Reason
                     </label>
 
-                    <div className="relative">
+                    <div className='relative'>
                       <textarea
                         {...register("cancel_reason", {
                           required: "This field is required",
                         })}
-                        id="message"
-                        rows="4"
+                        id='message'
+                        rows='4'
                         className={`block p-2.5 input-bg w-full text-sm text-gray-900  border
                                     focus-visible:outline-none focus-visible:border-none`}
                         style={{ border: "2px solid rgba(229, 0, 39, 1)" }}
                         placeholder={""}
                       ></textarea>
                       {errors["cancel_reason"] && (
-                        <p className="error" role="alert">
+                        <p className='error' role='alert'>
                           {errors["cancel_reason"].message}
                         </p>
                       )}
                     </div>
                   </div>
 
-                  <div className="flex justify-center gap-5 items-center pt-5 pb-10">
+                  <div className='flex justify-center gap-5 items-center pt-5 pb-10'>
                     <Button
-                      btnName="Cancel"
-                      btnCls="w-[18%]"
-                      btnCategory="secondary"
+                      btnName='Cancel'
+                      btnCls='w-[18%]'
+                      btnCategory='secondary'
                       onClick={resetAcceptCancelPopup}
                     />
                     <button
-                      type="submit"
-                      className="text-white py-3 px-7 w-[18%]"
+                      type='submit'
+                      className='text-white py-3 px-7 w-[18%]'
                       style={{
                         background:
                           "linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)",
@@ -1309,14 +1323,14 @@ export default function ProgramDetails({ setProgramDetailsId }) {
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={loading.join && role === "mentor"}
       >
-        <div className="px-5 py-1 flex justify-center items-center">
+        <div className='px-5 py-1 flex justify-center items-center'>
           <div
-            className="flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20"
+            className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
             style={{ background: "#fff", borderRadius: "10px" }}
           >
-            <img src={SuccessTik} alt="SuccessTik" />
+            <img src={SuccessTik} alt='SuccessTik' />
             <p
-              className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
+              className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
               style={{
                 fontWeight: 600,
               }}
@@ -1331,14 +1345,14 @@ export default function ProgramDetails({ setProgramDetailsId }) {
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={taskJoinedRequest}
       >
-        <div className="px-5 py-1 flex justify-center items-center">
+        <div className='px-5 py-1 flex justify-center items-center'>
           <div
-            className="flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20"
+            className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
             style={{ background: "#fff", borderRadius: "10px" }}
           >
-            <img src={SuccessTik} alt="SuccessTik" />
+            <img src={SuccessTik} alt='SuccessTik' />
             <p
-              className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
+              className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
               style={{
                 fontWeight: 600,
               }}
@@ -1356,17 +1370,17 @@ export default function ProgramDetails({ setProgramDetailsId }) {
         }}
         open={openPopup}
       >
-        <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] p-[12px] justify-center items-center">
-          <div className="border border-[#E50027] rounded-[15px] h-[100%] w-[100%] justify-center items-center flex flex-col relative">
+        <div className='popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] p-[12px] justify-center items-center'>
+          <div className='border border-[#E50027] rounded-[15px] h-[100%] w-[100%] justify-center items-center flex flex-col relative'>
             <div
-              className="absolute top-[12px] right-[12px]"
+              className='absolute top-[12px] right-[12px]'
               // onClick={() => handleCloseCancelPopup()}
             >
-              <img src={CloseIcon} alt="ConfirmIcon" />
+              <img src={CloseIcon} alt='ConfirmIcon' />
             </div>
-            <img src={ConfirmIcon} alt="ConfirmIcon" />
+            <img src={ConfirmIcon} alt='ConfirmIcon' />
 
-            <div className="py-5">
+            <div className='py-5'>
               <p
                 style={{
                   color: "rgba(24, 40, 61, 1)",
@@ -1377,19 +1391,19 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                 Are you sure want to Accept this Program?
               </p>
             </div>
-            <div className="flex justify-center">
-              <div className="flex gap-6 justify-center align-middle">
+            <div className='flex justify-center'>
+              <div className='flex gap-6 justify-center align-middle'>
                 <Button
-                  btnName="No"
-                  btnCategory="secondary"
-                  btnCls="border !border-[#1D5BBF] !text-[#1D5BBF] w-[110px]"
+                  btnName='No'
+                  btnCategory='secondary'
+                  btnCls='border !border-[#1D5BBF] !text-[#1D5BBF] w-[110px]'
                   onClick={() => setOpenPopup(false)}
                 />
                 <Button
-                  btnType="button"
-                  btnCls="w-[110px]"
+                  btnType='button'
+                  btnCls='w-[110px]'
                   btnName={"Yes"}
-                  btnCategory="primary"
+                  btnCategory='primary'
                   onClick={() => handleAcceptProgram()}
                 />
               </div>
@@ -1413,32 +1427,32 @@ export default function ProgramDetails({ setProgramDetailsId }) {
         noheader
       >
         <div
-          className="px-5 py-1 flex justify-center items-center"
+          className='px-5 py-1 flex justify-center items-center'
           style={{ border: "1px solid rgba(29, 91, 191, 1)" }}
         >
-          <div className="flex justify-center items-center flex-col gap-8 py-10 px-20 mt-5">
+          <div className='flex justify-center items-center flex-col gap-8 py-10 px-20 mt-5'>
             <div>{programdetails?.program_name}</div>
             <input
-              className="input-bg text-[12px] h-[60px] w-[396px] px-5"
+              className='input-bg text-[12px] h-[60px] w-[396px] px-5'
               style={{ borderRadius: "27px" }}
               disabled
               value={url}
             />
-            <div className="flex gap-7">
+            <div className='flex gap-7'>
               <img
-                className="cursor-pointer"
+                className='cursor-pointer'
                 src={LinkIcon}
-                alt="LinkIcon"
+                alt='LinkIcon'
                 onClick={handleCopy}
               />
             </div>
 
-            <div className="flex  justify-center align-middle pt-4">
+            <div className='flex  justify-center align-middle pt-4'>
               <Button
-                btnType="button"
+                btnType='button'
                 onClick={handleMoreMenuClosePopup}
-                btnName="Close"
-                btnCategory="primary"
+                btnName='Close'
+                btnCategory='primary'
               />
             </div>
           </div>
@@ -1453,33 +1467,33 @@ export default function ProgramDetails({ setProgramDetailsId }) {
         >
           <div style={{ border: "1px solid rgba(29, 91, 191, 1)" }}>
             <div
-              className="flex justify-between items-center px-3 py-4 mx-1"
+              className='flex justify-between items-center px-3 py-4 mx-1'
               style={{ borderBottom: "1px solid rgba(29, 91, 191, 1)" }}
             >
               <div>Reschedule {programdetails.name}</div>
               <img
-                className="cursor-pointer"
+                className='cursor-pointer'
                 onClick={() =>
                   setMoreMenuModal({ share: false, reschedule: false })
                 }
                 src={CancelIcon}
-                alt="CancelIcon"
+                alt='CancelIcon'
               />
             </div>
             <form onSubmit={handleSubmit(onSubmit)}>
-              <div className="px-4 py-7">
-                <div className="flex flex-wrap gap-4">
+              <div className='px-4 py-7'>
+                <div className='flex flex-wrap gap-4'>
                   <div className={`relative mb-6 w-[48%]`}>
                     <label
-                      className="block tracking-wide text-gray-700 text-xs font-bold mb-2"
+                      className='block tracking-wide text-gray-700 text-xs font-bold mb-2'
                       htmlFor={"Reschedule Date"}
                     >
                       Reschedule Start Date
                     </label>
 
-                    <div className="relative input-bg">
+                    <div className='relative input-bg'>
                       <Calendar
-                        className="calendar-control w-full"
+                        className='calendar-control w-full'
                         {...dateStartField}
                         value={dateFormatted["reschedule_start_date"]}
                         onChange={(e) => {
@@ -1501,8 +1515,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             : new Date(programdetails?.end_date)
                         }
                         showTime={false}
-                        hourFormat="12"
-                        dateFormat="dd/mm/yy"
+                        hourFormat='12'
+                        dateFormat='dd/mm/yy'
                         style={{ width: "60%" }}
                         ref={(el) => (calendarRef.current[0] = el)}
                         viewDate={
@@ -1515,9 +1529,9 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                       />
 
                       <img
-                        className="absolute top-5 right-2 cursor-pointer"
+                        className='absolute top-5 right-2 cursor-pointer'
                         src={CalendarIcon}
-                        alt="CalendarIcon"
+                        alt='CalendarIcon'
                         onClick={() => {
                           handleDateClick();
                           calendarRef?.current[0]?.show();
@@ -1525,7 +1539,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                       />
                     </div>
                     {errors["reschedule_start_date"] && (
-                      <p className="error" role="alert">
+                      <p className='error' role='alert'>
                         {errors["reschedule_start_date"].message}
                       </p>
                     )}
@@ -1533,15 +1547,15 @@ export default function ProgramDetails({ setProgramDetailsId }) {
 
                   <div className={`relative mb-6 w-[48%]`}>
                     <label
-                      className="block tracking-wide text-gray-700 text-xs font-bold mb-2"
+                      className='block tracking-wide text-gray-700 text-xs font-bold mb-2'
                       htmlFor={"Reschedule Date"}
                     >
                       Reschedule End Date
                     </label>
 
-                    <div className="relative input-bg">
+                    <div className='relative input-bg'>
                       <Calendar
-                        className="calendar-control w-full"
+                        className='calendar-control w-full'
                         {...dateEndField}
                         value={dateFormatted["reschedule_end_date"]}
                         onChange={(e) => {
@@ -1567,8 +1581,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             : new Date(programdetails?.end_date)
                         }
                         showTime={false}
-                        hourFormat="12"
-                        dateFormat="dd/mm/yy"
+                        hourFormat='12'
+                        dateFormat='dd/mm/yy'
                         style={{ width: "60%" }}
                         ref={(el) => (calendarRef.current[1] = el)}
                         viewDate={
@@ -1580,9 +1594,9 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                       />
 
                       <img
-                        className="absolute top-5 right-2 cursor-pointer"
+                        className='absolute top-5 right-2 cursor-pointer'
                         src={CalendarIcon}
-                        alt="CalendarIcon"
+                        alt='CalendarIcon'
                         onClick={() => {
                           handleDateClick();
                           calendarRef?.current[1]?.show();
@@ -1590,7 +1604,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                       />
                     </div>
                     {errors["reschedule_end_date"] && (
-                      <p className="error" role="alert">
+                      <p className='error' role='alert'>
                         {errors["reschedule_end_date"].message}
                       </p>
                     )}
@@ -1598,14 +1612,14 @@ export default function ProgramDetails({ setProgramDetailsId }) {
 
                   <div className={`relative mb-6 w-full`}>
                     <label
-                      className="block tracking-wide text-gray-700 text-xs font-bold mb-2"
+                      className='block tracking-wide text-gray-700 text-xs font-bold mb-2'
                       htmlFor={"Comments"}
                     >
                       Comments
                     </label>
                     <textarea
-                      id="message"
-                      rows="4"
+                      id='message'
+                      rows='4'
                       className={`block p-2.5 input-bg w-full text-sm text-gray-900  rounded-lg border
                                                                    focus:visible:outline-none focus:visible:border-none}`}
                       placeholder={""}
@@ -1615,7 +1629,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     ></textarea>
 
                     {errors["reason"] && (
-                      <p className="error" role="alert">
+                      <p className='error' role='alert'>
                         {errors["reason"].message}
                       </p>
                     )}
@@ -1623,18 +1637,18 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                 </div>
               </div>
 
-              <div className="flex gap-6 justify-center align-middle py-5">
+              <div className='flex gap-6 justify-center align-middle py-5'>
                 <Button
-                  btnName="Cancel"
-                  btnCategory="secondary"
+                  btnName='Cancel'
+                  btnCategory='secondary'
                   onClick={() =>
                     setMoreMenuModal({ share: false, reschedule: false })
                   }
                 />
                 <Button
-                  btnType="submit"
-                  btnName="Submit"
-                  btnCategory="primary"
+                  btnType='submit'
+                  btnName='Submit'
+                  btnCategory='primary'
                 />
               </div>
             </form>
@@ -1644,80 +1658,80 @@ export default function ProgramDetails({ setProgramDetailsId }) {
 
       {moreMenuModal.cancel && (
         <MuiModal
-          modalSize="md"
+          modalSize='md'
           modalOpen={moreMenuModal.cancel}
           modalClose={handleMoreMenuClosePopup}
           noheader
         >
-          <div className="px-5 py-5">
+          <div className='px-5 py-5'>
             <div
-              className="flex justify-center flex-col gap-5  mt-4 mb-4"
+              className='flex justify-center flex-col gap-5  mt-4 mb-4'
               style={{
                 border: "1px solid rgba(29, 91, 191, 1)",
                 borderRadius: "10px",
               }}
             >
               <div
-                className="flex justify-between px-3 py-4 items-center"
+                className='flex justify-between px-3 py-4 items-center'
                 style={{ borderBottom: "1px solid rgba(29, 91, 191, 1)" }}
               >
                 <p
-                  className="text-[18px]"
+                  className='text-[18px]'
                   style={{ color: "rgba(0, 0, 0, 1)" }}
                 >
                   Cancel Reason{" "}
                 </p>
                 <img
-                  className="cursor-pointer"
+                  className='cursor-pointer'
                   onClick={handleMoreMenuClosePopup}
                   src={CancelIcon}
-                  alt="CancelIcon"
+                  alt='CancelIcon'
                 />
               </div>
 
-              <div className="px-5">
+              <div className='px-5'>
                 {requestError !== "" ? (
-                  <p className="error" role="alert">
+                  <p className='error' role='alert'>
                     {requestError}
                   </p>
                 ) : null}
 
                 <form onSubmit={handleSubmit(onSubmit)}>
-                  <div className="relative pb-8">
-                    <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
+                  <div className='relative pb-8'>
+                    <label className='block tracking-wide text-gray-700 text-xs font-bold mb-2'>
                       Cancel Reason
                     </label>
 
-                    <div className="relative">
+                    <div className='relative'>
                       <textarea
                         {...register("cancel_reason", {
                           required: "This field is required",
                         })}
-                        id="message"
-                        rows="4"
+                        id='message'
+                        rows='4'
                         className={`block p-2.5 input-bg w-full text-sm text-gray-900  border
                                                                 focus-visible:outline-none focus-visible:border-none`}
                         style={{ border: "2px solid rgba(229, 0, 39, 1)" }}
                         placeholder={""}
                       ></textarea>
                       {errors["cancel_reason"] && (
-                        <p className="error" role="alert">
+                        <p className='error' role='alert'>
                           {errors["cancel_reason"].message}
                         </p>
                       )}
                     </div>
                   </div>
 
-                  <div className="flex justify-center gap-5 items-center pt-5 pb-10">
+                  <div className='flex justify-center gap-5 items-center pt-5 pb-10'>
                     <Button
-                      btnName="Cancel"
-                      btnCls="w-[18%]"
-                      btnCategory="secondary"
+                      btnName='Cancel'
+                      btnCls='w-[18%]'
+                      btnCategory='secondary'
                       onClick={handleMoreMenuClosePopup}
                     />
                     <button
-                      type="submit"
-                      className="text-white py-3 px-7 w-[18%]"
+                      type='submit'
+                      className='text-white py-3 px-7 w-[18%]'
                       style={{
                         background:
                           "linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)",
@@ -1738,16 +1752,16 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       programdetails &&
       Object.keys(programdetails)?.length ? (
         <div
-          className="grid mb-10"
+          className='grid mb-10'
           style={{
             boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.15)",
             borderRadius: "5px",
           }}
         >
-          <div className="breadcrum">
+          <div className='breadcrum'>
             <nav
-              className="flex justify-between px-7 pt-6 pb-5 mx-2 border-b-2"
-              aria-label="Breadcrumb"
+              className='flex justify-between px-7 pt-6 pb-5 mx-2 border-b-2'
+              aria-label='Breadcrumb'
             >
               <Breadcrumbs items={breadcrumbsArray} />
               {/* <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
@@ -1789,15 +1803,15 @@ export default function ProgramDetails({ setProgramDetailsId }) {
               </ol> */}
 
               <>
-                {(role === 'mentor' ||
-                  (role === 'admin' &&
+                {(role === "mentor" ||
+                  (role === "admin" &&
                     [
-                      'program_new',
-                      'program_join',
-                      'program_reschedule',
-                      'program_cancel',
-                    ].includes(searchParams.get('type')) === false) ||
-                  (role === 'mentee' &&
+                      "program_new",
+                      "program_join",
+                      "program_reschedule",
+                      "program_cancel",
+                    ].includes(searchParams.get("type")) === false) ||
+                  (role === "mentee" &&
                     (programdetails.status === programActionStatus.inprogress ||
                       programdetails.mentee_join_status ===
                         programActionStatus.program_join_request_accepted))) && (
@@ -1811,14 +1825,14 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                       open={open}
                       onClose={handleClose}
                       MenuListProps={{
-                        'aria-labelledby': 'basic-button',
+                        "aria-labelledby": "basic-button",
                       }}
                     >
-                      {(role === 'mentor' || role === 'admin') && (
+                      {(role === "mentor" || role === "admin") && (
                         <>
                           {/* programdetails.participated_mentees_count */}
                           <MenuItem
-                            onClick={() => handleMenu('share')}
+                            onClick={() => handleMenu("share")}
                             className='!text-[12px]'
                           >
                             <img
@@ -1828,34 +1842,38 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             />
                             Share
                           </MenuItem>
-                          {(programdetails.participated_mentees_count === 0 && programdetails?.created_by === userdetails?.data?.user_id) && (
-                            <MenuItem
-                              onClick={() => handleMenu('share')}
-                              className='!text-[12px]'
-                            >
-                              <img
-                                src={EditIcon}
-                                alt='EditIcon'
-                                className='pr-3 w-[25px]'
-                              />
-                              Edit
-                            </MenuItem>
-                          )}
+                          {programdetails.participated_mentees_count === 0 &&
+                            programdetails?.created_by ===
+                              userdetails?.data?.user_id && (
+                              <MenuItem
+                                onClick={() => handleMenu("share")}
+                                className='!text-[12px]'
+                              >
+                                <img
+                                  src={EditIcon}
+                                  alt='EditIcon'
+                                  className='pr-3 w-[25px]'
+                                />
+                                Edit
+                              </MenuItem>
+                            )}
                           {
                             !requestStatusParams &&
                               ![
-                                'yettoapprove',
-                                'cancelled',
-                                'new_program_request_rejected',
-                                'completed',
+                                "yettoapprove",
+                                "cancelled",
+                                "new_program_request_rejected",
+                                "completed",
                               ].includes(programdetails?.status) &&
                               !reqRole &&
                               !programdetails.hasOwnProperty(
-                                'admin_assign_program'
-                              ) && programdetails?.created_by === userdetails?.data?.user_id && (
+                                "admin_assign_program"
+                              ) &&
+                              programdetails?.created_by ===
+                                userdetails?.data?.user_id && (
                                 // role !== 'admin' && (
                                 <MenuItem
-                                  onClick={() => handleMenu('reschedule')}
+                                  onClick={() => handleMenu("reschedule")}
                                   className='!text-[12px]'
                                 >
                                   <img
@@ -1872,15 +1890,17 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                           {
                             !requestStatusParams &&
                               ![
-                                'yettoapprove',
-                                'cancelled',
-                                'new_program_request_rejected',
-                                'completed',
+                                "yettoapprove",
+                                "cancelled",
+                                "new_program_request_rejected",
+                                "completed",
                               ].includes(programdetails?.status) &&
-                              !reqRole && programdetails?.created_by === userdetails?.data?.user_id && (
+                              !reqRole &&
+                              programdetails?.created_by ===
+                                userdetails?.data?.user_id && (
                                 // role !== 'admin' && (
                                 <MenuItem
-                                  onClick={() => handleMenu('cancel')}
+                                  onClick={() => handleMenu("cancel")}
                                   className='!text-[12px]'
                                 >
                                   <img
@@ -1922,9 +1942,9 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                   Assign Task to Mentees
                                 </MenuItem>
                                 {[
-                                  'cancelled',
-                                  'inprogress',
-                                  'completed',
+                                  "cancelled",
+                                  "inprogress",
+                                  "completed",
                                 ].includes(programdetails?.status) && (
                                   <MenuItem
                                     onClick={() =>
@@ -1944,14 +1964,14 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             )}
                         </>
                       )}
-                      {role === 'mentee' && (
+                      {role === "mentee" && (
                         <>
                           {(programdetails.status ===
                             programActionStatus.inprogress ||
                             programdetails.mentee_join_status ===
                               programActionStatus.program_join_request_accepted) && (
                             <MenuItem
-                              onClick={() => handleMenu('cancel')}
+                              onClick={() => handleMenu("cancel")}
                               className='!text-[12px]'
                             >
                               <img
@@ -1962,7 +1982,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                               Cancel
                             </MenuItem>
                           )}
-                          {['cancelled', 'inprogress', 'completed'].includes(
+                          {["cancelled", "inprogress", "completed"].includes(
                             programdetails?.status
                           ) && (
                             <MenuItem
@@ -1987,20 +2007,20 @@ export default function ProgramDetails({ setProgramDetailsId }) {
               </>
             </nav>
 
-            <div className="content px-8">
-              <div className="grid grid-cols-3 gap-4 py-6">
+            <div className='content px-8'>
+              <div className='grid grid-cols-3 gap-4 py-6'>
                 {/* Left Side Content */}
-                <div className="left-side-content col-span-2">
-                  <div className="flex items-center gap-6 pb-6">
+                <div className='left-side-content col-span-2'>
+                  <div className='flex items-center gap-6 pb-6'>
                     <h3
-                      className="font-semibold text-[18px]"
+                      className='font-semibold text-[18px]'
                       style={{ color: "rgba(29, 91, 191, 1)" }}
                     >
                       {programdetails.program_name}
                     </h3>
                     {programdetails?.categories?.length ? (
                       <div
-                        className="text-[10px] px-3 py-2"
+                        className='text-[10px] px-3 py-2'
                         style={{
                           background: "rgba(238, 240, 244, 1)",
                           color: "rgba(253, 0, 58, 1)",
@@ -2012,7 +2032,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     ) : null}
 
                     {programdetails.reschedule_info?.length > 0 && (
-                      <div className="flex gap-3 items-center">
+                      <div className='flex gap-3 items-center'>
                         <span
                           style={{
                             background: "rgba(255, 213, 0, 1)",
@@ -2020,7 +2040,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             padding: "10px",
                           }}
                         >
-                          <img src={TimeHistoryIcon} alt="TimeHistoryIcon" />
+                          <img src={TimeHistoryIcon} alt='TimeHistoryIcon' />
                         </span>
                         <p
                           style={{
@@ -2038,25 +2058,25 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     )}
                   </div>
 
-                  <div className="text-[12px]">
+                  <div className='text-[12px]'>
                     {programdetails.description}
                   </div>
                   {programdetails?.prerequisites && (
-                    <div className="text-[12px] my-3">
-                      <span className="font-semibold text-background-primary-main">
+                    <div className='text-[12px] my-3'>
+                      <span className='font-semibold text-background-primary-main'>
                         Prerequisites:{" "}
                       </span>
                       {programdetails.prerequisites}
                     </div>
                   )}
 
-                  <div className="flex gap-6 py-6">
-                    <div className="flex gap-2 items-center">
-                      <img src={LocationIcon} alt="LocationIcon" />
-                      <span className="text-[12px]">
+                  <div className='flex gap-6 py-6'>
+                    <div className='flex gap-2 items-center'>
+                      <img src={LocationIcon} alt='LocationIcon' />
+                      <span className='text-[12px]'>
                         {/* {programdetails.venue} */}
-                        {programdetails?.program_mode === 'virtual_meeting'
-                          ? 'Online'
+                        {programdetails?.program_mode === "virtual_meeting"
+                          ? "Online"
                           : `${programdetails.city_details?.name}, ${programdetails.state_details?.abbreviation}`}
                       </span>
                     </div>
@@ -2065,16 +2085,16 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                       style={{ borderRight: "1px solid rgba(24, 40, 61, 1)" }}
                     ></div>
 
-                    <div className="flex gap-3 items-center">
-                      <img src={CalendarIcon} alt="CalendarIcon" />
-                      <span className="text-[12px]">
+                    <div className='flex gap-3 items-center'>
+                      <img src={CalendarIcon} alt='CalendarIcon' />
+                      <span className='text-[12px]'>
                         {formatDateTimeISO(programdetails?.start_date)}
                       </span>
                     </div>
                     <div
-                      style={{ borderRight: '1px solid rgba(24, 40, 61, 1)' }}
+                      style={{ borderRight: "1px solid rgba(24, 40, 61, 1)" }}
                     ></div>
-                    <div className="flex items-center gap-3 text-[12px]">
+                    <div className='flex items-center gap-3 text-[12px]'>
                       {!profileLoading && (
                         <img
                           src={
@@ -2085,7 +2105,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             width: "35px",
                             height: "35px",
                           }}
-                          alt="UserImage"
+                          alt='UserImage'
                         />
                       )}
 
@@ -2130,11 +2150,11 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                       </div>
                     )}
 
-                  <div className="flex gap-2">
+                  <div className='flex gap-2'>
                     {programdetails?.group_chat_requirement && (
                       <p
                         onClick={() => navigate("/discussions")}
-                        className="text-[14px] font-semibold text-font-primary-main px-4 py-2 border border-dashed border-background-primary-main rounded-[3px] bg-background-primary-light cursor-pointer"
+                        className='text-[14px] font-semibold text-font-primary-main px-4 py-2 border border-dashed border-background-primary-main rounded-[3px] bg-background-primary-light cursor-pointer'
                       >
                         Group Discussions
                       </p>
@@ -2142,7 +2162,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     {programdetails?.individual_chat_requirement && (
                       <p
                         onClick={() => navigate("/discussions")}
-                        className="text-[14px] font-semibold text-font-primary-main px-4 py-2 border border-dashed border-background-primary-main rounded-[3px] bg-background-primary-light cursor-pointer"
+                        className='text-[14px] font-semibold text-font-primary-main px-4 py-2 border border-dashed border-background-primary-main rounded-[3px] bg-background-primary-light cursor-pointer'
                       >
                         Individual Discussions
                       </p>
@@ -2153,7 +2173,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   {/* {(programdetails.status === programActionStatus.inprogress ||
                     programdetails.status === programActionStatus.paused ||
                     programdetails.status === programActionStatus.started) &&
-                  !programdetails.hasOwnProperty('sub_program') ? (
+                  !programdetails.hasOwnProperty("sub_program") ? (
                     <div className='flex flex-col mt-5'>
                       <p className='text-[12px] text-font-error-main'>
                         Date Tracker
@@ -2164,9 +2184,9 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             <span
                               className='px-2 py-1 text-[20px] w-[40px] flex justify-center items-center'
                               style={{
-                                background: 'rgba(231, 241, 242, 1)',
-                                color: 'rgba(0, 174, 189, 1)',
-                                borderRadius: '5px',
+                                background: "rgba(231, 241, 242, 1)",
+                                color: "rgba(0, 174, 189, 1)",
+                                borderRadius: "5px",
                                 fontWeight: 700,
                               }}
                             >
@@ -2174,7 +2194,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             </span>
                             <span
                               className='text-[12px]'
-                              style={{ color: 'rgba(118, 118, 118, 1)' }}
+                              style={{ color: "rgba(118, 118, 118, 1)" }}
                             >
                               Month
                             </span>
@@ -2186,9 +2206,9 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             <span
                               className='px-2 py-1 text-[20px] w-[40px] flex justify-center items-center'
                               style={{
-                                background: 'rgba(231, 241, 242, 1)',
-                                color: 'rgba(0, 174, 189, 1)',
-                                borderRadius: '5px',
+                                background: "rgba(231, 241, 242, 1)",
+                                color: "rgba(0, 174, 189, 1)",
+                                borderRadius: "5px",
                                 fontWeight: 700,
                               }}
                             >
@@ -2196,7 +2216,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             </span>
                             <span
                               className='text-[12px]'
-                              style={{ color: 'rgba(118, 118, 118, 1)' }}
+                              style={{ color: "rgba(118, 118, 118, 1)" }}
                             >
                               Day
                             </span>
@@ -2208,9 +2228,9 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             <span
                               className='px-2 py-1 text-[20px] w-[70px] flex justify-center items-center'
                               style={{
-                                background: 'rgba(231, 241, 242, 1)',
-                                color: 'rgba(0, 174, 189, 1)',
-                                borderRadius: '5px',
+                                background: "rgba(231, 241, 242, 1)",
+                                color: "rgba(0, 174, 189, 1)",
+                                borderRadius: "5px",
                                 fontWeight: 700,
                               }}
                             >
@@ -2218,14 +2238,14 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             </span>
                             <span
                               className='text-[12px]'
-                              style={{ color: 'rgba(118, 118, 118, 1)' }}
+                              style={{ color: "rgba(118, 118, 118, 1)" }}
                             >
                               Year
                             </span>
                           </p>
                         </div>
                         <>
-                          {role === 'mentor' && (
+                          {role === "mentor" && (
                             <button
                               className='py-3 px-10 text-white text-[14px] flex items-center w-[200px] justify-center'
                               title='Pause'
@@ -2235,18 +2255,18 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                     programActionStatus.paused &&
                                   programdetails.status !==
                                     programActionStatus.assigned
-                                    ? 'rgba(29, 91, 191, 1)'
-                                    : '#fff',
-                                borderRadius: '5px',
-                                border: '1px solid rgba(29, 91, 191, 1)',
-                                display: 'none',
+                                    ? "rgba(29, 91, 191, 1)"
+                                    : "#fff",
+                                borderRadius: "5px",
+                                border: "1px solid rgba(29, 91, 191, 1)",
+                                display: "none",
                                 background:
                                   programdetails.status ===
                                     programActionStatus.paused ||
                                   programdetails.status ===
                                     programActionStatus.assigned
-                                    ? 'linear-gradient(97.32deg, #1D5BBF -32.84%, #00AEBD 128.72%)'
-                                    : 'transparent',
+                                    ? "linear-gradient(97.32deg, #1D5BBF -32.84%, #00AEBD 128.72%)"
+                                    : "transparent",
                               }}
                               onClick={() => handleJoinProgram()}
                             >
@@ -2260,15 +2280,15 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                 alt={
                                   programdetails.status !==
                                   programActionStatus.inprogress
-                                    ? 'ResumeIcon'
-                                    : 'PauseIcon'
+                                    ? "ResumeIcon"
+                                    : "PauseIcon"
                                 }
                                 className='pr-4'
                               />
                               {programdetails.status ===
                               programActionStatus.inprogress
-                                ? 'Pause'
-                                : 'Start'}
+                                ? "Pause"
+                                : "Start"}
                             </button>
                           )}
                         </>
@@ -2284,15 +2304,15 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                       "program_join_payment_initiate" ||
                       programdetails?.mentee_join_status ===
                         "program_join_payment_pending") && (
-                      <div className="mt-3">
+                      <div className='mt-3'>
                         {programdetails?.mentee_join_status ===
                           "program_join_payment_initiate" && (
-                          <p className="text-font-error-main text-[14px] font-semibold mb-2">
+                          <p className='text-font-error-main text-[14px] font-semibold mb-2'>
                             {statusMessage}
                           </p>
                         )}
                         <Button
-                          btnType="button"
+                          btnType='button'
                           btnCls={
                             programdetails?.mentee_join_status ===
                             "program_join_payment_pending"
@@ -2314,7 +2334,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                           onClick={() => {
                             if (programdetails?.id) {
                               setProgramDetailsId(programdetails?.id);
-                              navigate('/payment-checkout');
+                              navigate("/payment-checkout");
                             }
                           }}
                           disabled={
@@ -2324,7 +2344,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                         />
                         {programdetails?.mentee_join_status ===
                           "program_join_payment_pending" && (
-                          <p className="text-font-error-main text-[14px] font-semibold mt-2">
+                          <p className='text-font-error-main text-[14px] font-semibold mt-2'>
                             Please Contact Administrator
                           </p>
                         )}
@@ -2351,13 +2371,13 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                 </div>
 
                 {/* Right Side Content */}
-                <div className="right-side-content">
+                <div className='right-side-content'>
                   <div
                     style={{
                       border: "1px solid rgba(223, 237, 255, 1)",
                       borderRadius: "10px",
                     }}
-                    className="px-6 pt-6 pb-3"
+                    className='px-6 pt-6 pb-3'
                   >
                     <ul className='flex flex-col gap-3'>
                       {/* {role !== "admin" && (
@@ -2381,7 +2401,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                         </li>
                       )} */}
                       <li
-                        className="flex justify-between text-[12px]"
+                        className='flex justify-between text-[12px]'
                         style={{
                           borderBottom: "1px solid rgba(217, 217, 217, 1)",
                           paddingBottom: "10px",
@@ -2392,7 +2412,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                         <span>{programdetails.session_count}</span>
                       </li>
                       <li
-                        className="flex justify-between text-[12px]"
+                        className='flex justify-between text-[12px]'
                         style={{
                           borderBottom: "1px solid rgba(217, 217, 217, 1)",
                           paddingBottom: "10px",
@@ -2406,7 +2426,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                       </li>
                       {programdetails.sub_program?.length > 0 ? (
                         <li
-                          className="flex justify-between text-[12px]"
+                          className='flex justify-between text-[12px]'
                           style={{
                             borderBottom: "1px solid rgba(217, 217, 217, 1)",
                             paddingBottom: "10px",
@@ -2433,7 +2453,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                           </li> */}
 
                           <li
-                            className="flex justify-between text-[12px]"
+                            className='flex justify-between text-[12px]'
                             style={{
                               borderBottom: "1px solid rgba(217, 217, 217, 1)",
                               paddingBottom: "10px",
@@ -2444,13 +2464,13 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             <span>
                               {programdetails?.start_date
                                 ? moment(programdetails?.start_date).format(
-                                    'MM-DD-YYYY'
+                                    "MM-DD-YYYY"
                                   )
-                                : '-'}
+                                : "-"}
                             </span>
                           </li>
                           <li
-                            className="flex justify-between text-[12px]"
+                            className='flex justify-between text-[12px]'
                             style={{
                               borderBottom: "1px solid rgba(217, 217, 217, 1)",
                               paddingBottom: "10px",
@@ -2461,9 +2481,9 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             <span>
                               {programdetails?.end_date
                                 ? moment(programdetails?.end_date).format(
-                                    'MM-DD-YYYY'
+                                    "MM-DD-YYYY"
                                   )
-                                : '-'}
+                                : "-"}
                             </span>
                           </li>
 
@@ -2472,47 +2492,47 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                           <li
                             className='flex justify-between text-[12px]'
                             style={{
-                              borderBottom: '1px solid rgba(217, 217, 217, 1)',
-                              paddingBottom: '10px',
-                              paddingTop: '14px',
+                              borderBottom: "1px solid rgba(217, 217, 217, 1)",
+                              paddingBottom: "10px",
+                              paddingTop: "14px",
                             }}
                           >
                             <span>Start Time</span>
                             <span>
                               {programdetails?.start_date
                                 ? moment(programdetails?.start_date).format(
-                                    'hh:mm A'
+                                    "hh:mm A"
                                   )
-                                : '-'}
+                                : "-"}
                             </span>
                           </li>
                           <li
                             className='flex justify-between text-[12px]'
                             style={{
-                              borderBottom: '1px solid rgba(217, 217, 217, 1)',
-                              paddingBottom: '10px',
-                              paddingTop: '14px',
+                              borderBottom: "1px solid rgba(217, 217, 217, 1)",
+                              paddingBottom: "10px",
+                              paddingTop: "14px",
                             }}
                           >
                             <span>End Time</span>
                             <span>
                               {programdetails?.end_date
                                 ? moment(programdetails?.end_date).format(
-                                    'hh:mm A'
+                                    "hh:mm A"
                                   )
-                                : '-'}
+                                : "-"}
                             </span>
                           </li>
 
                           <li
                             className='flex justify-between text-[12px]'
                             style={{
-                              borderBottom: '1px solid rgba(217, 217, 217, 1)',
-                              paddingBottom: '10px',
-                              paddingTop: '14px',
+                              borderBottom: "1px solid rgba(217, 217, 217, 1)",
+                              paddingBottom: "10px",
+                              paddingTop: "14px",
                             }}
                           >
-                            {' '}
+                            {" "}
                             <span>Duration</span>
                             <span>
                               {programdetails.duration} {" days"}
@@ -2540,7 +2560,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             programdetails?.mentee_join_status !==
                               "program_join_request_accepted" && (
                               <li
-                                className="flex justify-between text-[12px]"
+                                className='flex justify-between text-[12px]'
                                 style={{
                                   borderBottom:
                                     "1px solid rgba(217, 217, 217, 1)",
@@ -2549,20 +2569,20 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                 }}
                               >
                                 <span>Fees</span>
-                                <span className="text-[#1D5BBF]">
+                                <span className='text-[#1D5BBF]'>
                                   $ {programdetails?.enrollment_fees}
                                 </span>
                               </li>
                             )}
                           {(role === "mentor" || role === "admin") && (
                             <li
-                              className="flex justify-between text-[12px]"
+                              className='flex justify-between text-[12px]'
                               style={{ paddingTop: "14px" }}
                             >
                               {" "}
                               <span>Joined Mentees</span>
                               <span
-                                className="underline cursor-pointer"
+                                className='underline cursor-pointer'
                                 onClick={() =>
                                   handleViewJoinedMentees(programdetails)
                                 }
@@ -2574,19 +2594,19 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                           {programdetails?.mentee_join_status ===
                             "program_join_request_accepted" && (
                             <li
-                              className="flex justify-between text-[12px]"
+                              className='flex justify-between text-[12px]'
                               style={{
                                 paddingBottom: "10px",
                                 paddingTop: "14px",
                               }}
                             >
-                              <span className="flex gap-2">
+                              <span className='flex gap-2'>
                                 Paid{" "}
                                 <span>
-                                  <img src={PaidTickIcon} alt="" />
+                                  <img src={PaidTickIcon} alt='' />
                                 </span>
                               </span>
-                              <span className="text-[#1D5BBF]">
+                              <span className='text-[#1D5BBF]'>
                                 $ {programdetails?.enrollment_fees}
                               </span>
                             </li>
@@ -2720,10 +2740,10 @@ export default function ProgramDetails({ setProgramDetailsId }) {
               ) : null} */}
 
               {/* Notes Section */}
-              {["inprogress"].includes(
-                programdetails?.status
-              ) &&
-                (role === "mentee" || programdetails?.created_by === userdetails?.data?.user_id) && (
+              {["inprogress"].includes(programdetails?.status) &&
+                (role === "mentee" ||
+                  programdetails?.created_by ===
+                    userdetails?.data?.user_id) && (
                   <Box>
                     <Accordian
                       title={"Program Notes:"}
@@ -2743,9 +2763,9 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             mt={"12px"}
                           >
                             <Button
-                              btnCategory="primary"
-                              btnName="Save"
-                              btnCls=" w-[150px]"
+                              btnCategory='primary'
+                              btnName='Save'
+                              btnCls=' w-[150px]'
                               onClick={() => handleSubmitNotes()}
                             />
                           </Stack>
@@ -2761,14 +2781,14 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                       }}
                       open={notesActivity}
                     >
-                      <div className="px-5 py-1 flex justify-center items-center">
+                      <div className='px-5 py-1 flex justify-center items-center'>
                         <div
-                          className="flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20"
+                          className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
                           style={{ background: "#fff", borderRadius: "10px" }}
                         >
-                          <img src={SuccessTik} alt="SuccessTik" />
+                          <img src={SuccessTik} alt='SuccessTik' />
                           <p
-                            className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
+                            className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
                             style={{
                               fontWeight: 600,
                             }}
@@ -2794,10 +2814,10 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     defaultValue
                     children={
                       <div>
-                        <div className="w-full flex justify-end mb-4">
+                        <div className='w-full flex justify-end mb-4'>
                           <Button
-                            btnName="View All"
-                            btnCls="w-[140px]"
+                            btnName='View All'
+                            btnCls='w-[140px]'
                             onClick={() => navigate("/mentee-tasks")}
                           />
                         </div>
@@ -2808,13 +2828,13 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                 )}
               {/* Detail Section */}
               <div
-                className="details-section px-6 py-11 mb-10"
+                className='details-section px-6 py-11 mb-10'
                 style={{
                   background: "rgba(249, 249, 249, 1)",
                   borderRadius: "10px",
                 }}
               >
-                <div className="tabs flex gap-4">
+                <div className='tabs flex gap-4'>
                   {tabs.map((tab) => (
                     <button
                       key={tab.key}
@@ -2828,7 +2848,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   ))}
                 </div>
 
-                <div className="tab-content px-6 pt-10 text-[12px]">
+                <div className='tab-content px-6 pt-10 text-[12px]'>
                   <div
                     className={`about-programs ${
                       activeTab === "about_program" ? "block" : "hidden"
@@ -2836,9 +2856,9 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   >
                     {Array.isArray(programdetails?.goals) &&
                       programdetails?.goals?.length > 0 && (
-                        <div className="py-5">
-                          <p className="text-[12px] mb-2">Goals:</p>
-                          <div className="flex items-center gap-x-3">
+                        <div className='py-5'>
+                          <p className='text-[12px] mb-2'>Goals:</p>
+                          <div className='flex items-center gap-x-3'>
                             {programdetails?.goals.map((goal) => (
                               <button
                                 key={goal.id}
@@ -2856,9 +2876,9 @@ export default function ProgramDetails({ setProgramDetailsId }) {
 
                     {Array.isArray(programdetails?.admin_goals) &&
                       programdetails?.admin_goals?.length > 0 && (
-                        <div className="py-5">
-                          <p className="text-[12px] mb-2">Admin Goals:</p>
-                          <div className="flex items-center gap-x-3">
+                        <div className='py-5'>
+                          <p className='text-[12px] mb-2'>Admin Goals:</p>
+                          <div className='flex items-center gap-x-3'>
                             {programdetails?.admin_goals.map((goal) => (
                               <button
                                 key={goal.id}
@@ -2880,8 +2900,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                       {programdetails?.benefits || '-'}
                     </div> */}
                     {programdetails?.skill_details?.length ? (
-                      <div className="skills pt-8">
-                        <div className="font-semibold pb-5">
+                      <div className='skills pt-8'>
+                        <div className='font-semibold pb-5'>
                           Skills you'll gain
                         </div>
                         {programdetails?.skill_details}
@@ -2890,23 +2910,23 @@ export default function ProgramDetails({ setProgramDetailsId }) {
 
                     {programdetails.image !== null &&
                       programdetails.image !== "" && (
-                        <div className="sponsor pt-8">
-                          <div className="font-semibold pb-5">
+                        <div className='sponsor pt-8'>
+                          <div className='font-semibold pb-5'>
                             Sponsored by{" "}
                           </div>
-                          <ul className="flex gap-5">
+                          <ul className='flex gap-5'>
                             <img
                               style={{ width: "100px", height: "100px" }}
                               src={programdetails.image}
-                              alt="SponsorIcon"
+                              alt='SponsorIcon'
                             />
                           </ul>
                         </div>
                       )}
                     {role !== "admin" &&
                       !programdetails?.admin_assign_program && (
-                        <div className="benefits py-3">
-                          <div className="font-semibold pb-3">Benefits</div>
+                        <div className='benefits py-3'>
+                          <div className='font-semibold pb-3'>Benefits</div>
                           {programdetails.benefits}
                           {/* <ul className='leading-9 list-disc ml-4'>
                                                     <li>Lorem Ipsum is simply dummy text of the printing and typesetting industry. </li>
@@ -2915,16 +2935,16 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                                 </ul> */}
                         </div>
                       )}
-                    <div className="program-certificate pt-8">
-                      <div className="font-semibold pb-3">
+                    <div className='program-certificate pt-8'>
+                      <div className='font-semibold pb-3'>
                         Types of Certificates
                         {/* {
                                                         programdetails.certifications.length <= 9 ? ' 0' + programdetails.certifications.length : programdetails.certifications.length} */}
                       </div>
-                      <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700 mb-10">
-                        <ul className="flex flex-wrap -mb-px">
+                      <div className='text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700 mb-10'>
+                        <ul className='flex flex-wrap -mb-px'>
                           {participatedTabs.map((participatedTab) => (
-                            <li className="me-2" key={participatedTab.key}>
+                            <li className='me-2' key={participatedTab.key}>
                               <p
                                 className={`inline-block p-4 border-b-2 cursor-pointer border-transparent rounded-t-lg ${
                                   certificateActiveTab === participatedTab.key
@@ -2951,7 +2971,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                           }`}
                           key={participatedTab.key}
                         >
-                          <div className="px-9 py-16 w-4/6 leading-6">
+                          <div className='px-9 py-16 w-4/6 leading-6'>
                             {participatedTab.key === "participated" &&
                               "The ability for members to earn badges and receive certifications is another essential feature of our Mentoring Management program. It helps in creating engaging and impactful relationships between mentors and mentees."}
 
@@ -2959,9 +2979,9 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                               "All the badges and certifications are secured through a blockchain system to ensure authenticity and traceability. This innovative approach not only enhances motivation but also provides tangible recognition of achievements, encouraging continuous growth and engagement."}
                           </div>
                           <img
-                            className="absolute right-0"
+                            className='absolute right-0'
                             src={CertificateIcon}
-                            alt="CertificateIcon"
+                            alt='CertificateIcon'
                           />
                         </div>
                       ))}
@@ -2981,7 +3001,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                       activeTab === "program_testimonials" ? "block" : "hidden"
                     }`}
                   >
-                    <div className="testimonials bg-white px-5 py-7">
+                    <div className='testimonials bg-white px-5 py-7'>
                       {/* <div className='flex justify-end'>
                                                     <button className='py-2 px-6 mb-10' style={{ color: 'rgba(29, 91, 191, 1)', border: '1px dotted rgba(29, 91, 191, 1)', borderRadius: '3px' }}>Request Testimonials</button>
                                                 </div> */}
@@ -2991,36 +3011,36 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             <div
                               className='pt-16 pb-2 px-7 leading-5 relative'
                               style={{
-                                background: 'rgba(248, 249, 250, 1)',
+                                background: "rgba(248, 249, 250, 1)",
                               }}
                             >
                               <img
                                 src={QuoteIcon}
-                                className="absolute top-[-16px]"
-                                alt="QuoteIcon"
+                                className='absolute top-[-16px]'
+                                alt='QuoteIcon'
                               />
                               <div className='relative'>
-                                <p className='pb-7'>{e?.comments ?? '-'}</p>
+                                <p className='pb-7'>{e?.comments ?? "-"}</p>
                                 <hr
                                   className='absolute'
-                                  style={{ width: '100%' }}
+                                  style={{ width: "100%" }}
                                 />
                               </div>
 
                               <div className='flex gap-3 py-5'>
                                 <img
                                   src={e?.profile_image ?? UserImage}
-                                  alt="user"
+                                  alt='user'
                                   style={{
-                                    borderRadius: '50%',
-                                    width: '38px',
-                                    height: '35px',
+                                    borderRadius: "50%",
+                                    width: "38px",
+                                    height: "35px",
                                   }}
                                 />
                                 <div className='flex flex-col'>
                                   <span
                                     style={{
-                                      color: 'rgba(0, 174, 189, 1)',
+                                      color: "rgba(0, 174, 189, 1)",
                                     }}
                                   >
                                     {e?.name}
