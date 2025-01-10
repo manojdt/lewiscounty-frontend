@@ -23,10 +23,7 @@ import {
   requestStatusText,
   user,
 } from '../../../utils/constant';
-import {
-  requestPageBreadcrumbs,
-  tabQuertyData,
-} from '../../Breadcrumbs/BreadcrumbsCommonData';
+import { requestPageBreadcrumbs, tabQuertyData, tabQuertyDataMentor } from '../../Breadcrumbs/BreadcrumbsCommonData';
 import SearchIcon from '../../../assets/icons/search.svg';
 import Edit_Icon from '../../../assets/icons/editIcon.svg';
 import CalendarIcon from '../../../assets/images/calender_1x.png';
@@ -775,10 +772,8 @@ export default function AllRequest() {
                 <MenuItem
                   onClick={(e) => {
                     const requestQuery = `&request_id=${seletedItem.id}`;
-                    const tabQuery =
-                      selectedTab === 'mentees'
-                        ? `&breadcrumbsType=${requestPageBreadcrumbs.program_mentee_cancel}`
-                        : `&breadcrumbsType=${tabQuertyData(role, actionTab)}`;
+                    const tabQuery = selectedTab==="mentees"?`&breadcrumbsType=${requestPageBreadcrumbs.program_mentee_cancel}`:`&breadcrumbsType=${tabQuertyData(role,actionTab)}`;
+                    const tabQueryMentor = `breadcrumbsType=${tabQuertyDataMentor(role,actionTab)}`;
                     const url =
                       (role === 'mentor' || role === 'admin') &&
                       actionTab === 'program_join'
@@ -786,8 +781,8 @@ export default function AllRequest() {
                         : role === 'admin'
                         ? `/program-details/${seletedItem.program}?request_id=${seletedItem.id}&type=${actionTab}${tabQuery}`
                         : seletedItem?.status === 'approved'
-                        ? `/program-details/${seletedItem.program}`
-                        : `/program-details/${seletedItem.program}?request_id=${seletedItem.id}&type=${actionTab}`;
+                        ? `/program-details/${seletedItem.program}?${tabQueryMentor}`
+                        : `/program-details/${seletedItem.program}?request_id=${seletedItem.id}&type=${actionTab}&${tabQueryMentor}`;
                     return navigate(url, { state: { data: seletedItem } });
                   }}
                   className='!text-[12px]'
@@ -1034,12 +1029,15 @@ export default function AllRequest() {
               <MenuItem
                 onClick={(e) => {
                   const tabQuery =
-                    selectedTab === 'mentees'
-                      ? `&breadcrumbsType=${tabQuertyData(
-                          role,
-                          actionTab
-                        )}&goalType=${requestPageBreadcrumbs?.goal_request}`
-                      : `&breadcrumbsType=${tabQuertyData(role, actionTab)}`;
+                    selectedTab === "mentees"
+                      ? `&breadcrumbsType=${
+                          role === "admin"
+                            ? tabQuertyData(role, actionTab)
+                            : tabQuertyDataMentor(role, actionTab)
+                        }&goalType=${requestPageBreadcrumbs?.goal_request}`
+                      : role === "admin"
+                      ? `&breadcrumbsType=${tabQuertyData(role, actionTab)}`
+                      : `&breadcrumbsType=new_goals_request`;
                   navigate(
                     `/view-goal/${seletedItem?.goal?.id}?requestId=${seletedItem.id}${tabQuery}`
                   );
@@ -1405,7 +1403,7 @@ export default function AllRequest() {
               {role === 'mentor' && (
                 <>
                   <MenuItem
-                    onClick={() => navigate(`/view-report/${seletedItem?.id}`)}
+                    onClick={() => navigate(`/view-report/${seletedItem?.id}?breadcrumbsType=${requestPageBreadcrumbs.report_request}`)}
                     className='!text-[12px]'
                   >
                     <img
@@ -1669,7 +1667,7 @@ export default function AllRequest() {
                 <>
                   <MenuItem
                     onClick={() =>
-                      navigate(`/certificate_mentees/${seletedItem.program}`, {
+                      navigate(`/certificate_mentees/${seletedItem.program}?breadcrumbsType=${requestPageBreadcrumbs.certificate_request}`, {
                         state: {
                           rowId: seletedItem?.id,
                           status: seletedItem?.status,

@@ -293,7 +293,7 @@ export default function Programs() {
             : "admin_assign_program" in programdetails
             ? `?program_create_type=admin_program`
             : ""
-        }`
+        }${programdetails?.admin_program_request_id || "admin_assign_program" in programdetails ? "&" : "?"}breadcrumbsType=${displayName}`
       );
     }
   };
@@ -534,6 +534,7 @@ export default function Programs() {
       }
       return menu;
     });
+    console.log(programMenu,"programMenu")
     setProgramMenusList(programMenu);
   }, [userprograms.statusCounts, userprograms.programsCounts]);
 
@@ -623,6 +624,51 @@ export default function Programs() {
       );
     }
   }, [role, searchParams, programFilter]);
+  const getProgramMenuDisplayName = ({
+    filterType,
+    role,
+    userInfo,
+    isBookmark,
+    programMenusList
+  }) => {
+    // Check for bookmarked programs first
+    if (isBookmark) {
+      return "Bookmarked Programs";
+    }
+  
+    // Check for active programs condition
+    const isActiveProgramsView = 
+      filterType === "planned" || 
+      (filterType === null && 
+       (role === "mentee" || role === "admin") && 
+       !userInfo?.data?.is_registered);
+  
+    if (isActiveProgramsView) {
+      return "Active Programs";
+    }
+  
+    // Look for matching menu based on status or menteeStatus
+    const menuByStatus = programMenusList.find(
+      menu => menu.status === filterType
+    );
+  
+    const menuByMenteeStatus = 
+      role === "mentee" 
+        ? programMenusList.find(
+            menu => menu.menteeStatus === filterType
+          )
+        : null;
+  
+    // Return the appropriate name or default to "All Programs"
+    return menuByStatus?.name || menuByMenteeStatus?.name || "All Programs";
+  };
+  const displayName = getProgramMenuDisplayName({
+    filterType,
+    role,
+    userInfo,
+    isBookmark,
+    programMenusList
+  });
 
   return (
     <div className="dashboard-content px-8 mt-10">
@@ -675,14 +721,7 @@ export default function Programs() {
             <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
               <div className="flex gap-4">
                 <div>
-                  {programMenusList.find((menu) => menu.status === filterType)
-                    ?.name ||
-                    ((filterType === "planned" ||
-                      (filterType === null &&
-                        (role === "mentee" || role === "admin") &&
-                        !userInfo?.data?.is_registered)) &&
-                      "Active Programs") ||
-                    (isBookmark ? "Bookmarked Programs" : "All Programs")}
+                  {displayName}
                 </div>
                 <img
                   src={programView === "grid" ? ListViewIcon : GridViewIcon}

@@ -16,8 +16,25 @@ export const requestPageBreadcrumbs = {
   adminReportTab:"all",
   adminApproveReportTab:"approved",
   adminCancelReportTab:"rejected",
+  adminCertificateTab:"all",
+  adminCertificateApproveReportTab:"approved",
+  adminMemberMentorTab:"mentor",
+  adminMemberMenteeTab:"mentee",
+  new_goals_request:"new_goals_request",
+  feed:'fead',
 };
-
+export const programStatusBreadcrumbs=[
+    'All Programs',
+    'Active Programs',
+    'Recently Joined Programs',
+    'Ongoing Programs',
+    'Assign Programs',
+    'Drafted Programs',
+    'Bookmarked Programs',
+    'Rescheduled Programs',
+    'Completed Programs',
+    'Cancelled Programs'
+  ];
 // Program Request
 export const request_newProgramRequest = (name) => {
   return [
@@ -121,6 +138,17 @@ export const request_goalMentee = (name,menteeQuery) => {
       },
     ];
   };
+export const request_goalNew = (name,menteeQuery) => {
+    return [
+      {
+        label: "New Goal Request",
+        path: `/all-request?type=new_goals_request`,
+      },
+      {
+        label: `View ${name}`,
+      },
+    ];
+  };
 
 // Testimonials Requests
 export const request_testimonial = (name) => {
@@ -209,9 +237,88 @@ export const admin_Canceledreport = (name) => {
       },
     ];
   };
+// My Certificate
+
+export const adminMy_certificate = (name) => {
+    return [
+      {
+        label: "Certificate Request",
+        path: `/certificates?tabType=${requestPageBreadcrumbs?.adminCertificateTab}`,
+      },
+      {
+        label: `View Accepted Member List`,
+      },
+    ];
+  };
+export const adminMy_approvedCertificate = (name) => {
+    return [
+      {
+        label: "Certificate Request",
+        path: `/certificates?tabType=${requestPageBreadcrumbs?.adminCertificateApproveReportTab}`,
+      },
+      {
+        label: `View Accepted Member List`,
+      },
+    ];
+  };
+
+// Member List
+export const admin_mentorMember = (name) => {
+    return [
+      {
+        label: "Member",
+        path: `/members?tabType=${requestPageBreadcrumbs?.adminMemberMentorTab}`,
+      },
+      {
+        label: `Mentor Profile`,
+      },
+    ];
+  };
+export const admin_menteeMember = (name) => {
+    return [
+      {
+        label: "Member",
+        path: `/members?tabType=${requestPageBreadcrumbs?.adminMemberMenteeTab}`,
+      },
+      {
+        label: `Mentee Profile`,
+      },
+    ];
+  };
+
+// Program Details Page
+  export const program_details_main = (name,statusName) => {
+    return [
+      {
+        label: `${statusName}`,
+        path: -1,
+      },
+      {
+        label: `View ${name}`,
+      },
+    ];
+  };
+// Feed
+
+export const user_feed = (name) => {
+    return [
+      {
+        label: `Feed`,
+        path: `/feeds`,
+      },
+      {
+        label: `View ${name}`,
+      },
+    ];
+  };
 
 export const tabQuertyData = (role, tab) => {
   if (role === "admin") {
+    return requestPageBreadcrumbs[tab];
+  }
+};
+export const tabQuertyDataMentor = (role, tab) => {
+  if (role === "mentor") {
     return requestPageBreadcrumbs[tab];
   }
 };

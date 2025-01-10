@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import Tooltip from '../../shared/Tooltip';
 import CancelIcon from '../../assets/images/cancel-colour1x.png';
 import FeedImage from '../../assets/images/feed1.png';
@@ -28,6 +28,9 @@ import ProgramFeeds from '../../shared/ProgramFeeds';
 import { Button } from '../../shared';
 import { feedStatus } from '../../utils/constant';
 import NoImage from '../../assets/images/noimage.jpg';
+import { userUnFollow } from '../../services/userList';
+import { user_feed } from '../Breadcrumbs/BreadcrumbsCommonData';
+import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 
 export default function FeedDetails() {
   const navigate = useNavigate();
@@ -36,7 +39,10 @@ export default function FeedDetails() {
   const { feedDetails, recentPosts, loading, status } = useSelector(
     (state) => state.feeds
   );
+  const [searchParams] = useSearchParams();	 
 
+  const breadcrumbsType = searchParams.get("breadcrumbsType") || "";
+    const [breadcrumbsArray, setBreadcrumbsArray] = useState([]);
   const [comment, setComment] = useState('');
   const [replyInfo, setReplyInfo] = useState({ id: '', msg: '' });
 
@@ -100,8 +106,13 @@ export default function FeedDetails() {
       dispatch(getPostDetails(params.id));
     }
   }, [status]);
-
+useEffect(() => {
+ if(breadcrumbsType&&feedDetails.content){
+  setBreadcrumbsArray(user_feed(feedDetails.content))
+}
+}, [breadcrumbsType,feedDetails])
   console.log(feedDetails);
+  console.log(breadcrumbsArray);
 
   return (
     <>
@@ -120,8 +131,8 @@ export default function FeedDetails() {
           >
             <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
               <div className='flex items-center justify-between'>
+                <Breadcrumbs items={breadcrumbsArray}/>
                 <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 700 }}>
-                  {feedDetails.content}
                 </p>
               </div>
               <div className='flex gap-20 items-center'>
