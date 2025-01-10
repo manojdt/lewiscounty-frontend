@@ -1,43 +1,26 @@
 import React, { useEffect } from "react";
 import { MuiCustomModal } from "../../../shared/Modal/MuiCustomModal";
 import TextField from "@mui/material/TextField";
-import { useCreateMaterialMutation } from "../../../features/materials/materialApis.services";
+import { useCreateCertificateMutation } from "../../../features/certificates/certifcatesApi.services";
 import { useForm } from "react-hook-form";
 import {
   Avatar,
-  Button,
-  IconButton,
+  styled,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
-  MenuItem,
-  styled,
+  Button,
+  IconButton,
 } from "@mui/material";
+import modal_tick_icon from "../../../assets/icons/modal_tick_icon.svg";
 import AttachmentIcon from "../../../assets/icons/attachement_icon.svg";
 import DeleteIcon from "@mui/icons-material/Delete";
 import WallpaperOutlinedIcon from "@mui/icons-material/WallpaperOutlined";
-import modal_tick_icon from "../../../assets/icons/modal_tick_icon.svg";
-
-const materialTypeOptions = [
-  {
-    label: "Video",
-    value: "video",
-  },
-  {
-    label: "Document",
-    value: "document",
-  },
-  {
-    label: "PowerPoint",
-    value: "ppt",
-  },
-];
 
 const defaultValues = {
   name: "",
-  category: "",
-  material_type: "",
+  description: null,
   file: null,
 };
 
@@ -53,8 +36,8 @@ export const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-const MaterialsCreationModal = (props) => {
-  const { isOpen, handleCloseModal, categoryData, categoryId } = props;
+const CertificatesCreationModal = (props) => {
+  const { isOpen, handleCloseModal } = props;
 
   const {
     setValue,
@@ -65,21 +48,22 @@ const MaterialsCreationModal = (props) => {
     clearErrors,
     formState: { errors },
   } = useForm({ defaultValues });
+
   const formValues = watch();
   const [showBackdrop, setShowBackdrop] = React.useState(false);
 
   const [
-    createMaterial,
+    createCertificate,
     {
-      isLoading: isMaterialsCreating,
-      isSuccess: isMaterialsCreated,
-      isError: IsErrorMaterialsCreating,
+      isLoading: isCertificatesCreating,
+      isSuccess: isCertificatesCreated,
+      isError: IsErrorCertificatesCreating,
       data,
-      reset: resetCreateMaterialState,
+      reset: resetCreateCertificateState,
     },
-  ] = useCreateMaterialMutation();
+  ] = useCreateCertificateMutation();
 
-  const handleMaterialCreate = async () => {
+  const handleCertificateCreate = async () => {
     const isValid = await trigger();
 
     if (isValid) {
@@ -99,19 +83,19 @@ const MaterialsCreationModal = (props) => {
         });
       }
 
-      createMaterial(formData);
+      createCertificate(formData);
     }
   };
 
   const handleCancel = () => {
     reset(defaultValues); // Reset form values
     clearErrors(); // Clear any form errors
-    resetCreateMaterialState(); // Reset mutation state
+    resetCreateCertificateState(); // Reset mutation state
     handleCloseModal(); // Close the modal
   };
 
   useEffect(() => {
-    if (isMaterialsCreated || IsErrorMaterialsCreating) {
+    if (isCertificatesCreated || IsErrorCertificatesCreating) {
       setShowBackdrop(true);
 
       // Set timeout to handle cleanup after 3 seconds
@@ -120,18 +104,18 @@ const MaterialsCreationModal = (props) => {
         setShowBackdrop(false);
 
         // Only navigate on success cases
-        if (isMaterialsCreated) {
+        if (isCertificatesCreated) {
           handleCancel();
         }
       }, 3000);
       return () => {
         clearTimeout(timer);
-        resetCreateMaterialState();
+        resetCreateCertificateState();
         reset(defaultValues);
         clearErrors();
       };
     }
-  }, [IsErrorMaterialsCreating, isMaterialsCreated]);
+  }, [IsErrorCertificatesCreating, isCertificatesCreated]);
 
   useEffect(() => {
     const sub = watch((values) =>
@@ -141,17 +125,11 @@ const MaterialsCreationModal = (props) => {
     return () => sub.unsubscribe();
   }, [watch]);
 
-  useEffect(() => {
-    if (categoryId && isOpen) {
-      setValue("category", +categoryId);
-    }
-  }, [categoryId, isOpen]);
-
   return (
     <>
       <MuiCustomModal
         hideBackdrop
-        dialogTitle={"Add Materials"}
+        dialogTitle={"Add Certificates"}
         open={isOpen}
         handleClose={handleCancel}
         maxWidth="sm"
@@ -160,74 +138,33 @@ const MaterialsCreationModal = (props) => {
             color: "inherit",
             variant: "outlined",
             children: "Cancel",
-            disabled: isMaterialsCreating,
+            disabled: isCertificatesCreating,
             onClick: handleCancel,
           },
           {
             color: "primary",
             variant: "contained",
-            disabled: isMaterialsCreating,
-            children: isMaterialsCreating ? "Adding..." : "Add",
-            onClick: handleMaterialCreate,
+            disabled: isCertificatesCreating,
+            children: isCertificatesCreating
+              ? "Adding..."
+              : "Add New Certificate",
+            onClick: handleCertificateCreate,
           },
         ]}
       >
         <label className="block tracking-wide text-gray-700 text-xs font-bold mt-4">
-          Material Name
+          Certification Name
         </label>
         <TextField
           fullWidth
-          placeholder="Material Name"
+          placeholder="Certificate Name"
           margin="normal"
           {...register("name", {
-            required: "Material name is required",
+            required: "Certificate name is required",
           })}
           error={!!errors.name}
           helperText={errors.name?.message}
         />
-
-        {/* Category */}
-        <label className="block tracking-wide text-gray-700 text-xs font-bold mt-4">
-          Category
-        </label>
-        <TextField
-          disabled
-          select
-          fullWidth
-          value={formValues.category || ""}
-          placeholder="Category"
-          margin="normal"
-          error={!!errors.category}
-          helperText={errors.category?.message}
-        >
-          {categoryData?.map((category) => (
-            <MenuItem key={category.id} value={category.id}>
-              {category.name}
-            </MenuItem>
-          ))}
-        </TextField>
-
-        {/* Material Type */}
-        <label className="block tracking-wide text-gray-700 text-xs font-bold mt-4">
-          Material Type
-        </label>
-        <TextField
-          select
-          fullWidth
-          placeholder="Material Type"
-          margin="normal"
-          {...register("material_type", {
-            required: "Material type is required",
-          })}
-          error={!!errors.material_type}
-          helperText={errors.material_type?.message}
-        >
-          {materialTypeOptions.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </TextField>
 
         {/* File Upload Area */}
         <label className="block tracking-wide text-gray-700 text-xs font-bold my-4">
@@ -294,7 +231,7 @@ const MaterialsCreationModal = (props) => {
       <MuiCustomModal
         PaperProps={{
           sx: {
-            background: isMaterialsCreated
+            background: isCertificatesCreated
               ? "linear-gradient(97.86deg, #005DC6 -15.07%, #00B1C0 112.47%)"
               : "rgba(249, 249, 249, 1)",
           },
@@ -304,10 +241,10 @@ const MaterialsCreationModal = (props) => {
         onClose={() => setShowBackdrop(false)}
       >
         <div className="flex justify-center items-center flex-col gap-y-4">
-          {isMaterialsCreated && <Avatar src={modal_tick_icon} />}
+          {isCertificatesCreated && <Avatar src={modal_tick_icon} />}
           <p
             className={`
-            ${isMaterialsCreated ? "text-white" : "text-red-500"} 
+            ${isCertificatesCreated ? "text-white" : "text-red-500"} 
           pb-4 text-center font-normal text-md`}
             role="alert"
           >
@@ -319,4 +256,4 @@ const MaterialsCreationModal = (props) => {
   );
 };
 
-export default MaterialsCreationModal;
+export default CertificatesCreationModal;

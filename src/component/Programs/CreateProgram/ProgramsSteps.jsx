@@ -25,6 +25,7 @@ import { MentorAssignColumns } from "../../../mock";
 import MuiModal from "../../../shared/Modal";
 import { useSelector } from "react-redux";
 import { Button } from "../../../shared";
+import { formatPhoneNumber } from "../../../utils/formFields";
 // import { useGetStatesQuery } from '../../../features/programs/program-slice';
 // import { useGetCitiesQuery } from '../../../features/program/programApi.services';
 
@@ -91,8 +92,19 @@ const ProgramSteps = ({
     "program_mode",
   ]);
 
-  // console.log('stepFields', stepFields);
+const handleInputChange = (e, field) => {
+    const { value } = e.target;
 
+    if (
+      field.name === 'phone_number' ||
+      field.name === 'secondary_phone_number'
+    ) {
+      const formattedValue = formatPhoneNumber(value);
+      setValue(field.name, formattedValue);
+    } else {
+      setValue(field.name, value);
+    }
+  };
   const handleSelectedRow = (newSelectedRows) => {
     // For mentor_id, allow single selection/deselection
     // If the new selection is empty or different from current, update it
@@ -146,6 +158,7 @@ const ProgramSteps = ({
     if (count > currentLength) {
       for (let i = currentLength; i < count; i++) {
         append({
+          admin_program_series: i + 1,
           title: "",
           description: "",
           start_date: "",
@@ -319,7 +332,7 @@ const ProgramSteps = ({
                   />
                 </FormControl>
               ) : field.type === "input" ? (
-                <div className="relative">                  
+                <div className="relative">
                   <Controller
                     name={field.name}
                     control={control}
@@ -330,6 +343,7 @@ const ProgramSteps = ({
                         disabled={disableFields}
                         {...controlledField}
                         type={field.fieldtype}
+                        onChange={(e) => handleInputChange(e, field)}
                         className={`w-full border-none px-3 py-[0.32rem] leading-[2.15] ${
                           disableFields ? "bg-slate-300" : "input-bg"
                         } focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]`}
@@ -517,6 +531,7 @@ const ProgramSteps = ({
                       disableSelectFields ? "bg-slate-300" : "input-bg"
                     } focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]`}
                     placeholder={field.placeholder}
+                    value={watch(field.name) || ""}
                     style={{
                       color: "#232323",
                       borderRadius: "3px",
