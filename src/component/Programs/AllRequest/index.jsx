@@ -1845,7 +1845,7 @@ export default function AllRequest() {
       ...(filter.search !== '' && { search: filter.search }),
       ...(filter.filter_by !== ''
         ? { filter_by: filter.filter_by }
-        : { filter_by: 'month' }),
+        : {}),
     };
 
     if (role === 'mentor') {
@@ -1866,13 +1866,13 @@ export default function AllRequest() {
       getlearningAccessRequest({
         ...(filterStatus !== 'all' && { status: filterStatus }),
         created_at: 'mentor',
-        filter_by: 'month',
+        // filter_by: 'month',
         page: paginationModel?.page + 1,
         limit: paginationModel?.pageSize,
         ...(filter.search !== '' && { search: filter.search }),
         ...(filter.filter_by !== ''
           ? { filter_by: filter.filter_by }
-          : { filter_by: 'month' }),
+          : { }),
       })
     );
   };
@@ -1887,7 +1887,7 @@ export default function AllRequest() {
         ...(filter.search !== '' && { search: filter.search }),
         ...(filter.filter_by !== ''
           ? { filter_by: filter.filter_by }
-          : { filter_by: 'month' }),
+          : {  }),
       })
     );
   };
@@ -1897,7 +1897,7 @@ export default function AllRequest() {
       getAllGoals({
         ...(filter.filter_by !== ''
           ? { time_frame: filter.filter_by }
-          : { time_frame: 'month' }),
+          : {  }),
         params: 'request',
         page: paginationModel?.page + 1,
         limit: paginationModel?.pageSize,
@@ -1921,7 +1921,7 @@ export default function AllRequest() {
         ...(filter.search !== '' && { search: filter.search }),
         ...(filter.filter_by !== ''
           ? { filter_by: filter.filter_by }
-          : { filter_by: 'month' }),
+          : { }),
       })
     );
   };
@@ -1955,7 +1955,7 @@ export default function AllRequest() {
         ...(filter.search !== '' && { search: filter.search }),
         ...(filter.filter_by !== ''
           ? { filter_by: filter.filter_by }
-          : { filter_by: 'month' }),
+          : {  }),
       })
     );
   };
@@ -1970,7 +1970,7 @@ export default function AllRequest() {
         ...(filter.search !== '' && { search: filter.search }),
         ...(filter.filter_by !== ''
           ? { filter_by: filter.filter_by }
-          : { filter_by: 'month' }),
+          : { }),
       })
     );
   };
@@ -1984,7 +1984,7 @@ export default function AllRequest() {
       ...(filter.search !== '' && { search: filter.search }),
       ...(filter.filter_by !== ''
         ? { filter_by: filter.filter_by }
-        : { filter_by: 'month' }),
+        : { }),
     };
 
     // if (role === "mentor") {
@@ -2011,7 +2011,7 @@ export default function AllRequest() {
         ...(filter.search !== '' && { search: filter.search }),
         ...(filter.filter_by !== ''
           ? { filter_by: filter.filter_by }
-          : { filter_by: 'month' }),
+          : {}),
       })
     );
   };
@@ -2027,7 +2027,7 @@ export default function AllRequest() {
         ...(filter.search !== '' && { search: filter.search }),
         ...(filter.filter_by !== ''
           ? { filter_by: filter.filter_by }
-          : { filter_by: 'month' }),
+          : {}),
       })
     );
   };
@@ -2934,12 +2934,12 @@ export default function AllRequest() {
                           setFilter({ ...filter, filter_by: e.target.value })
                         }
                       >
-                        {/* <option
-                          value='year'
-                          selected={filter.filter_by === 'year'}
+                        <option
+                          value=''
+                          selected={filter.filter_by === ''}
                         >
-                          Year
-                        </option> */}
+                          All
+                        </option>
                         <option
                           value='month'
                           selected={filter.filter_by === 'month'}

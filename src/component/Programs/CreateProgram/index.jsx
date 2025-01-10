@@ -9,9 +9,6 @@ import ProgramSteps from "./ProgramsSteps";
 import { ProgramTabs, ProgramFields } from "../../../utils/formFields";
 import {
   updateNewPrograms,
-  getAllCertificates,
-  getAllSkills,
-  getAllMembers,
   getProgramNameValidate,
   getAllMentors,
 } from "../../../services/programInfo";
@@ -20,7 +17,6 @@ import {
   GoalColumns,
   MaterialColumns,
   MemberColumns,
-  SkillsColumns,
 } from "../../../mock";
 import DataTable from "../../../shared/DataGrid";
 import { goalStatus, programStatus } from "../../../utils/constant";
@@ -43,6 +39,8 @@ import {
   useGetCitiesQuery,
   useGetSpecificProgramDetailsQuery,
   useGetAllCategoriesQuery,
+  useGetCertificatesQuery,
+  useGetMembersQuery,
   // useGetCountryStatesQuery,
   // useGetCitiesQuery,
 } from "../../../features/program/programApi.services";
@@ -67,9 +65,6 @@ export default function CreatePrograms() {
   const [toggleRole, setToggleRole] = useState("");
   const {
     allPrograms,
-    certificate,
-    skills,
-    members,
     mentor_assign,
     loading: apiLoading,
     status,
@@ -116,6 +111,28 @@ export default function CreatePrograms() {
       skip: !formValues?.category,
     }
   );
+  const { data: certificate } = useGetCertificatesQuery(
+    {
+      ...(formValues?.category && {
+        category_id: formValues?.category,
+      }),
+    },
+    {
+      refetchOnMountOrArgChange: true,
+      skip: !formValues?.category,
+    }
+  );
+  const { data: members } = useGetMembersQuery(
+    {
+      ...(formValues?.category && {
+        category_id: formValues?.category,
+      }),
+    },
+    {
+      refetchOnMountOrArgChange: true,
+      skip: !formValues?.category,
+    }
+  );
 
   const [
     createProgram,
@@ -144,15 +161,15 @@ export default function CreatePrograms() {
   const [formDetails, setFormDetails] = useState({
     category: [],
     materials: [],
-    skills: [],
     certificate: [],
     members: [],
     goals: [],
     learning_materials: [],
   });
 
+  const ID_ONLY_FIELDS = ["goals", "equipments"];
   // console.log('formDetails', formDetails);
-
+  const [tempSelectedRows, setTempSelectedRows] = useState([]);
   const [logo, setLogo] = useState({});
   const [stepWiseData, setStepWiseData] = useState({});
   const [selectedItem, setSelectedItem] = React.useState({});
@@ -195,12 +212,10 @@ export default function CreatePrograms() {
 
   const [viewDetails, setViewDetails] = useState({
     material: false,
-    skills: false,
     certificate: false,
   });
   const [viewDetailsInfo, setViewDetailsInfo] = useState({
     material: {},
-    skills: {},
     certificate: {},
   });
   const [tabActionInfo, setTabActionInfo] = useState({
@@ -209,7 +224,7 @@ export default function CreatePrograms() {
     message: "",
   });
 
-  const resetViewInfo = { material: false, skills: false, certificate: false };
+  const resetViewInfo = { material: false, certificate: false };
 
   const filteredProgramTabs = ProgramTabs.filter((tab) => {
     // Exclude "program_testimonials" if role is "admin"
@@ -391,7 +406,6 @@ export default function CreatePrograms() {
 
           const jsonFields = [
             "learning_materials",
-            "skills",
             "certifications",
             "members",
             "goals",
@@ -545,24 +559,24 @@ export default function CreatePrograms() {
 
   const handleAddPopupData = (key, value) => {
     try {
-      if (value.length) {
-        if (key === "goals") {
-          // Extract only the IDs from the goals array
-          const goalIds = value.map((goal) => goal.id);
-          setValue(key, goalIds);
-          updateFormFields(key, goalIds, currentStep - 1);
-        } else {
-          // const ids = value.map((data) => data.id);
-          setFormDetails({
-            ...formDetails,
-            [key]: value,
-          });
-          setValue(key, value);
+      if (!value.length) return;
 
-          updateFormFields(key, value, currentStep - 1);
-        }
-        setActionModal("");
+      // For fields that only need IDs
+      if (ID_ONLY_FIELDS.includes(key)) {
+        // Only use the currently selected IDs from the DataTable
+        const selectedIds = value.map((row) => row.id);
+        setValue(key, selectedIds);
+        // Store the full objects in tempSelectedRows for display
+        setTempSelectedRows(value);
+      } else {
+        // For object fields - use only the currently selected rows
+        setValue(key, value);
+        setTempSelectedRows(value);
       }
+
+      // Update form fields with the new selection
+      updateFormFields(key, value, currentStep - 1);
+      setActionModal("");
     } catch (error) {
       console.error("Error updating form value:", error);
     }
@@ -596,7 +610,6 @@ export default function CreatePrograms() {
                   viewDetailsInfo: { [type]: params.row },
                   viewDetails: {
                     material: type === "material",
-                    skills: type === "skills",
                     certificate: type === "certificate",
                   },
                 };
@@ -673,7 +686,6 @@ export default function CreatePrograms() {
     MaterialColumns,
     "material"
   );
-  const updatedSkillColumn = createUpdatedColumns(SkillsColumns, "skills");
   const updatedCertificateColumn = createUpdatedColumns(
     CertificateColumns,
     "certificate"
@@ -683,18 +695,12 @@ export default function CreatePrograms() {
 
   const MODAL_CONFIG = {
     learning_materials: {
-      modalTitle: "Add study materials",
+      modalTitle: "Add learning materials",
       rows: "materials",
       columns: updatedMaterialColumn,
       btnName: "Submit",
       createBtnName: "Add Materials",
       onCreateBtnClick: handleMaterialCreateBtnClick,
-    },
-    skills: {
-      modalTitle: "Add skills",
-      rows: "skills",
-      columns: updatedSkillColumn,
-      btnName: "Add Skills",
     },
     certifications: {
       modalTitle: "Add certificate",
@@ -728,7 +734,10 @@ export default function CreatePrograms() {
     return (
       <div className="flex gap-6 justify-center items-center py-4">
         <button
-          onClick={() => setActionModal("")}
+          onClick={() => {
+            setTempSelectedRows([]);
+            setActionModal("");
+          }}
           className="py-3 px-6"
           style={cancelButtonStyle}
         >
@@ -743,11 +752,25 @@ export default function CreatePrograms() {
     );
   };
 
-  const fetchCategoryData = (categoryId) => {
-    dispatch(getAllCertificates(categoryId));
-    dispatch(getAllSkills(categoryId));
-    dispatch(getAllMembers(categoryId));
-  };
+  useEffect(() => {
+    if (!actionModal) {
+      setTempSelectedRows([]);
+    } else if (actionModal && formValues[actionModal]) {
+      // For ID-only fields (equipments and goals), we need to find the full objects
+      if (ID_ONLY_FIELDS.includes(actionModal)) {
+        const selectedIds = formValues[actionModal];
+        const allRows = formDetails[MODAL_CONFIG[actionModal].rows] || [];
+
+        const selectedRows = allRows.filter((row) =>
+          selectedIds.includes(row.id)
+        );
+        setTempSelectedRows(selectedRows);
+      } else {
+        // For other fields that store full objects, use as is
+        setTempSelectedRows(formValues[actionModal]);
+      }
+    }
+  }, [actionModal]);
 
   // useEffect(() => {
   //   if (role === 'admin') {
@@ -826,9 +849,19 @@ export default function CreatePrograms() {
 
       // Filter fields based on toggleRole
       if (toggleRole !== "") {
-        currentStepField = currentStepField.filter((curfields) =>
-          curfields.for?.includes(toggleRole)
-        );
+        currentStepField = currentStepField.filter((curfields) => {
+          // Special handling for environment field to show for both admin and mentor toggleRoles
+          if (curfields.name === "environment") {
+            // Only check actual role - show if not mentor
+            return (
+              role !== "mentor" &&
+              (toggleRole === "admin" || toggleRole === "mentor")
+            );
+          }
+
+          // For all other fields, use normal filtering based on toggleRole and their 'for' array
+          return curfields.for?.includes(toggleRole);
+        });
 
         if (toggleRole === "admin") {
           currentStepField = currentStepField.map((programfield) => {
@@ -896,10 +929,8 @@ export default function CreatePrograms() {
           if (fieldName === "category") {
             if (currentProgramDetail.categories?.length) {
               setValue(fieldName, currentProgramDetail.categories[0]?.id);
-              fetchCategoryData(currentProgramDetail.categories[0]?.id);
             } else {
               setValue(fieldName, currentProgramDetail?.incident_type?.id);
-              fetchCategoryData(currentProgramDetail?.incident_type?.id);
             }
           } else {
             let value = currentProgramDetail[fieldName];
@@ -953,14 +984,15 @@ export default function CreatePrograms() {
         ...prev,
         category,
         certificate,
-        skills,
         members,
         goals: goals?.results,
+        materials: materials?.results,
       }));
     }
   }, [
     currentStep,
     toggleRole,
+    role,
     category?.length,
     // programTypes?.length,
     countryStates?.length,
@@ -1040,11 +1072,10 @@ export default function CreatePrograms() {
       setFormDetails((prev) => ({
         ...prev,
         category,
-        materials,
         certificate,
-        skills,
         members,
         goals: goals?.results,
+        materials: materials?.results,
       }));
     }
   }, [
@@ -1053,7 +1084,6 @@ export default function CreatePrograms() {
     category,
     materials,
     certificate,
-    skills,
     members,
     goals,
     cities,
@@ -1122,7 +1152,6 @@ export default function CreatePrograms() {
   //           currentProgramDetail.categories?.length
   //         ) {
   //           currentFieldValue = currentProgramDetail.categories[0]?.id;
-  //           fetchCategoryData(currentProgramDetail.categories[0]?.id);
   //         }
 
   //         if (currentField === 'start_date' || currentField === 'end_date') {
@@ -1368,7 +1397,6 @@ export default function CreatePrograms() {
                     handleSearchChange={handleSearchChange}
                     setCurrent={setCurrent}
                     setToggleRole={setToggleRole}
-                    fetchCategoryData={fetchCategoryData}
                     handleAction={handleAction}
                     handleProgramCheck={handleProgramCheck}
                     stepData={stepData}
@@ -1509,58 +1537,7 @@ export default function CreatePrograms() {
             </div>
           </div>
         </MuiModal>
-        <MuiModal
-          modalSize="lg"
-          modalOpen={viewDetails.skills}
-          modalClose={() => setViewDetails(resetViewInfo)}
-          noheader
-        >
-          <div className="px-5 py-5">
-            <div
-              className="flex justify-center flex-col gap-5  mt-4 mb-4"
-              style={{
-                border: "1px solid rgba(217, 228, 242, 1)",
-                borderRadius: "10px",
-              }}
-            >
-              <div
-                className="flex justify-between px-3 py-4 items-center"
-                style={{ background: "rgba(217, 228, 242, 1)" }}
-              >
-                <p
-                  className="text-[14px]"
-                  style={{ color: "rgba(24, 40, 61, 1)" }}
-                >
-                  {viewDetailsInfo.skills?.name}
-                </p>
-                <img
-                  className="cursor-pointer"
-                  onClick={() => setViewDetails(resetViewInfo)}
-                  src={CancelIcon}
-                  alt="CancelIcon"
-                />
-              </div>
-              <div className="px-4 py-3">
-                <p className="text-[12px] pb-6">
-                  {viewDetailsInfo.skills?.desc}
-                </p>
-              </div>
-              <div className="flex justify-center items-center pt-5 pb-10">
-                <button
-                  onClick={() => setViewDetails(resetViewInfo)}
-                  className="text-white py-3 px-7 w-[25%]"
-                  style={{
-                    background:
-                      "linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)",
-                    borderRadius: "3px",
-                  }}
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-          </div>
-        </MuiModal>
+
         <MuiModal
           modalSize="lg"
           modalOpen={viewDetails.certificate}
@@ -1672,11 +1649,17 @@ export default function CreatePrograms() {
               footerAction={() => setActionModal("")}
               footerComponent={(props) => (
                 <FooterComponent
-                  selectedRows={props.selectedRows}
+                  selectedRows={tempSelectedRows}
                   action={actionModal}
                 />
               )}
-              selectedAllRows={stepData?.[actionModal] || []}
+              selectedAllRows={tempSelectedRows}
+              handleSelectedRow={(selected) => {
+                setTempSelectedRows(selected);
+              }}
+              rowCount={
+                formDetails[MODAL_CONFIG[actionModal].rows]?.length || 0
+              }
             />
           )}
         </MuiModal>
@@ -1688,6 +1671,7 @@ export default function CreatePrograms() {
           handleMenuClick={handleMenuClick}
         />
         <MaterialsCreationModal
+          categoryId={formValues.category}
           categoryData={category}
           isOpen={openMaterialModal}
           handleCloseModal={handleCloseModal}

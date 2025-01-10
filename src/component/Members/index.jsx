@@ -128,6 +128,12 @@ const Members = () => {
 
   const handleSearch = (value) => {
     setFilterInfo({ ...filterInfo, search: value })
+    // if (value !== '') {
+    //   setPaginationModel({
+    //     page: 0,
+    //     pageSize: 10
+    //   });
+    // }
   };
 
   const handleAssignProgramOrTask = () => {
@@ -333,25 +339,23 @@ const Members = () => {
 
     setActiveTableDetails({ data: tableData, column: updatedColumns });
   }, [mentor, mentee, anchorEl])
-
   useEffect(() => {
-    let payload = { role_name: actionTab, page: paginationModel?.page + 1, limit: paginationModel?.pageSize }
+    let payload = { 
+      role_name: actionTab, 
+      page: paginationModel?.page + 1, 
+      limit: paginationModel?.pageSize 
+    };
+
     if (filterInfo.status !== '' && filterInfo.status !== 'all') {
-      payload = { ...payload, status: filterInfo.status, page: paginationModel?.page + 1, limit: paginationModel?.pageSize }
+      payload = { ...payload, status: filterInfo.status };
     }
-    if (filterInfo.search !== '') {
-      payload = { ...payload, search: filterInfo.search, page: 1, limit: 10 }
-      setPaginationModel({
-        page: 0,
-        pageSize: 10
-      })
-    }
-    dispatch(getMembersList(payload))
-  }, [filterInfo])
 
-  useEffect(() => {
-    dispatch(getMembersList({ role_name: actionTab, page: paginationModel?.page + 1, limit: paginationModel?.pageSize }))
-  }, [actionTab, paginationModel]);
+    if (filterInfo.search !== '') {
+      payload = { ...payload, search: filterInfo.search };
+    }
+
+    dispatch(getMembersList(payload));
+  }, [actionTab, paginationModel, filterInfo.status, filterInfo.search]);
 
   return (
     <div className="program-request px-8 mt-10">
