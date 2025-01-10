@@ -1,6 +1,6 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import axios from 'axios';
-import { toast } from 'react-toastify';
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 let refresh = false;
 
@@ -10,28 +10,44 @@ const baseUrl = `${process.env.REACT_APP_BASE_URL}/api/`;
 // const baseUrl = "https://62f8-202-83-25-55.ngrok-free.app/api/"
 //comments
 export const rtkQueryServiceTags = {
-  PROGRAM_UPDATES: 'program_updates',
-  PROGRAM_LAUNCH: 'program_launch',
-  PROGRAM_ACCEPT: 'program_accept',
-  GOALS: 'Goals',
-  MATERIAL: 'Material',
+  PROGRAM_UPDATES: "program_updates",
+  PROGRAM_LAUNCH: "program_launch",
+  PROGRAM_ACCEPT: "program_accept",
+  GOALS: "Goals",
+  MATERIAL: "Material",
+  CERTIFICATE: "Certificate",
 };
-const { PROGRAM_UPDATES, PROGRAM_LAUNCH, PROGRAM_ACCEPT, GOALS, MATERIAL } = rtkQueryServiceTags;
+const {
+  PROGRAM_UPDATES,
+  PROGRAM_LAUNCH,
+  PROGRAM_ACCEPT,
+  GOALS,
+  MATERIAL,
+  CERTIFICATE,
+} = rtkQueryServiceTags;
+
 export const rtkQueryApiServices = createApi({
-  reducerPath: 'rtkQueryApiServices',
+  reducerPath: "rtkQueryApiServices",
   baseQuery: fetchBaseQuery({
     baseUrl,
     prepareHeaders: (headers) => {
-      const token = localStorage.getItem('access_token');
+      const token = localStorage.getItem("access_token");
 
       if (token) {
-        headers.set('Authorization', `Bearer ${token}`);
+        headers.set("Authorization", `Bearer ${token}`);
       }
 
       return headers;
     },
   }),
-  tagTypes: [PROGRAM_UPDATES, PROGRAM_LAUNCH, PROGRAM_ACCEPT, GOALS, MATERIAL], // Define the necessary tags
+  tagTypes: [
+    PROGRAM_UPDATES,
+    PROGRAM_LAUNCH,
+    PROGRAM_ACCEPT,
+    GOALS,
+    MATERIAL,
+    CERTIFICATE,
+  ], // Define the necessary tags
   endpoints: () => ({}),
 });
 
@@ -40,7 +56,7 @@ const api = axios.create({
 });
 
 api.interceptors.request.use(function (config) {
-  const token = localStorage.getItem('access_token');
+  const token = localStorage.getItem("access_token");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -61,7 +77,7 @@ api.interceptors.response.use(
     return response;
   },
   async (error) => {
-    const reasons = ['ERR_BAD_REQUEST', 'ERR_NETWORK', 'ERR_BAD_RESPONSE'];
+    const reasons = ["ERR_BAD_REQUEST", "ERR_NETWORK", "ERR_BAD_RESPONSE"];
     const errMsg =
       error?.response?.data?.errors?.[0] ??
       error?.response?.data?.error ??
@@ -71,24 +87,24 @@ api.interceptors.response.use(
     }
     if (
       error.code &&
-      (error.code === 'ERR_NETWORK' || error.code === 'ERR_BAD_RESPONSE')
+      (error.code === "ERR_NETWORK" || error.code === "ERR_BAD_RESPONSE")
     ) {
-      error.message = 'There is a Server Error. Please try again later.';
+      error.message = "There is a Server Error. Please try again later.";
     }
     if (
       error.code &&
-      error.code === 'ERR_BAD_REQUEST' &&
+      error.code === "ERR_BAD_REQUEST" &&
       error.response.status === 401
     ) {
-      if (localStorage.getItem('access_token')) {
-        window.location.replace(window.location.origin + '/logout');
+      if (localStorage.getItem("access_token")) {
+        window.location.replace(window.location.origin + "/logout");
       }
       error.message =
         error.response.data?.error || error.response.data?.message;
     }
     if (
       error.code &&
-      error.code === 'ERR_BAD_REQUEST' &&
+      error.code === "ERR_BAD_REQUEST" &&
       error.response.status === 400
     ) {
       error.message =
@@ -106,11 +122,11 @@ api.interceptors.response.use(
         const response = await axios.post(
           `${baseUrl}/token/refresh`,
           {
-            refresh: localStorage.getItem('refresh_token'),
+            refresh: localStorage.getItem("refresh_token"),
           },
           {
             headers: {
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
             withCredentials: true,
           }
@@ -118,14 +134,14 @@ api.interceptors.response.use(
 
         if (response.status === 200) {
           axios.defaults.headers.common[
-            'Authorization'
-          ] = `Bearer ${response.data['access']}`;
-          localStorage.setItem('access_token', response.data.access);
-          localStorage.setItem('refresh_token', response.data.refresh);
+            "Authorization"
+          ] = `Bearer ${response.data["access"]}`;
+          localStorage.setItem("access_token", response.data.access);
+          localStorage.setItem("refresh_token", response.data.refresh);
           return axios(error.config);
         }
       } catch (error) {
-        console.error('Token refresh error:', error);
+        console.error("Token refresh error:", error);
       }
     }
     refresh = false;
