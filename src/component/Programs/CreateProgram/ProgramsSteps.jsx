@@ -593,9 +593,7 @@ const handleInputChange = (e, field) => {
                           className="border border-[#1D5BBF] rounded mb-3"
                         >
                           <div className="flex justify-between px-5 py-4 bg-[#F3F7FC] rounded">
-                            <div className="text-sm font-semibold text=[#1D5BBF]">{`Sub Program-${
-                              index + 1
-                            }`}</div>
+                            <div className="text-sm font-semibold text-font-primary-main">{`${index + 1}. Subject`}</div>
                             <div>
                               <img
                                 src={DownArrowIcon}

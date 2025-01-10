@@ -10,6 +10,7 @@ import {
   Backdrop,
   Box,
   CircularProgress,
+  Grid,
   Menu,
   MenuItem,
   Stack,
@@ -101,6 +102,7 @@ import {
 import EditIcon from "../../../assets/icons/editIcon.svg";
 import PaidTickIcon from "../../../assets/icons/paidTickIcon.svg";
 import CustomAccordian from "../../../shared/CustomAccordian/CustomAccordian";
+import { SubjectProgramCard } from "./subjectProgramCard";
 
 export default function ProgramDetails({ setProgramDetailsId }) {
   const dateInfo = todatDateInfo();
@@ -1816,11 +1818,11 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                       programdetails.mentee_join_status ===
                         programActionStatus.program_join_request_accepted))) && (
                   <>
-                    <div className='cursor-pointer' onClick={handleClick}>
-                      <img src={MoreIcon} alt='MoreIcon' />
+                    <div className="cursor-pointer" onClick={handleClick}>
+                      <img src={MoreIcon} alt="MoreIcon" />
                     </div>
                     <Menu
-                      id='basic-menu'
+                      id="basic-menu"
                       anchorEl={anchorEl}
                       open={open}
                       onClose={handleClose}
@@ -1833,12 +1835,12 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                           {/* programdetails.participated_mentees_count */}
                           <MenuItem
                             onClick={() => handleMenu("share")}
-                            className='!text-[12px]'
+                            className="!text-[12px]"
                           >
                             <img
                               src={ShareIcon}
-                              alt='ShareIcon'
-                              className='pr-3 w-[25px]'
+                              alt="ShareIcon"
+                              className="pr-3 w-[25px]"
                             />
                             Share
                           </MenuItem>
@@ -1846,13 +1848,13 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             programdetails?.created_by ===
                               userdetails?.data?.user_id && (
                               <MenuItem
-                                onClick={() => handleMenu("share")}
-                                className='!text-[12px]'
+                                onClick={() => handleMenu("edit")}
+                                className="!text-[12px]"
                               >
                                 <img
                                   src={EditIcon}
-                                  alt='EditIcon'
-                                  className='pr-3 w-[25px]'
+                                  alt="EditIcon"
+                                  className="pr-3 w-[25px]"
                                 />
                                 Edit
                               </MenuItem>
@@ -1874,12 +1876,12 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                 // role !== 'admin' && (
                                 <MenuItem
                                   onClick={() => handleMenu("reschedule")}
-                                  className='!text-[12px]'
+                                  className="!text-[12px]"
                                 >
                                   <img
                                     src={RescheduleIcon}
-                                    alt='RescheduleIcon'
-                                    className='pr-3 w-[25px]'
+                                    alt="RescheduleIcon"
+                                    className="pr-3 w-[25px]"
                                   />
                                   Reschedule
                                 </MenuItem>
@@ -1901,12 +1903,12 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                 // role !== 'admin' && (
                                 <MenuItem
                                   onClick={() => handleMenu("cancel")}
-                                  className='!text-[12px]'
+                                  className="!text-[12px]"
                                 >
                                   <img
                                     src={AbortIcon}
-                                    alt='Cancel'
-                                    className='pr-3 w-[25px]'
+                                    alt="Cancel"
+                                    className="pr-3 w-[25px]"
                                   />
                                   Cancel
                                 </MenuItem>
@@ -1917,51 +1919,52 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             programActionStatus.inprogress ||
                             programdetails.status ===
                               programActionStatus.assigned) &&
-                            !reqRole && (
+                            !reqRole &&
+                            programdetails?.created_by ===
+                              userdetails?.data?.user_id && (
                               <>
                                 <MenuItem
                                   onClick={() => handleOpenConfirmPopup()}
-                                  className='!text-[12px]'
+                                  className="!text-[12px]"
                                 >
                                   <img
                                     src={CompleteIcon}
-                                    alt='AbortIcon'
-                                    className='pr-3 w-[25px]'
+                                    alt="AbortIcon"
+                                    className="pr-3 w-[25px]"
                                   />
                                   Complete
                                 </MenuItem>
                                 <MenuItem
                                   onClick={() => handleNewTaskFromAdmin()}
-                                  className='!text-[12px]'
+                                  className="!text-[12px]"
                                 >
                                   <img
                                     src={PlusCircle}
-                                    alt='PlusCircle'
-                                    className='pr-3 w-[25px]'
+                                    alt="PlusCircle"
+                                    className="pr-3 w-[25px]"
                                   />
                                   Assign Task to Mentees
                                 </MenuItem>
-                                {[
-                                  "cancelled",
-                                  "inprogress",
-                                  "completed",
-                                ].includes(programdetails?.status) && (
-                                  <MenuItem
-                                    onClick={() =>
-                                      navigate(`/historyNotes/${params.id}`)
-                                    }
-                                    className='!text-[12px]'
-                                  >
-                                    <img
-                                      src={ProgramHistoryIcon}
-                                      alt='ProgramHistoryIcon'
-                                      className='pr-3 w-[25px]'
-                                    />
-                                    Program Notes History
-                                  </MenuItem>
-                                )}
                               </>
                             )}
+
+                          {["cancelled", "inprogress", "completed"].includes(
+                            programdetails?.status
+                          ) && (
+                            <MenuItem
+                              onClick={() =>
+                                navigate(`/historyNotes/${params.id}`)
+                              }
+                              className="!text-[12px]"
+                            >
+                              <img
+                                src={ProgramHistoryIcon}
+                                alt="ProgramHistoryIcon"
+                                className="pr-3 w-[25px]"
+                              />
+                              Program Notes History
+                            </MenuItem>
+                          )}
                         </>
                       )}
                       {role === "mentee" && (
@@ -1972,12 +1975,12 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                               programActionStatus.program_join_request_accepted) && (
                             <MenuItem
                               onClick={() => handleMenu("cancel")}
-                              className='!text-[12px]'
+                              className="!text-[12px]"
                             >
                               <img
                                 src={AbortIcon}
-                                alt='AbortIcon'
-                                className='pr-3 w-[25px]'
+                                alt="AbortIcon"
+                                className="pr-3 w-[25px]"
                               />
                               Cancel
                             </MenuItem>
@@ -1989,12 +1992,12 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                               onClick={() =>
                                 navigate(`/historyNotes/${params.id}`)
                               }
-                              className='!text-[12px]'
+                              className="!text-[12px]"
                             >
                               <img
                                 src={ProgramHistoryIcon}
-                                alt='ProgramHistoryIcon'
-                                className='pr-3 w-[25px]'
+                                alt="ProgramHistoryIcon"
+                                className="pr-3 w-[25px]"
                               />
                               Program Notes History
                             </MenuItem>
@@ -2131,11 +2134,11 @@ export default function ProgramDetails({ setProgramDetailsId }) {
 
                   {Array.isArray(programdetails?.learning_materials) &&
                     programdetails?.learning_materials?.length > 0 && (
-                      <div className='py-10'>
-                        <p className='text-[14px] font-normal mb-2'>
+                      <div className="py-10">
+                        <p className="text-[14px] font-normal mb-2">
                           Our Learning Meterials
                         </p>
-                        <div className='flex items-center gap-x-3'>
+                        <div className="flex items-center gap-x-3">
                           {programdetails?.learning_materials.map(
                             (material) => (
                               <button
@@ -2317,7 +2320,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             programdetails?.mentee_join_status ===
                             "program_join_payment_pending"
                               ? "w-[200px] !bg-[#FFE3C2] !text-[#FF8A00] !border-none"
-                              : "w-[120px]"
+                              : "w-auto"
                           }
                           btnName={
                             programdetails?.mentee_join_status ===
@@ -2335,6 +2338,10 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             if (programdetails?.id) {
                               setProgramDetailsId(programdetails?.id);
                               navigate("/payment-checkout");
+                              localStorage.setItem(
+                                "program_id",
+                                programdetails?.id
+                              );
                             }
                           }}
                           disabled={
@@ -2351,23 +2358,28 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                       </div>
                     )}
 
-                  <ProgramActions
-                    role={role}
-                    programdetails={programdetails}
-                    programCompleted={programCompleted}
-                    handleJoinProgram={handleJoinProgram}
-                    isLaunchingProgram={isLaunchingProgram}
-                    requestId={requestId}
-                    handleAcceptCancelProgramRequest={
-                      handleAcceptCancelProgramRequest
-                    }
-                    type={searchParams.get("type")}
-                    setCancelPopup={setCancelPopup}
-                    reqStatusColor={reqStatusColor}
-                    reqStatus={reqStatus}
-                    requestStatusParams={requestStatusParams}
-                    setOpenPopup={setOpenPopup}
-                  />
+                  {(((role === "mentor" || role === "admin") &&
+                    programdetails?.created_by ===
+                      userdetails?.data?.user_id) ||
+                    role === "mentee") && (
+                    <ProgramActions
+                      role={role}
+                      programdetails={programdetails}
+                      programCompleted={programCompleted}
+                      handleJoinProgram={handleJoinProgram}
+                      isLaunchingProgram={isLaunchingProgram}
+                      requestId={requestId}
+                      handleAcceptCancelProgramRequest={
+                        handleAcceptCancelProgramRequest
+                      }
+                      type={searchParams.get("type")}
+                      setCancelPopup={setCancelPopup}
+                      reqStatusColor={reqStatusColor}
+                      reqStatus={reqStatus}
+                      requestStatusParams={requestStatusParams}
+                      setOpenPopup={setOpenPopup}
+                    />
+                  )}
                 </div>
 
                 {/* Right Side Content */}
@@ -2379,7 +2391,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     }}
                     className='px-6 pt-6 pb-3'
                   >
-                    <ul className='flex flex-col gap-3'>
+                    <ul className="flex flex-col gap-3">
                       {/* {role !== "admin" && (
                         <li
                           className='flex justify-between text-[12px]'
@@ -2400,17 +2412,19 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                           </span>
                         </li>
                       )} */}
-                      <li
-                        className='flex justify-between text-[12px]'
-                        style={{
-                          borderBottom: "1px solid rgba(217, 217, 217, 1)",
-                          paddingBottom: "10px",
-                          paddingTop: "14px",
-                        }}
-                      >
-                        <span>Session</span>
-                        <span>{programdetails.session_count}</span>
-                      </li>
+                      {!programdetails?.admin_assign_program && (
+                        <li
+                          className="flex justify-between text-[12px]"
+                          style={{
+                            borderBottom: "1px solid rgba(217, 217, 217, 1)",
+                            paddingBottom: "10px",
+                            paddingTop: "14px",
+                          }}
+                        >
+                          <span>Session</span>
+                          <span>{programdetails.session_count}</span>
+                        </li>
+                      )}
                       <li
                         className='flex justify-between text-[12px]'
                         style={{
@@ -2490,7 +2504,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                           {/* time */}
 
                           <li
-                            className='flex justify-between text-[12px]'
+                            className="flex justify-between text-[12px]"
                             style={{
                               borderBottom: "1px solid rgba(217, 217, 217, 1)",
                               paddingBottom: "10px",
@@ -2507,7 +2521,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             </span>
                           </li>
                           <li
-                            className='flex justify-between text-[12px]'
+                            className="flex justify-between text-[12px]"
                             style={{
                               borderBottom: "1px solid rgba(217, 217, 217, 1)",
                               paddingBottom: "10px",
@@ -2525,7 +2539,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                           </li>
 
                           <li
-                            className='flex justify-between text-[12px]'
+                            className="flex justify-between text-[12px]"
                             style={{
                               borderBottom: "1px solid rgba(217, 217, 217, 1)",
                               paddingBottom: "10px",
@@ -2592,25 +2606,26 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             </li>
                           )}
                           {programdetails?.mentee_join_status ===
-                            "program_join_request_accepted" && (
-                            <li
-                              className='flex justify-between text-[12px]'
-                              style={{
-                                paddingBottom: "10px",
-                                paddingTop: "14px",
-                              }}
-                            >
-                              <span className='flex gap-2'>
-                                Paid{" "}
-                                <span>
-                                  <img src={PaidTickIcon} alt='' />
+                            "program_join_request_accepted" &&
+                            !programdetails?.is_sponsored && (
+                              <li
+                                className="flex justify-between text-[12px]"
+                                style={{
+                                  paddingBottom: "10px",
+                                  paddingTop: "14px",
+                                }}
+                              >
+                                <span className="flex gap-2">
+                                  Paid{" "}
+                                  <span>
+                                    <img src={PaidTickIcon} alt="" />
+                                  </span>
                                 </span>
-                              </span>
-                              <span className='text-[#1D5BBF]'>
-                                $ {programdetails?.enrollment_fees}
-                              </span>
-                            </li>
-                          )}
+                                <span className="text-[#1D5BBF]">
+                                  $ {programdetails?.enrollment_fees}
+                                </span>
+                              </li>
+                            )}
                         </>
                       )}
 
@@ -2645,6 +2660,19 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   </div>
                 </div>
               </div>
+
+              {/* Subject Program List */}
+              {role === "mentee" && (
+                <Grid container spacing={2}>
+                  {programdetails?.active_sub_program?.map((e) => {
+                    return (
+                      <Grid item xs={4}>
+                        <SubjectProgramCard data={e} />
+                      </Grid>
+                    );
+                  })}
+                </Grid>
+              )}
               <ProgramReasons
                 programdetails={programdetails}
                 role={role}
@@ -2908,21 +2936,24 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                       </div>
                     ) : null}
 
-                    {programdetails.image !== null &&
-                      programdetails.image !== "" && (
-                        <div className='sponsor pt-8'>
-                          <div className='font-semibold pb-5'>
-                            Sponsored by{" "}
-                          </div>
-                          <ul className='flex gap-5'>
-                            <img
-                              style={{ width: "100px", height: "100px" }}
-                              src={programdetails.image}
-                              alt='SponsorIcon'
-                            />
-                          </ul>
+                    {programdetails?.sponsor_logos?.length > 0 && (
+                      <div className="sponsor pt-8">
+                        <div className="font-semibold pb-5">Sponsored by </div>
+                        <div>
+                          {programdetails?.sponsor_logos?.map((e) => {
+                            return (
+                              <div>
+                                <img
+                                  style={{ width: "100px", height: "100px" }}
+                                  src={e}
+                                  alt="SponsorIcon"
+                                />
+                              </div>
+                            );
+                          })}
                         </div>
-                      )}
+                      </div>
+                    )}
                     {role !== "admin" &&
                       !programdetails?.admin_assign_program && (
                         <div className='benefits py-3'>
@@ -3005,11 +3036,11 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                       {/* <div className='flex justify-end'>
                                                     <button className='py-2 px-6 mb-10' style={{ color: 'rgba(29, 91, 191, 1)', border: '1px dotted rgba(29, 91, 191, 1)', borderRadius: '3px' }}>Request Testimonials</button>
                                                 </div> */}
-                      <div className='grid grid-cols-3 gap-8'>
+                      <div className="grid grid-cols-3 gap-8">
                         {programdetails?.testimonial_content?.map((e) => {
                           return (
                             <div
-                              className='pt-16 pb-2 px-7 leading-5 relative'
+                              className="pt-16 pb-2 px-7 leading-5 relative"
                               style={{
                                 background: "rgba(248, 249, 250, 1)",
                               }}
@@ -3019,15 +3050,15 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                 className='absolute top-[-16px]'
                                 alt='QuoteIcon'
                               />
-                              <div className='relative'>
-                                <p className='pb-7'>{e?.comments ?? "-"}</p>
+                              <div className="relative">
+                                <p className="pb-7">{e?.comments ?? "-"}</p>
                                 <hr
-                                  className='absolute'
+                                  className="absolute"
                                   style={{ width: "100%" }}
                                 />
                               </div>
 
-                              <div className='flex gap-3 py-5'>
+                              <div className="flex gap-3 py-5">
                                 <img
                                   src={e?.profile_image ?? UserImage}
                                   alt='user'
@@ -3037,7 +3068,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                     height: "35px",
                                   }}
                                 />
-                                <div className='flex flex-col'>
+                                <div className="flex flex-col">
                                   <span
                                     style={{
                                       color: "rgba(0, 174, 189, 1)",
@@ -3045,7 +3076,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                   >
                                     {e?.name}
                                   </span>
-                                  <span className='capitalize'>{e?.role}</span>
+                                  <span className="capitalize">{e?.role}</span>
                                 </div>
                               </div>
                             </div>

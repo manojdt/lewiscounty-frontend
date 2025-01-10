@@ -1521,22 +1521,6 @@ export const ProgramInformationFields = [
     for: ['admin'],
   },
   {
-    type: 'dropdown',
-    name: 'no_of_subprograms',
-    label: 'No. of Sub Program',
-    placeholder: 'Select No. of Sub Program',
-    inputRules: {
-      valueAsNumber: true,
-      required: 'This field is required',
-    },
-    options: Array.from({ length: 6 }, (_, i) => i + 1).map((count) => ({
-      key: count,
-      value: count,
-    })),
-    width: 'width-32',
-    for: ['admin'],
-  },
-  {
     type: 'textbox',
     name: 'description',
     label: 'Program Description',
@@ -1557,6 +1541,22 @@ export const ProgramInformationFields = [
     },
     width: "w-full",
     for: ["admin"],
+  },
+  {
+    type: 'dropdown',
+    name: 'no_of_subprograms',
+    label: 'Number of Subject',
+    placeholder: 'Select Number of Subject',
+    inputRules: {
+      valueAsNumber: true,
+      required: 'This field is required',
+    },
+    options: Array.from({ length: 6 }, (_, i) => i + 1).map((count) => ({
+      key: count,
+      value: count,
+    })),
+    width: 'w-full',
+    for: ['admin'],
   },
   {
     type: 'dynamicFields',
