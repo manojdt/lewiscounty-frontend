@@ -534,7 +534,6 @@ export default function Programs() {
       }
       return menu;
     });
-    console.log(programMenu,"programMenu")
     setProgramMenusList(programMenu);
   }, [userprograms.statusCounts, userprograms.programsCounts]);
 
