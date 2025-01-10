@@ -1,7 +1,13 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const PaymentSuccessfull = () => {
+  const navigate = useNavigate()
+  const handleNavigate = () =>{
+    const program_id = localStorage.getItem("program_id")
+    navigate(`/program-details/${program_id}`)
+    localStorage.removeItem("program_id")
+  }
   return (
     <div className='flex flex-col items-center justify-center mt-44 bg-gray-50 '>
       <div className='max-w-md w-full space-y-6 p-6 bg-white rounded-lg shadow-lg '>
@@ -39,13 +45,13 @@ const PaymentSuccessfull = () => {
           </div> */}
         </div>
         <div className='flex justify-center'>
-          <Link
-            to='/programs'
+          <p
+            onClick={()=> handleNavigate()}
             className='inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900'
             prefetch={false}
           >
             Go to programs
-          </Link>
+          </p>
         </div>
       </div>
     </div>
