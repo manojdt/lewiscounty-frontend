@@ -350,7 +350,7 @@ const ProgramActions = ({
             )}
           </>
         ) : (
-          !menteeNotJoinCondition.includes(programdetails.status) && (
+          !menteeNotJoinCondition.includes(programdetails.status) && !["program_join_payment_initiate", "program_join_payment_pending"].includes(programdetails?.mentee_join_status) && (
             <button
               className='py-3 px-16 text-white text-[14px] flex items-center'
               style={{ ...buttonStyles.base, ...buttonStyles.gradient }}

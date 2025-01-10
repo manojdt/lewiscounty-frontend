@@ -454,7 +454,7 @@ export default function ProgramCard({
                             currentProgram.program_edit &&
                             !programImageRestirct.includes(
                               currentProgram.status
-                            ) && currentProgram?.participated_mentees_count === 0) && (
+                            )) && (
                               <div
                                 className={`absolute top-2 left-3 cursor-pointer  ${
                                   hoverIndex.image === index ? 'show' : 'hidden'

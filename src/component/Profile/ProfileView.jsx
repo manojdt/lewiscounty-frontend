@@ -51,11 +51,7 @@ import { requestStatus } from '../../utils/constant';
 import { useForm } from 'react-hook-form';
 import { CancelPopup } from '../Mentor/Task/cancelPopup';
 import { updateProfile } from '../../services/profile';
-import {
-  request_join,
-  request_memberJoin,
-  requestPageBreadcrumbs,
-} from '../Breadcrumbs/BreadcrumbsCommonData';
+import { admin_menteeMember, admin_mentorMember, request_join, request_memberJoin, requestPageBreadcrumbs } from '../Breadcrumbs/BreadcrumbsCommonData';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 
 export default function ProfileView() {
@@ -169,15 +165,8 @@ export default function ProfileView() {
       }
     });
   };
-  useEffect(() => {
-    if (breadcrumbsType === requestPageBreadcrumbs.member_join_request) {
-      setBreadcrumbsArray(request_memberJoin());
-    } else if (
-      breadcrumbsType === requestPageBreadcrumbs.program_join_request_admin
-    ) {
-      setBreadcrumbsArray(request_join());
-    }
-  }, [breadcrumbsType]);
+
+
   const handleShowPopup = () => {
     setActivity({ ...activity, modal: true });
   };
@@ -531,7 +520,35 @@ export default function ProfileView() {
       });
     }
   };
-
+  const handleBreadcrumbs = (key) => {
+    const admin_membermentor=admin_mentorMember()
+    const admin_memberMnetee=admin_menteeMember()
+    const admin_approvedreport=request_join()
+    const admin_request=request_memberJoin()
+    switch (key) {
+      case requestPageBreadcrumbs.member_join_request:
+        setBreadcrumbsArray(admin_request)
+        break;
+      case requestPageBreadcrumbs.program_join_request_admin:
+        setBreadcrumbsArray(admin_approvedreport)
+        break;
+        case requestPageBreadcrumbs.adminMemberMenteeTab:
+        setBreadcrumbsArray(admin_memberMnetee)
+        break;
+        case requestPageBreadcrumbs.adminMemberMentorTab:
+        setBreadcrumbsArray(admin_membermentor)
+        break;
+      case "discussion":
+        break;
+      default:
+        break;
+    }
+  };
+useEffect(() => {
+  if(breadcrumbsType){
+  handleBreadcrumbs(breadcrumbsType)
+ }
+ }, [breadcrumbsType])	
   return (
     <div className='profile-container'>
       <Backdrop

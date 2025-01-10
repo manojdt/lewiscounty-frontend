@@ -15,7 +15,7 @@ import ViewIcon from "../../assets/images/view1x.png";
 import ShareIcon from "../../assets/icons/Share.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { deactivateUser, getMembersList } from "../../services/members";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { memberStatusColor } from "../../utils/constant";
 import MuiModal from "../../shared/Modal";
 import { useForm } from "react-hook-form";
@@ -46,7 +46,8 @@ const Members = () => {
     page: 0,
     pageSize: 10,
   });
-
+  const [searchParams, setSearchParams] = useSearchParams();
+  const selectedRequestedTab = searchParams.get('tabType');
   const open = Boolean(anchorEl);
 
   const handleMoreClick = (event, data) => {
@@ -263,7 +264,8 @@ const Members = () => {
                 <MenuItem
                   onClick={(e) => {
                     handleClose();
-                    navigate(`/mentor-details/${seletedItem.id}`);
+                    const adminview=`?breadcrumbsType=${actionTab}`
+                    navigate(`/mentor-details/${seletedItem.id}${adminview}`);
                   }}
                   className="!text-[12px]"
                 >
@@ -356,7 +358,12 @@ const Members = () => {
 
     dispatch(getMembersList(payload));
   }, [actionTab, paginationModel, filterInfo.status, filterInfo.search]);
-
+  useEffect(() => {
+    if(selectedRequestedTab){
+      setActionTab(selectedRequestedTab)
+    
+    }
+   }, [selectedRequestedTab])
   return (
     <div className="program-request px-8 mt-10">
       <div className="px-6 program-info">

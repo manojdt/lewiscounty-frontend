@@ -90,6 +90,8 @@ import RescheduleIcon from "../../../assets/images/reschedule1x.png";
 import Breadcrumbs from "../../Breadcrumbs/Breadcrumbs";
 import {
   program_details,
+  program_details_main,
+  programStatusBreadcrumbs,
   request_newProgramRequest,
   request_programCancel,
   request_programMenteeCancel,
@@ -98,6 +100,7 @@ import {
 } from "../../Breadcrumbs/BreadcrumbsCommonData";
 import EditIcon from "../../../assets/icons/editIcon.svg";
 import PaidTickIcon from "../../../assets/icons/paidTickIcon.svg";
+import CustomAccordian from "../../../shared/CustomAccordian/CustomAccordian";
 
 export default function ProgramDetails({ setProgramDetailsId }) {
   const dateInfo = todatDateInfo();
@@ -200,11 +203,10 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     //   name: "Program Outcomes",
     //   key: "program_outcomes",
     // },
-    role !== "admin" &&
-      !programdetails?.admin_assign_program && {
-        name: "Program Testimonials",
-        key: "program_testimonials",
-      },
+    !programdetails?.sub_program && {
+      name: "Program Testimonials",
+      key: "program_testimonials",
+    },
   ].filter(Boolean);
 
   const reqStatus = {
@@ -485,11 +487,15 @@ export default function ProgramDetails({ setProgramDetailsId }) {
         break;
       case "discussion":
         break;
+      case "edit":
+        navigate(`/update-program/${params?.id}`);
+        break;
       default:
         break;
     }
   };
   const handleBreadcrumbs = (key) => {
+    const decodedKey = decodeURIComponent(key);
     const program_detailsData = program_details(state?.from);
     const program_New = request_newProgramRequest(programdetails?.program_name);
     const program_re = request_programReschedule(programdetails?.program_name);
@@ -497,6 +503,12 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     const program_mentee_cancel = request_programMenteeCancel(
       programdetails?.program_name
     );
+    if (programStatusBreadcrumbs.includes(decodedKey)) {
+      setBreadcrumbsArray(
+        program_details_main(programdetails?.program_name, decodedKey)
+      );
+      return;
+    }
     switch (key) {
       case "program":
         setBreadcrumbsArray(program_detailsData);
@@ -1830,19 +1842,21 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             />
                             Share
                           </MenuItem>
-                          {programdetails.participated_mentees_count === 0 && (
-                            <MenuItem
-                              onClick={() => handleMenu("share")}
-                              className='!text-[12px]'
-                            >
-                              <img
-                                src={EditIcon}
-                                alt='EditIcon'
-                                className='pr-3 w-[25px]'
-                              />
-                              Edit
-                            </MenuItem>
-                          )}
+                          {programdetails.participated_mentees_count === 0 &&
+                            programdetails?.created_by ===
+                              userdetails?.data?.user_id && (
+                              <MenuItem
+                                onClick={() => handleMenu("share")}
+                                className='!text-[12px]'
+                              >
+                                <img
+                                  src={EditIcon}
+                                  alt='EditIcon'
+                                  className='pr-3 w-[25px]'
+                                />
+                                Edit
+                              </MenuItem>
+                            )}
                           {
                             !requestStatusParams &&
                               ![
@@ -1854,7 +1868,9 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                               !reqRole &&
                               !programdetails.hasOwnProperty(
                                 "admin_assign_program"
-                              ) && (
+                              ) &&
+                              programdetails?.created_by ===
+                                userdetails?.data?.user_id && (
                                 // role !== 'admin' && (
                                 <MenuItem
                                   onClick={() => handleMenu("reschedule")}
@@ -1879,7 +1895,9 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                 "new_program_request_rejected",
                                 "completed",
                               ].includes(programdetails?.status) &&
-                              !reqRole && (
+                              !reqRole &&
+                              programdetails?.created_by ===
+                                userdetails?.data?.user_id && (
                                 // role !== 'admin' && (
                                 <MenuItem
                                   onClick={() => handleMenu("cancel")}
@@ -2143,7 +2161,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     )}
                     {programdetails?.individual_chat_requirement && (
                       <p
-                        onClick={() => navigate(`/discussions/${6}`)}
+                        onClick={() => navigate("/discussions")}
                         className='text-[14px] font-semibold text-font-primary-main px-4 py-2 border border-dashed border-background-primary-main rounded-[3px] bg-background-primary-light cursor-pointer'
                       >
                         Individual Discussions
@@ -2152,7 +2170,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   </div>
 
                   {/* Time Stamp */}
-                  {(programdetails.status === programActionStatus.inprogress ||
+                  {/* {(programdetails.status === programActionStatus.inprogress ||
                     programdetails.status === programActionStatus.paused ||
                     programdetails.status === programActionStatus.started) &&
                   !programdetails.hasOwnProperty("sub_program") ? (
@@ -2276,7 +2294,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                         </>
                       </div>
                     </div>
-                  ) : null}
+                  ) : null} */}
 
                   {/* payment button section */}
 
@@ -2722,10 +2740,10 @@ export default function ProgramDetails({ setProgramDetailsId }) {
               ) : null} */}
 
               {/* Notes Section */}
-              {["cancelled", "inprogress", "completed"].includes(
-                programdetails?.status
-              ) &&
-                role !== "admin" && (
+              {["inprogress"].includes(programdetails?.status) &&
+                (role === "mentee" ||
+                  programdetails?.created_by ===
+                    userdetails?.data?.user_id) && (
                   <Box>
                     <Accordian
                       title={"Program Notes:"}
@@ -2791,7 +2809,22 @@ export default function ProgramDetails({ setProgramDetailsId }) {
               {role === "mentee" &&
                 (programdetails.status === programActionStatus.inprogress ||
                   programdetails.status === programActionStatus.paused) && (
-                  <SkillsSet programdetails={programdetails} />
+                  <CustomAccordian
+                    title={"Program Task"}
+                    defaultValue
+                    children={
+                      <div>
+                        <div className='w-full flex justify-end mb-4'>
+                          <Button
+                            btnName='View All'
+                            btnCls='w-[140px]'
+                            onClick={() => navigate("/mentee-tasks")}
+                          />
+                        </div>
+                        <SkillsSet programdetails={programdetails} />
+                      </div>
+                    }
+                  />
                 )}
               {/* Detail Section */}
               <div
@@ -2982,7 +3015,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                               }}
                             >
                               <img
-                                src={e?.profile_image ?? QuoteIcon}
+                                src={QuoteIcon}
                                 className='absolute top-[-16px]'
                                 alt='QuoteIcon'
                               />
@@ -2996,7 +3029,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
 
                               <div className='flex gap-3 py-5'>
                                 <img
-                                  src={UserImage}
+                                  src={e?.profile_image ?? UserImage}
                                   alt='user'
                                   style={{
                                     borderRadius: "50%",

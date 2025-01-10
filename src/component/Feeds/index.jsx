@@ -21,6 +21,7 @@ import { Icon } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import { Button } from '../../shared';
+import { requestPageBreadcrumbs } from '../Breadcrumbs/BreadcrumbsCommonData';
 
 export default function Feeds() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -293,7 +294,7 @@ export default function Feeds() {
                   <div
                     className='feed-card cursor-pointer'
                     key={index}
-                    onClick={() => navigate(`/feed-details/${feed.id}`)}
+                    onClick={() => navigate(`/feed-details/${feed.id}?breadcrumbsType=${requestPageBreadcrumbs.feed}`)}
                   >
                     <img
                       className='feed-image !h-[250px] !w-full object-cover'
