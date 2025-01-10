@@ -25,6 +25,7 @@ import { createPost, updateFeedRequest } from '../../services/feeds';
 import CreatePostModal from '../Feeds/CreatePostModal';
 import SettingsModal from '../Feeds/SettingsModal';
 import SuccessTik from '../../assets/images/blue_tik1x.png';
+import { tabQuertyData } from '../Breadcrumbs/BreadcrumbsCommonData';
 
 
 const Reports = () => {
@@ -34,12 +35,14 @@ const Reports = () => {
     const userInfo = useSelector(state => state.userInfo);
     const role = userInfo.data.role
     const [anchorEl, setAnchorEl] = useState(null);
+    
     const open = Boolean(anchorEl);
     const [deleteModal, setDeleteModal] = useState(false)
     const [filter, setFilter] = useState({ search: '', filter_by: '' })
     const [requestTab, setRequestTab] = useState('all')
     const [searchParams, setSearchParams] = useSearchParams();
     const [reportData, setReportData] = useState({ action: '', selectedItem: [] })
+    const selectedRequestedTab = searchParams.get('tabType');
     const [paginationModel, setPaginationModel] = React.useState({
         page: 0,
         pageSize: 10,
@@ -256,7 +259,12 @@ const Reports = () => {
                                     </MenuItem>
                                 }
 
-                                <MenuItem onClick={() => navigate(`/view-report/${reportData.selectedItem[0].id}`)} className='!text-[12px]'>
+                                <MenuItem onClick={() =>{
+                                  
+                                    const adminView = role==='admin'?`?breadcrumbsType=${requestTab}`:''
+                                    navigate(`/view-report/${reportData.selectedItem[0].id}${adminView}`)
+                                } 
+                                } className='!text-[12px]'>
                                     <img src={ViewIcon} alt="ViewIcon" className='pr-3 w-[30px]' />
                                     View
                                 </MenuItem>
@@ -399,7 +407,12 @@ const Reports = () => {
             getReports()
         }
     }, [status,role])
-
+  useEffect(() => {
+    if(selectedRequestedTab){
+        setRequestTab(selectedRequestedTab)
+    
+    }
+   }, [selectedRequestedTab])
     return (
         <div className="reports px-9 py-9">
             <Backdrop
