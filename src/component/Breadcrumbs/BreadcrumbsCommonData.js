@@ -39,7 +39,7 @@ export const programStatusBreadcrumbs=[
 export const request_newProgramRequest = (name) => {
   return [
     {
-      label: "New Program Request",
+      label: "New Program Requests",
       path: "/all-request?type=program_request",
     },
     {
@@ -50,7 +50,7 @@ export const request_newProgramRequest = (name) => {
 export const request_programReschedule = (name) => {
   return [
     {
-      label: "Program Reschedule Request",
+      label: "Program Reschedule Requests",
       path: `/all-request?type=program_request&tabType=${requestPageBreadcrumbs?.program_reschedule}`,
     },
     {
@@ -61,7 +61,7 @@ export const request_programReschedule = (name) => {
 export const request_programCancel = (name) => {
   return [
     {
-      label: "Program Cancel Request",
+      label: "Program Cancel Requests",
       path: `/all-request?type=program_request&tabType=${requestPageBreadcrumbs?.program_cancel}`,
     },
     {
@@ -72,7 +72,7 @@ export const request_programCancel = (name) => {
 export const request_programMenteeCancel = (name) => {
   return [
     {
-      label: "Program Cancel Request",
+      label: "Program Cancel Requests",
       path: `/all-request?type=program_request&tabType=${requestPageBreadcrumbs?.program_cancel}&mainTab=${requestPageBreadcrumbs.main_mentee_tab}`,
     },
     {
@@ -103,7 +103,7 @@ export const request_memberJoin = (name) => {
     //     path: `/all-request`,
     //   },
       {
-        label: "Member Join Request",
+        label: "Member Join Requests",
         path: `/all-request?type=member_join_request`,
       },
       {
@@ -118,7 +118,7 @@ export const request_goalMentor = (name,menteeQuery) => {
     const query=menteeQuery?`&tabType=${requestPageBreadcrumbs?.mentor}&mainTab=${requestPageBreadcrumbs.main_mentee_tab}`:""
     return [
       {
-        label: "Goal Request",
+        label: "Goal Requests",
         path: `/all-request?type=goal_request${query}`,
       },
       {
@@ -130,7 +130,7 @@ export const request_goalMentee = (name,menteeQuery) => {
       const query=menteeQuery?`&mainTab=${requestPageBreadcrumbs.main_mentee_tab}`:""
     return [
       {
-        label: "Goal Request",
+        label: "Goal Requests",
         path: `/all-request?type=goal_request&tabType=${requestPageBreadcrumbs?.mentee}${query}`,
       },
       {
@@ -141,7 +141,7 @@ export const request_goalMentee = (name,menteeQuery) => {
 export const request_goalNew = (name,menteeQuery) => {
     return [
       {
-        label: "New Goal Request",
+        label: "New Goal Requests",
         path: `/all-request?type=new_goals_request`,
       },
       {
@@ -154,7 +154,7 @@ export const request_goalNew = (name,menteeQuery) => {
 export const request_testimonial = (name) => {
     return [
       {
-        label: "Testimonials Request",
+        label: "Testimonials Requests",
         path: `/all-request?type=testimonial_request`,
       },
       {
@@ -167,7 +167,7 @@ export const request_testimonial = (name) => {
 export const request_certificate = (name) => {
     return [
       {
-        label: "Certificate Request",
+        label: "Certificate Requests",
         path: `/all-request?type=certificate_request`,
       },
       {
@@ -180,7 +180,7 @@ export const request_certificate = (name) => {
 export const request_report = (name) => {
     return [
       {
-        label: "Report Request",
+        label: "Report Requests",
         path: `/all-request?type=report_request`,
       },
       {
@@ -194,7 +194,7 @@ export const request_report = (name) => {
 export const request_join = (name) => {
     return [
       {
-        label: "Program Join Request",
+        label: "Program Join Requests",
         path: `/all-request?type=program_request&tabType=${requestPageBreadcrumbs?.program_join}&mainTab=${requestPageBreadcrumbs.main_mentee_tab}`,
       },
       {
@@ -207,7 +207,7 @@ export const request_join = (name) => {
 export const admin_report = (name) => {
     return [
       {
-        label: "Report",
+        label: "Reports",
         path: `/reports`,
       },
       {
@@ -218,7 +218,7 @@ export const admin_report = (name) => {
 export const admin_Approvedreport = (name) => {
     return [
       {
-        label: "Report",
+        label: "Reports",
         path: `/reports?tabType=${requestPageBreadcrumbs?.adminApproveReportTab}`,
       },
       {
@@ -229,7 +229,7 @@ export const admin_Approvedreport = (name) => {
 export const admin_Canceledreport = (name) => {
     return [
       {
-        label: "Report",
+        label: "Reports",
         path: `/reports?tabType=${requestPageBreadcrumbs?.adminCancelReportTab}`,
       },
       {
@@ -242,7 +242,7 @@ export const admin_Canceledreport = (name) => {
 export const adminMy_certificate = (name) => {
     return [
       {
-        label: "Certificate Request",
+        label: "Certificate Requests",
         path: `/certificates?tabType=${requestPageBreadcrumbs?.adminCertificateTab}`,
       },
       {
@@ -253,7 +253,7 @@ export const adminMy_certificate = (name) => {
 export const adminMy_approvedCertificate = (name) => {
     return [
       {
-        label: "Certificate Request",
+        label: "Certificate Requests",
         path: `/certificates?tabType=${requestPageBreadcrumbs?.adminCertificateApproveReportTab}`,
       },
       {
@@ -266,7 +266,7 @@ export const adminMy_approvedCertificate = (name) => {
 export const admin_mentorMember = (name) => {
     return [
       {
-        label: "Member",
+        label: "Members",
         path: `/members?tabType=${requestPageBreadcrumbs?.adminMemberMentorTab}`,
       },
       {
@@ -277,7 +277,7 @@ export const admin_mentorMember = (name) => {
 export const admin_menteeMember = (name) => {
     return [
       {
-        label: "Member",
+        label: "Members",
         path: `/members?tabType=${requestPageBreadcrumbs?.adminMemberMenteeTab}`,
       },
       {
@@ -303,7 +303,7 @@ export const admin_menteeMember = (name) => {
 export const user_feed = (name) => {
     return [
       {
-        label: `Feed`,
+        label: `Feeds`,
         path: `/feeds`,
       },
       {
