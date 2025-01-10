@@ -20,7 +20,7 @@ import { updateReportRequest } from "../../services/request";
 import { CancelPopup } from "../Mentor/Task/cancelPopup";
 import { Typography } from "@mui/material";
 import CustomAccordian from "../../shared/CustomAccordian/CustomAccordian";
-import { request_report, requestPageBreadcrumbs } from "../Breadcrumbs/BreadcrumbsCommonData";
+import { admin_Approvedreport, admin_Canceledreport, admin_report, request_report, requestPageBreadcrumbs } from "../Breadcrumbs/BreadcrumbsCommonData";
 import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
 
 const ViewReport = () => {
@@ -124,9 +124,33 @@ const ViewReport = () => {
       }
     });
   };
+   const handleBreadcrumbs = (key) => {
+      const admin_repor=admin_report(reportDetails.name)
+      const admin_approvedreport=admin_Approvedreport(reportDetails.name)
+      const admin_canceledreport=admin_Canceledreport(reportDetails.name)
+      const admin_request=request_report(reportDetails.name)
+      switch (key) {
+        case requestPageBreadcrumbs.report_request:
+          setBreadcrumbsArray(admin_request)
+          break;
+        case requestPageBreadcrumbs.adminApproveReportTab:
+          setBreadcrumbsArray(admin_approvedreport)
+          break;
+          case requestPageBreadcrumbs.adminCancelReportTab:
+          setBreadcrumbsArray(admin_canceledreport)
+          break;
+          case requestPageBreadcrumbs.adminReportTab:
+          setBreadcrumbsArray(admin_repor)
+          break;
+        case "discussion":
+          break;
+        default:
+          break;
+      }
+    };
   useEffect(() => {
-    if(breadcrumbsType===requestPageBreadcrumbs.report_request&&reportDetails.name){
-    setBreadcrumbsArray(request_report(reportDetails.name))
+    if(breadcrumbsType&&reportDetails.name){
+    handleBreadcrumbs(breadcrumbsType)
    }
    }, [breadcrumbsType,reportDetails])	
   return (
@@ -165,8 +189,8 @@ const ViewReport = () => {
         >
           <div className="flex justify-between px-5 pb-4 mb-8 items-center border-b-2">
             <div className="flex gap-5 items-center text-[20px]">
-             {breadcrumbsType!==requestPageBreadcrumbs.report_request&& <p>View {reportDetails?.report_name} </p>}
-             {breadcrumbsType===requestPageBreadcrumbs.report_request&&<Breadcrumbs items={breadcrumbsArray}/>}
+             {!breadcrumbsType&& <p>View {reportDetails?.report_name} </p>}
+             {breadcrumbsType&&<Breadcrumbs items={breadcrumbsArray}/>}
               {reportDetails?.report_status === "pending" && (
                 <div
                   className="inset-y-0 end-0 flex items-center pe-3 cursor-pointer"

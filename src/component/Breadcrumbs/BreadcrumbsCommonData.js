@@ -12,7 +12,10 @@ export const requestPageBreadcrumbs = {
   mentee:"mentee",
   mentor:"mentor",
   program_join_request_admin:'program_join_request_admin',
-  main_mentee_tab:"mentee_tab"
+  main_mentee_tab:"mentee_tab",
+  adminReportTab:"all",
+  adminApproveReportTab:"approved",
+  adminCancelReportTab:"rejected",
 };
 
 // Program Request
@@ -171,6 +174,42 @@ export const request_join = (name) => {
       },
     ];
   };
+
+// Admin Report 
+export const admin_report = (name) => {
+    return [
+      {
+        label: "Report",
+        path: `/reports`,
+      },
+      {
+        label: `View ${name}`,
+      },
+    ];
+  };
+export const admin_Approvedreport = (name) => {
+    return [
+      {
+        label: "Report",
+        path: `/reports?tabType=${requestPageBreadcrumbs?.adminApproveReportTab}`,
+      },
+      {
+        label: `View ${name}`,
+      },
+    ];
+  };
+export const admin_Canceledreport = (name) => {
+    return [
+      {
+        label: "Report",
+        path: `/reports?tabType=${requestPageBreadcrumbs?.adminCancelReportTab}`,
+      },
+      {
+        label: `View ${name}`,
+      },
+    ];
+  };
+
 export const tabQuertyData = (role, tab) => {
   if (role === "admin") {
     return requestPageBreadcrumbs[tab];
