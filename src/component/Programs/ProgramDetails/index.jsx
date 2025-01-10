@@ -88,16 +88,9 @@ import moment from "moment";
 import ProgramHistoryIcon from "../../../assets/icons/historyIcon.svg";
 import RescheduleIcon from "../../../assets/images/reschedule1x.png";
 import Breadcrumbs from "../../Breadcrumbs/Breadcrumbs";
-import {
-  program_details,
-  request_newProgramRequest,
-  request_programCancel,
-  request_programMenteeCancel,
-  request_programReschedule,
-  requestPageBreadcrumbs,
-} from "../../Breadcrumbs/BreadcrumbsCommonData";
-import EditIcon from "../../../assets/icons/editIcon.svg";
-import PaidTickIcon from "../../../assets/icons/paidTickIcon.svg";
+import { program_details, program_details_main, programStatusBreadcrumbs, request_newProgramRequest, request_programCancel, request_programMenteeCancel, request_programReschedule, requestPageBreadcrumbs } from "../../Breadcrumbs/BreadcrumbsCommonData";
+import EditIcon from "../../../assets/icons/editIcon.svg"
+import PaidTickIcon from "../../../assets/icons/paidTickIcon.svg"
 import CustomAccordian from "../../../shared/CustomAccordian/CustomAccordian";
 
 export default function ProgramDetails({ setProgramDetailsId }) {
@@ -492,13 +485,16 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     }
   };
   const handleBreadcrumbs = (key) => {
-    const program_detailsData = program_details(state?.from);
-    const program_New = request_newProgramRequest(programdetails?.program_name);
-    const program_re = request_programReschedule(programdetails?.program_name);
-    const program_cancel = request_programCancel(programdetails?.program_name);
-    const program_mentee_cancel = request_programMenteeCancel(
-      programdetails?.program_name
-    );
+    const decodedKey = decodeURIComponent(key);
+    const program_detailsData=program_details(state?.from)
+    const program_New=request_newProgramRequest(programdetails?.program_name)
+    const program_re=request_programReschedule(programdetails?.program_name)
+    const program_cancel=request_programCancel(programdetails?.program_name)
+    const program_mentee_cancel=request_programMenteeCancel(programdetails?.program_name)
+    if (programStatusBreadcrumbs.includes(decodedKey)) {
+      setBreadcrumbsArray(program_details_main(programdetails?.program_name, decodedKey))
+      return;
+  }
     switch (key) {
       case "program":
         setBreadcrumbsArray(program_detailsData);

@@ -33,7 +33,7 @@ import { updateCertificateRequest } from "../../services/request";
 import TickColorIcon from "../../assets/icons/tickColorLatest.svg";
 import CancelColorIcon from "../../assets/icons/cancelCircle.svg";
 import { Typography } from "@mui/material";
-import { request_certificate, requestPageBreadcrumbs } from "../Breadcrumbs/BreadcrumbsCommonData";
+import { adminMy_approvedCertificate, adminMy_certificate, request_certificate, requestPageBreadcrumbs } from "../Breadcrumbs/BreadcrumbsCommonData";
 import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
 
 export default function CertificateMenteeList() {
@@ -283,12 +283,31 @@ export default function CertificateMenteeList() {
       handleCancelCertificateApiRequest();
     }
   };
-  useEffect(() => {
-    if(breadcrumbsType===requestPageBreadcrumbs.certificate_request){
-      console.log(request_certificate())
-    setBreadcrumbsArray(request_certificate())
-   }
-   }, [breadcrumbsType])
+   const handleBreadcrumbs = (key) => {
+        const request_certificat=request_certificate()
+        const admin_approvedreport=adminMy_approvedCertificate()
+        const admin_canceledreport=adminMy_certificate()
+        switch (key) {
+          case requestPageBreadcrumbs.certificate_request:
+            setBreadcrumbsArray(request_certificat)
+            break;
+          case requestPageBreadcrumbs.adminCertificateApproveReportTab:
+            setBreadcrumbsArray(admin_approvedreport)
+            break;
+            case requestPageBreadcrumbs.adminCertificateTab:
+            setBreadcrumbsArray(admin_canceledreport)
+            break;
+          case "discussion":
+            break;
+          default:
+            break;
+        }
+      };
+    useEffect(() => {
+      if(breadcrumbsType){
+      handleBreadcrumbs(breadcrumbsType)
+     }
+     }, [breadcrumbsType])
   return (
     <div className="px-8 mt-10 pb-5">
       <div
@@ -341,8 +360,8 @@ export default function CertificateMenteeList() {
           </div>
         </Backdrop>
         <div className="flex justify-between px-5 pb-4 mb-8 items-center border-b-2">
-        {breadcrumbsType===requestPageBreadcrumbs.certificate_request&& <Breadcrumbs items={breadcrumbsArray}/>}
-         {breadcrumbsType!==requestPageBreadcrumbs.certificate_request&&
+        {breadcrumbsType&& <Breadcrumbs items={breadcrumbsArray}/>}
+         {!breadcrumbsType&&
           <div className="flex gap-5 items-center text-[14px]">
             <p style={{ color: "rgba(89, 117, 162, 1)", fontWeight: 500 }}>
               Generate Certificates Request

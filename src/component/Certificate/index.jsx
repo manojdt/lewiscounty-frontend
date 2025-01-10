@@ -11,7 +11,7 @@ import ViewIcon from '../../assets/images/view1x.png'
 import MoreIcon from '../../assets/icons/moreIcon.svg'
 
 import { certificateColumns } from '../../utils/tableFields';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { certificateDownload, getCertificateList, getCertificates } from '../../services/certificate';
 import { certificateColor, certificateRequestStatusText, certificateText, requestStatusColor, requestStatusText } from '../../utils/constant';
 import Ratings from '../Programs/Ratings';
@@ -27,6 +27,8 @@ export default function Certificate() {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const [seletedItem, setSelectedItem] = useState({})
+    const [searchParams, setSearchParams] = useSearchParams();
+    const selectedRequestedTab = searchParams.get('tabType');
     const [paginationModel, setPaginationModel] = React.useState({
         page: 0,
         pageSize: 10,
@@ -143,7 +145,7 @@ export default function Certificate() {
                                 View
                             </MenuItem> : null}
                         {role === "admin" &&
-                            <MenuItem onClick={() => navigate(`/certificate_mentees/${seletedItem.id}?type=approved`, {
+                            <MenuItem onClick={() => navigate(`/certificate_mentees/${seletedItem.id}?type=approved&breadcrumbsType=${requestTab}`, {
                                 state: {
                                     rowId: seletedItem?.id,
                                     status: seletedItem?.status
@@ -204,6 +206,12 @@ export default function Certificate() {
         }
         // dispatch(getCertificates({search: role === "admin" ? requestTab : actionTab}))
     }, [requestTab, role, actionTab, paginationModel])
+    useEffect(() => {
+        if(selectedRequestedTab){
+            setRequestTab(selectedRequestedTab)
+        
+        }
+       }, [selectedRequestedTab])
     return (
         <div className="program-request px-8 mt-10">
 
