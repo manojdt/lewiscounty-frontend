@@ -199,12 +199,12 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     //   name: "Program Outcomes",
     //   key: "program_outcomes",
     // },
-    role !== "admin" &&
-      !programdetails?.admin_assign_program && {
+      !programdetails?.sub_program && {
         name: "Program Testimonials",
         key: "program_testimonials",
       },
   ].filter(Boolean);
+
 
   const reqStatus = {
     approved: "Approved",
@@ -1827,8 +1827,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                               />
                               Share
                             </MenuItem>
-                            {programdetails.participated_mentees_count ===
-                              0 && (
+                            {(programdetails.participated_mentees_count ===
+                              0 && programdetails?.created_by === userdetails?.data?.user_id) && (
                               <MenuItem
                                 onClick={() => handleMenu("edit")}
                                 className="!text-[12px]"
@@ -1852,7 +1852,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                 !reqRole &&
                                 !programdetails.hasOwnProperty(
                                   "admin_assign_program"
-                                ) && (
+                                ) && programdetails?.created_by === userdetails?.data?.user_id  && (
                                   // role !== 'admin' && (
                                   <MenuItem
                                     onClick={() => handleMenu("reschedule")}
@@ -1877,7 +1877,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                   "new_program_request_rejected",
                                   "completed",
                                 ].includes(programdetails?.status) &&
-                                !reqRole && (
+                                !reqRole && programdetails?.created_by === userdetails?.data?.user_id &&(
                                   // role !== 'admin' && (
                                   <MenuItem
                                     onClick={() => handleMenu("cancel")}
@@ -2151,7 +2151,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   </div>
 
                   {/* Time Stamp */}
-                  {(programdetails.status === programActionStatus.inprogress ||
+                  {/* {(programdetails.status === programActionStatus.inprogress ||
                     programdetails.status === programActionStatus.paused ||
                     programdetails.status === programActionStatus.started) &&
                   !programdetails.hasOwnProperty("sub_program") ? (
@@ -2275,7 +2275,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                         </>
                       </div>
                     </div>
-                  ) : null}
+                  ) : null} */}
 
                   {/* payment button section */}
 
@@ -2721,10 +2721,10 @@ export default function ProgramDetails({ setProgramDetailsId }) {
               ) : null} */}
 
               {/* Notes Section */}
-              {["cancelled", "inprogress", "completed"].includes(
+              {["inprogress"].includes(
                 programdetails?.status
               ) &&
-                role !== "admin" && (
+                (role === "mentee" || programdetails?.created_by === userdetails?.data?.user_id) && (
                   <Box>
                     <Accordian
                       title={"Program Notes:"}
