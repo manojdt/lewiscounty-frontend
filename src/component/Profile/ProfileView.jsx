@@ -51,7 +51,7 @@ import { requestStatus } from '../../utils/constant';
 import { useForm } from 'react-hook-form';
 import { CancelPopup } from '../Mentor/Task/cancelPopup';
 import { updateProfile } from '../../services/profile';
-import { request_join, request_memberJoin, requestPageBreadcrumbs } from '../Breadcrumbs/BreadcrumbsCommonData';
+import { admin_menteeMember, admin_mentorMember, request_join, request_memberJoin, requestPageBreadcrumbs } from '../Breadcrumbs/BreadcrumbsCommonData';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 
 export default function ProfileView() {
@@ -59,7 +59,7 @@ export default function ProfileView() {
   const dispatch = useDispatch();
   const state = useLocation()?.state;
   console.log('state ===>', state);
-  
+
   const { programRequest } = useSelector((state) => state.requestList);
   const [confirmPopup, setConfirmPopup] = useState({
     show: false,
@@ -108,8 +108,8 @@ export default function ProfileView() {
   const pageType = window.location.href.includes('mentor-details')
     ? 'Mentor'
     : 'Mentee';
-    const breadcrumbsType = searchParams.get("breadcrumbsType") || "";
-    const [breadcrumbsArray, setBreadcrumbsArray] = useState([]);
+  const breadcrumbsType = searchParams.get('breadcrumbsType') || '';
+  const [breadcrumbsArray, setBreadcrumbsArray] = useState([]);
   const { requestData } = useSelector((state) => state.userList);
   const {
     register,
@@ -165,13 +165,8 @@ export default function ProfileView() {
       }
     });
   };
-useEffect(() => {
- if(breadcrumbsType===requestPageBreadcrumbs.member_join_request){
- setBreadcrumbsArray(request_memberJoin())
-}else if(breadcrumbsType===requestPageBreadcrumbs.program_join_request_admin){
-  setBreadcrumbsArray(request_join())
-}
-}, [breadcrumbsType])
+
+
   const handleShowPopup = () => {
     setActivity({ ...activity, modal: true });
   };
@@ -525,7 +520,35 @@ useEffect(() => {
       });
     }
   };
-
+  const handleBreadcrumbs = (key) => {
+    const admin_membermentor=admin_mentorMember()
+    const admin_memberMnetee=admin_menteeMember()
+    const admin_approvedreport=request_join()
+    const admin_request=request_memberJoin()
+    switch (key) {
+      case requestPageBreadcrumbs.member_join_request:
+        setBreadcrumbsArray(admin_request)
+        break;
+      case requestPageBreadcrumbs.program_join_request_admin:
+        setBreadcrumbsArray(admin_approvedreport)
+        break;
+        case requestPageBreadcrumbs.adminMemberMenteeTab:
+        setBreadcrumbsArray(admin_memberMnetee)
+        break;
+        case requestPageBreadcrumbs.adminMemberMentorTab:
+        setBreadcrumbsArray(admin_membermentor)
+        break;
+      case "discussion":
+        break;
+      default:
+        break;
+    }
+  };
+useEffect(() => {
+  if(breadcrumbsType){
+  handleBreadcrumbs(breadcrumbsType)
+ }
+ }, [breadcrumbsType])	
   return (
     <div className='profile-container'>
       <Backdrop
@@ -868,7 +891,7 @@ useEffect(() => {
         </div>
       </MuiModal>
 
-      <Backdrop
+      {/* <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => 1 }}
         open={confirmPopup.show}
       >
@@ -907,7 +930,7 @@ useEffect(() => {
             </div>
           </div>
         </div>
-      </Backdrop>
+      </Backdrop> */}
 
       <div className='flex justify-between items-center mb-8'>
         {/* <div className='text-color font-medium'>My {pageType} Profile</div> */}
@@ -924,8 +947,7 @@ useEffect(() => {
         {/* <div className='flex justify-between items-center mb-8'>
           <div className='text-color font-medium'>Profile Picture</div>
         </div> */}
-        {role==="admin"&&
-        <Breadcrumbs items={breadcrumbsArray}/>}
+        {role === 'admin' && <Breadcrumbs items={breadcrumbsArray} />}
 
         <div className='flex justify-between items-center'>
           <div className='py-4 relative w-[12%]'>
@@ -1081,7 +1103,7 @@ useEffect(() => {
                       <MenuItem onClick={handleMemberAcceptRequest}>
                         Approve
                       </MenuItem>
-                      <MenuItem onClick={handleMemberCancelRequest}>
+                      <MenuItem onClick={() => setCancelPopup(true)}>
                         Reject
                       </MenuItem>
                       <MenuItem onClick={handleRedirectDocuSign}>

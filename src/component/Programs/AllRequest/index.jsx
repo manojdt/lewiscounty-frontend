@@ -23,7 +23,7 @@ import {
   requestStatusText,
   user,
 } from '../../../utils/constant';
-import { requestPageBreadcrumbs, tabQuertyData } from '../../Breadcrumbs/BreadcrumbsCommonData';
+import { requestPageBreadcrumbs, tabQuertyData, tabQuertyDataMentor } from '../../Breadcrumbs/BreadcrumbsCommonData';
 import SearchIcon from '../../../assets/icons/search.svg';
 import Edit_Icon from '../../../assets/icons/editIcon.svg';
 import CalendarIcon from '../../../assets/images/calender_1x.png';
@@ -561,8 +561,6 @@ export default function AllRequest() {
     }
   };
 
-
-
   // PROGRAM
 
   // Program Dropwdowm Accept
@@ -775,6 +773,7 @@ export default function AllRequest() {
                   onClick={(e) => {
                     const requestQuery = `&request_id=${seletedItem.id}`;
                     const tabQuery = selectedTab==="mentees"?`&breadcrumbsType=${requestPageBreadcrumbs.program_mentee_cancel}`:`&breadcrumbsType=${tabQuertyData(role,actionTab)}`;
+                    const tabQueryMentor = `breadcrumbsType=${tabQuertyDataMentor(role,actionTab)}`;
                     const url =
                       (role === 'mentor' || role === 'admin') &&
                       actionTab === 'program_join'
@@ -782,8 +781,8 @@ export default function AllRequest() {
                         : role === 'admin'
                         ? `/program-details/${seletedItem.program}?request_id=${seletedItem.id}&type=${actionTab}${tabQuery}`
                         : seletedItem?.status === 'approved'
-                        ? `/program-details/${seletedItem.program}`
-                        : `/program-details/${seletedItem.program}?request_id=${seletedItem.id}&type=${actionTab}`;
+                        ? `/program-details/${seletedItem.program}?${tabQueryMentor}`
+                        : `/program-details/${seletedItem.program}?request_id=${seletedItem.id}&type=${actionTab}&${tabQueryMentor}`;
                     return navigate(url, { state: { data: seletedItem } });
                   }}
                   className='!text-[12px]'
@@ -869,19 +868,25 @@ export default function AllRequest() {
                     actionTab === 'program_cancel' ||
                     actionTab === 'program_join') && (
                     <div>
-                      <MenuItem
-                        onClick={() => {
-                          navigate(`/update-program/${params?.row?.program}`);
-                        }}
-                        className='!text-[12px]'
-                      >
-                        <img
-                          src={Edit_Icon}
-                          alt='CancelIcon'
-                          className='pr-3 w-[27px]'
-                        />
-                        Edit
-                      </MenuItem>
+                      {![
+                        'program_reschedule',
+                        'program_cancel',
+                        'program_join',
+                      ].includes(actionTab) && (
+                        <MenuItem
+                          onClick={() => {
+                            navigate(`/update-program/${params?.row?.program}`);
+                          }}
+                          className='!text-[12px]'
+                        >
+                          <img
+                            src={Edit_Icon}
+                            alt='CancelIcon'
+                            className='pr-3 w-[27px]'
+                          />
+                          Edit
+                        </MenuItem>
+                      )}
                       <MenuItem
                         onClick={() => {
                           // setCancelPopup({
@@ -1023,7 +1028,16 @@ export default function AllRequest() {
             >
               <MenuItem
                 onClick={(e) => {
-                  const tabQuery =selectedTab==="mentees"? `&breadcrumbsType=${tabQuertyData(role,actionTab)}&goalType=${requestPageBreadcrumbs?.goal_request}`: `&breadcrumbsType=${tabQuertyData(role,actionTab)}`;
+                  const tabQuery =
+                    selectedTab === "mentees"
+                      ? `&breadcrumbsType=${
+                          role === "admin"
+                            ? tabQuertyData(role, actionTab)
+                            : tabQuertyDataMentor(role, actionTab)
+                        }&goalType=${requestPageBreadcrumbs?.goal_request}`
+                      : role === "admin"
+                      ? `&breadcrumbsType=${tabQuertyData(role, actionTab)}`
+                      : `&breadcrumbsType=new_goals_request`;
                   navigate(
                     `/view-goal/${seletedItem?.goal?.id}?requestId=${seletedItem.id}${tabQuery}`
                   );
@@ -1152,11 +1166,14 @@ export default function AllRequest() {
               <MenuItem
                 onClick={(e) => {
                   handleClose();
-                  navigate(`/mentor-details/${seletedItem.id}?breadcrumbsType=${requestPageBreadcrumbs.member_join_request}`, {
-                    state: {
-                      reqType: 'member_join_request',
-                    },
-                  });
+                  navigate(
+                    `/mentor-details/${seletedItem.id}?breadcrumbsType=${requestPageBreadcrumbs.member_join_request}`,
+                    {
+                      state: {
+                        reqType: 'member_join_request',
+                      },
+                    }
+                  );
                 }}
                 className='!text-[12px]'
               >
@@ -1340,7 +1357,11 @@ export default function AllRequest() {
               {role === 'admin' && (
                 <>
                   <MenuItem
-                    onClick={() => navigate(`/view-report/${seletedItem?.id}?breadcrumbsType=${requestPageBreadcrumbs.report_request}`)}
+                    onClick={() =>
+                      navigate(
+                        `/view-report/${seletedItem?.id}?breadcrumbsType=${requestPageBreadcrumbs.report_request}`
+                      )
+                    }
                     className='!text-[12px]'
                   >
                     <img
@@ -1382,7 +1403,7 @@ export default function AllRequest() {
               {role === 'mentor' && (
                 <>
                   <MenuItem
-                    onClick={() => navigate(`/view-report/${seletedItem?.id}`)}
+                    onClick={() => navigate(`/view-report/${seletedItem?.id}?breadcrumbsType=${requestPageBreadcrumbs.report_request}`)}
                     className='!text-[12px]'
                   >
                     <img
@@ -1594,12 +1615,15 @@ export default function AllRequest() {
                 <>
                   <MenuItem
                     onClick={() =>
-                      navigate(`/certificate_mentees/${seletedItem.program}?breadcrumbsType=${requestPageBreadcrumbs.certificate_request}`, {
-                        state: {
-                          rowId: seletedItem?.id,
-                          status: seletedItem?.status,
-                        },
-                      })
+                      navigate(
+                        `/certificate_mentees/${seletedItem.program}?breadcrumbsType=${requestPageBreadcrumbs.certificate_request}`,
+                        {
+                          state: {
+                            rowId: seletedItem?.id,
+                            status: seletedItem?.status,
+                          },
+                        }
+                      )
                     }
                     className='!text-[12px]'
                   >
@@ -1643,7 +1667,7 @@ export default function AllRequest() {
                 <>
                   <MenuItem
                     onClick={() =>
-                      navigate(`/certificate_mentees/${seletedItem.program}`, {
+                      navigate(`/certificate_mentees/${seletedItem.program}?breadcrumbsType=${requestPageBreadcrumbs.certificate_request}`, {
                         state: {
                           rowId: seletedItem?.id,
                           status: seletedItem?.status,
@@ -1745,7 +1769,9 @@ export default function AllRequest() {
                 <>
                   <MenuItem
                     onClick={() =>
-                      navigate(`/testimonialView/${seletedItem.request_id}?breadcrumbsType=${requestPageBreadcrumbs.testimonial_request}`)
+                      navigate(
+                        `/testimonialView/${seletedItem.request_id}?breadcrumbsType=${requestPageBreadcrumbs.testimonial_request}`
+                      )
                     }
                     className='!text-[12px]'
                   >
@@ -1843,9 +1869,7 @@ export default function AllRequest() {
       page: paginationModel?.page + 1,
       limit: paginationModel?.pageSize,
       ...(filter.search !== '' && { search: filter.search }),
-      ...(filter.filter_by !== ''
-        ? { filter_by: filter.filter_by }
-        : {}),
+      ...(filter.filter_by !== '' ? { filter_by: filter.filter_by } : {}),
     };
 
     if (role === 'mentor') {
@@ -1870,9 +1894,7 @@ export default function AllRequest() {
         page: paginationModel?.page + 1,
         limit: paginationModel?.pageSize,
         ...(filter.search !== '' && { search: filter.search }),
-        ...(filter.filter_by !== ''
-          ? { filter_by: filter.filter_by }
-          : { }),
+        ...(filter.filter_by !== '' ? { filter_by: filter.filter_by } : {}),
       })
     );
   };
@@ -1885,30 +1907,75 @@ export default function AllRequest() {
         page: paginationModel?.page + 1,
         limit: paginationModel?.pageSize,
         ...(filter.search !== '' && { search: filter.search }),
-        ...(filter.filter_by !== ''
-          ? { filter_by: filter.filter_by }
-          : {  }),
+        ...(filter.filter_by !== '' ? { filter_by: filter.filter_by } : {}),
       })
     );
   };
 
+  console.log('filterStatus', filterStatus);
+  console.log('actionTab', actionTab);
+
   const handleNewGoalRequestApi = () => {
-    dispatch(
-      getAllGoals({
-        ...(filter.filter_by !== ''
-          ? { time_frame: filter.filter_by }
-          : {  }),
-        params: 'request',
-        page: paginationModel?.page + 1,
-        limit: paginationModel?.pageSize,
-        ...(filterStatus !== 'all' && { status: filterStatus }),
-        ...(actionTab !== 'mentor' &&
-          role === 'mentor' && { created_by: actionTab ?? 'mentor' }),
-        ...(role === 'admin' && { created_by: actionTab ?? 'mentor' }),
-        ...(filter.search !== '' && { search: filter.search }),
-      })
-    );
+    let payload = {
+      ...(filter.filter_by !== '' && { time_frame: filter.filter_by }),
+      params: 'request',
+      page: paginationModel?.page + 1,
+      limit: paginationModel?.pageSize,
+      ...(filterStatus !== 'all' && { status: filterStatus }),
+      // ...((actionTab !== "mentor" && role === "mentor") && { created_by: actionTab ?? "mentor" }),
+      // ...((role === "admin") && { created_by: actionTab ?? "mentor" }),
+      // created_by: "mentee",
+      ...(filter.search !== '' && { search: filter.search }),
+    };
+    if (role === 'admin') {
+      if (selectedTab === 'my') {
+        payload = {
+          ...payload,
+          created_by: actionTab ?? 'mentor',
+        };
+      } else {
+        payload = {
+          ...payload,
+          created_by: 'mentee',
+        };
+      }
+    } else if (actionTab !== 'mentor' && role === user.mentor) {
+      payload = {
+        ...payload,
+        created_by: actionTab ?? 'mentor',
+      };
+    }
+    dispatch(getAllGoals(payload));
+
+    //   console.log("goal payload ==>", {
+    //     ...(filter.filter_by !== ""
+    //         ? { time_frame: filter.filter_by }
+    //         : { time_frame: "month" }),
+    //     params: "request",
+    //     page: paginationModel?.page + 1,
+    //     limit: paginationModel?.pageSize,
+    //     ...(filterStatus !== "all" && { status: filterStatus }),
+    //     ...((actionTab !== "mentor" && role === "mentor") && { created_by: actionTab ?? "mentor" }),
+    //     ...((role === "admin") && { created_by: actionTab ?? "mentor" }),
+    //     ...(filter.search !== "" && { search: filter.search }),
+    // })
   };
+
+  // const handleNewGoalRequestApi = () => {
+  //   dispatch(
+  //     getAllGoals({
+  //       ...(filter.filter_by !== '' ? { time_frame: filter.filter_by } : {}),
+  //       params: 'request',
+  //       page: paginationModel?.page + 1,
+  //       limit: paginationModel?.pageSize,
+  //       ...(filterStatus !== 'all' && { status: filterStatus }),
+  //       ...(actionTab !== 'mentor' &&
+  //         role === 'mentor' && { created_by: actionTab ?? 'mentor' }),
+  //       ...(role === 'admin' && { created_by: actionTab ?? 'mentor' }),
+  //       ...(filter.search !== '' && { search: filter.search }),
+  //     })
+  //   );
+  // };
 
   const getReportsRequestApi = () => {
     dispatch(
@@ -1919,9 +1986,7 @@ export default function AllRequest() {
         request_type: 'report',
         ...(role === 'admin' && { request_by: 'mentor' }),
         ...(filter.search !== '' && { search: filter.search }),
-        ...(filter.filter_by !== ''
-          ? { filter_by: filter.filter_by }
-          : { }),
+        ...(filter.filter_by !== '' ? { filter_by: filter.filter_by } : {}),
       })
     );
   };
@@ -1953,9 +2018,7 @@ export default function AllRequest() {
         request_type: 'certificate',
         ...(role === 'admin' && { request_by: 'mentor' }),
         ...(filter.search !== '' && { search: filter.search }),
-        ...(filter.filter_by !== ''
-          ? { filter_by: filter.filter_by }
-          : {  }),
+        ...(filter.filter_by !== '' ? { filter_by: filter.filter_by } : {}),
       })
     );
   };
@@ -1968,9 +2031,7 @@ export default function AllRequest() {
         page: paginationModel?.page + 1,
         limit: paginationModel?.pageSize,
         ...(filter.search !== '' && { search: filter.search }),
-        ...(filter.filter_by !== ''
-          ? { filter_by: filter.filter_by }
-          : { }),
+        ...(filter.filter_by !== '' ? { filter_by: filter.filter_by } : {}),
       })
     );
   };
@@ -1982,9 +2043,7 @@ export default function AllRequest() {
       limit: paginationModel?.pageSize,
       ...(role === 'admin' && { request_by: 'mentor' }),
       ...(filter.search !== '' && { search: filter.search }),
-      ...(filter.filter_by !== ''
-        ? { filter_by: filter.filter_by }
-        : { }),
+      ...(filter.filter_by !== '' ? { filter_by: filter.filter_by } : {}),
     };
 
     // if (role === "mentor") {
@@ -2009,9 +2068,7 @@ export default function AllRequest() {
         ...(role === 'admin' && { request_by: 'mentor' }),
         ...(selectedTab === 'mentees' && { request_by: 'mentee' }),
         ...(filter.search !== '' && { search: filter.search }),
-        ...(filter.filter_by !== ''
-          ? { filter_by: filter.filter_by }
-          : {}),
+        ...(filter.filter_by !== '' ? { filter_by: filter.filter_by } : {}),
       })
     );
   };
@@ -2025,9 +2082,7 @@ export default function AllRequest() {
         request_type: 'program_reopen',
         ...(role === 'admin' && { request_by: 'mentor' }),
         ...(filter.search !== '' && { search: filter.search }),
-        ...(filter.filter_by !== ''
-          ? { filter_by: filter.filter_by }
-          : {}),
+        ...(filter.filter_by !== '' ? { filter_by: filter.filter_by } : {}),
       })
     );
   };
@@ -2051,12 +2106,15 @@ export default function AllRequest() {
     setCategoryInfo({ search: e.target.value, list: catList });
   };
 
+  console.log('selectedddddTab', selectedTab);
+
   useEffect(() => {
     if (selectedRequestedtype && role !== '' && !userInfo.loading) {
       const tab = selectedRequestedtype;
       const requestTabDetails = RequestStatusArray.find(
         (request) => request.key === tab
       );
+      console.log('king cobra', RequestStatus.programRequest.key);
 
       let tableDetails = { ...activeTableDetails };
       let actionFilter = [];
@@ -2088,8 +2146,8 @@ export default function AllRequest() {
           break;
         case RequestStatus.goalRequest.key:
           tableDetails = { column: goalColumns, data: [] };
-          actionFilter = goalsRequestTab;
-          activeTabName = 'mentor';
+          // actionFilter = goalsRequestTab;
+          activeTabName = selectedTab === 'mentees' ? 'mentee' : 'mentor';
           break;
         case RequestStatus.resourceAccessRequest.key:
           tableDetails = { column: resourceColumns, data: [] };
@@ -2538,16 +2596,15 @@ export default function AllRequest() {
     </Typography>,
   ];
   useEffect(() => {
-    if(selectedMainRequestedTab===requestPageBreadcrumbs.main_mentee_tab){
-     setSelectedTab("mentees")
-     }
-   }, [selectedMainRequestedTab])
-  useEffect(() => {
-    if(selectedRequestedTab){
-     setActiveTab(selectedRequestedTab)
-    
+    if (selectedMainRequestedTab === requestPageBreadcrumbs.main_mentee_tab) {
+      setSelectedTab('mentees');
     }
-   }, [selectedRequestedTab,selectedTab])
+  }, [selectedMainRequestedTab]);
+  useEffect(() => {
+    if (selectedRequestedTab) {
+      setActiveTab(selectedRequestedTab);
+    }
+  }, [selectedRequestedTab, selectedTab]);
 
   return (
     <div className='program-request px-8 mt-10'>
@@ -2934,10 +2991,7 @@ export default function AllRequest() {
                           setFilter({ ...filter, filter_by: e.target.value })
                         }
                       >
-                        <option
-                          value=''
-                          selected={filter.filter_by === ''}
-                        >
+                        <option value='' selected={filter.filter_by === ''}>
                           All
                         </option>
                         <option

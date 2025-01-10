@@ -1,31 +1,33 @@
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import CircularProgress from '@mui/material/CircularProgress';
-import Backdrop from '@mui/material/Backdrop';
-import { LoginFields } from '../../utils/loginFields';
-import SocialMediaLogin from '../../shared/SocialMedia';
+import React from "react";
+import { useForm } from "react-hook-form";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import CircularProgress from "@mui/material/CircularProgress";
+import Backdrop from "@mui/material/Backdrop";
+import { LoginFields } from "../../utils/loginFields";
+import SocialMediaLogin from "../../shared/SocialMedia";
 import {
   userAccountLogin,
   resetUserInfo,
   updateInfo,
   updateUserInfo,
-} from '../../services/loginInfo';
-import { userStatus } from '../../utils/constant';
-import { ReactComponent as EyeCloseIcon } from '../../assets/icons/eyeClose.svg';
-import { ReactComponent as EyeOpenIcon } from '../../assets/icons/eyeOpen.svg';
-import SuccessIcon from '../../assets/images/Success_tic1x.png';
-import FailedIcon from '../../assets/images/cancel3x.png';
+} from "../../services/loginInfo";
+import { userStatus } from "../../utils/constant";
+import { ReactComponent as EyeCloseIcon } from "../../assets/icons/eyeClose.svg";
+import { ReactComponent as EyeOpenIcon } from "../../assets/icons/eyeOpen.svg";
+import SuccessIcon from "../../assets/images/Success_tic1x.png";
+import FailedIcon from "../../assets/images/cancel3x.png";
 
 const Login = () => {
   // Internal State
   const [remeberPassword, setRememberPassword] = React.useState(false);
   const [passwordVisibility, setPasswordVisibility] = React.useState(false);
   const [userFormDetails, setFormDetails] = React.useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
+
+  const location = useLocation();
 
   // Redux
   const dispatch = useDispatch();
@@ -42,17 +44,17 @@ const Login = () => {
 
   const onSubmit = (data) => {
     const { email, password } = data;
-    if (email !== '' && password !== '') {
+    if (email !== "" && password !== "") {
       if (/\s/.test(password)) {
-        setError('password', {
-          type: 'manual',
-          message: 'Password must not contain spaces',
+        setError("password", {
+          type: "manual",
+          message: "Password must not contain spaces",
         });
         return; // Stop further execution if the password contains spaces
       }
-      if (localStorage.getItem('rememberme') === 'true') {
-        localStorage.setItem('useremail', email);
-        localStorage.setItem('userpassword', btoa(password));
+      if (localStorage.getItem("rememberme") === "true") {
+        localStorage.setItem("useremail", email);
+        localStorage.setItem("userpassword", btoa(password));
       }
       dispatch(userAccountLogin(data));
       setFormDetails(data);
@@ -60,7 +62,7 @@ const Login = () => {
   };
 
   const handleRemeberPassword = () => {
-    localStorage.setItem('rememberme', !remeberPassword);
+    localStorage.setItem("rememberme", !remeberPassword);
     setRememberPassword(!remeberPassword);
   };
 
@@ -72,33 +74,36 @@ const Login = () => {
   //   else navigate("/questions");
   // }
 
+  const redirectPath =
+    new URLSearchParams(location.search).get("redirect") || "/dashboard";
+
   const handleRedirect = () => {
     dispatch(updateInfo());
     if (
-      userData.data.role === 'super_admin' &&
+      userData.data.role === "super_admin" &&
       userData.data.is_registered === true
     ) {
-      navigate('/super-members');
-    } else if (userData.data.role === 'fresher') {
-      navigate('/login-type');
+      navigate("/super-members");
+    } else if (userData.data.role === "fresher") {
+      navigate("/login-type");
     } else if (userData.data.is_registered) {
-      navigate('/dashboard');
+      navigate(redirectPath);
     } else if (
-      userData.data.role === 'mentee' &&
+      userData.data.role === "mentee" &&
       !userData.data.is_registered
     ) {
-      navigate('/programs');
+      navigate("/programs");
     } else {
-      navigate('/questions');
+      navigate("/questions");
     }
   };
 
   React.useEffect(() => {
-    const rememberme = localStorage.getItem('rememberme');
-    const email = localStorage.getItem('useremail');
-    const password = localStorage.getItem('userpassword');
+    const rememberme = localStorage.getItem("rememberme");
+    const email = localStorage.getItem("useremail");
+    const password = localStorage.getItem("userpassword");
     dispatch(resetUserInfo());
-    if (localStorage.getItem('rememberme') === 'true') {
+    if (localStorage.getItem("rememberme") === "true") {
       setRememberPassword(true);
       reset({ email, password: atob(password) });
     }
@@ -113,18 +118,17 @@ const Login = () => {
 
     if (!userData.loading && userData.status === userStatus.pending) {
       setTimeout(() => {
-        dispatch(updateUserInfo({ status: '' }));
+        dispatch(updateUserInfo({ status: "" }));
       }, 3000);
     }
   }, [userData]);
 
   // Prevent Enter key from triggering forgot password action
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && e.target.name === 'forgot-password') {
+    if (e.key === "Enter" && e.target.name === "forgot-password") {
       e.preventDefault();
     }
   };
-
 
   return (
     <React.Fragment>
@@ -163,9 +167,9 @@ const Login = () => {
             Welcome to Log In
           </h2>
           <p className='text-sm text-gray-600 mb-4'>
-            Don’t have an account?{' '}
+            Don’t have an account?{" "}
             <span
-              onClick={() => navigate('/register')}
+              onClick={() => navigate("/register")}
               className='text-blue-600 font-semibold underline cursor-pointer'
             >
               Create one
@@ -179,13 +183,13 @@ const Login = () => {
               <p
                 className='mx-4 mb-0 text-center font-semibold dark:text-neutral-200'
                 style={{
-                  color: '#232323',
+                  color: "#232323",
                 }}
               >
                 OR
               </p>
             </div>
-            {userData.error !== '' ? (
+            {userData.error !== "" ? (
               <div className='pb-7'>
                 <p className='error' role='alert'>
                   {userData.error}
@@ -199,28 +203,28 @@ const Login = () => {
                 </label>
                 <input
                   type={
-                    field.fieldtype === 'password'
+                    field.fieldtype === "password"
                       ? passwordVisibility
-                        ? 'text'
+                        ? "text"
                         : field.fieldtype
                       : field.fieldtype
                   }
                   className={`w-full rounded px-3 py-[0.32rem] text-[14px] leading-[2.15] h-[60px] ${
                     errors[field.name]
-                      ? 'focus:border-teal focus:outline-none focus:ring-0'
-                      : ''
+                      ? "focus:border-teal focus:outline-none focus:ring-0"
+                      : ""
                   }`}
                   placeholder={field.placeholder}
                   style={{
-                    color: '#232323',
+                    color: "#232323",
                     border: `1px solid ${
-                      errors[field.name] ? 'rgb(239 68 68)' : '#3E3E3E'
+                      errors[field.name] ? "rgb(239 68 68)" : "#3E3E3E"
                     }`,
                   }}
                   {...register(field.name, field.inputRules)}
-                  aria-invalid={errors[field.name] ? 'true' : 'false'}
+                  aria-invalid={errors[field.name] ? "true" : "false"}
                 />
-                {field.fieldtype === 'password' && (
+                {field.fieldtype === "password" && (
                   <button
                     type='button'
                     className='absolute top-8 end-0 p-3.5 rounded-e-md'
@@ -254,8 +258,8 @@ const Login = () => {
               <button
                 type='button' // Set type to 'button' to prevent it from submitting the form
                 className='text-[12px]'
-                style={{ color: '#00AEBD' }}
-                onClick={() => navigate('/forgot-password')}
+                style={{ color: "#00AEBD" }}
+                onClick={() => navigate("/forgot-password")}
               >
                 Forgot password?
               </button>
@@ -268,7 +272,7 @@ const Login = () => {
                 data-twe-ripple-init
                 data-twe-ripple-color='light'
                 style={{
-                  background: 'linear-gradient(to right, #00AEBD, #1D5BBF)',
+                  background: "linear-gradient(to right, #00AEBD, #1D5BBF)",
                 }}
                 disabled={userData.loading}
               >

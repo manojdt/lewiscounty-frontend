@@ -33,7 +33,7 @@ import CancelReq from "../../assets/icons/cancelRequest.svg"
 import dayjs from 'dayjs'
 import CreateGoal from './CreateGoal'
 import { dateFormatRever } from '../../utils'
-import { request_goalMentee, request_goalMentor, requestPageBreadcrumbs } from '../Breadcrumbs/BreadcrumbsCommonData'
+import { request_goalMentee, request_goalMentor, request_goalNew, requestPageBreadcrumbs } from '../Breadcrumbs/BreadcrumbsCommonData'
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs'
 
 const ViewGoal = ({ type = '' }) => {
@@ -259,12 +259,16 @@ const ViewGoal = ({ type = '' }) => {
       const handleBreadcrumbs = (key) => {
         const goal_menter=request_goalMentor(goalInfo.goal_name,goalType)
         const goal_mentee=request_goalMentee(goalInfo.goal_name,goalType)
+        const goal_new=request_goalNew(goalInfo.goal_name)
         switch (key) {
           case requestPageBreadcrumbs.mentee:
             setBreadcrumbsArray(goal_mentee)
             break;
             case requestPageBreadcrumbs.mentor:
             setBreadcrumbsArray(goal_menter)
+            break;
+            case requestPageBreadcrumbs.new_goals_request:
+            setBreadcrumbsArray(goal_new)
             break;
           case "discussion":
             break;
@@ -652,6 +656,10 @@ useEffect(() => {
                             </div>
                         </div> */}
 {role==="admin"&&
+<div className='pb-2'>
+    <Breadcrumbs items={breadcrumbsArray}/>
+    </div>}
+{role==="mentor"&&
 <div className='pb-2'>
     <Breadcrumbs items={breadcrumbsArray}/>
     </div>}

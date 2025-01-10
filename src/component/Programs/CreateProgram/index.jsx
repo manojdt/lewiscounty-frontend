@@ -19,11 +19,11 @@ import {
   MemberColumns,
 } from "../../../mock";
 import DataTable from "../../../shared/DataGrid";
-import { goalStatus, programStatus } from "../../../utils/constant";
+import { goalStatus, programStatus, user } from "../../../utils/constant";
 import MuiModal from "../../../shared/Modal";
 import Tooltip from "../../../shared/Tooltip";
 
-import CancelIcon from "../../../assets/images/cancel-colour1x.png";
+import CancelIcon from "../../../assets/icons/closeIcon.svg";
 import SuccessTik from "../../../assets/images/blue_tik1x.png";
 import CertificateIcon from "../../../assets/images/dummy_certificate.png";
 import SuccessIcon from "../../../assets/images/Success_tic1x.png";
@@ -48,10 +48,12 @@ import { MuiMenuDropDown } from "../../../shared/Dropdown/MuiMenuDropDown";
 import GoalCreationModal from "./GoalCreationModal";
 import MaterialsCreationModal from "./MaterialsCreationModal";
 import { useGetAllMaterialsQuery } from "../../../features/materials/materialApis.services";
+import CertificatesCreationModal from "./CertificateCreationModal";
 
 const EquipMentListMenuItems = [{ label: "View", action: "view" }];
 
 export default function CreatePrograms() {
+  const { admin, mentor, mentee } = user;
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const userInfo = useSelector((state) => state.userInfo);
@@ -72,7 +74,7 @@ export default function CreatePrograms() {
 
   const methods = useForm({
     defaultValues:
-      toggleRole === "admin"
+      toggleRole === admin
         ? { no_of_subprograms: 1, sub_programs: [] }
         : undefined,
   });
@@ -85,7 +87,10 @@ export default function CreatePrograms() {
     useGetAllCategoriesQuery();
 
   const { data: currentProgramDetail, isLoading: isDetailFetching } =
-    useGetSpecificProgramDetailsQuery({ id: params.id }, { skip: !params?.id });
+    useGetSpecificProgramDetailsQuery(
+      { id: params?.id },
+      { skip: !params?.id, refetchOnMountOrArgChange: true }
+    );
   const { data: goals } = useGetProgramGoalsQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
@@ -154,6 +159,7 @@ export default function CreatePrograms() {
   const [stepData, setStepData] = useState({});
   const [actionModal, setActionModal] = useState("");
   const [openMaterialModal, setOpenMaterialModal] = React.useState(false);
+  const [openCertificateModal, setOpenCertificateModal] = React.useState(false);
   const [openGoalsModal, setOpenGoalsModal] = React.useState(false);
 
   const [programAllFields, setProgramAllFields] = useState(ProgramFields);
@@ -167,7 +173,7 @@ export default function CreatePrograms() {
     learning_materials: [],
   });
 
-  const ID_ONLY_FIELDS = ["goals", "equipments"];
+  const ID_ONLY_FIELDS = ["goals"];
   // console.log('formDetails', formDetails);
   const [tempSelectedRows, setTempSelectedRows] = useState([]);
   const [logo, setLogo] = useState({});
@@ -190,6 +196,10 @@ export default function CreatePrograms() {
     setOpenMaterialModal(true);
   };
 
+  const handleCertificateCreateBtnClick = () => {
+    setOpenCertificateModal(true);
+  };
+
   const handleClickOpen = () => {
     setOpenGoalsModal(true);
   };
@@ -206,6 +216,7 @@ export default function CreatePrograms() {
   };
 
   const handleCloseModal = () => {
+    setOpenCertificateModal(false);
     setOpenMaterialModal(false);
     setOpenGoalsModal(false);
   };
@@ -214,10 +225,12 @@ export default function CreatePrograms() {
     material: false,
     certificate: false,
   });
+
   const [viewDetailsInfo, setViewDetailsInfo] = useState({
     material: {},
     certificate: {},
   });
+
   const [tabActionInfo, setTabActionInfo] = useState({
     activeTab: "program_information",
     error: false,
@@ -227,8 +240,8 @@ export default function CreatePrograms() {
   const resetViewInfo = { material: false, certificate: false };
 
   const filteredProgramTabs = ProgramTabs.filter((tab) => {
-    // Exclude "program_testimonials" if role is "admin"
-    if (tab.key === "program_testimonials" && toggleRole === "admin") {
+    // Exclude "program_testimonials" if role is admin
+    if (tab.key === "program_testimonials" && toggleRole === admin) {
       return false;
     }
     // Add other conditions here if needed
@@ -294,7 +307,7 @@ export default function CreatePrograms() {
       );
 
       // Handle admin role field width adjustments
-      if (toggleRole === "admin") {
+      if (toggleRole === admin) {
         const widthAdjustMentField1 = [
           "max_mentor_count",
           "max_mentee_count",
@@ -355,7 +368,7 @@ export default function CreatePrograms() {
 
     setStepData(fieldData);
     const totalSteps = filteredProgramTabs.length;
-    if (currentStep === 1 && role === "mentor" && !params?.id) {
+    if (currentStep === 1 && role === mentor && !params?.id) {
       dispatch(getProgramNameValidate(data?.program_name)).then((res) => {
         if (res?.meta?.requestStatus === "fulfilled") {
           if (!res?.payload?.is_available) {
@@ -392,7 +405,7 @@ export default function CreatePrograms() {
             "mentee_upload_certificates",
           ];
 
-          if (toggleRole !== "admin") {
+          if (toggleRole !== admin) {
             booleanFields.forEach((field) => {
               if (fieldData[field] !== undefined) {
                 fieldData[field] = fieldData[field] === "true";
@@ -479,16 +492,16 @@ export default function CreatePrograms() {
             await updateProgram({
               program_id: params?.id,
               bodyFormData,
-              role: toggleRole === "admin" ? toggleRole : "",
+              role: toggleRole === admin ? toggleRole : "",
             });
           } else {
-            if (toggleRole === "admin") {
+            if (toggleRole === admin) {
               bodyFormData.append("status", "started");
             }
             bodyFormData.append("program_admin", userInfo.data?.user_id);
             await createProgram({
               bodyFormData,
-              role: toggleRole === "admin" ? toggleRole : "",
+              role: toggleRole === admin ? toggleRole : "",
             });
           }
         } else {
@@ -707,6 +720,8 @@ export default function CreatePrograms() {
       rows: "certificate",
       columns: updatedCertificateColumn,
       btnName: "Add Certificate",
+      // createBtnName: "Create New Certificate",
+      // onCreateBtnClick: handleCertificateCreateBtnClick,
     },
     members: {
       modalTitle: "Add members",
@@ -756,7 +771,7 @@ export default function CreatePrograms() {
     if (!actionModal) {
       setTempSelectedRows([]);
     } else if (actionModal && formValues[actionModal]) {
-      // For ID-only fields (equipments and goals), we need to find the full objects
+      // For ID-only fields (goals), we need to find the full objects
       if (ID_ONLY_FIELDS.includes(actionModal)) {
         const selectedIds = formValues[actionModal];
         const allRows = formDetails[MODAL_CONFIG[actionModal].rows] || [];
@@ -783,7 +798,7 @@ export default function CreatePrograms() {
   };
 
   useEffect(() => {
-    if (role === "admin" || search.trim() !== "") {
+    if (role === admin || search.trim() !== "") {
       dispatch(getAllMentors(search));
     }
   }, [role, search, dispatch]);
@@ -833,261 +848,149 @@ export default function CreatePrograms() {
     if (role) {
       setToggleRole(role);
     }
-    if (role === "mentee") navigate("/programs");
+    if (role === mentee) navigate("/programs");
   }, [role]);
 
   useEffect(() => {
-    if (currentStep === 1 || role !== "") {
-      const widthAdjustMentField1 = [
-        "max_mentor_count",
-        "max_mentee_count",
-        "group_chat_requirement",
-        "individual_chat_requirement",
-      ];
-      const widthAdjustMentField2 = ["auto_approval", "venue"];
-      let currentStepField = ProgramFields[currentStep - 1];
+    // This effect should only handle field structure updates based on role and step
+    let currentStepField = ProgramFields[currentStep - 1];
 
-      // Filter fields based on toggleRole
-      if (toggleRole !== "") {
-        currentStepField = currentStepField.filter((curfields) => {
-          // Special handling for environment field to show for both admin and mentor toggleRoles
-          if (curfields.name === "environment") {
-            // Only check actual role - show if not mentor
-            return (
-              role !== "mentor" &&
-              (toggleRole === "admin" || toggleRole === "mentor")
-            );
-          }
-
-          // For all other fields, use normal filtering based on toggleRole and their 'for' array
-          return curfields.for?.includes(toggleRole);
-        });
-
-        if (toggleRole === "admin") {
-          currentStepField = currentStepField.map((programfield) => {
-            if (widthAdjustMentField1.includes(programfield.name)) {
-              return {
-                ...programfield,
-                width: "w-[24%]",
-              };
-            }
-            if (widthAdjustMentField2.includes(programfield.name)) {
-              return {
-                ...programfield,
-                width: "w-[49%]",
-              };
-            }
-            return programfield;
-          });
-        }
-      }
-      // Update fields with dynamic options
-      const updatedFields = currentStepField.map((field) => {
-        switch (field.name) {
-          case "category":
-            return {
-              ...field,
-              options: category,
-            };
-          case "state":
-            return {
-              ...field,
-              options: countryStates,
-            };
-          case "city":
-            return {
-              ...field,
-              options: cities || [],
-            };
-          default:
-            return field;
-        }
-      });
-
-      // Update program fields
-      setProgramAllFields((prevFields) =>
-        prevFields.map((fields, i) =>
-          i === currentStep - 1 ? updatedFields : fields
-        )
+    // Filter fields based on toggleRole
+    if (toggleRole !== "") {
+      currentStepField = currentStepField.filter((curfields) =>
+        curfields.for?.includes(toggleRole)
       );
 
-      // Set form values in edit mode
-      const isEditMode =
-        currentProgramDetail &&
-        Object.keys(currentProgramDetail).length &&
-        params.id;
-      if (isEditMode) {
-        if (
-          currentProgramDetail?.role === "Admin" &&
-          currentProgramDetail.hasOwnProperty("admin_program")
-        ) {
-          setToggleRole("mentor");
-        }
-        updatedFields.forEach((field) => {
-          const fieldName = field.name;
+      if (toggleRole === admin) {
+        const widthAdjustMentField1 = [
+          "max_mentor_count",
+          "max_mentee_count",
+          "group_chat_requirement",
+          "individual_chat_requirement",
+        ];
+        const widthAdjustMentField2 = ["auto_approval", "venue"];
 
-          if (fieldName === "category") {
-            if (currentProgramDetail.categories?.length) {
-              setValue(fieldName, currentProgramDetail.categories[0]?.id);
-            } else {
-              setValue(fieldName, currentProgramDetail?.incident_type?.id);
-            }
-          } else {
-            let value = currentProgramDetail[fieldName];
-
-            if (fieldName === "start_date" || fieldName === "end_date") {
-              value = new Date(value);
-            }
-            if (
-              [
-                "mentee_upload_certificates",
-                "group_chat_requirement",
-                "individual_chat_requirement",
-              ].includes(fieldName)
-            ) {
-              value = value ? "true" : "false";
-            }
-            if (fieldName === "program_image") {
-              value = currentProgramDetail["program_image"];
-            }
-            if (fieldName === "program_type") {
-              value = currentProgramDetail["program_type"]?.id;
-            }
-            if (fieldName === "state") {
-              value = currentProgramDetail["state_details"]?.id;
-              // Set state first so cities data can be fetched
-              setValue(fieldName, value);
-            }
-            if (
-              fieldName === "city" &&
-              currentProgramDetail.city_details?.id &&
-              cities?.length > 0 // Only set city if cities data is available
-            ) {
-              value = currentProgramDetail["city_details"]?.id;
-              setValue(fieldName, value);
-            }
-            if (fieldName === "equipments") {
-              value = currentProgramDetail["equipments"]?.map(
-                (item) => item?.id
-              );
-            }
-
-            if (fieldName !== "state" && fieldName !== "city") {
-              setValue(fieldName, value);
-            }
+        currentStepField = currentStepField.map((programfield) => {
+          if (widthAdjustMentField1.includes(programfield.name)) {
+            return { ...programfield, width: "w-[24%]" };
           }
+          if (widthAdjustMentField2.includes(programfield.name)) {
+            return { ...programfield, width: "w-[49%]" };
+          }
+          return programfield;
         });
       }
-
-      // Update form details
-      setFormDetails((prev) => ({
-        ...prev,
-        category,
-        certificate,
-        members,
-        goals: goals?.results,
-        materials: materials?.results,
-      }));
     }
+
+    // Update fields with dynamic options
+    const updatedFields = currentStepField.map((field) => {
+      switch (field.name) {
+        case "category":
+          return { ...field, options: category };
+        case "state":
+          return { ...field, options: countryStates };
+        case "city":
+          return { ...field, options: cities || [] };
+        default:
+          return field;
+      }
+    });
+
+    // Update program fields structure
+    setProgramAllFields((prevFields) =>
+      prevFields.map((fields, i) =>
+        i === currentStep - 1 ? updatedFields : fields
+      )
+    );
+
+    // Update form details
+    setFormDetails((prev) => ({
+      ...prev,
+      category,
+      certificate,
+      members,
+      goals: goals?.results,
+      materials: materials?.results,
+    }));
   }, [
     currentStep,
     toggleRole,
     role,
     category?.length,
-    // programTypes?.length,
     countryStates?.length,
-    cities?.length, // Added cities to dependencies
-    currentProgramDetail?.id,
-    params.id,
+    cities?.length,
     formValues?.state,
-  ]);
+    materials?.results
+  ]); // Removed currentProgramDetail?.id and params.id from dependencies
+
+  // Separate useEffect for initializing form values from currentProgramDetail
+  // Add a separate effect to handle city initialization after cities data is available
+  useEffect(() => {
+    if (cities?.length > 0 && currentProgramDetail?.city_details?.id) {
+      setValue("city", currentProgramDetail.city_details.id);
+    }
+  }, [cities, currentProgramDetail?.city_details?.id]);
 
   useEffect(() => {
-    if (currentStep === 1 || toggleRole !== "") {
-      const widthAdjustMentField1 = [
-        "max_mentor_count",
-        "max_mentee_count",
-        "group_chat_requirement",
-        "individual_chat_requirement",
-      ];
-      const widthAdjustMentField2 = ["auto_approval", "venue"];
-      let currentStepField = ProgramFields[currentStep - 1];
-
-      // Filter fields based on toggleRole
-      if (toggleRole !== "") {
-        currentStepField = currentStepField.filter((curfields) =>
-          curfields.for?.includes(toggleRole)
-        );
-
-        if (toggleRole === "admin") {
-          currentStepField = currentStepField.map((programfield) => {
-            if (widthAdjustMentField1.includes(programfield.name)) {
-              return {
-                ...programfield,
-                width: "w-[24%]",
-              };
-            }
-            if (widthAdjustMentField2.includes(programfield.name)) {
-              return {
-                ...programfield,
-                width: "w-[49%]",
-              };
-            }
-            return programfield;
-          });
-        }
+    if (
+      currentProgramDetail &&
+      Object.keys(currentProgramDetail).length &&
+      params.id
+    ) {
+      if (
+        currentProgramDetail?.role === "Admin" &&
+        currentProgramDetail.hasOwnProperty("admin_program")
+      ) {
+        setToggleRole(mentor);
       }
 
-      // Update fields with dynamic options
-      const updatedFields = currentStepField.map((field) => {
-        switch (field.name) {
-          case "category":
-            return {
-              ...field,
-              options: category,
-            };
-          case "state":
-            return {
-              ...field,
-              options: countryStates,
-            };
-          case "city":
-            return {
-              ...field,
-              options: cities || [],
-            };
-          default:
-            return field;
+      // Set initial values from currentProgramDetail
+      ProgramFields.flat().forEach((field) => {
+        const fieldName = field.name;
+
+        if (fieldName === "category") {
+          if (currentProgramDetail.categories?.length) {
+            setValue(fieldName, currentProgramDetail.categories[0]?.id);
+          } else {
+            setValue(fieldName, currentProgramDetail?.incident_type?.id);
+          }
+        } else {
+          let value = currentProgramDetail[fieldName];
+
+          if (fieldName === "start_date" || fieldName === "end_date") {
+            value = new Date(value);
+          }
+          if (
+            [
+              "mentee_upload_certificates",
+              "group_chat_requirement",
+              "individual_chat_requirement",
+            ].includes(fieldName)
+          ) {
+            value = value ? "true" : "false";
+          }
+          if (fieldName === "program_image") {
+            value = currentProgramDetail["program_image"];
+          }
+          if (fieldName === "program_type") {
+            value = currentProgramDetail["program_type"]?.id;
+          }
+          if (fieldName === "state") {
+            value = currentProgramDetail["state_details"]?.id;
+            setValue(fieldName, value);
+          }
+          // Remove city initialization from here as it's handled by the separate effect
+          if (fieldName === "equipments") {
+            value = currentProgramDetail["equipments"]?.map((item) => item?.id);
+          }
+
+          if (fieldName !== "state" && fieldName !== "city") {
+            setValue(fieldName, value);
+          }
         }
       });
-
-      // Preserve existing step data while updating current step
-      setProgramAllFields((prevFields) =>
-        prevFields.map((fields, i) =>
-          i === currentStep - 1 ? updatedFields : fields
-        )
-      );
-
-      // Update form details
-      setFormDetails((prev) => ({
-        ...prev,
-        category,
-        certificate,
-        members,
-        goals: goals?.results,
-        materials: materials?.results,
-      }));
     }
-  }, [
-    currentStep,
-    toggleRole,
-    category,
-    materials,
-    certificate,
-    members,
-    goals,
-    cities,
-  ]);
+  }, [currentProgramDetail, params.id]); // Only run when currentProgramDetail or params.id changes
 
   useEffect(() => {
     // If any completion state (success or error) is true, show the backdrop
@@ -1293,7 +1196,11 @@ export default function CreatePrograms() {
             <Tooltip title="Cancel">
               <img
                 className="cursor-pointer"
-                onClick={() => navigate("/programs")}
+                onClick={() => {
+                  role === admin && toggleRole === mentor
+                    ? setToggleRole(admin)
+                    : navigate("/programs");
+                }}
                 src={CancelIcon}
                 alt="CancelIcon"
               />
@@ -1416,7 +1323,7 @@ export default function CreatePrograms() {
                         if (current !== "own") {
                           navigate("/programs");
                         }
-                        setToggleRole("admin");
+                        setToggleRole(admin);
                         reset();
                       }}
                     />
@@ -1674,6 +1581,10 @@ export default function CreatePrograms() {
           categoryId={formValues.category}
           categoryData={category}
           isOpen={openMaterialModal}
+          handleCloseModal={handleCloseModal}
+        />
+        <CertificatesCreationModal
+          isOpen={openCertificateModal}
           handleCloseModal={handleCloseModal}
         />
         <GoalCreationModal

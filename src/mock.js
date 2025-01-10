@@ -435,47 +435,26 @@ export const MaterialColumns = [
   {
     field: 'name',
     headerName: 'Material Name',
-    width: 300,
+    flex: 1,
     id: 0,
   },
   {
     field: 'material_type',
     headerName: 'Material Type',
-    width: 300,
+    flex: 1,
     id: 1,
   },
   {
     field: 'material_size',
     headerName: 'Material Size',
-    width: 250,
+    flex: 1,
     id: 2,
   },
   {
     field: 'action',
     headerName: 'Action',
-    width: 300,
-    id: 3,
-    renderCell: (params) => {
-      return (
-        <button
-          style={{
-            background: 'rgb(29, 91, 191)',
-            color: 'rgb(255, 255, 255)',
-            padding: '2px 20px',
-            height: '32px',
-            margin: '9px 0px',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: '3px',
-          }}
-          onClick={() => console.log('click')}
-        >
-          {' '}
-          View Details{' '}
-        </button>
-      );
-    },
+    flex: 1,
+    id: 3,    
   },
 ];
 export const GoalColumns = [
