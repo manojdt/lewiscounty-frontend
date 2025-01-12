@@ -27,6 +27,7 @@ import { Button as MuiButton } from "@mui/material";
 import { formatPhoneNumber } from "../../../utils/formFields";
 import CustomDateTimePicker from "../../../shared/CustomDateTimePicker/MuiDateTimePicker";
 import moment from "moment";
+import DeleteIconRounded from "../../../assets/icons/delete-icon.svg";
 // import { useGetStatesQuery } from '../../../features/programs/program-slice';
 // import { useGetCitiesQuery } from '../../../features/program/programApi.services';
 
@@ -385,7 +386,7 @@ const ProgramSteps = ({
                         type={field.fieldtype}
                         placeholder={field.placeholder}
                         disabled={disableFields}
-                        {...controlledField}                       
+                        {...controlledField}
                         onChange={(e) => handleInputChange(e, field)}
                         onBlur={(e) => {
                           controlledField.onBlur();
@@ -588,7 +589,9 @@ const ProgramSteps = ({
                           className="border border-[#1D5BBF] rounded mb-3"
                         >
                           <div className="flex justify-between px-5 py-4 bg-[#F3F7FC] rounded">
-                            <div className="text-sm font-semibold text-font-primary-main">{`${index + 1}. Subject`}</div>
+                            <div className="text-sm font-semibold text-font-primary-main">{`${
+                              index + 1
+                            }. Subject`}</div>
                             <div>
                               <img
                                 src={DownArrowIcon}
@@ -1087,16 +1090,19 @@ const ProgramSteps = ({
                           className="border rounded-md p-4 mb-4"
                         >
                           <div className="flex justify-between items-center mb-4">
-                            <h4 className="font-medium text-md">
+                            <h4 className="font-medium text-sm">
                               Program cycle - {index + 1}
                             </h4>
                             {recurringFields.length > 1 && (
                               <button
                                 type="button"
                                 onClick={() => removeRecurringFields(index)}
-                                className="text-red-600 hover:text-red-700"
                               >
-                                Remove
+                                <img
+                                  className={"w-8 h-8"}
+                                  src={DeleteIconRounded}
+                                  alt="DeleteIconRounded"
+                                />
                               </button>
                             )}
                           </div>
@@ -1106,7 +1112,7 @@ const ProgramSteps = ({
                                 key={nestedRecField?.name}
                                 className="relative"
                               >
-                                <label className="block text-sm font-normal mb-1">
+                                <label className="block text-gray-700 text-xs font-bold mb-1">
                                   {nestedRecField?.label}
                                 </label>
                                 <CustomDateTimePicker
