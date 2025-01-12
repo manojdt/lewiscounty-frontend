@@ -1947,19 +1947,53 @@ export const ProgramInformationFields = [
     width: 'width-32',
     for: ['admin', 'mentor'],
   },
-  // {
-  //   type: 'input',
-  //   name: 'location',
-  //   label: 'Add Location for this Program/Events',
-  //   fieldtype: 'text',
-  //   placeholder: 'Add Location',
-  //   inputRules: {
-  //     required: 'This field is required',
-  //   },
-  //   width: 'w-full',
-  //   icon: 'location',
-  //   for: ['admin', 'mentor'],
-  // },
+  {
+    type: 'radio',
+    name: 'recurring_program',
+    label: 'Do you want this recurring program?',
+    placeholder: '',
+    options: [
+      { key: 'true', value: 'Yes' },
+      { key: 'false', value: 'No' },
+    ],
+    inputRules: {
+      required: 'This field is required',
+    },
+    size: true,
+    for: ['mentor'],
+  },
+  {
+    type: 'dynamicFields',
+    name: 'recurring_dates',
+    label: '',
+    for: ['mentor'],
+    width: 'w-full',
+    dynamicFields: [
+      
+      {
+        type: 'date',
+        name: 'start_date',
+        label: 'Start Date and Time',
+        placeholder: 'Select Start Date and Time',
+        inputRules: {
+          required: 'Start Date and Time is required',
+        },
+        width: 'width-32',
+        for: ['mentor'],
+      },
+      {
+        type: 'date',
+        name: 'end_date',
+        label: 'End Date and Time',
+        placeholder: 'Select End Date and Time',
+        inputRules: {
+          required: 'End Date and Time is required',
+        },
+        width: 'width-32',
+        for: ['mentor'],
+      },          
+    ],
+  },
 ];
 
 export const AboutProgramFields = [

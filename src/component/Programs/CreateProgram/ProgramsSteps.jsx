@@ -1,11 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
-import { Calendar } from "primereact/calendar";
 import SearchIcon from "../../../assets/icons/search.svg";
-import CalendarIcon from "../../../assets/icons/calendar_icon.svg";
-import HTMLIcon from "../../../assets/images/html1x.png";
-import LocationIcon from "../../../assets/images/Location1x.png";
 import PlusIcon from "../../../assets/icons/add_popup_icon.svg";
 import UploadIcon from "../../../assets/images/image_1x.png";
 import DeleteIcon from "../../../assets/images/delete_1x.png";
@@ -17,15 +13,20 @@ import DownArrowIcon from "../../../assets/icons/arrowDown.svg";
 import {
   FormControl,
   FormControlLabel,
+  MenuItem,
   Radio,
   RadioGroup,
+  TextField,
 } from "@mui/material";
 import DataTable from "../../../shared/DataGrid";
 import { MentorAssignColumns } from "../../../mock";
 import MuiModal from "../../../shared/Modal";
 import { useSelector } from "react-redux";
 import { Button } from "../../../shared";
+import { Button as MuiButton } from "@mui/material";
 import { formatPhoneNumber } from "../../../utils/formFields";
+import CustomDateTimePicker from "../../../shared/CustomDateTimePicker/MuiDateTimePicker";
+import moment from "moment";
 // import { useGetStatesQuery } from '../../../features/programs/program-slice';
 // import { useGetCitiesQuery } from '../../../features/program/programApi.services';
 
@@ -43,7 +44,6 @@ const ProgramSteps = ({
   goalData,
 }) => {
   const params = useParams();
-  const [checkBoxValue, setCheckBoxValue] = useState({});
   const [currentField, setCurrentField] = useState();
   const [selectedRows, setSelectedRows] = useState([]);
 
@@ -52,7 +52,6 @@ const ProgramSteps = ({
   };
   const role = useSelector((state) => state.userInfo?.data?.role);
 
-  const calendarRef = useRef([]);
   const startDateRefs = useRef([]);
   const endDateRefs = useRef([]);
 
@@ -76,28 +75,37 @@ const ProgramSteps = ({
     name: "sub_programs",
   });
 
+  const {
+    fields: recurringFields,
+    append: appendRecurringFields,
+    remove: removeRecurringFields,
+  } = useFieldArray({
+    control,
+    name: "recurring_dates",
+  });
+
   const [
     subProgramCount,
     is_sponsored = false,
     sub_programs,
-    start_date,
-    end_date,
     program_mode,
+    recurring_program,
+    recurring_dates,
   ] = watch([
     "no_of_subprograms",
     "is_sponsored",
     "sub_programs",
-    "start_date",
-    "end_date",
     "program_mode",
+    "recurring_program",
+    "recurring_dates",
   ]);
 
-const handleInputChange = (e, field) => {
+  const handleInputChange = (e, field) => {
     const { value } = e.target;
 
     if (
-      field.name === 'phone_number' ||
-      field.name === 'secondary_phone_number'
+      field.name === "phone_number" ||
+      field.name === "secondary_phone_number"
     ) {
       const formattedValue = formatPhoneNumber(value);
       setValue(field.name, formattedValue);
@@ -174,6 +182,25 @@ const handleInputChange = (e, field) => {
     }
   }, [subProgramCount, fields.length, append, remove]);
 
+  React.useEffect(() => {
+    if (recurring_program && recurringFields.length === 0) {
+      appendRecurringFields({
+        start_date: "",
+        end_date: "",
+      });
+    } else if (!recurring_program && recurringFields.length > 0) {
+      // Clear recurring fields when recurring_program becomes false
+      recurringFields.forEach((_, index) => {
+        removeRecurringFields(index);
+      });
+    }
+  }, [
+    recurring_program,
+    recurringFields.length,
+    appendRecurringFields,
+    removeRecurringFields,
+  ]);
+
   const handleLoadFieldValues = () => {
     const fName = [];
     const f = {};
@@ -211,13 +238,46 @@ const handleInputChange = (e, field) => {
     setValue(key, "");
   };
 
-  const handleCheckbox = (e) => {
-    setCheckBoxValue({ ...checkBoxValue, [e.target.name]: e.target.value });
-  };
-
   const handleActionPopup = (fieldName) => {
     // Open popup and allow user to select an item
     setCurrentField(fieldName);
+  };
+  // Watch all start and end dates to implement cross-field validation
+
+  const getMinDate = (field, index, allDates) => {
+    if (field === "start_date") {
+      if (!allDates) return moment(); // First cycle starts from today
+
+      // For subsequent cycles, start date must be after previous cycle's end date
+      const previousEndDate = allDates
+        ? [allDates]?.[index - 1]?.[field]
+        : watch(field);
+      return previousEndDate
+        ? moment(previousEndDate).add(1, "minute")
+        : moment();
+    } else {
+      // End date must be after its start date
+      const currentStartDate = allDates
+        ? [allDates]?.[index]?.[field]
+        : watch(field);
+      return currentStartDate ? moment(currentStartDate) : moment();
+    }
+  };
+
+  const getMaxDate = (field, index, allDates) => {
+    if (field === "start_date") {
+      // Start date must be before its end date if end date is selected
+      const currentEndDate = allDates
+        ? [allDates]?.[index]?.[field]
+        : watch(field);
+      return currentEndDate ? moment(currentEndDate) : null;
+    } else {
+      // End date must be before next cycle's start date if it exists
+      const nextStartDate = allDates
+        ? [allDates]?.[index + 1]?.[field]
+        : watch(field);
+      return nextStartDate ? moment(nextStartDate) : null;
+    }
   };
 
   return (
@@ -235,25 +295,7 @@ const handleInputChange = (e, field) => {
             return null;
           }
 
-          // const validationRules =
-          //   program_mode !== 'physical_location' && isAddressField
-          //     ? {}
-          //     : field.inputRules;
-
-          const dateField =
-            field.type === "date"
-              ? register(field.name, field.inputRules)
-              : undefined;
           let watchFile = field.type === "file" ? watch(field.name) : undefined;
-          const dropdownimageField =
-            field.type === "dropdown"
-              ? register(field.name, field.inputRules)
-              : undefined;
-          const checkbox =
-            field.type === "checkbox"
-              ? register(field.name, field.inputRules)
-              : undefined;
-          let imageName = "";
 
           if (field.name === "enrollment_fees" && is_sponsored === true) {
             return null;
@@ -339,52 +381,23 @@ const handleInputChange = (e, field) => {
                     defaultValue=""
                     rules={field.inputRules}
                     render={({ field: controlledField }) => (
-                      <input
-                        disabled={disableFields}
-                        {...controlledField}
+                      <TextField
                         type={field.fieldtype}
-                        onChange={(e) => handleInputChange(e, field)}
-                        className={`w-full border-none px-3 py-[0.32rem] leading-[2.15] ${
-                          disableFields ? "bg-slate-300" : "input-bg"
-                        } focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]`}
                         placeholder={field.placeholder}
+                        disabled={disableFields}
+                        {...controlledField}                       
+                        onChange={(e) => handleInputChange(e, field)}
                         onBlur={(e) => {
                           controlledField.onBlur();
                           if (field.name === "program_name") {
                             // handelProgramCheck(e?.target?.value);
                           }
                         }}
-                        style={{
-                          color: "#232323",
-                          borderRadius: "3px",
-                        }}
+                        error={!!errors.name}
+                        helperText={errors.name?.message}
                       />
                     )}
                   />
-                  {field.icon && field.icon === "location" && (
-                    <img
-                      className="absolute top-4 right-4"
-                      src={LocationIcon}
-                      alt="LocationIcon"
-                    />
-                  )}
-
-                  {field.icon && field.icon === "add" && (
-                    <Tooltip title={field.placeholder}>
-                      <img
-                        className="absolute cursor-pointer top-4 right-4"
-                        onClick={() => handleAction(field.name)}
-                        src={PlusIcon}
-                        alt="PlusIcon"
-                      />
-                    </Tooltip>
-                  )}
-
-                  {errors[field.name] && (
-                    <p className="error" role="alert">
-                      {errors[field.name].message}
-                    </p>
-                  )}
                 </div>
               ) : field.type === "popup-input" ? (
                 <div className="relative">
@@ -524,66 +537,48 @@ const handleInputChange = (e, field) => {
                 </div>
               ) : field.type === "dropdown" ? (
                 <>
-                  <select
-                    disabled={disableSelectFields}
-                    {...dropdownimageField}
-                    className={`w-full border-none px-3 py-[0.32rem] leading-[2.15] ${
-                      disableSelectFields ? "bg-slate-300" : "input-bg"
-                    } focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]`}
-                    placeholder={field.placeholder}
-                    value={watch(field.name) || ""}
-                    style={{
-                      color: "#232323",
-                      borderRadius: "3px",
-                      borderRight: "16px solid transparent",
-                    }}
-                    onChange={(e) => {
-                      dropdownimageField.onChange(e);
+                  <Controller
+                    name={field.name}
+                    control={control}
+                    defaultValue=""
+                    rules={field.inputRules}
+                    render={({ field: controlledField }) => (
+                      <TextField
+                        select
+                        fullWidth
+                        disabled={disableSelectFields}
+                        value={controlledField.value || ""}
+                        onChange={(e) => {
+                          controlledField.onChange(e);
 
-                      // if (field.name === 'state') {
-                      //   setStateId(e.target.value);
-                      // }
-                      if (field.name === "environment") {
-                        setToggleRole(
-                          e.target.value === "Own" ? "mentor" : "admin"
-                        );
-                        setCurrent(e.currentTarget.value);
-                      }
-                    }}
-                  >
-                    <option value="">Select</option>
-
-                    {/* {(field.name === 'state'
-                      ? statesOptions
-                      : // : field.name === 'city'
-                        // ? citiesOptions
-                        field.options || []
-                    )?.map((option, index) => (
-                      <option value={option.key || option.id} key={index}>
-                        {option.value || option.name}
-                      </option>
-                    ))} */}
-
-                    {field &&
-                      field.options?.length > 0 &&
-                      field.options.map((option, index) => {
-                        return (
-                          <option value={option.key || option.id} key={index}>
+                          // Handle special case for environment field
+                          if (field.name === "environment") {
+                            setToggleRole(
+                              e.target.value === "Own" ? "mentor" : "admin"
+                            );
+                            setCurrent(e.target.value);
+                          }
+                        }}
+                        error={!!errors[field.name]}
+                        helperText={errors[field.name]?.message}
+                      >
+                        <MenuItem value="">
+                          <em>Select</em>
+                        </MenuItem>
+                        {field.options?.map((option, index) => (
+                          <MenuItem
+                            key={option.id || option.key || index}
+                            value={option.id || option.key}
+                          >
                             {option.value || option.name}
-                          </option>
-                        );
-                      })}
-                  </select>
-                  {errors[field.name] && (
-                    <p className="error" role="alert">
-                      {errors[field.name].message}
-                    </p>
-                  )}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                    )}
+                  />
                 </>
-              ) : field.type === "dynamicFields" ? (
+              ) : field.name === "sub_programs" ? (
                 <>
-                  {/* Dynamic Fields for Sub Programs */}
-
                   {fields &&
                     fields.length > 0 &&
                     fields.map((item, index) => {
@@ -607,16 +602,6 @@ const handleInputChange = (e, field) => {
                             className="flex flex-wrap justify-between p-4"
                           >
                             {field.dynamicFields.map((nestedField) => {
-                              const fieldValue = watch(
-                                `sub_programs.${index}.${nestedField.name}`
-                              );
-
-                              // Only use the date value when the field type is date
-                              const dateValue =
-                                nestedField.type === "date"
-                                  ? fieldValue
-                                  : undefined;
-
                               return (
                                 <div
                                   key={nestedField.name}
@@ -627,12 +612,11 @@ const handleInputChange = (e, field) => {
                                   </label>
                                   <div>
                                     {nestedField.type === "input" ? (
-                                      <input
+                                      <TextField
                                         {...register(
                                           `sub_programs.${index}.${nestedField.name}`,
                                           nestedField.inputRules
                                         )}
-                                        className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
                                         placeholder={nestedField.placeholder}
                                         onBlur={(e) => {
                                           if (
@@ -644,97 +628,121 @@ const handleInputChange = (e, field) => {
                                             );
                                           }
                                         }}
-                                        // aria-invalid={!!errors[nestedField.name]}
+                                        error={
+                                          !!errors?.sub_programs?.[index]?.[
+                                            nestedField.name
+                                          ]
+                                        }
+                                        helperText={
+                                          errors?.sub_programs?.[index]?.[
+                                            nestedField.name
+                                          ]?.message
+                                        }
                                       />
                                     ) : nestedField.type === "textarea" ? (
-                                      <textarea
-                                        rows="4"
-                                        className={`block p-2.5 input-bg w-full text-sm text-gray-900  border focus-visible:outline-none focus-visible:border-none ${
-                                          nestedField.width === "width-82"
-                                            ? "h-[282px]"
-                                            : ""
-                                        }`}
+                                      <TextField
+                                        multiline
+                                        rows={4}
                                         placeholder={nestedField.placeholder}
                                         {...register(
                                           `sub_programs.${index}.${nestedField.name}`,
                                           nestedField.inputRules
                                         )}
-                                      ></textarea>
+                                        error={
+                                          !!errors?.sub_programs?.[index]?.[
+                                            nestedField.name
+                                          ]
+                                        }
+                                        helperText={
+                                          errors?.sub_programs?.[index]?.[
+                                            nestedField.name
+                                          ]?.message
+                                        }
+                                      />
                                     ) : nestedField.type === "date" ? (
                                       <div className="relative">
-                                        <Calendar
-                                          value={
-                                            dateValue
-                                              ? new Date(dateValue)
-                                              : null
-                                          }
-                                          className="calendar-control input-bg"
-                                          type={nestedField.type}
+                                        <CustomDateTimePicker
                                           {...register(
                                             `sub_programs.${index}.${nestedField.name}`,
-                                            nestedField.inputRules
+                                            {
+                                              required: `${nestedField?.label} date is required`,
+                                              validate: {
+                                                isValid: (value) =>
+                                                  !value ||
+                                                  moment(value).isValid() ||
+                                                  "Invalid date",
+                                                minDate: (value) =>
+                                                  !value ||
+                                                  moment(value).isSameOrAfter(
+                                                    getMinDate(
+                                                      nestedField.name,
+                                                      index,
+                                                      "sub_programs"
+                                                    ),
+                                                    "minute"
+                                                  ) ||
+                                                  `${nestedField?.label} must be after previous cycle's ${nestedField?.label}`,
+                                                maxDate: (value) => {
+                                                  const maxDate = getMaxDate(
+                                                    nestedField.name,
+                                                    index,
+                                                    "sub_programs"
+                                                  );
+                                                  return (
+                                                    !value ||
+                                                    !maxDate ||
+                                                    moment(
+                                                      value
+                                                    ).isSameOrBefore(
+                                                      maxDate,
+                                                      "minute"
+                                                    ) ||
+                                                    `${nestedField?.label} must be before ${nestedField?.label}`
+                                                  );
+                                                },
+                                              },
+                                            }
                                           )}
-                                          onChange={(e) => {
+                                          value={
+                                            sub_programs?.[index]?.[
+                                              nestedField.name
+                                            ]
+                                              ? moment(
+                                                  sub_programs?.[index]?.[
+                                                    nestedField.name
+                                                  ]
+                                                )
+                                              : null
+                                          }
+                                          onChange={(newValue) => {
                                             setValue(
                                               `sub_programs.${index}.${nestedField.name}`,
-                                              e.value
-                                                ? new Date(
-                                                    e.value
-                                                  ).toISOString()
+                                              newValue
+                                                ? newValue.toISOString()
                                                 : null
                                             );
                                           }}
-                                          {...(nestedField.name === "start_date"
-                                            ? {
-                                                minDate: start_date,
-                                                maxDate: end_date,
-                                              }
-                                            : {})}
-                                          {...(nestedField.name === "end_date"
-                                            ? {
-                                                minDate: start_date,
-                                                maxDate: end_date,
-                                              }
-                                            : {})}
-                                          showTime
-                                          hourFormat="12"
-                                          dateFormat="dd/mm/yy"
-                                          ref={(el) => {
-                                            if (
-                                              nestedField.name === "start_date"
-                                            ) {
-                                              startDateRefs.current[index] = el;
-                                            } else if (
-                                              nestedField.name === "end_date"
-                                            ) {
-                                              endDateRefs.current[index] = el;
-                                            }
-                                          }}
-                                        />
-                                        <img
-                                          className="absolute top-5 right-2 cursor-pointer"
-                                          src={CalendarIcon}
-                                          alt="CalendarIcon"
-                                          onClick={() => {
-                                            const ref = getCalendarRef(
-                                              index,
+                                          minDate={getMinDate(
+                                            nestedField?.name,
+                                            index,
+                                            "sub_programs"
+                                          )}
+                                          maxDate={getMaxDate(
+                                            nestedField?.name,
+                                            index,
+                                            "sub_programs"
+                                          )}
+                                          error={
+                                            !!errors?.sub_programs?.[index]?.[
                                               nestedField.name
-                                            );
-                                            if (ref) {
-                                              ref.show();
-                                            }
-                                          }}
+                                            ]
+                                          }
+                                          helperText={
+                                            errors?.sub_programs?.[index]?.[
+                                              nestedField.name
+                                            ]?.message
+                                          }
                                         />
-
-                                        {errors?.sub_programs?.[index] && (
-                                          <p className="error" role="alert">
-                                            {
-                                              errors?.sub_programs?.[index]?.[
-                                                nestedField.name
-                                              ]?.message
-                                            }
-                                          </p>
-                                        )}
                                       </div>
                                     ) : nestedField.type === "radio" ? (
                                       <FormControl
@@ -889,11 +897,11 @@ const handleInputChange = (e, field) => {
                 </>
               ) : field.type === "textbox" ? (
                 <>
-                  <textarea
+                  <TextField
+                    multiline
                     id={field.name} // Add unique id
                     key={field.name}
-                    rows="4"
-                    className={`block p-2.5 input-bg w-full text-sm text-gray-900 border focus-visible:outline-none focus-visible:border-none h-[182px]`}
+                    rows={4}
                     placeholder={field.placeholder}
                     {...register(field.name, {
                       ...field.inputRules,
@@ -906,76 +914,53 @@ const handleInputChange = (e, field) => {
                         });
                       },
                     })}
-                  ></textarea>
-                  {errors[field.name] && (
-                    <p className="error" role="alert">
-                      {errors[field.name].message}
-                    </p>
-                  )}
+                    error={!!errors[field.name]}
+                    helperText={errors[field.name]?.message}
+                  />
                 </>
-              ) : field.type === "checkbox" ? (
-                <div className="flex items-center me-4">
-                  {field.options.map((option, index) => (
-                    <div className="flex items-center me-4" key={index}>
-                      <input
-                        type="radio"
-                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                        {...checkbox}
-                        onChange={(e) => {
-                          checkbox.onChange(e);
-                          handleCheckbox(e);
-                        }}
-                        value={option.key}
-                        checked={checkBoxValue[field.name] === option.key}
-                      />
-                      <label className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-                        {option.value}
-                      </label>
-                    </div>
-                  ))}
-                </div>
               ) : field.type === "date" ? (
                 <div className="relative">
-                  <Calendar
+                  <CustomDateTimePicker
                     disabled={disableDateFields}
-                    className={`calendar-control ${
-                      disableDateFields ? "bg-slate-300" : "input-bg"
-                    }`}
-                    {...dateField}
-                    value={getValues(field.name)}
-                    {...(field.name === "start_date"
-                      ? { minDate: new Date() }
-                      : {})}
-                    {...(field.name === "end_date"
-                      ? { minDate: getValues("start_date") }
-                      : {})}
-                    showTime
-                    hourFormat="12"
-                    dateFormat="dd/mm/yy"
-                    ref={(el) => (calendarRef.current[index] = el)}
-                  />
-                  <img
-                    className="absolute top-5 right-2 cursor-pointer"
-                    src={CalendarIcon}
-                    alt="CalendarIcon"
-                    onClick={() => {
-                      calendarRef?.current[index]?.show();
+                    {...register(field?.name, {
+                      required: `${field?.label} date is required`,
+                      validate: {
+                        isValid: (value) =>
+                          !value || moment(value).isValid() || "Invalid date",
+                        minDate: (value) =>
+                          !value ||
+                          moment(value).isSameOrAfter(
+                            getMinDate(field?.name),
+                            "minute"
+                          ) ||
+                          `${field?.label} must be after previous cycle's ${field?.label}`,
+                        maxDate: (value) => {
+                          const maxDate = getMaxDate(field?.name);
+                          return (
+                            !value ||
+                            !maxDate ||
+                            moment(value).isSameOrBefore(maxDate, "minute") ||
+                            `${field?.label} must be before ${field?.label}`
+                          );
+                        },
+                      },
+                    })}
+                    value={
+                      getValues(field.name)
+                        ? moment(getValues(field.name))
+                        : null
+                    }
+                    onChange={(newValue) => {
+                      setValue(
+                        field.name,
+                        newValue ? newValue.toISOString() : null
+                      );
                     }}
+                    minDate={getMinDate(field?.name)}
+                    maxDate={getMaxDate(field?.name)}
+                    error={!!errors?.[field.name]}
+                    helperText={errors?.[field.name]?.message}
                   />
-
-                  {errors[field.name] && (
-                    <p className="error" role="alert">
-                      {errors[field.name].message}
-                    </p>
-                  )}
-                </div>
-              ) : field.type === "htmlbuilder" ? (
-                <div
-                  className="input-bg h-[282px] mt-6 flex items-center justify-center text-[12px] flex-col gap-2 cursor-pointer"
-                  style={{ borderRadius: "3px" }}
-                >
-                  <img src={HTMLIcon} alt="HTMLIcon" />
-                  <span>{field.text}</span>
                 </div>
               ) : field.type === "file" ? (
                 <>
@@ -1091,7 +1076,140 @@ const handleInputChange = (e, field) => {
                     </p>
                   )}
                 </>
-              ) : null}
+              ) : (
+                field.name === "recurring_dates" &&
+                recurring_program && (
+                  <div className="w-full">
+                    {recurringFields.map((recField, index) => {
+                      return (
+                        <div
+                          key={recField.id}
+                          className="border rounded-md p-4 mb-4"
+                        >
+                          <div className="flex justify-between items-center mb-4">
+                            <h4 className="font-medium text-md">
+                              Program cycle - {index + 1}
+                            </h4>
+                            {recurringFields.length > 1 && (
+                              <button
+                                type="button"
+                                onClick={() => removeRecurringFields(index)}
+                                className="text-red-600 hover:text-red-700"
+                              >
+                                Remove
+                              </button>
+                            )}
+                          </div>
+                          <div className="grid grid-cols-2 gap-4">
+                            {field?.dynamicFields?.map((nestedRecField) => (
+                              <div
+                                key={nestedRecField?.name}
+                                className="relative"
+                              >
+                                <label className="block text-sm font-normal mb-1">
+                                  {nestedRecField?.label}
+                                </label>
+                                <CustomDateTimePicker
+                                  {...register(
+                                    `recurring_dates.${index}.${nestedRecField?.name}`,
+                                    {
+                                      required: `${nestedRecField?.label} is required`,
+                                      validate: {
+                                        isValid: (value) =>
+                                          !value ||
+                                          moment(value).isValid() ||
+                                          "Invalid date",
+                                        minDate: (value) =>
+                                          !value ||
+                                          moment(value).isSameOrAfter(
+                                            getMinDate(
+                                              nestedRecField?.name,
+                                              index,
+                                              "recurring_dates"
+                                            ),
+                                            "minute"
+                                          ) ||
+                                          `${nestedRecField?.label} must be after previous cycle's ${nestedRecField?.label}`,
+                                        maxDate: (value) => {
+                                          const maxDate = getMaxDate(
+                                            nestedRecField?.name,
+                                            index,
+                                            "recurring_dates"
+                                          );
+                                          return (
+                                            !value ||
+                                            !maxDate ||
+                                            moment(value).isSameOrBefore(
+                                              maxDate,
+                                              "minute"
+                                            ) ||
+                                            `${nestedRecField?.label} must be before ${nestedRecField?.label}`
+                                          );
+                                        },
+                                      },
+                                    }
+                                  )}
+                                  value={
+                                    recurring_dates?.[index]?.[
+                                      nestedRecField?.name
+                                    ]
+                                      ? moment(
+                                          recurring_dates?.[index]?.[
+                                            nestedRecField.name
+                                          ]
+                                        )
+                                      : null
+                                  }
+                                  onChange={(newValue) => {
+                                    setValue(
+                                      `recurring_dates.${index}.${nestedRecField?.name}`,
+                                      newValue ? newValue.toISOString() : null
+                                    );
+                                  }}
+                                  minDate={getMinDate(
+                                    nestedRecField?.name,
+                                    index,
+                                    "recurring_dates"
+                                  )}
+                                  maxDate={getMaxDate(
+                                    nestedRecField?.name,
+                                    index,
+                                    "recurring_dates"
+                                  )}
+                                  error={
+                                    !!errors.recurring_dates?.[index]?.[
+                                      nestedRecField?.name
+                                    ]
+                                  }
+                                  helperText={
+                                    errors.recurring_dates?.[index]?.[
+                                      nestedRecField?.name
+                                    ]?.message
+                                  }
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
+                    <div className="flex justify-end items-center mb-4">
+                      <MuiButton
+                        variant="text"
+                        onClick={() =>
+                          appendRecurringFields({
+                            start_date: null,
+                            end_date: null,
+                          })
+                        }
+                        className="py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700"
+                      >
+                        Add +
+                      </MuiButton>
+                    </div>
+                  </div>
+                )
+              )}
             </div>
           );
         })}

@@ -709,6 +709,8 @@ export const statusAction = [
   'draft',
   'reschedule',
   'assign_program',
+  'interest',
+  'upcoming'
 ];
 
 export const programActionStatus = {
@@ -732,6 +734,8 @@ export const programActionStatus = {
   program_assign: 'assign_program',
   recent_join: 'recently_joined',
   ongoing: 'ongoing',
+  interest: 'interest',
+  upcoming: 'upcoming',
 };
 
 export const pipeUrls = {
@@ -765,6 +769,8 @@ export const programFilterUrls = {
   bookmark: '?is_bookmark=true',
   draft: `?type=${programActionStatus.draft}`,
   programAssign: `?type=${programActionStatus.program_assign}`,
+  interest: `?type=${programActionStatus.interest}`,
+  upcoming: `?type=${programActionStatus.upcoming}`,
 };
 
 export const menteeCountStatus = {
@@ -841,15 +847,24 @@ export const programMenus = (page = 'dashboard') => {
       menteeStatus: '',
       status: programActionStatus.draft,
     },
-    // {
-    //   name: "My Learning Programs",
-    //   count: 0,
-    //   page: `${pipeUrl}${programFilterUrls.learning}`,
-    //   for: ['mentee'],
-    //   mentorStatus: '',
-    //   menteeStatus: 'learning',
-    //   status: programActionStatus.learning
-    // },
+    {
+      name: "Upcoming Programs",
+      count: 0,
+      page: `${pipeUrl}${programFilterUrls.upcoming}`,
+      for: ['mentee'],
+      mentorStatus: '',
+      menteeStatus: 'upcoming',
+      status: programActionStatus.upcoming
+    },
+    {
+      name: "Interested Programs",
+      count: 0,
+      page: `${pipeUrl}${programFilterUrls.interest}`,
+      for: ['mentee'],
+      mentorStatus: '',
+      menteeStatus: 'interest',
+      status: programActionStatus.interest
+    },
 
     {
       name: 'Bookmarked Programs',

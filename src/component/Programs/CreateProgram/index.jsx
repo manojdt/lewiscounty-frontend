@@ -423,6 +423,7 @@ export default function CreatePrograms() {
             "members",
             "goals",
             "sub_programs",
+            "recurring_dates",
           ];
 
           jsonFields.forEach((field) => {
@@ -920,7 +921,7 @@ export default function CreatePrograms() {
     countryStates?.length,
     cities?.length,
     formValues?.state,
-    materials?.results
+    materials?.results,
   ]); // Removed currentProgramDetail?.id and params.id from dependencies
 
   // Separate useEffect for initializing form values from currentProgramDetail
