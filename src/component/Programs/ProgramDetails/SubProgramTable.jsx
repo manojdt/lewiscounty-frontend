@@ -70,7 +70,7 @@ const CourseCard = ({ data, handleMenuClick }) => {
           {data?.admin_program_series}. Subject
         </h2>
         <span className="px-3 py-1 text-xs text-gray-600 border border-gray-100 rounded-full">
-          Category1
+         {data?.category_name}
         </span>
       </div>
 
