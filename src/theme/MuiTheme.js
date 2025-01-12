@@ -27,6 +27,8 @@ let MuiTheme = createTheme({
         size: "large",
         disableElevation: true,
         disableTouchRipple: true,
+        variant: 'contained',
+        color: 'primary'
       },
     },
     MuiInputBase: {
@@ -44,6 +46,19 @@ let MuiTheme = createTheme({
         },
       }
     },
+    MuiTextField: {
+      defaultProps: {
+        fullWidth: true
+      }
+    },
+    MuiAvatar: {
+      defaultProps: {
+        variant: "rounded",
+        sx: {
+          width: 25, height: 25
+        }
+      }
+    }
   },
 });
 

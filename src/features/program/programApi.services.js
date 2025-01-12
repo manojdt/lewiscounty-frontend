@@ -1,6 +1,6 @@
 import { rtkQueryApiServices, rtkQueryServiceTags } from '../../services/api';
 
-const { PROGRAM_LAUNCH, PROGRAM_ACCEPT, PROGRAM_UPDATES, GOALS } = rtkQueryServiceTags;
+const { PROGRAM, GOALS } = rtkQueryServiceTags;
 
 // Helper function to build query string
 const buildQueryString = (query) => {
@@ -60,13 +60,13 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
         method: 'PUT',
         body: bodyFormData,
       }),
-      invalidatesTags: [PROGRAM_UPDATES],
+      invalidatesTags: [PROGRAM],
     }),
 
     // Get all categories
     getAllCategories: builder.query({
       query: () => 'category',
-    }),   
+    }),
 
     // Get Program Goals
     getProgramGoals: builder.query({
@@ -75,17 +75,17 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
 
     // Get certificates by category
     getCertificates: builder.query({
-      query: (params) => ({url:`certificate`,params}),
+      query: (params) => ({ url: `certificate`, params }),
     }),
 
     // Get skills by category
     getSkills: builder.query({
-      query: (params) => ({url:`skills`,params}),
+      query: (params) => ({ url: `skills`, params }),
     }),
 
     // Get members by category
     getMembers: builder.query({
-      query: (params) => ({url:`members`,params}),
+      query: (params) => ({ url: `members`, params }),
     }),
 
     // Get all mentors
@@ -151,7 +151,7 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
             ? `program/admin-program/${id}`
             : `programs/${id}${requestId ? `?request_id=${requestId}` : ''}`,
       }),
-      providesTags: [PROGRAM_LAUNCH, PROGRAM_ACCEPT],
+      providesTags: [PROGRAM],
     }),
 
     getSpecificProgramDetails: builder.query({
@@ -160,7 +160,7 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
           ? `?program_create_type=${program_create_type}`
           : ''
         }`,
-      providesTags: [PROGRAM_LAUNCH, PROGRAM_ACCEPT],
+      providesTags: [PROGRAM],
     }),
 
     launchProgram: builder.mutation({
@@ -169,7 +169,7 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
         method: 'POST',
         body: data,
       }),
-      invalidatesTags: [PROGRAM_LAUNCH],
+      invalidatesTags: [PROGRAM],
     }),
 
     acceptProgram: builder.mutation({
@@ -178,7 +178,7 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
         method: 'PATCH',
         body: data,
       }),
-      invalidatesTags: [PROGRAM_ACCEPT],
+      invalidatesTags: [PROGRAM],
     }),
 
     // Program Counts and Statistics
@@ -299,6 +299,14 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
       }),
     }),
 
+    markProgramInterest: builder.mutation({
+      query: (data) => ({
+        url: 'programs/interest',
+        method: 'POST',
+        body: data,
+      }), invalidatesTags: [PROGRAM]
+    }),
+
     getMenteeProgramCount: builder.query({
       query: (query) => {
         if (!query || Object.keys(query).length === 0) {
@@ -345,6 +353,7 @@ export const {
   useGetMenteeProgramCountQuery,
   useGetAllProgramsQuery,
   useCreateProgramMutation,
+  useMarkProgramInterestMutation,
   useGetAllCategoriesQuery,
   useGetCertificatesQuery,
   useGetSkillsQuery,

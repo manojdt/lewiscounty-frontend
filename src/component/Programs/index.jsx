@@ -196,7 +196,7 @@ export default function Programs() {
       //   role === "admin" && filterType === programActionStatus.program_assign,
     }
   );
-
+console.log('data?.programs', data)
   const [openCategory, setOpenCategory] = React.useState(false);
   const token = localStorage.getItem("access_token");
   const decoded = React.useMemo(() => jwtDecode(token), [token]);

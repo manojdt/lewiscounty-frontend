@@ -10,17 +10,13 @@ const baseUrl = `${process.env.REACT_APP_BASE_URL}/api/`;
 // const baseUrl = "https://62f8-202-83-25-55.ngrok-free.app/api/"
 //comments
 export const rtkQueryServiceTags = {
-  PROGRAM_UPDATES: "program_updates",
-  PROGRAM_LAUNCH: "program_launch",
-  PROGRAM_ACCEPT: "program_accept",
+  PROGRAM: "Program",
   GOALS: "Goals",
   MATERIAL: "Material",
   CERTIFICATE: "Certificate",
 };
 const {
-  PROGRAM_UPDATES,
-  PROGRAM_LAUNCH,
-  PROGRAM_ACCEPT,
+  PROGRAM,
   GOALS,
   MATERIAL,
   CERTIFICATE,
@@ -41,9 +37,7 @@ export const rtkQueryApiServices = createApi({
     },
   }),
   tagTypes: [
-    PROGRAM_UPDATES,
-    PROGRAM_LAUNCH,
-    PROGRAM_ACCEPT,
+    PROGRAM,
     GOALS,
     MATERIAL,
     CERTIFICATE,

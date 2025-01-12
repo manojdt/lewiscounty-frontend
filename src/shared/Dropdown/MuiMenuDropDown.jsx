@@ -1,4 +1,4 @@
-import { Menu, MenuItem } from "@mui/material";
+import { Avatar, Menu, MenuItem } from "@mui/material";
 
 function MuiMenuDropDown(props) {
   const { menuItems, handleMenuClick, ...restOfMenuProps } = props;
@@ -44,6 +44,7 @@ function MuiMenuDropDown(props) {
             key={item?.action}
             onClick={() => handleMenuClick(item?.action)}
           >
+            {item?.icon && item?.icon}
             {item?.label}
           </MenuItem>
         );
