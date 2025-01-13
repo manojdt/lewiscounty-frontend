@@ -51,6 +51,7 @@ import TimeHistoryIcon from "../../../assets/icons/time-history-icon.svg";
 import CancelIcon from "../../../assets/images/cancel1x.png";
 import CompleteIcon from "../../../assets/images/completed1x.png";
 import { Button } from "../../../shared";
+import { Button as MuiButton } from "@mui/material";
 import {
   convertDateFormat,
   formatDateTimeISO,
@@ -2668,24 +2669,21 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                               {programdetails.duration} {" days"}
                             </span>
                           </li>
-                          {/* <li
-                            className="flex justify-between text-[12px]"
-                            style={{
-                              borderBottom: "1px solid rgba(217, 217, 217, 1)",
-                              paddingBottom: "10px",
-                              paddingTop: "14px",
-                            }}
-                          >
-                            {" "}
-                            <span>Schedule</span>
-                            <span>
-                              <span>{`${moment(
-                                programdetails?.start_date
-                              ).format("hh:mm A")} to ${moment(
-                                programdetails?.end_date
-                              ).format("hh:mm A")}`}</span>
-                            </span>
-                          </li> */}
+                          {programdetails?.recurring_programs_details?.length >
+                            0 && (
+                            <li
+                              className="flex justify-between text-[12px] py-1"
+                              style={{
+                                borderBottom:
+                                  "1px solid rgba(217, 217, 217, 1)",
+                              }}
+                            >
+                              <span>Recurring cycle</span>
+                              <MuiButton size={"small"} variant={"text"}>
+                                View
+                              </MuiButton>
+                            </li>
+                          )}
                           {!programdetails.is_sponsored &&
                             programdetails?.mentee_join_status !==
                               "program_join_request_accepted" && (

@@ -58,7 +58,7 @@ const columns = [
   },
 ];
 
-const CourseCard = ({ data, handleMenuClick }) => {
+const CourseCard = ({ data, series, handleMenuClick }) => {
   const handleViewDetails = () => {
     // Pass the full row data including id when calling handleMenuClick
     handleMenuClick("view", data);
@@ -67,9 +67,7 @@ const CourseCard = ({ data, handleMenuClick }) => {
     <div className="max-w-xs p-5 bg-white rounded-lg shadow-md">
       {/* Category Badge */}
       <div className="flex justify-between items-center mb-3">
-        <h2 className="text-base font-semibold">
-          {data?.admin_program_series}. Subject
-        </h2>
+        <h2 className="text-base font-semibold">{series}. Subject</h2>
         <span className="px-3 py-1 text-xs text-gray-600 border border-gray-100 rounded-full">
           {data?.category_name}
         </span>
@@ -208,8 +206,12 @@ const SubprogramsDataGrid = ({ data, handleAcceptProgram }) => {
     <div>
       {role === "mentee" ? (
         <div className="flex gap-x-3 items-center">
-          {data?.map((item) => (
-            <CourseCard data={item} handleMenuClick={handleMenuClick} />
+          {data?.map((item, index) => (
+            <CourseCard
+              data={item}
+              series={index + 1}
+              handleMenuClick={handleMenuClick}
+            />
           ))}
         </div>
       ) : (

@@ -43,6 +43,7 @@ const ProgramSteps = ({
   mentor_assign,
   goalData,
   certificate,
+  materials,
 }) => {
   const params = useParams();
   const [currentField, setCurrentField] = useState();
@@ -412,10 +413,10 @@ const ProgramSteps = ({
                         return null;
                       }
 
-                      if (
-                        field.name === "goals" ||
-                        field.name === "certifications"
-                      ) {
+                      // if (
+                      //   field.name === "goals" ||
+                      //   field.name === "certifications"||
+                      // ) {
                         // Handle goals and equipments fields
                         if (Array.isArray(fieldValue)) {
                           return (
@@ -424,12 +425,17 @@ const ProgramSteps = ({
                                 const dataSource =
                                   field.name === "certifications"
                                     ? certificate
-                                    : goalData;
+                                    : field.name === "goals"
+                                    ? goalData
+                                    : field.name === "learning_materials"
+                                    ? materials
+                                    : [];
                                 const item = dataSource?.find(
                                   (g) => g.id === id
                                 );
 
                                 if (item) {
+                                  console.log('item', item)
                                   return (
                                     <p
                                       key={id}
@@ -465,49 +471,49 @@ const ProgramSteps = ({
                             </>
                           );
                         }
-                      } else {
-                        // Handle other popup-input fields
-                        if (Array.isArray(fieldValue)) {
-                          return (
-                            <>
-                              {fieldValue.slice(0, 6).map((item, index) => (
-                                <p
-                                  key={index}
-                                  className="flex items-center gap-1"
-                                >
-                                  <span
-                                    className="flex items-center px-3 py-3"
-                                    style={{
-                                      background: "rgba(223, 237, 255, 1)",
-                                      borderRadius: "50%",
-                                    }}
-                                  ></span>
-                                  {item.name ||
-                                    `${item.first_name || ""} ${
-                                      item.last_name || ""
-                                    }`.trim() ||
-                                    item.full_name ||
-                                    item}
-                                </p>
-                              ))}
-                              {fieldValue.length > 6 && (
-                                <p className="flex items-center gap-1">
-                                  <span
-                                    className="text-white flex items-center px-2 py-1"
-                                    style={{
-                                      background: "rgb(29, 91, 191)",
-                                      borderRadius: "50%",
-                                    }}
-                                  >
-                                    +{fieldValue.length - 6}
-                                  </span>
-                                  Others
-                                </p>
-                              )}
-                            </>
-                          );
-                        }
-                      }
+                      // } else {
+                      //   // Handle other popup-input fields
+                      //   if (Array.isArray(fieldValue)) {
+                      //     return (
+                      //       <>
+                      //         {fieldValue.slice(0, 6).map((item, index) => (
+                      //           <p
+                      //             key={index}
+                      //             className="flex items-center gap-1"
+                      //           >
+                      //             <span
+                      //               className="flex items-center px-3 py-3"
+                      //               style={{
+                      //                 background: "rgba(223, 237, 255, 1)",
+                      //                 borderRadius: "50%",
+                      //               }}
+                      //             ></span>
+                      //             {item.name ||
+                      //               `${item.first_name || ""} ${
+                      //                 item.last_name || ""
+                      //               }`.trim() ||
+                      //               item.full_name ||
+                      //               item}
+                      //           </p>
+                      //         ))}
+                      //         {fieldValue.length > 6 && (
+                      //           <p className="flex items-center gap-1">
+                      //             <span
+                      //               className="text-white flex items-center px-2 py-1"
+                      //               style={{
+                      //                 background: "rgb(29, 91, 191)",
+                      //                 borderRadius: "50%",
+                      //               }}
+                      //             >
+                      //               +{fieldValue.length - 6}
+                      //             </span>
+                      //             Others
+                      //           </p>
+                      //         )}
+                      //       </>
+                      //     );
+                      //   }
+                      // }
                     })()}
                   </div>
                   <input
