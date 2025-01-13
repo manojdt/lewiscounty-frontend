@@ -2105,7 +2105,7 @@ export const AboutProgramFields = [
   },
   {
     type: 'file',
-    name: 'image',
+    name: 'sponsor_logos',
     label: 'Add Sponsor Logo',
     fieldtype: 'text',
     placeholder: 'Multiple Skills added',

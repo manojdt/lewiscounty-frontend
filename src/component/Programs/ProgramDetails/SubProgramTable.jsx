@@ -63,11 +63,12 @@ const CourseCard = ({ data, series, handleMenuClick }) => {
     // Pass the full row data including id when calling handleMenuClick
     handleMenuClick("view", data);
   };
+  console.log('data', data)
   return (
     <div className="max-w-xs p-5 bg-white rounded-lg shadow-md">
       {/* Category Badge */}
       <div className="flex justify-between items-center mb-3">
-        <h2 className="text-base font-semibold">{series}. Subject</h2>
+        <h2 className="text-base font-semibold">{series}. {`${data?.program_name?.substring(0, 18)}...`}</h2>
         <span className="px-3 py-1 text-xs text-gray-600 border border-gray-100 rounded-full">
           {data?.category_name}
         </span>
@@ -104,7 +105,7 @@ const CourseCard = ({ data, series, handleMenuClick }) => {
       {/* View Details Button */}
       <div className="flex justify-center">
         <button
-          className="p-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+          className="p-2 text-xs bg-background-primary-main text-white rounded transition-colors"
           onClick={handleViewDetails}
         >
           View Details

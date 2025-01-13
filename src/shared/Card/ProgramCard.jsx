@@ -351,7 +351,7 @@ export default function ProgramCard({
         )}
 
         <div className="py-3 px-3 ">
-          <div className="flex flex-wrap">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {programs && programs.length ? (
               programs.map((currentProgram, index) => {
                 let startDate = "";
@@ -384,7 +384,7 @@ export default function ProgramCard({
                 return (
                   <div
                     key={index}
-                    className={`curated-programs program-container flex gap-1 items-center py-5 px-5 w-[33%]`}
+                    className={`curated-programs program-container flex gap-1 items-center py-5 px-5`}
                     style={{
                       ...(currentProgram.status === "yettoapprove" &&
                       !currentProgram?.mentor_id
@@ -397,7 +397,7 @@ export default function ProgramCard({
                     }}
                   >
                     <div
-                      className="w-full"
+                      className="w-full bg-white"
                       style={{
                         boxShadow: "4px 4px 15px 0px rgba(0, 0, 0, 0.1)",
                         borderRadius: "10px",
@@ -410,7 +410,7 @@ export default function ProgramCard({
                         >
                           {currentProgram?.program_image ? (
                             <img
-                              className="object-cover w-full h-[150px] cursor-pointer"
+                              className="rounded object-cover w-full h-[150px] cursor-pointer"
                               src={currentProgram.program_image}
                               alt="Program Logo"
                               onMouseEnter={() =>
@@ -428,6 +428,7 @@ export default function ProgramCard({
                               }}
                             >
                               <img
+                                className="w-full h-[150px] object-cover rounded"
                                 src={NoProgramImageBg}
                                 alt="Background"
                                 onMouseEnter={() =>
