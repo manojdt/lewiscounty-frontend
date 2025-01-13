@@ -165,9 +165,9 @@ export const TaskDetails = () => {
         bodyFormData.append('status', 'completed');
       }
 
-      if (type === 'submit' && taskData?.status === 'draft') {
+      if (type === 'submit' && (taskData?.status === 'draft' || taskData?.status === 'reassigned')) {
         submitTask("draft", bodyFormData)
-      } else if (type === 'draft' && taskData?.status === 'draft') {
+      } else if (type === 'draft' && (taskData?.status === 'draft' || taskData?.status === 'reassigned')) {
         submitTask("draft", bodyFormData)
       } else if (type === 'submit' && ['inprogress', 'pending'].includes(taskData?.status)) {
         submitTask("submit", bodyFormData)
@@ -219,11 +219,11 @@ export const TaskDetails = () => {
             row_id: uuidv4()
           }
         });
-
-
+        setValue("task_solution", res?.payload?.task_solution)
         setValue('file', files ?? [], {
           shouldValidate: taskData?.statue === 'draft' ? false : true,
         });
+        console.log("from set ===>", allFields)
         setTaskFile(files ?? []);
       }
     });
@@ -238,7 +238,7 @@ export const TaskDetails = () => {
   }, [task_submission]);
 
   const allFiles = getFiles(taskFile || []);
-console.log(allFiles,"allfiles")
+
   return (
     <div className='px-9 py-9'>      
       <Backdrop
@@ -469,6 +469,7 @@ console.log(allFiles,"allfiles")
                     >
                       Status
                     </th>
+                    {console.log("taskData ===>", taskData)}
                     <td
                       className='px-6 py-4 text-white'
                       style={{ background: 'rgba(29, 91, 191, 1)' }}
@@ -603,11 +604,13 @@ console.log(allFiles,"allfiles")
                 </Box>
               )}
 
-              {(!isPreview && ["inprogress","waiting_for_approval","completed","pending","draft"].includes(taskData.status)) && (
+              {(!isPreview && ["inprogress","waiting_for_approval","completed","pending","draft", "reassigned"].includes(taskData.status)) && (
                 <div className='py-6 mb-16'>
                   {taskData.status === TaskAllStatus.inprogress ||
                     taskData.status === TaskAllStatus.pending ||
-                    taskData.status === TaskAllStatus.draft ? (
+                    taskData.status === TaskAllStatus.draft ||
+                    taskData?.status === "reassigned"
+                     ? (
                     <>
                       <div className='relative'>
                         <label className='block tracking-wide text-gray-700 text-xs font-bold mb-2'>
@@ -1003,7 +1006,7 @@ console.log(allFiles,"allfiles")
                   onClick={() => navigate('/mentee-tasks')}
                 />
                 {(taskData.status === TaskAllStatus.draft ||
-                  taskData.status === TaskAllStatus.inprogress) && (
+                  taskData.status === TaskAllStatus.inprogress || taskData?.status === "reassigned") && (
                     <>
                       <Button
                         btnType='submit'

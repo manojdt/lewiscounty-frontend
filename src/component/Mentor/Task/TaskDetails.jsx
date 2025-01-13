@@ -22,6 +22,7 @@ import { CancelPopup } from './cancelPopup';
 import BreadCrumbsArrow from "../../../assets/icons/breadCrumbsArrow.svg"
 import TickColorIcon from '../../../assets/icons/tickColorLatest.svg'
 import TickCircle from "../../../assets/icons/tickCircle.svg"
+import ProgramHistoryIcon  from "../../../assets/icons/historyIcon.svg"
 
 const MentorTaskDetails = () => {
     const navigate = useNavigate()
@@ -73,6 +74,10 @@ const MentorTaskDetails = () => {
         {
             name: "Pending",
             key: "pending"
+        },
+        {
+            name: "Re Assign",
+            key: "reassigned"
         },
         {
             name: "Completed",
@@ -148,7 +153,7 @@ const MentorTaskDetails = () => {
         handleClose()
         setConfirmPopup({
             ...confirmPopup,
-            [type]: true,
+            [type === "reassign" ? 'cancel' : type]: true,
             type: type,
             title: title
         })
@@ -369,6 +374,13 @@ const MentorTaskDetails = () => {
                                                 <img src={Cancel} alt='Cancel' className='pr-3 w-[30px]' />
                                                 No Pass
                                             </MenuItem>
+                                            <MenuItem
+                                                onClick={() => handleOpenConfirmPopup("reassign", "Re Assign Reason", "reject_one_task")}
+                                                className='!text-[12px]'
+                                            >
+                                                <img src={ProgramHistoryIcon} alt='ProgramHistoryIcon' className='pr-3 w-[30px]' />
+                                                Re Assign
+                                            </MenuItem>
                                         </>
                                     )}
                                 </>
@@ -433,12 +445,18 @@ const MentorTaskDetails = () => {
 
 
     const handleUpdateResult = async (type, reason = "") => {
-        let payload = {
-            "result": type === "pass" ? true : false,
+        console.log("type ===>", type)
+        let payload = {            
             "task_id": selectedItem?.id,
-            "type": "single_result"
+            "type": newType === "reject_one_task" ? "reject_one_task" : "single_result"
         }
-        if (type === "fail") {
+        if(type !== "reject_one_task"){
+            payload={
+                ...payload,
+                "result": type === "pass" ? true : false,
+            }
+        }
+        if (type === "fail" || type === "reject_one_task") {
             payload = {
                 ...payload,
                 reason: reason
@@ -1062,14 +1080,17 @@ const MentorTaskDetails = () => {
 
             <CancelPopup open={confirmPopup?.cancel} header={confirmPopup?.title} handleClosePopup={() => handleCloseConfirmPopup("cancel")}
                 handleSubmit={(reason) => {
+                    
                     if (selectedTab === "new" || selectedTab === "") {
                         if (newType === "fail") {
                             handleUpdateResult("fail", reason)
+                        } else if(newType === "reject_one_task"){
+                            handleUpdateResult("reject_one_task", reason)
                         } else {
                             handleCancelAllMentee(reason)
                         }
-                    } else if (selectedTab === "pending"&&!newType) {
-                        handleUpdateAllTask("cancel", reason)
+                    } else if (selectedTab === "pending"&&!newType) {                        
+                            handleUpdateAllTask("cancel", reason)                    
                     } else {
                         handleUpdateResult("fail", reason)
                     }
@@ -1124,6 +1145,7 @@ const MentorTaskDetails = () => {
                         >
                             {(selectedTab !== "pending" && confirmPopup?.type === "pass") && "Successfully Marked as Pass"}
                             {(selectedTab !== "pending" && confirmPopup?.type === "cancel") && "Successfully marked as Fail"}
+                            {(selectedTab !== "pending" && confirmPopup?.type === "reassign") && "Successfully Task Reassigned"}                            
                             {((selectedTab === "pending" || selectedTab === "new") && confirmPopup?.type === "cancel") && "All Mentee’s New task has been successfully cancelled"}
                             {((selectedTab === "pending" || selectedTab === "new" || newType === "newTab") && confirmPopup?.type === "cancel_all") && "Task is cancelled successfully"}
                             {(selectedTab === "pending" && confirmPopup?.type === "pass") && "All Mentee’s New task has been successfully passed"}
