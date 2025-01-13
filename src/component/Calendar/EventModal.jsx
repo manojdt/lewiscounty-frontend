@@ -10,6 +10,7 @@ import DummyAvatar from '../../assets/icons/dummy-avatar.svg';
 import BellIcon from '../../assets/icons/bell-icon.svg';
 import GMeetModal from './GMeetModal';
 import { createCalendarEvent } from '../../services/scheduler';
+import { dateFormat } from '../../utils';
 
 const EventModal = ({ open, closeModal, actionActionBtn, event = [] }) => {
   const [deleteModal, setDeleteModal] = useState(false);
@@ -92,7 +93,7 @@ const EventModal = ({ open, closeModal, actionActionBtn, event = [] }) => {
                 {event?.title || 'Title Name'}
               </h2>
               <span className='text-slate-400'>
-                {event?.start_date} &nbsp; {event.start.slice(0, 5)} -{' '}
+                {dateFormat(event?.start_date)} &nbsp; {event.start.slice(0, 5)} -{' '}
                 {event.end.slice(0, 5)}
               </span>
             </div>

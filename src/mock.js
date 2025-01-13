@@ -1232,6 +1232,9 @@ export const goalsHistoryColumn = [
     headerName: 'Start Date',
     flex: 1,
     id: 1,
+    renderCell: (params) => {
+      return <div>{dateFormat(params.row.start_date)}</div>;
+    },
   },
 ];
 
@@ -1447,6 +1450,9 @@ export const programRequestColumns = [
     flex: 1,
     id: 5,
     for: ['admin', 'mentor', 'mentee'],
+    renderCell: (params) => {
+      return <div>{dateFormat(params.row.created_at)}</div>;
+    },
   },
   // {
   //   field: 'cancelled_reason',
@@ -1461,6 +1467,9 @@ export const programRequestColumns = [
     flex: 1,
     id: 7,
     for: ['admin', 'mentee', 'mentor'],
+    renderCell: (params) => {
+      return <div>{dateFormat(params.row.updated_at)}</div>;
+    },
   },
   {
     field: 'updated_by_full_name',
@@ -1562,6 +1571,9 @@ export const programExtendRequestColumns = [
     flex: 1,
     id: 5,
     for: ['admin', 'mentor', 'mentee'],
+    renderCell: (params) => {
+      return <div>{dateFormat(params.row.created_at)}</div>;
+    },
   },
   {
     field: 'updated_at',
@@ -1569,6 +1581,9 @@ export const programExtendRequestColumns = [
     flex: 1,
     id: 7,
     for: ['admin', 'mentee', 'mentor'],
+    renderCell: (params) => {
+      return <div>{dateFormat(params.row.updated_at)}</div>;
+    },
   },
   {
     field: 'updated_by_full_name',
@@ -1852,6 +1867,9 @@ export const goalsRequestColumns = [
     flex: 1,
     id: 2,
     for: ['admin'],
+    renderCell: (params) => {
+      return <div>{dateFormat(params.row.requested_date)}</div>;
+    },
   },
   {
     field: 'requested_by',
@@ -1866,6 +1884,9 @@ export const goalsRequestColumns = [
     flex: 1,
     id: 4,
     for: ['mentor'],
+    renderCell: (params) => {
+      return <div>{dateFormat(params.row.updated_at)}</div>;
+    },
   },
   {
     field: 'updated_by',
@@ -2027,6 +2048,9 @@ export const testimonialRequestColumns = [
     flex: 1,
     id: 3,
     for: ['admin'],
+    renderCell: (params) => {
+      return <div>{dateFormat(params.row.updated_at)}</div>;
+    },
   },
   {
     field: 'updated_by',
@@ -2131,6 +2155,9 @@ export const reportRequestColumns = [
     flex: 1,
     id: 3,
     for: ['admin'],
+    renderCell: (params) => {
+      return <div>{dateFormat(params.row.updated_at)}</div>;
+    },
   },
   {
     field: 'updated_by_full_name',
