@@ -856,7 +856,7 @@ export const programMenus = (page = 'dashboard') => {
       name: "Upcoming Programs",
       count: 0,
       page: `${pipeUrl}${programFilterUrls.upcoming}`,
-      for: ['mentee'],
+      for: ['mentee', 'mentor'],
       mentorStatus: '',
       menteeStatus: 'upcoming',
       status: programActionStatus.upcoming
@@ -1307,8 +1307,7 @@ export const menteeNotJoinCondition = [
   ...programNotReady,
   ...programCancelled,
   ...programCompleted,
-  'program_join_request_submitted',
-  'program_join_request_rejected',
+  
 ];
 
 export const menteeProgramStatus = {

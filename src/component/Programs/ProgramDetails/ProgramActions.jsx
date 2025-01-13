@@ -12,6 +12,7 @@ import DoubleArrowIcon from "../../../assets/images/double_arrow 1x.png";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "../../../shared";
 import { Button as MuiButton } from "@mui/material";
+import { useJoinAllProgramMutation } from "../../../features/program/programApi.services";
 
 const ProgramActions = ({
   role,
@@ -29,6 +30,8 @@ const ProgramActions = ({
 }) => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const [joinAllProgram, { isLoading, isSuccess, isError }] =
+    useJoinAllProgramMutation();
   // Common status button styles
   const buttonStyles = {
     base: {
@@ -94,8 +97,7 @@ const ProgramActions = ({
 
     // Accept Program button for admin programs
     if (
-      programdetails.status === "yettoapprove" 
-      &&
+      programdetails.status === "yettoapprove" &&
       programdetails?.admin_program
     ) {
       return (
@@ -369,24 +371,31 @@ const ProgramActions = ({
           ![
             "program_join_payment_initiate",
             "program_join_payment_pending",
-          ].includes(programdetails?.mentee_join_status) && (
-            <button
-              className="py-3 px-16 text-white text-[14px] flex items-center"
-              style={{ ...buttonStyles.base, ...buttonStyles.gradient }}
-              onClick={() =>
-                !isLaunchingProgram && handleJoinProgram("program_join")
-              }
+            "program_join_request_submitted",
+            "program_join_request_rejected",
+          ].includes(programdetails?.mentee_join_status) &&
+          (programdetails?.admin_assign_program ? (
+            <MuiButton
+              onClick={() => !isLoading && joinAllProgram(programdetails?.id)}
             >
-              {isLaunchingProgram ? "Loading..." : "Join Program"}
-              <span className="pl-8 pt-1">
+              {isLoading ? "Joining...." : "Join All Program"}
+            </MuiButton>
+          ) : (
+            <MuiButton
+              endIcon={
                 <img
                   style={{ width: "15px", height: "13px" }}
                   src={DoubleArrowIcon}
                   alt="DoubleArrowIcon"
                 />
-              </span>
-            </button>
-          )
+              }
+              onClick={() =>
+                !isLaunchingProgram && handleJoinProgram("program_join")
+              }
+            >
+              {isLaunchingProgram ? "Loading..." : "Join Program"}
+            </MuiButton>
+          ))
         )}
       </div>
     );
@@ -564,6 +573,7 @@ const ProgramActions = ({
               target="_blank"
               className="py-3 px-16 text-white text-[14px] rounded-sm cursor-pointer"
               style={{ ...buttonStyles.gradient }}
+              rel="noreferrer"
             >
               {"Join Meeting"}
             </a>

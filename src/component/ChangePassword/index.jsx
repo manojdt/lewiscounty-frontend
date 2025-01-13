@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import Backdrop from '@mui/material/Backdrop';
-import CircularProgress from '@mui/material/CircularProgress';
-import { ReactComponent as EyeCloseIcon } from '../../assets/icons/eyeClose.svg';
-import { ReactComponent as EyeOpenIcon } from '../../assets/icons/eyeOpen.svg';
-import { useDispatch, useSelector } from 'react-redux';
-import { resetUserInfo, updatePassword } from '../../services/loginInfo';
-import { PasswordRulesSet, userStatus } from '../../utils/constant';
-import { PasswordRules } from '../../utils/loginFields';
-import SuccessIcon from '../../assets/images/Success_tic1x.png';
-import FailedIcon from '../../assets/images/cancel3x.png';
+import React, { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
+import { ReactComponent as EyeCloseIcon } from "../../assets/icons/eyeClose.svg";
+import { ReactComponent as EyeOpenIcon } from "../../assets/icons/eyeOpen.svg";
+import { useDispatch, useSelector } from "react-redux";
+import { resetUserInfo, updatePassword } from "../../services/loginInfo";
+import { PasswordRulesSet, userStatus } from "../../utils/constant";
+import { PasswordRules } from "../../utils/loginFields";
+import SuccessIcon from "../../assets/images/Success_tic1x.png";
+import FailedIcon from "../../assets/images/cancel3x.png";
 
 export const ChangePassword = () => {
   const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
-  const userEmail = searchParams.get('email');
+  const userEmail = searchParams.get("email");
   const navigate = useNavigate();
   const userInfo = useSelector((state) => state.userInfo);
   const [passwordVisibility, setPasswordVisibility] = useState({
@@ -56,19 +56,19 @@ export const ChangePassword = () => {
   const onSubmit = (data) => {
     const { new_password, confirm_password } = data;
     if (
-      new_password !== '' &&
-      confirm_password !== '' &&
+      new_password !== "" &&
+      confirm_password !== "" &&
       new_password !== confirm_password
     ) {
-      setError('confirm_password', {
-        type: 'custom',
-        message: 'New password and Confirm password should be same',
+      setError("confirm_password", {
+        type: "custom",
+        message: "New password and Confirm password should be same",
       });
-    } else if (userEmail !== '' && new_password === confirm_password) {
+    } else if (userEmail !== "" && new_password === confirm_password) {
       if (passwordFailRule()) {
-        setError('common', {
-          type: 'manual',
-          message: 'All Conditions must be satisfied',
+        setError("common", {
+          type: "manual",
+          message: "All Conditions must be satisfied",
         });
       } else {
         dispatch(
@@ -80,8 +80,8 @@ export const ChangePassword = () => {
 
   const handleField = (field, value) => {
     const email = userEmail;
-    let emailExist = email !== '' && value !== '';
-    if (email !== '') {
+    let emailExist = email !== "" && value !== "";
+    if (email !== "") {
       const emailValidation = new RegExp(email);
       emailExist = !emailValidation.test(value);
     }
@@ -105,7 +105,7 @@ export const ChangePassword = () => {
 
   useEffect(() => {
     if (!passwordFailRule()) {
-      clearErrors('common');
+      clearErrors("common");
     }
   }, [verifyPasswordRule]);
 
@@ -115,20 +115,20 @@ export const ChangePassword = () => {
 
   useEffect(() => {
     if (!userInfo.loading && userInfo.status === userStatus.changePassword) {
-      navigate('/');
+      navigate("/");
     }
   }, [userInfo]);
 
   return (
     <React.Fragment>
       <Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={userInfo.loading}
       >
         <CircularProgress color='inherit' />
       </Backdrop>
       <Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={
           userInfo.loading ||
           userInfo.status === userStatus.login ||
@@ -151,10 +151,10 @@ export const ChangePassword = () => {
                 Congratulations!
               </h2>
             )}
-            <span style={{ color: '#232323' }}>
+            <span style={{ color: "#232323" }}>
               {userInfo.status === userStatus.pending
-                ? 'Please wait while you password being change'
-                : 'Your have successfully reset and created a new password'}
+                ? "Please wait while you password being change"
+                : "Your have successfully reset and created a new password"}
             </span>
           </div>
         ) : (
@@ -163,8 +163,8 @@ export const ChangePassword = () => {
       </Backdrop>
       <div className='w-full flex items-center justify-center'>
         <div className='w-4/5 max-w-md mt-20'>
-          <h4 className='mt-1 pl-3 pb-1 text-xl font-semibold logoColor'>
-            MyLogo
+          <h4 className='pb-1 text-3xl font-semibold bg-gradient-to-r from-[#00AEBD] to-[#1D5BBF] text-transparent bg-clip-text'>
+            MMA
           </h4>
 
           <h4 className='mb-6 mt-6 pb-1 text-xl font-semibold defaultTextColor'>
@@ -172,7 +172,7 @@ export const ChangePassword = () => {
           </h4>
 
           <form onSubmit={handleSubmit(onSubmit)}>
-            {userInfo.error !== '' ? (
+            {userInfo.error !== "" ? (
               <div className='pb-7'>
                 <p className='error' role='alert'>
                   {userInfo.error}
@@ -185,19 +185,19 @@ export const ChangePassword = () => {
               </label>
               <input
                 type={`${
-                  passwordVisibility.new_password ? 'text' : 'password'
+                  passwordVisibility.new_password ? "text" : "password"
                 }`}
                 className='w-full rounded px-3 py-[0.32rem] leading-[2.15] text-[14px] h-[60px]'
                 placeholder='Enter new password'
                 style={{
-                  color: '#232323',
-                  border: '1px solid #3E3E3E',
+                  color: "#232323",
+                  border: "1px solid #3E3E3E",
                 }}
-                {...register('new_password', {
+                {...register("new_password", {
                   required: true,
                 })}
-                onKeyUp={(e) => handleField('text', e.target.value)}
-                aria-invalid={errors.new_password ? 'true' : 'false'}
+                onKeyUp={(e) => handleField("text", e.target.value)}
+                aria-invalid={errors.new_password ? "true" : "false"}
               />
 
               <button
@@ -216,7 +216,7 @@ export const ChangePassword = () => {
                   <EyeCloseIcon />
                 )}
               </button>
-              {errors.new_password?.type === 'required' && (
+              {errors.new_password?.type === "required" && (
                 <p className='error' role='alert'>
                   New Password is required
                 </p>
@@ -229,20 +229,20 @@ export const ChangePassword = () => {
               </label>
               <input
                 type={`${
-                  passwordVisibility.confirm_password ? 'text' : 'password'
+                  passwordVisibility.confirm_password ? "text" : "password"
                 }`}
                 className='w-full rounded px-3 py-[0.32rem] leading-[2.15] text-[14px] h-[60px]'
                 placeholder='Enter confirm password'
                 style={{
-                  color: '#232323',
-                  border: '1px solid #3E3E3E',
+                  color: "#232323",
+                  border: "1px solid #3E3E3E",
                 }}
-                {...register('confirm_password', {
+                {...register("confirm_password", {
                   required: true,
                 })}
-                aria-invalid={errors.confirm_password ? 'true' : 'false'}
+                aria-invalid={errors.confirm_password ? "true" : "false"}
               />
-              {errors.confirm_password?.type === 'required' && (
+              {errors.confirm_password?.type === "required" && (
                 <p className='error' role='alert'>
                   Confirm Password is required
                 </p>
@@ -264,34 +264,34 @@ export const ChangePassword = () => {
                   <EyeCloseIcon />
                 )}
               </button>
-              {errors.confirm_password?.type === 'required' ||
-                (errors.confirm_password?.type === 'custom' && (
+              {errors.confirm_password?.type === "required" ||
+                (errors.confirm_password?.type === "custom" && (
                   <p className='error' role='alert'>
-                    {errors.confirm_password?.type === 'custom'
+                    {errors.confirm_password?.type === "custom"
                       ? errors.confirm_password?.message
-                      : 'Confirm Password is required'}
+                      : "Confirm Password is required"}
                   </p>
                 ))}
             </div>
 
-            {errors.common?.type === 'manual' && (
+            {errors.common?.type === "manual" && (
               <p className='error' role='alert'>
                 {errors.common?.message}
               </p>
             )}
 
-            {typeof getValues('new_password') !== 'undefined' && (
+            {typeof getValues("new_password") !== "undefined" && (
               <div className='pb-3 leading-6'>
                 <p className='text-[14px] pb-1'>Create a password That:</p>
                 <ul className=''>
                   {PasswordRules.map((rule, index) => {
-                    let icon = '\\2022';
+                    let icon = "\\2022";
                     let pd = 3;
-                    let textColor = '#000';
+                    let textColor = "#000";
                     if (verifyPasswordRule[rule.key]) {
-                      icon = '\\2714\\0020';
+                      icon = "\\2714\\0020";
                       pd = 2;
-                      textColor = '#00AEBD';
+                      textColor = "#00AEBD";
                     }
                     return (
                       <li
@@ -314,7 +314,7 @@ export const ChangePassword = () => {
                 data-twe-ripple-init
                 data-twe-ripple-color='light'
                 style={{
-                  background: 'linear-gradient(to right, #00AEBD, #1D5BBF)',
+                  background: "linear-gradient(to right, #00AEBD, #1D5BBF)",
                 }}
               >
                 Save New Password
