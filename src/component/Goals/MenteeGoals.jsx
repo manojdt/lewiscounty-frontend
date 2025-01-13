@@ -12,6 +12,7 @@ import { getGoalsHistory } from '../../services/goalsInfo';
 import DataTable from '../../shared/DataGrid';
 import { goalDataStatus, goalStatusColor } from '../../utils/constant';
 import dayjs from 'dayjs';
+import moment from 'moment';
 
 export default function MenteeGoals() {
     const [anchorEl, setAnchorEl] = useState(null);
@@ -61,7 +62,7 @@ export default function MenteeGoals() {
             id: 1,
             flex: 1,
             renderCell: (params) => {
-                return <div className='flex gap-2 items-center'>{`${params?.row?.completed_date ? dayjs(params?.row?.completed_date).format("DD-MM-YYYY") : "..."}`}</div>
+                return <div className='flex gap-2 items-center'>{`${params?.row?.completed_date ? moment(params?.row?.completed_date).format("MM-DD-YYYY") : "..."}`}</div>
             }
         },
         {

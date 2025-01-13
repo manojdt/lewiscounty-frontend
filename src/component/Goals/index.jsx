@@ -781,7 +781,7 @@ const Goals = () => {
         const payload = {
             id: seletedItem?.id,
             status: confirmPopup?.type === "complete" ? "completed" : "cancel",
-            start_date: dayjs(new Date()).format("YYYY-MM-DD")
+            start_date: moment(new Date()).format("YYYY-MM-DD")
         }
         dispatch(updateHistoryGoal(payload)).then((res) => {
             if (res?.meta?.requestStatus === "fulfilled") {
