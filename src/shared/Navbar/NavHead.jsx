@@ -21,7 +21,7 @@ const NavHead = ({ role, handleLogoClick }) => {
         };
       default:
         return {
-          text: "My Logo",
+          text: "MMA",
           color: "text-gray-800",
         };
     }
@@ -31,7 +31,7 @@ const NavHead = ({ role, handleLogoClick }) => {
 
   return (
     <div
-      className="site-logo cursor-pointer flex items-center space-x-3 rtl:space-x-reverse"
+      className='site-logo cursor-pointer flex items-center space-x-3 rtl:space-x-reverse'
       onClick={handleLogoClick}
     >
       <span
