@@ -181,6 +181,14 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
       invalidatesTags: [PROGRAM],
     }),
 
+    joinAllProgram: builder.mutation({
+      query: (id) => ({
+        url: `request/join-all-subprograms/${id}`,
+        method: 'POST',
+      }),
+      invalidatesTags: [PROGRAM],
+    }),
+
     // Program Counts and Statistics
     getProgramCounts: builder.query({
       query: (query) => {
@@ -334,6 +342,7 @@ export const {
   useGetSpecificProgramDetailsQuery,
   useUpdateProgramMutation,
   useLaunchProgramMutation,
+  useJoinAllProgramMutation,
   useAcceptProgramMutation,
   useGetProgramCountsQuery,
   useGetProgramGoalsQuery,

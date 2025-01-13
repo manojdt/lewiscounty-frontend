@@ -927,26 +927,6 @@ const ProgramSteps = ({
                     disabled={disableDateFields}
                     {...register(field?.name, {
                       required: `${field?.label} date is required`,
-                      validate: {
-                        isValid: (value) =>
-                          !value || moment(value).isValid() || "Invalid date",
-                        minDate: (value) =>
-                          !value ||
-                          moment(value).isSameOrAfter(
-                            getMinDate(field?.name),
-                            "minute"
-                          ) ||
-                          `${field?.label} must be after previous cycle's ${field?.label}`,
-                        maxDate: (value) => {
-                          const maxDate = getMaxDate(field?.name);
-                          return (
-                            !value ||
-                            !maxDate ||
-                            moment(value).isSameOrBefore(maxDate, "minute") ||
-                            `${field?.label} must be before ${field?.label}`
-                          );
-                        },
-                      },
                     })}
                     value={
                       getValues(field.name)
@@ -959,8 +939,18 @@ const ProgramSteps = ({
                         newValue ? newValue.toISOString() : null
                       );
                     }}
-                    minDate={getMinDate(field?.name)}
-                    maxDate={getMaxDate(field?.name)}
+                    {...(field.name === "start_date"
+                      ? {
+                          minDate: moment(new Date()), // Convert to moment object
+                        }
+                      : {})}
+                    {...(field.name === "end_date"
+                      ? {
+                          minDate: getValues("start_date")
+                            ? moment(getValues("start_date")) // Convert to moment object
+                            : null,
+                        }
+                      : {})}
                     error={!!errors?.[field.name]}
                     helperText={errors?.[field.name]?.message}
                   />

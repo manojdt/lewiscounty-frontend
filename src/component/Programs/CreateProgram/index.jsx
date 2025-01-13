@@ -63,7 +63,6 @@ export default function CreatePrograms() {
   const [showBackdrop, setShowBackdrop] = useState(false);
   const role = userInfo.data.role || "";
   const [search, setSearch] = useState("");
-  // console.log(search);
   const [toggleRole, setToggleRole] = useState("");
   const {
     allPrograms,
@@ -174,7 +173,6 @@ export default function CreatePrograms() {
   });
 
   const ID_ONLY_FIELDS = ["goals"];
-  // console.log('formDetails', formDetails);
   const [tempSelectedRows, setTempSelectedRows] = useState([]);
   const [logo, setLogo] = useState({});
   const [stepWiseData, setStepWiseData] = useState({});
@@ -365,7 +363,12 @@ export default function CreatePrograms() {
     if (fieldData.is_sponsored === false) {
       delete fieldData.image;
     }
-
+    fieldData = Object.entries(fieldData)
+      .filter(([_, value]) => value !== null && value !== undefined)
+      .reduce((obj, [key, value]) => {
+        obj[key] = value;
+        return obj;
+      }, {});
     setStepData(fieldData);
     const totalSteps = filteredProgramTabs.length;
     if (currentStep === 1 && role === mentor && !params?.id) {
@@ -427,33 +430,10 @@ export default function CreatePrograms() {
           ];
 
           jsonFields.forEach((field) => {
-            // console.log('field', field);
             if (fieldData[field]) {
-              // bodyFormData.append(field, JSON.stringify(fieldData[field]));
-              if (field === "goals" || field === "sub_programs") {
-                if (field == "goals") {
-                  const hasIdKey = fieldData[field].some((item) =>
-                    item.hasOwnProperty("id")
-                  );
-                  if (hasIdKey) {
-                    const idsOnly = fieldData[field].map((item) => item.id);
-                    bodyFormData.append(field, JSON.stringify(idsOnly));
-                  } else {
-                    bodyFormData.append(
-                      field,
-                      JSON.stringify(fieldData[field])
-                    );
-                  }
-                } else {
-                  bodyFormData.append(field, JSON.stringify(fieldData[field]));
-                }
-              } else {
-                const idsOnly = fieldData[field].map((item) => item.id);
-                bodyFormData.append(field, JSON.stringify(idsOnly));
-              }
+              bodyFormData.append(field, JSON.stringify(fieldData[field]));
             }
           });
-          // console.log('fieldData', fieldData);
 
           // Remove fields based on is_sponsored before creating FormData
           if (fieldData.is_sponsored === true) {
@@ -500,6 +480,10 @@ export default function CreatePrograms() {
               bodyFormData.append("status", "started");
             }
             bodyFormData.append("program_admin", userInfo.data?.user_id);
+            // for (let [key, value] of bodyFormData.entries()) {
+            //   console.log(`formData: ${key}: ${value}`);
+            // }
+
             await createProgram({
               bodyFormData,
               role: toggleRole === admin ? toggleRole : "",
