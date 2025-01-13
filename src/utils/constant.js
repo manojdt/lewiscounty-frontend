@@ -554,6 +554,7 @@ export const taskStatusText = {
   newtask: 'New',
   waiting_for_approval: 'Waiting',
   completed: 'Completed',
+  reassigned: "Re Assigned"
 };
 
 export const ticketStatusText = {
@@ -633,6 +634,10 @@ export const taskStatusColor = {
   completed: {
     color: 'rgba(22, 182, 129, 1)',
     bg: 'rgba(235, 255, 243, 1)',
+  },
+  reassigned: {
+    color: 'rgba(29, 91, 191, 1)',
+    bg: 'rgba(207, 225, 255, 1)',
   },
 };
 
@@ -1156,6 +1161,7 @@ export const TaskStatus = {
   cancelled: 'Cancelled',
   draft: 'Draft',
   waiting_for_approval: 'Waiting for Approval',
+  reassigned: "Re Assigned"
 };
 
 export const TaskApiStatus = {
@@ -1393,6 +1399,7 @@ export const taskStatus = {
   new: 'New',
   cancel: 'Cancel',
   inprogress: 'In Progress',
+  reassigned: 'Re Assigned'
 };
 
 export const taskStatusColorNew = {
@@ -1420,6 +1427,10 @@ export const taskStatusColorNew = {
     bg: '#FFFBE9',
     color: '#FFD500',
   },
+  reassigned: {
+    bg: '#EEF5FF',
+    color: '#1D5BBF',
+  }
 };
 
 export const view = {

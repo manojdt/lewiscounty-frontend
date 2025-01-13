@@ -67,6 +67,10 @@ export const Tasks = () => {
       key: 'waiting_for_approval',
     },
     {
+      name: 'Re Assign Task',
+      key: 'reassigned',
+    },
+    {
       name: 'Completed Task',
       key: 'completed',
     },
