@@ -39,6 +39,7 @@ import { getSpecificTask } from '../../services/task';
 import { getFiles } from '../../utils';
 import api from '../../services/api';
 import HtmlReport from '../../shared/htmlReport';
+import moment from 'moment';
 
 export const TaskDetails = () => {
   const navigate = useNavigate();
@@ -342,7 +343,7 @@ export const TaskDetails = () => {
                       className='px-6 py-4 text-white'
                       style={{ background: 'rgba(0, 174, 189, 1)' }}
                     >
-                      {taskData?.created_at?.split('T')[0]}
+                      {taskData?.created_at? moment(taskData?.created_at).format("MM-DD-YYYY") : "-"}
                     </td>
                   </tr>
                   <tr className='bg-white border-b dark:bg-gray-800 dark:border-gray-700'>
@@ -396,7 +397,8 @@ export const TaskDetails = () => {
                       className='px-6 py-4 text-white'
                       style={{ background: 'rgba(0, 174, 189, 1)' }}
                     >
-                      {taskData['due_date']?.split('T')[0]}
+                      {/* {taskData['due_date']?.split('T')[0]} */}
+                      {taskData?.due_date? moment(taskData?.due_date).format("MM-DD-YYYY") : "-"}
                     </td>
                   </tr>
                 </tbody>
@@ -419,7 +421,8 @@ export const TaskDetails = () => {
                       className='px-6 py-4 text-white'
                       style={{ background: 'rgba(29, 91, 191, 1)' }}
                     >
-                      {taskData?.submited_date?.split('T')[0] || '-'}
+                      {/* {taskData?.submited_date?.split('T')[0] || '-'} */}
+                      {taskData?.submited_date? moment(taskData?.submited_date).format("MM-DD-YYYY") : "-"}
                     </td>
                   </tr>
                   <tr className='bg-white border-b dark:bg-gray-800 dark:border-gray-700'>

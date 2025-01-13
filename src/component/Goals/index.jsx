@@ -37,6 +37,7 @@ import dayjs from 'dayjs';
 import { Button } from '../../shared';
 import StartIcon from "../../assets/icons/startIcon.svg"
 import TickCircleIcon from "../../assets/icons/tickCircle.svg"
+import moment from 'moment';
 
 const Goals = () => {
     const navigate = useNavigate()
@@ -481,7 +482,7 @@ const Goals = () => {
             flex: 1,
             id: 1,
             renderCell: (params) => {
-                return <div className='flex gap-2 items-center'>{params?.row?.completed_date ? dayjs(params?.row?.completed_date).format("DD-MM-YYYY") : "..."}</div>
+                return <div className='flex gap-2 items-center'>{params?.row?.completed_date ? moment(params?.row?.completed_date).format("MM-DD-YYYY") : "..."}</div>
             }
         },
         {

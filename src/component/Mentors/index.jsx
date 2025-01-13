@@ -38,6 +38,7 @@ import CloseRequest from '../../assets/icons/closeCircle.svg';
 import CloseReqPopup from '../../assets/icons/closeReqPopup.svg';
 import CancelReq from '../../assets/icons/cancelRequest.svg';
 import dayjs from 'dayjs';
+import moment from 'moment';
 
 export const Mentors = () => {
   const navigate = useNavigate();
@@ -247,7 +248,7 @@ export const Mentors = () => {
           <div className='flex gap-2 items-center'>
             {' '}
             {params?.row?.requested_date
-              ? dayjs(params?.row?.requested_date).format('DD/MM/YYYY')
+              ? moment(params?.row?.requested_date).format('MM-DD-YYYY')
               : '...'}
           </div>
         );
@@ -263,7 +264,7 @@ export const Mentors = () => {
           <div className='flex gap-2 items-center'>
             {' '}
             {params?.row?.cancelled_date
-              ? dayjs(params?.row?.cancelled_date).format('DD/MM/YYYY')
+              ? moment(params?.row?.cancelled_date).format('MM-DD-YYYY')
               : '...'}
           </div>
         );

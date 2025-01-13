@@ -117,6 +117,9 @@ export const discussionColumns = [
     headerName: "Date",
     flex: 1,
     id: 3,
+    renderCell: (params) => {
+      return <div>{dateFormat(params.row.date)}</div>;
+    },
   },
   {
     field: "task",

@@ -29,6 +29,7 @@ import NoProgramImageIcon from '../../assets/icons/noProgramImageIcon.svg';
 import Balck_Heart_Icon from '../../assets/icons/gray-heart.svg';
 import Crown_Icon from '../../assets/icons/cronwn.svg';
 import { Crown } from 'lucide-react';
+import moment from 'moment';
 
 export default function ProgramCard({
   title,
@@ -359,10 +360,11 @@ export default function ProgramCard({
                     .toISOString()
                     .substring(0, 10)
                     .split('-');
-                }
-                const actualStartDate = startDate.length
-                  ? `${startDate[2]}/${startDate[1]}/${startDate[0]}`
-                  : '';
+                } 
+                const actualStartDate = currentProgram.start_date ? moment(currentProgram.start_date).format("MM-DD-YYYY") : "-"
+                // startDate.length
+                //   ? `${startDate[2]}/${startDate[1]}/${startDate[0]}`
+                //   : '';
 
                 const date = new Date(currentProgram.created_at);
 
