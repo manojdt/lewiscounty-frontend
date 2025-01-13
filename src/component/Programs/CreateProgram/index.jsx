@@ -360,7 +360,7 @@ export default function CreatePrograms() {
       delete fieldData.enrollment_fees;
     }
     if (fieldData.is_sponsored === false) {
-      delete fieldData.image;
+      delete fieldData.sponsor_logos;
     }
     fieldData = Object.entries(fieldData)
       .filter(([_, value]) => value !== null && value !== undefined)
@@ -439,12 +439,12 @@ export default function CreatePrograms() {
             delete fieldData.enrollment_fees;
           }
           if (fieldData.is_sponsored === false) {
-            delete fieldData.image;
+            delete fieldData.sponsor_logos;
           }
 
           for (let key in fieldData) {
             if (
-              (key === "program_image" || key === "image") &&
+              (key === "program_image" || key === "sponsor_logos") &&
               fieldData[key]?.[0] instanceof File
             ) {
               bodyFormData.append(key, fieldData[key][0]);
@@ -465,8 +465,8 @@ export default function CreatePrograms() {
             if (typeof fieldData?.program_image === "string") {
               bodyFormData.delete("program_image");
             }
-            if (typeof fieldData?.image === "string") {
-              bodyFormData.delete("image");
+            if (typeof fieldData?.sponsor_logos === "string") {
+              bodyFormData.delete("sponsor_logos");
             }
             // bodyFormData.append("program_id", params?.id);
             await updateProgram({
@@ -493,8 +493,11 @@ export default function CreatePrograms() {
         }
       } else {
         let allLogo = { ...logo };
-        if (data.hasOwnProperty("image") && data?.image?.length) {
-          allLogo.image = data.image[0];
+        if (
+          data.hasOwnProperty("sponsor_logos") &&
+          data?.sponsor_logos?.length
+        ) {
+          allLogo.sponsor_logos = data.sponsor_logos[0];
         }
         if (
           data.hasOwnProperty("program_image") &&
@@ -560,11 +563,11 @@ export default function CreatePrograms() {
 
       // For fields that only need IDs
       // if (ID_ONLY_FIELDS.includes(key)) {
-        // Only use the currently selected IDs from the DataTable
-        const selectedIds = value.map((row) => row.id);
-        setValue(key, selectedIds);
-        // Store the full objects in tempSelectedRows for display
-        setTempSelectedRows(value);
+      // Only use the currently selected IDs from the DataTable
+      const selectedIds = value.map((row) => row.id);
+      setValue(key, selectedIds);
+      // Store the full objects in tempSelectedRows for display
+      setTempSelectedRows(value);
       // } else {
       //   // For object fields - use only the currently selected rows
       //   setValue(key, value);
@@ -722,7 +725,6 @@ export default function CreatePrograms() {
       onCreateBtnClick: handleClickOpen,
     },
   };
-
   const FooterComponent = ({ selectedRows, action }) => {
     const cancelButtonStyle = {
       border: "1px solid rgba(29, 91, 191, 1)",
@@ -905,6 +907,8 @@ export default function CreatePrograms() {
     cities?.length,
     formValues?.state,
     materials?.results,
+    goals?.results,
+    members,
   ]); // Removed currentProgramDetail?.id and params.id from dependencies
 
   // Separate useEffect for initializing form values from currentProgramDetail
@@ -958,6 +962,15 @@ export default function CreatePrograms() {
           }
           if (fieldName === "program_type") {
             value = currentProgramDetail["program_type"]?.id;
+          }
+          if (
+            fieldName === "sponsor_logos" &&
+            currentProgramDetail["sponsor_logos"]
+          ) {
+            value = currentProgramDetail["sponsor_logos"][0];
+          }
+          if (ID_ONLY_FIELDS.includes(fieldName)) {
+            value = currentProgramDetail[fieldName]?.map((item) => item?.id);
           }
           if (fieldName === "state") {
             value = currentProgramDetail["state_details"]?.id;
@@ -1293,9 +1306,10 @@ export default function CreatePrograms() {
                     stepData={stepData}
                     stepFields={programAllFields[currentStep - 1]}
                     mentor_assign={mentor_assign}
-                    goalData={formDetails.goals}
+                    goalData={goals?.results}
                     certificate={certificate}
                     materials={materials?.results}
+                    members={members}
                     setSearch={setSearch}
                     search={search}
                   />

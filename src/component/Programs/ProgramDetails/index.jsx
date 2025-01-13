@@ -1949,6 +1949,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                           {programdetails.participated_mentees_count === 0 &&
                             programdetails?.created_by ===
                               userdetails?.data?.user_id && (
+                                
                               <MenuItem
                                 onClick={() => handleMenu("edit")}
                                 className="!text-[12px]"
@@ -3012,7 +3013,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                   navigate(`/view-goal/${goal.id}`)
                                 }
                               >
-                                {goal.goal_name}
+                                {goal.description?.substring(0, 10)}
                               </button>
                             ))}
                           </div>
@@ -3032,7 +3033,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                   navigate(`/view-goal/${goal.id}`)
                                 }
                               >
-                                {goal.goal_name}
+                                {goal.description?.substring(0, 10)}
                               </button>
                             ))}
                           </div>
