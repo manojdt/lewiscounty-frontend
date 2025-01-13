@@ -22,7 +22,6 @@ import DataTable from "../../../shared/DataGrid";
 import { goalStatus, programStatus, user } from "../../../utils/constant";
 import MuiModal from "../../../shared/Modal";
 import Tooltip from "../../../shared/Tooltip";
-
 import CancelIcon from "../../../assets/icons/closeIcon.svg";
 import SuccessTik from "../../../assets/images/blue_tik1x.png";
 import CertificateIcon from "../../../assets/images/dummy_certificate.png";
@@ -172,7 +171,7 @@ export default function CreatePrograms() {
     learning_materials: [],
   });
 
-  const ID_ONLY_FIELDS = ["goals"];
+  const ID_ONLY_FIELDS = ["goals", "certifications"];
   const [tempSelectedRows, setTempSelectedRows] = useState([]);
   const [logo, setLogo] = useState({});
   const [stepWiseData, setStepWiseData] = useState({});
@@ -1295,6 +1294,7 @@ export default function CreatePrograms() {
                     stepFields={programAllFields[currentStep - 1]}
                     mentor_assign={mentor_assign}
                     goalData={formDetails.goals}
+                    certificate={certificate}
                     setSearch={setSearch}
                     search={search}
                   />

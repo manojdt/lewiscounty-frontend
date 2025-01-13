@@ -28,8 +28,7 @@ import { formatPhoneNumber } from "../../../utils/formFields";
 import CustomDateTimePicker from "../../../shared/CustomDateTimePicker/MuiDateTimePicker";
 import moment from "moment";
 import DeleteIconRounded from "../../../assets/icons/delete-icon.svg";
-// import { useGetStatesQuery } from '../../../features/programs/program-slice';
-// import { useGetCitiesQuery } from '../../../features/program/programApi.services';
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 
 const ProgramSteps = ({
   stepFields,
@@ -43,6 +42,7 @@ const ProgramSteps = ({
   setCurrent,
   mentor_assign,
   goalData,
+  certificate,
 }) => {
   const params = useParams();
   const [currentField, setCurrentField] = useState();
@@ -53,14 +53,6 @@ const ProgramSteps = ({
   };
   const role = useSelector((state) => state.userInfo?.data?.role);
 
-  const startDateRefs = useRef([]);
-  const endDateRefs = useRef([]);
-
-  const getCalendarRef = (index, fieldName) => {
-    return fieldName === "start_date"
-      ? startDateRefs.current[index]
-      : endDateRefs.current[index];
-  };
   const {
     register,
     formState: { errors },
@@ -394,6 +386,11 @@ const ProgramSteps = ({
                             // handelProgramCheck(e?.target?.value);
                           }
                         }}
+                        InputProps={{
+                          startAdornment: field.name === "enrollment_fees" && (
+                            <AttachMoneyIcon />
+                          ),
+                        }}
                         error={!!errors.name}
                         helperText={errors.name?.message}
                       />
@@ -415,13 +412,19 @@ const ProgramSteps = ({
                         return null;
                       }
 
-                      if (field.name === "goals") {
+                      if (
+                        field.name === "goals" ||
+                        field.name === "certifications"
+                      ) {
                         // Handle goals and equipments fields
                         if (Array.isArray(fieldValue)) {
                           return (
                             <>
                               {fieldValue.slice(0, 6).map((id) => {
-                                const dataSource = goalData;
+                                const dataSource =
+                                  field.name === "certifications"
+                                    ? certificate
+                                    : goalData;
                                 const item = dataSource?.find(
                                   (g) => g.id === id
                                 );
@@ -439,7 +442,7 @@ const ProgramSteps = ({
                                           borderRadius: "50%",
                                         }}
                                       ></span>
-                                      {item.description}
+                                      {item.description || item.name}
                                     </p>
                                   );
                                 }
