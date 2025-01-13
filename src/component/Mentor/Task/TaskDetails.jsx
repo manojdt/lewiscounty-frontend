@@ -23,6 +23,7 @@ import BreadCrumbsArrow from "../../../assets/icons/breadCrumbsArrow.svg"
 import TickColorIcon from '../../../assets/icons/tickColorLatest.svg'
 import TickCircle from "../../../assets/icons/tickCircle.svg"
 import ProgramHistoryIcon  from "../../../assets/icons/historyIcon.svg"
+import moment from 'moment';
 
 const MentorTaskDetails = () => {
     const navigate = useNavigate()
@@ -194,7 +195,7 @@ const MentorTaskDetails = () => {
             flex: 1,
             id: 0,
             renderCell: (params) => {
-                return <div className='flex gap-2 items-center'>{`${params?.row?.submited_date ? dayjs(params?.row?.submited_date).format("DD-MM-YYYY") : "..."}`}</div>
+                return <div className='flex gap-2 items-center'>{`${params?.row?.submited_date ? moment(params?.row?.submited_date).format("MM-DD-YYYY") : "..."}`}</div>
             }
         },
         {
@@ -203,7 +204,7 @@ const MentorTaskDetails = () => {
             flex: 1,
             id: 0,
             renderCell: (params) => {
-                return <div className='flex gap-2 items-center'>{`${params?.row?.cancel_date ? dayjs(params?.row?.cancel_date).format("DD-MM-YYYY") : "..."}`}</div>
+                return <div className='flex gap-2 items-center'>{`${params?.row?.cancel_date ? moment(params?.row?.cancel_date).format("MM-DD-YYYY") : "..."}`}</div>
             }
         },
         {
@@ -212,7 +213,7 @@ const MentorTaskDetails = () => {
             flex: 1,
             id: 0,
             renderCell: (params) => {
-                return <div className='flex gap-2 items-center'>{`${params?.row?.completed_date ? dayjs(params?.row?.completed_date).format("DD-MM-YYYY") : "..."}`}</div>
+                return <div className='flex gap-2 items-center'>{`${params?.row?.completed_date ? moment(params?.row?.completed_date).format("MM-DD-YYYY") : "..."}`}</div>
             }
         },
         {
@@ -773,7 +774,7 @@ const MentorTaskDetails = () => {
                     <Box className="!border !border-[#1D5BBF80] rounded-[3px] mt-5">
                         <Stack direction={"row"} alignItems={"center"} justifyContent={"space-between"} className='!border-b-2 !border-[#1D5BBF80] px-[35px] py-[22px]'>
                             <Typography className='!text-[#18283D] !text-[16px]' fontWeight={600}>{menteeTaskList?.task_name}</Typography>
-                            <Typography className='!text-[#18283D] !text-[14px]'>Due date: {dayjs(menteeTaskList.due_date).format("DD/MM/YYYY")}</Typography>
+                            <Typography className='!text-[#18283D] !text-[14px]'>Due date: {menteeTaskList.due_date ? moment(menteeTaskList.due_date).format("MM-DD-YYYY") : "-"}</Typography>
                         </Stack>
                         <Stack spacing={3} className='px-[35px] py-[22px]'>
                             <Typography className='!text-[#18283D] !text-[16px]' sx={{ fontWeight: 500 }}>

@@ -22,6 +22,7 @@ import {
 import { fileNameFromUrl, fileNameString } from '../../../utils';
 import dayjs from 'dayjs';
 import EditIcon from '../../../assets/icons/editIcon.svg';
+import moment from 'moment';
 
 const MentorTask = () => {
   const [activeTaskMenu, setActiveTaskMenu] = useState('my-task');
@@ -437,7 +438,7 @@ const MentorTask = () => {
         return (
           <div>
             {params?.row?.assign_task_created_at
-              ? dayjs(params?.row?.assign_task_created_at).format('DD/MM/YYYY')
+              ? moment(params?.row?.assign_task_created_at).format('MM-DD-YYYY')
               : '...'}
           </div>
         );

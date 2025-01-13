@@ -13,6 +13,7 @@ import UploadIcon from "../../../assets/images/image_1x.png"
 import { styled } from '@mui/material/styles';
 import TickColorIcon from '../../../assets/icons/tickColorLatest.svg'
 import CloseIcon from '../../../assets/icons/closeIcon.svg';
+import moment from 'moment';
 
 const CustomCheckbox = styled(Checkbox)({
     color: '#ccc',
@@ -194,7 +195,7 @@ const ViewTask = () => {
                                     Program Start Date
                                 </th>
                                 <td className="px-6 py-4 text-white !text-[14px]" style={{ background: 'rgba(0, 174, 189, 1)' }}>
-                                    {dayjs(taskDetails.program_startdate).format("DD/MM/YYYY")}
+                                    {taskDetails.program_startdate ? moment(taskDetails.program_startdate).format("MM-DD-YYYY") : "-"}
                                 </td>
                             </tr>
                             <tr className="bg-white border-b  dark:bg-gray-800">
@@ -202,7 +203,7 @@ const ViewTask = () => {
                                     Due Date
                                 </th>
                                 <td className="px-6 py-4 text-white !text-[14px]" style={{ background: 'rgba(0, 174, 189, 1)' }}>
-                                    {dayjs(taskDetails.due_date).format("DD/MM/YYYY")}
+                                    {taskDetails.due_date ? moment(taskDetails.due_date).format("MM-DD-YYYY") : "-"}
                                 </td>
                             </tr>
 
@@ -224,7 +225,7 @@ const ViewTask = () => {
                                     Program End Date
                                 </th>
                                 <td className="px-6 py-4 text-white !text-[14px]" style={{ background: 'rgba(29, 91, 191, 1)' }}>
-                                    {dayjs(taskDetails.program_enddate).format("DD/MM/YYYY")}
+                                    {taskDetails.program_enddate ? moment(taskDetails.program_enddate).format("MM-DD-YYYY") : "-"}
                                 </td>
                             </tr>
                             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -242,7 +243,7 @@ const ViewTask = () => {
                 <Box className="!border !border-[#1D5BBF80] rounded-[3px] mt-5">
                     <Stack direction={"row"} alignItems={"center"} justifyContent={"space-between"} className='!border-b-2 !border-[#1D5BBF80] px-[35px] py-[22px]'>
                         <Typography className='!text-[#18283D] !text-[16px]'>{taskDetails.task_name}</Typography>
-                        <Typography className='!text-[#18283D] !text-[14px]'>Due date: {dayjs(taskDetails.due_date).format("DD-MM-YYYY")}</Typography>
+                        <Typography className='!text-[#18283D] !text-[14px]'>Due date: {moment(taskDetails.due_date).format("MM-DD-YYYY")}</Typography>
                     </Stack>
                     <Stack spacing={3} className='px-[35px] py-[22px]'>
                         <Typography className='!text-[#18283D] !text-[16px]' sx={{ fontWeight: 500 }}>
