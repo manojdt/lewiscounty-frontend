@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { Star } from "lucide-react";
+import EditIcon from "@mui/icons-material/Edit";
 
 const columns = [
   { field: "mentor_name", headerName: "Mentor Name", flex: 1 },
@@ -70,7 +71,7 @@ const CourseCard = ({ data, handleMenuClick }) => {
           {data?.admin_program_series}. Subject
         </h2>
         <span className="px-3 py-1 text-xs text-gray-600 border border-gray-100 rounded-full">
-         {data?.category_name}
+          {data?.category_name}
         </span>
       </div>
 
@@ -115,7 +116,13 @@ const CourseCard = ({ data, handleMenuClick }) => {
   );
 };
 
-const ActionMenu = ({ anchorEl, open, handleClose, handleMenuClick }) => {
+const ActionMenu = ({
+  anchorEl,
+  open,
+  handleClose,
+  handleMenuClick,
+  gridCellParams,
+}) => {
   const role = useSelector((state) => state.userInfo?.data?.role);
 
   return (
@@ -133,16 +140,22 @@ const ActionMenu = ({ anchorEl, open, handleClose, handleMenuClick }) => {
         View
       </MenuItem>
       {role === "mentor" && (
-        <MenuItem onClick={() => handleMenuClick("accept")}>
-          <CheckCircleIcon sx={{ mr: 1 }} fontSize="small" />
-          Accept
-        </MenuItem>
+        <>
+          {gridCellParams?.status === "yettoapprove" && (
+            <MenuItem onClick={() => handleMenuClick("accept")}>
+              <CheckCircleIcon sx={{ mr: 1 }} fontSize="small" />
+              Accept
+            </MenuItem>
+          )}
+          {gridCellParams?.status === "assign_program_accepted" && (
+            <MenuItem onClick={() => handleMenuClick("edit")}>
+              <EditIcon sx={{ mr: 1 }} fontSize="small" />
+              Edit
+            </MenuItem>
+          )}
+        </>
       )}
-      {/* <MenuItem onClick={() => handleMenuClick("discussions")}>
-          <ChatIcon sx={{ mr: 1 }} fontSize="small" />
-          Discussions
-        </MenuItem>
-        <MenuItem onClick={() => handleMenuClick("share")}>
+      {/* <MenuItem onClick={() => handleMenuClick("share")}>
           <ShareIcon sx={{ mr: 1 }} fontSize="small" />
           Share
         </MenuItem> */}
@@ -155,7 +168,7 @@ const SubprogramsDataGrid = ({ data, handleAcceptProgram }) => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  const [gridCellParams, setgridCellParams] = React.useState();  
+  const [gridCellParams, setgridCellParams] = React.useState();
 
   const handleClick = (params, event) => {
     if (params.field === "actions") {
@@ -178,10 +191,10 @@ const SubprogramsDataGrid = ({ data, handleAcceptProgram }) => {
         );
         break;
       case "accept":
-        handleAcceptProgram(gridCellParams.id);
+        handleAcceptProgram(gridCellParams);
         break;
-      case "discussions":
-        // Handle discussions action
+      case "edit":
+        navigate(`/update-program/${gridCellParams.id}`);
         break;
       case "share":
         // Handle share action
@@ -222,6 +235,7 @@ const SubprogramsDataGrid = ({ data, handleAcceptProgram }) => {
         open={open}
         anchorEl={anchorEl}
         handleClose={handleClose}
+        gridCellParams={gridCellParams}
         handleMenuClick={handleMenuClick}
       />
     </div>

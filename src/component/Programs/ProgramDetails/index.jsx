@@ -112,8 +112,15 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   const params = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const [acceptProgram, { isSuccess: isAccepted, reset: resetProgramAccept }] =
-    useAcceptProgramMutation();
+  const [
+    acceptProgram,
+    {
+      isSuccess: isAccepted,
+      isErrorAccepting,
+      reset: resetProgramAccept,
+      error,
+    },
+  ] = useAcceptProgramMutation();
   const [
     markProgramInterest,
     {
@@ -133,7 +140,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   const reqRole = requestId && userdetails.data.role === "admin";
   const [loading, setLoading] = useState({ initial: true, join: false });
   const calendarRef = useRef([]);
-  const [taskJoined, setTaskJoined] = useState(false);
+  const [acceptingProgramID, setAcceptingProgramID] = useState();
   const [openPopup, setOpenPopup] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [message, setMessage] = useState(false);
@@ -310,10 +317,11 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   //   }
   // }, [params.id, programLaunchedSuccessful]);
 
-  const handleAcceptProgram = async (programId) => {
+  const handleAcceptProgram = async (program) => {
+    setAcceptingProgramID(program?.id);
     await acceptProgram({
-      id: requestId,
-      program: programId,
+      id: requestId || program?.admin_program_request_id,
+      program: program?.id,
       request_type: "program_assign",
       status: "approved",
     });
@@ -774,17 +782,6 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   }, [requestProgramStatus]);
 
   useEffect(() => {
-    if (taskJoined) {
-      setTimeout(() => {
-        // if (role === 'mentor') navigate(`${pipeUrls.assigntask}/${programdetails.id}`)
-        // if (role === "mentee")
-        //   navigate(`${pipeUrls.startprogram}/${programdetails.id}`);
-        refetch();
-      }, [3000]);
-    }
-  }, [taskJoined]);
-
-  useEffect(() => {
     if (loading.join) {
       if (role === "mentee") setTaskJoinedRequest(true);
       setTimeout(() => {
@@ -820,12 +817,16 @@ export default function ProgramDetails({ setProgramDetailsId }) {
 
   useEffect(() => {
     if (isAccepted) {
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         resetProgramAccept();
-        navigate(`/update-program/${programdetails?.id}`);
+        navigate(`/update-program/${acceptingProgramID}`);
       }, 3000);
+      return () => clearTimeout(timer);
     }
-  }, [isAccepted, programdetails?.id]);
+    if (isErrorAccepting) {
+      toast.error(error?.data?.error);
+    }
+  }, [error?.data, isAccepted, isErrorAccepting, acceptingProgramID]);
 
   const handleNewTaskFromAdmin = (data) => {
     const constructedData = {
@@ -1435,8 +1436,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   btnType='button'
                   btnCls='w-[110px]'
                   btnName={"Yes"}
-                  btnCategory='primary'
-                  onClick={() => handleAcceptProgram(programdetails?.id)}
+                  btnCategory="primary"
+                  onClick={() => handleAcceptProgram(programdetails)}
                 />
               </div>
             </div>
@@ -2259,8 +2260,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     )}
                     {programdetails?.individual_chat_requirement && (
                       <p
-                        onClick={() => navigate("/discussions")}
-                        className='text-[14px] font-semibold text-font-primary-main px-4 py-2 border border-dashed border-background-primary-main rounded-[3px] bg-background-primary-light cursor-pointer'
+                        onClick={() => navigate("/discussions/32")}
+                        className="text-[14px] font-semibold text-font-primary-main px-4 py-2 border border-dashed border-background-primary-main rounded-[3px] bg-background-primary-light cursor-pointer"
                       >
                         Individual Discussions
                       </p>
