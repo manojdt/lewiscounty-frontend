@@ -22,7 +22,6 @@ import DataTable from "../../../shared/DataGrid";
 import { goalStatus, programStatus, user } from "../../../utils/constant";
 import MuiModal from "../../../shared/Modal";
 import Tooltip from "../../../shared/Tooltip";
-
 import CancelIcon from "../../../assets/icons/closeIcon.svg";
 import SuccessTik from "../../../assets/images/blue_tik1x.png";
 import CertificateIcon from "../../../assets/images/dummy_certificate.png";
@@ -172,7 +171,7 @@ export default function CreatePrograms() {
     learning_materials: [],
   });
 
-  const ID_ONLY_FIELDS = ["goals"];
+  const ID_ONLY_FIELDS = ["goals", "certifications", "learning_materials"];
   const [tempSelectedRows, setTempSelectedRows] = useState([]);
   const [logo, setLogo] = useState({});
   const [stepWiseData, setStepWiseData] = useState({});
@@ -560,17 +559,17 @@ export default function CreatePrograms() {
       if (!value.length) return;
 
       // For fields that only need IDs
-      if (ID_ONLY_FIELDS.includes(key)) {
+      // if (ID_ONLY_FIELDS.includes(key)) {
         // Only use the currently selected IDs from the DataTable
         const selectedIds = value.map((row) => row.id);
         setValue(key, selectedIds);
         // Store the full objects in tempSelectedRows for display
         setTempSelectedRows(value);
-      } else {
-        // For object fields - use only the currently selected rows
-        setValue(key, value);
-        setTempSelectedRows(value);
-      }
+      // } else {
+      //   // For object fields - use only the currently selected rows
+      //   setValue(key, value);
+      //   setTempSelectedRows(value);
+      // }
 
       // Update form fields with the new selection
       updateFormFields(key, value, currentStep - 1);
@@ -1295,6 +1294,8 @@ export default function CreatePrograms() {
                     stepFields={programAllFields[currentStep - 1]}
                     mentor_assign={mentor_assign}
                     goalData={formDetails.goals}
+                    certificate={certificate}
+                    materials={materials?.results}
                     setSearch={setSearch}
                     search={search}
                   />
