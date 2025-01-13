@@ -164,7 +164,7 @@ const ProgramActions = ({
       (programdetails?.status === "inprogress" ||
         programdetails?.status === "yettostart") &&
       programdetails?.request_data?.request_type === "program_cancel" &&
-      programdetails?.request_data?.status === "new";
+      ["new", "pending"].includes(programdetails?.request_data?.status);
 
     if (showRequestButtons) {
       return (
@@ -195,6 +195,46 @@ const ProgramActions = ({
         </Box>
       );
     }
+
+    // Admin Approve Reject Button
+
+    const showApproveRejectButtons =
+      (programdetails?.status === "inprogress" ||
+        programdetails?.status === "yettostart") &&
+      programdetails?.request_data?.request_type === "program_new" &&
+      ["new", "pending"].includes(programdetails?.request_data?.status);
+
+    if (showApproveRejectButtons) {
+      return (
+        <Box mt={2}>
+          <Stack direction="row" alignItems="center" spacing="20px">
+            <button
+              className="py-3 px-16 text-white text-[14px] flex items-center"
+              style={{ ...buttonStyles.base, ...buttonStyles.danger }}
+              onClick={() =>
+                handleAcceptCancelProgramRequest("cancel", programdetails.id)
+              }
+            >
+              {searchParams.has("type") &&
+              searchParams.get("type") === "program_cancel"
+                ? "Continue"
+                : "Reject Request"}
+            </button>
+            <button
+              className="py-3 px-16 text-white text-[14px] flex items-center"
+              style={{ ...buttonStyles.base, ...buttonStyles.success }}
+              onClick={() =>
+                handleAcceptCancelProgramRequest("accept", programdetails.id)
+              }
+            >
+              Approve Request
+            </button>
+          </Stack>
+        </Box>
+      );
+    }
+
+
     // Program approval stage
 
     if (
@@ -487,7 +527,7 @@ const ProgramActions = ({
 
     if (
       programdetails.status === "yettojoin" &&
-      !programdetails?.admin_program
+      !["new", "pending"].includes(programdetails?.request_data?.status)
     ) {
       return (
         <div className="py-9">
@@ -513,7 +553,8 @@ const ProgramActions = ({
 
     if (
       programdetails?.status === "yettojoin" &&
-      programdetails?.request_data?.request_type === "program_new"
+      // programdetails?.request_data?.request_type === "program_new"
+      programdetails?.request_data?.status === "approved"
     ) {
       return (
         <button
