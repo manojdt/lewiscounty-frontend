@@ -1307,6 +1307,7 @@ export const menteeNotJoinCondition = [
   ...programNotReady,
   ...programCancelled,
   ...programCompleted,
+  programActionStatus.yettojoin
   
 ];
 

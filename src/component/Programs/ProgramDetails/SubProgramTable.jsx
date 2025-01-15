@@ -5,7 +5,6 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import PeopleIcon from "@mui/icons-material/People";
 import { menteeProgramStatus, pipeUrls } from "../../../utils/constant";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -125,7 +124,7 @@ const CourseCard = ({ data, series, handleMenuClick }) => {
         </button>
       </div>
 
-      {data?.admin_assign_program &&
+      {data?.program_created_is_admin &&
         data?.mentee_join_status === "program_join_request_submitted" && (
           <div className="flex justify-center py-2 mt-4">
             <span className="py-1 px-3 text-xs text-white bg-gray-400 rounded-sm">

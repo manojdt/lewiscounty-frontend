@@ -1,10 +1,13 @@
+import { IconButton } from '@mui/material';
 import { dateFormat } from './utils';
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {
   reportStatus,
   reportStatusColor,
   taskStatusColor,
   taskStatusText,
 } from './utils/constant';
+import moment from 'moment';
 
 export const loginUser = [
   {
@@ -454,29 +457,44 @@ export const MaterialColumns = [
     field: 'action',
     headerName: 'Action',
     flex: 1,
-    id: 3,    
+    id: 3,
   },
 ];
 export const RecurringTableColumns = [
   {
-    field: 'name',
+    field: 'program_name',
     headerName: 'Name',
-    flex: 1,
+    flex: 2,
     id: 0,
   },
   {
-    field: 'stat_date',
+    field: 'start_date',
     headerName: 'Start Date',
-    flex: 1,
+    flex: 3,
     id: 1,
+    renderCell: ({ row }) => moment(row?.start_date).format("MM/DD/YYYY hh:mm")
   },
   {
     field: 'end_date',
     headerName: 'End Date',
-    flex: 1,
+    flex: 3,
     id: 2,
-  },  
+    renderCell: ({ row }) => moment(row?.end_date).format("MM/DD/YYYY hh:mm")
+  },
+  {
+    field: "actions",
+    headerName: "Action",
+    flex: 1,
+    id: 3,
+    renderCell: () => (
+      <IconButton>
+        <MoreVertIcon />
+      </IconButton>
+    ),
+  },
 ];
+export const RecurringListMenuItems = [{ label: "Edit", action: "edit" }];
+
 export const GoalColumns = [
   {
     field: 'description',

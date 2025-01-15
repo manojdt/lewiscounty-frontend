@@ -188,7 +188,7 @@ export default function Programs() {
             : filterType,
       }),
       ...(filterDate && { filter_by: filterDate }),
-      ...(isBookmark && { is_bookmark: isBookmark }),
+      // ...(isBookmark && { is_bookmark: isBookmark }),
       ...(debouncedSearch && { search: debouncedSearch }),
     },
     {
@@ -294,7 +294,12 @@ export default function Programs() {
             : "admin_assign_program" in programdetails
             ? `?program_create_type=admin_program`
             : ""
-        }${programdetails?.admin_program_request_id || "admin_assign_program" in programdetails ? "&" : "?"}breadcrumbsType=${displayName}`
+        }${
+          programdetails?.admin_program_request_id ||
+          "admin_assign_program" in programdetails
+            ? "&"
+            : "?"
+        }breadcrumbsType=${displayName}`
       );
     }
   };
@@ -314,9 +319,11 @@ export default function Programs() {
 
   const getPrograms = () => {
     const pay = {
-      ...((programFilter.filter_by||filterDate)&&{ filter_by: programFilter.filter_by
-        ? programFilter.filter_by
-        : filterDate})
+      ...((programFilter.filter_by || filterDate) && {
+        filter_by: programFilter.filter_by
+          ? programFilter.filter_by
+          : filterDate,
+      }),
     };
     let query = {};
 
@@ -344,7 +351,7 @@ export default function Programs() {
     }
 
     if (isBookmark && isBookmark !== "") {
-      query = { type: "is_bookmark", value: isBookmark };
+      query = { type: "status", value: "bookmarked" };
     }
 
     if (role === "mentee") {
@@ -385,7 +392,7 @@ export default function Programs() {
     }
 
     if (isBookmark && isBookmark !== "") {
-      payload.is_bookmark = isBookmark;
+      payload.status = "bookmarked";
     }
     if (role === "mentee") {
       // dispatch(getallMenteeProgram(payload));
@@ -456,7 +463,7 @@ export default function Programs() {
       query = { type: filterType };
     }
     if (isBookmark && isBookmark !== "") {
-      query.is_bookmark = true;
+      query.type = "bookmarked";
     }
     if (programFilter.search !== "") query.search = programFilter.search;
     if (programFilter.filter_by !== "")
@@ -559,16 +566,18 @@ export default function Programs() {
     if (userprograms.status === programStatus.bookmarked) {
       let query = {};
       const pay = {
-        ...((programFilter.filter_by||filterDate)&&{ filter_by: programFilter.filter_by
-          ? programFilter.filter_by
-          : filterDate})
+        ...((programFilter.filter_by || filterDate) && {
+          filter_by: programFilter.filter_by
+            ? programFilter.filter_by
+            : filterDate,
+        }),
       };
       if (filterType && filterType !== "") {
         query = { type: "status", value: filterType };
       }
 
       if (isBookmark && isBookmark !== "") {
-        query = { type: "is_bookmark", value: isBookmark };
+        query = { type: "status", value: "bookmarked" };
       }
 
       if (role === "mentee") {
@@ -619,18 +628,22 @@ export default function Programs() {
     if (role === "mentor" || role === "admin") {
       dispatch(
         getProgramCounts({
-          ...((programFilter.filter_by||filterDate)&&{ filter_by: programFilter.filter_by
-            ? programFilter.filter_by
-            : filterDate})
+          ...((programFilter.filter_by || filterDate) && {
+            filter_by: programFilter.filter_by
+              ? programFilter.filter_by
+              : filterDate,
+          }),
         })
       );
     }
     if (role === "mentee") {
       dispatch(
         getMenteeProgramCount({
-          ...((programFilter.filter_by||filterDate)&&{ filter_by: programFilter.filter_by
-            ? programFilter.filter_by
-            : filterDate})
+          ...((programFilter.filter_by || filterDate) && {
+            filter_by: programFilter.filter_by
+              ? programFilter.filter_by
+              : filterDate,
+          }),
         })
       );
     }
@@ -640,36 +653,34 @@ export default function Programs() {
     role,
     userInfo,
     isBookmark,
-    programMenusList
+    programMenusList,
   }) => {
     // Check for bookmarked programs first
     if (isBookmark) {
       return "Bookmarked Programs";
     }
-  
+
     // Check for active programs condition
-    const isActiveProgramsView = 
-      filterType === "planned" || 
-      (filterType === null && 
-       (role === "mentee" || role === "admin") && 
-       !userInfo?.data?.is_registered);
-  
+    const isActiveProgramsView =
+      filterType === "planned" ||
+      (filterType === null &&
+        (role === "mentee" || role === "admin") &&
+        !userInfo?.data?.is_registered);
+
     if (isActiveProgramsView) {
       return "Active Programs";
     }
-  
+
     // Look for matching menu based on status or menteeStatus
     const menuByStatus = programMenusList.find(
-      menu => menu.status === filterType
+      (menu) => menu.status === filterType
     );
-  
-    const menuByMenteeStatus = 
-      role === "mentee" 
-        ? programMenusList.find(
-            menu => menu.menteeStatus === filterType
-          )
+
+    const menuByMenteeStatus =
+      role === "mentee"
+        ? programMenusList.find((menu) => menu.menteeStatus === filterType)
         : null;
-  
+
     // Return the appropriate name or default to "All Programs"
     return menuByStatus?.name || menuByMenteeStatus?.name || "All Programs";
   };
@@ -678,7 +689,7 @@ export default function Programs() {
     role,
     userInfo,
     isBookmark,
-    programMenusList
+    programMenusList,
   });
 
   return (
@@ -731,9 +742,7 @@ export default function Programs() {
           >
             <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
               <div className="flex gap-4">
-                <div>
-                  {displayName}
-                </div>
+                <div>{displayName}</div>
                 <img
                   src={programView === "grid" ? ListViewIcon : GridViewIcon}
                   className="cursor-pointer"

@@ -61,6 +61,7 @@ import { getUserProfile } from "../../../services/profile";
 import DataTable from "../../../shared/DataGrid";
 import {
   JoinedProgramMenteeColumn,
+  RecurringListMenuItems,
   RecurringTableColumns,
 } from "../../../mock";
 import ToastNotification from "../../../shared/Toast";
@@ -76,7 +77,7 @@ import {
   useGetSpecificProgramDetailsQuery,
   useLaunchProgramMutation,
   useMarkProgramInterestMutation,
-  useUpdateProgramMutation,
+  useUpdateProgramStatusMutation,
 } from "../../../features/program/programApi.services";
 import SubprogramsDataGrid from "./SubProgramTable";
 import ProgramActions from "./ProgramActions";
@@ -102,7 +103,7 @@ import {
   request_programReschedule,
   requestPageBreadcrumbs,
 } from "../../Breadcrumbs/BreadcrumbsCommonData";
-import EditIcon from "../../../assets/icons/editIcon.svg";
+import EditSVGIcon from "../../../assets/icons/editIcon.svg";
 import PaidTickIcon from "../../../assets/icons/paidTickIcon.svg";
 import CustomAccordian from "../../../shared/CustomAccordian/CustomAccordian";
 import { SubjectProgramCard } from "./subjectProgramCard";
@@ -112,6 +113,7 @@ import ProgramCard from "../../../shared/Card/ProgramCard";
 import SubDetailCardWrapper from "../../../shared/Card/SubDetailCardWrapper";
 import { CustomModal } from "../../../shared/CustomModal/CustomModal";
 import { DataGrid } from "@mui/x-data-grid";
+import EditIcon from "@mui/icons-material/Edit";
 
 export default function ProgramDetails({ setProgramDetailsId }) {
   const [showBackdrop, setShowBackdrop] = React.useState(false);
@@ -119,6 +121,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   const [cancelPopupConfirmation, setCancelPopupConfirmation] = useState(false);
   const params = useParams();
   const [searchParams] = useSearchParams();
+
   const navigate = useNavigate();
   const [
     acceptProgram,
@@ -143,6 +146,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   const requestStatusParams = searchParams.get("status") || "";
   const program_create_type = searchParams.get("program_create_type") || "";
   const breadcrumbsType = searchParams.get("breadcrumbsType") || "";
+  const typeParams = searchParams.get("type");
   const userdetails = useSelector((state) => state.userInfo);
   const role = userdetails.data.role || "";
   const reqRole = requestId && userdetails.data.role === "admin";
@@ -151,6 +155,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   const [acceptingProgramID, setAcceptingProgramID] = useState();
   const [openPopup, setOpenPopup] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [recAnchorEl, setRecAnchorEl] = useState(null);
   const [message, setMessage] = useState(false);
   const [dateFormatted, setDateFormat] = useState({});
   const [taskJoinedRequest, setTaskJoinedRequest] = useState(false);
@@ -161,11 +166,13 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     not_interested: false,
   });
   const [openRecurringModal, setOpenRecurringModal] = useState(false);
+  const [gridCellParams, setgridCellParams] = React.useState();
+
   const [completeProgram, setCompleteProgram] = React.useState({
     bool: false,
     activity: false,
   });
-
+  const openRecMenu = Boolean(recAnchorEl);
   const dispatch = useDispatch();
 
   // console.log(location.pathname, searchParams);
@@ -175,14 +182,14 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     { isLoading: isLaunchingProgram, isError, error: actionError },
   ] = useLaunchProgramMutation();
   const [
-    updateProgram,
+    updateProgramStatus,
     {
       isLoading: isProgramUpdating,
       isSuccess: isProgramUpdated,
       isError: IsErrorProgramUpdating,
       error: errorUpdateProgramMessage,
     },
-  ] = useUpdateProgramMutation();
+  ] = useUpdateProgramStatusMutation();
   const {
     data: programdetails,
     isLoading: programLoading,
@@ -265,11 +272,14 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   ];
 
   const open = Boolean(anchorEl);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
+    setRecAnchorEl(null);
   };
 
   const handleTab = (key) => {
@@ -279,6 +289,26 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   const handleRecurringModalClose = () => {
     setOpenRecurringModal(false);
   };
+
+  const handleRecurringListActionClick = (params, event) => {
+    if (params.field === "actions") {
+      setRecAnchorEl(event.currentTarget);
+    }
+    setgridCellParams(params.row);
+  };
+
+  const handleMenuClick = (action) => {
+    switch (action) {
+      case "edit":
+        navigate(`/update-program/${gridCellParams.id}`);
+        break;
+
+      default:
+        break;
+    }
+    handleClose();
+  };
+
   const handleCerificateTab = (key) => {
     setCertificateActiveTab(key);
   };
@@ -299,9 +329,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   };
 
   const handleComplete = async () => {
-    handleClose();
-    await updateProgram({
-      id: programdetails.id,
+    await updateProgramStatus({
+      id: programdetails?.id,
       status: programActionStatus.completed,
     });
   };
@@ -317,11 +346,14 @@ export default function ProgramDetails({ setProgramDetailsId }) {
           bool: false,
           activity: false,
         });
-        navigate(`/program-completion/${programdetails.id}`);
+
+        navigate(`/program-completion/${programdetails?.id}`);
       }, 2000);
+      handleClose();
     }
     if (IsErrorProgramUpdating) {
       toast.error(errorUpdateProgramMessage.data?.error);
+      handleClose();
     }
   }, [
     isProgramUpdated,
@@ -356,7 +388,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       request_type: "program_assign",
       status: "approved",
     });
-    setOpenPopup(false)
+    setOpenPopup(false);
   };
   // Handle Accept Program Popup
   const handleConfirmPopup = () => {
@@ -1942,11 +1974,12 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                       "program_join",
                       "program_reschedule",
                       "program_cancel",
-                    ].includes(searchParams.get("type")) === false) ||
+                    ].includes(typeParams) === false) ||
                   (role === "mentee" &&
                     (programdetails.status === programActionStatus.inprogress ||
                       programdetails.mentee_join_status ===
-                        programActionStatus.program_join_request_accepted))) && (
+                        programActionStatus.program_join_request_accepted ||
+                      programdetails?.program_interest))) && (
                   <>
                     <div className="cursor-pointer" onClick={handleClick}>
                       <img src={MoreIcon} alt="MoreIcon" />
@@ -1982,8 +2015,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                 className="!text-[12px]"
                               >
                                 <img
-                                  src={EditIcon}
-                                  alt="EditIcon"
+                                  src={EditSVGIcon}
+                                  alt="EditSVGIcon"
                                   className="pr-3 w-[25px]"
                                 />
                                 Edit
@@ -2282,7 +2315,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     programdetails?.learning_materials?.length > 0 && (
                       <div className="py-10">
                         <p className="text-[14px] font-normal mb-2">
-                        Our Learning Materials
+                          Our Learning Materials
                         </p>
                         <div className="flex items-center gap-x-3">
                           {programdetails?.learning_materials.map(
@@ -2524,7 +2557,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     handleAcceptCancelProgramRequest={
                       handleAcceptCancelProgramRequest
                     }
-                    type={searchParams.get("type")}
+                    type={typeParams}
                     setCancelPopup={setCancelPopup}
                     requestStatusParams={requestStatusParams}
                     setOpenPopup={setOpenPopup}
@@ -2717,7 +2750,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                               <MuiButton
                                 size={"small"}
                                 variant={"text"}
-                                onClick={handleRecurringModalClose}
+                                onClick={() => setOpenRecurringModal(true)}
                               >
                                 View
                               </MuiButton>
@@ -2818,9 +2851,27 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                 onClose={handleRecurringModalClose}
               >
                 <DataGrid
+                  hideFooter={true}
+                  loading={programLoading}
                   columns={RecurringTableColumns}
                   rows={programdetails?.recurring_programs_details}
+                  onCellClick={handleRecurringListActionClick}
                 />
+                <Menu
+                  open={openRecMenu}
+                  anchorEl={recAnchorEl}
+                  onClose={handleClose}
+                >
+                  {RecurringListMenuItems.map((menu) => (
+                    <MenuItem
+                      key={menu.value}
+                      onClick={() => handleMenuClick(menu.action)}
+                    >
+                      <EditIcon sx={{ mr: 1 }} fontSize="small" />
+                      {menu.label}
+                    </MenuItem>
+                  ))}
+                </Menu>
               </MuiCustomModal>
               {/* Subject Program List */}
               {role === "mentee" && (
@@ -3322,8 +3373,19 @@ export default function ProgramDetails({ setProgramDetailsId }) {
               </div>
             </Stack>
             <Box className="px-4 py-4">
-              <a className="!text-font-secondary-black" href={selectedLM?.data?.file_url} target="_blank">
-                {selectedLM?.data?.file_name ?? (selectedLM?.data?.file ?? selectedLM?.data?.file_url)?.substring((selectedLM?.data?.file ?? selectedLM?.data?.file_url)?.lastIndexOf('/') + 1)}
+              <a
+                className="!text-font-secondary-black"
+                href={selectedLM?.data?.file_url}
+                target="_blank"
+              >
+                {selectedLM?.data?.file_name ??
+                  (
+                    selectedLM?.data?.file ?? selectedLM?.data?.file_url
+                  )?.substring(
+                    (
+                      selectedLM?.data?.file ?? selectedLM?.data?.file_url
+                    )?.lastIndexOf("/") + 1
+                  )}
               </a>
             </Box>
           </Box>

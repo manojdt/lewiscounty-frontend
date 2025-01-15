@@ -1240,7 +1240,7 @@ const ProgramSteps = ({
               : (() => {
                   const currentValue = getValues(currentField);
                   if (!currentValue) return [];
-                  const selectedMentor = mentor_assign.find(
+                  const selectedMentor = mentor_assign?.find(
                     (m) => m.id === currentValue
                   );
                   return selectedMentor ? [selectedMentor] : [];
