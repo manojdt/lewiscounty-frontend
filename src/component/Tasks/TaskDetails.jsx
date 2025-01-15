@@ -55,7 +55,6 @@ export const TaskDetails = () => {
     status,loading:load
   } = useSelector((state) => state.userPrograms);
   const { task: taskData, loading } = useSelector((state) => state.tasks);
-  console.log(taskData,load,"taskData")
   const [startTask, setStartTask] = useState(true);
   const [taskStatus, setTaskStatus] = useState('');
   const params = useParams();
@@ -124,7 +123,6 @@ export const TaskDetails = () => {
         taskFile.filter((task) => task.row_id === id)?.[0]?.id,
       ]);
     }
-    console.log(id,taskDocs,taskFile)
   };
   const submitTask = (type = "", formData) => {
     if (type === "draft") {
@@ -204,7 +202,6 @@ export const TaskDetails = () => {
 
   useEffect(() => {
     let allTaskDocuments = { img: [], video: [], doc: [] };
-    console.log("taskFile", taskFile)
     allTaskDocuments = getFiles(taskFile);
     setTaskSolutionDocs((prevState)=>allTaskDocuments);
   }, [taskFile]);
@@ -212,7 +209,6 @@ export const TaskDetails = () => {
   useEffect(() => {
     dispatch(getProgramTaskDetails(params.id));
     dispatch(getSpecificTask({ task_id: params.id })).then((res) => {
-      console.log(res,"res")
       if (res?.meta?.requestStatus === 'fulfilled') {
         const files = res?.payload?.files?.map((e) => {
           return {
@@ -480,7 +476,6 @@ export const TaskDetails = () => {
                     >
                       Status
                     </th>
-                    {console.log("taskData ===>", taskData)}
                     <td
                       className='px-6 py-4 text-white'
                       style={{ background: 'rgba(29, 91, 191, 1)' }}
@@ -677,7 +672,8 @@ export const TaskDetails = () => {
                                 taskData.status === TaskAllStatus.newtask ||
                                   taskData.status === TaskAllStatus.pending ||
                                   taskData.status === TaskAllStatus.inprogress ||
-                                  taskData.status === 'draft'
+                                  taskData.status === 'draft' ||
+                                  taskData.status === "reassigned"
                                   ? 'pointer'
                                   : 'not-allowed',
                             }}
@@ -704,7 +700,8 @@ export const TaskDetails = () => {
                                   TaskAllStatus.inprogress ||
                                   taskData.status === TaskAllStatus.newtask ||
                                   taskData.status === TaskAllStatus.pending ||
-                                  taskData.status === 'draft'
+                                  taskData.status === 'draft' ||
+                                  taskData.status === "reassigned"
                                 ) {
                                   // imageField?.onChange(e);
                                   handleImageUpload('file', e);
