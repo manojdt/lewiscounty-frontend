@@ -359,6 +359,19 @@ const ProgramActions = ({
           </MuiButton>
         );
       }
+      if (programdetails?.program_interest) {
+        return (
+          <span
+            className="py-3 px-16 text-white text-[14px] rounded"
+            style={{
+              ...buttonStyles.success,
+              cursor: "not-allowed",
+            }}
+          >
+            Interested
+          </span>
+        );
+      }
     }
     const isSubProgramAccepted = programdetails?.sub_program?.every(
       (program) => program?.status === "yettojoin"
@@ -547,7 +560,7 @@ const ProgramActions = ({
 
     if (
       programdetails.status === "yettojoin" &&
-      !["new", "pending"].includes(programdetails?.request_data?.status) && 
+      !["new", "pending"].includes(programdetails?.request_data?.status) &&
       programdetails?.created_by === userInfo?.data?.user_id
     ) {
       return (
@@ -602,11 +615,11 @@ const ProgramActions = ({
       ((programdetails.status === programActionStatus.yettostart &&
         !requestId &&
         (role === "mentor" || role === "admin")) ||
-      (type === "admin_assign_program" &&
-        requestId &&
-        programdetails.status === programActionStatus.yettostart &&
-        (role === "mentor" || role === "admin"))) && 
-        programdetails?.created_by === userInfo?.data?.user_id
+        (type === "admin_assign_program" &&
+          requestId &&
+          programdetails.status === programActionStatus.yettostart &&
+          (role === "mentor" || role === "admin"))) &&
+      programdetails?.created_by === userInfo?.data?.user_id
     ) {
       return (
         <div className="my-8">
@@ -628,7 +641,10 @@ const ProgramActions = ({
         programdetails?.program_mode === "virtual_meeting" &&
         (role !== "mentee" ||
           (role === "mentee" && programdetails?.program_joined_status)) &&
-          ((role === "admin" && programdetails?.created_by === userInfo?.data?.user_id) || (role === "mentee" || role === "mentor"))
+        ((role === "admin" &&
+          programdetails?.created_by === userInfo?.data?.user_id) ||
+          role === "mentee" ||
+          role === "mentor")
       ) {
         return (
           <div className="my-8">

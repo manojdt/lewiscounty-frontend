@@ -39,8 +39,7 @@ import {
   useGetAllCategoriesQuery,
   useGetCertificatesQuery,
   useGetMembersQuery,
-  // useGetCountryStatesQuery,
-  // useGetCitiesQuery,
+  useGetAllMentorsQuery,
 } from "../../../features/program/programApi.services";
 import { MuiMenuDropDown } from "../../../shared/Dropdown/MuiMenuDropDown";
 import GoalCreationModal from "./GoalCreationModal";
@@ -63,7 +62,6 @@ export default function CreatePrograms() {
   const [toggleRole, setToggleRole] = useState("");
   const {
     allPrograms,
-    mentor_assign,
     loading: apiLoading,
     status,
   } = useSelector((state) => state.programInfo);
@@ -81,6 +79,11 @@ export default function CreatePrograms() {
 
   const { data: category, isLoading: isCategoryFetching } =
     useGetAllCategoriesQuery();
+
+  const { data: mentor_assign } = useGetAllMentorsQuery(undefined, {
+    skip: role !== admin,
+    refetchOnMountOrArgChange: true,
+  });
 
   const { data: currentProgramDetail, isLoading: isDetailFetching } =
     useGetSpecificProgramDetailsQuery(
@@ -854,7 +857,7 @@ export default function CreatePrograms() {
     const updatedFields = currentStepField.map((field) => {
       switch (field.name) {
         case "category":
-          return { ...field, options: category };
+          return { ...field, options: category || [] };
         case "state":
           return { ...field, options: countryStates };
         case "city":
@@ -1286,11 +1289,11 @@ export default function CreatePrograms() {
                     handleProgramCheck={handleProgramCheck}
                     stepData={stepData}
                     stepFields={programAllFields[currentStep - 1]}
-                    mentor_assign={mentor_assign}
+                    mentor_assign={mentor_assign?.results}
                     goalData={goals?.results}
                     certificate={certificate}
                     materials={materials?.results}
-                    members={members}                   
+                    members={members}
                   />
                 </div>
                 <div className="flex gap-6 justify-center align-middle">

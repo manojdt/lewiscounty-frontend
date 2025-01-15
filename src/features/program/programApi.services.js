@@ -63,6 +63,16 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
       invalidatesTags: [PROGRAM],
     }),
 
+    // Update program
+    updateProgramStatus: builder.mutation({
+      query: (body) => ({
+        url:  `update_program`,
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: [PROGRAM],
+    }),
+
     // Get all categories
     getAllCategories: builder.query({
       query: () => 'category',
@@ -341,6 +351,7 @@ export const {
   useGetProgramDetailsByIdQuery,
   useGetSpecificProgramDetailsQuery,
   useUpdateProgramMutation,
+  useUpdateProgramStatusMutation,
   useLaunchProgramMutation,
   useJoinAllProgramMutation,
   useAcceptProgramMutation,

@@ -1,4 +1,4 @@
-import { Avatar, Menu, MenuItem } from "@mui/material";
+import { Menu, MenuItem } from "@mui/material";
 
 function MuiMenuDropDown(props) {
   const { menuItems, handleMenuClick, ...restOfMenuProps } = props;
