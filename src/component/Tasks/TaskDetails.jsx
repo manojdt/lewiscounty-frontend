@@ -52,10 +52,10 @@ export const TaskDetails = () => {
       task_assigned_by,
       task_submission = {},
     },
-    status,
+    status,loading:load
   } = useSelector((state) => state.userPrograms);
   const { task: taskData, loading } = useSelector((state) => state.tasks);
-  console.log(taskData,"taskData")
+  console.log(taskData,load,"taskData")
   const [startTask, setStartTask] = useState(true);
   const [taskStatus, setTaskStatus] = useState('');
   const params = useParams();
@@ -292,6 +292,14 @@ export const TaskDetails = () => {
         ) : (
           <CircularProgress color='inherit' />
         )}
+      </Backdrop>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={load}
+      >
+       
+          <CircularProgress color='inherit' />
+      
       </Backdrop>
 
       <div

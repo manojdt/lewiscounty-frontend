@@ -16,7 +16,7 @@ import { getReportDetails } from "../../services/reportsInfo";
 import { dateTimeFormat } from "../../utils";
 import { reportAllStatus, StatusbuttonStyles } from "../../utils/constant";
 import TickColorIcon from "../../assets/icons/tickColorLatest.svg";
-import { updateReportRequest } from "../../services/request";
+import { updateLocalRequest, updateReportRequest } from "../../services/request";
 import { CancelPopup } from "../Mentor/Task/cancelPopup";
 import { Typography } from "@mui/material";
 import CustomAccordian from "../../shared/CustomAccordian/CustomAccordian";
@@ -119,6 +119,7 @@ const ViewReport = () => {
             activity: false,
             type: "",
           });
+          dispatch(updateLocalRequest({ status: '' }));
           dispatch(getReportDetails(params.id));
         }, 2000);
       }

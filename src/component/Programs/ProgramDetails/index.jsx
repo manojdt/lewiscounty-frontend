@@ -356,6 +356,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       request_type: "program_assign",
       status: "approved",
     });
+    setOpenPopup(false)
   };
   // Handle Accept Program Popup
   const handleConfirmPopup = () => {
@@ -2281,7 +2282,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     programdetails?.learning_materials?.length > 0 && (
                       <div className="py-10">
                         <p className="text-[14px] font-normal mb-2">
-                          Our Learning Meterials
+                        Our Learning Materials
                         </p>
                         <div className="flex items-center gap-x-3">
                           {programdetails?.learning_materials.map(
