@@ -97,7 +97,16 @@ export default function CreateReport() {
       if (res?.meta?.requestStatus === "fulfilled") {
         dispatch(updateReportLocalState({ programDetails: {}, status: "" }));
         reset();
-        navigate("/reports");
+        if (
+          searchParams.get("program_id") &&
+          searchParams.get("program_id") !== "" &&
+          searchParams.get("program_id") !== null
+        ) {
+          dispatch(updateReportLocalState({ programDetails: {} }));
+          navigate(`/generate_certificate/${searchParams.get("program_id")}`);
+        } else {
+          navigate("/reports");
+        }
       }
     });
   };
@@ -289,7 +298,7 @@ export default function CreateReport() {
       }
     }
   };
-console.log("reportData ===>", reportData)
+  console.log("reportData ===>", reportData);
   const handleInputChange = (field_name) => {
     // Clears the error when the user starts typing
     clearErrors(field_name);

@@ -58,6 +58,18 @@ let MuiTheme = createTheme({
           width: 25, height: 25
         }
       }
+    },
+    MuiDataGrid: {
+      defaultProps: {
+        sx: {
+          "& .MuiDataGrid-cell:focus": {
+            outline: "none",
+          },
+          "& .MuiDataGrid-cell:focus-within": {
+            outline: "none",
+          },
+        }
+      }
     }
   },
 });

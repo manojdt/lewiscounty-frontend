@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
-import SearchIcon from "../../../assets/icons/search.svg";
 import PlusIcon from "../../../assets/icons/add_popup_icon.svg";
 import UploadIcon from "../../../assets/images/image_1x.png";
 import DeleteIcon from "../../../assets/images/delete_1x.png";
@@ -36,8 +35,6 @@ const ProgramSteps = ({
   stepData,
   handleAction,
   handleProgramCheck,
-  handleSearchChange,
-  search,
   setToggleRole,
   setCurrent,
   mentor_assign,
@@ -295,7 +292,7 @@ const ProgramSteps = ({
           if (field.name === "enrollment_fees" && is_sponsored === true) {
             return null;
           }
-          if (field.name === "image" && is_sponsored === false) {
+          if (field.name === "sponsor_logos" && is_sponsored === false) {
             return null;
           }
 
@@ -306,9 +303,9 @@ const ProgramSteps = ({
             params?.id &&
             (field.name === "course_level" || field.name === "category") &&
             role === "mentor";
-          const disableDateFields =
+          const disableDateFields =(fieldName)=>
             params?.id &&
-            (field.name === "start_date" || field.name === "end_date") &&
+            (fieldName === "start_date" || fieldName === "end_date") &&
             role === "mentor";
           return (
             <div
@@ -382,7 +379,7 @@ const ProgramSteps = ({
                         disabled={disableFields}
                         {...controlledField}
                         onChange={(e) => handleInputChange(e, field)}
-                        onBlur={(e) => {
+                        onBlur={() => {
                           controlledField.onBlur();
                           if (field.name === "program_name") {
                             // handelProgramCheck(e?.target?.value);
@@ -937,7 +934,7 @@ const ProgramSteps = ({
               ) : field.type === "date" ? (
                 <div className="relative">
                   <CustomDateTimePicker
-                    disabled={disableDateFields}
+                    disabled={disableDateFields(field.name)}
                     {...register(field?.name, {
                       required: `${field?.label} date is required`,
                     })}
@@ -1008,7 +1005,7 @@ const ProgramSteps = ({
                           <input
                             type="file"
                             id={field.name}
-                            multiple={field.name === "image"}
+                            multiple={field.name === "sponsor_logos"}
                             accept="image/png, image/jpeg, image/jpg,image/webp,image/heic"
                             onChange={(e) => {
                               if (e.target.files && e.target.files.length > 0) {
@@ -1119,6 +1116,7 @@ const ProgramSteps = ({
                                   {nestedRecField?.label}
                                 </label>
                                 <CustomDateTimePicker
+                                disabled={disableDateFields(nestedRecField.name)}
                                   {...register(
                                     `recurring_dates.${index}.${nestedRecField?.name}`,
                                     {
@@ -1228,24 +1226,7 @@ const ProgramSteps = ({
         modalOpen={!!currentField}
         modalClose={() => setCurrentField("")}
         noheader
-      >
-        <div className="flex items-center justify-end m-4 relative">
-          <input
-            type="text"
-            id="search-navbar"
-            className="block w-full p-2 rounded-lg text-sm text-gray-900 border border-gray-300"
-            placeholder="Search here..."
-            style={{
-              height: "45px",
-              width: "280px",
-            }}
-            value={search}
-            onChange={(e) => handleSearchChange(e.target.value)}
-          />
-          <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
-            <img src={SearchIcon} alt="SearchIcon" />
-          </div>
-        </div>
+      >       
         <DataTable
           showToolbar={true}
           disableMultipleSelection={true}

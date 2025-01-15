@@ -7,7 +7,8 @@ module.exports = {
         background: {
           primary: {
             main: "#1D5BBF",
-            light: "#1D5BBF0D"
+            light: "#1D5BBF0D",
+            dark: "#76818E"
           },
         },
         font: {

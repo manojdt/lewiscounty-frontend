@@ -29,7 +29,7 @@ import {
   getCertificateMember,
 } from "../../services/certificate";
 import MuiModal from "../../shared/Modal";
-import { updateCertificateRequest } from "../../services/request";
+import { updateCertificateRequest, updateLocalRequest } from "../../services/request";
 import TickColorIcon from "../../assets/icons/tickColorLatest.svg";
 import CancelColorIcon from "../../assets/icons/cancelCircle.svg";
 import { Typography } from "@mui/material";
@@ -245,8 +245,9 @@ export default function CertificateMenteeList() {
             type: "",
             activity: false,
           });
+           dispatch(updateLocalRequest({ status: '' }));
           navigate(-1);
-        }, 2000);
+        }, 3000);
       }
     });
   };
@@ -582,9 +583,8 @@ export default function CertificateMenteeList() {
                 fontWeight: 600,
               }}
             >
-              {actionPopup?.type === "approve"
-                ? "Certificate Request Accept is Successfully"
-                : "Certificate Request has been Successfully cancelled"}
+             
+              Certificate Request Approved Successfully
             </p>
           </div>
         </div>
