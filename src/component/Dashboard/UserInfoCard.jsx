@@ -55,7 +55,7 @@ export default function UserInfoCard() {
     return (
         <div className="">
             <div className="pb-3 w-full max-w-sm bg-white rounded-lg" style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', background: 'rgba(255, 255, 255, 1)' }}>
-                <div className="flex flex-col items-center pb-10 pt-14 border-b-2 relative">
+                <div className={`flex flex-col items-center pb-10 pt-14 ${userInfo?.data?.userinfo?.approve_status === "accept" && 'border-b-2'} relative`}>
                     {
                         !loading &&
                         <img className={`w-24 h-24 mb-3 rounded-full shadow-lg object-cover cursor-pointer ${hoverIndex ? 'opacity-20' : ''}`}
@@ -79,6 +79,7 @@ export default function UserInfoCard() {
                     </span>
                 </div>
 
+                {userInfo?.data?.userinfo?.approve_status === "accept" &&
                 <ul className="flex flex-col gap-2 p-4 md:p-0 mt-4 font-medium">
                     {
                         programMenusList.map((menu, index) => {
@@ -99,16 +100,16 @@ export default function UserInfoCard() {
                         })
                     }
 
-                </ul>
-                <div className="flex justify-center mt-5 mb-2">
-                    {userInfo?.data?.userinfo?.approve_status === "accept" && <button className="text-white flex justify-center items-center gap-3 px-4 py-3 text-[12px]"
+                </ul>}
+                {userInfo?.data?.userinfo?.approve_status === "accept" &&<div className="flex justify-center mt-5 mb-2">
+                    <button className="text-white flex justify-center items-center gap-3 px-4 py-3 text-[12px]"
                         style={{ borderRadius: '3px', background: 'linear-gradient(97.32deg, #1D5BBF -32.84%, #00AEBD 128.72%)' }}
                         onClick={() => navigate('/programs')}
                     >
                         <span>View All</span>
                         <img src={RightArrow} alt={'RightArrow'} />
-                    </button>}
-                </div>
+                    </button>
+                </div>}
             </div>
         </div>
     )

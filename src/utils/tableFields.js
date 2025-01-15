@@ -155,8 +155,8 @@ export const memberRequestColumns = [
     id: 1,
   },
   {
-    field: "reason",
-    headerName: "Reason",
+    field: "email",
+    headerName: "Email",
     flex: 1,
     id: 2,
   },

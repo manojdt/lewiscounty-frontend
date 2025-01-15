@@ -151,6 +151,7 @@ export default function MemberRequest() {
         getMemberRequestList()
     }, [])
 
+
     return (
         <div>
             <Backdrop
@@ -161,7 +162,7 @@ export default function MemberRequest() {
             </Backdrop>
             <CardWrapper title='Recent Member Request' viewAll={memberRequest.length > 0}>
                 <div className='py-6 px-3'>
-                    <DataTable rows={memberRequest} columns={memberRequestColumn} hideFooter hideCheckbox />
+                    <DataTable rows={memberRequest?.results ?? []} columns={memberRequestColumn} hideFooter hideCheckbox rowCount={memberRequest?.count} />
                 </div>
             </CardWrapper>
 
