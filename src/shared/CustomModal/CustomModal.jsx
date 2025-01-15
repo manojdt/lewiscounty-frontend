@@ -1,4 +1,4 @@
-import { Backdrop, Box } from '@mui/material'
+import { Box, Dialog } from '@mui/material'
 import React from 'react'
 
 export const CustomModal = ({
@@ -14,14 +14,22 @@ export const CustomModal = ({
     }
 
     return (
-        <Backdrop
-            sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+        <Dialog
             open={open}
-            onClick={handleClose}
+            onClose={handleClose}
+            fullWidth
+            maxWidth={false} 
+            sx={{
+                "& .MuiPaper-root": {
+                    width: "100%",
+                    borderRadius: "10px",
+                    maxWidth: widthList[width],
+                },
+            }}
         >
-            <Box sx={{ width: widthList[width], background: "#fff", borderRadius: "10px" }}>
+            <Box sx={{ background: "#fff", borderRadius: "10px" }}>
                 {content}
             </Box>
-        </Backdrop>
+        </Dialog>
     )
 }

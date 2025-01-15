@@ -3260,8 +3260,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
 
             </Stack>
             <Box className="px-4 py-4">
-              <a className="!text-font-secondary-black" href={selectedLM?.data?.file_url}>
-                {selectedLM?.data?.file_name}
+              <a className="!text-font-secondary-black" href={selectedLM?.data?.file_url} target="_blank">
+                {selectedLM?.data?.file_name ?? (selectedLM?.data?.file ?? selectedLM?.data?.file_url)?.substring((selectedLM?.data?.file ?? selectedLM?.data?.file_url)?.lastIndexOf('/') + 1)}
               </a>
             </Box>
           </Box>

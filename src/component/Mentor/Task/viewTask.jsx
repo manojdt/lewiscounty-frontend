@@ -31,6 +31,9 @@ const ViewTask = () => {
     const navigate = useNavigate()
     const state = useLocation()?.state
     const { task: taskDetails, loading } = useSelector(state => state.tasks)
+    const userInfo = useSelector((state) => state.userInfo);
+    const role = userInfo.data.role || '';
+
     const [resultCheck, setResultCheck] = React.useState("")
     const [activity, setActivity] = React.useState({
         bool: true,
@@ -67,7 +70,8 @@ const ViewTask = () => {
     const handleClosePopup = () => {
         setCancelPopup({
             bool: false,
-            activity: false
+            activity: false,
+            type: ""
         })
     }
 
@@ -79,25 +83,47 @@ const ViewTask = () => {
 
 
     const handleCancelSubmit = (reason) => {
-        const payload = {
-            task_id: taskDetails?.id,
-            type: "cancel_one_task",
-            reason: reason
-        }
-        dispatch(updateCancelAllTask(payload)).then((res) => {
-            if (res.meta.requestStatus === "fulfilled") {
-                navigate(-1)
+        if (cancelPopup?.type === "reassign") {
+            const payload = {
+                task_id: taskDetails?.id,
+                type: "reject_one_task",
+                reason: reason
             }
-        })
 
-        setCancelPopup({
-            ...cancelPopup,
-            bool: false,
-            activity: true
-        })
-        setTimeout(() => {
-            handleClosePopup()
-        }, 2000);
+            dispatch(updateSinglePassFail(payload)).then((res) => {
+                if (res?.meta?.requestStatus === "fulfilled") {
+                    setCancelPopup({
+                        ...cancelPopup,
+                        bool: false,
+                        activity: true
+                    })
+                    setTimeout(() => {
+                        handleClosePopup()
+                        dispatch(getSpecificTask({ task_id: params.id }))
+                    }, 2000);
+                }
+            })
+        } else {
+            const payload = {
+                task_id: taskDetails?.id,
+                type: "cancel_one_task",
+                reason: reason
+            }
+            dispatch(updateCancelAllTask(payload)).then((res) => {
+                if (res.meta.requestStatus === "fulfilled") {
+                    navigate(-1)
+                }
+            })
+
+            setCancelPopup({
+                ...cancelPopup,
+                bool: false,
+                activity: true
+            })
+            setTimeout(() => {
+                handleClosePopup()
+            }, 2000);
+        }
     }
 
     const handleUpdateResult = async (type, reason = "") => {
@@ -172,7 +198,7 @@ const ViewTask = () => {
             <div className='px-3 py-5' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
                 {
                     state?.type === "certificate" &&
-                    <Stack direction={"row"} justifyContent={"space-between"} width={"100%"} p={"4px 0px 16px 0px"} sx={{borderBottom: "1px solid #D9E4F2"}} mb={2}>
+                    <Stack direction={"row"} justifyContent={"space-between"} width={"100%"} p={"4px 0px 16px 0px"} sx={{ borderBottom: "1px solid #D9E4F2" }} mb={2}>
                         <Typography className='!text-[18px]' fontWeight={600}>Task details</Typography>
                         <Box className='cursor-pointer' onClick={() => navigate(-1)}>
                             <img src={CloseIcon} alt='close' />
@@ -285,7 +311,7 @@ const ViewTask = () => {
 
 
                 {
-                    taskDetails?.status !== "new" &&   taskDetails?.status !== "inprogress"&&
+                    taskDetails?.status !== "new" && taskDetails?.status !== "inprogress" &&
                     <div className='flex justify-between task-uploaded-images-container'>
                         {
                             allFiles.files ?
@@ -451,7 +477,20 @@ const ViewTask = () => {
                     }
 
                     {
-                        ["completed", "inprogress","pending","cancel"].includes(taskDetails.status) &&
+                        (taskDetails?.status === "pending" && role === "mentor") &&
+                        <Button
+                            btnName="Re Assign"
+                            btnCategory="secondary"
+                            onClick={() => setCancelPopup({
+                                bool: true,
+                                type: "reassign"
+                            })}
+                            btnCls="mr-3"
+                        />
+                    }
+
+                    {
+                        ["completed", "inprogress", "pending", "cancel", "reassigned"].includes(taskDetails.status) &&
                         <Button
                             btnName='Close'
                             btnCategory='secondary'
@@ -461,7 +500,7 @@ const ViewTask = () => {
                     }
                 </Stack>
             </div>
-            <CancelPopup open={cancelPopup?.bool} handleClosePopup={handleClosePopup} header="Cancel Task Reason"
+            <CancelPopup open={cancelPopup?.bool} handleClosePopup={handleClosePopup} header={cancelPopup?.type === "reassign" ? "Re Assign Reason" : "Cancel Task Reason"}
                 handleSubmit={(reason) => handleCancelSubmit(reason)} />
 
             <Backdrop
@@ -477,7 +516,7 @@ const ViewTask = () => {
                             style={{
                                 fontWeight: 600
                             }}
-                        >Mentee New task has been successfully cancelled</p>
+                        >{cancelPopup?.type === "reassign" ? "Successfully Task Reassigned" : "Mentee New task has been successfully cancelled"}</p>
                     </div>
 
                 </div>

@@ -19,7 +19,7 @@ export const paymentApi = createApi({
   endpoints: (builder) => ({
     paymentProcessing: builder.query({
       query: (programId) => ({
-        url: `/api/payments/create-payment-intent/${programId}`,
+        url: `/payments/create-payment-intent/${programId}`,
         method: 'POST',
       }),
     }),

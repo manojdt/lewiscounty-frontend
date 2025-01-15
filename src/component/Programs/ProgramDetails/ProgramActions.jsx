@@ -31,8 +31,6 @@ const ProgramActions = ({
 }) => {
   const userInfo = useSelector((state) => state.userInfo);
 
-  console.log("userInfo from actionsbtn ==>", userInfo)
-  console.log("programdetails +++==>", programdetails)
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [joinAllProgram, { isLoading, isSuccess, isError }] =
