@@ -22,7 +22,7 @@ import { Button } from '../../shared'
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import MuiModal from '../../shared/Modal';
 import { useDispatch, useSelector } from 'react-redux'
-import { Backdrop, Checkbox, CircularProgress, Stack, Typography } from '@mui/material'
+import { Backdrop, Checkbox, CircularProgress, Menu, MenuItem, Stack, Typography } from '@mui/material'
 import { getGoalInfo, getGoalsHistory, updateGoalStatus, updateHistoryGoal } from '../../services/goalsInfo'
 import { goalDataStatus, goalHeadingStatus, goalPeriods, goalRequestStatus, goalStatus, requestStatus, user } from '../../utils/constant'
 import { getCategoryList, updateGoalRequest, updateLocalRequest } from '../../services/request'
@@ -32,17 +32,18 @@ import CloseReqPopup from "../../assets/icons/blackCloseIcon.svg"
 import CancelReq from "../../assets/icons/cancelRequest.svg"
 import dayjs from 'dayjs'
 import CreateGoal from './CreateGoal'
-import { dateFormatRever } from '../../utils'
+import { dateFormat, dateFormatRever } from '../../utils'
 import { request_goalMentee, request_goalMentor, request_goalNew, requestPageBreadcrumbs } from '../Breadcrumbs/BreadcrumbsCommonData'
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs'
+import ViewIcon from "../../assets/images/view1x.png";
+import MoreIcon from "../../assets/icons/moreIcon.svg";
 
 const ViewGoal = ({ type = '' }) => {
     const navigate = useNavigate()
     const params = useParams();
     const [searchParams] = useSearchParams();
-    console.log(params,"params")
-      const [reason,setReason] = useState('')
-      const [reasonError, setReasonError] = React.useState(false);
+    const [reason, setReason] = useState('')
+    const [reasonError, setReasonError] = React.useState(false);
     const location = useLocation(); // Provides access to the current URL
     const queryParams = new URLSearchParams(location.search); // Parses the query string
     const breadcrumbsType = searchParams.get("breadcrumbsType") || "";
@@ -68,6 +69,89 @@ const ViewGoal = ({ type = '' }) => {
     const role = userInfo.data.role
 
     let imageIcon = ActiveGoalIcon
+    const [paginationModel, setPaginationModel] = React.useState({
+        page: 0,
+        pageSize: 10,
+    })
+    const [seletedItem, setSelectedItem] = React.useState({});
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+    const handleMoreClick = (event, data) => {
+        setSelectedItem(data);
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const programTable = [
+        {
+            field: "category_name",
+            headerName: "Category",
+            flex: 1,
+            id: 1,
+        },
+        {
+            field: "program_name",
+            headerName: "Program Name",
+            flex: 1,
+            id: 1,
+        },
+        {
+            field: "start_date",
+            headerName: "Start Date",
+            flex: 1,
+            id: 1,
+            renderCell: (params) => {
+                return <div>{dateFormat(params.row.start_date)}</div>;
+            },
+        },
+        {
+            field: "end_date",
+            headerName: "End Date",
+            flex: 1,
+            id: 1,
+            renderCell: (params) => {
+                return <div>{dateFormat(params.row.end_date)}</div>;
+            },
+        },
+        // {
+        //     field: "created_by",
+        //     headerName: "Created By",
+        //     flex: 1,
+        //     id: 1,
+        // },
+        {
+            field: "participated_mentees_count",
+            headerName: "Mentee Count",
+            flex: 1,
+            id: 1,
+        },
+        {
+            field: "action",
+            headerName: "Action",
+            flex: 1,
+            id: 4,
+            renderCell: (params) => {
+                return (
+                    <>
+                        <div className="cursor-pointer flex items-center h-full" onClick={(e) => handleMoreClick(e, params.row)}>
+                            <img src={MoreIcon} alt="MoreIcon" />
+                        </div>
+                        <Menu id="basic-menu" anchorEl={anchorEl} open={open} onClose={handleClose} MenuListProps={{
+                            "aria-labelledby": "basic-button",
+                        }}
+                        >
+                            <MenuItem onClick={(e) => navigate(`/program-details/${seletedItem?.id}`)} className="!text-[12px]" >
+                                <img src={ViewIcon} alt="ViewIcon" className="pr-3 w-[30px]" />
+                                View
+                            </MenuItem>
+                        </Menu>
+                    </>
+                );
+            },
+        },
+    ]
 
     const handleActionBtn = () => {
         setActionModal({ ...actionModal, started: false, start: true })
@@ -127,16 +211,16 @@ const ViewGoal = ({ type = '' }) => {
     }
 
     const handleCloseGoal = (e) => {
-        if(e) e.preventDefault();
+        if (e) e.preventDefault();
         if (role === 'admin') {
             if (!reason.trim()) {
                 setReasonError(true); // Set error if reason is empty
                 return; // Prevent further action
-              }
+            }
             dispatch(updateGoalRequest({
                 goal_request_ids: [requestId],
                 status: "cancel",
-                description:reason
+                description: reason
             }))
         } else {
             dispatch(updateGoalStatus({ id: parseInt(goalInfo.id), status: 'cancel' })).then((res) => {
@@ -256,31 +340,31 @@ const ViewGoal = ({ type = '' }) => {
     useEffect(() => {
         dispatch(getGoalInfo(params.id))
     }, [])
-      const handleBreadcrumbs = (key) => {
-        const goal_menter=request_goalMentor(goalInfo.goal_name,goalType)
-        const goal_mentee=request_goalMentee(goalInfo.goal_name,goalType)
-        const goal_new=request_goalNew(goalInfo.goal_name)
+    const handleBreadcrumbs = (key) => {
+        const goal_menter = request_goalMentor(goalInfo.goal_name, goalType)
+        const goal_mentee = request_goalMentee(goalInfo.goal_name, goalType)
+        const goal_new = request_goalNew(goalInfo.goal_name)
         switch (key) {
-          case requestPageBreadcrumbs.mentee:
-            setBreadcrumbsArray(goal_mentee)
-            break;
+            case requestPageBreadcrumbs.mentee:
+                setBreadcrumbsArray(goal_mentee)
+                break;
             case requestPageBreadcrumbs.mentor:
-            setBreadcrumbsArray(goal_menter)
-            break;
+                setBreadcrumbsArray(goal_menter)
+                break;
             case requestPageBreadcrumbs.new_goals_request:
-            setBreadcrumbsArray(goal_new)
-            break;
-          case "discussion":
-            break;
-          default:
-            break;
+                setBreadcrumbsArray(goal_new)
+                break;
+            case "discussion":
+                break;
+            default:
+                break;
         }
-      };
-useEffect(() => {
- if(breadcrumbsType&&goalInfo.goal_name){
-    handleBreadcrumbs(breadcrumbsType)
-}
-}, [breadcrumbsType,goalInfo])
+    };
+    useEffect(() => {
+        if (breadcrumbsType && goalInfo.goal_name) {
+            handleBreadcrumbs(breadcrumbsType)
+        }
+    }, [breadcrumbsType, goalInfo])
     if (Object.keys(goalInfo).length) {
         switch (goalInfo.status) {
             case 'inactive':
@@ -327,7 +411,7 @@ useEffect(() => {
             status: confirmPopup?.type === "complete" ? "completed" : "cancel",
             start_date: dayjs(new Date()).format("YYYY-MM-DD")
         }
-      
+
 
         dispatch(updateHistoryGoal(payload)).then((res) => {
             if (res?.meta?.requestStatus === "fulfilled") {
@@ -371,9 +455,9 @@ useEffect(() => {
         setEditActionModal(true)
     }
     const handleSelectCategory = (value) => {
-      
-            setSelectedCategory(value);
-        
+
+        setSelectedCategory(value);
+
     };
     const handleSearchCategory = (e) => {
         let catList = categoryList && categoryList?.length > 0 && categoryList.filter((list) =>
@@ -404,11 +488,11 @@ useEffect(() => {
         ...categoryColumns,
     ];
     useEffect(() => {
-        if(categoryList){
+        if (categoryList) {
             setCategoryInfo({ search: '', list: categoryList });
         }
     }, [categoryList])
-    
+
     return (
         <div className="px-9 py-9">
             <Backdrop
@@ -482,65 +566,65 @@ useEffect(() => {
             </Backdrop>
 
 
-            <MuiModal modalSize='md' modalOpen={actionModal.cancel&&role === 'admin'} modalClose={handleCloseActionModal} noheader>
-<div className='px-5 py-5'>
-    <div className='flex justify-center flex-col gap-5  mt-4 mb-4'
-        style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '10px', }}>
-        <div className='flex justify-between px-3 py-4 items-center' style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
-            <p className='text-[18px]' style={{ color: 'rgba(0, 0, 0, 1)' }}>Reject Request Reason </p>
-            <img className='cursor-pointer' onClick={handleCloseActionModal} src={CancelIcon} alt="CancelIcon" />
-        </div>
+            <MuiModal modalSize='md' modalOpen={actionModal.cancel && role === 'admin'} modalClose={handleCloseActionModal} noheader>
+                <div className='px-5 py-5'>
+                    <div className='flex justify-center flex-col gap-5  mt-4 mb-4'
+                        style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '10px', }}>
+                        <div className='flex justify-between px-3 py-4 items-center' style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
+                            <p className='text-[18px]' style={{ color: 'rgba(0, 0, 0, 1)' }}>Reject Request Reason </p>
+                            <img className='cursor-pointer' onClick={handleCloseActionModal} src={CancelIcon} alt="CancelIcon" />
+                        </div>
 
-        <div className='px-5'>
+                        <div className='px-5'>
 
-            <form onSubmit={handleCloseGoal}>
-                <div className='relative pb-8'>
-                    <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
-                        Reject Reason <span style={{color: 'red'}}>{'*'}</span>
-                    </label>
+                            <form onSubmit={handleCloseGoal}>
+                                <div className='relative pb-8'>
+                                    <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
+                                        Reject Reason <span style={{ color: 'red' }}>{'*'}</span>
+                                    </label>
 
-                    <div className='relative'>
-                        <textarea
-                             value={reason}
-                             onChange={(e)=>{
-                               setReason(e.target.value)
-                               setReasonError(false)
-                             }}
-                            id="message" rows="4" className={`block p-2.5 input-bg w-full text-sm text-black  border
+                                    <div className='relative'>
+                                        <textarea
+                                            value={reason}
+                                            onChange={(e) => {
+                                                setReason(e.target.value)
+                                                setReasonError(false)
+                                            }}
+                                            id="message" rows="4" className={`block p-2.5 input-bg w-full text-sm text-black  border
                                focus-visible:outline-none focus-visible:border-none h-[130px]`}
-                            placeholder={''}
-                            style={{ border: '1px solid black' }}
-                        ></textarea>
-                       {reasonError && (
-              <p className="text-red-500 text-xs mt-1">
-                Please provide a reason for rejection.
-              </p>
-            )}
+                                            placeholder={''}
+                                            style={{ border: '1px solid black' }}
+                                        ></textarea>
+                                        {reasonError && (
+                                            <p className="text-red-500 text-xs mt-1">
+                                                Please provide a reason for rejection.
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div className='flex justify-center gap-5 items-center pt-5 pb-10'>
+                                    <Button btnName='Cancel' btnCls="w-[18%]" btnCategory="secondary" onClick={handleCloseActionModal} />
+                                    <button
+                                        type='submit'
+                                        className='text-white py-3 px-7 w-[18%]'
+                                        style={{ background: 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)', borderRadius: '3px' }}>
+                                        Submit
+                                    </button>
+                                </div>
+                            </form>
+
+                        </div>
+
+
                     </div>
+
                 </div>
-
-                <div className='flex justify-center gap-5 items-center pt-5 pb-10'>
-                    <Button btnName='Cancel' btnCls="w-[18%]" btnCategory="secondary" onClick={handleCloseActionModal} />
-                    <button
-                        type='submit'
-                        className='text-white py-3 px-7 w-[18%]'
-                        style={{ background: 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)', borderRadius: '3px' }}>
-                        Submit
-                    </button>
-                </div>
-            </form>
-
-        </div>
-
-
-    </div>
-
-</div>
-</MuiModal>
+            </MuiModal>
 
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={actionModal.cancel&&role !== 'admin'}
+                open={actionModal.cancel && role !== 'admin'}
             >
                 <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
 
@@ -624,7 +708,7 @@ useEffect(() => {
                                     }}
                                     onChange={handleSearchCategory}
                                     value={categoryInfo.search}
-                                    />
+                                />
                                 <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
                                     <img src={SearchIcon} alt='SearchIcon' />
                                 </div>
@@ -655,14 +739,14 @@ useEffect(() => {
                                 <p>Goals </p>
                             </div>
                         </div> */}
-{role==="admin"&&
-<div className='pb-2'>
-    <Breadcrumbs items={breadcrumbsArray}/>
-    </div>}
-{role==="mentor"&&
-<div className='pb-2'>
-    <Breadcrumbs items={breadcrumbsArray}/>
-    </div>}
+                        {role === "admin" &&
+                            <div className='pb-2'>
+                                <Breadcrumbs items={breadcrumbsArray} />
+                            </div>}
+                        {role === "mentor" &&
+                            <div className='pb-2'>
+                                <Breadcrumbs items={breadcrumbsArray} />
+                            </div>}
                         <div className='px-4' style={{ border: '1px solid rgba(223, 237, 255, 1)', borderRadius: '10px' }}>
 
                             <div className=''>
@@ -813,9 +897,9 @@ useEffect(() => {
 
                                             </>
                                         }
-{type&& <Button btnName={"Close"} style={{ border: '1px solid rgba(29, 91, 191, 1)', width: '180px', color: 'rgba(29, 91, 191, 1)' }}
-                                                            onClick={() => navigate(-1)}
-                                                        />}
+                                        {type && <Button btnName={"Close"} style={{ border: '1px solid rgba(29, 91, 191, 1)', width: '180px', color: 'rgba(29, 91, 191, 1)' }}
+                                            onClick={() => navigate(-1)}
+                                        />}
                                         {
                                             (role === 'admin' && goalInfo.status !== 'completed') ?
 
@@ -854,17 +938,17 @@ useEffect(() => {
                                                             //     >Cancelled
                                                             //     </button>
                                                             //     : 
-                                                                <>
-                                                                    {
-                                                                        !["new", "pending", "in_progress", 'aborted', 'cancel'].includes(goalInfo?.status) &&
-                                                                        <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                                            background: "#16B681",
-                                                                            borderRadius: '5px',
-                                                                            cursor: 'not-allowed'
-                                                                        }}
-                                                                            onClick={undefined}
-                                                                        >Approved
-                                                                        </button>}</>
+                                                            <>
+                                                                {
+                                                                    !["new", "pending", "in_progress", 'aborted', 'cancel'].includes(goalInfo?.status) &&
+                                                                    <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
+                                                                        background: "#16B681",
+                                                                        borderRadius: '5px',
+                                                                        cursor: 'not-allowed'
+                                                                    }}
+                                                                        onClick={undefined}
+                                                                    >Approved
+                                                                    </button>}</>
                                                     }
 
 
@@ -893,7 +977,16 @@ useEffect(() => {
                                     </div>
                                 </div>
                             </div>
+
+                            <div className='mb-3'>
+                                <DataTable
+                                    rows={goalInfo?.programs ?? []}
+                                    columns={programTable}
+                                    hideCheckbox
+                                    hideFooter />
+                            </div>
                         </div>
+
                     </div>
                     : null
             }

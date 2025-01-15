@@ -4,7 +4,7 @@ export const paymentApi = rtkQueryApiServices.injectEndpoints({
   endpoints: (builder) => ({
     paymentProcessing: builder.query({
       query: (programId) => ({
-        url: `/api/payments/create-payment-intent/${programId}`,
+        url: `/payments/create-payment-intent/${programId}`,
         method: 'POST',
       }),
     }),
