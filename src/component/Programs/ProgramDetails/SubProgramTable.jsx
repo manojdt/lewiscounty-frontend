@@ -6,7 +6,7 @@ import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import PeopleIcon from "@mui/icons-material/People";
-import { pipeUrls } from "../../../utils/constant";
+import { menteeProgramStatus, pipeUrls } from "../../../utils/constant";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -26,21 +26,23 @@ const columns = [
     headerName: "Status",
     flex: 1,
     renderCell: (params) => {
-      const programPending = ["yettoapprove"];
-      const isProgramPending = programPending.includes(params.row?.status);
+      const status = params.row?.status;
       return (
         <span
           style={{
-            backgroundColor: isProgramPending
-              ? "#ffead1"
-              : "rgba(235, 255, 243, 1)",
-            color: isProgramPending ? "#ffb155" : "#33bc93",
+            backgroundColor:
+              status === "yettoapprove" ? "#ffead1" : "rgba(235, 255, 243, 1)",
+            color: status === "yettoapprove" ? "#ffb155" : "#33bc93",
             padding: "6px 12px",
             fontSize: "0.875rem",
             borderRadius: 4,
           }}
         >
-          {isProgramPending ? "Pending" : "Accepted"}
+          {status === "yettoapprove"
+            ? "Pending"
+            : status === "completed"
+            ? "Completed"
+            : "Accepted"}
         </span>
       );
     },
@@ -63,12 +65,19 @@ const CourseCard = ({ data, series, handleMenuClick }) => {
     // Pass the full row data including id when calling handleMenuClick
     handleMenuClick("view", data);
   };
-  console.log('data', data)
+  console.log("data", data);
+  const isNotLaunch = data?.status === "yettojoin";
   return (
-    <div className="max-w-xs p-5 bg-white rounded-lg shadow-md">
+    <div
+      className={`max-w-xs p-5 bg-white rounded-lg shadow-md ${
+        isNotLaunch === "yettojoin" ? "opacity-50" : ""
+      }`}
+    >
       {/* Category Badge */}
       <div className="flex justify-between items-center mb-3">
-        <h2 className="text-base font-semibold">{series}. {`${data?.program_name?.substring(0, 18)}...`}</h2>
+        <h2 className="text-base font-semibold">
+          {series}. {`${data?.program_name?.substring(0, 18)}...`}
+        </h2>
         <span className="px-3 py-1 text-xs text-gray-600 border border-gray-100 rounded-full">
           {data?.category_name}
         </span>
@@ -105,12 +114,25 @@ const CourseCard = ({ data, series, handleMenuClick }) => {
       {/* View Details Button */}
       <div className="flex justify-center">
         <button
-          className="p-2 text-xs bg-background-primary-main text-white rounded transition-colors"
+          className={`p-2 text-xs ${
+            isNotLaunch
+              ? "bg-background-primary-dark"
+              : "bg-background-primary-main"
+          } text-white rounded transition-colors`}
           onClick={handleViewDetails}
         >
-          View Details
+          {isNotLaunch ? "Preview" : "View Details"}
         </button>
       </div>
+
+      {data?.admin_assign_program &&
+        data?.mentee_join_status === "program_join_request_submitted" && (
+          <div className="flex justify-center py-2 mt-4">
+            <span className="py-1 px-3 text-xs text-white bg-gray-400 rounded-sm">
+              {menteeProgramStatus[data.mentee_join_status]?.text}
+            </span>
+          </div>
+        )}
     </div>
   );
 };

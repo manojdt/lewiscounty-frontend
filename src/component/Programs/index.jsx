@@ -158,6 +158,7 @@ export default function Programs() {
     search: "",
     filter_by: "month",
   });
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const userInfo = useSelector((state) => state.userInfo);
@@ -188,7 +189,7 @@ export default function Programs() {
       }),
       ...(filterDate && { filter_by: filterDate }),
       ...(isBookmark && { is_bookmark: isBookmark }),
-      ...(filterSearch && { search: filterSearch }),
+      ...(debouncedSearch && { search: debouncedSearch }),
     },
     {
       refetchOnMountOrArgChange: true,
@@ -466,6 +467,17 @@ export default function Programs() {
   const handleProgramSearch = (e) => {
     setProgramFilter({ ...programFilter, search: e.target.value });
   };
+
+  // Debounce the search input
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(programFilter.search);
+    }, 1000); // Adjust debounce delay (e.g., 1000ms)
+
+    return () => {
+      clearTimeout(handler); // Clear timeout on component unmount or input change
+    };
+  }, [programFilter.search]);
 
   const handleDateFilter = (e) => {
     setProgramFilter({ ...programFilter, filter_by: e.target.value });
