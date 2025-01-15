@@ -457,6 +457,26 @@ export const MaterialColumns = [
     id: 3,    
   },
 ];
+export const RecurringTableColumns = [
+  {
+    field: 'name',
+    headerName: 'Name',
+    flex: 1,
+    id: 0,
+  },
+  {
+    field: 'stat_date',
+    headerName: 'Start Date',
+    flex: 1,
+    id: 1,
+  },
+  {
+    field: 'end_date',
+    headerName: 'End Date',
+    flex: 1,
+    id: 2,
+  },  
+];
 export const GoalColumns = [
   {
     field: 'description',

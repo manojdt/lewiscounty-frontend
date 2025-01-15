@@ -239,7 +239,6 @@ const ProgramActions = ({
       );
     }
 
-
     // Program approval stage
 
     if (
@@ -363,6 +362,29 @@ const ProgramActions = ({
         );
       }
     }
+    const isSubProgramAccepted = programdetails?.sub_program?.every(
+      (program) => program?.status === "yettojoin"
+    );
+
+    if (
+      programdetails?.admin_assign_program &&
+      !isSubProgramAccepted &&
+      ![
+        "program_join_payment_initiate",
+        "program_join_payment_pending",
+        "program_join_request_submitted",
+        "program_join_request_rejected",
+      ].includes(programdetails?.mentee_join_status)
+    ) {
+      return (
+        <MuiButton
+          className="!my-5"
+          onClick={() => !isLoading && joinAllProgram(programdetails?.id)}
+        >
+          {isLoading ? "Joining...." : "Join All Program"}
+        </MuiButton>
+      );
+    }
 
     return (
       <div className="py-9">
@@ -371,32 +393,33 @@ const ProgramActions = ({
             {programdetails.mentee_join_status !==
               menteeProgramStatus.program_join_request_accepted.status && (
               <div className="space-y-4">
-                {searchParams.get("type") !== "program_join" && (
-                  <button
-                    className="py-3 px-16 text-white text-[14px] flex items-center"
-                    style={{
-                      ...buttonStyles.base,
-                      ...buttonStyles.danger,
-                      cursor: "not-allowed",
-                    }}
-                    onClick={() => undefined}
-                  >
-                    {menteeProgramStatus[programdetails.mentee_join_status]
-                      .type === "waiting" && (
-                      <i className="pi pi-clock" style={{ color: "red" }}></i>
-                    )}
-                    {menteeProgramStatus[programdetails.mentee_join_status]
-                      .type === "reject" && (
-                      <i className="pi pi-ban" style={{ color: "red" }}></i>
-                    )}
-                    <span className="pl-3">
-                      {
-                        menteeProgramStatus[programdetails.mentee_join_status]
-                          ?.text
-                      }
-                    </span>
-                  </button>
-                )}
+                {searchParams.get("type") !== "program_join" &&
+                  !programdetails?.admin_assign_program && (
+                    <button
+                      className="py-3 px-16 text-white text-[14px] flex items-center"
+                      style={{
+                        ...buttonStyles.base,
+                        ...buttonStyles.danger,
+                        cursor: "not-allowed",
+                      }}
+                      onClick={() => undefined}
+                    >
+                      {menteeProgramStatus[programdetails.mentee_join_status]
+                        .type === "waiting" && (
+                        <i className="pi pi-clock" style={{ color: "red" }}></i>
+                      )}
+                      {menteeProgramStatus[programdetails.mentee_join_status]
+                        .type === "reject" && (
+                        <i className="pi pi-ban" style={{ color: "red" }}></i>
+                      )}
+                      <span className="pl-3">
+                        {
+                          menteeProgramStatus[programdetails.mentee_join_status]
+                            ?.text
+                        }
+                      </span>
+                    </button>
+                  )}
 
                 {["new", "pending"].includes(
                   programdetails?.request_data?.status
@@ -419,13 +442,7 @@ const ProgramActions = ({
             "program_join_request_submitted",
             "program_join_request_rejected",
           ].includes(programdetails?.mentee_join_status) &&
-          (programdetails?.admin_assign_program ? (
-            <MuiButton
-              onClick={() => !isLoading && joinAllProgram(programdetails?.id)}
-            >
-              {isLoading ? "Joining...." : "Join All Program"}
-            </MuiButton>
-          ) : (
+          !programdetails?.admin_assign_program && (
             <MuiButton
               endIcon={
                 <img
@@ -440,7 +457,7 @@ const ProgramActions = ({
             >
               {isLaunchingProgram ? "Loading..." : "Join Program"}
             </MuiButton>
-          ))
+          )
         )}
       </div>
     );

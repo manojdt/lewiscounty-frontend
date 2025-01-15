@@ -10,7 +10,6 @@ import { ProgramTabs, ProgramFields } from "../../../utils/formFields";
 import {
   updateNewPrograms,
   getProgramNameValidate,
-  getAllMentors,
 } from "../../../services/programInfo";
 import {
   CertificateColumns,
@@ -61,7 +60,6 @@ export default function CreatePrograms() {
   const [currentStep, setCurrentStep] = useState(1);
   const [showBackdrop, setShowBackdrop] = useState(false);
   const role = userInfo.data.role || "";
-  const [search, setSearch] = useState("");
   const [toggleRole, setToggleRole] = useState("");
   const {
     allPrograms,
@@ -773,22 +771,6 @@ export default function CreatePrograms() {
     }
   }, [actionModal]);
 
-  // useEffect(() => {
-  //   if (role === 'admin') {
-  //     dispatch(getAllMentors());
-  //   }
-  // }, [role]);
-
-  const handleSearchChange = (value) => {
-    setSearch(value);
-  };
-
-  useEffect(() => {
-    if (role === admin || search.trim() !== "") {
-      dispatch(getAllMentors(search));
-    }
-  }, [role, search, dispatch]);
-
   const buttonStyle = {
     background: "rgb(29, 91, 191)",
     color: "rgb(255, 255, 255)",
@@ -977,8 +959,8 @@ export default function CreatePrograms() {
             setValue(fieldName, value);
           }
           // Remove city initialization from here as it's handled by the separate effect
-          if (fieldName === "equipments") {
-            value = currentProgramDetail["equipments"]?.map((item) => item?.id);
+          if (fieldName === "recurring_dates") {
+            value = currentProgramDetail["recurring_programs_details"];
           }
 
           if (fieldName !== "state" && fieldName !== "city") {
@@ -1298,7 +1280,6 @@ export default function CreatePrograms() {
                     currentStepData={
                       stepData[filteredProgramTabs[currentStep - 1].key]
                     }
-                    handleSearchChange={handleSearchChange}
                     setCurrent={setCurrent}
                     setToggleRole={setToggleRole}
                     handleAction={handleAction}
@@ -1309,9 +1290,7 @@ export default function CreatePrograms() {
                     goalData={goals?.results}
                     certificate={certificate}
                     materials={materials?.results}
-                    members={members}
-                    setSearch={setSearch}
-                    search={search}
+                    members={members}                   
                   />
                 </div>
                 <div className="flex gap-6 justify-center align-middle">
