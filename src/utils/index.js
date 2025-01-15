@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import { useEffect, useState } from "react";
 
 export function getMonth(date = dayjs()) {
   const currDate = dayjs(date);
@@ -351,3 +352,18 @@ export const fileNameString = (data) => {
     remainingCount: remainingImagesCount
   };
 }
+export const useDebounce = (value, delay) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+};

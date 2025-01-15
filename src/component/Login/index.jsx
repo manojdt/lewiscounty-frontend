@@ -156,6 +156,12 @@ const Login = () => {
           <CircularProgress color='inherit' />
         )}
       </Backdrop> */}
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={userData.loading}
+      >
+          <CircularProgress color='inherit' />
+      </Backdrop>
 
       {/* Right Section */}
       <div className='w-full flex items-center justify-center'>
