@@ -262,14 +262,14 @@ const ProfileTab = ({ setEditMode }) => {
       </Backdrop>
       <div className='flex items-center justify-between'>
         <p className='text-xl font-semibold'>Profile Information</p>
-        <div>
+        {userInfo?.data?.userinfo?.approve_status === "accept" &&<div>
           <Button
             onClick={handleEditMode}
             btnType='button'
             btnName='Edit'
             btnCls={'w-[140px]'}
           />
-        </div>
+        </div>}
       </div>
 
       <div>
@@ -287,13 +287,13 @@ const ProfileTab = ({ setEditMode }) => {
                   style={{ borderRadius: '50%', height: '143px' }}
                   alt='ProfileImageIcon'
                 />
-                <img
+                {userInfo?.data?.userinfo?.approve_status === "accept" &&<img
                   src={ProfileImagePencilIcon}
                   className='absolute top-[50%] left-2 cursor-pointer'
                   alt='ProfileImagePencilIcon'
-                />
+                />}
 
-                <input type='file' class='hidden' onChange={uploadUserImage} />
+                {userInfo?.data?.userinfo?.approve_status === "accept" &&<input type='file' class='hidden' onChange={uploadUserImage} />}
               </label>
             </div>
           </div>

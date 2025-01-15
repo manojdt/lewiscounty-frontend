@@ -126,7 +126,7 @@ export default function DashboardCard({
                     .split('-');
                 }
                 const actualStartDate = startDate.length
-                  ? `${startDate[2]}/${startDate[1]}/${startDate[0]}`
+                  ? `${startDate[2]}/${startDate?.[1]}/${startDate?.[0]}`
                   : '';
 
                 return (
@@ -156,7 +156,7 @@ export default function DashboardCard({
                               border: '1px solid rgba(238, 238, 238, 1)',
                             }}
                           >
-                            {curatedProgram?.categories[0]?.name}
+                            {curatedProgram?.categories?.[0]?.name}
                           </p>
                           <h4 className='text-[16px]'>
                             {curatedProgram.program_name}

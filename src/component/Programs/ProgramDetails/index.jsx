@@ -15,6 +15,7 @@ import {
   Menu,
   MenuItem,
   Stack,
+  Typography,
 } from "@mui/material";
 import { useForm } from "react-hook-form";
 import {
@@ -108,6 +109,7 @@ import { MuiCustomModal } from "../../../shared/Modal/MuiCustomModal";
 import modal_tick_icon from "../../../assets/icons/modal_tick_icon.svg";
 import ProgramCard from "../../../shared/Card/ProgramCard";
 import SubDetailCardWrapper from "../../../shared/Card/SubDetailCardWrapper";
+import { CustomModal } from "../../../shared/CustomModal/CustomModal";
 
 export default function ProgramDetails({ setProgramDetailsId }) {
   const [showBackdrop, setShowBackdrop] = React.useState(false);
@@ -192,6 +194,10 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     modal: false,
     success: false,
   });
+  const [selectedLM, setSelectedLM] = React.useState({
+    bool: false,
+    data: ""
+  })
 
   const [certificateActiveTab, setCertificateActiveTab] =
     useState("participated");
@@ -987,30 +993,26 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     statusMessage = "Program is started today!";
   } else if (daysDifference < 0) {
     const absDifference = Math.abs(daysDifference);
-    statusMessage = `Program started ${absDifference} day${
-      absDifference > 1 ? "s" : ""
-    } ago`;
+    statusMessage = `Program started ${absDifference} day${absDifference > 1 ? "s" : ""
+      } ago`;
   } else {
-    statusMessage = `${daysDifference} day${
-      daysDifference > 1 ? "s" : ""
-    } left for the program to start`;
+    statusMessage = `${daysDifference} day${daysDifference > 1 ? "s" : ""
+      } left for the program to start`;
   }
 
   const handleNavigation = (programdetails) => {
     let baseUrl = pipeUrls.programdetails;
     if (Object.keys(programdetails).length) {
       navigate(
-        `${baseUrl}/${programdetails.program || programdetails?.id}${
-          programdetails?.admin_program_request_id
-            ? `?request_id=${programdetails?.admin_program_request_id}&type=admin_assign_program`
-            : "admin_assign_program" in programdetails
+        `${baseUrl}/${programdetails.program || programdetails?.id}${programdetails?.admin_program_request_id
+          ? `?request_id=${programdetails?.admin_program_request_id}&type=admin_assign_program`
+          : "admin_assign_program" in programdetails
             ? `?program_create_type=admin_program`
             : ""
-        }${
-          programdetails?.admin_program_request_id ||
+        }${programdetails?.admin_program_request_id ||
           "admin_assign_program" in programdetails
-            ? "&"
-            : "?"
+          ? "&"
+          : "?"
         }`
       );
     }
@@ -1168,8 +1170,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
               {requestProgramStatus === requestStatus.reschedule
                 ? "Rescheduled "
                 : requestProgramStatus === requestStatus.cancel
-                ? "Cancelled "
-                : ""}{" "}
+                  ? "Cancelled "
+                  : ""}{" "}
               Successfully
             </p>
           </div>
@@ -1428,7 +1430,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
           <div className="border border-[#E50027] rounded-[15px] h-[100%] w-[100%] justify-center items-center flex flex-col relative">
             <div
               className="absolute top-[12px] right-[12px]"
-              // onClick={() => handleCloseCancelPopup()}
+            // onClick={() => handleCloseCancelPopup()}
             >
               <img src={CloseIcon} alt="ConfirmIcon" />
             </div>
@@ -1642,7 +1644,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                         viewDate={
                           new Date(
                             dateFormatted.reschedule_start_date ??
-                              programdetails?.start_date
+                            programdetails?.start_date
                           )
                         }
                       />
@@ -1853,8 +1855,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       )}
 
       {!programLoading &&
-      programdetails &&
-      Object.keys(programdetails)?.length ? (
+        programdetails &&
+        Object.keys(programdetails)?.length ? (
         <div
           className="grid mb-10"
           style={{
@@ -1918,52 +1920,52 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   (role === "mentee" &&
                     (programdetails.status === programActionStatus.inprogress ||
                       programdetails.mentee_join_status ===
-                        programActionStatus.program_join_request_accepted))) && (
-                  <>
-                    <div className="cursor-pointer" onClick={handleClick}>
-                      <img src={MoreIcon} alt="MoreIcon" />
-                    </div>
-                    <Menu
-                      id="basic-menu"
-                      anchorEl={anchorEl}
-                      open={open}
-                      onClose={handleClose}
-                      MenuListProps={{
-                        "aria-labelledby": "basic-button",
-                      }}
-                    >
-                      {(role === "mentor" || role === "admin") && (
-                        <>
-                          {/* programdetails.participated_mentees_count */}
-                          <MenuItem
-                            onClick={() => handleMenu("share")}
-                            className="!text-[12px]"
-                          >
-                            <img
-                              src={ShareIcon}
-                              alt="ShareIcon"
-                              className="pr-3 w-[25px]"
-                            />
-                            Share
-                          </MenuItem>
-                          {programdetails.participated_mentees_count === 0 &&
-                            programdetails?.created_by ===
+                      programActionStatus.program_join_request_accepted))) && (
+                    <>
+                      <div className="cursor-pointer" onClick={handleClick}>
+                        <img src={MoreIcon} alt="MoreIcon" />
+                      </div>
+                      <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                        MenuListProps={{
+                          "aria-labelledby": "basic-button",
+                        }}
+                      >
+                        {(role === "mentor" || role === "admin") && (
+                          <>
+                            {/* programdetails.participated_mentees_count */}
+                            <MenuItem
+                              onClick={() => handleMenu("share")}
+                              className="!text-[12px]"
+                            >
+                              <img
+                                src={ShareIcon}
+                                alt="ShareIcon"
+                                className="pr-3 w-[25px]"
+                              />
+                              Share
+                            </MenuItem>
+                            {programdetails.participated_mentees_count === 0 &&
+                              programdetails?.created_by ===
                               userdetails?.data?.user_id && (
-                                
-                              <MenuItem
-                                onClick={() => handleMenu("edit")}
-                                className="!text-[12px]"
-                              >
-                                <img
-                                  src={EditIcon}
-                                  alt="EditIcon"
-                                  className="pr-3 w-[25px]"
-                                />
-                                Edit
-                              </MenuItem>
-                            )}
-                          {
-                            !requestStatusParams &&
+
+                                <MenuItem
+                                  onClick={() => handleMenu("edit")}
+                                  className="!text-[12px]"
+                                >
+                                  <img
+                                    src={EditIcon}
+                                    alt="EditIcon"
+                                    className="pr-3 w-[25px]"
+                                  />
+                                  Edit
+                                </MenuItem>
+                              )}
+                            {
+                              !requestStatusParams &&
                               ![
                                 "yettoapprove",
                                 "cancelled",
@@ -1975,7 +1977,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                 "admin_assign_program"
                               ) &&
                               programdetails?.created_by ===
-                                userdetails?.data?.user_id && (
+                              userdetails?.data?.user_id && (
                                 // role !== 'admin' && (
                                 <MenuItem
                                   onClick={() => handleMenu("reschedule")}
@@ -1989,11 +1991,11 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                   Reschedule
                                 </MenuItem>
                               )
-                            // )
-                          }
+                              // )
+                            }
 
-                          {
-                            !requestStatusParams &&
+                            {
+                              !requestStatusParams &&
                               ![
                                 "yettoapprove",
                                 "cancelled",
@@ -2002,7 +2004,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                               ].includes(programdetails?.status) &&
                               !reqRole &&
                               programdetails?.created_by ===
-                                userdetails?.data?.user_id && (
+                              userdetails?.data?.user_id && (
                                 // role !== 'admin' && (
                                 <MenuItem
                                   onClick={() => handleMenu("cancel")}
@@ -2016,115 +2018,115 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                   Cancel
                                 </MenuItem>
                               )
-                            // )
-                          }
-                          {(programdetails.status ===
-                            programActionStatus.inprogress ||
-                            programdetails.status ===
+                              // )
+                            }
+                            {(programdetails.status ===
+                              programActionStatus.inprogress ||
+                              programdetails.status ===
                               programActionStatus.assigned) &&
-                            !reqRole &&
-                            programdetails?.created_by ===
+                              !reqRole &&
+                              programdetails?.created_by ===
                               userdetails?.data?.user_id && (
-                              <>
+                                <>
+                                  <MenuItem
+                                    onClick={() => handleOpenConfirmPopup()}
+                                    className="!text-[12px]"
+                                  >
+                                    <img
+                                      src={CompleteIcon}
+                                      alt="AbortIcon"
+                                      className="pr-3 w-[25px]"
+                                    />
+                                    Complete
+                                  </MenuItem>
+                                  <MenuItem
+                                    onClick={() => handleNewTaskFromAdmin()}
+                                    className="!text-[12px]"
+                                  >
+                                    <img
+                                      src={PlusCircle}
+                                      alt="PlusCircle"
+                                      className="pr-3 w-[25px]"
+                                    />
+                                    Assign Task to Mentees
+                                  </MenuItem>
+                                </>
+                              )}
+
+                            {["cancelled", "inprogress", "completed"].includes(
+                              programdetails?.status
+                            ) && (
                                 <MenuItem
-                                  onClick={() => handleOpenConfirmPopup()}
+                                  onClick={() =>
+                                    navigate(`/historyNotes/${params.id}`)
+                                  }
                                   className="!text-[12px]"
                                 >
                                   <img
-                                    src={CompleteIcon}
+                                    src={ProgramHistoryIcon}
+                                    alt="ProgramHistoryIcon"
+                                    className="pr-3 w-[25px]"
+                                  />
+                                  Program Notes History
+                                </MenuItem>
+                              )}
+                          </>
+                        )}
+                        {role === "mentee" && (
+                          <>
+                            {programdetails?.status ===
+                              programActionStatus.yettojoin &&
+                              programdetails?.program_interest && (
+                                <MenuItem
+                                  onClick={() => handleMenu("not_interested")}
+                                  className="!text-[12px]"
+                                >
+                                  <img
+                                    src={AbortIcon}
                                     alt="AbortIcon"
                                     className="pr-3 w-[25px]"
                                   />
-                                  Complete
+                                  Not Interested
                                 </MenuItem>
+                              )}
+                            {(programdetails.status ===
+                              programActionStatus.inprogress ||
+                              programdetails.mentee_join_status ===
+                              programActionStatus.program_join_request_accepted) && (
                                 <MenuItem
-                                  onClick={() => handleNewTaskFromAdmin()}
+                                  onClick={() => handleMenu("cancel")}
                                   className="!text-[12px]"
                                 >
                                   <img
-                                    src={PlusCircle}
-                                    alt="PlusCircle"
+                                    src={AbortIcon}
+                                    alt="AbortIcon"
                                     className="pr-3 w-[25px]"
                                   />
-                                  Assign Task to Mentees
+                                  Cancel
                                 </MenuItem>
-                              </>
-                            )}
-
-                          {["cancelled", "inprogress", "completed"].includes(
-                            programdetails?.status
-                          ) && (
-                            <MenuItem
-                              onClick={() =>
-                                navigate(`/historyNotes/${params.id}`)
-                              }
-                              className="!text-[12px]"
-                            >
-                              <img
-                                src={ProgramHistoryIcon}
-                                alt="ProgramHistoryIcon"
-                                className="pr-3 w-[25px]"
-                              />
-                              Program Notes History
-                            </MenuItem>
-                          )}
-                        </>
-                      )}
-                      {role === "mentee" && (
-                        <>
-                          {programdetails?.status ===
-                            programActionStatus.yettojoin &&
-                            programdetails?.program_interest && (
-                              <MenuItem
-                                onClick={() => handleMenu("not_interested")}
-                                className="!text-[12px]"
-                              >
-                                <img
-                                  src={AbortIcon}
-                                  alt="AbortIcon"
-                                  className="pr-3 w-[25px]"
-                                />
-                                Not Interested
-                              </MenuItem>
-                            )}
-                          {(programdetails.status ===
-                            programActionStatus.inprogress ||
-                            programdetails.mentee_join_status ===
-                              programActionStatus.program_join_request_accepted) && (
-                            <MenuItem
-                              onClick={() => handleMenu("cancel")}
-                              className="!text-[12px]"
-                            >
-                              <img
-                                src={AbortIcon}
-                                alt="AbortIcon"
-                                className="pr-3 w-[25px]"
-                              />
-                              Cancel
-                            </MenuItem>
-                          )}
-                          {["cancelled", "inprogress", "completed"].includes(
-                            programdetails?.status
-                          ) && (
-                            <MenuItem
-                              onClick={() =>
-                                navigate(`/historyNotes/${params.id}`)
-                              }
-                              className="!text-[12px]"
-                            >
-                              <img
-                                src={ProgramHistoryIcon}
-                                alt="ProgramHistoryIcon"
-                                className="pr-3 w-[25px]"
-                              />
-                              Program Notes History
-                            </MenuItem>
-                          )}
-                        </>
-                      )}
-                    </Menu>
-                  </>
-                )}
+                              )}
+                            {["cancelled", "inprogress", "completed"].includes(
+                              programdetails?.status
+                            ) && (
+                                <MenuItem
+                                  onClick={() =>
+                                    navigate(`/historyNotes/${params.id}`)
+                                  }
+                                  className="!text-[12px]"
+                                >
+                                  <img
+                                    src={ProgramHistoryIcon}
+                                    alt="ProgramHistoryIcon"
+                                    className="pr-3 w-[25px]"
+                                  />
+                                  Program Notes History
+                                </MenuItem>
+                              )}
+                          </>
+                        )}
+                      </Menu>
+                    </>
+                  )}
               </>
             </nav>
 
@@ -2262,6 +2264,10 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                               <button
                                 key={material.id}
                                 className={`px-6 py-3 text-[12px] bg-gray-200 text-black rounded-full`}
+                                onClick={() => setSelectedLM({
+                                  bool: true,
+                                  data: material
+                                })}
                               >
                                 {material.name}
                               </button>
@@ -2424,31 +2430,31 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     (programdetails?.mentee_join_status ===
                       "program_join_payment_initiate" ||
                       programdetails?.mentee_join_status ===
-                        "program_join_payment_pending") && (
+                      "program_join_payment_pending") && (
                       <div className="mt-3">
                         {programdetails?.mentee_join_status ===
                           "program_join_payment_initiate" && (
-                          <p className="text-font-error-main text-[14px] font-semibold mb-2">
-                            {statusMessage}
-                          </p>
-                        )}
+                            <p className="text-font-error-main text-[14px] font-semibold mb-2">
+                              {statusMessage}
+                            </p>
+                          )}
                         <Button
                           btnType="button"
                           btnCls={
                             programdetails?.mentee_join_status ===
-                            "program_join_payment_pending"
+                              "program_join_payment_pending"
                               ? "w-[200px] !bg-[#FFE3C2] !text-[#FF8A00] !border-none"
                               : "w-auto"
                           }
                           btnName={
                             programdetails?.mentee_join_status ===
-                            "program_join_payment_pending"
+                              "program_join_payment_pending"
                               ? "Pending Payment"
                               : `Pay Now $ ${programdetails?.enrollment_fees}`
                           }
                           btnCategory={
                             programdetails?.mentee_join_status ===
-                            "program_join_payment_pending"
+                              "program_join_payment_pending"
                               ? "secondary"
                               : "primary"
                           }
@@ -2469,10 +2475,10 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                         />
                         {programdetails?.mentee_join_status ===
                           "program_join_payment_pending" && (
-                          <p className="text-font-error-main text-[14px] font-semibold mt-2">
-                            Please Contact Administrator
-                          </p>
-                        )}
+                            <p className="text-font-error-main text-[14px] font-semibold mt-2">
+                              Please Contact Administrator
+                            </p>
+                          )}
                       </div>
                     )}
 
@@ -2596,8 +2602,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             <span>
                               {programdetails?.start_date
                                 ? moment(programdetails?.start_date).format(
-                                    "MM-DD-YYYY"
-                                  )
+                                  "MM-DD-YYYY"
+                                )
                                 : "-"}
                             </span>
                           </li>
@@ -2613,8 +2619,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             <span>
                               {programdetails?.end_date
                                 ? moment(programdetails?.end_date).format(
-                                    "MM-DD-YYYY"
-                                  )
+                                  "MM-DD-YYYY"
+                                )
                                 : "-"}
                             </span>
                           </li>
@@ -2633,8 +2639,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             <span>
                               {programdetails?.start_date
                                 ? moment(programdetails?.start_date).format(
-                                    "hh:mm A"
-                                  )
+                                  "hh:mm A"
+                                )
                                 : "-"}
                             </span>
                           </li>
@@ -2650,8 +2656,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             <span>
                               {programdetails?.end_date
                                 ? moment(programdetails?.end_date).format(
-                                    "hh:mm A"
-                                  )
+                                  "hh:mm A"
+                                )
                                 : "-"}
                             </span>
                           </li>
@@ -2672,22 +2678,22 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                           </li>
                           {programdetails?.recurring_programs_details?.length >
                             0 && (
-                            <li
-                              className="flex justify-between text-[12px] py-1"
-                              style={{
-                                borderBottom:
-                                  "1px solid rgba(217, 217, 217, 1)",
-                              }}
-                            >
-                              <span>Recurring cycle</span>
-                              <MuiButton size={"small"} variant={"text"}>
-                                View
-                              </MuiButton>
-                            </li>
-                          )}
+                              <li
+                                className="flex justify-between text-[12px] py-1"
+                                style={{
+                                  borderBottom:
+                                    "1px solid rgba(217, 217, 217, 1)",
+                                }}
+                              >
+                                <span>Recurring cycle</span>
+                                <MuiButton size={"small"} variant={"text"}>
+                                  View
+                                </MuiButton>
+                              </li>
+                            )}
                           {!programdetails.is_sponsored &&
                             programdetails?.mentee_join_status !==
-                              "program_join_request_accepted" && (
+                            "program_join_request_accepted" && (
                               <li
                                 className="flex justify-between text-[12px]"
                                 style={{
@@ -2886,7 +2892,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
               {["inprogress"].includes(programdetails?.status) &&
                 (role === "mentee" ||
                   programdetails?.created_by ===
-                    userdetails?.data?.user_id) && (
+                  userdetails?.data?.user_id) && (
                   <Box>
                     <Accordian
                       title={"Program Notes:"}
@@ -2984,9 +2990,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   {tabs.map((tab) => (
                     <button
                       key={tab.key}
-                      className={`px-12 py-3 text-[12px] ${
-                        activeTab === tab.key ? "tab-active" : "tab"
-                      } `}
+                      className={`px-12 py-3 text-[12px] ${activeTab === tab.key ? "tab-active" : "tab"
+                        } `}
                       onClick={() => handleTab(tab.key)}
                     >
                       {tab.name}
@@ -2996,9 +3001,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
 
                 <div className="tab-content px-6 pt-10 text-[12px]">
                   <div
-                    className={`about-programs ${
-                      activeTab === "about_program" ? "block" : "hidden"
-                    }`}
+                    className={`about-programs ${activeTab === "about_program" ? "block" : "hidden"
+                      }`}
                   >
                     {Array.isArray(programdetails?.goals) &&
                       programdetails?.goals?.length > 0 && (
@@ -3095,11 +3099,10 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                           {participatedTabs.map((participatedTab) => (
                             <li className="me-2" key={participatedTab.key}>
                               <p
-                                className={`inline-block p-4 border-b-2 cursor-pointer border-transparent rounded-t-lg ${
-                                  certificateActiveTab === participatedTab.key
-                                    ? "active  text-blue-600 border-blue-500"
-                                    : ""
-                                } `}
+                                className={`inline-block p-4 border-b-2 cursor-pointer border-transparent rounded-t-lg ${certificateActiveTab === participatedTab.key
+                                  ? "active  text-blue-600 border-blue-500"
+                                  : ""
+                                  } `}
                                 onClick={() =>
                                   handleCerificateTab(participatedTab.key)
                                 }
@@ -3113,11 +3116,10 @@ export default function ProgramDetails({ setProgramDetailsId }) {
 
                       {participatedTabs.map((participatedTab) => (
                         <div
-                          className={`certificate-tab-content flex items-center justify-between relative ${
-                            participatedTab.key === certificateActiveTab
-                              ? "block"
-                              : "hidden"
-                          }`}
+                          className={`certificate-tab-content flex items-center justify-between relative ${participatedTab.key === certificateActiveTab
+                            ? "block"
+                            : "hidden"
+                            }`}
                           key={participatedTab.key}
                         >
                           <div className="px-9 py-16 w-4/6 leading-6">
@@ -3146,9 +3148,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   </div> */}
 
                   <div
-                    className={`program-outcomes ${
-                      activeTab === "program_testimonials" ? "block" : "hidden"
-                    }`}
+                    className={`program-outcomes ${activeTab === "program_testimonials" ? "block" : "hidden"
+                      }`}
                   >
                     <div className="testimonials bg-white px-5 py-7">
                       {/* <div className='flex justify-end'>
@@ -3240,6 +3241,31 @@ export default function ProgramDetails({ setProgramDetailsId }) {
         cancelPopupConfirmation={cancelPopupConfirmation}
         setCancelPopupConfirmation={setCancelPopupConfirmation}
       />
+{console.log("selectedLM ===>", selectedLM)}
+      <CustomModal open={selectedLM?.bool}
+        handleClose={() => setSelectedLM({
+          bool: false,
+          data: ""
+        })}
+        width="lg" content={
+          <Box className={"!border !border-background-primary-main rounded-[10px]"}>
+            <Stack direction={"row"} alignItems={"center"} justifyContent={"space-between"} className="!bg-background-primary-light px-4 py-4">
+              <Typography className="!text-font-secondary-black !font-bold !text-[20px]">{selectedLM?.data?.name}</Typography>
+              <div onClick={() => setSelectedLM({
+                bool: false,
+                data: ""
+              })} className="cursor-pointer">
+                <img src={CancelIcon} alt="CancelIcon" />
+              </div>
+
+            </Stack>
+            <Box className="px-4 py-4">
+              <a className="!text-font-secondary-black" href={selectedLM?.data?.file_url}>
+                {selectedLM?.data?.file_name}
+              </a>
+            </Box>
+          </Box>
+        } />
     </div>
   );
 }
