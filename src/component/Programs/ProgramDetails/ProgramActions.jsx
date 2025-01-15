@@ -13,6 +13,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "../../../shared";
 import { Button as MuiButton } from "@mui/material";
 import { useJoinAllProgramMutation } from "../../../features/program/programApi.services";
+import { useSelector } from "react-redux";
 
 const ProgramActions = ({
   role,
@@ -28,6 +29,10 @@ const ProgramActions = ({
   setOpenPopup,
   setCancelPopup,
 }) => {
+  const userInfo = useSelector((state) => state.userInfo);
+
+  console.log("userInfo from actionsbtn ==>", userInfo)
+  console.log("programdetails +++==>", programdetails)
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [joinAllProgram, { isLoading, isSuccess, isError }] =
@@ -527,7 +532,8 @@ const ProgramActions = ({
 
     if (
       programdetails.status === "yettojoin" &&
-      !["new", "pending"].includes(programdetails?.request_data?.status)
+      !["new", "pending"].includes(programdetails?.request_data?.status) && 
+      programdetails?.created_by === userInfo?.data?.user_id
     ) {
       return (
         <div className="py-9">
@@ -578,13 +584,14 @@ const ProgramActions = ({
   const renderCommonStatus = () => {
     // Start Program button
     if (
-      (programdetails.status === programActionStatus.yettostart &&
+      ((programdetails.status === programActionStatus.yettostart &&
         !requestId &&
         (role === "mentor" || role === "admin")) ||
       (type === "admin_assign_program" &&
         requestId &&
         programdetails.status === programActionStatus.yettostart &&
-        (role === "mentor" || role === "admin"))
+        (role === "mentor" || role === "admin"))) && 
+        programdetails?.created_by === userInfo?.data?.user_id
     ) {
       return (
         <div className="my-8">
@@ -605,7 +612,8 @@ const ProgramActions = ({
       if (
         programdetails?.program_mode === "virtual_meeting" &&
         (role !== "mentee" ||
-          (role === "mentee" && programdetails?.program_joined_status))
+          (role === "mentee" && programdetails?.program_joined_status)) &&
+          ((role === "admin" && programdetails?.created_by === userInfo?.data?.user_id) || (role === "mentee" || role === "mentor"))
       ) {
         return (
           <div className="my-8">
