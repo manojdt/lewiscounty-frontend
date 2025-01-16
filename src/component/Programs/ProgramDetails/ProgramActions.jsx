@@ -414,7 +414,7 @@ const ProgramActions = ({
       <div className="py-9">
         {menteeProgramStatus[programdetails.mentee_join_status] ? (
           <>
-          {["new", "pending"].includes(
+          {["new", "pending", "rejected"].includes(
                   programdetails?.request_data?.status
                 ) && (
                   <button
