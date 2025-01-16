@@ -172,7 +172,7 @@ export default function AllRequest() {
   const handleChange = (newAlignment) => () => {
     setSelectedTab(newAlignment);
     // handleResetTab()
-    navigate(`/all-request?type=program_request`);
+    navigate((newAlignment === "admin" && role === "admin") ? `/all-request?type=testimonial_request` : `/all-request?type=program_request`);
   };
 
   const {
@@ -253,6 +253,10 @@ export default function AllRequest() {
     {
       name: 'Mentees Request',
       value: 'mentees',
+    },
+    {
+      name: 'My Request',
+      value: 'admin',
     },
   ];
 
@@ -1695,25 +1699,22 @@ export default function AllRequest() {
                     />
                     View
                   </MenuItem>
-                  <MenuItem
-                    onClick={() =>
-                      // navigate(`/certificate_mentees/${seletedItem.program}`, {
-                      //     state: {
-                      //         rowId: seletedItem?.id,
-                      //         status: seletedItem?.status
-                      //     }
-                      // })
-                      handleCancelCeritificateRequest()
-                    }
-                    className='!text-[12px]'
-                  >
-                    <img
-                      src={CloseCircle}
-                      alt='CancelIcon'
-                      className='pr-3 w-[27px]'
-                    />
-                    Cancel Request
-                  </MenuItem>
+                  {
+                    ["new", "pending"].includes(seletedItem.status) && 
+                    <MenuItem
+                      onClick={() =>
+                        handleCancelCeritificateRequest()
+                      }
+                      className='!text-[12px]'
+                    >
+                      <img
+                        src={CloseCircle}
+                        alt='CancelIcon'
+                        className='pr-3 w-[27px]'
+                      />
+                      Cancel Request
+                    </MenuItem>
+                  }
                 </>
               )}
             </Menu>
@@ -1794,8 +1795,8 @@ export default function AllRequest() {
                     />
                     View
                   </MenuItem>
-                  {(seletedItem.status === 'new' ||
-                    seletedItem.status === 'pending') && (
+                  {((seletedItem.status === 'new' ||
+                    seletedItem.status === 'pending') && seletedItem?.is_active) && (
                     <>
                       <MenuItem
                         onClick={handleAcceptCeritificateRequest}
@@ -1823,6 +1824,25 @@ export default function AllRequest() {
                   )}
                 </>
               )}
+              {
+                role === "mentor" && (
+                  <MenuItem
+                    onClick={() =>
+                      navigate(
+                        `/testimonialView/${seletedItem.request_id}?breadcrumbsType=${requestPageBreadcrumbs.testimonial_request}`
+                      )
+                    }
+                    className='!text-[12px]'
+                  >
+                    <img
+                      src={ViewIcon}
+                      alt='AcceptIcon'
+                      className='pr-3 w-[27px]'
+                    />
+                    View
+                  </MenuItem>
+                )
+              }
             </Menu>
           </>
         );
@@ -1924,8 +1944,6 @@ export default function AllRequest() {
     );
   };
 
-  console.log('filterStatus', filterStatus);
-  console.log('actionTab', actionTab);
 
   const handleNewGoalRequestApi = () => {
     let payload = {
@@ -2011,7 +2029,7 @@ export default function AllRequest() {
         limit: paginationModel?.pageSize,
         // request_type: "testimonial",
         ...(role === 'admin' && {
-          request_by: selectedTab === 'mentees' ? 'mentee' : 'mentor',
+          request_by: selectedTab === "admin" ? "admin" : selectedTab === 'mentees' ? 'mentee' : 'mentor',
         }),
         ...(filter.search !== '' && { search: filter.search }),
         // ...(filter.filter_by !== ""
@@ -2118,7 +2136,6 @@ export default function AllRequest() {
     setCategoryInfo({ search: e.target.value, list: catList });
   };
 
-  console.log('selectedddddTab', selectedTab);
 
   useEffect(() => {
     if (selectedRequestedtype && role !== '' && !userInfo.loading) {
@@ -2126,7 +2143,6 @@ export default function AllRequest() {
       const requestTabDetails = RequestStatusArray.find(
         (request) => request.key === tab
       );
-      console.log('king cobra', RequestStatus.programRequest.key);
 
       let tableDetails = { ...activeTableDetails };
       let actionFilter = [];

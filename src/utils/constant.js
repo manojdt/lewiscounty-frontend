@@ -1123,6 +1123,13 @@ export const adminRequestOverview = [
     status: RequestStatus.programRequest.key,
     for: ['mentor'],
   },
+  {
+    name: 'Testimonial Requests',
+    key: RequestStatus.testimonicalRequest,
+    count: 0,
+    status: RequestStatus.testimonicalRequest.key,
+    for: ['admin'],
+  },
 ];
 
 export const allowedImagesTypes = ['png', 'jpeg', 'jpg'];

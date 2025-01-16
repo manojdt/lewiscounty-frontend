@@ -251,13 +251,13 @@ useEffect(() => {
                         btnName="Close"
                         btnCls='!border !border-[#18283D] !text-[#18283D]'
                         onClick={() => navigate(-1)} />
-                    {(role === "admin" && testimonialData?.status === "new") && <Button
+                    {(role === "admin" && testimonialData?.status === "new" && testimonialData?.is_active) && <Button
                         btnType='button'
                         btnCategory='secondary'
                         btnName="Reject"
                         btnCls='!border !border-[#FFE7E7] !text-[#E0382D] !bg-[#FFE7E7]'
                         onClick={() => handleOpenPopup("cancel")} />}
-                    {(role === "admin" && testimonialData?.status === "new") && <Button
+                    {(role === "admin" && testimonialData?.status === "new" && testimonialData?.is_active) && <Button
                         btnType='button'
                         btnCategory='primary'
                         btnName="Accept"
