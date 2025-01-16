@@ -1116,7 +1116,7 @@ export default function AllRequest() {
                   )}
                 </>
               )}
-              {role === "mentee" && (
+              {(role === "mentee" && ["new", "pending", "accept"].includes(seletedItem.status)) && (
                 <MenuItem
                   onClick={() => handleCancelGoalRequest()}
                   className="!text-[12px]"
