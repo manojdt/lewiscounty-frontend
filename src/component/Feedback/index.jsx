@@ -284,7 +284,7 @@ export default function Feedback() {
                                 <img src={CommentIcon} alt='CommentIcon' />
                                 <p>Comment({activePostInfo.comment_count})</p>
                               </div>
-                              <div
+                              {/* <div
                                 className='count-content'
                                 style={{
                                   background: "rgba(182, 249, 255, 1)",
@@ -302,7 +302,7 @@ export default function Feedback() {
                                     : "0"}
                                   )
                                 </p>
-                              </div>
+                              </div> */}
                             </div>
                             <div className='comments-section'>
                               {activePostInfo.comments &&
@@ -352,7 +352,7 @@ export default function Feedback() {
                                           <img src={LikeIcon} alt='likeicon' />
                                           <p>Like({comment.like_count})</p>
                                         </div>
-                                        <div
+                                        {/* <div
                                           className='count-content'
                                           style={{
                                             background:
@@ -365,7 +365,7 @@ export default function Feedback() {
                                             alt='CommentIcon'
                                           />
                                           <p>Replies({comment.reply_count})</p>
-                                        </div>
+                                        </div> */}
                                       </div>
 
                                       {activePostComments.commentId ===
