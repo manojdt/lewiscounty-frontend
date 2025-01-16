@@ -13,6 +13,7 @@ import DataTable from '../../shared/DataGrid';
 import { goalDataStatus, goalStatusColor } from '../../utils/constant';
 import dayjs from 'dayjs';
 import moment from 'moment';
+import { requestPageBreadcrumbs } from '../Breadcrumbs/BreadcrumbsCommonData';
 
 export default function MenteeGoals() {
     const [anchorEl, setAnchorEl] = useState(null);
@@ -116,7 +117,7 @@ export default function MenteeGoals() {
                         }}
                     >
                         <MenuItem onClick={(e) => {
-                            navigate(`/mentor-view-mentee-goal/${seletedItem.id}`);
+                            navigate(`/mentor-view-mentee-goal/${seletedItem.id}?breadcrumbsType=${requestPageBreadcrumbs.menteeGoalViewMentor}`);
                         }
                         } className='!text-[12px]'>
                             <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />

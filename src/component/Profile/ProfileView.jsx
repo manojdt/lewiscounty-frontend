@@ -51,7 +51,7 @@ import { requestStatus } from '../../utils/constant';
 import { useForm } from 'react-hook-form';
 import { CancelPopup } from '../Mentor/Task/cancelPopup';
 import { updateProfile } from '../../services/profile';
-import { admin_menteeMember, admin_mentorMember, request_join, request_memberJoin, requestPageBreadcrumbs } from '../Breadcrumbs/BreadcrumbsCommonData';
+import { admin_menteeMember, admin_mentorMember, myMneteePage, request_join, request_memberJoin, requestPageBreadcrumbs } from '../Breadcrumbs/BreadcrumbsCommonData';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 
 export default function ProfileView() {
@@ -525,9 +525,13 @@ export default function ProfileView() {
     const admin_memberMnetee=admin_menteeMember()
     const admin_approvedreport=request_join()
     const admin_request=request_memberJoin()
+    const myMentee=myMneteePage()
     switch (key) {
       case requestPageBreadcrumbs.member_join_request:
         setBreadcrumbsArray(admin_request)
+        break;
+      case requestPageBreadcrumbs.myMentee:
+        setBreadcrumbsArray(myMentee);
         break;
       case requestPageBreadcrumbs.program_join_request_admin:
         setBreadcrumbsArray(admin_approvedreport)
@@ -931,11 +935,12 @@ useEffect(() => {
           </div>
         </div>
       </Backdrop> */}
+      <div className='pb-3'>
 
-      <div className='flex justify-between items-center mb-8'>
-        {/* <div className='text-color font-medium'>My {pageType} Profile</div> */}
-        <div className='text-color font-medium !text-[20px]'>Profile</div>
+      {(role === 'admin'||role==="mentor") && <Breadcrumbs items={breadcrumbsArray} />} 
       </div>
+
+      
 
       <div
         className='profile-content py-8 px-14'
@@ -947,8 +952,10 @@ useEffect(() => {
         {/* <div className='flex justify-between items-center mb-8'>
           <div className='text-color font-medium'>Profile Picture</div>
         </div> */}
-        {role === 'admin' && <Breadcrumbs items={breadcrumbsArray} />}
-
+<div className='mb-4'>
+        {/* <div className='text-color font-medium'>My {pageType} Profile</div> */}
+        <div className='text-color font-medium !text-[20px]'>Profile</div>
+      </div>
         <div className='flex justify-between items-center'>
           <div className='py-4 relative w-[12%]'>
             <div className='upload-profile'>

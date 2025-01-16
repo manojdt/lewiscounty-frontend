@@ -20,7 +20,7 @@ import { updateLocalRequest, updateReportRequest } from "../../services/request"
 import { CancelPopup } from "../Mentor/Task/cancelPopup";
 import { Typography } from "@mui/material";
 import CustomAccordian from "../../shared/CustomAccordian/CustomAccordian";
-import { admin_Approvedreport, admin_Canceledreport, admin_report, request_report, requestPageBreadcrumbs } from "../Breadcrumbs/BreadcrumbsCommonData";
+import { admin_Approvedreport, admin_Canceledreport, admin_report, mentor_allreport, mentor_Completedreport, mentor_Draftreport, mentor_Newreport, mentor_Pendingreport, mentor_Rejectedreport, request_report, requestPageBreadcrumbs } from "../Breadcrumbs/BreadcrumbsCommonData";
 import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
 
 const ViewReport = () => {
@@ -126,34 +126,60 @@ const ViewReport = () => {
     });
   };
    const handleBreadcrumbs = (key) => {
-      const admin_repor=admin_report(reportDetails.name)
-      const admin_approvedreport=admin_Approvedreport(reportDetails.name)
-      const admin_canceledreport=admin_Canceledreport(reportDetails.name)
-      const admin_request=request_report(reportDetails.name)
-      switch (key) {
-        case requestPageBreadcrumbs.report_request:
-          setBreadcrumbsArray(admin_request)
-          break;
-        case requestPageBreadcrumbs.adminApproveReportTab:
-          setBreadcrumbsArray(admin_approvedreport)
-          break;
-          case requestPageBreadcrumbs.adminCancelReportTab:
-          setBreadcrumbsArray(admin_canceledreport)
-          break;
-          case requestPageBreadcrumbs.adminReportTab:
-          setBreadcrumbsArray(admin_repor)
-          break;
-        case "discussion":
-          break;
-        default:
-          break;
-      }
-    };
+     const admin_repor = admin_report(reportDetails.name);
+     const admin_approvedreport = admin_Approvedreport(reportDetails.name);
+     const admin_canceledreport = admin_Canceledreport(reportDetails.name);
+     const admin_request = request_report(reportDetails.name);
+     const mentee_all = mentor_allreport(reportDetails.name);
+     const mentee_new = mentor_Newreport(reportDetails.name);
+     const mentee_pending = mentor_Pendingreport(reportDetails.name);
+     const mentee_completed = mentor_Completedreport(reportDetails.name);
+     const mentee_rejected = mentor_Rejectedreport(reportDetails.name);
+     const mentee_draft = mentor_Draftreport(reportDetails.name);
+console.log(key,"key")
+     switch (key) {
+      case requestPageBreadcrumbs.menteeAllReport:
+        setBreadcrumbsArray(mentee_all);
+        break;
+      case requestPageBreadcrumbs.menteeNewReport:
+        setBreadcrumbsArray(mentee_new);
+        break;
+      case requestPageBreadcrumbs.menteePendingReport:
+        setBreadcrumbsArray(mentee_pending);
+        break;
+      case requestPageBreadcrumbs.menteeCompletedReport:
+        setBreadcrumbsArray(mentee_completed);
+        break;
+      case requestPageBreadcrumbs.menteeRejectedReport:
+        setBreadcrumbsArray(mentee_rejected);
+        break;
+      case requestPageBreadcrumbs.menteeDraftReport:
+        setBreadcrumbsArray(mentee_draft);
+        break;
+       case requestPageBreadcrumbs.report_request:
+         setBreadcrumbsArray(admin_request);
+         break;
+       case requestPageBreadcrumbs.adminApproveReportTab:
+         setBreadcrumbsArray(admin_approvedreport);
+         break;
+       case requestPageBreadcrumbs.adminCancelReportTab:
+         setBreadcrumbsArray(admin_canceledreport);
+         break;
+    
+       case "discussion":
+         break;
+       default:
+         break;
+     }
+   };
   useEffect(() => {
     if(breadcrumbsType&&reportDetails.name){
     handleBreadcrumbs(breadcrumbsType)
    }
    }, [breadcrumbsType,reportDetails])	
+  useEffect(() => {
+   console.log(breadcrumbsArray,"selectedRequestedTab")
+   }, [breadcrumbsArray])	
   return (
     <div className="px-9 py-9">
       <Backdrop
