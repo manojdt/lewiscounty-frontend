@@ -789,14 +789,8 @@ export default function AllRequest() {
                 <MenuItem
                   onClick={(e) => {
                     const requestQuery = `&request_id=${seletedItem.id}`;
-                    const tabQuery =
-                      selectedTab === "mentees"
-                        ? `&breadcrumbsType=${requestPageBreadcrumbs.program_mentee_cancel}`
-                        : `&breadcrumbsType=${tabQuertyData(role, actionTab)}`;
-                    const tabQueryMentor = `breadcrumbsType=${tabQuertyDataMentor(
-                      role,
-                      actionTab
-                    )}`;
+                    const tabQuery = selectedTab==="mentees"?`&breadcrumbsType=${requestPageBreadcrumbs.program_mentee_cancel}`:`&breadcrumbsType=${tabQuertyData(role,actionTab)}`;
+                    const tabQueryMentor =selectedTab==="mentees"?`&breadcrumbsType=${requestPageBreadcrumbs.program_mentee_cancel}`: `breadcrumbsType=${tabQuertyDataMentor(role,actionTab)}`;
                     const url =
                       (role === "mentor" || role === "admin") &&
                       actionTab === "program_join"

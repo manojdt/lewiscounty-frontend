@@ -1907,7 +1907,7 @@ export const ProgramInformationFields = [
     options: [
       {
         key: "physical_location",
-        value: "Physical Loction",
+        value: "Physical Location",
       },
       {
         key: "virtual_meeting",
