@@ -3,7 +3,6 @@ import { useLocation, useNavigate, Link } from 'react-router-dom';
 
 const Breadcrumbs = ({ items }) => {
   const navigate = useNavigate();
-  console.log(items,items.path,"items")
   return (
       <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
         {items.map((item, index) => (
