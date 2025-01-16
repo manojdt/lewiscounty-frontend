@@ -4,6 +4,7 @@ import {
   useSearchParams,
   useParams,
   useLocation,
+  Link,
 } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -2299,6 +2300,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
 
                       <span>Instructor :</span>
                       {role !== "mentor" ? (
+                         <Link to={`/mentor-details/${programdetails?.created_by}`} >
+
                         <span
                           style={{
                             color: "rgba(29, 91, 191, 1)",
@@ -2309,10 +2312,14 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                         >
                           {programdetails?.mentor_name}
                         </span>
+                         </Link>
                       ) : (
+                        <Link to={`/mentor-details/${programdetails?.created_by}`} >
+
                         <span style={{ color: "rgba(29, 91, 191, 1)" }}>
                           {programdetails?.mentor_name}
                         </span>
+                        </Link>
                       )}
                     </div>
                   </div>
@@ -3113,7 +3120,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                 key={goal.id}
                                 className={`px-6 py-3 text-[12px] bg-gray-200 text-black rounded-full`}
                                 onClick={() =>
-                                  navigate(`/view-goal/${goal.id}`)
+                                  navigate(`/view-goal/${goal.id}?breadcrumbsType=program_goal_view`)
                                 }
                               >
                                 {goal.description?.substring(0, 10)}

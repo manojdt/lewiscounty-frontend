@@ -565,3 +565,15 @@ export const tabQuertyDataMentor = (role, tab) => {
     return requestPageBreadcrumbs[tab];
   }
 };
+
+export const programProfileBreadCrumb = () => {
+  return [
+    {
+      label: `Program`,
+      path: `/programs`,
+    },
+    {
+      label: `View Mentee Profile`,
+    },
+  ];
+};
