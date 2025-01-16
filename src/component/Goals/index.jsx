@@ -38,6 +38,7 @@ import { Button } from '../../shared';
 import StartIcon from "../../assets/icons/startIcon.svg"
 import TickCircleIcon from "../../assets/icons/tickCircle.svg"
 import moment from 'moment';
+import { requestPageBreadcrumbs } from '../Breadcrumbs/BreadcrumbsCommonData';
 
 const Goals = () => {
     const navigate = useNavigate()
@@ -45,6 +46,8 @@ const Goals = () => {
     const role = userInfo.data.role
     const [searchParams] = useSearchParams();
     const filterType = searchParams.get("type") ?? "";
+    const adminTabType = searchParams.get("adminTabType") ?? "";
+    const mentortab = searchParams.get("mentortab") ?? "";
     const [anchorEl, setAnchorEl] = useState(null);
     const [requestEl, setRequestEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -168,6 +171,16 @@ const Goals = () => {
             setCreatedBy("mentor")
         }
     }, [role])
+    React.useEffect(() => {
+        if (role === "mentor"&&mentortab) {
+            setRequestTab('mentee-goals')
+        }
+    }, [role,mentortab])
+    // React.useEffect(() => {
+    //     if (role === "admin"&&adminTabType) {
+    //         handleViewTab(adminTabType)
+    //     }
+    // }, [role,adminTabType])
 
     const handleClose = () => {
         setAnchorEl(null);
@@ -356,7 +369,8 @@ const Goals = () => {
                         }
 
                         <MenuItem onClick={(e) => {
-                            navigate(`/view-goal/${seletedItem.id}`);
+                             const admintype=role==="admin"?`&adminTabType=${adminTab}`:""
+                            navigate(`/view-goal/${seletedItem.id}?breadcrumbsType=${seletedItem.status}${admintype}`);
                         }
                         } className='!text-[12px]'>
                             <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
@@ -526,12 +540,13 @@ const Goals = () => {
                         }}
                     >
                         <MenuItem onClick={(e) => {
+                            const admintype=role==="admin"?`&adminTabType=${adminTab}`:""
                             if(role==="admin"){
 
-                                navigate(`/view-goal/${seletedItem.id}?requestId=${seletedItem?.goal_request_id}`);
+                                navigate(`/view-goal/${seletedItem.id}?requestId=${seletedItem?.goal_request_id}&breadcrumbsType=${requestPageBreadcrumbs.goalHistory}${admintype}`);
                             }else{
 
-                                navigate(`/view-goal/${seletedItem.id}`);
+                                navigate(`/view-goal/${seletedItem.id}?breadcrumbsType=${requestPageBreadcrumbs.goalHistory}${admintype}`);
                             }
                         }
                         } className='!text-[12px]'>

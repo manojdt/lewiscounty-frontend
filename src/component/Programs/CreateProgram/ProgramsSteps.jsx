@@ -28,6 +28,7 @@ import CustomDateTimePicker from "../../../shared/CustomDateTimePicker/MuiDateTi
 import moment from "moment";
 import DeleteIconRounded from "../../../assets/icons/delete-icon.svg";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import { user } from "../../../utils/constant";
 
 const ProgramSteps = ({
   stepFields,
@@ -44,6 +45,8 @@ const ProgramSteps = ({
   members,
 }) => {
   const params = useParams();
+  const { admin, mentor } = user;
+
   const [currentField, setCurrentField] = useState();
   const [selectedRows, setSelectedRows] = useState([]);
 
@@ -58,6 +61,7 @@ const ProgramSteps = ({
     reset,
     getValues,
     setValue,
+    setError,
     watch,
     control,
   } = useFormContext();
@@ -272,6 +276,33 @@ const ProgramSteps = ({
     }
   };
 
+  // const handleDateFieldError = (fieldName) => (error) => {
+  //   if (error) {
+  //     let errorMessage = "";
+  //     switch (error) {
+  //       case "invalidDate":
+  //         errorMessage = "Invalid date format";
+  //         break;
+  //       case "minDate":
+  //         errorMessage =
+  //           fieldName === "start_date"
+  //             ? "Date cannot be in the past"
+  //             : "End date must be after start date";
+  //         break;
+  //       case "minTime":
+  //         errorMessage = "Please select a valid time";
+  //         break;
+  //       default:
+  //         errorMessage = "Invalid date/time";
+  //     }
+  //     setValue(fieldName, null);
+  //     setError(fieldName, {
+  //       type: "manual",
+  //       message: errorMessage,
+  //     });
+  //   }
+  // };
+
   return (
     <div>
       <div className="flex flex-wrap gap-4">
@@ -297,16 +328,18 @@ const ProgramSteps = ({
           }
 
           const disableFields =
-            params?.id && field.name === "program_name" && role === "mentor";
+            params?.id && field.name === "program_name" && role === mentor;
 
           const disableSelectFields =
             params?.id &&
             (field.name === "course_level" || field.name === "category") &&
-            role === "mentor";
-          const disableDateFields =(fieldName)=>
+            role === mentor;
+          const disableDateFields = (fieldName) =>
             params?.id &&
             (fieldName === "start_date" || fieldName === "end_date") &&
-            role === "mentor";
+            role === mentor;
+          const disableRecurringProgram =
+            params?.id && field.name === "recurring_program" && role === mentor;
           return (
             <div
               className={`relative mb-6  ${
@@ -348,6 +381,7 @@ const ProgramSteps = ({
                           <FormControlLabel
                             key={option.key}
                             value={option.key}
+                            disabled={disableRecurringProgram}
                             control={
                               <Radio
                                 checked={
@@ -402,7 +436,6 @@ const ProgramSteps = ({
                   <div
                     className="input-bg h-[60px] w-full mt-2 flex items-center text-[12px] gap-2 px-6"
                     style={{ borderRadius: "3px" }}
-                    // onClick={() => handleAction(field.name)}
                   >
                     {(() => {
                       // Get the current field value from watch
@@ -411,12 +444,6 @@ const ProgramSteps = ({
                       if (!fieldValue) {
                         return null;
                       }
-
-                      // if (
-                      //   field.name === "goals" ||
-                      //   field.name === "certifications"||
-                      // ) {
-                      // Handle goals and equipments fields
                       if (Array.isArray(fieldValue)) {
                         return (
                           <>
@@ -473,49 +500,6 @@ const ProgramSteps = ({
                           </>
                         );
                       }
-                      // } else {
-                      //   // Handle other popup-input fields
-                      //   if (Array.isArray(fieldValue)) {
-                      //     return (
-                      //       <>
-                      //         {fieldValue.slice(0, 6).map((item, index) => (
-                      //           <p
-                      //             key={index}
-                      //             className="flex items-center gap-1"
-                      //           >
-                      //             <span
-                      //               className="flex items-center px-3 py-3"
-                      //               style={{
-                      //                 background: "rgba(223, 237, 255, 1)",
-                      //                 borderRadius: "50%",
-                      //               }}
-                      //             ></span>
-                      //             {item.name ||
-                      //               `${item.first_name || ""} ${
-                      //                 item.last_name || ""
-                      //               }`.trim() ||
-                      //               item.full_name ||
-                      //               item}
-                      //           </p>
-                      //         ))}
-                      //         {fieldValue.length > 6 && (
-                      //           <p className="flex items-center gap-1">
-                      //             <span
-                      //               className="text-white flex items-center px-2 py-1"
-                      //               style={{
-                      //                 background: "rgb(29, 91, 191)",
-                      //                 borderRadius: "50%",
-                      //               }}
-                      //             >
-                      //               +{fieldValue.length - 6}
-                      //             </span>
-                      //             Others
-                      //           </p>
-                      //         )}
-                      //       </>
-                      //     );
-                      //   }
-                      // }
                     })()}
                   </div>
                   <input
@@ -566,7 +550,7 @@ const ProgramSteps = ({
                           // Handle special case for environment field
                           if (field.name === "environment") {
                             setToggleRole(
-                              e.target.value === "Own" ? "mentor" : "admin"
+                              e.target.value === "Own" ? mentor : admin
                             );
                             setCurrent(e.target.value);
                           }
@@ -936,6 +920,7 @@ const ProgramSteps = ({
               ) : field.type === "date" ? (
                 <div className="relative">
                   <CustomDateTimePicker
+                    // onError={handleDateFieldError(field.name)}
                     disabled={disableDateFields(field.name)}
                     {...register(field?.name, {
                       required: `${field?.label} date is required`,
@@ -953,13 +938,18 @@ const ProgramSteps = ({
                     }}
                     {...(field.name === "start_date"
                       ? {
-                          minDate: moment(new Date()), // Convert to moment object
+                          minDate: moment(new Date()),
                         }
                       : {})}
                     {...(field.name === "end_date"
                       ? {
                           minDate: getValues("start_date")
-                            ? moment(getValues("start_date")) // Convert to moment object
+                            ? moment(getValues("start_date"))
+                            : null,
+                          minDateTime: getValues("start_date")
+                            ? moment(getValues("start_date"))
+                                .add(1, "hour") // Add one hour to start_date time
+                                .startOf("hour") // Set to the start of that hour
                             : null,
                         }
                       : {})}
@@ -1118,7 +1108,9 @@ const ProgramSteps = ({
                                   {nestedRecField?.label}
                                 </label>
                                 <CustomDateTimePicker
-                                disabled={disableDateFields(nestedRecField.name)}
+                                  disabled={disableDateFields(
+                                    nestedRecField.name
+                                  )}
                                   {...register(
                                     `recurring_dates.${index}.${nestedRecField?.name}`,
                                     {
@@ -1228,7 +1220,7 @@ const ProgramSteps = ({
         modalOpen={!!currentField}
         modalClose={() => setCurrentField("")}
         noheader
-      >       
+      >
         <DataTable
           showToolbar={true}
           disableMultipleSelection={true}

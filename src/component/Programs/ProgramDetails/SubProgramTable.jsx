@@ -5,7 +5,12 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import { menteeProgramStatus, pipeUrls } from "../../../utils/constant";
+import {
+  menteeProgramStatus,
+  pipeUrls,
+  programStatusColor,
+  programStatusText,
+} from "../../../utils/constant";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -29,19 +34,14 @@ const columns = [
       return (
         <span
           style={{
-            backgroundColor:
-              status === "yettoapprove" ? "#ffead1" : "rgba(235, 255, 243, 1)",
-            color: status === "yettoapprove" ? "#ffb155" : "#33bc93",
+            backgroundColor: programStatusColor[status]?.bgColor,
+            color: programStatusColor?.[status]?.color,
             padding: "6px 12px",
             fontSize: "0.875rem",
             borderRadius: 4,
           }}
         >
-          {status === "yettoapprove"
-            ? "Pending"
-            : status === "completed"
-            ? "Completed"
-            : "Accepted"}
+          {status === "yettoapprove" ? "Pending" : programStatusText?.[status]}
         </span>
       );
     },
