@@ -237,8 +237,31 @@ const ProgramActions = ({
       );
     }
 
-    // Program approval stage
+    // Launch program button
+    if (programdetails.status === "yettojoin") {
+      return (
+        <div className="py-9">
+          <button
+            className="py-3 px-16 text-white text-[14px] flex items-center"
+            style={{ ...buttonStyles.base, ...buttonStyles.gradient }}
+            onClick={() =>
+              !isLaunchingProgram && handleJoinProgram("program_join")
+            }
+          >
+            {isLaunchingProgram ? "loading..." : "Launch Program"}
+            <span className="pl-8 pt-1">
+              <img
+                style={{ width: "15px", height: "13px" }}
+                src={DoubleArrowIcon}
+                alt="DoubleArrowIcon"
+              />
+            </span>
+          </button>
+        </div>
+      );
+    }
 
+    // Program approval stage
     if (
       programApprovalStage[programdetails.status] &&
       !programdetails?.admin_program
@@ -312,29 +335,7 @@ const ProgramActions = ({
       );
     }
 
-    // Launch program button
-    if (programdetails.status === "yettojoin") {
-      return (
-        <div className="py-9">
-          <button
-            className="py-3 px-16 text-white text-[14px] flex items-center"
-            style={{ ...buttonStyles.base, ...buttonStyles.gradient }}
-            onClick={() =>
-              !isLaunchingProgram && handleJoinProgram("program_join")
-            }
-          >
-            {isLaunchingProgram ? "loading..." : "Launch Program"}
-            <span className="pl-8 pt-1">
-              <img
-                style={{ width: "15px", height: "13px" }}
-                src={DoubleArrowIcon}
-                alt="DoubleArrowIcon"
-              />
-            </span>
-          </button>
-        </div>
-      );
-    }
+    
 
     return null;
   };
