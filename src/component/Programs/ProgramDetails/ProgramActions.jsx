@@ -401,8 +401,19 @@ const ProgramActions = ({
       <div className="py-9">
         {menteeProgramStatus[programdetails.mentee_join_status] ? (
           <>
+          {["new", "pending"].includes(
+                  programdetails?.request_data?.status
+                ) && (
+                  <button
+                    onClick={() => setCancelPopup(true)}
+                    className="border-[2px] border-red-500 rounded-md text-red-500 px-4 py-2 font-semibold text-sm flex items-center"
+                  >
+                    Cancel Request
+                  </button>
+                )}
             {programdetails.mentee_join_status !==
-              menteeProgramStatus.program_join_request_accepted.status && (
+              menteeProgramStatus.program_join_request_accepted.status && 
+              (
               <div className="space-y-4">
                 {searchParams.get("type") !== "program_join" &&
                   !programdetails?.admin_assign_program && (
@@ -430,18 +441,7 @@ const ProgramActions = ({
                         }
                       </span>
                     </button>
-                  )}
-
-                {["new", "pending"].includes(
-                  programdetails?.request_data?.status
-                ) && (
-                  <button
-                    onClick={() => setCancelPopup(true)}
-                    className="border-[2px] border-red-500 rounded-md text-red-500 px-4 py-2 font-semibold text-sm flex items-center"
-                  >
-                    Cancel Request
-                  </button>
-                )}
+                  )}                
               </div>
             )}
           </>

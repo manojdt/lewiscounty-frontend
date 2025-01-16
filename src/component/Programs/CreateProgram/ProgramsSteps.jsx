@@ -392,6 +392,7 @@ const ProgramSteps = ({
                         }}
                         error={!!errors.name}
                         helperText={errors.name?.message}
+                        onWheel={(e) => e.target.blur()}
                       />
                     )}
                   />
@@ -651,6 +652,7 @@ const ProgramSteps = ({
                                             nestedField.name
                                           ]?.message
                                         }
+                                        onWheel={(e) => e.target.blur()}
                                       />
                                     ) : nestedField.type === "textarea" ? (
                                       <TextField
