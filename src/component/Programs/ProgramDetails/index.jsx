@@ -333,6 +333,9 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     await updateProgramStatus({
       id: programdetails?.id,
       status: programActionStatus.completed,
+      ...(programdetails.hasOwnProperty("admin_assign_program") && {
+        is_admin_program: true,
+      }),
     });
   };
 
@@ -348,7 +351,13 @@ export default function ProgramDetails({ setProgramDetailsId }) {
           activity: false,
         });
 
-        navigate(`/program-completion/${programdetails?.id}`);
+        navigate(
+          `/program-completion/${programdetails?.id}${
+            "admin_assign_program" in programdetails
+              ? `?program_create_type=admin_program`
+              : ""
+          }`
+        );
       }, 2000);
       handleClose();
     }
@@ -1975,18 +1984,15 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                       "program_join",
                       "program_reschedule",
                       "program_cancel",
-                    ].includes(typeParams)
-                  ) ||
+                    ].includes(typeParams)) ||
                   (role === "mentee" &&
                     (programdetails.status === programActionStatus.inprogress ||
                       programdetails.mentee_join_status ===
                         programActionStatus.program_join_request_accepted ||
                       programdetails?.program_interest) &&
-                      ![
-                        "program_join",
-                        "program_cancel",
-                      ].includes(typeParams)
-                    )) && (
+                    !["program_join", "program_cancel"].includes(
+                      typeParams
+                    ))) && (
                   <>
                     <div className="cursor-pointer" onClick={handleClick}>
                       <img src={MoreIcon} alt="MoreIcon" />
