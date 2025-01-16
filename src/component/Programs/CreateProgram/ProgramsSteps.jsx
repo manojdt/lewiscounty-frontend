@@ -49,7 +49,7 @@ const ProgramSteps = ({
 
   const [currentField, setCurrentField] = useState();
   const [selectedRows, setSelectedRows] = useState([]);
-
+  const [selectedMentorsByField, setSelectedMentorsByField] = useState({});
   const getRowIdentifier = (row) => {
     return row.id;
   };
@@ -61,11 +61,10 @@ const ProgramSteps = ({
     reset,
     getValues,
     setValue,
-    setError,
     watch,
     control,
   } = useFormContext();
-
+  const formValues = watch();
   const { fields, append, remove } = useFieldArray({
     control,
     name: "sub_programs",
@@ -112,23 +111,18 @@ const ProgramSteps = ({
       setValue(field.name, value);
     }
   };
-  const handleSelectedRow = (newSelectedRows) => {
-    // For mentor_id, allow single selection/deselection
-    // If the new selection is empty or different from current, update it
-    // If clicking the same row again, clear the selection
-    const currentSelection = selectedRows[0];
+  const handleSelectedRow = (newSelectedRows, fieldId) => {
+    const currentSelection = selectedMentorsByField[fieldId]?.[0];
     const newSelection = newSelectedRows[newSelectedRows.length - 1];
 
-    if (!newSelection) {
-      // Handle deselection
-      setSelectedRows([]);
-    } else if (!currentSelection || currentSelection.id !== newSelection.id) {
-      // New selection
-      setSelectedRows([newSelection]);
-    } else {
-      // Clicking the same row again - deselect
-      setSelectedRows([]);
-    }
+    setSelectedMentorsByField((prev) => ({
+      ...prev,
+      [fieldId]: !newSelection
+        ? []
+        : !currentSelection || currentSelection.id !== newSelection.id
+        ? [newSelection]
+        : [],
+    }));
   };
 
   const mentorFooterComponent = ({ selectedRows }) => {
@@ -279,32 +273,73 @@ const ProgramSteps = ({
     }
   };
 
-  // const handleDateFieldError = (fieldName) => (error) => {
-  //   if (error) {
-  //     let errorMessage = "";
-  //     switch (error) {
-  //       case "invalidDate":
-  //         errorMessage = "Invalid date format";
-  //         break;
-  //       case "minDate":
-  //         errorMessage =
-  //           fieldName === "start_date"
-  //             ? "Date cannot be in the past"
-  //             : "End date must be after start date";
-  //         break;
-  //       case "minTime":
-  //         errorMessage = "Please select a valid time";
-  //         break;
-  //       default:
-  //         errorMessage = "Invalid date/time";
-  //     }
-  //     setValue(fieldName, null);
-  //     setError(fieldName, {
-  //       type: "manual",
-  //       message: errorMessage,
-  //     });
-  //   }
-  // };
+  const getDateValidation = (fieldName, index = null) => {
+    return {
+      required: `${fieldName} is required`,
+      validate: {
+        isValid: (value) => !value || moment(value).isValid() || "Invalid date",
+        // futureDate: (value) => {
+        //   if (fieldName === "start_date") {
+        //     return (
+        //       moment(value).isSameOrAfter(moment(), "minute") ||
+        //       "Start date must be in the future"
+        //     );
+        //   }
+        //   return true;
+        // },
+        dateOrder: (value) => {
+          if (fieldName === "end_date") {
+            const startDate =
+              index !== null
+                ? getValues(`sub_programs.${index}.start_date`)
+                : getValues("start_date");
+
+            return (
+              !value ||
+              !startDate ||
+              moment(value).isAfter(moment(startDate)) ||
+              "End date must be after start date"
+            );
+          }
+          return true;
+        },
+        timeOrder: (value) => {
+          if (fieldName === "end_date") {
+            const startDate =
+              index !== null
+                ? getValues(`sub_programs.${index}.start_date`)
+                : getValues("start_date");
+
+            if (
+              value &&
+              startDate &&
+              moment(value).isSame(moment(startDate), "day")
+            ) {
+              return (
+                moment(value).isAfter(moment(startDate)) ||
+                "End time must be after start time on the same day"
+              );
+            }
+          }
+          return true;
+        },
+      },
+    };
+  };
+
+  // Add cleanup for selectedMentorsByField when fields are removed:
+  useEffect(() => {
+    const fieldIds = fields.map((f, i) => `sub_programs.${i}.mentor_id`);
+    setSelectedMentorsByField((prev) => {
+      const newState = {};
+      Object.keys(prev).forEach((key) => {
+        if (fieldIds.includes(key)) {
+          newState[key] = prev[key];
+        }
+      });
+      return newState;
+    });
+  }, [fields.length]);
 
   return (
     <div>
@@ -427,8 +462,8 @@ const ProgramSteps = ({
                             <AttachMoneyIcon />
                           ),
                         }}
-                        error={!!errors.name}
-                        helperText={errors.name?.message}
+                        error={!!errors[field.name]}
+                        helperText={errors[field.name]?.message}
                         onWheel={(e) => e.target.blur()}
                       />
                     )}
@@ -541,39 +576,41 @@ const ProgramSteps = ({
                     control={control}
                     defaultValue=""
                     rules={field.inputRules}
-                    render={({ field: controlledField }) => (
-                      <TextField
-                        select
-                        fullWidth
-                        disabled={disableSelectFields}
-                        value={controlledField.value || ""}
-                        onChange={(e) => {
-                          controlledField.onChange(e);
+                    render={({ field: controlledField }) => {                     
+                      return (
+                        <TextField
+                          select
+                          fullWidth
+                          disabled={disableSelectFields}
+                          value={formValues[field?.name] || ""}
+                          onChange={(e) => {
+                            controlledField.onChange(e);
 
-                          // Handle special case for environment field
-                          if (field.name === "environment") {
-                            setToggleRole(
-                              e.target.value === "Own" ? mentor : admin
-                            );
-                            setCurrent(e.target.value);
-                          }
-                        }}
-                        error={!!errors[field.name]}
-                        helperText={errors[field.name]?.message}
-                      >
-                        <MenuItem value="">
-                          <em>Select</em>
-                        </MenuItem>
-                        {field.options?.map((option, index) => (
-                          <MenuItem
-                            key={option.id || option.key || index}
-                            value={option.id || option.key}
-                          >
-                            {option.value || option.name}
+                            // Handle special case for environment field
+                            if (field.name === "environment") {
+                              setToggleRole(
+                                e.target.value === "Own" ? mentor : admin
+                              );
+                              setCurrent(e.target.value);
+                            }
+                          }}
+                          error={!!errors[field.name]}
+                          helperText={errors[field.name]?.message}
+                        >
+                          <MenuItem value="">
+                            <em>Select</em>
                           </MenuItem>
-                        ))}
-                      </TextField>
-                    )}
+                          {field.options?.map((option, index) => (
+                            <MenuItem
+                              key={option.id || option.key || index}
+                              value={option.id || option.key}
+                            >
+                              {option.value || option.name}
+                            </MenuItem>
+                          ))}
+                        </TextField>
+                      );
+                    }}
                   />
                 </>
               ) : field.name === "sub_programs" ? (
@@ -666,44 +703,10 @@ const ProgramSteps = ({
                                         <CustomDateTimePicker
                                           {...register(
                                             `sub_programs.${index}.${nestedField.name}`,
-                                            {
-                                              required: `${nestedField?.label} date is required`,
-                                              validate: {
-                                                isValid: (value) =>
-                                                  !value ||
-                                                  moment(value).isValid() ||
-                                                  "Invalid date",
-                                                minDate: (value) =>
-                                                  !value ||
-                                                  moment(value).isSameOrAfter(
-                                                    getMinDate(
-                                                      nestedField.name,
-                                                      index,
-                                                      "sub_programs"
-                                                    ),
-                                                    "minute"
-                                                  ) ||
-                                                  `${nestedField?.label} must be after previous cycle's ${nestedField?.label}`,
-                                                maxDate: (value) => {
-                                                  const maxDate = getMaxDate(
-                                                    nestedField.name,
-                                                    index,
-                                                    "sub_programs"
-                                                  );
-                                                  return (
-                                                    !value ||
-                                                    !maxDate ||
-                                                    moment(
-                                                      value
-                                                    ).isSameOrBefore(
-                                                      maxDate,
-                                                      "minute"
-                                                    ) ||
-                                                    `${nestedField?.label} must be before ${nestedField?.label}`
-                                                  );
-                                                },
-                                              },
-                                            }
+                                            getDateValidation(
+                                              nestedField.name,
+                                              index
+                                            )
                                           )}
                                           value={
                                             sub_programs?.[index]?.[
@@ -878,17 +881,6 @@ const ProgramSteps = ({
                                       </div>
                                     )}
                                   </div>
-                                  {errors?.sub_programs?.[index]?.[
-                                    nestedField.name
-                                  ]?.message && (
-                                    <p className="error" role="alert">
-                                      {
-                                        errors.sub_programs[index][
-                                          nestedField.name
-                                        ].message
-                                      }
-                                    </p>
-                                  )}
                                 </div>
                               );
                             })}
@@ -925,9 +917,7 @@ const ProgramSteps = ({
                   <CustomDateTimePicker
                     // onError={handleDateFieldError(field.name)}
                     disabled={disableDateFields(field.name)}
-                    {...register(field?.name, {
-                      required: `${field?.label} date is required`,
-                    })}
+                    {...register(field?.name, getDateValidation(field?.name))}
                     value={
                       getValues(field.name)
                         ? moment(getValues(field.name))
@@ -1117,42 +1107,10 @@ const ProgramSteps = ({
                                   )}
                                   {...register(
                                     `recurring_dates.${index}.${nestedRecField?.name}`,
-                                    {
-                                      required: `${nestedRecField?.label} is required`,
-                                      validate: {
-                                        isValid: (value) =>
-                                          !value ||
-                                          moment(value).isValid() ||
-                                          "Invalid date",
-                                        minDate: (value) =>
-                                          !value ||
-                                          moment(value).isSameOrAfter(
-                                            getMinDate(
-                                              nestedRecField?.name,
-                                              index,
-                                              "recurring_dates"
-                                            ),
-                                            "minute"
-                                          ) ||
-                                          `${nestedRecField?.label} must be after previous cycle's ${nestedRecField?.label}`,
-                                        maxDate: (value) => {
-                                          const maxDate = getMaxDate(
-                                            nestedRecField?.name,
-                                            index,
-                                            "recurring_dates"
-                                          );
-                                          return (
-                                            !value ||
-                                            !maxDate ||
-                                            moment(value).isSameOrBefore(
-                                              maxDate,
-                                              "minute"
-                                            ) ||
-                                            `${nestedRecField?.label} must be before ${nestedRecField?.label}`
-                                          );
-                                        },
-                                      },
-                                    }
+                                    getDateValidation(
+                                      nestedRecField?.name,
+                                      index
+                                    )
                                   )}
                                   value={
                                     recurring_dates?.[index]?.[
@@ -1232,19 +1190,8 @@ const ProgramSteps = ({
           rows={mentor_assign}
           columns={MentorAssignColumns}
           checkboxSelection
-          selectedAllRows={
-            selectedRows.length > 0
-              ? selectedRows
-              : (() => {
-                  const currentValue = getValues(currentField);
-                  if (!currentValue) return [];
-                  const selectedMentor = mentor_assign?.find(
-                    (m) => m.id === currentValue
-                  );
-                  return selectedMentor ? [selectedMentor] : [];
-                })()
-          }
-          handleSelectedRow={handleSelectedRow}
+          selectedAllRows={selectedMentorsByField[currentField] || []}
+          handleSelectedRow={(rows) => handleSelectedRow(rows, currentField)}
           footerAction={() => setCurrentField("")}
           footerComponent={(props) =>
             mentorFooterComponent({ ...props, selectedRows })

@@ -16,14 +16,26 @@ import { useSelector } from "react-redux";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { Star } from "lucide-react";
 import EditIcon from "@mui/icons-material/Edit";
+import moment from "moment/moment";
 
+const dateFormat = "MM/DD/YYYY hh:mm a";
 const columns = [
   { field: "mentor_name", headerName: "Mentor Name", flex: 1 },
   { field: "subprogram", headerName: "Sub program", flex: 1 },
   { field: "program_name", headerName: "Title Name", flex: 1 },
   { field: "description", headerName: "Description", flex: 1.5 },
-  { field: "start_date", headerName: "Start date", flex: 1 },
-  { field: "end_date", headerName: "End date", flex: 1 },
+  {
+    field: "start_date",
+    headerName: "Start date",
+    flex: 1,
+    renderCell: (params) => moment(params.row?.start_date).format(dateFormat),
+  },
+  {
+    field: "end_date",
+    headerName: "End date",
+    flex: 1,
+    renderCell: (params) => moment(params.row?.end_date).format(dateFormat),
+  },
   { field: "acceptedDate", headerName: "Accepted date", flex: 1 },
   {
     field: "status",
@@ -64,7 +76,7 @@ const CourseCard = ({ data, series, handleMenuClick }) => {
     // Pass the full row data including id when calling handleMenuClick
     handleMenuClick("view", data);
   };
-  console.log("data", data);
+
   const isNotLaunch = data?.status === "yettojoin";
   return (
     <div

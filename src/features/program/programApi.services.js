@@ -66,7 +66,7 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
     // Update program
     updateProgramStatus: builder.mutation({
       query: (body) => ({
-        url:  `update_program`,
+        url: `update_program`,
         method: 'POST',
         body,
       }),
@@ -100,8 +100,11 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
 
     // Get all mentors
     getAllMentors: builder.query({
-      query: () =>
-        'members/member-list?role_name=mentor&page=1&limit=100&status=active',
+      query: (params) => ({
+        url:
+          'members/member-list',
+        params
+      }),
     }),
 
     // Get programs by category

@@ -1652,29 +1652,7 @@ export const ProgramInformationFields = [
         },
         width: "width-32",
         for: ["admin"],
-      },
-      // {
-      //   type: 'time',
-      //   name: 'start_time',
-      //   label: 'Start Time',
-      //   placeholder: 'Select Start Time',
-      //   inputRules: {
-      //     required: 'Start Time is required',
-      //   },
-      //   width: 'width-32',
-      //   for: ['admin'],
-      // },
-      // {
-      //   type: 'time',
-      //   name: 'end_time',
-      //   label: 'End Time',
-      //   placeholder: 'Select End Time',
-      //   inputRules: {
-      //     required: 'End Time is required',
-      //   },
-      //   width: 'width-32',
-      //   for: ['admin'],
-      // },
+      },      
       {
         type: "radio",
         name: "flexible_time",
@@ -2135,9 +2113,9 @@ export const AboutProgramFields = [
   {
     type: "input",
     name: "enrollment_fees",
-    label: "Enrollment fees",
+    label: "Fees",
     fieldtype: "number",
-    placeholder: "Enter Enrollment fees",
+    placeholder: "Enter fees",
     inputRules: {
       valueAsNumber: true,
       required: "This field is required",
