@@ -18,7 +18,7 @@ import CalenderIcon from "../../assets/icons/Calender.svg";
 import StarColorIcon from "../../assets/icons/starColor.svg";
 import UploadIcon from "../../assets/images/image_1x.png";
 import DeleteIcon from "../../assets/images/delete_1x.png";
-import { ProgramStatusInCard, user } from "../../utils/constant";
+import { ProgramStatusInCard } from "../../utils/constant";
 import MuiModal from "../Modal";
 import { Button } from "../Button";
 import { updateProgramImage } from "../../services/userprograms";
@@ -28,8 +28,7 @@ import NoProgramImageBg from "../../assets/icons/noProgramImageBg.svg";
 import NoProgramImageIcon from "../../assets/icons/noProgramImageIcon.svg";
 import Balck_Heart_Icon from "../../assets/icons/gray-heart.svg";
 import Crown_Icon from "../../assets/icons/cronwn.svg";
-import { Crown } from "lucide-react";
-import moment from 'moment';
+import moment from "moment";
 
 export default function ProgramCard({
   title,
@@ -327,9 +326,11 @@ export default function ProgramCard({
                   startDate = new Date(currentProgram.start_date)
                     .toISOString()
                     .substring(0, 10)
-                    .split('-');
-                } 
-                const actualStartDate = currentProgram.start_date ? moment(currentProgram.start_date).format("MM-DD-YYYY") : "-"
+                    .split("-");
+                }
+                const actualStartDate = currentProgram.start_date
+                  ? moment(currentProgram.start_date).format("MM-DD-YYYY")
+                  : "-";
                 // startDate.length
                 //   ? `${startDate[2]}/${startDate[1]}/${startDate[0]}`
                 //   : '';
@@ -503,7 +504,12 @@ export default function ProgramCard({
                                       )
                                     ) {
                                       navigate(
-                                        `/update-program/${currentProgram.id}`
+                                        `/update-program/${currentProgram.id}${
+                                          "admin_assign_program" in
+                                          currentProgram
+                                            ? `?program_create_type=admin_program`
+                                            : ""
+                                        }`
                                       );
                                     }
                                   }}

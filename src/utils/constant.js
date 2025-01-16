@@ -771,7 +771,7 @@ export const programFilterUrls = {
   reschedule: `?type=${programActionStatus.reschedule}`,
   cancelled: `?type=${programActionStatus.cancelled}`,
   learning: `?type=${programActionStatus.learning}`,
-  bookmark: '?is_bookmark=true',
+  bookmark: `?type=${programActionStatus.bookmark}`,
   draft: `?type=${programActionStatus.draft}`,
   programAssign: `?type=${programActionStatus.program_assign}`,
   interest: `?type=${programActionStatus.interest}`,
@@ -856,7 +856,7 @@ export const programMenus = (page = 'dashboard') => {
       name: "Upcoming Programs",
       count: 0,
       page: `${pipeUrl}${programFilterUrls.upcoming}`,
-      for: ['mentee', 'mentor'],
+      for: ['mentee'],
       mentorStatus: '',
       menteeStatus: 'upcoming',
       status: programActionStatus.upcoming
@@ -876,8 +876,8 @@ export const programMenus = (page = 'dashboard') => {
       count: 0,
       page: `${pipeUrl}${programFilterUrls.bookmark}`,
       for: ['mentor', 'mentee', 'admin'],
-      mentorStatus: 'is_bookmark',
-      menteeStatus: 'is_bookmark',
+      mentorStatus: programActionStatus.bookmark,
+      menteeStatus: programActionStatus.bookmark,
       status: programActionStatus.bookmark,
     },
     {
@@ -1313,7 +1313,7 @@ export const menteeNotJoinCondition = [
   ...programCancelled,
   ...programCompleted,
   programActionStatus.yettojoin
-  
+
 ];
 
 export const menteeProgramStatus = {
