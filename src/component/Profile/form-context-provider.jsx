@@ -1,19 +1,19 @@
-import React, { useEffect } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 
 const FormContextProvider = ({ children, onSubmit, initialValues }) => {
   const methods = useForm();
 
   useEffect(() => {
     if (Object.keys(initialValues).length) {
-      const name = initialValues?.name?.split(' ');
+      const name = initialValues?.name?.split(" ");
       methods.reset({
         ...initialValues,
-        first_name: initialValues.first_name || '',
-        last_name: initialValues.last_name || '',
+        first_name: initialValues.first_name || "",
+        last_name: initialValues.last_name || "",
         phone_number: initialValues?.phone_number,
-        secondary_phone_number: initialValues?.secondary_phone_number || '',
+        secondary_phone_number: initialValues?.secondary_phone_number || "",
         email: initialValues?.email,
         address: initialValues?.address,
         professional_bio: initialValues?.professional_bio,

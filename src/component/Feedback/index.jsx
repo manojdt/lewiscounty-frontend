@@ -1,25 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState } from "react";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import { useDispatch, useSelector } from "react-redux";
 
-import FeedbackIcon from '../../assets/icons/feedback.svg';
-import CalenderIcon from '../../assets/icons/CalenderIcon.svg';
-import SearchIcon from '../../assets/icons/SearchColor.svg';
-import ChatImage from '../../assets/images/chatimage.png';
-import LikeIcon from '../../assets/icons/like.svg';
-import LikeWhiteIcon from '../../assets/icons/LikeWhite.svg';
-import CommentWhiteIcon from '../../assets/icons/CommentWhite.svg';
-import CommentIcon from '../../assets/icons/feedbackComment.svg';
-import ShareFeedbackIcon from '../../assets/icons/ShareFeedback.svg';
-import ReplyFeedbackIcon from '../../assets/icons/ReplyFeedback.svg';
-import MoreIcon from '../../assets/icons/moreIcon.svg';
-import UserIcon from '../../assets/images/user.jpg';
+import FeedbackIcon from "../../assets/icons/feedback.svg";
+import CalenderIcon from "../../assets/icons/CalenderIcon.svg";
+import SearchIcon from "../../assets/icons/SearchColor.svg";
+import ChatImage from "../../assets/images/chatimage.png";
+import LikeIcon from "../../assets/icons/like.svg";
+import LikeWhiteIcon from "../../assets/icons/LikeWhite.svg";
+import CommentWhiteIcon from "../../assets/icons/CommentWhite.svg";
+import CommentIcon from "../../assets/icons/feedbackComment.svg";
+import ShareFeedbackIcon from "../../assets/icons/ShareFeedback.svg";
+import ReplyFeedbackIcon from "../../assets/icons/ReplyFeedback.svg";
+import MoreIcon from "../../assets/icons/moreIcon.svg";
+import UserIcon from "../../assets/images/user.jpg";
 
-import { getPost, getRecentPosts, getFeedTrack } from '../../services/feeds';
+import { getPost, getRecentPosts, getFeedTrack } from "../../services/feeds";
 
-import { PostList, RecentDiscussion } from '../../mock';
-import ReadableDate from '../../shared/ReadableDateTime';
+import { PostList, RecentDiscussion } from "../../mock";
+import ReadableDate from "../../shared/ReadableDateTime";
 
 export default function Feedback() {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -38,12 +38,6 @@ export default function Feedback() {
   const open = Boolean(anchorEl);
 
   useEffect(() => {
-    console.log('FEEDS', feeds);
-    console.log('recentPosts', recentPosts);
-    console.log('FeedTrack', feedTrack);
-  }, [feeds, recentPosts, feedTrack]);
-
-  useEffect(() => {
     dispatch(getPost());
     dispatch(getRecentPosts());
   }, []);
@@ -51,7 +45,6 @@ export default function Feedback() {
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (activePostInfo) {
-        console.log('activePost', activePostInfo);
         dispatch(getFeedTrack(activePostInfo.id));
       }
     }, 300);
@@ -89,13 +82,13 @@ export default function Feedback() {
       <div
         className='px-3 py-5'
         style={{
-          boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)',
-          borderRadius: '10px',
+          boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.15)",
+          borderRadius: "10px",
         }}
       >
         <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
           <div className='flex w-full gap-5 items-center justify-between'>
-            <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 700 }}>
+            <p style={{ color: "rgba(24, 40, 61, 1)", fontWeight: 700 }}>
               Feedback
             </p>
             {/* <img
@@ -150,8 +143,8 @@ export default function Feedback() {
                 <div
                   className='post-content'
                   style={{
-                    boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)',
-                    borderRadius: '10px',
+                    boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.05)",
+                    borderRadius: "10px",
                   }}
                 >
                   <div className='grid grid-cols-5'>
@@ -167,7 +160,7 @@ export default function Feedback() {
                         feeds.results.map((list, index) => (
                           <div
                             className={`post-info ${
-                              activePost === index ? 'active' : ''
+                              activePost === index ? "active" : ""
                             }`}
                             key={index}
                             onClick={() => handlePostClick(list, index)}
@@ -226,7 +219,7 @@ export default function Feedback() {
                             open={open}
                             onClose={handleClose}
                             MenuListProps={{
-                              'aria-labelledby': 'basic-button',
+                              "aria-labelledby": "basic-button",
                             }}
                           >
                             <MenuItem
@@ -254,11 +247,14 @@ export default function Feedback() {
                             }
                             alt='Userimage'
                           />
-                          <div style={{ width: 'calc(100% - 50px)' }}>
+                          {console.log("activePostInfo", activePostInfo)}
+                          <div style={{ width: "calc(100% - 50px)" }}>
                             <div className='flex justify-between py-1'>
                               <p className='text-[14px]'>
-                                <span style={{ fontWeight: 700 }}>Johnson</span>{' '}
-                                ({activePostInfo.type})
+                                <span style={{ fontWeight: 700 }}>
+                                  {activePostInfo?.user_name}
+                                </span>{" "}
+                                ({activePostInfo.role})
                               </p>
                               <p className='text-[10px]'>
                                 {activePostInfo.posted}
@@ -267,8 +263,8 @@ export default function Feedback() {
                             <div
                               className='py-5 my-2 text-[13px]'
                               style={{
-                                background: 'rgba(217, 217, 217, 0.15)',
-                                padding: '10px',
+                                background: "rgba(217, 217, 217, 0.15)",
+                                padding: "10px",
                               }}
                             >
                               {activePostInfo.content}
@@ -281,18 +277,18 @@ export default function Feedback() {
                               <div
                                 className='count-content'
                                 style={{
-                                  background: 'rgba(255, 219, 225, 1)',
-                                  color: 'rgba(243, 81, 109, 1)',
+                                  background: "rgba(255, 219, 225, 1)",
+                                  color: "rgba(243, 81, 109, 1)",
                                 }}
                               >
                                 <img src={CommentIcon} alt='CommentIcon' />
                                 <p>Comment({activePostInfo.comment_count})</p>
                               </div>
-                              <div
+                              {/* <div
                                 className='count-content'
                                 style={{
-                                  background: 'rgba(182, 249, 255, 1)',
-                                  color: 'rgba(0, 174, 189, 1)',
+                                  background: "rgba(182, 249, 255, 1)",
+                                  color: "rgba(0, 174, 189, 1)",
                                 }}
                               >
                                 <img
@@ -303,10 +299,10 @@ export default function Feedback() {
                                   Share(
                                   {activePostInfo.shareCount
                                     ? activePostInfo.shareCount
-                                    : '0'}
+                                    : "0"}
                                   )
                                 </p>
-                              </div>
+                              </div> */}
                             </div>
                             <div className='comments-section'>
                               {activePostInfo.comments &&
@@ -325,13 +321,13 @@ export default function Feedback() {
                                       }
                                       alt='Userimage'
                                     />
-                                    <div style={{ width: 'calc(100% - 50px)' }}>
+                                    <div style={{ width: "calc(100% - 50px)" }}>
                                       <div className='flex justify-between py-1'>
                                         <p className='text-[14px]'>
                                           <span style={{ fontWeight: 700 }}>
                                             {comment.user_name}
                                           </span>
-                                          ({comment.role}, {comment.gender})
+                                          &nbsp; ({comment.role})
                                         </p>
                                         <p className='text-[10px]'>
                                           {comment.time_since_action}
@@ -341,9 +337,9 @@ export default function Feedback() {
                                         className='py-5 my-2 text-[13px]'
                                         style={{
                                           background:
-                                            'rgba(217, 217, 217, 0.15)',
-                                          padding: '10px',
-                                          cursor: 'pointer',
+                                            "rgba(217, 217, 217, 0.15)",
+                                          padding: "10px",
+                                          cursor: "pointer",
                                         }}
                                         onClick={() =>
                                           handleViewReplies(comment.id)
@@ -356,12 +352,12 @@ export default function Feedback() {
                                           <img src={LikeIcon} alt='likeicon' />
                                           <p>Like({comment.like_count})</p>
                                         </div>
-                                        <div
+                                        {/* <div
                                           className='count-content'
                                           style={{
                                             background:
-                                              'rgba(255, 219, 225, 1)',
-                                            color: 'rgba(243, 81, 109, 1)',
+                                              "rgba(255, 219, 225, 1)",
+                                            color: "rgba(243, 81, 109, 1)",
                                           }}
                                         >
                                           <img
@@ -369,7 +365,7 @@ export default function Feedback() {
                                             alt='CommentIcon'
                                           />
                                           <p>Replies({comment.reply_count})</p>
-                                        </div>
+                                        </div> */}
                                       </div>
 
                                       {activePostComments.commentId ===
@@ -379,8 +375,8 @@ export default function Feedback() {
                                           <div
                                             className='replies-section'
                                             style={{
-                                              marginLeft: '20px',
-                                              marginTop: '10px',
+                                              marginLeft: "20px",
+                                              marginTop: "10px",
                                             }}
                                           >
                                             {comment.replies &&
@@ -402,7 +398,7 @@ export default function Feedback() {
                                                   <div
                                                     style={{
                                                       width:
-                                                        'calc(100% - 50px)',
+                                                        "calc(100% - 50px)",
                                                     }}
                                                   >
                                                     <div className='flex justify-between py-1'>
@@ -414,7 +410,7 @@ export default function Feedback() {
                                                         >
                                                           {reply.user_name}
                                                         </span>
-                                                        ({reply.role},{' '}
+                                                        ({reply.role},{" "}
                                                         {reply.gender})
                                                       </p>
                                                       <p className='text-[10px]'>
@@ -427,8 +423,8 @@ export default function Feedback() {
                                                       className='py-2 text-[13px]'
                                                       style={{
                                                         background:
-                                                          'rgba(235, 235, 235, 0.15)',
-                                                        padding: '8px',
+                                                          "rgba(235, 235, 235, 0.15)",
+                                                        padding: "8px",
                                                       }}
                                                     >
                                                       {reply.content}
@@ -466,8 +462,8 @@ export default function Feedback() {
                 <div
                   className='recent-discussion pb-3'
                   style={{
-                    boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)',
-                    borderRadius: '10px',
+                    boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.05)",
+                    borderRadius: "10px",
                   }}
                 >
                   <div className='title flex justify-between py-3 px-4 border-b-2'>

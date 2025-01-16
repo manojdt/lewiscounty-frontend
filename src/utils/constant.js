@@ -1111,7 +1111,7 @@ export const menteesRequestOverview = [
     key: RequestStatus.goalRequest,
     count: 0,
     status: RequestStatus.goalRequest.key,
-    for: ['mentor', 'admin'],
+    for: ['admin'],
   },
 ];
 
@@ -1122,6 +1122,13 @@ export const adminRequestOverview = [
     count: 0,
     status: RequestStatus.programRequest.key,
     for: ['mentor'],
+  },
+  {
+    name: 'Testimonial Requests',
+    key: RequestStatus.testimonicalRequest,
+    count: 0,
+    status: RequestStatus.testimonicalRequest.key,
+    for: ['admin'],
   },
 ];
 

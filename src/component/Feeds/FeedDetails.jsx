@@ -1,36 +1,37 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import Tooltip from '../../shared/Tooltip';
-import CancelIcon from '../../assets/images/cancel-colour1x.png';
-import FeedImage from '../../assets/images/feed1.png';
-import LikeBlackIcon from '../../assets/icons/LikeBlack.svg';
-import ShareIcon from '../../assets/icons/Share.svg';
-import CommentIcon from '../../assets/icons/CommentBlack.svg';
-import ChatImage from '../../assets/images/chatimage.png';
-import UserIcon from '../../assets/images/user.jpg';
-import LikeIcon from '../../assets/icons/like.svg';
-import CommentRedIcon from '../../assets/icons/feedbackComment.svg';
-import ShareFeedbackIcon from '../../assets/icons/ShareFeedback.svg';
-import ReplyFeedbackIcon from '../../assets/icons/ReplyFeedback.svg';
-import MaleIcon from '../../assets/images/male-profile1x.png';
-import FemaleIcon from '../../assets/images/female-profile1x.png';
-import Programs from '../Dashboard/Programs';
-import { useDispatch, useSelector } from 'react-redux';
-import { Backdrop, CircularProgress } from '@mui/material';
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import Tooltip from "../../shared/Tooltip";
+import CancelIcon from "../../assets/images/cancel-colour1x.png";
+import FeedImage from "../../assets/images/feed1.png";
+import LikeBlackIcon from "../../assets/icons/LikeBlack.svg";
+import ShareIcon from "../../assets/icons/Share.svg";
+import CommentIcon from "../../assets/icons/CommentBlack.svg";
+import ChatImage from "../../assets/images/chatimage.png";
+import UserIcon from "../../assets/images/user.jpg";
+import LikeIcon from "../../assets/icons/like.svg";
+import LikedHeartIcon from "../../assets/icons/likedHear-Icon.svg";
+import CommentRedIcon from "../../assets/icons/feedbackComment.svg";
+import ShareFeedbackIcon from "../../assets/icons/ShareFeedback.svg";
+import ReplyFeedbackIcon from "../../assets/icons/ReplyFeedback.svg";
+import MaleIcon from "../../assets/images/male-profile1x.png";
+import FemaleIcon from "../../assets/images/female-profile1x.png";
+import Programs from "../Dashboard/Programs";
+import { useDispatch, useSelector } from "react-redux";
+import { Backdrop, CircularProgress } from "@mui/material";
 import {
   getPostDetails,
   getRecentPosts,
   postComment,
   postCommentLike,
   updateFeedTrack,
-} from '../../services/feeds';
-import ProgramFeeds from '../../shared/ProgramFeeds';
-import { Button } from '../../shared';
-import { feedStatus } from '../../utils/constant';
-import NoImage from '../../assets/images/noimage.jpg';
-import { userUnFollow } from '../../services/userList';
-import { user_feed } from '../Breadcrumbs/BreadcrumbsCommonData';
-import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
+} from "../../services/feeds";
+import ProgramFeeds from "../../shared/ProgramFeeds";
+import { Button } from "../../shared";
+import { feedStatus } from "../../utils/constant";
+import NoImage from "../../assets/images/noimage.jpg";
+import { userUnFollow } from "../../services/userList";
+import { user_feed } from "../Breadcrumbs/BreadcrumbsCommonData";
+import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
 
 export default function FeedDetails() {
   const navigate = useNavigate();
@@ -39,19 +40,19 @@ export default function FeedDetails() {
   const { feedDetails, recentPosts, loading, status } = useSelector(
     (state) => state.feeds
   );
-  const [searchParams] = useSearchParams();	 
+  const [searchParams] = useSearchParams();
 
   const breadcrumbsType = searchParams.get("breadcrumbsType") || "";
-    const [breadcrumbsArray, setBreadcrumbsArray] = useState([]);
-  const [comment, setComment] = useState('');
-  const [replyInfo, setReplyInfo] = useState({ id: '', msg: '' });
+  const [breadcrumbsArray, setBreadcrumbsArray] = useState([]);
+  const [comment, setComment] = useState("");
+  const [replyInfo, setReplyInfo] = useState({ id: "", msg: "" });
 
   const handlePostChange = (e) => {
     setComment(e.target.value);
   };
 
   const handleCancelComment = () => {
-    setComment('');
+    setComment("");
   };
 
   const handleCreateComment = () => {
@@ -64,12 +65,12 @@ export default function FeedDetails() {
   };
 
   const handleCommentLike = (type, id) => {
-    const payload = type === 'post' ? { post_id: id } : { comment_id: id };
+    const payload = type === "post" ? { post_id: id } : { comment_id: id };
     dispatch(postCommentLike(payload));
   };
 
   const handleReply = (commendId) => {
-    setReplyInfo({ id: commendId, msg: '' });
+    setReplyInfo({ id: commendId, msg: "" });
   };
 
   const handleReplyComment = () => {
@@ -82,17 +83,17 @@ export default function FeedDetails() {
   };
 
   const handleCancelReplyComment = () => {
-    setReplyInfo({ id: '', msg: '' });
+    setReplyInfo({ id: "", msg: "" });
   };
 
-  let imageUrl = feedDetails?.image_url || '';
+  let imageUrl = feedDetails?.image_url || "";
 
-  if (imageUrl === '' && Object.keys(feedDetails).length) {
-    imageUrl = feedDetails.gender === 'male' ? MaleIcon : FemaleIcon;
+  if (imageUrl === "" && Object.keys(feedDetails).length) {
+    imageUrl = feedDetails.gender === "male" ? MaleIcon : FemaleIcon;
   }
 
   useEffect(() => {
-    if (params.id !== '') {
+    if (params.id !== "") {
       dispatch(getPostDetails(params.id));
       dispatch(getRecentPosts());
       dispatch(updateFeedTrack({ id: params.id }));
@@ -101,22 +102,20 @@ export default function FeedDetails() {
 
   useEffect(() => {
     if (status === feedStatus.createcomment || status === feedStatus.postlike) {
-      setComment('');
-      setReplyInfo({ id: '', msg: '' });
+      setComment("");
+      setReplyInfo({ id: "", msg: "" });
       dispatch(getPostDetails(params.id));
     }
   }, [status]);
-useEffect(() => {
- if(breadcrumbsType&&feedDetails.content){
-  setBreadcrumbsArray(user_feed(feedDetails.content))
-}
-}, [breadcrumbsType,feedDetails])
-  console.log(feedDetails);
-  console.log(breadcrumbsArray);
+  useEffect(() => {
+    if (breadcrumbsType && feedDetails.content) {
+      setBreadcrumbsArray(user_feed(feedDetails.content));
+    }
+  }, [breadcrumbsType, feedDetails]);
 
   return (
     <>
-      <Backdrop sx={{ color: '#fff', zIndex: 99999 }} open={loading}>
+      <Backdrop sx={{ color: "#fff", zIndex: 99999 }} open={loading}>
         <CircularProgress color='inherit' />
       </Backdrop>
       {Object.keys(feedDetails).length > 0 && (
@@ -124,22 +123,23 @@ useEffect(() => {
           <div
             className='px-3 pt-5 pb-56 mb-8'
             style={{
-              boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)',
-              borderRadius: '10px',
-              border: '1px solid rgba(219, 224, 229, 1)',
+              boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.15)",
+              borderRadius: "10px",
+              border: "1px solid rgba(219, 224, 229, 1)",
             }}
           >
             <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
               <div className='flex items-center justify-between'>
-                <Breadcrumbs items={breadcrumbsArray}/>
-                <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 700 }}>
-                </p>
+                <Breadcrumbs items={breadcrumbsArray} />
+                <p
+                  style={{ color: "rgba(24, 40, 61, 1)", fontWeight: 700 }}
+                ></p>
               </div>
               <div className='flex gap-20 items-center'>
                 <Tooltip title='Cancel'>
                   <img
                     className='cursor-pointer'
-                    onClick={() => navigate('/feeds')}
+                    onClick={() => navigate("/feeds")}
                     src={CancelIcon}
                     alt='CancelIcon'
                   />
@@ -177,12 +177,20 @@ useEffect(() => {
                       <div
                         className='list-item'
                         onClick={() =>
-                          handleCommentLike('post', feedDetails.id)
+                          handleCommentLike("post", feedDetails.id)
                         }
                       >
-                        <img src={LikeBlackIcon} alt='LikeBlackIcon' />
+                        {console.log("feedDetails", feedDetails)}
+                        <img
+                          src={
+                            feedDetails.like_post_counts > 0
+                              ? LikedHeartIcon
+                              : LikeBlackIcon
+                          }
+                          alt='LikeBlackIcon'
+                        />
                         <p>
-                          Like{' '}
+                          Like{" "}
                           {feedDetails.like_post_counts > 0
                             ? `(${feedDetails.like_post_counts})`
                             : null}
@@ -191,7 +199,7 @@ useEffect(() => {
                       <div className='list-item'>
                         <img src={CommentIcon} alt='CommentIcon' />
                         <p>
-                          Comment{' '}
+                          Comment{" "}
                           {feedDetails.comment_count > 0
                             ? `(${feedDetails.comment_count})`
                             : null}
@@ -206,34 +214,18 @@ useEffect(() => {
                     <div className='post-details'>
                       <h4
                         className='pb-5 font-semibold'
-                        style={{ color: 'rgba(0, 0, 0, 1)' }}
+                        style={{ color: "rgba(0, 0, 0, 1)" }}
                       >
-                        {feedDetails.content}
+                        {feedDetails?.title}
                       </h4>
                       <p className='text-[12px] leading-6'>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                        sed do eiusmod tempor incididunt ut labore et dolore
-                        magna aliqua. Ut enim ad minim veniam, quis nostrud
-                        exercitation ullamco laboris nisi ut aliquip ex ea
-                        commodo consequat. Duis aute irure dolor in
-                        reprehenderit in voluptate velit esse cillum dolore eu
-                        fugiat nulla pariatur. Excepteur sint occaecat cupidatat
-                        non proident, sunt in culpa qui officia deserunt mollit
-                        anim id est laborumLorem ipsum dolor sit amet,
-                        consectetur adipiscing elit, sed do eiusmod tempor
-                        incididunt ut labore et dolore magna aliqua. Ut enim ad
-                        minim veniam, quis nostrud exercitation ullamco laboris
-                        nisi ut aliquip ex ea commodo consequat. Duis aute irure
-                        dolor in reprehenderit in voluptate velit esse cillum
-                        dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                        cupidatat non proident, sunt in culpa qui officia
-                        deserunt mollit anim id est laborum
+                        {feedDetails?.content}
                       </p>
                     </div>
 
                     <div className='post-comments'>
                       <h3>
-                        Post Comments{' '}
+                        Post Comments{" "}
                         {feedDetails.comments.length > 0
                           ? `(${feedDetails.comments.length})`
                           : null}
@@ -248,18 +240,18 @@ useEffect(() => {
                           onChange={handlePostChange}
                         />
                       </div>
-                      {comment !== '' && (
+                      {comment !== "" && (
                         <div className='flex gap-2 justify-end'>
                           <Button
                             btnType='button'
                             btnCls='w-[150px]'
-                            btnName={'Cancel'}
+                            btnName={"Cancel"}
                             onClick={handleCancelComment}
                           />
                           <Button
                             btnType='button'
                             btnCls='w-[150px]'
-                            btnName={'Comment'}
+                            btnName={"Comment"}
                             btnCategory='primary'
                             onClick={handleCreateComment}
                           />
@@ -274,12 +266,12 @@ useEffect(() => {
                                 src={ChatImage}
                                 alt='Userimage'
                               />
-                              <div style={{ width: 'calc(100% - 50px)' }}>
+                              <div style={{ width: "calc(100% - 50px)" }}>
                                 <div className='flex gap-3 items-center py-1'>
                                   <p className='text-[14px] capitalize'>
                                     <span style={{ fontWeight: 700 }}>
                                       {postComment.user_name}
-                                    </span>{' '}
+                                    </span>{" "}
                                     ({postComment.role})
                                   </p>
                                   <p className='text-[10px]'>
@@ -289,8 +281,8 @@ useEffect(() => {
                                 <div
                                   className='py-5 my-2 text-[13px]'
                                   style={{
-                                    background: 'rgba(217, 217, 217, 0.15)',
-                                    padding: '10px',
+                                    background: "rgba(217, 217, 217, 0.15)",
+                                    padding: "10px",
                                   }}
                                 >
                                   {postComment.content}
@@ -301,14 +293,21 @@ useEffect(() => {
                                     className='count-content cursor-pointer'
                                     onClick={() =>
                                       handleCommentLike(
-                                        'comment',
+                                        "comment",
                                         postComment.id
                                       )
                                     }
                                   >
-                                    <img src={LikeIcon} alt='likeicon' />
+                                    <img
+                                      src={
+                                        postComment?.like_count > 0
+                                          ? LikedHeartIcon
+                                          : LikeIcon
+                                      }
+                                      alt='likeicon'
+                                    />
                                     <p>
-                                      Like{' '}
+                                      Like{" "}
                                       {postComment.like_count > 0
                                         ? `(${postComment.like_count})`
                                         : null}
@@ -318,7 +317,7 @@ useEffect(() => {
                                   <div
                                     className='count-content cursor-pointer'
                                     style={{
-                                      color: 'rgba(0, 174, 189, 1)',
+                                      color: "rgba(0, 174, 189, 1)",
                                     }}
                                   >
                                     <img
@@ -330,7 +329,7 @@ useEffect(() => {
                                   <div
                                     className='count-content cursor-pointer'
                                     style={{
-                                      color: 'rgba(51, 161, 90, 1)',
+                                      color: "rgba(51, 161, 90, 1)",
                                     }}
                                     onClick={() => handleReply(postComment.id)}
                                   >
@@ -369,13 +368,13 @@ useEffect(() => {
                                       <Button
                                         btnType='button'
                                         btnCls='w-[150px]'
-                                        btnName={'Cancel'}
+                                        btnName={"Cancel"}
                                         onClick={handleCancelReplyComment}
                                       />
                                       <Button
                                         btnType='button'
                                         btnCls='w-[150px]'
-                                        btnName={'Reply'}
+                                        btnName={"Reply"}
                                         btnCategory='primary'
                                         onClick={handleReplyComment}
                                       />
@@ -399,7 +398,7 @@ useEffect(() => {
                                             />
                                             <div
                                               style={{
-                                                width: 'calc(100% - 50px)',
+                                                width: "calc(100% - 50px)",
                                               }}
                                             >
                                               <div className='flex gap-3 items-center py-1'>
@@ -408,7 +407,7 @@ useEffect(() => {
                                                     style={{ fontWeight: 700 }}
                                                   >
                                                     {replyData.user_name}
-                                                  </span>{' '}
+                                                  </span>{" "}
                                                   ({replyData.role})
                                                 </p>
                                                 <p className='text-[10px]'>
@@ -419,8 +418,8 @@ useEffect(() => {
                                                 className='py-5 my-2 text-[13px]'
                                                 style={{
                                                   background:
-                                                    'rgba(217, 217, 217, 0.15)',
-                                                  padding: '10px',
+                                                    "rgba(217, 217, 217, 0.15)",
+                                                  padding: "10px",
                                                 }}
                                               >
                                                 {replyData.content}
@@ -432,7 +431,7 @@ useEffect(() => {
                                               className='count-content cursor-pointer'
                                               onClick={() =>
                                                 handleCommentLike(
-                                                  'comment',
+                                                  "comment",
                                                   replyData.id
                                                 )
                                               }
@@ -442,7 +441,7 @@ useEffect(() => {
                                                 alt='likeicon'
                                               />
                                               <p>
-                                                Like{' '}
+                                                Like{" "}
                                                 {replyData.like_count > 0
                                                   ? `(${replyData.like_count})`
                                                   : null}
@@ -452,7 +451,7 @@ useEffect(() => {
                                             <div
                                               className='count-content cursor-pointer'
                                               style={{
-                                                color: 'rgba(0, 174, 189, 1)',
+                                                color: "rgba(0, 174, 189, 1)",
                                               }}
                                             >
                                               <img
@@ -464,7 +463,7 @@ useEffect(() => {
                                             <div
                                               className='count-content cursor-pointer'
                                               style={{
-                                                color: 'rgba(51, 161, 90, 1)',
+                                                color: "rgba(51, 161, 90, 1)",
                                               }}
                                               onClick={() =>
                                                 handleReply(replyData.id)
@@ -508,7 +507,7 @@ useEffect(() => {
                                                 <Button
                                                   btnType='button'
                                                   btnCls='w-[150px]'
-                                                  btnName={'Cancel'}
+                                                  btnName={"Cancel"}
                                                   onClick={
                                                     handleCancelReplyComment
                                                   }
@@ -516,7 +515,7 @@ useEffect(() => {
                                                 <Button
                                                   btnType='button'
                                                   btnCls='w-[150px]'
-                                                  btnName={'Reply'}
+                                                  btnName={"Reply"}
                                                   btnCategory='primary'
                                                   onClick={handleReplyComment}
                                                 />

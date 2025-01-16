@@ -33,12 +33,12 @@ import CancelReq from "../../assets/icons/cancelRequest.svg"
 import dayjs from 'dayjs'
 import CreateGoal from './CreateGoal'
 import { dateFormat, dateFormatRever } from '../../utils'
-import { request_goalMentee, request_goalMentor, request_goalNew, requestPageBreadcrumbs } from '../Breadcrumbs/BreadcrumbsCommonData'
+import { goal_active, goal_cancelled, goal_completed, goal_history, goal_program_details, goal_progress, mentee_goal_view, request_goalMentee, request_goalMentor, request_goalNew, requestPageBreadcrumbs } from '../Breadcrumbs/BreadcrumbsCommonData'
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs'
 import ViewIcon from "../../assets/images/view1x.png";
 import MoreIcon from "../../assets/icons/moreIcon.svg";
 
-const ViewGoal = ({ type = '' }) => {
+const ViewGoal = ({ type = '',headTreeList="" }) => {
     const navigate = useNavigate()
     const params = useParams();
     const [searchParams] = useSearchParams();
@@ -46,7 +46,8 @@ const ViewGoal = ({ type = '' }) => {
     const [reasonError, setReasonError] = React.useState(false);
     const location = useLocation(); // Provides access to the current URL
     const queryParams = new URLSearchParams(location.search); // Parses the query string
-    const breadcrumbsType = searchParams.get("breadcrumbsType") || "";
+    const breadcrumbsType =headTreeList?headTreeList: searchParams.get("breadcrumbsType") || "";
+    const adminTabType = searchParams.get("adminTabType") || "";
     const goalType = searchParams.get("goalType") || "";
     const [breadcrumbsArray, setBreadcrumbsArray] = useState([]);
     const requestId = queryParams.get('requestId');
@@ -344,6 +345,13 @@ const ViewGoal = ({ type = '' }) => {
         const goal_menter = request_goalMentor(goalInfo.goal_name, goalType)
         const goal_mentee = request_goalMentee(goalInfo.goal_name, goalType)
         const goal_new = request_goalNew(goalInfo.goal_name)
+        const goal_History = goal_history(goalInfo.goal_name,adminTabType)
+        const goal_Active = goal_active(goalInfo.goal_name,adminTabType)
+        const goal_Progress = goal_progress(goalInfo.goal_name,adminTabType)
+        const goal_Completed = goal_completed(goalInfo.goal_name,adminTabType)
+        const goal_Cancelled = goal_cancelled(goalInfo.goal_name,adminTabType)
+        const goal_Program = goal_program_details(goalInfo.goal_name)
+        const mentee_goal_View = mentee_goal_view(goalInfo.goal_name)
         switch (key) {
             case requestPageBreadcrumbs.mentee:
                 setBreadcrumbsArray(goal_mentee)
@@ -353,6 +361,27 @@ const ViewGoal = ({ type = '' }) => {
                 break;
             case requestPageBreadcrumbs.new_goals_request:
                 setBreadcrumbsArray(goal_new)
+                break;
+            case requestPageBreadcrumbs.goalHistory:
+                setBreadcrumbsArray(goal_History)
+                break;
+            case requestPageBreadcrumbs.activeGoal:
+                setBreadcrumbsArray(goal_Active)
+                break;
+            case requestPageBreadcrumbs.progressGoal:
+                setBreadcrumbsArray(goal_Progress)
+                break;
+            case requestPageBreadcrumbs.completedGoal:
+                setBreadcrumbsArray(goal_Completed)
+                break;
+            case requestPageBreadcrumbs.cancelledGoal:
+                setBreadcrumbsArray(goal_Cancelled)
+                break;
+            case requestPageBreadcrumbs.programGoalView:
+                setBreadcrumbsArray(goal_Program)
+                break;
+            case requestPageBreadcrumbs.menteeGoalViewMentor:
+                setBreadcrumbsArray(mentee_goal_View)
                 break;
             case "discussion":
                 break;
@@ -739,14 +768,9 @@ const ViewGoal = ({ type = '' }) => {
                                 <p>Goals </p>
                             </div>
                         </div> */}
-                        {role === "admin" &&
                             <div className='pb-2'>
                                 <Breadcrumbs items={breadcrumbsArray} />
-                            </div>}
-                        {role === "mentor" &&
-                            <div className='pb-2'>
-                                <Breadcrumbs items={breadcrumbsArray} />
-                            </div>}
+                            </div>
                         <div className='px-4' style={{ border: '1px solid rgba(223, 237, 255, 1)', borderRadius: '10px' }}>
 
                             <div className=''>

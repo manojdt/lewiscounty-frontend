@@ -1,13 +1,14 @@
-import React, { useRef } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import React, { useRef } from "react";
+import { Controller, useFormContext } from "react-hook-form";
 import {
+  formatPhoneNumber,
   MenteePersonalInformationFields,
   PersonalInfoFields,
-} from '../../../utils/formFields';
-import CalendarIcon from '../../../assets/images/calender_1x.png';
-import { user, view } from '../../../utils/constant';
-import { Calendar } from 'primereact/calendar';
-import { useSelector } from 'react-redux';
+} from "../../../utils/formFields";
+import CalendarIcon from "../../../assets/images/calender_1x.png";
+import { user, view } from "../../../utils/constant";
+import { Calendar } from "primereact/calendar";
+import { useSelector } from "react-redux";
 // import { CalendarIcon } from '@mui/x-date-pickers';
 // import CalendarIcon from '../../../assets/images/calender_1x.png';
 
@@ -36,23 +37,23 @@ const PersonalInfoSection = ({ type }) => {
       {PersonalInfoRoleFields.map((field) => {
         // console.log(getValues(field.name));
         switch (field.type) {
-          case 'input':
+          case "input":
             return (
               <div
                 key={field.name}
                 className={`${field.width}`}
-                style={{ marginBottom: '16px' }}
+                style={{ marginBottom: "16px" }}
               >
                 <label
                   className='block disabled:text-gray-100 tracking-wide  text-xs mb-2'
-                  style={{ color: 'rgba(116, 116, 116, 1)' }}
+                  style={{ color: "rgba(116, 116, 116, 1)" }}
                 >
                   {field.label}
-                  {field?.inputRules?.required && '*'}
+                  {field?.inputRules?.required && "*"}
                 </label>
                 {type === view.viewOnly ? (
                   <p className='text-[14px] pt-3'>
-                    {getValues(field.name) ? getValues(field.name) : '-'}
+                    {getValues(field.name) ? getValues(field.name) : "-"}
                   </p>
                 ) : (
                   <Controller
@@ -67,11 +68,24 @@ const PersonalInfoSection = ({ type }) => {
                         className='w-full border-none px-3 py-[0.32rem] disabled:bg-gray-100 leading-[2.15] input-bg focus:border-none focus-visible:border-none
                                                           focus-visible:outline-none text-[14px] h-[60px]'
                         placeholder={field.placeholder}
+                        onChange={(e) => {
+                          const rawValue = e.target.value;
+                          if (
+                            field.name === "phone_number" ||
+                            field.name === "secondary_phone_number"
+                          ) {
+                            const formattedValue = formatPhoneNumber(rawValue);
+                            controllerField.onChange(formattedValue); // Update form state
+                          } else {
+                            controllerField.onChange(rawValue); // Update form state
+                          }
+                        }}
+                        value={controllerField.value || ""}
                         style={{
-                          color: '#232323',
-                          borderRadius: '3px',
+                          color: "#232323",
+                          borderRadius: "3px",
 
-                          paddingLeft: '10px',
+                          paddingLeft: "10px",
                         }}
                         disabled={field.disabled}
                         aria-invalid={!!errors[field.name]}
@@ -80,29 +94,29 @@ const PersonalInfoSection = ({ type }) => {
                   />
                 )}
                 {errors[field.name] && (
-                  <p style={{ color: 'red', fontSize: '12px' }}>
+                  <p style={{ color: "red", fontSize: "12px" }}>
                     {errors[field.name]?.message}
                   </p>
                 )}
               </div>
             );
 
-          case 'radio':
+          case "radio":
             return (
               <div
                 key={field.name}
                 className={`${field.width}`}
-                style={{ marginBottom: '16px' }}
+                style={{ marginBottom: "16px" }}
               >
                 <label
                   className='block tracking-wide text-xs mb-2'
-                  style={{ color: 'rgba(116, 116, 116, 1)' }}
+                  style={{ color: "rgba(116, 116, 116, 1)" }}
                 >
                   {field.label}
                 </label>
                 {type === view.viewOnly ? (
                   <p className='text-[14px] pt-3'>
-                    {getValues(field.name) ? getValues(field.name) : '-'}
+                    {getValues(field.name) ? getValues(field.name) : "-"}
                   </p>
                 ) : (
                   <div>
@@ -117,7 +131,7 @@ const PersonalInfoSection = ({ type }) => {
                             <label
                               className='flex items-center justify-center gap-1'
                               key={option.key}
-                              style={{ marginRight: '8px' }}
+                              style={{ marginRight: "8px" }}
                             >
                               <input
                                 type='radio'
@@ -134,7 +148,7 @@ const PersonalInfoSection = ({ type }) => {
                       )}
                     />
                     {errors[field.name] && (
-                      <p style={{ color: 'red', fontSize: '12px' }}>
+                      <p style={{ color: "red", fontSize: "12px" }}>
                         {errors[field.name]?.message}
                       </p>
                     )}
@@ -142,22 +156,22 @@ const PersonalInfoSection = ({ type }) => {
                 )}
               </div>
             );
-          case 'checkbox':
+          case "checkbox":
             return (
               <div
                 key={field.name}
                 className={`${field.width}`}
-                style={{ marginBottom: '16px' }}
+                style={{ marginBottom: "16px" }}
               >
                 <label
                   className='block tracking-wide text-xs mb-2'
-                  style={{ color: 'rgba(116, 116, 116, 1)' }}
+                  style={{ color: "rgba(116, 116, 116, 1)" }}
                 >
                   {field.label}
                 </label>
                 {type === view.viewOnly ? (
                   <p className='text-[14px] pt-3'>
-                    {getValues(field.name) ? getValues(field.name) : '-'}
+                    {getValues(field.name) ? getValues(field.name) : "-"}
                   </p>
                 ) : (
                   <div>
@@ -172,7 +186,7 @@ const PersonalInfoSection = ({ type }) => {
                             <label
                               className='flex items-center justify-center gap-1'
                               key={option.key}
-                              style={{ marginRight: '8px' }}
+                              style={{ marginRight: "8px" }}
                             >
                               <input
                                 type='radio'
@@ -189,7 +203,7 @@ const PersonalInfoSection = ({ type }) => {
                       )}
                     />
                     {errors[field.name] && (
-                      <p style={{ color: 'red', fontSize: '12px' }}>
+                      <p style={{ color: "red", fontSize: "12px" }}>
                         {errors[field.name]?.message}
                       </p>
                     )}
@@ -198,18 +212,18 @@ const PersonalInfoSection = ({ type }) => {
               </div>
             );
 
-          case 'date':
+          case "date":
             return (
               <div className={`${field.width} relative`}>
                 <label
                   className='block disabled:bg-gray-100 tracking-wide text-xs mb-2'
-                  style={{ color: 'rgba(116, 116, 116, 1)' }}
+                  style={{ color: "rgba(116, 116, 116, 1)" }}
                 >
                   {field.label}
                 </label>
                 {type === view.viewOnly ? (
                   <p className='text-[14px] pt-3'>
-                    {getValues(field.name) ? getValues(field.name) : '-'}
+                    {getValues(field.name) ? getValues(field.name) : "-"}
                   </p>
                 ) : (
                   <div className='relative'>
@@ -250,18 +264,18 @@ const PersonalInfoSection = ({ type }) => {
               </div>
             );
 
-          case 'dropdown':
+          case "dropdown":
             return (
               <div className={`${field.width}`}>
                 <label
                   className='block tracking-wide text-xs mb-2'
-                  style={{ color: 'rgba(116, 116, 116, 1)' }}
+                  style={{ color: "rgba(116, 116, 116, 1)" }}
                 >
                   {field.label}
                 </label>
                 {type === view.viewOnly ? (
                   <p className='text-[14px] pt-3'>
-                    {getValues(field.name) ? getValues(field.name) : '-'}
+                    {getValues(field.name) ? getValues(field.name) : "-"}
                   </p>
                 ) : (
                   <div>
@@ -271,8 +285,8 @@ const PersonalInfoSection = ({ type }) => {
                      focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]'
                       placeholder={field.placeholder}
                       style={{
-                        color: '#232323',
-                        borderRight: '16px solid transparent',
+                        color: "#232323",
+                        borderRight: "16px solid transparent",
                       }}
                     >
                       <option value=''>Select</option>
