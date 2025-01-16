@@ -1226,6 +1226,11 @@ export const ProgramStatusInCard = {
 };
 
 export const programApprovalStage = {
+  yettojoin: {
+    status: 'yettojoin',
+    text: 'Waiting for admin approval',
+    type: 'waiting',
+  },
   yettoapprove: {
     status: 'yettoapprove',
     text: 'Waiting for admin approval',

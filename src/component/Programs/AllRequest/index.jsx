@@ -87,6 +87,7 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { getAllGoals } from '../../../services/goalsInfo';
 import { EditIcon } from 'lucide-react';
 import { docuSign } from '../../../services/activities';
+import ShareIcon from "../../../assets/images/share1x.png";
 
 export default function AllRequest() {
   const navigate = useNavigate();
@@ -932,6 +933,17 @@ export default function AllRequest() {
                       Cancel Request
                     </MenuItem>
                   )}
+
+                    <MenuItem
+                      className='!text-[12px]'
+                    >
+                      <img
+                        src={ShareIcon}
+                        alt="ShareIcon"
+                        className="pr-3 w-[25px]"
+                      />
+                      Share
+                    </MenuItem>
               </Menu>
             </>
           );
