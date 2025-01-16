@@ -1,23 +1,24 @@
-import React from "react";
-import Day from "./day";
-import { getWeek } from "../../utils";
-import dayjs from "dayjs";
+import React from 'react';
+import Day from './day';
+import { getWeek } from '../../utils';
+import dayjs from 'dayjs';
 
 export default function Week({
   currentDate,
   savedEvents,
   fetchEvents,
   deleteAppointment,
-  newData
+  actionActionBtn,
+  newData,
 }) {
   const week = getWeek(currentDate);
 
   const timeblockWeek = [...week];
-  timeblockWeek[0].unshift("Time");
+  timeblockWeek[0].unshift('Time');
   timeblockWeek[1].unshift(dayjs().year(1975));
 
   return (
-    <div className="flex-1 grid grid-cols-8 gap-0">
+    <div className='flex-1 grid grid-cols-8 gap-0'>
       {timeblockWeek.map((row, i) => (
         <React.Fragment key={i}>
           {row.map((day, idx) => (
@@ -26,6 +27,7 @@ export default function Week({
               day={day}
               key={idx}
               rowIdx={i}
+              actionActionBtn={actionActionBtn}
               colIdx={idx}
               savedEvents={savedEvents}
               deleteAppointment={deleteAppointment}

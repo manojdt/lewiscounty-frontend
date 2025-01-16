@@ -1,12 +1,12 @@
-import dayjs from "dayjs";
-import React, { useState } from "react";
+import dayjs from 'dayjs';
+import React, { useState } from 'react';
 
-import GoogleIcon from "../../assets/icons/google_icon.svg";
-import TrashIcon from "../../assets/images/delete.png";
-import CalendarIcon from "../../assets/icons/calendar-boxed.svg";
-import InternalCalendarIcon from "../../assets/icons/internal-meeting.svg";
+import GoogleIcon from '../../assets/icons/google_icon.svg';
+import TrashIcon from '../../assets/images/delete.png';
+import CalendarIcon from '../../assets/icons/calendar-boxed.svg';
+import InternalCalendarIcon from '../../assets/icons/internal-meeting.svg';
+import MultiEventModal from './MultiEventModal';
 
-import EventModal from "./EventsModal";
 // import { AppointmentDetail_Modal } from "../Appointment/AppointmentDetail";
 // import AddAppointment from "./addappointment";
 // import PrivateComponent from "../PrivateComponent";
@@ -24,47 +24,47 @@ export default function Months({
   };
 
   function getCurrentDayClass() {
-    return month.format("MMMMYYYY") === dayjs().format("MMMMYYYY")
-      ? "bg-[#2F9384] text-white rounded h-5 mt-2 px-2"
-      : "pt-2 pr-2";
+    return month.format('MMMMYYYY') === dayjs().format('MMMMYYYY')
+      ? 'bg-[#2F9384] text-white rounded h-5 mt-2 px-2'
+      : 'pt-2 pr-2';
   }
 
   function getTitleBackGround() {
-    const monthName = month.format("MMMM");
+    const monthName = month.format('MMMM');
 
     switch (monthName) {
-      case "January":
-        return "text-white bg-fuchsia-900";
-      case "February":
-        return "text-white bg-emerald-500";
-      case "March":
-        return "text-white bg-sky-500";
-      case "April":
-        return "text-white bg-red-500";
-      case "May":
-        return "text-black bg-yellow-200";
-      case "June":
-        return "text-white bg-teal-500";
-      case "July":
-        return "text-white bg-indigo-500";
-      case "August":
-        return "text-white bg-orange-500";
-      case "September":
-        return "text-white bg-lime-500";
-      case "October":
-        return "text-white bg-violet-500";
-      case "November":
-        return "text-white bg-cyan-500";
-      case "December":
-        return "text-white bg-rose-500";
+      case 'January':
+        return 'text-white bg-fuchsia-900';
+      case 'February':
+        return 'text-white bg-emerald-500';
+      case 'March':
+        return 'text-white bg-sky-500';
+      case 'April':
+        return 'text-white bg-red-500';
+      case 'May':
+        return 'text-black bg-yellow-200';
+      case 'June':
+        return 'text-white bg-teal-500';
+      case 'July':
+        return 'text-white bg-indigo-500';
+      case 'August':
+        return 'text-white bg-orange-500';
+      case 'September':
+        return 'text-white bg-lime-500';
+      case 'October':
+        return 'text-white bg-violet-500';
+      case 'November':
+        return 'text-white bg-cyan-500';
+      case 'December':
+        return 'text-white bg-rose-500';
       default:
-        return "";
+        return '';
     }
   }
 
   const eventsForMonth = savedEvents.filter(
     (event) =>
-      month.format("MMMM") === dayjs(event.start.dateTime).format("MMMM") &&
+      month.format('MMMM') === dayjs(event.start.dateTime).format('MMMM') &&
       month.year() === dayjs(event.start.dateTime).year()
   );
 
@@ -86,9 +86,9 @@ export default function Months({
   return (
     <>
       <div className={`opacity-75 border border-gray-200 flex flex-col h-36`}>
-        <div className="flex justify-start ms-2">
+        <div className='flex justify-start ms-2'>
           <p className={`text-center text-sm ${getCurrentDayClass()}`}>
-            {`${month.format("MMM")} ${month.format("YYYY")}`}
+            {`${month.format('MMM')} ${month.format('YYYY')}`}
           </p>
         </div>
         {displayedEvents.map((event, index) => {
@@ -99,12 +99,12 @@ export default function Months({
 
           return (
             <>
-              {" "}
-              <div key={index} className="m-2 mb-0 relative">
+              {' '}
+              <div key={index} className='m-2 mb-0 relative'>
                 <a
                   // href={event.htmlLink}
-                  target="_blank"
-                  className="block w-full"
+                  target='_blank'
+                  className='block w-full'
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
@@ -114,19 +114,19 @@ export default function Months({
                   <div
                     className={`relative flex flex-row gap-1 items-center justify-between w-full h-7 ${getTitleBackGround()} rounded-tl-sm rounded-tr-sm mx-1`}
                   >
-                    <div className="flex items-center gap-1 flex-grow overflow-hidden max-w-[75%]">
+                    <div className='flex items-center gap-1 flex-grow overflow-hidden max-w-[75%]'>
                       <img
                         src={
                           event.isExternal ? GoogleIcon : InternalCalendarIcon
                         }
                         className={`${
                           event.isExternal
-                            ? "h-[16px] w-[16px] ms-1 bg-white rounded-full"
-                            : "h-[20px] w-[20px] ms-1"
+                            ? 'h-[16px] w-[16px] ms-1 bg-white rounded-full'
+                            : 'h-[20px] w-[20px] ms-1'
                         }`}
-                        alt="event-meet"
+                        alt='event-meet'
                       />
-                      <div className="text-xs font-normal truncate flex-grow overflow-hidden">
+                      <div className='text-xs font-normal truncate flex-grow overflow-hidden'>
                         {event.meeting_title}
                       </div>
                     </div>
@@ -147,13 +147,12 @@ export default function Months({
                   </div>
                 </a>
               </div>
-            
             </>
           );
         })}
         {additionalEventsCount > 0 && (
           <div
-            className="flex items-center justify-center mt-2 text-sm text-[#2F9384] cursor-pointer"
+            className='flex items-center justify-center mt-2 text-sm text-[#2F9384] cursor-pointer'
             onClick={() => {
               setShowModal(true);
             }}
@@ -162,9 +161,9 @@ export default function Months({
           </div>
         )}
       </div>
-      <EventModal
+      <MultiEventModal
         show={showModal}
-        eventDate={month.format("MMMM-YYYY")}
+        eventDate={month.format('MMMM-YYYY')}
         toggleModal={toggleModal}
         events={eventsForMonth}
         fetchEvents={fetchEvents}

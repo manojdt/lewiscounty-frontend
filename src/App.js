@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate, Outlet } from "react-router-dom";
+import { Routes, Route, Navigate, Outlet, useLocation } from "react-router-dom";
 import {
   ChangePassword,
   Dashboard,
@@ -13,7 +13,7 @@ import {
 import Layout from "./component/Layout";
 import { useSelector, useDispatch } from "react-redux";
 import { updateInfo } from "./services/loginInfo";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Programs from "./component/Programs";
 import ProgramData from "./component/ProgramData";
 import ProgramsData from "./component/ProgramsData";
@@ -76,6 +76,23 @@ import ProfileView from "./component/Profile/ProfileView";
 import Category from "./component/category";
 import CategoryView from "./component/category/categoryView";
 import MenteeTaskList from "./component/Tasks/MenteeTaskList";
+import AddNewTicket from "./component/SuperAdmin/tickets/AddNewTicket";
+import { AuthLayout } from "./component/Login/AuthLayout";
+import { TestimonialView } from "./component/testimonialView";
+import ViewTask from "./component/Mentor/Task/viewTask";
+import AdminTickets from "./component/SuperAdmin/tickets/Tickets";
+import AdminMembers from "./component/SuperAdmin/tickets/SuperAdminMembers";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import ViewTicket from "./component/SuperAdmin/tickets/ViewTicket";
+import TicketDetails from "./component/SuperAdmin/tickets/TicketDetails";
+import PaymentPage from "./component/payments-page/payments";
+import TicketHistory from "./component/Help/TicketHistory";
+import TicketCreation from "./component/Help/TicketCreation";
+import Tickets from "./component/SuperAdmin/tickets/Tickets";
+import PaymentSuccessfull from "./shared/paymentButton/payment-successfull";
+import BgVerify from "./component/BackgroundVerification/BgVerify";
+import HistoryNotes from "./component/Programs/ProgramDetails/notesHistory";
 
 function App() {
   const PrivateRoute = () => {
@@ -87,121 +104,190 @@ function App() {
         dispatch(updateInfo());
       }
     }, []);
-    // return <Outlet />
-    return loggedIn ? <Outlet /> : <Navigate to="/login" />;
+
+    const location = useLocation();
+    const redirectPath = `${location.pathname}${location.search}`;
+    return loggedIn ? (
+      <Outlet />
+    ) : (
+      <Navigate to={`/login?redirect=${redirectPath}`} />
+    );
   };
 
   const PubicRoutes = () => {
     const loggedIn = !localStorage.getItem("access_token");
-    return loggedIn ? <Outlet /> : <Navigate to="/dashboard" />;
+    return loggedIn ? <Outlet /> : <Navigate to='/dashboard' />;
   };
 
+  const [programDetailsId, setProgramDetailsId] = useState(null);
+
   return (
-    <Routes>
-      <Route element={<PubicRoutes />}>
-        <Route path="/" element={<Navigate to="/login" />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Signup />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/verify-otp" element={<VerifyOTP />} />
-        <Route path="/change-password" element={<ChangePassword />} />
-      </Route>
-
-      <Route element={<PrivateRoute />}>
-        <Route element={<Layout subheader={true} />}>
-          <Route path="/super-members" element={<SuperMembers />} />
-          <Route path="/super-members/add" element={<AddSuperMember />} />
-          <Route path="/my-profile-admin" element={<Profile />} />
-          <Route path="/help-admin" element={<HelpPage />} />
+    <>
+      {/* {clientSecret && (
+        <Elements
+          stripe={stripePromise}
+          // options={options}
+          options={{ clientSecret }}
+        > */}
+      <Routes>
+        <Route element={<PubicRoutes />}>
+          <Route path='/' element={<AuthLayout />}>
+            <Route index element={<Navigate to='/login' replace />} />
+            <Route path='/login' element={<Login />} />
+            <Route path='/register' element={<Signup />} />
+            <Route path='/forgot-password' element={<ForgotPassword />} />
+            <Route path='/verify-otp' element={<VerifyOTP />} />
+            <Route path='/change-password' element={<ChangePassword />} />
+          </Route>
         </Route>
 
-        <Route path="/login-type" element={<LoginType />} />
-        <Route path="/questions" element={<Questions />} />
-        <Route element={<Layout />}>
-          <Route path="/dashboard" element={<Dashboard />} />
+        <Route element={<PrivateRoute />}>
+          <Route element={<Layout subheader={true} />}>
+            <Route path='/super-members' element={<SuperMembers />} />
+            <Route path='/tickets' element={<Tickets />} />
+            {/* <Route path='/tickets/:id' element={<ViewTicket />} /> */}
+            <Route path='/tickets/:id' element={<TicketDetails />} />
+            {/* <Route path='/members' element={<AdminMembers />} /> */}
+            <Route path='/add-new-ticket' element={<AddNewTicket />} />
+            <Route path='/super-members/add' element={<AddSuperMember />} />
+            <Route path='/my-profile-admin' element={<Profile />} />
+            <Route path='/help-admin' element={<HelpPage />} />
+            <Route path='/bgVerify' element={<BgVerify />} />
+          </Route>
 
-          <Route path="/mentor-doc-upload" element={<DocumentUpload />} />
-          <Route path="/mentee-doc-upload/:id" element={<DocumentUpload />} />
-          <Route path="/mentee-document-upload/:id" element={<MenteeDocs />} />
-          <Route path="/programs" element={<Programs />} />
-          <Route path="/program-details/:id" element={<ProgramDetails />} />
-          <Route path="/program-task/:id" element={<ProgramTask />} />
-          <Route path="/assign-task/:id" element={<AssignTask />} />
-          <Route path="/assign-mentees/:id" element={<AssignMentees />} />
-          <Route path="/start-program/:id" element={<AssignTask />} />
-          <Route path="/submit-task-program/:id" element={<TaskDetails />} />
-          <Route path="/program-completion/:id" element={<ProgramCompletion />} />
+          <Route path='/login-type' element={<LoginType />} />
+          <Route path='/questions' element={<Questions />} />
+          <Route element={<Layout />}>
+            <Route path='/dashboard' element={<Dashboard />} />
 
-          <Route path="/create-programs" element={<CreatePrograms />} />
-          <Route path="/update-program/:id" element={<CreatePrograms />} />
-          <Route path="/all-request" element={<AllRequest />} />
-          <Route path="/program" element={<ProgramData />} />
+            <Route path='/mentor-doc-upload' element={<DocumentUpload />} />
+            <Route path='/mentee-doc-upload/:id' element={<DocumentUpload />} />
+            <Route
+              path='/mentee-document-upload/:id'
+              element={<MenteeDocs />}
+            />
+            <Route path='/programs' element={<Programs />} />
+            <Route
+              path='/payment-successfull'
+              element={<PaymentSuccessfull />}
+            />
+            <Route
+              path='/program-details/:id'
+              element={
+                <ProgramDetails setProgramDetailsId={setProgramDetailsId} />
+              }
+            />
+            <Route path='/ticket-history' element={<Tickets />} />
+            <Route
+              path='/payment-checkout'
+              element={<PaymentPage programDetailsId={programDetailsId} />}
+            />
+            <Route path='/program-task/:id' element={<ProgramTask />} />
+            <Route path='/assign-task/:id' element={<AssignTask />} />
+            <Route path='/assign-mentees/:id' element={<AssignMentees />} />
+            <Route path='/assign-mentees' element={<AssignMentees />} />
+            <Route path='/start-program/:id' element={<AssignTask />} />
+            <Route path='/submit-task-program/:id' element={<TaskDetails />} />
+            <Route
+              path='/program-completion/:id'
+              element={<ProgramCompletion />}
+            />
 
-          <Route path="/calendar" element={<Scheduler />} />
-          <Route path="/create-meeting" element={<CreateMeeting />} />
-          <Route path="/members" element={<Members />} />
-          <Route path="/assignMentor" element={<AssignMentor />} />
+            <Route path='/create-programs' element={<CreatePrograms />} />
+            <Route path='/update-program/:id' element={<CreatePrograms />} />
+            <Route path='/all-request' element={<AllRequest />} />
+            <Route path='/program' element={<ProgramData />} />
 
+            <Route path='/calendar' element={<Scheduler />} />
+            <Route path='/create-meeting' element={<CreateMeeting />} />
+            <Route path='/edit-meeting' element={<CreateMeeting />} />
+            <Route path='/members' element={<Members />} />
+            <Route path='/assignMentor' element={<AssignMentor />} />
 
-          <Route path="/discussions" element={<Discussions />} />
+            <Route path='/discussions' element={<Discussions />} />
+            <Route path='/discussions/:id' element={<DiscussionDetails />} />
 
-          <Route path="/mentor-profile/:id" element={<ProfileView />} />
+            <Route path='/mentor-profile/:id' element={<ProfileView />} />
 
-          <Route path="/edit-profile" element={<EditProfile />} />
-          <Route path="/program-data" element={<ProgramsData />} />
-          <Route path="/feedback" element={<Feedback />} />
-          <Route path="/help" element={<HelpPage />} />
-          <Route path="/notification" element={<NotificationMenu />} />
-          <Route path="/feeds" element={<Feeds />} />
-          <Route path="/feed-details/:id" element={<FeedDetails />} />
-          <Route path="/my-profile" element={<Profile />} />
-          <Route path="/profile" element={<MyProfile />} />
+            <Route path='/edit-profile' element={<EditProfile />} />
+            <Route path='/program-data' element={<ProgramsData />} />
+            <Route path='/feedback' element={<Feedback />} />
+            <Route path='/help' element={<HelpPage />} />
+            <Route path='/notification' element={<NotificationMenu />} />
+            <Route path='/feeds' element={<Feeds />} />
+            <Route path='/feed-details/:id' element={<FeedDetails />} />
+            <Route path='/my-profile' element={<Profile />} />
+            <Route path='/profile' element={<MyProfile />} />
 
-          <Route path="/certificates" element={<Certificate />} />
-          <Route path="/create-certificate" element={<CreateCertificate />} />
-          <Route path="/certificate-view/:id" element={<CertificateDetails />} />
-          <Route path="/generate_certificate/:id" element={<GenerateCertificate />} />
-          <Route path="/certificate_members/:id" element={<CertificateMemberDetails />} />
-          <Route path="/certificate_mentees/:id" element={<CertificateMenteeList />} />
-          
+            <Route path='/certificates' element={<Certificate />} />
+            <Route path='/create-certificate' element={<CreateCertificate />} />
+            <Route
+              path='/certificate-view/:id'
+              element={<CertificateDetails />}
+            />
+            <Route
+              path='/generate_certificate/:id'
+              element={<GenerateCertificate />}
+            />
+            <Route
+              path='/certificate_members/:id'
+              element={<CertificateMemberDetails />}
+            />
+            <Route
+              path='/certificate_mentees/:id'
+              element={<CertificateMenteeList />}
+            />
 
-          <Route path="/mentors" element={<Mentors />} />
-          <Route path="/mentor-details/:id" element={<ProfileView />} />
-          <Route path="/mentor-tasks" element={<MentorTask />} />
-          <Route
-            path="/mentor-tasks-details/:id"
-            element={<MentorTaskDetails />}
-          />
-          <Route path="/mentor-change-view" element={<MentorChangeRequest />}/>
+            <Route path='/mentors' element={<Mentors />} />
+            <Route path='/mentor-details/:id' element={<ProfileView />} />
+            <Route path='/mentor-tasks' element={<MentorTask />} />
+            <Route
+              path='/mentor-tasks-details/:id'
+              element={<MentorTaskDetails />}
+            />
+            <Route
+              path='/mentor-change-view'
+              element={<MentorChangeRequest />}
+            />
 
-          <Route path="/mentees" element={<Mentees />} />
-          <Route path="/mentee-details/:id" element={<ProfileView />} />
-          <Route path="/mentee-tasks" element={<Tasks />} />
-          <Route path="/mentee-task_list/:id" element={<MenteeTaskList />} />
-          <Route path="/mentee-tasks-details/:id" element={<TaskDetails />} />
-          <Route path="/preview-mentee-tasks-details/:id" element={<PreviewTaskDetails />} />
+            <Route path='/mentees' element={<Mentees />} />
+            <Route path='/mentee-details/:id' element={<ProfileView />} />
+            <Route path='/mentee-tasks' element={<Tasks />} />
+            <Route path='/mentee-task_list/:id' element={<MenteeTaskList />} />
+            <Route path='/mentee-tasks-details/:id' element={<TaskDetails />} />
+            <Route
+              path='/preview-mentee-tasks-details/:id'
+              element={<PreviewTaskDetails />}
+            />
 
+            <Route path='/ticket-creation' element={<TicketCreation />} />
+            <Route path='/ticket-creation/:id' element={<TicketCreation />} />
+            <Route path='/launch-program' element={<LaunchProgram />} />
+            <Route path='/goals' element={<Goals />} />
+            <Route
+              path='/mentor-view-mentee-goal/:id'
+              element={<MentorViewMenteeGoal />}
+            />
+            <Route path='/view-goal/:id' element={<ViewGoal />} />
 
-          <Route path="/launch-program" element={<LaunchProgram />} />
-          <Route path="/goals" element={<Goals />} />
-          <Route
-            path="/mentor-view-mentee-goal/:id"
-            element={<MentorViewMenteeGoal />}
-          />
-          <Route path="/view-goal/:id" element={<ViewGoal />} />
-
-          <Route path="/reports" element={<Reports />} />
-          <Route path="/create-report" element={<CreateReport />} />
-          <Route path="/edit-report/:id" element={<EditReport />} />
-          <Route path="/view-report/:id" element={<ViewReport />} />
-          <Route path="/profileView" element={<MentorMenteeProfile />} />
-          <Route path="/category" element={<Category />} />
-          <Route path="/categoryView" element={<CategoryView />} />
+            <Route path='/reports' element={<Reports />} />
+            <Route path='/create-report' element={<CreateReport />} />
+            <Route path='/edit-report/:id' element={<EditReport />} />
+            <Route path='/view-report/:id' element={<ViewReport />} />
+            <Route path='/profileView' element={<MentorMenteeProfile />} />
+            <Route path='/category' element={<Category />} />
+            <Route path='/categoryView' element={<CategoryView />} />
+            <Route path='/viewTask/:id' element={<ViewTask />} />
+            <Route path='/testimonialView/:id' element={<TestimonialView />} />
+            <Route path='/historyNotes/:id' element={<HistoryNotes />} />
+          </Route>
         </Route>
-      </Route>
 
-      <Route path="/logout" element={<Logout />} />
-    </Routes>
+        <Route path='/logout' element={<Logout />} />
+      </Routes>
+      {/* </Elements>
+      )} */}
+    </>
   );
 }
 

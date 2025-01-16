@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import dayjs from "dayjs";
-import { getTodayTime } from "../../utils";
-import GoogleIcon from "../../assets/icons/google_icon.svg";
-import TrashIcon from "../../assets/images/delete.png";
-import CalendarIcon from "../../assets/icons/calendar-boxed.svg";
-import InternalCalendarIcon from "../../assets/icons/internal-meeting.svg";
+import React, { useState } from 'react';
+import dayjs from 'dayjs';
+import { formatTime, getTodayTime } from '../../utils';
+import GoogleIcon from '../../assets/icons/google_icon.svg';
+import TrashIcon from '../../assets/images/delete.png';
+import CalendarIcon from '../../assets/icons/calendar-boxed.svg';
+import InternalCalendarIcon from '../../assets/icons/internal-meeting.svg';
+import EventModal from './EventModal';
 // import { AppointmentDetail_Modal } from "../Appointment/AppointmentDetail";
 // import AddAppointment from "./addappointment";
-import EventModal from "./EventsModal";
 // import PrivateComponent from "../PrivateComponent";
 
 export default function TodayView({
@@ -17,14 +17,15 @@ export default function TodayView({
   deleteAppointment,
   isWeek,
   rowIdx,
+  actionActionBtn,
   colIdx,
-  newData
+  newData,
 }) {
   const todayTimes = getTodayTime(currentDate);
 
   return (
     <>
-      <div className="mt-1 p-1">
+      <div className='mt-1 p-1'>
         {todayTimes.map((time, index) => {
           return (
             <TimeBlock
@@ -33,6 +34,7 @@ export default function TodayView({
               colIdx={colIdx}
               key={index}
               time={time}
+              actionActionBtn={actionActionBtn}
               savedEvents={savedEvents}
               fetchEvents={fetchEvents}
               deleteAppointment={deleteAppointment}
@@ -53,59 +55,60 @@ function TimeBlock({
   savedEvents,
   fetchEvents,
   deleteAppointment,
-  newData
+  actionActionBtn,
+  newData,
 }) {
-  const startTime = time.format("h:mm A"); // Format the start time
-  const endTime = time.add(1, "hour").format("h:mm A"); // Add 1 hour to get the end time
+  const startTime = time.format('h:mm A'); // Format the start time
+  const endTime = time.add(1, 'hour').format('h:mm A'); // Add 1 hour to get the end time
 
   function getCurrentTimeClass() {
-    return time.format("H") === dayjs().format("H")
-      ? "bg-[#2F9384] text-white rounded-md h-5 m-0 w-100"
-      : "pt-2";
+    return time.format('H') === dayjs().format('H')
+      ? 'bg-[#2F9384] text-white rounded-md h-5 m-0 w-100'
+      : 'pt-2';
   }
 
   function getTitleBackGround() {
-    const timeHour = dayjs(time).format("HH");
+    const timeHour = dayjs(time).format('HH');
 
     switch (timeHour) {
-      case "01":
-      case "13":
-        return "text-white bg-fuchsia-900";
-      case "02":
-      case "14":
-        return "text-white bg-emerald-500";
-      case "03":
-      case "15":
-        return "text-white bg-sky-500";
-      case "04":
-      case "16":
-        return "text-white bg-red-500";
-      case "05":
-      case "17":
-        return "text-black bg-yellow-200";
-      case "06":
-      case "18":
-        return "text-white bg-teal-500";
-      case "07":
-      case "19":
-        return "text-white bg-indigo-500";
-      case "08":
-      case "20":
-        return "text-white bg-orange-500";
-      case "09":
-      case "21":
-        return "text-white bg-lime-500";
-      case "10":
-      case "22":
-        return "text-white bg-violet-500";
-      case "11":
-      case "23":
-        return "text-white bg-cyan-500";
-      case "12":
-      case "00":
-        return "text-white bg-rose-500";
+      case '01':
+      case '13':
+        return 'text-white bg-fuchsia-900';
+      case '02':
+      case '14':
+        return 'text-white bg-emerald-500';
+      case '03':
+      case '15':
+        return 'text-white bg-sky-500';
+      case '04':
+      case '16':
+        return 'text-white bg-red-500';
+      case '05':
+      case '17':
+        return 'text-black bg-yellow-200';
+      case '06':
+      case '18':
+        return 'text-white bg-teal-500';
+      case '07':
+      case '19':
+        return 'text-white bg-indigo-500';
+      case '08':
+      case '20':
+        return 'text-white bg-orange-500';
+      case '09':
+      case '21':
+        return 'text-white bg-lime-500';
+      case '10':
+      case '22':
+        return 'text-white bg-violet-500';
+      case '11':
+      case '23':
+        return 'text-white bg-cyan-500';
+      case '12':
+      case '00':
+        return 'text-white bg-rose-500';
       default:
-        return "";
+        return '';
     }
   }
 
@@ -114,18 +117,20 @@ function TimeBlock({
     return eventTime.hour() === time.hour() && eventTime.date() === time.date();
   });
 
-
   const eventsForHour1 = newData.filter((event) => {
     const eventTime = dayjs(new Date(event.date).toDateString());
     return eventTime.hour() === time.hour() && eventTime.date() === time.date();
   });
 
-
-  
-
   const [showDetailModal, setShowDetailModal] = useState(null);
+  const [selectedEvent, setSelectedEvent] = useState(null);
   const toggleDetailModal = (index) => {
     setShowDetailModal(index);
+  };
+
+  const handleEventClick = (item) => {
+    setSelectedEvent(item);
+    setShowModal(true);
   };
 
   const [editEvent, setEditEvent] = useState(false);
@@ -147,33 +152,32 @@ function TimeBlock({
   const toggleModal = () => {
     setShowModal(!showModal);
   };
-
   return (
     <div
-      className={`flex-1 grid grid-cols-9 gap-2 m-0 opacity-75 ${
-        isWeek ? "border-b-[1px] h-16" : "border"
+      className={`flex-1 grid grid-cols-9 gap-2 opacity-75 ${
+        isWeek ? 'border-b-[1px] h-16' : 'border'
       }  border-gray-200`}
     >
       {showTimeBlock && (
         <div
           className={`${
-            showTimeBlock && isWeek ? "col-span-9" : "col-span-1"
+            showTimeBlock && isWeek ? 'col-span-9' : 'col-span-1'
           } ${
-            isWeek ? "" : "border-r-2"
+            isWeek ? '' : 'border-r-2'
           }  border-gray-200 flex justify-center items-center`}
         >
           <p
             className={`text-center text-sm ${getCurrentTimeClass()} w-full h-full flex justify-center items-center`}
           >
-            <span className="m-auto">{startTime}</span>
+            <span className='m-auto'>{startTime}</span>
           </p>
         </div>
       )}
       {showEvent && (
-        <div className={`${showEvent && isWeek ? "col-span-9" : "col-span-8"}`}>
+        <div className={`${showEvent && isWeek ? 'col-span-9' : 'col-span-8'}`}>
           {eventsForHour1.map((event, index) => {
-            const startTime = dayjs(event.start).format("hh:mm A");
-            const endTime = dayjs(event.end).format("hh:mm A");
+            const startTime = dayjs(event.start).format('hh:mm A');
+            const endTime = dayjs(event.end).format('hh:mm A');
 
             let showAppointment = editEvent === index;
             if (viewEvent === index) {
@@ -181,7 +185,7 @@ function TimeBlock({
             }
 
             let eventTitleDisplay =
-              startTime + "-" + endTime + " | " + event.title;
+              startTime + '-' + endTime + ' | ' + event.title;
 
             if (isWeek) {
               eventTitleDisplay = event.title;
@@ -193,41 +197,82 @@ function TimeBlock({
             }
 
             return (
-              <>
+              <div className='cursor-pointer'>
                 <div
                   key={index}
-                  className={`${isWeek ? "" : "m-2"} mb-0 relative`}
+                  className='cursor-pointer'
+                  // className={`${isWeek ? '' : 'm-2'} mb-0 cursor-pointer`}
+                  onClick={() => handleEventClick(event)}
                 >
-                  <a
+                  {/* <a
                     // href={event.htmlLink}
-                    target="_blank"
+                    target='_blank'
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
                       toggleDetailModal(index);
                     }}
+                  > */}
+                  <div
+                    // className={`relative flex flex-row gap-1 items-center justify-between w-full h-7 rounded-tl-sm rounded-tr-sm mx-1 ${getTitleBackGround()}`}
+                    className='text-sm relative cursor-pointer calendar-event-conatiner'
+                    onClick={() => handleEventClick(event)}
+                    style={{
+                      boxShadow: '4px 4px 15px 2px rgba(0, 0, 0, 0.1)',
+                      borderRadius: '3px',
+                      background: '#fff',
+                    }}
                   >
+                    {event?.length > 1 && (
+                      <span
+                        className='absolute notification-count'
+                        style={{
+                          background: 'rgba(255, 206, 71, 1)',
+                          right: '4px',
+                          top: '-7px',
+                          height: '23px',
+                          width: '23px',
+                          textAlign: 'center',
+                          borderRadius: '50%',
+                          color: '#fff',
+                        }}
+                      >
+                        {event?.length}
+                      </span>
+                    )}
                     <div
-                      className={`relative flex flex-row gap-1 items-center justify-between w-full h-7 rounded-tl-sm rounded-tr-sm mx-1 ${getTitleBackGround()}`}
+                      // className='flex items-center gap-1'
+                      className='event-title'
+                      onClick={() => handleEventClick(event)}
+                      // title={event?.title}
+                      style={{
+                        background: '#1D5BBF',
+                        color: '#fff',
+                        padding: '5px',
+                        borderRadius: '3px',
+                      }}
                     >
-                      <div className="flex items-center gap-1">
-                        <img
-                          src={
-                            event?.isExternal ? GoogleIcon : InternalCalendarIcon
-                          }
-                          className={
-                            event?.isExternal
-                              ? "h-[16px] w-[16px] ms-1 bg-white rounded-full"
-                              : "h-[20px] w-[20px] ms-1"
-                          }
-                          alt="event-meet"
-                        />
-                        <div className="text-center text-xs font-normal truncate">
-                          {eventTitleDisplay}
-                        </div>
+                      <div className='text-xs font-normal truncate'>
+                        {/* {eventTitleDisplay} */}
+                        {event.title}
                       </div>
+                    </div>
+                    <div className='meeting-details px-2 pt-2 pb-3'>
+                      <div
+                        className='mb-2 meeting-scheduler text-xs'
+                        title='Mentor : John Doe'
+                      >
+                        Mentor : John Doe
+                      </div>
+                      <div
+                        className='text-[12px] meeting-time'
+                        style={{ color: 'rgba(40, 41, 59, 1)' }}
+                      >
+                        Time: {formatTime(event.start)} -{formatTime(event.end)}
+                      </div>
+                    </div>
 
-                      {/* <PrivateComponent permission="delete_appointments_in_my_calendar">
+                    {/* <PrivateComponent permission="delete_appointments_in_my_calendar">
                         <div className="absolute inset-y-0 right-0 bg-slate-50 px-1 m-1 rounded flex items-center justify-end pe-1">
                           <button
                             onClick={(e) => {
@@ -240,8 +285,8 @@ function TimeBlock({
                           </button>
                         </div>
                       </PrivateComponent> */}
-                    </div>
-                  </a>
+                  </div>
+                  {/* </a> */}
                 </div>
                 {/* {showDetailModal === index && (
                   <AppointmentDetail_Modal
@@ -272,13 +317,13 @@ function TimeBlock({
                   isUpdate={editEvent === index}
                   isView={viewEvent === index}
                 /> */}
-              </>
+              </div>
             );
           })}
 
           {isWeek && eventsForHour.length > 1 && (
             <div
-              className="flex items-center justify-center mt-2 text-sm text-[#2F9384] cursor-pointer"
+              className='flex items-center justify-center mt-2 text-sm text-[#2F9384] cursor-pointer'
               onClick={() => {
                 setShowModal(true);
               }}
@@ -286,18 +331,18 @@ function TimeBlock({
               +{eventsForHour.length - 1} more
             </div>
           )}
-
-          {showModal && (
-            <EventModal
-              show={showModal}
-              eventDate={`${startTime}-${endTime}`}
-              toggleModal={toggleModal}
-              events={eventsForHour}
-              fetchEvents={fetchEvents}
-              deleteAppointment={deleteAppointment}
-            />
-          )}
         </div>
+      )}
+      {showModal && (
+        <EventModal
+          open={showModal}
+          eventDate={`${startTime}-${endTime}`}
+          closeModal={toggleModal}
+          event={selectedEvent}
+          actionActionBtn={actionActionBtn}
+          fetchEvents={fetchEvents}
+          deleteAppointment={deleteAppointment}
+        />
       )}
     </div>
   );

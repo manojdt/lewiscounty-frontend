@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { Backdrop, CircularProgress } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,19 +17,21 @@ import { MenteeAssignColumns } from '../../mock';
 import { getAllCategories } from '../../services/programInfo';
 
 import { certificateStatus, pipeUrls, programActionStatus, reportsStatus } from '../../utils/constant';
-import { createReport, getCompletedProgramsByCategoryId, getProgramsByCategoryId, getReportProgramDetails } from '../../services/reportsInfo';
+import { createReport, getCompletedProgramsByCategoryId, getProgramsByCategoryId, getReportProgramDetails, updateReportLocalState } from '../../services/reportsInfo';
 import ToastNotification from '../../shared/Toast';
 import { dateTimeFormat } from '../../utils';
 import { createCertificate } from '../../services/certificate';
+import { Calendar } from 'primereact/calendar';
 
 export default function CreateCertificate() {
     const navigate = useNavigate()
     const params = useParams();
-
+    const state = useLocation()?.state
     const dispatch = useDispatch()
     const { programdetails, loading: programLoading, error, menteeList } = useSelector(state => state.userPrograms)
     const { category, loading: apiLoading } = useSelector(state => state.programInfo)
     const { categoryPrograms, loading: reportsLoading, programDetails } = useSelector(state => state.reports)
+    console.log(programDetails,"programDetails")
     const { status } = useSelector(state => state.certificates)
     const [certificateFields, setCertificateFields] = useState(CreateCertificateFields)
     const [dateFormat, setDateFormat] = useState({})
@@ -45,15 +47,29 @@ export default function CreateCertificate() {
         handleSubmit,
         reset,
         getValues,
-        setValue
+        setValue,
+        watch
     } = useForm();
+
+    const allFields = watch()
+
+    React.useEffect(() => {
+        if (state?.type === "new") {
+            reset()
+            dispatch(updateReportLocalState({ programDetails: {} }))
+        }
+        // return()=>{
+        //     reset()
+        //     dispatch(updateReportLocalState({ programDetails: {} }))
+        // }
+    }, [])
 
     const onSubmit = (data) => {
         const apiPayload = {
-            id: parseInt(data.program),
+            program: parseInt(data.program),
+            request_type: "certificate"
         }
         dispatch(createCertificate(apiPayload))
-        // dispatch(updateProgram({ id: programdetails.id, status: programActionStatus.assigned }))
         // reset()
     }
 
@@ -66,7 +82,7 @@ export default function CreateCertificate() {
     }
 
     const handleProgramData = (programId) => {
-        dispatch(getReportProgramDetails(programId))
+        dispatch(getReportProgramDetails(programId,"type"))
     }
 
 
@@ -91,18 +107,22 @@ export default function CreateCertificate() {
     }, [status])
 
     useEffect(() => {
-        if (programDetails && Object.keys(programDetails).length) {
-            reset({
-                mentor_name: programDetails.mentor_full_name,
-                course_level: CourseLevelOptions.find(level => level.key === programDetails.course_level)?.value,
-                start_date: dateTimeFormat(programDetails.start_date),
-                end_date: dateTimeFormat(programDetails.end_date),
-                duration: programDetails.duration,
-                participated_mentees: programDetails.participated_mentees,
-                pass_mentee_list: programDetails.pass_mentee_list,
-                fail_mentee_list: programDetails.fail_mentee_list
-            })
-        }
+        // if (!state?.type) {
+            if (programDetails && Object.keys(programDetails).length) {
+                reset({
+                    mentor_name: programDetails.mentor_name,
+                    course_level: CourseLevelOptions.find(level => level.key === programDetails.course_level)?.value,
+                    // start_date: dateTimeFormat(programDetails.start_date),
+                    // end_date: dateTimeFormat(programDetails.end_date),
+                    start_date: new Date(programDetails?.start_date) ?? "",
+                end_date: new Date(programDetails?.end_date) ?? '',
+                    duration: programDetails.duration,
+                    participated_mentees: programDetails.participated_mentees,
+                    pass_mentee_list: programDetails.pass_participates,
+                    fail_mentee_list: programDetails.fail_participates
+                })
+            }
+        // }
     }, [programDetails])
 
     useEffect(() => {
@@ -141,7 +161,7 @@ export default function CreateCertificate() {
             setCertificateFields(fields)
         }
 
-        if (!categoryPrograms.length && getValues('category') !== '') {
+        if (!categoryPrograms.length && getValues('category')) {
             setNotification({ program: true })
         }
     }, [categoryPrograms])
@@ -149,6 +169,43 @@ export default function CreateCertificate() {
     useEffect(() => {
         dispatch(getAllCategories())
     }, [])
+
+
+    // useEffect(() => {
+
+    //     const selectedProgram = categoryPrograms?.filter((e) => e?.id === Number(allFields?.program))?.[0]
+
+    //     if (allFields?.program) {
+    //         reset({
+    //             ...getValues(),
+    //             mentor_name: selectedProgram?.mentor_name,
+    //             course_level: selectedProgram?.course_level,
+    //             start_date: new Date(selectedProgram?.start_date) ?? "",
+    //             end_date: new Date(selectedProgram?.end_date) ?? '',
+    //             duration: `${selectedProgram?.duration} Days`,
+    //             participated_mentees: "",
+    //             pass_mentee_list: "",
+    //             fail_mentee_list: "",
+    //         })
+    //     }
+    // }, [allFields?.program])
+
+    useEffect(() => {
+        if (allFields?.category) {
+            reset({
+                ...getValues(),
+                program: "",
+                mentor_name: "",
+                course_level: "",
+                start_date: "",
+                end_date: "",
+                duration: "",
+                participated_mentees: "",
+                pass_mentee_list: "",
+                fail_mentee_list: "",
+            })
+        }
+    }, [allFields?.category])
 
 
     return (
@@ -166,10 +223,14 @@ export default function CreateCertificate() {
                 open={status === certificateStatus.create}
             >
                 <div className='px-5 py-1 flex justify-center items-center'>
-                    <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
-                        style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
+                    <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+                        style={{ background: '#fff', borderRadius: '10px' }}>
                         <img src={SuccessTik} alt="SuccessTik" />
-                        <p className='text-white text-[12px]'>Certificate action successfully performed</p>
+                        <p className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                            style={{
+                                fontWeight: 600
+                            }}
+                        >Certificate action successfully performed</p>
                     </div>
 
                 </div>
@@ -314,7 +375,7 @@ export default function CreateCertificate() {
                                                                     field.type === 'date' ?
                                                                         <>
                                                                             <div className='relative input-bg'>
-                                                                                <input {...register(field.name, field.inputRules)}
+                                                                                {/* <input {...register(field.name, field.inputRules)}
                                                                                     type={field.fieldtype}
                                                                                     className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none 
                                                                                     focus-visible:outline-none text-[14px] h-[60px]"
@@ -325,6 +386,18 @@ export default function CreateCertificate() {
                                                                                     }}
                                                                                     disabled={field.disabled}
                                                                                     aria-invalid={!!errors[field.name]}
+                                                                                    value={getValues(field.name)}
+                                                                                    hourFormat="12"
+                                                                                    dateFormat="dd/mm/yy"
+                                                                                /> */}
+
+
+                                                                                <Calendar
+                                                                                    className='calendar-control w-full'
+                                                                                    value={getValues(field.name)}
+                                                                                    disabled={true}
+                                                                                    hourFormat="12"
+                                                                                    dateFormat="dd/mm/yy"
                                                                                 />
                                                                                 <img className='absolute top-5 right-2' src={CalendarIcon} alt="CalendarIcon" />
                                                                             </div>
@@ -354,7 +427,7 @@ export default function CreateCertificate() {
 
                                                                                                         }}></p>
                                                                                                         {
-                                                                                                            popupfield.mentee_name
+                                                                                                            popupfield?.mentee_name||popupfield?.full_name
                                                                                                         }
                                                                                                     </p>
                                                                                                 </>
@@ -380,14 +453,14 @@ export default function CreateCertificate() {
                                                                             field.type === 'editor' ?
                                                                                 <>
                                                                                     <div className='flex gap-3'>
-                                                                                        <textarea id="message" rows="4" className={`block p-2.5 input-bg w-[95%] h-[200px] text-sm text-gray-900  rounded-lg border
+                                                                                        <textarea id="message" rows="4" className={`block p-2.5 input-bg w-[100%] h-[200px] text-sm text-gray-900  rounded-lg border
                                                                                             focus:visible:outline-none focus:visible:border-none ${field.width === 'width-82' ? 'h-[282px]' : ''}`}
                                                                                             placeholder={field.placeholder}
                                                                                             {...register(field.name, field.inputRules)}></textarea>
-                                                                                        <div className='flex flex-col gap-6 items-center justify-center input-bg w-[4%]' style={{ borderRadius: '3px' }}>
+                                                                                        {/* <div className='flex flex-col gap-6 items-center justify-center input-bg w-[4%]' style={{ borderRadius: '3px' }}>
                                                                                             <img src={TextIcon} alt="TextIcon" />
                                                                                             <img src={HTMLIcon} alt="HTMLIcon" />
-                                                                                        </div>
+                                                                                        </div> */}
                                                                                     </div>
                                                                                     {errors[field.name] && (
                                                                                         <p className="error" role="alert">

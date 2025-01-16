@@ -1,4 +1,4 @@
-import { Backdrop, Box, CircularProgress, Stack, Tab, Tabs, Typography } from "@mui/material";
+import { Backdrop, Box, CircularProgress, Menu, MenuItem, Stack, Tab, Tabs, Typography } from "@mui/material";
 import React from "react";
 import SearchIcon from '../../assets/icons/search.svg';
 import { categoryViewMentees, categoryViewMentors, categoryViewProgram } from "../../mock";
@@ -9,6 +9,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCategoryView } from "../../services/category";
 import { useLocation, useNavigate } from "react-router-dom";
 import ArrowRight from "../../assets/icons/breadCrumbsArrow.svg"
+import MoreIcon from "../../assets/icons/moreIcon.svg";
+import ViewIcon from "../../assets/images/view1x.png";
 
 const CategoryView = () => {
     const { viewData, loading } = useSelector((state) => state.category)
@@ -21,6 +23,17 @@ const CategoryView = () => {
         page: 0,
         pageSize: 10,
     });
+    const [seletedItem, setSelectedItem] = React.useState({});
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+    const handleMoreClick = (event, data) => {
+        setSelectedItem(data);
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
 
     const handleGetTableData = (searchText = search) => {
         const payload = {
@@ -94,7 +107,31 @@ const CategoryView = () => {
                     </div>
                 </>
             }
-        }
+        },
+        {
+            field: "action",
+            headerName: "Action",
+            flex: 1,
+            id: 4,
+            renderCell: (params) => {
+                return (
+                    <>
+                        <div className="cursor-pointer flex items-center h-full" onClick={(e) => handleMoreClick(e, params.row)}>
+                            <img src={MoreIcon} alt="MoreIcon" />
+                        </div>
+                        <Menu id="basic-menu" anchorEl={anchorEl} open={open} onClose={handleClose} MenuListProps={{
+                            "aria-labelledby": "basic-button",
+                        }}
+                        >
+                            <MenuItem onClick={(e) => handleView(seletedItem.id)} className="!text-[12px]" >
+                                <img src={ViewIcon} alt="ViewIcon" className="pr-3 w-[30px]" />
+                                View
+                            </MenuItem>
+                        </Menu>
+                    </>
+                );
+            },
+        },
     ]
 
     const MenteesColumns = [
@@ -118,13 +155,82 @@ const CategoryView = () => {
                     </div>
                 </>
             }
-        }
+        },
+        {
+            field: "action",
+            headerName: "Action",
+            flex: 1,
+            id: 4,
+            renderCell: (params) => {
+                return (
+                    <>
+                        <div className="cursor-pointer flex items-center h-full" onClick={(e) => handleMoreClick(e, params.row)}>
+                            <img src={MoreIcon} alt="MoreIcon" />
+                        </div>
+                        <Menu id="basic-menu" anchorEl={anchorEl} open={open} onClose={handleClose} MenuListProps={{
+                            "aria-labelledby": "basic-button",
+                        }}
+                        >
+                            <MenuItem onClick={(e) => handleView(seletedItem.id)} className="!text-[12px]" >
+                                <img src={ViewIcon} alt="ViewIcon" className="pr-3 w-[30px]" />
+                                View
+                            </MenuItem>
+                        </Menu>
+                    </>
+                );
+            },
+        },
+    ]
+
+    const categoryViewProgramColumns = [
+        ...categoryViewProgram,
+        {
+            field: "action",
+            headerName: "Action",
+            flex: 1,
+            id: 4,
+            renderCell: (params) => {
+                return (
+                    <>
+                        <div className="cursor-pointer flex items-center h-full" onClick={(e) => handleMoreClick(e, params.row)}>
+                            <img src={MoreIcon} alt="MoreIcon" />
+                        </div>
+                        <Menu id="basic-menu" anchorEl={anchorEl} open={open} onClose={handleClose} MenuListProps={{
+                            "aria-labelledby": "basic-button",
+                        }}
+                        >
+                            <MenuItem onClick={(e) => handleView(seletedItem.id, "program")} className="!text-[12px]" >
+                                <img src={ViewIcon} alt="ViewIcon" className="pr-3 w-[30px]" />
+                                View
+                            </MenuItem>
+                        </Menu>
+                    </>
+                );
+            },
+        },
     ]
 
     const columns = {
         mentor: MentorsColumns,
         mentee: MenteesColumns,
-        program: categoryViewProgram
+        program: categoryViewProgramColumns
+    }
+
+    const handleView = (id, type = "") => {
+        if (type === "program") {
+            navigate(`/program-details/${id}`, {
+                state: {                  
+                    from: "category"
+                },
+            })
+        } else {
+            navigate(`/profileView`, {
+                state: {
+                    user_id: id,
+                    from: "category"
+                },
+            })
+        }
     }
 
     return (
@@ -136,20 +242,21 @@ const CategoryView = () => {
                 <CircularProgress color="inherit" />
             </Backdrop>
 
-            
+
 
             <Box p={4}>
-            <Stack direction={"row"} alignItems={"center"} spacing={1}>
-                <Typography className="text-[#5975A2] text-[16px] cursor-pointer" sx={{fontWeight: 500}} onClick={()=> navigate(-1)}>Category</Typography>
-                <img src={ArrowRight} />
-                <Typography className="text-[#18283D] text-[16px]" sx={{fontWeight: 500}}>View Teaching Category</Typography>
-            </Stack>
+                <Stack direction={"row"} alignItems={"center"} spacing={1}>
+                    <Typography className="text-[#5975A2] !text-[12px] cursor-pointer" sx={{ fontWeight: 500 }} onClick={() => navigate(-1)}>Category</Typography>
+                    <img src={ArrowRight} />
+                    <Typography className="text-[#18283D] !text-[12px]" sx={{ fontWeight: 500 }}>View Teaching Category</Typography>
+                </Stack>
                 <Tabs
                     value={value}
                     onChange={handleChange}
                     aria-label="wrapped label tabs example"
                     style={{ borderBottom: "1px soild #1D5BBF" }}
                     sx={{
+                        marginTop: "18px",
                         "& .MuiTabs-indicator": {
                             height: "5px",
                             background: "#1D5BBF",
@@ -165,11 +272,11 @@ const CategoryView = () => {
                                     value={e?.value}
                                     label={
                                         <Stack alignItems={"center"} spacing={1}>
-                                            <Typography className={`${e?.value === value ? 'bg-[#EEF5FF]' : 'bg-[#D6D6D6]'} 
+                                            {/* <Typography className={`${e?.value === value ? 'bg-[#EEF5FF]' : 'bg-[#D6D6D6]'} 
                                         p-[4px] text-[${e?.value === value ? '#1D5BBF' : '#18283D'}] 
-                                        rounded-[2px] text-[16px]`}>{e?.count}</Typography>
+                                        rounded-[2px] !text-[12px]`}>{e?.count}</Typography> */}
 
-                                            <Typography className={`text-[16px] text-[${e?.value === value ? '#1D5BBF' : '#18283D'}] 
+                                            <Typography className={`!text-[14px] text-[${e?.value === value ? '#1D5BBF' : '#18283D'}] 
                                         capitalize`} sx={{ fontWeight: 500 }}>{e?.title}</Typography>
                                         </Stack>
                                     }

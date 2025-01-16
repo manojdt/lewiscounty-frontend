@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import { useEffect, useState } from "react";
 
 export function getMonth(date = dayjs()) {
   const currDate = dayjs(date);
@@ -160,7 +161,19 @@ export const dateFormat = data => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
-    const formattedDate = `${year}-${month}-${day}`;
+    const formattedDate = `${month}-${day}-${year}`;
+    return formattedDate
+  }
+  return ''
+}
+export const dateFormatRever = data => {
+  if (data && data !== '') {
+    const timestamp = data;
+    const date = new Date(timestamp);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const formattedDate = `${month}-${day}-${year}`;
     return formattedDate
   }
   return ''
@@ -176,7 +189,7 @@ export const dateTimeFormat = data => {
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
     const seconds = String(date.getSeconds()).padStart(2, '0');
-    const formattedDate = `${month}/${day}/${year} | ${hours}:${minutes}`;
+    const formattedDate = `${month}-${day}-${year} | ${hours}:${minutes}`;
     return formattedDate
   }
   return ''
@@ -279,37 +292,45 @@ export const getFiles = (files) => {
     files: false
   };
 
-  const imageExtension = ['jpg', 'jpeg', 'png']
-  const docuementExtension = ['pdf', 'doc', 'docx']
-  const videoExtension = ['mov', 'mp4', 'avi']
+  const imageExtension = ["jpg", "jpeg", "png", "gif"];
+  const documentExtension = ["pdf", "doc", "docx", "txt"];
+  const videoExtension = ["mp4", "mov", "avi"];
 
-  files.forEach(file => {
-    const url = file.files;
-    const fileName = url.split('/').pop().split('.')[0];
-    const extension = url.split('.').pop() || '';
-
-
+  files?.forEach((fileObj) => {
+    const file = fileObj["0"]?fileObj["0"]:fileObj; 
+    if (!file) return; 
+    let url =file?.id?file?.files: URL.createObjectURL(file); 
+    let fileName =file.file_name || file.name.split(".")[0] || "";
+    let extension = file.name.split(".").pop() || "";
+    let rowId= fileObj?.row_id?fileObj?.row_id:undefined
+   
     if (imageExtension.includes(extension.toLowerCase())) {
       allFiles.image.push({
+        ...file,
         name: fileName,
-        fileurl: url
+        fileurl: url,
+        row_id:rowId
       });
-      allFiles.files = true
-    } else if (docuementExtension.includes(extension.toLowerCase())) {
+      allFiles.files = true;
+    } else if (documentExtension.includes(extension.toLowerCase())) {
       allFiles.doc.push({
+        ...file,
         name: fileName,
-        fileurl: url
+        fileurl: url,
+        row_id:rowId
       });
-      allFiles.files = true
+      allFiles.files = true;
     } else if (videoExtension.includes(extension.toLowerCase())) {
       allFiles.video.push({
+        ...file,
         name: fileName,
-        fileurl: url
+        fileurl: url,
+        row_id:rowId
       });
-      allFiles.files = true
+      allFiles.files = true;
     }
   });
-  return allFiles
+  return allFiles;
 }
 
 export const fileNameFromUrl = (file) => {
@@ -321,14 +342,28 @@ export const fileNameFromUrl = (file) => {
 }
 
 export const fileNameString = (data) => {
- 
+
   const fileNames = data.map(item => item.files.split('/').pop());
-  console.log('fileNames', fileNames)
   const firstImageName = fileNames[0].slice(0, 6);
-  const remainingImagesCount = fileNames.length - 1;
+  const remainingImagesCount = fileNames?.length - 1;
   return {
     filename: firstImageName,
     fullName: fileNames[0],
     remainingCount: remainingImagesCount
   };
 }
+export const useDebounce = (value, delay) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+};

@@ -16,15 +16,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { getReportProgramDetails } from "../../services/reportsInfo";
 import { Button } from "../../shared";
 import MoreIcon from "../../assets/icons/moreIcon.svg";
-import { Backdrop, Menu } from "@mui/material";
+import { Backdrop, Menu, MenuItem } from "@mui/material";
 import SuccessTik from "../../assets/images/blue_tik1x.png";
 import { createCertificate } from "../../services/certificate";
+import TickCircle from '../../assets/icons/tickCircle.svg';
 
 export default function CertificateMemberDetails() {
   const navigate = useNavigate();
   const { id } = useParams();
   const { programDetails } = useSelector((state) => state.reports);
   const { status } = useSelector((state) => state.certificates);
+  const userInfo = useSelector(state => state.userInfo);
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -32,23 +34,39 @@ export default function CertificateMemberDetails() {
   const [menteeList, setMenteeList] = useState([]);
   const [loading, setLoading] = useState(false);
   const getCertificateDetails = async () => {
-    dispatch(getReportProgramDetails(id));
+    dispatch(getReportProgramDetails(id,"type"));
   };
+  const role = userInfo.data.role
   const getMenteeList = async () => {
-    const passMenteeList = programDetails?.pass_mentee_list || [];
-    const failMenteeList = programDetails?.fail_mentee_list || [];
+    const constructedPassList = programDetails?.pass_participates?.map((e) => {
+      return {
+        ...e,
+        program_id: programDetails?.id
+      }
+    })
+
+    const constructedFailList = programDetails?.fail_participates?.map((e) => {
+      return {
+        ...e,
+        program_id: programDetails?.id
+      }
+    })
+    const passMenteeList = constructedPassList || [];
+    const failMenteeList = constructedFailList || [];
     const listMentee = [...passMenteeList, ...failMenteeList];
     const res =
       listMentee.length > 0
         ? listMentee.map((val, i) => ({
-            ...val,
-            id: i + 1,
-            program_name: programDetails?.program_name,
-          }))
+          ...val,
+          id: i + 1,
+          program_name: programDetails?.program_name,
+        }))
         : [];
-
+console.log(res,"res")
     setMenteeList(res);
   };
+
+  console.log("menteeList ===>", menteeList)
 
   useEffect(() => {
     if (id) {
@@ -130,10 +148,17 @@ export default function CertificateMemberDetails() {
                 "aria-labelledby": "basic-button",
               }}
             >
-              {/* {role === "mentee" ? (
+              {role === "mentor" || role === "admin" ? (
                 <MenuItem
                   onClick={() =>
-                    navigate(`/certificate-view/${seletedItem.id}`)
+                    navigate(
+                      `/mentee-task_list/${seletedItem.id}?mentee_id=${seletedItem?.mentee_id}&program_id=${seletedItem?.program_id}`, {
+                        state: {
+                          from: "program"
+                        }
+                      }
+                      // `/certificate-view/${seletedItem.id}?mentee_id=${seletedItem?.mentee_id}`
+                    )
                   }
                   className="!text-[12px]"
                 >
@@ -144,7 +169,7 @@ export default function CertificateMemberDetails() {
                   />
                   View
                 </MenuItem>
-              ) : null} */}
+              ) : null}
 
               {/* <MenuItem onClick={handleCeritificateDownload} className='!text-[12px]'>
                             <img src={DownloadIcon} alt="AcceptIcon" className='pr-3 w-[27px]' />
@@ -165,7 +190,7 @@ export default function CertificateMemberDetails() {
   }, [status]);
 
   const handleSubmit = () => {
-    dispatch(createCertificate({ id: +id }));
+    dispatch(createCertificate({ program: +id, request_type: "certificate" }));
   };
   return (
     <div className="px-8 mt-10 pb-5">
@@ -178,25 +203,22 @@ export default function CertificateMemberDetails() {
           open={status === certificateStatus.create}
           onClick={() => setLoading(false)}
         >
-          <div className="px-5 py-1 flex justify-center items-center">
-            <div
-              className="flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20"
-              style={{
-                background:
-                  "linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)",
-                borderRadius: "10px",
-              }}
-            >
+          <div className='px-5 py-1 flex justify-center items-center'>
+            <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+              style={{ background: '#fff', borderRadius: '10px' }}>
               <img src={SuccessTik} alt="SuccessTik" />
-              <p className="text-white text-[12px]">
-                Certificate request is successfully created
-              </p>
+              <p className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                style={{
+                  fontWeight: 600
+                }}
+              >Certificate request is successfully created</p>
             </div>
+
           </div>
         </Backdrop>
         <div className="flex justify-between px-5 pb-4 mb-8 items-center border-b-2">
           <div className="flex gap-5 items-center text-[14px]">
-         
+
             <p> Member Select</p>
           </div>
           <div
@@ -219,7 +241,7 @@ export default function CertificateMemberDetails() {
               btnName="Cancel"
               btnCls="w-[13%]"
               btnCategory="secondary"
-              onClick={() => navigate("/reports")}
+              onClick={() => navigate(-1)}
             />
             <Button
               btnType="button"

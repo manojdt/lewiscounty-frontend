@@ -1,20 +1,15 @@
-import {
-  createAsyncThunk,
-  createAction
-} from "@reduxjs/toolkit";
-import {
-  jwtDecode
-} from "jwt-decode";
-import api from "./api";
+import { createAsyncThunk, createAction } from '@reduxjs/toolkit';
+import { jwtDecode } from 'jwt-decode';
+import api from './api';
 
 // User Create Account
 export const userAccountCreate = createAsyncThunk(
-  "userCreate",
+  'userCreate',
   async (data) => {
-    const userCreate = await api.post("register", data);
+    const userCreate = await api.post('register', data);
     if (userCreate.status === 201) {
-      localStorage.setItem("access_token", userCreate.data.access);
-      localStorage.setItem("refresh_token", userCreate.data.refresh);
+      localStorage.setItem('access_token', userCreate.data.access);
+      localStorage.setItem('refresh_token', userCreate.data.refresh);
       let decoded = jwtDecode(userCreate.data.access);
       return { status: userCreate.status, userResponse: decoded };
     }
@@ -23,121 +18,116 @@ export const userAccountCreate = createAsyncThunk(
   }
 );
 
-export const updateInfo = createAsyncThunk(
-  "updateInfo",
-  async () => {
-    const userToken = localStorage.getItem("access_token");
-    if (userToken) {
-      let decoded = jwtDecode(userToken);
-      return decoded;
-    }
-    return {};
+export const updateInfo = createAsyncThunk('updateInfo', async () => {
+  const userToken = localStorage.getItem('access_token');
+  if (userToken) {
+    let decoded = jwtDecode(userToken);
+    return decoded;
   }
-);
+  return {};
+});
 
-export const updateUserInfo = createAction('update/userInfo')
+export const updateUserInfo = createAction('update/userInfo');
 
-export const resetUserInfo = createAction('reset/userInfo')
+export const resetUserInfo = createAction('reset/userInfo');
 
 // User Login
-export const userAccountLogin = createAsyncThunk("userLogin", async (data) => {
-  const userlogin = await api.post("login", data);
+export const userAccountLogin = createAsyncThunk('userLogin', async (data) => {
+  const userlogin = await api.post('login', data);
   if (userlogin.status) {
     if (userlogin.status === 200) {
       let decoded = jwtDecode(userlogin.data.access);
-      if(decoded?.userinfo?.approve_status === 'new'){
-        return {}
-      }
-      localStorage.setItem("access_token", userlogin.data.access);
-      localStorage.setItem("refresh_token", userlogin.data.refresh);
+      // if (decoded?.userinfo?.approve_status === 'new') {
+      //   return {};
+      // }
+      localStorage.setItem('access_token', userlogin.data.access);
+      localStorage.setItem('refresh_token', userlogin.data.refresh);
       return decoded;
     }
     if (userlogin.status === 401) {
-      userlogin.error = 'Invalid Credentials'
+      userlogin.error = 'Invalid Credentials';
     }
   }
-  return userlogin
+  return userlogin;
 });
-
 
 // Get User Token
-export const userAccessToken = createAsyncThunk("refreshUserToken", async (data) => {
-  const userToken = await api.post("/token/", data);
-  if (userToken.status && userToken.status === 200) {
-    localStorage.setItem("access_token", userToken.data.access);
-    localStorage.setItem("refresh_token", userToken.data.refresh);
-    let decoded = jwtDecode(userToken.data.access);
-    return decoded;
+export const userAccessToken = createAsyncThunk(
+  'refreshUserToken',
+  async (data) => {
+    const userToken = await api.post('/token/', data);
+    if (userToken.status && userToken.status === 200) {
+      localStorage.setItem('access_token', userToken.data.access);
+      localStorage.setItem('refresh_token', userToken.data.refresh);
+      let decoded = jwtDecode(userToken.data.access);
+      return decoded;
+    }
+    return userToken;
   }
-  return userToken
-});
+);
 
 // Update User Role
-export const updateUserRole = createAsyncThunk("updateUserRole", async (data) => {
-  const updateRole = await api.post("update-role", data);
-  if (updateRole.status && updateRole.status === 200) {
-    localStorage.setItem("access_token", updateRole.data.access);
-    localStorage.setItem("refresh_token", updateRole.data.refresh);
-    let decoded = jwtDecode(updateRole.data.access);
-    return decoded;
+export const updateUserRole = createAsyncThunk(
+  'updateUserRole',
+  async (data) => {
+    const updateRole = await api.post('update-role', data);
+    if (updateRole.status && updateRole.status === 200) {
+      localStorage.setItem('access_token', updateRole.data.access);
+      localStorage.setItem('refresh_token', updateRole.data.refresh);
+      let decoded = jwtDecode(updateRole.data.access);
+      return decoded;
+    }
+    return {
+      ...updateRole,
+    };
   }
-  return {
-    ...updateRole
-  }
-});
-
+);
 
 // Forgot password
 export const forgotPassword = createAsyncThunk(
-  "userTriggerOtp",
+  'userTriggerOtp',
   async (data) => {
-   
-    const triggerOtp = await api.post("trigger-otp", data);
-    console.log('data', triggerOtp)
+    const triggerOtp = await api.post('trigger-otp', data);
+    console.log('data', triggerOtp);
     if (triggerOtp.status === 200) {
       return triggerOtp;
     }
     if (triggerOtp.status === 500) {
       return {
         ...triggerOtp,
-        error: 'Server error'
+        error: 'Server error',
       };
     }
     if (triggerOtp.status === 429) {
       return {
         ...triggerOtp,
-        error: 'Error'
+        error: 'Error',
       };
     }
     if (triggerOtp.status === 401) {
       return {
         ...triggerOtp,
-        error: triggerOtp?.message || 'Invalid Email'
+        error: triggerOtp?.message || 'Invalid Email',
       };
     }
     return triggerOtp;
-    
-   
   }
 );
 
 // Validate OTP
-export const validateOTP = createAsyncThunk(
-  "userValidateOTP",
-  async (data) => {
-    const validateOTP = await api.post("validate-otp", data);
-    if (validateOTP.status === 200) {
-      return validateOTP;
-    }
+export const validateOTP = createAsyncThunk('userValidateOTP', async (data) => {
+  const validateOTP = await api.post('validate-otp', data);
+  if (validateOTP.status === 200) {
     return validateOTP;
   }
-);
+  return validateOTP;
+});
 
 // Validate OTP
 export const updatePassword = createAsyncThunk(
-  "userUpdatePassword",
+  'userUpdatePassword',
   async (data) => {
-    const updatePassword = await api.post("update-pwd", data);
+    const updatePassword = await api.post('update-pwd', data);
     if (updatePassword.status === 200) {
       return updatePassword;
     }
@@ -147,37 +137,43 @@ export const updatePassword = createAsyncThunk(
 
 // Update Questions
 export const updateQuestions = createAsyncThunk(
-  "userUpdateQuestions",
+  'userUpdateQuestions',
   async (data) => {
-    const updateQuestion = await api.put("user_info_update", data);
+    const updateQuestion = await api.put('user_info_update', data);
     if (updateQuestion.status === 200) {
       let decoded = jwtDecode(updateQuestion.data.access);
-      localStorage.setItem("access_token", updateQuestion.data.access);
-      localStorage.setItem("refresh_token", updateQuestion.data.refresh);
+      localStorage.setItem('access_token', updateQuestion.data.access);
+      localStorage.setItem('refresh_token', updateQuestion.data.refresh);
       return decoded;
     }
     return updateQuestion;
   }
 );
-
 
 // Update Mentee Questions
 export const updateMenteeQuestions = createAsyncThunk(
-  "userUpdateMenteeQuestions",
+  'userUpdateMenteeQuestions',
   async (data) => {
-    const updateQuestion = await api.post("mentee_info_update", data);
+    const updateQuestion = await api.post('mentee_info_update', data);
     if (updateQuestion.status === 201) {
       let decoded = jwtDecode(updateQuestion.data.access);
-      if(decoded?.userinfo?.approve_status === 'new'){
-        return {}
+      if (decoded?.userinfo?.approve_status === 'new') {
+        return {};
       }
 
-      localStorage.setItem("access_token", updateQuestion.data.access);
-      localStorage.setItem("refresh_token", updateQuestion.data.refresh);
+      localStorage.setItem('access_token', updateQuestion.data.access);
+      localStorage.setItem('refresh_token', updateQuestion.data.refresh);
       return decoded;
     }
     return updateQuestion;
   }
 );
 
-
+export const updateToken = createAsyncThunk('updateToken', async (data) => {
+  const updateNewToken = await api.post('generate_new_token');
+  if (updateNewToken.status === 201) {
+    // localStorage.setItem('access_token', updateNewToken.data.access);
+    // localStorage.setItem('refresh_token', updateNewToken.data.refresh);
+  }
+  return updateNewToken;
+});

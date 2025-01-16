@@ -1,1556 +1,3402 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate, useSearchParams, useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { Backdrop, CircularProgress, Menu, MenuItem } from '@mui/material';
-import { useForm } from 'react-hook-form';
-
-import api from '../../../services/api';
-import { menteeNotJoinCondition, menteeProgramStatus, pipeUrls, programActionStatus, programAdminRejected, programApprovalStage, programCancelled, programCompleted, programInProgress, programNotLaunched, programNotStarted, programRequestApproval, programWaitingActiveApproval, requestStatus } from '../../../utils/constant';
-import { getMenteeJoinedInProgram, getProgramDetails, getSpecificProgramDetails, updateProgram } from '../../../services/userprograms';
-import { programCancelRequest, programRescheduleRequest, updateLocalRequest, updateProgramMenteeRequest, updateProgramRequest } from '../../../services/request';
-
+import React, { useEffect, useRef, useState } from "react";
+import {
+  useNavigate,
+  useSearchParams,
+  useParams,
+  useLocation,
+} from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  Avatar,
+  Backdrop,
+  Box,
+  CircularProgress,
+  Grid,
+  Menu,
+  MenuItem,
+  Stack,
+  Typography,
+} from "@mui/material";
+import { useForm } from "react-hook-form";
+import {
+  pipeUrls,
+  programActionStatus,
+  programCompleted,
+  requestStatus,
+} from "../../../utils/constant";
+import { getMenteeJoinedInProgram } from "../../../services/userprograms";
+import {
+  programCancelRequest,
+  programRescheduleRequest,
+  updateLocalRequest,
+  updateProgramMenteeRequest,
+  updateProgramRequest,
+} from "../../../services/request";
+import PlusCircle from "../../../assets/icons/Pluscircle.svg";
 import UserImage from "../../../assets/icons/user-icon.svg";
-import ShareIcon from '../../../assets/images/share1x.png';
-import DiscussionsIcon from '../../../assets/images/discussions1x.png';
-import RescheduleIcon from '../../../assets/images/reschedule1x.png';
-import MoreIcon from '../../../assets/images/more1x.png';
-import AbortIcon from '../../../assets/images/abort1x.png';
-import LocationIcon from '../../../assets/images/Location1x.png';
-import CalendarIcon from '../../../assets/images/calender_1x.png';
-import DoubleArrowIcon from '../../../assets/images/double_arrow 1x.png';
-import RatingsIcon from '../../../assets/images/ratings1x.png';
-import CertificateIcon from '../../../assets/images/certficate1x.png';
-import QuoteIcon from '../../../assets/images/quotes1x.png';
-import MuiModal from '../../../shared/Modal';
-import SuccessTik from '../../../assets/images/blue_tik1x.png';
-import LinkIcon from '../../../assets/images/link1x.png';
-import TickColorIcon from '../../../assets/icons/tickColorLatest.svg'
-import TimeHistoryIcon from '../../../assets/icons/time-history-icon.svg'
-import CancelIcon from '../../../assets/images/cancel1x.png'
+import ShareIcon from "../../../assets/images/share1x.png";
+import MoreIcon from "../../../assets/images/more1x.png";
+import AbortIcon from "../../../assets/images/abort1x.png";
+import LocationIcon from "../../../assets/images/Location1x.png";
+import CalendarIcon from "../../../assets/images/calender_1x.png";
+import CertificateIcon from "../../../assets/images/certficate1x.png";
+import QuoteIcon from "../../../assets/images/quotes1x.png";
+import MuiModal from "../../../shared/Modal";
+import SuccessTik from "../../../assets/images/blue_tik1x.png";
+import LinkIcon from "../../../assets/images/link1x.png";
+import TickColorIcon from "../../../assets/icons/tickColorLatest.svg";
+import TimeHistoryIcon from "../../../assets/icons/time-history-icon.svg";
+import CancelIcon from "../../../assets/images/cancel1x.png";
+import CompleteIcon from "../../../assets/images/completed1x.png";
+import { Button } from "../../../shared";
+import { Button as MuiButton } from "@mui/material";
+import {
+  convertDateFormat,
+  formatDateTimeISO,
+  todatDateInfo,
+} from "../../../utils";
+import "./program-details.css";
+import Ratings from "../Ratings";
+import { getUserProfile } from "../../../services/profile";
+import DataTable from "../../../shared/DataGrid";
+import {
+  JoinedProgramMenteeColumn,
+  RecurringListMenuItems,
+  RecurringTableColumns,
+} from "../../../mock";
+import ToastNotification from "../../../shared/Toast";
+import { Calendar } from "primereact/calendar";
+import {
+  getProgramMentees,
+  insertProgramNotes,
+} from "../../../services/programInfo";
+import ConfirmIcon from "../../../assets/icons/Popup-confirmation.svg";
+import CloseIcon from "../../../assets/icons/close_x.svg";
+import {
+  useAcceptProgramMutation,
+  useGetSpecificProgramDetailsQuery,
+  useLaunchProgramMutation,
+  useMarkProgramInterestMutation,
+  useUpdateProgramStatusMutation,
+} from "../../../features/program/programApi.services";
+import SubprogramsDataGrid from "./SubProgramTable";
+import ProgramActions from "./ProgramActions";
+import { toast } from "react-toastify";
+import SkillsSet from "../../SkillsSet";
+import { CancelPopup } from "../../Mentor/Task/cancelPopup";
+import SuccessGradientMessage from "../../success-gradient-message";
+import ProgramReasons from "./ProgramReasons";
+import { CustomFormFields } from "../../../shared/CustomFormFields/CustomFormFields";
+import ColorLocation from "../../../assets/icons/colorLocation.svg";
+import Accordian from "../../../shared/Accordian";
+import moment from "moment";
+import ProgramHistoryIcon from "../../../assets/icons/historyIcon.svg";
+import RescheduleIcon from "../../../assets/images/reschedule1x.png";
+import Breadcrumbs from "../../Breadcrumbs/Breadcrumbs";
+import {
+  program_details,
+  program_details_main,
+  programStatusBreadcrumbs,
+  request_newProgramRequest,
+  request_programCancel,
+  request_programMenteeCancel,
+  request_programReschedule,
+  requestPageBreadcrumbs,
+} from "../../Breadcrumbs/BreadcrumbsCommonData";
+import EditSVGIcon from "../../../assets/icons/editIcon.svg";
+import PaidTickIcon from "../../../assets/icons/paidTickIcon.svg";
+import CustomAccordian from "../../../shared/CustomAccordian/CustomAccordian";
+import { SubjectProgramCard } from "./subjectProgramCard";
+import { MuiCustomModal } from "../../../shared/Modal/MuiCustomModal";
+import modal_tick_icon from "../../../assets/icons/modal_tick_icon.svg";
+import ProgramCard from "../../../shared/Card/ProgramCard";
+import SubDetailCardWrapper from "../../../shared/Card/SubDetailCardWrapper";
+import { CustomModal } from "../../../shared/CustomModal/CustomModal";
+import { DataGrid } from "@mui/x-data-grid";
+import EditIcon from "@mui/icons-material/Edit";
 
-import { Button } from '../../../shared';
-import { convertDateFormat, dateFormat, formatDateTimeISO } from '../../../utils';
-import './program-details.css'
-import Ratings from '../Ratings';
-import { getUserProfile } from '../../../services/profile';
-import DataTable from '../../../shared/DataGrid';
-import { JoinedMenteeColumn } from '../../../mock';
-import ToastNotification from '../../../shared/Toast';
-import { Calendar } from 'primereact/calendar';
+export default function ProgramDetails({ setProgramDetailsId }) {
+  const [showBackdrop, setShowBackdrop] = React.useState(false);
+  const [cancelPopup, setCancelPopup] = useState(false);
+  const [cancelPopupConfirmation, setCancelPopupConfirmation] = useState(false);
+  const params = useParams();
+  const [searchParams] = useSearchParams();
 
+  const navigate = useNavigate();
+  const [
+    acceptProgram,
+    {
+      isSuccess: isAccepted,
+      isErrorAccepting,
+      reset: resetProgramAccept,
+      error,
+    },
+  ] = useAcceptProgramMutation();
+  const [
+    markProgramInterest,
+    {
+      isLoading: markingInterest,
+      isSuccess: isInsterestMarked,
+      reset: resetMarkInterestState,
+      data: markInterestResponseData,
+    },
+  ] = useMarkProgramInterestMutation();
 
-export default function ProgramDetails() {
-    const [loading, setLoading] = useState({ initial: true, join: false })
-    const calendarRef = useRef([])
-    const [taskJoined, setTaskJoined] = useState(false)
-    const [anchorEl, setAnchorEl] = useState(null);
-    const [message, setMessage] = useState(false);
-    const [dateFormatted, setDateFormat] = useState({})
-    const [taskJoinedRequest, setTaskJoinedRequest] = useState(false)
-    const [moreMenuModal, setMoreMenuModal] = useState({ share: false, reschedule: false })
-    const navigate = useNavigate()
-    const dispatch = useDispatch()
-    const params = useParams();
-    const [searchParams] = useSearchParams();
-    const [activeTab, setActiveTab] = useState('about_program')
-    const [ratingModal, setRatingModal] = useState({ modal: false, success: false })
-    const [certificateActiveTab, setCertificateActiveTab] = useState('participated')
-    const [viewMenteeModal, setViewMenteeModal] = useState(false)
-    const [confirmPopup, setConfirmPopup] = useState({ accept: false, cancel: false, programId: '' })
-    const userdetails = useSelector(state => state.userInfo)
-    const { profile, loading: profileLoading } = useSelector(state => state.profileInfo)
-    const { programdetails, loading: programLoading, error, menteeJoined, status } = useSelector(state => state.userPrograms)
-    const { loading: requestLoading, status: requestProgramStatus, error: requestError } = useSelector(state => state.requestList);
-    const role = userdetails.data.role || ''
-    const rating = programdetails?.mentor_rating === 0 ? 3 : programdetails?.mentor_rating;
-    const url = `${process.env.REACT_APP_SITE_URL}/program-details/${params.id}`
+  const requestId = searchParams.get("request_id") || "";
+  const requestStatusParams = searchParams.get("status") || "";
+  const program_create_type = searchParams.get("program_create_type") || "";
+  const breadcrumbsType = searchParams.get("breadcrumbsType") || "";
+  const typeParams = searchParams.get("type");
+  const userdetails = useSelector((state) => state.userInfo);
+  const role = userdetails.data.role || "";
+  const reqRole = requestId && userdetails.data.role === "admin";
+  const [loading, setLoading] = useState({ initial: true, join: false });
+  const calendarRef = useRef([]);
+  const [acceptingProgramID, setAcceptingProgramID] = useState();
+  const [openPopup, setOpenPopup] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [recAnchorEl, setRecAnchorEl] = useState(null);
+  const [message, setMessage] = useState(false);
+  const [dateFormatted, setDateFormat] = useState({});
+  const [taskJoinedRequest, setTaskJoinedRequest] = useState(false);
+  const [breadcrumbsArray, setBreadcrumbsArray] = useState([]);
+  const [moreMenuModal, setMoreMenuModal] = useState({
+    share: false,
+    reschedule: false,
+    not_interested: false,
+  });
+  const [openRecurringModal, setOpenRecurringModal] = useState(false);
+  const [gridCellParams, setgridCellParams] = React.useState();
 
-    const tabs = [
-        {
-            name: 'About Program',
-            key: 'about_program'
-        },
-        {
-            name: 'Program Outcomes',
-            key: 'program_outcomes'
-        },
-        {
-            name: 'Program Testimonials',
-            key: 'program_testimonials'
-        },
-    ]
+  const [completeProgram, setCompleteProgram] = React.useState({
+    bool: false,
+    activity: false,
+  });
+  const openRecMenu = Boolean(recAnchorEl);
+  const dispatch = useDispatch();
 
-    const requestId = searchParams.get("request_id") || '';
+  // console.log(location.pathname, searchParams);
 
-    const {
-        register,
-        formState: { errors },
-        handleSubmit,
-        reset,
-    } = useForm();
-
-    const participatedTabs = [
-        {
-            name: 'Participated',
-            key: 'participated'
-        },
-        {
-            name: 'Completed',
-            key: 'completed'
-        },
-
-    ]
-
-    const open = Boolean(anchorEl);
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
-    const handleTab = (key) => {
-        setActiveTab(key)
+  const [
+    launchProgram,
+    { isLoading: isLaunchingProgram, isError, error: actionError },
+  ] = useLaunchProgramMutation();
+  const [
+    updateProgramStatus,
+    {
+      isLoading: isProgramUpdating,
+      isSuccess: isProgramUpdated,
+      isError: IsErrorProgramUpdating,
+      error: errorUpdateProgramMessage,
+    },
+  ] = useUpdateProgramStatusMutation();
+  const {
+    data: programdetails,
+    isLoading: programLoading,
+    refetch,
+  } = useGetSpecificProgramDetailsQuery(
+    {
+      id: params?.id,
+      requestId: requestId,
+      ...(program_create_type && { program_create_type }),
+    },
+    {
+      skip: !params?.id,
+      refetchOnMountOrArgChange: true,
     }
+  );
 
-    const handleCerificateTab = (key) => {
-        setCertificateActiveTab(key)
+  const [activeTab, setActiveTab] = useState("about_program");
+  const [ratingModal, setRatingModal] = useState({
+    modal: false,
+    success: false,
+  });
+  const [selectedLM, setSelectedLM] = React.useState({
+    bool: false,
+    data: "",
+  });
+
+  const [certificateActiveTab, setCertificateActiveTab] =
+    useState("participated");
+
+  const [viewMenteeModal, setViewMenteeModal] = useState(false);
+  const [confirmPopup, setConfirmPopup] = useState({
+    accept: false,
+    cancel: false,
+    programId: "",
+  });
+  const { profile, loading: profileLoading } = useSelector(
+    (state) => state.profileInfo
+  );
+  const { programMentees } = useSelector((state) => state.programInfo);
+  const { menteeJoined, status } = useSelector((state) => state.userPrograms);
+  const {
+    loading: requestLoading,
+    status: requestProgramStatus,
+    error: requestError,
+  } = useSelector((state) => state.requestList);
+  const url = `${process.env.REACT_APP_SITE_URL}/program-details/${params.id}`;
+  const state = useLocation()?.state;
+
+  const tabs = [
+    {
+      name: "About Program",
+      key: "about_program",
+    },
+    // {
+    //   name: "Program Outcomes",
+    //   key: "program_outcomes",
+    // },
+    !programdetails?.sub_program && {
+      name: "Program Testimonials",
+      key: "program_testimonials",
+    },
+  ].filter(Boolean);
+
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    reset,
+  } = useForm();
+
+  const participatedTabs = [
+    {
+      name: "Participated",
+      key: "participated",
+    },
+    {
+      name: "Completed",
+      key: "completed",
+    },
+  ];
+
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+    setRecAnchorEl(null);
+  };
+
+  const handleTab = (key) => {
+    setActiveTab(key);
+  };
+
+  const handleRecurringModalClose = () => {
+    setOpenRecurringModal(false);
+  };
+
+  const handleRecurringListActionClick = (params, event) => {
+    if (params.field === "actions") {
+      setRecAnchorEl(event.currentTarget);
     }
+    setgridCellParams(params.row);
+  };
 
-    const commonApproval = ['completed', 'cancelled']
+  const handleMenuClick = (action) => {
+    switch (action) {
+      case "edit":
+        navigate(`/update-program/${gridCellParams.id}`);
+        break;
 
-    const handleJoinProgram = async (programId) => {
+      default:
+        break;
+    }
+    handleClose();
+  };
 
-        if (role === 'mentee' && !userdetails?.data?.is_registered) {
-            navigate(`/questions?program_id=${programdetails.id}`)
+  const handleCerificateTab = (key) => {
+    setCertificateActiveTab(key);
+  };
+  const handleOpenConfirmPopup = () => {
+    handleClose();
+    setCompleteProgram({
+      ...completeProgram,
+      bool: true,
+    });
+  };
+
+  const handleCloseConfirmPopup = () => {
+    setCompleteProgram({
+      bool: false,
+      activity: false,
+    });
+    setCancelPopup(false);
+  };
+
+  const handleComplete = async () => {
+    await updateProgramStatus({
+      id: programdetails?.id,
+      status: programActionStatus.completed,
+    });
+  };
+
+  useEffect(() => {
+    if (isProgramUpdated) {
+      setCompleteProgram({
+        bool: false,
+        activity: true,
+      });
+      setTimeout(() => {
+        setCompleteProgram({
+          bool: false,
+          activity: false,
+        });
+
+        navigate(`/program-completion/${programdetails?.id}`);
+      }, 2000);
+      handleClose();
+    }
+    if (IsErrorProgramUpdating) {
+      toast.error(errorUpdateProgramMessage.data?.error);
+      handleClose();
+    }
+  }, [
+    isProgramUpdated,
+    programdetails?.id,
+    IsErrorProgramUpdating,
+    errorUpdateProgramMessage?.data?.error,
+  ]);
+
+  const handleJoinProgram = async (request_type) => {
+    if (role === "mentee" && !userdetails?.data?.is_registered) {
+      navigate(`/questions?program_id=${programdetails.id}`);
+    } else if (role === "mentee" && !userdetails?.data?.document_upload) {
+      navigate(`/mentee-doc-upload/${programdetails.id}`);
+    } else {
+      await launchProgram({ program: programdetails?.id, request_type });
+    }
+  };
+
+  // useEffect(() => {
+  //   if (programLaunchedSuccessful) {
+  //     navigate(
+  //       `${pipeUrls.startprogram}/${params.id}?program_create_type=${program_create_type}`
+  //     );
+  //   }
+  // }, [params.id, programLaunchedSuccessful]);
+
+  const handleAcceptProgram = async (program) => {
+    setAcceptingProgramID(program?.id);
+    await acceptProgram({
+      id: requestId || program?.admin_program_request_id,
+      program: program?.id,
+      request_type: "program_assign",
+      status: "approved",
+    });
+    setOpenPopup(false);
+  };
+  // Handle Accept Program Popup
+  const handleConfirmPopup = () => {
+    if (role === "admin") {
+      dispatch(
+        updateProgramRequest({
+          id: parseInt(requestId),
+          status: "approved",
+        })
+      ).then((res) => {
+        if (res?.meta?.requestStatus === "fulfilled") {
+          setConfirmPopup({
+            ...confirmPopup,
+            accept: false,
+          });
+          refetch();
         }
-        else if (role === 'mentee' && !userdetails?.data?.document_upload) {
-            navigate(`/mentee-doc-upload/${programdetails.id}`)
-        } else {
-            setLoading({ initial: true, join: false })
-            const joinProgramAction = await api.post('join_program', { id: programId });
-            if (joinProgramAction.status === 200 && joinProgramAction.data) {
-                setLoading({ initial: false, join: role === 'mentee' })
-                if (role === 'mentor') { dispatch(updateProgram({ id: programId, status: programActionStatus.yettostart })); }
-            }
+      });
+    }
+    if (role === "mentor") {
+      dispatch(
+        updateProgramMenteeRequest({
+          id: parseInt(requestId),
+          status: "approved",
+        })
+      ).then((res) => {
+        if (res?.meta?.requestStatus === "fulfilled") {
+          setConfirmPopup({
+            ...confirmPopup,
+            accept: false,
+          });
+          refetch();
         }
+      });
     }
+  };
 
-    // Handle Accept Program Popup
-    const handleConfirmPopup = () => {
-        if (role === 'admin') {
-            dispatch(updateProgramRequest({
-                "id": parseInt(requestId),
-                "action": "accept"
-            }))
-        }
-        if (role === 'mentor') {
-            dispatch(updateProgramMenteeRequest(
-                {
-                    "id": parseInt(requestId),
-                    "action": "accept"
-                }
-            ))
-        }
-    }
-
-    // Handle Submit Cancel Program Popup
-    const handleCancelReasonPopupSubmit = (data) => {
-        if (data.cancel_reason !== '') {
-            if (confirmPopup.cancel) {
-                if (role === 'admin') {
-                    dispatch(updateProgramRequest({
-                        id: parseInt(requestId),
-                        action: "cancel",
-                        cancelled_reason: data.cancel_reason
-                    }))
-                }
-
-                if (role === 'mentor') {
-                    dispatch(updateProgramMenteeRequest({
-                        id: parseInt(requestId),
-                        action: "cancel",
-                        cancelled_reason: data.cancel_reason
-                    }))
-                }
-
-            }
-        }
-    }
-
-    // Accept / Cancel Program Request
-    const handleAcceptCancelProgramRequest = (action, programid) => {
-        let popup = { ...confirmPopup, programId: programid }
-        if (action === 'accept') { setConfirmPopup({ ...popup, accept: true }); }
-        if (action === 'cancel') { setConfirmPopup({ ...popup, cancel: true }) }
-    }
-
-    // Handle Close Accept / Cancel Popup
-    const resetAcceptCancelPopup = () => {
-        setConfirmPopup({ accept: false, cancel: false, programId: '' });
-    }
-
-    const handleMenteeAcceptCancelRequest = (type, id) => {
-        if (type === 'approve') { setConfirmPopup({ ...confirmPopup, accept: true }); }
-        if (type === 'reject') { setConfirmPopup({ ...confirmPopup, cancel: true }) }
-    }
-
-    const handleInstructor = (programdetails) => {
-        const mentorId = programdetails?.mentor_info?.id || ''
-
-        if (mentorId !== '' && mentorId !== userdetails?.data?.user_id) {
-            navigate(`/mentor-profile/${mentorId}`)
-        }
-    }
-
-    const ratingModalSuccess = () => {
-        setRatingModal({ modal: false, success: true })
-    }
-
-    const ratingModalClose = () => {
-        setRatingModal({ modal: false, success: false })
-    }
-
-    const handleViewJoinedMentees = (programInfo) => {
-        setViewMenteeModal(true)
-    }
-
-    const JoinMenteeColumn = [
-        ...JoinedMenteeColumn,
-        {
-            field: 'action',
-            headerName: 'View',
-            width: 300,
-            id: 3,
-            renderCell: (params) => {
-                console.log('params123', params)
-                return <button style={
-                    {
-                        background: 'rgb(29, 91, 191)',
-                        color: 'rgb(255, 255, 255)',
-                        padding: '2px 20px',
-                        height: '32px',
-                        margin: '9px 0px',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        borderRadius: '3px'
-                    }
-                }
-                    onClick={
-                        () => navigate(`/mentee-details/${params.row.mentee_id}`)
-                    } > View Profile </button>;
-            }
-        }
-    ]
-
-    const handleMenu = (key) => {
-        switch (key) {
-            case 'create-task':
-                navigate('/assign-mentees/1')
-                handleClose()
-                break;
-            case 'share':
-                setMoreMenuModal({ ...moreMenuModal, share: true });
-                handleClose()
-                break
-            case 'reschedule':
-                setMoreMenuModal({ ...moreMenuModal, reschedule: true })
-                handleClose()
-                break;
-
-            case 'cancel':
-                setMoreMenuModal({ ...moreMenuModal, reschedule: false, cancel: true })
-                handleClose()
-                break;
-            case 'discussion':
-                break;
-            default:
-                break
-        }
-    }
-
-    const handleMoreMenuClosePopup = () => {
-        setMoreMenuModal({ share: false, reschedule: false, cancel: false })
-        reset()
-    }
-
-    const handleDateClick = () => {
-        setTimeout(() => {
-            document.querySelector('.p-datepicker')?.classList.add('program-date-picker')
-        }, 200)
-
-    }
-
-    const handleCopy = () => {
-
-        navigator.clipboard.writeText(url)
-            .then(() => {
-                setMessage(true);
+  // Handle Submit Cancel Program Popup
+  const handleCancelReasonPopupSubmit = (data) => {
+    if (data.cancel_reason !== "") {
+      if (confirmPopup.cancel) {
+        if (role === "admin") {
+          dispatch(
+            updateProgramRequest({
+              id: parseInt(requestId),
+              status: "rejected",
+              reason: data.cancel_reason,
             })
-            .catch((err) => {
-                console.error('Error copying text: ', err);
-                setMessage(false);
-            });
+          ).then((res) => {
+            if (res?.meta?.requestStatus === "fulfilled") {
+              setConfirmPopup({
+                ...confirmPopup,
+                cancel: false,
+              });
+              refetch();
+            }
+          });
+        }
+
+        if (role === "mentor") {
+          dispatch(
+            updateProgramMenteeRequest({
+              id: parseInt(requestId),
+              status: "rejected",
+              rejection_reason: data.cancel_reason,
+            })
+          ).then((res) => {
+            if (res?.meta?.requestStatus === "fulfilled") {
+              setConfirmPopup({
+                ...confirmPopup,
+                cancel: false,
+              });
+              refetch();
+            }
+          });
+        }
+      }
+    }
+  };
+
+  // Accept / Cancel Program Request
+  const handleAcceptCancelProgramRequest = (action, programid) => {
+    let popup = { ...confirmPopup, programId: programid };
+    if (action === "accept") {
+      setConfirmPopup({ ...popup, accept: true });
+    }
+    if (action === "cancel") {
+      setConfirmPopup({ ...popup, cancel: true });
+    }
+  };
+
+  // Handle Close Accept / Cancel Popup
+  const resetAcceptCancelPopup = () => {
+    setConfirmPopup({ accept: false, cancel: false, programId: "" });
+  };
+
+  const handleInstructor = (programdetails) => {
+    const mentorId = programdetails?.mentor_info?.id || "";
+
+    // if (mentorId !== '' && mentorId !== userdetails?.data?.user_id) {
+    navigate(`/mentor-profile/${mentorId}`);
+    // }
+  };
+
+  const ratingModalSuccess = () => {
+    setRatingModal({ modal: false, success: true });
+  };
+
+  const ratingModalClose = () => {
+    setRatingModal({ modal: false, success: false });
+  };
+
+  const handleViewJoinedMentees = (programInfo) => {
+    dispatch(getProgramMentees(programInfo?.id));
+    setViewMenteeModal(true);
+  };
+
+  const JoinMenteeColumn = [
+    ...JoinedProgramMenteeColumn,
+    {
+      field: "action",
+      headerName: "View",
+      width: 150,
+      id: 3,
+      renderCell: (params) => {
+        return (
+          <button
+            style={{
+              background: "rgb(29, 91, 191)",
+              color: "rgb(255, 255, 255)",
+              padding: "2px 20px",
+              height: "32px",
+              margin: "9px 0px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: "3px",
+            }}
+            onClick={() => navigate(`/mentee-details/${params.row?.id}`)}
+          >
+            {" "}
+            View Profile{" "}
+          </button>
+        );
+      },
+    },
+  ];
+
+  const handleMenu = (key) => {
+    switch (key) {
+      case "create-task":
+        navigate("/assign-mentees/1");
+        handleClose();
+        break;
+      case "share":
+        setMoreMenuModal({ ...moreMenuModal, share: true });
+        handleClose();
+        break;
+      case "reschedule":
+        setMoreMenuModal({ ...moreMenuModal, reschedule: true });
+        handleClose();
+        break;
+
+      case "cancel":
+        setMoreMenuModal({ ...moreMenuModal, reschedule: false, cancel: true });
+        handleClose();
+        break;
+      case "discussion":
+        break;
+      case "edit":
+        navigate(`/update-program/${params?.id}`);
+        break;
+      case "not_interested":
+        setMoreMenuModal({ ...moreMenuModal, not_interested: true });
+        break;
+      default:
+        break;
+    }
+  };
+  const handleBreadcrumbs = (key) => {
+    const decodedKey = decodeURIComponent(key);
+    const program_detailsData = program_details(state?.from);
+    const program_New = request_newProgramRequest(programdetails?.program_name);
+    const program_re = request_programReschedule(programdetails?.program_name);
+    const program_cancel = request_programCancel(programdetails?.program_name);
+    const program_mentee_cancel = request_programMenteeCancel(
+      programdetails?.program_name
+    );
+    if (programStatusBreadcrumbs.includes(decodedKey)) {
+      setBreadcrumbsArray(
+        program_details_main(programdetails?.program_name, decodedKey)
+      );
+      return;
+    }
+    switch (key) {
+      case "program":
+        setBreadcrumbsArray(program_detailsData);
+        break;
+      case requestPageBreadcrumbs.program_new:
+        setBreadcrumbsArray(program_New);
+        break;
+      case requestPageBreadcrumbs.program_reschedule:
+        setBreadcrumbsArray(program_re);
+        break;
+      case requestPageBreadcrumbs.program_cancel:
+        setBreadcrumbsArray(program_cancel);
+        break;
+      case requestPageBreadcrumbs.program_mentee_cancel:
+        setBreadcrumbsArray(program_mentee_cancel);
+        break;
+      case "discussion":
+        break;
+      default:
+        break;
+    }
+  };
+  useEffect(() => {
+    if (breadcrumbsType && programdetails?.program_name) {
+      handleBreadcrumbs(breadcrumbsType);
+    } else {
+      handleBreadcrumbs("program");
+    }
+  }, [breadcrumbsType, programdetails]);
+
+  const handleMoreMenuClosePopup = () => {
+    setMoreMenuModal({ share: false, reschedule: false, cancel: false });
+    reset();
+  };
+
+  const handleDateClick = () => {
+    setTimeout(() => {
+      document
+        .querySelector(".p-datepicker")
+        ?.classList.add("program-date-picker");
+    }, 200);
+  };
+
+  const handleCopy = () => {
+    navigator.clipboard
+      .writeText(url)
+      .then(() => {
+        setMessage(true);
+      })
+      .catch(() => {
+        setMessage(false);
+      });
+  };
+
+  const handleCloseNotify = () => {
+    setMessage(false);
+  };
+
+  const onSubmit = (data) => {
+    if (moreMenuModal.reschedule) {
+      const formattedStartDate = convertDateFormat(data.reschedule_start_date);
+      const formattedEndDate = convertDateFormat(data.reschedule_end_date);
+
+      const payload = {
+        // reschedule_start_date: formattedStartDate,
+        // reschedule_end_date: formattedEndDate,
+        // program_id: params.id,
+        // reason: data.reason,
+
+        request_type: "program_reschedule",
+        start_date: formattedStartDate,
+        end_date: formattedEndDate,
+        program: params.id,
+        comments: data?.reason,
+      };
+      dispatch(programRescheduleRequest(payload));
+    }
+
+    if (moreMenuModal.cancel) {
+      dispatch(
+        programCancelRequest({
+          program: params.id,
+          comments: data.cancel_reason,
+          request_type: "program_cancel",
+        })
+      );
+    }
+  };
+
+  const handleMarkInterestClick = async (isIntersted) =>
+    await markProgramInterest({
+      program_id: programdetails?.id,
+      interest: isIntersted,
+    });
+
+  const handleCancel = () => {
+    setMoreMenuModal({ ...moreMenuModal, not_interested: false });
+  };
+
+  useEffect(() => {
+    if (isInsterestMarked) {
+      setShowBackdrop(true);
+
+      // Set timeout to handle cleanup after 3 seconds
+      const timer = setTimeout(() => {
+        // Reset all states
+        setShowBackdrop(false);
+
+        // Only navigate on success cases
+        if (isInsterestMarked) {
+          handleCancel();
+        }
+      }, 3000);
+      return () => {
+        clearTimeout(timer);
+        resetMarkInterestState();
+      };
+    }
+  }, [isInsterestMarked]);
+  useEffect(() => {
+    if (ratingModal.success) {
+      setTimeout(() => {
+        setRatingModal({ modal: false, success: false });
+      }, 3000);
+    }
+  }, [ratingModal.success]);
+
+  useEffect(() => {
+    if (
+      programdetails &&
+      Object.keys(programdetails)?.length &&
+      !programLoading
+    ) {
+      // const notAllowedCond = [
+      //   "completed",
+      //   "yettoapprove",
+      //   "draft",
+      //   "cancelled",
+      // ];
+
+      // if (!notAllowedCond.includes(programdetails.status)) {
+      //   if (
+      //     role === "mentee" &&
+      //     programdetails.status !== "yettojoin" &&
+      //     programdetails.mentee_join_status === "program_join_request_accepted"
+      //   ) {
+      //     navigate(
+      //       `${pipeUrls.startprogram}/${params.id}?program_create_type=${program_create_type}`
+      //     );
+      //   }
+
+      //   if ((role === "mentor" || role === "admin") && requestId === "") {
+      //     if (programdetails.status === programActionStatus.yettostart) {
+      //       navigate(
+      //         `${pipeUrls.startprogram}/${params.id}?program_create_type=${program_create_type}`
+      //       );
+      //     } else if (
+      //       programdetails.status === programActionStatus.inprogress ||
+      //       programdetails.status === programActionStatus.assigned ||
+      //       programdetails.status === programActionStatus.paused ||
+      //       programdetails.status === programActionStatus.started
+      //     ) {
+      //       navigate(
+      //         `${pipeUrls.startprogram}/${params.id}?program_create_type=${program_create_type}`
+      //       );
+      //     }
+      //   }
+      // }
+
+      if (
+        role === "mentee" &&
+        programdetails.status === "completed" &&
+        !programdetails.mentee_program_rating
+      ) {
+        setRatingModal({ modal: true, success: false });
+      }
+
+      setLoading({ ...loading, initial: false });
+    }
+  }, [programdetails, menteeJoined]);
+
+  const handleCancelSubmit = (reason) => {
+    if (role === "mentor") {
+      dispatch(
+        updateProgramMenteeRequest({
+          id: programdetails?.request_data?.id,
+          status: "rejected",
+          rejection_reason: reason,
+        })
+      ).then((res) => {
+        if (res?.meta?.requestStatus === "fulfilled") {
+          // handleCloseCancelReasonPopup();
+          setCancelPopup(false);
+          setCancelPopupConfirmation(true);
+          setTimeout(() => {
+            setCancelPopupConfirmation(false);
+            refetch();
+          }, 2000);
+        }
+      });
+    }
+
+    if (role === "mentee") {
+      dispatch(
+        updateProgramRequest({
+          id: programdetails?.request_data?.id,
+          status: "rejected",
+          reason: reason,
+        })
+      ).then((res) => {
+        if (res?.meta?.requestStatus === "fulfilled") {
+          setCancelPopup(false);
+          setCancelPopupConfirmation(true);
+          setTimeout(() => {
+            setCancelPopupConfirmation(false);
+            refetch();
+          }, 2000);
+        }
+      });
+    }
+  };
+
+  useEffect(() => {
+    const programId = params.id;
+    if (programId && programId !== "") {
+      if (role === "mentee") {
+        dispatch(getMenteeJoinedInProgram({ id: programId }));
+      }
+    }
+
+    if (!Object.keys(profile)?.length) {
+      dispatch(getUserProfile());
+    }
+  }, [params.id, role]);
+
+  useEffect(() => {
+    if (status === programActionStatus.yettostart) {
+      setLoading({ initial: false, join: true });
+    }
+  }, [status]);
+
+  useEffect(() => {
+    if (requestProgramStatus === requestStatus.programupdate) {
+      setTimeout(() => {
+        setConfirmPopup({ accept: false, cancel: false, programId: "" });
+        dispatch(updateLocalRequest({ status: "" }));
+      }, [2000]);
+    }
+
+    if (
+      requestProgramStatus === requestStatus.reschedule ||
+      requestProgramStatus === requestStatus.cancel
+    ) {
+      setMoreMenuModal({ share: false, reschedule: false });
+      reset();
+      setDateFormat({});
+      setTimeout(() => {
+        dispatch(updateLocalRequest({ status: "" }));
+      }, 3000);
+    }
+  }, [requestProgramStatus]);
+
+  useEffect(() => {
+    if (loading.join) {
+      if (role === "mentee") setTaskJoinedRequest(true);
+      setTimeout(() => {
+        setLoading({ ...loading, join: false });
+
+        // if (role === 'mentor') navigate(`${pipeUrls.programtask}/${programdetails.id}`)
+        if (role === "mentee") setTaskJoinedRequest(false);
+      }, [3000]);
+    }
+  }, [loading.join]);
+
+  const dateStartField = moreMenuModal.reschedule
+    ? register("reschedule_start_date", { required: "This field is required" })
+    : undefined;
+  const dateEndField = moreMenuModal.reschedule
+    ? register("reschedule_end_date", { required: "This field is required" })
+    : undefined;
+
+  // const payment = useSelector((state) => state.payment);
+
+  // const [programDetailsId, setProgramDetailsId] = useState(null);
+  //   const [clientSecret, setClientSecret] = useState();
+
+  // const stripePromise = loadStripe(
+  //   'pk_test_51QThrEKalAFoHITwOWO9dbQ3kl8kUUfBANhS3U4dNzYvmRsXl8j196jDww2VCJGGehlc7XSBkhagvMVajsoGWfDo00KOCPJQiq'
+  // );
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(actionError?.data?.errors?.[0]);
+    }
+  }, [actionError, isError]);
+
+  useEffect(() => {
+    if (isAccepted) {
+      const timer = setTimeout(() => {
+        resetProgramAccept();
+        navigate(`/update-program/${acceptingProgramID}`);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+    if (isErrorAccepting) {
+      toast.error(error?.data?.error);
+    }
+  }, [error?.data, isAccepted, isErrorAccepting, acceptingProgramID]);
+
+  const handleNewTaskFromAdmin = (data) => {
+    const constructedData = {
+      ...data,
+
+      program_category_name: programdetails?.category_name,
+      program_name: programdetails?.program_name,
+      program_startdate: programdetails?.start_date,
+      program_enddate: programdetails?.end_date,
+      task_name: programdetails?.task_name ?? "",
+      reference_link: programdetails?.reference_links ?? "",
+      task_details: programdetails?.task_details ?? "",
+      due_date: programdetails?.due_date,
+      // "assign_task_id": null,
+      list_mentees: programdetails?.participated_mentees,
+      program_id: programdetails?.id,
+      program_duration: programdetails?.duration,
+      category_id: programdetails?.categories?.[0]?.id,
+      // "mentor_id": programdetails?.created_by,
+      mentor_name: programdetails?.mentor_name,
+      // "task_id": null,
+      state_date: programdetails?.start_date,
     };
 
-    const handleCloseNotify = () => {
-        setMessage(false)
+    navigate(`/assign-mentees/?type=edit&from=program`, {
+      state: {
+        data: constructedData,
+      },
+    });
+  };
+
+  const notesFields = [
+    {
+      type: "date",
+      label: "Date",
+      isRequired: true,
+      col: 4,
+      key: "date",
+      minDate: programdetails?.start_date,
+      maxDate: programdetails?.end_date,
+    },
+    {
+      type: "time",
+      label: "Time",
+      isRequired: true,
+      col: 4,
+      key: "time",
+    },
+    {
+      type: "textbox",
+      label: "Location",
+      isRequired: true,
+      col: 4,
+      key: "location",
+      endAdornment: <img src={ColorLocation} alt="color_location" />,
+      background: "#FFF8F2",
+    },
+    {
+      type: "textarea",
+      label: "Comment",
+      isRequired: true,
+      col: 12,
+      key: "comment",
+      background: "#FFF8F2",
+    },
+  ];
+  const [notesActivity, setNotesActivity] = React.useState(false);
+  const [notesForm, setNotesForm] = React.useState({
+    date: "",
+    time: "",
+    location: "",
+    comment: "",
+    error: {
+      date: "",
+      time: "",
+      location: "",
+      comment: "",
+    },
+  });
+
+  const updateState = (key, value) => {
+    setNotesForm({
+      ...notesForm,
+      [key]: value,
+      error: {
+        ...notesForm?.error,
+        [key]: "",
+      },
+    });
+  };
+
+  const handleValidate = () => {
+    let error = notesForm.error;
+    let isValid = true;
+    if (notesForm?.date === "") {
+      isValid = false;
+      error.date = "Date is Required";
     }
-
-    console.log('error', error)
-    const onSubmit = (data) => {
-        console.log('Data', data)
-        if (moreMenuModal.reschedule) {
-
-            const formattedStartDate = convertDateFormat(data.reschedule_start_date);
-            const formattedEndDate = convertDateFormat(data.reschedule_end_date);
-
-            const payload = {
-                reschedule_start_date: formattedStartDate,
-                reschedule_end_date: formattedEndDate,
-                program_id: params.id,
-                reason: data.reason
-            }
-            dispatch(programRescheduleRequest(payload))
-        }
-
-        if (moreMenuModal.cancel) {
-            dispatch(programCancelRequest({
-                program_id: params.id,
-                reason: data.cancel_reason
-            }))
-        }
+    if (notesForm?.time === "") {
+      isValid = false;
+      error.time = "Time is Required";
     }
+    if (notesForm?.location === "") {
+      isValid = false;
+      error.location = "Location is Required";
+    }
+    if (notesForm?.comment === "") {
+      isValid = false;
+      error.comment = "Comment is Required";
+    }
+    setNotesForm({
+      ...notesForm,
+      error: error,
+    });
+    return isValid;
+  };
 
-    useEffect(() => {
-        if (ratingModal.success) {
-            setTimeout(() => {
-                setRatingModal({ modal: false, success: false })
-                dispatch(getProgramDetails(params.id))
-            }, 3000)
+  const handleSubmitNotes = () => {
+    if (handleValidate()) {
+      const payload = {
+        post_date: moment(notesForm?.date).format("yyyy-MM-DD"),
+        post_time: moment(notesForm?.time).format("hh:mm"),
+        address: notesForm?.location,
+        description: notesForm?.comment,
+        program: params.id,
+      };
+      dispatch(insertProgramNotes(payload)).then((res) => {
+        if (res?.meta?.requestStatus === "fulfilled") {
+          setNotesForm({
+            date: "",
+            time: "",
+            location: "",
+            comment: "",
+          });
+          setNotesActivity(true);
+          setTimeout(() => {
+            setNotesActivity(false);
+          }, 2000);
         }
-    }, [ratingModal.success])
+      });
+    }
+  };
 
-    useEffect(() => {
-        if (Object.keys(programdetails).length && !programLoading) {
-            const notAllowedCond = ['completed', 'yettoapprove', 'draft', 'cancelled']
+  // payment status start
+  const start_date = moment(programdetails?.start_date);
+  const current_date = moment();
+  const daysDifference = start_date.diff(current_date, "days");
 
+  let statusMessage;
 
-            if (!notAllowedCond.includes(programdetails.status)) {
-                if (role === 'mentee' && programdetails.status !== 'yettojoin' && programdetails.mentee_join_status === 'program_join_request_accepted') {
-                    navigate(`${pipeUrls.startprogram}/${params.id}`)
-                }
+  if (daysDifference > 3) {
+    statusMessage = `${daysDifference} more days left`;
+  } else if (daysDifference === 0) {
+    statusMessage = "Program is started today!";
+  } else if (daysDifference < 0) {
+    const absDifference = Math.abs(daysDifference);
+    statusMessage = `Program started ${absDifference} day${
+      absDifference > 1 ? "s" : ""
+    } ago`;
+  } else {
+    statusMessage = `${daysDifference} day${
+      daysDifference > 1 ? "s" : ""
+    } left for the program to start`;
+  }
 
-                if (role === 'mentor' && requestId === '') {
-                    if (programdetails.status === programActionStatus.yettostart) {
-                        navigate(`${pipeUrls.startprogram}/${params.id}`)
-                    }
-                    else if ((programdetails.status === programActionStatus.inprogress || programdetails.status === programActionStatus.assigned ||
-                        programdetails.status === programActionStatus.paused || programdetails.status === programActionStatus.started
-
-                    )) {
-                        navigate(`${pipeUrls.startprogram}/${params.id}`)
-                    }
-                }
-            }
-
-
-
-            if (role === 'mentee' && programdetails.status === 'completed' && !programdetails.mentee_program_rating) {
-                setRatingModal({ modal: true, success: false })
-            }
-
-            setLoading({ ...loading, initial: false })
+  const handleNavigation = (programdetails) => {
+    let baseUrl = pipeUrls.programdetails;
+    if (Object.keys(programdetails).length) {
+      navigate(
+        `${baseUrl}/${programdetails.program || programdetails?.id}${
+          programdetails?.admin_program_request_id
+            ? `?request_id=${programdetails?.admin_program_request_id}&type=admin_assign_program`
+            : "admin_assign_program" in programdetails
+            ? `?program_create_type=admin_program`
+            : ""
+        }${
+          programdetails?.admin_program_request_id ||
+          "admin_assign_program" in programdetails
+            ? "&"
+            : "?"
+        }`
+      );
+    }
+  };
+  return (
+    <div className="px-9 my-6 grid">
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={
+          loading.initial || loading.join || programLoading || requestLoading
         }
-    }, [programdetails, menteeJoined])
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
 
-    useEffect(() => {
-        const programId = params.id;
-        if (programId && programId !== '') {
-            dispatch(getSpecificProgramDetails({ id: programId, requestId: requestId }))
-            if (role === 'mentee') { dispatch(getMenteeJoinedInProgram({ id: programId })); }
-        }
-
-        if (!Object.keys(profile).length) {
-            dispatch(getUserProfile())
-        }
-
-    }, [params.id, role])
-
-    useEffect(() => {
-        if (status === programActionStatus.yettostart) {
-            setLoading({ initial: false, join: true })
-        }
-    }, [status])
-
-    useEffect(() => {
-        if (requestProgramStatus === requestStatus.programupdate) {
-            setTimeout(() => {
-                setConfirmPopup({ accept: false, cancel: false, programId: '' })
-                dispatch(getSpecificProgramDetails({ id: params.id, requestId: requestId }))
-                dispatch(updateLocalRequest({ status: '' }))
-            }, [2000])
-        }
-
-        if (requestProgramStatus === requestStatus.reschedule || requestProgramStatus === requestStatus.cancel) {
-            setMoreMenuModal({ share: false, reschedule: false })
-            reset()
-            setDateFormat({})
-            setTimeout(() => {
-                dispatch(getProgramDetails(parseInt(params.id)))
-                dispatch(updateLocalRequest({ status: '' }))
-
-            }, 3000)
-        }
-    }, [requestProgramStatus])
-
-    useEffect(() => {
-        if (taskJoined) {
-            setTimeout(() => {
-                // if (role === 'mentor') navigate(`${pipeUrls.assigntask}/${programdetails.id}`)
-                if (role === 'mentee') navigate(`${pipeUrls.startprogram}/${programdetails.id}`)
-            }, [3000])
-
-        }
-    }, [taskJoined])
-
-    useEffect(() => {
-        if (loading.join) {
-            if (role === 'mentee') setTaskJoinedRequest(true)
-            setTimeout(() => {
-                setLoading({ ...loading, join: false })
-                dispatch(getProgramDetails(params.id))
-                // if (role === 'mentor') navigate(`${pipeUrls.programtask}/${programdetails.id}`)
-                if (role === 'mentee') setTaskJoinedRequest(false)
-            }, [3000])
-        }
-    }, [loading.join])
-
-    const dateStartField = moreMenuModal.reschedule ? register('reschedule_start_date', { required: "This field is required" }) : undefined
-    const dateEndField = moreMenuModal.reschedule ? register('reschedule_end_date', { required: "This field is required" }) : undefined
-
-
-    return (
-        <div className="px-9 my-6 grid">
-
-            <Backdrop
-                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={loading.initial || loading.join || programLoading || requestLoading}
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={ratingModal.success}
+      >
+        <div className="px-5 py-1 flex justify-center items-center">
+          <div
+            className="flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20"
+            style={{ background: "#fff", borderRadius: "10px" }}
+          >
+            <img src={SuccessTik} alt="SuccessTik" />
+            <p
+              className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
+              style={{
+                fontWeight: 600,
+                color: "#232323",
+              }}
             >
-                <CircularProgress color="inherit" />
-            </Backdrop>
+              Thank you for providing the rating for this program
+            </p>
+          </div>
+        </div>
+      </Backdrop>
 
-            <Backdrop
-                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={ratingModal.success}
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={completeProgram.bool}
+      >
+        <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
+          <img src={TickColorIcon} alt="TickColorIcon" />
+          <span
+            style={{
+              color: "#232323",
+              fontWeight: 600,
+              fontSize: "24px",
+            }}
+          >
+            Complete
+          </span>
+          <div className="py-5">
+            <p
+              style={{
+                color: "rgba(24, 40, 61, 1)",
+                fontWeight: 600,
+                fontSize: "18px",
+              }}
             >
-                <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
-                    style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
-                    <img src={SuccessTik} alt="SuccessTik" />
-                    <p className='text-white text-[12px]'>Thank you for providing the rating for this program</p>
-                </div>
-            </Backdrop>
-
-            <Ratings open={ratingModal.modal} modalSuccess={ratingModalSuccess} modalClose={ratingModalClose} />
-
-
-            <Backdrop
-                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={requestProgramStatus === requestStatus.reschedule || requestProgramStatus === requestStatus.cancel}
+              Are you sure want to complete the program?
+            </p>
+          </div>
+          <div className="flex justify-center">
+            <div className="flex gap-6 justify-center align-middle">
+              <Button
+                btnCls="w-[110px]"
+                btnName={"No"}
+                btnCategory="secondary"
+                onClick={handleCloseConfirmPopup}
+              />
+              <Button
+                btnType="button"
+                btnCls="w-[110px]"
+                btnName={"Yes"}
+                style={{ background: "#16B681" }}
+                btnCategory="primary"
+                onClick={handleComplete}
+              />
+            </div>
+          </div>
+        </div>
+      </Backdrop>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={completeProgram.activity}
+      >
+        <div className="px-5 py-1 flex justify-center items-center">
+          <div
+            className="flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20"
+            style={{ background: "#fff", borderRadius: "10px" }}
+          >
+            <img src={SuccessTik} alt="SuccessTik" />
+            <p
+              className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
+              style={{
+                fontWeight: 600,
+              }}
             >
-                <div className='px-5 py-1 flex justify-center items-center'>
-                    <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
-                        style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
-                        <img src={SuccessTik} alt="SuccessTik" />
-                        <p className='text-white text-[12px]'>Program {requestProgramStatus === requestStatus.reschedule ? 'Rescheduled ' :
-                            requestProgramStatus === requestStatus.cancel ? 'Cancelled ' : ''
-                        } Successfully</p>
-                    </div>
-                </div>
-            </Backdrop>
+              Program Completed successfully
+            </p>
+          </div>
+        </div>
+      </Backdrop>
 
-            {/* Program Request Updated Popup */}
-            <Backdrop
-                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={requestProgramStatus === requestStatus.programupdate}
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isAccepted}
+      >
+        <div className="px-5 py-1 flex justify-center items-center">
+          <div
+            className="flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20"
+            style={{ background: "#fff", borderRadius: "10px" }}
+          >
+            <img src={SuccessTik} alt="SuccessTik" />
+            <p
+              className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
+              style={{
+                fontWeight: 600,
+              }}
             >
-                <div className='px-5 py-1 flex justify-center items-center'>
-                    <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
-                        style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
-                        <img src={SuccessTik} alt="SuccessTik" />
-                        <p className='text-white text-[12px]'>Program Request updated successfully</p>
-                    </div>
+              Program accepted successfully
+            </p>
+          </div>
+        </div>
+      </Backdrop>
 
-                </div>
+      <Ratings
+        open={ratingModal.modal}
+        modalSuccess={ratingModalSuccess}
+        modalClose={ratingModalClose}
+      />
 
-            </Backdrop>
-
-
-            <MuiModal modalSize='md' modalOpen={viewMenteeModal} modalClose={undefined} noheader>
-                <div className='px-5 py-5'>
-                    <div className='flex justify-center flex-col gap-5  mt-4 mb-4'
-                        style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '10px', }}>
-                        <div className='flex justify-between px-3 py-4 items-center' style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
-                            <p className='text-[18px]' style={{ color: 'rgba(0, 0, 0, 1)' }}>Joining Mentees </p>
-                            <img className='cursor-pointer' onClick={() => setViewMenteeModal(false)} src={CancelIcon} alt="CancelIcon" />
-                        </div>
-                        <div className='px-5'>
-                            <DataTable rows={programdetails.participated_mentees} columns={JoinMenteeColumn} hideCheckbox />
-                        </div>
-                    </div>
-                </div>
-            </MuiModal>
-
-            {/* Program Accept Popup */}
-            <Backdrop
-                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={confirmPopup.accept}
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={
+          requestProgramStatus === requestStatus.reschedule ||
+          requestProgramStatus === requestStatus.cancel
+        }
+      >
+        <div className="px-5 py-1 flex justify-center items-center">
+          <div
+            className="flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20"
+            style={{ background: "#fff", borderRadius: "10px" }}
+          >
+            <img src={SuccessTik} alt="SuccessTik" />
+            <p
+              className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
+              style={{
+                fontWeight: 600,
+              }}
             >
-                <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
-                    <img src={TickColorIcon} alt="TickColorIcon" />
-                    <span style={{ color: '#232323', fontWeight: 600, fontSize: '24px' }}>
-                        Approve
-                    </span>
-                    <div className='py-5'>
-                        <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 600, fontSize: '18px' }}>
-                            Are you sure want to approve Program Request?
-                        </p>
-                    </div>
-                    <div className='flex justify-center'>
-                        <div className="flex gap-6 justify-center align-middle">
-                            <Button btnCls="w-[110px]" btnName={'Cancel'} btnCategory="secondary" onClick={resetAcceptCancelPopup} />
-                            <Button btnType="button" btnCls="w-[110px]" btnName={'Approve'}
-                                style={{ background: '#16B681' }} btnCategory="primary"
-                                onClick={handleConfirmPopup}
-                            />
-                        </div>
-                    </div>
-                </div>
-            </Backdrop>
+              Program{" "}
+              {requestProgramStatus === requestStatus.reschedule
+                ? "Rescheduled "
+                : requestProgramStatus === requestStatus.cancel
+                ? "Cancelled "
+                : ""}{" "}
+              Successfully
+            </p>
+          </div>
+        </div>
+      </Backdrop>
 
-            {/* Program Cancel Popup */}
-            {
-                confirmPopup.cancel &&
+      {/* Program Request Updated Popup */}
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={requestProgramStatus === requestStatus.programupdate}
+      >
+        <div className="px-5 py-1 flex justify-center items-center">
+          <div
+            className="flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20"
+            style={{ background: "#fff", borderRadius: "10px" }}
+          >
+            <img src={SuccessTik} alt="SuccessTik" />
+            <p
+              className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
+              style={{
+                fontWeight: 600,
+              }}
+            >
+              {programdetails?.program_name} Request is Successfully updated
+            </p>
+          </div>
+        </div>
+      </Backdrop>
 
-                <MuiModal modalSize='md' modalOpen={confirmPopup.cancel} modalClose={resetAcceptCancelPopup} noheader>
+      <MuiModal
+        modalSize="md"
+        modalOpen={viewMenteeModal}
+        modalClose={undefined}
+        noheader
+      >
+        <div className="px-5 py-5">
+          <div
+            className="flex justify-center flex-col gap-5  mt-4 mb-4"
+            style={{
+              border: "1px solid rgba(29, 91, 191, 1)",
+              borderRadius: "10px",
+            }}
+          >
+            <div
+              className="flex justify-between px-3 py-4 items-center"
+              style={{ borderBottom: "1px solid rgba(29, 91, 191, 1)" }}
+            >
+              <p className="text-[18px]" style={{ color: "rgba(0, 0, 0, 1)" }}>
+                Joining Mentees{" "}
+              </p>
+              <img
+                className="cursor-pointer"
+                onClick={() => setViewMenteeModal(false)}
+                src={CancelIcon}
+                alt="CancelIcon"
+              />
+            </div>
+            <div className="px-5">
+              <DataTable
+                rows={programMentees?.length > 0 && programMentees}
+                columns={JoinMenteeColumn}
+                hideCheckbox
+              />
+            </div>
+          </div>
+        </div>
+      </MuiModal>
 
-                    <div className='px-5 py-5'>
-                        <div className='flex justify-center flex-col gap-5  mt-4 mb-4'
-                            style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '10px', }}>
-                            <div className='flex justify-between px-3 py-4 items-center' style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
-                                <p className='text-[18px]' style={{ color: 'rgba(0, 0, 0, 1)' }}>Reject Request Reason </p>
-                                <img className='cursor-pointer' onClick={resetAcceptCancelPopup} src={CancelIcon} alt="CancelIcon" />
-                            </div>
+      {/* Program Accept Popup */}
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={confirmPopup.accept}
+      >
+        <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
+          <img src={TickColorIcon} alt="TickColorIcon" />
+          <span style={{ color: "#232323", fontWeight: 600, fontSize: "24px" }}>
+            Approve
+          </span>
+          <div className="py-5">
+            <p
+              style={{
+                color: "rgba(24, 40, 61, 1)",
+                fontWeight: 600,
+                fontSize: "18px",
+              }}
+            >
+              Are you sure want to approve Program Request?
+            </p>
+          </div>
+          <div className="flex justify-center">
+            <div className="flex gap-6 justify-center align-middle">
+              <Button
+                btnCls="w-[110px]"
+                btnName={"Cancel"}
+                btnCategory="secondary"
+                onClick={resetAcceptCancelPopup}
+              />
+              <Button
+                btnType="button"
+                btnCls="w-[110px]"
+                btnName={"Approve"}
+                style={{ background: "#16B681" }}
+                btnCategory="primary"
+                onClick={handleConfirmPopup}
+              />
+            </div>
+          </div>
+        </div>
+      </Backdrop>
 
-                            <div className='px-5'>
-                                {
-                                    requestError !== '' ? <p className="error" role="alert">{requestError}</p> : null
-                                }
+      {/* Program Cancel Popup */}
+      {confirmPopup.cancel && (
+        <MuiModal
+          modalSize="md"
+          modalOpen={confirmPopup.cancel}
+          modalClose={resetAcceptCancelPopup}
+          noheader
+        >
+          <div className="px-5 py-5">
+            <div
+              className="flex justify-center flex-col gap-5  mt-4 mb-4"
+              style={{
+                border: "1px solid rgba(29, 91, 191, 1)",
+                borderRadius: "10px",
+              }}
+            >
+              <div
+                className="flex justify-between px-3 py-4 items-center"
+                style={{ borderBottom: "1px solid rgba(29, 91, 191, 1)" }}
+              >
+                <p
+                  className="text-[18px]"
+                  style={{ color: "rgba(0, 0, 0, 1)" }}
+                >
+                  Reject Reason{" "}
+                </p>
+                <img
+                  className="cursor-pointer"
+                  onClick={resetAcceptCancelPopup}
+                  src={CancelIcon}
+                  alt="CancelIcon"
+                />
+              </div>
 
+              <div className="px-5">
+                {requestError !== "" ? (
+                  <p className="error" role="alert">
+                    {requestError}
+                  </p>
+                ) : null}
 
-                                <form onSubmit={handleSubmit(handleCancelReasonPopupSubmit)}>
-                                    <div className='relative pb-8'>
-                                        <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
-                                            Reject Request Reason
-                                        </label>
+                <form onSubmit={handleSubmit(handleCancelReasonPopupSubmit)}>
+                  <div className="relative pb-8">
+                    <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
+                      Reject Reason
+                    </label>
 
-                                        <div className='relative'>
-                                            <textarea
-                                                {...register('cancel_reason', {
-                                                    required: "This field is required",
-                                                })}
-                                                id="message" rows="4" className={`block p-2.5 input-bg w-full text-sm text-gray-900  border
+                    <div className="relative">
+                      <textarea
+                        {...register("cancel_reason", {
+                          required: "This field is required",
+                        })}
+                        id="message"
+                        rows="4"
+                        className={`block p-2.5 input-bg w-full text-sm text-gray-900  border
                                     focus-visible:outline-none focus-visible:border-none`}
-                                                style={{ border: '2px solid rgba(229, 0, 39, 1)' }}
-                                                placeholder={''}
-                                            ></textarea>
-                                            {errors['cancel_reason'] && (
-                                                <p className="error" role="alert">
-                                                    {errors['cancel_reason'].message}
-                                                </p>
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    <div className='flex justify-center gap-5 items-center pt-5 pb-10'>
-                                        <Button btnName='Cancel' btnCls="w-[18%]" btnCategory="secondary" onClick={resetAcceptCancelPopup} />
-                                        <button
-                                            type='submit'
-                                            className='text-white py-3 px-7 w-[18%]'
-                                            style={{ background: 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)', borderRadius: '3px' }}>
-                                            Submit
-                                        </button>
-                                    </div>
-                                </form>
-
-                            </div>
-
-
-                        </div>
-
+                        style={{ border: "2px solid rgba(229, 0, 39, 1)" }}
+                        placeholder={""}
+                      ></textarea>
+                      {errors["cancel_reason"] && (
+                        <p className="error" role="alert">
+                          {errors["cancel_reason"].message}
+                        </p>
+                      )}
                     </div>
-                </MuiModal>
-            }
+                  </div>
 
-
-            <Backdrop
-                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={loading.join && role === 'mentor'}
-            >
-                <div className='px-5 py-1 flex justify-center items-center'>
-                    <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
-                        style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
-                        <img src={SuccessTik} alt="SuccessTik" />
-                        <p className='text-white text-[12px]'>Successfully Launched a program</p>
-                    </div>
-
-                </div>
-            </Backdrop>
-
-            <Backdrop
-                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={taskJoinedRequest}
-            >
-                <div className='px-5 py-1 flex justify-center items-center'>
-                    <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
-                        style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
-                        <img src={SuccessTik} alt="SuccessTik" />
-                        <p className='text-white text-[12px]'>Program join request submitted successfully to Mentor</p>
-                    </div>
-
-                </div>
-            </Backdrop>
-
-
-            {
-                message &&
-                <ToastNotification openToaster={message} message={'URL copied!'} handleClose={handleCloseNotify} toastType={'success'} />
-            }
-
-            <MuiModal modalOpen={moreMenuModal.share} modalClose={handleMoreMenuClosePopup} noheader>
-                <div className='px-5 py-1 flex justify-center items-center' style={{ border: '1px solid rgba(29, 91, 191, 1)' }}>
-                    <div className='flex justify-center items-center flex-col gap-8 py-10 px-20 mt-5'
+                  <div className="flex justify-center gap-5 items-center pt-5 pb-10">
+                    <Button
+                      btnName="Cancel"
+                      btnCls="w-[18%]"
+                      btnCategory="secondary"
+                      onClick={resetAcceptCancelPopup}
+                    />
+                    <button
+                      type="submit"
+                      className="text-white py-3 px-7 w-[18%]"
+                      style={{
+                        background:
+                          "linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)",
+                        borderRadius: "3px",
+                      }}
                     >
-                        <div>{programdetails?.program_name}</div>
-                        <input className='input-bg text-[12px] h-[60px] w-[396px] px-5' style={{ borderRadius: '27px' }} disabled
-                            value={url} />
-                        <div className='flex gap-7'>
-                            <img className='cursor-pointer' src={LinkIcon} alt="LinkIcon" onClick={handleCopy} />
-                        </div>
+                      Submit
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </MuiModal>
+      )}
 
-                        <div className="flex  justify-center align-middle pt-4">
-                            <Button btnType="button" onClick={handleMoreMenuClosePopup} btnName='Close' btnCategory="primary" />
-                        </div>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading.join && role === "mentor"}
+      >
+        <div className="px-5 py-1 flex justify-center items-center">
+          <div
+            className="flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20"
+            style={{ background: "#fff", borderRadius: "10px" }}
+          >
+            <img src={SuccessTik} alt="SuccessTik" />
+            <p
+              className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
+              style={{
+                fontWeight: 600,
+              }}
+            >
+              Successfully Launched a program
+            </p>
+          </div>
+        </div>
+      </Backdrop>
+
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={taskJoinedRequest}
+      >
+        <div className="px-5 py-1 flex justify-center items-center">
+          <div
+            className="flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20"
+            style={{ background: "#fff", borderRadius: "10px" }}
+          >
+            <img src={SuccessTik} alt="SuccessTik" />
+            <p
+              className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
+              style={{
+                fontWeight: 600,
+              }}
+            >
+              Program join request submitted successfully to Mentor
+            </p>
+          </div>
+        </div>
+      </Backdrop>
+
+      <Backdrop
+        sx={{
+          color: "#fff",
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+        }}
+        open={openPopup}
+      >
+        <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] p-[12px] justify-center items-center">
+          <div className="border border-[#E50027] rounded-[15px] h-[100%] w-[100%] justify-center items-center flex flex-col relative">
+            <div
+              className="absolute top-[12px] right-[12px]"
+              // onClick={() => handleCloseCancelPopup()}
+            >
+              <img src={CloseIcon} alt="ConfirmIcon" />
+            </div>
+            <img src={ConfirmIcon} alt="ConfirmIcon" />
+
+            <div className="py-5">
+              <p
+                style={{
+                  color: "rgba(24, 40, 61, 1)",
+                  fontWeight: 600,
+                  fontSize: "18px",
+                }}
+              >
+                Are you sure want to Accept this Program?
+              </p>
+            </div>
+            <div className="flex justify-center">
+              <div className="flex gap-6 justify-center align-middle">
+                <Button
+                  btnName="No"
+                  btnCategory="secondary"
+                  btnCls="border !border-[#1D5BBF] !text-[#1D5BBF] w-[110px]"
+                  onClick={() => setOpenPopup(false)}
+                />
+                <Button
+                  btnType="button"
+                  btnCls="w-[110px]"
+                  btnName={"Yes"}
+                  btnCategory="primary"
+                  onClick={() => handleAcceptProgram(programdetails)}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </Backdrop>
+
+      {message && (
+        <ToastNotification
+          openToaster={message}
+          message={"URL copied!"}
+          handleClose={handleCloseNotify}
+          toastType={"success"}
+        />
+      )}
+
+      <MuiModal
+        modalOpen={moreMenuModal.share}
+        modalClose={handleMoreMenuClosePopup}
+        noheader
+      >
+        <div
+          className="px-5 py-1 flex justify-center items-center"
+          style={{ border: "1px solid rgba(29, 91, 191, 1)" }}
+        >
+          <div className="flex justify-center items-center flex-col gap-8 py-10 px-20 mt-5">
+            <div>{programdetails?.program_name}</div>
+            <input
+              className="input-bg text-[12px] h-[60px] w-[396px] px-5"
+              style={{ borderRadius: "27px" }}
+              disabled
+              value={url}
+            />
+            <div className="flex gap-7">
+              <img
+                className="cursor-pointer"
+                src={LinkIcon}
+                alt="LinkIcon"
+                onClick={handleCopy}
+              />
+            </div>
+
+            <div className="flex  justify-center align-middle pt-4">
+              <Button
+                btnType="button"
+                onClick={handleMoreMenuClosePopup}
+                btnName="Close"
+                btnCategory="primary"
+              />
+            </div>
+          </div>
+        </div>
+      </MuiModal>
+
+      {moreMenuModal.reschedule && (
+        <MuiModal
+          modalOpen={moreMenuModal.reschedule}
+          modalClose={handleMoreMenuClosePopup}
+          noheader
+        >
+          <div style={{ border: "1px solid rgba(29, 91, 191, 1)" }}>
+            <div
+              className="flex justify-between items-center px-3 py-4 mx-1"
+              style={{ borderBottom: "1px solid rgba(29, 91, 191, 1)" }}
+            >
+              <div>Reschedule {programdetails.name}</div>
+              <img
+                className="cursor-pointer"
+                onClick={() =>
+                  setMoreMenuModal({ share: false, reschedule: false })
+                }
+                src={CancelIcon}
+                alt="CancelIcon"
+              />
+            </div>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="px-4 py-7">
+                <div className="flex flex-wrap gap-4">
+                  <div className={`relative mb-6 w-[48%]`}>
+                    <label
+                      className="block tracking-wide text-gray-700 text-xs font-bold mb-2"
+                      htmlFor={"Reschedule Date"}
+                    >
+                      Reschedule Start Date
+                    </label>
+
+                    <div className="relative input-bg">
+                      <Calendar
+                        className="calendar-control w-full"
+                        {...dateStartField}
+                        value={dateFormatted["reschedule_start_date"]}
+                        onChange={(e) => {
+                          dateStartField.onChange(e);
+                          setDateFormat({
+                            reschedule_end_date: "",
+                            reschedule_start_date: e.value,
+                          });
+                          calendarRef?.current[0]?.hide();
+                        }}
+                        onClick={handleDateClick}
+                        disabled={false}
+                        minDate={new Date()}
+                        maxDate={
+                          ["yettostart", "yettojoin"].includes(
+                            programdetails?.status
+                          )
+                            ? ""
+                            : new Date(programdetails?.end_date)
+                        }
+                        showTime={false}
+                        hourFormat="12"
+                        dateFormat="dd/mm/yy"
+                        style={{ width: "60%" }}
+                        ref={(el) => (calendarRef.current[0] = el)}
+                        viewDate={
+                          ["yettostart", "yettojoin"].includes(
+                            programdetails?.status
+                          )
+                            ? new Date()
+                            : new Date(programdetails?.start_date)
+                        }
+                      />
+
+                      <img
+                        className="absolute top-5 right-2 cursor-pointer"
+                        src={CalendarIcon}
+                        alt="CalendarIcon"
+                        onClick={() => {
+                          handleDateClick();
+                          calendarRef?.current[0]?.show();
+                        }}
+                      />
                     </div>
+                    {errors["reschedule_start_date"] && (
+                      <p className="error" role="alert">
+                        {errors["reschedule_start_date"].message}
+                      </p>
+                    )}
+                  </div>
 
-                </div>
-            </MuiModal>
+                  <div className={`relative mb-6 w-[48%]`}>
+                    <label
+                      className="block tracking-wide text-gray-700 text-xs font-bold mb-2"
+                      htmlFor={"Reschedule Date"}
+                    >
+                      Reschedule End Date
+                    </label>
 
-            {
-                moreMenuModal.reschedule &&
+                    <div className="relative input-bg">
+                      <Calendar
+                        className="calendar-control w-full"
+                        {...dateEndField}
+                        value={dateFormatted["reschedule_end_date"]}
+                        onChange={(e) => {
+                          dateEndField.onChange(e);
+                          setDateFormat({
+                            ...dateFormatted,
+                            ["reschedule_end_date"]: e.value,
+                          });
+                          calendarRef?.current[1]?.hide();
+                        }}
+                        onClick={handleDateClick}
+                        disabled={false}
+                        minDate={
+                          dateFormatted.reschedule_start_date
+                            ? new Date(dateFormatted.reschedule_start_date)
+                            : new Date()
+                        }
+                        maxDate={
+                          ["yettojoin", "yettostart"].includes(
+                            programdetails?.status
+                          )
+                            ? ""
+                            : new Date(programdetails?.end_date)
+                        }
+                        showTime={false}
+                        hourFormat="12"
+                        dateFormat="dd/mm/yy"
+                        style={{ width: "60%" }}
+                        ref={(el) => (calendarRef.current[1] = el)}
+                        viewDate={
+                          new Date(
+                            dateFormatted.reschedule_start_date ??
+                              programdetails?.start_date
+                          )
+                        }
+                      />
 
-                <MuiModal modalOpen={moreMenuModal.reschedule} modalClose={handleMoreMenuClosePopup} noheader>
-                    <div style={{ border: '1px solid rgba(29, 91, 191, 1)' }}>
-                        <div className='flex justify-between items-center px-3 py-4 mx-1' style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
-                            <div>Reschedule {programdetails.name}</div>
-                            <img className='cursor-pointer' onClick={() => setMoreMenuModal({ share: false, reschedule: false })} src={CancelIcon} alt="CancelIcon" />
-                        </div>
-                        <form onSubmit={handleSubmit(onSubmit)}>
-                            <div className='px-4 py-7'>
+                      <img
+                        className="absolute top-5 right-2 cursor-pointer"
+                        src={CalendarIcon}
+                        alt="CalendarIcon"
+                        onClick={() => {
+                          handleDateClick();
+                          calendarRef?.current[1]?.show();
+                        }}
+                      />
+                    </div>
+                    {errors["reschedule_end_date"] && (
+                      <p className="error" role="alert">
+                        {errors["reschedule_end_date"].message}
+                      </p>
+                    )}
+                  </div>
 
-                                <div className="flex flex-wrap gap-4">
-
-                                    <div className={`relative mb-6 w-[48%]`} >
-                                        <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor={'Reschedule Date'}>
-                                            Reschedule Start Date
-                                        </label>
-
-                                        <div className='relative input-bg'>
-                                            <Calendar
-                                                className='calendar-control w-full'
-                                                {...dateStartField}
-                                                value={dateFormatted['reschedule_start_date']}
-                                                onChange={(e) => {
-                                                    dateStartField.onChange(e)
-                                                    setDateFormat({ reschedule_end_date: '', reschedule_start_date: e.value })
-                                                    calendarRef?.current[0]?.hide()
-                                                }}
-                                                onClick={handleDateClick}
-                                                disabled={false}
-                                                minDate={new Date()}
-                                                maxDate={programdetails?.status === "yettostart" ? "" : new Date(programdetails?.end_date)}
-                                                showTime={false}
-                                                hourFormat="12"
-                                                dateFormat="dd/mm/yy"
-                                                style={{ width: '60%' }}
-                                                ref={el => (calendarRef.current[0] = el)}
-                                                viewDate={programdetails?.status === "yettostart" ? new Date() : new Date(programdetails?.start_date)}
-                                            />
-
-                                            <img className='absolute top-5 right-2 cursor-pointer' src={CalendarIcon} alt="CalendarIcon"
-                                                onClick={(e) => {
-                                                    handleDateClick();
-                                                    calendarRef?.current[0]?.show();
-                                                }}
-                                            />
-                                        </div>
-                                        {errors['reschedule_start_date'] && (
-                                            <p className="error" role="alert">
-                                                {errors['reschedule_start_date'].message}
-                                            </p>
-                                        )}
-
-                                    </div>
-
-                                    <div className={`relative mb-6 w-[48%]`} >
-                                        <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor={'Reschedule Date'}>
-                                            Reschedule End Date
-                                        </label>
-
-                                        <div className='relative input-bg'>
-                                            <Calendar
-                                                className='calendar-control w-full'
-                                                {...dateEndField}
-                                                value={dateFormatted['reschedule_end_date']}
-                                                onChange={(e) => {
-                                                    dateEndField.onChange(e)
-                                                    setDateFormat({ ...dateFormatted, ['reschedule_end_date']: e.value })
-                                                    calendarRef?.current[1]?.hide()
-                                                }}
-                                                onClick={handleDateClick}
-                                                disabled={false}
-                                                minDate={dateFormatted.reschedule_start_date ? new Date(dateFormatted.reschedule_start_date) : new Date()}
-                                                maxDate={programdetails?.status === "yettostart" ? "" : new Date(programdetails?.end_date)}
-                                                showTime={false}
-                                                hourFormat="12"
-                                                dateFormat="dd/mm/yy"
-                                                style={{ width: '60%' }}
-                                                ref={el => (calendarRef.current[1] = el)}
-                                                viewDate={new Date(dateFormatted.reschedule_start_date ?? programdetails?.start_date)}
-                                            />
-
-                                            <img className='absolute top-5 right-2 cursor-pointer' src={CalendarIcon} alt="CalendarIcon"
-                                                onClick={(e) => {
-                                                    handleDateClick();
-                                                    calendarRef?.current[1]?.show();
-
-                                                }}
-                                            />
-                                        </div>
-                                        {errors['reschedule_end_date'] && (
-                                            <p className="error" role="alert">
-                                                {errors['reschedule_end_date'].message}
-                                            </p>
-                                        )}
-                                    </div>
-
-                                    <div className={`relative mb-6 w-full`} >
-                                        <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor={'Comments'}>
-                                            Comments
-                                        </label>
-                                        <textarea id="message" rows="4" className={`block p-2.5 input-bg w-full text-sm text-gray-900  rounded-lg border
+                  <div className={`relative mb-6 w-full`}>
+                    <label
+                      className="block tracking-wide text-gray-700 text-xs font-bold mb-2"
+                      htmlFor={"Comments"}
+                    >
+                      Comments
+                    </label>
+                    <textarea
+                      id="message"
+                      rows="4"
+                      className={`block p-2.5 input-bg w-full text-sm text-gray-900  rounded-lg border
                                                                    focus:visible:outline-none focus:visible:border-none}`}
-                                            placeholder={''}
-                                            {...register('reason', { required: "This field is required" })}></textarea>
+                      placeholder={""}
+                      {...register("reason", {
+                        required: "This field is required",
+                      })}
+                    ></textarea>
 
-                                        {errors['reason'] && (
-                                            <p className="error" role="alert">
-                                                {errors['reason'].message}
-                                            </p>
-                                        )}
-                                    </div>
+                    {errors["reason"] && (
+                      <p className="error" role="alert">
+                        {errors["reason"].message}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
 
-                                </div>
+              <div className="flex gap-6 justify-center align-middle py-5">
+                <Button
+                  btnName="Cancel"
+                  btnCategory="secondary"
+                  onClick={() =>
+                    setMoreMenuModal({ share: false, reschedule: false })
+                  }
+                />
+                <Button
+                  btnType="submit"
+                  btnName="Submit"
+                  btnCategory="primary"
+                />
+              </div>
+            </form>
+          </div>
+        </MuiModal>
+      )}
+      <MuiCustomModal
+        open={moreMenuModal.not_interested}
+        actionButtons={[
+          {
+            color: "inherit",
+            variant: "outlined",
+            children: "Cancel",
 
-                            </div>
+            onClick: handleCancel,
+          },
+          {
+            color: "primary",
+            variant: "contained",
+            children: "Yes",
+            onClick: () => handleMarkInterestClick(false),
+          },
+        ]}
+      >
+        <p
+          className={`
+             
+          pb-4 text-center font-normal text-md`}
+          role="alert"
+        >
+          {"Are you sure want to mark this program as 'Not interested' ?"}
+        </p>
+      </MuiCustomModal>
+      <MuiCustomModal
+        PaperProps={{
+          sx: {
+            background: isInsterestMarked
+              ? "linear-gradient(97.86deg, #005DC6 -15.07%, #00B1C0 112.47%)"
+              : "rgba(249, 249, 249, 1)",
+          },
+        }}
+        open={showBackdrop}
+        maxWidth="sm"
+        onClose={() => setShowBackdrop(false)}
+      >
+        <div className="flex justify-center items-center flex-col gap-y-4">
+          {isInsterestMarked && <Avatar src={modal_tick_icon} />}
+          <p
+            className={`
+            ${isInsterestMarked ? "text-white" : "text-red-500"} 
+          pb-4 text-center font-normal text-md`}
+            role="alert"
+          >
+            {markInterestResponseData?.message}
+          </p>
+        </div>
+      </MuiCustomModal>
+      {moreMenuModal.cancel && (
+        <MuiModal
+          modalSize="md"
+          modalOpen={moreMenuModal.cancel}
+          modalClose={handleMoreMenuClosePopup}
+          noheader
+        >
+          <div className="px-5 py-5">
+            <div
+              className="flex justify-center flex-col gap-5  mt-4 mb-4"
+              style={{
+                border: "1px solid rgba(29, 91, 191, 1)",
+                borderRadius: "10px",
+              }}
+            >
+              <div
+                className="flex justify-between px-3 py-4 items-center"
+                style={{ borderBottom: "1px solid rgba(29, 91, 191, 1)" }}
+              >
+                <p
+                  className="text-[18px]"
+                  style={{ color: "rgba(0, 0, 0, 1)" }}
+                >
+                  Cancel Reason{" "}
+                </p>
+                <img
+                  className="cursor-pointer"
+                  onClick={handleMoreMenuClosePopup}
+                  src={CancelIcon}
+                  alt="CancelIcon"
+                />
+              </div>
 
+              <div className="px-5">
+                {requestError !== "" ? (
+                  <p className="error" role="alert">
+                    {requestError}
+                  </p>
+                ) : null}
 
-                            <div className="flex gap-6 justify-center align-middle py-5">
-                                <Button btnName='Cancel' btnCategory="secondary" onClick={() => setMoreMenuModal({ share: false, reschedule: false })} />
-                                <Button btnType="submit" btnName='Submit' btnCategory="primary" />
-                            </div>
-                        </form>
-                    </div>
-                </MuiModal>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <div className="relative pb-8">
+                    <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
+                      Cancel Reason
+                    </label>
 
-            }
-
-            {
-                moreMenuModal.cancel &&
-
-                <MuiModal modalSize='md' modalOpen={moreMenuModal.cancel} modalClose={handleMoreMenuClosePopup} noheader>
-
-                    <div className='px-5 py-5'>
-                        <div className='flex justify-center flex-col gap-5  mt-4 mb-4'
-                            style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '10px', }}>
-                            <div className='flex justify-between px-3 py-4 items-center' style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}>
-                                <p className='text-[18px]' style={{ color: 'rgba(0, 0, 0, 1)' }}>Cancel Request Reason </p>
-                                <img className='cursor-pointer' onClick={handleMoreMenuClosePopup} src={CancelIcon} alt="CancelIcon" />
-                            </div>
-
-                            <div className='px-5'>
-                                {
-                                    requestError !== '' ? <p className="error" role="alert">{requestError}</p> : null
-                                }
-
-                                <form onSubmit={handleSubmit(onSubmit)}>
-                                    <div className='relative pb-8'>
-                                        <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
-                                            Cancel Reason
-                                        </label>
-
-                                        <div className='relative'>
-                                            <textarea
-                                                {...register('cancel_reason', {
-                                                    required: "This field is required",
-                                                })}
-                                                id="message" rows="4" className={`block p-2.5 input-bg w-full text-sm text-gray-900  border
+                    <div className="relative">
+                      <textarea
+                        {...register("cancel_reason", {
+                          required: "This field is required",
+                        })}
+                        id="message"
+                        rows="4"
+                        className={`block p-2.5 input-bg w-full text-sm text-gray-900  border
                                                                 focus-visible:outline-none focus-visible:border-none`}
-                                                style={{ border: '2px solid rgba(229, 0, 39, 1)' }}
-                                                placeholder={''}
-                                            ></textarea>
-                                            {errors['cancel_reason'] && (
-                                                <p className="error" role="alert">
-                                                    {errors['cancel_reason'].message}
-                                                </p>
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    <div className='flex justify-center gap-5 items-center pt-5 pb-10'>
-                                        <Button btnName='Cancel' btnCls="w-[18%]" btnCategory="secondary" onClick={handleMoreMenuClosePopup} />
-                                        <button
-                                            type='submit'
-                                            className='text-white py-3 px-7 w-[18%]'
-                                            style={{ background: 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)', borderRadius: '3px' }}>
-                                            Submit
-                                        </button>
-                                    </div>
-                                </form>
-
-                            </div>
-
-
-                        </div>
-
+                        style={{ border: "2px solid rgba(229, 0, 39, 1)" }}
+                        placeholder={""}
+                      ></textarea>
+                      {errors["cancel_reason"] && (
+                        <p className="error" role="alert">
+                          {errors["cancel_reason"].message}
+                        </p>
+                      )}
                     </div>
-                </MuiModal>
-            }
+                  </div>
 
-            {
-                (!programLoading && Object.keys(programdetails).length) ?
+                  <div className="flex justify-center gap-5 items-center pt-5 pb-10">
+                    <Button
+                      btnName="Cancel"
+                      btnCls="w-[18%]"
+                      btnCategory="secondary"
+                      onClick={handleMoreMenuClosePopup}
+                    />
+                    <button
+                      type="submit"
+                      className="text-white py-3 px-7 w-[18%]"
+                      style={{
+                        background:
+                          "linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)",
+                        borderRadius: "3px",
+                      }}
+                    >
+                      Submit
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </MuiModal>
+      )}
 
-                    <div className='grid mb-10' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)', borderRadius: '5px' }}>
-                        <div className='breadcrum'>
-                            <nav className="flex justify-between px-7 pt-6 pb-5 mx-2 border-b-2" aria-label="Breadcrumb">
-                                <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
-                                    <li className="inline-flex items-center">
-                                        <a href="#" className="inline-flex items-center text-sm font-medium" style={{ color: 'rgba(89, 117, 162, 1)' }}>
-                                            Program
-                                        </a>
-                                        <svg className="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
-                                        </svg>
-                                    </li>
-                                    <li>
-                                        <div className="flex items-center">
-                                            <a href="#" className="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">
-                                                Program Details </a>
-                                        </div>
-                                    </li>
+      {!programLoading &&
+      programdetails &&
+      Object.keys(programdetails)?.length ? (
+        <div
+          className="grid mb-10"
+          style={{
+            boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.15)",
+            borderRadius: "5px",
+          }}
+        >
+          <div className="breadcrum">
+            <nav
+              className="flex justify-between px-7 pt-6 pb-5 mx-2 border-b-2"
+              aria-label="Breadcrumb"
+            >
+              <Breadcrumbs items={breadcrumbsArray} />
+              {/* <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+                <li className="inline-flex items-center">
+                  <p
+                    href='#'
+                    className='inline-flex items-center text-sm font-medium cursor-pointer'
+                    style={{ color: 'rgba(89, 117, 162, 1)' }}
+                    onClick={() => navigate(-1)}
+                  >
+                    {state?.from === 'category' ? 'Category View' : 'Program'}
+                  </p>
+                  <svg
+                    className='rtl:rotate-180 w-3 h-3 text-gray-400 mx-1'
+                    aria-hidden='true'
+                    xmlns='http://www.w3.org/2000/svg'
+                    fill='none'
+                    viewBox='0 0 6 10'
+                  >
+                    <path
+                      stroke='currentColor'
+                      stroke-linecap='round'
+                      stroke-linejoin='round'
+                      stroke-width='2'
+                      d='m1 9 4-4-4-4'
+                    />
+                  </svg>
+                </li>
+                <li>
+                  <div className='flex items-center'>
+                    <p
+                      href='#'
+                      className='ms-1 text-sm font-medium text-gray-700 '
+                    >
+                      Program Details{' '}
+                    </p>
+                  </div>
+                </li>
+              </ol> */}
 
-                                </ol>
-                                {
-                                    role === 'mentor' &&
-                                    <>
-                                        <div className='cursor-pointer' onClick={handleClick}>
-                                            <img src={MoreIcon} alt='MoreIcon' />
-                                        </div>
-                                        <Menu
-                                            id="basic-menu"
-                                            anchorEl={anchorEl}
-                                            open={open}
-                                            onClose={handleClose}
-                                            MenuListProps={{
-                                                'aria-labelledby': 'basic-button',
-                                            }}
-                                        >
-                                            <MenuItem onClick={() => handleMenu('share')} className='!text-[12px]'>
-                                                <img src={ShareIcon} alt="ShareIcon" className='pr-3 w-[25px]' />
-                                                Share
-                                            </MenuItem>
-                                            <MenuItem onClick={() => handleMenu('reschedule')} className='!text-[12px]'>
-                                                <img src={RescheduleIcon} alt="RescheduleIcon" className='pr-3 w-[25px]' />
-                                                Reschedule
-                                            </MenuItem>
+              <>
+                {(role === "mentor" ||
+                  (role === "admin" &&
+                    ![
+                      "program_new",
+                      "program_join",
+                      "program_reschedule",
+                      "program_cancel",
+                    ].includes(typeParams)
+                  ) ||
+                  (role === "mentee" &&
+                    (programdetails.status === programActionStatus.inprogress ||
+                      programdetails.mentee_join_status ===
+                        programActionStatus.program_join_request_accepted ||
+                      programdetails?.program_interest) &&
+                      ![
+                        "program_join",
+                        "program_cancel",
+                      ].includes(typeParams)
+                    )) && (
+                  <>
+                    <div className="cursor-pointer" onClick={handleClick}>
+                      <img src={MoreIcon} alt="MoreIcon" />
+                    </div>
+                    <Menu
+                      id="basic-menu"
+                      anchorEl={anchorEl}
+                      open={open}
+                      onClose={handleClose}
+                      MenuListProps={{
+                        "aria-labelledby": "basic-button",
+                      }}
+                    >
+                      {(role === "mentor" || role === "admin") && (
+                        <>
+                          {/* programdetails.participated_mentees_count */}
+                          <MenuItem
+                            onClick={() => handleMenu("share")}
+                            className="!text-[12px]"
+                          >
+                            <img
+                              src={ShareIcon}
+                              alt="ShareIcon"
+                              className="pr-3 w-[25px]"
+                            />
+                            Share
+                          </MenuItem>
+                          {programdetails.participated_mentees_count === 0 &&
+                            programdetails?.created_by ===
+                              userdetails?.data?.user_id && (
+                              <MenuItem
+                                onClick={() => handleMenu("edit")}
+                                className="!text-[12px]"
+                              >
+                                <img
+                                  src={EditSVGIcon}
+                                  alt="EditSVGIcon"
+                                  className="pr-3 w-[25px]"
+                                />
+                                Edit
+                              </MenuItem>
+                            )}
+                          {
+                            !requestStatusParams &&
+                              ![
+                                "yettoapprove",
+                                "cancelled",
+                                "new_program_request_rejected",
+                                "completed",
+                              ].includes(programdetails?.status) &&
+                              !reqRole &&
+                              !programdetails.hasOwnProperty(
+                                "admin_assign_program"
+                              ) &&
+                              programdetails?.created_by ===
+                                userdetails?.data?.user_id && (
+                                // role !== 'admin' && (
+                                <MenuItem
+                                  onClick={() => handleMenu("reschedule")}
+                                  className="!text-[12px]"
+                                >
+                                  <img
+                                    src={RescheduleIcon}
+                                    alt="RescheduleIcon"
+                                    className="pr-3 w-[25px]"
+                                  />
+                                  Reschedule
+                                </MenuItem>
+                              )
+                            // )
+                          }
 
-                                            <MenuItem onClick={() => handleMenu('cancel')} className='!text-[12px]'>
-                                                <img src={AbortIcon} alt="Cancel" className='pr-3 w-[25px]' />
-                                                Cancel
-                                            </MenuItem>
-                                        </Menu>
-                                    </>
+                          {
+                            !requestStatusParams &&
+                              ![
+                                "yettoapprove",
+                                "cancelled",
+                                "new_program_request_rejected",
+                                "completed",
+                              ].includes(programdetails?.status) &&
+                              !reqRole &&
+                              programdetails?.created_by ===
+                                userdetails?.data?.user_id && (
+                                // role !== 'admin' && (
+                                <MenuItem
+                                  onClick={() => handleMenu("cancel")}
+                                  className="!text-[12px]"
+                                >
+                                  <img
+                                    src={AbortIcon}
+                                    alt="Cancel"
+                                    className="pr-3 w-[25px]"
+                                  />
+                                  Cancel
+                                </MenuItem>
+                              )
+                            // )
+                          }
+                          {[
+                            programActionStatus.inprogress,
+                            programActionStatus.assigned,
+                            programActionStatus.started,
+                          ].includes(programdetails.status) && (
+                            <>
+                              <MenuItem
+                                onClick={() => handleOpenConfirmPopup()}
+                                className="!text-[12px]"
+                              >
+                                <img
+                                  src={CompleteIcon}
+                                  alt="AbortIcon"
+                                  className="pr-3 w-[25px]"
+                                />
+                                Complete
+                              </MenuItem>
+                              {programdetails?.created_by ===
+                                userdetails?.data?.user_id && (
+                                <MenuItem
+                                  onClick={() => handleNewTaskFromAdmin()}
+                                  className="!text-[12px]"
+                                >
+                                  <img
+                                    src={PlusCircle}
+                                    alt="PlusCircle"
+                                    className="pr-3 w-[25px]"
+                                  />
+                                  Assign Task to Mentees
+                                </MenuItem>
+                              )}
+                            </>
+                          )}
+
+                          {["cancelled", "inprogress", "completed"].includes(
+                            programdetails?.status
+                          ) && (
+                            <MenuItem
+                              onClick={() =>
+                                navigate(`/historyNotes/${params.id}`)
+                              }
+                              className="!text-[12px]"
+                            >
+                              <img
+                                src={ProgramHistoryIcon}
+                                alt="ProgramHistoryIcon"
+                                className="pr-3 w-[25px]"
+                              />
+                              Program Notes History
+                            </MenuItem>
+                          )}
+                        </>
+                      )}
+                      {role === "mentee" && (
+                        <>
+                          {programdetails?.status ===
+                            programActionStatus.yettojoin &&
+                            programdetails?.program_interest && (
+                              <MenuItem
+                                onClick={() => handleMenu("not_interested")}
+                                className="!text-[12px]"
+                              >
+                                <img
+                                  src={AbortIcon}
+                                  alt="AbortIcon"
+                                  className="pr-3 w-[25px]"
+                                />
+                                Not Interested
+                              </MenuItem>
+                            )}
+                          {(programdetails.status ===
+                            programActionStatus.inprogress ||
+                            programdetails.mentee_join_status ===
+                              programActionStatus.program_join_request_accepted) && (
+                            <MenuItem
+                              onClick={() => handleMenu("cancel")}
+                              className="!text-[12px]"
+                            >
+                              <img
+                                src={AbortIcon}
+                                alt="AbortIcon"
+                                className="pr-3 w-[25px]"
+                              />
+                              Cancel
+                            </MenuItem>
+                          )}
+                          {["cancelled", "inprogress", "completed"].includes(
+                            programdetails?.status
+                          ) && (
+                            <MenuItem
+                              onClick={() =>
+                                navigate(`/historyNotes/${params.id}`)
+                              }
+                              className="!text-[12px]"
+                            >
+                              <img
+                                src={ProgramHistoryIcon}
+                                alt="ProgramHistoryIcon"
+                                className="pr-3 w-[25px]"
+                              />
+                              Program Notes History
+                            </MenuItem>
+                          )}
+                        </>
+                      )}
+                    </Menu>
+                  </>
+                )}
+              </>
+            </nav>
+
+            <div className="content px-8">
+              <div className="grid grid-cols-3 gap-4 py-6">
+                {/* Left Side Content */}
+                <div className="left-side-content col-span-2">
+                  <div className="flex items-center gap-6 pb-6">
+                    <h3
+                      className="font-semibold text-[18px]"
+                      style={{ color: "rgba(29, 91, 191, 1)" }}
+                    >
+                      {programdetails.program_name}
+                    </h3>
+                    {programdetails?.categories?.length ? (
+                      <div
+                        className="text-[10px] px-3 py-2"
+                        style={{
+                          background: "rgba(238, 240, 244, 1)",
+                          color: "rgba(253, 0, 58, 1)",
+                          borderRadius: "5px",
+                        }}
+                      >
+                        {programdetails.categories[0].name}
+                      </div>
+                    ) : null}
+
+                    {programdetails.reschedule_info?.length > 0 && (
+                      <div className="flex gap-3 items-center">
+                        <span
+                          style={{
+                            background: "rgba(255, 213, 0, 1)",
+                            borderRadius: "3px",
+                            padding: "10px",
+                          }}
+                        >
+                          <img src={TimeHistoryIcon} alt="TimeHistoryIcon" />
+                        </span>
+                        <p
+                          style={{
+                            background: "rgba(255, 249, 216, 1)",
+                            color: "rgba(255, 213, 0, 1)",
+                            padding: "10px",
+                            borderRadius: "10px",
+                            fontSize: "12px",
+                            fontWeight: 500,
+                          }}
+                        >
+                          {programdetails.reschedule_info}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="text-[12px]">
+                    {programdetails.description}
+                  </div>
+                  {programdetails?.prerequisites && (
+                    <div className="text-[12px] my-3">
+                      <span className="font-semibold text-background-primary-main">
+                        Prerequisites:{" "}
+                      </span>
+                      {programdetails.prerequisites}
+                    </div>
+                  )}
+
+                  <div className="flex gap-6 py-6">
+                    <div className="flex gap-2 items-center">
+                      <img src={LocationIcon} alt="LocationIcon" />
+                      <span className="text-[12px]">
+                        {/* {programdetails.venue} */}
+                        {programdetails?.program_mode === "virtual_meeting"
+                          ? "Online"
+                          : `${programdetails.city_details?.name}, ${programdetails.state_details?.abbreviation}`}
+                      </span>
+                    </div>
+
+                    <div
+                      style={{ borderRight: "1px solid rgba(24, 40, 61, 1)" }}
+                    ></div>
+
+                    <div className="flex gap-3 items-center">
+                      <img src={CalendarIcon} alt="CalendarIcon" />
+                      <span className="text-[12px]">
+                        {formatDateTimeISO(programdetails?.start_date)}
+                      </span>
+                    </div>
+                    <div
+                      style={{ borderRight: "1px solid rgba(24, 40, 61, 1)" }}
+                    ></div>
+                    <div className="flex items-center gap-3 text-[12px]">
+                      {!profileLoading && (
+                        <img
+                          src={
+                            programdetails?.mentor_profile_image || UserImage
+                          }
+                          style={{
+                            borderRadius: "50%",
+                            width: "35px",
+                            height: "35px",
+                          }}
+                          alt="UserImage"
+                        />
+                      )}
+
+                      <span>Instructor :</span>
+                      {role !== "mentor" ? (
+                        <span
+                          style={{
+                            color: "rgba(29, 91, 191, 1)",
+                            textDecoration: "underline",
+                            cursor: "pointer",
+                          }}
+                          onClick={() => handleInstructor(programdetails)}
+                        >
+                          {programdetails?.mentor_name}
+                        </span>
+                      ) : (
+                        <span style={{ color: "rgba(29, 91, 191, 1)" }}>
+                          {programdetails?.mentor_name}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {Array.isArray(programdetails?.learning_materials) &&
+                    programdetails?.learning_materials?.length > 0 && (
+                      <div className="py-10">
+                        <p className="text-[14px] font-normal mb-2">
+                          Our Learning Materials
+                        </p>
+                        <div className="flex items-center gap-x-3">
+                          {programdetails?.learning_materials.map(
+                            (material) => (
+                              <button
+                                key={material.id}
+                                className={`px-6 py-3 text-[12px] bg-gray-200 text-black rounded-full`}
+                                onClick={() =>
+                                  setSelectedLM({
+                                    bool: true,
+                                    data: material,
+                                  })
                                 }
+                              >
+                                {material.name}
+                              </button>
+                            )
+                          )}
+                        </div>
+                      </div>
+                    )}
 
+                  <div className="flex gap-2">
+                    {programdetails?.group_chat_requirement && (
+                      <p
+                        onClick={() => navigate("/discussions")}
+                        className="text-[14px] font-semibold text-font-primary-main px-4 py-2 border border-dashed border-background-primary-main rounded-[3px] bg-background-primary-light cursor-pointer"
+                      >
+                        Group Discussions
+                      </p>
+                    )}
+                    {programdetails?.individual_chat_requirement && (
+                      <p
+                        onClick={() => navigate("/discussions/32")}
+                        className="text-[14px] font-semibold text-font-primary-main px-4 py-2 border border-dashed border-background-primary-main rounded-[3px] bg-background-primary-light cursor-pointer"
+                      >
+                        Individual Discussions
+                      </p>
+                    )}
+                  </div>
 
-                            </nav>
-
-                            <div className='content px-8'>
-                                <div className='grid grid-cols-3 gap-4 py-6'>
-
-                                    {/* Left Side Content */}
-                                    <div className='left-side-content col-span-2'>
-                                        <div className='flex items-center gap-6 pb-6'>
-                                            <h3 className='font-semibold text-[18px]' style={{ color: 'rgba(29, 91, 191, 1)' }}>{programdetails.program_name}</h3>
-                                            {
-                                                programdetails.categories.length ?
-
-                                                    <div className='text-[10px] px-3 py-2' style={{
-                                                        background: 'rgba(238, 240, 244, 1)',
-                                                        color: 'rgba(253, 0, 58, 1)',
-                                                        borderRadius: '5px'
-                                                    }}>
-                                                        {programdetails.categories[0].name}
-                                                    </div>
-                                                    : null
-                                            }
-
-                                            {
-                                                programdetails.reschedule_info !== '' &&
-                                                <div className='flex gap-3 items-center'>
-                                                    <span style={{ background: 'rgba(255, 213, 0, 1)', borderRadius: '3px', padding: '10px' }}>
-                                                        <img src={TimeHistoryIcon} alt="TimeHistoryIcon" />
-                                                    </span>
-                                                    <p style={{
-                                                        background: 'rgba(255, 249, 216, 1)', color: 'rgba(255, 213, 0, 1)',
-                                                        padding: '10px', borderRadius: '10px', fontSize: '12px', fontWeight: 500
-                                                    }}>{programdetails.reschedule_info}</p>
-                                                </div>
-                                            }
-
-
-                                        </div>
-
-                                        <div className='text-[12px]'>
-                                            {programdetails.description}
-                                        </div>
-
-                                        <div className='flex gap-6 py-6'>
-                                            <div className='flex gap-2 items-center'>
-                                                <img src={LocationIcon} alt="LocationIcon" />
-                                                <span className='text-[12px]'>
-                                                    {programdetails.venue}
-                                                </span>
-                                            </div>
-                                            <div style={{ borderRight: '1px solid rgba(24, 40, 61, 1)' }}></div>
-
-                                            <div className='flex gap-3 items-center'>
-                                                <img src={CalendarIcon} alt="CalendarIcon" />
-                                                <span className='text-[12px]'>
-
-                                                    {formatDateTimeISO(programdetails?.start_date)}
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                        <div className='flex items-center gap-3 text-[12px]'>
-                                            {
-                                                !profileLoading && <img src={programdetails?.mentor_profile_image || UserImage} style={{ borderRadius: '50%', width: '35px', height: '35px' }} alt="UserImage" />
-
-                                            }
-
-
-                                            <span>Instructor :</span>
-                                            {
-                                                role !== 'mentor' ?
-                                                    <span style={{ color: 'rgba(29, 91, 191, 1)', textDecoration: 'underline', cursor: 'pointer' }} onClick={() => handleInstructor(programdetails)}>{programdetails?.mentor_name}</span>
-                                                    :
-                                                    <span style={{ color: 'rgba(29, 91, 191, 1)' }}>{programdetails?.mentor_name}</span>
-                                            }
-                                        </div>
-
-
-                                        {
-                                            programCompleted.includes(programdetails.status) &&
-
-                                            <div className='py-9'>
-                                                <div className='py-3 px-16 text-white text-[14px] flex justify-center items-center' style={{
-                                                    background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
-                                                    borderRadius: '5px',
-                                                    width: '30%'
-                                                }}>Program Completed</div>
-                                            </div>
-
-                                        }
-
-                                        {
-                                            (role === 'mentor' && !programCompleted.includes(programdetails.status) && !programCancelled.includes(programdetails.status)) ?
-                                                <>
-
-                                                    {
-                                                        requestId !== '' && programdetails.mentor_join_request_status !== 'accept' && programdetails.mentor_join_request_status !== 'cancel' ?
-                                                            <div className='flex gap-4 pt-10'>
-                                                                <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                                    border: "1px solid #E0382D",
-                                                                    borderRadius: '5px',
-                                                                    color: '#E0382D'
-                                                                }}
-                                                                    onClick={() => handleMenteeAcceptCancelRequest('reject', requestId)}
-                                                                >Reject Request
-                                                                </button>
-                                                                <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                                    background: "#16B681",
-                                                                    borderRadius: '5px'
-                                                                }}
-                                                                    onClick={() => handleMenteeAcceptCancelRequest('approve', requestId)}
-                                                                >Approve Request
-                                                                </button>
-                                                            </div>
-                                                            :
-
-                                                            requestId !== '' ?
-                                                                <>
-                                                                    {
-                                                                        programdetails.mentor_join_request_status === 'accept' &&
-
-                                                                        <button className='py-3 px-16 mt-7 text-white text-[14px] flex items-center' style={{
-                                                                            background: "#16B681",
-                                                                            borderRadius: '5px'
-                                                                        }}
-                                                                            onClick={() => undefined}
-                                                                        >Approved
-                                                                        </button>
-                                                                    }
-
-                                                                    {
-                                                                        programdetails.mentor_join_request_status === 'cancel' &&
-
-                                                                        <button className='py-3 mt-7 px-16 text-white text-[14px] flex items-center' style={{
-                                                                            border: "1px solid #E0382D",
-                                                                            borderRadius: '5px',
-                                                                            color: '#E0382D'
-                                                                        }}
-                                                                            onClick={() => undefined}
-                                                                        >Rejected
-                                                                        </button>
-                                                                    }
-                                                                </>
-
-                                                                :
-                                                                // (Object.keys(programdetails.cancel_reason).length || Object.keys(programdetails.reschedule_reason
-                                                                // ).length) ?
-
-                                                                //     <div className='flex gap-4 pt-10' >
-                                                                //         <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                                //             border: "1px solid #E0382D",
-                                                                //             borderRadius: '5px',
-                                                                //             color: '#E0382D',
-                                                                //             cursor: 'not-allowed'
-                                                                //         }}
-                                                                //             onClick={() => undefined}
-                                                                //         >
-                                                                //             <i className="pi pi-clock" style={{ color: 'red' }}></i>
-                                                                //             <span className='pl-3'>Waiting for admin approval</span>
-                                                                //         </button>
-                                                                //     </div>
-                                                                //     :
-
-                                                                programApprovalStage[programdetails.status] ?
-                                                                    <div className='flex gap-4 pt-10' >
-                                                                        <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                                            border: "1px solid #E0382D",
-                                                                            borderRadius: '5px',
-                                                                            color: '#E0382D',
-                                                                            cursor: 'not-allowed'
-                                                                        }}
-                                                                            onClick={() => undefined}
-                                                                        >
-                                                                            {programApprovalStage[programdetails.status].type === 'waiting' && <i className="pi pi-clock" style={{ color: 'red' }}></i>}
-                                                                            {programApprovalStage[programdetails.status].type === 'reject' && <i className="pi pi-ban" style={{ color: 'red' }}></i>}
-                                                                            <span className='pl-3'>{programApprovalStage[programdetails.status]?.text}</span>
-                                                                        </button>
-                                                                    </div>
-                                                                    :
-                                                                    programdetails.status === 'draft' ?
-                                                                        <div className='py-9'>
-                                                                            <div className='py-3 px-16 text-white text-[14px] flex justify-center items-center' style={{
-                                                                                background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
-                                                                                borderRadius: '5px',
-                                                                                width: '30%'
-                                                                            }}>Drafted</div>
-                                                                        </div>
-                                                                        :
-                                                                        programdetails.status === 'yettojoin' ?
-
-                                                                            <div className='py-9'>
-                                                                                <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                                                    background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
-                                                                                    borderRadius: '5px'
-                                                                                }}
-                                                                                    onClick={() => handleJoinProgram(programdetails.id)}
-                                                                                >Launch Program
-                                                                                    <span className='pl-8 pt-1'><img style={{ width: '15px', height: '13px' }} src={DoubleArrowIcon} alt="DoubleArrowIcon" /></span>
-                                                                                </button>
-                                                                            </div>
-                                                                            : null
-                                                    }
-                                                </>
-                                                : null
-
-                                        }
-
-                                        {
-                                            (role === 'mentee' && !programCompleted.includes(programdetails.status) && !programCancelled.includes(programdetails.status)) ?
-                                                <div className='py-9'>
-                                                    {
-                                                        (menteeProgramStatus[programdetails.mentee_join_status]) ?
-                                                            <>
-                                                                <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                                    border: "1px solid #E0382D",
-                                                                    borderRadius: '5px',
-                                                                    color: '#E0382D',
-                                                                    cursor: 'not-allowed'
-                                                                }}
-                                                                    onClick={() => undefined}
-                                                                >
-                                                                    {menteeProgramStatus[programdetails.mentee_join_status].type === 'waiting' && <i className="pi pi-clock" style={{ color: 'red' }}></i>}
-                                                                    {menteeProgramStatus[programdetails.mentee_join_status].type === 'reject' && <i className="pi pi-ban" style={{ color: 'red' }}></i>}
-                                                                    <span className='pl-3'>{menteeProgramStatus[programdetails.mentee_join_status]?.text}</span>
-                                                                </button>
-                                                            </>
-                                                            :
-                                                            !menteeNotJoinCondition.includes(programdetails.status) ?
-                                                                <>
-                                                                    <div className='py-9'>
-                                                                        <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                                            background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
-                                                                            borderRadius: '5px'
-                                                                        }}
-                                                                            onClick={() => handleJoinProgram(programdetails.id)}
-                                                                        >Join Program
-                                                                            <span className='pl-8 pt-1'><img style={{ width: '15px', height: '13px' }} src={DoubleArrowIcon} alt="DoubleArrowIcon" /></span>
-                                                                        </button>
-                                                                    </div>
-                                                                </>
-
-                                                                :
-                                                                null
-
-                                                    }
-                                                </div>
-
-                                                : null
-                                        }
-
-
-                                        {
-                                            (role === 'admin' && !programCompleted.includes(programdetails.status) && !programCancelled.includes(programdetails.status)) ?
-                                                <>
-                                                    {
-                                                        <div className='flex gap-4 pt-10' >
-                                                            {
-                                                                (requestId !== '' && (programRequestApproval.includes(programdetails.status) ||
-                                                                    programWaitingActiveApproval.includes(programdetails.status) ||
-                                                                    (Object.keys(programdetails.cancel_reason).length && programdetails.cancel_reason?.id === parseInt(requestId)
-                                                                        && (programdetails.cancel_reason?.status === 'new' || programdetails.cancel_reason?.status === 'pending')) ||
-
-                                                                    (Object.keys(programdetails.reschedule_reason).length
-                                                                        && (programdetails.reschedule_reason?.status === 'new' || programdetails.reschedule_reason?.status === 'pending'))
-                                                                )
-                                                                ) ?
-
-                                                                    <>
-                                                                        <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                                            border: "1px solid #E0382D",
-                                                                            borderRadius: '5px',
-                                                                            color: '#E0382D'
-                                                                        }}
-                                                                            onClick={() => handleAcceptCancelProgramRequest('cancel', programdetails.id)}
-                                                                        >
-                                                                            {searchParams.has('type') && searchParams.get('type') === 'program_cancel' ? 'Continue' : 'Reject Request'}
-                                                                        </button>
-                                                                        <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                                            background: "#16B681",
-                                                                            borderRadius: '5px'
-                                                                        }}
-                                                                            onClick={() => handleAcceptCancelProgramRequest('accept', programdetails.id)}
-                                                                        >Approve Request
-                                                                        </button>
-                                                                    </>
-
-                                                                    :
-
-                                                                    programAdminRejected.includes(programdetails.status) ?
-
-                                                                        <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                                            border: "1px solid #E0382D",
-                                                                            borderRadius: '5px',
-                                                                            color: '#E0382D',
-                                                                            cursor: 'not-allowed'
-                                                                        }}
-                                                                            onClick={undefined}
-                                                                        >Rejected
-                                                                        </button>
-
-                                                                        :
-
-                                                                        programInProgress.includes(programdetails.status) ?
-                                                                            <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                                                background: "#16B681",
-                                                                                borderRadius: '5px',
-                                                                                cursor: 'not-allowed'
-                                                                            }}
-                                                                                onClick={undefined}
-                                                                            >In-Progress
-                                                                            </button>
-
-                                                                            :
-
-                                                                            programNotLaunched.includes(programdetails.status)
-                                                                                ?
-                                                                                <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                                                    background: "#16B681",
-                                                                                    borderRadius: '5px',
-                                                                                    cursor: 'not-allowed'
-                                                                                }}
-                                                                                    onClick={undefined}
-                                                                                >Mentor yet to launch
-                                                                                </button>
-
-                                                                                :
-
-
-                                                                                programNotStarted.includes(programdetails.status) ?
-                                                                                    <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                                                        background: "#16B681",
-                                                                                        borderRadius: '5px',
-                                                                                        cursor: 'not-allowed'
-                                                                                    }}
-                                                                                        onClick={undefined}
-                                                                                    >Mentor yet to start
-                                                                                    </button>
-
-                                                                                    :
-
-                                                                                    (!programRequestApproval.includes(programdetails.status) && !commonApproval.includes(programdetails.status)) ?
-
-                                                                                        <>
-                                                                                            <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                                                                background: "#16B681",
-                                                                                                borderRadius: '5px',
-                                                                                                cursor: 'not-allowed'
-                                                                                            }}
-                                                                                                onClick={undefined}
-                                                                                            >Approved
-                                                                                            </button>
-                                                                                        </>
-                                                                                        : null
-
-                                                            }
-                                                        </div>
-                                                    }
-
-                                                </>
-                                                : null
-                                        }
-
-                                        {
-                                            programdetails.status === 'cancelled' &&
-                                            <div className='flex gap-4 pt-10' >
-                                                <button className='py-3 px-16 text-white text-[14px] flex items-center' style={{
-                                                    border: "1px solid #E0382D",
-                                                    borderRadius: '5px',
-                                                    color: '#E0382D',
-                                                    cursor: 'not-allowed'
-                                                }}
-                                                    onClick={() => undefined}
-                                                >Cancelled
-                                                </button>
-                                            </div>
-                                        }
-                                    </div>
-
-                                    {/* Right Side Content */}
-                                    <div className='right-side-content'>
-                                        <div style={{ border: '1px solid rgba(223, 237, 255, 1)', borderRadius: '10px' }}
-                                            className='px-6 pt-6 pb-3'>
-                                            <ul className='flex flex-col gap-3'>
-                                                {
-                                                    role === 'mentee1' &&
-                                                    <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px' }}>
-                                                        <span>Ratings</span>
-                                                        <span className='flex gap-2 items-center'>
-                                                            {
-                                                                Array.from({ length: rating }, (_, i) => i + 1).map(i => {
-                                                                    return <img src={RatingsIcon} style={{ width: '12px', height: '12px' }} alt="RatingsIcon" />
-                                                                })
-                                                            }
-                                                            {rating}
-                                                        </span>
-                                                    </li>
-                                                }
-                                                <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}>
-                                                    <span>Session</span>
-                                                    <span>{programdetails.session_count}</span>
-                                                </li>
-                                                <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}>
-                                                    <span>Course Level</span>
-                                                    <span>{programdetails.course_level}</span>
-                                                </li>
-                                                <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>Start Date</span>
-                                                    <span>{`${dateFormat(programdetails?.start_date)} `}</span>
-                                                </li>
-                                                <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>End Date</span>
-                                                    <span> {`${dateFormat(programdetails?.end_date)}`}</span>
-                                                </li>
-
-                                                <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>Duration</span>
-                                                    <span>{programdetails.duration} {' days'}</span>
-                                                </li>
-                                                <li className='flex justify-between text-[12px]' style={{ borderBottom: '1px solid rgba(217, 217, 217, 1)', paddingBottom: '10px', paddingTop: '14px' }}> <span>Schedule</span>
-                                                    <span>Flexible schedule</span>
-                                                </li>
-                                                {
-                                                    role === 'mentor' &&
-                                                    <li className='flex justify-between text-[12px]' style={{ paddingTop: '14px' }}> <span>Joined Mentees</span>
-                                                        <span className='underline cursor-pointer' onClick={() => handleViewJoinedMentees(programdetails)}>{programdetails.participated_mentees_count}</span>
-                                                    </li>
-                                                }
-
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-
-                                {
-                                    (role !== 'mentee' && ((role === 'admin' && requestId !== null && programdetails?.cancel_reason && Object.keys(programdetails?.cancel_reason).length &&
-                                        programdetails.cancel_reason.id === parseInt(requestId))
-                                        || (programdetails.status === programActionStatus.cancelled))) ?
-                                        <div className={`action-set action_cancelled`}>
-                                            <div className='reason-title'>
-                                                {programdetails.status === programActionStatus.cancelled ||
-
-                                                    (role === 'admin' && requestId !== null && programdetails?.cancel_reason && Object.keys(programdetails?.cancel_reason).length)
-
-                                                    ? 'Cancelled ' : ''} Reason
-                                            </div>
-                                            <div className='reason-content'>
-                                                {programdetails?.cancel_reason?.cancel_request_reason}
-                                            </div>
-                                        </div>
-                                        : null
+                  {/* Time Stamp */}
+                  {/* {(programdetails.status === programActionStatus.inprogress ||
+                    programdetails.status === programActionStatus.paused ||
+                    programdetails.status === programActionStatus.started) &&
+                  !programdetails.hasOwnProperty("sub_program") ? (
+                    <div className='flex flex-col mt-5'>
+                      <p className='text-[12px] text-font-error-main'>
+                        Date Tracker
+                      </p>
+                      <div className='flex gap-9 mb-4 mt-2'>
+                        <div className='flex gap-2 items-center justify-center'>
+                          <p className='flex flex-col gap-2 items-center justify-center'>
+                            <span
+                              className='px-2 py-1 text-[20px] w-[40px] flex justify-center items-center'
+                              style={{
+                                background: "rgba(231, 241, 242, 1)",
+                                color: "rgba(0, 174, 189, 1)",
+                                borderRadius: "5px",
+                                fontWeight: 700,
+                              }}
+                            >
+                              {dateInfo.month}
+                            </span>
+                            <span
+                              className='text-[12px]'
+                              style={{ color: "rgba(118, 118, 118, 1)" }}
+                            >
+                              Month
+                            </span>
+                          </p>
+                          <p className='flex justify-center items-baseline pt-2 h-full w-full font-bold'>
+                            -
+                          </p>
+                          <p className='flex flex-col gap-2 items-center justify-center'>
+                            <span
+                              className='px-2 py-1 text-[20px] w-[40px] flex justify-center items-center'
+                              style={{
+                                background: "rgba(231, 241, 242, 1)",
+                                color: "rgba(0, 174, 189, 1)",
+                                borderRadius: "5px",
+                                fontWeight: 700,
+                              }}
+                            >
+                              {dateInfo.date}
+                            </span>
+                            <span
+                              className='text-[12px]'
+                              style={{ color: "rgba(118, 118, 118, 1)" }}
+                            >
+                              Day
+                            </span>
+                          </p>
+                          <p className='flex justify-center items-baseline pt-2 h-full w-full font-bold'>
+                            -
+                          </p>
+                          <p className='flex flex-col gap-2 items-center justify-center'>
+                            <span
+                              className='px-2 py-1 text-[20px] w-[70px] flex justify-center items-center'
+                              style={{
+                                background: "rgba(231, 241, 242, 1)",
+                                color: "rgba(0, 174, 189, 1)",
+                                borderRadius: "5px",
+                                fontWeight: 700,
+                              }}
+                            >
+                              {dateInfo.year}
+                            </span>
+                            <span
+                              className='text-[12px]'
+                              style={{ color: "rgba(118, 118, 118, 1)" }}
+                            >
+                              Year
+                            </span>
+                          </p>
+                        </div>
+                        <>
+                          {role === "mentor" && (
+                            <button
+                              className='py-3 px-10 text-white text-[14px] flex items-center w-[200px] justify-center'
+                              title='Pause'
+                              style={{
+                                color:
+                                  programdetails.status !==
+                                    programActionStatus.paused &&
+                                  programdetails.status !==
+                                    programActionStatus.assigned
+                                    ? "rgba(29, 91, 191, 1)"
+                                    : "#fff",
+                                borderRadius: "5px",
+                                border: "1px solid rgba(29, 91, 191, 1)",
+                                display: "none",
+                                background:
+                                  programdetails.status ===
+                                    programActionStatus.paused ||
+                                  programdetails.status ===
+                                    programActionStatus.assigned
+                                    ? "linear-gradient(97.32deg, #1D5BBF -32.84%, #00AEBD 128.72%)"
+                                    : "transparent",
+                              }}
+                              onClick={() => handleJoinProgram()}
+                            >
+                              <img
+                                src={
+                                  programdetails.status !==
+                                  programActionStatus.inprogress
+                                    ? ResumeIcon
+                                    : PauseIcon
                                 }
-
-
-                                {
-                                    (role !== 'mentee' && ((role === 'admin' && requestId !== null && programdetails?.reschedule_reason &&
-                                        Object.keys(programdetails?.reschedule_reason).length &&
-                                        programdetails.reschedule_reason.id === parseInt(requestId)))) ?
-                                        <div className={`action-set action_cancelled`} style={{ border: '1px solid rgba(255, 118, 0, 1)', background: 'rgba(255, 242, 231, 1)' }}>
-                                            <div className='reason-title' style={{ color: 'rgba(255, 118, 0, 1)' }}>
-                                                {programdetails.status === programActionStatus.cancelled ||
-
-                                                    (role === 'admin' && requestId !== null && programdetails?.reschedule_reason && Object.keys(programdetails?.reschedule_reason).length)
-
-                                                    ? 'Rescheduled ' : ''} Reason
-                                            </div>
-                                            <div className='reason-content'>
-                                                {programdetails?.reschedule_reason?.reason}
-                                            </div>
-                                        </div>
-                                        : null
+                                alt={
+                                  programdetails.status !==
+                                  programActionStatus.inprogress
+                                    ? "ResumeIcon"
+                                    : "PauseIcon"
                                 }
+                                className='pr-4'
+                              />
+                              {programdetails.status ===
+                              programActionStatus.inprogress
+                                ? "Pause"
+                                : "Start"}
+                            </button>
+                          )}
+                        </>
+                      </div>
+                    </div>
+                  ) : null} */}
 
-                                {/* Detail Section */}
-                                <div className='details-section px-6 py-11 mb-10' style={{ background: 'rgba(249, 249, 249, 1)', borderRadius: '10px' }}>
-                                    <div className='tabs flex gap-4'>
-                                        {
-                                            tabs.map((tab) =>
-                                                <button key={tab.key}
-                                                    className={`px-12 py-3 text-[12px] ${activeTab === tab.key ? 'tab-active' : 'tab'} `}
-                                                    onClick={() => handleTab(tab.key)}>
-                                                    {tab.name}
-                                                </button>)
-                                        }
-                                    </div>
-                                    <div className='tab-content px-6 pt-10 text-[12px]'>
-                                        <div className={`about-programs ${activeTab === 'about_program' ? 'block' : 'hidden'}`}>
-                                            <div className='learning'>
-                                                <div className='font-semibold pb-3'>What you'll learn</div>
-                                                {programdetails.about_program}
-                                            </div>
-                                            {
-                                                programdetails.skills.length ?
+                  {/* payment button section */}
 
-                                                    <div className='skills pt-8'>
-                                                        <div className='font-semibold pb-5'>Skills you'll gain</div>
-                                                        <ul className='flex gap-3'>
-                                                            {
-                                                                programdetails.skills.map((skills) =>
-                                                                    <li key={skills.id} className='px-8 py-3' style={{ background: 'rgba(234, 237, 240, 1)', borderRadius: '30px' }}>{skills.name}</li>
-                                                                )
-                                                            }
-                                                        </ul>
-                                                    </div>
-                                                    : null
-                                            }
+                  {role === "mentee" &&
+                    !programdetails?.is_sponsored &&
+                    (programdetails?.mentee_join_status ===
+                      "program_join_payment_initiate" ||
+                      programdetails?.mentee_join_status ===
+                        "program_join_payment_pending") && (
+                      <div className="mt-3">
+                        {programdetails?.mentee_join_status ===
+                          "program_join_payment_initiate" && (
+                          <p className="text-font-error-main text-[14px] font-semibold mb-2">
+                            {statusMessage}
+                          </p>
+                        )}
+                        <Button
+                          btnType="button"
+                          btnCls={
+                            programdetails?.mentee_join_status ===
+                            "program_join_payment_pending"
+                              ? "w-[200px] !bg-[#FFE3C2] !text-[#FF8A00] !border-none"
+                              : "w-auto"
+                          }
+                          btnName={
+                            programdetails?.mentee_join_status ===
+                            "program_join_payment_pending"
+                              ? "Pending Payment"
+                              : `Pay Now $ ${programdetails?.enrollment_fees}`
+                          }
+                          btnCategory={
+                            programdetails?.mentee_join_status ===
+                            "program_join_payment_pending"
+                              ? "secondary"
+                              : "primary"
+                          }
+                          onClick={() => {
+                            if (programdetails?.id) {
+                              setProgramDetailsId(programdetails?.id);
+                              navigate("/payment-checkout");
+                              localStorage.setItem(
+                                "program_id",
+                                programdetails?.id
+                              );
+                            }
+                          }}
+                          disabled={
+                            programdetails?.mentee_join_status ===
+                            "program_join_payment_pending"
+                          }
+                        />
+                        {programdetails?.mentee_join_status ===
+                          "program_join_payment_pending" && (
+                          <p className="text-font-error-main text-[14px] font-semibold mt-2">
+                            Please Contact Administrator
+                          </p>
+                        )}
+                      </div>
+                    )}
 
-                                            {
-                                                programdetails.image !== null && programdetails.image !== '' &&
+                  {/* {(((role === "mentor" || role === "admin") &&
+                    programdetails?.created_by ===
+                      userdetails?.data?.user_id) ||
+                    role === "mentee") && ( */}
+                  <ProgramActions
+                    role={role}
+                    programdetails={programdetails}
+                    programCompleted={programCompleted}
+                    handleJoinProgram={handleJoinProgram}
+                    isLaunchingProgram={isLaunchingProgram}
+                    requestId={requestId}
+                    handleAcceptCancelProgramRequest={
+                      handleAcceptCancelProgramRequest
+                    }
+                    type={typeParams}
+                    setCancelPopup={setCancelPopup}
+                    requestStatusParams={requestStatusParams}
+                    setOpenPopup={setOpenPopup}
+                    handleMarkInterestClick={handleMarkInterestClick}
+                    markingInterest={markingInterest}
+                  />
+                  {/* )} */}
+                </div>
 
-                                                <div className='sponsor pt-8'>
-                                                    <div className='font-semibold pb-5'>Sponsored by </div>
-                                                    <ul className='flex gap-5'>
-                                                        <img style={{ width: '100px', height: '100px' }} src={programdetails.image} alt="SponsorIcon" />
-                                                    </ul>
-                                                </div>
-                                            }
+                {/* Right Side Content */}
+                <div className="right-side-content">
+                  <div
+                    style={{
+                      border: "1px solid rgba(223, 237, 255, 1)",
+                      borderRadius: "10px",
+                    }}
+                    className="px-6 pt-6 pb-3"
+                  >
+                    <ul className="flex flex-col gap-3">
+                      {/* {role !== "admin" && (
+                        <li
+                          className='flex justify-between text-[12px]'
+                          style={{
+                            borderBottom: '1px solid rgba(217, 217, 217, 1)',
+                            paddingBottom: '10px',
+                          }}
+                        >
+                          <span>Ratings</span>
+                          <span className='flex gap-2 items-center'>
+                            <img
+                              src={RatingsIcon}
+                              style={{ width: '12px', height: '12px' }}
+                              alt='RatingsIcon'
+                            />
 
+                            {rating}
+                          </span>
+                        </li>
+                      )} */}
+                      {!programdetails?.admin_assign_program && (
+                        <li
+                          className="flex justify-between text-[12px]"
+                          style={{
+                            borderBottom: "1px solid rgba(217, 217, 217, 1)",
+                            paddingBottom: "10px",
+                            paddingTop: "14px",
+                          }}
+                        >
+                          <span>Session</span>
+                          <span>{programdetails.session_count}</span>
+                        </li>
+                      )}
+                      <li
+                        className="flex justify-between text-[12px]"
+                        style={{
+                          borderBottom: "1px solid rgba(217, 217, 217, 1)",
+                          paddingBottom: "10px",
+                          paddingTop: "14px",
+                        }}
+                      >
+                        <span>Course Level</span>
+                        <span style={{ textTransform: "capitalize" }}>
+                          {programdetails.course_level}
+                        </span>
+                      </li>
+                      {programdetails.sub_program?.length > 0 ? (
+                        <li
+                          className="flex justify-between text-[12px]"
+                          style={{
+                            borderBottom: "1px solid rgba(217, 217, 217, 1)",
+                            paddingBottom: "10px",
+                            paddingTop: "14px",
+                          }}
+                        >
+                          <span>Sub Programs</span>
+                          <span style={{ textTransform: "capitalize" }}>
+                            {programdetails.sub_program?.length}
+                          </span>
+                        </li>
+                      ) : (
+                        <>
+                          {/* <li
+                            className="flex justify-between text-[12px]"
+                            style={{
+                              borderBottom: '1px solid rgba(217, 217, 217, 1)',
+                              paddingBottom: '10px',
+                              paddingTop: '14px',
+                            }}
+                          >
+                            <span>Session</span>
+                            <span>{programdetails.session_count}</span>
+                          </li> */}
 
-                                        </div>
+                          <li
+                            className="flex justify-between text-[12px]"
+                            style={{
+                              borderBottom: "1px solid rgba(217, 217, 217, 1)",
+                              paddingBottom: "10px",
+                              paddingTop: "14px",
+                            }}
+                          >
+                            <span>Start Date</span>
+                            <span>
+                              {programdetails?.start_date
+                                ? moment(programdetails?.start_date).format(
+                                    "MM-DD-YYYY"
+                                  )
+                                : "-"}
+                            </span>
+                          </li>
+                          <li
+                            className="flex justify-between text-[12px]"
+                            style={{
+                              borderBottom: "1px solid rgba(217, 217, 217, 1)",
+                              paddingBottom: "10px",
+                              paddingTop: "14px",
+                            }}
+                          >
+                            <span>End Date</span>
+                            <span>
+                              {programdetails?.end_date
+                                ? moment(programdetails?.end_date).format(
+                                    "MM-DD-YYYY"
+                                  )
+                                : "-"}
+                            </span>
+                          </li>
 
-                                        <div className={`program-outcomes ${activeTab === 'program_outcomes' ? 'block' : 'hidden'}`}>
-                                            <div className='benefits'>
-                                                <div className='font-semibold pb-3'>Benefits</div>
-                                                {
-                                                    programdetails.benefits
-                                                }
-                                                {/* <ul className='leading-9 list-disc ml-4'>
+                          {/* time */}
+
+                          <li
+                            className="flex justify-between text-[12px]"
+                            style={{
+                              borderBottom: "1px solid rgba(217, 217, 217, 1)",
+                              paddingBottom: "10px",
+                              paddingTop: "14px",
+                            }}
+                          >
+                            <span>Start Time</span>
+                            <span>
+                              {programdetails?.start_date
+                                ? moment(programdetails?.start_date).format(
+                                    "hh:mm A"
+                                  )
+                                : "-"}
+                            </span>
+                          </li>
+                          <li
+                            className="flex justify-between text-[12px]"
+                            style={{
+                              borderBottom: "1px solid rgba(217, 217, 217, 1)",
+                              paddingBottom: "10px",
+                              paddingTop: "14px",
+                            }}
+                          >
+                            <span>End Time</span>
+                            <span>
+                              {programdetails?.end_date
+                                ? moment(programdetails?.end_date).format(
+                                    "hh:mm A"
+                                  )
+                                : "-"}
+                            </span>
+                          </li>
+
+                          <li
+                            className="flex justify-between text-[12px]"
+                            style={{
+                              borderBottom: "1px solid rgba(217, 217, 217, 1)",
+                              paddingBottom: "10px",
+                              paddingTop: "14px",
+                            }}
+                          >
+                            {" "}
+                            <span>Duration</span>
+                            <span>
+                              {programdetails.duration} {" days"}
+                            </span>
+                          </li>
+                          {programdetails?.recurring_programs_details?.length >
+                            0 && (
+                            <li
+                              className="flex justify-between text-[12px] py-1"
+                              style={{
+                                borderBottom:
+                                  "1px solid rgba(217, 217, 217, 1)",
+                              }}
+                            >
+                              <span>Recurring cycle</span>
+                              <MuiButton
+                                size={"small"}
+                                variant={"text"}
+                                onClick={() => setOpenRecurringModal(true)}
+                              >
+                                View
+                              </MuiButton>
+                            </li>
+                          )}
+                          {!programdetails.is_sponsored &&
+                            programdetails?.mentee_join_status !==
+                              "program_join_request_accepted" && (
+                              <li
+                                className="flex justify-between text-[12px]"
+                                style={{
+                                  borderBottom:
+                                    "1px solid rgba(217, 217, 217, 1)",
+                                  paddingBottom: "10px",
+                                  paddingTop: "14px",
+                                }}
+                              >
+                                <span>Fees</span>
+                                <span className="text-[#1D5BBF]">
+                                  $ {programdetails?.enrollment_fees}
+                                </span>
+                              </li>
+                            )}
+                          {(role === "mentor" || role === "admin") && (
+                            <li
+                              className="flex justify-between text-[12px]"
+                              style={{ paddingTop: "14px" }}
+                            >
+                              {" "}
+                              <span>Joined Mentees</span>
+                              <span
+                                className="underline cursor-pointer"
+                                onClick={() =>
+                                  handleViewJoinedMentees(programdetails)
+                                }
+                              >
+                                {programdetails.participated_mentees_count}
+                              </span>
+                            </li>
+                          )}
+                          {programdetails?.mentee_join_status ===
+                            "program_join_request_accepted" &&
+                            !programdetails?.is_sponsored && (
+                              <li
+                                className="flex justify-between text-[12px]"
+                                style={{
+                                  paddingBottom: "10px",
+                                  paddingTop: "14px",
+                                }}
+                              >
+                                <span className="flex gap-2">
+                                  Paid{" "}
+                                  <span>
+                                    <img src={PaidTickIcon} alt="" />
+                                  </span>
+                                </span>
+                                <span className="text-[#1D5BBF]">
+                                  $ {programdetails?.enrollment_fees}
+                                </span>
+                              </li>
+                            )}
+                        </>
+                      )}
+
+                      {/* <li
+                        className='flex justify-between text-[12px]'
+                        style={{ paddingBottom: '10px', paddingTop: '14px' }}
+                      >
+                        <span
+                          className='cursor-pointer'
+                          onClick={() => {
+                            setProgramDetailsId(programdetails?.id);
+                            // navigate('/payment');
+                          }}
+                        >
+                          Buy
+                        </span>
+                        {payment?.paymentData?.data?.client_secret && (
+                          <Elements
+                            stripe={stripePromise}
+                            options={{
+                              clientSecret:
+                                payment?.paymentData?.data?.client_secret,
+                              theme: 'stripe',
+                              loader: 'auto',
+                            }}
+                          >
+                            <CheckoutForm />
+                          </Elements>
+                        )}
+                      </li> */}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <MuiCustomModal
+                open={openRecurringModal}
+                onClose={handleRecurringModalClose}
+              >
+                <DataGrid
+                  hideFooter={true}
+                  loading={programLoading}
+                  columns={RecurringTableColumns}
+                  rows={programdetails?.recurring_programs_details}
+                  onCellClick={handleRecurringListActionClick}
+                />
+                <Menu
+                  open={openRecMenu}
+                  anchorEl={recAnchorEl}
+                  onClose={handleClose}
+                >
+                  {RecurringListMenuItems.map((menu) => (
+                    <MenuItem
+                      key={menu.value}
+                      onClick={() => handleMenuClick(menu.action)}
+                    >
+                      <EditIcon sx={{ mr: 1 }} fontSize="small" />
+                      {menu.label}
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </MuiCustomModal>
+              {/* Subject Program List */}
+              {role === "mentee" && (
+                <Grid container spacing={2}>
+                  {programdetails?.active_sub_program?.map((e) => {
+                    return (
+                      <Grid item xs={4}>
+                        <SubjectProgramCard data={e} />
+                      </Grid>
+                    );
+                  })}
+                </Grid>
+              )}
+              <ProgramReasons
+                programdetails={programdetails}
+                role={role}
+                requestId={requestId}
+                programActionStatus={programActionStatus}
+              />
+              {/* <div>/............................................................................../ </div>
+              {(programdetails?.request_data?.request_type ===
+                'program_reschedule' ||
+                programdetails?.request_data?.request_type ===
+                  'program_cancel' ||
+                programdetails?.request_data?.request_type === 'program_new') &&
+                  'program_cancel') &&
+                ['new', 'pending', 'approved', 'rejected'].includes(
+                  programdetails?.request_data?.status
+                ) &&
+                requestId !== null && (
+                  <div className={`action-set action_cancelled`}>
+                    {programdetails?.request_data?.request_type !==
+                      'program_cancel' && (
+                      <div className='reason-title'>
+                        {programdetails.status ===
+                          programActionStatus.cancelled ||
+                        (role === 'admin' &&
+                          requestId !== null &&
+                          programdetails?.request_data?.rejection_reason &&
+                          Object.keys(
+                            programdetails?.request_data?.rejection_reason
+                          )?.length)
+                          ? 'Cancelled '
+                          : 'Reschedule'}{' '}
+                        Reason
+                      </div>
+                    )}
+                    {programdetails?.request_data?.request_type ===
+                      'program_cancel' && (
+                      <div className='reason-title'>Cancelled Reason</div>
+                    )}
+                    <div className='reason-content'>
+                      {programdetails?.request_data?.request_type ===
+                        'program_reschedule' && (
+                        <div className='flex gap-2 text-[12px] pb-2'>
+                          <div className='font-bold'>
+                            Reschedule Start & End Date:
+                          </div>
+                          <div className='text-[11px]'>
+                            {' '}
+                            {`${dateFormat(
+                              programdetails?.request_data?.start_date
+                            )} - ${dateFormat(
+                              programdetails?.request_data?.end_date
+                            )}`}
+                          </div>
+                        </div>
+                      )}
+                      {programdetails?.request_data?.status === 'rejected'
+                        ? programdetails?.request_data?.rejection_reason
+                        : programdetails?.request_data?.comments}
+                    </div>
+                  </div>
+                )}
+
+              {role !== 'mentee' &&
+              role === 'admin' &&
+              requestId !== null &&
+              programdetails?.reschedule_reason &&
+              Object.keys(programdetails?.reschedule_reason)?.length &&
+              programdetails.reschedule_reason.id === parseInt(requestId) ? (
+                <div
+                  className={`action-set action_cancelled`}
+                  style={{
+                    border: '1px solid rgba(255, 118, 0, 1)',
+                    background: 'rgba(255, 242, 231, 1)',
+                  }}
+                >
+                  <div
+                    className='reason-title'
+                    style={{ color: 'rgba(255, 118, 0, 1)' }}
+                  >
+                    {programdetails.status === programActionStatus.cancelled ||
+                    (role === 'admin' &&
+                      requestId !== null &&
+                      programdetails?.reschedule_reason &&
+                      Object.keys(programdetails?.reschedule_reason)?.length)
+                      ? 'Rescheduled '
+                      : ''}{' '}
+                    Reason
+                  </div>
+                  <div className='reason-content'>
+                    {programdetails?.reschedule_reason?.reason}
+                  </div>
+                </div>
+              ) : null} */}
+
+              {/* Notes Section */}
+              {["inprogress"].includes(programdetails?.status) &&
+                (role === "mentee" ||
+                  programdetails?.created_by ===
+                    userdetails?.data?.user_id) && (
+                  <Box>
+                    <Accordian
+                      title={"Program Notes:"}
+                      titleColor={"#FE634E"}
+                      children={
+                        <>
+                          <CustomFormFields
+                            fields={notesFields}
+                            formData={notesForm}
+                            handleChange={updateState}
+                          />
+                          <Stack
+                            justifyContent={"end"}
+                            direction={"row"}
+                            alignItems={"end"}
+                            width={"100%"}
+                            mt={"12px"}
+                          >
+                            <Button
+                              btnCategory="primary"
+                              btnName="Save"
+                              btnCls=" w-[150px]"
+                              onClick={() => handleSubmitNotes()}
+                            />
+                          </Stack>
+                        </>
+                      }
+                      defaultValue={true}
+                    />
+
+                    <Backdrop
+                      sx={{
+                        color: "#fff",
+                        zIndex: (theme) => theme.zIndex.drawer + 1,
+                      }}
+                      open={notesActivity}
+                    >
+                      <div className="px-5 py-1 flex justify-center items-center">
+                        <div
+                          className="flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20"
+                          style={{ background: "#fff", borderRadius: "10px" }}
+                        >
+                          <img src={SuccessTik} alt="SuccessTik" />
+                          <p
+                            className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
+                            style={{
+                              fontWeight: 600,
+                            }}
+                          >
+                            Program Notes added successfully
+                          </p>
+                        </div>
+                      </div>
+                    </Backdrop>
+                  </Box>
+                )}
+              {/* Notes Section End */}
+
+              {"sub_program" in programdetails &&
+                programdetails?.sub_program?.length > 0 && (
+                  <SubprogramsDataGrid
+                    data={programdetails?.sub_program}
+                    handleAcceptProgram={handleAcceptProgram}
+                  />
+                )}
+              {role === "mentee" &&
+                (programdetails.status === programActionStatus.inprogress ||
+                  programdetails.status === programActionStatus.paused) && (
+                  <CustomAccordian
+                    title={"Program Task"}
+                    defaultValue
+                    children={
+                      <div>
+                        <div className="w-full flex justify-end mb-4">
+                          <Button
+                            btnName="View All"
+                            btnCls="w-[140px]"
+                            onClick={() => navigate("/mentee-tasks")}
+                          />
+                        </div>
+                        <SkillsSet programdetails={programdetails} />
+                      </div>
+                    }
+                  />
+                )}
+              {/* Detail Section */}
+              <div
+                className="details-section px-6 py-11 mb-10"
+                style={{
+                  background: "rgba(249, 249, 249, 1)",
+                  borderRadius: "10px",
+                }}
+              >
+                <div className="tabs flex gap-4">
+                  {tabs.map((tab) => (
+                    <button
+                      key={tab.key}
+                      className={`px-12 py-3 text-[12px] ${
+                        activeTab === tab.key ? "tab-active" : "tab"
+                      } `}
+                      onClick={() => handleTab(tab.key)}
+                    >
+                      {tab.name}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="tab-content px-6 pt-10 text-[12px]">
+                  <div
+                    className={`about-programs ${
+                      activeTab === "about_program" ? "block" : "hidden"
+                    }`}
+                  >
+                    {Array.isArray(programdetails?.goals) &&
+                      programdetails?.goals?.length > 0 && (
+                        <div className="py-5">
+                          <p className="text-[12px] mb-2">Goals:</p>
+                          <div className="flex items-center gap-x-3">
+                            {programdetails?.goals.map((goal) => (
+                              <button
+                                key={goal.id}
+                                className={`px-6 py-3 text-[12px] bg-gray-200 text-black rounded-full`}
+                                onClick={() =>
+                                  navigate(`/view-goal/${goal.id}`)
+                                }
+                              >
+                                {goal.description?.substring(0, 10)}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                    {Array.isArray(programdetails?.admin_goals) &&
+                      programdetails?.admin_goals?.length > 0 && (
+                        <div className="py-5">
+                          <p className="text-[12px] mb-2">Admin Goals:</p>
+                          <div className="flex items-center gap-x-3">
+                            {programdetails?.admin_goals.map((goal) => (
+                              <button
+                                key={goal.id}
+                                className={`px-6 py-3 text-[12px] bg-gray-200 text-black rounded-full`}
+                                onClick={() =>
+                                  navigate(`/view-goal/${goal.id}`)
+                                }
+                              >
+                                {goal.description?.substring(0, 10)}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    {/* <div className="learning">
+                      <div className="font-semibold pb-3">
+                        What you'll learn
+                      </div>
+                      {programdetails?.benefits || '-'}
+                    </div> */}
+                    {programdetails?.skill_details?.length ? (
+                      <div className="skills pt-8">
+                        <div className="font-semibold pb-5">
+                          Skills you'll gain
+                        </div>
+                        {programdetails?.skill_details}
+                      </div>
+                    ) : null}
+
+                    {programdetails?.sponsor_logos?.length > 0 && (
+                      <div className="sponsor pt-8">
+                        <div className="font-semibold pb-5">Sponsored by </div>
+                        <div>
+                          {programdetails?.sponsor_logos?.map((e) => {
+                            return (
+                              <div>
+                                <img
+                                  style={{ width: "100px", height: "100px" }}
+                                  src={e}
+                                  alt="SponsorIcon"
+                                />
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+                    {role !== "admin" &&
+                      !programdetails?.admin_assign_program && (
+                        <div className="benefits py-3">
+                          <div className="font-semibold pb-3">Benefits</div>
+                          {programdetails.benefits}
+                          {/* <ul className='leading-9 list-disc ml-4'>
                                                     <li>Lorem Ipsum is simply dummy text of the printing and typesetting industry. </li>
                                                     <li>Lorem Ipsum is simply dummy text of the printing and typesetting industry. </li>
                                                     <li>Lorem Ipsum is simply dummy text of the printing and typesetting industry. </li>
                                                 </ul> */}
-                                            </div>
-                                            <div className='program-certificate pt-8'>
-                                                <div className='font-semibold pb-3'>Types of Certificates
-                                                    {/* {
+                        </div>
+                      )}
+                    <div className="program-certificate pt-8">
+                      <div className="font-semibold pb-3">
+                        Types of Certificates
+                        {/* {
                                                         programdetails.certifications.length <= 9 ? ' 0' + programdetails.certifications.length : programdetails.certifications.length} */}
-                                                </div>
-                                                <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700 mb-10">
-                                                    <ul className="flex flex-wrap -mb-px">
-                                                        {
-                                                            participatedTabs.map(participatedTab =>
+                      </div>
+                      <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700 mb-10">
+                        <ul className="flex flex-wrap -mb-px">
+                          {participatedTabs.map((participatedTab) => (
+                            <li className="me-2" key={participatedTab.key}>
+                              <p
+                                className={`inline-block p-4 border-b-2 cursor-pointer border-transparent rounded-t-lg ${
+                                  certificateActiveTab === participatedTab.key
+                                    ? "active  text-blue-600 border-blue-500"
+                                    : ""
+                                } `}
+                                onClick={() =>
+                                  handleCerificateTab(participatedTab.key)
+                                }
+                              >
+                                {participatedTab.name}
+                              </p>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
 
-                                                                <li className="me-2" key={participatedTab.key}>
-                                                                    <p className={`inline-block p-4 border-b-2 cursor-pointer border-transparent rounded-t-lg ${certificateActiveTab === participatedTab.key ? 'active  text-blue-600 border-blue-500' : ''} `}
-                                                                        onClick={() => handleCerificateTab(participatedTab.key)}
-                                                                    >{participatedTab.name}</p>
-                                                                </li>
+                      {participatedTabs.map((participatedTab) => (
+                        <div
+                          className={`certificate-tab-content flex items-center justify-between relative ${
+                            participatedTab.key === certificateActiveTab
+                              ? "block"
+                              : "hidden"
+                          }`}
+                          key={participatedTab.key}
+                        >
+                          <div className="px-9 py-16 w-4/6 leading-6">
+                            {participatedTab.key === "participated" &&
+                              "The ability for members to earn badges and receive certifications is another essential feature of our Mentoring Management program. It helps in creating engaging and impactful relationships between mentors and mentees."}
 
-                                                            )
-                                                        }
+                            {participatedTab.key === "completed" &&
+                              "All the badges and certifications are secured through a blockchain system to ensure authenticity and traceability. This innovative approach not only enhances motivation but also provides tangible recognition of achievements, encouraging continuous growth and engagement."}
+                          </div>
+                          <img
+                            className="absolute right-0"
+                            src={CertificateIcon}
+                            alt="CertificateIcon"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
 
-                                                    </ul>
-                                                </div>
+                  {/* <div
+                    className={`program-outcomes ${
+                      activeTab === "program_outcomes" ? "block" : "hidden"
+                    }`}
+                  >
+                    
+                  </div> */}
 
-                                                {
-                                                    participatedTabs.map(participatedTab =>
-
-                                                        <div className={`certificate-tab-content flex items-center justify-between relative ${participatedTab.key === certificateActiveTab ? 'block' : 'hidden'}`} key={participatedTab.key}>
-                                                            <div className='px-9 py-16 w-4/6 leading-6'>
-                                                                {participatedTab.key === 'participated' && 'The ability for members to earn badges and receive certifications is another essential feature of our Mentoring Management program. It helps in creating engaging and impactful relationships between mentors and mentees.'}
-
-                                                                {participatedTab.key === 'completed' &&
-                                                                    'All the badges and certifications are secured through a blockchain system to ensure authenticity and traceability. This innovative approach not only enhances motivation but also provides tangible recognition of achievements, encouraging continuous growth and engagement.'}
-                                                            </div>
-                                                            <img className='absolute right-0' src={CertificateIcon} alt="CertificateIcon" />
-                                                        </div>
-
-                                                    )
-                                                }
-
-
-
-                                            </div>
-                                        </div>
-
-
-                                        <div className={`program-outcomes ${activeTab === 'program_testimonials' ? 'block' : 'hidden'}`}>
-                                            <div className='testimonials bg-white px-5 py-7'>
-                                                {/* <div className='flex justify-end'>
+                  <div
+                    className={`program-outcomes ${
+                      activeTab === "program_testimonials" ? "block" : "hidden"
+                    }`}
+                  >
+                    <div className="testimonials bg-white px-5 py-7">
+                      {/* <div className='flex justify-end'>
                                                     <button className='py-2 px-6 mb-10' style={{ color: 'rgba(29, 91, 191, 1)', border: '1px dotted rgba(29, 91, 191, 1)', borderRadius: '3px' }}>Request Testimonials</button>
                                                 </div> */}
-                                                <div className="grid grid-cols-3 gap-8">
+                      <div className="grid grid-cols-3 gap-8">
+                        {programdetails?.testimonial_content?.map((e) => {
+                          return (
+                            <div
+                              className="pt-16 pb-2 px-7 leading-5 relative"
+                              style={{
+                                background: "rgba(248, 249, 250, 1)",
+                              }}
+                            >
+                              <img
+                                src={QuoteIcon}
+                                className="absolute top-[-16px]"
+                                alt="QuoteIcon"
+                              />
+                              <div className="relative">
+                                <p className="pb-7">{e?.comments ?? "-"}</p>
+                                <hr
+                                  className="absolute"
+                                  style={{ width: "100%" }}
+                                />
+                              </div>
 
-                                                    <div className='pt-16 pb-2 px-7 leading-5 relative' style={{ background: 'rgba(248, 249, 250, 1)', }}>
-                                                        <img src={QuoteIcon} className='absolute top-[-16px]' alt="QuoteIcon" />
-                                                        <div className='relative'>
-                                                            <p className='pb-7'>
-                                                                {programdetails.testimonial_types}
-                                                            </p>
-                                                            <hr className='absolute' style={{ width: '496px', left: '-15px' }} />
-                                                        </div>
-
-                                                        <div className='flex gap-3 py-5'>
-                                                            <img src={UserImage} alt="user" style={{ borderRadius: '50%', width: '38px', height: '35px' }} />
-                                                            <div className='flex flex-col'>
-                                                                <span style={{ color: 'rgba(0, 174, 189, 1)' }}>Alexander Johnson</span>
-                                                                <span>Mentor</span>
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
-
-                                                    {/* <div className='pt-16 pb-2 px-7 leading-5 relative' style={{ background: 'rgba(248, 249, 250, 1)', }}>
-                                                        <img src={QuoteIcon} className='absolute top-[-16px]' alt="QuoteIcon" />
-                                                        <div className='relative'>
-                                                            <p className='pb-7'>
-                                                                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                                                                ook.standard dummy text ever since the 1500s, ook.
-                                                            </p>
-                                                            <hr className='absolute' style={{ width: '496px', left: '-15px' }} />
-                                                        </div>
-
-                                                        <div className='flex gap-3 py-5'>
-                                                            <img src={UserImage} alt="user" style={{ borderRadius: '50%', width: '38px', height: '35px' }} />
-                                                            <div className='flex flex-col'>
-                                                                <span style={{ color: 'rgba(0, 174, 189, 1)' }}>Alexander Johnson</span>
-                                                                <span>Mentor</span>
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
-
-                                                    <div className='pt-16 pb-2 px-7 leading-5 relative' style={{ background: 'rgba(248, 249, 250, 1)', }}>
-                                                        <img src={QuoteIcon} className='absolute top-[-16px]' alt="QuoteIcon" />
-                                                        <div className='relative'>
-                                                            <p className='pb-7'>
-                                                                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                                                                ook.standard dummy text ever since the 1500s, ook.
-                                                            </p>
-                                                            <hr className='absolute' style={{ width: '496px', left: '-15px' }} />
-                                                        </div>
-
-                                                        <div className='flex gap-3 py-5'>
-                                                            <img src={UserImage} alt="user" style={{ borderRadius: '50%', width: '38px', height: '35px' }} />
-                                                            <div className='flex flex-col'>
-                                                                <span style={{ color: 'rgba(0, 174, 189, 1)' }}>Alexander Johnson</span>
-                                                                <span>Mentor</span>
-                                                            </div>
-                                                        </div>
-
-                                                    </div> */}
-                                                </div>
-                                            </div>
-
-
-
-
-
-                                        </div>
-                                    </div>
+                              <div className="flex gap-3 py-5">
+                                <img
+                                  src={e?.profile_image ?? UserImage}
+                                  alt="user"
+                                  style={{
+                                    borderRadius: "50%",
+                                    width: "38px",
+                                    height: "35px",
+                                  }}
+                                />
+                                <div className="flex flex-col">
+                                  <span
+                                    style={{
+                                      color: "rgba(0, 174, 189, 1)",
+                                    }}
+                                  >
+                                    {e?.name}
+                                  </span>
+                                  <span className="capitalize">{e?.role}</span>
                                 </div>
-
+                              </div>
                             </div>
-                        </div>
+                          );
+                        })}
+                      </div>
                     </div>
-                    : null
-            }
-
-        </div >
-    )
-
+                  </div>
+                </div>
+              </div>
+              {programdetails?.recurring_programs_details?.length > 0 && (
+                <div className="my-4">
+                  <SubDetailCardWrapper
+                    title={"Upcoming program"}
+                    onViewAll={() =>
+                      navigate("/programs?type=upcoming&filter_by=month")
+                    }
+                  >
+                    <ProgramCard
+                      title="Active Programs"
+                      handleNavigateDetails={handleNavigation}
+                      // handleBookmark={handleBookmark}
+                      programs={programdetails?.recurring_programs_details}
+                      noTitle
+                    />
+                  </SubDetailCardWrapper>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      ) : null}
+      <CancelPopup
+        open={cancelPopup}
+        header={"Cancel Reason"}
+        handleClosePopup={() => handleCloseConfirmPopup("cancel")}
+        handleSubmit={(reason) => {
+          handleCancelSubmit(reason);
+        }}
+      />
+      <SuccessGradientMessage
+        message={"Program Cancelled successfully"}
+        cancelPopupConfirmation={cancelPopupConfirmation}
+        setCancelPopupConfirmation={setCancelPopupConfirmation}
+      />
+      {console.log("selectedLM ===>", selectedLM)}
+      <CustomModal
+        open={selectedLM?.bool}
+        handleClose={() =>
+          setSelectedLM({
+            bool: false,
+            data: "",
+          })
+        }
+        width="lg"
+        content={
+          <Box
+            className={"!border !border-background-primary-main rounded-[10px]"}
+          >
+            <Stack
+              direction={"row"}
+              alignItems={"center"}
+              justifyContent={"space-between"}
+              className="!bg-background-primary-light px-4 py-4"
+            >
+              <Typography className="!text-font-secondary-black !font-bold !text-[20px]">
+                {selectedLM?.data?.name}
+              </Typography>
+              <div
+                onClick={() =>
+                  setSelectedLM({
+                    bool: false,
+                    data: "",
+                  })
+                }
+                className="cursor-pointer"
+              >
+                <img src={CancelIcon} alt="CancelIcon" />
+              </div>
+            </Stack>
+            <Box className="px-4 py-4">
+              <a
+                className="!text-font-secondary-black"
+                href={selectedLM?.data?.file_url}
+                target="_blank"
+              >
+                {selectedLM?.data?.file_name ??
+                  (
+                    selectedLM?.data?.file ?? selectedLM?.data?.file_url
+                  )?.substring(
+                    (
+                      selectedLM?.data?.file ?? selectedLM?.data?.file_url
+                    )?.lastIndexOf("/") + 1
+                  )}
+              </a>
+            </Box>
+          </Box>
+        }
+      />
+    </div>
+  );
 }

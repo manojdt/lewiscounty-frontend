@@ -23,11 +23,17 @@ import {
     updateCertificateRequest,
     updateProgramRequest,
     updateReportRequest,
-    getlearningAccessRequest
+    getlearningAccessRequest,
+    getExtendProgramRequest,
+    getTestimonialRequest,
+    getReopenRequest,
+    updateTestimonial,
+    getTestimonialView
 } from "../../services/request";
 
 const initialState = {
     programRequest: [],
+    programExtend: [],
     memberRequest: [],
     resourceRequest: [],
     goalsRequest: [],
@@ -38,6 +44,9 @@ const initialState = {
     categoryList: [],
     reportsRequest: [],
     learningAccessRequests: [],
+    testimonialRequest: [],
+    reopenRequest: [],
+    testimonialData: {},
     loading: false,
     status: "",
     error: "",
@@ -63,6 +72,28 @@ export const requestSlice = createSlice({
                 };
             })
             .addCase(getprogramRequest.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+        builder
+            .addCase(getExtendProgramRequest.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(getExtendProgramRequest.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    programExtend: action.payload,
+                    status: requestStatus.load,
+                    loading: false,
+                };
+            })
+            .addCase(getExtendProgramRequest.rejected, (state, action) => {
                 return {
                     ...state,
                     loading: false,
@@ -471,6 +502,97 @@ export const requestSlice = createSlice({
                 };
             });
 
+            builder
+            .addCase(getTestimonialRequest.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(getTestimonialRequest.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    testimonialRequest: action.payload,
+                    status: requestStatus.load,
+                    loading: false,
+                };
+            })
+            .addCase(getTestimonialRequest.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
+            builder
+            .addCase(getReopenRequest.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(getReopenRequest.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    reopenRequest: action.payload,
+                    status: requestStatus.load,
+                    loading: false,
+                };
+            })
+            .addCase(getReopenRequest.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
+            
+            builder
+            .addCase(updateTestimonial.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(updateTestimonial.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    status: requestStatus.testimonialupdate,
+                    loading: false,
+                };
+            })
+            .addCase(updateTestimonial.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
+            builder
+            .addCase(getTestimonialView.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(getTestimonialView.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    testimonialData: action.payload,
+                    loading: false,
+                };
+            })
+            .addCase(getTestimonialView.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+            // getTestimonialView
     },
 });
 

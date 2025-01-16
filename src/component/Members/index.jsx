@@ -15,7 +15,7 @@ import ViewIcon from "../../assets/images/view1x.png";
 import ShareIcon from "../../assets/icons/Share.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { deactivateUser, getMembersList } from "../../services/members";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { memberStatusColor } from "../../utils/constant";
 import MuiModal from "../../shared/Modal";
 import { useForm } from "react-hook-form";
@@ -46,7 +46,8 @@ const Members = () => {
     page: 0,
     pageSize: 10,
   });
-
+  const [searchParams, setSearchParams] = useSearchParams();
+  const selectedRequestedTab = searchParams.get('tabType');
   const open = Boolean(anchorEl);
 
   const handleMoreClick = (event, data) => {
@@ -128,6 +129,12 @@ const Members = () => {
 
   const handleSearch = (value) => {
     setFilterInfo({ ...filterInfo, search: value })
+    // if (value !== '') {
+    //   setPaginationModel({
+    //     page: 0,
+    //     pageSize: 10
+    //   });
+    // }
   };
 
   const handleAssignProgramOrTask = () => {
@@ -257,7 +264,8 @@ const Members = () => {
                 <MenuItem
                   onClick={(e) => {
                     handleClose();
-                    navigate(`/mentor-details/${seletedItem.id}`);
+                    const adminview=`?breadcrumbsType=${actionTab}`
+                    navigate(`/mentor-details/${seletedItem.id}${adminview}`);
                   }}
                   className="!text-[12px]"
                 >
@@ -333,26 +341,29 @@ const Members = () => {
 
     setActiveTableDetails({ data: tableData, column: updatedColumns });
   }, [mentor, mentee, anchorEl])
-
   useEffect(() => {
-    let payload = { role_name: actionTab, page: paginationModel?.page + 1, limit: paginationModel?.pageSize }
+    let payload = { 
+      role_name: actionTab, 
+      page: paginationModel?.page + 1, 
+      limit: paginationModel?.pageSize 
+    };
+
     if (filterInfo.status !== '' && filterInfo.status !== 'all') {
-      payload = { ...payload, status: filterInfo.status, page: paginationModel?.page + 1, limit: paginationModel?.pageSize }
+      payload = { ...payload, status: filterInfo.status };
     }
+
     if (filterInfo.search !== '') {
-      payload = { ...payload, search: filterInfo.search, page: 1, limit: 10 }
-      setPaginationModel({
-        page: 0,
-        pageSize: 10
-      })
+      payload = { ...payload, search: filterInfo.search };
     }
-    dispatch(getMembersList(payload))
-  }, [filterInfo])
 
+    dispatch(getMembersList(payload));
+  }, [actionTab, paginationModel, filterInfo.status, filterInfo.search]);
   useEffect(() => {
-    dispatch(getMembersList({ role_name: actionTab, page: paginationModel?.page + 1, limit: paginationModel?.pageSize }))
-  }, [actionTab, paginationModel]);
-
+    if(selectedRequestedTab){
+      setActionTab(selectedRequestedTab)
+    
+    }
+   }, [selectedRequestedTab])
   return (
     <div className="program-request px-8 mt-10">
       <div className="px-6 program-info">
@@ -389,14 +400,19 @@ const Members = () => {
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={assignProgramInfo.message !== ''}
       >
-        <div className='px-5 py-1 flex justify-center items-center'>
-          <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
-            style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
-            <img src={SuccessTik} alt="SuccessTik" />
-            <p className='text-white text-[12px]'>{assignProgramInfo.message}</p>
-          </div>
 
-        </div>
+        <div className='px-5 py-1 flex justify-center items-center'>
+                    <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+                        style={{ background: '#fff', borderRadius: '10px' }}>
+                        <img src={SuccessTik} alt="SuccessTik" />
+                        <p className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                            style={{
+                                fontWeight: 600
+                            }}
+                        >{assignProgramInfo.message}</p>
+                    </div>
+
+                </div>
       </Backdrop>
 
 

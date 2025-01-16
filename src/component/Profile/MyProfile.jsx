@@ -1,199 +1,108 @@
-import React, { useEffect, useState } from 'react'
-import { Button } from '../../shared'
-import { useNavigate } from 'react-router-dom'
+import React, { useEffect, useRef, useState } from 'react';
+import ProfileIcon from '../../assets/icons/profile-icon.svg';
+import SecurityIcon from '../../assets/icons/security-icon.svg';
+import PermissionIcon from '../../assets/icons/permission-icon.svg';
+import ProfileTab from './tabs/ProfileTab';
+import PermissionTab from './tabs/PermissionTab';
+import SecurityTab from './tabs/SecurityTab';
+import EditProfile from './edit-profile';
 
-import SuccessTik from '../../assets/images/blue_tik1x.png';
-import ProfileImageIcon from '../../assets/icons/profile-image-icon.svg'
-import ProfileImagePencilIcon from '../../assets/icons/profile-image-pencil-icon.svg'
-import { getUserProfile, updateLocalProfileInfo, updateProfile, updateProfileImage } from '../../services/profile'
-import { useDispatch, useSelector } from 'react-redux'
-import { Backdrop, CircularProgress } from '@mui/material'
-import { useForm } from 'react-hook-form'
-import { ProfileFields } from '../../utils/formFields'
-import { profileStatus } from '../../utils/constant'
+export const roleBasedSections = {
+  mentor: [
+    'Personal Information',
+    'Professional Bakground',
+    'Educational Background',
+    'Area of expertise',
+    'Mentorship Experience',
+    'Document upload',
+    'Mentorship Preference',
+    'Goals and Expections',
+    'Availability and Commitment',
+    'Additional Information',
+  ],
+  mentee: [
+    'Personal Information',
+    'Current Status',
+    'Skill and Interests',
+    'Expectation and goals',
+    'Document upload',
+    'Career/Academic Goals',
+    'Mentoring Preferences',
+    'Availability',
+    'Detailed Career/academic Goals',
+    'Challenges and Obstacles',
+    'Mentoring Experience',
+    'Learning style & Preferences',
+    'Networking & Professional Developement',
+    'Personal Development',
+    'Mentoring Relationship Dynamics',
+    'Long-term Vision',
+    'Additional Information',
+  ],
+  admin: ['Personal Information'],
+};
 
 export default function MyProfile() {
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
-  const [editMode, setEditMode] = useState(false)
-  const userData = useSelector((state) => state.userInfo);
-  const { profile, loading, status } = useSelector(state => state.profileInfo);
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-    reset,
-    getValues,
-    setValue
-  } = useForm();
+  const [activeTab, setActiveTab] = useState(0);
+  const [editMode, setEditMode] = useState(false);
+  const [contentHeights, setContentHeights] = useState([]);
+  const contentRefs = useRef([]);
 
-
-  const loadUserProfile = () => {
-    dispatch(getUserProfile())
-  }
-
-  const uploadUserImage = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      let bodyFormData = new FormData();
-      bodyFormData.append('profile_image', e.target.files[0]);
-      dispatch(updateProfileImage(bodyFormData)).then(() => loadUserProfile())
-    }
-  }
-
-  const handleEditMode = (e) => {
-    e.preventDefault()
-    setEditMode(true)
-  }
-
-  const onSubmit = (data) => {
-    console.log('Data', data)
-    const apiPayload = {
-      phone_number: data.phone_number,
-      secondary_phone_number: data.secondary_phone_number,
-      address: data.address,
-    }
-    dispatch(updateProfile(apiPayload))
-
-  }
-
-  useEffect(() => {
-    if (Object.keys(profile).length) {
-      const name = profile?.name?.split(" ");
-      reset({
-        first_name: name[0] || '',
-        last_name: name[1] || '',
-        phone_number: profile?.phone_number,
-        secondary_phone_number: profile?.secondary_phone_number || '',
-        email: profile?.email,
-        address: profile?.address
-      });
-    }
-  }, [profile])
-
-  useEffect(() => {
-    loadUserProfile()
-  }, [])
-
-  useEffect(() => {
-    if (status === profileStatus.update) {
-      setTimeout(() => {
-        setEditMode(false)
-        loadUserProfile()
-      }, 3000)
-    }
-  }, [status])
+  const tabs = [
+    {
+      label: 'Profile',
+      icon: ProfileIcon,
+      content: <ProfileTab setEditMode={() => setEditMode(true)} />,
+    },
+    {
+      label: 'Security',
+      icon: SecurityIcon,
+      content: <SecurityTab />,
+    },
+    {
+      label: 'Permissions',
+      icon: PermissionIcon,
+      content: <PermissionTab />,
+    },
+  ];
 
   return (
-    <div className="profile-container">
-
-      <Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={loading}
-      >
-        <CircularProgress color="inherit" />
-
-      </Backdrop>
-
-
-
-      <Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={status === profileStatus.update}
-      >
-        <div className='px-5 py-1 flex justify-center items-center'>
-          <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
-            style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
-            <img src={SuccessTik} alt="SuccessTik" />
-            <p className='text-white text-[12px]'>Profile updated Successfully</p>
-          </div>
-
-        </div>
-      </Backdrop>
-
-      <div className='flex justify-between items-center mb-8'>
-        <div className='text-color font-medium' >
-          Profile
-        </div>
+    <div className='profile-container'>
+      <div className='flex justify-between items-center mb-6'>
+        <p className='text-color text-2xl font-semibold'>
+          {editMode ? 'Edit Profile' : 'Settings'}
+        </p>
       </div>
-
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className='profile-content py-8 px-14' style={{ border: '1px solid rgba(219, 224, 229, 1)', background: 'rgba(255, 255, 255, 1)' }}>
-          <div className='flex justify-between items-center mb-8'>
-            <div className='text-color font-medium' >
-              Profile Picture
-            </div>
-            <div>
-              {
-                !editMode ?
-                  <Button onClick={handleEditMode} btnType="button" btnName="Edit" btnCls={'w-[140px]'} />
-                  :
-                  <Button btnType="submit" btnName="Save Changes" btnCls={'w-[170px]'} />
-              }
-
-            </div>
-          </div>
-
-          <div className='py-4 relative w-[12%]'>
-            <div className='upload-profile'>
-              <label className="w-[40%] pb-3 rounded-lg text-white text-[14px] cursor-pointer" style={{
-                border: 'none'
-              }}>
-                <img src={profile?.image || ProfileImageIcon} style={{ borderRadius: '50%', height: '143px' }} alt="ProfileImageIcon" />
-                <img src={ProfileImagePencilIcon} className='absolute top-[50%] left-2 cursor-pointer' alt="ProfileImagePencilIcon" />
-
-                <input type='file' class="hidden" onChange={uploadUserImage} />
-              </label>
-            </div>
-
-
-          </div>
-
-          <div className='grid grid-cols-6 gap-3 mt-12'>
-            {
-              ProfileFields.map((profilefield, index) =>
-                <div className='col-span-2' key={index}>
-                  <div className='mb-5'>
-                    <label className="block tracking-wide  text-xs mb-2" style={{ color: 'rgba(116, 116, 116, 1)' }}>
-                      {profilefield.label}{editMode && <span style={{ color: 'red' }}>{profilefield?.inputRules?.required ? '*' : ''}</span>}
-                    </label>
-                    {
-                      editMode ?
-                        <>
-                          <input {...register(profilefield.name, profilefield.inputRules)}
-                            type={profilefield.fieldtype}
-                            className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none 
-                                                                    focus-visible:outline-none text-[14px] h-[60px]"
-                            placeholder={profilefield.placeholder}
-                            style={{
-                              color: "#232323",
-                              borderRadius: '3px',
-
-                              paddingLeft: '10px'
-                            }}
-
-                            disabled={profilefield.disabled}
-                            aria-invalid={!!errors[profilefield.name]}
-                          />
-                          {errors[profilefield.name] && (
-                            <p className="error" role="alert">
-                              {errors[profilefield.name].message}
-                            </p>
-                          )}
-                        </>
-                        :
-                        <p className="text-[14px]">{getValues(profilefield.name)}</p>
-                    }
-
-
-                  </div>
+      {!editMode ? (
+        <div className='border grid grid-cols-5 rounded-xl bg-white'>
+          {/* Sidebar */}
+          <div className='grid col-span-1 border-r pl-6 py-10'>
+            <div className='flex flex-col gap-1'>
+              {tabs.map((tab, index) => (
+                <div
+                  key={index}
+                  className={`p-4 font-semibold pl-6 flex items-start cursor-pointer gap-4 transition-all duration-300 ease-in-out ${
+                    activeTab === index
+                      ? 'text-blue-500 bg-[#F0F5FF] border-r-4 rounded-tl-lg rounded-bl-lg border-blue-500'
+                      : 'text-gray-500 hover:text-blue-500'
+                  }`}
+                  onClick={() => setActiveTab(index)}
+                >
+                  <img src={tab.icon} alt='' />
+                  {tab.label}
                 </div>
+              ))}
+            </div>
+          </div>
 
-              )
-            }
+          {/* Tab Content */}
+          <div className='grid col-span-4 p-12 overflow-hidden'>
+            <div className='relative'>{tabs[activeTab].content}</div>
           </div>
         </div>
-      </form>
-
+      ) : (
+        <EditProfile setEditMode={setEditMode} />
+      )}
     </div>
-  )
+  );
 }

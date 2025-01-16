@@ -114,7 +114,7 @@ const Category = () => {
         },
         {
             field: 'description',
-            headerName: 'Descriptions',
+            headerName: 'Description',
             flex: 1,
             id: 0,
             renderCell: (params) => {
@@ -147,15 +147,16 @@ const Category = () => {
                                     id: seletedItem?.id
                                 }
                             })
-                        }}>
+                        }} className='!text-[14px] !text-[#18283D]' style={{fontWeight: 500}}>
                             <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
                             View
                         </MenuItem>
-                        <MenuItem onClick={() => handleOpenEditForm(seletedItem, true)}>
+                        <MenuItem onClick={() => handleOpenEditForm(seletedItem, true)}
+                        className='!text-[14px] !text-[#18283D]' style={{fontWeight: 500}}>
                             <img src={EditIcon} alt="EditIcon" field={params.id} className='pr-3 w-[30px]' />
                             Edit
                         </MenuItem>
-                        <MenuItem onClick={() => handleOpenDeletePopup(seletedItem?.id)}>
+                        <MenuItem onClick={() => handleOpenDeletePopup(seletedItem?.id)} className='!text-[14px] !text-[#18283D]' style={{fontWeight: 500}}>
                             <img src={DeleteIcon} alt="EditIcon" field={params.id} className='pr-3 w-[30px]' />
                             Delete
                         </MenuItem>
@@ -290,7 +291,7 @@ const Category = () => {
                         <Button btnName={
                             <Stack direction={"row"} alignItems={"center"} spacing={2}>
                                 <img src={AddCategory} />
-                                <Typography>Add Category</Typography>
+                                <Typography className='!text-[14px]'>Add Category</Typography>
                             </Stack>
                         }
                             onClick={() => setCreateEditForm({
@@ -327,10 +328,14 @@ const Category = () => {
                 open={activity?.bool}
             >
                 <div className='px-5 py-1 flex justify-center items-center'>
-                    <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
-                        style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
+                    <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+                        style={{ background: '#fff', borderRadius: '10px' }}>
                         <img src={SuccessTik} alt="SuccessTik" />
-                        <p className='text-white text-[12px]'>{createEditForm?.type === "edit" ? "Your category has been successfully edited" : "Your category has been successfully submitted"}</p>
+                        <p className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                        style={{
+                          fontWeight: 600
+                        }}
+                        >{createEditForm?.type === "edit" ? "Your category has been successfully edited" : "Your category has been successfully submitted"}</p>
                     </div>
 
                 </div>
@@ -377,10 +382,14 @@ const Category = () => {
             // onClick={() => setCreateMeetingLoading(false)}
             >
                 <div className='px-5 py-1 flex justify-center items-center'>
-                    <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
-                        style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
+                    <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+                        style={{ background: '#fff', borderRadius: '10px' }}>
                         <img src={SuccessTik} alt="SuccessTik" />
-                        <p className='text-white text-[12px]'>Mentor category deleted is successfully</p>
+                        <p className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                        style={{
+                          fontWeight: 600
+                        }}
+                        >Mentor category deleted is successfully</p>
                     </div>
 
                 </div>

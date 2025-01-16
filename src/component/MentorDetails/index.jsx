@@ -355,10 +355,14 @@ export default function MentorDetails() {
                 open={requestStatusInfo === requestStatus.memberupdate || requestStatusInfo === requestStatus.membercancel}
             >
                 <div className='px-5 py-1 flex justify-center items-center'>
-                    <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
-                        style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
+                    <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+                        style={{ background: '#fff', borderRadius: '10px' }}>
                         <img src={SuccessTik} alt="SuccessTik" />
-                        <p className='text-white text-[12px]'>Member request is updated Successfully</p>
+                        <p className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                            style={{
+                                fontWeight: 600
+                            }}
+                        >Member request is updated Successfully</p>
                     </div>
 
                 </div>
@@ -370,10 +374,14 @@ export default function MentorDetails() {
                 open={requestStatusInfo === requestStatus.autoapproval}
             >
                 <div className='px-5 py-1 flex justify-center items-center'>
-                    <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
-                        style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
+                    <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+                        style={{ background: '#fff', borderRadius: '10px' }}>
                         <img src={SuccessTik} alt="SuccessTik" />
-                        <p className='text-white text-[12px]'>Auto Approval {checked ? 'enabled ' : 'disabled '} successfully</p>
+                        <p className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                            style={{
+                                fontWeight: 600
+                            }}
+                        >Auto Approval {checked ? 'enabled ' : 'disabled '} successfully</p>
                     </div>
 
                 </div>

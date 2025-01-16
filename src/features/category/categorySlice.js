@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createCategory, deleteCategory, getCategory, getCategoryView, updateCategoryLocalState } from "../../services/category";
+import { acceptMember, createCategory, deleteCategory, getCategory, getCategoryView, updateCategoryLocalState } from "../../services/category";
 
 const initialState = {
     formDetails: {},
@@ -49,6 +49,7 @@ export const adminCategory = createSlice({
                 };
             })
             .addCase(getCategory.fulfilled, (state, action) => {
+                console.log("abcd", action)
                 return {
                     ...state,
                     status: "done",
@@ -100,7 +101,7 @@ export const adminCategory = createSlice({
 
 
         // View 
-        
+
         builder
             .addCase(getCategoryView.pending, (state) => {
                 return {
@@ -118,6 +119,30 @@ export const adminCategory = createSlice({
                 };
             })
             .addCase(getCategoryView.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+
+
+        builder
+            .addCase(acceptMember.pending, (state) => {
+                return {
+                    ...state,
+                    status: "pending",
+                    loading: true,
+                };
+            })
+            .addCase(acceptMember.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    status: "done",
+                    loading: false,
+                };
+            })
+            .addCase(acceptMember.rejected, (state, action) => {
                 return {
                     ...state,
                     loading: false,

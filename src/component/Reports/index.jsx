@@ -17,27 +17,126 @@ import CancelIcon from '../../assets/images/cancel1x.png'
 import { Button } from '../../shared';
 import { deleteReports, getAllReports } from '../../services/reportsInfo';
 import { useDispatch, useSelector } from 'react-redux';
-import { pipeUrls, reportAllStatus, reportsStatus, reportStatus, reportStatusColor } from '../../utils/constant';
-import { reportColumns } from '../../utils/formFields';
+import { feedStatus, pipeUrls, reportAllStatus, reportsStatus, reportStatus, reportStatusColor } from '../../utils/constant';
+import { reportAdminColumns, reportColumns } from '../../utils/formFields';
 import api from '../../services/api';
-
+import { useForm } from 'react-hook-form';
+import { createPost, updateFeedRequest } from '../../services/feeds';
+import CreatePostModal from '../Feeds/CreatePostModal';
+import SettingsModal from '../Feeds/SettingsModal';
+import SuccessTik from '../../assets/images/blue_tik1x.png';
+import { tabQuertyData } from '../Breadcrumbs/BreadcrumbsCommonData';
 
 
 const Reports = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const { allreports, loading, status } = useSelector(state => state.reports)
+    const userInfo = useSelector(state => state.userInfo);
+    const role = userInfo.data.role
     const [anchorEl, setAnchorEl] = useState(null);
+    
     const open = Boolean(anchorEl);
     const [deleteModal, setDeleteModal] = useState(false)
     const [filter, setFilter] = useState({ search: '', filter_by: '' })
     const [requestTab, setRequestTab] = useState('all')
     const [searchParams, setSearchParams] = useSearchParams();
     const [reportData, setReportData] = useState({ action: '', selectedItem: [] })
+    const selectedRequestedTab = searchParams.get('tabType');
     const [paginationModel, setPaginationModel] = React.useState({
         page: 0,
         pageSize: 10,
     });
+
+    // feed State start
+
+    const [postModal, setPostModal] = useState({
+        create: false,
+        settings: false,
+        control: false,
+        visibility: false,
+        activity: false
+    });
+    const [formData, setFormData] = useState({
+        visibility: 'anyone',
+        comment_control: 'anyone',
+        brand_partnership: false,
+        is_published: true,
+    });
+
+    const {
+        register,
+        formState: { errors },
+        handleSubmit,
+        reset,
+        setValue,
+        getValues,
+    } = useForm();
+
+    const handleCreatePostPopup = () => {
+        setPostModal({ ...postModal, create: true, visibility: false });
+        handleClose()
+    };
+
+    const handleClosePostPopup = () => {
+        setPostModal({ ...postModal, create: false})
+    }
+
+    const handleVisibilty = () => {
+        setPostModal({ ...postModal, settings: true });
+    };
+
+    const handleSettingsBack = () => {
+        setPostModal({ ...postModal, settings: false, create: true });
+    };
+
+    const handleSettingsData = (data) => {
+        setFormData({ ...formData, ...data });
+        setPostModal({ ...postModal, settings: false, create: true });
+    };
+
+    const onSubmit = (data) => {
+        const formDatas = new FormData();
+
+        if (data.image) {
+            if (Array.isArray(data.image)) {
+                data.image.forEach((file, index) => {
+                    formDatas.append('image', file);
+                });
+            } else {
+                formDatas.append('image', data.image);
+            }
+        }
+
+        formDatas.append('title', data.title);
+        formDatas.append('content', data.content);
+        formDatas.append('brand_partnership', formData.brand_partnership);
+        formDatas.append('comment_control', formData.comment_control);
+        formDatas.append('visibility', formData.visibility);
+        formDatas.append('is_published', formData.is_published);
+        formDatas.append("request", reportData?.selectedItem?.[0]?.id)
+
+        // console.log(formDatas);
+        dispatch(createPost(formDatas)).then((res) => {
+            if (res?.meta?.requestStatus === "fulfilled") {
+                setPostModal({
+                    ...postModal,
+                    create: false,
+                    activity: true
+                })
+                setTimeout(() => {
+                    setPostModal({
+                        ...postModal,
+                        create: false,
+                        activity: false
+                    })
+                    dispatch(updateFeedRequest({ status: '' }))
+                }, 2000);
+            }
+        })
+    };
+
+    // feed State end
 
     const requestBtns = [
         {
@@ -54,15 +153,30 @@ const Reports = () => {
         },
         {
             name: 'Completed Reports',
-            key: 'accept'
+            key: 'approved'
         },
         {
             name: 'Rejected Reports',
-            key: 'cancel'
+            key: 'rejected'
         },
         {
             name: 'Draft Reports',
             key: 'draft'
+        }
+    ]
+
+    const requestAdminBtn = [
+        {
+            name: 'My Reports',
+            key: 'all'
+        },
+        {
+            name: 'Approval Reports',
+            key: 'approved'
+        },
+        {
+            name: 'Cancel Reports',
+            key: 'rejected'
         }
     ]
 
@@ -85,7 +199,7 @@ const Reports = () => {
 
 
     const reportColumn = [
-        ...reportColumns.filter(rColumn => rColumn.status.includes(requestTab)),
+        ...(role === "admin" ? reportAdminColumns : reportColumns).filter(rColumn => rColumn.status.includes(requestTab)),
         {
             field: 'report_status',
             headerName: 'Status',
@@ -96,12 +210,12 @@ const Reports = () => {
                     <div className='cursor-pointer flex items-center h-full relative'>
                         <span className='w-[80px] flex justify-center h-[30px] px-7'
                             style={{
-                                background: reportStatusColor[params.row.report_status]?.bg || '', lineHeight: '30px',
-                                borderRadius: '3px', height: '34px', color: reportStatusColor[params.row.report_status]?.color || '',
+                                background: reportStatusColor[params.row.status]?.bg || '', lineHeight: '30px',
+                                borderRadius: '3px', height: '34px', color: reportStatusColor[params.row.status]?.color || '',
                                 fontSize: '12px'
                             }}
                         >
-                            {reportStatus[params.row.report_status]}
+                            {reportStatus[params.row.status]}
                         </span>
                     </div>
                 </>
@@ -129,7 +243,7 @@ const Reports = () => {
                                 }}
                             >
                                 {
-                                    reportData.selectedItem[0]?.report_status === 'cancel' &&
+                                    (role === "mentor" && reportData.selectedItem[0]?.status === 'rejected') &&
                                     <MenuItem onClick={() => navigate(`/edit-report/${reportData.selectedItem[0].id}?type=re-open`)} className='!text-[12px]'>
                                         <img src={ViewIcon} alt="ViewIcon" className='pr-3 w-[30px]' />
                                         Re-Open
@@ -137,7 +251,7 @@ const Reports = () => {
                                 }
 
                                 {
-                                    (reportData.selectedItem[0]?.report_status === 'new' || reportData.selectedItem[0]?.report_status === 'pending' || reportData.selectedItem[0]?.report_status === 'draft') &&
+                                    (role === "mentor" && (reportData.selectedItem[0]?.status === 'new' || reportData.selectedItem[0]?.status === 'pending' || reportData.selectedItem[0]?.status === 'draft')) &&
 
                                     <MenuItem onClick={() => navigate(`/edit-report/${reportData.selectedItem[0].id}`)} className='!text-[12px]'>
                                         <img src={EditIcon} alt="EditIcon" className='pr-3 w-[30px]' />
@@ -145,7 +259,12 @@ const Reports = () => {
                                     </MenuItem>
                                 }
 
-                                <MenuItem onClick={() => navigate(`/view-report/${reportData.selectedItem[0].id}`)} className='!text-[12px]'>
+                                <MenuItem onClick={() =>{
+                                  
+                                    const adminView = role==='admin'?`?breadcrumbsType=${requestTab}`:''
+                                    navigate(`/view-report/${reportData.selectedItem[0].id}${adminView}`)
+                                } 
+                                } className='!text-[12px]'>
                                     <img src={ViewIcon} alt="ViewIcon" className='pr-3 w-[30px]' />
                                     View
                                 </MenuItem>
@@ -160,11 +279,20 @@ const Reports = () => {
                                 } */}
 
 
-
-                                <MenuItem onClick={handleDeleteSelectedRows} className='!text-[12px]'>
-                                    <img src={DeleteIcon} alt="DeleteIcon" className='pr-3 w-[27px]' />
-                                    Delete
-                                </MenuItem>
+                                {
+                                    (role === "mentor" && (reportData.selectedItem[0]?.status === 'new' || reportData.selectedItem[0]?.status === 'pending' || reportData.selectedItem[0]?.status === 'draft')) &&
+                                    <MenuItem onClick={handleDeleteSelectedRows} className='!text-[12px]'>
+                                        <img src={DeleteIcon} alt="DeleteIcon" className='pr-3 w-[27px]' />
+                                        Delete
+                                    </MenuItem>
+                                }
+                                {
+                                    reportData?.selectedItem?.[0]?.status === "approved" &&
+                                    <MenuItem onClick={handleCreatePostPopup} className='!text-[12px]'>
+                                        <img src={ViewIcon} alt="ViewIcon" className='pr-3 w-[27px]' />
+                                        Post to Feed
+                                    </MenuItem>
+                                }
                             </Menu>
                         </>
                     }
@@ -176,7 +304,7 @@ const Reports = () => {
         },
     ]
 
-    const title = requestBtns.find(option => option.key === requestTab)?.name || ''
+    const title = (role === "admin" ? requestAdminBtn : requestBtns).find(option => option.key === requestTab)?.name || ''
 
     const handleTab = (key) => {
         let typeString = `?type=${key}`
@@ -184,7 +312,7 @@ const Reports = () => {
             typeString = ''
         }
         navigate(`${pipeUrls.reports}${typeString}`)
-        setFilter({filter_by: '', search: ''})
+        setFilter({ filter_by: '', search: '' })
         setRequestTab(key)
         setPaginationModel({
             page: 0,
@@ -207,8 +335,20 @@ const Reports = () => {
         const filterSearch = searchParams.get("search");
         const filterDate = searchParams.get("filter_by");
         let query = {}
-        if (filterType && filterType !== '') {
-            query.status = filterType
+        if (role === "admin") {
+            if (requestTab === "all") {
+                query.status = "approved";
+                query.request_type = "report";
+            } else {
+                query.status = requestTab === "cancel" ? "rejected" : requestTab;
+                query.request_type = "report";
+                query.request_by = "mentor";
+            }
+        } else {
+            if (filterType && filterType !== '') {
+                query.status = filterType;
+            }
+            query.request_type = "report";
         }
 
         if (filterSearch && filterSearch !== '') {
@@ -218,7 +358,17 @@ const Reports = () => {
         if (filterDate && filterDate !== '') {
             query.filter_by = filterDate
         }
-        dispatch(getAllReports({...query, page: paginationModel?.page + 1, limit: paginationModel?.pageSize}));
+        // if (role === "admin") {
+        //     query.request_by = "mentor"
+        // }
+        if (role === "admin"&&requestTab === "all") {
+           delete query.request_by
+        }
+        if(query.status){
+            dispatch(getAllReports({ ...query, page: paginationModel?.page + 1, limit: paginationModel?.pageSize }));
+        }else{
+            dispatch(getAllReports({ ...query, page: paginationModel?.page + 1, limit: paginationModel?.pageSize }));
+        }
     }
 
     const handleCancelDelete = () => {
@@ -247,8 +397,8 @@ const Reports = () => {
     }, [filter])
 
     useEffect(() => {
-        getReports()
-    }, [searchParams, paginationModel])
+            getReports()
+    }, [searchParams,role, paginationModel,requestTab])
 
 
     useEffect(() => {
@@ -256,8 +406,13 @@ const Reports = () => {
             setDeleteModal(false)
             getReports()
         }
-    }, [status])
-
+    }, [status,role])
+  useEffect(() => {
+    if(selectedRequestedTab){
+        setRequestTab(selectedRequestedTab)
+    
+    }
+   }, [selectedRequestedTab])
     return (
         <div className="reports px-9 py-9">
             <Backdrop
@@ -327,14 +482,14 @@ const Reports = () => {
                                 <option value="day" selected={filter.filter_by === 'day'}>Day</option>
                             </select>
                         </div>
-                        <Button btnName="Create Report" onClick={() => navigate('/create-report')} btnCls="!py-4" />
+                        <Button btnName="Create Report" onClick={() => navigate('/create-report', { state: { type: "new" } })} btnCls="!py-4" />
                     </div>
                 </div>
 
                 <div className='mx-5'>
                     <div className='flex gap-7 mb-6'>
                         {
-                            requestBtns.map((actionBtn, index) =>
+                            (role === "admin" ? requestAdminBtn : requestBtns).map((actionBtn, index) =>
                                 <button key={index} className='px-5 py-4 text-[14px]' style={{
                                     background: requestTab === actionBtn.key ? 'linear-gradient(97.86deg, #005DC6 -15.07%, #00B1C0 112.47%)' :
                                         '#fff',
@@ -371,14 +526,70 @@ const Reports = () => {
                                 </div>
                             </div>
                         </div>
-                        <DataTable rows={allreports?.results ?? []} columns={reportColumn} handleSelectedRow={handleSelectedRow}
-                        rowCount={allreports?.count}
-                        paginationModel={paginationModel} setPaginationModel={setPaginationModel}
-                        hideFooter={allreports?.results?.length === 0} />
+                        <DataTable rows={allreports?.results ?? []} columns={(role === "admin" && requestTab === "all") ? reportColumn?.filter((e) => e?.field !== "report_status") : reportColumn} handleSelectedRow={handleSelectedRow}
+                            rowCount={allreports?.count}
+                            paginationModel={paginationModel} setPaginationModel={setPaginationModel}
+                            hideFooter={allreports?.results?.length === 0} />
                     </div>
 
                 </div>
             </div>
+
+            {/* Create Feed */}
+            {postModal.create && (
+                <CreatePostModal
+                    register={register}
+                    handleSubmit={handleSubmit}
+                    formData={formData}
+                    errors={errors}
+                    reset={reset}
+                    setValue={setValue}
+                    getValues={getValues}
+                    open={postModal.create}
+                    handlePostData={onSubmit}
+                    handleClose={handleClosePostPopup}
+                    handleVisibilty={handleVisibilty}
+                    isReport={true}
+                    reportData={reportData?.selectedItem}
+                />
+            )}
+
+            {postModal.settings && (
+                <SettingsModal
+                    formData={formData}
+                    register={register}
+                    errors={errors}
+                    reset={reset}
+                    handleSubmit={handleSubmit}
+                    handleSettingsData={onSubmit}
+                    open={postModal.settings}
+                    handleClose={handleClose}
+                    handleSettingsBack={handleSettingsBack}
+                    handlePostData={handleSettingsData}
+                />
+            )}
+
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={postModal?.activity}
+            >
+                <div className='px-5 py-1 flex justify-center items-center'>
+                    <div
+                        className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+                        style={{ background: '#fff', borderRadius: '10px' }}
+                    >
+                        <img src={SuccessTik} alt='SuccessTik' />
+                        <p
+                            className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                            style={{
+                                fontWeight: 600,
+                            }}
+                        >
+                            Your post is successfully uploaded
+                        </p>
+                    </div>
+                </div>
+            </Backdrop>
         </div>
     )
 }

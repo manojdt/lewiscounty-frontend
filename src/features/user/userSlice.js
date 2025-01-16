@@ -1,6 +1,4 @@
-import {
-  createSlice
-} from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 import {
   userAccountCreate,
   userAccountLogin,
@@ -13,43 +11,39 @@ import {
   updatePassword,
   validateOTP,
   updateQuestions,
-  updateMenteeQuestions
-} from "../../services/loginInfo";
-import {
-  userStatus
-} from '../../utils/constant'
-
+  updateMenteeQuestions,
+  updateToken,
+} from '../../services/loginInfo';
+import { userStatus } from '../../utils/constant';
 
 const initialState = {
   data: {},
   loading: false,
   status: '',
-  error: "",
-  otp: ""
+  error: '',
+  otp: '',
 };
 
 export const userSlice = createSlice({
-  name: "userInfo",
+  name: 'userInfo',
   initialState,
-  reducers: {
-
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(userAccountCreate.pending, (state) => {
         return {
           ...state,
-          loading: true
+          loading: true,
         };
       })
       .addCase(userAccountCreate.fulfilled, (state, action) => {
-        const { userResponse = {}, status} = action.payload
+        const { userResponse = {}, status } = action.payload;
         return {
           ...state,
           data: userResponse,
           status: status === 201 ? userStatus.create : '',
-          error: status === 200 ? (action.payload?.data?.error || '' ) : '',
-          loading: false
+          error: status === 200 ? action.payload?.data?.error || '' : '',
+          loading: false,
         };
       })
       .addCase(userAccountCreate.rejected, (state, action) => {
@@ -58,20 +52,22 @@ export const userSlice = createSlice({
           loading: false,
           error: action.error.message,
         };
-      })
+      });
     builder
       .addCase(userAccountLogin.pending, (state) => {
         return {
           ...state,
-          loading: true
+          loading: true,
         };
       })
       .addCase(userAccountLogin.fulfilled, (state, action) => {
         return {
           ...state,
           data: action.payload,
-          status: !Object.keys(action.payload).length ? userStatus.pending :  userStatus.login,
-          loading: false
+          status: !Object.keys(action.payload).length
+            ? userStatus.pending
+            : userStatus.login,
+          loading: false,
         };
       })
       .addCase(userAccountLogin.rejected, (state, action) => {
@@ -80,35 +76,35 @@ export const userSlice = createSlice({
           loading: false,
           error: action.error.message,
         };
-      })
+      });
     builder.addCase(updateUserInfo, (state, action) => {
       return {
         ...state,
-        ...action.payload
-      }
-    })
-    builder.addCase(resetUserInfo, (state, action) => initialState)
+        ...action.payload,
+      };
+    });
+    builder.addCase(resetUserInfo, (state, action) => initialState);
     builder.addCase(updateInfo.fulfilled, (state, action) => {
       return {
         ...state,
         loading: false,
         data: action.payload,
         status: '',
-        error: ''
-      }
-    })
+        error: '',
+      };
+    });
     builder
       .addCase(userAccessToken.pending, (state) => {
         return {
           ...state,
-          loading: true
+          loading: true,
         };
       })
       .addCase(userAccessToken.fulfilled, (state, action) => {
         return {
           ...state,
           status: userStatus.login,
-          loading: false
+          loading: false,
         };
       })
       .addCase(userAccessToken.rejected, (state, action) => {
@@ -117,12 +113,12 @@ export const userSlice = createSlice({
           loading: false,
           error: action.error.message,
         };
-      })
+      });
     builder
       .addCase(updateUserRole.pending, (state) => {
         return {
           ...state,
-          loading: true
+          loading: true,
         };
       })
       .addCase(updateUserRole.fulfilled, (state, action) => {
@@ -130,7 +126,7 @@ export const userSlice = createSlice({
           ...state,
           loading: false,
           status: userStatus.role,
-          data: action.payload
+          data: action.payload,
         };
       })
       .addCase(updateUserRole.rejected, (state, action) => {
@@ -139,43 +135,43 @@ export const userSlice = createSlice({
           loading: false,
           error: action.error.message,
         };
-      })
+      });
 
     builder
       .addCase(forgotPassword.pending, (state) => {
         return {
           ...state,
-          loading: true
+          loading: true,
         };
       })
       .addCase(forgotPassword.fulfilled, (state, action) => {
         return {
           ...state,
           loading: false,
-          status : userStatus.otp
+          status: userStatus.otp,
         };
       })
       .addCase(forgotPassword.rejected, (state, action) => {
-        console.log('GGG', action)
+        console.log('GGG', action);
         return {
           ...state,
           loading: false,
           error: action.error.message,
         };
-      })
+      });
 
-      builder
+    builder
       .addCase(validateOTP.pending, (state) => {
         return {
           ...state,
-          loading: true
+          loading: true,
         };
       })
       .addCase(validateOTP.fulfilled, (state, action) => {
         return {
           ...state,
           loading: false,
-          status : userStatus.otpSuccess
+          status: userStatus.otpSuccess,
         };
       })
       .addCase(validateOTP.rejected, (state, action) => {
@@ -184,20 +180,20 @@ export const userSlice = createSlice({
           loading: false,
           error: action.error.message,
         };
-      })
+      });
 
-      builder
+    builder
       .addCase(updatePassword.pending, (state) => {
         return {
           ...state,
-          loading: true
+          loading: true,
         };
       })
       .addCase(updatePassword.fulfilled, (state, action) => {
         return {
           ...state,
           loading: false,
-          status : userStatus.changePassword
+          status: userStatus.changePassword,
         };
       })
       .addCase(updatePassword.rejected, (state, action) => {
@@ -205,15 +201,14 @@ export const userSlice = createSlice({
           ...state,
           loading: false,
           error: action.error.message,
-
         };
-      })
+      });
 
-      builder
+    builder
       .addCase(updateQuestions.pending, (state) => {
         return {
           ...state,
-          loading: true
+          loading: true,
         };
       })
       .addCase(updateQuestions.fulfilled, (state, action) => {
@@ -222,7 +217,7 @@ export const userSlice = createSlice({
           loading: false,
           data: action.payload,
           // status : !Object.keys(action.payload).length ? userStatus.pending : userStatus.questions
-          status : userStatus.questions
+          status: userStatus.questions,
         };
       })
       .addCase(updateQuestions.rejected, (state, action) => {
@@ -230,15 +225,14 @@ export const userSlice = createSlice({
           ...state,
           loading: false,
           error: action.error.message,
-
         };
-      })
+      });
 
-      builder
+    builder
       .addCase(updateMenteeQuestions.pending, (state) => {
         return {
           ...state,
-          loading: true
+          loading: true,
         };
       })
       .addCase(updateMenteeQuestions.fulfilled, (state, action) => {
@@ -246,7 +240,9 @@ export const userSlice = createSlice({
           ...state,
           loading: false,
           data: action.payload,
-          status : !Object.keys(action.payload).length ? userStatus.pending : userStatus.questions
+          status: !Object.keys(action.payload).length
+            ? userStatus.pending
+            : userStatus.questions,
         };
       })
       .addCase(updateMenteeQuestions.rejected, (state, action) => {
@@ -254,11 +250,34 @@ export const userSlice = createSlice({
           ...state,
           loading: false,
           error: action.error.message,
+        };
+      });
 
+    builder
+      .addCase(updateToken.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
         };
       })
+      .addCase(updateToken.fulfilled, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          data: action.payload,
+          status: !Object.keys(action.payload).length
+            ? userStatus.pending
+            : userStatus.questions,
+        };
+      })
+      .addCase(updateToken.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
   },
 });
-
 
 export default userSlice.reducer;

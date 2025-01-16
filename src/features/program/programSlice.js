@@ -6,29 +6,42 @@ import {
   editUpdateProgram,
   getAllCategories,
   getAllCertificates,
+  getAllMentors,
   getAllMaterials,
   getAllMembers,
+  getallMenteeProgram,
+  getallMyProgram,
   getAllPrograms,
   getAllSkills,
   getProgramDetails,
+  getProgramListWithCategory,
+  getProgramMentees,
+  getProgramNameValidate,
   getProgramsByCategory,
   loadAllPrograms,
   updateAllPrograms,
   updateNewPrograms,
   updateProgramDetails,
+  getProgramNotesUserList,
+  getProgramNotes,
+  insertProgramNotes,
 } from "../../services/programInfo";
 import { programStatus, userStatus } from "../../utils/constant";
 
 const initialState = {
   allPrograms: [],
   programDetails: {},
+  programMentees: [],
+  allProgramsList: {},
   createdPrograms: [],
   category: [],
   materials: [],
   certificate: [],
   members: [],
+  mentor_assign: [],
   skills: [],
   categoryPrograms: [],
+  programListByCategory: [],
   loading: false,
   status: "",
   error: "",
@@ -62,6 +75,50 @@ export const programSlice = createSlice({
         };
       });
     builder
+      .addCase(getallMyProgram.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(getallMyProgram.fulfilled, (state, action) => {
+        return {
+          ...state,
+          allProgramsList: action.payload,
+          status: userStatus.create,
+          loading: false,
+        };
+      })
+      .addCase(getallMyProgram.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
+    builder
+      .addCase(getallMenteeProgram.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(getallMenteeProgram.fulfilled, (state, action) => {
+        return {
+          ...state,
+          allProgramsList: action.payload,
+          status: userStatus.create,
+          loading: false,
+        };
+      })
+      .addCase(getallMenteeProgram.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
+    builder
       .addCase(getProgramDetails.pending, (state) => {
         return {
           ...state,
@@ -77,6 +134,28 @@ export const programSlice = createSlice({
         };
       })
       .addCase(getProgramDetails.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
+    builder
+      .addCase(getProgramMentees.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(getProgramMentees.fulfilled, (state, action) => {
+        return {
+          ...state,
+          programMentees: action.payload,
+          status: userStatus.create,
+          loading: false,
+        };
+      })
+      .addCase(getProgramMentees.rejected, (state, action) => {
         return {
           ...state,
           loading: false,
@@ -114,9 +193,9 @@ export const programSlice = createSlice({
         };
       })
       .addCase(createNewPrograms.fulfilled, (state, action) => {
-        const responseStatus = action.payload.status;
+        const responseStatus = action.payload?.status;
         const status =
-          responseStatus === 200
+          responseStatus === 200 || responseStatus === 400
             ? programStatus.exist
             : responseStatus === 500
             ? programStatus.error
@@ -131,17 +210,25 @@ export const programSlice = createSlice({
         };
       })
       .addCase(createNewPrograms.rejected, (state, action) => {
+        const responseStatus = action.payload?.status;
+        const status =
+          responseStatus === 200 || responseStatus === 400
+            ? programStatus.exist
+            : responseStatus === 500
+            ? programStatus.error
+            : responseStatus === 201
+            ? programStatus.create
+            : "";
+
         return {
           ...state,
+          status: status,
           loading: false,
           error: action.error.message,
         };
       });
 
-
-
-
-      builder
+    builder
       .addCase(editUpdateProgram.pending, (state) => {
         return {
           ...state,
@@ -170,9 +257,6 @@ export const programSlice = createSlice({
           error: action.error.message,
         };
       });
-
-
-
 
     builder
       .addCase(loadAllPrograms.pending, (state) => {
@@ -389,6 +473,141 @@ export const programSlice = createSlice({
         };
       })
       .addCase(getAllMembers.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
+
+    builder
+      .addCase(getAllMentors.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(getAllMentors.fulfilled, (state, action) => {
+        return {
+          ...state,
+          mentor_assign: action.payload?.results,
+          loading: false,
+        };
+      })
+      .addCase(getAllMentors.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
+
+    // builder.addCase(updateLocalProgram)builder
+    builder
+      .addCase(getProgramNameValidate.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(getProgramNameValidate.fulfilled, (state, action) => {
+        return {
+          ...state,
+          status: action?.payload?.is_available ? programStatus.exist : "",
+          loading: false,
+        };
+      })
+      .addCase(getProgramNameValidate.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
+
+    builder
+      .addCase(getProgramListWithCategory.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(getProgramListWithCategory.fulfilled, (state, action) => {
+        return {
+          ...state,
+          programListByCategory: action.payload,
+          loading: false,
+        };
+      })
+      .addCase(getProgramListWithCategory.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
+
+    builder
+      .addCase(insertProgramNotes.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(insertProgramNotes.fulfilled, (state, action) => {
+        return {
+          ...state,
+          status: "done",
+          loading: false,
+        };
+      })
+      .addCase(insertProgramNotes.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
+
+    builder
+      .addCase(getProgramNotes.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(getProgramNotes.fulfilled, (state, action) => {
+        return {
+          ...state,
+          status: "done",
+          historyNotes: action?.payload,
+          loading: false,
+        };
+      })
+      .addCase(getProgramNotes.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
+
+    builder
+      .addCase(getProgramNotesUserList.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(getProgramNotesUserList.fulfilled, (state, action) => {
+        return {
+          ...state,
+          status: "done",
+          noteUserList: action?.payload,
+          loading: false,
+        };
+      })
+      .addCase(getProgramNotesUserList.rejected, (state, action) => {
         return {
           ...state,
           loading: false,

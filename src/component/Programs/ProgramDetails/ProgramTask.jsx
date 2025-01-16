@@ -7,7 +7,7 @@ import CancelIcon from '../../../assets/images/cancel-colour1x.png'
 import DeleteIcon from "../../../assets/images/delete_1x.png"
 import FileUploadIcon from "../../../assets/icons/Upload.svg"
 
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getProgramDetails, updateProgram } from '../../../services/userprograms';
 import { useDispatch, useSelector } from 'react-redux';
 import { Backdrop, CircularProgress } from '@mui/material';
@@ -280,16 +280,15 @@ export default function ProgramTask() {
                                         </div>
                                         : taskStage === 'submit' ?
 
-                                            <div className='px-96 py-16 flex justify-center items-center' style={{ border: '1px solid rgba(107, 107, 107, 1)', borderRadius: '7px' }}>
-                                                <div className='flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20'
-                                                    style={{ background: 'linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)', borderRadius: '10px' }}>
+                                            <div className='px-5 py-1 flex justify-center items-center'>
+                                                <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+                                                    style={{ background: '#fff', borderRadius: '10px' }}>
                                                     <img src={SuccessTik} alt="SuccessTik" />
-                                                    <p className='text-white text-[12px]'>
-                                                        
-                                                        {/* You have selected for this program. */}
-                                                        Your ID proof has been approved,& you have successfully joined.
-                                                        
-                                                        </p>
+                                                    <p className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                                                        style={{
+                                                            fontWeight: 600
+                                                        }}
+                                                    >Your ID proof has been approved,& you have successfully joined.</p>
                                                 </div>
 
                                             </div>

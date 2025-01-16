@@ -18,7 +18,7 @@ export default function ProgramMetrix() {
         // Fetch data from the API
         const fetchData = async () => {
             try {
-                const response = await protectedApi.get('/dashboard/metrics-galance');
+                const response = await protectedApi.get('/dashboard/metrics-galance?filter_by=year');
                 const data = response.data;
 
                 // Prepare chart data

@@ -1,6 +1,7 @@
 import { dateFormat } from ".";
 import { CourseLevelOptions } from "./formFields";
 import StarColorIcon from '../assets/icons/starColor.svg';
+import { programStatusColor, programStatusText, requestStatusColor, requestStatusText } from "./constant";
 
 export const myMenteeColumns = [
   {
@@ -78,6 +79,24 @@ export const myReqMenteeColumns = [
     flex: 1,
     id: 2,
   },
+  {
+    field: 'created_at',
+    headerName: 'Request Date',
+    flex: 1,
+    id: 1,
+    renderCell: (params) => {
+        return <div>{dateFormat(params.row?.created_at)}</div>
+    }
+},
+{
+    field: 'last_updated_date',
+    headerName: 'Last Updated Date',
+    flex: 1,
+    id: 1,
+    renderCell: (params) => {
+        return <div>{dateFormat(params.row?.last_updated_date)}</div>
+    }
+},
 ]
 
 export const discussionColumns = [
@@ -98,6 +117,9 @@ export const discussionColumns = [
     headerName: "Date",
     flex: 1,
     id: 3,
+    renderCell: (params) => {
+      return <div>{dateFormat(params.row.date)}</div>;
+    },
   },
   {
     field: "task",
@@ -133,8 +155,8 @@ export const memberRequestColumns = [
     id: 1,
   },
   {
-    field: "reason",
-    headerName: "Reason",
+    field: "email",
+    headerName: "Email",
     flex: 1,
     id: 2,
   },
@@ -190,7 +212,7 @@ export const certificateColumns = [{
         for: ['mentor', 'mentee','admin']
     },
     {
-        field: 'location',
+        field: 'program_location',
         headerName: 'Location',
         flex: 1,
         id: 1,
@@ -203,7 +225,7 @@ export const certificateColumns = [{
         id: 1,
         for: ['mentee'],
         renderCell: (params) => {
-            return <div>{dateFormat(params.row.start_date)}</div>
+            return <div>{dateFormat(params.row.program_start_date_and_time)}</div>
         }
     },
     {
@@ -213,7 +235,7 @@ export const certificateColumns = [{
         id: 1,
         for: ['mentee'],
         renderCell: (params) => {
-            return <div>{dateFormat(params.row.end_date)}</div>
+            return <div>{dateFormat(params.row.program_end_date_and_time)}</div>
         }
     },
     {
@@ -223,11 +245,11 @@ export const certificateColumns = [{
         id: 1,
         for: ['mentee'],
         renderCell: (params) => {
-            return <div>{dateFormat(params.row.end_date)}</div>
+            return <div>{dateFormat(params.row.approved_date)}</div>
         }
     },
     {
-        field: 'approved_by',
+        field: 'approved_by_full_name',
         headerName: 'Approved by',
         flex: 1,
         id: 1,
@@ -235,62 +257,37 @@ export const certificateColumns = [{
     },
 
     {
-        field: 'reason',
-        headerName: 'Reason',
-        flex: 1,
-        id: 1,
-        for: ['mentee'],
-    },
-    {
-        field: 'reject_date',
-        headerName: 'Rejected Date',
-        flex: 1,
-        id: 1,
-        for: ['mentee'],
-        renderCell: (params) => {
-            return <div>{dateFormat(params.row.reject_date)}</div>
-        }
-    },
-    {
-        field: 'rejected_by',
-        headerName: 'Rejected by',
-        flex: 1,
-        id: 1,
-        for: ['mentee']
-    },
-
-    {
-        field: 'Mentee_count',
+        field: 'participates_count',
         headerName: 'Mentees',
         flex: 1,
         id: 2,
         for: ['mentor','admin']
     }, {
-        field: 'pass_mentee_count',
+        field: 'pass_participates_count',
         headerName: 'Pass',
         flex: 1,
         id: 1,
         for: ['mentor']
     },
     {
-        field: 'fail_mentee_count',
-        headerName: 'Fail',
+        field: 'fail_participates_count',
+        headerName: 'No Pass',
         flex: 1,
         id: 1,
         for: ['mentor']
     },
     {
-        field: 'requested_date',
+        field: 'created_at',
         headerName: 'Request Date',
         flex: 1,
         id: 1,
         for: ['mentor','admin'],
         renderCell: (params) => {
-            return <div>{dateFormat(params.row.requested_date)}</div>
+            return <div>{dateFormat(params.row.created_at)}</div>
         }
     },
     {
-        field: 'request_by',
+        field: 'created_by_full_name',
         headerName: 'Requested by',
         flex: 1,
         id: 1,
@@ -307,7 +304,7 @@ export const certificateColumns = [{
         }
     },
     {
-        field: 'last_updated_by',
+        field: 'updated_by_full_name',
         headerName: 'Last updated by',
         flex: 1,
         id: 1,
@@ -382,9 +379,29 @@ export const programListColumns = [
       flex: 1,
       id: 5,
       renderCell: (params) => {
-        return <div className="pl-4">{params.row.duration}</div>
+        return <div className="pl-4">{params.row.duration} {params?.row?.duration>1?"Days":"Day"}</div>
       }
   },
+  {
+    field: 'status',
+    headerName: 'Status',
+    flex: 1,
+    id: 5,
+    renderCell: (params) => {
+        return <>
+            <div className='cursor-pointer flex items-center justify-center h-full relative'>
+
+                <span className='w-[100px] flex justify-center h-[30px] px-4'
+                    style={{
+                        background: programStatusColor[params?.row?.status]?.bgColor, lineHeight: '30px',
+                        borderRadius: '3px', width: '110px', height: '34px',  fontSize: '12px', color: programStatusColor?.[params?.row?.status]?.color
+                    }}>
+                    {programStatusText?.[params?.row?.status]}
+                </span>
+            </div>
+        </>
+    }
+},
   // {
   //     field: 'mentor_manager_id',
   //     headerName: 'M.M',
@@ -397,7 +414,7 @@ export const programListColumns = [
       flex: 1,
       id: 7,
       renderCell : (params) => {
-          return <div className="pl-4">{params.row.members.length}</div>
+          return <div className="pl-4">{params.row?.members?.length}</div>
       }
   },
   {
