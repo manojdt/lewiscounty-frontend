@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   Backdrop,
   Breadcrumbs,
@@ -8,10 +8,10 @@ import {
   CircularProgress,
   Link,
   Typography,
-} from '@mui/material';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import Card from '../../../shared/Card';
+} from "@mui/material";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Card from "../../../shared/Card";
 import {
   adminRequestOverview,
   menteesRequestOverview,
@@ -22,22 +22,26 @@ import {
   requestStatusColor,
   requestStatusText,
   user,
-} from '../../../utils/constant';
-import { requestPageBreadcrumbs, tabQuertyData, tabQuertyDataMentor } from '../../Breadcrumbs/BreadcrumbsCommonData';
-import SearchIcon from '../../../assets/icons/search.svg';
-import Edit_Icon from '../../../assets/icons/editIcon.svg';
-import CalendarIcon from '../../../assets/images/calender_1x.png';
-import MoreIcon from '../../../assets/icons/moreIcon.svg';
-import TickCircle from '../../../assets/icons/tickCircle.svg';
-import CloseCircle from '../../../assets/icons/closeCircle.svg';
-import Bg_verificatin_icon from '../../../assets/icons/bg-verification-icon.svg';
-import DocuSign_icon from '../../../assets/icons/docu-sign-icon.svg';
-import ViewIcon from '../../../assets/images/view1x.png';
-import CancelIcon from '../../../assets/images/cancel1x.png';
-import TickColorIcon from '../../../assets/icons/tickColorLatest.svg';
-import CancelColorIcon from '../../../assets/icons/cancelCircle.svg';
-import SuccessTik from '../../../assets/images/blue_tik1x.png';
-import DataTable from '../../../shared/DataGrid';
+} from "../../../utils/constant";
+import {
+  requestPageBreadcrumbs,
+  tabQuertyData,
+  tabQuertyDataMentor,
+} from "../../Breadcrumbs/BreadcrumbsCommonData";
+import SearchIcon from "../../../assets/icons/search.svg";
+import Edit_Icon from "../../../assets/icons/editIcon.svg";
+import CalendarIcon from "../../../assets/images/calender_1x.png";
+import MoreIcon from "../../../assets/icons/moreIcon.svg";
+import TickCircle from "../../../assets/icons/tickCircle.svg";
+import CloseCircle from "../../../assets/icons/closeCircle.svg";
+import Bg_verificatin_icon from "../../../assets/icons/bg-verification-icon.svg";
+import DocuSign_icon from "../../../assets/icons/docu-sign-icon.svg";
+import ViewIcon from "../../../assets/images/view1x.png";
+import CancelIcon from "../../../assets/images/cancel1x.png";
+import TickColorIcon from "../../../assets/icons/tickColorLatest.svg";
+import CancelColorIcon from "../../../assets/icons/cancelCircle.svg";
+import SuccessTik from "../../../assets/images/blue_tik1x.png";
+import DataTable from "../../../shared/DataGrid";
 import {
   categoryColumns,
   certificateRequestColumns,
@@ -52,9 +56,9 @@ import {
   resourceAccessRequestColumns,
   techinicalSupportRequestColumns,
   testimonialRequestColumns,
-} from '../../../mock';
+} from "../../../mock";
 
-import './request.css';
+import "./request.css";
 
 import {
   cancelMemberRequest,
@@ -77,24 +81,25 @@ import {
   updateProgramRequest,
   updateReportRequest,
   updateTestimonial,
-} from '../../../services/request';
-import ToastNotification from '../../../shared/Toast';
-import MuiModal from '../../../shared/Modal';
-import { useForm } from 'react-hook-form';
-import { Button } from '../../../shared';
-import { SelectBox } from '../../../shared/SelectBox';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import { getAllGoals } from '../../../services/goalsInfo';
-import { EditIcon } from 'lucide-react';
-import { docuSign } from '../../../services/activities';
+} from "../../../services/request";
+import ToastNotification from "../../../shared/Toast";
+import MuiModal from "../../../shared/Modal";
+import { useForm } from "react-hook-form";
+import { Button } from "../../../shared";
+import { SelectBox } from "../../../shared/SelectBox";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import { getAllGoals } from "../../../services/goalsInfo";
+import { EditIcon } from "lucide-react";
+import { docuSign } from "../../../services/activities";
 import ShareIcon from "../../../assets/images/share1x.png";
+import LinkIcon from "../../../assets/images/link1x.png";
 
 export default function AllRequest() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const userInfo = useSelector((state) => state.userInfo);
   const role = userInfo.data.role;
-  const currentTab = role === 'mentee' ? 'program_join' : 'program_new';
+  const currentTab = role === "mentee" ? "program_join" : "program_new";
   const dispatch = useDispatch();
   const {
     programRequest: programTableInfo,
@@ -118,14 +123,14 @@ export default function AllRequest() {
   const [currentRequestTab, setCurrentRequestTab] = useState(
     RequestStatus.programRequest
   );
-  const [categoryInfo, setCategoryInfo] = useState({ search: '', list: [] });
-  const [filterStatus, setFilterStatus] = useState('all');
+  const [categoryInfo, setCategoryInfo] = useState({ search: "", list: [] });
+  const [filterStatus, setFilterStatus] = useState("all");
   const [anchorEl, setAnchorEl] = useState(null);
-  const [filter, setFilter] = useState({ search: '', filter_by: '' });
+  const [filter, setFilter] = useState({ search: "", filter_by: "" });
   const open = Boolean(anchorEl);
-  const selectedRequestedtype = searchParams.get('type');
-  const selectedRequestedTab = searchParams.get('tabType');
-  const selectedMainRequestedTab = searchParams.get('mainTab');
+  const selectedRequestedtype = searchParams.get("type");
+  const selectedRequestedTab = searchParams.get("tabType");
+  const selectedMainRequestedTab = searchParams.get("mainTab");
   const [actionTab, setActiveTab] = useState(currentTab);
   const [actionTabFilter, setActionTabFilter] = useState([]);
   const [requestOverview, setRequestOverview] = useState([]);
@@ -137,17 +142,17 @@ export default function AllRequest() {
   const [seletedItem, setSelectedItem] = useState({});
   const [confirmPopup, setConfirmPopup] = useState({
     show: false,
-    title: '',
-    type: '',
-    action: '',
+    title: "",
+    type: "",
+    action: "",
   });
-  const [cancelPopup, setCancelPopup] = useState({ show: false, page: '' });
-  const [showToast, setShowToast] = useState({ show: false, message: '' });
+  const [cancelPopup, setCancelPopup] = useState({ show: false, page: "" });
+  const [showToast, setShowToast] = useState({ show: false, message: "" });
   const [categoryPopup, setCategoryPopup] = useState({
     show: false,
     selectedItem: [],
-    page: '',
-    tab: '',
+    page: "",
+    tab: "",
   });
   const [paginationModel, setPaginationModel] = React.useState({
     page: 0,
@@ -155,16 +160,19 @@ export default function AllRequest() {
   });
 
   const [selectedCategory, setSelectedCategory] = React.useState([]);
+  const [showShare, setShowShare] = React.useState(false);
+  const [message, setMessage] = useState(false);
 
   const [selectedTab, setSelectedTab] = React.useState(
-    role === 'mentee' ? 'mentees' : 'my'
+    role === "mentee" ? "mentees" : "my"
   );
+  const shareUrl = `${process.env.REACT_APP_SITE_URL}/program-details/${seletedItem.program}`;
 
   const handleRedirectDocuSign = () => {
     dispatch(docuSign()).then((res) => {
-      if (res?.meta?.requestStatus === 'fulfilled') {
-        const url = res?.payload?.url ?? '#';
-        window.open(url, '_blank');
+      if (res?.meta?.requestStatus === "fulfilled") {
+        const url = res?.payload?.url ?? "#";
+        window.open(url, "_blank");
       }
     });
   };
@@ -172,7 +180,11 @@ export default function AllRequest() {
   const handleChange = (newAlignment) => () => {
     setSelectedTab(newAlignment);
     // handleResetTab()
-    navigate((newAlignment === "admin" && role === "admin") ? `/all-request?type=testimonial_request` : `/all-request?type=program_request`);
+    navigate(
+      newAlignment === "admin" && role === "admin"
+        ? `/all-request?type=testimonial_request`
+        : `/all-request?type=program_request`
+    );
   };
 
   const {
@@ -184,34 +196,34 @@ export default function AllRequest() {
 
   let programRequestTab = [
     {
-      name: 'New Program Request',
-      key: 'program_new',
-      for: ['admin', 'mentor'],
-      forTabs: ['my'],
+      name: "New Program Request",
+      key: "program_new",
+      for: ["admin", "mentor"],
+      forTabs: ["my"],
     },
     {
-      name: 'Joining Request',
-      key: 'program_join',
-      for: ['mentee', 'mentor'],
-      forTabs: ['mentees'],
+      name: "Joining Request",
+      key: "program_join",
+      for: ["mentee", "mentor"],
+      forTabs: ["mentees"],
     },
     {
-      name: 'Program Reschedule',
-      key: 'program_reschedule',
-      for: ['mentor', 'admin'],
-      forTabs: ['my'],
+      name: "Program Reschedule",
+      key: "program_reschedule",
+      for: ["mentor", "admin"],
+      forTabs: ["my"],
     },
     {
-      name: 'Program Join',
-      key: 'program_join',
-      for: ['mentor', 'mentee', 'admin'],
-      forTabs: role === 'mentee' ? ['my'] : role === 'admin' ? ['mentees'] : [],
+      name: "Program Join",
+      key: "program_join",
+      for: ["mentor", "mentee", "admin"],
+      forTabs: role === "mentee" ? ["my"] : role === "admin" ? ["mentees"] : [],
     },
     {
-      name: 'Program Cancel',
-      key: 'program_cancel',
-      for: ['mentor', 'mentee', 'admin'],
-      forTabs: ['my', 'mentees'],
+      name: "Program Cancel",
+      key: "program_cancel",
+      for: ["mentor", "mentee", "admin"],
+      forTabs: ["my", "mentees"],
     },
   ];
 
@@ -221,8 +233,8 @@ export default function AllRequest() {
 
   const memberJoinRequestTab = [
     {
-      name: 'Mentor Request',
-      key: 'mentor',
+      name: "Mentor Request",
+      key: "mentor",
     },
     // {
     //     name: 'Mentee Request',
@@ -232,77 +244,77 @@ export default function AllRequest() {
 
   const requestActionTab = [
     {
-      name: 'My Request',
-      value: 'my',
+      name: "My Request",
+      value: "my",
     },
     {
-      name: 'Mentees Request',
-      value: 'mentees',
+      name: "Mentees Request",
+      value: "mentees",
     },
     {
-      name: 'Admin Request',
-      value: 'admin',
+      name: "Admin Request",
+      value: "admin",
     },
   ];
 
   const requestAdminActionTab = [
     {
-      name: 'Mentor Request',
-      value: 'my',
+      name: "Mentor Request",
+      value: "my",
     },
     {
-      name: 'Mentees Request',
-      value: 'mentees',
+      name: "Mentees Request",
+      value: "mentees",
     },
     {
-      name: 'My Request',
-      value: 'admin',
+      name: "My Request",
+      value: "admin",
     },
   ];
 
   const goalsRequestTab = [
     {
-      name: 'Mentor Goals',
-      key: 'mentor',
+      name: "Mentor Goals",
+      key: "mentor",
     },
     {
-      name: 'Mentee goals',
-      key: 'mentee',
+      name: "Mentee goals",
+      key: "mentee",
     },
   ];
 
   const resourceAccessRequestTab = [
     {
-      name: 'Mentor Resources',
-      key: 'mentor',
+      name: "Mentor Resources",
+      key: "mentor",
     },
     {
-      name: 'Mentee Resources',
-      key: 'mentee',
+      name: "Mentee Resources",
+      key: "mentee",
     },
   ];
 
   const statusOptions = [
     {
-      label: 'All',
-      value: 'all',
+      label: "All",
+      value: "all",
     },
     {
-      label: 'New',
-      value: 'new',
+      label: "New",
+      value: "new",
     },
     {
-      label: 'Pending',
-      value: 'pending',
+      label: "Pending",
+      value: "pending",
     },
     {
-      label: 'Approved',
-      value: 'approved',
+      label: "Approved",
+      value: "approved",
     },
     {
       label:
-        selectedRequestedtype === 'report_request' ? 'Reviewed' : 'Rejected',
-      value: 'rejected',
+        selectedRequestedtype === "report_request" ? "Reviewed" : "Rejected",
+      value: "rejected",
     },
   ];
 
@@ -319,10 +331,10 @@ export default function AllRequest() {
   const resetConfirmPopup = () => {
     setConfirmPopup({
       show: false,
-      title: '',
-      requestType: '',
-      type: '',
-      action: '',
+      title: "",
+      requestType: "",
+      type: "",
+      action: "",
     });
   };
 
@@ -331,7 +343,7 @@ export default function AllRequest() {
     title,
     pageType,
     request,
-    type = 'approve'
+    type = "approve"
   ) => {
     setConfirmPopup({
       show: true,
@@ -344,31 +356,31 @@ export default function AllRequest() {
 
   // Confirm Accept Popup
   const handleConfirmPopup = () => {
-    if (confirmPopup.requestType === 'program_request') {
+    if (confirmPopup.requestType === "program_request") {
       handleAcceptProgramApiRequest();
     }
 
-    if (confirmPopup.requestType === 'member_join_request') {
-      if (confirmPopup.type === 'reject') {
+    if (confirmPopup.requestType === "member_join_request") {
+      if (confirmPopup.type === "reject") {
         handleCancelMemberApiRequest();
       }
     }
 
-    if (confirmPopup.requestType === 'report_request') {
-      if (confirmPopup.type === 'approve') {
+    if (confirmPopup.requestType === "report_request") {
+      if (confirmPopup.type === "approve") {
         handleAcceptReportApiRequest();
       }
     }
-    if (confirmPopup.requestType === 'certificate_request') {
-      if (confirmPopup.type === 'approve') {
+    if (confirmPopup.requestType === "certificate_request") {
+      if (confirmPopup.type === "approve") {
         handleApproveCertificateApiRequest();
       }
-      if (confirmPopup.type === 'reject') {
+      if (confirmPopup.type === "reject") {
         handleCancelCertificateApiRequest();
       }
     }
 
-    if (confirmPopup.requestType === 'testimonial_request') {
+    if (confirmPopup.requestType === "testimonial_request") {
       handleTestimonialRequest();
     }
   };
@@ -376,7 +388,7 @@ export default function AllRequest() {
   const handleTestimonialRequest = () => {
     const payload = {
       request_id: seletedItem?.request_id,
-      action: confirmPopup.type === 'approve' ? 'accept' : 'reject',
+      action: confirmPopup.type === "approve" ? "accept" : "reject",
     };
 
     dispatch(updateTestimonial(payload));
@@ -391,20 +403,20 @@ export default function AllRequest() {
     dispatch(
       updateCertificateRequest({
         id: seletedItem.id,
-        status: 'approved',
+        status: "approved",
       })
     );
   };
 
-  const handleCancelCertificateApiRequest = (reason = '') => {
+  const handleCancelCertificateApiRequest = (reason = "") => {
     dispatch(
       updateCertificateRequest({
         id: seletedItem.id,
-        status: 'rejected',
+        status: "rejected",
         rejection_reason: reason,
       })
     ).then((res) => {
-      if (res?.meta?.requestStatus === 'fulfilled') {
+      if (res?.meta?.requestStatus === "fulfilled") {
         handleCloseCancelReasonPopup();
       }
     });
@@ -414,20 +426,20 @@ export default function AllRequest() {
 
   // Accepting Program Request Api Call
   const handleAcceptProgramApiRequest = () => {
-    if (role === 'admin') {
+    if (role === "admin") {
       dispatch(
         updateProgramRequest({
           id: seletedItem.id,
-          status: 'approved',
+          status: "approved",
         })
       );
     }
 
-    if (role === 'mentor') {
+    if (role === "mentor") {
       dispatch(
         updateProgramMenteeRequest({
           id: seletedItem.id,
-          status: 'approved',
+          status: "approved",
         })
       );
     }
@@ -438,21 +450,21 @@ export default function AllRequest() {
     dispatch(
       updateReportRequest({
         id: seletedItem.id,
-        status: 'approved',
+        status: "approved",
       })
     );
   };
 
   // Cancel Goal Request Api Call
-  const handleCancelGoalApiRequest = (reason = '') => {
+  const handleCancelGoalApiRequest = (reason = "") => {
     dispatch(
       updateGoalRequest({
-        status: 'cancel',
+        status: "cancel",
         goal_request_ids: [seletedItem.id],
         description: reason,
       })
     ).then((res) => {
-      if (res?.meta?.requestStatus === 'fulfilled') {
+      if (res?.meta?.requestStatus === "fulfilled") {
         handleCloseCancelReasonPopup();
       }
     });
@@ -475,91 +487,91 @@ export default function AllRequest() {
 
   // Reset Cancel Popup
   const resetCancelReasonPopup = () => {
-    setCancelPopup({ show: false, page: '' });
+    setCancelPopup({ show: false, page: "" });
   };
 
   // Cancel Reason Popup Submit
   const handleCancelReasonPopupSubmit = (data) => {
-    if (data.cancel_reason !== '') {
+    if (data.cancel_reason !== "") {
       if (cancelPopup.show) {
-        if (cancelPopup.page === 'program_request') {
-          if (role === 'admin') {
+        if (cancelPopup.page === "program_request") {
+          if (role === "admin") {
             dispatch(
               updateProgramRequest({
                 id: seletedItem.id,
-                status: 'rejected',
+                status: "rejected",
                 reason: data.cancel_reason,
               })
             ).then((res) => {
-              if (res?.meta?.requestStatus === 'fulfilled') {
+              if (res?.meta?.requestStatus === "fulfilled") {
                 handleCloseCancelReasonPopup();
               }
             });
           }
 
-          if (role === 'mentor') {
+          if (role === "mentor") {
             dispatch(
               updateProgramMenteeRequest({
                 id: seletedItem.id,
-                status: 'rejected',
+                status: "rejected",
                 rejection_reason: data.cancel_reason,
               })
             ).then((res) => {
-              if (res?.meta?.requestStatus === 'fulfilled') {
+              if (res?.meta?.requestStatus === "fulfilled") {
                 handleCloseCancelReasonPopup();
               }
             });
           }
 
-          if (role === 'mentee') {
+          if (role === "mentee") {
             dispatch(
               updateProgramRequest({
                 id: seletedItem.id,
-                status: 'rejected',
+                status: "rejected",
                 reason: data.cancel_reason,
               })
             ).then((res) => {
-              if (res?.meta?.requestStatus === 'fulfilled') {
+              if (res?.meta?.requestStatus === "fulfilled") {
                 handleCloseCancelReasonPopup();
               }
             });
           }
         }
 
-        if (cancelPopup.page === 'report_request') {
+        if (cancelPopup.page === "report_request") {
           dispatch(
             updateReportRequest({
               id: seletedItem.id,
-              status: 'rejected',
+              status: "rejected",
               rejection_reason: data.cancel_reason,
             })
           ).then((res) => {
-            if (res?.meta?.requestStatus === 'fulfilled') {
+            if (res?.meta?.requestStatus === "fulfilled") {
               handleCloseCancelReasonPopup();
             }
           });
         }
-        if (cancelPopup.page === 'member_join_request') {
+        if (cancelPopup.page === "member_join_request") {
           dispatch(
             cancelMemberRequest({
               member_id: seletedItem.id,
               reason: data.cancel_reason,
             })
           ).then((res) => {
-            if (res?.meta?.requestStatus === 'fulfilled') {
+            if (res?.meta?.requestStatus === "fulfilled") {
               handleCloseCancelReasonPopup();
             }
           });
         }
 
         if (
-          cancelPopup.page === 'goal_request' ||
-          cancelPopup.page === 'new_goals_request'
+          cancelPopup.page === "goal_request" ||
+          cancelPopup.page === "new_goals_request"
         ) {
           handleCancelGoalApiRequest(data.cancel_reason);
         }
 
-        if (cancelPopup.page === 'certificate_request') {
+        if (cancelPopup.page === "certificate_request") {
           handleCancelCertificateApiRequest(data?.cancel_reason);
         }
       }
@@ -571,10 +583,10 @@ export default function AllRequest() {
   // Program Dropwdowm Accept
   const handleAcceptProgramRequest = () => {
     handleOpenConfirmPopup(
-      'Program Request',
+      "Program Request",
       currentRequestTab.key,
       actionTab,
-      'approve'
+      "approve"
     );
     handleClose();
   };
@@ -608,20 +620,20 @@ export default function AllRequest() {
   // REPORTS
   const handleAcceptReportsRequest = () => {
     handleOpenConfirmPopup(
-      'Report Request',
+      "Report Request",
       currentRequestTab.key,
       actionTab,
-      'approve'
+      "approve"
     );
     handleClose();
   };
   // Certificate
   const handleAcceptCeritificateRequest = () => {
     handleOpenConfirmPopup(
-      'Certificate Request',
+      "Certificate Request",
       currentRequestTab.key,
       actionTab,
-      'approve'
+      "approve"
     );
     handleClose();
   };
@@ -638,10 +650,10 @@ export default function AllRequest() {
 
   const handleCancelTestimonialRequest = () => {
     handleOpenConfirmPopup(
-      'Testimonial Request',
+      "Testimonial Request",
       currentRequestTab.key,
       actionTab,
-      'reject'
+      "reject"
     );
     handleClose();
   };
@@ -669,8 +681,8 @@ export default function AllRequest() {
 
   // Category Popup Close
   const handleCloseCategoryPopup = () => {
-    setCategoryPopup({ show: false, selectedItem: [], page: '', tab: '' });
-    setSelectedCategory('');
+    setCategoryPopup({ show: false, selectedItem: [], page: "", tab: "" });
+    setSelectedCategory("");
   };
 
   // Handle Selected Items for Category
@@ -679,16 +691,16 @@ export default function AllRequest() {
     if (selectedInfo.length) {
       data = { ...data, selectedItem: selectedInfo };
     }
-    if (categoryPopup.page === 'goal_request') {
+    if (categoryPopup.page === "goal_request") {
       const payload = {
-        status: 'accept',
+        status: "accept",
         goal_request_ids: [seletedItem.id],
         category_id: selectedCategory,
       };
       dispatch(updateGoalRequest(payload));
     }
 
-    if (categoryPopup.page === 'member_join_request') {
+    if (categoryPopup.page === "member_join_request") {
       const categoryId = [];
       data.selectedItem.forEach((selected) =>
         categoryId.push(selected.categories_id)
@@ -712,37 +724,37 @@ export default function AllRequest() {
     (request) => request.for.includes(role)
   );
 
-  if (actionTab !== 'program_start') {
+  if (actionTab !== "program_start") {
     programRequestColumn = programRequestColumn.filter(
-      (column) => column.field !== 'auto_approval'
+      (column) => column.field !== "auto_approval"
     );
   }
 
   programRequestColumn = [
     ...programRequestColumn,
     {
-      field: 'status',
-      headerName: 'Status',
+      field: "status",
+      headerName: "Status",
       flex: 1,
       id: 2,
       renderCell: (params) => {
         return (
           <>
-            <div className='cursor-pointer flex items-center h-full relative'>
+            <div className="cursor-pointer flex items-center h-full relative">
               <span
-                className='w-[80px] flex justify-center h-[30px] px-7'
+                className="w-[80px] flex justify-center h-[30px] px-7"
                 style={{
                   background:
-                    requestStatusColor[params.row.status]?.bgColor || '',
-                  lineHeight: '30px',
-                  borderRadius: '3px',
-                  width: '110px',
-                  height: '34px',
-                  color: requestStatusColor[params.row.status]?.color || '',
-                  fontSize: '12px',
+                    requestStatusColor[params.row.status]?.bgColor || "",
+                  lineHeight: "30px",
+                  borderRadius: "3px",
+                  width: "110px",
+                  height: "34px",
+                  color: requestStatusColor[params.row.status]?.color || "",
+                  fontSize: "12px",
                 }}
               >
-                {requestStatusText[params.row.status] || ''}
+                {requestStatusText[params.row.status] || ""}
               </span>
             </div>
           </>
@@ -752,142 +764,148 @@ export default function AllRequest() {
     {
       ...// role !== "mentee" &&
       {
-        field: 'action',
-        headerName: 'Action',
+        field: "action",
+        headerName: "Action",
         flex: 1,
         id: 4,
         renderCell: (params) => {
           return (
             <>
               <div
-                className='cursor-pointer flex items-center h-full'
+                className="cursor-pointer flex items-center h-full"
                 onClick={(e) => handleMoreClick(e, params.row)}
               >
-                <img src={MoreIcon} alt='MoreIcon' />
+                <img src={MoreIcon} alt="MoreIcon" />
               </div>
               <Menu
-                id='basic-menu'
+                id="basic-menu"
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
                 MenuListProps={{
-                  'aria-labelledby': 'basic-button',
+                  "aria-labelledby": "basic-button",
                 }}
               >
                 <MenuItem
                   onClick={(e) => {
                     const requestQuery = `&request_id=${seletedItem.id}`;
-                    const tabQuery = selectedTab==="mentees"?`&breadcrumbsType=${requestPageBreadcrumbs.program_mentee_cancel}`:`&breadcrumbsType=${tabQuertyData(role,actionTab)}`;
-                    const tabQueryMentor = `breadcrumbsType=${tabQuertyDataMentor(role,actionTab)}`;
+                    const tabQuery =
+                      selectedTab === "mentees"
+                        ? `&breadcrumbsType=${requestPageBreadcrumbs.program_mentee_cancel}`
+                        : `&breadcrumbsType=${tabQuertyData(role, actionTab)}`;
+                    const tabQueryMentor = `breadcrumbsType=${tabQuertyDataMentor(
+                      role,
+                      actionTab
+                    )}`;
                     const url =
-                      (role === 'mentor' || role === 'admin') &&
-                      actionTab === 'program_join'
+                      (role === "mentor" || role === "admin") &&
+                      actionTab === "program_join"
                         ? `/mentee-details/${seletedItem.created_by}?type=mentee_request${requestQuery}&breadcrumbsType=${requestPageBreadcrumbs.program_join_request_admin}`
-                        : role === 'admin'
+                        : role === "admin"
                         ? `/program-details/${seletedItem.program}?request_id=${seletedItem.id}&type=${actionTab}${tabQuery}`
-                        : seletedItem?.status === 'approved'
+                        : seletedItem?.status === "approved"
                         ? `/program-details/${seletedItem.program}?${tabQueryMentor}`
                         : `/program-details/${seletedItem.program}?request_id=${seletedItem.id}&type=${actionTab}&${tabQueryMentor}`;
                     return navigate(url, { state: { data: seletedItem } });
                   }}
-                  className='!text-[12px]'
+                  className="!text-[12px]"
                 >
                   <img
                     src={ViewIcon}
-                    alt='ViewIcon'
-                    className='pr-3 w-[30px]'
+                    alt="ViewIcon"
+                    className="pr-3 w-[30px]"
                   />
                   View
                 </MenuItem>
 
-                {['new', 'pending'].includes(seletedItem.status) &&
-                  role === 'mentor' &&
-                  selectedTab !== 'my' && (
+                {["new", "pending"].includes(seletedItem.status) &&
+                  role === "mentor" &&
+                  selectedTab !== "my" && (
                     <>
                       {
                         <MenuItem
                           onClick={handleAcceptProgramRequest}
-                          className='!text-[12px]'
+                          className="!text-[12px]"
                         >
                           <img
                             src={TickCircle}
-                            alt='AcceptIcon'
-                            className='pr-3 w-[27px]'
+                            alt="AcceptIcon"
+                            className="pr-3 w-[27px]"
                           />
-                          {actionTab === 'program_cancel'
-                            ? 'Accept'
-                            : 'Approve'}
+                          {actionTab === "program_cancel"
+                            ? "Accept"
+                            : "Approve"}
                         </MenuItem>
                       }
                       <MenuItem
                         onClick={handleCancelProgramRequest}
-                        className='!text-[12px]'
+                        className="!text-[12px]"
                       >
                         <img
                           src={CloseCircle}
-                          alt='CancelIcon'
-                          className='pr-3 w-[27px]'
+                          alt="CancelIcon"
+                          className="pr-3 w-[27px]"
                         />
-                        {actionTab === 'program_cancel' ? 'Continue' : 'Reject'}
+                        {actionTab === "program_cancel" ? "Continue" : "Reject"}
                       </MenuItem>
                     </>
                   )}
 
-                {['new', 'pending'].includes(seletedItem.status) &&
-                  role === 'admin' && (
+                {["new", "pending"].includes(seletedItem.status) &&
+                  role === "admin" && (
                     <>
                       {
                         <MenuItem
                           onClick={handleAcceptProgramRequest}
-                          className='!text-[12px]'
+                          className="!text-[12px]"
                         >
                           <img
                             src={TickCircle}
-                            alt='AcceptIcon'
-                            className='pr-3 w-[27px]'
+                            alt="AcceptIcon"
+                            className="pr-3 w-[27px]"
                           />
-                          {actionTab === 'program_cancel'
-                            ? 'Accept'
-                            : 'Approve'}
+                          {actionTab === "program_cancel"
+                            ? "Accept"
+                            : "Approve"}
                         </MenuItem>
                       }
                       <MenuItem
                         onClick={handleCancelProgramRequest}
-                        className='!text-[12px]'
+                        className="!text-[12px]"
                       >
                         <img
                           src={CloseCircle}
-                          alt='CancelIcon'
-                          className='pr-3 w-[27px]'
+                          alt="CancelIcon"
+                          className="pr-3 w-[27px]"
                         />
-                        {actionTab === 'program_cancel' ? 'Continue' : 'Reject'}
+                        {actionTab === "program_cancel" ? "Continue" : "Reject"}
                       </MenuItem>
                     </>
                   )}
 
-                {['new', 'pending'].includes(seletedItem.status) &&
-                  (role === 'mentor' || role === 'mentee') &&
-                  selectedTab === 'my' &&
-                  (actionTab === 'program_new' ||
-                    actionTab === 'program_reschedule' ||
-                    actionTab === 'program_cancel' ||
-                    actionTab === 'program_join') && (
+                {["new", "pending"].includes(seletedItem.status) &&
+                  (role === "mentor" || role === "mentee") &&
+                  selectedTab === "my" &&
+                  (actionTab === "program_new" ||
+                    actionTab === "program_reschedule" ||
+                    actionTab === "program_cancel" ||
+                    actionTab === "program_join") && (
                     <div>
                       {![
-                        'program_reschedule',
-                        'program_cancel',
-                        'program_join',
+                        "program_reschedule",
+                        "program_cancel",
+                        "program_join",
                       ].includes(actionTab) && (
                         <MenuItem
                           onClick={() => {
                             navigate(`/update-program/${params?.row?.program}`);
                           }}
-                          className='!text-[12px]'
+                          className="!text-[12px]"
                         >
                           <img
                             src={Edit_Icon}
-                            alt='CancelIcon'
-                            className='pr-3 w-[27px]'
+                            alt="CancelIcon"
+                            className="pr-3 w-[27px]"
                           />
                           Edit
                         </MenuItem>
@@ -901,12 +919,12 @@ export default function AllRequest() {
                           // })
                           handleCancelProgramRequest();
                         }}
-                        className='!text-[12px]'
+                        className="!text-[12px]"
                       >
                         <img
                           src={CloseCircle}
-                          alt='CancelIcon'
-                          className='pr-3 w-[27px]'
+                          alt="CancelIcon"
+                          className="pr-3 w-[27px]"
                         />
                         Cancel Request
                       </MenuItem>
@@ -914,10 +932,10 @@ export default function AllRequest() {
                   )}
                 {/* mentee Cancel Request */}
 
-                {['new', 'pending'].includes(seletedItem.status) &&
-                  role === 'mentee' &&
-                  (actionTab === 'program_cancel' ||
-                    actionTab === 'program_join') && (
+                {["new", "pending"].includes(seletedItem.status) &&
+                  role === "mentee" &&
+                  (actionTab === "program_cancel" ||
+                    actionTab === "program_join") && (
                     <MenuItem
                       onClick={() => {
                         // setCancelPopup({
@@ -927,27 +945,31 @@ export default function AllRequest() {
                         // })
                         handleCancelProgramRequest();
                       }}
-                      className='!text-[12px]'
+                      className="!text-[12px]"
                     >
                       <img
                         src={CloseCircle}
-                        alt='CancelIcon'
-                        className='pr-3 w-[27px]'
+                        alt="CancelIcon"
+                        className="pr-3 w-[27px]"
                       />
                       Cancel Request
                     </MenuItem>
                   )}
 
-                    <MenuItem
-                      className='!text-[12px]'
-                    >
-                      <img
-                        src={ShareIcon}
-                        alt="ShareIcon"
-                        className="pr-3 w-[25px]"
-                      />
-                      Share
-                    </MenuItem>
+                <MenuItem
+                  className="!text-[12px]"
+                  onClick={() => {
+                    handleClose();
+                    setShowShare(true);
+                  }}
+                >
+                  <img
+                    src={ShareIcon}
+                    alt="ShareIcon"
+                    className="pr-3 w-[25px]"
+                  />
+                  Share
+                </MenuItem>
               </Menu>
             </>
           );
@@ -958,59 +980,59 @@ export default function AllRequest() {
 
   const goalColumns = [
     {
-      field: 'goal_name',
-      headerName: 'Goal Name',
+      field: "goal_name",
+      headerName: "Goal Name",
       flex: 1,
       id: 0,
-      for: ['admin', 'mentor'],
+      for: ["admin", "mentor"],
       renderCell: (params) => {
         return (
-          <div className='flex gap-2 items-center'>
-            {params?.row?.goal?.goal_name ?? '...'}
+          <div className="flex gap-2 items-center">
+            {params?.row?.goal?.goal_name ?? "..."}
           </div>
         );
       },
     },
     {
-      field: 'reason_request',
-      headerName: 'Reason Request',
+      field: "reason_request",
+      headerName: "Reason Request",
       flex: 1,
       id: 1,
-      for: ['admin', 'mentor'],
+      for: ["admin", "mentor"],
       renderCell: (params) => {
         return (
-          <div className='flex gap-2 items-center'>
+          <div className="flex gap-2 items-center">
             {params?.row?.goal?.description?.length
               ? params?.row?.goal?.description
-              : '...'}
+              : "..."}
           </div>
         );
       },
     },
     ...goalsRequestColumns,
     {
-      field: 'status',
-      headerName: 'Status',
+      field: "status",
+      headerName: "Status",
       flex: 1,
       id: 2,
       renderCell: (params) => {
         return (
           <>
-            <div className='cursor-pointer flex items-center h-full relative'>
+            <div className="cursor-pointer flex items-center h-full relative">
               <span
-                className='w-[80px] flex justify-center h-[30px] px-7'
+                className="w-[80px] flex justify-center h-[30px] px-7"
                 style={{
                   background:
-                    requestStatusColor[params.row.status]?.bgColor || '',
-                  lineHeight: '30px',
-                  borderRadius: '3px',
-                  width: '110px',
-                  height: '34px',
-                  color: requestStatusColor[params.row.status]?.color || '',
-                  fontSize: '12px',
+                    requestStatusColor[params.row.status]?.bgColor || "",
+                  lineHeight: "30px",
+                  borderRadius: "3px",
+                  width: "110px",
+                  height: "34px",
+                  color: requestStatusColor[params.row.status]?.color || "",
+                  fontSize: "12px",
                 }}
               >
-                {requestStatusText[params.row.status] || ''}
+                {requestStatusText[params.row.status] || ""}
               </span>
             </div>
           </>
@@ -1018,8 +1040,8 @@ export default function AllRequest() {
       },
     },
     {
-      field: 'action',
-      headerName: 'Action',
+      field: "action",
+      headerName: "Action",
       flex: 1,
       id: 4,
       renderCell: (params) => {
@@ -1028,18 +1050,18 @@ export default function AllRequest() {
         return (
           <>
             <div
-              className='cursor-pointer flex items-center h-full'
+              className="cursor-pointer flex items-center h-full"
               onClick={(e) => handleMoreClick(e, params.row)}
             >
-              <img src={MoreIcon} alt='MoreIcon' />
+              <img src={MoreIcon} alt="MoreIcon" />
             </div>
             <Menu
-              id='basic-menu'
+              id="basic-menu"
               anchorEl={anchorEl}
               open={open}
               onClose={handleClose}
               MenuListProps={{
-                'aria-labelledby': 'basic-button',
+                "aria-labelledby": "basic-button",
               }}
             >
               <MenuItem
@@ -1058,41 +1080,41 @@ export default function AllRequest() {
                     `/view-goal/${seletedItem?.goal?.id}?requestId=${seletedItem.id}${tabQuery}`
                   );
                 }}
-                className='!text-[12px]'
+                className="!text-[12px]"
               >
                 <img
                   src={ViewIcon}
-                  alt='ViewIcon'
+                  alt="ViewIcon"
                   field={params.id}
-                  className='pr-3 w-[30px]'
+                  className="pr-3 w-[30px]"
                 />
                 View
               </MenuItem>
 
-              {role === 'admin' && (
+              {role === "admin" && (
                 <>
-                  {(seletedItem.status === 'new' ||
-                    seletedItem.status === 'pending') && (
+                  {(seletedItem.status === "new" ||
+                    seletedItem.status === "pending") && (
                     <>
                       <MenuItem
                         onClick={handleAcceptGoalRequest}
-                        className='!text-[12px]'
+                        className="!text-[12px]"
                       >
                         <img
                           src={TickCircle}
-                          alt='AcceptIcon'
-                          className='pr-3 w-[27px]'
+                          alt="AcceptIcon"
+                          className="pr-3 w-[27px]"
                         />
                         Approve
                       </MenuItem>
                       <MenuItem
                         onClick={handleCancelGoalRequest}
-                        className='!text-[12px]'
+                        className="!text-[12px]"
                       >
                         <img
                           src={CloseCircle}
-                          alt='CancelIcon'
-                          className='pr-3 w-[27px]'
+                          alt="CancelIcon"
+                          className="pr-3 w-[27px]"
                         />
                         Reject
                       </MenuItem>
@@ -1100,15 +1122,15 @@ export default function AllRequest() {
                   )}
                 </>
               )}
-              {role === 'mentee' && (
+              {role === "mentee" && (
                 <MenuItem
                   onClick={() => handleCancelGoalRequest()}
-                  className='!text-[12px]'
+                  className="!text-[12px]"
                 >
                   <img
                     src={CloseCircle}
-                    alt='CancelIcon'
-                    className='pr-3 w-[27px]'
+                    alt="CancelIcon"
+                    className="pr-3 w-[27px]"
                   />
                   Cancel Request
                 </MenuItem>
@@ -1122,34 +1144,34 @@ export default function AllRequest() {
 
   const membersColumns = [
     {
-      field: 'status',
-      headerName: 'Status',
+      field: "status",
+      headerName: "Status",
       flex: 1,
       id: 2,
       renderCell: (params) => {
         return (
           <>
-            <div className='cursor-pointer flex items-center h-full relative'>
+            <div className="cursor-pointer flex items-center h-full relative">
               <span
-                className='w-[80px] flex justify-center h-[30px] px-7'
+                className="w-[80px] flex justify-center h-[30px] px-7"
                 style={{
                   background:
-                    requestStatusColor[params.row.status]?.bgColor || '',
-                  lineHeight: '30px',
-                  borderRadius: '3px',
-                  width: '110px',
-                  height: '34px',
-                  color: requestStatusColor[params.row.status]?.color || '',
-                  fontSize: '12px',
+                    requestStatusColor[params.row.status]?.bgColor || "",
+                  lineHeight: "30px",
+                  borderRadius: "3px",
+                  width: "110px",
+                  height: "34px",
+                  color: requestStatusColor[params.row.status]?.color || "",
+                  fontSize: "12px",
                 }}
               >
                 {requestStatusText[
-                  params?.row?.status === 'accept'
-                    ? 'approved'
-                    : params?.row?.status === 'cancel'
-                    ? 'rejected'
+                  params?.row?.status === "accept"
+                    ? "approved"
+                    : params?.row?.status === "cancel"
+                    ? "rejected"
                     : params?.row?.status
-                ] || ''}
+                ] || ""}
               </span>
             </div>
           </>
@@ -1157,26 +1179,26 @@ export default function AllRequest() {
       },
     },
     {
-      field: 'action',
-      headerName: 'Action',
+      field: "action",
+      headerName: "Action",
       flex: 1,
       id: 4,
       renderCell: (params) => {
         return (
           <>
             <div
-              className='cursor-pointer flex items-center h-full'
+              className="cursor-pointer flex items-center h-full"
               onClick={(e) => handleMoreClick(e, params.row)}
             >
-              <img src={MoreIcon} alt='MoreIcon' />
+              <img src={MoreIcon} alt="MoreIcon" />
             </div>
             <Menu
-              id='basic-menu'
+              id="basic-menu"
               anchorEl={anchorEl}
               open={open}
               onClose={handleClose}
               MenuListProps={{
-                'aria-labelledby': 'basic-button',
+                "aria-labelledby": "basic-button",
               }}
             >
               <MenuItem
@@ -1186,69 +1208,69 @@ export default function AllRequest() {
                     `/mentor-details/${seletedItem.id}?breadcrumbsType=${requestPageBreadcrumbs.member_join_request}`,
                     {
                       state: {
-                        reqType: 'member_join_request',
+                        reqType: "member_join_request",
                       },
                     }
                   );
                 }}
-                className='!text-[12px]'
+                className="!text-[12px]"
               >
                 <img
                   src={ViewIcon}
-                  alt='ViewIcon'
+                  alt="ViewIcon"
                   field={params.id}
-                  className='pr-3 w-[30px]'
+                  className="pr-3 w-[30px]"
                 />
                 View Profile
               </MenuItem>
 
-              {role === 'admin' && (
+              {role === "admin" && (
                 <>
-                  {(seletedItem.status === 'new' ||
-                    seletedItem.status === 'pending') && (
+                  {(seletedItem.status === "new" ||
+                    seletedItem.status === "pending") && (
                     <>
                       <MenuItem
                         onClick={handleMemberAcceptRequest}
-                        className='!text-[12px]'
+                        className="!text-[12px]"
                       >
                         <img
                           src={TickCircle}
-                          alt='AcceptIcon'
-                          className='pr-3 w-[27px]'
+                          alt="AcceptIcon"
+                          className="pr-3 w-[27px]"
                         />
                         Approve
                       </MenuItem>
                       <MenuItem
                         onClick={handleMemberCancelRequest}
-                        className='!text-[12px]'
+                        className="!text-[12px]"
                       >
                         <img
                           src={CloseCircle}
-                          alt='CancelIcon'
-                          className='pr-3 w-[27px]'
+                          alt="CancelIcon"
+                          className="pr-3 w-[27px]"
                         />
                         Reject
                       </MenuItem>
 
                       <MenuItem
-                        onClick={() => navigate('/bgVerify')}
-                        className='!text-[12px]'
+                        onClick={() => navigate("/bgVerify")}
+                        className="!text-[12px]"
                       >
                         <img
                           src={Bg_verificatin_icon}
-                          alt='AcceptIcon'
-                          className='pr-3 w-[27px]'
+                          alt="AcceptIcon"
+                          className="pr-3 w-[27px]"
                         />
                         BG verification
                       </MenuItem>
                       <MenuItem
                         onClick={handleRedirectDocuSign}
-                        className='!text-[12px]'
+                        className="!text-[12px]"
                       >
                         <img
                           src={DocuSign_icon}
-                          alt='AcceptIcon'
-                          className='pr-3 w-[27px]'
+                          alt="AcceptIcon"
+                          className="pr-3 w-[27px]"
                         />
                         DocuSign
                       </MenuItem>
@@ -1266,28 +1288,28 @@ export default function AllRequest() {
   const resourceColumns = [
     ...resourceAccessRequestColumns,
     {
-      field: 'status',
-      headerName: 'Status',
+      field: "status",
+      headerName: "Status",
       flex: 1,
       id: 2,
       renderCell: (params) => {
         return (
           <>
-            <div className='cursor-pointer flex items-center h-full relative'>
+            <div className="cursor-pointer flex items-center h-full relative">
               <span
-                className='w-[80px] flex justify-center h-[30px] px-7'
+                className="w-[80px] flex justify-center h-[30px] px-7"
                 style={{
                   background:
-                    requestStatusColor[params.row.status]?.bgColor || '',
-                  lineHeight: '30px',
-                  borderRadius: '3px',
-                  width: '110px',
-                  height: '34px',
-                  color: requestStatusColor[params.row.status]?.color || '',
-                  fontSize: '12px',
+                    requestStatusColor[params.row.status]?.bgColor || "",
+                  lineHeight: "30px",
+                  borderRadius: "3px",
+                  width: "110px",
+                  height: "34px",
+                  color: requestStatusColor[params.row.status]?.color || "",
+                  fontSize: "12px",
                 }}
               >
-                {requestStatusText[params.row.status] || ''}
+                {requestStatusText[params.row.status] || ""}
               </span>
             </div>
           </>
@@ -1295,18 +1317,18 @@ export default function AllRequest() {
       },
     },
     {
-      field: 'action',
-      headerName: 'Action',
+      field: "action",
+      headerName: "Action",
       flex: 1,
       id: 4,
       renderCell: (params) => {
         return (
           <>
             <div
-              className='cursor-pointer flex items-center h-full'
+              className="cursor-pointer flex items-center h-full"
               onClick={(e) => handleMoreClick(e, params.row)}
             >
-              <img src={MoreIcon} alt='MoreIcon' />
+              <img src={MoreIcon} alt="MoreIcon" />
             </div>
           </>
         );
@@ -1317,30 +1339,30 @@ export default function AllRequest() {
   const reportRequestColumn = [
     ...reportRequestColumns,
     {
-      field: 'status',
-      headerName: 'Status',
+      field: "status",
+      headerName: "Status",
       flex: 1,
       id: 2,
       renderCell: (params) => {
         return (
           <>
-            <div className='cursor-pointer flex items-center h-full relative'>
+            <div className="cursor-pointer flex items-center h-full relative">
               <span
-                className='w-[80px] flex justify-center h-[30px] px-7'
+                className="w-[80px] flex justify-center h-[30px] px-7"
                 style={{
                   background:
-                    requestStatusColor[params.row.status]?.bgColor || '',
-                  lineHeight: '30px',
-                  borderRadius: '3px',
-                  width: '110px',
-                  height: '34px',
-                  color: requestStatusColor[params.row.status]?.color || '',
-                  fontSize: '12px',
+                    requestStatusColor[params.row.status]?.bgColor || "",
+                  lineHeight: "30px",
+                  borderRadius: "3px",
+                  width: "110px",
+                  height: "34px",
+                  color: requestStatusColor[params.row.status]?.color || "",
+                  fontSize: "12px",
                 }}
               >
-                {params.row.status === 'rejected'
-                  ? 'Reviewed'
-                  : requestStatusText[params.row.status] || ''}
+                {params.row.status === "rejected"
+                  ? "Reviewed"
+                  : requestStatusText[params.row.status] || ""}
               </span>
             </div>
           </>
@@ -1348,29 +1370,29 @@ export default function AllRequest() {
       },
     },
     {
-      field: 'action',
-      headerName: 'Action',
+      field: "action",
+      headerName: "Action",
       flex: 1,
       id: 4,
       renderCell: (params) => {
         return (
           <>
             <div
-              className='cursor-pointer flex items-center h-full'
+              className="cursor-pointer flex items-center h-full"
               onClick={(e) => handleMoreClick(e, params.row)}
             >
-              <img src={MoreIcon} alt='MoreIcon' />
+              <img src={MoreIcon} alt="MoreIcon" />
             </div>
             <Menu
-              id='basic-menu'
+              id="basic-menu"
               anchorEl={anchorEl}
               open={open}
               onClose={handleClose}
               MenuListProps={{
-                'aria-labelledby': 'basic-button',
+                "aria-labelledby": "basic-button",
               }}
             >
-              {role === 'admin' && (
+              {role === "admin" && (
                 <>
                   <MenuItem
                     onClick={() =>
@@ -1378,37 +1400,37 @@ export default function AllRequest() {
                         `/view-report/${seletedItem?.id}?breadcrumbsType=${requestPageBreadcrumbs.report_request}`
                       )
                     }
-                    className='!text-[12px]'
+                    className="!text-[12px]"
                   >
                     <img
                       src={ViewIcon}
-                      alt='AcceptIcon'
-                      className='pr-3 w-[27px]'
+                      alt="AcceptIcon"
+                      className="pr-3 w-[27px]"
                     />
                     View
                   </MenuItem>
-                  {(seletedItem.status === 'new' ||
-                    seletedItem.status === 'pending') && (
+                  {(seletedItem.status === "new" ||
+                    seletedItem.status === "pending") && (
                     <>
                       <MenuItem
                         onClick={handleAcceptReportsRequest}
-                        className='!text-[12px]'
+                        className="!text-[12px]"
                       >
                         <img
                           src={TickCircle}
-                          alt='AcceptIcon'
-                          className='pr-3 w-[27px]'
+                          alt="AcceptIcon"
+                          className="pr-3 w-[27px]"
                         />
                         Approve
                       </MenuItem>
                       <MenuItem
                         onClick={handleCancelReportRequest}
-                        className='!text-[12px]'
+                        className="!text-[12px]"
                       >
                         <img
                           src={CloseCircle}
-                          alt='CancelIcon'
-                          className='pr-3 w-[27px]'
+                          alt="CancelIcon"
+                          className="pr-3 w-[27px]"
                         />
                         Review
                       </MenuItem>
@@ -1416,30 +1438,34 @@ export default function AllRequest() {
                   )}
                 </>
               )}
-              {role === 'mentor' && (
+              {role === "mentor" && (
                 <>
                   <MenuItem
-                    onClick={() => navigate(`/view-report/${seletedItem?.id}?breadcrumbsType=${requestPageBreadcrumbs.report_request}`)}
-                    className='!text-[12px]'
+                    onClick={() =>
+                      navigate(
+                        `/view-report/${seletedItem?.id}?breadcrumbsType=${requestPageBreadcrumbs.report_request}`
+                      )
+                    }
+                    className="!text-[12px]"
                   >
                     <img
                       src={ViewIcon}
-                      alt='ViewIcon'
-                      className='pr-3 w-[27px]'
+                      alt="ViewIcon"
+                      className="pr-3 w-[27px]"
                     />
                     View
                   </MenuItem>
-                  {(seletedItem.status === 'new' ||
-                    seletedItem.status === 'pending') && (
+                  {(seletedItem.status === "new" ||
+                    seletedItem.status === "pending") && (
                     <>
                       <MenuItem
                         onClick={() => handleCancelReportRequest()}
-                        className='!text-[12px]'
+                        className="!text-[12px]"
                       >
                         <img
                           src={CloseCircle}
-                          alt='CancelIcon'
-                          className='pr-3 w-[27px]'
+                          alt="CancelIcon"
+                          className="pr-3 w-[27px]"
                         />
                         Cancel Request
                       </MenuItem>
@@ -1456,27 +1482,27 @@ export default function AllRequest() {
   const extendRequestColumn = [
     ...programExtendRequestColumns,
     {
-      field: 'status',
-      headerName: 'Status',
+      field: "status",
+      headerName: "Status",
       flex: 1,
       id: 2,
       renderCell: (params) => {
         return (
           <>
-            <div className='cursor-pointer flex items-center h-full relative'>
+            <div className="cursor-pointer flex items-center h-full relative">
               <span
-                className='w-[80px] flex justify-center h-[30px] px-7'
+                className="w-[80px] flex justify-center h-[30px] px-7"
                 style={{
-                  background: requestStatusColor[params.row.status]?.bg || '',
-                  lineHeight: '30px',
-                  borderRadius: '3px',
-                  width: '110px',
-                  height: '34px',
-                  color: requestStatusColor[params.row.status]?.color || '',
-                  fontSize: '12px',
+                  background: requestStatusColor[params.row.status]?.bg || "",
+                  lineHeight: "30px",
+                  borderRadius: "3px",
+                  width: "110px",
+                  height: "34px",
+                  color: requestStatusColor[params.row.status]?.color || "",
+                  fontSize: "12px",
                 }}
               >
-                {requestStatusText[params.row.status] || ''}
+                {requestStatusText[params.row.status] || ""}
               </span>
             </div>
           </>
@@ -1484,65 +1510,65 @@ export default function AllRequest() {
       },
     },
     {
-      field: 'action',
-      headerName: 'Action',
+      field: "action",
+      headerName: "Action",
       flex: 1,
       id: 4,
       renderCell: (params) => {
         return (
           <>
             <div
-              className='cursor-pointer flex items-center h-full'
+              className="cursor-pointer flex items-center h-full"
               onClick={(e) => handleMoreClick(e, params.row)}
             >
-              <img src={MoreIcon} alt='MoreIcon' />
+              <img src={MoreIcon} alt="MoreIcon" />
             </div>
             <Menu
-              id='basic-menu'
+              id="basic-menu"
               anchorEl={anchorEl}
               open={open}
               onClose={handleClose}
               MenuListProps={{
-                'aria-labelledby': 'basic-button',
+                "aria-labelledby": "basic-button",
               }}
             >
-              {role === 'admin' && (
+              {role === "admin" && (
                 <>
                   <MenuItem
                     onClick={() =>
                       navigate(`/view-report/${seletedItem.report_id}`)
                     }
-                    className='!text-[12px]'
+                    className="!text-[12px]"
                   >
                     <img
                       src={TickCircle}
-                      alt='AcceptIcon'
-                      className='pr-3 w-[27px]'
+                      alt="AcceptIcon"
+                      className="pr-3 w-[27px]"
                     />
                     View
                   </MenuItem>
-                  {(seletedItem.status === 'new' ||
-                    seletedItem.status === 'pending') && (
+                  {(seletedItem.status === "new" ||
+                    seletedItem.status === "pending") && (
                     <>
                       <MenuItem
                         onClick={handleAcceptReportsRequest}
-                        className='!text-[12px]'
+                        className="!text-[12px]"
                       >
                         <img
                           src={TickCircle}
-                          alt='AcceptIcon'
-                          className='pr-3 w-[27px]'
+                          alt="AcceptIcon"
+                          className="pr-3 w-[27px]"
                         />
                         Approve
                       </MenuItem>
                       <MenuItem
                         onClick={handleCancelReportRequest}
-                        className='!text-[12px]'
+                        className="!text-[12px]"
                       >
                         <img
                           src={CloseCircle}
-                          alt='CancelIcon'
-                          className='pr-3 w-[27px]'
+                          alt="CancelIcon"
+                          className="pr-3 w-[27px]"
                         />
                         Reject
                       </MenuItem>
@@ -1560,14 +1586,14 @@ export default function AllRequest() {
   const techinicalColums = [
     ...techinicalSupportRequestColumns,
     {
-      field: 'status',
-      headerName: 'Status',
+      field: "status",
+      headerName: "Status",
       flex: 1,
       id: 2,
     },
     {
-      field: 'action',
-      headerName: 'Action',
+      field: "action",
+      headerName: "Action",
       flex: 1,
       id: 4,
     },
@@ -1576,28 +1602,28 @@ export default function AllRequest() {
   const certificateColumns = [
     ...certificateRequestColumns,
     {
-      field: 'status',
-      headerName: 'Status',
+      field: "status",
+      headerName: "Status",
       flex: 1,
       id: 2,
       renderCell: (params) => {
         return (
           <>
-            <div className='cursor-pointer flex items-center h-full relative'>
+            <div className="cursor-pointer flex items-center h-full relative">
               <span
-                className='w-[80px] flex justify-center h-[30px] px-7'
+                className="w-[80px] flex justify-center h-[30px] px-7"
                 style={{
                   background:
-                    requestStatusColor[params.row.status]?.bgColor || '',
-                  lineHeight: '30px',
-                  borderRadius: '3px',
-                  width: '110px',
-                  height: '34px',
-                  color: requestStatusColor[params.row.status]?.color || '',
-                  fontSize: '12px',
+                    requestStatusColor[params.row.status]?.bgColor || "",
+                  lineHeight: "30px",
+                  borderRadius: "3px",
+                  width: "110px",
+                  height: "34px",
+                  color: requestStatusColor[params.row.status]?.color || "",
+                  fontSize: "12px",
                 }}
               >
-                {requestStatusText[params.row.status] || ''}
+                {requestStatusText[params.row.status] || ""}
               </span>
             </div>
           </>
@@ -1605,29 +1631,29 @@ export default function AllRequest() {
       },
     },
     {
-      field: 'action',
-      headerName: 'Action',
+      field: "action",
+      headerName: "Action",
       flex: 1,
       id: 4,
       renderCell: (params) => {
         return (
           <>
             <div
-              className='cursor-pointer flex items-center h-full'
+              className="cursor-pointer flex items-center h-full"
               onClick={(e) => handleMoreClick(e, params.row)}
             >
-              <img src={MoreIcon} alt='MoreIcon' />
+              <img src={MoreIcon} alt="MoreIcon" />
             </div>
             <Menu
-              id='basic-menu'
+              id="basic-menu"
               anchorEl={anchorEl}
               open={open}
               onClose={handleClose}
               MenuListProps={{
-                'aria-labelledby': 'basic-button',
+                "aria-labelledby": "basic-button",
               }}
             >
-              {role === 'admin' && (
+              {role === "admin" && (
                 <>
                   <MenuItem
                     onClick={() =>
@@ -1641,26 +1667,26 @@ export default function AllRequest() {
                         }
                       )
                     }
-                    className='!text-[12px]'
+                    className="!text-[12px]"
                   >
                     <img
                       src={ViewIcon}
-                      alt='AcceptIcon'
-                      className='pr-3 w-[27px]'
+                      alt="AcceptIcon"
+                      className="pr-3 w-[27px]"
                     />
                     View
                   </MenuItem>
-                  {(seletedItem.status === 'new' ||
-                    seletedItem.status === 'pending') && (
+                  {(seletedItem.status === "new" ||
+                    seletedItem.status === "pending") && (
                     <>
                       <MenuItem
                         onClick={handleAcceptCeritificateRequest}
-                        className='!text-[12px]'
+                        className="!text-[12px]"
                       >
                         <img
                           src={TickCircle}
-                          alt='AcceptIcon'
-                          className='pr-3 w-[27px]'
+                          alt="AcceptIcon"
+                          className="pr-3 w-[27px]"
                         />
                         Approve
                       </MenuItem>
@@ -1679,42 +1705,42 @@ export default function AllRequest() {
                   )}
                 </>
               )}
-              {role === 'mentor' && (
+              {role === "mentor" && (
                 <>
                   <MenuItem
                     onClick={() =>
-                      navigate(`/certificate_mentees/${seletedItem.program}?breadcrumbsType=${requestPageBreadcrumbs.certificate_request}`, {
-                        state: {
-                          rowId: seletedItem?.id,
-                          status: seletedItem?.status,
-                        },
-                      })
+                      navigate(
+                        `/certificate_mentees/${seletedItem.program}?breadcrumbsType=${requestPageBreadcrumbs.certificate_request}`,
+                        {
+                          state: {
+                            rowId: seletedItem?.id,
+                            status: seletedItem?.status,
+                          },
+                        }
+                      )
                     }
-                    className='!text-[12px]'
+                    className="!text-[12px]"
                   >
                     <img
                       src={ViewIcon}
-                      alt='AcceptIcon'
-                      className='pr-3 w-[27px]'
+                      alt="AcceptIcon"
+                      className="pr-3 w-[27px]"
                     />
                     View
                   </MenuItem>
-                  {
-                    ["new", "pending"].includes(seletedItem.status) && 
+                  {["new", "pending"].includes(seletedItem.status) && (
                     <MenuItem
-                      onClick={() =>
-                        handleCancelCeritificateRequest()
-                      }
-                      className='!text-[12px]'
+                      onClick={() => handleCancelCeritificateRequest()}
+                      className="!text-[12px]"
                     >
                       <img
                         src={CloseCircle}
-                        alt='CancelIcon'
-                        className='pr-3 w-[27px]'
+                        alt="CancelIcon"
+                        className="pr-3 w-[27px]"
                       />
                       Cancel Request
                     </MenuItem>
-                  }
+                  )}
                 </>
               )}
             </Menu>
@@ -1727,28 +1753,28 @@ export default function AllRequest() {
   const testimonialRequestColumn = [
     ...testimonialRequestColumns,
     {
-      field: 'status',
-      headerName: 'Status',
+      field: "status",
+      headerName: "Status",
       flex: 1,
       id: 2,
       renderCell: (params) => {
         return (
           <>
-            <div className='cursor-pointer flex items-center h-full relative'>
+            <div className="cursor-pointer flex items-center h-full relative">
               <span
-                className='w-[80px] flex justify-center h-[30px] px-7'
+                className="w-[80px] flex justify-center h-[30px] px-7"
                 style={{
                   background:
-                    requestStatusColor[params.row.status]?.bgColor || '',
-                  lineHeight: '30px',
-                  borderRadius: '3px',
-                  width: '110px',
-                  height: '34px',
-                  color: requestStatusColor[params.row.status]?.color || '',
-                  fontSize: '12px',
+                    requestStatusColor[params.row.status]?.bgColor || "",
+                  lineHeight: "30px",
+                  borderRadius: "3px",
+                  width: "110px",
+                  height: "34px",
+                  color: requestStatusColor[params.row.status]?.color || "",
+                  fontSize: "12px",
                 }}
               >
-                {requestStatusText[params.row.status] || ''}
+                {requestStatusText[params.row.status] || ""}
               </span>
             </div>
           </>
@@ -1756,29 +1782,29 @@ export default function AllRequest() {
       },
     },
     {
-      field: 'action',
-      headerName: 'Action',
+      field: "action",
+      headerName: "Action",
       flex: 1,
       id: 4,
       renderCell: (params) => {
         return (
           <>
             <div
-              className='cursor-pointer flex items-center h-full'
+              className="cursor-pointer flex items-center h-full"
               onClick={(e) => handleMoreClick(e, params.row)}
             >
-              <img src={MoreIcon} alt='MoreIcon' />
+              <img src={MoreIcon} alt="MoreIcon" />
             </div>
             <Menu
-              id='basic-menu'
+              id="basic-menu"
               anchorEl={anchorEl}
               open={open}
               onClose={handleClose}
               MenuListProps={{
-                'aria-labelledby': 'basic-button',
+                "aria-labelledby": "basic-button",
               }}
             >
-              {role === 'admin' && (
+              {role === "admin" && (
                 <>
                   <MenuItem
                     onClick={() =>
@@ -1786,63 +1812,62 @@ export default function AllRequest() {
                         `/testimonialView/${seletedItem.request_id}?breadcrumbsType=${requestPageBreadcrumbs.testimonial_request}`
                       )
                     }
-                    className='!text-[12px]'
+                    className="!text-[12px]"
                   >
                     <img
                       src={ViewIcon}
-                      alt='AcceptIcon'
-                      className='pr-3 w-[27px]'
+                      alt="AcceptIcon"
+                      className="pr-3 w-[27px]"
                     />
                     View
                   </MenuItem>
-                  {((seletedItem.status === 'new' ||
-                    seletedItem.status === 'pending') && seletedItem?.is_active) && (
-                    <>
-                      <MenuItem
-                        onClick={handleAcceptCeritificateRequest}
-                        className='!text-[12px]'
-                      >
-                        <img
-                          src={TickCircle}
-                          alt='AcceptIcon'
-                          className='pr-3 w-[27px]'
-                        />
-                        Approve
-                      </MenuItem>
-                      <MenuItem
-                        onClick={handleCancelTestimonialRequest}
-                        className='!text-[12px]'
-                      >
-                        <img
-                          src={CloseCircle}
-                          alt='CancelIcon'
-                          className='pr-3 w-[27px]'
-                        />
-                        Reject
-                      </MenuItem>
-                    </>
-                  )}
+                  {(seletedItem.status === "new" ||
+                    seletedItem.status === "pending") &&
+                    seletedItem?.is_active && (
+                      <>
+                        <MenuItem
+                          onClick={handleAcceptCeritificateRequest}
+                          className="!text-[12px]"
+                        >
+                          <img
+                            src={TickCircle}
+                            alt="AcceptIcon"
+                            className="pr-3 w-[27px]"
+                          />
+                          Approve
+                        </MenuItem>
+                        <MenuItem
+                          onClick={handleCancelTestimonialRequest}
+                          className="!text-[12px]"
+                        >
+                          <img
+                            src={CloseCircle}
+                            alt="CancelIcon"
+                            className="pr-3 w-[27px]"
+                          />
+                          Reject
+                        </MenuItem>
+                      </>
+                    )}
                 </>
               )}
-              {
-                role === "mentor" && (
-                  <MenuItem
-                    onClick={() =>
-                      navigate(
-                        `/testimonialView/${seletedItem.request_id}?breadcrumbsType=${requestPageBreadcrumbs.testimonial_request}`
-                      )
-                    }
-                    className='!text-[12px]'
-                  >
-                    <img
-                      src={ViewIcon}
-                      alt='AcceptIcon'
-                      className='pr-3 w-[27px]'
-                    />
-                    View
-                  </MenuItem>
-                )
-              }
+              {role === "mentor" && (
+                <MenuItem
+                  onClick={() =>
+                    navigate(
+                      `/testimonialView/${seletedItem.request_id}?breadcrumbsType=${requestPageBreadcrumbs.testimonial_request}`
+                    )
+                  }
+                  className="!text-[12px]"
+                >
+                  <img
+                    src={ViewIcon}
+                    alt="AcceptIcon"
+                    className="pr-3 w-[27px]"
+                  />
+                  View
+                </MenuItem>
+              )}
             </Menu>
           </>
         );
@@ -1852,25 +1877,25 @@ export default function AllRequest() {
 
   const handleResetTab = (tab = actionTab) => {
     switch (selectedTab) {
-      case 'my':
-        if (role === 'mentee') {
-          setActiveTab('program_join');
+      case "my":
+        if (role === "mentee") {
+          setActiveTab("program_join");
         }
-        if (selectedRequestedtype === 'program_request') {
-          setActiveTab(tab ?? 'program_join');
+        if (selectedRequestedtype === "program_request") {
+          setActiveTab(tab ?? "program_join");
         }
-        if (selectedRequestedtype === 'goal_request') {
-          setActiveTab(tab === 'program_new' ? 'mentor' : tab ?? 'mentor');
+        if (selectedRequestedtype === "goal_request") {
+          setActiveTab(tab === "program_new" ? "mentor" : tab ?? "mentor");
         }
         break;
-      case 'mentees':
-        if (selectedRequestedtype === 'program_request') {
+      case "mentees":
+        if (selectedRequestedtype === "program_request") {
           setActiveTab(
-            tab === 'mentor' ? 'program_join' : tab ?? 'program_join'
+            tab === "mentor" ? "program_join" : tab ?? "program_join"
           );
         }
         break;
-      case 'admin':
+      case "admin":
         break;
       default:
         break;
@@ -1886,10 +1911,10 @@ export default function AllRequest() {
 
   const handleClick = (menu) => {
     navigate(`/all-request?type=${menu.status}`);
-    handleStatus('all');
-    setFilter({ search: '', filter_by: '' });
-    if (menu?.status === 'goal_request') {
-      setActiveTab('mentor');
+    handleStatus("all");
+    setFilter({ search: "", filter_by: "" });
+    if (menu?.status === "goal_request") {
+      setActiveTab("mentor");
     }
     // handleResetTab()
   };
@@ -1897,21 +1922,21 @@ export default function AllRequest() {
   const getProgramRequestApi = () => {
     let payload = {
       request_type: actionTab,
-      ...(filterStatus !== 'all' ? { status: filterStatus } : ''),
+      ...(filterStatus !== "all" ? { status: filterStatus } : ""),
       page: paginationModel?.page + 1,
       limit: paginationModel?.pageSize,
-      ...(filter.search !== '' && { search: filter.search }),
-      ...(filter.filter_by !== '' ? { filter_by: filter.filter_by } : {}),
+      ...(filter.search !== "" && { search: filter.search }),
+      ...(filter.filter_by !== "" ? { filter_by: filter.filter_by } : {}),
     };
 
-    if (role === 'mentor') {
-      if (selectedTab === 'mentees') {
-        payload.request_by = 'mentee';
+    if (role === "mentor") {
+      if (selectedTab === "mentees") {
+        payload.request_by = "mentee";
       }
       payload.request_type = actionTab;
     }
-    if (role === 'admin') {
-      payload.request_by = selectedTab === 'mentees' ? 'mentee' : 'mentor';
+    if (role === "admin") {
+      payload.request_by = selectedTab === "mentees" ? "mentee" : "mentor";
     }
     // handleResetTab(actionTab)
     dispatch(getprogramRequest(payload));
@@ -1920,13 +1945,13 @@ export default function AllRequest() {
   const getLearningAccessApi = async () => {
     dispatch(
       getlearningAccessRequest({
-        ...(filterStatus !== 'all' && { status: filterStatus }),
-        created_at: 'mentor',
+        ...(filterStatus !== "all" && { status: filterStatus }),
+        created_at: "mentor",
         // filter_by: 'month',
         page: paginationModel?.page + 1,
         limit: paginationModel?.pageSize,
-        ...(filter.search !== '' && { search: filter.search }),
-        ...(filter.filter_by !== '' ? { filter_by: filter.filter_by } : {}),
+        ...(filter.search !== "" && { search: filter.search }),
+        ...(filter.filter_by !== "" ? { filter_by: filter.filter_by } : {}),
       })
     );
   };
@@ -1934,45 +1959,44 @@ export default function AllRequest() {
   const getGoalsRequestApi = (createdBy = actionTab) => {
     dispatch(
       goalsRequest({
-        ...(filterStatus !== 'all' && { status: filterStatus }),
+        ...(filterStatus !== "all" && { status: filterStatus }),
         // created_by: createdBy,
         page: paginationModel?.page + 1,
         limit: paginationModel?.pageSize,
-        ...(filter.search !== '' && { search: filter.search }),
-        ...(filter.filter_by !== '' ? { filter_by: filter.filter_by } : {}),
+        ...(filter.search !== "" && { search: filter.search }),
+        ...(filter.filter_by !== "" ? { filter_by: filter.filter_by } : {}),
       })
     );
   };
 
-
   const handleNewGoalRequestApi = () => {
     let payload = {
-      ...(filter.filter_by !== '' && { time_frame: filter.filter_by }),
-      params: 'request',
+      ...(filter.filter_by !== "" && { time_frame: filter.filter_by }),
+      params: "request",
       page: paginationModel?.page + 1,
       limit: paginationModel?.pageSize,
-      ...(filterStatus !== 'all' && { status: filterStatus }),
+      ...(filterStatus !== "all" && { status: filterStatus }),
       // ...((actionTab !== "mentor" && role === "mentor") && { created_by: actionTab ?? "mentor" }),
       // ...((role === "admin") && { created_by: actionTab ?? "mentor" }),
       // created_by: "mentee",
-      ...(filter.search !== '' && { search: filter.search }),
+      ...(filter.search !== "" && { search: filter.search }),
     };
-    if (role === 'admin') {
-      if (selectedTab === 'my') {
+    if (role === "admin") {
+      if (selectedTab === "my") {
         payload = {
           ...payload,
-          created_by: actionTab ?? 'mentor',
+          created_by: actionTab ?? "mentor",
         };
       } else {
         payload = {
           ...payload,
-          created_by: 'mentee',
+          created_by: "mentee",
         };
       }
-    } else if (actionTab !== 'mentor' && role === user.mentor) {
+    } else if (actionTab !== "mentor" && role === user.mentor) {
       payload = {
         ...payload,
-        created_by: actionTab ?? 'mentor',
+        created_by: actionTab ?? "mentor",
       };
     }
     dispatch(getAllGoals(payload));
@@ -2010,13 +2034,13 @@ export default function AllRequest() {
   const getReportsRequestApi = () => {
     dispatch(
       getReportRequest({
-        ...(filterStatus !== 'all' && { status: filterStatus }),
+        ...(filterStatus !== "all" && { status: filterStatus }),
         page: paginationModel?.page + 1,
         limit: paginationModel?.pageSize,
-        request_type: 'report',
-        ...(role === 'admin' && { request_by: 'mentor' }),
-        ...(filter.search !== '' && { search: filter.search }),
-        ...(filter.filter_by !== '' ? { filter_by: filter.filter_by } : {}),
+        request_type: "report",
+        ...(role === "admin" && { request_by: "mentor" }),
+        ...(filter.search !== "" && { search: filter.search }),
+        ...(filter.filter_by !== "" ? { filter_by: filter.filter_by } : {}),
       })
     );
   };
@@ -2028,10 +2052,15 @@ export default function AllRequest() {
         page: paginationModel?.page + 1,
         limit: paginationModel?.pageSize,
         // request_type: "testimonial",
-        ...(role === 'admin' && {
-          request_by: selectedTab === "admin" ? "admin" : selectedTab === 'mentees' ? 'mentee' : 'mentor',
+        ...(role === "admin" && {
+          request_by:
+            selectedTab === "admin"
+              ? "admin"
+              : selectedTab === "mentees"
+              ? "mentee"
+              : "mentor",
         }),
-        ...(filter.search !== '' && { search: filter.search }),
+        ...(filter.search !== "" && { search: filter.search }),
         // ...(filter.filter_by !== ""
         //     ? { filter_by: filter.filter_by }
         //     : { filter_by: "month" }),
@@ -2042,13 +2071,13 @@ export default function AllRequest() {
   const getCerificateRequestAPi = () => {
     dispatch(
       certificateRequest({
-        filterStatus: filterStatus !== 'all' ? filterStatus : '',
+        filterStatus: filterStatus !== "all" ? filterStatus : "",
         page: paginationModel?.page + 1,
         limit: paginationModel?.pageSize ?? 10,
-        request_type: 'certificate',
-        ...(role === 'admin' && { request_by: 'mentor' }),
-        ...(filter.search !== '' && { search: filter.search }),
-        ...(filter.filter_by !== '' ? { filter_by: filter.filter_by } : {}),
+        request_type: "certificate",
+        ...(role === "admin" && { request_by: "mentor" }),
+        ...(filter.search !== "" && { search: filter.search }),
+        ...(filter.filter_by !== "" ? { filter_by: filter.filter_by } : {}),
       })
     );
   };
@@ -2056,24 +2085,24 @@ export default function AllRequest() {
   const getMembersRequestApi = () => {
     dispatch(
       getMemberRequest({
-        ...(filterStatus !== 'all' && { status: filterStatus }),
-        user: actionTab === 'program_new' ? 'mentor' : actionTab,
+        ...(filterStatus !== "all" && { status: filterStatus }),
+        user: actionTab === "program_new" ? "mentor" : actionTab,
         page: paginationModel?.page + 1,
         limit: paginationModel?.pageSize,
-        ...(filter.search !== '' && { search: filter.search }),
-        ...(filter.filter_by !== '' ? { filter_by: filter.filter_by } : {}),
+        ...(filter.search !== "" && { search: filter.search }),
+        ...(filter.filter_by !== "" ? { filter_by: filter.filter_by } : {}),
       })
     );
   };
   const getExtendRequestApi = () => {
     let payload = {
-      request_type: 'program_extend',
-      ...(filterStatus !== 'all' ? { status: filterStatus } : ''),
+      request_type: "program_extend",
+      ...(filterStatus !== "all" ? { status: filterStatus } : ""),
       page: paginationModel?.page + 1,
       limit: paginationModel?.pageSize,
-      ...(role === 'admin' && { request_by: 'mentor' }),
-      ...(filter.search !== '' && { search: filter.search }),
-      ...(filter.filter_by !== '' ? { filter_by: filter.filter_by } : {}),
+      ...(role === "admin" && { request_by: "mentor" }),
+      ...(filter.search !== "" && { search: filter.search }),
+      ...(filter.filter_by !== "" ? { filter_by: filter.filter_by } : {}),
     };
 
     // if (role === "mentor") {
@@ -2092,13 +2121,13 @@ export default function AllRequest() {
   const getResourceRequestApi = () => {
     dispatch(
       getResourceRequest({
-        ...(filterStatus !== 'all' && { status: filterStatus }),
+        ...(filterStatus !== "all" && { status: filterStatus }),
         // created_at: selectedTab,
-        request_type: 'learning_material',
-        ...(role === 'admin' && { request_by: 'mentor' }),
-        ...(selectedTab === 'mentees' && { request_by: 'mentee' }),
-        ...(filter.search !== '' && { search: filter.search }),
-        ...(filter.filter_by !== '' ? { filter_by: filter.filter_by } : {}),
+        request_type: "learning_material",
+        ...(role === "admin" && { request_by: "mentor" }),
+        ...(selectedTab === "mentees" && { request_by: "mentee" }),
+        ...(filter.search !== "" && { search: filter.search }),
+        ...(filter.filter_by !== "" ? { filter_by: filter.filter_by } : {}),
       })
     );
   };
@@ -2106,13 +2135,13 @@ export default function AllRequest() {
   const getReopenRequestApi = () => {
     dispatch(
       getReopenRequest({
-        ...(filterStatus !== 'all' && { rep_status: filterStatus }),
+        ...(filterStatus !== "all" && { rep_status: filterStatus }),
         page: paginationModel?.page + 1,
         limit: paginationModel?.pageSize,
-        request_type: 'program_reopen',
-        ...(role === 'admin' && { request_by: 'mentor' }),
-        ...(filter.search !== '' && { search: filter.search }),
-        ...(filter.filter_by !== '' ? { filter_by: filter.filter_by } : {}),
+        request_type: "program_reopen",
+        ...(role === "admin" && { request_by: "mentor" }),
+        ...(filter.search !== "" && { search: filter.search }),
+        ...(filter.filter_by !== "" ? { filter_by: filter.filter_by } : {}),
       })
     );
   };
@@ -2132,13 +2161,12 @@ export default function AllRequest() {
       categoryList.filter((list) =>
         list.name.toLowerCase().includes(e.target.value.toLowerCase())
       );
-    if (e.target.value === '') catList = categoryList;
+    if (e.target.value === "") catList = categoryList;
     setCategoryInfo({ search: e.target.value, list: catList });
   };
 
-
   useEffect(() => {
-    if (selectedRequestedtype && role !== '' && !userInfo.loading) {
+    if (selectedRequestedtype && role !== "" && !userInfo.loading) {
       const tab = selectedRequestedtype;
       const requestTabDetails = RequestStatusArray.find(
         (request) => request.key === tab
@@ -2146,23 +2174,23 @@ export default function AllRequest() {
 
       let tableDetails = { ...activeTableDetails };
       let actionFilter = [];
-      let activeTabName = '';
+      let activeTabName = "";
       switch (tab) {
         case RequestStatus.programRequest.key:
           let programInfoTab = programRequestTab;
           tableDetails = { column: programRequestColumn, data: [] };
           actionFilter = programInfoTab;
           activeTabName =
-            selectedTab === 'my' && role === 'mentee'
-              ? 'program_join'
-              : selectedTab === 'mentees' && role === 'mentor'
-              ? 'program_join'
-              : selectedTab === 'my'
-              ? 'program_new'
-              : selectedTab === 'mentees'
-              ? 'program_join'
-              : 'program_request';
-          if (actionTab !== 'program_join' && actionTab !== 'program_new') {
+            selectedTab === "my" && role === "mentee"
+              ? "program_join"
+              : selectedTab === "mentees" && role === "mentor"
+              ? "program_join"
+              : selectedTab === "my"
+              ? "program_new"
+              : selectedTab === "mentees"
+              ? "program_join"
+              : "program_request";
+          if (actionTab !== "program_join" && actionTab !== "program_new") {
             activeTabName = actionTab;
           }
 
@@ -2170,16 +2198,16 @@ export default function AllRequest() {
         case RequestStatus.memberJoinRequest.key:
           tableDetails = { column: memberMentorRequestColumns, data: [] };
           // actionFilter = memberJoinRequestTab;
-          activeTabName = 'mentor';
+          activeTabName = "mentor";
           break;
         case RequestStatus.goalRequest.key:
           tableDetails = { column: goalColumns, data: [] };
           // actionFilter = goalsRequestTab;
-          activeTabName = selectedTab === 'mentees' ? 'mentee' : 'mentor';
+          activeTabName = selectedTab === "mentees" ? "mentee" : "mentor";
           break;
         case RequestStatus.resourceAccessRequest.key:
           tableDetails = { column: resourceColumns, data: [] };
-          activeTabName = 'mentor';
+          activeTabName = "mentor";
           break;
         case RequestStatus.technicalSupportRequest.key:
           tableDetails = { column: techinicalColums, data: [] };
@@ -2215,13 +2243,13 @@ export default function AllRequest() {
       setActionTabFilter(actionFilter);
       setActiveTab(activeTabName);
     } else {
-      if (role !== '') {
+      if (role !== "") {
         setActionTabFilter(programRequestTab);
-        if (role !== 'admin') {
-          if (selectedTab === 'my') {
-            setActiveTab('program_new');
-          } else if (selectedTab === 'mentees') {
-            setActiveTab('program_join');
+        if (role !== "admin") {
+          if (selectedTab === "my") {
+            setActiveTab("program_new");
+          } else if (selectedTab === "mentees") {
+            setActiveTab("program_join");
           }
         }
       }
@@ -2233,14 +2261,14 @@ export default function AllRequest() {
     if (status === requestStatus.programupdate) {
       setShowToast({
         show: true,
-        message: 'Program Request updated successfully',
+        message: "Program Request updated successfully",
       });
       getProgramRequestApi();
       if (confirmPopup.show) resetConfirmPopup();
       if (cancelPopup.show) resetCancelReasonPopup();
       setTimeout(() => {
-        setShowToast({ show: false, message: '' });
-        dispatch(updateLocalRequest({ status: '' }));
+        setShowToast({ show: false, message: "" });
+        dispatch(updateLocalRequest({ status: "" }));
       }, [3000]);
     }
 
@@ -2252,9 +2280,9 @@ export default function AllRequest() {
         page: currentRequestTab.key,
         tab: actionTab,
       });
-      setCategoryInfo({ search: '', list: categoryList });
+      setCategoryInfo({ search: "", list: categoryList });
       setTimeout(() => {
-        dispatch(updateLocalRequest({ status: '' }));
+        dispatch(updateLocalRequest({ status: "" }));
       }, 2000);
     }
 
@@ -2268,11 +2296,11 @@ export default function AllRequest() {
       getMembersRequestApi();
       setShowToast({
         show: true,
-        message: 'Member Request updated successfully',
+        message: "Member Request updated successfully",
       });
       setTimeout(() => {
-        setShowToast({ show: false, message: '' });
-        dispatch(updateLocalRequest({ status: '' }));
+        setShowToast({ show: false, message: "" });
+        dispatch(updateLocalRequest({ status: "" }));
       }, 3000);
     }
 
@@ -2283,11 +2311,11 @@ export default function AllRequest() {
       getGoalsRequestApi();
       setShowToast({
         show: true,
-        message: 'Goal Request updated successfully',
+        message: "Goal Request updated successfully",
       });
       setTimeout(() => {
-        setShowToast({ show: false, message: '' });
-        dispatch(updateLocalRequest({ status: '' }));
+        setShowToast({ show: false, message: "" });
+        dispatch(updateLocalRequest({ status: "" }));
       }, 3000);
     }
 
@@ -2298,11 +2326,11 @@ export default function AllRequest() {
       getCerificateRequestAPi();
       setShowToast({
         show: true,
-        message: 'Certificate Request updated successfully',
+        message: "Certificate Request updated successfully",
       });
       setTimeout(() => {
-        setShowToast({ show: false, message: '' });
-        dispatch(updateLocalRequest({ status: '' }));
+        setShowToast({ show: false, message: "" });
+        dispatch(updateLocalRequest({ status: "" }));
       }, 3000);
     }
 
@@ -2313,31 +2341,31 @@ export default function AllRequest() {
       getReportsRequestApi();
       setShowToast({
         show: true,
-        message: 'Reports Request updated successfully',
+        message: "Reports Request updated successfully",
       });
       setTimeout(() => {
-        setShowToast({ show: false, message: '' });
-        dispatch(updateLocalRequest({ status: '' }));
+        setShowToast({ show: false, message: "" });
+        dispatch(updateLocalRequest({ status: "" }));
       }, 3000);
     }
 
     if (status === requestStatus.testimonialupdate) {
       setShowToast({
         show: true,
-        message: 'Testimonial Request updated successfully',
+        message: "Testimonial Request updated successfully",
       });
       getTestimonialRequestApi();
       if (confirmPopup.show) resetConfirmPopup();
       if (cancelPopup.show) resetCancelReasonPopup();
       setTimeout(() => {
-        setShowToast({ show: false, message: '' });
-        dispatch(updateLocalRequest({ status: '' }));
+        setShowToast({ show: false, message: "" });
+        dispatch(updateLocalRequest({ status: "" }));
       }, [3000]);
     }
   }, [status]);
 
   useEffect(() => {
-    if (selectedRequestedtype === 'program_request' || !selectedRequestedtype) {
+    if (selectedRequestedtype === "program_request" || !selectedRequestedtype) {
       setActiveTableDetails({
         column: programRequestColumn,
         data: programTableInfo.results,
@@ -2345,10 +2373,10 @@ export default function AllRequest() {
       });
     }
 
-    if (selectedRequestedtype === 'member_join_request') {
+    if (selectedRequestedtype === "member_join_request") {
       setActiveTableDetails({
         column:
-          actionTab === 'mentor'
+          actionTab === "mentor"
             ? [...memberMentorRequestColumns, ...membersColumns]
             : [...memberMenteeRequestColumns, ...membersColumns],
         data: memberRequest?.results,
@@ -2356,14 +2384,14 @@ export default function AllRequest() {
       });
     }
 
-    if (selectedRequestedtype === 'new_goals_request') {
+    if (selectedRequestedtype === "new_goals_request") {
       setActiveTableDetails({
         column: goalColumns,
         data: goalsRequestInfo?.results,
         rowCount: goalsRequestInfo?.count,
       });
     }
-    if (selectedRequestedtype === 'certificate_request') {
+    if (selectedRequestedtype === "certificate_request") {
       setActiveTableDetails({
         column: certificateColumns,
         data: certificateRequestList?.results,
@@ -2371,49 +2399,49 @@ export default function AllRequest() {
       });
     }
 
-    if (selectedRequestedtype === 'resource_access_request') {
+    if (selectedRequestedtype === "resource_access_request") {
       setActiveTableDetails({
         column: resourceColumns,
         data: resourceRequest?.results,
       });
     }
 
-    if (selectedRequestedtype === 'report_request') {
+    if (selectedRequestedtype === "report_request") {
       setActiveTableDetails({
         column: reportRequestColumn,
         data: reportsRequestInfo?.results,
         rowCount: reportsRequestInfo?.count,
       });
     }
-    if (selectedRequestedtype === 'extended_request') {
+    if (selectedRequestedtype === "extended_request") {
       setActiveTableDetails({
         column: extendRequestColumn,
         data: programExtendRequests?.results,
         rowCount: programExtendRequests?.count,
       });
     }
-    if (selectedRequestedtype === 'learning_access_requests') {
+    if (selectedRequestedtype === "learning_access_requests") {
       setActiveTableDetails({
         column: learningAccessRequestsColumns,
         data: learningAccessRequests?.results,
         rowCount: learningAccessRequests?.count,
       });
     }
-    if (selectedRequestedtype === 'testimonial_request') {
+    if (selectedRequestedtype === "testimonial_request") {
       setActiveTableDetails({
         column: testimonialRequestColumn,
         data: testimonialRequest?.results,
         rowCount: testimonialRequest?.count,
       });
     }
-    if (selectedRequestedtype === 're_open_request') {
+    if (selectedRequestedtype === "re_open_request") {
       setActiveTableDetails({
         column: extendRequestColumn,
         data: reopenRequest?.results,
         rowCount: reopenRequest?.count,
       });
     }
-    if (selectedRequestedtype === 'goal_request') {
+    if (selectedRequestedtype === "goal_request") {
       setActiveTableDetails({
         column: goalColumns,
         data: goalsList?.results,
@@ -2435,45 +2463,45 @@ export default function AllRequest() {
   ]);
 
   useEffect(() => {
-    if (role !== '') {
+    if (role !== "") {
       if (
         !selectedRequestedtype ||
-        selectedRequestedtype === 'program_request'
+        selectedRequestedtype === "program_request"
       ) {
         getProgramRequestApi();
       }
 
-      if (selectedRequestedtype === 'learning_access_requests') {
+      if (selectedRequestedtype === "learning_access_requests") {
         getLearningAccessApi();
       }
-      if (selectedRequestedtype === 'member_join_request') {
+      if (selectedRequestedtype === "member_join_request") {
         getMembersRequestApi();
       }
 
-      if (selectedRequestedtype === 'resource_access_request') {
+      if (selectedRequestedtype === "resource_access_request") {
         getResourceRequestApi();
       }
 
-      if (selectedRequestedtype === 'new_goals_request') {
+      if (selectedRequestedtype === "new_goals_request") {
         getGoalsRequestApi();
       }
-      if (selectedRequestedtype === 'goal_request') {
+      if (selectedRequestedtype === "goal_request") {
         handleNewGoalRequestApi();
       }
 
-      if (selectedRequestedtype === 'certificate_request') {
+      if (selectedRequestedtype === "certificate_request") {
         getCerificateRequestAPi();
       }
-      if (selectedRequestedtype === 'report_request') {
+      if (selectedRequestedtype === "report_request") {
         getReportsRequestApi();
       }
-      if (selectedRequestedtype === 'extended_request') {
+      if (selectedRequestedtype === "extended_request") {
         getExtendRequestApi();
       }
-      if (selectedRequestedtype === 'testimonial_request') {
+      if (selectedRequestedtype === "testimonial_request") {
         getTestimonialRequestApi();
       }
-      if (selectedRequestedtype === 're_open_request') {
+      if (selectedRequestedtype === "re_open_request") {
         getReopenRequestApi();
       }
     }
@@ -2481,17 +2509,17 @@ export default function AllRequest() {
 
   const footerComponent = (props) => {
     return (
-      <div className='flex gap-6 justify-center items-center py-4'>
+      <div className="flex gap-6 justify-center items-center py-4">
         <button
           onClick={() => {
             setCategoryPopup({ show: false, selectedItem: [] });
             selectedCategory([]);
           }}
-          className='py-3 px-6 w-[16%]'
+          className="py-3 px-6 w-[16%]"
           style={{
-            border: '1px solid rgba(29, 91, 191, 1)',
-            borderRadius: '3px',
-            color: 'rgba(29, 91, 191, 1)',
+            border: "1px solid rgba(29, 91, 191, 1)",
+            borderRadius: "3px",
+            color: "rgba(29, 91, 191, 1)",
           }}
         >
           Cancel
@@ -2500,11 +2528,11 @@ export default function AllRequest() {
           onClick={() => {
             handleSelectedItems(props.selectedRows);
           }}
-          className='text-white py-3 px-6 w-[16%]'
+          className="text-white py-3 px-6 w-[16%]"
           style={{
             background:
-              'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)',
-            borderRadius: '3px',
+              "linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)",
+            borderRadius: "3px",
           }}
         >
           Submit
@@ -2514,7 +2542,7 @@ export default function AllRequest() {
   };
 
   const resetPageDetails = () => {
-    handleStatus('all');
+    handleStatus("all");
   };
 
   const handleSearch = (e) => {
@@ -2522,44 +2550,44 @@ export default function AllRequest() {
   };
 
   useEffect(() => {
-    if (filter.search !== '') {
-      searchParams.set('search', filter.search);
+    if (filter.search !== "") {
+      searchParams.set("search", filter.search);
     } else {
-      searchParams.delete('search');
+      searchParams.delete("search");
     }
-    if (filter.filter_by !== '') {
-      searchParams.set('filter_by', filter.filter_by);
+    if (filter.filter_by !== "") {
+      searchParams.set("filter_by", filter.filter_by);
     } else {
-      searchParams.delete('filter_by');
+      searchParams.delete("filter_by");
     }
     setSearchParams(searchParams);
   }, [filter]);
 
   useEffect(() => {
     let currentOveriew = [];
-    let currentTab = '';
+    let currentTab = "";
     if (role !== user.mentee) {
       switch (selectedTab) {
-        case 'my':
+        case "my":
           currentOveriew = myRequestOverview;
           currentTab =
-            role === 'admin' && selectedRequestedtype === 'goal_request'
-              ? 'mentor'
-              : role === 'mentee'
-              ? 'program_join'
-              : 'program_new';
+            role === "admin" && selectedRequestedtype === "goal_request"
+              ? "mentor"
+              : role === "mentee"
+              ? "program_join"
+              : "program_new";
           break;
-        case 'mentees':
+        case "mentees":
           currentOveriew = menteesRequestOverview;
           currentTab =
-            (role === 'admin' || role === 'mentor') &&
-            selectedRequestedtype === 'goal_request'
-              ? 'mentor'
-              : 'program_join';
+            (role === "admin" || role === "mentor") &&
+            selectedRequestedtype === "goal_request"
+              ? "mentor"
+              : "program_join";
           break;
-        case 'admin':
+        case "admin":
           currentOveriew = adminRequestOverview;
-          currentTab = 'program_request';
+          currentTab = "program_request";
           break;
 
         default:
@@ -2569,16 +2597,16 @@ export default function AllRequest() {
       currentOveriew = myRequestOverview?.filter((e) =>
         e?.for.includes(user?.mentee)
       );
-      currentTab = 'program_join';
+      currentTab = "program_join";
     }
     setActiveTab(
-      selectedRequestedtype === 'member_join_request' ? 'mentor' : currentTab
+      selectedRequestedtype === "member_join_request" ? "mentor" : currentTab
     );
     setRequestOverview(currentOveriew);
   }, [selectedTab, selectedRequestedtype]);
 
   const handleSelectCategory = (value) => {
-    if (selectedRequestedtype === 'member_join_request') {
+    if (selectedRequestedtype === "member_join_request") {
       if (selectedCategory?.includes(value)) {
         setSelectedCategory(selectedCategory.filter((e) => e !== value));
       } else {
@@ -2591,18 +2619,18 @@ export default function AllRequest() {
 
   const categoryColumn = [
     {
-      field: 'checkbox',
-      headerName: '',
+      field: "checkbox",
+      headerName: "",
       // flex: 1,
       id: 0,
       width: 100,
-      for: ['admin', 'mentor'],
+      for: ["admin", "mentor"],
       renderCell: (params) => {
         return (
           <div>
             <Checkbox
               checked={
-                selectedRequestedtype === 'member_join_request'
+                selectedRequestedtype === "member_join_request"
                   ? selectedCategory.includes(params?.row?.categories_id)
                   : selectedCategory === params?.row?.categories_id
               }
@@ -2616,16 +2644,16 @@ export default function AllRequest() {
   ];
 
   const breadcrumbs = [
-    <Link variant='body2' underline='hover' key='1' color='inherit' href='#'>
+    <Link variant="body2" underline="hover" key="1" color="inherit" href="#">
       Objective
     </Link>,
-    <Typography key='2' variant='body2' color={'primary'}>
+    <Typography key="2" variant="body2" color={"primary"}>
       All Request
     </Typography>,
   ];
   useEffect(() => {
     if (selectedMainRequestedTab === requestPageBreadcrumbs.main_mentee_tab) {
-      setSelectedTab('mentees');
+      setSelectedTab("mentees");
     }
   }, [selectedMainRequestedTab]);
   useEffect(() => {
@@ -2634,15 +2662,33 @@ export default function AllRequest() {
     }
   }, [selectedRequestedTab, selectedTab]);
 
+  const handleCopy = () => {
+    navigator.clipboard
+      .writeText(shareUrl)
+      .then(() => {
+        setMessage(true);
+        setTimeout(() => {
+          setMessage(false);
+        }, 2000);
+      })
+      .catch(() => {
+        setMessage(false);
+      });
+  };
+
+  const handleCloseNotify = () => {
+    setMessage(false);
+  };
+
   return (
-    <div className='program-request px-8 mt-10'>
-      {role === 'mentor' && (
-        <div className='flex gap-x-4 mb-6'>
+    <div className="program-request px-8 mt-10">
+      {role === "mentor" && (
+        <div className="flex gap-x-4 mb-6">
           {requestActionTab.map((action) => {
             return (
               <Button
                 onClick={handleChange(action.value)}
-                btnCategory={selectedTab === action.value ? 'primary' : ''}
+                btnCategory={selectedTab === action.value ? "primary" : ""}
                 btnName={action.name}
               />
             );
@@ -2650,14 +2696,14 @@ export default function AllRequest() {
         </div>
       )}
 
-      {role === 'admin' && (
+      {role === "admin" && (
         // requestAdminActionTab
-        <div className='flex gap-x-4 mb-6'>
+        <div className="flex gap-x-4 mb-6">
           {requestAdminActionTab.map((action) => {
             return (
               <Button
                 onClick={handleChange(action.value)}
-                btnCategory={selectedTab === action.value ? 'primary' : ''}
+                btnCategory={selectedTab === action.value ? "primary" : ""}
                 btnName={action.name}
               />
             );
@@ -2665,11 +2711,11 @@ export default function AllRequest() {
         </div>
       )}
       <div
-        className='px-3 py-5'
+        className="px-3 py-5"
         style={{
           boxShadow:
-            role === 'admin'
-              ? '4px 4px 25px 0px rgba(0, 0, 0, 0.15)'
+            role === "admin"
+              ? "4px 4px 25px 0px rgba(0, 0, 0, 0.15)"
               : undefined,
         }}
       >
@@ -2691,18 +2737,18 @@ export default function AllRequest() {
                 )} */}
 
         <Backdrop
-          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={showToast.show}
           onClick={() => false}
         >
-          <div className='px-5 py-1 flex justify-center items-center'>
+          <div className="px-5 py-1 flex justify-center items-center">
             <div
-              className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
-              style={{ background: '#fff', borderRadius: '10px' }}
+              className="flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20"
+              style={{ background: "#fff", borderRadius: "10px" }}
             >
-              <img src={SuccessTik} alt='SuccessTik' />
+              <img src={SuccessTik} alt="SuccessTik" />
               <p
-                className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
                 style={{
                   fontWeight: 600,
                 }}
@@ -2714,69 +2760,69 @@ export default function AllRequest() {
         </Backdrop>
 
         <Backdrop
-          sx={{ color: '#fff', zIndex: (theme) => 1 }}
+          sx={{ color: "#fff", zIndex: (theme) => 1 }}
           open={confirmPopup.show}
         >
-          <div className='popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center'>
+          <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
             <img
               src={
-                confirmPopup.type === 'approve'
+                confirmPopup.type === "approve"
                   ? TickColorIcon
-                  : confirmPopup.type === 'reject'
+                  : confirmPopup.type === "reject"
                   ? CancelColorIcon
-                  : ''
+                  : ""
               }
-              alt='TickColorIcon'
+              alt="TickColorIcon"
             />
             <span
-              style={{ color: '#232323', fontWeight: 600, fontSize: '24px' }}
+              style={{ color: "#232323", fontWeight: 600, fontSize: "24px" }}
             >
-              {confirmPopup.type === 'approve'
-                ? 'Approve'
-                : confirmPopup.type === 'reject'
-                ? 'Reject'
-                : ''}
+              {confirmPopup.type === "approve"
+                ? "Approve"
+                : confirmPopup.type === "reject"
+                ? "Reject"
+                : ""}
             </span>
-            <div className='py-5'>
+            <div className="py-5">
               <p
                 style={{
-                  color: 'rgba(24, 40, 61, 1)',
+                  color: "rgba(24, 40, 61, 1)",
                   fontWeight: 600,
-                  fontSize: '18px',
+                  fontSize: "18px",
                 }}
               >
                 Are you sure want to {confirmPopup.type} {confirmPopup.title}?
               </p>
             </div>
-            <div className='flex justify-center'>
-              <div className='flex gap-6 justify-center align-middle'>
+            <div className="flex justify-center">
+              <div className="flex gap-6 justify-center align-middle">
                 <Button
-                  btnCls='w-[110px]'
+                  btnCls="w-[110px]"
                   btnName={
-                    confirmPopup.type === 'approve'
-                      ? 'Cancel'
-                      : confirmPopup.type === 'reject'
-                      ? 'No'
-                      : ''
+                    confirmPopup.type === "approve"
+                      ? "Cancel"
+                      : confirmPopup.type === "reject"
+                      ? "No"
+                      : ""
                   }
-                  btnCategory='secondary'
+                  btnCategory="secondary"
                   onClick={handleCancelConfirmPopup}
                 />
                 <Button
-                  btnType='button'
-                  btnCls='w-[110px]'
+                  btnType="button"
+                  btnCls="w-[110px]"
                   btnName={
-                    confirmPopup.type === 'approve'
-                      ? 'Approve'
-                      : confirmPopup.type === 'reject'
-                      ? 'Yes'
-                      : ''
+                    confirmPopup.type === "approve"
+                      ? "Approve"
+                      : confirmPopup.type === "reject"
+                      ? "Yes"
+                      : ""
                   }
                   style={{
                     background:
-                      confirmPopup.type === 'approve' ? '#16B681' : '#E0382D',
+                      confirmPopup.type === "approve" ? "#16B681" : "#E0382D",
                   }}
-                  btnCategory='primary'
+                  btnCategory="primary"
                   onClick={handleConfirmPopup}
                 />
               </div>
@@ -2786,42 +2832,42 @@ export default function AllRequest() {
 
         {/* {'Cancel Popup'} */}
         <MuiModal
-          modalSize='md'
+          modalSize="md"
           modalOpen={cancelPopup.show}
           modalClose={handleCloseCancelReasonPopup}
           noheader
         >
-          <div className='px-5 py-5'>
+          <div className="px-5 py-5">
             <div
-              className='flex justify-center flex-col gap-5  mt-4 mb-4'
+              className="flex justify-center flex-col gap-5  mt-4 mb-4"
               style={{
-                border: '1px solid rgba(29, 91, 191, 1)',
-                borderRadius: '10px',
+                border: "1px solid rgba(29, 91, 191, 1)",
+                borderRadius: "10px",
               }}
             >
               <div
-                className='flex justify-between px-3 py-4 items-center'
-                style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}
+                className="flex justify-between px-3 py-4 items-center"
+                style={{ borderBottom: "1px solid rgba(29, 91, 191, 1)" }}
               >
                 <p
-                  className='text-[18px]'
-                  style={{ color: 'rgba(0, 0, 0, 1)' }}
+                  className="text-[18px]"
+                  style={{ color: "rgba(0, 0, 0, 1)" }}
                 >
-                  {role === 'admin'
-                    ? selectedRequestedtype === 'report_request'
-                      ? 'Review Reason'
-                      : 'Reject Request Reason'
-                    : 'Cancel Reason'}
+                  {role === "admin"
+                    ? selectedRequestedtype === "report_request"
+                      ? "Review Reason"
+                      : "Reject Request Reason"
+                    : "Cancel Reason"}
                 </p>
                 <img
-                  className='cursor-pointer'
+                  className="cursor-pointer"
                   onClick={handleCloseCancelReasonPopup}
                   src={CancelIcon}
-                  alt='CancelIcon'
+                  alt="CancelIcon"
                 />
               </div>
 
-              <div className='px-5'>
+              <div className="px-5">
                 {/* {error !== "" ? (
                                     <p className="error" role="alert">
                                         {error}
@@ -2829,49 +2875,49 @@ export default function AllRequest() {
                                 ) : null} */}
 
                 <form onSubmit={handleSubmit(handleCancelReasonPopupSubmit)}>
-                  <div className='relative pb-8'>
-                    <label className='block tracking-wide text-gray-700 text-xs font-bold mb-2'>
-                      {role === 'admin'
-                        ? selectedRequestedtype === 'report_request'
-                          ? 'Review Reason'
-                          : 'Reject Reason'
-                        : 'Cancel Reason'}
+                  <div className="relative pb-8">
+                    <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
+                      {role === "admin"
+                        ? selectedRequestedtype === "report_request"
+                          ? "Review Reason"
+                          : "Reject Reason"
+                        : "Cancel Reason"}
                     </label>
 
-                    <div className='relative'>
+                    <div className="relative">
                       <textarea
-                        {...register('cancel_reason', {
-                          required: 'This field is required',
+                        {...register("cancel_reason", {
+                          required: "This field is required",
                         })}
-                        id='message'
-                        rows='4'
+                        id="message"
+                        rows="4"
                         className={`block p-2.5 input-bg w-full text-sm text-gray-900  border
                                                                    focus-visible:outline-none focus-visible:border-none`}
-                        style={{ border: '2px solid rgba(229, 0, 39, 1)' }}
-                        placeholder={''}
+                        style={{ border: "2px solid rgba(229, 0, 39, 1)" }}
+                        placeholder={""}
                       ></textarea>
-                      {errors['cancel_reason'] && (
-                        <p className='error' role='alert'>
-                          {errors['cancel_reason'].message}
+                      {errors["cancel_reason"] && (
+                        <p className="error" role="alert">
+                          {errors["cancel_reason"].message}
                         </p>
                       )}
                     </div>
                   </div>
 
-                  <div className='flex justify-center gap-5 items-center pt-5 pb-10'>
+                  <div className="flex justify-center gap-5 items-center pt-5 pb-10">
                     <Button
-                      btnName='Cancel'
-                      btnCls='w-[18%]'
-                      btnCategory='secondary'
+                      btnName="Cancel"
+                      btnCls="w-[18%]"
+                      btnCategory="secondary"
                       onClick={handleCloseCancelReasonPopup}
                     />
                     <button
-                      type='submit'
-                      className='text-white py-3 px-7 w-[18%]'
+                      type="submit"
+                      className="text-white py-3 px-7 w-[18%]"
                       style={{
                         background:
-                          'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)',
-                        borderRadius: '3px',
+                          "linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)",
+                        borderRadius: "3px",
                       }}
                     >
                       Submit
@@ -2885,54 +2931,54 @@ export default function AllRequest() {
 
         {/* { 'Select Categort Popup'} */}
         <MuiModal
-          modalSize='md'
+          modalSize="md"
           modalOpen={categoryPopup.show}
           modalClose={handleCloseCategoryPopup}
           noheader
         >
-          <div className='px-5 py-5'>
+          <div className="px-5 py-5">
             <div
-              className='flex justify-center flex-col gap-5 px-5 pb-5 mt-4 mb-4'
+              className="flex justify-center flex-col gap-5 px-5 pb-5 mt-4 mb-4"
               style={{
-                border: '1px solid rgba(29, 91, 191, 1)',
-                borderRadius: '10px',
+                border: "1px solid rgba(29, 91, 191, 1)",
+                borderRadius: "10px",
               }}
             >
               <div
-                className='flex justify-between px-3 py-4 items-center'
-                style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}
+                className="flex justify-between px-3 py-4 items-center"
+                style={{ borderBottom: "1px solid rgba(29, 91, 191, 1)" }}
               >
                 <p
-                  className='text-[18px]'
-                  style={{ color: 'rgba(0, 0, 0, 1)' }}
+                  className="text-[18px]"
+                  style={{ color: "rgba(0, 0, 0, 1)" }}
                 >
                   Select Category
                 </p>
                 <img
-                  className='cursor-pointer'
+                  className="cursor-pointer"
                   onClick={handleCloseCategoryPopup}
                   src={CancelIcon}
-                  alt='CancelIcon'
+                  alt="CancelIcon"
                 />
               </div>
-              <div className='flex justify-between px-3 mb-4'>
-                <div className='relative w-full'>
+              <div className="flex justify-between px-3 mb-4">
+                <div className="relative w-full">
                   <input
-                    type='text'
-                    id='search-navbar'
-                    className='block w-full p-2 text-sm text-gray-900 border-none'
-                    placeholder='Search here...'
+                    type="text"
+                    id="search-navbar"
+                    className="block w-full p-2 text-sm text-gray-900 border-none"
+                    placeholder="Search here..."
                     style={{
-                      border: '1px solid rgba(29, 91, 191, 1)',
-                      borderRadius: '50px',
-                      height: '60px',
-                      width: '100%',
+                      border: "1px solid rgba(29, 91, 191, 1)",
+                      borderRadius: "50px",
+                      height: "60px",
+                      width: "100%",
                     }}
                     onChange={handleSearchCategory}
                     value={categoryInfo.search}
                   />
-                  <div className='absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none'>
-                    <img src={SearchIcon} alt='SearchIcon' />
+                  <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
+                    <img src={SearchIcon} alt="SearchIcon" />
                   </div>
                 </div>
               </div>
@@ -2940,11 +2986,11 @@ export default function AllRequest() {
               <DataTable
                 rows={categoryInfo.list}
                 columns={
-                  categoryPopup.page === 'goal_request'
+                  categoryPopup.page === "goal_request"
                     ? categoryColumn
                     : categoryColumn
                 }
-                height={'460px'}
+                height={"460px"}
                 footerComponent={footerComponent}
                 hideCheckbox
                 // hideCheckbox={categoryPopup.page === "goal_request"}
@@ -2954,83 +3000,83 @@ export default function AllRequest() {
           </div>
         </MuiModal>
 
-        <div className='px-4'>
-          <div className='grid grid-cols-5 gap-3'>
-            <div className='row-span-3 flex flex-col gap-8'>
+        <div className="px-4">
+          <div className="grid grid-cols-5 gap-3">
+            <div className="row-span-3 flex flex-col gap-8">
               <Card
-                cardTitle={'Request Overview'}
+                cardTitle={"Request Overview"}
                 cardContent={requestList}
                 handleClick={handleClick}
                 activeItem={currentRequestTab?.key}
               />
             </div>
 
-            <div className='col-span-4'>
+            <div className="col-span-4">
               <div
                 style={{
-                  boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)',
-                  borderRadius: '10px',
+                  boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.05)",
+                  borderRadius: "10px",
                 }}
               >
-                <div className='title flex justify-between py-3 px-4 border-b-2 items-center'>
+                <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
                   <div
-                    className='flex gap-4'
-                    style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 600 }}
+                    className="flex gap-4"
+                    style={{ color: "rgba(24, 40, 61, 1)", fontWeight: 600 }}
                   >
                     {currentRequestTab?.name}
                   </div>
-                  <div className='flex gap-7 items-center'>
-                    <div className='relative'>
+                  <div className="flex gap-7 items-center">
+                    <div className="relative">
                       <input
-                        type='text'
-                        id='search-navbar'
-                        className='block w-full p-2 text-sm text-gray-900 border-none'
-                        placeholder='Search here...'
+                        type="text"
+                        id="search-navbar"
+                        className="block w-full p-2 text-sm text-gray-900 border-none"
+                        placeholder="Search here..."
                         style={{
-                          border: '1px solid rgba(29, 91, 191, 1)',
-                          height: '45px',
-                          width: '280px',
+                          border: "1px solid rgba(29, 91, 191, 1)",
+                          height: "45px",
+                          width: "280px",
                         }}
                         value={filter.search}
                         onChange={handleSearch}
                       />
-                      <div className='absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none'>
-                        <img src={SearchIcon} alt='SearchIcon' />
+                      <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
+                        <img src={SearchIcon} alt="SearchIcon" />
                       </div>
                     </div>
                     {/* <img src={SearchIcon} alt="statistics" /> */}
 
                     <p
-                      className='text-[12px] py-2 pl-5 pr-4 flex gap-4'
+                      className="text-[12px] py-2 pl-5 pr-4 flex gap-4"
                       style={{
-                        background: 'rgba(223, 237, 255, 1)',
-                        borderRadius: '5px',
+                        background: "rgba(223, 237, 255, 1)",
+                        borderRadius: "5px",
                       }}
                     >
-                      <img src={CalendarIcon} alt='CalendarIcon' />
+                      <img src={CalendarIcon} alt="CalendarIcon" />
 
                       <select
-                        className='focus:outline-none'
+                        className="focus:outline-none"
                         style={{
-                          background: 'rgba(223, 237, 255, 1)',
-                          border: 'none',
+                          background: "rgba(223, 237, 255, 1)",
+                          border: "none",
                         }}
                         onChange={(e) =>
                           setFilter({ ...filter, filter_by: e.target.value })
                         }
                       >
-                        <option value='' selected={filter.filter_by === ''}>
+                        <option value="" selected={filter.filter_by === ""}>
                           All
                         </option>
                         <option
-                          value='month'
-                          selected={filter.filter_by === 'month'}
+                          value="month"
+                          selected={filter.filter_by === "month"}
                         >
                           Month
                         </option>
                         <option
-                          value='day'
-                          selected={filter.filter_by === 'day'}
+                          value="day"
+                          selected={filter.filter_by === "day"}
                         >
                           Day
                         </option>
@@ -3055,14 +3101,14 @@ export default function AllRequest() {
                   </div>
                 </div>
 
-                <div className='px-6 py-7 program-info'>
+                <div className="px-6 py-7 program-info">
                   {actionTabFilter.length ? (
-                    <div className='flex justify-between px-5 mb-8 items-center border-b-2 '>
-                      <ul className='tab-list'>
+                    <div className="flex justify-between px-5 mb-8 items-center border-b-2 ">
+                      <ul className="tab-list">
                         {actionTabFilter.map((discussion, index) => (
                           <li
                             className={`${
-                              actionTab === discussion.key ? 'active' : ''
+                              actionTab === discussion.key ? "active" : ""
                             } relative`}
                             key={index}
                             onClick={() => {
@@ -3071,8 +3117,8 @@ export default function AllRequest() {
                               // setFilter({ search: '', filter_by: '' })
                             }}
                           >
-                            <div className='text-[13px]'>
-                              {' '}
+                            <div className="text-[13px]">
+                              {" "}
                               {`${discussion.name}`}
                             </div>
                             {actionTab === discussion.key && <span></span>}
@@ -3086,7 +3132,7 @@ export default function AllRequest() {
                     sx={{ zIndex: (theme) => 999999999 }}
                     open={loading || goalLoading}
                   >
-                    <CircularProgress sx={{ color: 'white' }} />
+                    <CircularProgress sx={{ color: "white" }} />
                   </Backdrop>
 
                   <DataTable
@@ -3097,6 +3143,53 @@ export default function AllRequest() {
                     paginationModel={paginationModel}
                     setPaginationModel={setPaginationModel}
                   />
+{console.log("seletedItem ===>", seletedItem)}
+                  <MuiModal
+                    modalOpen={showShare}
+                    modalClose={() => setShowShare(false)}
+                    noheader
+                  >
+                    <div
+                      className="px-5 py-1 flex justify-center items-center"
+                      style={{ border: "1px solid rgba(29, 91, 191, 1)" }}
+                    >
+                      <div className="flex justify-center items-center flex-col gap-8 py-10 px-20 mt-5">
+                        <div>{seletedItem?.program_name}</div>
+                        <input
+                          className="input-bg text-[12px] h-[60px] w-[396px] px-5"
+                          style={{ borderRadius: "27px" }}
+                          disabled
+                          value={shareUrl}
+                        />
+                        <div className="flex gap-7">
+                          <img
+                            className="cursor-pointer"
+                            src={LinkIcon}
+                            alt="LinkIcon"
+                            onClick={handleCopy}
+                          />
+                        </div>
+
+                        <div className="flex  justify-center align-middle pt-4">
+                          <Button
+                            btnType="button"
+                            onClick={() => setShowShare(false)}
+                            btnName="Close"
+                            btnCategory="primary"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </MuiModal>
+
+                  {message && (
+                    <ToastNotification
+                      openToaster={message}
+                      message={"URL copied!"}
+                      handleClose={handleCloseNotify}
+                      toastType={"success"}
+                    />
+                  )}
                 </div>
               </div>
             </div>

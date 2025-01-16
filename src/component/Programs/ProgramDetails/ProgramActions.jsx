@@ -163,41 +163,41 @@ const ProgramActions = ({
         );
       }
     }
-    const showRequestButtons =
-      (programdetails?.status === "inprogress" ||
-        programdetails?.status === "yettostart") &&
-      programdetails?.request_data?.request_type === "program_cancel" &&
-      ["new", "pending"].includes(programdetails?.request_data?.status);
+    // const showRequestButtons =
+    //   (programdetails?.status === "inprogress" ||
+    //     programdetails?.status === "yettostart") &&
+    //   programdetails?.request_data?.request_type === "program_cancel" &&
+    //   ["new", "pending"].includes(programdetails?.request_data?.status);
 
-    if (showRequestButtons) {
-      return (
-        <Box mt={2}>
-          <Stack direction="row" alignItems="center" spacing="20px">
-            <button
-              className="py-3 px-16 text-white text-[14px] flex items-center"
-              style={{ ...buttonStyles.base, ...buttonStyles.danger }}
-              onClick={() =>
-                handleAcceptCancelProgramRequest("cancel", programdetails.id)
-              }
-            >
-              {searchParams.has("type") &&
-              searchParams.get("type") === "program_cancel"
-                ? "Continue"
-                : "Reject Request"}
-            </button>
-            <button
-              className="py-3 px-16 text-white text-[14px] flex items-center"
-              style={{ ...buttonStyles.base, ...buttonStyles.success }}
-              onClick={() =>
-                handleAcceptCancelProgramRequest("accept", programdetails.id)
-              }
-            >
-              Approve Request
-            </button>
-          </Stack>
-        </Box>
-      );
-    }
+    // if (showRequestButtons) {
+    //   return (
+    //     <Box mt={2}>
+    //       <Stack direction="row" alignItems="center" spacing="20px">
+    //         <button
+    //           className="py-3 px-16 text-white text-[14px] flex items-center"
+    //           style={{ ...buttonStyles.base, ...buttonStyles.danger }}
+    //           onClick={() =>
+    //             handleAcceptCancelProgramRequest("cancel", programdetails.id)
+    //           }
+    //         >
+    //           {searchParams.has("type") &&
+    //           searchParams.get("type") === "program_cancel"
+    //             ? "Continue"
+    //             : "Reject Request"}
+    //         </button>
+    //         <button
+    //           className="py-3 px-16 text-white text-[14px] flex items-center"
+    //           style={{ ...buttonStyles.base, ...buttonStyles.success }}
+    //           onClick={() =>
+    //             handleAcceptCancelProgramRequest("accept", programdetails.id)
+    //           }
+    //         >
+    //           Approve Request
+    //         </button>
+    //       </Stack>
+    //     </Box>
+    //   );
+    // }
 
     // Admin Approve Reject Button
 
@@ -292,6 +292,19 @@ const ProgramActions = ({
           )}
         </div>
       );
+    }
+
+    if(["new", "pending"].includes(
+      programdetails?.request_data?.status
+    ) && role === "mentor" && (type === "program_reschedule" || type === "program_cancel")){
+        return(
+          <button
+            onClick={() => setCancelPopup(true)}
+            className="!border-[2px] border-red-500 rounded-md text-red-500 px-4 py-2 font-semibold text-sm flex items-center mt-5"
+          >
+            Cancel Request
+          </button>
+        )
     }
 
     // Draft status

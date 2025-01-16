@@ -1111,7 +1111,7 @@ export const menteesRequestOverview = [
     key: RequestStatus.goalRequest,
     count: 0,
     status: RequestStatus.goalRequest.key,
-    for: ['mentor', 'admin'],
+    for: ['admin'],
   },
 ];
 

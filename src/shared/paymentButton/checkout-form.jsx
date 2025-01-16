@@ -24,7 +24,7 @@ const CheckoutForm = () => {
       elements,
       confirmParams: {
         return_url:
-          "https://mentor-frontend.dataterrain-dev.net/payment-successfull",
+          `${process.env.REACT_APP_SITE_URL}/payment-successfull`
       },
     });
 
