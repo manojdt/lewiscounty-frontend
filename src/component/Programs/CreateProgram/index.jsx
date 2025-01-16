@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import Backdrop from "@mui/material/Backdrop";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import ReactPlayer from "react-player";
 import MoreIcon from "../../../assets/icons/moreIcon.svg";
@@ -60,6 +60,10 @@ export default function CreatePrograms() {
   const [showBackdrop, setShowBackdrop] = useState(false);
   const role = userInfo.data.role || "";
   const [toggleRole, setToggleRole] = useState("");
+  const [searchParams] = useSearchParams();
+
+  const program_create_type = searchParams.get("program_create_type") || "";
+
   const {
     allPrograms,
     loading: apiLoading,
@@ -87,7 +91,7 @@ export default function CreatePrograms() {
 
   const { data: currentProgramDetail, isLoading: isDetailFetching } =
     useGetSpecificProgramDetailsQuery(
-      { id: params?.id },
+      { id: params?.id, ...(program_create_type && { program_create_type }) },
       { skip: !params?.id, refetchOnMountOrArgChange: true }
     );
   const { data: goals } = useGetProgramGoalsQuery(undefined, {
@@ -172,7 +176,12 @@ export default function CreatePrograms() {
     learning_materials: [],
   });
 
-  const ID_ONLY_FIELDS = ["goals", "certifications", "learning_materials"];
+  const ID_ONLY_FIELDS = [
+    "goals",
+    "certifications",
+    "learning_materials",
+    "members",
+  ];
   const [tempSelectedRows, setTempSelectedRows] = useState([]);
   const [logo, setLogo] = useState({});
   const [stepWiseData, setStepWiseData] = useState({});
