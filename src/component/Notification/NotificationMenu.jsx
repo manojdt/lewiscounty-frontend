@@ -64,8 +64,8 @@ export default function NotificationMenu() {
       case 'report':
         const reporturl =
           role === 'mentor'
-            ? `view-report/${data.related_data.report_id}`
-            : `view-report/${data.related_data.report_id}`;
+            ? `/view-report/${data.related_data.report_id}`
+            : `/view-report/${data.related_data.report_id}`;
         //handleClose && handleClose();
         navigate(reporturl);
         break;
@@ -99,8 +99,8 @@ export default function NotificationMenu() {
       case 'certificate':
         const certificateurl =
           role === 'mentor' || role === 'mentee'
-            ? `certificate_mentees/${data.related_data.program_id}`
-            : `certificate_mentees/${data.related_data.program_id}?request_id=${data.related_data?.certificate_id}`;
+            ? `/certificate_mentees/${data.related_data.program_id}`
+            : `/certificate_mentees/${data.related_data.program_id}?request_id=${data.related_data?.certificate_id}`;
         //handleClose && handleClose();
         navigate(
           certificateurl,
