@@ -18,7 +18,7 @@ import CalenderIcon from "../../assets/icons/Calender.svg";
 import StarColorIcon from "../../assets/icons/starColor.svg";
 import UploadIcon from "../../assets/images/image_1x.png";
 import DeleteIcon from "../../assets/images/delete_1x.png";
-import { ProgramStatusInCard, user } from "../../utils/constant";
+import { ProgramStatusInCard } from "../../utils/constant";
 import MuiModal from "../Modal";
 import { Button } from "../Button";
 import { updateProgramImage } from "../../services/userprograms";
@@ -28,7 +28,6 @@ import NoProgramImageBg from "../../assets/icons/noProgramImageBg.svg";
 import NoProgramImageIcon from "../../assets/icons/noProgramImageIcon.svg";
 import Balck_Heart_Icon from "../../assets/icons/gray-heart.svg";
 import Crown_Icon from "../../assets/icons/cronwn.svg";
-import { Crown } from "lucide-react";
 import moment from "moment";
 
 export default function ProgramCard({
@@ -505,7 +504,12 @@ export default function ProgramCard({
                                       )
                                     ) {
                                       navigate(
-                                        `/update-program/${currentProgram.id}`
+                                        `/update-program/${currentProgram.id}${
+                                          "admin_assign_program" in
+                                          currentProgram
+                                            ? `?program_create_type=admin_program`
+                                            : ""
+                                        }`
                                       );
                                     }
                                   }}

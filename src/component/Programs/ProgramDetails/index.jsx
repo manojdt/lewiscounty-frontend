@@ -1969,17 +1969,23 @@ export default function ProgramDetails({ setProgramDetailsId }) {
               <>
                 {(role === "mentor" ||
                   (role === "admin" &&
-                    [
+                    ![
                       "program_new",
                       "program_join",
                       "program_reschedule",
                       "program_cancel",
-                    ].includes(typeParams) === false) ||
+                    ].includes(typeParams)
+                  ) ||
                   (role === "mentee" &&
                     (programdetails.status === programActionStatus.inprogress ||
                       programdetails.mentee_join_status ===
                         programActionStatus.program_join_request_accepted ||
-                      programdetails?.program_interest))) && (
+                      programdetails?.program_interest) &&
+                      ![
+                        "program_join",
+                        "program_cancel",
+                      ].includes(typeParams)
+                    )) && (
                   <>
                     <div className="cursor-pointer" onClick={handleClick}>
                       <img src={MoreIcon} alt="MoreIcon" />
