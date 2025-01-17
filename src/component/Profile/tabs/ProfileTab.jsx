@@ -262,7 +262,7 @@ const ProfileTab = ({ setEditMode }) => {
       </Backdrop>
       <div className='flex items-center justify-between'>
         <p className='text-xl font-semibold'>Profile Information</p>
-        {userInfo?.data?.userinfo?.approve_status === "accept" &&<div>
+        {(userInfo?.data?.userinfo?.approve_status === "accept" || userRole === user.admin) &&<div>
           <Button
             onClick={handleEditMode}
             btnType='button'

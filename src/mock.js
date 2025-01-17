@@ -1517,6 +1517,13 @@ export const programRequestColumns = [
     for: ['admin', 'mentee', 'mentor'],
   },
   {
+    field: 'rejection_reason',
+    headerName: 'Cancel Reason',
+    flex: 1,
+    id: 8,
+    for: ['admin', 'mentee', 'mentor'],
+  },
+  {
     field: 'auto_approval',
     headerName: 'Auto Approval',
     flex: 1,

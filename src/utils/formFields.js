@@ -18,6 +18,18 @@ export const formatPhoneNumber = (value) => {
   }
 };
 
+export const formatZipCode = (value) => {
+  value = value.replace(/\D/g, "");
+
+    if (value.length > 5) {
+      value = value.slice(0, 5) + "-" + value.slice(5, 9);
+    }
+
+    value = value.slice(0, 10);
+
+    return value;
+};
+
 // export const handleChange = (e) => {
 //   const value = e.target.value;
 //   const formattedValue = formatPhoneNumber(value);
@@ -46,7 +58,7 @@ export const PersonalInformationFields = [
     label: "Last Name",
     placeholder: "Enter Last Name",
     inputRules: {
-      // required: "This field is required",
+      required: "This field is required",
     },
     size: true,
     disable: true,
@@ -1971,7 +1983,7 @@ export const ProgramInformationFields = [
     inputRules: {
       required: "This field is required",
       pattern: {
-        value: /^\d{5}(-\d{4})?$/,
+        value: /^\d{5}(-\d{4})?$/, 
         message: "ZIP code must be in the format XXXXX or XXXXX-XXXX.",
       },
     },

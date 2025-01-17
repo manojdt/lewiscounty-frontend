@@ -23,7 +23,7 @@ import MuiModal from "../../../shared/Modal";
 import { useSelector } from "react-redux";
 import { Button } from "../../../shared";
 import { Button as MuiButton } from "@mui/material";
-import { formatPhoneNumber } from "../../../utils/formFields";
+import { formatPhoneNumber, formatZipCode } from "../../../utils/formFields";
 import CustomDateTimePicker from "../../../shared/CustomDateTimePicker/MuiDateTimePicker";
 import moment from "moment";
 import DeleteIconRounded from "../../../assets/icons/delete-icon.svg";
@@ -105,6 +105,9 @@ const ProgramSteps = ({
     ) {
       const formattedValue = formatPhoneNumber(value);
       setValue(field.name, formattedValue);
+    } else if (field.name === 'zip_code') {
+      const zipCodeFormatValue = formatZipCode(value)
+      setValue(field.name, zipCodeFormatValue)
     } else {
       setValue(field.name, value);
     }
