@@ -9,7 +9,7 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ThreeDotIcon from '../../assets/icons/threeDots.svg';
 import ProfileImageIcon from '../../assets/icons/profile-image-icon.svg';
 import { Button } from '../../shared';
@@ -35,13 +35,15 @@ import {
   updateProgramMenteeRequest,
   updateProgramRequest,
 } from '../../services/request';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import SuccessTik from '../../assets/images/blue_tik1x.png';
 import CloseReqPopup from '../../assets/icons/closeReqPopup.svg';
 import CancelReq from '../../assets/icons/cancelRequest.svg';
 import CancelIcon from '../../assets/images/cancel-colour1x.png'
 import ArrowRight from "../../assets/icons/breadCrumbsArrow.svg"
 import { CancelPopup } from '../Mentor/Task/cancelPopup';
+import { myMneteePage, newFollowRequestMentorPage, newFollowRequestPage, requestPageBreadcrumbs } from '../Breadcrumbs/BreadcrumbsCommonData';
+import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 
 const MentorMenteeProfile = () => {
   const [activity, setActivity] = React.useState({
@@ -52,7 +54,12 @@ const MentorMenteeProfile = () => {
   const dispatch = useDispatch();
   const state = useLocation()?.state;
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
+  const breadcrumbsType = searchParams.get("breadcrumbsType") || "";
+  const breadcrumbsStatusType = searchParams.get("status") || "";
+ 
+   const [breadcrumbsArray, setBreadcrumbsArray] = useState([]);
   const { profile } = useSelector((state) => state.profileInfo);
   const { status, userDetails, loading } = useSelector(
     (state) => state.userList
@@ -213,7 +220,36 @@ const MentorMenteeProfile = () => {
     mentee: "Mentee Profile",
     mentor: "Mentor Profile"
   }
+  const handleBreadcrumbs = (key) => {
+  const myMentee=myMneteePage()
+  const newFollowReq=newFollowRequestPage(breadcrumbsStatusType)
+  const newFollowReqMentor=newFollowRequestMentorPage(breadcrumbsStatusType)
 
+ 
+    switch (key) {
+      case requestPageBreadcrumbs.myMentee:
+        setBreadcrumbsArray(myMentee);
+        break;
+      case requestPageBreadcrumbs.newFollowRequest:
+        setBreadcrumbsArray(newFollowReq);
+        break;
+      case requestPageBreadcrumbs.newFollowRequestMentor:
+        setBreadcrumbsArray(newFollowReqMentor);
+        break;
+      // case requestPageBreadcrumbs.program_mentee_cancel:
+      //   setBreadcrumbsArray(program_mentee_cancel);
+      //   break;
+      case "discussion":
+        break;
+      default:
+        break;
+    }
+  };
+  useEffect(() => {
+    if (breadcrumbsType) {
+      handleBreadcrumbs(breadcrumbsType);
+    }
+  }, [breadcrumbsType]);
   return (
     <>
       <Backdrop
@@ -222,8 +258,8 @@ const MentorMenteeProfile = () => {
       >
         <CircularProgress color='inherit' />
       </Backdrop>
-
-      <Stack
+    
+     {!breadcrumbsType&& <Stack
         direction={'row'}
         alignItems={'center'}
         spacing={2}
@@ -258,7 +294,7 @@ const MentorMenteeProfile = () => {
               ? 'Mentee Profile'
               : 'View New Request Mentor Profile'}
         </Typography>
-      </Stack>
+      </Stack>}
       <Backdrop
             sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
             open={message}
@@ -281,7 +317,12 @@ const MentorMenteeProfile = () => {
 
             </div>
           </Backdrop>
-      <div className='border border-[#DBE0E5] rounded-[6px] bg-[#fff] m-[32px] p-[32px]'>
+          <div className='ml-8 pt-2'>
+
+{breadcrumbsType&&<Breadcrumbs items={breadcrumbsArray} />}
+</div>
+      <div className='border border-[#DBE0E5] rounded-[6px] bg-[#fff] m-[32px] mt-[10px] p-[32px]'>
+    
         <Stack
           direction={'row'}
           justifyContent={'space-between'}

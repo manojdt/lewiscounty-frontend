@@ -134,7 +134,7 @@ export default function Scheduler() {
                   className='text-base font-semibold'
                   style={{ color: 'rgba(24, 40, 61, 1)' }}
                 >
-                  My program list
+                  My meetings
                 </h4>
               </div>
               <div className='flex gap-5 flex-col justify-center items-center pb-5'>

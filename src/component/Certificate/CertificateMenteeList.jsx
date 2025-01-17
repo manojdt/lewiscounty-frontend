@@ -33,7 +33,7 @@ import { updateCertificateRequest, updateLocalRequest } from "../../services/req
 import TickColorIcon from "../../assets/icons/tickColorLatest.svg";
 import CancelColorIcon from "../../assets/icons/cancelCircle.svg";
 import { Typography } from "@mui/material";
-import { adminMy_approvedCertificate, adminMy_certificate, request_certificate, requestPageBreadcrumbs } from "../Breadcrumbs/BreadcrumbsCommonData";
+import { adminMy_approvedCertificate, adminMy_certificate, Approved_Certificate, pending_Certificate, request_certificate, requestPageBreadcrumbs, wait_certificate } from "../Breadcrumbs/BreadcrumbsCommonData";
 import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
 
 export default function CertificateMenteeList() {
@@ -288,6 +288,9 @@ export default function CertificateMenteeList() {
         const request_certificat=request_certificate()
         const admin_approvedreport=adminMy_approvedCertificate()
         const admin_canceledreport=adminMy_certificate()
+        const mentorwait_canceledreport=wait_certificate()
+        const mentorpending_canceledreport=pending_Certificate()
+        const mentorApproved_canceledreport=Approved_Certificate()
         switch (key) {
           case requestPageBreadcrumbs.certificate_request:
             setBreadcrumbsArray(request_certificat)
@@ -297,6 +300,15 @@ export default function CertificateMenteeList() {
             break;
             case requestPageBreadcrumbs.adminCertificateTab:
             setBreadcrumbsArray(admin_canceledreport)
+            break;
+            case requestPageBreadcrumbs.waitCertificateTab:
+            setBreadcrumbsArray(mentorwait_canceledreport)
+            break;
+            case requestPageBreadcrumbs.pendingCertificateTab:
+            setBreadcrumbsArray(mentorpending_canceledreport)
+            break;
+            case requestPageBreadcrumbs.approvedCertificateTab:
+            setBreadcrumbsArray(mentorApproved_canceledreport)
             break;
           case "discussion":
             break;

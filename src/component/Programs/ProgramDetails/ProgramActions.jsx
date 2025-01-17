@@ -163,41 +163,41 @@ const ProgramActions = ({
         );
       }
     }
-    const showRequestButtons =
-      (programdetails?.status === "inprogress" ||
-        programdetails?.status === "yettostart") &&
-      programdetails?.request_data?.request_type === "program_cancel" &&
-      ["new", "pending"].includes(programdetails?.request_data?.status);
+    // const showRequestButtons =
+    //   (programdetails?.status === "inprogress" ||
+    //     programdetails?.status === "yettostart") &&
+    //   programdetails?.request_data?.request_type === "program_cancel" &&
+    //   ["new", "pending"].includes(programdetails?.request_data?.status);
 
-    if (showRequestButtons) {
-      return (
-        <Box mt={2}>
-          <Stack direction="row" alignItems="center" spacing="20px">
-            <button
-              className="py-3 px-16 text-white text-[14px] flex items-center"
-              style={{ ...buttonStyles.base, ...buttonStyles.danger }}
-              onClick={() =>
-                handleAcceptCancelProgramRequest("cancel", programdetails.id)
-              }
-            >
-              {searchParams.has("type") &&
-              searchParams.get("type") === "program_cancel"
-                ? "Continue"
-                : "Reject Request"}
-            </button>
-            <button
-              className="py-3 px-16 text-white text-[14px] flex items-center"
-              style={{ ...buttonStyles.base, ...buttonStyles.success }}
-              onClick={() =>
-                handleAcceptCancelProgramRequest("accept", programdetails.id)
-              }
-            >
-              Approve Request
-            </button>
-          </Stack>
-        </Box>
-      );
-    }
+    // if (showRequestButtons) {
+    //   return (
+    //     <Box mt={2}>
+    //       <Stack direction="row" alignItems="center" spacing="20px">
+    //         <button
+    //           className="py-3 px-16 text-white text-[14px] flex items-center"
+    //           style={{ ...buttonStyles.base, ...buttonStyles.danger }}
+    //           onClick={() =>
+    //             handleAcceptCancelProgramRequest("cancel", programdetails.id)
+    //           }
+    //         >
+    //           {searchParams.has("type") &&
+    //           searchParams.get("type") === "program_cancel"
+    //             ? "Continue"
+    //             : "Reject Request"}
+    //         </button>
+    //         <button
+    //           className="py-3 px-16 text-white text-[14px] flex items-center"
+    //           style={{ ...buttonStyles.base, ...buttonStyles.success }}
+    //           onClick={() =>
+    //             handleAcceptCancelProgramRequest("accept", programdetails.id)
+    //           }
+    //         >
+    //           Approve Request
+    //         </button>
+    //       </Stack>
+    //     </Box>
+    //   );
+    // }
 
     // Admin Approve Reject Button
 
@@ -237,8 +237,31 @@ const ProgramActions = ({
       );
     }
 
-    // Program approval stage
+    // Launch program button
+    if (programdetails.status === "yettojoin") {
+      return (
+        <div className="py-9">
+          <button
+            className="py-3 px-16 text-white text-[14px] flex items-center"
+            style={{ ...buttonStyles.base, ...buttonStyles.gradient }}
+            onClick={() =>
+              !isLaunchingProgram && handleJoinProgram("program_join")
+            }
+          >
+            {isLaunchingProgram ? "loading..." : "Launch Program"}
+            <span className="pl-8 pt-1">
+              <img
+                style={{ width: "15px", height: "13px" }}
+                src={DoubleArrowIcon}
+                alt="DoubleArrowIcon"
+              />
+            </span>
+          </button>
+        </div>
+      );
+    }
 
+    // Program approval stage
     if (
       programApprovalStage[programdetails.status] &&
       !programdetails?.admin_program
@@ -294,6 +317,19 @@ const ProgramActions = ({
       );
     }
 
+    if(["new", "pending"].includes(
+      programdetails?.request_data?.status
+    ) && role === "mentor" && (type === "program_reschedule" || type === "program_cancel")){
+        return(
+          <button
+            onClick={() => setCancelPopup(true)}
+            className="!border-[2px] border-red-500 rounded-md text-red-500 px-4 py-2 font-semibold text-sm flex items-center mt-5"
+          >
+            Cancel Request
+          </button>
+        )
+    }
+
     // Draft status
     if (programdetails.status === "draft") {
       return (
@@ -312,29 +348,7 @@ const ProgramActions = ({
       );
     }
 
-    // Launch program button
-    if (programdetails.status === "yettojoin") {
-      return (
-        <div className="py-9">
-          <button
-            className="py-3 px-16 text-white text-[14px] flex items-center"
-            style={{ ...buttonStyles.base, ...buttonStyles.gradient }}
-            onClick={() =>
-              !isLaunchingProgram && handleJoinProgram("program_join")
-            }
-          >
-            {isLaunchingProgram ? "loading..." : "Launch Program"}
-            <span className="pl-8 pt-1">
-              <img
-                style={{ width: "15px", height: "13px" }}
-                src={DoubleArrowIcon}
-                alt="DoubleArrowIcon"
-              />
-            </span>
-          </button>
-        </div>
-      );
-    }
+    
 
     return null;
   };
@@ -401,7 +415,7 @@ const ProgramActions = ({
       <div className="py-9">
         {menteeProgramStatus[programdetails.mentee_join_status] ? (
           <>
-          {["new", "pending"].includes(
+          {["new", "pending", "rejected"].includes(
                   programdetails?.request_data?.status
                 ) && (
                   <button

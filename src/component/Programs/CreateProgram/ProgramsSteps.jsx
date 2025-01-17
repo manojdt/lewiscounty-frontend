@@ -994,6 +994,7 @@ const ProgramSteps = ({
                         name={field.name}
                         control={control}
                         defaultValue=""
+                        rules={field.inputRules}
                         render={({
                           field: { onChange, value, ...inputProps },
                         }) => (

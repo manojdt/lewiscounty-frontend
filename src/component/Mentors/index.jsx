@@ -39,6 +39,7 @@ import CloseReqPopup from '../../assets/icons/closeReqPopup.svg';
 import CancelReq from '../../assets/icons/cancelRequest.svg';
 import dayjs from 'dayjs';
 import moment from 'moment';
+import { requestPageBreadcrumbs } from '../Breadcrumbs/BreadcrumbsCommonData';
 
 export const Mentors = () => {
   const navigate = useNavigate();
@@ -47,6 +48,7 @@ export const Mentors = () => {
   const [searchParams] = useSearchParams();
   const mentortype = searchParams.get('type');
   const mentortypereq = searchParams.get('req');
+  const breadcrumbsStatusType = searchParams.get("status") || "";
   const state = useLocation()?.state;
 
   const { mentorList, loading, status } = useSelector(
@@ -54,7 +56,7 @@ export const Mentors = () => {
   );
 
   const [mentorType, setMentorType] = useState(
-    mentortypereq?mentortypereq: mentortype ?? state?.type === 'requestmentor' ?  'requestmentor' : 'mymentor'
+    mentortypereq ? mentortypereq : mentortype ?? state?.type === 'requestmentor' ? 'requestmentor' : 'mymentor'
   );
   const [requestTab, setRequestTab] = useState('all');
   const [selectedItem, setSelectedItem] = useState({});
@@ -183,7 +185,15 @@ export const Mentors = () => {
               }}
             >
               <MenuItem
-                onClick={() => navigate(`/mentor-details/${selectedItem.id}`)}
+                onClick={() => { 
+                  if(mentorType==="topmentor"){
+
+                    navigate(`/mentor-details/${selectedItem.id}?breadcrumbsType=${requestPageBreadcrumbs.topMentor}`)
+                  }else{
+                    navigate(`/mentor-details/${selectedItem.id}?breadcrumbsType=${requestPageBreadcrumbs.myMentor}`)
+
+                  }
+                   }}
                 className='!text-[12px]'
               >
                 <img src={ViewIcon} alt='ViewIcon' className='pr-3 w-[30px]' />
@@ -327,7 +337,7 @@ export const Mentors = () => {
             >
               <MenuItem
                 onClick={() =>
-                  navigate(`/profileView`, {
+                  navigate(`/profileView?breadcrumbsType=${requestPageBreadcrumbs.newFollowRequestMentor}&status=${requestTab}`, {
                     state: {
                       row_id: selectedItem?.id,
                       user_id: selectedItem?.following,
@@ -341,22 +351,22 @@ export const Mentors = () => {
                 View
               </MenuItem>
               {(selectedItem.status === "new" ||
-                                        selectedItem.status === "pending") &&
-                                    <>
-              <MenuItem
-                onClick={() => {
-                  handleOpenCancelPopup(selectedItem);
-                }}
-                className='!text-[12px]'
-              >
-                <img
-                  src={CloseRequest}
-                  alt='FollowIcon'
-                  className='pr-3 w-[27px]'
-                />
-                Cancel Request
-              </MenuItem>
-              </>}
+                selectedItem.status === "pending") &&
+                <>
+                  <MenuItem
+                    onClick={() => {
+                      handleOpenCancelPopup(selectedItem);
+                    }}
+                    className='!text-[12px]'
+                  >
+                    <img
+                      src={CloseRequest}
+                      alt='FollowIcon'
+                      className='pr-3 w-[27px]'
+                    />
+                    Cancel Request
+                  </MenuItem>
+                </>}
             </Menu>
           </>
         );
@@ -377,7 +387,7 @@ export const Mentors = () => {
         getMyReqMentors({
           page: paginationModel?.page + 1,
           limit: paginationModel?.pageSize,
-          status: requestTab,
+          status:breadcrumbsStatusType|| requestTab,
         })
       );
     } else {
@@ -385,11 +395,11 @@ export const Mentors = () => {
     }
   };
   useEffect(() => {
-    if(searchParams.get('req')){
-     setMentorType(searchParams.get('req'))
-     getMentorDatas(searchParams.get('req'))
+    if (searchParams.get('req')) {
+      setMentorType(searchParams.get('req'))
+      getMentorDatas(searchParams.get('req'))
     }
-   }, [searchParams]);
+  }, [searchParams]);
   useEffect(() => {
     getMentorDatas();
   }, [paginationModel]);
@@ -545,7 +555,11 @@ export const Mentors = () => {
       }
     });
   };
-
+  useEffect(() => {
+    if (breadcrumbsStatusType) {
+      setRequestTab(breadcrumbsStatusType)
+    }
+  }, [breadcrumbsStatusType]);
   return (
     <div className='px-9 py-9'>
       <Backdrop

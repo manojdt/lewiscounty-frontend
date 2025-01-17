@@ -42,7 +42,7 @@ const Reports = () => {
     const [requestTab, setRequestTab] = useState('all')
     const [searchParams, setSearchParams] = useSearchParams();
     const [reportData, setReportData] = useState({ action: '', selectedItem: [] })
-    const selectedRequestedTab = searchParams.get('tabType');
+    const selectedRequestedTab = searchParams.get('tabType')||"";
     const [paginationModel, setPaginationModel] = React.useState({
         page: 0,
         pageSize: 10,
@@ -261,7 +261,7 @@ const Reports = () => {
 
                                 <MenuItem onClick={() =>{
                                   
-                                    const adminView = role==='admin'?`?breadcrumbsType=${requestTab}`:''
+                                    const adminView = role==='admin'||role==="mentor"?`?breadcrumbsType=${requestTab}`:''
                                     navigate(`/view-report/${reportData.selectedItem[0].id}${adminView}`)
                                 } 
                                 } className='!text-[12px]'>
@@ -331,7 +331,7 @@ const Reports = () => {
 
 
     const getReports = () => {
-        const filterType = searchParams.get("type");
+        const filterType = searchParams.get("type")||selectedRequestedTab;
         const filterSearch = searchParams.get("search");
         const filterDate = searchParams.get("filter_by");
         let query = {}
@@ -408,9 +408,11 @@ const Reports = () => {
         }
     }, [status,role])
   useEffect(() => {
-    if(selectedRequestedTab){
+    if(selectedRequestedTab&&role==='admin'){
         setRequestTab(selectedRequestedTab)
     
+    }else if(selectedRequestedTab&&role==='mentor'){
+        handleTab(selectedRequestedTab)
     }
    }, [selectedRequestedTab])
     return (

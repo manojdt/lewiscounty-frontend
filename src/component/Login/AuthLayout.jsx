@@ -4,6 +4,7 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { Outlet } from 'react-router-dom';
 import { styled } from '@mui/material';
+import { useWindowSize } from '../../utils/windowResize';
 
 const SlideDotStyleWrapper = styled('div')`
   .custom-dots {
@@ -64,6 +65,8 @@ const AuthLayout = () => {
     ),
   };
 
+  const { width } = useWindowSize();
+
   // Welcome slider content
   const slides = [
     {
@@ -89,7 +92,7 @@ const AuthLayout = () => {
   return (
     <div className='flex h-screen overflow-hidden'>
       {/* Left Section */}
-      <div
+      {width > 1024 && <div
         className='w-3/5 flex items-center justify-center'
         style={{
           background:
@@ -109,8 +112,9 @@ const AuthLayout = () => {
             ))}
           </Slider>
         </div>
-      </div>
-      <div className='w-full overflow-y-auto py-10'>
+      </div>}
+      
+      <div className='w-full overflow-y-auto py-10 max-lg:py-2'>
         <Outlet />
       </div>
     </div>

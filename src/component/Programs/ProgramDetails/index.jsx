@@ -4,6 +4,7 @@ import {
   useSearchParams,
   useParams,
   useLocation,
+  Link,
 } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -97,6 +98,7 @@ import {
   program_details,
   program_details_main,
   programStatusBreadcrumbs,
+  request_join,
   request_newProgramRequest,
   request_programCancel,
   request_programMenteeCancel,
@@ -332,6 +334,9 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     await updateProgramStatus({
       id: programdetails?.id,
       status: programActionStatus.completed,
+      ...(programdetails.hasOwnProperty("admin_assign_program") && {
+        is_admin_program: true,
+      }),
     });
   };
 
@@ -347,7 +352,13 @@ export default function ProgramDetails({ setProgramDetailsId }) {
           activity: false,
         });
 
-        navigate(`/program-completion/${programdetails?.id}`);
+        navigate(
+          `/program-completion/${programdetails?.id}${
+            "admin_assign_program" in programdetails
+              ? `?program_create_type=admin_program`
+              : ""
+          }`
+        );
       }, 2000);
       handleClose();
     }
@@ -577,6 +588,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     const program_mentee_cancel = request_programMenteeCancel(
       programdetails?.program_name
     );
+     const admin_approvedreport=request_join(programdetails?.program_nam)
     if (programStatusBreadcrumbs.includes(decodedKey)) {
       setBreadcrumbsArray(
         program_details_main(programdetails?.program_name, decodedKey)
@@ -598,6 +610,9 @@ export default function ProgramDetails({ setProgramDetailsId }) {
         break;
       case requestPageBreadcrumbs.program_mentee_cancel:
         setBreadcrumbsArray(program_mentee_cancel);
+        break;
+      case requestPageBreadcrumbs.program_join_request_admin:
+        setBreadcrumbsArray(admin_approvedreport);
         break;
       case "discussion":
         break;
@@ -1974,18 +1989,15 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                       "program_join",
                       "program_reschedule",
                       "program_cancel",
-                    ].includes(typeParams)
-                  ) ||
+                    ].includes(typeParams)) ||
                   (role === "mentee" &&
                     (programdetails.status === programActionStatus.inprogress ||
                       programdetails.mentee_join_status ===
                         programActionStatus.program_join_request_accepted ||
                       programdetails?.program_interest) &&
-                      ![
-                        "program_join",
-                        "program_cancel",
-                      ].includes(typeParams)
-                    )) && (
+                    !["program_join", "program_cancel"].includes(
+                      typeParams
+                    ))) && (
                   <>
                     <div className="cursor-pointer" onClick={handleClick}>
                       <img src={MoreIcon} alt="MoreIcon" />
@@ -2299,6 +2311,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
 
                       <span>Instructor :</span>
                       {role !== "mentor" ? (
+                         <Link to={`/mentor-details/${programdetails?.created_by}`} >
+
                         <span
                           style={{
                             color: "rgba(29, 91, 191, 1)",
@@ -2309,10 +2323,14 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                         >
                           {programdetails?.mentor_name}
                         </span>
+                         </Link>
                       ) : (
+                        <Link to={`/mentor-details/${programdetails?.created_by}`} >
+
                         <span style={{ color: "rgba(29, 91, 191, 1)" }}>
                           {programdetails?.mentor_name}
                         </span>
+                        </Link>
                       )}
                     </div>
                   </div>
@@ -3113,7 +3131,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                 key={goal.id}
                                 className={`px-6 py-3 text-[12px] bg-gray-200 text-black rounded-full`}
                                 onClick={() =>
-                                  navigate(`/view-goal/${goal.id}`)
+                                  navigate(`/view-goal/${goal.id}?breadcrumbsType=program_goal_view`)
                                 }
                               >
                                 {goal.description?.substring(0, 10)}

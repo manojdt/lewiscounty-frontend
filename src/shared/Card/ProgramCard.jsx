@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { useDispatch, useSelector } from "react-redux";
@@ -592,10 +592,10 @@ export default function ProgramCard({
                             }}
                           >
                             Instructor :{" "}
-                            <span style={{ color: "#1D5BBF" }}>
+                            <Link to={`/mentor-details/${currentProgram?.created_by}`} style={{ color: "#1D5BBF" }}>
                               {currentProgram?.mentor_name} (
                               {currentProgram?.role ?? ""})
-                            </span>
+                            </Link>
                           </span>
                         </div>
                         <div className='flex justify-center pt-2'>

@@ -15,13 +15,15 @@ import { getProgramDetails } from '../../../services/userprograms';
 import { Backdrop, CircularProgress } from '@mui/material';
 import { dateFormatRever } from '../../../utils';
 import moment from 'moment';
+import { programCompletionPage } from '../../Breadcrumbs/BreadcrumbsCommonData';
+import Breadcrumbs from '../../Breadcrumbs/Breadcrumbs';
 
 export default function ProgramCompletion() {
     const navigate = useNavigate()
     const params = useParams();
     const [anchorEl, setAnchorEl] = useState(null);
     const [completedProgram, setCompletedProgram] = useState({})
-
+    const [breadcrumbsArray, setBreadcrumbsArray] = useState([]);
     const dispatch = useDispatch()
     const { programdetails, loading: programLoading, error, status, menteeList } = useSelector(state => state.userPrograms)
 
@@ -54,10 +56,17 @@ export default function ProgramCompletion() {
     }, [programdetails])
 
     useEffect(() => {
+        if (programdetails.program_name) {
+            setBreadcrumbsArray(programCompletionPage(programdetails.program_name))
+        }
+    }, [programdetails])
+
+
+    useEffect(() => {
         if (params.id) {
             const programId = params.id;
             if (programId && programId !== '') {
-                dispatch(getProgramDetails({id: programId}))
+                dispatch(getProgramDetails({ id: programId }))
             }
         }
     }, [params.id])
@@ -75,7 +84,8 @@ export default function ProgramCompletion() {
                     <div className='grid mb-10' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)', borderRadius: '5px' }}>
                         <div className='breadcrum'>
                             <nav className="flex px-7 pt-6 pb-5 mx-2 border-b-2 justify-between" aria-label="Breadcrumb">
-                                <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+                                <Breadcrumbs items={breadcrumbsArray} />
+                                {/* <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
                                     <li className="inline-flex items-center">
                                         <p className="inline-flex items-center text-sm font-medium" style={{ color: 'rgba(89, 117, 162, 1)' }}>
                                             Program
@@ -99,7 +109,7 @@ export default function ProgramCompletion() {
                                                 Completed </p>
                                         </div>
                                     </li>
-                                </ol>
+                                </ol> */}
                                 {/* <div className='cursor-pointer' onClick={handleClick}>
                                     <img src={MoreIcon} alt='MoreIcon' />
                                 </div> */}
@@ -109,7 +119,7 @@ export default function ProgramCompletion() {
                                     open={open}
                                     onClose={handleClose}
                                     MenuListProps={{
-                                        'aria-labelledby': 'basic-button',
+                                        "aria-labelledby": "basic-button",
                                     }}
                                 >
                                     {/* <MenuItem onClick={handleClose} className='!text-[12px]'>
@@ -122,54 +132,105 @@ export default function ProgramCompletion() {
                                 </Menu>
                             </nav>
                         </div>
-                        <div className='flex justify-center items-center flex-col gap-8 py-10'>
-                            <div className='font-semibold' style={{ color: 'rgba(29, 91, 191, 1)' }}>Completed {programdetails?.program_name} Program</div>
-                            <img src={CompletedIcon} alt="CompletedIcon" className='w-[2%]' />
+                        <div className="flex justify-center items-center flex-col gap-8 py-10">
+                            <div
+                                className="font-semibold"
+                                style={{ color: "rgba(29, 91, 191, 1)" }}
+                            >
+                                Completed {programdetails?.program_name} Program
+                            </div>
+                            <img src={CompletedIcon} alt="CompletedIcon" className="w-[2%]" />
                             <div>
                                 <div className="relative ">
                                     <table className="w-[800px] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                                        <tbody style={{ border: '1px solid rgba(29, 91, 191, 1)' }}>
+                                        <tbody style={{ border: "1px solid rgba(29, 91, 191, 1)" }}>
                                             <tr className="bg-white border-b">
-                                                <th scope="row" style={{ border: '1px solid rgba(29, 91, 191, 1)' }} className="px-6 py-4 font-medium whitespace-nowrap text-font-secondary-black">
+                                                <th
+                                                    scope="row"
+                                                    style={{ border: "1px solid rgba(29, 91, 191, 1)" }}
+                                                    className="px-6 py-4 font-medium whitespace-nowrap text-font-secondary-black"
+                                                >
                                                     Start Date | End Date
                                                 </th>
-                                                <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
-                                                    {completedProgram?.start_date ? `${moment(completedProgram?.start_date).format("MM-DD-YYYY")}` : "-"} | {completedProgram?.end_date ? `${moment(completedProgram?.end_date).format("MM-DD-YYYY")}`: "-"}
+                                                <td
+                                                    className="px-6 py-4 text-white"
+                                                    style={{ background: "rgba(29, 91, 191, 1)" }}
+                                                >
+                                                    {programdetails?.start_date
+                                                        ? `${moment(programdetails?.start_date).format(
+                                                            "MM-DD-YYYY"
+                                                        )}`
+                                                        : "-"}{" "}
+                                                    |{" "}
+                                                    {programdetails?.end_date
+                                                        ? `${moment(programdetails?.end_date).format(
+                                                            "MM-DD-YYYY"
+                                                        )}`
+                                                        : "-"}
                                                 </td>
                                             </tr>
                                             <tr className="bg-white border-b">
-                                                <th style={{ border: '1px solid rgba(29, 91, 191, 1)' }} scope="row" className="px-6 py-4 font-medium  whitespace-nowrap text-font-secondary-black">
+                                                <th
+                                                    style={{ border: "1px solid rgba(29, 91, 191, 1)" }}
+                                                    scope="row"
+                                                    className="px-6 py-4 font-medium  whitespace-nowrap text-font-secondary-black"
+                                                >
                                                     Durations
                                                 </th>
-                                                <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
-                                                    {completedProgram.duration} {' Days'}
+                                                <td
+                                                    className="px-6 py-4 text-white"
+                                                    style={{ background: "rgba(29, 91, 191, 1)" }}
+                                                >
+                                                    {programdetails?.duration} {" Days"}
                                                 </td>
                                             </tr>
                                             <tr className="bg-white border-b ">
-                                                <th style={{ border: '1px solid rgba(29, 91, 191, 1)' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap text-font-secondary-black">
+                                                <th
+                                                    style={{ border: "1px solid rgba(29, 91, 191, 1)" }}
+                                                    scope="row"
+                                                    className="px-6 py-4 font-medium whitespace-nowrap text-font-secondary-black"
+                                                >
                                                     Attended Mentees
                                                 </th>
-                                                <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
-                                                    {completedProgram?.participated_mentees_count}
+                                                <td
+                                                    className="px-6 py-4 text-white"
+                                                    style={{ background: "rgba(29, 91, 191, 1)" }}
+                                                >
+                                                    {programdetails?.participated_mentees_count}
                                                 </td>
                                             </tr>
-                                            {
-                                                completedProgram?.program_mode !== "virtual_meeting" &&
+                                            {programdetails?.program_mode !== "virtual_meeting" && (
                                                 <tr className="bg-white border-b ">
-                                                    <th style={{ border: '1px solid rgba(29, 91, 191, 1)' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap text-font-secondary-black">
+                                                    <th
+                                                        style={{ border: "1px solid rgba(29, 91, 191, 1)" }}
+                                                        scope="row"
+                                                        className="px-6 py-4 font-medium whitespace-nowrap text-font-secondary-black"
+                                                    >
                                                         Location
                                                     </th>
-                                                    <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
-                                                        {`${completedProgram?.city_details?.name}, ${completedProgram?.state_details?.abbreviation}`}
+                                                    <td
+                                                        className="px-6 py-4 text-white"
+                                                        style={{ background: "rgba(29, 91, 191, 1)" }}
+                                                    >
+                                                        {`${programdetails?.city_details?.name}, ${programdetails?.state_details?.abbreviation}`}
                                                     </td>
                                                 </tr>
-                                            }
+                                            )}
                                             <tr className="bg-white border-b">
-                                                <th style={{ border: '1px solid rgba(29, 91, 191, 1)' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap text-font-secondary-black">
+                                                <th
+                                                    style={{ border: "1px solid rgba(29, 91, 191, 1)" }}
+                                                    scope="row"
+                                                    className="px-6 py-4 font-medium whitespace-nowrap text-font-secondary-black"
+                                                >
                                                     Program status
                                                 </th>
-                                                <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
-                                                    {completedProgram?.program_mode === "virtual_meeting" ? "Online" : "Offline"}
+                                                <td
+                                                    className="px-6 py-4 text-white"
+                                                    style={{ background: "rgba(29, 91, 191, 1)" }}
+                                                >
+                                                    {programdetails?.program_mode === "virtual_meeting"
+                                                        ? "Online"
+                                                        : "Offline"}
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -182,14 +243,25 @@ export default function ProgramCompletion() {
                         </div>
 
                         <div className="flex gap-6 justify-center align-middle py-10">
-                            <Button btnName='Skip' btnCls="w-[13%]" btnCategory="secondary" onClick={() => navigate(`/generate_certificate/${params.id}`)} />
-                            <Button btnType="button" btnCls="w-[13%]" onClick={() =>  navigate(`/create-report?program_id=${params.id}&cat_id=${programdetails?.categories[0]?.id}`)} btnName='Create Report' btnCategory="primary" />
+                            <Button
+                                btnName="Skip"
+                                btnCls="w-[13%]"
+                                btnCategory="secondary"
+                                onClick={() => navigate(`/generate_certificate/${params.id}`)}
+                            />
+                            <Button
+                                btnType="button"
+                                btnCls="w-[13%]"
+                                onClick={() =>
+                                    navigate(
+                                        `/create-report?program_id=${params.id}&cat_id=${programdetails?.categories[0]?.id}`
+                                    )
+                                }
+                                btnName="Create Report"
+                                btnCategory="primary"
+                            />
                         </div>
-
-                    </div>
-                    : null
-            }
-        </div>
-
-    )
+                    </div>:""}
+    </div>
+    );
 }

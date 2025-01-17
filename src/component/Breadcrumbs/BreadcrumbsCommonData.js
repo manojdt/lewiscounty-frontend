@@ -17,11 +17,40 @@ export const requestPageBreadcrumbs = {
   adminApproveReportTab:"approved",
   adminCancelReportTab:"rejected",
   adminCertificateTab:"all",
+  waitCertificateTab:"waiting_for_response",
+  pendingCertificateTab:"pending",
+  approvedCertificateTab:"approved",
   adminCertificateApproveReportTab:"approved",
   adminMemberMentorTab:"mentor",
   adminMemberMenteeTab:"mentee",
   new_goals_request:"new_goals_request",
   feed:'fead',
+  myMentee:"myMentee",
+  newFollowRequest:"new_follow_request",
+  myMentor:"myMentor",
+  topMentor:"topMentor",
+  newFollowRequestMentor:"new_follow_request_mentor",
+  goalHistory:"goalHistory",
+  activeGoal:"active",
+  progressGoal:"in_progress",
+  completedGoal:"completed",
+  cancelledGoal:"cancel",
+  programGoalView:"program_goal_view",
+  menteeGoalViewMentor:"mentor-view-mentee-goal",
+  menteeAllReport:'all',
+  menteeNewReport:'new',
+  menteePendingReport:'pending',
+  menteeCompletedReport:'approved',
+  menteeRejectedReport:'rejected',
+  menteeDraftReport:'draft',
+  taskMenteeAllReport:'all',
+  taskMenteeNewReport:'newtask',
+  taskMenteeWaitReport:'waiting_for_approval',
+  taskMenteeReassignedReport:'reassigned',
+  taskMenteePendingReport:'pending',
+  taskMenteeCompletedReport:'completed',
+  taskMenteeRejectedReport:'rejected',
+  taskMenteeDraftReport:'draft',
 };
 export const programStatusBreadcrumbs=[
     'All Programs',
@@ -198,7 +227,7 @@ export const request_join = (name) => {
         path: `/all-request?type=program_request&tabType=${requestPageBreadcrumbs?.program_join}&mainTab=${requestPageBreadcrumbs.main_mentee_tab}`,
       },
       {
-        label: `View Mentee Profile ${name}`,
+        label: name?`View ${name}`:`View Mentee Profile`,
       },
     ];
   };
@@ -237,6 +266,73 @@ export const admin_Canceledreport = (name) => {
       },
     ];
   };
+// Mentor Report
+export const mentor_allreport = (name) => {
+  return [
+    {
+      label: "Reports",
+      path: `/reports`,
+    },
+    {
+      label: `View ${name}`,
+    },
+  ];
+};
+export const mentor_Newreport = (name) => {
+  return [
+    {
+      label: "Reports",
+      path: `/reports?tabType=${requestPageBreadcrumbs?.menteeNewReport}`,
+    },
+    {
+      label: `View ${name}`,
+    },
+  ];
+};
+export const mentor_Pendingreport = (name) => {
+  return [
+    {
+      label: "Reports",
+      path: `/reports?tabType=${requestPageBreadcrumbs?.menteePendingReport}`,
+    },
+    {
+      label: `View ${name}`,
+    },
+  ];
+};
+export const mentor_Completedreport = (name) => {
+  return [
+    {
+      label: "Reports",
+      path: `/reports?tabType=${requestPageBreadcrumbs?.menteeCompletedReport}&tr=fsdbj`,
+    },
+    {
+      label: `View ${name}`,
+    },
+  ];
+};
+export const mentor_Rejectedreport = (name) => {
+  return [
+    {
+      label: "Reports",
+      path: `/reports?tabType=${requestPageBreadcrumbs?.menteeRejectedReport}`,
+    },
+    {
+      label: `View ${name}`,
+    },
+  ];
+};
+export const mentor_Draftreport = (name) => {
+  return [
+    {
+      label: "Reports",
+      path: `/reports?tabType=${requestPageBreadcrumbs?.menteeDraftReport}`,
+    },
+    {
+      label: `View ${name}`,
+    },
+  ];
+};
 // My Certificate
 
 export const adminMy_certificate = (name) => {
@@ -261,6 +357,52 @@ export const adminMy_approvedCertificate = (name) => {
       },
     ];
   };
+// Mentor Certificate
+export const wait_certificate = (name) => {
+  return [
+    {
+      label: " Generate Certificates Request",
+      path: `/certificates?tabType=${requestPageBreadcrumbs?.waitCertificateTab}`,
+    },
+    {
+      label: `View Accepted Member List`,
+    },
+  ];
+};
+export const pending_Certificate = (name) => {
+  return [
+    {
+      label: "Generate Certificates Request",
+      path: `/certificates?tabType=${requestPageBreadcrumbs?.pendingCertificateTab}`,
+    },
+    {
+      label: `View Accepted Member List`,
+    },
+  ];
+};
+export const Approved_Certificate = (name) => {
+  return [
+    {
+      label: "Generate Certificates Request",
+      path: `/certificates?tabType=${requestPageBreadcrumbs?.approvedCertificateTab}`,
+    },
+    {
+      label: `View Accepted Member List`,
+    },
+  ];
+};
+// Mentee Certificate
+export const mentee_Certificate_list = (name) => {
+  return [
+    {
+      label: "Certificates",
+      path: -1,
+    },
+    {
+      label: `View Certificate`,
+    },
+  ];
+};
 
 // Member List
 export const admin_mentorMember = (name) => {
@@ -294,7 +436,7 @@ export const admin_menteeMember = (name) => {
         path: -1,
       },
       {
-        label: `View ${name}`,
+        label: `${name}`,
       },
     ];
   };
@@ -312,6 +454,271 @@ export const user_feed = (name) => {
     ];
   };
 
+// Mentee Nav tab
+
+export const myMneteePage = () => {
+    return [
+      {
+        label: `My Mentees`,
+        path: `/mentees?req=my-mentee`,
+      },
+      {
+        label: `View Mentee Profile`,
+      },
+    ];
+  };
+export const newFollowRequestPage = (status) => {
+    return [
+      {
+        label: `New Follow Requests`,
+        path: `/mentees?req=new-request-mentees&status=${status}`,
+      },
+      {
+        label: `View Mentee Profile`,
+      },
+    ];
+  };
+
+// Mentor Nav Tab
+export const myMentorPage = () => {
+  return [
+    {
+      label: `My Mentors`,
+      path: `/mentors`,
+    },
+    {
+      label: `View Mentors Profile`,
+    },
+  ];
+};
+export const topMentorPage = () => {
+  return [
+    {
+      label: `Top Mentors`,
+      path: `/mentors?req=topmentor`,
+    },
+    {
+      label: `View Mentors Profile`,
+    },
+  ];
+};
+export const newFollowRequestMentorPage = (status) => {
+  return [
+    {
+      label: `New Follow Requests`,
+      path: `/mentors?req=requestmentor&status=${status}`,
+    },
+    {
+      label: `View Mentor Profile`,
+    },
+  ];
+};
+
+
+ // Goals
+
+  export const goal_history = (name,queryString) => {
+      const query=queryString?`?adminTabType=${queryString}`:""
+    return [
+      {
+        label: "Goals",
+        path: `/goals${query}`,
+      },
+      {
+        label: `View ${name}`,
+      },
+    ];
+  };
+  export const goal_active = (name,queryString) => {
+     const query=queryString?`&adminTabType=${queryString}`:""
+    return [
+      {
+        label: "Active Goals",
+        path: `/goals?type=active${query}`,
+      },
+      {
+        label: `View ${name}`,
+      },
+    ];
+  };
+  export const goal_progress = (name,queryString) => {
+     const query=queryString?`&adminTabType=${queryString}`:""
+    return [
+      {
+        label: "Goals in Progress",
+        path: `/goals?type=in_progress${query}`,
+      },
+      {
+        label: `View ${name}`,
+      },
+    ];
+  };
+  export const goal_completed = (name,queryString) => {
+     const query=queryString?`&adminTabType=${queryString}`:""
+    return [
+      {
+        label: "Completed Goals",
+        path: `/goals?type=completed${query}`,
+      },
+      {
+        label: `View ${name}`,
+      },
+    ];
+  };
+  export const goal_cancelled = (name,queryString) => {
+     const query=queryString?`&adminTabType=${queryString}`:""
+    return [
+      {
+        label: "Cancelled Goals ",
+        path: `/goals?type=cancel${query}`,
+      },
+      {
+        label: `View ${name}`,
+      },
+    ];
+  };
+  export const mentee_goal_view = (name) => {
+    
+    return [
+      {
+        label: "Mentee Goals",
+        path: `/goals?mentortab=mentee`,
+      },
+      {
+        label: `View ${name}`,
+      },
+    ];
+  };
+  export const goal_program_details = (name) => {
+    
+    return [
+      {
+        label: "Program Details",
+        path: -1,
+      },
+      {
+        label: `View ${name}`,
+      },
+    ];
+  };
+
+  // Task
+  
+  export const allTask = (name) => {
+    
+    return [
+      {
+        label: "Tasks",
+        path: `/mentee-tasks`,
+      },
+      {
+        label: `View ${name}`,
+      },
+    ];
+  }; 
+  export const newTask = (name) => {
+    
+    return [
+      {
+        label: "Tasks",
+        path: `/mentee-tasks?type=newtask`,
+      },
+      {
+        label: `View ${name}`,
+      },
+    ];
+  }; 
+  export const pendingTask = (name) => {
+    
+    return [
+      {
+        label: "Tasks",
+        path: `/mentee-tasks?type=pending`,
+      },
+      {
+        label: `View ${name}`,
+      },
+    ];
+  }; 
+  export const waitTask = (name) => {
+    
+    return [
+      {
+        label: "Tasks",
+        path: `/mentee-tasks?type=waiting_for_approval`,
+      },
+      {
+        label: `View ${name}`,
+      },
+    ];
+  }; 
+  export const reassignTask = (name) => {
+    
+    return [
+      {
+        label: "Tasks",
+        path: `/mentee-tasks?type=reassigned`,
+      },
+      {
+        label: `View ${name}`,
+      },
+    ];
+  }; 
+  export const completedTask = (name) => {
+    
+    return [
+      {
+        label: "Tasks",
+        path: `/mentee-tasks?type=completed`,
+      },
+      {
+        label: `View ${name}`,
+      },
+    ];
+  }; 
+  export const rejectedTask = (name) => {
+    
+    return [
+      {
+        label: "Tasks",
+        path: `/mentee-tasks?type=rejected`,
+      },
+      {
+        label: `View ${name}`,
+      },
+    ];
+  }; 
+  export const draftTask = (name) => {
+    
+    return [
+      {
+        label: "Tasks",
+        path: `/mentee-tasks?type=draft`,
+      },
+      {
+        label: `View ${name}`,
+      },
+    ];
+  }; 
+
+// Program Completion Page
+export const programCompletionPage = (name) => {
+    
+  return [
+    {
+      label: "Programs",
+      path: `/programs`,
+    },
+    {
+      label: `${name}`,
+      path: -1,
+    },
+    {
+      label: `Completed`,
+    },
+  ];
+}; 
+
 export const tabQuertyData = (role, tab) => {
   if (role === "admin") {
     return requestPageBreadcrumbs[tab];
@@ -321,4 +728,16 @@ export const tabQuertyDataMentor = (role, tab) => {
   if (role === "mentor") {
     return requestPageBreadcrumbs[tab];
   }
+};
+
+export const programProfileBreadCrumb = () => {
+  return [
+    {
+      label: `Program`,
+      path: `/programs`,
+    },
+    {
+      label: `View Mentee Profile`,
+    },
+  ];
 };

@@ -949,7 +949,7 @@ export const RequestStatusArray = [
   },
   {
     key: 'new_goals_request',
-    name: 'New Goals Requests',
+    name: 'Goals Requests',
   },
 ];
 
@@ -992,11 +992,11 @@ export const RequestStatus = {
   },
   newGoalsRequests: {
     key: 'new_goals_request',
-    name: 'New Goals Requests',
+    name: 'Goals Requests',
   },
   extendedRequests: {
     key: 'extended_request',
-    name: 'Extended Requests',
+    name: 'Extension Requests',
   },
   reOpenRequests: {
     key: 're_open_request',
@@ -1020,7 +1020,7 @@ export const myRequestOverview = [
   //   for: ['admin', 'mentor'],
   // },
   {
-    name: 'New Goals Requests',
+    name: 'Goals Requests',
     key: RequestStatus.newGoalsRequests.key,
     count: 0,
     status: RequestStatus.newGoalsRequests.key,
@@ -1069,7 +1069,7 @@ export const myRequestOverview = [
     for: ['admin'],
   },
   {
-    name: 'Extended Requests',
+    name: 'Extension Requests',
     key: RequestStatus.extendedRequests,
     count: 0,
     status: RequestStatus.extendedRequests.key,
@@ -1111,7 +1111,7 @@ export const menteesRequestOverview = [
     key: RequestStatus.goalRequest,
     count: 0,
     status: RequestStatus.goalRequest.key,
-    for: ['mentor', 'admin'],
+    for: ['admin'],
   },
 ];
 
@@ -1122,6 +1122,13 @@ export const adminRequestOverview = [
     count: 0,
     status: RequestStatus.programRequest.key,
     for: ['mentor'],
+  },
+  {
+    name: 'Testimonial Requests',
+    key: RequestStatus.testimonicalRequest,
+    count: 0,
+    status: RequestStatus.testimonicalRequest.key,
+    for: ['admin'],
   },
 ];
 

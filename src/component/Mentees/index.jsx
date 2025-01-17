@@ -34,6 +34,7 @@ import {
 import { Button } from '../../shared';
 import SuccessTik from '../../assets/images/blue_tik1x.png';
 import MuiModal from '../../shared/Modal';
+import { requestPageBreadcrumbs } from '../Breadcrumbs/BreadcrumbsCommonData';
 
 export const Mentees = () => {
   const navigate = useNavigate();
@@ -48,6 +49,7 @@ export const Mentees = () => {
     (state) => state.userList
   );
 
+  const breadcrumbsStatusType = searchParams.get("status") || "";
   const [mentorType, setMentorType] = useState(
     state?.type === 'new_req_mentee' ? 'new-request-mentees' :searchParams.get('req')==="new-request-mentees"?"new-request-mentees": 'my-mentee'
   );
@@ -162,7 +164,7 @@ if(reason){
               }}
             >
               <MenuItem
-                onClick={() => navigate(`/mentee-details/${selectedMentee.id}`)}
+                onClick={() => navigate(`/mentee-details/${selectedMentee.id}?breadcrumbsType=${requestPageBreadcrumbs.myMentee}`)}
                 className='!text-[12px]'
               >
                 <img src={ViewIcon} alt='ViewIcon' className='pr-3 w-[30px]' />
@@ -232,7 +234,7 @@ if(reason){
             >
               <MenuItem
                 onClick={() =>
-                  navigate(`/profileView`, {
+                  navigate(`/profileView?breadcrumbsType=${requestPageBreadcrumbs.newFollowRequest}&status=${requestTab}`, {
                     state: {
                       row_id: selectedMentee?.id,
                       user_id: selectedMentee?.follower,
@@ -319,6 +321,11 @@ if(reason){
     setMentorType(searchParams.get('req'))
    }
   }, [searchParams]);
+  useEffect(() => {
+   if(breadcrumbsStatusType){
+    setRequestTab(breadcrumbsStatusType)
+   }
+  }, [breadcrumbsStatusType]);
 
   const handleOpenActivityPopup = (id, type) => {
     handleClose();

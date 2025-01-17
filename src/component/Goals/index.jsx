@@ -38,6 +38,8 @@ import { Button } from '../../shared';
 import StartIcon from "../../assets/icons/startIcon.svg"
 import TickCircleIcon from "../../assets/icons/tickCircle.svg"
 import moment from 'moment';
+import { requestPageBreadcrumbs } from '../Breadcrumbs/BreadcrumbsCommonData';
+import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 
 const Goals = () => {
     const navigate = useNavigate()
@@ -45,6 +47,8 @@ const Goals = () => {
     const role = userInfo.data.role
     const [searchParams] = useSearchParams();
     const filterType = searchParams.get("type") ?? "";
+    const adminTabType = searchParams.get("adminTabType") ?? "";
+    const mentortab = searchParams.get("mentortab") ?? "";
     const [anchorEl, setAnchorEl] = useState(null);
     const [requestEl, setRequestEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -168,6 +172,16 @@ const Goals = () => {
             setCreatedBy("mentor")
         }
     }, [role])
+    React.useEffect(() => {
+        if (role === "mentor"&&mentortab) {
+            setRequestTab('mentee-goals')
+        }
+    }, [role,mentortab])
+    // React.useEffect(() => {
+    //     if (role === "admin"&&adminTabType) {
+    //         handleViewTab(adminTabType)
+    //     }
+    // }, [role,adminTabType])
 
     const handleClose = () => {
         setAnchorEl(null);
@@ -356,7 +370,8 @@ const Goals = () => {
                         }
 
                         <MenuItem onClick={(e) => {
-                            navigate(`/view-goal/${seletedItem.id}`);
+                             const admintype=role==="admin"?`&adminTabType=${adminTab}`:""
+                            navigate(`/view-goal/${seletedItem.id}?breadcrumbsType=${seletedItem.status}${admintype}`);
                         }
                         } className='!text-[12px]'>
                             <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
@@ -526,12 +541,13 @@ const Goals = () => {
                         }}
                     >
                         <MenuItem onClick={(e) => {
+                            const admintype=role==="admin"?`&adminTabType=${adminTab}`:""
                             if(role==="admin"){
 
-                                navigate(`/view-goal/${seletedItem.id}?requestId=${seletedItem?.goal_request_id}`);
+                                navigate(`/view-goal/${seletedItem.id}?requestId=${seletedItem?.goal_request_id}&breadcrumbsType=${requestPageBreadcrumbs.goalHistory}${admintype}`);
                             }else{
 
-                                navigate(`/view-goal/${seletedItem.id}`);
+                                navigate(`/view-goal/${seletedItem.id}?breadcrumbsType=${requestPageBreadcrumbs.goalHistory}${admintype}`);
                             }
                         }
                         } className='!text-[12px]'>
@@ -976,11 +992,12 @@ const Goals = () => {
         getAllGoalData(type, seletedItem?.created_by)
     }
 
-    const handleCloseAdmin = () => {
+    const handleCloseAdmin = (tab) => {
+        const tabvalue=tab?tab:"mentor"
         setShowAdmin(true)
         setCreatedBy("")
-        setAdminTab("mentor")
-        handleGetAdminTableData("month", "mentor")
+        setAdminTab(tabvalue)
+        handleGetAdminTableData("month",tabvalue)
         navigate('/goals')
     }
 
@@ -1042,7 +1059,12 @@ const Goals = () => {
     const activityPopupText = {
         start: "Your goal has been successfully started"
     }
-
+    const goalBreadCrepms=[{
+        label:"Goals",
+        onClick:adminTab === "mentor" ?()=> handleCloseAdmin() : ()=>handleCloseAdmin("mentee")
+    },{
+        label:adminTab === "mentor" ? "Mentor Goals" : "Mentee Goals"
+    }]
     return (
         <div className="goals px-9 py-9">
             <Backdrop
@@ -1116,7 +1138,9 @@ const Goals = () => {
             <div className='px-3 py-5' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
                 <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
                     <div className='flex gap-5 items-center'>
-                        <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 700 }}>Goals</p>
+                    {
+                        (!showAdmin && role === "admin") ?<Breadcrumbs items={goalBreadCrepms}/>: <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 700 }}>Goals</p>
+                    }
                     </div>
                     {
                         (!showAdmin && role === "admin") &&

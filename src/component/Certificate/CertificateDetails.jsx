@@ -5,12 +5,15 @@ import CancelIcon from "../../assets/images/cancel-colour1x.png";
 import Tooltip from "../../shared/Tooltip";
 import api from "../../services/api";
 import { Button } from "../../shared";
+import { mentee_Certificate_list } from "../Breadcrumbs/BreadcrumbsCommonData";
+import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
 
 export default function CertificateDetails() {
   const navigate = useNavigate();
   const contentRef = useRef();
   const { id } = useParams();
   const [searchParams] = useSearchParams();
+  const breadcrumbsArray=mentee_Certificate_list()
   const [certificateDetails, setCertificateDetails] = useState(<></>);
   const [loading, setLoading] = useState(true);
 
@@ -60,7 +63,7 @@ export default function CertificateDetails() {
       >
         <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
           <div className="flex gap-4">
-            <h4>Certificates</h4>
+          <Breadcrumbs items={breadcrumbsArray} />
           </div>
           <div className="flex gap-20 items-center">
             <Tooltip title="Cancel">

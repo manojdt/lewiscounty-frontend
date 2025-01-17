@@ -2152,7 +2152,7 @@ export const AboutProgramFields = [
     fieldtype: "text",
     placeholder: "Multiple Skills added",
     inputRules: {
-      required: false,
+      required: "This field is required"
     },
     width: "w-full",
     for: ["admin", "mentor"],

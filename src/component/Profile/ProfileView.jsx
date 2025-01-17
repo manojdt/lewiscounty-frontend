@@ -54,9 +54,12 @@ import { updateProfile } from "../../services/profile";
 import {
   admin_menteeMember,
   admin_mentorMember,
+  myMentorPage,
+  myMneteePage,
   request_join,
   request_memberJoin,
   requestPageBreadcrumbs,
+  topMentorPage,
 } from "../Breadcrumbs/BreadcrumbsCommonData";
 import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
 import { allProfileSections } from "./tabs/ProfileTab";
@@ -536,9 +539,15 @@ export default function ProfileView() {
     const admin_memberMnetee = admin_menteeMember();
     const admin_approvedreport = request_join();
     const admin_request = request_memberJoin();
+    const myMentee = myMneteePage();
+    const TopMentor = topMentorPage();
+    const myMentor = myMentorPage();
     switch (key) {
       case requestPageBreadcrumbs.member_join_request:
         setBreadcrumbsArray(admin_request);
+        break;
+      case requestPageBreadcrumbs.myMentee:
+        setBreadcrumbsArray(myMentee);
         break;
       case requestPageBreadcrumbs.program_join_request_admin:
         setBreadcrumbsArray(admin_approvedreport);
@@ -548,6 +557,12 @@ export default function ProfileView() {
         break;
       case requestPageBreadcrumbs.adminMemberMentorTab:
         setBreadcrumbsArray(admin_membermentor);
+        break;
+      case requestPageBreadcrumbs.myMentor:
+        setBreadcrumbsArray(myMentor);
+        break;
+      case requestPageBreadcrumbs.topMentor:
+        setBreadcrumbsArray(TopMentor);
         break;
       case "discussion":
         break;
@@ -947,10 +962,8 @@ export default function ProfileView() {
           </div>
         </div>
       </Backdrop> */}
-
-      <div className="flex justify-between items-center mb-8">
-        {/* <div className='text-color font-medium'>My {pageType} Profile</div> */}
-        <div className="text-color font-medium !text-[20px]">Profile</div>
+      <div className="pb-3">
+        {breadcrumbsType && <Breadcrumbs items={breadcrumbsArray} />}
       </div>
 
       <div
@@ -963,8 +976,10 @@ export default function ProfileView() {
         {/* <div className='flex justify-between items-center mb-8'>
           <div className='text-color font-medium'>Profile Picture</div>
         </div> */}
-        {role === "admin" && <Breadcrumbs items={breadcrumbsArray} />}
-
+        <div className="mb-4">
+          {/* <div className='text-color font-medium'>My {pageType} Profile</div> */}
+          <div className="text-color font-medium !text-[20px]">Profile</div>
+        </div>
         <div className="flex justify-between items-center">
           <div className="py-4 relative w-[12%]">
             <div className="upload-profile">

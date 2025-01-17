@@ -19,21 +19,21 @@ import Ratings from '../Programs/Ratings';
 
 export default function Certificate() {
     const navigate = useNavigate()
-    const [actionTab, setActiveTab] = useState('waiting_for_response')
+    const userInfo = useSelector(state => state.userInfo)
+    const role = userInfo.data.role
+    const [searchParams, setSearchParams] = useSearchParams();
+    const selectedRequestedTab = searchParams.get('tabType');
+    const [actionTab, setActiveTab] = useState(selectedRequestedTab&&role==="mentor"?selectedRequestedTab:'waiting_for_response')
     const [requestTab, setRequestTab] = useState('all')
     const [ratingModal, setRatingModal] = useState({ modal: false, success: false })
-    const userInfo = useSelector(state => state.userInfo)
     const { certificatesList, certificateHTML, loading } = useSelector(state => state.certificates)
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const [seletedItem, setSelectedItem] = useState({})
-    const [searchParams, setSearchParams] = useSearchParams();
-    const selectedRequestedTab = searchParams.get('tabType');
     const [paginationModel, setPaginationModel] = React.useState({
         page: 0,
         pageSize: 10,
     });
-    const role = userInfo.data.role
     const dispatch = useDispatch()
     const ratingModalSuccess = () => {
         if (role) {
@@ -129,13 +129,14 @@ export default function Certificate() {
                                     navigate(`/certificate-view/${seletedItem.id}`)
                                 }else{
                                     setRatingModal({ modal: true, success: false })
+                                    handleClose()
                                 }
                                 }} className='!text-[12px]'>
                                 <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
                                 View
                             </MenuItem> : null}
                         {(role === 'mentor') ?
-                            <MenuItem onClick={() => navigate(`/certificate_mentees/${seletedItem.id}?type=${actionTab}`,{
+                            <MenuItem onClick={() => navigate(`/certificate_mentees/${seletedItem.id}?type=${actionTab}&breadcrumbsType=${actionTab}`,{
                                 state: {
                                     rowId: seletedItem?.id,
                                     status: seletedItem?.status
@@ -208,7 +209,12 @@ export default function Certificate() {
     }, [requestTab, role, actionTab, paginationModel])
     useEffect(() => {
         if(selectedRequestedTab){
-            setRequestTab(selectedRequestedTab)
+            if(role==="mentor"){
+                handleMenteeTabChange(selectedRequestedTab)
+            }else{
+
+                setRequestTab(selectedRequestedTab)
+            }
         
         }
        }, [selectedRequestedTab])
