@@ -169,6 +169,7 @@ export default function Programs() {
   const filterSearch = searchParams.get("search");
   const filterDate = searchParams.get("filter_by");
   const isBookmark = searchParams.get("is_bookmark");
+  const programListView= searchParams.get("programView");
   const { data, isLoading, refetch, isFetching } = useGetAllProgramsQuery(
     {
       limit:
@@ -253,6 +254,7 @@ export default function Programs() {
     }
   }, [role]);
 
+
   const handleBookmark = async (program) => {
     const payload = {
       program_id: program.id,
@@ -299,7 +301,7 @@ export default function Programs() {
           "admin_assign_program" in programdetails
             ? "&"
             : "?"
-        }breadcrumbsType=${displayName}`
+        }breadcrumbsType=${displayName}&programView=${programView}`
       );
     }
   };
@@ -691,7 +693,11 @@ export default function Programs() {
     isBookmark,
     programMenusList,
   });
-
+  React.useEffect(() => {
+    if (programListView) {
+      setProgramView(programListView);
+    }
+  }, [programListView]);
   return (
     <div className="dashboard-content px-8 mt-10">
       <div className="flex justify-between items-center mb-8">

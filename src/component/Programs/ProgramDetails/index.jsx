@@ -98,6 +98,7 @@ import {
   program_details,
   program_details_main,
   programStatusBreadcrumbs,
+  request_join,
   request_newProgramRequest,
   request_programCancel,
   request_programMenteeCancel,
@@ -587,6 +588,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     const program_mentee_cancel = request_programMenteeCancel(
       programdetails?.program_name
     );
+     const admin_approvedreport=request_join(programdetails?.program_nam)
     if (programStatusBreadcrumbs.includes(decodedKey)) {
       setBreadcrumbsArray(
         program_details_main(programdetails?.program_name, decodedKey)
@@ -608,6 +610,9 @@ export default function ProgramDetails({ setProgramDetailsId }) {
         break;
       case requestPageBreadcrumbs.program_mentee_cancel:
         setBreadcrumbsArray(program_mentee_cancel);
+        break;
+      case requestPageBreadcrumbs.program_join_request_admin:
+        setBreadcrumbsArray(admin_approvedreport);
         break;
       case "discussion":
         break;

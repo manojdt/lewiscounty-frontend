@@ -789,8 +789,11 @@ export default function AllRequest() {
                 <MenuItem
                   onClick={(e) => {
                     const requestQuery = `&request_id=${seletedItem.id}`;
-                    const tabQuery = selectedTab==="mentees"?`&breadcrumbsType=${requestPageBreadcrumbs.program_mentee_cancel}`:`&breadcrumbsType=${tabQuertyData(role,actionTab)}`;
-                    const tabQueryMentor =selectedTab==="mentees"?`&breadcrumbsType=${requestPageBreadcrumbs.program_mentee_cancel}`: `breadcrumbsType=${tabQuertyDataMentor(role,actionTab)}`;
+                    const tabQuery = selectedTab === "mentees" ? `&breadcrumbsType=${actionTab === "program_join" ? 
+                    requestPageBreadcrumbs.program_join_request_admin : requestPageBreadcrumbs.program_mentee_cancel}` : `&breadcrumbsType=${tabQuertyData(role, actionTab)}`;
+                    const tabQueryMentor = selectedTab === "mentees" ? `&breadcrumbsType=${actionTab === "program_join" ? 
+                    requestPageBreadcrumbs.program_join_request_admin : requestPageBreadcrumbs.program_mentee_cancel}` : 
+                    `&breadcrumbsType=${tabQuertyDataMentor(role, actionTab)}`;
                     const url =
                       (role === "mentor" || role === "admin") &&
                       actionTab === "program_join"
@@ -799,7 +802,7 @@ export default function AllRequest() {
                         ? `/program-details/${seletedItem.program}?request_id=${seletedItem.id}&type=${actionTab}${tabQuery}`
                         : seletedItem?.status === "approved"
                         ? `/program-details/${seletedItem.program}?${tabQueryMentor}`
-                        : `/program-details/${seletedItem.program}?request_id=${seletedItem.id}&type=${actionTab}&${tabQueryMentor}`;
+                        : `/program-details/${seletedItem.program}?request_id=${seletedItem.id}&type=${actionTab}${tabQueryMentor}`;
                     return navigate(url, { state: { data: seletedItem } });
                   }}
                   className="!text-[12px]"
@@ -1065,7 +1068,7 @@ export default function AllRequest() {
                       ? `&breadcrumbsType=${
                           role === "admin"
                             ? tabQuertyData(role, actionTab)
-                            : tabQuertyDataMentor(role, actionTab)
+                            :role === "mentor"? tabQuertyDataMentor(role, actionTab):"new_goals_request"
                         }&goalType=${requestPageBreadcrumbs?.goal_request}`
                       : role === "admin"
                       ? `&breadcrumbsType=${tabQuertyData(role, actionTab)}`

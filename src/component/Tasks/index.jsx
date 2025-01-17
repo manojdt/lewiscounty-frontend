@@ -51,31 +51,31 @@ export const Tasks = () => {
 
   const taskMenuList = [
     {
-      name: 'All Task',
+      name: 'All Tasks',
       key: 'all',
     },
     {
-      name: 'New Task',
+      name: 'New Tasks',
       key: 'newtask',
     },
     {
-      name: 'Pending Task',
+      name: 'Pending Tasks',
       key: 'pending',
     },
     {
-      name: 'Waiting Task',
+      name: 'Waiting Tasks',
       key: 'waiting_for_approval',
     },
     {
-      name: 'Re Assign Task',
+      name: 'Re Assign Tasks',
       key: 'reassigned',
     },
     {
-      name: 'Completed Task',
+      name: 'Completed Tasks',
       key: 'completed',
     },
     {
-      name: 'Rejected Task',
+      name: 'Rejected Tasks',
       key: 'rejected',
     },
     {
@@ -192,7 +192,7 @@ export const Tasks = () => {
             >
               <MenuItem
                 onClick={() =>
-                  navigate(`/mentee-tasks-details/${seletedItem.id}`)
+                  navigate(`/mentee-tasks-details/${seletedItem.id}?breadcrumbsType=${requestTab}`)
                 }
                 className='!text-[12px]'
               >
@@ -246,6 +246,12 @@ export const Tasks = () => {
       })
     );
   }, [searchTask]);
+  useEffect(() => {
+    const filterType = searchParams.get('type');
+    if(filterType){
+      handleTab(filterType)
+    }
+  }, [searchParams.get('type')]);
 
   useEffect(() => {
     const filterType = searchParams.get('type');
@@ -417,7 +423,7 @@ export const Tasks = () => {
       >
         <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
           <div className='flex gap-5 items-center text-[20px]'>
-            <p>Task</p>
+            <p>Tasks</p>
           </div>
           <div className='flex gap-8 items-center'>
             <div className='relative'>

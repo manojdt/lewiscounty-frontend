@@ -39,6 +39,7 @@ import StartIcon from "../../assets/icons/startIcon.svg"
 import TickCircleIcon from "../../assets/icons/tickCircle.svg"
 import moment from 'moment';
 import { requestPageBreadcrumbs } from '../Breadcrumbs/BreadcrumbsCommonData';
+import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 
 const Goals = () => {
     const navigate = useNavigate()
@@ -991,11 +992,12 @@ const Goals = () => {
         getAllGoalData(type, seletedItem?.created_by)
     }
 
-    const handleCloseAdmin = () => {
+    const handleCloseAdmin = (tab) => {
+        const tabvalue=tab?tab:"mentor"
         setShowAdmin(true)
         setCreatedBy("")
-        setAdminTab("mentor")
-        handleGetAdminTableData("month", "mentor")
+        setAdminTab(tabvalue)
+        handleGetAdminTableData("month",tabvalue)
         navigate('/goals')
     }
 
@@ -1057,7 +1059,12 @@ const Goals = () => {
     const activityPopupText = {
         start: "Your goal has been successfully started"
     }
-
+    const goalBreadCrepms=[{
+        label:"Goals",
+        onClick:adminTab === "mentor" ?()=> handleCloseAdmin() : ()=>handleCloseAdmin("mentee")
+    },{
+        label:adminTab === "mentor" ? "Mentor Goals" : "Mentee Goals"
+    }]
     return (
         <div className="goals px-9 py-9">
             <Backdrop
@@ -1131,7 +1138,9 @@ const Goals = () => {
             <div className='px-3 py-5' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
                 <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
                     <div className='flex gap-5 items-center'>
-                        <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 700 }}>Goals</p>
+                    {
+                        (!showAdmin && role === "admin") ?<Breadcrumbs items={goalBreadCrepms}/>: <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 700 }}>Goals</p>
+                    }
                     </div>
                     {
                         (!showAdmin && role === "admin") &&

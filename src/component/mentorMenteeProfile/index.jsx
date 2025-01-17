@@ -42,7 +42,7 @@ import CancelReq from '../../assets/icons/cancelRequest.svg';
 import CancelIcon from '../../assets/images/cancel-colour1x.png'
 import ArrowRight from "../../assets/icons/breadCrumbsArrow.svg"
 import { CancelPopup } from '../Mentor/Task/cancelPopup';
-import { myMneteePage, newFollowRequestPage, requestPageBreadcrumbs } from '../Breadcrumbs/BreadcrumbsCommonData';
+import { myMneteePage, newFollowRequestMentorPage, newFollowRequestPage, requestPageBreadcrumbs } from '../Breadcrumbs/BreadcrumbsCommonData';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 
 const MentorMenteeProfile = () => {
@@ -223,6 +223,7 @@ const MentorMenteeProfile = () => {
   const handleBreadcrumbs = (key) => {
   const myMentee=myMneteePage()
   const newFollowReq=newFollowRequestPage(breadcrumbsStatusType)
+  const newFollowReqMentor=newFollowRequestMentorPage(breadcrumbsStatusType)
 
  
     switch (key) {
@@ -231,6 +232,9 @@ const MentorMenteeProfile = () => {
         break;
       case requestPageBreadcrumbs.newFollowRequest:
         setBreadcrumbsArray(newFollowReq);
+        break;
+      case requestPageBreadcrumbs.newFollowRequestMentor:
+        setBreadcrumbsArray(newFollowReqMentor);
         break;
       // case requestPageBreadcrumbs.program_mentee_cancel:
       //   setBreadcrumbsArray(program_mentee_cancel);
@@ -243,7 +247,6 @@ const MentorMenteeProfile = () => {
   };
   useEffect(() => {
     if (breadcrumbsType) {
-      console.log(breadcrumbsType)
       handleBreadcrumbs(breadcrumbsType);
     }
   }, [breadcrumbsType]);
@@ -255,10 +258,7 @@ const MentorMenteeProfile = () => {
       >
         <CircularProgress color='inherit' />
       </Backdrop>
-      <div className='pl-3'>
-
-      {breadcrumbsType&&<Breadcrumbs items={breadcrumbsArray} />}
-      </div>
+    
      {!breadcrumbsType&& <Stack
         direction={'row'}
         alignItems={'center'}
@@ -317,7 +317,11 @@ const MentorMenteeProfile = () => {
 
             </div>
           </Backdrop>
-      <div className='border border-[#DBE0E5] rounded-[6px] bg-[#fff] m-[32px] p-[32px]'>
+          <div className='ml-8 pt-2'>
+
+{breadcrumbsType&&<Breadcrumbs items={breadcrumbsArray} />}
+</div>
+      <div className='border border-[#DBE0E5] rounded-[6px] bg-[#fff] m-[32px] mt-[10px] p-[32px]'>
     
         <Stack
           direction={'row'}
