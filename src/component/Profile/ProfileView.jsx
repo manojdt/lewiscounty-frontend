@@ -51,7 +51,7 @@ import { requestStatus } from '../../utils/constant';
 import { useForm } from 'react-hook-form';
 import { CancelPopup } from '../Mentor/Task/cancelPopup';
 import { updateProfile } from '../../services/profile';
-import { admin_menteeMember, admin_mentorMember, myMneteePage, request_join, request_memberJoin, requestPageBreadcrumbs } from '../Breadcrumbs/BreadcrumbsCommonData';
+import { admin_menteeMember, admin_mentorMember, myMentorPage, myMneteePage, request_join, request_memberJoin, requestPageBreadcrumbs, topMentorPage } from '../Breadcrumbs/BreadcrumbsCommonData';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 
 export default function ProfileView() {
@@ -526,6 +526,8 @@ export default function ProfileView() {
     const admin_approvedreport=request_join()
     const admin_request=request_memberJoin()
     const myMentee=myMneteePage()
+    const TopMentor=topMentorPage()
+    const myMentor=myMentorPage()
     switch (key) {
       case requestPageBreadcrumbs.member_join_request:
         setBreadcrumbsArray(admin_request)
@@ -541,6 +543,12 @@ export default function ProfileView() {
         break;
         case requestPageBreadcrumbs.adminMemberMentorTab:
         setBreadcrumbsArray(admin_membermentor)
+        break;
+        case requestPageBreadcrumbs.myMentor:
+        setBreadcrumbsArray(myMentor)
+        break;
+        case requestPageBreadcrumbs.topMentor:
+        setBreadcrumbsArray(TopMentor)
         break;
       case "discussion":
         break;
@@ -937,7 +945,7 @@ useEffect(() => {
       </Backdrop> */}
       <div className='pb-3'>
 
-      {(role === 'admin'||role==="mentor") && <Breadcrumbs items={breadcrumbsArray} />} 
+      {breadcrumbsType&& <Breadcrumbs items={breadcrumbsArray} />} 
       </div>
 
       

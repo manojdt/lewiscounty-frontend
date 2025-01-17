@@ -129,6 +129,7 @@ export default function Certificate() {
                                     navigate(`/certificate-view/${seletedItem.id}`)
                                 }else{
                                     setRatingModal({ modal: true, success: false })
+                                    handleClose()
                                 }
                                 }} className='!text-[12px]'>
                                 <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />

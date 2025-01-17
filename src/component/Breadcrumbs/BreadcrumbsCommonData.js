@@ -27,6 +27,9 @@ export const requestPageBreadcrumbs = {
   feed:'fead',
   myMentee:"myMentee",
   newFollowRequest:"new_follow_request",
+  myMentor:"myMentor",
+  topMentor:"topMentor",
+  newFollowRequestMentor:"new_follow_request_mentor",
   goalHistory:"goalHistory",
   activeGoal:"active",
   progressGoal:"in_progress",
@@ -40,6 +43,14 @@ export const requestPageBreadcrumbs = {
   menteeCompletedReport:'approved',
   menteeRejectedReport:'rejected',
   menteeDraftReport:'draft',
+  taskMenteeAllReport:'all',
+  taskMenteeNewReport:'newtask',
+  taskMenteeWaitReport:'waiting_for_approval',
+  taskMenteeReassignedReport:'reassigned',
+  taskMenteePendingReport:'pending',
+  taskMenteeCompletedReport:'completed',
+  taskMenteeRejectedReport:'rejected',
+  taskMenteeDraftReport:'draft',
 };
 export const programStatusBreadcrumbs=[
     'All Programs',
@@ -216,7 +227,7 @@ export const request_join = (name) => {
         path: `/all-request?type=program_request&tabType=${requestPageBreadcrumbs?.program_join}&mainTab=${requestPageBreadcrumbs.main_mentee_tab}`,
       },
       {
-        label: `View Mentee Profile`,
+        label: name?`View ${name}`:`View Mentee Profile`,
       },
     ];
   };
@@ -425,7 +436,7 @@ export const admin_menteeMember = (name) => {
         path: -1,
       },
       {
-        label: `View ${name}`,
+        label: `${name}`,
       },
     ];
   };
@@ -448,7 +459,7 @@ export const user_feed = (name) => {
 export const myMneteePage = () => {
     return [
       {
-        label: `My Mentee`,
+        label: `My Mentees`,
         path: `/mentees?req=my-mentee`,
       },
       {
@@ -467,6 +478,42 @@ export const newFollowRequestPage = (status) => {
       },
     ];
   };
+
+// Mentor Nav Tab
+export const myMentorPage = () => {
+  return [
+    {
+      label: `My Mentors`,
+      path: `/mentors`,
+    },
+    {
+      label: `View Mentors Profile`,
+    },
+  ];
+};
+export const topMentorPage = () => {
+  return [
+    {
+      label: `Top Mentors`,
+      path: `/mentors?req=topmentor`,
+    },
+    {
+      label: `View Mentors Profile`,
+    },
+  ];
+};
+export const newFollowRequestMentorPage = (status) => {
+  return [
+    {
+      label: `New Follow Requests`,
+      path: `/mentors?req=requestmentor&status=${status}`,
+    },
+    {
+      label: `View Mentor Profile`,
+    },
+  ];
+};
+
 
  // Goals
 
@@ -554,6 +601,123 @@ export const newFollowRequestPage = (status) => {
       },
     ];
   };
+
+  // Task
+  
+  export const allTask = (name) => {
+    
+    return [
+      {
+        label: "Tasks",
+        path: `/mentee-tasks`,
+      },
+      {
+        label: `View ${name}`,
+      },
+    ];
+  }; 
+  export const newTask = (name) => {
+    
+    return [
+      {
+        label: "Tasks",
+        path: `/mentee-tasks?type=newtask`,
+      },
+      {
+        label: `View ${name}`,
+      },
+    ];
+  }; 
+  export const pendingTask = (name) => {
+    
+    return [
+      {
+        label: "Tasks",
+        path: `/mentee-tasks?type=pending`,
+      },
+      {
+        label: `View ${name}`,
+      },
+    ];
+  }; 
+  export const waitTask = (name) => {
+    
+    return [
+      {
+        label: "Tasks",
+        path: `/mentee-tasks?type=waiting_for_approval`,
+      },
+      {
+        label: `View ${name}`,
+      },
+    ];
+  }; 
+  export const reassignTask = (name) => {
+    
+    return [
+      {
+        label: "Tasks",
+        path: `/mentee-tasks?type=reassigned`,
+      },
+      {
+        label: `View ${name}`,
+      },
+    ];
+  }; 
+  export const completedTask = (name) => {
+    
+    return [
+      {
+        label: "Tasks",
+        path: `/mentee-tasks?type=completed`,
+      },
+      {
+        label: `View ${name}`,
+      },
+    ];
+  }; 
+  export const rejectedTask = (name) => {
+    
+    return [
+      {
+        label: "Tasks",
+        path: `/mentee-tasks?type=rejected`,
+      },
+      {
+        label: `View ${name}`,
+      },
+    ];
+  }; 
+  export const draftTask = (name) => {
+    
+    return [
+      {
+        label: "Tasks",
+        path: `/mentee-tasks?type=draft`,
+      },
+      {
+        label: `View ${name}`,
+      },
+    ];
+  }; 
+
+// Program Completion Page
+export const programCompletionPage = (name) => {
+    
+  return [
+    {
+      label: "Programs",
+      path: `/programs`,
+    },
+    {
+      label: `${name}`,
+      path: -1,
+    },
+    {
+      label: `Completed`,
+    },
+  ];
+}; 
 
 export const tabQuertyData = (role, tab) => {
   if (role === "admin") {

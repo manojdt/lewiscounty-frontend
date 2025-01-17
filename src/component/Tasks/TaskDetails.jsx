@@ -8,7 +8,7 @@ import EditIcon from '../../assets/images/Edit1x.png';
 import FileIcon from '../../assets/icons/linkIcon.svg';
 import SuccessTik from '../../assets/images/blue_tik1x.png';
 import { Button } from '../../shared';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   getProgramTaskDetails,
@@ -40,10 +40,15 @@ import { getFiles } from '../../utils';
 import api from '../../services/api';
 import HtmlReport from '../../shared/htmlReport';
 import moment from 'moment';
+import { allTask, completedTask, draftTask, newTask, pendingTask, reassignTask, rejectedTask, requestPageBreadcrumbs, waitTask } from '../Breadcrumbs/BreadcrumbsCommonData';
+import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 
 export const TaskDetails = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+   const [searchParams] = useSearchParams();
+  const breadcrumbsType = searchParams.get("breadcrumbsType") || "";
+    const [breadcrumbsArray, setBreadcrumbsArray] = useState([]);
   const {
     taskdetails: {
       task,
@@ -235,7 +240,53 @@ export const TaskDetails = () => {
   }, [task_submission]);
 
   const allFiles = getFiles(taskFile || []);
-
+  const handleBreadcrumbs = (key) => {
+    const task = allTask(taskData?.task_name);
+    const newTaskPage = newTask(taskData?.task_name);
+    const pendingTaskPage = pendingTask(taskData?.task_name);
+    const waitingTaskPage = waitTask(taskData?.task_name);
+    const reassignedTaskPage = reassignTask(taskData?.task_name);
+    const completedTaskPage = completedTask(taskData?.task_name);
+    const rejectedTaskPage = rejectedTask(taskData?.task_name);
+    const draftTaskPage = draftTask(taskData?.task_name);
+   
+    
+    switch (key) {
+      case requestPageBreadcrumbs.taskMenteeAllReport:
+        setBreadcrumbsArray(task);
+        break;
+      case requestPageBreadcrumbs.taskMenteeNewReport:
+        setBreadcrumbsArray(newTaskPage);
+        break;
+      case requestPageBreadcrumbs.taskMenteePendingReport:
+        setBreadcrumbsArray(pendingTaskPage);
+        break;
+      case requestPageBreadcrumbs.taskMenteeWaitReport:
+        setBreadcrumbsArray(waitingTaskPage);
+        break;
+      case requestPageBreadcrumbs.taskMenteeReassignedReport:
+        setBreadcrumbsArray(reassignedTaskPage);
+        break;
+      case requestPageBreadcrumbs.taskMenteeCompletedReport:
+        setBreadcrumbsArray(completedTaskPage);
+        break;
+      case requestPageBreadcrumbs.taskMenteeRejectedReport:
+        setBreadcrumbsArray(rejectedTaskPage);
+        break;
+      case requestPageBreadcrumbs.taskMenteeDraftReport:
+        setBreadcrumbsArray(draftTaskPage);
+        break;
+      case "discussion":
+        break;
+      default:
+        break;
+    }
+  };
+  useEffect(() => {
+    if (breadcrumbsType &&taskData?.task_name) {
+      handleBreadcrumbs(breadcrumbsType);
+    }
+  }, [breadcrumbsType, taskData]);
   return (
     <div className='px-9 py-9'>      
       <Backdrop
@@ -304,7 +355,8 @@ export const TaskDetails = () => {
       >
         <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
           <div className='flex gap-5 items-center text-[20px]'>
-            <p>Task Details</p>
+           {!breadcrumbsType? <p>Task Details</p>:
+            <Breadcrumbs items={breadcrumbsArray} />}
             {params.id === '2' && !startTask && (
               <div
                 className='inset-y-0 end-0 flex items-center pe-3 cursor-pointer'
