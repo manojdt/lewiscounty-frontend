@@ -18,6 +18,8 @@ import UserInfoCard from "./UserInfoCard";
 import ProgramCard from "../../shared/Card/ProgramCard";
 import api from "../../services/api";
 import { getUserProfile } from "../../services/profile";
+import ProgramFeeds from "../../shared/ProgramFeeds";
+import { getPost } from "../../services/feeds";
 
 export const Mentor = () => {
   const dispatch = useDispatch();
@@ -27,6 +29,7 @@ export const Mentor = () => {
   const { programRequest } = useSelector((state) => state.requestList);
   const userpragrams = useSelector((state) => state.userPrograms);
   const userInfo = useSelector((state) => state.userInfo);
+  const { feeds } = useSelector((state) => state.feeds);
 
   const handlePerformanceFilter = (e) => {
     const res = e?.target?.value || "date";
@@ -99,9 +102,7 @@ export const Mentor = () => {
     //     }
     //   }
     // })
-    
   }, []);
-
 
   useEffect(() => {
     const fetchAndUpdateTokens = async () => {
@@ -109,31 +110,28 @@ export const Mentor = () => {
         // Initial API call to get the user profile
         const res = await dispatch(getUserProfile()).unwrap(); // Use .unwrap() for cleaner promise handling
         console.log("User profile response:", res);
-  
-        if (res?.approve_status === "accept") {
-          
 
-          const updateToken = await api.post('generate_new_token', {
+        if (res?.approve_status === "accept") {
+          const updateToken = await api.post("generate_new_token", {
             headers: {
-              'Content-Type': 'multipart/form-data',
+              "Content-Type": "multipart/form-data",
             },
           });
 
           if (updateToken.status === 200) {
-            console.log('updateToken', updateToken);
-            localStorage.setItem('access_token', updateToken.data.access);
-            localStorage.setItem('refresh_token', updateToken.data.refresh);
-            navigate("/dashboard")
+            console.log("updateToken", updateToken);
+            localStorage.setItem("access_token", updateToken.data.access);
+            localStorage.setItem("refresh_token", updateToken.data.refresh);
+            navigate("/dashboard");
           }
         }
       } catch (error) {
         console.error("Error during profile or token update:", error);
       }
     };
-  
+
     fetchAndUpdateTokens();
   }, [dispatch]); // Added dispatch to dependencies for better practice
-  
 
   useEffect(() => {
     getPrograms();
@@ -154,6 +152,16 @@ export const Mentor = () => {
     }
   }, [userpragrams.status]);
 
+  React.useEffect(() => {
+    //   if (feedsList?.length === 0) {
+    let feedData = {
+      page: 1,
+      pageSize: 5,
+    };
+    dispatch(getPost(feedData));
+    //   }
+  }, []);
+
   return (
     <>
       <div className="dashboard-content px-8 mt-10">
@@ -164,14 +172,21 @@ export const Mentor = () => {
           {<CircularProgress color="inherit" />}
         </Backdrop>
 
-        <div className={userInfo?.data?.userinfo?.approve_status === "accept" ? "main-grid grid grid-cols-5 gap-3" : "w-full"}>
-          {userInfo?.data?.userinfo?.approve_status === "accept" &&
-          <div className="left-bar row-span-3 flex flex-col gap-8">
-            <UserInfoCard />
-            {/* <ViewImpression /> */}
-            {/* <RecentActivities /> */}
-            <Invite />
-          </div>}
+        <div
+          className={
+            userInfo?.data?.userinfo?.approve_status === "accept"
+              ? "main-grid grid grid-cols-5 gap-3"
+              : "w-full"
+          }
+        >
+          {userInfo?.data?.userinfo?.approve_status === "accept" && (
+            <div className="left-bar row-span-3 flex flex-col gap-8">
+              <UserInfoCard />
+              {/* <ViewImpression /> */}
+              {/* <RecentActivities /> */}
+              <Invite />
+            </div>
+          )}
 
           {!["new", "pending"].includes(
             userInfo?.data?.userinfo?.approve_status
@@ -262,7 +277,8 @@ export const Mentor = () => {
                 </div>
 
                 <div className="layer-second flex flex-col gap-8">
-                  <Programs />
+                  {/* <Programs /> */}
+                  <ProgramFeeds feedsList={feeds?.results} />
                 </div>
               </div>
             </div>

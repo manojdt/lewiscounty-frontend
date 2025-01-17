@@ -62,7 +62,7 @@ function MentorProfile() {
   const dispatch = useDispatch();
   const fetchMentoProfile = async () => {
     if (id) {
-      dispatch(getProfileInfo({id: id}));
+      dispatch(getProfileInfo({ id: id }));
     }
   };
   const handleOpenConfirmPopup = (
@@ -107,7 +107,7 @@ function MentorProfile() {
   };
 
   const handleMemberAcceptRequest = () => {
-    dispatch(getCategoryList())
+    dispatch(getCategoryList());
     setCategoryPopup({ show: true, selectedItem: [] });
   };
 
