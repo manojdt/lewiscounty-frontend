@@ -237,7 +237,7 @@ export const Signup = () => {
                 <>
                   <div
                     className={`relative mb-6 ${
-                      field.size ? "width-49" : "w-full"
+                      field.size ? "width-49 max-lg:w-full" : "w-full"
                     }`}
                     key={index}
                   >
