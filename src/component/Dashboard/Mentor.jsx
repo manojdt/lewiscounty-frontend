@@ -18,6 +18,8 @@ import UserInfoCard from "./UserInfoCard";
 import ProgramCard from "../../shared/Card/ProgramCard";
 import api from "../../services/api";
 import { getUserProfile } from "../../services/profile";
+import ProgramFeeds from "../../shared/ProgramFeeds";
+import { getPost } from "../../services/feeds";
 
 export const Mentor = () => {
   const dispatch = useDispatch();
@@ -27,6 +29,7 @@ export const Mentor = () => {
   const { programRequest } = useSelector((state) => state.requestList);
   const userpragrams = useSelector((state) => state.userPrograms);
   const userInfo = useSelector((state) => state.userInfo);
+  const { feeds } = useSelector((state) => state.feeds);
 
   const handlePerformanceFilter = (e) => {
     const res = e?.target?.value || "date";
@@ -107,6 +110,16 @@ export const Mentor = () => {
       getPrograms();
     }
   }, [userpragrams.status]);
+
+  React.useEffect(() => {
+    //   if (feedsList?.length === 0) {
+    let feedData = {
+      page: 1,
+      pageSize: 5,
+    };
+    dispatch(getPost(feedData));
+    //   }
+  }, []);
 
   return (
     <>
@@ -215,15 +228,20 @@ export const Mentor = () => {
                 </div>
 
                 <div className="layer-second flex flex-col gap-8">
-                  <Programs />
+                  {/* <Programs /> */}
+                  <ProgramFeeds feedsList={feeds?.results} />
                 </div>
               </div>
             </div>
           ) : (
             <div className="programs-list !h-[100vh]">
               <div className="flex items-center justify-center h-full w-full flex-col gap-3">
-                <p className="text-[24px] text-font-primary-main font-bold">Welcome to Mentoring Management Application</p>
-                <p className="text-[18px] text-font-primary-main font-bold">Waiting for Admin approval</p>
+                <p className="text-[24px] text-font-primary-main font-bold">
+                  Welcome to Mentoring Management Application
+                </p>
+                <p className="text-[18px] text-font-primary-main font-bold">
+                  Waiting for Admin approval
+                </p>
               </div>
             </div>
           )}

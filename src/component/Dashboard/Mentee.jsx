@@ -1,32 +1,34 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Backdrop, CircularProgress, Stack, Typography } from '@mui/material';
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { Backdrop, CircularProgress, Stack, Typography } from "@mui/material";
 
-import UserInfoCard from './UserInfoCard';
+import UserInfoCard from "./UserInfoCard";
 
-import SearchIcon from '../../assets/icons/search.svg';
-import UserImage from '../../assets/images/user.jpg';
-import MaleIcon from '../../assets/images/male-profile1x.png';
-import FemaleIcon from '../../assets/images/female-profile1x.png';
+import SearchIcon from "../../assets/icons/search.svg";
+import UserImage from "../../assets/images/user.jpg";
+import MaleIcon from "../../assets/images/male-profile1x.png";
+import FemaleIcon from "../../assets/images/female-profile1x.png";
 
-import { pipeUrls } from '../../utils/constant';
-import { programStatus } from '../../utils/constant';
+import { pipeUrls } from "../../utils/constant";
+import { programStatus } from "../../utils/constant";
 import {
   getMenteeProgramCount,
   getMenteePrograms,
-} from '../../services/userprograms';
+} from "../../services/userprograms";
 
-import './dashboard.css';
-import ProgramCard from '../../shared/Card/ProgramCard';
-import { programFeeds } from '../../utils/mock';
-import Invite from './Invite';
-import api from '../../services/api';
-import MuiModal from '../../shared/Modal';
-import { CategoryPopup } from './categoryPopup';
-import CloseIcon from '../../assets/icons/blueCloseIcon.svg';
-import { acceptMember, getCategory } from '../../services/category';
-import { jwtDecode } from 'jwt-decode';
+import "./dashboard.css";
+import ProgramCard from "../../shared/Card/ProgramCard";
+import { programFeeds } from "../../utils/mock";
+import Invite from "./Invite";
+import api from "../../services/api";
+import MuiModal from "../../shared/Modal";
+import { CategoryPopup } from "./categoryPopup";
+import CloseIcon from "../../assets/icons/blueCloseIcon.svg";
+import { acceptMember, getCategory } from "../../services/category";
+import { jwtDecode } from "jwt-decode";
+import { FeedCard } from "./feedCard";
+import { getPost } from "../../services/feeds";
 
 export const Mentee = () => {
   const dispatch = useDispatch();
@@ -37,7 +39,8 @@ export const Mentee = () => {
   const [openCategory, setOpenCategory] = React.useState(false);
   const userpragrams = useSelector((state) => state.userPrograms);
   const userInfo = useSelector((state) => state.userInfo);
-  const token = localStorage.getItem('access_token');
+  const { feeds } = useSelector((state) => state.feeds);
+  const token = localStorage.getItem("access_token");
   let decoded = jwtDecode(token);
 
   React.useEffect(() => {
@@ -57,21 +60,21 @@ export const Mentee = () => {
   const role = userInfo.data.role;
 
   const getPrograms = () => {
-    const filterType = searchParams.get('type');
-    const isBookmark = searchParams.get('is_bookmark');
-    const categoryFilter = searchParams.get('category_id');
+    const filterType = searchParams.get("type");
+    const isBookmark = searchParams.get("is_bookmark");
+    const categoryFilter = searchParams.get("category_id");
 
     let query = {};
 
-    if (filterType && filterType !== '') {
-      query = { type: 'status', value: filterType };
+    if (filterType && filterType !== "") {
+      query = { type: "status", value: filterType };
     }
 
-    if (isBookmark && isBookmark !== '') {
-      query = { type: 'is_bookmark', value: isBookmark };
+    if (isBookmark && isBookmark !== "") {
+      query = { type: "is_bookmark", value: isBookmark };
     }
 
-    if (categoryFilter && categoryFilter !== '') {
+    if (categoryFilter && categoryFilter !== "") {
       query.category_id = categoryFilter;
     }
 
@@ -79,21 +82,21 @@ export const Mentee = () => {
   };
 
   const getTopMentors = async () => {
-    const topMentor = await api.get('rating/top_mentor');
+    const topMentor = await api.get("rating/top_mentor");
     if (topMentor.status === 200 && topMentor.data?.results) {
       setTopMentorList(topMentor.data.results);
     }
   };
 
   useEffect(() => {
-    if (role !== '' && userInfo?.data?.is_registered) {
+    if (role !== "" && userInfo?.data?.is_registered) {
       getPrograms();
     }
   }, [searchParams, role]);
 
   useEffect(() => {
-    const filterType = searchParams.get('type');
-    const isBookmark = searchParams.get('is_bookmark');
+    const filterType = searchParams.get("type");
+    const isBookmark = searchParams.get("is_bookmark");
     dispatch(getMenteeProgramCount());
     getTopMentors();
     if (
@@ -108,7 +111,7 @@ export const Mentee = () => {
   const handleNavigateDetails = (program) => {
     let baseUrl = pipeUrls.programdetails;
     if (Object.keys(program).length) {
-      const filterType = searchParams.get('type');
+      const filterType = searchParams.get("type");
       navigate(`${baseUrl}/${program.id}`);
     }
   };
@@ -120,11 +123,11 @@ export const Mentee = () => {
     };
     setLoading(true);
 
-    const bookmark = await api.post('bookmark', payload);
+    const bookmark = await api.post("bookmark", payload);
     if (bookmark.status === 201 && bookmark.data) {
       setLoading(false);
       getPrograms();
-      if (role === 'mentee') dispatch(getMenteeProgramCount());
+      if (role === "mentee") dispatch(getMenteeProgramCount());
     }
   };
 
@@ -140,35 +143,35 @@ export const Mentee = () => {
   const [selectedCategory, setSelectedCategory] = React.useState([]);
   const [category, setCategory] = React.useState([]);
 
-  const handleGetCategory = (searchText = '') => {
+  const handleGetCategory = (searchText = "") => {
     const payload = {
       search: searchText,
     };
     dispatch(getCategory(payload)).then((res) => {
-      if (res?.meta?.requestStatus === 'fulfilled') {
+      if (res?.meta?.requestStatus === "fulfilled") {
         setCategory(res?.payload ?? []);
       }
     });
   };
 
-  const handleUpdateGategory = (type = '') => {
+  const handleUpdateGategory = (type = "") => {
     let payload = {};
-    if (type === 'update') {
+    if (type === "update") {
       payload = {
-        type: 'mentee_category',
+        type: "mentee_category",
         categories_id: selectedCategory,
       };
     } else {
       payload = {
-        type: 'mentee_category',
+        type: "mentee_category",
       };
     }
     dispatch(acceptMember(payload)).then((res) => {
-      if (res.meta.requestStatus === 'fulfilled') {
+      if (res.meta.requestStatus === "fulfilled") {
         setOpenCategory(false);
         setCategory([]);
-        localStorage.setItem('access_token', res?.payload?.access);
-        localStorage.setItem('refresh_token', res?.payload?.refresh);
+        localStorage.setItem("access_token", res?.payload?.access);
+        localStorage.setItem("refresh_token", res?.payload?.refresh);
         getPrograms();
       }
     });
@@ -184,109 +187,119 @@ export const Mentee = () => {
     }
   };
 
+  React.useEffect(() => {
+    //   if (feedsList?.length === 0) {
+    let feedData = {
+      page: 1,
+      pageSize: 5,
+    };
+    dispatch(getPost(feedData));
+    //   }
+  }, []);
+
   return (
     <>
-      <div className='dashboard-content px-8 mt-10'>
+      <div className="dashboard-content px-8 mt-10">
         <Backdrop
-          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={userpragrams.loading || loading}
         >
-          <CircularProgress color='inherit' />
+          <CircularProgress color="inherit" />
         </Backdrop>
 
-        <div className='grid grid-cols-5 gap-7'>
+        <div className="grid grid-cols-5 gap-7">
           <div>
             <UserInfoCard />
             <div
-              className='recent-request mt-4'
+              className="recent-request mt-4"
               style={{
-                boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)',
-                borderRadius: '10px',
+                boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.05)",
+                borderRadius: "10px",
               }}
             >
-              <div className='title flex justify-between py-3 px-4 border-b-2 items-center'>
-                <div className='flex gap-4'>
+              <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
+                <div className="flex gap-4">
                   <div
-                    className='card-dash'
+                    className="card-dash"
                     style={{
                       background:
-                        'linear-gradient(180deg, #00B1C0 0%, #005DC6 100%)',
+                        "linear-gradient(180deg, #00B1C0 0%, #005DC6 100%)",
                     }}
                   ></div>
                   <h4>Top Mentors</h4>
                 </div>
-                <div className='flex justify-center mt-2 mb-2'>
+                <div className="flex justify-center mt-2 mb-2">
                   <p
-                    className='text-[12px] py-2 px-2 cursor-pointer'
+                    className="text-[12px] py-2 px-2 cursor-pointer"
                     style={{
-                      background: 'rgba(217, 228, 242, 1)',
-                      color: 'rgba(29, 91, 191, 1)',
-                      borderRadius: '3px',
+                      background: "rgba(217, 228, 242, 1)",
+                      color: "rgba(29, 91, 191, 1)",
+                      borderRadius: "3px",
                     }}
-                    onClick={() => navigate('/mentors?type=topmentor')}
+                    onClick={() => navigate("/mentors?type=topmentor")}
                   >
                     View All
                   </p>
                 </div>
               </div>
 
-              <div className='content flex flex-col gap-4 py-5 px-5 overflow-x-auto'>
+              <div className="content flex flex-col gap-4 py-5 px-5 overflow-x-auto">
                 {topMentotList.map((recentReq, index) => {
                   let name = `${recentReq.first_name} ${recentReq.last_name}`;
                   return (
                     <div
                       key={index}
-                      className='py-3 px-3'
+                      className="py-3 px-3"
                       style={{
-                        border: '1px solid rgba(29, 91, 191, 1)',
-                        borderRadius: '10px',
+                        border: "1px solid rgba(29, 91, 191, 1)",
+                        borderRadius: "10px",
                       }}
                     >
                       <div
-                        className='flex gap-2 pb-3'
+                        className="flex gap-2 pb-3"
                         style={{
-                          borderBottom: '1px solid rgba(29, 91, 191, 1)',
+                          borderBottom: "1px solid rgba(29, 91, 191, 1)",
                         }}
                       >
-                        <div className='w-1/4'>
-                          {' '}
+                        <div className="w-1/4">
+                          {" "}
                           <img
                             src={index % 2 === 0 ? MaleIcon : FemaleIcon}
-                            alt='male-icon'
-                          />{' '}
+                            alt="male-icon"
+                          />{" "}
                         </div>
-                        <div className='flex flex-col gap-2'>
+                        <div className="flex flex-col gap-2">
                           <p
-                            className='text-[14px]'
+                            className="text-[14px]"
                             style={{
-                              width: '100px',
-                              overflow: 'hidden',
-                              whiteSpace: 'nowrap',
-                              textOverflow: 'ellipsis',
+                              width: "100px",
+                              overflow: "hidden",
+                              whiteSpace: "nowrap",
+                              textOverflow: "ellipsis",
                             }}
                             title={name}
                           >
                             {name}
                           </p>
-                          <p className='text-[12px]'>{recentReq.role}</p>
+                          <p className="text-[12px]">{recentReq.role}</p>
                         </div>
                       </div>
-                      <div className='flex gap-3 pt-3'>
-                        <div className='flex items-center gap-1'>
+                      <div className="flex gap-3 pt-3">
+                        <div className="flex items-center gap-1">
                           <span
-                            className='lg:w-2 lg:h-2  rounded-full'
-                            style={{ background: 'rgba(29, 91, 191, 1)' }}
+                            className="lg:w-2 lg:h-2  rounded-full"
+                            style={{ background: "rgba(29, 91, 191, 1)" }}
                           ></span>
-                          <span className='lg:text-[10px]'>
+                          <span className="lg:text-[10px]">
                             Attended({recentReq.attended || 0})
                           </span>
                         </div>
-                        <div className='flex items-center gap-1'>
+                        <div className="flex items-center gap-1">
                           <span
-                            className='lg:w-2 lg:h-2  rounded-full'
-                            style={{ background: 'rgba(0, 174, 189, 1)' }}
+                            className="lg:w-2 lg:h-2  rounded-full"
+                            style={{ background: "rgba(0, 174, 189, 1)" }}
                           ></span>
-                          <span className='lg:text-[10px]'>
+                          <span className="lg:text-[10px]">
                             Completed({recentReq.completed || 0})
                           </span>
                         </div>
@@ -296,17 +309,17 @@ export const Mentee = () => {
                 })}
               </div>
             </div>
-            <div className='mt-6'>
+            <div className="mt-6">
               <Invite />
             </div>
           </div>
 
-          <div className='col-span-4'>
-            {searchParams.get('type') === null &&
-              searchParams.get('is_bookmark') === null && (
+          <div className="col-span-4">
+            {searchParams.get("type") === null &&
+              searchParams.get("is_bookmark") === null && (
                 <ProgramCard
-                  title='All Programs'
-                  viewpage='/programs'
+                  title="All Programs"
+                  viewpage="/programs"
                   handleNavigateDetails={handleNavigateDetails}
                   handleBookmark={handleBookmark}
                   programs={userpragrams.allprograms}
@@ -314,11 +327,11 @@ export const Mentee = () => {
                 />
               )}
 
-            {(searchParams.get('type') === 'yettojoin' ||
-              searchParams.get('type') === 'planned') && (
+            {(searchParams.get("type") === "yettojoin" ||
+              searchParams.get("type") === "planned") && (
               <ProgramCard
-                title='Active Programs'
-                viewpage='/programs?type=yettojoin'
+                title="Active Programs"
+                viewpage="/programs?type=yettojoin"
                 handleNavigateDetails={handleNavigateDetails}
                 handleBookmark={handleBookmark}
                 programs={userpragrams.yettojoin}
@@ -326,10 +339,10 @@ export const Mentee = () => {
               />
             )}
 
-            {searchParams.get('type') === 'yettostart' && (
+            {searchParams.get("type") === "yettostart" && (
               <ProgramCard
-                title='Recent Join Programs'
-                viewpage='/programs?type=yettostart'
+                title="Recent Join Programs"
+                viewpage="/programs?type=yettostart"
                 handleNavigateDetails={handleNavigateDetails}
                 handleBookmark={handleBookmark}
                 programs={userpragrams.yettostart}
@@ -337,10 +350,10 @@ export const Mentee = () => {
               />
             )}
 
-            {searchParams.get('type') === 'inprogress' && (
+            {searchParams.get("type") === "inprogress" && (
               <ProgramCard
-                title='Ongoing Programs'
-                viewpage='/programs?type=inprogress'
+                title="Ongoing Programs"
+                viewpage="/programs?type=inprogress"
                 handleNavigateDetails={handleNavigateDetails}
                 handleBookmark={handleBookmark}
                 programs={userpragrams.inprogress}
@@ -348,33 +361,33 @@ export const Mentee = () => {
               />
             )}
 
-            <div className='mt-4'>
+            <div className="mt-4">
               <div
-                className='program-feeds'
+                className="program-feeds"
                 style={{
-                  boxShadow: '4px 4px 15px 0px rgba(0, 0, 0, 0.05)',
-                  borderRadius: '10px',
+                  boxShadow: "4px 4px 15px 0px rgba(0, 0, 0, 0.05)",
+                  borderRadius: "10px",
                 }}
               >
-                <div className='title flex justify-between py-3 px-4 border-b-2 items-center'>
-                  <div className='flex gap-4'>
+                <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
+                  <div className="flex gap-4">
                     <div
-                      className='card-dash'
+                      className="card-dash"
                       style={{
                         background:
-                          'linear-gradient(180deg, #00B1C0 0%, #005DC6 100%)',
+                          "linear-gradient(180deg, #00B1C0 0%, #005DC6 100%)",
                       }}
                     ></div>
                     <h4>Program Feeds</h4>
                   </div>
-                  <div className='flex gap-4 items-center'>
-                    <img src={SearchIcon} alt='statistics' />
+                  <div className="flex gap-4 items-center">
+                    <img src={SearchIcon} alt="statistics" />
                     <p
-                      className='text-[12px] py-2 px-2 cursor-pointer'
-                      onClick={() => navigate('/feeds')}
+                      className="text-[12px] py-2 px-2 cursor-pointer"
+                      onClick={() => navigate("/feeds")}
                       style={{
-                        background: 'rgba(223, 237, 255, 1)',
-                        borderRadius: '5px',
+                        background: "rgba(223, 237, 255, 1)",
+                        borderRadius: "5px",
                       }}
                     >
                       View All
@@ -382,67 +395,69 @@ export const Mentee = () => {
                   </div>
                 </div>
 
-                <div className='content flex overflow-x-auto'>
-                  {programFeeds.map((programFeeds, index) => (
-                    <div
-                      key={index}
-                      style={{
-                        border: '1px solid rgba(29, 91, 191, 1)',
-                        borderRadius: '5px',
-                      }}
-                      className='program-feed-root mx-7 my-7'
-                    >
-                      <div className='flex py-3 px-3 gap-4 w-[340px]'>
-                        <img
-                          src={UserImage}
-                          className={`program-user-image ${
-                            getWindowDimensions().width <= 1536
-                              ? 'w-1/5'
-                              : 'w-1/6'
-                          } rounded-xl h-[100px]`}
-                          style={{
-                            height:
-                              getWindowDimensions().width <= 1536
-                                ? '90px'
-                                : '100px',
-                          }}
-                          alt=''
-                        />
-                        <div className='feed-content flex flex-col gap-4'>
-                          <h3>{programFeeds.title}</h3>
-                          <h4 className='text-[12px]'>{programFeeds.desc}</h4>
-                          <div className='flex gap-3'>
-                            <span
-                              style={{
-                                background: 'rgba(238, 245, 255, 1)',
-                                borderRadius: '30px',
-                              }}
-                              className='tags py-1 px-4 text-[13px]'
-                            >
-                              Tag
-                            </span>
-                            <span
-                              style={{
-                                background: 'rgba(238, 245, 255, 1)',
-                                borderRadius: '30px',
-                              }}
-                              className='tags py-1 px-4 text-[13px]'
-                            >
-                              Tag
-                            </span>
-                            <span
-                              style={{
-                                background: 'rgba(238, 245, 255, 1)',
-                                borderRadius: '30px',
-                              }}
-                              className='tags py-1 px-4 text-[13px]'
-                            >
-                              Tag
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                <div className="content flex overflow-x-auto">
+                  {feeds?.results?.map((programFeeds, index) => (
+                    // <div
+                    //   key={index}
+                    //   style={{
+                    //     border: '1px solid rgba(29, 91, 191, 1)',
+                    //     borderRadius: '5px',
+                    //   }}
+                    //   className='program-feed-root mx-7 my-7'
+                    // >
+                    //   <div className='flex py-3 px-3 gap-4 w-[340px]'>
+                    //     <img
+                    //       src={UserImage}
+                    //       className={`program-user-image ${
+                    //         getWindowDimensions().width <= 1536
+                    //           ? 'w-1/5'
+                    //           : 'w-1/6'
+                    //       } rounded-xl h-[100px]`}
+                    //       style={{
+                    //         height:
+                    //           getWindowDimensions().width <= 1536
+                    //             ? '90px'
+                    //             : '100px',
+                    //       }}
+                    //       alt=''
+                    //     />
+                    //     <div className='feed-content flex flex-col gap-4'>
+                    //       <h3>{programFeeds.title}</h3>
+                    //       <h4 className='text-[12px]'>{programFeeds.desc}</h4>
+                    //       <div className='flex gap-3'>
+                    //         <span
+                    //           style={{
+                    //             background: 'rgba(238, 245, 255, 1)',
+                    //             borderRadius: '30px',
+                    //           }}
+                    //           className='tags py-1 px-4 text-[13px]'
+                    //         >
+                    //           Tag
+                    //         </span>
+                    //         <span
+                    //           style={{
+                    //             background: 'rgba(238, 245, 255, 1)',
+                    //             borderRadius: '30px',
+                    //           }}
+                    //           className='tags py-1 px-4 text-[13px]'
+                    //         >
+                    //           Tag
+                    //         </span>
+                    //         <span
+                    //           style={{
+                    //             background: 'rgba(238, 245, 255, 1)',
+                    //             borderRadius: '30px',
+                    //           }}
+                    //           className='tags py-1 px-4 text-[13px]'
+                    //         >
+                    //           Tag
+                    //         </span>
+                    //       </div>
+                    //     </div>
+                    //   </div>
+                    // </div>
+
+                    <FeedCard programFeeds={programFeeds} />
                   ))}
                 </div>
               </div>
@@ -459,11 +474,11 @@ export const Mentee = () => {
         padding={0}
       >
         <Stack
-          p={'12px 18px'}
-          className='border-b border-[#D9E4F2]'
-          direction={'row'}
-          alignItems={'center'}
-          justifyContent={'space-between'}
+          p={"12px 18px"}
+          className="border-b border-[#D9E4F2]"
+          direction={"row"}
+          alignItems={"center"}
+          justifyContent={"space-between"}
         >
           <Typography>Select Category's</Typography>
           <div onClick={() => setOpenCategory(false)}>
