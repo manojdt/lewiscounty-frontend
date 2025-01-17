@@ -28,6 +28,7 @@ const ProgramActions = ({
   handleAcceptCancelProgramRequest,
   setOpenPopup,
   setCancelPopup,
+  from = ""
 }) => {
   const userInfo = useSelector((state) => state.userInfo);
 
@@ -504,7 +505,7 @@ const ProgramActions = ({
         (programdetails?.request_data?.request_type === "program_cancel" &&
           programdetails?.request_data?.status === "new"));
 
-    if (showRequestButtons) {
+    if (showRequestButtons && from !== "subprogram") {
       return (
         <Box mt={2}>
           <Stack direction="row" alignItems="center" spacing="20px">

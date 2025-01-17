@@ -15,7 +15,7 @@ import ProgramPerformance from './ProgramPerformance';
 import ReportsInfo from './Admin/ReportsInfo';
 import Tooltip from '../../shared/Tooltip';
 import { programFeeds } from '../../utils/mock';
-import { chartProgramList, getProgramCounts } from '../../services/userprograms';
+import { chartProgramList, getActivityList, getProgramCounts } from '../../services/userprograms';
 import MemberRequest from './MemberRequest';
 import protectedApi from "../../services/api";
 
@@ -29,6 +29,7 @@ export default function Admin() {
     const [chartList, setChartList] = useState([])
     const [membersCount, setMembersCount] = useState([])
     const [loading, setLoading] = useState(true); // Track loading state
+    const [activityList, setActivityList] = React.useState([])
  
     const role = userInfo.data.role
     const dispatch = useDispatch()
@@ -69,6 +70,25 @@ export default function Admin() {
       useEffect(() => {
         fetchMembersCount();
           dispatch(getProgramCounts())
+          const payload = {
+            page: 1,
+            limit: 5
+          }
+          dispatch(getActivityList(payload)).then((res)=>{
+            if(res?.meta?.requestStatus === "fulfilled"){
+                console.log("res ==>", res)
+                const constructedData = res?.payload?.results?.map((e)=>{
+                    return{
+                        id: e?.id,
+                        name: e?.name,
+                        action_message: e?.description,
+                        time_since_action: e?.time_since_action,
+                        action: e?.action
+                    }
+                })
+                setActivityList(constructedData ?? [])
+            }
+          })
       }, []); 
       useEffect(() => {
 
@@ -99,43 +119,6 @@ export default function Admin() {
             { title: 'Abort Programs', value: 35, color: '#FEA7BB' }
         ];
 
-    const activityList = [
-        {
-            id: 1,
-            name: 'Report 1',
-            action_message: 'Approved by Admin',
-            time_since_action: '10 min ago',
-            action: 'create'
-        },
-        {
-            id: 2,
-            name: 'Report 1',
-            action_message: 'Approved by Admin',
-            time_since_action: '10 min ago',
-            action: 'create'
-        },
-        {
-            id: 3,
-            name: 'Report 1',
-            action_message: 'Approved by Admin',
-            time_since_action: '10 min ago',
-            action: 'create'
-        },
-        {
-            id: 4,
-            name: 'Report 1',
-            action_message: 'Approved by Admin',
-            time_since_action: '10 min ago',
-            action: 'create'
-        },
-        {
-            id: 5,
-            name: 'Report 1',
-            action_message: 'Approved by Admin',
-            time_since_action: '10 min ago',
-            action: 'create'
-        }
-    ]
 
     const handlePerformanceFilter = (e) => {
         const res = e?.target?.value || "date"

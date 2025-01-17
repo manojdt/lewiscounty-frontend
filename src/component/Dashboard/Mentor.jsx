@@ -86,8 +86,54 @@ export const Mentor = () => {
 
   useEffect(() => {
     handlePerformanceFilter();
-    dispatch(getUserProfile());
+    // dispatch(getUserProfile()).then((res)=>{
+    //   if(res?.meta?.requestStatus === "fulfilled"){
+    //     console.log("sdjsjdflsldnf ===>", res)
+    //     if(res?.payload?.approve_status === "accept"){
+    //       dispatch(updateToken()).then((response) => {
+    //         console.log("res from updateToken ===>", response)
+    //         localStorage.setItem("access_token", response.payload.data.access);
+    //         localStorage.setItem("refresh_token", response.payload.data.refresh);
+    //         dispatch(getUserProfile())
+    //       });
+    //     }
+    //   }
+    // })
+    
   }, []);
+
+
+  useEffect(() => {
+    const fetchAndUpdateTokens = async () => {
+      try {
+        // Initial API call to get the user profile
+        const res = await dispatch(getUserProfile()).unwrap(); // Use .unwrap() for cleaner promise handling
+        console.log("User profile response:", res);
+  
+        if (res?.approve_status === "accept") {
+          
+
+          const updateToken = await api.post('generate_new_token', {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+
+          if (updateToken.status === 200) {
+            console.log('updateToken', updateToken);
+            localStorage.setItem('access_token', updateToken.data.access);
+            localStorage.setItem('refresh_token', updateToken.data.refresh);
+            navigate("/dashboard")
+          }
+        }
+      } catch (error) {
+        console.error("Error during profile or token update:", error);
+      }
+    };
+  
+    fetchAndUpdateTokens();
+  }, [dispatch]); // Added dispatch to dependencies for better practice
+  
 
   useEffect(() => {
     getPrograms();
@@ -118,13 +164,14 @@ export const Mentor = () => {
           {<CircularProgress color="inherit" />}
         </Backdrop>
 
-        <div className="main-grid grid grid-cols-5 gap-3">
+        <div className={userInfo?.data?.userinfo?.approve_status === "accept" ? "main-grid grid grid-cols-5 gap-3" : "w-full"}>
+          {userInfo?.data?.userinfo?.approve_status === "accept" &&
           <div className="left-bar row-span-3 flex flex-col gap-8">
             <UserInfoCard />
             {/* <ViewImpression /> */}
             {/* <RecentActivities /> */}
             <Invite />
-          </div>
+          </div>}
 
           {!["new", "pending"].includes(
             userInfo?.data?.userinfo?.approve_status
@@ -222,8 +269,13 @@ export const Mentor = () => {
           ) : (
             <div className="programs-list !h-[100vh]">
               <div className="flex items-center justify-center h-full w-full flex-col gap-3">
-                <p className="text-[24px] text-font-primary-main font-bold">Welcome to Mentoring Management Application</p>
-                <p className="text-[18px] text-font-primary-main font-bold">Waiting for Admin approval</p>
+                <p className="text-[24px] text-font-primary-main font-bold">
+                  Welcome to Mentoring Management Application
+                </p>
+                <p className="text-[18px] text-font-primary-main font-bold">
+                  Waiting for Admin approval
+                </p>
+                <Invite />
               </div>
             </div>
           )}
