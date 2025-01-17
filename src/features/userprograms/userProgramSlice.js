@@ -6,6 +6,7 @@ import {
   acceptProgram,
   assignProgramTask,
   chartProgramList,
+  getActivityList,
   getAllProgramDetails,
   getMenteeJoinedInProgram,
   getMenteeProgramCount,
@@ -62,6 +63,7 @@ const initialState = {
   taskdetails: {},
   menteeList: [],
   programMenteeList: [],
+  activityList: [],
   menteeJoined: true,
   status: "",
   loading: false,
@@ -682,6 +684,27 @@ export const userProgramSlice = createSlice({
           };
       });
 
+      builder
+      .addCase(getActivityList.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(getActivityList.fulfilled, (state, action) => {
+        return {
+          ...state,
+          activityList: action.payload,
+          loading: false,
+        };
+      })
+      .addCase(getActivityList.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
   },
 });
 

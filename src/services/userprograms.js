@@ -461,3 +461,21 @@ export const updateTaskSubmission = createAsyncThunk(
         return updateTaskSubmission
     }
 );
+
+
+export const getActivityList = createAsyncThunk(
+    "getActivityList",
+    async (data) => {
+        let filteredQuery = Object.fromEntries(
+            Object.entries(data).filter(([key, value]) => 
+                !(key === "search" && value.trim().length === 0))
+        );
+        let queryString = new URLSearchParams(filteredQuery).toString()
+        // const programRequest = await api.get(`goals/get/goals/request?${queryString}`);
+        const activityList = await api.get(`/recent_activities/recent-activities?${queryString}`);
+        if (activityList.status === 200 && activityList.data) {
+            return activityList.data;
+        }
+        return activityList;
+    }
+);
