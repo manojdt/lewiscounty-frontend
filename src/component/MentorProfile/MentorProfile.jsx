@@ -579,7 +579,6 @@ function MentorProfile() {
                     height: "auto",
                   }}
                 >
-                  zxczxcz
                   <Box>
                     <CardWrapper title="Program Feeds" viewAll>
                       <div style={{ height: "750px", overflowY: "scroll" }}>
