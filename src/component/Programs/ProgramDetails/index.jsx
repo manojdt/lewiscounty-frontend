@@ -243,7 +243,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       name: "About Program",
       key: "about_program",
     },    
-    !programdetails?.sub_program && {
+    !programdetails?.sub_programs && {
       name: "Program Testimonials",
       key: "program_testimonials",
     },
@@ -2402,7 +2402,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                           {programdetails.course_level}
                         </span>
                       </li>
-                      {programdetails.sub_program?.length > 0 ? (
+                      {programdetails.sub_programs?.length > 0 ? (
                         <li
                           className="flex justify-between text-[12px]"
                           style={{
@@ -2413,7 +2413,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                         >
                           <span>Sub Programs</span>
                           <span style={{ textTransform: "capitalize" }}>
-                            {programdetails.sub_program?.length}
+                            {programdetails.sub_programs?.length}
                           </span>
                         </li>
                       ) : (
@@ -2705,10 +2705,10 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                 )}
               {/* Notes Section End */}
 
-              {"sub_program" in programdetails &&
-                programdetails?.sub_program?.length > 0 && (
+              {"sub_programs" in programdetails &&
+                programdetails?.sub_programs?.length > 0 && (
                   <SubprogramsDataGrid
-                    data={programdetails?.sub_program}
+                    data={programdetails?.sub_programs}
                     handleAcceptProgram={handleAcceptProgram}
                   />
                 )}
