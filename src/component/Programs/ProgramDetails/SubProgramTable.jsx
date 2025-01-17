@@ -207,7 +207,7 @@ const SubprogramsDataGrid = ({ data, handleAcceptProgram }) => {
         navigate(
           `${pipeUrls.programdetails}/${
             course ? course?.id : gridCellParams.id
-          }`
+          }?from=subprogram`
         );
         break;
       case "accept":

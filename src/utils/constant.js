@@ -208,6 +208,7 @@ export const activityStatusColor = {
   ongoing: 'rgba(255, 212, 27, 1)',
   abort: 'rgba(255, 0, 215, 1)',
   update: 'rgba(255, 118, 0, 1)',
+  approve: 'rgba(0, 174, 189, 1)'
 };
 
 export const goalDataStatus = {

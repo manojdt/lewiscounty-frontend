@@ -148,6 +148,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   const program_create_type = searchParams.get("program_create_type") || "";
   const breadcrumbsType = searchParams.get("breadcrumbsType") || "";
   const typeParams = searchParams.get("type");
+  const from = searchParams.get("from")
   const userdetails = useSelector((state) => state.userInfo);
   const role = userdetails.data.role || "";
   const reqRole = requestId && userdetails.data.role === "admin";
@@ -2097,7 +2098,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             programActionStatus.started,
                           ].includes(programdetails.status) && (
                             <>
-                              <MenuItem
+                              {programdetails?.created_by ===
+                                userdetails?.data?.user_id &&<MenuItem
                                 onClick={() => handleOpenConfirmPopup()}
                                 className="!text-[12px]"
                               >
@@ -2107,7 +2109,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                   className="pr-3 w-[25px]"
                                 />
                                 Complete
-                              </MenuItem>
+                              </MenuItem>}
                               {programdetails?.created_by ===
                                 userdetails?.data?.user_id && (
                                 <MenuItem
@@ -2582,6 +2584,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     setOpenPopup={setOpenPopup}
                     handleMarkInterestClick={handleMarkInterestClick}
                     markingInterest={markingInterest}
+                    from={from}
                   />
                   {/* )} */}
                 </div>
