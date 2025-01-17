@@ -1,7 +1,7 @@
-import React from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
-import { MentorShipExperienceFields } from '../../../utils/formFields';
-import { view } from '../../../utils/constant';
+import React from "react";
+import { Controller, useFormContext } from "react-hook-form";
+import { MentorShipExperienceFields } from "../../../utils/formFields";
+import { view } from "../../../utils/constant";
 
 const MentorshipExperienceSection = ({ type }) => {
   const {
@@ -15,10 +15,10 @@ const MentorshipExperienceSection = ({ type }) => {
     setValue,
   } = useFormContext();
 
-  const hasPreviousMentorship = watch('prev_mentorship');
+  const hasPreviousMentorship = watch("prev_mentorship");
 
   return (
-    <div className='grid grid-cols-2 gap-6'>
+    <div className="grid grid-cols-2 gap-6">
       {MentorShipExperienceFields.map((field) => {
         // if (
         //   field.name === 'mentor_exp_desc' &&
@@ -26,10 +26,10 @@ const MentorshipExperienceSection = ({ type }) => {
         // ) {
         //   return null;
         // }
-        if (field.name === 'mentor_exp_desc') {
+        if (field.name === "mentor_exp_desc") {
           if (
             hasPreviousMentorship !== true &&
-            hasPreviousMentorship !== 'Yes'
+            hasPreviousMentorship !== "Yes"
           ) {
             return null;
           }
@@ -37,36 +37,36 @@ const MentorshipExperienceSection = ({ type }) => {
             <div
               key={field.name}
               className={`${field.width}`}
-              style={{ marginBottom: '16px' }}
+              style={{ marginBottom: "16px" }}
             >
               <label
-                className='block tracking-wide text-xs mb-2'
-                style={{ color: 'rgba(116, 116, 116, 1)' }}
+                className="block tracking-wide text-xs mb-2"
+                style={{ color: "rgba(116, 116, 116, 1)" }}
               >
                 {field.label}
-                {field?.inputRules?.required && '*'}
+                {field?.inputRules?.required && "*"}
               </label>
               {type === view.viewOnly ? (
-                <p className='text-[14px] pt-3'>
-                  {getValues(field.name) ? getValues(field.name) : '-'}
+                <p className="text-[14px] pt-3">
+                  {getValues(field.name) ? getValues(field.name) : "-"}
                 </p>
               ) : (
                 <div>
                   <Controller
                     name={field.name}
                     control={control}
-                    defaultValue=''
+                    defaultValue=""
                     rules={field.inputRules}
                     render={({ field: controllerField }) => (
                       <input
                         {...controllerField}
                         type={field.fieldtype}
-                        className='w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:outline-none text-[14px] h-[60px]'
+                        className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:outline-none text-[14px] h-[60px]"
                         placeholder={field.placeholder}
                         style={{
-                          color: '#232323',
-                          borderRadius: '3px',
-                          paddingLeft: '10px',
+                          color: "#232323",
+                          borderRadius: "3px",
+                          paddingLeft: "10px",
                         }}
                         disabled={field.disabled}
                         aria-invalid={!!errors[field.name]}
@@ -74,7 +74,7 @@ const MentorshipExperienceSection = ({ type }) => {
                     )}
                   />
                   {errors[field.name] && (
-                    <p style={{ color: 'red', fontSize: '12px' }}>
+                    <p style={{ color: "red", fontSize: "12px" }}>
                       {errors[field.name]?.message}
                     </p>
                   )}
@@ -85,42 +85,42 @@ const MentorshipExperienceSection = ({ type }) => {
         }
 
         switch (field.type) {
-          case 'input':
+          case "input":
             return (
               <div
                 key={field.name}
                 className={`${field.width}`}
-                style={{ marginBottom: '16px' }}
+                style={{ marginBottom: "16px" }}
               >
                 <label
-                  className='block tracking-wide  text-xs mb-2'
-                  style={{ color: 'rgba(116, 116, 116, 1)' }}
+                  className="block tracking-wide  text-xs mb-2"
+                  style={{ color: "rgba(116, 116, 116, 1)" }}
                 >
                   {field.label}
-                  {field?.inputRules?.required && '*'}
+                  {field?.inputRules?.required && "*"}
                 </label>
                 {type === view.viewOnly ? (
-                  <p className='text-[14px] pt-3'>
-                    {getValues(field.name) ? getValues(field.name) : '-'}
+                  <p className="text-[14px] pt-3">
+                    {getValues(field.name) ? getValues(field.name) : "-"}
                   </p>
                 ) : (
                   <Controller
                     name={field.name}
                     control={control}
-                    defaultValue=''
+                    defaultValue=""
                     rules={field.inputRules}
                     render={({ field: controllerField }) => (
                       <input
                         {...register(field.name, field.inputRules)}
                         type={field.fieldtype}
-                        className='w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none
-                                                          focus-visible:outline-none text-[14px] h-[60px]'
+                        className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none
+                                                          focus-visible:outline-none text-[14px] h-[60px]"
                         placeholder={field.placeholder}
                         style={{
-                          color: '#232323',
-                          borderRadius: '3px',
+                          color: "#232323",
+                          borderRadius: "3px",
 
-                          paddingLeft: '10px',
+                          paddingLeft: "10px",
                         }}
                         disabled={field.disabled}
                         aria-invalid={!!errors[field.name]}
@@ -129,53 +129,53 @@ const MentorshipExperienceSection = ({ type }) => {
                   />
                 )}
                 {errors[field.name] && (
-                  <p style={{ color: 'red', fontSize: '12px' }}>
+                  <p style={{ color: "red", fontSize: "12px" }}>
                     {errors[field.name]?.message}
                   </p>
                 )}
               </div>
             );
 
-          case 'radio':
+          case "radio":
             return (
               <div
                 key={field.name}
                 className={`${field.width}`}
-                style={{ marginBottom: '16px' }}
+                style={{ marginBottom: "16px" }}
               >
                 <label
-                  className='block tracking-wide text-xs mb-2'
-                  style={{ color: 'rgba(116, 116, 116, 1)' }}
+                  className="block tracking-wide text-xs mb-2"
+                  style={{ color: "rgba(116, 116, 116, 1)" }}
                 >
                   {field.label}
                 </label>
                 {type === view.viewOnly ? (
-                  <p className='text-[14px] pt-3'>
+                  <p className="text-[14px] pt-3">
                     {getValues(field.name) && getValues(field.name) === true
-                      ? 'Yes'
-                      : 'No'}
+                      ? "Yes"
+                      : "No"}
                   </p>
                 ) : (
                   <>
                     <Controller
                       name={field.name}
                       control={control}
-                      defaultValue=''
+                      defaultValue={field.defaultValue} // Pass the backend value here
                       rules={field.inputRules}
                       render={({ field: controllerField }) => (
-                        <div className='flex items-center justify-start gap-6 mt-6'>
+                        <div className="flex items-center justify-start gap-6 mt-6">
                           {field.options.map((option) => (
                             <label
-                              className='flex items-center justify-center gap-1'
+                              className="flex items-center justify-center gap-1"
                               key={option.key}
-                              style={{ marginRight: '8px' }}
+                              style={{ marginRight: "8px" }}
                             >
                               <input
-                                type='radio'
-                                value={option.value}
-                                checked={controllerField.value === option.value}
-                                onChange={(e) =>
-                                  controllerField.onChange(e.target.value)
+                                type="radio"
+                                value={option.key} 
+                                checked={controllerField.value === option.key}
+                                onChange={
+                                  (e) => controllerField.onChange(option.key) 
                                 }
                               />
                               {option.value}
@@ -184,8 +184,9 @@ const MentorshipExperienceSection = ({ type }) => {
                         </div>
                       )}
                     />
+
                     {errors[field.name] && (
-                      <p style={{ color: 'red', fontSize: '12px' }}>
+                      <p style={{ color: "red", fontSize: "12px" }}>
                         {errors[field.name]?.message}
                       </p>
                     )}

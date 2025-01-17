@@ -2320,6 +2320,8 @@ export default function AllRequest() {
     }
   }, [status]);
 
+  console.log(programTableInfo.results)
+
   useEffect(() => {
     if (selectedRequestedtype === 'program_request' || !selectedRequestedtype) {
       setActiveTableDetails({

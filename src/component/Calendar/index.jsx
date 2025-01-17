@@ -10,6 +10,7 @@ import {
   getCalendarFilterEvents,
 } from '../../services/scheduler';
 import { Backdrop, CircularProgress } from '@mui/material';
+import { user } from '../../utils/constant';
 
 export default function Scheduler() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -137,7 +138,7 @@ export default function Scheduler() {
                 </h4>
               </div>
               <div className='flex gap-5 flex-col justify-center items-center pb-5'>
-                {userInfo.role === 'mentor' && (
+                {userInfo.role !== user.mentee && (
                   <button
                     className='flex gap-3 justify-center py-3 w-full text-[13px]'
                     style={{
@@ -175,7 +176,6 @@ export default function Scheduler() {
                       ></div>
                       <span className='text-[13px]'>{calendarevent.name}</span>
                     </div>
-                    {/* <div className='font-semibold'>{calendarevent.total}</div> */}
                   </div>
                 ))}
               </div>
