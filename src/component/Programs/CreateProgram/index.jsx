@@ -64,11 +64,7 @@ export default function CreatePrograms() {
 
   const program_create_type = searchParams.get("program_create_type") || "";
 
-  const {
-    allPrograms,
-    loading: apiLoading,
-    status,
-  } = useSelector((state) => state.programInfo);
+  const { allPrograms, status } = useSelector((state) => state.programInfo);
 
   const methods = useForm({
     defaultValues:
@@ -82,12 +78,17 @@ export default function CreatePrograms() {
   const formValues = watch();
 
   const { data: category, isLoading: isCategoryFetching } =
-    useGetAllCategoriesQuery();
+    useGetAllCategoriesQuery(undefined, {
+      refetchOnMountOrArgChange: true,
+    });
 
-  const { data: mentor_assign } = useGetAllMentorsQuery(undefined, {
-    skip: role !== admin,
-    refetchOnMountOrArgChange: true,
-  });
+  const { data: mentor_assign } = useGetAllMentorsQuery(
+    { role_name: "mentor", page: 1, limit: 100, status: "active" },
+    {
+      skip: role !== admin,
+      refetchOnMountOrArgChange: true,
+    }
+  );
 
   const { data: currentProgramDetail, isLoading: isDetailFetching } =
     useGetSpecificProgramDetailsQuery(
@@ -119,6 +120,7 @@ export default function CreatePrograms() {
       skip: !formValues?.category,
     }
   );
+
   const { data: certificate } = useGetCertificatesQuery(
     {
       ...(formValues?.category && {
@@ -927,15 +929,24 @@ export default function CreatePrograms() {
       }
 
       // Set initial values from currentProgramDetail
+      // Set initial values from currentProgramDetail
       ProgramFields.flat().forEach((field) => {
         const fieldName = field.name;
 
         if (fieldName === "category") {
+          // Handle category field specifically
+          let categoryId;
           if (currentProgramDetail.categories?.length) {
-            setValue(fieldName, currentProgramDetail.categories[0]?.id);
-          } else {
-            setValue(fieldName, currentProgramDetail?.incident_type?.id);
+            categoryId = currentProgramDetail.categories[0]?.id;
+          } else if (currentProgramDetail?.incident_type?.id) {
+            categoryId = currentProgramDetail.incident_type.id;
           }
+
+          // Use setValue with shouldValidate and shouldDirty options
+          setValue(fieldName, categoryId, {
+            shouldValidate: true,
+            shouldDirty: true,
+          });
         } else {
           let value = currentProgramDetail[fieldName];
 
@@ -1025,99 +1036,6 @@ export default function CreatePrograms() {
     }
   }, [tabActionInfo.error]);
 
-  // useEffect(() => {
-  //   if (
-  //     currentProgramDetail &&
-  //     Object.keys(currentProgramDetail).length &&
-  //     params.id !== ''
-  //   ) {
-  //     let stepListData = {};
-  //     let data = {};
-
-  //     programAllFields.forEach((field, index) => {
-  //       let stepField = {};
-  //       field.forEach((fl, i) => {
-  //         let currentField = fl.name;
-  //         let currentFieldValue = currentProgramDetail[currentField];
-
-  //         // Handle special cases
-  //         if (
-  //           currentField === 'category' &&
-  //           currentProgramDetail.categories?.length
-  //         ) {
-  //           currentFieldValue = currentProgramDetail.categories[0]?.id;
-  //         }
-
-  //         if (currentField === 'start_date' || currentField === 'end_date') {
-  //           currentFieldValue = new Date(currentProgramDetail[currentField]);
-  //         }
-
-  //         if (
-  //           [
-  //             'mentee_upload_certificates',
-  //             'group_chat_requirement',
-  //             'individual_chat_requirement',
-  //           ].includes(currentField)
-  //         ) {
-  //           currentFieldValue = currentProgramDetail[currentField]
-  //             ? 'true'
-  //             : 'false';
-  //         }
-
-  //         if (currentField === 'certificates') {
-  //           currentFieldValue = currentProgramDetail['certifications'];
-  //         }
-
-  //         if (currentField === 'testimonial_types') {
-  //           currentFieldValue = currentProgramDetail['testimonial_types'];
-  //         }
-
-  //         if (currentField === 'program_image') {
-  //           currentFieldValue = currentProgramDetail['program_image'];
-  //         }
-
-  //         if (currentField === 'state') {
-  //           currentFieldValue = currentProgramDetail?.state_details?.id;
-  //         }
-
-  //         if (currentField === 'city') {
-  //           currentFieldValue = currentProgramDetail?.city_details?.id;
-  //         }
-
-  //         // Set value in React Hook Form
-  //         setValue(currentField, currentFieldValue);
-
-  //         stepField[currentField] = currentFieldValue;
-  //       });
-  //       stepListData = { ...stepListData, [index]: stepField };
-  //       data = { ...data, ...stepField };
-  //     });
-
-  //     setStepData(data);
-  //   }
-  // }, [
-  //   currentStep,
-  //   role,
-  //   category?.length,
-  //   // programTypes?.length,
-  //   countryStates?.length,
-  //   cities?.length,
-  //   currentProgramDetail?.id,
-  //   params.id,
-  // ]);
-
-  // useEffect(() => {
-  //   if (params.id && currentProgramDetail) {
-  //     methods.reset({
-  //       ...currentProgramDetail,
-  //       state: currentProgramDetail?.state_details?.id,
-  //       city: currentProgramDetail?.city_details?.id,
-  //       start_date: new Date(currentProgramDetail.start_date),
-  //       end_date: new Date(currentProgramDetail.end_date),
-  //     });
-  //   }
-  // }, [params.id, currentProgramDetail]);
-
   const handleDraft = () => {
     setValue("status", "draft");
     document.getElementById("program-submit").click();
@@ -1138,22 +1056,6 @@ export default function CreatePrograms() {
   }, [formValues?.program_mode, unregister]);
 
   const onSubmit = (data) => {
-    // setStepWiseData(combinedData);
-
-    // if (formValues.program_mode !== 'physical_location') {
-    //   const filteredData = Object.fromEntries(
-    //     Object.entries(data).filter(
-    //       ([key]) =>
-    //         ![
-    //           'address_line1',
-    //           'address_line2',
-    //           'state',
-    //           'city',
-    //           'zip_code',
-    //         ].includes(key)
-    //     )
-    //   );
-    // }
     setStepWiseData((prevStData) => {
       const newStepData = {
         ...prevStData,
@@ -1162,7 +1064,6 @@ export default function CreatePrograms() {
       return newStepData;
     });
     handleNextStep(data);
-    // reset();
   };
 
   useEffect(() => {
@@ -1171,6 +1072,14 @@ export default function CreatePrograms() {
     return () => sub.unsubscribe();
   }, [watch]);
 
+  const handleCancelClick = () => {
+    if (role === admin && toggleRole === mentor && !params?.id) {
+      setToggleRole(admin);
+    } else {
+      navigate("/programs");
+      reset();
+    }
+  };
   return (
     <div className="dashboard-content px-8 mt-10">
       <div
@@ -1187,11 +1096,7 @@ export default function CreatePrograms() {
             <Tooltip title="Cancel">
               <img
                 className="cursor-pointer"
-                onClick={() => {
-                  role === admin && toggleRole === mentor
-                    ? setToggleRole(admin)
-                    : navigate("/programs");
-                }}
+                onClick={handleCancelClick}
                 src={CancelIcon}
                 alt="CancelIcon"
               />
@@ -1310,13 +1215,7 @@ export default function CreatePrograms() {
                     <Button
                       btnName="Cancel"
                       btnCategory="secondary"
-                      onClick={() => {
-                        if (current !== "own") {
-                          navigate("/programs");
-                        }
-                        setToggleRole(admin);
-                        reset();
-                      }}
+                      onClick={handleCancelClick}
                     />
                   )}
                   {currentStep > 1 && (

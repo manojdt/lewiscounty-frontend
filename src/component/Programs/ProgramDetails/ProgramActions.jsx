@@ -377,7 +377,7 @@ const ProgramActions = ({
       if (programdetails?.program_interest) {
         return (
           <span
-            className="py-3 px-16 text-white text-[14px] rounded"
+            className="mt-4 py-3 px-16 text-white text-[14px] rounded"
             style={{
               ...buttonStyles.success,
               cursor: "not-allowed",
