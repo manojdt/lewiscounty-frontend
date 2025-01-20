@@ -89,7 +89,7 @@ export const Mentors = () => {
       value: 'topmentor',
     },
     {
-      name: 'New Follow Requests',
+      name: 'Follow Requests',
       value: 'requestmentor',
     },
   ];
@@ -112,7 +112,7 @@ export const Mentors = () => {
       key: 'accept',
     },
     {
-      name: 'Cancel',
+      name: 'Reject',
       key: 'cancel',
     },
   ];
@@ -250,7 +250,7 @@ export const Mentors = () => {
     },
     {
       field: 'request_date',
-      headerName: 'Request Date',
+      headerName: 'Requested Date',
       flex: 1,
       id: 5,
       renderCell: (params) => {
@@ -266,7 +266,7 @@ export const Mentors = () => {
     },
     {
       field: 'last_request_date',
-      headerName: 'Last Request Date',
+      headerName: 'Last Updated Date',
       flex: 1,
       id: 5,
       renderCell: (params) => {
