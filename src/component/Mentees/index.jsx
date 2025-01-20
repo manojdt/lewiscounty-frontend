@@ -73,7 +73,7 @@ export const Mentees = () => {
       value: 'my-mentee',
     },
     {
-      name: 'New Follow Requests',
+      name: 'Follow Requests',
       value: 'new-request-mentees',
     },
   ];

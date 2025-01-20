@@ -11,7 +11,7 @@ export const SignupFields = [
     inputRules: {
       required: "First name is required",
       pattern:{
-        value:/^[A-Za-z]+$/i,
+        value:/^[A-Za-z]+(?:\s[A-Za-z]+)*$/i,
         message:"Only alphabets are allowed"
       }
     },
@@ -26,7 +26,7 @@ export const SignupFields = [
     inputRules: {
       required: "Last name is required",
       pattern:{
-        value:/^[A-Za-z]+$/i,
+        value:/^[A-Za-z]+(?:\s[A-Za-z]+)*$/i,
         message:"Only alphabets are allowed"
       }
     },
@@ -104,8 +104,8 @@ export const PasswordRules = [
     name : 'Does not contain your email address',
     key: PasswordRulesSet.email
   },
-  {
-    name : 'Is not commonly used',
-    key: PasswordRulesSet.common
-  }
+  // {
+  //   name : 'Is not commonly used',
+  //   key: PasswordRulesSet.common
+  // }
 ]

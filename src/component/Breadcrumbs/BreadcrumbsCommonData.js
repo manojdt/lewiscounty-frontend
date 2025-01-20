@@ -484,7 +484,7 @@ export const myMneteePage = () => {
 export const newFollowRequestPage = (status) => {
     return [
       {
-        label: `New Follow Requests`,
+        label: `Follow Requests`,
         path: `/mentees?req=new-request-mentees&status=${status}`,
       },
       {
@@ -519,7 +519,7 @@ export const topMentorPage = () => {
 export const newFollowRequestMentorPage = (status) => {
   return [
     {
-      label: `New Follow Requests`,
+      label: `Follow Requests`,
       path: `/mentors?req=requestmentor&status=${status}`,
     },
     {
