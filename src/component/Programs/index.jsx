@@ -42,6 +42,8 @@ import MuiModal from "../../shared/Modal";
 import { CategoryPopup } from "../Dashboard/categoryPopup";
 import { acceptMember, getCategory } from "../../services/category";
 import { useGetAllProgramsQuery } from "../../features/program/programApi.services";
+import RequestSelectBox from "../../shared/RequestSelectBox";
+import ProgramMobileDropDown from "../../shared/ProgramMobileDropDown";
 
 const CustomPagination = ({
   totalItems = 200,
@@ -169,7 +171,7 @@ export default function Programs() {
   const filterSearch = searchParams.get("search");
   const filterDate = searchParams.get("filter_by");
   const isBookmark = searchParams.get("is_bookmark");
-  const programListView= searchParams.get("programView");
+  const programListView = searchParams.get("programView");
   const { data, isLoading, refetch, isFetching } = useGetAllProgramsQuery(
     {
       limit:
@@ -253,7 +255,6 @@ export default function Programs() {
       setOpenCategory(true);
     }
   }, [role]);
-
 
   const handleBookmark = async (program) => {
     const payload = {
@@ -730,8 +731,8 @@ export default function Programs() {
           )}
       </div>
 
-      <div className="grid grid-cols-5 gap-3">
-        <div className="row-span-3 flex flex-col gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-3">
+        <div className="row-span-3 hidden lg:flex flex-col gap-8">
           <Card
             cardTitle={"Program Types"}
             cardContent={programMenusList}
@@ -739,15 +740,15 @@ export default function Programs() {
           />
         </div>
 
-        <div className="col-span-4">
+        <div className="md:col-span-3 lg:col-span-4">
           <div
             style={{
               boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.05)",
               borderRadius: "10px",
             }}
           >
-            <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
-              <div className="flex gap-4">
+            <div className="title flex flex-wrap justify-between py-3 px-4 border-b-2 items-center">
+              <div className="flex gap-4 mb-2 md:mb-0">
                 <div>{displayName}</div>
                 <img
                   src={programView === "grid" ? ListViewIcon : GridViewIcon}
@@ -756,12 +757,12 @@ export default function Programs() {
                   onClick={handleViewChange}
                 />
               </div>
-              <div className="flex gap-8 items-center">
+              <div className="flex flex-wrap gap-4 items-center">
                 <div className="relative">
                   <input
                     type="text"
                     id="search-navbar"
-                    className="block w-full p-2 text-sm text-gray-900 border border-background-primary-main h-[40px] w-[345px]"
+                    className="block w-48 p-2 text-sm text-gray-900 border border-background-primary-main h-[40px] md:w-[345px]"
                     placeholder="Search here..."
                     value={programFilter.search}
                     onChange={handleProgramSearch}
@@ -797,6 +798,13 @@ export default function Programs() {
                     <option value="year">Year</option>
                   </select>
                 </p>
+                <div className="lg:hidden">
+                  <ProgramMobileDropDown
+                    // cardTitle={"Program Types"}
+                    cardContent={programMenusList}
+                    menuNavigate={menuNavigate}
+                  />
+                </div>
               </div>
             </div>
             {programView === "grid" && (

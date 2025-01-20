@@ -93,6 +93,7 @@ import { EditIcon } from "lucide-react";
 import { docuSign } from "../../../services/activities";
 import ShareIcon from "../../../assets/images/share1x.png";
 import LinkIcon from "../../../assets/images/link1x.png";
+import RequestSelectBox from "../../../shared/RequestSelectBox";
 
 export default function AllRequest() {
   const navigate = useNavigate();
@@ -792,11 +793,25 @@ export default function AllRequest() {
                 <MenuItem
                   onClick={(e) => {
                     const requestQuery = `&request_id=${seletedItem.id}`;
-                    const tabQuery = selectedTab === "mentees" ? `&breadcrumbsType=${actionTab === "program_join" ? 
-                    requestPageBreadcrumbs.program_join_request_admin : requestPageBreadcrumbs.program_mentee_cancel}` : `&breadcrumbsType=${tabQuertyData(role, actionTab)}`;
-                    const tabQueryMentor = selectedTab === "mentees" ? `&breadcrumbsType=${actionTab === "program_join" ? 
-                    requestPageBreadcrumbs.program_join_request_admin : requestPageBreadcrumbs.program_mentee_cancel}` : 
-                    `&breadcrumbsType=${tabQuertyDataMentor(role, actionTab)}`;
+                    const tabQuery =
+                      selectedTab === "mentees"
+                        ? `&breadcrumbsType=${
+                            actionTab === "program_join"
+                              ? requestPageBreadcrumbs.program_join_request_admin
+                              : requestPageBreadcrumbs.program_mentee_cancel
+                          }`
+                        : `&breadcrumbsType=${tabQuertyData(role, actionTab)}`;
+                    const tabQueryMentor =
+                      selectedTab === "mentees"
+                        ? `&breadcrumbsType=${
+                            actionTab === "program_join"
+                              ? requestPageBreadcrumbs.program_join_request_admin
+                              : requestPageBreadcrumbs.program_mentee_cancel
+                          }`
+                        : `&breadcrumbsType=${tabQuertyDataMentor(
+                            role,
+                            actionTab
+                          )}`;
                     const url =
                       (role === "mentor" || role === "admin") &&
                       actionTab === "program_join"
@@ -1042,7 +1057,9 @@ export default function AllRequest() {
                       ? `&breadcrumbsType=${
                           role === "admin"
                             ? tabQuertyData(role, actionTab)
-                            :role === "mentor"? tabQuertyDataMentor(role, actionTab):"new_goals_request"
+                            : role === "mentor"
+                            ? tabQuertyDataMentor(role, actionTab)
+                            : "new_goals_request"
                         }&goalType=${requestPageBreadcrumbs?.goal_request}`
                       : role === "admin"
                       ? `&breadcrumbsType=${tabQuertyData(role, actionTab)}`
@@ -1093,19 +1110,20 @@ export default function AllRequest() {
                   )}
                 </>
               )}
-              {(role === "mentee" && ["new", "pending", "accept"].includes(seletedItem.status)) && (
-                <MenuItem
-                  onClick={() => handleCancelGoalRequest()}
-                  className="!text-[12px]"
-                >
-                  <img
-                    src={CloseCircle}
-                    alt="CancelIcon"
-                    className="pr-3 w-[27px]"
-                  />
-                  Cancel Request
-                </MenuItem>
-              )}
+              {role === "mentee" &&
+                ["new", "pending", "accept"].includes(seletedItem.status) && (
+                  <MenuItem
+                    onClick={() => handleCancelGoalRequest()}
+                    className="!text-[12px]"
+                  >
+                    <img
+                      src={CloseCircle}
+                      alt="CancelIcon"
+                      className="pr-3 w-[27px]"
+                    />
+                    Cancel Request
+                  </MenuItem>
+                )}
             </Menu>
           </>
         );
@@ -2335,8 +2353,6 @@ export default function AllRequest() {
     }
   }, [status]);
 
-  console.log(programTableInfo.results)
-
   useEffect(() => {
     if (selectedRequestedtype === "program_request" || !selectedRequestedtype) {
       setActiveTableDetails({
@@ -2671,7 +2687,7 @@ export default function AllRequest() {
 
       {role === "admin" && (
         // requestAdminActionTab
-        <div className="flex gap-x-4 mb-6">
+        <div className="flex gap-x-4 mb-6 overflow-x-auto">
           {requestAdminActionTab.map((action) => {
             return (
               <Button
@@ -2684,12 +2700,9 @@ export default function AllRequest() {
         </div>
       )}
       <div
-        className="px-3 py-5"
+        className=""
         style={{
-          boxShadow:
-            role === "admin"
-              ? "4px 4px 25px 0px rgba(0, 0, 0, 0.15)"
-              : undefined,
+          boxShadow: role === "admin" ? "" : undefined,
         }}
       >
         {/* {role === 'admin' &&
@@ -2973,9 +2986,10 @@ export default function AllRequest() {
           </div>
         </MuiModal>
 
-        <div className="px-4">
-          <div className="grid grid-cols-5 gap-3">
-            <div className="row-span-3 flex flex-col gap-8">
+        <div className="">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-3">
+            {/* Sidebar */}
+            <div className="row-span-3 hidden lg:flex flex-col gap-8">
               <Card
                 cardTitle={"Request Overview"}
                 cardContent={requestList}
@@ -2984,56 +2998,40 @@ export default function AllRequest() {
               />
             </div>
 
-            <div className="col-span-4">
+            {/* Main content */}
+            <div className="col-span-1 lg:col-span-4 border rounded-lg">
               <div
+                className="rounded-lg shadow-lg"
                 style={{
                   boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.05)",
-                  borderRadius: "10px",
                 }}
               >
-                <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
-                  <div
-                    className="flex gap-4"
-                    style={{ color: "rgba(24, 40, 61, 1)", fontWeight: 600 }}
-                  >
+                {/* Header */}
+                <div className="title flex flex-wrap justify-between py-3 px-4 border-b items-center">
+                  <div className="text-lg font-semibold text-gray-800 flex gap-4">
                     {currentRequestTab?.name}
                   </div>
-                  <div className="flex gap-7 items-center">
-                    <div className="relative">
+                  <div className="flex flex-wrap gap-4 items-center">
+                    {/* Search Box */}
+                    <div className="relative w-full sm:w-auto">
                       <input
                         type="text"
                         id="search-navbar"
-                        className="block w-full p-2 text-sm text-gray-900 border-none"
+                        className="block w-full p-2 text-sm text-gray-900 rounded border border-blue-600 sm:w-72"
                         placeholder="Search here..."
-                        style={{
-                          border: "1px solid rgba(29, 91, 191, 1)",
-                          height: "45px",
-                          width: "280px",
-                        }}
                         value={filter.search}
                         onChange={handleSearch}
                       />
                       <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
-                        <img src={SearchIcon} alt="SearchIcon" />
+                        <img src={SearchIcon} alt="Search Icon" />
                       </div>
                     </div>
-                    {/* <img src={SearchIcon} alt="statistics" /> */}
 
-                    <p
-                      className="text-[12px] py-2 pl-5 pr-4 flex gap-4"
-                      style={{
-                        background: "rgba(223, 237, 255, 1)",
-                        borderRadius: "5px",
-                      }}
-                    >
-                      <img src={CalendarIcon} alt="CalendarIcon" />
-
+                    {/* Filter Dropdown */}
+                    <p className="text-sm flex items-center gap-4 px-5 py-2 rounded bg-blue-100">
+                      <img src={CalendarIcon} alt="Calendar Icon" />
                       <select
-                        className="focus:outline-none"
-                        style={{
-                          background: "rgba(223, 237, 255, 1)",
-                          border: "none",
-                        }}
+                        className="focus:outline-none bg-blue-100 border-none"
                         onChange={(e) =>
                           setFilter({ ...filter, filter_by: e.target.value })
                         }
@@ -3056,44 +3054,41 @@ export default function AllRequest() {
                       </select>
                     </p>
 
-                    {/* <p className="text-[12px] py-2 pl-5 pr-4 flex gap-4" style={{ background: 'rgba(29, 91, 191, 1)', borderRadius: '5px', height: '40px' }}>
-                                            <select className='focus:outline-none' style={{ background: 'rgba(29, 91, 191, 1)', border: 'none', color: '#fff' }} onChange={(e) => handleStatus(e?.target?.value)}>
-
-                                                {
-                                                    statusOptions.map((option, index) =>
-                                                        <option style={{ background: '#fff !important', color: '#000' }} key={index} selected={option?.value === filterStatus} value={option?.value}>{option?.label}</option>
-                                                    )
-                                                }
-                                            </select>                                            
-                                        </p> */}
+                    {/* Status Dropdown */}
                     <SelectBox
                       value={filterStatus}
                       handleChange={(e) => handleStatus(e?.target?.value)}
                       menuList={statusOptions}
                     />
+
+                    <div className="lg:hidden">
+                      <RequestSelectBox
+                        // cardTitle={"Request Overview"}
+                        cardContent={requestList}
+                        handleClick={handleClick}
+                        activeItem={currentRequestTab?.key}
+                      />
+                    </div>
                   </div>
                 </div>
 
-                <div className="px-6 py-7 program-info">
+                {/* Content */}
+                <div className="px-4 sm:px-6 py-7 program-info">
                   {actionTabFilter.length ? (
-                    <div className="flex justify-between px-5 mb-8 items-center border-b-2 ">
-                      <ul className="tab-list">
+                    <div className="flex flex-wrap justify-between px-5 mb-8 items-center border-b">
+                      <ul className="tab-list flex gap-4 flex-nowrap overflow-x-auto hide-scrollbar">
                         {actionTabFilter.map((discussion, index) => (
                           <li
                             className={`${
                               actionTab === discussion.key ? "active" : ""
-                            } relative`}
+                            } relative cursor-pointer flex-shrink-0`} // Prevent shrinking for better display on smaller screens
                             key={index}
                             onClick={() => {
                               setActiveTab(discussion.key);
                               resetPageDetails();
-                              // setFilter({ search: '', filter_by: '' })
                             }}
                           >
-                            <div className="text-[13px]">
-                              {" "}
-                              {`${discussion.name}`}
-                            </div>
+                            <div className="text-sm">{discussion.name}</div>
                             {actionTab === discussion.key && <span></span>}
                           </li>
                         ))}
@@ -3116,21 +3111,17 @@ export default function AllRequest() {
                     paginationModel={paginationModel}
                     setPaginationModel={setPaginationModel}
                   />
-{console.log("seletedItem ===>", seletedItem)}
+
                   <MuiModal
                     modalOpen={showShare}
                     modalClose={() => setShowShare(false)}
                     noheader
                   >
-                    <div
-                      className="px-5 py-1 flex justify-center items-center"
-                      style={{ border: "1px solid rgba(29, 91, 191, 1)" }}
-                    >
-                      <div className="flex justify-center items-center flex-col gap-8 py-10 px-20 mt-5">
+                    <div className="px-5 py-1 flex justify-center items-center border border-blue-600">
+                      <div className="flex justify-center items-center flex-col gap-8 py-10 px-5 sm:px-20 mt-5">
                         <div>{seletedItem?.program_name}</div>
                         <input
-                          className="input-bg text-[12px] h-[60px] w-[396px] px-5"
-                          style={{ borderRadius: "27px" }}
+                          className="input-bg text-sm h-12 w-full sm:w-[396px] px-5 rounded-full"
                           disabled
                           value={shareUrl}
                         />
@@ -3138,12 +3129,12 @@ export default function AllRequest() {
                           <img
                             className="cursor-pointer"
                             src={LinkIcon}
-                            alt="LinkIcon"
+                            alt="Link Icon"
                             onClick={handleCopy}
                           />
                         </div>
 
-                        <div className="flex  justify-center align-middle pt-4">
+                        <div className="flex justify-center align-middle pt-4">
                           <Button
                             btnType="button"
                             onClick={() => setShowShare(false)}

@@ -55,8 +55,8 @@ export function CustomFooterStatusComponent(props) {
 function CustomToolbar(props) {
   const { toolBarComponent } = props;
   return (
-    <GridToolbarContainer className="justify-end my-4 mr-5 sticky top-0 z-50">
-      <div className="border rounded-sm bg-white w-80">
+    <GridToolbarContainer className="flex flex-col md:flex-row justify-between my-4 mx-2 sticky top-0 z-50">
+      <div className="border rounded-sm bg-white w-full md:w-80">
         <StyledSearchInput
           fullWidth
           InputProps={{
@@ -78,7 +78,7 @@ function CustomToolbar(props) {
           }
         />
       </div>
-      {toolBarComponent}
+      <div className="mt-4 md:mt-0">{toolBarComponent}</div>
     </GridToolbarContainer>
   );
 }
@@ -130,7 +130,7 @@ function TablePaginationActions(props) {
         } justify-between items-center`}
       >
         <div className="flex gap-2">
-          <span>Shows</span>
+          <span className="text-xs md:text-base">Shows</span>
           <select
             style={{ margin: 0, border: "0.5px solid rgba(62, 62, 62, 1)" }}
             onChange={handlePerPage}
@@ -145,15 +145,15 @@ function TablePaginationActions(props) {
               </option>
             ))}
           </select>
-          <span>Entries</span>
+          <span className="text-xs md:text-base">Entries</span>
         </div>
-        <div className="flex gap-4">
+        {/* <div className="flex gap-4">
           {props?.paginationModel?.page >= 1 && (
             <button
               onClick={handleBackButtonClick}
               // disabled={paginationDetails.paginationModel.page
               //     <= Math.ceil(paginationDetails.rowCount / paginationDetails.paginationModel.pageSize) - 1}
-              className="text-white py-3 px-6 col-span-1"
+              className="text-white py-3 px-6 col-span-1 hidden lg:block"
               style={{
                 border: "1px solid rgba(0, 0, 0, 1)",
                 borderRadius: "3px",
@@ -174,7 +174,7 @@ function TablePaginationActions(props) {
                 ) -
                   1
               }
-              className="text-white py-3 px-6 col-span-1"
+              className="text-white py-3 px-6 col-span-1 hidden lg:block"
               style={{
                 background:
                   "linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)",
@@ -185,31 +185,17 @@ function TablePaginationActions(props) {
               Next Page
             </button>
           )}
-        </div>
+        </div> */}
       </div>
       <div className="flex items-center">
-        <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-          <span
-            style={{
-              border: "1px solid rgba(9, 19, 22, 1)",
-              display: "flex",
-              width: "36px",
-              height: "37px",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            {/* <input type="number" style={{width: '100%', height: '100%', padding: '12px'}} value={paginationDetails.paginationModel.page + 1} 
-                        
-                        /> */}
-            {/* {props?.paginationModel.page + 1}</span> of
-                    <span className='pl-1'>{Math.ceil(paginationDetails.rowCount / props?.paginationModel.pageSize)}</span> */}
+        <div className="flex items-center gap-1">
+          <span className="text-xs md:text-base">
             {props?.paginationModel?.page !== undefined
               ? props.paginationModel.page + 1
               : 1}
           </span>
           of
-          <span className="pl-1">
+          <span className="text-xs md:text-base">
             {paginationDetails?.rowCount && props?.paginationModel?.pageSize
               ? Math.ceil(
                   paginationDetails.rowCount / props.paginationModel.pageSize
@@ -260,7 +246,7 @@ export default function DataTable({
   hideCheckbox = false,
   hideFooter = false,
   handleSelectedRow = undefined,
-  height = 600,
+  height = 600, // Default fixed height
   getPageDetails = () => false,
   rowCount = 0,
   setPaginationModel = () => false,
@@ -271,11 +257,6 @@ export default function DataTable({
 }) {
   const [selectedRows, setSelectedRows] = useState([]);
   const [selectedIds, setSelectedIds] = useState([]);
-
-  // const [paginationModel, setPaginationModel] = React.useState({
-  //     page: 0,
-  //     pageSize: 10,
-  // });
 
   const handleRowSelection = (ids) => {
     const selected = [...rows].filter((row) =>
@@ -295,7 +276,6 @@ export default function DataTable({
   function CustomPagination(props) {
     return (
       <div className="flex h-[90px] mx-2 custom-pagination w-full relative">
-        {" "}
         <TablePaginationActions
           {...props}
           paginationModel={paginationModel}
@@ -307,57 +287,67 @@ export default function DataTable({
   }
 
   return (
-    <div style={{ height: height, width: "100%", position: "relative" }}>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        hideFooterPagination={hideFooter}
-        getRowId={(row) =>
-          row.id || row.first_name || row.categories_id || row.mentee_id
-        }
-        checkboxSelection={!hideCheckbox}
-        onPageChange={(e) => console.log("change", e)}
-        page={paginationModel?.page}
-        pageSize={paginationModel?.pageSize}
-        sx={{
-          "& .MuiDataGrid-cell:focus": {
-            outline: "none",
-          },
-          "& .MuiDataGrid-cell:focus-within": {
-            outline: "none",
-          },
-        }}
-        {...(footerComponent
-          ? {
-              slots: {
-                footer: footerComponent,
-                toolbar: () =>
-                  showToolbar ? (
-                    <CustomToolbar toolBarComponent={toolBarComponent} />
-                  ) : null,
-              },
-              slotProps: {
-                footer: { footerAction, selectedRows },
-              },
-            }
-          : {
-              initialState: {
-                pagination: {
-                  paginationModel: paginationModel,
+    <div
+      className="w-full "
+      style={{ height: height, maxHeight: height, position: "relative" }}
+    >
+      <div className="w-full  lg:min-w-0 h-full">
+        <DataGrid
+          rows={rows}
+          columns={columns.map((col) => ({
+            ...col,
+            flex: 1, // Ensures columns expand proportionally
+            minWidth: 150, // Sets a minimum width for each column
+          }))}
+          hideFooterPagination={hideFooter}
+          getRowId={(row) =>
+            row.id || row.first_name || row.categories_id || row.mentee_id
+          }
+          checkboxSelection={!hideCheckbox}
+          onPageChange={(e) => console.log("change", e)}
+          page={paginationModel?.page}
+          pageSize={paginationModel?.pageSize}
+          sx={{
+            height: "100%",
+            "& .MuiDataGrid-cell:focus": {
+              outline: "none",
+            },
+            "& .MuiDataGrid-cell:focus-within": {
+              outline: "none",
+            },
+          }}
+          {...(footerComponent
+            ? {
+                slots: {
+                  footer: footerComponent,
+                  toolbar: () =>
+                    showToolbar ? (
+                      <CustomToolbar toolBarComponent={toolBarComponent} />
+                    ) : null,
                 },
-              },
-              slots: {
-                pagination: CustomPagination,
-              },
-              pageSizeOptions: { options },
-            })}
-        hideFooter={hideFooter}
-        disableRowSelectionOnClick
-        rowSelectionModel={selectedIds}
-        onRowSelectionModelChange={(itm, i) => handleRowSelection(itm)}
-        paginationMode="server"
-        rowCount={rowCount}
-      />
+                slotProps: {
+                  footer: { footerAction, selectedRows },
+                },
+              }
+            : {
+                initialState: {
+                  pagination: {
+                    paginationModel: paginationModel,
+                  },
+                },
+                slots: {
+                  pagination: CustomPagination,
+                },
+                pageSizeOptions: { options },
+              })}
+          hideFooter={hideFooter}
+          disableRowSelectionOnClick
+          rowSelectionModel={selectedIds}
+          onRowSelectionModelChange={(itm, i) => handleRowSelection(itm)}
+          paginationMode="server"
+          rowCount={rowCount}
+        />
+      </div>
     </div>
   );
 }
