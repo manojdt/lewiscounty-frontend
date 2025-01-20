@@ -441,6 +441,17 @@ export const admin_menteeMember = (name) => {
       },
     ];
   };
+  export const dashboard_program_details_main = (name,statusName) => {
+    return [
+      {
+        label: `Dashboard`,
+        path: -1,
+      },
+      {
+        label: `${name}`,
+      },
+    ];
+  };
 
 
 // Feed
