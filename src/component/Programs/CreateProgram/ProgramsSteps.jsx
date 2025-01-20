@@ -48,7 +48,6 @@ const ProgramSteps = ({
   const { admin, mentor } = user;
 
   const [currentField, setCurrentField] = useState();
-  const [selectedRows, setSelectedRows] = useState([]);
   const [selectedMentorsByField, setSelectedMentorsByField] = useState({});
   const getRowIdentifier = (row) => {
     return row.id;
@@ -146,7 +145,7 @@ const ProgramSteps = ({
           btnCategory="primary"
           btnName="Add"
           onClick={handleActionPopupData}
-          disabled={selectedRows.length === 0}
+          disabled={selectedMentorsByField.length === 0}
         />
       </div>
     );
@@ -1194,7 +1193,7 @@ const ProgramSteps = ({
           handleSelectedRow={(rows) => handleSelectedRow(rows, currentField)}
           footerAction={() => setCurrentField("")}
           footerComponent={(props) =>
-            mentorFooterComponent({ ...props, selectedRows })
+            mentorFooterComponent({ ...props, selectedMentorsByField })
           }
         />
       </MuiModal>
