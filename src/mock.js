@@ -1965,10 +1965,20 @@ export const goalsRequestColumns = [
   },
   {
     field: "requested_date",
+    headerName: "Requested Date",
+    flex: 1,
+    id: 8,
+    for: ["mentee"],
+    renderCell: (params) => {
+      return <div>{dateFormat(params.row.requested_date)}</div>;
+    },
+  },
+  {
+    field: "requested_date",
     headerName: "Request Date",
     flex: 1,
     id: 2,
-    for: ["admin","mentee", "mentor"],
+    for: ["admin", "mentor"],
     renderCell: (params) => {
       return <div>{dateFormat(params.row.requested_date)}</div>;
     },

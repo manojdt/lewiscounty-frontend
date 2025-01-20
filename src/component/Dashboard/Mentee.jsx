@@ -481,7 +481,7 @@ export const Mentee = () => {
           alignItems={"center"}
           justifyContent={"space-between"}
         >
-          <Typography>Select Category's</Typography>
+          <Typography>Select Category</Typography>
           <div onClick={() => setOpenCategory(false)}>
             <img src={CloseIcon} />
           </div>
