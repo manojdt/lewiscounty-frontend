@@ -851,7 +851,7 @@ export default function Programs() {
             alignItems={"center"}
             justifyContent={"space-between"}
           >
-            <Typography>Select Category's</Typography>
+            <Typography>Select Category</Typography>
             <div onClick={() => setOpenCategory(false)}>
               <img src={CloseIcon} alt="" />
             </div>

@@ -747,7 +747,7 @@ const MentorTask = () => {
       <div className='px-3 py-5 !border !border-[#DBE0E5] rounded-[10px]'>
         <div className='flex justify-between px-5 pb-4 mb-8 items-center'>
           <div className='flex gap-5 items-center text-[20px]'>
-            <p className='text-[20px] text-[#18283D]' style={{ fontWeight: 500 }}>Mentees Task</p>
+            <p className='text-[20px] text-[#18283D]' style={{ fontWeight: 500 }}>Mentees Tasks</p>
           </div>
           <Stack direction={"row"} alignItems={"center"} spacing={2}>
             <div className="relative">
