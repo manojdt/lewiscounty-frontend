@@ -51,11 +51,11 @@ export const ForgotPassword = () => {
       </Backdrop>
       <div className='w-full flex items-center justify-center'>
         <div className='w-4/5 max-w-md mt-20'>
-          <h4 className='pb-1 text-3xl font-semibold bg-gradient-to-r from-[#00AEBD] to-[#1D5BBF] text-transparent bg-clip-text'>
+          <h4 className='pb-1 text-3xl font-semibold bg-gradient-to-r from-[#00AEBD] to-[#1D5BBF] text-transparent bg-clip-text text-center'>
             MMA
           </h4>
 
-          <h4 className='mb-6 mt-6 pb-1 text-xl font-semibold defaultTextColor'>
+          <h4 className='mb-6 mt-6 pb-1 text-xl font-semibold defaultTextColor text-center'>
             Forgot Your Password
           </h4>
 

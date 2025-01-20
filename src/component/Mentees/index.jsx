@@ -53,7 +53,7 @@ export const Mentees = () => {
   const [mentorType, setMentorType] = useState(
     state?.type === 'new_req_mentee' ? 'new-request-mentees' :searchParams.get('req')==="new-request-mentees"?"new-request-mentees": 'my-mentee'
   );
-  const [requestTab, setRequestTab] = useState('all');
+  const [requestTab, setRequestTab] = useState(breadcrumbsStatusType||'all');
   const [selectedMentee, setSelectedMentee] = useState({});
   const [paginationModel, setPaginationModel] = React.useState({
     page: 0,
@@ -290,7 +290,15 @@ if(reason){
   const title =
     menteeOption.find((option) => option.value === mentorType)?.name || '';
 
-  const handleTab = (key) => setRequestTab(key);
+  const handleTab = (key) => {
+    // const setParams=searchParams.set("status","")
+    // setSearchParams(setParams)
+    setPaginationModel({
+      page: 0,
+      pageSize: 10,
+    })
+    setRequestTab(key)
+  };
 
   const getTableData = (search = '') => {
     if (mentorType === 'my-mentee') {

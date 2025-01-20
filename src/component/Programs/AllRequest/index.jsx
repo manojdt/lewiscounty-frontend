@@ -720,6 +720,9 @@ export default function AllRequest() {
   let programRequestColumn = programRequestColumns.filter((request) =>
     request.for.includes(role)
   );
+  let goalColumns = goalsRequestColumns.filter((request) =>
+    request.for.includes(role)
+  );
   let programExtendRequestColumn = programExtendRequestColumns.filter(
     (request) => request.for.includes(role)
   );
@@ -975,38 +978,9 @@ export default function AllRequest() {
     },
   ];
 
-  const goalColumns = [
-    {
-      field: "goal_name",
-      headerName: "Goal Name",
-      flex: 1,
-      id: 0,
-      for: ["admin", "mentor"],
-      renderCell: (params) => {
-        return (
-          <div className="flex gap-2 items-center">
-            {params?.row?.goal?.goal_name ?? "..."}
-          </div>
-        );
-      },
-    },
-    {
-      field: "reason_request",
-      headerName: "Reason Request",
-      flex: 1,
-      id: 1,
-      for: ["admin", "mentor"],
-      renderCell: (params) => {
-        return (
-          <div className="flex gap-2 items-center">
-            {params?.row?.goal?.description?.length
-              ? params?.row?.goal?.description
-              : "..."}
-          </div>
-        );
-      },
-    },
-    ...goalsRequestColumns,
+   goalColumns = [
+    ...goalColumns,
+   
     {
       field: "status",
       headerName: "Status",

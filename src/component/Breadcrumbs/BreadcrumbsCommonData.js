@@ -51,6 +51,7 @@ export const requestPageBreadcrumbs = {
   taskMenteeCompletedReport:'completed',
   taskMenteeRejectedReport:'rejected',
   taskMenteeDraftReport:'draft',
+  dashboardPrograms:'dashboardProgramDetails',
 };
 export const programStatusBreadcrumbs=[
     'All Programs',
@@ -440,6 +441,8 @@ export const admin_menteeMember = (name) => {
       },
     ];
   };
+
+
 // Feed
 
 export const user_feed = (name) => {
@@ -593,7 +596,7 @@ export const newFollowRequestMentorPage = (status) => {
     
     return [
       {
-        label: "Program Details",
+        label: "Program Detail",
         path: -1,
       },
       {

@@ -29,6 +29,7 @@ import { acceptMember, getCategory } from "../../services/category";
 import { jwtDecode } from "jwt-decode";
 import { FeedCard } from "./feedCard";
 import { getPost } from "../../services/feeds";
+import { requestPageBreadcrumbs } from "../Breadcrumbs/BreadcrumbsCommonData";
 
 export const Mentee = () => {
   const dispatch = useDispatch();
@@ -112,7 +113,7 @@ export const Mentee = () => {
     let baseUrl = pipeUrls.programdetails;
     if (Object.keys(program).length) {
       const filterType = searchParams.get("type");
-      navigate(`${baseUrl}/${program.id}`);
+      navigate(`${baseUrl}/${program.id}?breadcrumbsType=${requestPageBreadcrumbs.dashboardPrograms}`);
     }
   };
 

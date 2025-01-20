@@ -20,6 +20,7 @@ import api from "../../services/api";
 import { getUserProfile } from "../../services/profile";
 import ProgramFeeds from "../../shared/ProgramFeeds";
 import { getPost } from "../../services/feeds";
+import { requestPageBreadcrumbs } from "../Breadcrumbs/BreadcrumbsCommonData";
 
 export const Mentor = () => {
   const dispatch = useDispatch();
@@ -65,8 +66,8 @@ export const Mentor = () => {
       navigate(
         `${baseUrl}/${program.id}${
           program?.admin_program_request_id
-            ? `?request_id=${program?.admin_program_request_id}&type=admin_assign_program`
-            : ""
+            ? `?request_id=${program?.admin_program_request_id}&type=admin_assign_program&breadcrumbsType=${requestPageBreadcrumbs.dashboardPrograms}`
+            : `?breadcrumbsType=${requestPageBreadcrumbs.dashboardPrograms}`
         }`
       );
     }
