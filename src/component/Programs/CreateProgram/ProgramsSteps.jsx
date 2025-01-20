@@ -103,9 +103,9 @@ const ProgramSteps = ({
     ) {
       const formattedValue = formatPhoneNumber(value);
       setValue(field.name, formattedValue);
-    } else if (field.name === 'zip_code') {
-      const zipCodeFormatValue = formatZipCode(value)
-      setValue(field.name, zipCodeFormatValue)
+    } else if (field.name === "zip_code") {
+      const zipCodeFormatValue = formatZipCode(value);
+      setValue(field.name, zipCodeFormatValue);
     } else {
       setValue(field.name, value);
     }
@@ -575,7 +575,7 @@ const ProgramSteps = ({
                     control={control}
                     defaultValue=""
                     rules={field.inputRules}
-                    render={({ field: controlledField }) => {                     
+                    render={({ field: controlledField }) => {
                       return (
                         <TextField
                           select

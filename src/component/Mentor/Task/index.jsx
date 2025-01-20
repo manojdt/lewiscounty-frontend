@@ -1,33 +1,33 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import DashboardCard from '../../../shared/Card/DashboardCard';
-import { pipeUrls, programActionStatus } from '../../../utils/constant';
-import { Button } from '../../../shared';
-import DataTable from '../../../shared/DataGrid';
-import { mentorTaskColumns, mentorTaskListColumns } from '../../../mock';
-import ViewIcon from '../../../assets/images/view1x.png';
-import CloseIcon from '../../../assets/icons/closeIcon.svg';
-import SearchIcon from '../../../assets/icons/search.svg';
-import MoreIcon from '../../../assets/icons/moreIcon.svg';
-import { useDispatch, useSelector } from 'react-redux';
-import { getMenteeTaskfromMentor } from '../../../services/task';
+import { useNavigate, useSearchParams } from "react-router-dom";
+import DashboardCard from "../../../shared/Card/DashboardCard";
+import { pipeUrls, programActionStatus } from "../../../utils/constant";
+import { Button } from "../../../shared";
+import DataTable from "../../../shared/DataGrid";
+import { mentorTaskColumns, mentorTaskListColumns } from "../../../mock";
+import ViewIcon from "../../../assets/images/view1x.png";
+import CloseIcon from "../../../assets/icons/closeIcon.svg";
+import SearchIcon from "../../../assets/icons/search.svg";
+import MoreIcon from "../../../assets/icons/moreIcon.svg";
+import { useDispatch, useSelector } from "react-redux";
+import { getMenteeTaskfromMentor } from "../../../services/task";
 import {
   Backdrop,
   CircularProgress,
   Menu,
   MenuItem,
   Stack,
-} from '@mui/material';
-import { fileNameFromUrl, fileNameString } from '../../../utils';
-import dayjs from 'dayjs';
-import EditIcon from '../../../assets/icons/editIcon.svg';
-import moment from 'moment';
+} from "@mui/material";
+import { fileNameFromUrl, fileNameString } from "../../../utils";
+import dayjs from "dayjs";
+import EditIcon from "../../../assets/icons/editIcon.svg";
+import moment from "moment";
 
 const MentorTask = () => {
-  const [activeTaskMenu, setActiveTaskMenu] = useState('my-task');
-  const [activeCategoryMenu, setActiveCategoryMenu] = useState('');
-  const [activeTab, setActiveTab] = useState('all_programs');
+  const [activeTaskMenu, setActiveTaskMenu] = useState("my-task");
+  const [activeCategoryMenu, setActiveCategoryMenu] = useState("");
+  const [activeTab, setActiveTab] = useState("all_programs");
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const [seletedItem, setSelectedItem] = useState({});
@@ -50,54 +50,54 @@ const MentorTask = () => {
 
   const taskList = [
     {
-      name: 'My Task',
-      key: 'my-task',
+      name: "My Task",
+      key: "my-task",
     },
     {
-      name: 'Mentee Task',
-      key: 'mentee-task',
+      name: "Mentee Task",
+      key: "mentee-task",
     },
   ];
 
   const Category = [
     {
-      name: 'Teaching',
-      key: 'teaching',
-      count: '02',
+      name: "Teaching",
+      key: "teaching",
+      count: "02",
     },
     {
-      name: 'Social',
-      key: 'social',
-      count: '10',
+      name: "Social",
+      key: "social",
+      count: "10",
     },
     {
-      name: 'Category 1',
-      key: 'category1',
-      count: '04',
+      name: "Category 1",
+      key: "category1",
+      count: "04",
     },
     {
-      name: 'Category 2',
-      key: 'category2',
-      count: '20',
+      name: "Category 2",
+      key: "category2",
+      count: "20",
     },
   ];
 
   const tabs = [
     {
-      name: 'All Programs',
-      key: 'all_programs',
+      name: "All Programs",
+      key: "all_programs",
     },
     {
-      name: 'Ongoing  Programs',
-      key: 'ongoing_programs',
+      name: "Ongoing  Programs",
+      key: "ongoing_programs",
     },
     {
-      name: 'Completed Programs',
-      key: 'completed_programs',
+      name: "Completed Programs",
+      key: "completed_programs",
     },
     {
-      name: 'Abort Programs',
-      key: 'abort_programs',
+      name: "Abort Programs",
+      key: "abort_programs",
     },
   ];
 
@@ -123,7 +123,7 @@ const MentorTask = () => {
   };
 
   const handleBookmark = (program) => {
-    console.log('program', program);
+    console.log("program", program);
   };
 
   const handleClick = (event, data) => {
@@ -132,7 +132,7 @@ const MentorTask = () => {
   };
 
   const handleSearch = (search) => {
-    searchParams.set('search', search);
+    searchParams.set("search", search);
     setSearchParams(searchParams);
   };
 
@@ -143,28 +143,28 @@ const MentorTask = () => {
   const programs = [
     {
       id: 2,
-      program_name: 'React Bootcamp Demo',
-      session_count: '10',
-      description: 'Description about program',
-      course_level: 'beginner',
-      start_date: '2024-07-07T09:33:03Z',
-      end_date: '2024-07-12T09:33:03Z',
+      program_name: "React Bootcamp Demo",
+      session_count: "10",
+      description: "Description about program",
+      course_level: "beginner",
+      start_date: "2024-07-07T09:33:03Z",
+      end_date: "2024-07-12T09:33:03Z",
       max_mentee_count: 10,
       group_chat_requirement: false,
       individual_chat_requirement: false,
-      venue: 'USA',
-      about_program: 'About program',
+      venue: "USA",
+      about_program: "About program",
       image:
-        'http://mentor-backend.dataterrain-dev.net/media/sponsor_logo/lap_J6Ea08I.jpg',
+        "http://mentor-backend.dataterrain-dev.net/media/sponsor_logo/lap_J6Ea08I.jpg",
       image_url:
-        'http://mentor-backend.dataterrain-dev.net/media/sponsor_logo/lap_J6Ea08I.jpg',
-      benefits: 'Benefits',
-      testimonial_types: 'blog',
+        "http://mentor-backend.dataterrain-dev.net/media/sponsor_logo/lap_J6Ea08I.jpg",
+      benefits: "Benefits",
+      testimonial_types: "blog",
       mentor_id: null,
       duration: 6,
       mentor_manager_id: null,
-      status: 'completed',
-      created_at: '2024-07-06T09:34:32.419883Z',
+      status: "completed",
+      created_at: "2024-07-06T09:34:32.419883Z",
       created_by: 4,
       approved_by: null,
       is_approve: false,
@@ -172,74 +172,74 @@ const MentorTask = () => {
       skills: [
         {
           id: 1,
-          name: 'Western',
-          desc: 'Music sample text',
+          name: "Western",
+          desc: "Music sample text",
           category: 5,
         },
       ],
       categories: [
         {
           id: 1,
-          name: 'Music',
+          name: "Music",
         },
       ],
       certifications: [
         {
           id: 1,
-          name: 'Carnatic',
-          certificate_link: 'http://www.sample.com',
-          certificate_description: 'THis is sample certificate for music',
-          issue_date: '2024-07-05',
+          name: "Carnatic",
+          certificate_link: "http://www.sample.com",
+          certificate_description: "THis is sample certificate for music",
+          issue_date: "2024-07-05",
           category: 3,
         },
       ],
       members: [
         {
           id: 4,
-          first_name: 'Subramaniyan',
-          last_name: 'T',
-          email: 'subramaniyan@dataterrain.com',
+          first_name: "Subramaniyan",
+          last_name: "T",
+          email: "subramaniyan@dataterrain.com",
         },
       ],
       learning_materials: [
         {
           id: 1,
           category: 5,
-          name: 'Music Learning Material',
-          material_type: 'video',
+          name: "Music Learning Material",
+          material_type: "video",
           material_size: 742478,
           material_details:
-            'This is sample learning video for development purpose',
-          file: 'http://mentor-backend.dataterrain-dev.net/media/learning_materials/avi_video.avi',
-          file_url: '/media/learning_materials/avi_video.avi',
+            "This is sample learning video for development purpose",
+          file: "http://mentor-backend.dataterrain-dev.net/media/learning_materials/avi_video.avi",
+          file_url: "/media/learning_materials/avi_video.avi",
         },
       ],
       mentor_name: null,
     },
     {
       id: 11,
-      program_name: 'ss',
-      session_count: '10',
-      description: 'sss',
-      course_level: 'beginner',
-      start_date: '2024-07-31T13:16:44.809000Z',
-      end_date: '2024-06-05T13:16:44.809000Z',
+      program_name: "ss",
+      session_count: "10",
+      description: "sss",
+      course_level: "beginner",
+      start_date: "2024-07-31T13:16:44.809000Z",
+      end_date: "2024-06-05T13:16:44.809000Z",
       max_mentee_count: 5,
       group_chat_requirement: true,
       individual_chat_requirement: true,
-      venue: '11111',
-      about_program: 'ss',
+      venue: "11111",
+      about_program: "ss",
       image:
-        'http://mentor-backend.dataterrain-dev.net/media/sponsor_logo/Screenshot_15.png',
+        "http://mentor-backend.dataterrain-dev.net/media/sponsor_logo/Screenshot_15.png",
       image_url:
-        'http://mentor-backend.dataterrain-dev.net/media/sponsor_logo/Screenshot_15.png',
-      benefits: 'ssss',
-      testimonial_types: 'blog',
+        "http://mentor-backend.dataterrain-dev.net/media/sponsor_logo/Screenshot_15.png",
+      benefits: "ssss",
+      testimonial_types: "blog",
       mentor_id: null,
       duration: -55,
       mentor_manager_id: null,
-      status: 'inprogress',
-      created_at: '2024-07-08T13:18:26.736326Z',
+      status: "inprogress",
+      created_at: "2024-07-08T13:18:26.736326Z",
       created_by: 8,
       approved_by: null,
       is_approve: false,
@@ -247,176 +247,176 @@ const MentorTask = () => {
       skills: [
         {
           id: 3,
-          name: 'Boxing',
-          desc: 'This is sample boxing description',
+          name: "Boxing",
+          desc: "This is sample boxing description",
           category: 3,
         },
       ],
       categories: [
         {
           id: 1,
-          name: 'Music',
+          name: "Music",
         },
       ],
       certifications: [
         {
           id: 1,
-          name: 'Carnatic',
-          certificate_link: 'http://www.sample.com',
-          certificate_description: 'THis is sample certificate for music',
-          issue_date: '2024-07-05',
+          name: "Carnatic",
+          certificate_link: "http://www.sample.com",
+          certificate_description: "THis is sample certificate for music",
+          issue_date: "2024-07-05",
           category: 3,
         },
       ],
       members: [
         {
           id: 3,
-          first_name: 'Murugesh',
-          last_name: 'Sekar',
-          email: 'murugesh@dataterrain.com',
+          first_name: "Murugesh",
+          last_name: "Sekar",
+          email: "murugesh@dataterrain.com",
         },
         {
           id: 8,
-          first_name: 'Subash',
-          last_name: 'A',
-          email: 'subash@dataterrain.com',
+          first_name: "Subash",
+          last_name: "A",
+          email: "subash@dataterrain.com",
         },
         {
           id: 10,
-          first_name: 'Stephen',
-          last_name: 'Johnson',
-          email: 'stephen@email.com',
+          first_name: "Stephen",
+          last_name: "Johnson",
+          email: "stephen@email.com",
         },
         {
           id: 12,
-          first_name: 'Karthikeyan',
-          last_name: 'D',
-          email: 'marketing@dataterrain.com',
+          first_name: "Karthikeyan",
+          last_name: "D",
+          email: "marketing@dataterrain.com",
         },
         {
           id: 13,
-          first_name: 'Dillli',
-          last_name: 'Rathnam',
-          email: 'dilli@dataterrain.com',
+          first_name: "Dillli",
+          last_name: "Rathnam",
+          email: "dilli@dataterrain.com",
         },
         {
           id: 9,
-          first_name: 'Subramaniyan',
-          last_name: 'T',
-          email: 'tsubramaniyan2@gmail.com',
+          first_name: "Subramaniyan",
+          last_name: "T",
+          email: "tsubramaniyan2@gmail.com",
         },
         {
           id: 5,
-          first_name: 'Krishna',
-          last_name: 'M',
-          email: 'menteeuser@gmail.com',
+          first_name: "Krishna",
+          last_name: "M",
+          email: "menteeuser@gmail.com",
         },
         {
           id: 6,
-          first_name: 'Karthik',
-          last_name: 'Subbaraj',
-          email: 'menteeuser1@gmail.com',
+          first_name: "Karthik",
+          last_name: "Subbaraj",
+          email: "menteeuser1@gmail.com",
         },
         {
           id: 11,
-          first_name: 'Test',
-          last_name: 'User',
-          email: 'testuser@gmail.com',
+          first_name: "Test",
+          last_name: "User",
+          email: "testuser@gmail.com",
         },
         {
           id: 14,
-          first_name: 'Sanjeev',
-          last_name: 'Kumar',
-          email: 'sanjeevkumar@email.com',
+          first_name: "Sanjeev",
+          last_name: "Kumar",
+          email: "sanjeevkumar@email.com",
         },
         {
           id: 2,
-          first_name: 'Madhan',
-          last_name: 'K',
-          email: 'krishshajahan7@gmail.com',
+          first_name: "Madhan",
+          last_name: "K",
+          email: "krishshajahan7@gmail.com",
         },
         {
           id: 4,
-          first_name: 'Subramaniyan',
-          last_name: 'T',
-          email: 'subramaniyan@dataterrain.com',
+          first_name: "Subramaniyan",
+          last_name: "T",
+          email: "subramaniyan@dataterrain.com",
         },
         {
           id: 7,
-          first_name: 'karthick',
-          last_name: 'A',
-          email: 'karthick@gmail.com',
+          first_name: "karthick",
+          last_name: "A",
+          email: "karthick@gmail.com",
         },
         {
           id: 1,
-          first_name: '',
-          last_name: '',
-          email: 'admin@gmail.com',
+          first_name: "",
+          last_name: "",
+          email: "admin@gmail.com",
         },
       ],
       learning_materials: [
         {
           id: 3,
           category: 2,
-          name: 'Action Learning Material',
-          material_type: 'document',
+          name: "Action Learning Material",
+          material_type: "document",
           material_size: 1139524,
-          material_details: 'This is sample text for Action material',
-          file: 'http://mentor-backend.dataterrain-dev.net/media/learning_materials/AWS_Certified_SysOps_Administrator_-_Associate_certificate.pdf',
+          material_details: "This is sample text for Action material",
+          file: "http://mentor-backend.dataterrain-dev.net/media/learning_materials/AWS_Certified_SysOps_Administrator_-_Associate_certificate.pdf",
           file_url:
-            '/media/learning_materials/AWS_Certified_SysOps_Administrator_-_Associate_certificate.pdf',
+            "/media/learning_materials/AWS_Certified_SysOps_Administrator_-_Associate_certificate.pdf",
         },
         {
           id: 6,
           category: 5,
-          name: 'ER Diagram Screenshot1',
-          material_type: 'document',
+          name: "ER Diagram Screenshot1",
+          material_type: "document",
           material_size: 39246,
-          material_details: 'Details about the Mentor Mentee project',
-          file: 'http://mentor-backend.dataterrain-dev.net/media/learning_materials/Pngtreeinstagram_icon_instagram_logo_3584852.png',
+          material_details: "Details about the Mentor Mentee project",
+          file: "http://mentor-backend.dataterrain-dev.net/media/learning_materials/Pngtreeinstagram_icon_instagram_logo_3584852.png",
           file_url:
-            '/media/learning_materials/Pngtreeinstagram_icon_instagram_logo_3584852.png',
+            "/media/learning_materials/Pngtreeinstagram_icon_instagram_logo_3584852.png",
         },
         {
           id: 5,
           category: 5,
-          name: 'Spiritual Learning MAterial',
-          material_type: 'document',
+          name: "Spiritual Learning MAterial",
+          material_type: "document",
           material_size: 558428,
-          material_details: 'Sample text for Spiritual Learning Material',
-          file: 'http://mentor-backend.dataterrain-dev.net/media/learning_materials/lap.jpg',
-          file_url: '/media/learning_materials/lap.jpg',
+          material_details: "Sample text for Spiritual Learning Material",
+          file: "http://mentor-backend.dataterrain-dev.net/media/learning_materials/lap.jpg",
+          file_url: "/media/learning_materials/lap.jpg",
         },
         {
           id: 4,
           category: 2,
-          name: 'Adventure Learning Material',
-          material_type: 'document',
+          name: "Adventure Learning Material",
+          material_type: "document",
           material_size: 269,
-          material_details: 'This is sample text for adventure',
-          file: 'http://mentor-backend.dataterrain-dev.net/media/learning_materials/lap_QIA9XEi.jpg',
-          file_url: '/media/learning_materials/lap_QIA9XEi.jpg',
+          material_details: "This is sample text for adventure",
+          file: "http://mentor-backend.dataterrain-dev.net/media/learning_materials/lap_QIA9XEi.jpg",
+          file_url: "/media/learning_materials/lap_QIA9XEi.jpg",
         },
         {
           id: 2,
           category: 2,
-          name: 'Sports Learning Material',
-          material_type: 'document',
+          name: "Sports Learning Material",
+          material_type: "document",
           material_size: 558428,
-          material_details: 'This is sample text for sports learning material',
-          file: 'http://mentor-backend.dataterrain-dev.net/media/learning_materials/lap_6ajYWax.jpg',
-          file_url: '/media/learning_materials/lap_6ajYWax.jpg',
+          material_details: "This is sample text for sports learning material",
+          file: "http://mentor-backend.dataterrain-dev.net/media/learning_materials/lap_6ajYWax.jpg",
+          file_url: "/media/learning_materials/lap_6ajYWax.jpg",
         },
         {
           id: 1,
           category: 5,
-          name: 'Music Learning Material',
-          material_type: 'video',
+          name: "Music Learning Material",
+          material_type: "video",
           material_size: 742478,
           material_details:
-            'This is sample learning video for development purpose',
-          file: 'http://mentor-backend.dataterrain-dev.net/media/learning_materials/avi_video.avi',
-          file_url: '/media/learning_materials/avi_video.avi',
+            "This is sample learning video for development purpose",
+          file: "http://mentor-backend.dataterrain-dev.net/media/learning_materials/avi_video.avi",
+          file_url: "/media/learning_materials/avi_video.avi",
         },
       ],
       mentor_name: null,
@@ -430,31 +430,31 @@ const MentorTask = () => {
   const mentorTaskColumn = [
     ...mentorTaskListColumns,
     {
-      field: 'created_date',
-      headerName: 'Created Date',
+      field: "created_date",
+      headerName: "Created Date",
       flex: 1,
       id: 0,
       renderCell: (params) => {
         return (
           <div>
             {params?.row?.assign_task_created_at
-              ? moment(params?.row?.assign_task_created_at).format('MM-DD-YYYY')
-              : '...'}
+              ? moment(params?.row?.assign_task_created_at).format("MM-DD-YYYY")
+              : "..."}
           </div>
         );
       },
     },
     {
-      field: 'due_date',
-      headerName: 'Due Date',
+      field: "due_date",
+      headerName: "Due Date",
       flex: 1,
       id: 0,
       renderCell: (params) => {
         return (
           <div>
             {params?.row?.due_date
-              ? dayjs(params.row.due_date).format('DD/MM/YYYY')
-              : '...'}
+              ? dayjs(params.row.due_date).format("DD/MM/YYYY")
+              : "..."}
           </div>
         );
       },
@@ -509,60 +509,58 @@ const MentorTask = () => {
     //   },
     // },
     {
-      field: 'action',
-      headerName: 'Action',
+      field: "action",
+      headerName: "Action",
       flex: 1,
       id: 4,
       renderCell: (params) => {
         return (
           <>
             <div
-              className='cursor-pointer flex items-center h-full'
+              className="cursor-pointer flex items-center h-full"
               onClick={(e) => handleClick(e, params.row)}
             >
-              <img src={MoreIcon} alt='ViewIcon' />
+              <img src={MoreIcon} alt="ViewIcon" />
             </div>
             <Menu
-              id='basic-menu'
+              id="basic-menu"
               anchorEl={anchorEl}
               open={open}
               onClose={handleClose}
               MenuListProps={{
-                'aria-labelledby': 'basic-button',
+                "aria-labelledby": "basic-button",
               }}
             >
               <MenuItem
                 onClick={() =>
                   navigate(`/mentor-tasks-details/${seletedItem.id}`)
                 }
-                className='!text-[12px]'
+                className="!text-[12px]"
               >
                 <img
                   src={ViewIcon}
-                  alt='ViewIcon'
+                  alt="ViewIcon"
                   field={params.id}
-                  className='pr-3 w-[30px]'
+                  className="pr-3 w-[30px]"
                 />
                 View
               </MenuItem>
-              {
-                seletedItem?.editable &&
+              {seletedItem?.editable && (
                 <>
-                
-                <MenuItem
-                  onClick={() => handleEditTask()}
-                  className='!text-[12px]'
-                >
-                  <img
-                    src={EditIcon}
-                    alt='EditIcon'
-                    field={params.id}
-                    className='pr-3 w-[30px]'
-                  />
-                  Edit Task
-                </MenuItem>
+                  <MenuItem
+                    onClick={() => handleEditTask()}
+                    className="!text-[12px]"
+                  >
+                    <img
+                      src={EditIcon}
+                      alt="EditIcon"
+                      field={params.id}
+                      className="pr-3 w-[30px]"
+                    />
+                    Edit Task
+                  </MenuItem>
                 </>
-              }
+              )}
             </Menu>
           </>
         );
@@ -572,46 +570,46 @@ const MentorTask = () => {
 
   const alltaskList = [
     {
-      name: 'All Task',
-      key: 'all',
+      name: "All Task",
+      key: "all",
     },
     {
-      name: 'New Task',
-      key: 'newtask',
+      name: "New Task",
+      key: "newtask",
     },
     {
-      name: 'Pending Task',
-      key: 'pending',
+      name: "Pending Task",
+      key: "pending",
     },
     {
-      name: 'Ongoing Task',
-      key: 'ongoing',
+      name: "Ongoing Task",
+      key: "ongoing",
     },
     {
-      name: 'Waiting Task',
-      key: 'waiting_for_approval',
+      name: "Waiting Task",
+      key: "waiting_for_approval",
     },
     {
-      name: 'Rejected Task',
-      key: 'rejected',
+      name: "Rejected Task",
+      key: "rejected",
     },
     {
-      name: 'Completed Task',
-      key: 'completed',
+      name: "Completed Task",
+      key: "completed",
     },
   ];
 
   const handleTaskMenu = (key) => {
     setActiveTaskMenu(key);
-    if (key === 'mentee-task') {
+    if (key === "mentee-task") {
       navigate(`${pipeUrls.mentortask}?type=menteetask`);
     }
   };
 
   const handleMenteeTaskFilterTab = (value) => {
     let queryString = `?status=${value}`;
-    if (searchParams.get('type') === 'menteetask') {
-      queryString += `&type=${searchParams.get('type')}`;
+    if (searchParams.get("type") === "menteetask") {
+      queryString += `&type=${searchParams.get("type")}`;
     }
     navigate(`${pipeUrls.mentortask}${queryString}`);
   };
@@ -626,17 +624,17 @@ const MentorTask = () => {
       limit: paginationModel?.pageSize,
     };
 
-    const statusQuery = searchParams.has('status')
-      ? searchParams.get('status')
-      : '';
-    if (statusQuery !== '') {
+    const statusQuery = searchParams.has("status")
+      ? searchParams.get("status")
+      : "";
+    if (statusQuery !== "") {
       query.status = statusQuery;
     }
 
-    const searchQuery = searchParams.has('search')
-      ? searchParams.get('search')
-      : '';
-    if (searchQuery !== '') {
+    const searchQuery = searchParams.has("search")
+      ? searchParams.get("search")
+      : "";
+    if (searchQuery !== "") {
       query.search = searchQuery;
     }
 
@@ -647,14 +645,14 @@ const MentorTask = () => {
 
   const handleEditTask = () => {
     const keysToExclude = [
-      'results',
-      'count',
-      'next',
-      'total_pages',
-      'previous',
-      'next',
-      'page_size',
-      'current_page',
+      "results",
+      "count",
+      "next",
+      "total_pages",
+      "previous",
+      "next",
+      "page_size",
+      "current_page",
     ];
 
     const data = Object.fromEntries(
@@ -693,194 +691,155 @@ const MentorTask = () => {
   };
 
   return (
-    <div className='mentor-task px-9 py-9'>
-      <Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={taskFilesPopup.modal}
-      >
-        <div className='py-3 px-4 bg-white' style={{ borderRadius: '3px' }}>
-          <div
-            style={{
-              border: '1px solid rgba(29, 91, 191, 1)',
-              borderRadius: '3px',
-            }}
-            className='py-2'
-          >
-            <div
-              className='flex justify-between px-3 py-1'
-              style={{ borderBottom: '1px solid rgba(29, 91, 191, 1)' }}
-            >
-              <p style={{ color: 'rgba(29, 91, 191, 1)' }}>
-                Reference Link View
-              </p>
-              <img
-                src={CloseIcon}
-                alt='CloseIcon'
-                className='cursor-pointer'
-                onClick={() => setTaskFilesPopup({ modal: false, files: [] })}
-              />
-            </div>
-            <ul className='text-black py-2 px-5 leading-10'>
-              {taskFilesPopup.files.map((file, index) => {
-                return (
+    <div className="mentor-task px-4 py-6 sm:px-6 lg:px-8">
+      {/* Backdrop Popup */}
+      {taskFilesPopup.modal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-5 rounded-md shadow-md">
+            <div className="border border-blue-500 rounded-md">
+              <div className="flex justify-between items-center px-4 py-2 border-b border-blue-500">
+                <p className="text-blue-500 font-medium">Reference Link View</p>
+                <button
+                  onClick={() => setTaskFilesPopup({ modal: false, files: [] })}
+                >
+                  <img src={CloseIcon} alt="Close" className="cursor-pointer" />
+                </button>
+              </div>
+              <ul className="py-2 px-4 space-y-2">
+                {taskFilesPopup.files.map((file, index) => (
                   <li key={index}>
                     <a
                       href={file.files}
-                      style={{
-                        color: 'rgba(24, 40, 61, 1)',
-                        textDecoration: 'underline',
-                      }}
-                      target='_blank'
+                      target="_blank"
+                      className="text-blue-700 underline hover:text-blue-900"
                     >
                       {fileNameFromUrl(file.files)}
                     </a>
                   </li>
-                );
-              })}
-            </ul>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
-      </Backdrop>
+      )}
 
-
-
-      <div className='px-3 py-5 !border !border-[#DBE0E5] rounded-[10px]'>
-        <div className='flex justify-between px-5 pb-4 mb-8 items-center'>
-          <div className='flex gap-5 items-center text-[20px]'>
-            <p className='text-[20px] text-[#18283D]' style={{ fontWeight: 500 }}>Mentees Task</p>
-          </div>
-          <Stack direction={"row"} alignItems={"center"} spacing={2}>
+      {/* Header */}
+      <div className="bg-white p-5 rounded-lg shadow-sm border border-gray-300">
+        <div className="flex flex-wrap items-center justify-between mb-4">
+          <h1 className="text-xl font-semibold text-gray-800">Mentees Task</h1>
+          <div className="flex items-center space-x-3">
             <div className="relative">
-              <input type="text" id="search-navbar" className="block w-full p-2 text-sm text-gray-900 border-none"
-                placeholder="Search here..." style={{
-                  border: '1px solid rgba(29, 91, 191, 1)',
-                  borderRadius: '1px',
-                  height: '45px',
-                  width: '280px'
-                }}
-
+              <input
+                type="text"
+                className="w-full px-4 py-2 border border-blue-500 rounded-md focus:outline-none focus:ring focus:ring-blue-300"
+                placeholder="Search here..."
                 onChange={(e) => handleSearch(e.target.value)}
               />
-              <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
-                <img src={SearchIcon} alt='SearchIcon' />
+              <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+                <img src={SearchIcon} alt="Search" />
               </div>
             </div>
-            <Button btnType="button" btnCls="w-[150px]" btnName={'Create Task'} btnCategory="primary" onClick={() => navigate("/assign-mentees?type=new")} />
-
-          </Stack>
+            <button
+              onClick={() => navigate("/assign-mentees?type=new")}
+              className="px-5 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:ring focus:ring-blue-300"
+            >
+              Create Task
+            </button>
+          </div>
         </div>
 
-        <Backdrop
-          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          open={menteeTaskLoading}
-        >
-          <CircularProgress color='inherit' />
-        </Backdrop>
-        <div className='mx-5'>
-          <div className='main-grid grid grid-cols-5 gap-3'>
-            {/* <div className="left-bar row-span-3 flex flex-col gap-8">
-                            <div className="pb-3 w-full max-w-sm bg-white rounded-lg" style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', background: 'rgba(255, 255, 255, 1)' }}>
-                                <div className="title flex justify-between py-3 px-4 border-b-2">
-                                    <h4 className="text-base" style={{ color: 'rgba(29, 91, 191, 1)' }}>Task</h4>
-                                </div>
-                                <ul className="flex flex-col gap-2 p-4 md:p-0 mt-4 font-medium">
-                                    {
-                                        taskList.map((menu, index) => {
-                                            return (
-                                                <li className="" key={index}>
-                                                    <div className={`flex justify-between py-2 px-6 rounded cursor-pointer menu-content ${activeTaskMenu === menu.key ? 'active' : ''}
-                                                        `} aria-current="page"
-                                                        onClick={() => handleTaskMenu(menu.key)}>
-                                                        <span className="text-sm">{menu.name}</span>
-                                                    </div>
-                                                </li>
-                                            )
-                                        })
-                                    }
-
-                                </ul>
-                            </div>
-
-                            <div className="pb-3 w-full max-w-sm bg-white rounded-lg" style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', background: 'rgba(255, 255, 255, 1)' }}>
-                                <div className="title flex justify-between py-3 px-4 border-b-2">
-                                    <h4 className="text-base" style={{ color: 'rgba(29, 91, 191, 1)' }}>Category</h4>
-                                </div>
-                                <ul className="flex flex-col gap-2 p-4 md:p-0 mt-4 font-medium">
-                                    {
-                                        Category.map((menu, index) => {
-                                            return (
-                                                <li className="" key={index}>
-                                                    <div className={`flex justify-between py-2 px-6 rounded cursor-pointer menu-content ${activeCategoryMenu === menu.key ? 'active' : ''}
-                                                        `} aria-current="page"
-                                                        onClick={() => setActiveCategoryMenu(menu.key)}>
-                                                        <span className="text-sm">{menu.name}</span>
-                                                    </div>
-                                                </li>
-                                            )
-                                        })
-                                    }
-
-                                </ul>
-                            </div>
-                        </div> */}
-
-            <div className='flex relative flex-col col-span-5'>
-              {activeTaskMenu === 'my-task1' ? (
-                <>
-                  <div className='text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700 mb-10'>
-                    <ul className='flex flex-wrap -mb-px'>
-                      {tabs.map((participatedTab) => (
-                        <li className='me-2' key={participatedTab.key}>
-                          <p
-                            className={`inline-block p-4 border-b-2 cursor-pointer rounded-t-lg ${activeTab === participatedTab.key
-                                ? 'active  text-blue-600 border-blue-500'
-                                : ''
-                              } `}
-                            onClick={() => handleTab(participatedTab.key)}
-                          >
-                            {participatedTab.name}
-                          </p>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <DashboardCard
-                    title='All Programs'
-                    viewpage='/programs?type=yettostart'
-                    handleNavigateDetails={handleNavigateDetails}
-                    handleBookmark={handleBookmark}
-                    programs={programs}
-                  />
-                </>
-              ) : (
-                <>
-                  {/* <div className='flex justify-between'>
-                                            <div>
-                                                <select style={{ border: '1px solid rgba(29, 91, 191, 1)', borderRadius: '3px' }}
-                                                    className='px-4 py-4 w-[250px] text-[14px]'
-                                                    onChange={(e) => handleMenteeTaskFilterTab(e.target.value)}
-                                                >
-                                                    {
-                                                        alltaskList.map(task => <option value={task.key} selected={searchParams.get('status') === task.key}>{task.name}</option>)
-                                                    }
-                                                </select>
-                                            </div>
-
-                                        </div> */}
-
-                  <div className='task-list py-0'>
-                    <DataTable
-                      rows={menteeTask?.results ?? []}
-                      columns={mentorTaskColumn}
-                      hideCheckbox
-                      rowCount={menteeTask?.count}
-                      paginationModel={paginationModel}
-                      setPaginationModel={setPaginationModel}
-                    />
-                  </div>
-                </>
-              )}
+        {/* Loader */}
+        {menteeTaskLoading && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30">
+            <div className="flex items-center">
+              <CircularProgress color="inherit" />
             </div>
+          </div>
+        )}
+
+        {/* Content Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          {/* Sidebar (if needed) */}
+          {/* <div className="hidden md:block col-span-1 lg:col-span-1">
+            <div className="bg-white p-4 rounded-lg shadow-md">
+              <h4 className="text-blue-500 font-medium mb-2">Task</h4>
+              <ul className="space-y-2">
+                {taskList.map((menu, index) => (
+                  <li key={index}>
+                    <div
+                      className={`flex items-center justify-between p-2 rounded-md cursor-pointer ${
+                        activeTaskMenu === menu.key ? "bg-blue-100" : ""
+                      }`}
+                      onClick={() => handleTaskMenu(menu.key)}
+                    >
+                      <span className="text-sm text-gray-800">{menu.name}</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="bg-white p-4 mt-4 rounded-lg shadow-md">
+              <h4 className="text-blue-500 font-medium mb-2">Category</h4>
+              <ul className="space-y-2">
+                {Category.map((menu, index) => (
+                  <li key={index}>
+                    <div
+                      className={`flex items-center justify-between p-2 rounded-md cursor-pointer ${
+                        activeCategoryMenu === menu.key ? "bg-blue-100" : ""
+                      }`}
+                      onClick={() => setActiveCategoryMenu(menu.key)}
+                    >
+                      <span className="text-sm text-gray-800">{menu.name}</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div> */}
+
+          {/* Main Content */}
+          <div className="col-span-5">
+            {activeTaskMenu === "my-task1" ? (
+              <>
+                {/* Tabs */}
+                <div className="border-b border-gray-300 mb-4">
+                  <ul className="flex space-x-4">
+                    {tabs.map((tab) => (
+                      <li
+                        key={tab.key}
+                        className={`cursor-pointer pb-2 ${
+                          activeTab === tab.key
+                            ? "text-blue-500 border-b-2 border-blue-500"
+                            : "text-gray-500"
+                        }`}
+                        onClick={() => handleTab(tab.key)}
+                      >
+                        {tab.name}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Dashboard Card */}
+                <DashboardCard
+                  title="All Programs"
+                  viewpage="/programs?type=yettostart"
+                  handleNavigateDetails={handleNavigateDetails}
+                  handleBookmark={handleBookmark}
+                  programs={programs}
+                />
+              </>
+            ) : (
+              <DataTable
+                rows={menteeTask?.results ?? []}
+                columns={mentorTaskColumn}
+                hideCheckbox
+                rowCount={menteeTask?.count}
+                paginationModel={paginationModel}
+                setPaginationModel={setPaginationModel}
+              />
+            )}
           </div>
         </div>
       </div>
