@@ -166,12 +166,14 @@ const Login = () => {
       {/* Right Section */}
       <div className='w-full flex items-center justify-center'>
         <div className='w-4/5 max-w-md'>
-          <h4 className='pb-1 text-3xl font-semibold bg-gradient-to-r from-[#00AEBD] to-[#1D5BBF] text-transparent bg-clip-text'>
-            MMA
-          </h4>
+        <div className="flex gap-1">
           <h2 className='text-2xl font-bold text-gray-800 mb-6'>
-            Welcome to Log In
+            Log in to
           </h2>
+          <h2 className='pb-1 text-2xl font-semibold bg-gradient-to-r from-[#00AEBD] to-[#1D5BBF] text-transparent bg-clip-text'>
+            MMA
+          </h2>
+        </div>
           <p className='text-sm text-gray-600 mb-4'>
             Don’t have an account?{" "}
             <span

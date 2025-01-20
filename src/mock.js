@@ -1468,11 +1468,18 @@ export const programRequestColumns = [
     for: ["admin", "mentor", "mentee"],
   },
   {
-    field: "created_by_full_name",
-    headerName: "Requested By",
+    field: 'created_by_full_name',
+    headerName: 'Requested To',
     flex: 1,
     id: 2,
-    for: ["admin", "mentee"],
+    for: ['mentee'],
+  },
+  {
+    field: 'created_by_full_name',
+    headerName: 'Requested By',
+    flex: 1,
+    id: 2,
+    for: ['admin'],
   },
   {
     field: "position",
@@ -1913,28 +1920,73 @@ export const memberMenteeRequestColumns = [
 
 export const goalsRequestColumns = [
   {
+    field: "goal_name",
+    headerName: "Goal Name",
+    flex: 1,
+    id: 0,
+    for: ["admin", "mentor","mentee"],
+    renderCell: (params) => {
+      return (
+        <div className="flex gap-2 items-center">
+          {params?.row?.goal?.goal_name ?? "..."}
+        </div>
+      );
+    },
+  },
+  {
+    field: "reason_request",
+    headerName: "Reason Request",
+    flex: 1,
+    id: 1,
+    for: ["admin"],
+    renderCell: (params) => {
+      return (
+        <div className="flex gap-2 items-center">
+          {params?.row?.goal?.description?.length
+            ? params?.row?.goal?.description
+            : "..."}
+        </div>
+      );
+    },
+  },
+  {
+    field: "Description",
+    headerName: "Description",
+    flex: 1,
+    id: 7,
+    for: ["mentee", "mentor"],
+    renderCell: (params) => {
+      return (
+        <div className="flex gap-2 items-center">
+          {params?.row?.goal?.description ?? "..."}
+        </div>
+      );
+    },
+  },
+  {
     field: "requested_date",
     headerName: "Request Date",
     flex: 1,
     id: 2,
-    for: ["admin"],
+    for: ["admin","mentee", "mentor"],
     renderCell: (params) => {
       return <div>{dateFormat(params.row.requested_date)}</div>;
     },
   },
+
   {
     field: "requested_by",
     headerName: "Requested By",
     flex: 1,
     id: 3,
-    for: ["admin"],
+    for: ["admin","mentee", "mentor"],
   },
   {
     field: "updated_at",
     headerName: "Last Updated Date",
     flex: 1,
     id: 4,
-    for: ["mentor"],
+    for: ["admin","mentor","mentee"],
     renderCell: (params) => {
       return <div>{dateFormat(params.row.updated_at)}</div>;
     },
@@ -1944,7 +1996,7 @@ export const goalsRequestColumns = [
     headerName: "Last Updated By",
     flex: 1,
     id: 5,
-    for: ["admin", "mentor"],
+    for: ["admin", "mentor","mentee"],
   },
 ];
 

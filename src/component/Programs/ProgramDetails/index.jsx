@@ -95,6 +95,7 @@ import ProgramHistoryIcon from "../../../assets/icons/historyIcon.svg";
 import RescheduleIcon from "../../../assets/images/reschedule1x.png";
 import Breadcrumbs from "../../Breadcrumbs/Breadcrumbs";
 import {
+  dashboard_program_details_main,
   program_details,
   program_details_main,
   programStatusBreadcrumbs,
@@ -575,6 +576,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     const program_New = request_newProgramRequest(programdetails?.program_name);
     const program_re = request_programReschedule(programdetails?.program_name);
     const program_cancel = request_programCancel(programdetails?.program_name);
+    const dashBoardProgram = dashboard_program_details_main(programdetails?.program_name);
     const program_mentee_cancel = request_programMenteeCancel(
       programdetails?.program_name
     );
@@ -603,6 +605,9 @@ export default function ProgramDetails({ setProgramDetailsId }) {
         break;
       case requestPageBreadcrumbs.program_join_request_admin:
         setBreadcrumbsArray(admin_approvedreport);
+        break;
+      case requestPageBreadcrumbs.dashboardPrograms:
+        setBreadcrumbsArray(dashBoardProgram);
         break;
       case "discussion":
         break;

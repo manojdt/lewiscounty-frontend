@@ -2,14 +2,21 @@ import React from 'react'
 import DashboardCard from '../../../shared/Card/DashboardCard'
 import ViewAllIcon from '../../../assets/icons/viewAll.svg'
 import CreateIcon from '../../../assets/icons/createNewProgram.svg'
+import { pipeUrls } from '../../../utils/constant'
+import { useNavigate } from 'react-router-dom'
+import { requestPageBreadcrumbs } from '../../Breadcrumbs/BreadcrumbsCommonData'
 // import { useDispatch } from 'react-redux'
 // import { getallMyProgram } from '../../../services/programInfo'
 
 export default function DashboardPrograms() {
     // const dispatch = useDispatch()
     // const [programData, setProgramData] = React.useState({})
-    const handleNavigateDetails = () => {
-        console.log('handleNavigateDetails')
+      const navigate = useNavigate();
+    const handleNavigateDetails = (program) => {
+          let baseUrl = pipeUrls.programdetails;
+            if (Object.keys(program).length) {
+              navigate(`${baseUrl}/${program.id}?breadcrumbsType=${requestPageBreadcrumbs.dashboardPrograms}`);
+            }
     }
 
     const handleBookmark = () => {
