@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none; /* Hides the scrollbar in webkit browsers (Chrome, Safari) */
+  }
+
+  .hide-scrollbar {
+    -ms-overflow-style: none; /* Hides the scrollbar in IE and Edge */
+    scrollbar-width: none; /* Hides the scrollbar in Firefox */
+  }
+}
+
+
 body,
 button,
 .MuiMenuItem-root,
