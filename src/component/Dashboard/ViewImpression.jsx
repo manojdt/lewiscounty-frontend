@@ -13,8 +13,8 @@ export default function ViewImpression() {
                     Impressions.map((menu, index) => 
                     <li className="" key={index}>
                         <div className="flex justify-between py-2 px-6 rounded" aria-current="page">
-                            <span className="text-sm">{menu.name}</span>
-                            <span className="text-base" style={{ color: 'rgba(0, 174, 189, 1)' }}>{menu.count}</span>
+                            <span className="text-sm max-lg:text-[12px]">{menu.name}</span>
+                            <span className="text-base max-lg:text-[12px]" style={{ color: 'rgba(0, 174, 189, 1)' }}>{menu.count}</span>
                         </div>
                     </li>)
                 }

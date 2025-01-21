@@ -181,7 +181,7 @@ export const Mentor = () => {
           }
         >
           {userInfo?.data?.userinfo?.approve_status === "accept" && (
-            <div className="left-bar row-span-3 flex flex-col gap-8">
+            <div className="left-bar col-span-5 sm:col-span-5 md:col-span-2 lg:col-span-1">
               <UserInfoCard />
               {/* <ViewImpression /> */}
               {/* <RecentActivities /> */}
@@ -191,8 +191,8 @@ export const Mentor = () => {
 
           {!["new", "pending"].includes(
             userInfo?.data?.userinfo?.approve_status
-          ) ? (
-            <div className="programs-list">
+          ) ? (     
+            <div className="col-span-5 sm:col-span-5 md:col-span-3 lg:col-span-4">
               {searchParams.get("type") === null &&
                 searchParams.get("is_bookmark") === null && (
                   <ProgramCard

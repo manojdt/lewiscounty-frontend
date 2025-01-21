@@ -338,7 +338,7 @@ export default function DashboardCard({
                       </div>
 
                       <div className='flex justify-between pb-3 mx-4 my-4 items-center'>
-                        <div className='program-time-info flex text-[12px] gap-4 items-center'>
+                        <div className='program-time-info flex text-[12px] gap-1 items-center'>
                           <img src={CalenderIcon} alt='CalendarImage' />
                           <span className='program-date'>
                             {actualStartDate}
@@ -355,7 +355,7 @@ export default function DashboardCard({
                           </span>
                         </div>
                         <div
-                          className='posted-time text-[12px] px-2 py-2'
+                          className='posted-time text-[10px] px-2 py-2'
                           style={{
                             background: 'rgba(241, 241, 241, 1)',
                             borderRadius: '3px',
@@ -369,7 +369,7 @@ export default function DashboardCard({
                 );
               })
             ) : (
-              <div>No Programs found</div>
+              <div className='text-sm'>No Programs found</div>
             )}
           </div>
         )}

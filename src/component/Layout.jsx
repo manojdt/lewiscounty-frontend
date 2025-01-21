@@ -202,15 +202,15 @@ export default function Layout({ subheader }) {
         role === "admin") &&
       userInfo.data.role !== user.super_admin ? (
         <div
-          className="secondary-menu py-8"
+          className="secondary-menu py-8 sm:py-2 md:py-4"
           style={{ boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.05)" }}
         >
           <ul
-            style={{ gap: "40px" }}
-            className={`flex flex-col ${
+            // style={{ gap: "40px" }}
+            className={`flex ${
               !userInfo?.data?.is_registered ? "ml-[150px]" : "justify-center"
-            } items-center p-4 md:p-0 mt-4 font-medium border border-gray-100 
-          rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0`}
+            } items-center p-2 md:p-0 mt-4 border border-gray-100 
+          rounded-lg md:space-x-8 rtl:space-x-reverse flex-row md:mt-0 md:border-0`}
           >
             {userInfo?.data?.is_registered && (
               <li
@@ -220,7 +220,7 @@ export default function Layout({ subheader }) {
               >
                 <span
                   onClick={() => navigate("/dashboard")}
-                  className="block py-2 px-3 rounded md:p-0 cursor-pointer"
+                  className="block py-2 px-3 sm:py-0 sm:px-0 rounded md:p-0 cursor-pointer md:text-[12px] lg:text-[14px]"
                   aria-current="page"
                 >
                   Dashboard
@@ -235,7 +235,7 @@ export default function Layout({ subheader }) {
             >
               <span
                 onClick={() => navigate("/programs")}
-                className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer"
+                className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer md:text-[12px] lg:text-[14px]"
               >
                 Programs
               </span>
@@ -248,7 +248,7 @@ export default function Layout({ subheader }) {
               >
                 <span
                   onClick={() => navigate("/mentors")}
-                  className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer"
+                  className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer md:text-[12px] lg:text-[14px]"
                 >
                   Mentors
                 </span>
@@ -263,7 +263,7 @@ export default function Layout({ subheader }) {
               >
                 <span
                   onClick={() => navigate("/mentees")}
-                  className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer"
+                  className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer md:text-[12px] lg:text-[14px]"
                 >
                   Mentees
                 </span>
@@ -278,7 +278,7 @@ export default function Layout({ subheader }) {
               >
                 <span
                   onClick={() => navigate("/members")}
-                  className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer"
+                  className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer md:text-[12px] lg:text-[14px]"
                 >
                   Members
                 </span>
@@ -293,7 +293,7 @@ export default function Layout({ subheader }) {
               >
                 <span
                   onClick={() => navigate("/all-request")}
-                  className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer"
+                  className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer md:text-[12px] lg:text-[14px]"
                 >
                   My Requests
                 </span>
@@ -335,7 +335,7 @@ export default function Layout({ subheader }) {
                         role === "mentee" ? "/mentee-tasks" : "/mentor-tasks"
                       )
                     }
-                    className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer"
+                    className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer md:text-[12px] lg:text-[14px]"
                   >
                     Tasks
                   </span>
@@ -348,7 +348,7 @@ export default function Layout({ subheader }) {
                 >
                   <span
                     onClick={() => navigate("/goals")}
-                    className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer"
+                    className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer md:text-[12px] lg:text-[14px]"
                   >
                     Goals
                   </span>
@@ -361,7 +361,7 @@ export default function Layout({ subheader }) {
                 >
                   <span
                     onClick={() => navigate("/calendar")}
-                    className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer"
+                    className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer md:text-[12px] lg:text-[14px]"
                   >
                     Scheduler
                   </span>
@@ -372,7 +372,7 @@ export default function Layout({ subheader }) {
                     <div>
                       <button
                         type="button"
-                        className="inline-flex w-full justify-center gap-x-1.5  px-3 py-2  text-gray-900"
+                        className="inline-flex w-full justify-center gap-x-1.5  px-3 py-2  text-gray-900 md:text-[12px] lg:text-[14px]"
                         id="menu-button"
                         aria-expanded="true"
                         aria-haspopup="true"

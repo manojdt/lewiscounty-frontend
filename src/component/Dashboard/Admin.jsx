@@ -29,8 +29,10 @@ import MemberRequest from "./MemberRequest";
 import protectedApi from "../../services/api";
 import { getPost } from "../../services/feeds";
 import ProgramFeeds from "../../shared/ProgramFeeds";
+import { useWindowSize } from "../../utils/windowResize";
 
 export default function Admin() {
+  const { width } = useWindowSize();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const userInfo = useSelector((state) => state.userInfo);
@@ -202,7 +204,7 @@ export default function Admin() {
 
   return (
     <div className="dashboard-content px-8 mt-10 py-5">
-      <div className="grid grid-cols-7 gap-7">
+      <div className="grid grid-cols-7 gap-7 max-md:block">
         <div className="col-span-2">
           <div
             className="pb-3 w-full  bg-white rounded-lg"
@@ -217,11 +219,11 @@ export default function Admin() {
                 src={UserImage}
                 alt="User logo"
               />
-              <h5 className="mb-1 text-xl font-medium text-gray-900 ">
+              <h5 className="mb-1 text-xl font-medium text-gray-900  max-lg:text-[16px]">
                 {userInfo?.data?.first_name} {userInfo?.data?.last_name}
               </h5>
               <span
-                className="text-sm text-gray-500 "
+                className="text-sm text-gray-500 max-lg:text-[12px] "
                 style={{ textTransform: "capitalize" }}
               >
                 {userInfo.data.role} |{" "}
@@ -260,8 +262,8 @@ export default function Admin() {
                       aria-current="page"
                       onClick={() => navigate(menu.page)}
                     >
-                      <span className="text-sm">{menu.name}</span>
-                      <span className="text-base">{menu.count}</span>
+                      <span className="text-sm max-lg:text-[12px]">{menu.name}</span>
+                      <span className="text-base max-lg:text-[12px]">{menu.count}</span>
                     </div>
                   </li>
                 );
@@ -316,10 +318,10 @@ export default function Admin() {
 
             </div> */}
 
-      <div className="grid grid-cols-10 gap-7 mt-4">
-        <div className="col-span-2">
+      <div className="grid grid-cols-10 gap-7 mt-4 max-md:block">
+        <div className="col-span-2 sm:col-span-2 md:col-span-5 lg:col-span-5 xl:col-span-2">
           <CardWrapper title="Recent Activities" viewAll>
-            <div style={{ height: "640px" }}>
+            <div style={{ height: "440px" }}>
               {activityList.length ? (
                 <div className="program-status flex items-center flex-col justify-center w-max py-4 px-4">
                   {activityList.map((recentActivity) => (
@@ -343,10 +345,12 @@ export default function Admin() {
                             {recentActivity.action_message}
                           </h6>
                         </Tooltip>
-                      </div>
-                      <div className="timeline absolute lg:right-[-205px] md:right-[-227px] sm:right-[-200px] text-[10px]">
+                        {/* <div className="timeline absolute lg:right-[-205px] md:right-[-227px] sm:right-[-200px] text-[10px]"> */}
+                        <div className="timeline absolute text-[10px]">
                         {recentActivity.time_since_action}
                       </div>
+                      </div>
+                      
                       <div className="w-8 h-3  mx-[-1px]  flex items-center justify-center">
                         <span
                           className="w-3 h-3  rounded-full"
@@ -371,7 +375,7 @@ export default function Admin() {
             </div>
           </CardWrapper>
         </div>
-        <div className="col-span-4">
+        <div className="col-span-4 sm:col-span-4 md:col-span-5 lg:col-span-5 xl:col-span-4">
           <MemberRequest />
           {/* <div style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px', padding: '20px', marginTop: '20px' }} >
                         <div className='flex justify-evenly items-center'>
@@ -391,7 +395,7 @@ export default function Admin() {
                     </div> */}
         </div>
 
-        <div className="col-span-4">
+        <div className="col-span-4 sm:col-span-4 md:col-span-10 lg:col-span-10 xl:col-span-4">
           {/* <CardWrapper title="Program Feeds" viewAll>
             <div style={{ height: "640px", overflowY: "scroll" }}>
               {programFeeds.map((programFeeds, index) => (

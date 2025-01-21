@@ -1037,6 +1037,12 @@ input[type='number'] {
   }
 } */
 
+@media screen and (max-width: 768px) {
+  .secondary-menu {
+    display: none;
+  }
+}
+
 @media screen and (max-width: 600px) {
   .login-content .logo,
   .signup-content .logo {
@@ -1070,9 +1076,9 @@ input[type='number'] {
   }
 
   /* Navbar */
-  .navbar-content .site-logo {
+  /* .navbar-content .site-logo {
     display: none;
-  }
+  } */
 
   .navbar-mobile-menu {
     display: block;
@@ -1181,7 +1187,7 @@ input[type='number'] {
   }
 
   .dashboard-content .left-bar {
-    display: none;
+    /* display: none; */
   }
 
   .dashboard-content .programs-list,

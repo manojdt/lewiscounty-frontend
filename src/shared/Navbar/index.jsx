@@ -12,6 +12,7 @@ import ProfileIcon from '../../assets/icons/Profile.svg';
 import LogoutIcon from '../../assets/icons/Logout.svg';
 import LogoutColorIcon from '../../assets/icons/Logoutpop.svg';
 import AddTicketIcon from '../../assets/icons/add-ticket-icon.svg';
+import MenuIcon from "../../assets/images/menuIcon.svg";
 import {
   Backdrop,
   Badge,
@@ -34,6 +35,9 @@ import CategoryIcon from '../../assets/icons/category.svg';
 import PermissionIcon from '../../assets/icons/permissionIcon.svg';
 import { user } from '../../utils/constant';
 import NavHead from './NavHead';
+import useWindowWidth from '../../utils/useWindowWidth';
+import { useWindowSize } from '../../utils/windowResize';
+import MobileDrawer from '../../component/MobileDrawer';
 
 const HtmlTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} arrow />
@@ -47,6 +51,8 @@ const HtmlTooltip = styled(({ className, ...props }) => (
 }));
 
 export const Navbar = () => {
+  const { width } = useWindowSize();
+  const [hamburgerOpen, setHamburgerOpen] = useState(false);
   const navigate = useNavigate();
   const searchBar = useRef(null);
   const op = useRef(null);
@@ -67,6 +73,9 @@ export const Navbar = () => {
   const open = Boolean(anchorEl);
   const { pathname } = location;
   const role = userInfo.data.role || '';
+  const handleHamburgerClick = () => {
+    setHamburgerOpen((prev) => !prev);
+  };
 
   const filterBtn = [
     {
@@ -127,13 +136,13 @@ export const Navbar = () => {
     document.getElementById('mySidenav').style.display = 'none';
   }
 
-  const handleLeftSidebar = () => {
-    const leftElement = document.getElementById('leftSideNav');
-    const leftBar = document.getElementsByClassName('left-bar')[0];
-    leftElement.style.width = '300px';
-    leftElement.style.display = 'block';
-    document.getElementById('left-content').appendChild(leftBar);
-  };
+  // const handleLeftSidebar = () => {
+  //   const leftElement = document.getElementById('leftSideNav');
+  //   const leftBar = document.getElementsByClassName('left-bar')[0];
+  //   leftElement.style.width = '300px';
+  //   leftElement.style.display = 'block';
+  //   document.getElementById('left-content').appendChild(leftBar);
+  // };
 
   function closeLeftNav() {
     document.getElementById('leftSideNav').style.width = '0';
@@ -234,10 +243,12 @@ export const Navbar = () => {
   const handleTooltipOpen = () => {
     setOpenSetting(true);
   };
+  const getInputWidth = useWindowWidth(); // Get the dynamic width from the hook
+  
 
   return (
     <div
-      className='navbar-content px-4'
+      className='navbar-content px-4  max-md:px-2'
       style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}
     >
       <Backdrop
@@ -351,7 +362,7 @@ export const Navbar = () => {
                   </ul>
                 </div>
               )}
-              <div className='navbar-mobile-menu' onClick={handleLeftSidebar}>
+              {/* <div className='navbar-mobile-menu' onClick={handleLeftSidebar}>
                 <div className='user-image'>
                   <img
                     className='rounded-3xl object-cover h-10 w-10 cursor-pointer'
@@ -359,7 +370,8 @@ export const Navbar = () => {
                     alt='User logo1'
                   />
                 </div>
-              </div>
+              </div> */}
+              
               {/* {
                             role === 'mentee' &&
 
@@ -380,7 +392,7 @@ export const Navbar = () => {
             </div>
 
             <div
-              className='flex items-center justify-center p-4 gap-4'
+              className='flex items-center justify-center p-4 gap-4 max-md:p-2 max-md:gap-2'
               // className={`navbar-icons flex items-center ${
               //   userInfo?.data?.is_registered && !documentUpload
               //     ? 'justify-between'
@@ -388,7 +400,7 @@ export const Navbar = () => {
               // } ${getWindowDimensions().width <= 1536 ? 'w-3/6' : 'w-2/5'} p-4`}
             >
               {userInfo?.data?.is_registered && (userInfo?.data?.userinfo?.approve_status === "accept" || role === "admin") && (
-                <div className='relative mt-1 search-container'>
+                <div className='relative search-container'>
                   {userInfo?.data?.role === 'super_admin' ? (
                     <div>
                       <input
@@ -398,8 +410,8 @@ export const Navbar = () => {
                         placeholder='Search...'
                         style={{
                           backgroundColor: '#F5F9FF',
-                          width: '430px',
-                          height: '50px',
+                          width: getInputWidth,
+                          height: '42px',
                           borderRadius: '3px',
                         }}
                         onClick={(e) => handleOpenSearchBar(e)}
@@ -465,8 +477,8 @@ export const Navbar = () => {
                         placeholder='Search...'
                         style={{
                           backgroundColor: '#F5F9FF',
-                          width: '430px',
-                          height: '50px',
+                          width: getInputWidth,
+                          height: '42px',
                           borderRadius: '3px',
                         }}
                         onClick={(e) => handleOpenSearchBar(e)}
@@ -537,7 +549,7 @@ export const Navbar = () => {
                     >
                       {userInfo?.data?.role === 'super_admin' ? null : (
                         <div className='notitification-group'>
-                          <div className='bg-[#EEF5FF] rounded-[3px] h-[40px] w-[40px] flex items-center justify-center'>
+                          <div className='bg-[#EEF5FF] rounded-[3px] h-[40px] w-[40px] max-sm:h-[35px] max-sm:w-[35px] flex items-center justify-center'>
                             {activity?.notifications_count > 0 ? (
                               <Badge
                                 color='error'
@@ -657,11 +669,14 @@ export const Navbar = () => {
                         </React.Fragment>
                       }
                     >
+                      <div className='h-[40px] w-[40px] max-sm:h-[35px] max-sm:w-[35px]'>
                       <img
                         src={SettingIcon}
                         onClick={handleTooltipOpen}
                         className='cursor-pointer'
                       />
+                      </div>
+                      
                     </HtmlTooltip>
                   </div>
                 </ClickAwayListener>
@@ -675,8 +690,7 @@ export const Navbar = () => {
               >
                 &#9776;
               </span>
-
-              <div className='reletive action-menu'>
+              {width > 768 && <div className='reletive action-menu'>
                 <img
                   className='rounded-3xl object-cover h-8 w-8 cursor-pointer'
                   src={profile?.image || UserImage}
@@ -740,7 +754,8 @@ export const Navbar = () => {
                     Log out
                   </MenuItem>
                 </Menu>
-              </div>
+              </div>}
+              
 
               <div id='mySidenav' className='sub-menu sidenav hidden'>
                 <a
@@ -895,6 +910,24 @@ export const Navbar = () => {
                   </li>
                 </ul>
               </div>
+
+              {width <= 768 && (
+            <>
+              <Tooltip title="Hamburger Menu">
+                <button
+                  className="p-1"
+                  onClick={handleHamburgerClick}
+                >
+                  <img src={MenuIcon} className="size-6" alt="hamburger" />
+                </button>
+              </Tooltip>
+              <MobileDrawer
+                isOpen={hamburgerOpen}
+                onClose={() => setHamburgerOpen(false)}
+                
+              />
+            </>
+          )}
 
               <div id='leftSideNav' className='sub-menu leftsidenav hidden'>
                 <a href='#' className='closebtn' onClick={() => closeLeftNav()}>

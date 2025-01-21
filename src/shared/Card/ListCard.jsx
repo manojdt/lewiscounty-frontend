@@ -19,8 +19,8 @@ export default function ListCard({ title = '', viewall = false, handleViewall, i
                         <div className="flex justify-between py-2 px-6 rounded cursor-pointer" 
                         onClick={() => handleClickItem(menu)}
                         aria-current="page">
-                            <span className="text-sm">{capitalizeEachWord(menu.role)}</span>
-                            <span className="text-base">{menu.count}</span>
+                            <span className="text-sm max-lg:text-[12px]">{capitalizeEachWord(menu.role)}</span>
+                            <span className="text-base max-lg:text-[12px]">{menu.count}</span>
                         </div>
                     </li>)
                 }

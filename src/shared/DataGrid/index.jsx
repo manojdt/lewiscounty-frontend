@@ -246,7 +246,7 @@ export default function DataTable({
   hideCheckbox = false,
   hideFooter = false,
   handleSelectedRow = undefined,
-  height = 600, // Default fixed height
+  height = 410, // Default fixed height
   getPageDetails = () => false,
   rowCount = 0,
   setPaginationModel = () => false,
