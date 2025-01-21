@@ -18,7 +18,7 @@ const GoalCreationModal = (props) => {
   ] = useCreateGoalMutation();
   const { isOpen, handleCloseModal } = props;
   const handleGoalCreate = () => {
-    createGoals({ description, goal_name: "Goal Name" });
+    createGoals({ description, goal_name: description });
   };
   useEffect(() => {
     if (isGoalsCreated || IsErrorGoalsCreating) {
