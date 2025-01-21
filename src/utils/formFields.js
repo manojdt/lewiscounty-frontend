@@ -149,18 +149,18 @@ export const PersonalInformationFields = [
         key: "female",
         value: "Female",
       },
+      // {
+      //   key: "others",
+      //   value: "Others",
+      // },
       {
-        key: "others",
-        value: "Others",
+        key: "non_binary",
+        value: "nonbinary",
       },
-      // {
-      //   key: "non_binary ",
-      //   value: "nonbinary",
-      // },
-      // {
-      //   key: "prefer_not_to_answer",
-      //   value: "prefer not to answer",
-      // },
+      {
+        key: "prefer_not_to_answer",
+        value: "prefer not to answer",
+      },
     ],
     inputRules: {
       // required: "This field is required",
@@ -621,18 +621,18 @@ export const MenteePersonalInformationFields = [
         key: "female",
         value: "female",
       },
+      // {
+      //   key: "others",
+      //   value: "others",
+      // },
       {
-        key: "others",
-        value: "others",
+        key: "non_binary",
+        value: "nonbinary",
       },
-      // {
-      //   key: "non_binary ",
-      //   value: "nonbinary",
-      // },
-      // {
-      //   key: "prefer_not_to_answer",
-      //   value: "prefer not to answer",
-      // },
+      {
+        key: "prefer_not_to_answer",
+        value: "prefer not to answer",
+      },
     ],
     inputRules: {
       // required: "This field is required",
