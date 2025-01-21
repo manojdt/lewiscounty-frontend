@@ -1482,7 +1482,7 @@ const Goals = () => {
             <div className="goals-container">
               <div className="title-container flex justify-between items-center">
                 <div className="flex gap-5 items-center ">
-                  <p className="text-[18px] font-semibold">{title}</p>
+                  {/* <p className="text-[18px] font-semibold">{title}</p>   */}
                 </div>
                 <div className="flex gap-8 items-center">
                   <div
@@ -1509,7 +1509,7 @@ const Goals = () => {
               </div>
 
               <div className="goals-info">
-                <div className="goals-list flex items-center gap-4">
+                <div className="goals-list flex flex-wrap items-center gap-4">
                   {goalsListMenu.map((goal) => (
                     <div
                       className={`goal-counts-container 
@@ -1552,8 +1552,8 @@ const Goals = () => {
                   )}
                 </div>
 
-                <div className="grid grid-cols-4 gap-7 py-5">
-                  <div className="col-span-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-7 py-5">
+                  <div className="col-span-1 md:col-span-2 lg:col-span-3">
                     {searchParams.get("type") === null ? (
                       <div>
                         <div
@@ -1580,7 +1580,6 @@ const Goals = () => {
                                 }}
                               >
                                 <img src={CalenderIcon} alt="CalenderIcon" />
-
                                 <select
                                   className="focus:outline-none"
                                   style={{
@@ -1593,7 +1592,7 @@ const Goals = () => {
                                 >
                                   {timeFrameList?.map((e) => {
                                     return (
-                                      <option value={e?.value}>
+                                      <option value={e?.value} key={e?.value}>
                                         {e?.label}
                                       </option>
                                     );
@@ -1635,11 +1634,7 @@ const Goals = () => {
                     )}
                   </div>
 
-                  <div className="pt-2">
-                    {/* {
-                                            searchParams.get('type') === null && <GoalProgress />
-                                        } */}
-
+                  <div className="pt-2 hidden xl:block col-span-1">
                     <RecentActivities key={recentActivityCheck} />
                   </div>
                 </div>
@@ -1731,7 +1726,7 @@ const Goals = () => {
                 </Stack>
                 <Divider />
 
-                <Box mt={2}>
+                <div className="mt-2">
                   <DataTable
                     rows={goalHistory?.results ?? []}
                     columns={
@@ -1744,7 +1739,7 @@ const Goals = () => {
                     setPaginationModel={setAdminTablePaginationModal}
                     hideCheckbox
                   />
-                </Box>
+                </div>
               </Box>
             </Box>
           )}
