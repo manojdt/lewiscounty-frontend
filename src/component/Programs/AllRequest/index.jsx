@@ -30,7 +30,8 @@ import {
 } from "../../Breadcrumbs/BreadcrumbsCommonData";
 import SearchIcon from "../../../assets/icons/search.svg";
 import Edit_Icon from "../../../assets/icons/editIcon.svg";
-import CalendarIcon from "../../../assets/images/calender_1x.png";
+// import CalendarIcon from "../../../assets/images/calender_1x.png";
+import CalendarIcon from '../../../assets/icons/CalenderIcon.svg'
 import MoreIcon from "../../../assets/icons/moreIcon.svg";
 import TickCircle from "../../../assets/icons/tickCircle.svg";
 import CloseCircle from "../../../assets/icons/closeCircle.svg";
@@ -215,7 +216,7 @@ export default function AllRequest() {
       forTabs: ["my"],
     },
     {
-      name: "Program Join",
+      name: role === "admin"?"Program Join Requests":"Program Join",
       key: "program_join",
       for: ["mentor", "mentee", "admin"],
       forTabs: role === "mentee" ? ["my"] : role === "admin" ? ["mentees"] : [],
@@ -245,15 +246,15 @@ export default function AllRequest() {
 
   const requestActionTab = [
     {
-      name: "My Request",
+      name: "My Requests",
       value: "my",
     },
     {
-      name: "Mentees Request",
+      name: "Mentees Requests",
       value: "mentees",
     },
     {
-      name: "Admin Request",
+      name: "Admin Requests",
       value: "admin",
     },
   ];
@@ -721,6 +722,15 @@ export default function AllRequest() {
   let programRequestColumn = programRequestColumns.filter((request) =>
     request.for.includes(role)
   );
+  let goalColumns = goalsRequestColumns.filter((request) =>
+    request.for.includes(role)
+  );
+  let reportRequestColumn = reportRequestColumns.filter((request) =>
+    request.for.includes(role)
+  );
+  let testimonialRequestColumn = testimonialRequestColumns.filter((request) =>
+    request.for.includes(role)
+  );
   let programExtendRequestColumn = programExtendRequestColumns.filter(
     (request) => request.for.includes(role)
   );
@@ -990,38 +1000,9 @@ export default function AllRequest() {
     },
   ];
 
-  const goalColumns = [
-    {
-      field: "goal_name",
-      headerName: "Goal Name",
-      flex: 1,
-      id: 0,
-      for: ["admin", "mentor"],
-      renderCell: (params) => {
-        return (
-          <div className="flex gap-2 items-center">
-            {params?.row?.goal?.goal_name ?? "..."}
-          </div>
-        );
-      },
-    },
-    {
-      field: "reason_request",
-      headerName: "Reason Request",
-      flex: 1,
-      id: 1,
-      for: ["admin", "mentor"],
-      renderCell: (params) => {
-        return (
-          <div className="flex gap-2 items-center">
-            {params?.row?.goal?.description?.length
-              ? params?.row?.goal?.description
-              : "..."}
-          </div>
-        );
-      },
-    },
-    ...goalsRequestColumns,
+   goalColumns = [
+    ...goalColumns,
+   
     {
       field: "status",
       headerName: "Status",
@@ -1351,8 +1332,8 @@ export default function AllRequest() {
     },
   ];
 
-  const reportRequestColumn = [
-    ...reportRequestColumns,
+  reportRequestColumn = [
+    ...reportRequestColumn,
     {
       field: "status",
       headerName: "Status",
@@ -1765,8 +1746,8 @@ export default function AllRequest() {
     },
   ];
 
-  const testimonialRequestColumn = [
-    ...testimonialRequestColumns,
+   testimonialRequestColumn = [
+    ...testimonialRequestColumn,
     {
       field: "status",
       headerName: "Status",
@@ -3052,12 +3033,16 @@ export default function AllRequest() {
                         <img src={SearchIcon} alt="Search Icon" />
                       </div>
                     </div>
+                    {/* <img src={SearchIcon} alt="statistics" /> */}
+                   
+                    <div className="relative flex gap-3 py-2 px-3"
+                      
+                      style={{ border: '1px solid rgba(24, 40, 61, 0.25)', borderRadius: '3px' }}
+                    >
+                      <img src={CalendarIcon} alt="CalendarIcon" />
 
-                    {/* Filter Dropdown */}
-                    <p className="text-sm flex items-center gap-4 px-5 py-2 rounded bg-blue-100">
-                      <img src={CalendarIcon} alt="Calendar Icon" />
                       <select
-                        className="focus:outline-none bg-blue-100 border-none"
+                        className="focus:outline-none"
                         onChange={(e) =>
                           setFilter({ ...filter, filter_by: e.target.value })
                         }
@@ -3078,7 +3063,7 @@ export default function AllRequest() {
                           Day
                         </option>
                       </select>
-                    </p>
+                    </div>
 
                     {/* Status Dropdown */}
                     <SelectBox

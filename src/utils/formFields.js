@@ -485,7 +485,7 @@ const ageField = () => {
 export const MenteePersonalInformationFields = [
   {
     type: "input",
-    name: "full_name",
+    name: "first_name",
     fieldtype: "text",
     label: "First Name",
     placeholder: "Enter First Name",

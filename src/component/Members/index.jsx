@@ -129,11 +129,11 @@ const Members = () => {
 
   let membersTab = [
     {
-      name: "Mentor",
+      name: "Mentors",
       key: "mentor",
     },
     {
-      name: "Mentee",
+      name: "Mentees",
       key: "mentee",
     },
   ];

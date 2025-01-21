@@ -1468,11 +1468,18 @@ export const programRequestColumns = [
     for: ["admin", "mentor", "mentee"],
   },
   {
-    field: "created_by_full_name",
-    headerName: "Requested By",
+    field: 'created_by_full_name',
+    headerName: 'Requested To',
     flex: 1,
     id: 2,
-    for: ["admin", "mentee"],
+    for: ['mentee'],
+  },
+  {
+    field: 'created_by_full_name',
+    headerName: 'Requested By',
+    flex: 1,
+    id: 2,
+    for: ['admin'],
   },
   {
     field: "position",
@@ -1913,28 +1920,83 @@ export const memberMenteeRequestColumns = [
 
 export const goalsRequestColumns = [
   {
-    field: "requested_date",
-    headerName: "Request Date",
+    field: "goal_name",
+    headerName: "Goal Name",
     flex: 1,
-    id: 2,
+    id: 0,
+    for: ["admin", "mentor","mentee"],
+    renderCell: (params) => {
+      return (
+        <div className="flex gap-2 items-center">
+          {params?.row?.goal?.goal_name ?? "..."}
+        </div>
+      );
+    },
+  },
+  {
+    field: "reason_request",
+    headerName: "Reason Request",
+    flex: 1,
+    id: 1,
     for: ["admin"],
+    renderCell: (params) => {
+      return (
+        <div className="flex gap-2 items-center">
+          {params?.row?.goal?.description?.length
+            ? params?.row?.goal?.description
+            : "..."}
+        </div>
+      );
+    },
+  },
+  {
+    field: "Description",
+    headerName: "Description",
+    flex: 1,
+    id: 7,
+    for: ["mentee", "mentor"],
+    renderCell: (params) => {
+      return (
+        <div className="flex gap-2 items-center">
+          {params?.row?.goal?.description ?? "..."}
+        </div>
+      );
+    },
+  },
+  {
+    field: "requested_date",
+    headerName: "Requested Date",
+    flex: 1,
+    id: 8,
+    for: ["mentee"],
     renderCell: (params) => {
       return <div>{dateFormat(params.row.requested_date)}</div>;
     },
   },
   {
+    field: "requested_date",
+    headerName: "Request Date",
+    flex: 1,
+    id: 2,
+    for: ["admin", "mentor"],
+    renderCell: (params) => {
+      return <div>{dateFormat(params.row.requested_date)}</div>;
+    },
+  },
+
+  {
     field: "requested_by",
     headerName: "Requested By",
     flex: 1,
     id: 3,
-    for: ["admin"],
+    for: ["admin","mentee", "mentor"],
   },
   {
     field: "updated_at",
     headerName: "Last Updated Date",
     flex: 1,
     id: 4,
-    for: ["mentor"],
+    for: ["admin","mentor","mentee"],
     renderCell: (params) => {
       return <div>{dateFormat(params.row.updated_at)}</div>;
     },
@@ -1944,7 +2006,7 @@ export const goalsRequestColumns = [
     headerName: "Last Updated By",
     flex: 1,
     id: 5,
-    for: ["admin", "mentor"],
+    for: ["admin", "mentor","mentee"],
   },
 ];
 
@@ -2066,6 +2128,48 @@ export const testimonialRequestColumns = [
     for: ["admin", "mentor"],
   },
   {
+    field: "category",
+    headerName: "Category",
+    flex: 1,
+    id: 7,
+    for: ["admin", "mentor",],
+  },
+  {
+    field: "program_description",
+    headerName: "Description",
+    flex: 1,
+    id: 8,
+    for: ["admin"],
+  },
+  {
+    field: "email",
+    headerName: "Email",
+    flex: 1,
+    id: 9,
+    for: ["admin"],
+  },
+  {
+    field: "location",
+    headerName: "Location",
+    flex: 1,
+    id: 10,
+    for: ["admin"],
+  },
+  {
+    field: "phone_number",
+    headerName: "Phone Number",
+    flex: 1,
+    id: 11,
+    for: ["admin"],
+  },
+  {
+    field: "zip_code",
+    headerName: "Zip Code",
+    flex: 1,
+    id: 12,
+    for: ["admin"],
+  },
+  {
     field: "testimonial_type",
     headerName: "Testimonial Type",
     flex: 1,
@@ -2074,31 +2178,31 @@ export const testimonialRequestColumns = [
   },
   {
     field: "requested_to",
-    headerName: "To Request",
+    headerName: "Requested To",
     flex: 1,
     id: 2,
-    for: ["admin"],
+    for: ["admin", "mentor"],
   },
   {
     field: "request_date",
     headerName: "Requested Date",
     flex: 1,
     id: 3,
-    for: ["admin"],
+    for: ["admin", "mentor"],
   },
   {
     field: "requested_by",
     headerName: "Requested By",
     flex: 1,
-    id: 3,
+    id: 4,
     for: ["admin"],
   },
   {
     field: "updated_at",
     headerName: "Last Updated Date",
     flex: 1,
-    id: 3,
-    for: ["admin"],
+    id: 5,
+    for: ["admin", "mentor"],
     renderCell: (params) => {
       return <div>{dateFormat(params.row.updated_at)}</div>;
     },
@@ -2107,8 +2211,8 @@ export const testimonialRequestColumns = [
     field: "updated_by",
     headerName: "Last Updated By",
     flex: 1,
-    id: 3,
-    for: ["admin"],
+    id: 6,
+    for: ["admin", "mentor"],
   },
 ];
 
@@ -2134,13 +2238,13 @@ export const certificateRequestColumns = [
     id: 2,
     for: ["admin"],
   },
-  {
-    field: "created_by_full_name",
-    headerName: "Requested By",
-    flex: 1,
-    id: 3,
-    for: ["admin"],
-  },
+  // {
+  //   field: "created_by_full_name",
+  //   headerName: "Requested By",
+  //   flex: 1,
+  //   id: 3,
+  //   for: ["admin"],
+  // },
   {
     field: "created_at",
     headerName: "Requested Date",
@@ -2148,7 +2252,7 @@ export const certificateRequestColumns = [
     id: 3,
     for: ["admin"],
     renderCell: (params) => {
-      return <div>{dateFormat(params.row.requested_date)}</div>;
+      return <div>{dateFormat(params.row.created_at)}</div>;
     },
   },
 
@@ -2161,6 +2265,13 @@ export const certificateRequestColumns = [
     renderCell: (params) => {
       return <div>{dateFormat(params.row.updated_at)}</div>;
     },
+  },
+  {
+    field: "updated_by_full_name",
+    headerName: "Last Updated By",
+    flex: 1,
+    id: 4,
+    for: ["admin", "mentor"],
   },
 ];
 
@@ -2177,35 +2288,45 @@ export const reportRequestColumns = [
     headerName: "Mentor Name",
     flex: 1,
     id: 1,
-    for: ["admin", "mentor"],
+    for: ["admin"],
   },
   {
     field: "category_name",
     headerName: "Category",
     flex: 1,
     id: 2,
-    for: ["admin"],
+    for: ["admin", "mentor"],
   },
   {
     field: "program_name",
     headerName: "Program Name",
     flex: 1,
     id: 2,
-    for: ["admin"],
+    for: ["admin", "mentor"],
   },
   {
     field: "participates_count",
     headerName: "Mentees",
     flex: 1,
     id: 2,
-    for: ["admin"],
+    for: ["admin", "mentor"],
+  },
+  {
+    field: "created_at",
+    headerName: "Requested Date",
+    flex: 1,
+    id: 3,
+    for: ["admin","mentor"],
+    renderCell: (params) => {
+      return <div>{dateFormat(params.row.created_at)}</div>;
+    },
   },
   {
     field: "updated_at",
     headerName: "Last Updated Date",
     flex: 1,
     id: 3,
-    for: ["admin"],
+    for: ["admin", "mentor"],
     renderCell: (params) => {
       return <div>{dateFormat(params.row.updated_at)}</div>;
     },
@@ -2215,7 +2336,7 @@ export const reportRequestColumns = [
     headerName: "Last Updated By",
     flex: 1,
     id: 3,
-    for: ["admin"],
+    for: ["admin", "mentor"],
   },
 ];
 

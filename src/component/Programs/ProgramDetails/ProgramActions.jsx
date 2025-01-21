@@ -205,7 +205,8 @@ const ProgramActions = ({
     const showApproveRejectButtons =
       (programdetails?.status === "inprogress" ||
         programdetails?.status === "yettostart") &&
-      programdetails?.request_data?.request_type === "program_new" &&
+      (programdetails?.request_data?.request_type === "program_new" ||
+        programdetails?.request_data?.request_type === "program_cancel") &&
       ["new", "pending"].includes(programdetails?.request_data?.status);
 
     if (showApproveRejectButtons) {
@@ -318,17 +319,19 @@ const ProgramActions = ({
       );
     }
 
-    if(["new", "pending"].includes(
-      programdetails?.request_data?.status
-    ) && role === "mentor" && (type === "program_reschedule" || type === "program_cancel")){
-        return(
-          <button
-            onClick={() => setCancelPopup(true)}
-            className="!border-[2px] border-red-500 rounded-md text-red-500 px-4 py-2 font-semibold text-sm flex items-center mt-5"
-          >
-            Cancel Request
-          </button>
-        )
+    if (
+      ["new", "pending"].includes(programdetails?.request_data?.status) &&
+      role === "mentor" &&
+      (type === "program_reschedule" || type === "program_cancel")
+    ) {
+      return (
+        <button
+          onClick={() => setCancelPopup(true)}
+          className="!border-[2px] border-red-500 rounded-md text-red-500 px-4 py-2 font-semibold text-sm flex items-center mt-5"
+        >
+          Cancel Request
+        </button>
+      );
     }
 
     // Draft status
@@ -427,8 +430,7 @@ const ProgramActions = ({
                   </button>
                 )}
             {programdetails.mentee_join_status !==
-              menteeProgramStatus.program_join_request_accepted.status && 
-              (
+              menteeProgramStatus.program_join_request_accepted.status && (
               <div className="space-y-4">
                 {searchParams.get("type") !== "program_join" &&
                   !programdetails?.admin_assign_program && (
@@ -456,7 +458,7 @@ const ProgramActions = ({
                         }
                       </span>
                     </button>
-                  )}                
+                  )}
               </div>
             )}
           </>

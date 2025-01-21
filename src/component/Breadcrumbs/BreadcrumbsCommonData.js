@@ -51,6 +51,7 @@ export const requestPageBreadcrumbs = {
   taskMenteeCompletedReport:'completed',
   taskMenteeRejectedReport:'rejected',
   taskMenteeDraftReport:'draft',
+  dashboardPrograms:'dashboardProgramDetails',
 };
 export const programStatusBreadcrumbs=[
     'All Programs',
@@ -440,6 +441,19 @@ export const admin_menteeMember = (name) => {
       },
     ];
   };
+  export const dashboard_program_details_main = (name,statusName) => {
+    return [
+      {
+        label: `Dashboard`,
+        path: -1,
+      },
+      {
+        label: `${name}`,
+      },
+    ];
+  };
+
+
 // Feed
 
 export const user_feed = (name) => {
@@ -470,7 +484,7 @@ export const myMneteePage = () => {
 export const newFollowRequestPage = (status) => {
     return [
       {
-        label: `New Follow Requests`,
+        label: `Follow Requests`,
         path: `/mentees?req=new-request-mentees&status=${status}`,
       },
       {
@@ -505,7 +519,7 @@ export const topMentorPage = () => {
 export const newFollowRequestMentorPage = (status) => {
   return [
     {
-      label: `New Follow Requests`,
+      label: `Follow Requests`,
       path: `/mentors?req=requestmentor&status=${status}`,
     },
     {
@@ -593,7 +607,7 @@ export const newFollowRequestMentorPage = (status) => {
     
     return [
       {
-        label: "Program Details",
+        label: "Program Detail",
         path: -1,
       },
       {

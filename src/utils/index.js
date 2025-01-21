@@ -206,9 +206,18 @@ export const formatDateTimeISO = (isoString) => {
   };
   const [monthDay, time] = date.toLocaleString('en-US', options).split(', ');
 
-  const suffixes = ['th', 'st', 'nd', 'rd'];
+  // const suffixes = ['th', 'st', 'nd', 'rd'];
   const day = date.getDate();
-  const suffix = suffixes[(day % 10)] || 'th';
+  let suffix = 'th';
+  
+  if (day % 10 === 1 && day !== 11) {
+    suffix = 'st';
+  } else if (day % 10 === 2 && day !== 12) {
+    suffix = 'nd';
+  } else if (day % 10 === 3 && day !== 13) {
+    suffix = 'rd';
+  }
+  // const suffix = suffixes[(day % 10)] || 'th';
 
   return `Begins ${monthDay}${suffix} at ${time}`;
 };

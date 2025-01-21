@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import SearchIcon from '../../assets/icons/search.svg';
-import UserIcon from '../../assets/images/user.jpg';
+import UserIcon from '../../assets/icons/user-icon.svg';
+// import UserImage from '../../assets/icons/user-icon.svg';
 import ArrorRight from '../../assets/icons/arrowRightColor.svg';
 import VideoIcon from '../../assets/icons/Videocall.svg';
 import MenuIcon from '../../assets/icons/menu.svg';
