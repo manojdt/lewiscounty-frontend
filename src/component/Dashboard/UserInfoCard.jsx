@@ -54,7 +54,7 @@ export default function UserInfoCard() {
 
     return (
         <div className="">
-            <div className="pb-3 w-full max-w-sm bg-white rounded-lg" style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', background: 'rgba(255, 255, 255, 1)' }}>
+            <div className="pb-3 w-full  bg-white rounded-lg" style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', background: 'rgba(255, 255, 255, 1)' }}>
                 <div className={`flex flex-col items-center pb-10 pt-14 ${userInfo?.data?.userinfo?.approve_status === "accept" && 'border-b-2'} relative`}>
                     {
                         !loading &&
@@ -71,10 +71,10 @@ export default function UserInfoCard() {
                         <img className="h-[25px] w-[22px]" src={EditIcon} alt="EditIcon" />
                     </div>
 
-                    <h5 className="mb-1 text-xl font-medium text-gray-900 ">
+                    <h5 className="mb-1 text-xl font-medium text-gray-900 max-lg:text-[16px]">
                         {userInfo?.data?.first_name} {userInfo?.data?.last_name}
                     </h5>
-                    <span className="text-sm text-gray-500 " style={{ textTransform: 'capitalize' }}>
+                    <span className="text-sm text-gray-500 max-lg:text-[12px]" style={{ textTransform: 'capitalize' }}>
                         {userInfo.data.role} | {role === 'mentee'?"Student":role === 'mentor'?"Teaching Professional":role === 'admin'?"Organizational Admin":""}
                     </span>
                 </div>
@@ -92,8 +92,8 @@ export default function UserInfoCard() {
                                             || (searchParams.get("type") === programActionStatus.planned && menu.status === programActionStatus.yettojoin)
                                             || (searchParams.get("type") === null && searchParams.get("is_bookmark") === null && menu.status === programActionStatus.all) ? 'active' : ''}`} aria-current="page"
                                         onClick={() => navigate(menu.page)}>
-                                        <span className="text-sm">{menu.name}</span>
-                                        <span className="text-base">{menu.count > 0 ? menu.count : ''}</span>
+                                        <span className="text-sm max-lg:text-[12px]">{menu.name}</span>
+                                        <span className="text-base max-lg:text-[12px]">{menu.count > 0 ? menu.count : ''}</span>
                                     </div>
                                 </li>
                             )

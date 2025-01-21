@@ -19,7 +19,7 @@ export default function CardWrapper({ title = '', viewAll, timeFilter, handleVie
             <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
                 <div className="flex gap-4">
                     <div className="card-dash" style={{ background: 'linear-gradient(180deg, #00B1C0 0%, #005DC6 100%)' }} ></div>
-                    <h4>{title}</h4>
+                    <h4 className='text-sm max-lg:text-[12px]'>{title}</h4>
                     {icon && <img src={icon} alt="image" />}
                 </div>
                 {

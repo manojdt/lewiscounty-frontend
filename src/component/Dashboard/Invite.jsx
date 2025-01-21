@@ -76,14 +76,14 @@ export default function Invite() {
     }, [inviteModal.success])
 
     return (
-        <div className="pb-3" style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }}>
+        <div className="pb-3 mt-3 " style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }}>
             <div className="flex py-6 px-6 justify-evenly gap-4">
-                <div className="flex h-[50px] text-center px-4" style={{ background: 'rgba(238, 245, 255, 1)' }}>
+                <div className="flex h-[25px] text-center px-4" style={{ background: 'rgba(238, 245, 255, 1)' }}>
                     <img src={InviteFriendsIcon} alt="user icon" />
                 </div>
 
                 <div className='flex items-center justify-center'>
-                    <p className="text-[18px]">Invite friends</p>
+                    <p className="text-[14px]">Invite friends</p>
                     {/* <p className="text-sm">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p> */}
                 </div>
             </div>

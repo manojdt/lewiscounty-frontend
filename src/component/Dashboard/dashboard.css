@@ -4,6 +4,19 @@
   border-radius: 5px;
   color: rgba(29, 91, 191, 1);
 }
+/* Small screens (mobile devices) */
+@media (max-width: 576px) {
+  .dashboard-menu-active {
+    padding: 4px; /* Adjust the padding for small screens */
+  }
+}
+
+/* Medium screens (tablets) */
+@media (min-width: 577px) and (max-width: 992px) {
+  .dashboard-menu-active {
+    padding: 6px; /* Adjust the padding for medium screens */
+  }
+}
 
 .card-dash {
   width: 5px;

@@ -320,7 +320,7 @@ export default function ProgramCard({
         )}
 
         <div className="py-3 px-3 ">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-3">
             {programs && programs.length ? (
               programs.map((currentProgram, index) => {
                 let startDate = "";
@@ -641,7 +641,7 @@ export default function ProgramCard({
                       </div>
 
                       <div className="flex justify-between pb-3 mx-4 my-4 items-center">
-                        <div className="program-time-info flex text-[12px] gap-4 items-center">
+                        <div className="program-time-info flex text-[12px] gap-1 items-center">
                           <img src={CalenderIcon} alt="CalendarImage" />
                           <span className="program-date">
                             {actualStartDate}
@@ -673,7 +673,7 @@ export default function ProgramCard({
                           </div>
                         ) : (
                           <div
-                            className="posted-tim text-[12px] px-2 py-2"
+                            className="posted-tim text-[10px] px-1 py-1"
                             style={{
                               background: "rgba(241, 241, 241, 1)",
                               borderRadius: "3px",

@@ -209,7 +209,9 @@ export const Mentee = () => {
         </Backdrop>
 
         <div className="grid grid-cols-5 gap-7">
-          <div>
+          {/* <div className="col-span-5 sm:col-span-5 md:col-span-2 lg:col-span-1"> */}
+          <div className="col-span-5 sm:col-span-5 md:col-span-5 lg:col-span-1">
+
             <UserInfoCard />
             <div
               className="recent-request mt-4"
@@ -244,7 +246,7 @@ export const Mentee = () => {
                 </div>
               </div>
 
-              <div className="content flex flex-col gap-4 py-5 px-5 overflow-x-auto">
+              <div className="content flex flex-col gap-2 py-2 px-2 overflow-x-auto">
                 {topMentotList.map((recentReq, index) => {
                   let name = `${recentReq.first_name} ${recentReq.last_name}`;
                   return (
@@ -271,7 +273,7 @@ export const Mentee = () => {
                         </div>
                         <div className="flex flex-col gap-2">
                           <p
-                            className="text-[14px]"
+                            className="text-[12px]"
                             style={{
                               width: "100px",
                               overflow: "hidden",
@@ -282,7 +284,7 @@ export const Mentee = () => {
                           >
                             {name}
                           </p>
-                          <p className="text-[12px]">{recentReq.role}</p>
+                          <p className="text-[10px]">{recentReq.role}</p>
                         </div>
                       </div>
                       <div className="flex gap-3 pt-3">
@@ -291,7 +293,7 @@ export const Mentee = () => {
                             className="lg:w-2 lg:h-2  rounded-full"
                             style={{ background: "rgba(29, 91, 191, 1)" }}
                           ></span>
-                          <span className="lg:text-[10px]">
+                          <span className="lg:text-[8px]">
                             Attended({recentReq.attended || 0})
                           </span>
                         </div>
@@ -300,7 +302,7 @@ export const Mentee = () => {
                             className="lg:w-2 lg:h-2  rounded-full"
                             style={{ background: "rgba(0, 174, 189, 1)" }}
                           ></span>
-                          <span className="lg:text-[10px]">
+                          <span className="lg:text-[8px]">
                             Completed({recentReq.completed || 0})
                           </span>
                         </div>
@@ -315,7 +317,9 @@ export const Mentee = () => {
             </div>
           </div>
 
-          <div className="col-span-4">
+          {/* <div className="col-span-5 sm:col-span-5 md:col-span-3 lg:col-span-4"> */}
+          <div className="col-span-5 sm:col-span-5 md:col-span-5 lg:col-span-4">
+
             {searchParams.get("type") === null &&
               searchParams.get("is_bookmark") === null && (
                 <ProgramCard
