@@ -30,7 +30,7 @@ import { Button } from "../../shared";
 import { feedStatus } from "../../utils/constant";
 import NoImage from "../../assets/images/noimage.jpg";
 import { userUnFollow } from "../../services/userList";
-import { user_feed } from "../Breadcrumbs/BreadcrumbsCommonData";
+import { user_Defaultfeed, user_feed } from "../Breadcrumbs/BreadcrumbsCommonData";
 import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
 
 export default function FeedDetails() {
@@ -110,6 +110,8 @@ export default function FeedDetails() {
   useEffect(() => {
     if (breadcrumbsType && feedDetails.content) {
       setBreadcrumbsArray(user_feed(feedDetails.content));
+    }else{
+      setBreadcrumbsArray(user_Defaultfeed(feedDetails.content));
     }
   }, [breadcrumbsType, feedDetails]);
 
@@ -139,7 +141,7 @@ export default function FeedDetails() {
                 <Tooltip title="Cancel">
                   <img
                     className="cursor-pointer"
-                    onClick={() => navigate("/feeds")}
+                    onClick={() => navigate(-1)}
                     src={CancelIcon}
                     alt="CancelIcon"
                   />

@@ -360,7 +360,7 @@ export default function Certificate() {
           <div className="flex gap-5 items-center text-[18px] font-semibold">
             <p>
               {role !== "mentee" && "Generate "} Certificates{" "}
-              {role === "mentor" ? "Request" : ""}
+              {role === "mentor" ? "Requests" : ""}
             </p>
           </div>
 

@@ -377,7 +377,7 @@ export default function CertificateMenteeList() {
          {!breadcrumbsType&&
           <div className="flex gap-5 items-center text-[14px]">
             <p style={{ color: "rgba(89, 117, 162, 1)", fontWeight: 500 }}>
-              Generate Certificates Request
+              Generate Certificates Requests
             </p>
             <img src={ArrowRightIcon} alt="ArrowRightIcon" />
             {searchParams.get("type") === "approved" ? (

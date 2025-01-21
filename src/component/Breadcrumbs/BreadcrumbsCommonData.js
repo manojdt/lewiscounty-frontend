@@ -467,6 +467,17 @@ export const user_feed = (name) => {
       },
     ];
   };
+export const user_Defaultfeed = (name) => {
+    return [
+      {
+        label: `Feeds`,
+        path: `/feeds`,
+      },
+      {
+        label: `View ${name}`,
+      },
+    ];
+  };
 
 // Mentee Nav tab
 
@@ -519,7 +530,7 @@ export const topMentorPage = () => {
 export const newFollowRequestMentorPage = (status) => {
   return [
     {
-      label: `Follow Requests`,
+      label: `Follow Mentors`,
       path: `/mentors?req=requestmentor&status=${status}`,
     },
     {
