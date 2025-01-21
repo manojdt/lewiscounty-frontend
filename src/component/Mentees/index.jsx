@@ -249,7 +249,7 @@ if(reason){
                 View
               </MenuItem>
               {(selectedMentee?.status === 'new' ||
-                selectedMentee?.status === 'pending') && (
+                selectedMentee?.status === 'pending'||selectedMentee?.status === 'cancel') && (
                   <MenuItem
                     onClick={() =>
                       handleOpenActivityPopup(selectedMentee?.id, 'accept')
@@ -265,7 +265,7 @@ if(reason){
                   </MenuItem>
                 )}
               {(selectedMentee?.status === 'new' ||
-                selectedMentee?.status === 'pending') && (
+                selectedMentee?.status === 'pending'|| selectedMentee?.status === 'accept') && (
                   <MenuItem
                     onClick={() =>
                       handleOpenActivityPopup(selectedMentee?.id, 'reject')

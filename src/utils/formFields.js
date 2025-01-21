@@ -153,6 +153,14 @@ export const PersonalInformationFields = [
         key: "others",
         value: "Others",
       },
+      // {
+      //   key: "non_binary ",
+      //   value: "nonbinary",
+      // },
+      // {
+      //   key: "prefer_not_to_answer",
+      //   value: "prefer not to answer",
+      // },
     ],
     inputRules: {
       // required: "This field is required",

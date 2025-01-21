@@ -89,7 +89,7 @@ export const Mentors = () => {
       value: 'topmentor',
     },
     {
-      name: 'Follow Requests',
+      name: 'Follow Mentors',
       value: 'requestmentor',
     },
   ];

@@ -3,11 +3,13 @@ import SearchIcon from "../../assets/icons/search.svg";
 import UserImage from "../../assets/images/user.jpg";
 import { programFeeds } from "../../utils/mock";
 import ShowMoreText from "react-show-more-text";
+import { useNavigate } from "react-router-dom";
 
 export default function ProgramFeeds({
   title = "Program Feeds",
   feedsList = [],
 }) {
+    const navigate = useNavigate();
   function getWindowDimensions() {
     const { innerWidth: width, innerHeight: height } = window;
     return {
@@ -35,9 +37,10 @@ export default function ProgramFeeds({
           <h4>{title}</h4>
         </div>
         <div className="flex gap-4 items-center">
-          <img src={SearchIcon} alt="statistics" />
+          {/* <img src={SearchIcon} alt="statistics" /> */}
           <p
-            className="text-[12px] py-2 px-2"
+             className="text-[12px] py-2 px-2 cursor-pointer"
+             onClick={() => navigate("/feeds")}
             style={{
               background: "rgba(223, 237, 255, 1)",
               borderRadius: "5px",
@@ -53,11 +56,12 @@ export default function ProgramFeeds({
       {feedsList?.map((programFeeds, index) => (
         <div
           key={index}
+           onClick={() => navigate(`/feed-details/${programFeeds.id}`)}
           style={{
             border: "1px solid rgba(29, 91, 191, 1)",
             borderRadius: "5px",
           }}
-          className="program-feed-root mx-9 my-9"
+          className="program-feed-root mx-9 my-9 cursor-pointer"
         >
           <div className="flex py-3 px-3 gap-4">
             <img

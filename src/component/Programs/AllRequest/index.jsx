@@ -204,7 +204,7 @@ export default function AllRequest() {
       forTabs: ["my"],
     },
     {
-      name: "Joining Request",
+      name: "Joining Requests",
       key: "program_join",
       for: ["mentee", "mentor"],
       forTabs: ["mentees"],
@@ -261,15 +261,15 @@ export default function AllRequest() {
 
   const requestAdminActionTab = [
     {
-      name: "Mentor Request",
+      name: "Mentor Requests",
       value: "my",
     },
     {
-      name: "Mentees Request",
+      name: "Mentees Requests",
       value: "mentees",
     },
     {
-      name: "My Request",
+      name: "My Requests",
       value: "admin",
     },
   ];

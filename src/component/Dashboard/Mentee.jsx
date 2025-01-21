@@ -382,7 +382,7 @@ export const Mentee = () => {
                     <h4>Program Feeds</h4>
                   </div>
                   <div className="flex gap-4 items-center">
-                    <img src={SearchIcon} alt="statistics" />
+                    {/* <img src={SearchIcon} alt="statistics" /> */}
                     <p
                       className="text-[12px] py-2 px-2 cursor-pointer"
                       onClick={() => navigate("/feeds")}
