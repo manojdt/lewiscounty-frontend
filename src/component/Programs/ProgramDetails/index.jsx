@@ -36,6 +36,7 @@ import {
 import PlusCircle from "../../../assets/icons/Pluscircle.svg";
 import UserImage from "../../../assets/icons/user-icon.svg";
 import ShareIcon from "../../../assets/images/share1x.png";
+import ReOpenIcon from "../../../assets/icons/Reopen_icon.svg";
 import MoreIcon from "../../../assets/images/more1x.png";
 import AbortIcon from "../../../assets/images/abort1x.png";
 import LocationIcon from "../../../assets/images/Location1x.png";
@@ -150,7 +151,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   const program_create_type = searchParams.get("program_create_type") || "";
   const breadcrumbsType = searchParams.get("breadcrumbsType") || "";
   const typeParams = searchParams.get("type");
-  const from = searchParams.get("from")
+  const from = searchParams.get("from");
   const userdetails = useSelector((state) => state.userInfo);
   const role = userdetails.data.role || "";
   const reqRole = requestId && userdetails.data.role === "admin";
@@ -243,7 +244,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     {
       name: "About Program",
       key: "about_program",
-    },    
+    },
     !programdetails?.sub_programs && {
       name: "Program Testimonials",
       key: "program_testimonials",
@@ -576,11 +577,13 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     const program_New = request_newProgramRequest(programdetails?.program_name);
     const program_re = request_programReschedule(programdetails?.program_name);
     const program_cancel = request_programCancel(programdetails?.program_name);
-    const dashBoardProgram = dashboard_program_details_main(programdetails?.program_name);
+    const dashBoardProgram = dashboard_program_details_main(
+      programdetails?.program_name
+    );
     const program_mentee_cancel = request_programMenteeCancel(
       programdetails?.program_name
     );
-     const admin_approvedreport=request_join(programdetails?.program_nam)
+    const admin_approvedreport = request_join(programdetails?.program_nam);
     if (programStatusBreadcrumbs.includes(decodedKey)) {
       setBreadcrumbsArray(
         program_details_main(programdetails?.program_name, decodedKey)
@@ -725,7 +728,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       programdetails &&
       Object.keys(programdetails)?.length &&
       !programLoading
-    ) {      
+    ) {
       if (
         role === "mentee" &&
         programdetails.status === "completed" &&
@@ -836,7 +839,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     : undefined;
   const dateEndField = moreMenuModal.reschedule
     ? register("reschedule_end_date", { required: "This field is required" })
-    : undefined;  
+    : undefined;
 
   useEffect(() => {
     if (isError) {
@@ -1936,6 +1939,32 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             />
                             Share
                           </MenuItem>
+                          {console.log(
+                            "programdetails",
+                            "admin_assign_program" in programdetails,
+                            programdetails.status
+                          )}
+                          {!("admin_assign_program" in programdetails) &&
+                            (programdetails.status === "cancelled" ||
+                              programdetails.status ===
+                                "new_program_request_rejected" ||
+                              programdetails.status === "completed") && (
+                              <MenuItem
+                                onClick={() =>
+                                  navigate(
+                                    `/update-program/${programdetails.id}?type=re_open`
+                                  )
+                                }
+                                className="!text-[12px]"
+                              >
+                                <img
+                                  src={ReOpenIcon}
+                                  alt="ReOpenIcon"
+                                  className="pr-3 w-[25px]"
+                                />
+                                Re-Open
+                              </MenuItem>
+                            )}
                           {programdetails.participated_mentees_count === 0 &&
                             programdetails?.created_by ===
                               userdetails?.data?.user_id && (
@@ -2011,17 +2040,19 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                           ].includes(programdetails.status) && (
                             <>
                               {programdetails?.created_by ===
-                                userdetails?.data?.user_id &&<MenuItem
-                                onClick={() => handleOpenConfirmPopup()}
-                                className="!text-[12px]"
-                              >
-                                <img
-                                  src={CompleteIcon}
-                                  alt="AbortIcon"
-                                  className="pr-3 w-[25px]"
-                                />
-                                Complete
-                              </MenuItem>}
+                                userdetails?.data?.user_id && (
+                                <MenuItem
+                                  onClick={() => handleOpenConfirmPopup()}
+                                  className="!text-[12px]"
+                                >
+                                  <img
+                                    src={CompleteIcon}
+                                    alt="AbortIcon"
+                                    className="pr-3 w-[25px]"
+                                  />
+                                  Complete
+                                </MenuItem>
+                              )}
                               {programdetails?.created_by ===
                                 userdetails?.data?.user_id && (
                                 <MenuItem
