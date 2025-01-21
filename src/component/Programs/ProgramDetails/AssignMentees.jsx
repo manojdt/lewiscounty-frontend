@@ -90,7 +90,7 @@ export default function AssignMentees() {
   const { data: currentProgramDetail, isLoading: isDetailFetching } =
     useGetSpecificProgramDetailsQuery(
       {
-        id: allFields.program_id,
+        id: type === "new" ? allFields.program_id : allFields.program_id_val,
       },
       { skip: !allFields.program_id, refetchOnMountOrArgChange: true }
     );
@@ -238,7 +238,10 @@ export default function AssignMentees() {
               };
             });
             const fields = [...menteeFields].map((field) => {
-              if (field.name === "program_id") {
+              if (
+                field.name === "program_id" ||
+                field.name === "program_id_val"
+              ) {
                 return {
                   ...field,
                   options: constructedData ?? [],
@@ -254,8 +257,10 @@ export default function AssignMentees() {
     }
   }, [allFields?.category_id]);
 
+  // console.log("allFields", allFields);
+
   useEffect(() => {
-    if (type === "new" && allFields?.program_id) {
+    if (allFields?.program_id) {
       // Reset form values
       //   reset({
       //     ...getValues(),
@@ -290,47 +295,6 @@ export default function AssignMentees() {
       setMenteeFields(updatedFields);
     }
   }, [allFields?.program_id, currentProgramDetail]);
-
-  //   useEffect(() => {
-  //     if (type === "new" && allFields?.program_id) {
-  //       //   Reset form values
-  //       reset({
-  //         ...getValues(),
-  //         // program_id: "",
-  //         mentor: "",
-  //         duration: "",
-  //         start_date: "",
-  //         end_date: "",
-  //         mentees_list: [],
-  //         due_date: "",
-  //         task_name: "",
-  //         task_details: "",
-  //         reference_links: "",
-  //       });
-
-  //       //   Reset mentee list
-  //       setAllMenteeList([]);
-
-  //       // Update mentee fields
-  //       const updatedFields = menteeFields.map((field) => {
-  //         if (field.name === "goal_id") {
-  //           console.log("working condiiotn", {
-  //             ...field,
-  //             options: currentProgramDetail?.goals ?? [],
-  //           });
-  //           return {
-  //             ...field,
-  //             options: currentProgramDetail?.goals ?? [],
-  //           };
-  //         }
-  //         return field;
-  //       });
-
-  //       setMenteeFields(updatedFields);
-  //     }
-  //   }, [allFields?.program_id]);
-
-  console.log("menteeFields", menteeFields);
 
   useEffect(() => {
     if (type === "new" && allFields?.program_id) {
@@ -385,6 +349,7 @@ export default function AssignMentees() {
       let fieldValue = {
         category_id: state?.data?.category_id,
         program_id: state?.data?.program_name,
+        program_id_val: state?.data?.program_id,
         mentor: state?.data?.mentor_name,
         start_date: new Date(state?.data?.program_startdate),
         end_date: new Date(state?.data?.program_enddate),
@@ -408,7 +373,7 @@ export default function AssignMentees() {
     if (type !== "new") {
       dispatch(getProgramTaskMentees(state?.data?.program_id));
     }
-  }, []);
+  }, [category, type, state?.data?.program_id, dispatch]);
 
   const handleAddPopupData = (value) => {
     if (value.length) {
@@ -755,7 +720,7 @@ export default function AssignMentees() {
                                               //     <p className='flex items-center px-3 py-3' style={{
                                               //         background: 'rgba(223, 237, 255, 1)', borderRadius: '50%',
 
-                                              //     }}></p> :
+                                              //     }}>.</p> :
                                               <img
                                                 src={
                                                   popupfield?.profile_image
@@ -849,18 +814,6 @@ export default function AssignMentees() {
                                     );
                                   }
                                 )}
-
-                              {/* {
-                                                                                                    menteeAllList && menteeAllList?.length > 6 &&
-
-                                                                                                    <p className='flex items-center gap-1'>
-                                                                                                        <p className='text-white flex items-center px-2 py-1' style={{
-                                                                                                            background: 'rgb(29, 91, 191)', borderRadius: '50%',
-
-                                                                                                        }}>{menteeAllList.length - 6}</p>
-                                                                                                        Others</p>
-
-                                                                                                } */}
                             </div>
                           </div>
                         ) : field.type === "editor" ? (
