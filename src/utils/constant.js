@@ -915,6 +915,7 @@ export const RequestStatusArray = [
   {
     key: 'program_request',
     name: 'Program Requests',
+    menteeTabName:"Mentees Program Requests"
   },
   {
     key: 'member_join_request',
@@ -1094,7 +1095,7 @@ export const myRequestOverview = [
 
 export const menteesRequestOverview = [
   {
-    name: 'Program Requests',
+    name: 'Mentees Program Requests',
     key: RequestStatus.programRequest.key,
     count: 0,
     status: RequestStatus.programRequest.key,

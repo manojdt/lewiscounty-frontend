@@ -3,7 +3,7 @@ import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import calendar_icon from "../../assets/icons/calendar_icon.svg";
 import { Avatar } from "@mui/material";
 
-const CustomDateTimePicker = ({ helperText, error, ...restOfProps }) => {
+const CustomDateTimePicker = ({ helperText,placeholder, error, ...restOfProps }) => {
   return (
     <LocalizationProvider dateAdapter={AdapterMoment}>
       <DateTimePicker
@@ -16,6 +16,7 @@ const CustomDateTimePicker = ({ helperText, error, ...restOfProps }) => {
           textField: {
             error: !!error,
             helperText,
+            ...(placeholder && { placeholder })
           },
         }}
         {...restOfProps}

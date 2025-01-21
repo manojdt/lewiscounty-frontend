@@ -334,7 +334,7 @@ export const Questions = () => {
     ) {
       setStepData({
         ...stepData,
-        [role === 'mentee' ? 'full_name' : 'first_name']:
+        [role === 'mentee' ? 'first_name' : 'first_name']:
           userInfo.data.first_name,
         [role === 'mentee' ? 'last_name' : 'last_name']:
           userInfo.data.last_name,

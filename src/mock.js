@@ -1459,6 +1459,7 @@ export const programRequestColumns = [
     flex: 1,
     id: 0,
     for: ["admin", "mentor", "mentee"],
+    tab:["program_cancel","program_join","program_reschedule","program_new"]
   },
   {
     field: "program_name",
@@ -1466,27 +1467,39 @@ export const programRequestColumns = [
     flex: 1,
     id: 1,
     for: ["admin", "mentor", "mentee"],
+    tab:["program_cancel","program_join","program_reschedule","program_new"]
   },
   {
-    field: 'created_by_full_name',
-    headerName: 'Requested To',
+    field: "created_by_full_name",
+    headerName: "Mentee Name",
     flex: 1,
     id: 2,
-    for: ['mentee'],
+    for: ["admin", "mentor", "mentee"],
+    tab:["program_join"]
   },
+  // {
+  //   field: 'created_by_full_name',
+  //   headerName: 'Requested To',
+  //   flex: 1,
+  //   id: 2,
+  //   for: ['mentee'],
+  //   tab:["program_cancel","program_join","program_reschedule","program_new"]
+  // },
   {
     field: 'created_by_full_name',
     headerName: 'Requested By',
     flex: 1,
-    id: 2,
+    id: 3,
     for: ['admin'],
+    tab:["program_cancel","program_join","program_reschedule","program_new"]
   },
   {
     field: "position",
     headerName: "Position",
     flex: 1,
-    id: 3,
+    id: 4,
     for: ["admin"],
+    tab:["program_cancel","program_join","program_reschedule","program_new"]
   },
   // {
   //   field: 'to_request',
@@ -1501,8 +1514,42 @@ export const programRequestColumns = [
     flex: 1,
     id: 5,
     for: ["admin", "mentor", "mentee"],
+    tab:["program_cancel","program_join","program_reschedule","program_new"],
     renderCell: (params) => {
       return <div>{dateFormat(params.row.created_at)}</div>;
+    },
+  },
+  {
+    field: "start_date",
+    headerName: "Start Date",
+    flex: 1,
+    id: 6,
+    for: ["admin", "mentor", "mentee"],
+    tab:["program_reschedule"],
+    renderCell: (params) => {
+      return <div>{dateFormat(params.row.start_date)}</div>;
+    },
+  },
+  {
+    field: "end_date",
+    headerName: "End Date",
+    flex: 1,
+    id: 7,
+    for: ["admin", "mentor", "mentee"],
+    tab:["program_reschedule"],
+    renderCell: (params) => {
+      return <div>{dateFormat(params.row.end_date)}</div>;
+    },
+  },
+  {
+    field: "comments",
+    headerName: "Reschedule Reason",
+    flex: 1,
+    id: 8,
+    for: ["admin", "mentor", "mentee"],
+    tab:["program_reschedule"],
+    renderCell: (params) => {
+      return <div>{params.row.comments}</div>;
     },
   },
   // {
@@ -1516,8 +1563,9 @@ export const programRequestColumns = [
     field: "updated_at",
     headerName: "Last Updated Date",
     flex: 1,
-    id: 7,
+    id: 9,
     for: ["admin", "mentee", "mentor"],
+    tab:["program_cancel","program_join","program_reschedule","program_new"],
     renderCell: (params) => {
       return <div>{dateFormat(params.row.updated_at)}</div>;
     },
@@ -1526,22 +1574,25 @@ export const programRequestColumns = [
     field: "updated_by_full_name",
     headerName: "Last Updated By",
     flex: 1,
-    id: 8,
+    id: 10,
     for: ["admin", "mentee", "mentor"],
+    tab:["program_cancel","program_join","program_reschedule","program_new"]
   },
   {
-    field: 'rejection_reason',
+    field: 'comments',
     headerName: 'Cancel Reason',
     flex: 1,
-    id: 8,
+    id: 11,
     for: ['admin', 'mentee', 'mentor'],
+    tab:["program_cancel"]
   },
   {
     field: 'auto_approval',
     headerName: 'Auto Approval',
     flex: 1,
-    id: 8,
+    id: 12,
     for: ["admin"],
+    tab:["program_cancel","program_join","program_reschedule","program_new"]
   },
   // {
   //   field: 'approved_date_time',
@@ -2490,26 +2541,26 @@ export const allMembersColumns = [
     id: 5,
     for: ["mentor", "mentee"],
   },
-  {
-    field: "certificates",
-    headerName: "Certificates",
-    flex: 1,
-    id: 5,
-    for: ["mentor", "mentee"],
-  },
-  {
-    field: "auto_approval",
-    headerName: "Auto Approval",
-    flex: 1,
-    id: 5,
-    for: ["mentor"],
-  },
+  // {
+  //   field: "certificates",
+  //   headerName: "Certificates",
+  //   flex: 1,
+  //   id: 5,
+  //   for: ["mentor", "mentee"],
+  // },
+  // {
+  //   field: "auto_approval",
+  //   headerName: "Auto Approval",
+  //   flex: 1,
+  //   id: 5,
+  //   for: ["mentor"],
+  // },
   {
     field: "ratings",
     headerName: "Ratings",
     flex: 1,
     id: 5,
-    for: ["mentor", "mentee"],
+    for: ["mentor"],
   },
 ];
 export const assignMentorColumns = [
