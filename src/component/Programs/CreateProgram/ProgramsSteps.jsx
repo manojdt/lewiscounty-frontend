@@ -700,6 +700,7 @@ const ProgramSteps = ({
                                     ) : nestedField.type === "date" ? (
                                       <div className="relative">
                                         <CustomDateTimePicker
+                                         placeholder={"mm/dd/yyyy hh:mm AM/PM"}
                                           {...register(
                                             `sub_programs.${index}.${nestedField.name}`,
                                             getDateValidation(
@@ -922,6 +923,7 @@ const ProgramSteps = ({
                         ? moment(getValues(field.name))
                         : null
                     }
+                    placeholder={"mm/dd/yyyy hh:mm AM/PM"}
                     onChange={(newValue) => {
                       setValue(
                         field.name,

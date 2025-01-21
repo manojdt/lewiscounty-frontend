@@ -617,6 +617,14 @@ export const MenteePersonalInformationFields = [
         key: "others",
         value: "others",
       },
+      // {
+      //   key: "non_binary ",
+      //   value: "nonbinary",
+      // },
+      // {
+      //   key: "prefer_not_to_answer",
+      //   value: "prefer not to answer",
+      // },
     ],
     inputRules: {
       // required: "This field is required",

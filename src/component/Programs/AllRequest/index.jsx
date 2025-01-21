@@ -198,7 +198,7 @@ export default function AllRequest() {
 
   let programRequestTab = [
     {
-      name: "New Program Request",
+      name: "Program Requests",
       key: "program_new",
       for: ["admin", "mentor"],
       forTabs: ["my"],
@@ -210,7 +210,7 @@ export default function AllRequest() {
       forTabs: ["mentees"],
     },
     {
-      name: "Program Reschedule",
+      name: "Rescheduled Programs",
       key: "program_reschedule",
       for: ["mentor", "admin"],
       forTabs: ["my"],
@@ -2362,8 +2362,11 @@ export default function AllRequest() {
 
   useEffect(() => {
     if (selectedRequestedtype === "program_request" || !selectedRequestedtype) {
+      let programRequestFilteredColumn = programRequestColumn?.filter((request) =>
+        request?.tab?.includes(actionTab)
+      );
       setActiveTableDetails({
-        column: programRequestColumn,
+        column: programRequestFilteredColumn?.length>0?programRequestFilteredColumn:programRequestColumn,
         data: programTableInfo.results,
         rowCount: programTableInfo?.count,
       });
@@ -3016,7 +3019,7 @@ export default function AllRequest() {
                 {/* Header */}
                 <div className="title flex flex-wrap justify-between py-3 px-4 border-b items-center">
                   <div className="text-lg font-semibold text-gray-800 flex gap-4">
-                    {currentRequestTab?.name}
+                    {selectedTab === "mentees"&&currentRequestTab.key==="program_request"?currentRequestTab?.menteeTabName:currentRequestTab?.name}
                   </div>
                   <div className="flex flex-wrap gap-4 items-center">
                     {/* Search Box */}
