@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import PlusIcon from "../../../assets/icons/add_popup_icon.svg";
 import UploadIcon from "../../../assets/images/image_1x.png";
@@ -46,6 +46,8 @@ const ProgramSteps = ({
 }) => {
   const params = useParams();
   const { admin, mentor } = user;
+
+  const [searchParams] = useSearchParams();
 
   const [currentField, setCurrentField] = useState();
   const [selectedMentorsByField, setSelectedMentorsByField] = useState({});
@@ -371,10 +373,17 @@ const ProgramSteps = ({
             params?.id &&
             (field.name === "course_level" || field.name === "category") &&
             role === mentor;
+          // const disableDateFields = (fieldName) =>
+          //   params?.id &&
+          //   (fieldName === "start_date" || fieldName === "end_date") &&
+          //   role === mentor;
+
           const disableDateFields = (fieldName) =>
             params?.id &&
             (fieldName === "start_date" || fieldName === "end_date") &&
-            role === mentor;
+            role === mentor &&
+            searchParams.get("type") !== "re_open";
+
           const disableRecurringProgram =
             params?.id && field.name === "recurring_program" && role === mentor;
           return (
