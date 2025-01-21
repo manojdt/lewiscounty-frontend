@@ -1459,6 +1459,7 @@ export const programRequestColumns = [
     flex: 1,
     id: 0,
     for: ["admin", "mentor", "mentee"],
+    mainTab: ["my", "mentees", "admin"],
     tab:["program_cancel","program_join","program_reschedule","program_new"]
   },
   {
@@ -1467,6 +1468,7 @@ export const programRequestColumns = [
     flex: 1,
     id: 1,
     for: ["admin", "mentor", "mentee"],
+    mainTab: ["my", "mentees", "admin"],
     tab:["program_cancel","program_join","program_reschedule","program_new"]
   },
   {
@@ -1475,7 +1477,8 @@ export const programRequestColumns = [
     flex: 1,
     id: 2,
     for: ["admin", "mentor", "mentee"],
-    tab:["program_join"]
+    mainTab: ["mentees"],
+    tab:["program_join","program_cancel"]
   },
   // {
   //   field: 'created_by_full_name',
@@ -1491,6 +1494,7 @@ export const programRequestColumns = [
     flex: 1,
     id: 3,
     for: ['admin'],
+    mainTab: ["my", "mentees", "admin"],
     tab:["program_cancel","program_join","program_reschedule","program_new"]
   },
   {
@@ -1499,6 +1503,7 @@ export const programRequestColumns = [
     flex: 1,
     id: 4,
     for: ["admin"],
+    mainTab: ["my", "mentees", "admin"],
     tab:["program_cancel","program_join","program_reschedule","program_new"]
   },
   // {
@@ -1514,6 +1519,7 @@ export const programRequestColumns = [
     flex: 1,
     id: 5,
     for: ["admin", "mentor", "mentee"],
+    mainTab: ["my", "mentees", "admin"],
     tab:["program_cancel","program_join","program_reschedule","program_new"],
     renderCell: (params) => {
       return <div>{dateFormat(params.row.created_at)}</div>;
@@ -1526,6 +1532,7 @@ export const programRequestColumns = [
     id: 6,
     for: ["admin", "mentor", "mentee"],
     tab:["program_reschedule"],
+    mainTab: ["my", "mentees", "admin"],
     renderCell: (params) => {
       return <div>{dateFormat(params.row.start_date)}</div>;
     },
@@ -1537,6 +1544,7 @@ export const programRequestColumns = [
     id: 7,
     for: ["admin", "mentor", "mentee"],
     tab:["program_reschedule"],
+    mainTab: ["my", "mentees", "admin"],
     renderCell: (params) => {
       return <div>{dateFormat(params.row.end_date)}</div>;
     },
@@ -1548,6 +1556,7 @@ export const programRequestColumns = [
     id: 8,
     for: ["admin", "mentor", "mentee"],
     tab:["program_reschedule"],
+    mainTab: ["my", "mentees", "admin"],
     renderCell: (params) => {
       return <div>{params.row.comments}</div>;
     },
@@ -1565,6 +1574,7 @@ export const programRequestColumns = [
     flex: 1,
     id: 9,
     for: ["admin", "mentee", "mentor"],
+    mainTab: ["my", "mentees", "admin"],
     tab:["program_cancel","program_join","program_reschedule","program_new"],
     renderCell: (params) => {
       return <div>{dateFormat(params.row.updated_at)}</div>;
@@ -1576,6 +1586,7 @@ export const programRequestColumns = [
     flex: 1,
     id: 10,
     for: ["admin", "mentee", "mentor"],
+    mainTab: ["my", "mentees", "admin"],
     tab:["program_cancel","program_join","program_reschedule","program_new"]
   },
   {
@@ -1584,6 +1595,7 @@ export const programRequestColumns = [
     flex: 1,
     id: 11,
     for: ['admin', 'mentee', 'mentor'],
+    mainTab: ["my", "mentees", "admin"],
     tab:["program_cancel"]
   },
   {
@@ -1592,6 +1604,7 @@ export const programRequestColumns = [
     flex: 1,
     id: 12,
     for: ["admin"],
+    mainTab: ["my", "mentees", "admin"],
     tab:["program_cancel","program_join","program_reschedule","program_new"]
   },
   // {

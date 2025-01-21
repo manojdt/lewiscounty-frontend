@@ -748,6 +748,9 @@ export default function AllRequest() {
       headerName: "Status",
       flex: 1,
       id: 2,
+      for: ["admin", "mentor", "mentee"],
+      mainTab: ["my", "mentees", "admin"],
+      tab:["program_cancel","program_join","program_reschedule","program_new"],
       renderCell: (params) => {
         return (
           <>
@@ -779,6 +782,9 @@ export default function AllRequest() {
         headerName: "Action",
         flex: 1,
         id: 4,
+        for: ["admin", "mentor", "mentee"],
+        mainTab: ["my", "mentees", "admin"],
+        tab:["program_cancel","program_join","program_reschedule","program_new"],
         renderCell: (params) => {
           return (
             <>
@@ -1008,6 +1014,7 @@ export default function AllRequest() {
       headerName: "Status",
       flex: 1,
       id: 2,
+      for: ["admin", "mentor","mentee"],
       renderCell: (params) => {
         return (
           <>
@@ -1037,6 +1044,7 @@ export default function AllRequest() {
       headerName: "Action",
       flex: 1,
       id: 4,
+      for: ["admin", "mentor","mentee"],
       renderCell: (params) => {
         // if (params.row.status !== "new" && params.row.status !== "pending" && params.row.status !== "accept")
         //     return <></>;
@@ -1339,6 +1347,7 @@ export default function AllRequest() {
       headerName: "Status",
       flex: 1,
       id: 2,
+      for: ["admin", "mentor","mentee"],
       renderCell: (params) => {
         return (
           <>
@@ -1370,6 +1379,7 @@ export default function AllRequest() {
       headerName: "Action",
       flex: 1,
       id: 4,
+      for: ["admin", "mentor","mentee"],
       renderCell: (params) => {
         return (
           <>
@@ -2027,6 +2037,7 @@ export default function AllRequest() {
   //   );
   // };
 
+  
   const getReportsRequestApi = () => {
     dispatch(
       getReportRequest({
@@ -2044,7 +2055,7 @@ export default function AllRequest() {
   const getTestimonialRequestApi = () => {
     dispatch(
       getTestimonialRequest({
-        // ...(filterStatus !== "all" && { rep_status: filterStatus }),
+        ...(filterStatus !== "all" && { status: filterStatus }),
         page: paginationModel?.page + 1,
         limit: paginationModel?.pageSize,
         // request_type: "testimonial",
@@ -2362,11 +2373,14 @@ export default function AllRequest() {
 
   useEffect(() => {
     if (selectedRequestedtype === "program_request" || !selectedRequestedtype) {
-      let programRequestFilteredColumn = programRequestColumn?.filter((request) =>
+      let programRequestFilteredColumn = !actionTab ? programRequestColumn : programRequestColumn?.filter((request) =>
         request?.tab?.includes(actionTab)
       );
+      let programRequestMainTabFilteredColumn = !selectedTab ? programRequestFilteredColumn : programRequestFilteredColumn?.filter((request) =>
+        request?.mainTab?.includes(selectedTab)
+      );
       setActiveTableDetails({
-        column: programRequestFilteredColumn?.length>0?programRequestFilteredColumn:programRequestColumn,
+        column: programRequestMainTabFilteredColumn,
         data: programTableInfo.results,
         rowCount: programTableInfo?.count,
       });
@@ -3102,7 +3116,7 @@ export default function AllRequest() {
                               resetPageDetails();
                             }}
                           >
-                            <div className="text-sm">{discussion.name}</div>
+                            <div className="text-sm whitespace-nowrap">{discussion.name}</div>
                             {actionTab === discussion.key && <span></span>}
                           </li>
                         ))}
