@@ -2311,7 +2311,7 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       width: "w-full",
     },
     {
-      type: type === "new" ? "dropdown" : "input",
+      type: "dropdown",
       name: "goal_id",
       fieldtype: "text",
       label: "Goals",
@@ -2320,7 +2320,7 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
         required: "This field is required",
       },
       width: "w-full",
-      disabled: bool,
+      // disabled: bool,
       options: [],
     },
     {
