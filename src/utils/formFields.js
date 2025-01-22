@@ -154,11 +154,11 @@ export const PersonalInformationFields = [
       //   value: "Others",
       // },
       {
-        key: "non_binary",
+        key: "nonbinary",
         value: "nonbinary",
       },
       {
-        key: "prefer_not_to_answer",
+        key: "prefer not to answer",
         value: "prefer not to answer",
       },
     ],
@@ -626,11 +626,11 @@ export const MenteePersonalInformationFields = [
       //   value: "others",
       // },
       {
-        key: "non_binary",
+        key: "nonbinary",
         value: "nonbinary",
       },
       {
-        key: "prefer_not_to_answer",
+        key: "prefer not to answer",
         value: "prefer not to answer",
       },
     ],

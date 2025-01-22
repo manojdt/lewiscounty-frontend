@@ -708,7 +708,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
         if (isInsterestMarked) {
           handleCancel();
         }
-      }, 3000);
+      }, 2000);
       return () => {
         clearTimeout(timer);
         resetMarkInterestState();
@@ -899,6 +899,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       key: "date",
       minDate: programdetails?.start_date,
       maxDate: programdetails?.end_date,
+      isDisable:true,
     },
     {
       type: "time",
@@ -906,6 +907,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       isRequired: true,
       col: 4,
       key: "time",
+      isDisable:true,
     },
     {
       type: "textbox",
@@ -927,8 +929,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   ];
   const [notesActivity, setNotesActivity] = React.useState(false);
   const [notesForm, setNotesForm] = React.useState({
-    date: "",
-    time: "",
+    date: new Date(),
+    time: new Date(),
     location: "",
     comment: "",
     error: {
@@ -1456,7 +1458,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
           <div className="border border-[#E50027] rounded-[15px] h-[100%] w-[100%] justify-center items-center flex flex-col relative">
             <div
               className="absolute top-[12px] right-[12px]"
-              // onClick={() => handleCloseCancelPopup()}
+              onClick={() => setOpenPopup(false)}
             >
               <img src={CloseIcon} alt="ConfirmIcon" />
             </div>

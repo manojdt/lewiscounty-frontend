@@ -152,7 +152,7 @@ const ProgramActions = ({
         );
       }
 
-      if (programdetails.status === "cancel") {
+      if (programdetails.status === "cancel"||programdetails?.request_data?.status === "rejected") {
         return (
           <button
             className="py-3 mt-7 px-16 text-white text-[14px] flex items-center"
@@ -419,7 +419,7 @@ const ProgramActions = ({
       <div className="py-9">
         {menteeProgramStatus[programdetails.mentee_join_status] ? (
           <>
-          {["new", "pending", "rejected"].includes(
+          {["new", "pending"].includes(
                   programdetails?.request_data?.status
                 ) && (
                   <button

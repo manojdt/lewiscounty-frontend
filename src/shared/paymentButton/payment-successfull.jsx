@@ -47,7 +47,7 @@ const PaymentSuccessfull = () => {
         <div className='flex justify-center'>
           <p
             onClick={()=> handleNavigate()}
-            className='inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900'
+            className='inline-flex items-center cursor-pointer justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900'
             prefetch={false}
           >
             Go to programs
