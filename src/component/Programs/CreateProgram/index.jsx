@@ -50,6 +50,7 @@ import CertificatesCreationModal from "./CertificateCreationModal";
 import { useDebounce } from "../../../utils";
 
 const EquipMentListMenuItems = [{ label: "View", action: "view" }];
+const DEFAULT_VALUE = 1;
 
 export default function CreatePrograms() {
   const { admin, mentor, mentee } = user;
@@ -58,7 +59,7 @@ export default function CreatePrograms() {
   const userInfo = useSelector((state) => state.userInfo);
   const params = useParams();
   const [loading, setLoading] = useState({ create: false, success: false });
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(DEFAULT_VALUE);
   const [showBackdrop, setShowBackdrop] = useState(false);
   const role = userInfo.data.role || "";
   const [toggleRole, setToggleRole] = useState("");
@@ -1324,6 +1325,7 @@ export default function CreatePrograms() {
   const handleCancelClick = () => {
     if (role === admin && toggleRole === mentor && !params?.id) {
       setToggleRole(admin);
+      setCurrentStep(DEFAULT_VALUE)
     } else {
       navigate("/programs");
       reset();
