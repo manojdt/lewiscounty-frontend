@@ -595,7 +595,7 @@ export default function ProfileView() {
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={adminPopup?.bool && adminPopup?.type === "approved"}
       >
-        <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
+        <div className="popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
           <img src={ConnectIcon} alt="ConnectIcon" />
           {/* <span style={{ color: '#232323', fontWeight: 600, fontSize: '24px' }}>
             {followInfo.is_following ? 'Unfollow' : 'Follow'}
@@ -644,7 +644,7 @@ export default function ProfileView() {
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={activity.modal}
       >
-        <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
+        <div className="popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
           <img src={ConnectIcon} alt="ConnectIcon" />
           <span style={{ color: "#232323", fontWeight: 600, fontSize: "24px" }}>
             {followInfo.is_following ? "Unfollow" : "Follow"}
@@ -735,7 +735,7 @@ export default function ProfileView() {
         sx={{ color: "#fff", zIndex: (theme) => 1 }}
         open={menteeRequestOption.modal}
       >
-        <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
+        <div className="popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
           <img src={TickColorIcon} alt="TickColorIcon" />
           <span style={{ color: "#232323", fontWeight: 600, fontSize: "24px" }}>
             Approve
@@ -926,7 +926,7 @@ export default function ProfileView() {
         sx={{ color: '#fff', zIndex: (theme) => 1 }}
         open={confirmPopup.show}
       >
-        <div className='popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center'>
+        <div className='popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[330px] justify-center items-center'>
           <img src={CancelColorIcon} alt='CancelColorIcon' />
           <span style={{ color: '#232323', fontWeight: 600, fontSize: '24px' }}>
             Reject

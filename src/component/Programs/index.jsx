@@ -752,7 +752,7 @@ export default function Programs() {
                   <input
                     type="text"
                     id="search-navbar"
-                    className="block w-48 p-2 text-sm text-gray-900 border border-background-primary-main h-[40px] md:w-[345px]"
+                    className="block w-32 p-2 text-sm text-gray-900 border border-background-primary-main h-[42px] md:w-[320px] lg:w-[345px]"
                     placeholder="Search here..."
                     value={programFilter.search}
                     onChange={handleProgramSearch}

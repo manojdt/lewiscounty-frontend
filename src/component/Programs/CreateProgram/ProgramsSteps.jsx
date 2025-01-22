@@ -391,10 +391,7 @@ const ProgramSteps = ({
           return (
             <div
               className={`relative mb-6  ${
-                getWindowDimensions().width <= 1536 &&
-                field.width === "width-82"
-                  ? "w-[81%]"
-                  : field.width
+                field.width
               }`}
               key={index}
             >

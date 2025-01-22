@@ -1472,7 +1472,7 @@ export const ProgramInformationFields = [
         value: "Own",
       },
     ],
-    width: "width-32",
+    width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     for: ["admin"],
   },
 
@@ -1494,7 +1494,7 @@ export const ProgramInformationFields = [
         key: "Long term(more than 3 months)",
       },
     ],
-    width: "width-32",
+    width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     for: ["admin"],
   },
   {
@@ -1516,7 +1516,7 @@ export const ProgramInformationFields = [
         value: "Category 2",
       },
     ],
-    width: "width-32",
+    width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     for: ["admin", "mentor"],
   },
   {
@@ -1528,7 +1528,7 @@ export const ProgramInformationFields = [
     inputRules: {
       required: "This field is required",
     },
-    width: "width-32",
+    width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     for: ["admin"],
   },
   {
@@ -1539,7 +1539,7 @@ export const ProgramInformationFields = [
     inputRules: {
       required: "This field is required",
     },
-    width: "width-32",
+    width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     for: ["admin"],
   },
   {
@@ -1550,7 +1550,7 @@ export const ProgramInformationFields = [
     inputRules: {
       required: "This field is required",
     },
-    width: "width-32",
+    width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     for: ["admin"],
   },
   {
@@ -1561,7 +1561,7 @@ export const ProgramInformationFields = [
     inputRules: {
       required: "This field is required",
     },
-    width: "width-32",
+    width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     for: ["admin"],
   },
   {
@@ -1576,7 +1576,7 @@ export const ProgramInformationFields = [
         message: "Invalid phone number format",
       },
     },
-    width: "width-32",
+    width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     for: ["admin"],
   },
   {
@@ -1655,7 +1655,7 @@ export const ProgramInformationFields = [
         inputRules: {
           required: "Start Date is required",
         },
-        width: "width-32",
+        width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
         for: ["admin"],
       },
       {
@@ -1666,7 +1666,7 @@ export const ProgramInformationFields = [
         inputRules: {
           required: "End Date is required",
         },
-        width: "width-32",
+        width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
         for: ["admin"],
       },      
       {
@@ -1693,7 +1693,7 @@ export const ProgramInformationFields = [
         inputRules: {
           // required: 'This field is required',
         },
-        width: "width-32",
+        width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
         icon: "add",
         for: ["admin"],
       },
@@ -1721,7 +1721,7 @@ export const ProgramInformationFields = [
     inputRules: {
       required: "This field is required",
     },
-    width: "width-32",
+    width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     for: ["mentor"],
   },
   {
@@ -1733,7 +1733,7 @@ export const ProgramInformationFields = [
       required: "This field is required",
     },
     options: SessionCounts(),
-    width: "width-32",
+    width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     for: ["mentor"],
   },
   {
@@ -1778,7 +1778,7 @@ export const ProgramInformationFields = [
       required: "This field is required",
     },
     options: CourseLevelOptions,
-    width: "width-32",
+    width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     for: ["admin", "mentor"],
   },
   {
@@ -1789,7 +1789,7 @@ export const ProgramInformationFields = [
     inputRules: {
       required: "This field is required",
     },
-    width: "width-32",
+    width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     for: ["mentor"],
   },
   {
@@ -1800,7 +1800,7 @@ export const ProgramInformationFields = [
     inputRules: {
       required: "This field is required",
     },
-    width: "width-32",
+    width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     for: ["mentor"],
   },
   {
@@ -1857,7 +1857,7 @@ export const ProgramInformationFields = [
     inputRules: {
       // required: 'This field is required',
     },
-    width: "width-32",
+    width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     for: ["mentor"],
   },
   {
@@ -1878,7 +1878,7 @@ export const ProgramInformationFields = [
         value: "No",
       },
     ],
-    width: "width-32",
+    width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     for: ["mentor"],
   },
   {
@@ -1899,7 +1899,7 @@ export const ProgramInformationFields = [
         value: "No",
       },
     ],
-    width: "width-32",
+    width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     for: ["mentor"],
   },
   {
@@ -1931,7 +1931,7 @@ export const ProgramInformationFields = [
     inputRules: {
       required: "This field is required",
     },
-    width: "width-32",
+    width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     for: ["admin", "mentor"],
   },
   {
@@ -1942,7 +1942,7 @@ export const ProgramInformationFields = [
     inputRules: {
       // required: 'This field is required',
     },
-    width: "width-32",
+    width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     for: ["admin", "mentor"],
   },
   {
@@ -1954,7 +1954,7 @@ export const ProgramInformationFields = [
       required: "This field is required",
     },
     options: [],
-    width: "width-32",
+    width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     for: ["admin", "mentor"],
   },
   {
@@ -1966,7 +1966,7 @@ export const ProgramInformationFields = [
       required: "This field is required",
     },
     options: [],
-    width: "width-32",
+    width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     for: ["admin", "mentor"],
   },
   {
@@ -1981,7 +1981,7 @@ export const ProgramInformationFields = [
         message: "ZIP code must be in the format XXXXX or XXXXX-XXXX.",
       },
     },
-    width: "width-32",
+    width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     for: ["admin", "mentor"],
   },
   {
@@ -2014,7 +2014,7 @@ export const ProgramInformationFields = [
         inputRules: {
           required: "Start Date and Time is required",
         },
-        width: "width-32",
+        width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
         for: ["mentor"],
       },
       {
@@ -2025,7 +2025,7 @@ export const ProgramInformationFields = [
         inputRules: {
           required: "End Date and Time is required",
         },
-        width: "width-32",
+        width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
         for: ["mentor"],
       },
     ],

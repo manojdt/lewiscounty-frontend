@@ -270,7 +270,7 @@ useEffect(() => {
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                 open={open?.accept}
             >
-                <div className='popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center'>
+                <div className='popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[330px] justify-center items-center'>
                     <img src={ConnectIcon} alt='ConnectIcon' />
 
                     <div className='py-5'>
@@ -311,7 +311,7 @@ useEffect(() => {
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                 open={open?.cancel}
             >
-                <div className='popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center'>
+                <div className='popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[330px] justify-center items-center'>
                     <img src={CancelColorIcon} alt='ConnectIcon' />
 
                     <div className='py-5'>

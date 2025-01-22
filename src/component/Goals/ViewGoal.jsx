@@ -554,7 +554,7 @@ const ViewGoal = ({ type = '',headTreeList="" }) => {
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                 open={actionModal.start}
             >
-                <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
+                <div className="popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
                     <img src={ConnectIcon} alt="ConnectIcon" />
 
                     <div className='py-5'>
@@ -576,7 +576,7 @@ const ViewGoal = ({ type = '',headTreeList="" }) => {
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                 open={actionModal.complete}
             >
-                <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
+                <div className="popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
                     <img src={ConnectIcon} alt="ConnectIcon" />
 
                     <div className='py-5'>
@@ -655,7 +655,7 @@ const ViewGoal = ({ type = '',headTreeList="" }) => {
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                 open={actionModal.cancel && role !== 'admin'}
             >
-                <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
+                <div className="popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
 
                     <div style={{ borderRadius: '15px' }} className='relative flex flex-col gap-2 justify-center 
                         items-center py-14 px-16'>
@@ -1024,7 +1024,7 @@ const ViewGoal = ({ type = '',headTreeList="" }) => {
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                 open={confirmPopup?.bool && confirmPopup?.type === "complete"}
             >
-                <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
+                <div className="popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
                     <img src={ConnectIcon} alt="ConnectIcon" />
                     {/* <span style={{ color: '#232323', fontWeight: 600, fontSize: '24px' }}>{followInfo.is_following ? 'UnFollow' : 'Follow'}</span> */}
 
@@ -1050,7 +1050,7 @@ const ViewGoal = ({ type = '',headTreeList="" }) => {
                 open={confirmPopup?.bool && confirmPopup?.type === "cancel"}
             >
 
-                <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] p-[12px] justify-center items-center">
+                <div className="popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[330px] p-[12px] justify-center items-center">
                     <div className='border border-[#E50027] rounded-[15px] h-[100%] w-[100%] justify-center items-center flex flex-col relative'>
                         <div className='absolute top-[12px] right-[12px] cursor-pointer' onClick={() => handleCloseConfirmPopup()}>
                             <img src={CloseReqPopup} />
