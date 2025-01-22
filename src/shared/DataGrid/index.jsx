@@ -346,6 +346,7 @@ export default function DataTable({
         onRowSelectionModelChange={(itm, i) => handleRowSelection(itm)}
         paginationMode="server"
         rowCount={rowCount}
+        {...restOfProps}
       />
       {/* </div> */}
     </div>

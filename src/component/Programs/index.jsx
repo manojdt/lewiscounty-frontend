@@ -277,19 +277,9 @@ export default function Programs() {
   };
 
   const handleNavigation = (programdetails) => {
-    // if (!userInfo?.data?.is_registered) {
-    //     navigate(`/questions?program_id=${programdetails.id}`)
-    // }
-    // else {
+    
     let baseUrl = pipeUrls.programdetails;
-    if (Object.keys(programdetails).length) {
-      // if (role === "mentor" && programdetails.status !== "completed") {
-      //   if (programdetails.status === programActionStatus.yettostart)
-      //     baseUrl = pipeUrls.startprogram;
-      //   if (programdetails.status === programActionStatus.inprogress)
-      //     baseUrl = pipeUrls.startprogram;
-      // }
-
+    if (Object.keys(programdetails).length) {     
       navigate(
         `${baseUrl}/${programdetails.program || programdetails?.id}${
           programdetails?.admin_program_request_id
