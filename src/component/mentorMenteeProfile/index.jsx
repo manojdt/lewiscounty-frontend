@@ -552,7 +552,7 @@ const MentorMenteeProfile = () => {
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={activity?.bool}
       >
-        <div className='popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center'>
+        <div className='popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[330px] justify-center items-center'>
           <img src={ConnectIcon} alt='ConnectIcon' />
           <span style={{ color: '#232323', fontWeight: 600, fontSize: '24px' }}>
             {activity?.type === 'reject' ? 'Reject' : 'Connect'}
@@ -620,7 +620,7 @@ const MentorMenteeProfile = () => {
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={cancelPopup?.bool}
       >
-        <div className='popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] p-[12px] justify-center items-center'>
+        <div className='popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[330px] p-[12px] justify-center items-center'>
           <div className='border border-[#E50027] rounded-[15px] h-[100%] w-[100%] justify-center items-center flex flex-col relative'>
             <div
               className='absolute top-[12px] right-[12px]'
@@ -686,7 +686,7 @@ const MentorMenteeProfile = () => {
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={adminPopup?.bool && adminPopup?.type === "accept"}
       >
-        <div className='popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center'>
+        <div className='popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[330px] justify-center items-center'>
           <img src={ConnectIcon} alt='ConnectIcon' />
           {/* <span style={{ color: '#232323', fontWeight: 600, fontSize: '24px' }}>
             {followInfo.is_following ? 'Unfollow' : 'Follow'}

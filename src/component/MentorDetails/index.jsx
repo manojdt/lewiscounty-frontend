@@ -327,7 +327,7 @@ export default function MentorDetails() {
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                 open={confirmPopup.approve || confirmPopup.reject}
             >
-                <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
+                <div className="popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
                     <img src={confirmPopup.approve ? TickColorIcon : confirmPopup.reject ? CancelColorIcon : ''} alt="TickColorIcon" />
                     <span style={{ color: '#232323', fontWeight: 600, fontSize: '24px' }}>
                         {confirmPopup.approve ? 'Approve' : confirmPopup.reject ? 'Reject' : ''}
@@ -423,7 +423,7 @@ export default function MentorDetails() {
                                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                                 open={activity.modal}
                             >
-                                <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
+                                <div className="popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
                                     <img src={ConnectIcon} alt="ConnectIcon" />
                                     <span style={{ color: '#232323', fontWeight: 600, fontSize: '24px' }}>{followInfo.is_following ? 'UnFollow' : 'Follow'}</span>
 
