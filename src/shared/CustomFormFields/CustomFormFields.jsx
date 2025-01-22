@@ -108,7 +108,7 @@ export const CustomFormFields = ({
                         className="calendar-control bg-[#1D5BBF0D]"
                         onChange={(e) => handleChange(fld?.key, e.value)}
                         value={formData[fld?.key]}
-                        dateFormat="dd/mm/yy"
+                        dateFormat="mm-dd-yy"
                         placeholder={fld?.placeholder ?? "Select"}
                         ref={(el) => (calendarRef.current[index] = el)}
                         minDate={
@@ -117,13 +117,16 @@ export const CustomFormFields = ({
                         maxDate={
                           fld?.maxDate ? new Date(fld?.maxDate) : new Date()
                         }
+                        disabled={fld?.isDisable ?? false}
                       />
                       <img
                         className="absolute top-5 right-2 cursor-pointer"
                         src={CalendarIcon}
                         alt="CalendarIcon"
                         onClick={(e) => {
-                          calendarRef?.current[index]?.show();
+                          if(!fld?.isDisable){
+                            calendarRef?.current[index]?.show();
+                          }
                         }}
                       />
                     </div>
@@ -139,13 +142,16 @@ export const CustomFormFields = ({
                         hourFormat="12"
                         placeholder={fld?.placeholder ?? "Select"}
                         ref={(el) => (calendarRef.current[index] = el)}
+                        disabled={fld?.isDisable ?? false}
                       />
                       <img
                         className="absolute top-5 right-2 cursor-pointer"
                         src={CalendarIcon}
                         alt="CalendarIcon"
                         onClick={(e) => {
-                          calendarRef?.current[index]?.show();
+                          if(!fld?.isDisable){
+                            calendarRef?.current[index]?.show();
+                          }
                         }}
                       />
                     </div>

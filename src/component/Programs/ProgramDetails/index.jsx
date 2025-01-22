@@ -708,7 +708,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
         if (isInsterestMarked) {
           handleCancel();
         }
-      }, 3000);
+      }, 2000);
       return () => {
         clearTimeout(timer);
         resetMarkInterestState();
@@ -899,6 +899,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       key: "date",
       minDate: programdetails?.start_date,
       maxDate: programdetails?.end_date,
+      isDisable:true,
     },
     {
       type: "time",
@@ -906,6 +907,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       isRequired: true,
       col: 4,
       key: "time",
+      isDisable:true,
     },
     {
       type: "textbox",
@@ -927,8 +929,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   ];
   const [notesActivity, setNotesActivity] = React.useState(false);
   const [notesForm, setNotesForm] = React.useState({
-    date: "",
-    time: "",
+    date: new Date(),
+    time: new Date(),
     location: "",
     comment: "",
     error: {
@@ -1081,7 +1083,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={completeProgram.bool}
       >
-        <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
+        <div className="popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
           <img src={TickColorIcon} alt="TickColorIcon" />
           <span
             style={{
@@ -1271,7 +1273,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={confirmPopup.accept}
       >
-        <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
+        <div className="popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
           <img src={TickColorIcon} alt="TickColorIcon" />
           <span style={{ color: "#232323", fontWeight: 600, fontSize: "24px" }}>
             Approve
@@ -1452,11 +1454,11 @@ export default function ProgramDetails({ setProgramDetailsId }) {
         }}
         open={openPopup}
       >
-        <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] p-[12px] justify-center items-center">
+        <div className="popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[330px] p-[12px] justify-center items-center">
           <div className="border border-[#E50027] rounded-[15px] h-[100%] w-[100%] justify-center items-center flex flex-col relative">
             <div
               className="absolute top-[12px] right-[12px]"
-              // onClick={() => handleCloseCancelPopup()}
+              onClick={() => setOpenPopup(false)}
             >
               <img src={CloseIcon} alt="ConfirmIcon" />
             </div>

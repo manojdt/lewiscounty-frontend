@@ -210,11 +210,11 @@ export default function Feeds() {
             <p className="text-lg font-bold text-gray-800">Feeds</p>
           </div>
           <div className="flex items-center gap-4 sm:gap-8">
-            <img
+            {/* <img
               src={SearchIcon}
               alt="SearchIcon"
               className="cursor-pointer w-6 h-6"
-            />
+            /> */}
             <Button
               btnName="Add Posts"
               btnCls="w-[140px] sm:w-[170px]"

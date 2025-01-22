@@ -34,7 +34,7 @@ export default function Layout({ subheader }) {
     {
       label: (
         <div className="flex gap-4 items-center">
-          <img src={TaskIcon} alt="TaskIcon" />
+          <img className ="p-2 h-8" src={TaskIcon} alt="TaskIcon" />
           <p>Task</p>
         </div>
       ),
@@ -44,7 +44,7 @@ export default function Layout({ subheader }) {
     {
       label: (
         <div className="flex gap-4 items-center">
-          <img src={GoalIcon} alt="GoalIcon" />
+          <img className ="p-2 h-8" src={GoalIcon} alt="GoalIcon" />
           <p>Goal</p>
         </div>
       ),
@@ -56,7 +56,7 @@ export default function Layout({ subheader }) {
     items.unshift({
       label: (
         <div className="flex gap-4 items-center">
-          <img src={TaskIcon} alt="TaskIcon" />
+          <img className ="p-2 h-8" src={TaskIcon} alt="TaskIcon" />
           <p>Launch Program</p>
         </div>
       ),
@@ -68,7 +68,7 @@ export default function Layout({ subheader }) {
     {
       label: (
         <div className="flex gap-4 items-center">
-          <img src={DiscussionIcon} alt="DiscussionIcon" />
+          <img className ="p-2 h-8" src={DiscussionIcon} alt="DiscussionIcon" />
           <p>Discussions</p>
         </div>
       ),
@@ -77,7 +77,7 @@ export default function Layout({ subheader }) {
     {
       label: (
         <div className="flex gap-4 items-center">
-          <img src={FeedbackIcon} alt="FeedbackIcon" />
+          <img className ="p-2 h-8" src={FeedbackIcon} alt="FeedbackIcon" />
           <p>Feedback</p>
         </div>
       ),
@@ -86,7 +86,7 @@ export default function Layout({ subheader }) {
     {
       label: (
         <div className="flex gap-4 items-center">
-          <img src={CertificateIcon} alt="CertificateIcon" />
+          <img className ="p-2 h-8" src={CertificateIcon} alt="CertificateIcon" />
           <p>Certificate</p>
         </div>
       ),
@@ -95,7 +95,7 @@ export default function Layout({ subheader }) {
     {
       label: (
         <div className="flex gap-4 items-center">
-          <img src={FeedIcon} alt="FeedIcon" />
+          <img className ="p-2 h-8" src={FeedIcon} alt="FeedIcon" />
           <p>Feed</p>
         </div>
       ),
@@ -106,7 +106,7 @@ export default function Layout({ subheader }) {
     moreitems.push({
       label: (
         <div className="flex gap-4 items-center">
-          <img src={ReportIcon} alt="FeedIcon" />
+          <img className ="p-2 h-8" src={ReportIcon} alt="FeedIcon" />
           <p>BG Verification</p>
         </div>
       ),
@@ -118,7 +118,7 @@ export default function Layout({ subheader }) {
     moreitems.push({
       label: (
         <div className="flex gap-4 items-center">
-          <img src={ReportIcon} alt="FeedIcon" />
+          <img className ="p-2 h-8" src={ReportIcon} alt="FeedIcon" />
           <p>Mentee Report</p>
         </div>
       ),
@@ -135,7 +135,7 @@ export default function Layout({ subheader }) {
     moreitems.push({
       label: (
         <div className="flex gap-4 items-center">
-          <img src={ReportIcon} alt="FeedIcon" />
+          <img className ="p-2 h-8" src={ReportIcon} alt="FeedIcon" />
           <p>Mentor Report</p>
         </div>
       ),
@@ -152,7 +152,7 @@ export default function Layout({ subheader }) {
     moreitems.unshift({
       label: (
         <div className="flex gap-4 items-center">
-          <img src={ReportIcon} alt="ReportIcon" />
+          <img className ="p-2 h-8"src={ReportIcon} alt="ReportIcon" />
           <p>Reports</p>
         </div>
       ),
@@ -220,7 +220,7 @@ export default function Layout({ subheader }) {
               >
                 <span
                   onClick={() => navigate("/dashboard")}
-                  className="block py-2 px-3 sm:py-0 sm:px-0 rounded md:p-0 cursor-pointer md:text-[12px] lg:text-[14px]"
+                  className="block py-2 px-3 sm:py-0 sm:px-0 rounded md:p-0 cursor-pointer md:text-[14px] lg:text-[16px]"
                   aria-current="page"
                 >
                   Dashboard
@@ -235,7 +235,7 @@ export default function Layout({ subheader }) {
             >
               <span
                 onClick={() => navigate("/programs")}
-                className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer md:text-[12px] lg:text-[14px]"
+                className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer md:text-[14px] lg:text-[16px]"
               >
                 Programs
               </span>
@@ -248,7 +248,7 @@ export default function Layout({ subheader }) {
               >
                 <span
                   onClick={() => navigate("/mentors")}
-                  className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer md:text-[12px] lg:text-[14px]"
+                  className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer md:text-[14px] lg:text-[16px]"
                 >
                   Mentors
                 </span>
@@ -263,7 +263,7 @@ export default function Layout({ subheader }) {
               >
                 <span
                   onClick={() => navigate("/mentees")}
-                  className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer md:text-[12px] lg:text-[14px]"
+                  className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer md:text-[14px] lg:text-[16px]"
                 >
                   Mentees
                 </span>
@@ -278,7 +278,7 @@ export default function Layout({ subheader }) {
               >
                 <span
                   onClick={() => navigate("/members")}
-                  className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer md:text-[12px] lg:text-[14px]"
+                  className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer md:text-[14px] lg:text-[16px]"
                 >
                   Members
                 </span>
@@ -293,7 +293,7 @@ export default function Layout({ subheader }) {
               >
                 <span
                   onClick={() => navigate("/all-request")}
-                  className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer md:text-[12px] lg:text-[14px]"
+                  className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer md:text-[14px] lg:text-[16px]"
                 >
                   My Requests
                 </span>
@@ -335,7 +335,7 @@ export default function Layout({ subheader }) {
                         role === "mentee" ? "/mentee-tasks" : "/mentor-tasks"
                       )
                     }
-                    className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer md:text-[12px] lg:text-[14px]"
+                    className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer md:text-[14px] lg:text-[16px]"
                   >
                     Tasks
                   </span>
@@ -348,7 +348,7 @@ export default function Layout({ subheader }) {
                 >
                   <span
                     onClick={() => navigate("/goals")}
-                    className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer md:text-[12px] lg:text-[14px]"
+                    className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer md:text-[14px] lg:text-[16px]"
                   >
                     Goals
                   </span>
@@ -361,7 +361,7 @@ export default function Layout({ subheader }) {
                 >
                   <span
                     onClick={() => navigate("/calendar")}
-                    className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer md:text-[12px] lg:text-[14px]"
+                    className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer md:text-[14px] lg:text-[16px]"
                   >
                     Scheduler
                   </span>
@@ -372,7 +372,7 @@ export default function Layout({ subheader }) {
                     <div>
                       <button
                         type="button"
-                        className="inline-flex w-full justify-center gap-x-1.5  px-3 py-2  text-gray-900 md:text-[12px] lg:text-[14px]"
+                        className="inline-flex w-full justify-center gap-x-1.5  px-3 py-2  text-gray-900 md:text-[14px] lg:text-[16px]"
                         id="menu-button"
                         aria-expanded="true"
                         aria-haspopup="true"

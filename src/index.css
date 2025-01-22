@@ -251,7 +251,7 @@ input[type='range']::-ms-thumb {
 }
 
 .goals .goals-info .create-goal {
-  width: 220px;
+  width: 200px;
   text-align: center;
   color: rgba(29, 91, 191, 1);
   height: 160px;
@@ -1070,10 +1070,10 @@ input[type='number'] {
     width: 48.5%;
   }
 
-  .popup-content {
+  /* .popup-content {
     width: 85%;
-    height: 220px;
-  }
+    height: 265px;
+  } */
 
   /* Navbar */
   /* .navbar-content .site-logo {

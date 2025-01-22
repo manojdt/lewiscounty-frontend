@@ -2788,7 +2788,7 @@ export default function AllRequest() {
           sx={{ color: "#fff", zIndex: (theme) => 1 }}
           open={confirmPopup.show}
         >
-          <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
+          <div className="popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
             <img
               src={
                 confirmPopup.type === "approve"
@@ -3048,10 +3048,7 @@ export default function AllRequest() {
                 {/* Header */}
                 <div className="title flex flex-wrap justify-between py-3 px-4 border-b items-center">
                   <div className="text-lg font-semibold text-gray-800 flex gap-4">
-                    {selectedTab === "mentees" &&
-                    currentRequestTab.key === "program_request"
-                      ? currentRequestTab?.menteeTabName
-                      : currentRequestTab?.name}
+                    {currentRequestTab?.name}
                   </div>
                   <div className="flex flex-wrap gap-4 items-center">
                     {/* Search Box */}
