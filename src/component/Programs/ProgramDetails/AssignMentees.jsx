@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   useLocation,
   useNavigate,
@@ -259,31 +259,14 @@ export default function AssignMentees() {
 
   // console.log("allFields", allFields);
 
-  useEffect(() => {
+  useMemo(() => {
     if (allFields?.program_id) {
-      // Reset form values
-      //   reset({
-      //     ...getValues(),
-      //     mentor: "",
-      //     duration: "",
-      //     start_date: "",
-      //     end_date: "",
-      //     mentees_list: [],
-      //     due_date: "",
-      //     task_name: "",
-      //     task_details: "",
-      //     reference_links: "",
-      //   });
-
-      // Reset mentee list
-      setAllMenteeList([]);
-
       // Update mentee fields
       const updatedFields = menteeFields.map((field) => {
         if (field.name === "goal_id" && currentProgramDetail) {
           return {
             ...field,
-            options: currentProgramDetail?.goals ?? [], // Ensure goals are updated
+            options: currentProgramDetail?.goals ?? [],
           };
         }
         return field;

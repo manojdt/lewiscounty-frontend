@@ -739,12 +739,14 @@ const MentorTask = () => {
                 <img src={SearchIcon} alt="Search" />
               </div>
             </div>
-            <button
+
+            <Button
+              btnType="button"
+              btnCls="w-[150px]"
+              btnName={"Create Task"}
+              btnCategory="primary"
               onClick={() => navigate("/assign-mentees?type=new")}
-              className="px-5 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:ring focus:ring-blue-300"
-            >
-              Create Task
-            </button>
+            />
           </div>
         </div>
 

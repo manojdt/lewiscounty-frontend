@@ -291,63 +291,63 @@ export default function DataTable({
       className="w-full "
       style={{ height: height, maxHeight: height, position: "relative" }}
     >
-      <div className="w-full  lg:min-w-0 h-full">
-        <DataGrid
-          rows={rows}
-          columns={columns.map((col) => ({
-            ...col,
-            flex: 1, // Ensures columns expand proportionally
-            minWidth: 150, // Sets a minimum width for each column
-          }))}
-          hideFooterPagination={hideFooter}
-          getRowId={(row) =>
-            row.id || row.first_name || row.categories_id || row.mentee_id
-          }
-          checkboxSelection={!hideCheckbox}
-          onPageChange={(e) => console.log("change", e)}
-          page={paginationModel?.page}
-          pageSize={paginationModel?.pageSize}
-          sx={{
-            height: "100%",
-            "& .MuiDataGrid-cell:focus": {
-              outline: "none",
-            },
-            "& .MuiDataGrid-cell:focus-within": {
-              outline: "none",
-            },
-          }}
-          {...(footerComponent
-            ? {
-                slots: {
-                  footer: footerComponent,
-                  toolbar: () =>
-                    showToolbar ? (
-                      <CustomToolbar toolBarComponent={toolBarComponent} />
-                    ) : null,
+      {/* <div className="w-full  lg:min-w-0 h-full"> */}
+      <DataGrid
+        rows={rows}
+        columns={columns.map((col) => ({
+          ...col,
+          flex: 1, // Ensures columns expand proportionally
+          minWidth: 150, // Sets a minimum width for each column
+        }))}
+        hideFooterPagination={hideFooter}
+        getRowId={(row) =>
+          row.id || row.first_name || row.categories_id || row.mentee_id
+        }
+        checkboxSelection={!hideCheckbox}
+        onPageChange={(e) => console.log("change", e)}
+        page={paginationModel?.page}
+        pageSize={paginationModel?.pageSize}
+        sx={{
+          height: "100%",
+          "& .MuiDataGrid-cell:focus": {
+            outline: "none",
+          },
+          "& .MuiDataGrid-cell:focus-within": {
+            outline: "none",
+          },
+        }}
+        {...(footerComponent
+          ? {
+              slots: {
+                footer: footerComponent,
+                toolbar: () =>
+                  showToolbar ? (
+                    <CustomToolbar toolBarComponent={toolBarComponent} />
+                  ) : null,
+              },
+              slotProps: {
+                footer: { footerAction, selectedRows },
+              },
+            }
+          : {
+              initialState: {
+                pagination: {
+                  paginationModel: paginationModel,
                 },
-                slotProps: {
-                  footer: { footerAction, selectedRows },
-                },
-              }
-            : {
-                initialState: {
-                  pagination: {
-                    paginationModel: paginationModel,
-                  },
-                },
-                slots: {
-                  pagination: CustomPagination,
-                },
-                pageSizeOptions: { options },
-              })}
-          hideFooter={hideFooter}
-          disableRowSelectionOnClick
-          rowSelectionModel={selectedIds}
-          onRowSelectionModelChange={(itm, i) => handleRowSelection(itm)}
-          paginationMode="server"
-          rowCount={rowCount}
-        />
-      </div>
+              },
+              slots: {
+                pagination: CustomPagination,
+              },
+              pageSizeOptions: { options },
+            })}
+        hideFooter={hideFooter}
+        disableRowSelectionOnClick
+        rowSelectionModel={selectedIds}
+        onRowSelectionModelChange={(itm, i) => handleRowSelection(itm)}
+        paginationMode="server"
+        rowCount={rowCount}
+      />
+      {/* </div> */}
     </div>
   );
 }
