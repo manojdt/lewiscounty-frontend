@@ -37,7 +37,9 @@ const ProgramSteps = ({
   handleAction,
   handleProgramCheck,
   setToggleRole,
-  setCurrent,
+  mentorSearchValue,
+  isMentorDataLoading,
+  setMentorSearchValue,
   mentor_assign,
   goalData,
   certificate,
@@ -599,7 +601,6 @@ const ProgramSteps = ({
                               setToggleRole(
                                 e.target.value === "Own" ? mentor : admin
                               );
-                              setCurrent(e.target.value);
                             }
                           }}
                           error={!!errors[field.name]}
@@ -709,7 +710,7 @@ const ProgramSteps = ({
                                     ) : nestedField.type === "date" ? (
                                       <div className="relative">
                                         <CustomDateTimePicker
-                                         placeholder={"mm/dd/yyyy hh:mm AM/PM"}
+                                          placeholder={"mm/dd/yyyy hh:mm AM/PM"}
                                           {...register(
                                             `sub_programs.${index}.${nestedField.name}`,
                                             getDateValidation(
@@ -1191,10 +1192,23 @@ const ProgramSteps = ({
         modalSize="md"
         modalOpen={!!currentField}
         modalClose={() => setCurrentField("")}
-        noheader
+        title="Add mentor"
       >
+        <TextField
+          fullWidth={false}
+          size="small"
+          sx={{
+            marginBottom: 2,
+            "& .MuiOutlinedInput-notchedOutline": {
+              border: "1px solid",
+            },
+          }}
+          placeholder="Search mentor"
+          value={mentorSearchValue}
+          onChange={(e) => setMentorSearchValue(e.target.value)}
+        />
         <DataTable
-          showToolbar={true}
+          loading={isMentorDataLoading}
           disableMultipleSelection={true}
           disableSelectionOnClick={false} // Add this line
           rows={mentor_assign}
