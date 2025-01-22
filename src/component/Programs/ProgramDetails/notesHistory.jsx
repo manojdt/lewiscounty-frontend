@@ -92,10 +92,10 @@ const HistoryNotes = () => {
             />
           </div>
           <div className="w-full bg-[#F5F9FF] py-3 px-4 mt-2">
-            <div className="grid items-center grid-cols-3 gap-4 text-sm text-gray-600">
+          <div className="grid items-center grid-cols-3 gap-4 text-sm text-gray-600">
               <div className="text-left">Date & Time</div>
-              <div className="text-center">Update content</div>
-              <div className="text-right">Updated by User</div>
+              <div className="text-left">Update content</div>
+              <div className="text-right">Commented by</div>
             </div>
           </div>
           {historyNotes?.map((item, index) => (
@@ -123,11 +123,11 @@ const HistoryNotes = () => {
                   )}
                 </div>
                 <div className="flex flex-col items-start justify-start w-full px-4">
-                  <div className="relative z-10 inline-block py-2 bg-white">
+                  {/* <div className="relative z-10 inline-block py-2 bg-white">
                     <div className="flex ">
                       <div>{item?.description}</div>
                     </div>
-                  </div>
+                  </div> */}
 
                   {/* Comments (if any) */}
                   {item?.description && (
@@ -140,6 +140,15 @@ const HistoryNotes = () => {
                       </div>
                     </div>
                   )}
+                  <div className="w-full mt-4 text-left">
+                    <div className="font-semibold text-font-primary-main">
+                      Location:{" "}
+                      <span className="text-font-secondary-black">
+                        {item?.address}
+                      </span>
+                    </div>
+                  </div>
+
                 </div>
               </div>
 

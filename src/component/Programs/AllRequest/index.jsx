@@ -3033,7 +3033,7 @@ export default function AllRequest() {
                 {/* Header */}
                 <div className="title flex flex-wrap justify-between py-3 px-4 border-b items-center">
                   <div className="text-lg font-semibold text-gray-800 flex gap-4">
-                    {selectedTab === "mentees"&&currentRequestTab.key==="program_request"?currentRequestTab?.menteeTabName:currentRequestTab?.name}
+                   {currentRequestTab?.name}
                   </div>
                   <div className="flex flex-wrap gap-4 items-center">
                     {/* Search Box */}
