@@ -13,13 +13,33 @@ import api from '../../services/api';
 import { Backdrop, CircularProgress } from '@mui/material';
 import ToastNotification from '../../shared/Toast';
 
+const renderSocialMediaUrls = (type) =>{
+     window.open(`https://www.${type}.com`,"_blank")
+}
+
 export default function Invite() {
     const [inviteModal, setInviteModal] = useState({ open: false, loading: false, success: false })
     const [message, setMessage] = useState(false);
-
     const handleCloseInviteModal = () => {
         setInviteModal({ open: false, loading: false, success: false })
     }
+    useEffect(() => {
+        if (message) {
+            setTimeout(() => {
+                setMessage(false)
+            }, 3000)
+        }
+    }, [message])
+
+    useEffect(() => {
+        if (inviteModal.success) {
+            setTimeout(() => {
+                handleCloseInviteModal()
+            }, 3000)
+
+        }
+    }, [inviteModal.success])
+    
 
     const {
         register,
@@ -58,22 +78,6 @@ export default function Invite() {
         setMessage(false)
     }
 
-    useEffect(() => {
-        if (message) {
-            setTimeout(() => {
-                setMessage(false)
-            }, 3000)
-        }
-    }, [message])
-
-    useEffect(() => {
-        if (inviteModal.success) {
-            setTimeout(() => {
-                handleCloseInviteModal()
-            }, 3000)
-
-        }
-    }, [inviteModal.success])
 
     return (
         <div className="pb-3 mt-3 " style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px' }}>
@@ -142,10 +146,10 @@ export default function Invite() {
 
                             <div className='flex gap-7'>
                                 <img className='cursor-pointer' src={LinkIcon} alt="LinkIcon" onClick={handleCopy} />
-                                <img className='cursor-pointer' src={LinkedInIcon} alt="LinkedInIcon" />
-                                <img className='cursor-pointer' src={InstagramIcon} alt="InstagramIcon" />
-                                <img className='cursor-pointer' src={FacebookOutlineIcon} alt="FacebookOutlineIcon" />
-                                <img className='cursor-pointer' src={TwitterIcon} alt="TwitterIcon" />
+                                <img className='cursor-pointer' src={LinkedInIcon} alt="LinkedInIcon"   onClick = {()=>renderSocialMediaUrls('linkedin')}/>
+                                <img className='cursor-pointer' src={InstagramIcon} alt="InstagramIcon" onClick = {()=>renderSocialMediaUrls('instagram')} />
+                                <img className='cursor-pointer' src={FacebookOutlineIcon} alt="FacebookOutlineIcon" onClick={()=>renderSocialMediaUrls('facebook')} />
+                                <img className='cursor-pointer' src={TwitterIcon} alt="TwitterIcon" onClick={()=>{renderSocialMediaUrls('x')}} />
                             </div>
 
                             <div className="flex  justify-center align-middle pt-8">
