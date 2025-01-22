@@ -1315,10 +1315,9 @@ export default function CreatePrograms() {
   const handleCancelClick = () => {
     if (role === admin && toggleRole === mentor && !params?.id) {
       setToggleRole(admin);
-    } else {
+    }
       navigate("/programs");
       reset();
-    }
   };
   return (
     <div className="dashboard-content px-8 mt-10">
