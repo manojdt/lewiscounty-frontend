@@ -87,12 +87,24 @@ export default function AssignMentees() {
     useState(MenteeAssignColumns);
   const allFields = watch();
 
+  // const { data: currentProgramDetail, isLoading: isDetailFetching } =
+  //   useGetSpecificProgramDetailsQuery(
+  //     {
+  //       id: type === "new" ? allFields.program_id : allFields.program_id_val,
+  //     },
+  //     { skip: !allFields.program_id, refetchOnMountOrArgChange: true }
+  //   );
+
   const { data: currentProgramDetail, isLoading: isDetailFetching } =
     useGetSpecificProgramDetailsQuery(
       {
         id: type === "new" ? allFields.program_id : allFields.program_id_val,
       },
-      { skip: !allFields.program_id, refetchOnMountOrArgChange: true }
+      {
+        skip:
+          type === "new" ? !allFields.program_id : !allFields.program_id_val,
+        refetchOnMountOrArgChange: true,
+      }
     );
 
   const onSubmit = (data) => {
@@ -259,25 +271,27 @@ export default function AssignMentees() {
 
   // console.log("allFields", allFields);
 
-  useMemo(() => {
-    if (allFields?.program_id) {
-      // Update mentee fields
-      const updatedFields = menteeFields.map((field) => {
-        if (field.name === "goal_id" && currentProgramDetail) {
-          return {
-            ...field,
-            options: currentProgramDetail?.goals ?? [],
-          };
-        }
-        return field;
+  useEffect(() => {
+    if (
+      (allFields?.program_id || allFields?.program_id_val) &&
+      currentProgramDetail
+    ) {
+      setMenteeFields((prevFields) => {
+        const updatedFields = prevFields.map((field) => {
+          if (field.name === "goal_id") {
+            return {
+              ...field,
+              options: currentProgramDetail?.goals ?? [],
+            };
+          }
+          return field;
+        });
+
+        console.log("Updated Fields Inside useEffect:", updatedFields);
+        return updatedFields; // Update the state with the new fields
       });
-
-      console.log("updatedFields", updatedFields);
-
-      // Set updated fields
-      setMenteeFields(updatedFields);
     }
-  }, [allFields?.program_id, currentProgramDetail]);
+  }, [allFields?.program_id, allFields?.program_id_val, currentProgramDetail]);
 
   useEffect(() => {
     if (type === "new" && allFields?.program_id) {
