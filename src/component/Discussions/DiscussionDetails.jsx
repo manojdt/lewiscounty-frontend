@@ -142,10 +142,10 @@ export default function DiscussionDetails() {
                       </div>
                     </div>
                     <div className='flex-shrink-1 right-bg rounded py-2 px-3 mt-3 text-[13px]'>
-                      Hi john!!
+                      Hi John !!
                     </div>
                     <div className='flex-shrink-1 right-bg rounded py-2 px-3 mt-3 text-[13px]'>
-                      How can i asset you?
+                      How can I assist you?
                     </div>
                   </div>
                   <div className='chat-message-left pb-4'>
@@ -162,8 +162,7 @@ export default function DiscussionDetails() {
                       </div>
                     </div>
                     <div className='flex-shrink-1 left-bg rounded py-2 px-3 text-[13px]'>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                      sed do eiusmod tempor incididunt
+                       Thank you for offering to assist! Whether it's providing advice, solving an issue, or just sharing your perspective, your support would mean a lot to me. Let me know if you need more details about what I need assistance with!
                     </div>
                   </div>
                 </div>
