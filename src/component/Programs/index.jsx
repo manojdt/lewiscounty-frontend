@@ -14,7 +14,7 @@ import Card from "../../shared/Card";
 import CloseIcon from "../../assets/icons/blueCloseIcon.svg";
 import ProgramCard from "../../shared/Card/ProgramCard";
 import SearchIcon from "../../assets/icons/search.svg";
-import CalendarIcon from '../../assets/icons/CalenderIcon.svg';
+import CalendarIcon from "../../assets/icons/CalenderIcon.svg";
 import GridViewIcon from "../../assets/icons/gridviewIcon.svg";
 import ListViewIcon from "../../assets/icons/listviewIcon.svg";
 import MoreIcon from "../../assets/icons/moreIcon.svg";

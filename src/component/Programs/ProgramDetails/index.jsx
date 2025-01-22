@@ -1969,7 +1969,9 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             )}
                           {programdetails.participated_mentees_count === 0 &&
                             programdetails?.created_by ===
-                              userdetails?.data?.user_id && (
+                              userdetails?.data?.user_id &&
+                            programdetails?.admin_program === null &&
+                            programdetails?.status !== "yettoapprove" && (
                               <MenuItem
                                 onClick={() => handleMenu("edit")}
                                 className="!text-[12px]"

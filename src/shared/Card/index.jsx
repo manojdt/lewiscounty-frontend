@@ -58,6 +58,7 @@ export default function Card({
       <ul className="flex flex-col gap-4 p-4 md:p-0 mt-4 font-medium">
         {cardContent.map((menu, index) => (
           <li className="" key={index}>
+            {/* {console.log("cardContent", cardContent)} */}
             <div
               onClick={() =>
                 menu.page
