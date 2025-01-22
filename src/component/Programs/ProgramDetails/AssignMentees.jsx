@@ -287,8 +287,7 @@ export default function AssignMentees() {
           return field;
         });
 
-        console.log("Updated Fields Inside useEffect:", updatedFields);
-        return updatedFields; // Update the state with the new fields
+        return updatedFields;
       });
     }
   }, [allFields?.program_id, allFields?.program_id_val, currentProgramDetail]);
@@ -341,12 +340,15 @@ export default function AssignMentees() {
     }
   }, [params.id]);
 
+  console.log(state?.data);
+
   useEffect(() => {
     if (state?.data && Object.keys(state?.data).length) {
       let fieldValue = {
         category_id: state?.data?.category_id,
         program_id: state?.data?.program_name,
         program_id_val: state?.data?.program_id,
+        goal_id: state?.data?.goal,
         mentor: state?.data?.mentor_name,
         start_date: new Date(state?.data?.program_startdate),
         end_date: new Date(state?.data?.program_enddate),
