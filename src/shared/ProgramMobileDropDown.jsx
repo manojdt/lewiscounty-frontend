@@ -52,7 +52,7 @@ export default function RequestSelectBox({
           value={selectedFilter}
           label={cardTitle}
           onChange={handleFilterChange}
-          sx={{ background: "rgba(217, 228, 242, 1)" }}
+          sx={{ background: "rgba(217, 228, 242, 1)" , height:"2.5rem"}}
         >
           {cardContent.map((menu, index) => (
             <MenuItem

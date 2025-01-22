@@ -31,7 +31,7 @@ import {
 import SearchIcon from "../../../assets/icons/search.svg";
 import Edit_Icon from "../../../assets/icons/editIcon.svg";
 // import CalendarIcon from "../../../assets/images/calender_1x.png";
-import CalendarIcon from '../../../assets/icons/CalenderIcon.svg'
+import CalendarIcon from "../../../assets/icons/CalenderIcon.svg";
 import MoreIcon from "../../../assets/icons/moreIcon.svg";
 import TickCircle from "../../../assets/icons/tickCircle.svg";
 import CloseCircle from "../../../assets/icons/closeCircle.svg";
@@ -216,7 +216,7 @@ export default function AllRequest() {
       forTabs: ["my"],
     },
     {
-      name: role === "admin"?"Program Join Requests":"Program Join",
+      name: role === "admin" ? "Program Join Requests" : "Program Join",
       key: "program_join",
       for: ["mentor", "mentee", "admin"],
       forTabs: role === "mentee" ? ["my"] : role === "admin" ? ["mentees"] : [],
@@ -731,6 +731,8 @@ export default function AllRequest() {
   let testimonialRequestColumn = testimonialRequestColumns.filter((request) =>
     request.for.includes(role)
   );
+
+  console.log(testimonialRequest);
   let programExtendRequestColumn = programExtendRequestColumns.filter(
     (request) => request.for.includes(role)
   );
@@ -750,7 +752,12 @@ export default function AllRequest() {
       id: 2,
       for: ["admin", "mentor", "mentee"],
       mainTab: ["my", "mentees", "admin"],
-      tab:["program_cancel","program_join","program_reschedule","program_new"],
+      tab: [
+        "program_cancel",
+        "program_join",
+        "program_reschedule",
+        "program_new",
+      ],
       renderCell: (params) => {
         return (
           <>
@@ -784,7 +791,12 @@ export default function AllRequest() {
         id: 4,
         for: ["admin", "mentor", "mentee"],
         mainTab: ["my", "mentees", "admin"],
-        tab:["program_cancel","program_join","program_reschedule","program_new"],
+        tab: [
+          "program_cancel",
+          "program_join",
+          "program_reschedule",
+          "program_new",
+        ],
         renderCell: (params) => {
           return (
             <>
@@ -1006,15 +1018,15 @@ export default function AllRequest() {
     },
   ];
 
-   goalColumns = [
+  goalColumns = [
     ...goalColumns,
-   
+
     {
       field: "status",
       headerName: "Status",
       flex: 1,
       id: 2,
-      for: ["admin", "mentor","mentee"],
+      for: ["admin", "mentor", "mentee"],
       renderCell: (params) => {
         return (
           <>
@@ -1044,7 +1056,7 @@ export default function AllRequest() {
       headerName: "Action",
       flex: 1,
       id: 4,
-      for: ["admin", "mentor","mentee"],
+      for: ["admin", "mentor", "mentee"],
       renderCell: (params) => {
         // if (params.row.status !== "new" && params.row.status !== "pending" && params.row.status !== "accept")
         //     return <></>;
@@ -1347,7 +1359,7 @@ export default function AllRequest() {
       headerName: "Status",
       flex: 1,
       id: 2,
-      for: ["admin", "mentor","mentee"],
+      for: ["admin", "mentor", "mentee"],
       renderCell: (params) => {
         return (
           <>
@@ -1379,7 +1391,7 @@ export default function AllRequest() {
       headerName: "Action",
       flex: 1,
       id: 4,
-      for: ["admin", "mentor","mentee"],
+      for: ["admin", "mentor", "mentee"],
       renderCell: (params) => {
         return (
           <>
@@ -1756,7 +1768,7 @@ export default function AllRequest() {
     },
   ];
 
-   testimonialRequestColumn = [
+  testimonialRequestColumn = [
     ...testimonialRequestColumn,
     {
       field: "status",
@@ -2037,7 +2049,6 @@ export default function AllRequest() {
   //   );
   // };
 
-  
   const getReportsRequestApi = () => {
     dispatch(
       getReportRequest({
@@ -2373,12 +2384,16 @@ export default function AllRequest() {
 
   useEffect(() => {
     if (selectedRequestedtype === "program_request" || !selectedRequestedtype) {
-      let programRequestFilteredColumn = !actionTab ? programRequestColumn : programRequestColumn?.filter((request) =>
-        request?.tab?.includes(actionTab)
-      );
-      let programRequestMainTabFilteredColumn = !selectedTab ? programRequestFilteredColumn : programRequestFilteredColumn?.filter((request) =>
-        request?.mainTab?.includes(selectedTab)
-      );
+      let programRequestFilteredColumn = !actionTab
+        ? programRequestColumn
+        : programRequestColumn?.filter((request) =>
+            request?.tab?.includes(actionTab)
+          );
+      let programRequestMainTabFilteredColumn = !selectedTab
+        ? programRequestFilteredColumn
+        : programRequestFilteredColumn?.filter((request) =>
+            request?.mainTab?.includes(selectedTab)
+          );
       setActiveTableDetails({
         column: programRequestMainTabFilteredColumn,
         data: programTableInfo.results,
@@ -2773,7 +2788,7 @@ export default function AllRequest() {
           sx={{ color: "#fff", zIndex: (theme) => 1 }}
           open={confirmPopup.show}
         >
-          <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
+          <div className="popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
             <img
               src={
                 confirmPopup.type === "approve"
@@ -3033,7 +3048,7 @@ export default function AllRequest() {
                 {/* Header */}
                 <div className="title flex flex-wrap justify-between py-3 px-4 border-b items-center">
                   <div className="text-lg font-semibold text-gray-800 flex gap-4">
-                    {selectedTab === "mentees"&&currentRequestTab.key==="program_request"?currentRequestTab?.menteeTabName:currentRequestTab?.name}
+                    {currentRequestTab?.name}
                   </div>
                   <div className="flex flex-wrap gap-4 items-center">
                     {/* Search Box */}
@@ -3051,10 +3066,13 @@ export default function AllRequest() {
                       </div>
                     </div>
                     {/* <img src={SearchIcon} alt="statistics" /> */}
-                   
-                    <div className="relative flex gap-3 py-2 px-3"
-                      
-                      style={{ border: '1px solid rgba(24, 40, 61, 0.25)', borderRadius: '3px' }}
+
+                    <div
+                      className="relative flex gap-3 py-2 px-3"
+                      style={{
+                        border: "1px solid rgba(24, 40, 61, 0.25)",
+                        borderRadius: "3px",
+                      }}
                     >
                       <img src={CalendarIcon} alt="CalendarIcon" />
 
@@ -3116,7 +3134,9 @@ export default function AllRequest() {
                               resetPageDetails();
                             }}
                           >
-                            <div className="text-sm whitespace-nowrap">{discussion.name}</div>
+                            <div className="text-sm whitespace-nowrap">
+                              {discussion.name}
+                            </div>
                             {actionTab === discussion.key && <span></span>}
                           </li>
                         ))}

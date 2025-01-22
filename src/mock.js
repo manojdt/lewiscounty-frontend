@@ -2267,9 +2267,9 @@ export const testimonialRequestColumns = [
     flex: 1,
     id: 5,
     for: ["admin", "mentor"],
-    renderCell: (params) => {
-      return <div>{dateFormat(params.row.updated_at)}</div>;
-    },
+    // renderCell: (params) => {
+    //   return <div>{dateFormat(params.row.updated_at)}</div>;
+    // },
   },
   {
     field: "updated_by",

@@ -47,6 +47,7 @@ import GoalCreationModal from "./GoalCreationModal";
 import MaterialsCreationModal from "./MaterialsCreationModal";
 import { useGetAllMaterialsQuery } from "../../../features/materials/materialApis.services";
 import CertificatesCreationModal from "./CertificateCreationModal";
+import { useDebounce } from "../../../utils";
 
 const EquipMentListMenuItems = [{ label: "View", action: "view" }];
 const DEFAULT_VALUE = 1;
@@ -63,6 +64,8 @@ export default function CreatePrograms() {
   const role = userInfo.data.role || "";
   const [toggleRole, setToggleRole] = useState("");
   const [searchParams] = useSearchParams();
+  const [mentorSearchValue, setMentorSearchValue] = useState("");
+  const searchValue = useDebounce(mentorSearchValue, 500);
 
   const program_create_type = searchParams.get("program_create_type") || "";
   const re_open_type = searchParams.get("type") || "";
@@ -85,14 +88,21 @@ export default function CreatePrograms() {
       refetchOnMountOrArgChange: true,
     });
 
-  const { data: mentor_assign } = useGetAllMentorsQuery(
-    { role_name: "mentor", page: 1, limit: 100, status: "active" },
+  const { data: mentor_assign, isFetching } = useGetAllMentorsQuery(
+    {
+      role_name: "mentor",
+      page: 1,
+      limit: 100,
+      status: "active",
+      ...(searchValue && { search: searchValue }),
+    },
     {
       skip: role !== admin,
       refetchOnMountOrArgChange: true,
     }
   );
 
+  console.log("isFetching", isFetching);
   const { data: currentProgramDetail, isLoading: isDetailFetching } =
     useGetSpecificProgramDetailsQuery(
       { id: params?.id, ...(program_create_type && { program_create_type }) },
@@ -180,7 +190,6 @@ export default function CreatePrograms() {
   const [openGoalsModal, setOpenGoalsModal] = React.useState(false);
 
   const [programAllFields, setProgramAllFields] = useState(ProgramFields);
-  const [current, setCurrent] = useState("");
   const [formDetails, setFormDetails] = useState({
     category: [],
     materials: [],
@@ -1439,7 +1448,9 @@ export default function CreatePrograms() {
                     currentStepData={
                       stepData[filteredProgramTabs[currentStep - 1].key]
                     }
-                    setCurrent={setCurrent}
+                    setMentorSearchValue={setMentorSearchValue}
+                    mentorSearchValue={mentorSearchValue}
+                    isMentorDataLoading={isFetching}
                     setToggleRole={setToggleRole}
                     handleAction={handleAction}
                     handleProgramCheck={handleProgramCheck}

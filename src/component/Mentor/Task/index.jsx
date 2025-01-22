@@ -726,7 +726,7 @@ const MentorTask = () => {
       {/* Header */}
       <div className="bg-white p-5 rounded-lg shadow-sm border border-gray-300">
         <div className="flex flex-wrap items-center justify-between mb-4">
-          <h1 className="text-xl font-semibold text-gray-800">Mentees Task</h1>
+          <h1 className="text-xl font-semibold text-gray-800">Mentees Tasks</h1>
           <div className="flex items-center space-x-3">
             <div className="relative">
               <input

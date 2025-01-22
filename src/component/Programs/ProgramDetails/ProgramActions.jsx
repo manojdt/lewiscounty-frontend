@@ -28,7 +28,7 @@ const ProgramActions = ({
   handleAcceptCancelProgramRequest,
   setOpenPopup,
   setCancelPopup,
-  from = ""
+  from = "",
 }) => {
   const userInfo = useSelector((state) => state.userInfo);
 
@@ -152,7 +152,10 @@ const ProgramActions = ({
         );
       }
 
-      if (programdetails.status === "cancel") {
+      if (
+        programdetails.status === "cancel" ||
+        programdetails?.request_data?.status === "rejected"
+      ) {
         return (
           <button
             className="py-3 mt-7 px-16 text-white text-[14px] flex items-center"
@@ -352,8 +355,6 @@ const ProgramActions = ({
       );
     }
 
-    
-
     return null;
   };
 
@@ -379,16 +380,17 @@ const ProgramActions = ({
       }
       if (programdetails?.program_interest) {
         return (
-          <span
-            className="mt-4 py-3 px-16 text-white text-[14px] rounded"
-            style={{
-              ...buttonStyles.success,
-              cursor: "not-allowed",
-              lineHeight:'5'
-            }}
-          >
-            Interested
-          </span>
+          <div className="mt-6">
+            <span
+              className="py-3 px-16 text-white text-[14px] rounded"
+              style={{
+                ...buttonStyles.success,
+                cursor: "not-allowed",
+              }}
+            >
+              Interested
+            </span>
+          </div>
         );
       }
     }
@@ -420,16 +422,16 @@ const ProgramActions = ({
       <div className="py-9">
         {menteeProgramStatus[programdetails.mentee_join_status] ? (
           <>
-          {["new", "pending", "rejected"].includes(
-                  programdetails?.request_data?.status
-                ) && (
-                  <button
-                    onClick={() => setCancelPopup(true)}
-                    className="border-[2px] border-red-500 rounded-md text-red-500 px-4 py-2 font-semibold text-sm flex items-center"
-                  >
-                    Cancel Request
-                  </button>
-                )}
+            {["new", "pending", "rejected"].includes(
+              programdetails?.request_data?.status
+            ) && (
+              <button
+                onClick={() => setCancelPopup(true)}
+                className="border-[2px] border-red-500 rounded-md text-red-500 px-4 py-2 font-semibold text-sm flex items-center"
+              >
+                Cancel Request
+              </button>
+            )}
             {programdetails.mentee_join_status !==
               menteeProgramStatus.program_join_request_accepted.status && (
               <div className="space-y-4">

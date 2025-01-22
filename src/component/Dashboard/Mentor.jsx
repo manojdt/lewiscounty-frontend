@@ -56,18 +56,16 @@ export const Mentor = () => {
     dispatch(getUserPrograms(query));
   };
 
-  const handleNavigateDetails = (program) => {
+  const handleNavigateDetails = (programdetails) => {
     let baseUrl = pipeUrls.programdetails;
-    if (Object.keys(program).length) {
-      // if (program.status === programActionStatus.yettostart) baseUrl = pipeUrls.startprogram
-      // if (program.status === programActionStatus.assigned
-      //     || program.status === programActionStatus.inprogress
-      // ) baseUrl = pipeUrls.startprogram
+    if (Object.keys(programdetails).length) {
       navigate(
-        `${baseUrl}/${program.id}${
-          program?.admin_program_request_id
-            ? `?request_id=${program?.admin_program_request_id}&type=admin_assign_program&breadcrumbsType=${requestPageBreadcrumbs.dashboardPrograms}`
-            : `?breadcrumbsType=${requestPageBreadcrumbs.dashboardPrograms}`
+        `${baseUrl}/${programdetails.program || programdetails?.id}${
+          programdetails?.admin_program_request_id
+            ? `?request_id=${programdetails?.admin_program_request_id}&type=admin_assign_program`
+            : "admin_assign_program" in programdetails
+            ? `?program_create_type=admin_program`
+            : ""
         }`
       );
     }
@@ -191,7 +189,7 @@ export const Mentor = () => {
 
           {!["new", "pending"].includes(
             userInfo?.data?.userinfo?.approve_status
-          ) ? (     
+          ) ? (
             <div className="col-span-5 sm:col-span-5 md:col-span-3 lg:col-span-4">
               {searchParams.get("type") === null &&
                 searchParams.get("is_bookmark") === null && (
