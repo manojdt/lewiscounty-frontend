@@ -340,8 +340,6 @@ export default function AssignMentees() {
     }
   }, [params.id]);
 
-  console.log(state?.data);
-
   useEffect(() => {
     if (state?.data && Object.keys(state?.data).length) {
       let fieldValue = {

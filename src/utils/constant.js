@@ -732,7 +732,7 @@ export const programActionStatus = {
   started: 'started',
   cancelled: 'cancelled',
   learning: 'learning',
-  bookmark: 'bookmarked',
+  bookmark: 'is_bookmark',
   planned: 'planned',
   draft: 'draft',
   reschedule: 'reschedule',
@@ -871,7 +871,6 @@ export const programMenus = (page = 'dashboard') => {
       menteeStatus: 'interest',
       status: programActionStatus.interest
     },
-
     {
       name: 'Bookmarked Programs',
       count: 0,
