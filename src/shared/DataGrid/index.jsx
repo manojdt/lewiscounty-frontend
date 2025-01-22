@@ -246,7 +246,7 @@ export default function DataTable({
   hideCheckbox = false,
   hideFooter = false,
   handleSelectedRow = undefined,
-  height = 410, // Default fixed height
+  height = 670, // Default fixed height
   getPageDetails = () => false,
   rowCount = 0,
   setPaginationModel = () => false,
@@ -288,7 +288,7 @@ export default function DataTable({
 
   return (
     <div
-      className="w-full "
+      // className="w-full"
       style={{ height: height, maxHeight: height, position: "relative" }}
     >
       {/* <div className="w-full  lg:min-w-0 h-full"> */}
