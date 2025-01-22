@@ -384,6 +384,7 @@ const ProgramActions = ({
             style={{
               ...buttonStyles.success,
               cursor: "not-allowed",
+              lineHeight:'5'
             }}
           >
             Interested

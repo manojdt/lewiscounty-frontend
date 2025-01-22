@@ -227,6 +227,12 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     cancel: false,
     programId: "",
   });
+
+  React.useEffect(()=>{
+    if(!moreMenuModal.not_interested){
+      setAnchorEl(null);
+    }
+  },[moreMenuModal.not_interested])
   const { profile, loading: profileLoading } = useSelector(
     (state) => state.profileInfo
   );
