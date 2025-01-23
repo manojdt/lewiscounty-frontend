@@ -73,12 +73,11 @@ export default function ProgramCard({
   const open = Boolean(anchorEl);
 
   const userdetails = useSelector((state) => state.userInfo);
-  console.log(userdetails,"userdetails")
   const { profile } = useSelector((state) => state.profileInfo);
   const { category, loading: apiLoading } = useSelector(
     (state) => state.programInfo
   );
-  const role = userdetails.data.role || '';
+  const role = userdetails.data.role || "";
 
   const statusNotShow = [
     "yettoapprove",
@@ -359,11 +358,15 @@ export default function ProgramCard({
                     style={{
                       ...(currentProgram.status === "yettoapprove" &&
                       !currentProgram?.mentor_id
-                        ?role==="admin"&&userdetails?.data?.user_id!==currentProgram?.created_by?{}: {
-                            opacity: "0.5",
-                            pointerEvents: "none",
-                            cursor: "not-allowed",
-                          }
+                        ? role === "admin" &&
+                          userdetails?.data?.user_id !==
+                            currentProgram?.created_by
+                          ? {}
+                          : {
+                              opacity: "0.5",
+                              pointerEvents: "none",
+                              cursor: "not-allowed",
+                            }
                         : {}),
                     }}
                   >
@@ -583,46 +586,50 @@ export default function ProgramCard({
                         <div className="flex justify-center pt-2">
                           {(currentProgram.status === "yettoapprove" &&
                             !currentProgram?.mentor_id) ||
-                          currentProgram.status === "draft" ?role==="admin"&&userdetails?.data?.user_id!==currentProgram?.created_by?(
-                            <button
-                              className="text-white text-[12px] py-3 w-[140px]"
-                              onClick={() =>
-                                handleNavigateDetails(currentProgram)
-                              }
-                              style={{
-                                background: "rgba(29, 91, 191, 1)",
-                                borderRadius: "5px",
-                              }}
-                            >
-                              View Details
-                            </button>
-                          ): (
-                            <button
-                              className={`text-white text-[12px] py-3 ${
-                                currentProgram.status === "draft"
-                                  ? "w-[110px]"
-                                  : "w-[170px]"
-                              }`}
-                              onClick={() =>
-                                currentProgram.status === "draft"
-                                  ? navigate(
-                                      `/update-program/${currentProgram.id}`
-                                    )
-                                  : undefined
-                              }
-                              style={{
-                                background:
-                                  currentProgram.status === "yettoapprove" &&
-                                  !currentProgram?.mentor_id
-                                    ? "#76818E"
-                                    : "rgba(29, 91, 191, 1)",
-                                borderRadius: "5px",
-                              }}
-                            >
-                              {currentProgram.status === "draft"
-                                ? "Continue"
-                                : "Waiting for approval"}
-                            </button>
+                          currentProgram.status === "draft" ? (
+                            role === "admin" &&
+                            userdetails?.data?.user_id !==
+                              currentProgram?.created_by ? (
+                              <button
+                                className="text-white text-[12px] py-3 w-[140px]"
+                                onClick={() =>
+                                  handleNavigateDetails(currentProgram)
+                                }
+                                style={{
+                                  background: "rgba(29, 91, 191, 1)",
+                                  borderRadius: "5px",
+                                }}
+                              >
+                                View Details
+                              </button>
+                            ) : (
+                              <button
+                                className={`text-white text-[12px] py-3 ${
+                                  currentProgram.status === "draft"
+                                    ? "w-[110px]"
+                                    : "w-[170px]"
+                                }`}
+                                onClick={() =>
+                                  currentProgram.status === "draft"
+                                    ? navigate(
+                                        `/update-program/${currentProgram.id}`
+                                      )
+                                    : undefined
+                                }
+                                style={{
+                                  background:
+                                    currentProgram.status === "yettoapprove" &&
+                                    !currentProgram?.mentor_id
+                                      ? "#76818E"
+                                      : "rgba(29, 91, 191, 1)",
+                                  borderRadius: "5px",
+                                }}
+                              >
+                                {currentProgram.status === "draft"
+                                  ? "Continue"
+                                  : "Waiting for approval"}
+                              </button>
+                            )
                           ) : (
                             <button
                               className="text-white text-[12px] py-3 w-[140px]"

@@ -21,7 +21,23 @@ import moment from "moment/moment";
 const dateFormat = "MM/DD/YYYY hh:mm a";
 const columns = [
   { field: "mentor_name", headerName: "Mentor Name", flex: 1 },
-  { field: "subprogram", headerName: "Sub program", flex: 1 },
+  {
+    field: "admin_program_series",
+    headerName: "Sub program",
+    flex: 1,
+    renderCell: (params) => {
+      console.log(params);
+      const sub_program_count = params.row?.admin_program_series;
+
+      return (
+        <div>
+          {sub_program_count
+            ? sub_program_count
+            : params.api.getSortedRowIds().indexOf(params.id) + 1}
+        </div>
+      );
+    },
+  },
   { field: "program_name", headerName: "Title Name", flex: 1 },
   { field: "description", headerName: "Description", flex: 1.5 },
   {
@@ -36,7 +52,13 @@ const columns = [
     flex: 1,
     renderCell: (params) => moment(params.row?.end_date).format(dateFormat),
   },
-  { field: "acceptedDate", headerName: "Accepted date", flex: 1 },
+  {
+    field: "acceptedDate",
+    headerName: "Accepted date",
+    flex: 1,
+    renderCell: (params) =>
+      moment(params.row?.admin_program_accepted).format(dateFormat),
+  },
   {
     field: "status",
     headerName: "Status",
@@ -53,7 +75,11 @@ const columns = [
             borderRadius: 4,
           }}
         >
-          {status === "yettoapprove" ? "Pending" : programStatusText?.[status]}
+          {status === "yettoapprove"
+            ? "Pending"
+            : status === "assign_program_accepted"
+            ? "Accepted"
+            : programStatusText?.[status]}
         </span>
       );
     },
