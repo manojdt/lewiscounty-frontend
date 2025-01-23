@@ -57,7 +57,9 @@ const columns = [
     headerName: "Accepted date",
     flex: 1,
     renderCell: (params) =>
-      moment(params.row?.admin_program_accepted).format(dateFormat),
+      params.row?.admin_program_accepted_date
+        ? moment(params.row?.admin_program_accepted_date).format(dateFormat)
+        : "",
   },
   {
     field: "status",
