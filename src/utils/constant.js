@@ -479,6 +479,11 @@ export const programStatusColor = {
     bgColor: '#ffead1',
     color: '#ffb155',
   },
+  assign_program_accepted: {
+    bgColor: 'rgba(235, 255, 243, 1)',
+    color: 'rgba(22, 182, 129, 1)',
+  },
+  
 };
 
 export const requestStatusColor = {

@@ -255,10 +255,12 @@ export default function Programs() {
       setOpenCategory(true);
     }
   }, [role]);
-
   const handleBookmark = async (program) => {
+    const is_admin_assign_program = program.hasOwnProperty(
+      "admin_assign_program"
+    );
     const payload = {
-      program_id: program.id,
+      [is_admin_assign_program ? "admin_program_id" : "program_id"]: program.id,
       marked: !program.is_bookmark,
     };
     // setLoading(true);
@@ -277,9 +279,8 @@ export default function Programs() {
   };
 
   const handleNavigation = (programdetails) => {
-    
     let baseUrl = pipeUrls.programdetails;
-    if (Object.keys(programdetails).length) {     
+    if (Object.keys(programdetails).length) {
       navigate(
         `${baseUrl}/${programdetails.program || programdetails?.id}${
           programdetails?.admin_program_request_id
