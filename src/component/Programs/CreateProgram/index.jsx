@@ -1249,8 +1249,10 @@ export default function CreatePrograms() {
     if (
       isProgramCreated ||
       isProgramUpdated ||
+      isProgramReopenUpdated ||
       IsErrorProgramCreating ||
       IsErrorProgramUpdating ||
+      IsErrorProgramReopenUpdating ||
       status === programStatus.exist ||
       status === programStatus.error
     ) {
@@ -1263,7 +1265,7 @@ export default function CreatePrograms() {
         setShowBackdrop(false);
 
         // Only navigate on success cases
-        if (isProgramCreated || isProgramUpdated) {
+        if (isProgramCreated || isProgramUpdated || isProgramReopenUpdated) {
           navigate("/dashboard");
         }
       }, 3000);
@@ -1273,7 +1275,7 @@ export default function CreatePrograms() {
   }, [
     isProgramCreated,
     isProgramUpdated,
-    IsErrorProgramCreating,
+    isProgramReopenUpdated,
     IsErrorProgramUpdating,
     status,
   ]);
@@ -1325,7 +1327,7 @@ export default function CreatePrograms() {
   const handleCancelClick = () => {
     if (role === admin && toggleRole === mentor && !params?.id) {
       setToggleRole(admin);
-      setCurrentStep(DEFAULT_VALUE)
+      setCurrentStep(DEFAULT_VALUE);
     } else {
       navigate("/programs");
       reset();
@@ -1380,16 +1382,17 @@ export default function CreatePrograms() {
           open={
             showBackdrop || // Control visibility with local state
             isProgramCreating ||
-            isProgramUpdating
+            isProgramUpdating ||
+            isProgramReopenUpdating
           }
         >
-          {isProgramCreating || isProgramUpdating ? (
+          {isProgramCreating || isProgramUpdating || isProgramReopenUpdating ? (
             <CircularProgress color="inherit" />
           ) : (
             <div className="w-2/6 bg-white flex flex-col gap-4 h-[330px] justify-center items-center">
               <img
                 src={
-                  isProgramCreated || isProgramUpdated
+                  isProgramCreated || isProgramUpdated || isProgramReopenUpdated
                     ? SuccessIcon
                     : FailedIcon
                 }
@@ -1400,7 +1403,9 @@ export default function CreatePrograms() {
                   ? "Program already exists"
                   : status === programStatus.error
                   ? "There is a Server Error. Please try again later"
-                  : IsErrorProgramCreating || IsErrorProgramUpdating
+                  : IsErrorProgramCreating ||
+                    IsErrorProgramUpdating ||
+                    IsErrorProgramReopenUpdating
                   ? `Error ${
                       IsErrorProgramCreating ? "Creating" : "Updating"
                     } program`

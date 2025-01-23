@@ -481,7 +481,7 @@ const Members = () => {
         modalClose={handleCloseCancelReasonPopup}
         noheader
       >
-        <div className="px-5 py-5 max-w-sm sm:max-w-md">
+        <div className="p-5">
           <div
             className="flex flex-col gap-5 border rounded-lg"
             style={{ borderColor: "rgba(29, 91, 191, 1)" }}
@@ -495,7 +495,10 @@ const Members = () => {
                 alt="CancelIcon"
               />
             </div>
-            <form onSubmit={handleSubmit(handleCancelReasonPopupSubmit)}>
+            <form
+              onSubmit={handleSubmit(handleCancelReasonPopupSubmit)}
+              className="p-4"
+            >
               <label className="block text-xs font-bold mb-2">Reason</label>
               <textarea
                 {...register("reason", { required: "This field is required" })}

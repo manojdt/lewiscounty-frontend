@@ -228,11 +228,11 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     programId: "",
   });
 
-  React.useEffect(()=>{
-    if(!moreMenuModal.not_interested){
+  React.useEffect(() => {
+    if (!moreMenuModal.not_interested) {
       setAnchorEl(null);
     }
-  },[moreMenuModal.not_interested])
+  }, [moreMenuModal.not_interested]);
   const { profile, loading: profileLoading } = useSelector(
     (state) => state.profileInfo
   );
@@ -905,7 +905,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       key: "date",
       minDate: programdetails?.start_date,
       maxDate: programdetails?.end_date,
-      isDisable:true,
+      isDisable: true,
     },
     {
       type: "time",
@@ -913,7 +913,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       isRequired: true,
       col: 4,
       key: "time",
-      isDisable:true,
+      isDisable: true,
     },
     {
       type: "textbox",
@@ -1922,7 +1922,10 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                       typeParams
                     ))) && (
                   <>
-                    <div className="cursor-pointer" onClick={handleClick}>
+                    <div
+                      className="cursor-pointer w-8 h-8 rounded-full flex items-center justify-center bg-gray-200 hover:bg-gray-300 transition-all duration-300"
+                      onClick={handleClick}
+                    >
                       <img src={MoreIcon} alt="MoreIcon" />
                     </div>
                     <Menu
