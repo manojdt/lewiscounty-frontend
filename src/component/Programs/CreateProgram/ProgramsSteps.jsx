@@ -1184,7 +1184,10 @@ const ProgramSteps = ({
       <MuiModal
         modalSize="md"
         modalOpen={!!currentField}
-        modalClose={() => setCurrentField("")}
+        modalClose={() => {
+          setCurrentField("");
+          setMentorSearchValue("");
+        }}
         title="Add mentor"
       >
         <TextField
