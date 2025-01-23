@@ -367,6 +367,26 @@ export const Mentors = () => {
                     Cancel Request
                   </MenuItem>
                 </>}
+                {/* {selectedItem.status === "accept" &&
+                <>
+                <MenuItem
+                onClick={() => {
+                  selectedItem?.is_follow !== 'waiting' &&
+                    handleOpenFollowPopup(
+                      selectedItem?.following,
+                      selectedItem?.is_follow
+                    );
+                }}
+                className='!text-[12px]'
+              >
+                <img
+                  src={FollowIcon}
+                  alt='FollowIcon'
+                  className='pr-3 w-[27px]'
+                />
+                {followBtnText[selectedItem?.is_follow]}
+              </MenuItem>
+              </>} */}
             </Menu>
           </>
         );

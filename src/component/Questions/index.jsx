@@ -6,7 +6,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import SuccessTik from '../../assets/images/blue_tik1x.png';
 import rightArrow from '../../assets/images/right.png';
-import { Navbar, Stepper } from '../../shared';
+import { Button, Navbar, Stepper } from '../../shared';
 import { MenteeStepsList, StepsList, userStatus } from '../../utils/constant';
 import {
   StepFormFields,
@@ -420,14 +420,20 @@ export const Questions = () => {
       )
     );
   };
+  const handleLogout = () => {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    dispatch({ type: "logout" });
+    navigate("/login");
+  };
   return (
     <>
       <Navbar />
-      <div className='px-9'>
-        <div className='flex justify-between items-center'>
+      <div className="px-9">
+        <div className="flex justify-between items-center">
           <h2
-            className='text-xl text-left py-8'
-            style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 500 }}
+            className="text-xl text-left py-8"
+            style={{ color: "rgba(24, 40, 61, 1)", fontWeight: 500 }}
           >
             {/* Fill the Question and Answer */}
           </h2>
@@ -435,50 +441,60 @@ export const Questions = () => {
         {errorNot && (
           <ToastNotification
             openToaster={errorNot}
-            message={'Please fill all mandatory fields'}
+            message={"Please fill all mandatory fields"}
             handleClose={() => setErrorNot(false)}
-            toastType={'error'}
+            toastType={"error"}
           />
         )}
         <Backdrop
-          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={userInfo.loading || customLoading || actionInfo.loading}
         >
-          <CircularProgress color='inherit' />
+          <CircularProgress color="inherit" />
         </Backdrop>
 
         <Backdrop
-          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={loading || userInfo.status === userStatus.questions}
         >
-          <div className='px-5 py-1 flex justify-center items-center'>
+          <div className="px-5 py-1 flex justify-center items-center">
             <div
-              className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
-              style={{ background: '#fff', borderRadius: '10px' }}
+              className="flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20"
+              style={{ background: "#fff", borderRadius: "10px" }}
             >
-              <img src={SuccessTik} alt='SuccessTik' />
+              <img src={SuccessTik} alt="SuccessTik" />
               <p
-                className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
                 style={{
                   fontWeight: 600,
                 }}
               >
-                {role === 'mentee'
+                {role === "mentee"
                   ? redirect
-                    ? 'We are redirecting to programs page'
-                    : 'Questions submitted Successfully'
+                    ? "We are redirecting to programs page"
+                    : "Questions submitted Successfully"
                   : redirect
-                  ? 'We are redirecting to login page'
-                  : 'Questions submitted Successfully.'}
+                  ? "We are redirecting to login page"
+                  : "Questions submitted Successfully."}
               </p>
             </div>
           </div>
         </Backdrop>
-
-        <div style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
+        {role === "mentor" && (
+          <div className="flex justify-end pb-2">
+            <Button
+              btnType="button"
+              btnCls="w-[110px]"
+              btnName="Logout"
+              btnCategory="primary"
+              onClick={handleLogout}
+            />
+          </div>
+        )}
+        <div style={{ boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.15)" }}>
           <div
-            className='steps pl-24 pr-28'
-            style={{ boxShadow: '4px 4px 15px 0px rgba(0, 0, 0, 0.1)' }}
+            className="steps pl-24 pr-28"
+            style={{ boxShadow: "4px 4px 15px 0px rgba(0, 0, 0, 0.1)" }}
           >
             <Stepper
               steps={allStepList}

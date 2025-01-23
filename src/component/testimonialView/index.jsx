@@ -9,7 +9,7 @@ import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import BlueCloseIcon from '../../assets/icons/blue-close-icon.svg';
 import SuccessTik from '../../assets/images/blue_tik1x.png';
 import CancelColorIcon from '../../assets/icons/cancelCircle.svg'
-import { request_testimonial, requestPageBreadcrumbs } from '../Breadcrumbs/BreadcrumbsCommonData';
+import { request_testimonial, request_testimonial_admin, requestPageBreadcrumbs } from '../Breadcrumbs/BreadcrumbsCommonData';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 
 export const TestimonialView = () => {
@@ -87,9 +87,8 @@ export const TestimonialView = () => {
 useEffect(() => {
  if(breadcrumbsType===requestPageBreadcrumbs.testimonial_request){
  setBreadcrumbsArray(request_testimonial())
-}else{
-    // setBreadcrumbsArray(request_testimonial())
-
+}else if(breadcrumbsType===requestPageBreadcrumbs.testimonial_request_admin_my){
+    setBreadcrumbsArray(request_testimonial_admin())
 }
 }, [breadcrumbsType])
     return (

@@ -579,7 +579,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   };
   const handleBreadcrumbs = (key) => {
     const decodedKey = decodeURIComponent(key);
-    const program_detailsData = program_details(state?.from);
+    const program_detailsData = program_details(state?.from,programdetails?.program_name);
     const program_New = request_newProgramRequest(programdetails?.program_name);
     const program_re = request_programReschedule(programdetails?.program_name);
     const program_cancel = request_programCancel(programdetails?.program_name);
@@ -2217,6 +2217,14 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                         Prerequisites:{" "}
                       </span>
                       {programdetails.prerequisites}
+                    </div>
+                  )}
+                  {programdetails?.session_details && (
+                    <div className="text-[12px] my-3">
+                      <span className="font-semibold text-background-primary-main">
+                        Session Details:{" "}
+                      </span>
+                      {programdetails.session_details}
                     </div>
                   )}
 
