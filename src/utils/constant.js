@@ -1008,6 +1008,10 @@ export const RequestStatus = {
     key: 're_open_request',
     name: 'Re-open Requests',
   },
+  mentorChangeRequest: {
+    key: 'mentor_change_request',
+    name: 'Mentor Change Requests',
+  },
 };
 
 export const myRequestOverview = [
@@ -1123,10 +1127,10 @@ export const menteesRequestOverview = [
 
 export const adminRequestOverview = [
   {
-    name: 'Mentor Changes request',
-    key: RequestStatus.programRequest.key,
+    name: 'Mentor Change Requests',
+    key: RequestStatus.mentorChangeRequest.key,
     count: 0,
-    status: RequestStatus.programRequest.key,
+    status: RequestStatus.mentorChangeRequest.key,
     for: ['mentor'],
   },
   {
