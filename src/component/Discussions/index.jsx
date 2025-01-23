@@ -24,7 +24,7 @@ export default function Discussions() {
       key: 'completed',
     },
     {
-      name: 'Archieve',
+      name: 'Archive',
       key: 'archieve',
     },
   ];

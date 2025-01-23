@@ -67,7 +67,7 @@ const EditProfile = ({ setEditMode }) => {
       component: <MenteeExpectionAndGoalsSection />,
     },
     {
-      title: "Professional Bakground",
+      title: "Professional Background",
       component: <ProfessionalBakgroundSection />,
     },
     {

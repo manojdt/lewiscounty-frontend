@@ -2332,9 +2332,9 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       fieldtype: "text",
       label: "Goals",
       placeholder: "Select Goals",
-      inputRules: {
-        required: "This field is required",
-      },
+      // inputRules: {
+      //   required: "This field is required",
+      // },
       width: "w-full",
       // disabled: bool,
       options: [],

@@ -55,9 +55,11 @@ export const SubjectProgramCard = ({ data = {} }) => {
               }}
             >
               Instructor :{" "}
-              <span style={{ color: "#1D5BBF" }}>
-                {data?.mentor_name} ({data?.role ?? ""})                
-              </span>
+              <a href={`/mentor-details/${data?.created_by}`}>
+                <span style={{ color: "#1D5BBF" }}>
+                  {data?.mentor_name} ({data?.role ?? ""})
+                </span>
+              </a>
             </span>
           </Stack>
         </Stack>
@@ -66,7 +68,7 @@ export const SubjectProgramCard = ({ data = {} }) => {
             btnName="View Details"
             btnCls="w-[140px] !text-[#fff] !bg-background-primary-main !text-[12px]"
             btnCategory="secondary"
-            onClick={()=> navigate(`/program-details/${data?.id}`)}
+            onClick={() => navigate(`/program-details/${data?.id}`)}
           />
         </Box>
       </Stack>

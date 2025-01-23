@@ -30,6 +30,9 @@ import protectedApi from "../../services/api";
 import { getPost } from "../../services/feeds";
 import ProgramFeeds from "../../shared/ProgramFeeds";
 import { useWindowSize } from "../../utils/windowResize";
+import api from "../../services/api";
+import MaleIcon from "../../assets/images/male-profile1x.png";
+import FemaleIcon from "../../assets/images/female-profile1x.png";
 
 export default function Admin() {
   const { width } = useWindowSize();
@@ -43,6 +46,7 @@ export default function Admin() {
   const [chartList, setChartList] = useState([]);
   const [membersCount, setMembersCount] = useState([]);
   const [loading, setLoading] = useState(true); // Track loading state
+  const [topMentotList, setTopMentorList] = useState([]);
 
   const role = userInfo.data.role;
   const dispatch = useDispatch();
@@ -68,6 +72,7 @@ export default function Admin() {
   //         count: 40
   //     },
   // ]
+  
 
   const fetchMembersCount = async () => {
     setLoading(true); // Set loading to true while fetching
@@ -83,7 +88,16 @@ export default function Admin() {
   useEffect(() => {
     fetchMembersCount();
     dispatch(getProgramCounts());
+    getTopMentors()
   }, []);
+
+  const getTopMentors = async () => {
+    const topMentor = await api.get("rating/top_mentor");
+    if (topMentor.status === 200 && topMentor.data?.results) {
+      setTopMentorList(topMentor.data.results);
+    }
+  };
+
   useEffect(() => {
     const totalCount = userpragrams.statusCounts;
     if (Object.keys(totalCount).length) {
@@ -293,35 +307,9 @@ export default function Admin() {
               items={membersCount}
             />
           </div>
-        </div>
-
-        <div className="col-span-5">
-          <CardWrapper title="Metrics at a Glance">
-            <ProgramMetrix />
-          </CardWrapper>
-
-          <div className="py-3">
-            <DashboardPrograms />
-          </div>
-        </div>
-      </div>
-
-      {/* <div className="grid grid-cols-8 gap-7 mt-4">
-                <div className='col-span-3'>
-                    <ProgramPerformance data={userpragrams?.chartProgramDetails?.data &&
-                        userpragrams?.chartProgramDetails?.data?.length > 0 ?
-                        userpragrams?.chartProgramDetails?.data : data} total={userpragrams?.chartProgramDetails?.total_program_count || 10} handleFilter={handlePerformanceFilter} handleDetails={handleDetails} height={'440px'} />
-                </div>
-                <div className='col-span-5'>
-                    <ReportsInfo />
-                </div>
-
-            </div> */}
-
-      <div className="grid grid-cols-10 gap-7 mt-4 max-md:block">
-        <div className="col-span-2 sm:col-span-2 md:col-span-5 lg:col-span-5 xl:col-span-2">
+          <div className="mt-4">
           <CardWrapper title="Recent Activities" viewAll>
-            <div style={{ height: "440px" }}>
+            <div style={{ height: "700px" }}>
               {activityList.length ? (
                 <div className="program-status flex items-center flex-col justify-center w-max py-4 px-4">
                   {activityList.map((recentActivity) => (
@@ -351,7 +339,7 @@ export default function Admin() {
                       </div>
                       </div>
                       
-                      <div className="w-8 h-3  mx-[-1px]  flex items-center justify-center">
+                      <div className="w-8 h-10  mx-[-1px]  flex items-center justify-center">
                         <span
                           className="w-3 h-3  rounded-full"
                           style={{
@@ -374,6 +362,133 @@ export default function Admin() {
               )}
             </div>
           </CardWrapper>
+          </div>
+        </div>
+
+        <div className="col-span-5">
+          <CardWrapper title="Metrics at a Glance">
+            <ProgramMetrix />
+          </CardWrapper>
+
+          <div className="py-3">
+            <DashboardPrograms />
+          </div>
+        </div>
+      </div>
+
+      {/* <div className="grid grid-cols-8 gap-7 mt-4">
+                <div className='col-span-3'>
+                    <ProgramPerformance data={userpragrams?.chartProgramDetails?.data &&
+                        userpragrams?.chartProgramDetails?.data?.length > 0 ?
+                        userpragrams?.chartProgramDetails?.data : data} total={userpragrams?.chartProgramDetails?.total_program_count || 10} handleFilter={handlePerformanceFilter} handleDetails={handleDetails} height={'440px'} />
+                </div>
+                <div className='col-span-5'>
+                    <ReportsInfo />
+                </div>
+
+            </div> */}
+
+      <div className="grid grid-cols-10 gap-7 mt-4 max-md:block">
+        <div className="col-span-2 sm:col-span-2 md:col-span-5 lg:col-span-5 xl:col-span-2">
+        <div
+              className="recent-request"
+              style={{
+                boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.05)",
+                borderRadius: "10px",
+              }}
+            >
+              <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
+                <div className="flex gap-4">
+                  <div
+                    className="card-dash"
+                    style={{
+                      background:
+                        "linear-gradient(180deg, #00B1C0 0%, #005DC6 100%)",
+                    }}
+                  ></div>
+                  <h4>Top Mentors</h4>
+                </div>
+                <div className="flex justify-center mt-2 mb-2">
+                  <p
+                    className="text-[12px] py-2 px-2 cursor-pointer"
+                    style={{
+                      background: "rgba(217, 228, 242, 1)",
+                      color: "rgba(29, 91, 191, 1)",
+                      borderRadius: "3px",
+                    }}
+                    onClick={() => navigate("/mentors?type=topmentor")}
+                  >
+                    View All
+                  </p>
+                </div>
+              </div>
+
+              <div className="content flex flex-col gap-2 py-2 px-2 overflow-x-auto">
+                {topMentotList.map((recentReq, index) => {
+                  let name = `${recentReq.first_name} ${recentReq.last_name}`;
+                  return (
+                    <div
+                      key={index}
+                      className="py-3 px-3"
+                      style={{
+                        border: "1px solid rgba(29, 91, 191, 1)",
+                        borderRadius: "10px",
+                      }}
+                    >
+                      <div
+                        className="flex gap-2 pb-3"
+                        style={{
+                          borderBottom: "1px solid rgba(29, 91, 191, 1)",
+                        }}
+                      >
+                        <div className="w-1/4">
+                          {" "}
+                          <img
+                            src={index % 2 === 0 ? MaleIcon : FemaleIcon}
+                            alt="male-icon"
+                          />{" "}
+                        </div>
+                        <div className="flex flex-col gap-2">
+                          <p
+                            className="text-[12px]"
+                            style={{
+                              width: "100px",
+                              overflow: "hidden",
+                              whiteSpace: "nowrap",
+                              textOverflow: "ellipsis",
+                            }}
+                            title={name}
+                          >
+                            {name}
+                          </p>
+                          <p className="text-[10px]">{recentReq.role}</p>
+                        </div>
+                      </div>
+                      <div className="flex gap-3 pt-3">
+                        <div className="flex items-center gap-1">
+                          <span
+                            className="lg:w-2 lg:h-2  rounded-full"
+                            style={{ background: "rgba(29, 91, 191, 1)" }}
+                          ></span>
+                          <span className="lg:text-[8px]">
+                            Attended({recentReq.attended || 0})
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <span
+                            className="lg:w-2 lg:h-2  rounded-full"
+                            style={{ background: "rgba(0, 174, 189, 1)" }}
+                          ></span>
+                          <span className="lg:text-[8px]">
+                            Completed({recentReq.completed || 0})
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
         </div>
         <div className="col-span-4 sm:col-span-4 md:col-span-5 lg:col-span-5 xl:col-span-4">
           <MemberRequest />

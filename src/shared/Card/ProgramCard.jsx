@@ -73,7 +73,6 @@ export default function ProgramCard({
   const open = Boolean(anchorEl);
 
   const userdetails = useSelector((state) => state.userInfo);
-  console.log(userdetails,"userdetails")
   const { profile } = useSelector((state) => state.profileInfo);
   const { category, loading: apiLoading } = useSelector(
     (state) => state.programInfo

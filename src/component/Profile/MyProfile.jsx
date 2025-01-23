@@ -10,7 +10,7 @@ import EditProfile from './edit-profile';
 export const roleBasedSections = {
   mentor: [
     'Personal Information',
-    'Professional Bakground',
+    'Professional Background',
     'Educational Background',
     'Area of expertise',
     'Mentorship Experience',

@@ -1977,7 +1977,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             programdetails?.created_by ===
                               userdetails?.data?.user_id &&
                             programdetails?.admin_program === null &&
-                            programdetails?.status !== "yettoapprove" && (
+                            !["cancelled", "yettoapprove", "new_program_request_rejected"].includes(programdetails?.status) &&
+                             (
                               <MenuItem
                                 onClick={() => handleMenu("edit")}
                                 className="!text-[12px]"
@@ -2670,6 +2671,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                 </Menu>
               </MuiCustomModal>
               {/* Subject Program List */}
+              {console.log("programdetails?.active_sub_program ===>", programdetails?.active_sub_program)}
               {role === "mentee" && (
                 <Grid container spacing={2}>
                   {programdetails?.active_sub_program?.map((e) => {

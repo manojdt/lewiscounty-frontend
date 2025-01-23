@@ -124,7 +124,7 @@ export default function Layout({ subheader }) {
       ),
       command: () => {
         window.open(
-          "https://app.powerbi.com/reportEmbed?reportId=6590f3d3-161e-48a2-8481-94d95328eb36&autoAuth=true&ctid=4673b081-e64e-481e-82c9-1eecd44c322a",
+          "https://app.powerbi.com/reportEmbed?reportId=f3c91b7c-947e-418f-9cfc-e41cfb84f1fb&autoAuth=true&ctid=4673b081-e64e-481e-82c9-1eecd44c322a",
           "_blank"
         );
       },
@@ -141,7 +141,7 @@ export default function Layout({ subheader }) {
       ),
       command: () => {
         window.open(
-          "https://app.powerbi.com/reportEmbed?reportId=ad0defeb-0f1e-4556-9e3a-ac7017c87c93&autoAuth=true&ctid=4673b081-e64e-481e-82c9-1eecd44c322a",
+          "https://app.powerbi.com/reportEmbed?reportId=20cbceaf-a863-45b5-8f1a-88f4f8ec8cbf&autoAuth=true&ctid=4673b081-e64e-481e-82c9-1eecd44c322a",
           "_blank"
         );
       },
