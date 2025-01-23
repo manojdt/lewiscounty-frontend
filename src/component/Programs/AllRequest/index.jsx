@@ -1825,11 +1825,17 @@ export default function AllRequest() {
               {role === "admin" && (
                 <>
                   <MenuItem
-                    onClick={() =>
-                      navigate(
-                        `/testimonialView/${seletedItem.request_id}?breadcrumbsType=${requestPageBreadcrumbs.testimonial_request}`
-                      )
-                    }
+                    onClick={() => {
+                      if (selectedTab === "admin") {
+                        navigate(
+                          `/testimonialView/${seletedItem.request_id}?breadcrumbsType=${requestPageBreadcrumbs.testimonial_request_admin_my}`
+                        );
+                      } else {
+                        navigate(
+                          `/testimonialView/${seletedItem.request_id}?breadcrumbsType=${requestPageBreadcrumbs.testimonial_request}`
+                        );
+                      }
+                    }}
                     className="!text-[12px]"
                   >
                     <img
@@ -2682,6 +2688,10 @@ export default function AllRequest() {
   useEffect(() => {
     if (selectedMainRequestedTab === requestPageBreadcrumbs.main_mentee_tab) {
       setSelectedTab("mentees");
+    } else if (
+      selectedMainRequestedTab === requestPageBreadcrumbs.main_admin_test_tab
+    ) {
+      setSelectedTab("admin");
     }
   }, [selectedMainRequestedTab]);
   useEffect(() => {

@@ -7,7 +7,7 @@ import { requestStatusColor, requestStatusText } from "../../utils/constant";
 import DataTable from "../../shared/DataGrid";
 import { useDispatch, useSelector } from "react-redux";
 import { getCategoryView } from "../../services/category";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import ArrowRight from "../../assets/icons/breadCrumbsArrow.svg"
 import MoreIcon from "../../assets/icons/moreIcon.svg";
 import ViewIcon from "../../assets/images/view1x.png";
@@ -15,8 +15,10 @@ import ViewIcon from "../../assets/images/view1x.png";
 const CategoryView = () => {
     const { viewData, loading } = useSelector((state) => state.category)
     const dispatch = useDispatch()
-    const state = useLocation()?.state
     const navigate = useNavigate()
+    const [searchParams,setSearchParams] = useSearchParams();
+    const state = searchParams.get("id")
+      const tabValue=searchParams.get("tab")||"mentor"
     const [value, setValue] = React.useState('mentor');
     const [search, setSearch] = React.useState("")
     const [paginationModel, setPaginationModel] = React.useState({
@@ -39,7 +41,7 @@ const CategoryView = () => {
         const payload = {
             page: paginationModel?.page + 1,
             limit: paginationModel?.pageSize,
-            id: state?.id,
+            id: state,
             search: searchText,
             type: value
         }
@@ -56,7 +58,9 @@ const CategoryView = () => {
     }
 
     const handleChange = (event, newValue) => {
-        setValue(newValue);
+        const currentParams = new URLSearchParams(searchParams);
+        currentParams.set('tab', newValue);
+        setSearchParams(currentParams);
     };
 
     const tabFields = [
@@ -232,7 +236,9 @@ const CategoryView = () => {
             })
         }
     }
-
+    React.useEffect(() => {
+        setValue(tabValue)
+     }, [tabValue])
     return (
         <>
             <Backdrop

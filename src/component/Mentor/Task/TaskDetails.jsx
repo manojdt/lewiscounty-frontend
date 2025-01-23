@@ -60,34 +60,30 @@ import ProgramHistoryIcon from "../../../assets/icons/historyIcon.svg";
 import moment from "moment";
 
 const MentorTaskDetails = () => {
-  const navigate = useNavigate();
-  const [editTask, setEditTask] = useState(true);
-  const params = useParams();
-  const [searchParams] = useSearchParams();
-  const dispatch = useDispatch();
-  const {
-    task: taskDetails,
-    loading: taskDetailsLoading,
-    status,
-    menteeTaskList,
-  } = useSelector((state) => state.tasks);
-  const state = useLocation()?.state;
-  const [selectedTab, setSelectedTab] = React.useState("");
-  const [paginationModel, setPaginationModel] = React.useState({
-    page: 0,
-    pageSize: 10,
-  });
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedItem, setSelectedItem] = useState({});
-  const open = Boolean(anchorEl);
-  const [confirmPopup, setConfirmPopup] = React.useState({
-    cancel: false,
-    type: "",
-    activity: false,
-    title: "Cancel Task Reason",
-    pass: false,
-  });
-  const [newType, setNewType] = React.useState("");
+    const navigate = useNavigate()
+    const [editTask, setEditTask] = useState(true)
+    const params = useParams();
+       const [searchParams, setSearchParams] = useSearchParams();
+       const tabValue=searchParams.get("status")||""
+    const dispatch = useDispatch()
+    const { task: taskDetails, loading: taskDetailsLoading, status, menteeTaskList } = useSelector(state => state.tasks)
+    const state = useLocation()?.state
+    const [selectedTab, setSelectedTab] = React.useState("")
+    const [paginationModel, setPaginationModel] = React.useState({
+        page: 0,
+        pageSize: 10
+    })
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [selectedItem, setSelectedItem] = useState({});
+    const open = Boolean(anchorEl);
+    const [confirmPopup, setConfirmPopup] = React.useState({
+        cancel: false,
+        type: "",
+        activity: false,
+        title: "Cancel Task Reason",
+        pass: false
+    })
+    const [newType, setNewType] = React.useState("")
 
   const handleClick = (event, row) => {
     setAnchorEl(event.currentTarget);
@@ -185,24 +181,22 @@ const MentorTaskDetails = () => {
 
   const allFiles = getFiles(taskDetails?.files || []);
 
-  const handleTab = (event, newValue) => {
-    setSelectedTab(newValue);
-  };
+    const handleTab = (event, newValue) => {
+        const currentParams = new URLSearchParams(searchParams);
+        currentParams.set('status', newValue);
+        setSearchParams(currentParams);
+    }
 
-  const handleOpenConfirmPopup = (
-    type,
-    title = confirmPopup?.title,
-    new_type = ""
-  ) => {
-    setNewType(new_type);
-    handleClose();
-    setConfirmPopup({
-      ...confirmPopup,
-      [type === "reassign" ? "cancel" : type]: true,
-      type: type,
-      title: title,
-    });
-  };
+    const handleOpenConfirmPopup = (type, title = confirmPopup?.title, new_type = "") => {
+        setNewType(new_type)
+        handleClose()
+        setConfirmPopup({
+            ...confirmPopup,
+            [type === "reassign" ? 'cancel' : type]: true,
+            type: type,
+            title: title
+        })
+    }
 
   const handleCloseConfirmPopup = (type = confirmPopup?.type) => {
     setConfirmPopup({
@@ -510,9 +504,12 @@ const MentorTaskDetails = () => {
     dispatch(getMenteeTaskListFromMentor(payload));
   };
 
-  React.useEffect(() => {
-    getMenteeList();
-  }, [selectedTab, paginationModel]);
+    React.useEffect(() => {
+       setSelectedTab(tabValue)
+    }, [tabValue])
+    React.useEffect(() => {
+        getMenteeList()
+    }, [selectedTab, paginationModel])
 
   const handleEditTask = () => {
     const keysToExclude = [
@@ -759,28 +756,13 @@ const MentorTaskDetails = () => {
         <CircularProgress color="inherit" />
       </Backdrop>
 
-      <Stack
-        direction={"row"}
-        alignItems={"center"}
-        justifyContent={"space-between"}
-        mb={"30px"}
-      >
-        <Stack direction={"row"} alignItems={"center"} spacing={"14px"}>
-          <Typography
-            className="!text-[#5975A2] !text-[14px] cursor-pointer"
-            fontWeight={500}
-            onClick={() => navigate(-1)}
-          >
-            MenteesTask
-          </Typography>
-          <img src={BreadCrumbsArrow} alt="" />
-          <Typography
-            className="!text-[#18283D] !text-[14px] cursor-pointer"
-            fontWeight={500}
-          >
-            View {menteeTaskList?.program_name}
-          </Typography>
-        </Stack>
+            <Stack direction={"row"} alignItems={"center"} justifyContent={"space-between"} mb={"30px"}>
+                <Stack direction={"row"} alignItems={"center"} spacing={"14px"}>
+                    <Typography className=' text-blue-600 !text-[14px] cursor-pointer' fontWeight={500}
+                        onClick={() => navigate("/mentor-tasks?type=menteetask")}>MenteesTask</Typography>
+                    <img src={BreadCrumbsArrow} alt="" />
+                    <Typography className='!text-[#18283D] !text-[14px] cursor-pointer' fontWeight={500}>View {menteeTaskList?.program_name}</Typography>
+                </Stack>
 
         {menteeTaskList?.editable && (
           <Button

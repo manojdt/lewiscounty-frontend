@@ -142,11 +142,7 @@ const Category = () => {
                         }}
                     >
                         <MenuItem onClick={() => {
-                            navigate("/categoryView", {
-                                state: {
-                                    id: seletedItem?.id
-                                }
-                            })
+                            navigate(`/categoryView?id=${seletedItem?.id}`)
                         }} className='!text-[14px] !text-[#18283D]' style={{fontWeight: 500}}>
                             <img src={ViewIcon} alt="ViewIcon" field={params.id} className='pr-3 w-[30px]' />
                             View

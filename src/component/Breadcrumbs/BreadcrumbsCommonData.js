@@ -6,6 +6,7 @@ export const requestPageBreadcrumbs = {
   program_join: "program_join",
   member_join_request:"member_join_request",
   testimonial_request:"testimonial_request",
+  testimonial_request_admin_my:"testimonial_request_admin_my",
   certificate_request:"certificate_request",
   report_request:"report_request",
   goal_request:"goal_request",
@@ -13,6 +14,7 @@ export const requestPageBreadcrumbs = {
   mentor:"mentor",
   program_join_request_admin:'program_join_request_admin',
   main_mentee_tab:"mentee_tab",
+  main_admin_test_tab:"my_tab",
   adminReportTab:"all",
   adminApproveReportTab:"approved",
   adminCancelReportTab:"rejected",
@@ -112,14 +114,14 @@ export const request_programMenteeCancel = (name) => {
 };
 
 // Program
-export const program_details = (state) => {
+export const program_details = (state,name) => {
   return [
     {
       label: state === "category" ? "Category View" : "Program",
-      path: "/programs",
+      path: -1,
     },
     {
-      label: "Program Details",
+      label:  `${name}`,
     },
   ];
 };
@@ -186,6 +188,17 @@ export const request_testimonial = (name) => {
       {
         label: "Testimonials Requests",
         path: `/all-request?type=testimonial_request`,
+      },
+      {
+        label: `View Testimonials`,
+      },
+    ];
+  };
+export const request_testimonial_admin = (name) => {
+    return [
+      {
+        label: "Testimonials Requests",
+        path: `/all-request?type=testimonial_request&mainTab=${requestPageBreadcrumbs.main_admin_test_tab}`,
       },
       {
         label: `View Testimonials`,
@@ -725,6 +738,22 @@ export const newFollowRequestMentorPage = (status) => {
       },
     ];
   }; 
+  export const viewTasksDetails = (name,taskName) => {
+    
+    return [
+      {
+        label: "MenteesTask",
+        path: "/mentor-tasks?type=menteetask",
+      },
+      {
+        label: `${name}`,
+        path:-1
+      },
+      {
+        label: `View ${taskName}`,
+      },
+    ];
+  }; 
 
 // Program Completion Page
 export const programCompletionPage = (name) => {
@@ -743,6 +772,45 @@ export const programCompletionPage = (name) => {
     },
   ];
 }; 
+// Category View
+
+export const categoryMentee = (name) => {
+    
+  return [
+    {
+      label: "Category",
+      path: `/mentee-tasks?type=completed`,
+    },
+    {
+      label: `View ${name}`,
+    },
+  ];
+}; 
+export const categoryMentor = (name) => {
+  
+  return [
+    {
+      label: "Category",
+      path: `/mentee-tasks?type=rejected`,
+    },
+    {
+      label: `View ${name}`,
+    },
+  ];
+}; 
+export const categoryProgramList = (name) => {
+  
+  return [
+    {
+      label: "Category",
+      path: `/mentee-tasks?type=draft`,
+    },
+    {
+      label: `View ${name}`,
+    },
+  ];
+}; 
+
 
 export const tabQuertyData = (role, tab) => {
   if (role === "admin") {

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { getSpecificTask, updateCancelAllTask, updateSinglePassFail } from '../../../services/task';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,6 +14,8 @@ import { styled } from '@mui/material/styles';
 import TickColorIcon from '../../../assets/icons/tickColorLatest.svg'
 import CloseIcon from '../../../assets/icons/closeIcon.svg';
 import moment from 'moment';
+import Breadcrumbs from '../../Breadcrumbs/Breadcrumbs';
+import { viewTasksDetails } from '../../Breadcrumbs/BreadcrumbsCommonData';
 
 const CustomCheckbox = styled(Checkbox)({
     color: '#ccc',
@@ -33,7 +35,7 @@ const ViewTask = () => {
     const { task: taskDetails, loading } = useSelector(state => state.tasks)
     const userInfo = useSelector((state) => state.userInfo);
     const role = userInfo.data.role || '';
-
+    const [breadcrumbsArray, setBreadcrumbsArray] = useState([]);
     const [resultCheck, setResultCheck] = React.useState("")
     const [activity, setActivity] = React.useState({
         bool: true,
@@ -175,7 +177,11 @@ const ViewTask = () => {
         })
 
     }
-
+    useEffect(() => {
+        if(taskDetails?.program_name&&taskDetails.task_name){
+        setBreadcrumbsArray(viewTasksDetails(taskDetails?.program_name,taskDetails.task_name))
+       }
+       }, [taskDetails])
     return (
         <div className="px-9 py-9">
             <Backdrop
@@ -186,13 +192,14 @@ const ViewTask = () => {
             </Backdrop>
 
             {state?.type !== "certificate" && <Stack direction={"row"} alignItems={"center"} spacing={"14px"} mb={"30px"}>
-                <Typography className='!text-[#5975A2] !text-[14px] cursor-pointer' fontWeight={500}
+                <Breadcrumbs items={breadcrumbsArray}/>
+                {/* <Typography className='!text-[#5975A2] !text-[14px] cursor-pointer' fontWeight={500}
                     onClick={() => navigate("/mentor-tasks?type=menteetask")}>MenteesTask</Typography>
                 <img src={BreadCrumbsArrow} alt="" />
                 <Typography className='!text-[#5975A2] !text-[14px] cursor-pointer' fontWeight={500}
                     onClick={() => navigate(-1)}>{taskDetails?.program_name}</Typography>
                 <img src={BreadCrumbsArrow} alt="" />
-                <Typography className='!text-[#18283D] !text-[14px] cursor-pointer' fontWeight={500}>View {taskDetails.task_name}</Typography>
+                <Typography className='!text-[#18283D] !text-[14px] cursor-pointer' fontWeight={500}>View {taskDetails.task_name}</Typography> */}
             </Stack>}
 
             <div className='px-3 py-5' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>

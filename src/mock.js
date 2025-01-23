@@ -1494,8 +1494,8 @@ export const programRequestColumns = [
     flex: 1,
     id: 3,
     for: ['admin'],
-    mainTab: ["my", "mentees", "admin"],
-    tab:["program_cancel","program_join","program_reschedule","program_new"]
+    mainTab: ["my", "admin"],
+    tab:["program_cancel","program_reschedule","program_new"]
   },
   {
     field: "position",
@@ -1504,7 +1504,7 @@ export const programRequestColumns = [
     id: 4,
     for: ["admin"],
     mainTab: ["my", "mentees", "admin"],
-    tab:["program_cancel","program_join","program_reschedule","program_new"]
+    tab:["program_cancel","program_reschedule","program_new"]
   },
   // {
   //   field: 'to_request',

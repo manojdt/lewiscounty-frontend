@@ -1,22 +1,24 @@
 import React from "react";
-import SearchIcon from "../../assets/icons/search.svg";
-import UserImage from "../../assets/images/user.jpg";
-import { programFeeds } from "../../utils/mock";
+import FeedImage from "../../assets/images/feed1.png";
 import ShowMoreText from "react-show-more-text";
+import { Box, Grid, Menu, MenuItem, Stack, Typography } from "@mui/material";
+import MoreIcon from "../../assets/icons/moreIcon.svg";
+import ViewIcon from "../../assets/icons/View.svg";
 import { useNavigate } from "react-router-dom";
-
+import "./ProgramFeeds.css";
 export default function ProgramFeeds({
   title = "Program Feeds",
   feedsList = [],
 }) {
-    const navigate = useNavigate();
-  function getWindowDimensions() {
-    const { innerWidth: width, innerHeight: height } = window;
-    return {
-      width,
-      height,
-    };
-  }
+  const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   return (
     <div
       className="program-feeds"
@@ -39,8 +41,7 @@ export default function ProgramFeeds({
         <div className="flex gap-4 items-center">
           {/* <img src={SearchIcon} alt="statistics" /> */}
           <p
-             className="text-[12px] py-2 px-2 cursor-pointer"
-             onClick={() => navigate("/feeds")}
+            className="text-[12px] py-2 px-2"
             style={{
               background: "rgba(223, 237, 255, 1)",
               borderRadius: "5px",
@@ -50,66 +51,155 @@ export default function ProgramFeeds({
           </p>
         </div>
       </div>
-
-      {console.log(feedsList)}
-
-      {feedsList?.map((programFeeds, index) => (
-        <div
-          key={index}
-           onClick={() => navigate(`/feed-details/${programFeeds.id}`)}
-          style={{
-            border: "1px solid rgba(29, 91, 191, 1)",
-            borderRadius: "5px",
-          }}
-          className="program-feed-root mx-9 my-9 cursor-pointer"
-        >
-          <div className="flex py-3 px-3 gap-4">
-            <img
-              src={programFeeds?.image_url || UserImage}
-              className={`program-user-image ${
-                getWindowDimensions().width <= 1536 ? "w-1/5" : "w-1/6"
-              } rounded-xl h-[100px]`}
-              style={{
-                height: getWindowDimensions().width <= 1536 ? "90px" : "100px",
-              }}
-              alt=""
-            />
-            <div>
-              <h3>{programFeeds.user_name}</h3>
-              <ShowMoreText
-                lines={3}
-                more={<span className="custom-more-less">Show more</span>}
-                less={<span className="custom-more-less">Show less</span>}
-                anchorClass="my-anchor-class"
-                expanded={false}
+      <div style={{ height: "640px", overflowY: "scroll", background: "#fff" }}>
+        {feedsList?.map((programFeeds, index) => (
+          <div
+            key={index}
+            style={
+              {
+                // border: "1px solid rgba(29, 91, 191, 1)",
+                // borderRadius: "5px",
+              }
+            }
+            className="program-feed-root mx-9 my-9"
+          >
+            <Stack
+              direction={"row"}
+              alignItems={"center"}
+              justifyContent={"space-between"}
+              m={"22px"}
+              className="!border !border-background-primary-main p-2 rounded-[10px]"
+            >
+              <Stack
+                direction={"row"}
+                alignItems={"start"}
+                spacing={2}
+                width={"100%"}
               >
-                <p
-                  className="custom-content"
-                  style={{ fontSize: "14px", color: "#232323" }}
-                >
-                  {programFeeds.content ?? programFeeds?.desc ?? ""}
-                </p>
-              </ShowMoreText>
-              <div className="flex flex-wrap gap-2">
-                {programFeeds?.tags_list?.length > 0 &&
-                  programFeeds?.tags_list.map((tag) => (
-                    <div className=" gap-3 pt-3">
-                      <span
+                <Box className="w-[140px]">
+                  <img
+                    src={
+                      programFeeds?.media_files?.[0]?.media_files ?? FeedImage
+                    }
+                    alt=""
+                    className="h-[120px] w-[100%] rounded-[10px]"
+                  />
+                </Box>
+                <Stack spacing={1} width={"100%"}>
+                  <Stack spacing={1}>
+                    <Stack
+                      direction={"row"}
+                      alignItems={"center"}
+                      justifyContent={"space-between"}
+                      width={"100%"}
+                    >
+                      <Typography className="!text-font-secondary-black !text-[18px] font-bold">
+                        {programFeeds.title}
+                      </Typography>
+                      <div
+                        className="bg-background-primary-light"
                         style={{
-                          background: "rgba(238, 245, 255, 1)",
-                          borderRadius: "30px",
+                          padding: "14px 18px",
+                          cursor: "pointer",
                         }}
-                        className="tags py-2 px-6 text-[14px]"
+                        // onClick={() =>
+                        //   navigate(`/feed-details/${programFeeds?.id}`)
+                        // }
+                        id="basic-button"
+                        aria-controls={open ? "basic-menu" : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={open ? "true" : undefined}
+                        onClick={handleClick}
                       >
-                        #{tag}
-                      </span>
-                    </div>
-                  ))}
-              </div>
-            </div>
+                        <img src={MoreIcon} alt="MoreIcon" />
+                      </div>
+
+                      <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                        MenuListProps={{
+                          "aria-labelledby": "basic-button",
+                        }}
+                      >
+                        <MenuItem
+                          onClick={() =>
+                            navigate(`/feed-details/${programFeeds?.id}`)
+                          }
+                        >
+                          <img src={ViewIcon} alt="" />
+                          <Typography className="!text-font-secondary-black text-[12px] font-semibold pl-2">
+                            View
+                          </Typography>
+                        </MenuItem>
+                        {/* <MenuItem
+                          onClick={() =>
+                            navigate(`/feed-details/${programFeeds?.id}`)
+                          }
+                        >
+                          <img src={EditIcon} alt="" />
+                          <Typography className="!text-font-secondary-black text-[12px] font-semibold pl-2">
+                            Edit
+                          </Typography>
+                        </MenuItem>                        
+                        <MenuItem onClick={handleClose}>
+                          <img src={UnFollowIcon} alt="" />
+                          <Typography className="!text-font-secondary-black text-[12px] font-semibold pl-2">
+                            Unfollow
+                          </Typography>
+                        </MenuItem>
+                        <MenuItem onClick={handleClose}>
+                          <img src={HideIcon} alt="" />
+                          <Typography className="!text-font-secondary-black text-[12px] font-semibold pl-2">
+                            Hide
+                          </Typography>
+                        </MenuItem>
+                        <MenuItem onClick={handleClose}>
+                          <img src={ReportIcon} alt="" />
+                          <Typography className="!text-font-secondary-black text-[12px] font-semibold pl-2">
+                            Report
+                          </Typography>
+                        </MenuItem> */}
+                      </Menu>
+                    </Stack>
+                    <Typography className="!text-font-primary-main !text-[12px]">
+                      {programFeeds?.time_since_action}
+                    </Typography>
+                  </Stack>
+                  {/* <Typography>{programFeeds.content ?? programFeeds?.desc ?? ""}</Typography> */}
+
+                  <ShowMoreText
+                    lines={3}
+                    more={<span className="custom-more-less">Show more</span>}
+                    less={<span className="custom-more-less">Show less</span>}
+                    anchorClass="my-anchor-class"
+                    expanded={false}
+                  >
+                    <Typography
+                      className="custom-content"
+                      style={{ fontSize: "14px", color: "#232323" }}
+                    >
+                      {programFeeds.content ?? programFeeds?.desc ?? ""}
+                    </Typography>
+                  </ShowMoreText>
+                  <Grid container spacing={1}>
+                    {programFeeds?.tags_list?.map((e) => {
+                      return (
+                        <Grid item xs={3}>
+                          <Typography className="!bg-background-primary-light px-[12px] py-[4px] rounded-[50px] !text-font-primary-main text-center !text-[12px]">
+                            {e}
+                          </Typography>
+                        </Grid>
+                      );
+                    })}
+                  </Grid>
+                </Stack>
+              </Stack>
+            </Stack>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }
