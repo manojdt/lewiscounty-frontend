@@ -238,7 +238,7 @@ input[type='range']::-ms-thumb {
 
 .goals .goals-info .goal-counts-container {
   background: rgba(238, 245, 255, 1);
-  width: 200px;
+  width: 190px;
   height: 160px; /* Set a fixed height */
   text-align: center;
   color: rgba(24, 40, 61, 1);
@@ -251,7 +251,7 @@ input[type='range']::-ms-thumb {
 }
 
 .goals .goals-info .create-goal {
-  width: 200px;
+  width: 190px;
   text-align: center;
   color: rgba(29, 91, 191, 1);
   height: 160px;

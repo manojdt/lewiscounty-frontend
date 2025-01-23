@@ -10,6 +10,7 @@ import UploadIcon from '../../assets/images/image_1x.png';
 import DeleteIcon from '../../assets/images/delete_1x.png';
 import ToastNotification from '../../shared/Toast';
 import { formatPhoneNumber } from '../../utils/formFields';
+import { useDispatch } from 'react-redux';
 
 const StepComponenRender = ({
   stepFields,
@@ -33,7 +34,7 @@ const StepComponenRender = ({
     setError,
     setValue,
   } = useForm();
-
+  const dispatch = useDispatch();
   const [dateFormat, setDateFormat] = useState({});
   const [checkBoxValue, setCheckBoxValue] = useState('');
   const [disabledFields, setDisabledFields] = useState({});
@@ -43,7 +44,12 @@ const StepComponenRender = ({
     handleNextStep(data);
     reset();
   };
-
+  const handleLogout = () => {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    dispatch({ type: "logout" });
+    navigate("/login");
+  };
   const handleInputChange = (e, field) => {
     const { value } = e.target;
 
@@ -407,7 +413,13 @@ const StepComponenRender = ({
               <Button
                 btnName='Cancel'
                 btnCategory='secondary'
-                onClick={() => navigate('/login-type')}
+                onClick={() =>{
+                  if(role==="mentor"){
+                    handleLogout()
+                  }else{
+                    navigate('/login-type')
+                  }
+                }}
               />
             )}
             {currentStep > 1 && (

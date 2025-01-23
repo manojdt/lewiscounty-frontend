@@ -420,12 +420,7 @@ export const Questions = () => {
       )
     );
   };
-  const handleLogout = () => {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
-    dispatch({ type: "logout" });
-    navigate("/login");
-  };
+
   return (
     <>
       <Navbar />
@@ -480,7 +475,7 @@ export const Questions = () => {
             </div>
           </div>
         </Backdrop>
-        {role === "mentor" && (
+        {/* {role === "mentor" && (
           <div className="flex justify-end pb-2">
             <Button
               btnType="button"
@@ -490,7 +485,7 @@ export const Questions = () => {
               onClick={handleLogout}
             />
           </div>
-        )}
+        )} */}
         <div style={{ boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.15)" }}>
           <div
             className="steps pl-24 pr-28"

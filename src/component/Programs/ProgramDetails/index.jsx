@@ -228,11 +228,11 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     programId: "",
   });
 
-  React.useEffect(()=>{
-    if(!moreMenuModal.not_interested){
+  React.useEffect(() => {
+    if (!moreMenuModal.not_interested) {
       setAnchorEl(null);
     }
-  },[moreMenuModal.not_interested])
+  }, [moreMenuModal.not_interested]);
   const { profile, loading: profileLoading } = useSelector(
     (state) => state.profileInfo
   );
@@ -579,7 +579,10 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   };
   const handleBreadcrumbs = (key) => {
     const decodedKey = decodeURIComponent(key);
-    const program_detailsData = program_details(state?.from,programdetails?.program_name);
+    const program_detailsData = program_details(
+      state?.from,
+      programdetails?.program_name
+    );
     const program_New = request_newProgramRequest(programdetails?.program_name);
     const program_re = request_programReschedule(programdetails?.program_name);
     const program_cancel = request_programCancel(programdetails?.program_name);
@@ -905,7 +908,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       key: "date",
       minDate: programdetails?.start_date,
       maxDate: programdetails?.end_date,
-      isDisable:true,
+      isDisable: true,
     },
     {
       type: "time",
@@ -913,7 +916,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       isRequired: true,
       col: 4,
       key: "time",
-      isDisable:true,
+      isDisable: true,
     },
     {
       type: "textbox",
@@ -996,8 +999,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       dispatch(insertProgramNotes(payload)).then((res) => {
         if (res?.meta?.requestStatus === "fulfilled") {
           setNotesForm({
-            date: "",
-            time: "",
+            date: new Date(),
+            time: new Date(),
             location: "",
             comment: "",
           });
