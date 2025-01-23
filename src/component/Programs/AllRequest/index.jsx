@@ -50,6 +50,7 @@ import {
   learningAccessRequestsColumns,
   memberMenteeRequestColumns,
   memberMentorRequestColumns,
+  mentorChangeRequestColums,
   newGoalsRequestsColumns,
   programExtendRequestColumns,
   programRequestColumns,
@@ -183,7 +184,7 @@ export default function AllRequest() {
     setSelectedTab(newAlignment);
     // handleResetTab()
     navigate(
-      newAlignment === "admin" && role === "admin"
+      newAlignment === "admin" && role === "mentor"?`/all-request?type=mentor_change_request`:newAlignment === "admin" && role === "admin"
         ? `/all-request?type=testimonial_request`
         : `/all-request?type=program_request`
     );
@@ -2257,6 +2258,10 @@ export default function AllRequest() {
           tableDetails = { column: programExtendRequestColumn, data: [] };
           actionFilter = [];
           break;
+        case RequestStatus.mentorChangeRequest.key:
+          tableDetails = { column: mentorChangeRequestColums, data: [] };
+          actionFilter = [];
+          break;
         default:
           tableDetails = { column: programRequestTab, data: [] };
           actionFilter = [];
@@ -2468,6 +2473,13 @@ export default function AllRequest() {
         rowCount: testimonialRequest?.count,
       });
     }
+    if (selectedRequestedtype === "mentor_change_request") {
+      setActiveTableDetails({
+        column: mentorChangeRequestColums,
+        data: [],
+        rowCount: 0,
+      });
+    }
     if (selectedRequestedtype === "re_open_request") {
       setActiveTableDetails({
         column: extendRequestColumn,
@@ -2537,6 +2549,13 @@ export default function AllRequest() {
       }
       if (selectedRequestedtype === "re_open_request") {
         getReopenRequestApi();
+      }
+      if (selectedRequestedtype === "mentor_change_request") {
+        setActiveTableDetails({
+          column: mentorChangeRequestColums,
+          data: [],
+          rowCount: 0,
+        });
       }
     }
   }, [actionTab, searchParams, filterStatus, role, paginationModel]);

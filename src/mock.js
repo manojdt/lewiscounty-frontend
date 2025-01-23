@@ -1550,24 +1550,17 @@ export const programRequestColumns = [
   //   },
   // },
   {
-    field: "comments",
+    field: "comment",
     headerName: "Reschedule Reason",
     flex: 1,
     id: 8,
-    for: ["admin", "mentor", "mentee"],
+    for: ["admin", "mentor"],
     tab:["program_reschedule"],
-    mainTab: ["my", "mentees", "admin"],
+    mainTab: ["my", "admin"],
     renderCell: (params) => {
       return <div>{params.row.comments}</div>;
     },
   },
-  // {
-  //   field: 'cancelled_reason',
-  //   headerName: 'Cancel Reason',
-  //   flex: 1,
-  //   id: 6,
-  //   for: ['mentor'],
-  // },
   {
     field: "updated_at",
     headerName: "Last Updated Date",
@@ -1910,6 +1903,57 @@ export const memberMentorRequestColumns = [
   {
     field: "years_of_experience",
     headerName: "Mentoring Experience",
+    flex: 1,
+    id: 6,
+    for: ["mentor"],
+  },
+];
+export const mentorChangeRequestColums = [
+  {
+    field: "name",
+    headerName: "Change Mentor",
+    flex: 1,
+    id: 0,
+    for: ["admin", "mentor"],
+  },
+  {
+    field: "designation",
+    headerName: "Category",
+    flex: 1,
+    id: 1,
+    for: ["admin", "mentor"],
+  },
+  {
+    field: "skills",
+    headerName: "Program Name",
+    flex: 1,
+    id: 2,
+    for: ["admin"],
+  },
+  {
+    field: "phone_number",
+    headerName: "Request Date",
+    flex: 1,
+    id: 3,
+    for: ["admin"],
+  },
+  {
+    field: "email",
+    headerName: "Request By",
+    flex: 1,
+    id: 4,
+    for: ["mentor"],
+  },
+  {
+    field: "address",
+    headerName: "Last Updated Date",
+    flex: 1,
+    id: 5,
+    for: ["admin", "mentor"],
+  },
+  {
+    field: "years_of_experience",
+    headerName: "Status",
     flex: 1,
     id: 6,
     for: ["mentor"],
