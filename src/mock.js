@@ -1527,28 +1527,28 @@ export const programRequestColumns = [
   },
   {
     field: "start_date",
-    headerName: "Start Date",
+    headerName: "Start & End Date",
     flex: 1,
     id: 6,
     for: ["admin", "mentor", "mentee"],
     tab:["program_reschedule"],
     mainTab: ["my", "mentees", "admin"],
     renderCell: (params) => {
-      return <div>{dateFormat(params.row.start_date)}</div>;
+      return <div>{`${dateFormat(params.row.start_date)} & ${dateFormat(params.row.end_date)}`}</div>;
     },
   },
-  {
-    field: "end_date",
-    headerName: "End Date",
-    flex: 1,
-    id: 7,
-    for: ["admin", "mentor", "mentee"],
-    tab:["program_reschedule"],
-    mainTab: ["my", "mentees", "admin"],
-    renderCell: (params) => {
-      return <div>{dateFormat(params.row.end_date)}</div>;
-    },
-  },
+  // {
+  //   field: "end_date",
+  //   headerName: "End Date",
+  //   flex: 1,
+  //   id: 7,
+  //   for: ["admin", "mentor", "mentee"],
+  //   tab:["program_reschedule"],
+  //   mainTab: ["my", "mentees", "admin"],
+  //   renderCell: (params) => {
+  //     return <div>{dateFormat(params.row.end_date)}</div>;
+  //   },
+  // },
   {
     field: "comments",
     headerName: "Reschedule Reason",
