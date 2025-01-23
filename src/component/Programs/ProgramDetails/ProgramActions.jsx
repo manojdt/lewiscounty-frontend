@@ -243,7 +243,10 @@ const ProgramActions = ({
     }
 
     // Launch program button
-    if (programdetails.status === "yettojoin") {
+    if (
+      programdetails.status === "yettojoin" &&
+      type !== "program_reschedule"
+    ) {
       return (
         <div className="py-9">
           <button
@@ -319,21 +322,6 @@ const ProgramActions = ({
             </div>
           )}
         </div>
-      );
-    }
-
-    if (
-      ["new", "pending"].includes(programdetails?.request_data?.status) &&
-      role === "mentor" &&
-      (type === "program_reschedule" || type === "program_cancel")
-    ) {
-      return (
-        <button
-          onClick={() => setCancelPopup(true)}
-          className="!border-[2px] border-red-500 rounded-md text-red-500 px-4 py-2 font-semibold text-sm flex items-center mt-5"
-        >
-          Cancel Request
-        </button>
       );
     }
 
@@ -509,8 +497,12 @@ const ProgramActions = ({
           programdetails?.request_data?.status === "new") ||
         (programdetails?.request_data?.request_type === "program_cancel" &&
           programdetails?.request_data?.status === "new"));
-
-    if (showRequestButtons && from !== "subprogram") {
+    const acceptType = [
+      "program_reschedule",
+      "program_new",
+      "program_cancel",
+    ].includes(type);
+    if (showRequestButtons && from !== "subprogram" && acceptType) {
       return (
         <Box mt={2}>
           <Stack direction="row" alignItems="center" spacing="20px">
@@ -699,6 +691,33 @@ const ProgramActions = ({
           </button>
         </div>
       );
+    }
+
+    if (
+      ["new", "pending"].includes(programdetails?.request_data?.status) &&
+      role === "mentor" &&
+      (type === "program_reschedule" || type === "program_cancel")
+    ) {
+      return (
+        <button
+          onClick={() => setCancelPopup(true)}
+          className="!border-[2px] border-red-500 rounded-md text-red-500 px-4 py-2 font-semibold text-sm flex items-center mt-2"
+        >
+          Cancel Request
+        </button>
+      );
+    }
+
+    if (role === "mentor" && programdetails.status === "assign_program_accepted" && from === "subprogram") {
+      return(
+        <Button
+        btnType="button"
+        btnCls="w-[110px] h-11"
+        btnName={"Edit"}
+        btnCategory="primary"
+        onClick={() => navigate(`/update-program/${programdetails?.id}`)}
+      />
+      )
     }
 
     return null;

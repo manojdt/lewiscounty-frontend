@@ -60,7 +60,7 @@ export const Mentor = () => {
     let baseUrl = pipeUrls.programdetails;
     if (Object.keys(programdetails).length) {
       navigate(
-        `${baseUrl}/${programdetails.program || programdetails?.id}${
+        `${baseUrl}/${programdetails?.id ?? programdetails.program}${
           programdetails?.admin_program_request_id
             ? `?request_id=${programdetails?.admin_program_request_id}&type=admin_assign_program`
             : "admin_assign_program" in programdetails
@@ -108,7 +108,6 @@ export const Mentor = () => {
       try {
         // Initial API call to get the user profile
         const res = await dispatch(getUserProfile()).unwrap(); // Use .unwrap() for cleaner promise handling
-        console.log("User profile response:", res);
 
         if (res?.approve_status === "accept") {
           const updateToken = await api.post("generate_new_token", {
@@ -118,7 +117,6 @@ export const Mentor = () => {
           });
 
           if (updateToken.status === 200) {
-            console.log("updateToken", updateToken);
             localStorage.setItem("access_token", updateToken.data.access);
             localStorage.setItem("refresh_token", updateToken.data.refresh);
             navigate("/dashboard");

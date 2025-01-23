@@ -113,7 +113,11 @@ export const Mentee = () => {
     let baseUrl = pipeUrls.programdetails;
     if (Object.keys(program).length) {
       const filterType = searchParams.get("type");
-      navigate(`${baseUrl}/${program.id}?breadcrumbsType=${requestPageBreadcrumbs.dashboardPrograms}`);
+      if(program?.admin_assign_program){
+        navigate(`${baseUrl}/${program.id}?program_create_type=admin_program&breadcrumbsType=${requestPageBreadcrumbs.dashboardPrograms}`);
+      }else{
+        navigate(`${baseUrl}/${program.id}?breadcrumbsType=${requestPageBreadcrumbs.dashboardPrograms}`);
+      }      
     }
   };
 
