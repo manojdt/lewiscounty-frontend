@@ -178,7 +178,6 @@ export default function Layout({ subheader }) {
     //   localStorage.removeItem('refresh_token');
     //   navigate('/logout');
     // }
-console.log(userInfo,"userInfo")
     if (role === "mentor") {
       if (!userInfo.data.is_registered) {
         navigate("/questions");
