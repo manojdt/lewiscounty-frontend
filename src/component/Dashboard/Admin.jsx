@@ -51,7 +51,7 @@ export default function Admin() {
   const role = userInfo.data.role;
   const dispatch = useDispatch();
   const handleViewAllMembers = () => {
-    console.log("View all");
+    navigate("/members")
   };
 
   // const membersList = [
@@ -308,7 +308,7 @@ export default function Admin() {
             />
           </div>
           <div className="mt-4">
-          <CardWrapper title="Recent Activities" viewAll>
+          <CardWrapper title="Recent Activities">
             <div style={{ height: "700px" }}>
               {activityList.length ? (
                 <div className="program-status flex items-center flex-col justify-center w-max py-4 px-4">
@@ -423,17 +423,18 @@ export default function Admin() {
                 </div>
               </div>
 
-              <div className="content flex flex-col gap-2 py-2 px-2 overflow-x-auto">
+              <div className="content flex flex-col gap-2 py-2 px-2 overflow-x-auto cursor-pointer">
                 {topMentotList.map((recentReq, index) => {
                   let name = `${recentReq.first_name} ${recentReq.last_name}`;
                   return (
                     <div
                       key={index}
-                      className="py-3 px-3"
+                      className="py-3 px-3 cursor-pointer"
                       style={{
                         border: "1px solid rgba(29, 91, 191, 1)",
                         borderRadius: "10px",
                       }}
+                      onClick={()=>navigate(`/mentor-details/${recentReq?.id}`)}
                     >
                       <div
                         className="flex gap-2 pb-3"

@@ -57,6 +57,12 @@ const ProgramActions = ({
     },
   };
 
+  const acceptType = [
+    "program_reschedule",
+    "program_new",
+    "program_cancel",
+  ].includes(type);
+
   // const renderRequestStatus = () => {
   //   // if (!requestStatusParams || role !== "mentor") return null;
   //   // return (
@@ -204,13 +210,15 @@ const ProgramActions = ({
     // }
 
     // Admin Approve Reject Button
-
+    
     const showApproveRejectButtons =
       (programdetails?.status === "inprogress" ||
         programdetails?.status === "yettostart") &&
       (programdetails?.request_data?.request_type === "program_new" ||
         programdetails?.request_data?.request_type === "program_cancel") &&
-      ["new", "pending"].includes(programdetails?.request_data?.status);
+      ["new", "pending"].includes(programdetails?.request_data?.status) &&
+        acceptType
+      ;
 
     if (showApproveRejectButtons) {
       return (
@@ -244,8 +252,11 @@ const ProgramActions = ({
 
     // Launch program button
     if (
+      // programdetails.status === "yettojoin" &&
+      // type !== "program_reschedule"
       programdetails.status === "yettojoin" &&
-      type !== "program_reschedule"
+      !["new", "pending"].includes(programdetails?.request_data?.status) &&
+      programdetails?.created_by === userInfo?.data?.user_id
     ) {
       return (
         <div className="py-9">
@@ -273,6 +284,7 @@ const ProgramActions = ({
     if (
       programApprovalStage[programdetails.status] &&
       !programdetails?.admin_program
+      && !type
     ) {
       return (
         <div className="space-y-4 pt-10">
@@ -300,9 +312,9 @@ const ProgramActions = ({
             </button>
           )}
 
-          {["new", "pending"].includes(
+          {(["new", "pending"].includes(
             programdetails?.request_data?.status
-          ) && (
+          ) && type !== "program_reschedule") && (
             <div className="flex items-center justify-start gap-6">
               <button
                 onClick={() => setCancelPopup(true)}
@@ -382,7 +394,7 @@ const ProgramActions = ({
         );
       }
     }
-    const isSubProgramAccepted = programdetails?.sub_program?.every(
+    const isSubProgramAccepted = programdetails?.sub_programs?.every(
       (program) => program?.status === "yettojoin"
     );
 
@@ -403,6 +415,18 @@ const ProgramActions = ({
         >
           {isLoading ? "Joining...." : "Join All Program"}
         </MuiButton>
+      );
+    }
+
+    if (programdetails?.request_data?.status === "rejected") {
+      return (
+        <button
+          className="py-3 mt-7 mb-4 px-16 text-white text-[14px] flex items-center cursor-default"
+          style={{ ...buttonStyles.base, ...buttonStyles.danger }}
+          onClick={() => undefined}
+        >
+          Rejected
+        </button>
       );
     }
 
@@ -648,7 +672,7 @@ const ProgramActions = ({
       );
     }
 
-    if (programdetails?.status === "inprogress") {
+    if (programdetails?.status === "inprogress" && !acceptType) {
       if (
         programdetails?.program_mode === "virtual_meeting" &&
         (role !== "mentee" ||
@@ -701,7 +725,7 @@ const ProgramActions = ({
       return (
         <button
           onClick={() => setCancelPopup(true)}
-          className="!border-[2px] border-red-500 rounded-md text-red-500 px-4 py-2 font-semibold text-sm flex items-center mt-2"
+          className="!border-[2px] border-red-500 rounded-md text-red-500 px-4 py-2 font-semibold text-sm flex items-center mt-4"
         >
           Cancel Request
         </button>

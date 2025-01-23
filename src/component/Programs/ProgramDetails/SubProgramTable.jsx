@@ -22,7 +22,7 @@ import moment from "moment/moment";
 import { Button } from "../../../shared";
 import { Backdrop } from "@mui/material";
 
-const dateFormat = "MM/DD/YYYY hh:mm a";
+const dateFormat = "MM-DD-YYYY";
 const columns = [
   { field: "mentor_name", headerName: "Mentor Name", flex: 1 },
   {

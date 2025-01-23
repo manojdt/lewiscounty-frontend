@@ -845,7 +845,7 @@ export default function AllRequest() {
                         : role === "admin"
                         ? `/program-details/${seletedItem.program}?request_id=${seletedItem.id}&type=${actionTab}${tabQuery}`
                         : seletedItem?.status === "approved"
-                        ? `/program-details/${seletedItem.program}?${tabQueryMentor}`
+                        ? `/program-details/${seletedItem.program}?${tabQueryMentor}&request_id=${seletedItem.id}&type=${actionTab}`
                         : `/program-details/${seletedItem.program}?request_id=${seletedItem.id}&type=${actionTab}${tabQueryMentor}`;
                     return navigate(url, { state: { data: seletedItem } });
                   }}
@@ -873,9 +873,7 @@ export default function AllRequest() {
                             alt="AcceptIcon"
                             className="pr-3 w-[27px]"
                           />
-                          {actionTab === "program_cancel"
-                            ? "Accept"
-                            : "Approve"}
+                          Approve
                         </MenuItem>
                       }
                       <MenuItem
@@ -905,9 +903,7 @@ export default function AllRequest() {
                             alt="AcceptIcon"
                             className="pr-3 w-[27px]"
                           />
-                          {actionTab === "program_cancel"
-                            ? "Accept"
-                            : "Approve"}
+                          Approve
                         </MenuItem>
                       }
                       <MenuItem
