@@ -1925,7 +1925,10 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                       typeParams
                     ))) && (
                   <>
-                    <div className="cursor-pointer" onClick={handleClick}>
+                    <div
+                      className="cursor-pointer w-8 h-8 rounded-full flex items-center justify-center bg-gray-200 hover:bg-gray-300 transition-all duration-300"
+                      onClick={handleClick}
+                    >
                       <img src={MoreIcon} alt="MoreIcon" />
                     </div>
                     <Menu

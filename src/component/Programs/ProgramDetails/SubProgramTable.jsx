@@ -11,12 +11,16 @@ import {
   programStatusColor,
   programStatusText,
 } from "../../../utils/constant";
+import ConfirmIcon from "../../../assets/icons/Popup-confirmation.svg";
+import CloseIcon from "../../../assets/icons/close_x.svg";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { Star } from "lucide-react";
 import EditIcon from "@mui/icons-material/Edit";
 import moment from "moment/moment";
+import { Button } from "../../../shared";
+import { Backdrop } from "@mui/material";
 
 const dateFormat = "MM/DD/YYYY hh:mm a";
 const columns = [
@@ -182,6 +186,7 @@ const ActionMenu = ({
   handleClose,
   handleMenuClick,
   gridCellParams,
+  setOpenPopup,
 }) => {
   const role = useSelector((state) => state.userInfo?.data?.role);
 
@@ -202,7 +207,7 @@ const ActionMenu = ({
       {role === "mentor" && (
         <>
           {gridCellParams?.status === "yettoapprove" && (
-            <MenuItem onClick={() => handleMenuClick("accept")}>
+            <MenuItem onClick={() => setOpenPopup(true)}>
               <CheckCircleIcon sx={{ mr: 1 }} fontSize="small" />
               Accept
             </MenuItem>
@@ -224,6 +229,7 @@ const ActionMenu = ({
 };
 
 const SubprogramsDataGrid = ({ data, handleAcceptProgram }) => {
+  const [openPopup, setOpenPopup] = React.useState(false);
   const role = useSelector((state) => state.userInfo?.data?.role);
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -301,7 +307,56 @@ const SubprogramsDataGrid = ({ data, handleAcceptProgram }) => {
         handleClose={handleClose}
         gridCellParams={gridCellParams}
         handleMenuClick={handleMenuClick}
+        setOpenPopup={setOpenPopup}
       />
+      <Backdrop
+        sx={{
+          color: "#fff",
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+        }}
+        open={openPopup}
+      >
+        <div className="popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[330px] p-[12px] justify-center items-center">
+          <div className="border border-[#E50027] rounded-[15px] h-[100%] w-[100%] justify-center items-center flex flex-col relative">
+            <div
+              className="absolute top-[12px] right-[12px]"
+              onClick={() => setOpenPopup(false)}
+            >
+              <img src={CloseIcon} alt="ConfirmIcon" />
+            </div>
+            <img src={ConfirmIcon} alt="ConfirmIcon" />
+
+            <div className="py-5">
+              <p
+                style={{
+                  color: "rgba(24, 40, 61, 1)",
+                  fontWeight: 600,
+                  fontSize: "18px",
+                }}
+              >
+                Are you sure want to Accept this Program?
+              </p>
+            </div>
+            <div className="flex justify-center">
+              <div className="flex gap-6 justify-center align-middle">
+                <Button
+                  btnName="No"
+                  btnCategory="secondary"
+                  btnCls="border !border-[#1D5BBF] !text-[#1D5BBF] w-[110px]"
+                  onClick={() => setOpenPopup(false)}
+                />
+                <Button
+                  btnType="button"
+                  btnCls="w-[110px]"
+                  btnName={"Yes"}
+                  btnCategory="primary"
+                  onClick={() => handleMenuClick("accept")}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </Backdrop>
     </div>
   );
 };
