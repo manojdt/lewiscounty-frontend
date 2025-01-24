@@ -324,6 +324,15 @@ export const goalRequestColor = {
   },
 };
 
+export const eventColors = {
+  all: '#00AEBD',
+  upcoming: '#1D5BBF',
+  reschedule: '#FF8A00',
+  completed: '#16B681',
+  cancelled: '#E0382D',
+  draft: '#B7B7B7',
+};
+
 export const certificateText = {
   inprogress: 'In-Progress',
   yettoapprove: 'Yet to Approve',
@@ -1466,7 +1475,6 @@ export const view = {
 export function getCurrentWeekAndDay(date = new Date()) {
   const currentDayOfMonth = date.getDate();
   const currentDayOfWeek = date.getDay();
-  // console.log(currentDayOfMonth, currentDayOfWeek);
 
   const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
   const dayOfWeekStart = startOfMonth.getDay();
