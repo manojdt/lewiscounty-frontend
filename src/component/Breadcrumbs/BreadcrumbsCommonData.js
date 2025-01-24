@@ -54,6 +54,7 @@ export const requestPageBreadcrumbs = {
   taskMenteeRejectedReport:'rejected',
   taskMenteeDraftReport:'draft',
   dashboardPrograms:'dashboardProgramDetails',
+  ticketHistorys:'ticketHistoryView',
 };
 export const programStatusBreadcrumbs=[
     'All Programs',
@@ -810,7 +811,19 @@ export const categoryProgramList = (name) => {
     },
   ];
 }; 
-
+// Tickets History View
+export const ticketHistoryView = (name) => {
+  
+  return [
+    {
+      label: "History",
+      path:-1,
+    },
+    {
+      label: `View New Ticket`,
+    },
+  ];
+}; 
 
 export const tabQuertyData = (role, tab) => {
   if (role === "admin") {
