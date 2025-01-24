@@ -2708,7 +2708,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
               {["inprogress"].includes(programdetails?.status) &&
                 (role === "mentee" ||
                   programdetails?.created_by ===
-                    userdetails?.data?.user_id) && (
+                    userdetails?.data?.user_id) && !typeParams && (
                   <Box>
                     <Accordian
                       title={"Program Notes:"}

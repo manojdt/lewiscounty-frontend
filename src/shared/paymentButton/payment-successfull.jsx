@@ -15,7 +15,7 @@ const PaymentSuccessfull = () => {
           <CircleCheckIcon className='text-green-500 h-16 w-16' />
           <h1 className='text-3xl font-bold   mt-4'>Payment Successful</h1>
           <p className='text-gray-500 mt-2'>
-            Thank you for your payment. Your order is being processed.
+            Thank you for your payment.
           </p>
         </div>
         <div className='border-t border-gray-200  pt-6 space-y-4'>

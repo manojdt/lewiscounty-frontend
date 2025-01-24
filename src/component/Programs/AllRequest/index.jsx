@@ -841,7 +841,7 @@ export default function AllRequest() {
                     const url =
                       (role === "mentor" || role === "admin") &&
                       actionTab === "program_join"
-                        ? `/mentee-details/${seletedItem.created_by}?type=mentee_request${requestQuery}&breadcrumbsType=${requestPageBreadcrumbs.program_join_request_admin}`
+                        ? `/mentee-details/${seletedItem.created_by}?type=mentee_request${requestQuery}&breadcrumbsType=${requestPageBreadcrumbs.program_join_request_admin}&from=program_join`
                         : role === "admin"
                         ? `/program-details/${seletedItem.program}?request_id=${seletedItem.id}&type=${actionTab}${tabQuery}`
                         : seletedItem?.status === "approved"
@@ -1135,7 +1135,7 @@ export default function AllRequest() {
                 </>
               )}
               {role === "mentee" &&
-                ["new", "pending", "accept"].includes(seletedItem.status) && (
+                ["new", "pending"].includes(seletedItem.status) && (
                   <MenuItem
                     onClick={() => handleCancelGoalRequest()}
                     className="!text-[12px]"
