@@ -10,11 +10,12 @@ import ChatImage from "../../assets/images/chatimage.png";
 import LikeIcon from "../../assets/icons/like.svg";
 import LikeWhiteIcon from "../../assets/icons/LikeWhite.svg";
 import CommentWhiteIcon from "../../assets/icons/CommentWhite.svg";
+import UserIcon from "../../assets/icons/user-icon.svg";
 import CommentIcon from "../../assets/icons/feedbackComment.svg";
 import ShareFeedbackIcon from "../../assets/icons/ShareFeedback.svg";
 import ReplyFeedbackIcon from "../../assets/icons/ReplyFeedback.svg";
 import MoreIcon from "../../assets/icons/moreIcon.svg";
-import UserIcon from "../../assets/images/user.jpg";
+// import UserIcon from "../../assets/images/user.jpg";
 
 import {
   getPost,
@@ -293,7 +294,7 @@ export default function Feedback() {
                                 <img src={LikeIcon} alt="likeicon" />
                                 <p>Like({activePostInfo.like_post_counts})</p>
                               </div>
-                              <div
+                              {/* <div
                                 className="count-content"
                                 style={{
                                   background: "rgba(255, 219, 225, 1)",
@@ -302,7 +303,7 @@ export default function Feedback() {
                               >
                                 <img src={CommentIcon} alt="CommentIcon" />
                                 <p>Comment({activePostInfo.comment_count})</p>
-                              </div>
+                              </div> */}
                               {/* <div
                                 className='count-content'
                                 style={{

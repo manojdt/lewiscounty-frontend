@@ -47,7 +47,7 @@ import {
 import MuiModal from "../../shared/Modal";
 import DataTable from "../../shared/DataGrid";
 import { categoryColumns } from "../../mock";
-import { pipeUrls, requestStatus } from "../../utils/constant";
+import { requestStatus } from "../../utils/constant";
 import { useForm } from "react-hook-form";
 import { CancelPopup } from "../Mentor/Task/cancelPopup";
 import { updateProfile } from "../../services/profile";
@@ -66,9 +66,6 @@ import { allProfileSections } from "./tabs/ProfileTab";
 import { roleBasedSections } from "./MyProfile";
 import Accordian from "../../shared/Accordian";
 import FormContextProvider from "./form-context-provider";
-import { getallMyProgram } from "../../services/programInfo";
-import api from "../../services/api";
-import ProgramCard from "../../shared/Card/ProgramCard";
 
 export default function ProfileView() {
   const navigate = useNavigate();
@@ -77,7 +74,6 @@ export default function ProfileView() {
   console.log("state ===>", state);
 
   const { programRequest } = useSelector((state) => state.requestList);
-  const [programData, setProgramData] = React.useState({});
   const [confirmPopup, setConfirmPopup] = useState({
     show: false,
     category: false,
@@ -110,7 +106,6 @@ export default function ProfileView() {
     error: "",
   });
   const [notesActivity, setNotesActivity] = React.useState(false);
-  const [bookmarkLoading, setBookmarkLoading] = React.useState;
 
   const { profile, loading } = useSelector((state) => state.profileInfo);
   const userInfo = useSelector((state) => state.userInfo);
@@ -599,55 +594,14 @@ export default function ProfileView() {
   }, [breadcrumbsType]);
 
   const profileSection = allProfileSections.filter((section) =>
-    ["Personal Information"]?.includes(section.title)
+    roleBasedSections[userDetails?.role]?.includes(section.title)
   );
-
-  const handleFetchPrograms = () => {
-    const payload = {
-      limit: 3,
-      page: 1,
-      status: "yettojoin",
-    };
-    dispatch(getallMyProgram(payload)).then((res) => {
-      // console.log("res ====>", res)
-      setProgramData(res?.payload);
-    });
-  };
-
-  React.useEffect(() => {
-    handleFetchPrograms();
-  }, []);
-
-  const handleBookmark = async (program) => {
-    const is_admin_assign_program = program.hasOwnProperty(
-      "admin_assign_program"
-    );
-    const payload = {
-      [is_admin_assign_program ? "admin_program_id" : "program_id"]: program.id,
-      marked: !program.is_bookmark,
-    };
-    setBookmarkLoading(true);
-    const bookmark = await api.post("bookmark", payload);
-    if (bookmark.status === 201 && bookmark.data) {
-      setBookmarkLoading(false);
-      handleFetchPrograms();
-    }
-  };
-
-  const handleNavigateDetails = (program) => {
-    let baseUrl = pipeUrls.programdetails;
-    if (Object.keys(program).length) {
-      navigate(
-        `${baseUrl}/${program.id}?breadcrumbsType=${requestPageBreadcrumbs.dashboardPrograms}`
-      );
-    }
-  };
 
   return (
     <div className="profile-container">
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => 999999 }}
-        open={loading || userInfoLoading || reportLoading || bookmarkLoading}
+        open={loading || userInfoLoading || reportLoading}
       >
         <CircularProgress color="inherit" />
       </Backdrop>
@@ -1450,48 +1404,6 @@ export default function ProfileView() {
                     </div>
                   )}
 
-                {
-                  // role === "mentor" &&
-                  searchParams.has("type") &&
-                    searchParams.get("type") === "mentee_request" &&
-                    searchParams.has("request_id") &&
-                    searchParams.get("request_id") !== "" &&
-                    ["new", "pending"].includes(requestData?.status) && (
-                      <div className="flex gap-4 pt-10">
-                        <button
-                          className="py-3 px-16 text-white text-[14px] flex items-center"
-                          style={{
-                            border: "1px solid #E0382D",
-                            borderRadius: "5px",
-                            color: "#E0382D",
-                          }}
-                          onClick={() => handleMemberCancelRequest()}
-                        >
-                          Reject
-                        </button>
-                        <button
-                          className="py-3 px-16 text-white text-[14px] flex items-center"
-                          style={{
-                            background: "#16B681",
-                            borderRadius: "5px",
-                          }}
-                          onClick={() => handleMemberAcceptRequest()}
-                        >
-                          Approve
-                        </button>
-                      </div>
-                    )
-                }
-
-                {from !== "program_join" && (
-                  <div
-                    className="w-8 h-8 rounded-md flex items-center justify-center bg-gray-200"
-                    onClick={handleClick}
-                  >
-                    <img src={MoreIcon} alt="" />
-                  </div>
-                )}
-
                 {from !== "program_join" && type !== "view" && (
                   <div
                     className="w-8 h-8 rounded-md flex items-center justify-center bg-gray-200"
@@ -1500,6 +1412,7 @@ export default function ProfileView() {
                     <img src={MoreIcon} alt="" />
                   </div>
                 )}
+
                 <Menu
                   anchorEl={anchorEl}
                   open={open}
@@ -1606,26 +1519,6 @@ export default function ProfileView() {
               </div>
             </>
           )}
-        </div>
-
-        <div className="bg-[#F9F9F9]">
-          <div className="flex justify-between items-center border-b border-border-main px-5 py-3">
-            <p className="text-[18px] font-semibold">Current Program</p>
-            <p className="bg-background-primary-light rounded-[3px] text-[#6B6B6B] text-[12px] cursor-pointer px-2 py-1">
-              View All
-            </p>
-          </div>
-          <div>
-            <ProgramCard
-              title="Current Programs"
-              viewpage="/programs?type=yettojoin"
-              handleNavigateDetails={handleNavigateDetails}
-              handleBookmark={handleBookmark}
-              programs={programData?.programs ?? []}
-              //   loadProgram={getPrograms}
-              noTitle
-            />
-          </div>
         </div>
         <CancelPopup
           open={cancelPopup}
