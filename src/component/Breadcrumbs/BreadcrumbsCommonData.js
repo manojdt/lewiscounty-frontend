@@ -238,7 +238,6 @@ export const request_report = (name) => {
 // Program Join Request
 
 export const request_join = (name) => {
-  console.log(name,"name")
     return [
       {
         label: "Program Join Requests",
