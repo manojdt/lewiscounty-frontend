@@ -592,7 +592,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     const program_mentee_cancel = request_programMenteeCancel(
       programdetails?.program_name
     );
-    const admin_approvedreport = request_join(programdetails?.program_nam);
+    const admin_approvedreport = request_join(programdetails?.program_name);
+    console.log(admin_approvedreport,"admin_approvedreport")
     if (programStatusBreadcrumbs.includes(decodedKey)) {
       setBreadcrumbsArray(
         program_details_main(programdetails?.program_name, decodedKey)
