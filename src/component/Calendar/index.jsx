@@ -10,7 +10,7 @@ import {
   getCalendarFilterEvents,
 } from '../../services/scheduler';
 import { Backdrop, CircularProgress } from '@mui/material';
-import { user } from '../../utils/constant';
+import { eventColors, user } from '../../utils/constant';
 
 export default function Scheduler() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -27,14 +27,6 @@ export default function Scheduler() {
   });
 
   const [actionActionBtn, setActionActionBtn] = useState('all');
-  const eventColors = {
-    all: 'rgba(0, 174, 189, 1)',
-    upcoming: 'rgba(29, 91, 191, 1)',
-    reschedule: 'rgba(255, 138, 0, 1)',
-    completed: 'rgba(22, 182, 129, 1)',
-    cancelled: 'rgba(224, 56, 45, 1)',
-    draft: 'rgba(183, 183, 183, 1)',
-  };
 
   let calendarEvents = [
     { name: 'All Meetings', key: 'all', total: 10, view: ['mentor', 'mentee'] },

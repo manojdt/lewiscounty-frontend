@@ -28,6 +28,7 @@ import ToastNotification from "../../shared/Toast";
 import { dateTimeFormat } from "../../utils";
 import MuiModal from "../../shared/Modal";
 import HtmlReport from "../Docusign/Docusignn";
+import AddGoalIcon from "../../assets/icons/addGoal.svg";
 
 export default function CreateReport() {
   const userInfo = useSelector((state) => state.userInfo);
@@ -591,8 +592,8 @@ export default function CreateReport() {
                         </div>
                       ) : field.type === "editor" ? (
                         <>
-                          <div className="flex gap-3">
-                            <textarea
+                          <div className="flex gap-2">
+                            {/* <textarea
                               id="message"
                               rows="4"
                               className={`block p-2.5 input-bg w-[100%] h-[200px] text-sm text-gray-900  rounded-lg border
@@ -613,7 +614,32 @@ export default function CreateReport() {
                             >
                               <img src={TextIcon} alt="TextIcon" />
                               <img src={HTMLIcon} alt="HTMLIcon" />
+                            </div> */}
+                            <div
+                              className="border border-dashed border-background-primary-main text-font-primary-main whitespace-nowrap flex items-center justify-center p-3 px-7 rounded-[2px] gap-3 cursor-pointer"
+                              onClick={() => handleOpenHtmlReport()}
+                            >
+                              <img
+                                src={AddGoalIcon}
+                                alt="AddGoalIcon"
+                                className="h-[20px] w-[20px]"
+                              />
+                              <p>Generate Report Link</p>
                             </div>
+                            <input
+                              {...register(field.name, field.inputRules)}
+                              type={field.fieldtype}
+                              className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none 
+                                                                    focus-visible:outline-none text-[14px] h-[60px]"
+                              placeholder={field.placeholder}
+                              style={{
+                                color: "#232323",
+                                borderRadius: "3px",
+                              }}
+                              disabled={field.disabled}
+                              aria-invalid={!!errors[field.name]}
+                              onChange={() => handleInputChange(field.name)}
+                            />
                           </div>
                           {errors[field.name] && (
                             <p className="error" role="alert">

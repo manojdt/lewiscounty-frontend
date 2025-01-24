@@ -324,6 +324,15 @@ export const goalRequestColor = {
   },
 };
 
+export const eventColors = {
+  all: '#00AEBD',
+  upcoming: '#1D5BBF',
+  reschedule: '#FF8A00',
+  completed: '#16B681',
+  cancelled: '#E0382D',
+  draft: '#B7B7B7',
+};
+
 export const certificateText = {
   inprogress: 'In-Progress',
   yettoapprove: 'Yet to Approve',
@@ -483,7 +492,7 @@ export const programStatusColor = {
     bgColor: 'rgba(235, 255, 243, 1)',
     color: 'rgba(22, 182, 129, 1)',
   },
-  
+
 };
 
 export const requestStatusColor = {
@@ -919,7 +928,7 @@ export const RequestStatusArray = [
   {
     key: 'program_request',
     name: 'Program Requests',
-    menteeTabName:"Mentees Program Requests"
+    menteeTabName: "Mentees Program Requests"
   },
   {
     key: 'member_join_request',
@@ -1338,16 +1347,19 @@ export const menteeProgramStatus = {
     status: 'program_join_request_submitted',
     text: 'Waiting for mentor approval',
     type: 'waiting',
+    bgColor: 'bg-gray-400'
   },
   program_join_request_rejected: {
     status: 'program_join_request_rejected',
     text: 'Join request rejected by Mentor',
     type: 'reject',
+    bgColor: 'bg-red-500'
   },
   program_join_request_accepted: {
     status: 'program_join_request_accepted',
     text: 'Join request accepted by Mentor',
     type: 'success',
+    bgColor: 'bg-green-500'
   },
 };
 
@@ -1463,7 +1475,6 @@ export const view = {
 export function getCurrentWeekAndDay(date = new Date()) {
   const currentDayOfMonth = date.getDate();
   const currentDayOfWeek = date.getDay();
-  // console.log(currentDayOfMonth, currentDayOfWeek);
 
   const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
   const dayOfWeekStart = startOfMonth.getDay();

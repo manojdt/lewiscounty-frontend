@@ -20,7 +20,7 @@ import SuccessTik from "../../assets/images/blue_tik1x.png";
 import ViewIcon from "../../assets/images/view1x.png";
 import ShareIcon from "../../assets/icons/Share.svg";
 import { useDispatch, useSelector } from "react-redux";
-import { deactivateUser, getMembersList } from "../../services/members";
+import { activateUser, deactivateUser, getMembersList } from "../../services/members";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { memberStatusColor } from "../../utils/constant";
 import MuiModal from "../../shared/Modal";
@@ -75,8 +75,9 @@ const Members = () => {
 
   const handleDeactive = () => {
     handleClose();
+    const isOpenDeactivePopup =   ['mentor','mentee'].includes(actionTab);
     setActionColumnInfo({
-      cancelPopup: actionTab === "mentor",
+      cancelPopup:isOpenDeactivePopup,
       menteecancel: actionTab === "mentee",
     });
   };
@@ -85,6 +86,26 @@ const Members = () => {
     reset();
     setActionColumnInfo({ cancelPopup: false, menteecancel: false });
   };
+
+  //Mentor/Mentee deactive ---> active
+
+  const handleActivate = () =>{
+    handleClose();
+    dispatch(
+      activateUser({
+        user_id: seletedItem.id,
+      })
+    ).then(() => {
+      handleCloseCancelReasonPopup();
+      dispatch(
+        getMembersList({
+          role_name: actionTab,
+          page: paginationModel?.page + 1,
+          limit: paginationModel?.pageSize,
+        })
+      );
+    });
+  }
 
   // Mentor Deactivate
   const handleCancelReasonPopupSubmit = (data) => {
@@ -279,6 +300,13 @@ const Members = () => {
         id: 4,
         align: "center",
         renderCell: (params) => {
+
+          const onViewClick = () =>{
+            handleClose();
+                    const adminview = `&breadcrumbsType=${actionTab}`;
+                    const memberStatus = seletedItem.member_active?'Active':'Deactive';
+                    navigate(`/mentor-details/${seletedItem.id}?member_status=${memberStatus}${adminview}`);
+          }
           return (
             <>
               <div
@@ -297,11 +325,7 @@ const Members = () => {
                 }}
               >
                 <MenuItem
-                  onClick={(e) => {
-                    handleClose();
-                    const adminview = `?breadcrumbsType=${actionTab}`;
-                    navigate(`/mentor-details/${seletedItem.id}${adminview}`);
-                  }}
+                  onClick={onViewClick}
                   className="!text-[12px]"
                 >
                   <img
@@ -323,7 +347,7 @@ const Members = () => {
                 </MenuItem>
 
                 {!seletedItem.member_active && (
-                  <MenuItem className="!text-[12px]" onClick={undefined}>
+                  <MenuItem className="!text-[12px]" onClick={handleActivate}>
                     <img
                       src={PowerIcon}
                       alt="CancelIcon"
@@ -352,7 +376,7 @@ const Members = () => {
                   Share
                 </MenuItem>
 
-                {!seletedItem.member_active && (
+                {/* {seletedItem.member_active && (
                   <MenuItem
                     className="!text-[12px]"
                     onClick={handleAssignProgramOrTask}
@@ -365,7 +389,7 @@ const Members = () => {
                     Assign{" "}
                     {actionTab === "mentor" ? "Mentor Program" : "to Task"}
                   </MenuItem>
-                )}
+                )} */}
               </Menu>
             </>
           );
