@@ -12,7 +12,7 @@ export default function ProgramFeeds({
 }) {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [sellectedItem, setSelectedItem] = React.useState({});
+  const [selectedItem, setSelectedItem] = React.useState({});
   const open = Boolean(anchorEl);
   const handleClick = (event,row) => {
     setAnchorEl(event.currentTarget);
@@ -129,7 +129,7 @@ export default function ProgramFeeds({
                       >
                         <MenuItem
                           onClick={() =>
-                            navigate(`/feed-details/${sellectedItem?.id}`)
+                            navigate(`/feed-details/${selectedItem?.id}`)
                           }
                         >
                           <img src={ViewIcon} alt="" />
