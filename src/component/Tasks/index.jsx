@@ -270,7 +270,7 @@ export const Tasks = () => {
   }, [searchParams, paginationModel]);
 
   return (
-    <div className='p-9'>
+    <div className='p-4 sm:p-4 md:p-6 lg:p-9 xl:p-9'>
       <MuiModal
         modalSize='lg'
         modalOpen={requestTask}
@@ -421,7 +421,7 @@ export const Tasks = () => {
         className='px-3 py-5'
         style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}
       >
-        <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
+        <div className='flex justify-between px-1 sm:px-1 md:px-2 lg:px-5 xl:px-5  pb-4 mb-8 items-center border-b-2'>
           <div className='flex gap-5 items-center text-[20px]'>
             <p>Tasks</p>
           </div>
@@ -435,7 +435,7 @@ export const Tasks = () => {
                 style={{
                   border: '1px solid rgba(29, 91, 191, 1)',
                   height: '41px',
-                  width: '345px',
+                  // width: '345px',
                 }}
                 value={searchTask}
                 onChange={(e) => handleTaskSearch(e.target.value)}
@@ -446,8 +446,8 @@ export const Tasks = () => {
             </div>
           </div>
         </div>
-        <div className='mx-5'>
-          <div className='flex gap-3 mb-6'>
+        <div className='mx-1 sm:mx-1 md:mx-2 lg:mx-5 xl:mx-5 '>
+          <div className='flex gap-3 mb-6 flex-col sm:flex-col md:flex-row lg:flex-row xl:flex-row'>
             {taskMenuList.map((actionBtn, index) => (
               <button
                 key={index}

@@ -1303,7 +1303,7 @@ const Goals = () => {
     },
   ];
   return (
-    <div className="goals px-4 py-9 sm:px-4 md:px-6 lg:px-9 xl:px-9">
+    <div className="goals px-2 py-9 sm:px-2 md:px-6 lg:px-9 xl:px-9">
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={loading}
@@ -1508,8 +1508,8 @@ const Goals = () => {
                 </div>
               </div>
 
-              <div className="goals-info">
-                <div className="goals-list flex flex-wrap items-center gap-4">
+              <div className="goals-info p-4">
+                <div className="goals-list flex flex-wrap items-center gap-4 justify-center">
                   {goalsListMenu.map((goal) => (
                     <div
                       className={`goal-counts-container 
@@ -1561,7 +1561,7 @@ const Goals = () => {
                             border: "1px solid rgba(29, 91, 191, 1)",
                             padding: "20px",
                             borderRadius: "10px",
-                            margin: "60px 0",
+                            // margin: "60px 0",
                           }}
                         >
                           <div className="goal-title-container flex justify-between items-center mb-10">
@@ -1634,7 +1634,7 @@ const Goals = () => {
                     )}
                   </div>
 
-                  <div className="pt-2 hidden xl:block col-span-1">
+                  <div className="pt-2 xl:block col-span-1">
                     <RecentActivities key={recentActivityCheck} />
                   </div>
                 </div>

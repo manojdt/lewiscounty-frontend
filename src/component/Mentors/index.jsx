@@ -599,7 +599,7 @@ export const Mentors = () => {
     }
   }, [breadcrumbsStatusType]);
   return (
-    <div className="px-9 py-9">
+    <div className='px-2 py-9 sm:px-2 md:px-4 lg:px-9 xl:px-9'>
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={loading}
@@ -607,25 +607,25 @@ export const Mentors = () => {
         <CircularProgress color="inherit" />
       </Backdrop>
       <div
-        className="px-3 py-5"
-        style={{ boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.15)" }}
+        className='px-0 py-5 sm:px-0 md:px-1 lg:px-3 xl:px-3'
+        style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}
       >
-        <div className="flex justify-between px-5 pb-4 mb-8 items-center border-b-2">
-          <div className="flex gap-5 items-center ">
+        <div className='flex justify-between px-5 pb-4 mb-8 border-b-2 flex-col sm:flex-col md:flex-row lg:flex-row xl:flex-row md:items-center lg:items-center xl:items-center'>
+          <div className='flex gap-5 items-center '>
             <p>{title}</p>
             <p>{/* <img src={FilterIcon} alt='FilterIcon' /> */}</p>
           </div>
           <div className="flex gap-8 items-center">
             <div className="relative">
               <input
-                type="text"
-                id="search-navbar"
-                className="block w-full p-2 text-sm text-gray-900 border-none"
-                placeholder="Search here..."
+                type='text'
+                id='search-navbar'
+                className='block w-40 p-2 text-sm text-gray-900 border border-background-primary-main h-[42px] md:w-[320px] lg:w-[345px]'
+                placeholder='Search here...'
                 style={{
-                  border: "1px solid rgba(29, 91, 191, 1)",
-                  height: "41px",
-                  width: "345px",
+                  border: '1px solid rgba(29, 91, 191, 1)',
+                  height: '41px',
+                  // width: '345px',
                 }}
                 value={search}
                 onChange={(e) => handleSearch(e.target.value)}
