@@ -721,6 +721,7 @@ const ProgramActions = ({
       ["new", "pending"].includes(programdetails?.request_data?.status) &&
       role === "mentor" &&
       (type === "program_reschedule" || type === "program_cancel")
+      && (programdetails?.request_data?.created_by === userInfo?.data?.user_id)
     ) {
       return (
         <button
@@ -749,6 +750,7 @@ const ProgramActions = ({
 
   return (
     <div>
+    {console.log("programdetails?.request_data ==>", programdetails?.request_data, userInfo)}
       {renderCompletedStatus()}
       {renderMentorActions()}
       {renderMenteeActions()}

@@ -236,7 +236,11 @@ export default function Feeds() {
           <div className="px-4 sm:px-5 py-2 flex justify-center items-center">
             <div className="flex flex-col justify-center items-center gap-8 py-10 px-8 bg-white rounded-md shadow-lg">
               <img src={SuccessTik} alt="SuccessTik" />
-              <p className="text-lg font-semibold text-gradient bg-clip-text bg-gradient-to-r from-blue-600 to-teal-500">
+              <p className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                        style={{
+                          fontWeight: 600
+                        }}
+                        >
                 Your post is successfully uploaded
               </p>
             </div>

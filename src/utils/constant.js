@@ -716,7 +716,7 @@ export const statusAction = [
   'inprogress',
   'completed',
   'cancelled',
-  'bookmarked',
+  'is_bookmark',
   'draft',
   'reschedule',
   'assign_program',

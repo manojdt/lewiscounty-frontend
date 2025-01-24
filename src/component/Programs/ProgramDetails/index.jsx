@@ -592,7 +592,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     const program_mentee_cancel = request_programMenteeCancel(
       programdetails?.program_name
     );
-    const admin_approvedreport = request_join(programdetails?.program_nam);
+    const admin_approvedreport = request_join(programdetails?.program_name);
     if (programStatusBreadcrumbs.includes(decodedKey)) {
       setBreadcrumbsArray(
         program_details_main(programdetails?.program_name, decodedKey)
@@ -2708,7 +2708,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
               {["inprogress"].includes(programdetails?.status) &&
                 (role === "mentee" ||
                   programdetails?.created_by ===
-                    userdetails?.data?.user_id) && (
+                    userdetails?.data?.user_id) && !typeParams && (
                   <Box>
                     <Accordian
                       title={"Program Notes:"}

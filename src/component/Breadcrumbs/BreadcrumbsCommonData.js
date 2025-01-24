@@ -54,6 +54,7 @@ export const requestPageBreadcrumbs = {
   taskMenteeRejectedReport:'rejected',
   taskMenteeDraftReport:'draft',
   dashboardPrograms:'dashboardProgramDetails',
+  ticketHistorys:'ticketHistoryView',
 };
 export const programStatusBreadcrumbs=[
     'All Programs',
@@ -63,6 +64,8 @@ export const programStatusBreadcrumbs=[
     'Assign Programs',
     'Drafted Programs',
     'Bookmarked Programs',
+    'Upcoming Programs',
+    'Interested Programs',
     'Rescheduled Programs',
     'Completed Programs',
     'Cancelled Programs'
@@ -375,11 +378,11 @@ export const adminMy_approvedCertificate = (name) => {
 export const wait_certificate = (name) => {
   return [
     {
-      label: " Generate Certificates Request",
+      label: "Generate Certificates Request",
       path: `/certificates?tabType=${requestPageBreadcrumbs?.waitCertificateTab}`,
     },
     {
-      label: `View Accepted Member List`,
+      label: `View Member List`,
     },
   ];
 };
@@ -390,7 +393,7 @@ export const pending_Certificate = (name) => {
       path: `/certificates?tabType=${requestPageBreadcrumbs?.pendingCertificateTab}`,
     },
     {
-      label: `View Accepted Member List`,
+      label: `View Member List`,
     },
   ];
 };
@@ -401,7 +404,7 @@ export const Approved_Certificate = (name) => {
       path: `/certificates?tabType=${requestPageBreadcrumbs?.approvedCertificateTab}`,
     },
     {
-      label: `View Accepted Member List`,
+      label: `View Approved Certificates`,
     },
   ];
 };
@@ -810,7 +813,19 @@ export const categoryProgramList = (name) => {
     },
   ];
 }; 
-
+// Tickets History View
+export const ticketHistoryView = (name) => {
+  
+  return [
+    {
+      label: "History",
+      path:-1,
+    },
+    {
+      label: `View New Ticket`,
+    },
+  ];
+}; 
 
 export const tabQuertyData = (role, tab) => {
   if (role === "admin") {
