@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 
-import DataTable from '../../shared/DataGrid';
-import FilterIcon from '../../assets/icons/Filter.svg';
-import StarIcon from '../../assets/icons/filledStar.svg';
-import MoreIcon from '../../assets/icons/moreIcon.svg';
-import ViewIcon from '../../assets/images/view1x.png';
-import SearchIcon from '../../assets/images/search1x.png';
-import ReportIcon from '../../assets/icons/report.svg';
-import FollowIcon from '../../assets/images/connect1x.png';
+import DataTable from "../../shared/DataGrid";
+import FilterIcon from "../../assets/icons/Filter.svg";
+import StarIcon from "../../assets/icons/filledStar.svg";
+import MoreIcon from "../../assets/icons/moreIcon.svg";
+import ViewIcon from "../../assets/images/view1x.png";
+import SearchIcon from "../../assets/images/search1x.png";
+import ReportIcon from "../../assets/icons/report.svg";
+import FollowIcon from "../../assets/images/connect1x.png";
 
-import Dropdown from '../../shared/Dropdown';
-import { mentorColumns, mentorRows } from '../../mock';
+import Dropdown from "../../shared/Dropdown";
+import { mentorColumns, mentorRows } from "../../mock";
 import {
   getMyMentors,
   getMyReqMentors,
@@ -23,31 +23,31 @@ import {
   menteeFollowReq,
   menteeUnFollowReq,
   updateUserList,
-} from '../../services/userList';
-import { myMentorColumns } from '../../utils/formFields';
-import { Backdrop, CircularProgress } from '@mui/material';
-import { Button } from '../../shared';
-import ConnectIcon from '../../assets/images/Connectpop1x.png';
-import SuccessTik from '../../assets/images/blue_tik1x.png';
+} from "../../services/userList";
+import { myMentorColumns } from "../../utils/formFields";
+import { Backdrop, CircularProgress } from "@mui/material";
+import { Button } from "../../shared";
+import ConnectIcon from "../../assets/images/Connectpop1x.png";
+import SuccessTik from "../../assets/images/blue_tik1x.png";
 import {
   followBtnText,
   requestStatusColor,
   requestStatusText,
-} from '../../utils/constant';
-import CloseRequest from '../../assets/icons/closeCircle.svg';
-import CloseReqPopup from '../../assets/icons/closeReqPopup.svg';
-import CancelReq from '../../assets/icons/cancelRequest.svg';
-import dayjs from 'dayjs';
-import moment from 'moment';
-import { requestPageBreadcrumbs } from '../Breadcrumbs/BreadcrumbsCommonData';
+} from "../../utils/constant";
+import CloseRequest from "../../assets/icons/closeCircle.svg";
+import CloseReqPopup from "../../assets/icons/closeReqPopup.svg";
+import CancelReq from "../../assets/icons/cancelRequest.svg";
+import dayjs from "dayjs";
+import moment from "moment";
+import { requestPageBreadcrumbs } from "../Breadcrumbs/BreadcrumbsCommonData";
 
 export const Mentors = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
   const [searchParams] = useSearchParams();
-  const mentortype = searchParams.get('type');
-  const mentortypereq = searchParams.get('req');
+  const mentortype = searchParams.get("type");
+  const mentortypereq = searchParams.get("req");
   const breadcrumbsStatusType = searchParams.get("status") || "";
   const state = useLocation()?.state;
 
@@ -56,23 +56,27 @@ export const Mentors = () => {
   );
 
   const [mentorType, setMentorType] = useState(
-    mentortypereq ? mentortypereq : mentortype ?? state?.type === 'requestmentor' ? 'requestmentor' : 'mymentor'
+    mentortypereq
+      ? mentortypereq
+      : mentortype ?? state?.type === "requestmentor"
+      ? "requestmentor"
+      : "mymentor"
   );
-  const [requestTab, setRequestTab] = useState('all');
+  const [requestTab, setRequestTab] = useState("all");
   const [selectedItem, setSelectedItem] = useState({});
   const [paginationModel, setPaginationModel] = React.useState({
     page: 0,
     pageSize: 10,
   });
-  const [search, setSearch] = React.useState('');
+  const [search, setSearch] = React.useState("");
   const [followPopup, setFollowPopup] = React.useState({
     bool: false,
     data: {},
-    type: '',
+    type: "",
   });
   const [createMeetingLoading, setCreateMeetingLoading] = React.useState({
     bool: false,
-    type: '',
+    type: "",
   });
   const [cancelPopup, setCancelPopup] = React.useState({
     bool: false,
@@ -81,39 +85,39 @@ export const Mentors = () => {
 
   const mentorOption = [
     {
-      name: 'My Mentor',
-      value: 'mymentor',
+      name: "My Mentor",
+      value: "mymentor",
     },
     {
-      name: 'Top Mentors',
-      value: 'topmentor',
+      name: "Top Mentors",
+      value: "topmentor",
     },
     {
-      name: 'Follow Mentors',
-      value: 'requestmentor',
+      name: "Follow Mentors",
+      value: "requestmentor",
     },
   ];
 
   const requestBtns = [
     {
-      name: 'All',
-      key: 'all',
+      name: "All",
+      key: "all",
     },
     {
-      name: 'New',
-      key: 'new',
+      name: "New",
+      key: "new",
     },
     {
-      name: 'Pending',
-      key: 'pending',
+      name: "Pending",
+      key: "pending",
     },
     {
-      name: 'Accept',
-      key: 'accept',
+      name: "Accept",
+      key: "accept",
     },
     {
-      name: 'Reject',
-      key: 'cancel',
+      name: "Reject",
+      key: "cancel",
     },
   ];
 
@@ -129,13 +133,13 @@ export const Mentors = () => {
 
   const mentorColumn = [
     {
-      field: 'name',
-      headerName: 'Name',
+      field: "name",
+      headerName: "Name",
       flex: 1,
       id: 0,
       renderCell: (params) => {
         return (
-          <div className='flex gap-2 items-center'>
+          <div className="flex gap-2 items-center">
             {params.row.first_name} {params.row.last_name}
           </div>
         );
@@ -143,76 +147,86 @@ export const Mentors = () => {
     },
     ...myMentorColumns,
     {
-      field: 'ratings',
-      headerName: 'Ratings',
+      field: "ratings",
+      headerName: "Ratings",
       flex: 1,
       id: 5,
       renderCell: (params) => {
         return (
-          <div className='flex gap-2 items-center'>
-            {' '}
-            <img src={StarIcon} alt='StarIcon' />
-            {params?.row?.average_rating === 0
-              ? 3
-              : params?.row?.average_rating}
+          <div className="flex h-full gap-2 items-center">
+            {Array.from(
+              {
+                length: params?.row?.average_rating,
+              },
+              (_, index) => (
+                <img
+                  key={index}
+                  src={StarIcon}
+                  alt="StarIcon"
+                  className="w-4 h-4"
+                />
+              )
+            )}
           </div>
         );
       },
     },
     {
-      field: 'action',
-      headerName: 'Action',
+      field: "action",
+      headerName: "Action",
       flex: 1,
       id: 6,
       renderCell: (params) => {
         return (
           <>
             <div
-              className='cursor-pointer flex items-center h-full'
+              className="cursor-pointer flex items-center h-full"
               onClick={(event) => {
                 handleClick(event, params.row);
               }}
             >
-              <img src={MoreIcon} alt='MoreIcon' />
+              <img src={MoreIcon} alt="MoreIcon" />
             </div>
             <Menu
-              id='basic-menu'
+              id="basic-menu"
               anchorEl={anchorEl}
               open={open}
               onClose={handleClose}
               MenuListProps={{
-                'aria-labelledby': 'basic-button',
+                "aria-labelledby": "basic-button",
               }}
             >
               <MenuItem
-                onClick={() => { 
-                  if(mentorType==="topmentor"){
-
-                    navigate(`/mentor-details/${selectedItem.id}?breadcrumbsType=${requestPageBreadcrumbs.topMentor}&fromType=topmentor`)
-                  }else{
-                    navigate(`/mentor-details/${selectedItem.id}?breadcrumbsType=${requestPageBreadcrumbs.myMentor}`)
-
+                onClick={() => {
+                  if (mentorType === "topmentor") {
+                    navigate(
+                      `/mentor-details/${selectedItem.id}?breadcrumbsType=${requestPageBreadcrumbs.topMentor}&fromType=topmentor`
+                    );
+                  } else {
+                    navigate(
+                      `/mentor-details/${selectedItem.id}?breadcrumbsType=${requestPageBreadcrumbs.myMentor}`
+                    );
                   }
-                   }}
-                className='!text-[12px]'
+                }}
+                className="!text-[12px]"
               >
-                <img src={ViewIcon} alt='ViewIcon' className='pr-3 w-[30px]' />
+                <img src={ViewIcon} alt="ViewIcon" className="pr-3 w-[30px]" />
                 View
               </MenuItem>
               <MenuItem
                 onClick={() => {
-                  selectedItem?.is_follow !== 'waiting' &&
+                  selectedItem?.is_follow !== "waiting" &&
                     handleOpenFollowPopup(
                       selectedItem.id,
                       selectedItem?.is_follow
                     );
                 }}
-                className='!text-[12px]'
+                className="!text-[12px]"
               >
                 <img
                   src={FollowIcon}
-                  alt='FollowIcon'
-                  className='pr-3 w-[27px]'
+                  alt="FollowIcon"
+                  className="pr-3 w-[27px]"
                 />
                 {followBtnText[selectedItem?.is_follow]}
               </MenuItem>
@@ -225,22 +239,22 @@ export const Mentors = () => {
 
   const reqMentorColumn = [
     {
-      field: 'mentor_name',
-      headerName: 'Name',
+      field: "mentor_name",
+      headerName: "Name",
       flex: 1,
       id: 0,
     },
     ...myMentorColumns,
     {
-      field: 'ratings',
-      headerName: 'Ratings',
+      field: "ratings",
+      headerName: "Ratings",
       flex: 1,
       id: 5,
       renderCell: (params) => {
         return (
-          <div className='flex gap-2 items-center'>
-            {' '}
-            <img src={StarIcon} alt='StarIcon' />
+          <div className="flex gap-2 items-center">
+            {" "}
+            <img src={StarIcon} alt="StarIcon" />
             {params?.row?.average_rating === 0
               ? 3
               : params?.row?.average_rating}
@@ -249,60 +263,60 @@ export const Mentors = () => {
       },
     },
     {
-      field: 'request_date',
-      headerName: 'Requested Date',
+      field: "request_date",
+      headerName: "Requested Date",
       flex: 1,
       id: 5,
       renderCell: (params) => {
         return (
-          <div className='flex gap-2 items-center'>
-            {' '}
+          <div className="flex gap-2 items-center">
+            {" "}
             {params?.row?.requested_date
-              ? moment(params?.row?.requested_date).format('MM-DD-YYYY')
-              : '...'}
+              ? moment(params?.row?.requested_date).format("MM-DD-YYYY")
+              : "..."}
           </div>
         );
       },
     },
     {
-      field: 'last_request_date',
-      headerName: 'Last Updated Date',
+      field: "last_request_date",
+      headerName: "Last Updated Date",
       flex: 1,
       id: 5,
       renderCell: (params) => {
         return (
-          <div className='flex gap-2 items-center'>
-            {' '}
+          <div className="flex gap-2 items-center">
+            {" "}
             {params?.row?.cancelled_date
-              ? moment(params?.row?.cancelled_date).format('MM-DD-YYYY')
-              : '...'}
+              ? moment(params?.row?.cancelled_date).format("MM-DD-YYYY")
+              : "..."}
           </div>
         );
       },
     },
     {
-      field: 'status',
-      headerName: 'Status',
+      field: "status",
+      headerName: "Status",
       flex: 1,
       id: 2,
       renderCell: (params) => {
         return (
           <>
-            <div className='cursor-pointer flex items-center h-full relative'>
+            <div className="cursor-pointer flex items-center h-full relative">
               <span
-                className='w-[80px] flex justify-center h-[30px] px-3'
+                className="w-[80px] flex justify-center h-[30px] px-3"
                 style={{
                   background:
-                    requestStatusColor[params.row.status]?.bgColor || '',
-                  lineHeight: '30px',
-                  borderRadius: '3px',
-                  width: '110px',
-                  height: '34px',
-                  color: requestStatusColor[params.row.status]?.color || '',
-                  fontSize: '12px',
+                    requestStatusColor[params.row.status]?.bgColor || "",
+                  lineHeight: "30px",
+                  borderRadius: "3px",
+                  width: "110px",
+                  height: "34px",
+                  color: requestStatusColor[params.row.status]?.color || "",
+                  fontSize: "12px",
                 }}
               >
-                {' '}
+                {" "}
                 {requestStatusText[params.row.status]}
               </span>
             </div>
@@ -311,63 +325,67 @@ export const Mentors = () => {
       },
     },
     {
-      field: 'action',
-      headerName: 'Action',
+      field: "action",
+      headerName: "Action",
       flex: 1,
       id: 6,
       renderCell: (params) => {
         return (
           <>
             <div
-              className='cursor-pointer flex items-center h-full'
+              className="cursor-pointer flex items-center h-full"
               onClick={(event) => {
                 handleClick(event, params.row);
               }}
             >
-              <img src={MoreIcon} alt='MoreIcon' />
+              <img src={MoreIcon} alt="MoreIcon" />
             </div>
             <Menu
-              id='basic-menu'
+              id="basic-menu"
               anchorEl={anchorEl}
               open={open}
               onClose={handleClose}
               MenuListProps={{
-                'aria-labelledby': 'basic-button',
+                "aria-labelledby": "basic-button",
               }}
             >
               <MenuItem
                 onClick={() =>
-                  navigate(`/profileView?breadcrumbsType=${requestPageBreadcrumbs.newFollowRequestMentor}&status=${requestTab}`, {
-                    state: {
-                      row_id: selectedItem?.id,
-                      user_id: selectedItem?.following,
-                      page: 'requested_mentor',
-                    },
-                  })
+                  navigate(
+                    `/profileView?breadcrumbsType=${requestPageBreadcrumbs.newFollowRequestMentor}&status=${requestTab}`,
+                    {
+                      state: {
+                        row_id: selectedItem?.id,
+                        user_id: selectedItem?.following,
+                        page: "requested_mentor",
+                      },
+                    }
+                  )
                 }
-                className='!text-[12px]'
+                className="!text-[12px]"
               >
-                <img src={ViewIcon} alt='ViewIcon' className='pr-3 w-[30px]' />
+                <img src={ViewIcon} alt="ViewIcon" className="pr-3 w-[30px]" />
                 View
               </MenuItem>
               {(selectedItem.status === "new" ||
-                selectedItem.status === "pending") &&
+                selectedItem.status === "pending") && (
                 <>
                   <MenuItem
                     onClick={() => {
                       handleOpenCancelPopup(selectedItem);
                     }}
-                    className='!text-[12px]'
+                    className="!text-[12px]"
                   >
                     <img
                       src={CloseRequest}
-                      alt='FollowIcon'
-                      className='pr-3 w-[27px]'
+                      alt="FollowIcon"
+                      className="pr-3 w-[27px]"
                     />
                     Cancel Request
                   </MenuItem>
-                </>}
-                {/* {selectedItem.status === "accept" &&
+                </>
+              )}
+              {/* {selectedItem.status === "accept" &&
                 <>
                 <MenuItem
                 onClick={() => {
@@ -395,19 +413,19 @@ export const Mentors = () => {
   ];
 
   const title =
-    mentorOption.find((option) => option.value === mentorType)?.name || '';
+    mentorOption.find((option) => option.value === mentorType)?.name || "";
 
   const handleTab = (key) => setRequestTab(key);
 
   const getMentorDatas = (type = mentorType) => {
-    if (type === 'topmentor') {
+    if (type === "topmentor") {
       dispatch(getMyTopMentors(paginationModel));
-    } else if (type === 'requestmentor') {
+    } else if (type === "requestmentor") {
       dispatch(
         getMyReqMentors({
           page: paginationModel?.page + 1,
           limit: paginationModel?.pageSize,
-          status:breadcrumbsStatusType|| requestTab,
+          status: breadcrumbsStatusType || requestTab,
         })
       );
     } else {
@@ -415,9 +433,9 @@ export const Mentors = () => {
     }
   };
   useEffect(() => {
-    if (searchParams.get('req')) {
-      setMentorType(searchParams.get('req'))
-      getMentorDatas(searchParams.get('req'))
+    if (searchParams.get("req")) {
+      setMentorType(searchParams.get("req"));
+      getMentorDatas(searchParams.get("req"));
     }
   }, [searchParams]);
   useEffect(() => {
@@ -425,7 +443,7 @@ export const Mentors = () => {
   }, [paginationModel]);
 
   useEffect(() => {
-    if (status === 'done') {
+    if (status === "done") {
       setCreateMeetingLoading({
         ...createMeetingLoading,
         bool: true,
@@ -433,15 +451,15 @@ export const Mentors = () => {
       setTimeout(() => {
         setCreateMeetingLoading({
           bool: false,
-          type: '',
+          type: "",
         });
-        dispatch(updateUserList({ status: '' }));
+        dispatch(updateUserList({ status: "" }));
         getMentorDatas(mentorType);
         setMentorType(mentorType);
         setFollowPopup({
           bool: false,
-          id: '',
-          type: '',
+          id: "",
+          type: "",
         });
       }, [2000]);
     }
@@ -454,14 +472,14 @@ export const Mentors = () => {
       page: 0,
       pageSize: 10,
     });
-    navigate(`/mentors?req=${value}`)
+    navigate(`/mentors?req=${value}`);
   };
 
   const handleSearch = (value) => {
     setSearch(value);
-    if (mentorType === 'topmentor') {
+    if (mentorType === "topmentor") {
       dispatch(getMyTopMentors({ ...paginationModel, search: value }));
-    } else if (mentorType === 'requestmentor') {
+    } else if (mentorType === "requestmentor") {
       dispatch(
         getMyReqMentors({
           page: paginationModel?.page + 1,
@@ -490,12 +508,12 @@ export const Mentors = () => {
   const handleCloseFollowPopup = () => {
     setFollowPopup({
       bool: false,
-      data: '',
+      data: "",
     });
   };
 
   const handleSubmitBtn = (id) => {
-    if (followPopup?.type === 'accepted') {
+    if (followPopup?.type === "accepted") {
       handleUnFollowMentor(id);
     } else {
       handleFollowMentor(id);
@@ -509,7 +527,7 @@ export const Mentors = () => {
     await dispatch(menteeFollowReq(payload)).then(() => {
       setFollowPopup({
         bool: false,
-        id: '',
+        id: "",
       });
     });
   };
@@ -522,7 +540,7 @@ export const Mentors = () => {
     dispatch(menteeUnFollowReq(payload)).then(() => {
       setFollowPopup({
         bool: false,
-        id: '',
+        id: "",
       });
     });
   };
@@ -560,12 +578,12 @@ export const Mentors = () => {
       follow_id: cancelPopup?.data?.id,
     };
     await dispatch(menteeCancelReq(payload)).then((res) => {
-      if (res?.meta?.requestStatus === 'fulfilled') {
+      if (res?.meta?.requestStatus === "fulfilled") {
         setCancelPopup({
           bool: false,
           activity: true,
         });
-        setMentorType('requestmentor');
+        setMentorType("requestmentor");
         setTimeout(() => {
           setCancelPopup({
             bool: false,
@@ -577,16 +595,16 @@ export const Mentors = () => {
   };
   useEffect(() => {
     if (breadcrumbsStatusType) {
-      setRequestTab(breadcrumbsStatusType)
+      setRequestTab(breadcrumbsStatusType);
     }
   }, [breadcrumbsStatusType]);
   return (
     <div className='px-2 py-9 sm:px-2 md:px-4 lg:px-9 xl:px-9'>
       <Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={loading}
       >
-        <CircularProgress color='inherit' />
+        <CircularProgress color="inherit" />
       </Backdrop>
       <div
         className='px-0 py-5 sm:px-0 md:px-1 lg:px-3 xl:px-3'
@@ -595,12 +613,10 @@ export const Mentors = () => {
         <div className='flex justify-between px-5 pb-4 mb-8 border-b-2 flex-col sm:flex-col md:flex-row lg:flex-row xl:flex-row md:items-center lg:items-center xl:items-center'>
           <div className='flex gap-5 items-center '>
             <p>{title}</p>
-            <p>
-              {/* <img src={FilterIcon} alt='FilterIcon' /> */}
-            </p>
+            <p>{/* <img src={FilterIcon} alt='FilterIcon' /> */}</p>
           </div>
-          <div className='flex gap-8 items-center'>
-            <div className='relative'>
+          <div className="flex gap-8 items-center">
+            <div className="relative">
               <input
                 type='text'
                 id='search-navbar'
@@ -614,12 +630,12 @@ export const Mentors = () => {
                 value={search}
                 onChange={(e) => handleSearch(e.target.value)}
               />
-              <div className='absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none'>
-                <img src={SearchIcon} alt='SearchIcon' />
+              <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
+                <img src={SearchIcon} alt="SearchIcon" />
               </div>
             </div>
             <Dropdown
-              label={'My Mentors'}
+              label={"My Mentors"}
               options={mentorOption}
               value={mentorType}
               handleDropdown={(event) =>
@@ -628,23 +644,23 @@ export const Mentors = () => {
             />
           </div>
         </div>
-        <div className='mx-5'>
-          {mentorType === 'requestmentor' && (
-            <div className='flex gap-3 mb-6'>
+        <div className="mx-5">
+          {mentorType === "requestmentor" && (
+            <div className="flex gap-3 mb-6">
               {requestBtns.map((actionBtn, index) => (
                 <button
                   key={index}
-                  className='text-[14px]'
+                  className="text-[14px]"
                   style={{
                     background:
                       requestTab === actionBtn.key
-                        ? 'linear-gradient(97.86deg, #005DC6 -15.07%, #00B1C0 112.47%)'
-                        : 'rgba(249, 249, 249, 1)',
-                    color: requestTab === actionBtn.key ? '#fff' : '#000',
-                    borderRadius: '3px',
-                    height: '40px',
-                    width: '150px',
-                    border: requestTab !== actionBtn.key && '1px solid #88B2E8',
+                        ? "linear-gradient(97.86deg, #005DC6 -15.07%, #00B1C0 112.47%)"
+                        : "rgba(249, 249, 249, 1)",
+                    color: requestTab === actionBtn.key ? "#fff" : "#000",
+                    borderRadius: "3px",
+                    height: "40px",
+                    width: "150px",
+                    border: requestTab !== actionBtn.key && "1px solid #88B2E8",
                   }}
                   onClick={() => handleTabSwitch(actionBtn.key)}
                 >
@@ -657,7 +673,7 @@ export const Mentors = () => {
           <DataTable
             rows={mentorList?.results}
             columns={
-              mentorType === 'requestmentor' ? reqMentorColumn : mentorColumn
+              mentorType === "requestmentor" ? reqMentorColumn : mentorColumn
             }
             hideCheckbox
             rowCount={mentorList?.count}
@@ -670,47 +686,47 @@ export const Mentors = () => {
       {/* Follow Request Popup */}
 
       <Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={followPopup?.bool}
       >
-        <div className='popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[330px] justify-center items-center'>
-          <img src={ConnectIcon} alt='ConnectIcon' />
-          <span style={{ color: '#232323', fontWeight: 600, fontSize: '24px' }}>
+        <div className="popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
+          <img src={ConnectIcon} alt="ConnectIcon" />
+          <span style={{ color: "#232323", fontWeight: 600, fontSize: "24px" }}>
             {/* {followInfo.is_following ? 'UnFollow' : 'Follow'} */}
-            {followPopup?.type === 'accepted' ? 'Unfollow' : 'Follow'}
+            {followPopup?.type === "accepted" ? "Unfollow" : "Follow"}
             {/* Follow */}
           </span>
 
-          <div className='py-5'>
+          <div className="py-5">
             <p
               style={{
-                color: 'rgba(24, 40, 61, 1)',
+                color: "rgba(24, 40, 61, 1)",
                 fontWeight: 600,
-                fontSize: '18px',
+                fontSize: "18px",
               }}
             >
               Are you sure you want to
               <span>
-                {' '}
-                {followPopup?.type === 'accepted' ? 'unfollow' : 'follow'}{' '}
+                {" "}
+                {followPopup?.type === "accepted" ? "unfollow" : "follow"}{" "}
               </span>
               Mentor?
             </p>
           </div>
-          <div className='flex justify-center'>
-            <div className='flex gap-6 justify-center align-middle'>
+          <div className="flex justify-center">
+            <div className="flex gap-6 justify-center align-middle">
               <Button
-                btnName='Cancel'
-                btnCategory='secondary'
+                btnName="Cancel"
+                btnCategory="secondary"
                 onClick={() => handleCloseFollowPopup()}
               />
               <Button
-                btnType='button'
-                btnCls='w-[110px]'
+                btnType="button"
+                btnCls="w-[110px]"
                 btnName={
-                  followPopup?.type === 'accepted' ? 'Unfollow' : 'Follow'
+                  followPopup?.type === "accepted" ? "Unfollow" : "Follow"
                 }
-                btnCategory='primary'
+                btnCategory="primary"
                 onClick={() => handleSubmitBtn(followPopup?.id)}
               />
             </div>
@@ -719,66 +735,70 @@ export const Mentors = () => {
       </Backdrop>
 
       <Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={createMeetingLoading?.bool}
         onClick={() => setCreateMeetingLoading(false)}
       >
-        <div className='px-5 py-1 flex justify-center items-center'>
-          <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
-            style={{ background: '#fff', borderRadius: '10px' }}>
+        <div className="px-5 py-1 flex justify-center items-center">
+          <div
+            className="flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20"
+            style={{ background: "#fff", borderRadius: "10px" }}
+          >
             <img src={SuccessTik} alt="SuccessTik" />
-            <p className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+            <p
+              className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
               style={{
-                fontWeight: 600
+                fontWeight: 600,
               }}
-            >{createMeetingLoading?.type === 'accepted'
-              ? 'Unfollow is Successfully'
-              : 'Connect is Successfully'}</p>
+            >
+              {createMeetingLoading?.type === "accepted"
+                ? "Unfollow is Successfully"
+                : "Connect is Successfully"}
+            </p>
           </div>
-
         </div>
       </Backdrop>
 
       {/* cancel request popup */}
 
       <Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={cancelPopup?.bool}
       >
-        <div className='popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[330px] p-[12px] justify-center items-center'>
-          <div className='border border-[#E50027] rounded-[15px] h-[100%] w-[100%] justify-center items-center flex flex-col relative'>
+        <div className="popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[330px] p-[12px] justify-center items-center">
+          <div className="border border-[#E50027] rounded-[15px] h-[100%] w-[100%] justify-center items-center flex flex-col relative">
             <div
-              className='absolute top-[12px] right-[12px] cursor-pointer'
+              className="absolute top-[12px] right-[12px] cursor-pointer"
               onClick={() => handleCloseCancelPopup()}
             >
               <img src={CloseReqPopup} />
             </div>
-            <img src={CancelReq} alt='ConnectIcon' />
+            <img src={CancelReq} alt="ConnectIcon" />
 
-            <div className='py-5'>
+            <div className="py-5">
               <p
                 style={{
-                  color: 'rgba(24, 40, 61, 1)',
+                  color: "rgba(24, 40, 61, 1)",
                   fontWeight: 600,
-                  fontSize: '18px',
+                  fontSize: "18px",
                 }}
               >
                 Are you sure want to cancel this Request?
               </p>
             </div>
-            <div className='flex justify-center'>
-              <div className='flex gap-6 justify-center align-middle'>
+            <div className="flex justify-center">
+              <div className="flex gap-6 justify-center align-middle">
                 <Button
-                  btnName='No'
-                  btnCategory='secondary'
-                  btnCls='border !border-[#E50027] !text-[#E50027] w-[110px]'
+                  btnName="No"
+                  btnCategory="secondary"
+                  btnCls="border !border-[#E50027] !text-[#E50027] w-[110px]"
                   onClick={() => handleCloseCancelPopup()}
                 />
                 <Button
-                  btnType='button'
-                  btnCls='w-[110px] !bg-[#E50027] !text-[#fff] border !border-[#E50027]'
-                  btnName={'Yes'}
-                  btnCategory='secondary'
+                  btnType="button"
+                  btnCls="w-[110px] !bg-[#E50027] !text-[#fff] border !border-[#E50027]"
+                  btnName={"Yes"}
+                  btnCategory="secondary"
                   onClick={() => handleCancelRequest()}
                 />
               </div>
@@ -788,21 +808,25 @@ export const Mentors = () => {
       </Backdrop>
 
       <Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={cancelPopup?.activity}
         onClick={() => setCreateMeetingLoading(false)}
       >
-        <div className='px-5 py-1 flex justify-center items-center'>
-          <div className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
-            style={{ background: '#fff', borderRadius: '10px' }}>
+        <div className="px-5 py-1 flex justify-center items-center">
+          <div
+            className="flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20"
+            style={{ background: "#fff", borderRadius: "10px" }}
+          >
             <img src={SuccessTik} alt="SuccessTik" />
-            <p className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+            <p
+              className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
               style={{
-                fontWeight: 600
+                fontWeight: 600,
               }}
-            >Mentor request has been successfully cancelled</p>
+            >
+              Mentor request has been successfully cancelled
+            </p>
           </div>
-
         </div>
       </Backdrop>
     </div>

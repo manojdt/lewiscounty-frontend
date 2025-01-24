@@ -2702,7 +2702,7 @@ export const reportColumns = [
 
 export const myMentorColumns = [
   {
-    field: "designation",
+    field: "job_title",
     headerName: "Designation",
     flex: 1,
     id: 1,
