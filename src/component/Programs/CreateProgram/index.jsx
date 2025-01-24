@@ -71,7 +71,7 @@ export default function CreatePrograms() {
   const re_open_type = searchParams.get("type") || "";
 
   const { allPrograms, status } = useSelector((state) => state.programInfo);
-  console.log("status", status);
+
   const methods = useForm({
     defaultValues:
       toggleRole === admin
@@ -102,7 +102,6 @@ export default function CreatePrograms() {
     }
   );
 
-  console.log("isFetching", isFetching);
   const { data: currentProgramDetail, isLoading: isDetailFetching } =
     useGetSpecificProgramDetailsQuery(
       { id: params?.id, ...(program_create_type && { program_create_type }) },

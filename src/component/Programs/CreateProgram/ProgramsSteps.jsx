@@ -838,83 +838,76 @@ const ProgramSteps = ({
                                           )}
                                         />
                                       </FormControl>
-                                    ) : (
-                                      <div
-                                        className="input-bg h-[60px] w-full mt-2 flex items-center relative text-[12px] gap-2 cursor-pointer px-6"
-                                        style={{ borderRadius: "3px" }}
-                                        onClick={() =>
-                                          handleActionPopup(
-                                            `sub_programs.${index}.mentor_id`
-                                          )
-                                        }
-                                      >
-                                        {sub_programs[index].mentor_id && (
-                                          <p className="flex items-center gap-1">
-                                            <p
-                                              className="flex items-center px-3 py-3"
-                                              style={{
-                                                background:
-                                                  "rgba(223, 237, 255, 1)",
-                                                borderRadius: "50%",
-                                              }}
-                                            ></p>
+                                    ) : nestedField.type === "popup-input" ? (
+                                      <div className="relative">
+                                        <div
+                                          className="input-bg h-[60px] w-full mt-2 flex items-center relative text-[12px] gap-2 px-6"
+                                          style={{ borderRadius: "3px" }}
+                                        >
+                                          {sub_programs[index]?.mentor_id && (
+                                            <p className="flex items-center gap-1">
+                                              <span
+                                                className="flex items-center px-3 py-3"
+                                                style={{
+                                                  background:
+                                                    "rgba(223, 237, 255, 1)",
+                                                  borderRadius: "50%",
+                                                }}
+                                              />
+                                              {
+                                                mentor_assign?.find(
+                                                  (mentor) =>
+                                                    mentor?.id ===
+                                                    sub_programs[index]
+                                                      .mentor_id
+                                                )?.name
+                                              }
+                                            </p>
+                                          )}
+
+                                          <Controller
+                                            name={`sub_programs.${index}.mentor_id`}
+                                            control={control}
+                                            rules={nestedField.inputRules}
+                                            defaultValue=""
+                                            render={({ field }) => (
+                                              <input
+                                                {...field}
+                                                type="hidden"
+                                                className="hidden"
+                                              />
+                                            )}
+                                          />
+
+                                          {nestedField.icon &&
+                                            nestedField.icon === "add" && (
+                                              <Tooltip
+                                                title={nestedField.placeholder}
+                                              >
+                                                <img
+                                                  className="absolute top-4 right-4 cursor-pointer"
+                                                  onClick={() =>
+                                                    handleActionPopup(
+                                                      `sub_programs.${index}.mentor_id`
+                                                    )
+                                                  }
+                                                  src={PlusIcon}
+                                                  alt="PlusIcon"
+                                                />
+                                              </Tooltip>
+                                            )}
+                                        </div>
+                                        {errors?.sub_programs?.[index]
+                                          ?.mentor_id && (
+                                          <p className="mt-1 text-xs text-red-500">
                                             {
-                                              mentor_assign?.find(
-                                                (mentor) =>
-                                                  mentor?.id ===
-                                                  sub_programs[index].mentor_id
-                                              )?.name
+                                              errors.sub_programs[index]
+                                                .mentor_id.message
                                             }
                                           </p>
                                         )}
-
-                                        <input
-                                          {...register(
-                                            nestedField.name,
-                                            nestedField.inputRules
-                                          )}
-                                          type={nestedField.fieldtype}
-                                          className="w-full hidden border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none 
-                                                                                                                    focus-visible:outline-none text-[14px] h-[60px]"
-                                          placeholder={nestedField.placeholder}
-                                          style={{
-                                            color: "#232323",
-                                            borderRadius: "3px",
-                                          }}
-                                          aria-invalid={
-                                            !!errors[nestedField.name]
-                                          }
-                                        />
-                                        {nestedField.icon &&
-                                          nestedField.icon === "add" && (
-                                            <Tooltip
-                                              title={nestedField.placeholder}
-                                            >
-                                              <img
-                                                className="absolute top-4 right-4 cursor-pointer"
-                                                onClick={() =>
-                                                  handleActionPopup(
-                                                    `sub_programs.${index}.mentor_id`
-                                                  )
-                                                }
-                                                src={PlusIcon}
-                                                alt="PlusIcon"
-                                              />
-                                            </Tooltip>
-                                          )}
-                                        {errors?.sub_programs?.[index]?.[
-                                          nestedField.name
-                                        ] && (
-                                          <div>
-                                            {
-                                              errors?.sub_programs?.[index]?.[
-                                                nestedField.name
-                                              ]?.message
-                                            }
-                                          </div>
-                                        )}
                                       </div>
-                                    )}
+                                    ) : null}
                                   </div>
                                 </div>
                               );

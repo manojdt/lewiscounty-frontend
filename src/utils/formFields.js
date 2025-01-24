@@ -1691,7 +1691,7 @@ export const ProgramInformationFields = [
         placeholder: "Select Mentor",
         fieldtype: "text",
         inputRules: {
-          // required: 'This field is required',
+          required: 'This field is required',
         },
         width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
         icon: "add",
