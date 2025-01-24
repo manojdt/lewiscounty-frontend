@@ -487,6 +487,7 @@ export const Mentee = () => {
         modalClose={() => setOpenCategory(false)}
         noheader
         padding={0}
+        modalSize="md"
       >
         <Stack
           p={"12px 18px"}
