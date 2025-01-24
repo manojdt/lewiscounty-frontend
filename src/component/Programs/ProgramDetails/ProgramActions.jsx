@@ -217,7 +217,8 @@ const ProgramActions = ({
       (programdetails?.request_data?.request_type === "program_new" ||
         programdetails?.request_data?.request_type === "program_cancel") &&
       ["new", "pending"].includes(programdetails?.request_data?.status) &&
-        acceptType
+        acceptType && 
+        programdetails?.request_data?.created_by !== userInfo?.data?.user_id
       ;
 
     if (showApproveRejectButtons) {
@@ -720,7 +721,7 @@ const ProgramActions = ({
     if (
       ["new", "pending"].includes(programdetails?.request_data?.status) &&
       role === "mentor" &&
-      (type === "program_reschedule" || type === "program_cancel")
+      (type === "program_reschedule" || type === "program_cancel" || type === "program_new")
       && (programdetails?.request_data?.created_by === userInfo?.data?.user_id)
     ) {
       return (
