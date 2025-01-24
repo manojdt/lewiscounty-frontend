@@ -754,7 +754,6 @@ const ProgramActions = ({
 
   return (
     <div>
-    {console.log("programdetails?.request_data ==>", programdetails?.request_data, userInfo)}
       {renderCompletedStatus()}
       {renderMentorActions()}
       {renderMenteeActions()}
