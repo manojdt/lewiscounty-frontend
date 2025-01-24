@@ -21,6 +21,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import moment from "moment/moment";
 import { Button } from "../../../shared";
 import { Backdrop } from "@mui/material";
+import { MuiCustomModal } from "../../../shared/Modal/MuiCustomModal";
 
 const dateFormat = "MM-DD-YYYY";
 const columns = [
@@ -30,7 +31,6 @@ const columns = [
     headerName: "Sub program",
     flex: 1,
     renderCell: (params) => {
-      console.log(params);
       const sub_program_count = params.row?.admin_program_series;
 
       return (
@@ -215,7 +215,12 @@ const ActionMenu = ({
       {role === "mentor" && (
         <>
           {gridCellParams?.status === "yettoapprove" && (
-            <MenuItem onClick={() => setOpenPopup(true)}>
+            <MenuItem
+              onClick={() => {
+                handleClose();
+                setOpenPopup(true);
+              }}
+            >
               <CheckCircleIcon sx={{ mr: 1 }} fontSize="small" />
               Accept
             </MenuItem>
@@ -243,6 +248,8 @@ const SubprogramsDataGrid = ({ data, handleAcceptProgram }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const [gridCellParams, setgridCellParams] = React.useState();
+
+  const handlePopupClose = () => setOpenPopup(false);
 
   const handleClick = (params, event) => {
     if (params.field === "actions") {
@@ -317,54 +324,72 @@ const SubprogramsDataGrid = ({ data, handleAcceptProgram }) => {
         handleMenuClick={handleMenuClick}
         setOpenPopup={setOpenPopup}
       />
-      <Backdrop
-        sx={{
-          color: "#fff",
-          zIndex: (theme) => theme.zIndex.drawer + 1,
-        }}
+      <MuiCustomModal
+        hideBackdrop
+        dialogTitle={"Accept Program"}
         open={openPopup}
+        handleClose={handlePopupClose}
+        maxWidth="sm"
+        actionButtons={[
+          {
+            color: "inherit",
+            variant: "outlined",
+            children: "No",
+            onClick: handlePopupClose,
+          },
+          {
+            color: "primary",
+            variant: "contained",
+            children: "yes",
+            onClick: () => {
+              handlePopupClose();
+              handleMenuClick("accept");
+            },
+          },
+        ]}
       >
-        <div className="popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[330px] p-[12px] justify-center items-center">
+        {/* <div className="popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[330px] p-[12px] justify-center items-center">
           <div className="border border-[#E50027] rounded-[15px] h-[100%] w-[100%] justify-center items-center flex flex-col relative">
             <div
               className="absolute top-[12px] right-[12px]"
               onClick={() => setOpenPopup(false)}
             >
               <img src={CloseIcon} alt="ConfirmIcon" />
-            </div>
-            <img src={ConfirmIcon} alt="ConfirmIcon" />
+            </div> */}
+        <div className="flex items-center flex-col">
+          <img className="w-10 h-10" src={ConfirmIcon} alt="ConfirmIcon" />
+          <p
+            className="py-5"
+            style={{
+              color: "rgba(24, 40, 61, 1)",
+              fontWeight: 600,
+              fontSize: "18px",
+            }}
+          >
+            Are you sure want to Accept this Program?
+          </p>
+        </div>
 
-            <div className="py-5">
-              <p
-                style={{
-                  color: "rgba(24, 40, 61, 1)",
-                  fontWeight: 600,
-                  fontSize: "18px",
-                }}
-              >
-                Are you sure want to Accept this Program?
-              </p>
-            </div>
-            <div className="flex justify-center">
+        {/* <div className="flex justify-center">
               <div className="flex gap-6 justify-center align-middle">
                 <Button
                   btnName="No"
                   btnCategory="secondary"
                   btnCls="border !border-[#1D5BBF] !text-[#1D5BBF] w-[110px]"
-                  onClick={() => setOpenPopup(false)}
+                  onClick={handlePopupClose}
                 />
                 <Button
                   btnType="button"
                   btnCls="w-[110px]"
                   btnName={"Yes"}
                   btnCategory="primary"
-                  onClick={() => handleMenuClick("accept")}
+                  onClick={}
                 />
               </div>
-            </div>
-          </div>
-        </div>
-      </Backdrop>
+            </div> */}
+        {/* </div> */}
+        {/* </div> */}
+      </MuiCustomModal>
     </div>
   );
 };

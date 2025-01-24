@@ -52,10 +52,7 @@ import CancelIcon from "../../../assets/images/cancel1x.png";
 import CompleteIcon from "../../../assets/images/completed1x.png";
 import { Button } from "../../../shared";
 import { Button as MuiButton } from "@mui/material";
-import {
-  convertDateFormat,
-  formatDateTimeISO,
-} from "../../../utils";
+import { convertDateFormat, formatDateTimeISO } from "../../../utils";
 import "./program-details.css";
 import Ratings from "../Ratings";
 import { getUserProfile } from "../../../services/profile";
@@ -134,6 +131,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       error,
     },
   ] = useAcceptProgramMutation();
+
   const [
     markProgramInterest,
     {
@@ -858,8 +856,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
 
   useEffect(() => {
     if (isAccepted) {
-      resetProgramAccept();
       const timer = setTimeout(() => {
+        resetProgramAccept();
         navigate(`/update-program/${acceptingProgramID}`);
       }, 3000);
       return () => clearTimeout(timer);
@@ -1497,7 +1495,9 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   btnCls="w-[110px]"
                   btnName={"Yes"}
                   btnCategory="primary"
-                  onClick={() => handleAcceptProgram(programdetails)}
+                  onClick={() => {
+                    handleAcceptProgram(programdetails);
+                  }}
                 />
               </div>
             </div>
@@ -1952,12 +1952,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                               className="pr-3 w-[25px]"
                             />
                             Share
-                          </MenuItem>
-                          {console.log(
-                            "programdetails",
-                            "admin_assign_program" in programdetails,
-                            programdetails.status
-                          )}
+                          </MenuItem>                          
                           {!("admin_assign_program" in programdetails) &&
                             (programdetails.status === "cancelled" ||
                               programdetails.status ===
@@ -2690,11 +2685,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   })}
                 </Menu>
               </MuiCustomModal>
-              {/* Subject Program List */}
-              {console.log(
-                "programdetails?.active_sub_program ===>",
-                programdetails?.active_sub_program
-              )}
+              {/* Subject Program List */}             
               {role === "mentee" && (
                 <Grid container spacing={2}>
                   {programdetails?.active_sub_program?.map((e) => {

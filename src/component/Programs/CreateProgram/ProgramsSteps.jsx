@@ -665,6 +665,11 @@ const ProgramSteps = ({
                                 >
                                   <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2 mt-5">
                                     {nestedField.label}
+                                    <span style={{ color: "red" }}>
+                                      {nestedField?.inputRules?.required
+                                        ? "*"
+                                        : ""}
+                                    </span>
                                   </label>
                                   <div>
                                     {nestedField.type === "input" ? (
@@ -897,6 +902,17 @@ const ProgramSteps = ({
                                               />
                                             </Tooltip>
                                           )}
+                                        {errors?.sub_programs?.[index]?.[
+                                          nestedField.name
+                                        ] && (
+                                          <div>
+                                            {
+                                              errors?.sub_programs?.[index]?.[
+                                                nestedField.name
+                                              ]?.message
+                                            }
+                                          </div>
+                                        )}
                                       </div>
                                     )}
                                   </div>
