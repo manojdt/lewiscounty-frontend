@@ -256,10 +256,10 @@ export default function AllRequest() {
       name: "Mentees Requests",
       value: "mentees",
     },
-    {
-      name: "Admin Requests",
-      value: "admin",
-    },
+    // {
+    //   name: "Admin Requests",
+    //   value: "admin",
+    // },
   ];
 
   const requestAdminActionTab = [
@@ -937,7 +937,7 @@ export default function AllRequest() {
                       ].includes(actionTab) && (
                         <MenuItem
                           onClick={() => {
-                            navigate(`/update-program/${params?.row?.program}`);
+                            navigate(`/update-program/${seletedItem.program}`);
                           }}
                           className="!text-[12px]"
                         >

@@ -25,7 +25,7 @@ import CancelIcon from "../../../assets/icons/closeIcon.svg";
 import SuccessTik from "../../../assets/images/blue_tik1x.png";
 import CertificateIcon from "../../../assets/images/dummy_certificate.png";
 import SuccessIcon from "../../../assets/images/Success_tic1x.png";
-import FailedIcon from "../../../assets/images/cancel3x.png";
+import FailedIcon from "../../../assets/icons/programErrorIcon.svg";
 import ToastNotification from "../../../shared/Toast";
 import { FormProvider, useForm } from "react-hook-form";
 import { Button } from "../../../shared";
@@ -1151,8 +1151,9 @@ export default function CreatePrograms() {
           {isProgramCreating || isProgramUpdating || isProgramReopenUpdating ? (
             <CircularProgress color="inherit" />
           ) : (
-            <div className="w-2/6 bg-white flex flex-col gap-4 h-[330px] justify-center items-center">
+            <div className="w-[450px] bg-white flex flex-col gap-10 h-[230px] justify-center items-center rounded-[10px] border border-background-primary-main">
               <img
+              className="h-[45px] w-[45px]"
                 src={
                   isProgramCreated || isProgramUpdated || isProgramReopenUpdated
                     ? SuccessIcon

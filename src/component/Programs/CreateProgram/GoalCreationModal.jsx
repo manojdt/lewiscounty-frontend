@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { MuiCustomModal } from "../../../shared/Modal/MuiCustomModal";
 import { useCreateGoalMutation } from "../../../features/goals/goalsApi.services";
+import SuccessTik from '../../../assets/images/blue_tik1x.png';
 
 const GoalCreationModal = (props) => {
   const [description, setDescription] = React.useState("");
@@ -81,23 +82,29 @@ const GoalCreationModal = (props) => {
       <MuiCustomModal
         PaperProps={{
           sx: {
-            background: isGoalsCreated
-              ? "linear-gradient(97.86deg, #005DC6 -15.07%, #00B1C0 112.47%)"
-              : "rgba(249, 249, 249, 1)",
+            background: "rgba(249, 249, 249, 1)",
           },
         }}
         open={showBackdrop}
         maxWidth="sm"
         onClose={() => setShowBackdrop(false)}
       >
-        <p
-          className={`${
-            isGoalsCreated ? "text-white" : "text-red-500"
-          } pb-4 text-center font-normal text-md`}
-          role="alert"
-        >
-          {data?.message}
-        </p>
+        <div className="px-5 py-1 flex justify-center items-center h-[250px] w-full">
+          <div
+            className="flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20 w-full"
+            style={{ background: "#fff", borderRadius: "10px" }}
+          >
+            <img src={SuccessTik} alt="SuccessTik" />
+            <p
+              className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
+              style={{
+                fontWeight: 600,
+              }}
+            >
+              {data?.message}
+            </p>
+          </div>
+        </div>
       </MuiCustomModal>
     </>
   );

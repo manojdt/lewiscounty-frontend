@@ -916,7 +916,7 @@ export const programMenus = (page = 'dashboard') => {
       name: 'Cancelled Programs',
       count: 0,
       page: `${pipeUrl}${programFilterUrls.cancelled}`,
-      for: ['mentee', 'mentor'],
+      for: ['mentee', 'mentor', 'admin'],
       mentorStatus: 'cancelled',
       menteeStatus: 'cancelled',
       status: programActionStatus.cancelled,
