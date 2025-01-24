@@ -55,7 +55,6 @@ import { Button as MuiButton } from "@mui/material";
 import {
   convertDateFormat,
   formatDateTimeISO,
-  todatDateInfo,
 } from "../../../utils";
 import "./program-details.css";
 import Ratings from "../Ratings";
@@ -117,7 +116,6 @@ import ProgramCard from "../../../shared/Card/ProgramCard";
 import SubDetailCardWrapper from "../../../shared/Card/SubDetailCardWrapper";
 import { CustomModal } from "../../../shared/CustomModal/CustomModal";
 import { DataGrid } from "@mui/x-data-grid";
-import EditIcon from "@mui/icons-material/Edit";
 
 export default function ProgramDetails({ setProgramDetailsId }) {
   const [showBackdrop, setShowBackdrop] = React.useState(false);
@@ -131,7 +129,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     acceptProgram,
     {
       isSuccess: isAccepted,
-      isErrorAccepting,
+      isError: isErrorAccepting,
       reset: resetProgramAccept,
       error,
     },
@@ -716,6 +714,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
         // Only navigate on success cases
         if (isInsterestMarked) {
           handleCancel();
+          resetMarkInterestState();
         }
       }, 2000);
       return () => {
@@ -724,6 +723,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       };
     }
   }, [isInsterestMarked]);
+
   useEffect(() => {
     if (ratingModal.success) {
       setTimeout(() => {
@@ -858,8 +858,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
 
   useEffect(() => {
     if (isAccepted) {
+      resetProgramAccept();
       const timer = setTimeout(() => {
-        resetProgramAccept();
         navigate(`/update-program/${acceptingProgramID}`);
       }, 3000);
       return () => clearTimeout(timer);
@@ -2115,7 +2115,10 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             programActionStatus.yettojoin &&
                             programdetails?.program_interest && (
                               <MenuItem
-                                onClick={() => handleMenu("not_interested")}
+                                onClick={() => {
+                                  handleClose();
+                                  handleMenu("not_interested");
+                                }}
                                 className="!text-[12px]"
                               >
                                 <img
