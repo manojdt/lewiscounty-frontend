@@ -1983,8 +1983,11 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             programdetails?.created_by ===
                               userdetails?.data?.user_id &&
                             programdetails?.admin_program === null &&
-                            !["cancelled", "yettoapprove", "new_program_request_rejected"].includes(programdetails?.status) &&
-                             (
+                            ![
+                              "cancelled",
+                              "yettoapprove",
+                              "new_program_request_rejected",
+                            ].includes(programdetails?.status) && (
                               <MenuItem
                                 onClick={() => handleMenu("edit")}
                                 className="!text-[12px]"
@@ -2277,7 +2280,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                       <span>Instructor :</span>
                       {role !== "mentor" ? (
                         <Link
-                          to={`/mentor-details/${programdetails?.created_by}`}
+                          to={`/mentor-details/${programdetails?.created_by}?type=view`}
                         >
                           <span
                             style={{
@@ -2685,7 +2688,10 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                 </Menu>
               </MuiCustomModal>
               {/* Subject Program List */}
-              {console.log("programdetails?.active_sub_program ===>", programdetails?.active_sub_program)}
+              {console.log(
+                "programdetails?.active_sub_program ===>",
+                programdetails?.active_sub_program
+              )}
               {role === "mentee" && (
                 <Grid container spacing={2}>
                   {programdetails?.active_sub_program?.map((e) => {
@@ -2707,8 +2713,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
               {/* Notes Section */}
               {["inprogress"].includes(programdetails?.status) &&
                 (role === "mentee" ||
-                  programdetails?.created_by ===
-                    userdetails?.data?.user_id) && !typeParams && (
+                  programdetails?.created_by === userdetails?.data?.user_id) &&
+                !typeParams && (
                   <Box>
                     <Accordian
                       title={"Program Notes:"}
