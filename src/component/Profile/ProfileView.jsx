@@ -292,27 +292,27 @@ export default function ProfileView() {
     approved: {
       background: "#16B681",
       borderRadius: "5px",
-      width: "300px",
+      // width: "300px",
       cursor: "not-allowed",
     },
     rejected: {
       border: "1px solid #E0382D",
       borderRadius: "5px",
       color: "#E0382D",
-      width: "300px",
+      // width: "300px",
       cursor: "not-allowed",
     },
     cancel: {
       border: "1px solid #E0382D",
       borderRadius: "5px",
       color: "#E0382D",
-      width: "300px",
+      // width: "300px",
       cursor: "not-allowed",
     },
     accept: {
       background: "#16B681",
       borderRadius: "5px",
-      width: "300px",
+      // width: "300px",
       cursor: "not-allowed",
     },
   };
@@ -1041,7 +1041,7 @@ export default function ProfileView() {
       </div>
 
       <div
-        className="profile-content py-8 px-14"
+        className="profile-content py-8 px-4 sm:px-4 md:px-8 lg:px-14 xl:px-14 "
         style={{
           border: "1px solid rgba(219, 224, 229, 1)",
           background: "rgba(255, 255, 255, 1)",
@@ -1055,7 +1055,7 @@ export default function ProfileView() {
           <div className="text-color font-medium !text-[20px]">Profile</div>
         </div>
         <div className="flex justify-between items-center">
-          <div className="py-4 relative w-[12%]">
+          <div className="py-4 relative w-[50%] sm:w-[50%] md:w-[17%] lg:w-[14%] xl:w-[12%]">
             <div className="upload-profile">
               <label
                 className="w-[40%] pb-3 rounded-lg text-white text-[14px] cursor-pointer"
@@ -1071,7 +1071,7 @@ export default function ProfileView() {
               </label>
             </div>
           </div>
-          <div className="flex gap-5">
+          <div className="flex gap-5 flex-col sm:flex-col md:flex-row lg:flex-row xl:flex-row">
             {/* {role !== "admin" ? (
               <>
                 {(state?.data?.status === "new" ||
@@ -1566,7 +1566,7 @@ export default function ProfileView() {
                     {noteData?.error}
                   </p>
                 )}
-                <div className="flex justify-end">
+                <div className="flex justify-center ">
                   <Button btnName="Submit" onClick={() => handleSaveNotes()} />
                 </div>
               </div>

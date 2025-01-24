@@ -232,9 +232,9 @@ input[type='range']::-ms-thumb {
   border-bottom: 1px solid rgba(198, 198, 198, 1);
 }
 
-.goals .goals-info {
+/* .goals .goals-info {
   padding: 30px 40px;
-}
+} */
 
 .goals .goals-info .goal-counts-container {
   background: rgba(238, 245, 255, 1);
@@ -1416,5 +1416,9 @@ input[type='number'] {
   }
   .feedback .feedback-content {
     padding: 0;
+  }
+  .profile-container {
+    margin-top: 5px;
+    padding: 15px 15px;
   }
 }

@@ -163,7 +163,7 @@ export default function MenteeGoals() {
                 <div className='flex gap-5 items-center '>
                     <p className='text-[18px] font-semibold'>Mentee Goals</p>
                 </div>
-                <div className='flex gap-8 items-center'>
+                <div className='flex gap-8 items-center flex-col sm:flex-col md:flex-row lg:flex-row xl:flex-row'>
                     <div className="relative flex gap-3 py-3 px-4"
                         style={{ border: '1px solid rgba(24, 40, 61, 0.25)', background: 'rgba(238, 245, 255, 1)', borderRadius: '3px' }}>
                         <img src={CalenderIcon} alt="CalenderIcon" />
@@ -190,7 +190,7 @@ export default function MenteeGoals() {
                 </div>
 
             </div>
-            <div className='py-8 px-6'>
+            <div className='py-8 px-3 sm:px-2 md:px-3 lg:px-6 xl:px-6'>
                 <DataTable rows={goalHistory?.results} columns={menteeGoalsColumn}
                     rowCount={goalHistory?.count}
                     paginationModel={paginationModel} setPaginationModel={setPaginationModel} 

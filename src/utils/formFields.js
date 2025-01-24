@@ -503,7 +503,7 @@ export const MenteePersonalInformationFields = [
     size: true,
     disabled: true,
     disable: true,
-    width: "col-span-2",
+    width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-2 xl:col-span-2",
   },
   {
     type: "input",
@@ -517,7 +517,7 @@ export const MenteePersonalInformationFields = [
     size: true,
     disabled: true,
     disable: true,
-    width: "col-span-2",
+    width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-2 xl:col-span-2",
   },
   {
     type: "input",
@@ -531,7 +531,7 @@ export const MenteePersonalInformationFields = [
     size: true,
     disabled: true,
     disable: true,
-    width: "col-span-2",
+    width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-2 xl:col-span-2",
   },
   {
     type: "input",
@@ -547,7 +547,7 @@ export const MenteePersonalInformationFields = [
       },
     },
     size: true,
-    width: "col-span-2",
+    width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-2 xl:col-span-2",
   },
   {
     type: "input",
@@ -562,7 +562,7 @@ export const MenteePersonalInformationFields = [
       },
     },
     size: true,
-    width: "col-span-2",
+    width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-2 xl:col-span-2",
   },
   // {
   //   type: "input",
@@ -605,7 +605,7 @@ export const MenteePersonalInformationFields = [
     },
     // disabled: true,
     size: true,
-    width: "col-span-2",
+    width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-2 xl:col-span-2",
   },
   {
     type: "checkbox",
@@ -638,7 +638,7 @@ export const MenteePersonalInformationFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-2",
+    width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-2 xl:col-span-2",
   },
   {
     type: "input",
@@ -650,7 +650,7 @@ export const MenteePersonalInformationFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-2",
+    width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-2 xl:col-span-2",
   },
   {
     type: "dropdown",
@@ -679,7 +679,7 @@ export const MenteePersonalInformationFields = [
       required: "This field is required",
     },
     size: false,
-    width: "col-span-2",
+    width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-2 xl:col-span-2",
   },
 ];
 
@@ -694,7 +694,7 @@ export const MenteeCareerInformationFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-1",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
   {
     type: "input",
@@ -707,7 +707,7 @@ export const MenteeCareerInformationFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-1",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
   {
     type: "input",
@@ -719,7 +719,7 @@ export const MenteeCareerInformationFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-1",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
   {
     type: "dropdown",
@@ -744,7 +744,7 @@ export const MenteeCareerInformationFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-1",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
 ];
 
@@ -759,7 +759,7 @@ export const MenteeCurrentStatusFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-1",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
   {
     type: "input",
@@ -771,7 +771,7 @@ export const MenteeCurrentStatusFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-1",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
   {
     type: "input",
@@ -784,7 +784,7 @@ export const MenteeCurrentStatusFields = [
       // required: "This field is required",
     },
     size: false,
-    width: "col-span-2",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
 ];
 
@@ -853,7 +853,7 @@ export const MenteeSkillsFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-1",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
   {
     type: "input",
@@ -865,7 +865,7 @@ export const MenteeSkillsFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-1",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
   {
     type: "input",
@@ -877,7 +877,7 @@ export const MenteeSkillsFields = [
       // required: "This field is required",
     },
     size: false,
-    width: "col-span-2",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
 ];
 
@@ -892,7 +892,7 @@ export const MenteeExpectationGoalsFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-1",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
   {
     type: "input",
@@ -906,7 +906,7 @@ export const MenteeExpectationGoalsFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-1",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
   {
     type: "input",
@@ -920,7 +920,7 @@ export const MenteeExpectationGoalsFields = [
       // required: "This field is required",
     },
     size: false,
-    width: "col-span-2",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
 ];
 
@@ -935,7 +935,7 @@ export const MenteeAvailabilitysFields = [
       // required: "This field is required",
     },
     size: false,
-    width: "col-span-1",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
   {
     type: "input",
@@ -949,7 +949,7 @@ export const MenteeAvailabilitysFields = [
       // required: "This field is required",
     },
     size: false,
-    width: "col-span-1",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
 ];
 
@@ -964,7 +964,7 @@ export const MenteeDetailedCareerFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-1",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
   {
     type: "input",
@@ -978,7 +978,7 @@ export const MenteeDetailedCareerFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-1",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
   {
     type: "input",
@@ -990,7 +990,7 @@ export const MenteeDetailedCareerFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-1",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
   {
     type: "input",
@@ -1004,7 +1004,7 @@ export const MenteeDetailedCareerFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-1",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
 ];
 
@@ -1021,7 +1021,7 @@ export const MenteeChallengesFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-1",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
   {
     type: "input",
@@ -1035,7 +1035,7 @@ export const MenteeChallengesFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-1",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
   {
     type: "input",
@@ -1047,7 +1047,7 @@ export const MenteeChallengesFields = [
       // required: "This field is required",
     },
     size: false,
-    width: "col-span-2",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
 ];
 
@@ -1064,7 +1064,7 @@ export const MenteeMentoringExperienceFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-1",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
   {
     type: "input",
@@ -1078,7 +1078,7 @@ export const MenteeMentoringExperienceFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-1",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
   {
     type: "input",
@@ -1092,7 +1092,7 @@ export const MenteeMentoringExperienceFields = [
       // required: "This field is required",
     },
     size: false,
-    width: "col-span-2",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
 ];
 
@@ -1116,7 +1116,7 @@ export const MenteeLearningFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-1",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
   ,
   {
@@ -1129,7 +1129,7 @@ export const MenteeLearningFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-1",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
   {
     type: "input",
@@ -1143,7 +1143,7 @@ export const MenteeLearningFields = [
       // required: "This field is required",
     },
     size: false,
-    width: "col-span-2",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
 ];
 
@@ -1160,7 +1160,7 @@ export const MenteeNetworkingFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-1",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
   {
     type: "input",
@@ -1173,7 +1173,7 @@ export const MenteeNetworkingFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-1",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
   {
     type: "input",
@@ -1187,7 +1187,7 @@ export const MenteeNetworkingFields = [
       // required: "This field is required",
     },
     size: false,
-    width: "col-span-2",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
 ];
 
@@ -1204,7 +1204,7 @@ export const MenteePersonalDevelopmentFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-1",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
   {
     type: "input",
@@ -1218,7 +1218,7 @@ export const MenteePersonalDevelopmentFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-1",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
   {
     type: "input",
@@ -1231,7 +1231,7 @@ export const MenteePersonalDevelopmentFields = [
       // required: "This field is required",
     },
     size: false,
-    width: "col-span-2",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
 ];
 
@@ -1246,7 +1246,7 @@ export const MenteeMentoringRelationshipFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-1",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
   {
     type: "input",
@@ -1260,7 +1260,7 @@ export const MenteeMentoringRelationshipFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-1",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
   {
     type: "input",
@@ -1272,7 +1272,7 @@ export const MenteeMentoringRelationshipFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-1",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
   {
     type: "input",
@@ -1286,7 +1286,7 @@ export const MenteeMentoringRelationshipFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-1",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
 ];
 
@@ -1301,7 +1301,7 @@ export const MenteeLongTermFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-1",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
   {
     type: "input",
@@ -1315,7 +1315,7 @@ export const MenteeLongTermFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-1",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
   {
     type: "input",
@@ -1329,7 +1329,7 @@ export const MenteeLongTermFields = [
       // required: "This field is required",
     },
     size: false,
-    width: "col-span-2",
+    width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
   },
 ];
 export const MenteeDocumentUplaod = [
@@ -3141,7 +3141,7 @@ export const PersonalInfoFields = [
     },
     size: true,
     disabled: true,
-    width: "col-span-2",
+    width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-2 xl:col-span-2",
   },
   {
     type: "input",
@@ -3154,7 +3154,7 @@ export const PersonalInfoFields = [
     },
     size: true,
     disabled: true,
-    width: "col-span-2",
+    width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-2 xl:col-span-2",
   },
   {
     type: "input",
@@ -3167,7 +3167,7 @@ export const PersonalInfoFields = [
     },
     size: true,
     disabled: true,
-    width: "col-span-2",
+    width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-2 xl:col-span-2",
   },
   {
     type: "input",
@@ -3183,7 +3183,7 @@ export const PersonalInfoFields = [
       },
     },
     size: true,
-    width: "col-span-2",
+    width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-2 xl:col-span-2",
   },
   {
     type: "input",
@@ -3198,7 +3198,7 @@ export const PersonalInfoFields = [
       },
     },
     size: true,
-    width: "col-span-2",
+    width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-2 xl:col-span-2",
   },
   // {
   //   type: 'input',
@@ -3241,7 +3241,7 @@ export const PersonalInfoFields = [
       // required: 'This field is required',
     },
     size: true,
-    width: "col-span-2",
+    width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-2 xl:col-span-2",
   },
   {
     type: "input",
@@ -3253,7 +3253,7 @@ export const PersonalInfoFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-2",
+    width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-2 xl:col-span-2",
   },
   {
     type: "radio",
@@ -3278,7 +3278,7 @@ export const PersonalInfoFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-2",
+    width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-2 xl:col-span-2",
   },
   {
     type: "input",
@@ -3290,7 +3290,7 @@ export const PersonalInfoFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-2",
+    width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-2 xl:col-span-2",
   },
   {
     type: "input",

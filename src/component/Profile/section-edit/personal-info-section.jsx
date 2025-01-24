@@ -42,7 +42,7 @@ const PersonalInfoSection = ({ type }) => {
               <div
                 key={field.name}
                 className={`${field.width}`}
-                style={{ marginBottom: "16px" }}
+                // style={{ marginBottom: "16px" }}
               >
                 <label
                   className='block disabled:text-gray-100 tracking-wide  text-xs mb-2'
