@@ -47,7 +47,7 @@ import {
 import MuiModal from "../../shared/Modal";
 import DataTable from "../../shared/DataGrid";
 import { categoryColumns } from "../../mock";
-import { requestStatus } from "../../utils/constant";
+import { pipeUrls, requestStatus } from "../../utils/constant";
 import { useForm } from "react-hook-form";
 import { CancelPopup } from "../Mentor/Task/cancelPopup";
 import { updateProfile } from "../../services/profile";
@@ -66,6 +66,8 @@ import { allProfileSections } from "./tabs/ProfileTab";
 import { roleBasedSections } from "./MyProfile";
 import Accordian from "../../shared/Accordian";
 import FormContextProvider from "./form-context-provider";
+import api from "../../services/api";
+import ProgramCard from "../../shared/Card/ProgramCard";
 
 export default function ProfileView() {
   const navigate = useNavigate();
@@ -106,6 +108,7 @@ export default function ProfileView() {
     error: "",
   });
   const [notesActivity, setNotesActivity] = React.useState(false);
+  const [bookmarkLoading, setBookmarkLoading] = React.useState(false)
 
   const { profile, loading } = useSelector((state) => state.profileInfo);
   const userInfo = useSelector((state) => state.userInfo);
@@ -120,6 +123,7 @@ export default function ProfileView() {
   const [searchParams] = useSearchParams();
   const type = searchParams.get("type");
   const from = searchParams.get("from");
+  const fromType = searchParams.get("fromType")
   const pageType = window.location.href.includes("mentor-details")
     ? "Mentor"
     : "Mentee";
@@ -142,7 +146,7 @@ export default function ProfileView() {
   };
 
   const loadUserProfile = () => {
-    dispatch(getProfileInfo({ id: params.id }));
+    dispatch(getProfileInfo({ id: params.id, program_limit: 3 }));
     dispatch(getFollowList(params.id));
   };
 
@@ -439,7 +443,6 @@ export default function ProfileView() {
     }
   }, [params]);
   useEffect(() => {
-    console.log("role=>", role);
     if (searchParams.get("request_id")) {
       if (role === "admin") {
         dispatch(getRequestView(parseInt(searchParams.get("request_id"))));
@@ -524,7 +527,6 @@ export default function ProfileView() {
     });
   };
 
-  console.log("userDetails", userDetails);
 
   const handleSaveNotes = () => {
     if (noteData?.text !== "") {
@@ -594,8 +596,43 @@ export default function ProfileView() {
   }, [breadcrumbsType]);
 
   const profileSection = allProfileSections.filter((section) =>
-    roleBasedSections[userDetails?.role]?.includes(section.title)
+    ["Personal Information"]?.includes(section.title)
   );
+
+  const handleBookmark = async (program) => {
+    const is_admin_assign_program = program.hasOwnProperty(
+      "admin_assign_program"
+    );
+    const payload = {
+      [is_admin_assign_program ? "admin_program_id" : "program_id"]: program.id,
+      marked: !program.is_bookmark,
+    };
+    setBookmarkLoading(true)
+    const bookmark = await api.post("bookmark", payload);
+    if (bookmark.status === 201 && bookmark.data) {
+      setBookmarkLoading(false);
+      if (params.id) {
+        loadUserProfile();
+      }
+    }
+  };
+
+
+  const handleNavigateDetails = (program) => {
+    let baseUrl = pipeUrls.programdetails;
+    if (Object.keys(program).length) {
+      if(program?.admin_assign_program){
+        navigate(
+          `${baseUrl}/${program.id}?breadcrumbsType=${requestPageBreadcrumbs.dashboardPrograms}&program_create_type=admin_program`
+        );
+      }else{
+        navigate(
+          `${baseUrl}/${program.id}?breadcrumbsType=${requestPageBreadcrumbs.dashboardPrograms}`
+        );
+      }
+      
+    }
+  };
 
   return (
     <div className="profile-container">
@@ -1520,6 +1557,27 @@ export default function ProfileView() {
             </>
           )}
         </div>
+
+        {fromType === "topmentor" && <div className="bg-[#F9F9F9]">
+          <div className="flex justify-between items-center border-b border-border-main px-5 py-3">
+            <p className="text-[18px] font-semibold">Upcoming Programs</p>
+            <p className="bg-background-primary-light rounded-[3px] text-[#6B6B6B] text-[12px] cursor-pointer px-2 py-1"
+            onClick={()=>navigate("/programs?type=upcoming&filter_by=month")}>
+              View All
+            </p>
+          </div>
+          <div>
+            <ProgramCard
+              title="Upcoming Programs"
+              viewpage="/programs?type=yettojoin"
+              handleNavigateDetails={handleNavigateDetails}
+              handleBookmark={handleBookmark}
+              programs={userDetails?.upcoming_programs ?? []}
+              //   loadProgram={getPrograms}
+              noTitle
+            />
+          </div>
+        </div>}
         <CancelPopup
           open={cancelPopup}
           header={"Reject Reason"}
