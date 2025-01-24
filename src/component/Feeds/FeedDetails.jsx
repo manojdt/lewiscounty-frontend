@@ -18,6 +18,9 @@ import FemaleIcon from "../../assets/images/female-profile1x.png";
 import Programs from "../Dashboard/Programs";
 import { useDispatch, useSelector } from "react-redux";
 import { Backdrop, CircularProgress } from "@mui/material";
+import NoProgramImageBg from "../../assets/icons/noProgramImageBg.svg";
+import NoProgramImageIcon from "../../assets/icons/noProgramImageIcon.svg";
+
 import {
   getPostDetails,
   getRecentPosts,
@@ -168,7 +171,7 @@ export default function FeedDetails() {
                           alt="FeedImage"
                         />
                       </a>
-                    ) : (
+                    ) : feedDetails?.media_files > 0 ? (
                       <img
                         className="feed-detail-image !h-[400px] object-cover"
                         src={
@@ -177,7 +180,34 @@ export default function FeedDetails() {
                         }
                         alt="FeedImage"
                       />
+                    ) : (
+                      <div
+                        style={{
+                          position: "relative",
+                          display: "inline-block",
+                        }}
+                      >
+                        <img
+                          className="feed-detail-image !h-[400px] object-cover"
+                          src={NoProgramImageBg}
+                          alt="Background"
+                        />
+                        <div
+                          style={{
+                            position: "absolute",
+                            top: "50%",
+                            left: "50%",
+                            transform: "translate(-50%, -50%)",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <img src={NoProgramImageIcon} alt="Icon" />
+                        </div>
+                      </div>
                     )}
+
                     <div className="feed-action-info">
                       <div
                         className="list-item"
