@@ -483,7 +483,7 @@ export const programStatusColor = {
     bgColor: 'rgba(235, 255, 243, 1)',
     color: 'rgba(22, 182, 129, 1)',
   },
-  
+
 };
 
 export const requestStatusColor = {
@@ -919,7 +919,7 @@ export const RequestStatusArray = [
   {
     key: 'program_request',
     name: 'Program Requests',
-    menteeTabName:"Mentees Program Requests"
+    menteeTabName: "Mentees Program Requests"
   },
   {
     key: 'member_join_request',
@@ -1338,16 +1338,19 @@ export const menteeProgramStatus = {
     status: 'program_join_request_submitted',
     text: 'Waiting for mentor approval',
     type: 'waiting',
+    bgColor: 'bg-gray-400'
   },
   program_join_request_rejected: {
     status: 'program_join_request_rejected',
     text: 'Join request rejected by Mentor',
     type: 'reject',
+    bgColor: 'bg-red-500'
   },
   program_join_request_accepted: {
     status: 'program_join_request_accepted',
     text: 'Join request accepted by Mentor',
     type: 'success',
+    bgColor: 'bg-green-500'
   },
 };
 

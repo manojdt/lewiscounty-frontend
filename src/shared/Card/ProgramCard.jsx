@@ -99,6 +99,7 @@ export default function ProgramCard({
     "new_program_request_rejected",
     "cancelled",
     "completed",
+    "inprogress",
   ];
 
   const handleClose = () => {
@@ -575,7 +576,7 @@ export default function ProgramCard({
                           >
                             Instructor :{" "}
                             <Link
-                              to={`/mentor-details/${currentProgram?.created_by}`}
+                              to={`/mentor-details/${currentProgram?.created_by}?type=view`}
                               style={{ color: "#1D5BBF" }}
                             >
                               {currentProgram?.mentor_name} (

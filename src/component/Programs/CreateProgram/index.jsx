@@ -71,7 +71,7 @@ export default function CreatePrograms() {
   const re_open_type = searchParams.get("type") || "";
 
   const { allPrograms, status } = useSelector((state) => state.programInfo);
-
+  console.log("status", status);
   const methods = useForm({
     defaultValues:
       toggleRole === admin
@@ -477,6 +477,8 @@ export default function CreatePrograms() {
               bodyFormData.append(key, fieldData[key]);
             }
           }
+          bodyFormData.append("program_admin", userInfo.data?.user_id);
+          bodyFormData.append("status", "started");
 
           // Handle re-open condition
           if (searchParams.get("type") === "re_open") {
@@ -506,10 +508,6 @@ export default function CreatePrograms() {
                 role: toggleRole === admin ? toggleRole : "",
               });
             } else {
-              if (toggleRole === admin) {
-                bodyFormData.append("status", "started");
-              }
-              bodyFormData.append("program_admin", userInfo.data?.user_id);
               await createProgram({
                 bodyFormData,
                 role: toggleRole === admin ? toggleRole : "",
@@ -546,244 +544,6 @@ export default function CreatePrograms() {
       }
     }
   };
-
-  // const handleNextStep = async (data, stData) => {
-  //   // Get the current step's allowed fields
-  //   let currentStepField = ProgramFields[currentStep - 1];
-
-  //   // Apply the same filtering logic as in useEffect
-  //   if (toggleRole !== "") {
-  //     currentStepField = currentStepField.filter((curfields) =>
-  //       curfields.for?.includes(toggleRole)
-  //     );
-
-  //     // Handle admin role field width adjustments
-  //     if (toggleRole === admin) {
-  //       const widthAdjustMentField1 = [
-  //         "max_mentor_count",
-  //         "max_mentee_count",
-  //         "group_chat_requirement",
-  //         "individual_chat_requirement",
-  //       ];
-  //       const widthAdjustMentField2 = ["auto_approval", "venue"];
-
-  //       currentStepField = currentStepField.map((programfield) => {
-  //         if (widthAdjustMentField1.includes(programfield.name)) {
-  //           return { ...programfield, width: "w-[24%]" };
-  //         }
-  //         if (widthAdjustMentField2.includes(programfield.name)) {
-  //           return { ...programfield, width: "w-[49%]" };
-  //         }
-  //         return programfield;
-  //       });
-  //     }
-  //   }
-  //   // const saveDraft = (data)=> {
-  //   //     let fieldData = {
-  //   //         ...stepData, ...data,
-  //   //     }
-  //   //     setStepData(fieldData)
-
-  //   // Get allowed field names for current step
-  //   const allowedFields = currentStepField.map((field) => field.name);
-
-  //   // Filter the incoming data to only include allowed fields
-  //   const currentStepData = Object.keys(data)
-  //     .filter((key) => allowedFields.includes(key))
-  //     .reduce((obj, key) => {
-  //       obj[key] = data[key];
-  //       return obj;
-  //     }, {});
-
-  //   // Filter stepData to remove fields from current step
-  //   const filteredStepData = Object.keys(stepData)
-  //     .filter((key) => !allowedFields.includes(key))
-  //     .reduce((obj, key) => {
-  //       obj[key] = stepData[key];
-  //       return obj;
-  //     }, {});
-
-  //   // Combine filtered previous step data with current step data
-  //   let fieldData = {
-  //     ...filteredStepData,
-  //     ...currentStepData,
-  //   };
-
-  //   // Remove specific fields based on is_sponsored condition
-  //   if (fieldData.is_sponsored === true) {
-  //     delete fieldData.enrollment_fees;
-  //   }
-  //   if (fieldData.is_sponsored === false) {
-  //     delete fieldData.sponsor_logos;
-  //   }
-  //   fieldData = Object.entries(fieldData)
-  //     .filter(([_, value]) => value !== null && value !== undefined)
-  //     .reduce((obj, [key, value]) => {
-  //       obj[key] = value;
-  //       return obj;
-  //     }, {});
-  //   setStepData(fieldData);
-  //   const totalSteps = filteredProgramTabs.length;
-  //   if (currentStep === 1 && role === mentor && !params?.id) {
-  //     dispatch(getProgramNameValidate(data?.program_name)).then((res) => {
-  //       if (res?.meta?.requestStatus === "fulfilled") {
-  //         if (!res?.payload?.is_available) {
-  //           setCurrentStep((prevStep) => {
-  //             const nextStep = prevStep + 1;
-  //             setTabActionInfo({
-  //               ...tabActionInfo,
-  //               activeTab: filteredProgramTabs[nextStep - 1]?.key || "",
-  //             });
-  //             return nextStep;
-  //           });
-  //         } else {
-  //           setTabActionInfo({
-  //             ...tabActionInfo,
-  //             error: true,
-  //             message: "Program name already exists",
-  //           });
-  //         }
-  //       }
-  //     });
-  //   } else {
-  //     if (currentStep >= totalSteps) {
-  //       const answeredSteps = Object.keys(stepWiseData).length;
-  //       if (
-  //         (answeredSteps === currentStep - 1 &&
-  //           !stepWiseData.hasOwnProperty(currentStep)) ||
-  //         answeredSteps === totalSteps
-  //       ) {
-  //         let bodyFormData = new FormData();
-
-  //         const booleanFields = [
-  //           "group_chat_requirement",
-  //           "individual_chat_requirement",
-  //           "mentee_upload_certificates",
-  //         ];
-
-  //         if (toggleRole !== admin) {
-  //           booleanFields.forEach((field) => {
-  //             if (fieldData[field] !== undefined) {
-  //               fieldData[field] = fieldData[field] === "true";
-  //             }
-  //           });
-  //         } else {
-  //           booleanFields.forEach((field) => {
-  //             delete fieldData[field];
-  //           });
-  //         }
-
-  //         const jsonFields = [
-  //           "learning_materials",
-  //           "certifications",
-  //           "members",
-  //           "goals",
-  //           "sub_programs",
-  //           "recurring_dates",
-  //         ];
-
-  //         jsonFields.forEach((field) => {
-  //           if (fieldData[field]) {
-  //             bodyFormData.append(field, JSON.stringify(fieldData[field]));
-  //           }
-  //         });
-
-  //         // Remove fields based on is_sponsored before creating FormData
-  //         if (fieldData.is_sponsored === true) {
-  //           delete fieldData.enrollment_fees;
-  //         }
-  //         if (fieldData.is_sponsored === false) {
-  //           delete fieldData.sponsor_logos;
-  //         }
-
-  //         for (let key in fieldData) {
-  //           if (
-  //             (key === "program_image" || key === "sponsor_logos") &&
-  //             fieldData[key]?.[0] instanceof File
-  //           ) {
-  //             bodyFormData.append(key, fieldData[key][0]);
-  //           } else if (["start_date", "end_date"].includes(key)) {
-  //             bodyFormData.append(key, new Date(fieldData[key]).toISOString());
-  //           } else if (!jsonFields.includes(key)) {
-  //             bodyFormData.append(key, fieldData[key]);
-  //           }
-  //         }
-
-  //         let status = fieldData.status === "draft" ? "draft" : "";
-  //         setProgramApiStatus(status);
-
-  //         if (params?.id) {
-  //           if (currentProgramDetail.status === "draft" && status !== "draft") {
-  //             bodyFormData.append("status", "create");
-  //           }
-  //           if (typeof fieldData?.program_image === "string") {
-  //             bodyFormData.delete("program_image");
-  //           }
-  //           if (typeof fieldData?.sponsor_logos === "string") {
-  //             bodyFormData.delete("sponsor_logos");
-  //           }
-  //           // bodyFormData.append("program_id", params?.id);
-
-  //           if (re_open_type) {
-  //             await updateProgramReopen({
-  //               program_id: params?.id,
-  //               bodyFormData,
-  //               role: toggleRole === admin ? toggleRole : "",
-  //             });
-  //           }
-  //           await updateProgram({
-  //             program_id: params?.id,
-  //             bodyFormData,
-  //             role: toggleRole === admin ? toggleRole : "",
-  //           });
-  //         } else {
-  //           if (toggleRole === admin) {
-  //             bodyFormData.append("status", "started");
-  //           }
-  //           bodyFormData.append("program_admin", userInfo.data?.user_id);
-  //           // for (let [key, value] of bodyFormData.entries()) {
-  //           //   console.log(`formData: ${key}: ${value}`);
-  //           // }
-
-  //           await createProgram({
-  //             bodyFormData,
-  //             role: toggleRole === admin ? toggleRole : "",
-  //           });
-  //         }
-  //       } else {
-  //         setTabActionInfo({ ...tabActionInfo, error: true, message: "" });
-  //       }
-  //     } else {
-  //       let allLogo = { ...logo };
-  //       if (
-  //         data.hasOwnProperty("sponsor_logos") &&
-  //         data?.sponsor_logos?.length
-  //       ) {
-  //         allLogo.sponsor_logos = data.sponsor_logos[0];
-  //       }
-  //       if (
-  //         data.hasOwnProperty("program_image") &&
-  //         data?.program_image?.length
-  //       ) {
-  //         allLogo.program_image = data.program_image[0];
-  //       }
-  //       setLogo(allLogo);
-
-  //       setCurrentStep((prevStep) => {
-  //         const nextStep = prevStep < totalSteps ? prevStep + 1 : totalSteps;
-  //         setTabActionInfo({
-  //           ...tabActionInfo,
-  //           activeTab: filteredProgramTabs[nextStep - 1]?.key || "",
-  //         });
-  //         return nextStep;
-  //       });
-  //       // methods.reset({
-  //       //   ...currentProgramDetail,
-  //       //   learning_materials: formDetails?.learning_materials,
-  //       // });
-  //     }
-  //   }
-  // };
 
   const handlePreviousStep = () => {
     setCurrentStep(currentStep - 1);
@@ -1330,8 +1090,8 @@ export default function CreatePrograms() {
       setCurrentStep(DEFAULT_VALUE);
     } else {
       navigate("/programs");
-      reset();
     }
+    reset();
   };
   return (
     <div className="dashboard-content px-8 mt-10">

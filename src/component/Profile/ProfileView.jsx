@@ -118,7 +118,8 @@ export default function ProfileView() {
   } = useSelector((state) => state.requestList);
   const params = useParams();
   const [searchParams] = useSearchParams();
-  const from = searchParams.get("from")
+  const type = searchParams.get("type");
+  const from = searchParams.get("from");
   const pageType = window.location.href.includes("mentor-details")
     ? "Mentor"
     : "Mentee";
@@ -281,7 +282,7 @@ export default function ProfileView() {
     rejected: "Rejected",
     new: "New",
     cancel: "Rejected",
-    accept: "Approved"
+    accept: "Approved",
   };
   const reqStatusColor = {
     approved: {
@@ -1266,8 +1267,7 @@ export default function ProfileView() {
                 </div>
               )} */}
 
-
-{role !== "admin" && (
+            {role !== "admin" && (
               <>
                 {(state?.data?.status === "new" ||
                   requestData?.status === "new") &&
@@ -1380,49 +1380,55 @@ export default function ProfileView() {
             {role === "admin" && (
               <div className="flex gap-4 items-center">
                 {/* This is Approved and Rejected status shows when not came from program Join */}
-                {(from !== "program_join" && !["new", "pending"].includes(userDetails?.approve_status)) &&
-                  <div
-                  className="py-3 px-16 text-white text-[14px] flex justify-center items-center"
-                  style={{
-                    ...reqStatusColor[
-                      (approvalLabel==='Active'||userDetails?.approve_status === "approved")
-                      ? "approved"
-                      : (approvalLabel==='Deactive' ||userDetails?.approve_status === "rejected")
-                      ? "rejected"
-                      : userDetails?.approve_status
-                    ],
-                  }}
-                >
-                {approvalLabel}
-                </div>}
+                {from !== "program_join" &&
+                  !["new", "pending"].includes(userDetails?.approve_status) && (
+                    <div
+                      className="py-3 px-16 text-white text-[14px] flex justify-center items-center"
+                      style={{
+                        ...reqStatusColor[
+                          (approvalLabel==='Active'||userDetails?.approve_status === "approved")
+                          ? "approved"
+                          : (approvalLabel==='Deactive' ||userDetails?.approve_status === "rejected")
+                          ? "rejected"
+                          : userDetails?.approve_status
+                        ],
+                      }}
+                    >
+                    {approvalLabel}
+                    </div>
+                  )}
 
                 {/* This is Approved and Rejected status shows when come from program Join */}
-                {(from === "program_join" && !["new", "pending"].includes(requestData?.status)) &&
-                  <div
-                  className="py-3 px-16 text-white text-[14px] flex justify-center items-center"
-                  style={{
-                    ...reqStatusColor[
-                      requestData?.status === "approved"
-                        ? "approved"
+                {from === "program_join" &&
+                  !["new", "pending"].includes(requestData?.status) && (
+                    <div
+                      className="py-3 px-16 text-white text-[14px] flex justify-center items-center"
+                      style={{
+                        ...reqStatusColor[
+                          requestData?.status === "approved"
+                            ? "approved"
+                            : requestData?.status === "rejected"
+                            ? "rejected"
+                            : requestData?.status
+                        ],
+                      }}
+                    >
+                      {requestData?.status === "approved"
+                        ? "Approved"
                         : requestData?.status === "rejected"
-                        ? "rejected"
-                        : requestData?.status
-                    ],
-                  }}
-                >
-                  {requestData?.status === "approved"
-                    ? "Approved"
-                    : requestData?.status === "rejected"
-                    ? "Rejected"
-                    : reqStatus[requestData?.status]}
-                </div>}
+                        ? "Rejected"
+                        : reqStatus[requestData?.status]}
+                    </div>
+                  )}
 
-                {from !== "program_join" && <div
-                  className="w-8 h-8 rounded-md flex items-center justify-center bg-gray-200"
-                  onClick={handleClick}
-                >
-                  <img src={MoreIcon} alt="" />
-                </div>}
+                {from !== "program_join" && type !== "view" && (
+                  <div
+                    className="w-8 h-8 rounded-md flex items-center justify-center bg-gray-200"
+                    onClick={handleClick}
+                  >
+                    <img src={MoreIcon} alt="" />
+                  </div>
+                )}
 
                 <Menu
                   anchorEl={anchorEl}
@@ -1449,7 +1455,6 @@ export default function ProfileView() {
                 </Menu>
               </div>
             )}
-
           </div>
         </div>
 

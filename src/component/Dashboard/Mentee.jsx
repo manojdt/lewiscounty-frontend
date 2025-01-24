@@ -113,17 +113,24 @@ export const Mentee = () => {
     let baseUrl = pipeUrls.programdetails;
     if (Object.keys(program).length) {
       const filterType = searchParams.get("type");
-      if(program?.admin_assign_program){
-        navigate(`${baseUrl}/${program.id}?program_create_type=admin_program&breadcrumbsType=${requestPageBreadcrumbs.dashboardPrograms}`);
-      }else{
-        navigate(`${baseUrl}/${program.id}?breadcrumbsType=${requestPageBreadcrumbs.dashboardPrograms}`);
-      }      
+      if (program?.admin_assign_program) {
+        navigate(
+          `${baseUrl}/${program.id}?program_create_type=admin_program&breadcrumbsType=${requestPageBreadcrumbs.dashboardPrograms}`
+        );
+      } else {
+        navigate(
+          `${baseUrl}/${program.id}?breadcrumbsType=${requestPageBreadcrumbs.dashboardPrograms}`
+        );
+      }
     }
   };
 
   const handleBookmark = async (program) => {
+    const is_admin_assign_program = program.hasOwnProperty(
+      "admin_assign_program"
+    );
     const payload = {
-      program_id: program.id,
+      [is_admin_assign_program ? "admin_program_id" : "program_id"]: program.id,
       marked: !program.is_bookmark,
     };
     setLoading(true);
@@ -215,7 +222,6 @@ export const Mentee = () => {
         <div className="grid grid-cols-5 gap-7">
           {/* <div className="col-span-5 sm:col-span-5 md:col-span-2 lg:col-span-1"> */}
           <div className="col-span-5 sm:col-span-5 md:col-span-5 lg:col-span-1">
-
             <UserInfoCard />
             <div
               className="recent-request mt-4"
@@ -235,7 +241,7 @@ export const Mentee = () => {
                   ></div>
                   <h4>Top Mentors</h4>
                 </div>
-                {/* <div className="flex justify-center mt-2 mb-2">
+                <div className="flex justify-center mt-2 mb-2">
                   <p
                     className="text-[12px] py-2 px-2 cursor-pointer"
                     style={{
@@ -243,11 +249,11 @@ export const Mentee = () => {
                       color: "rgba(29, 91, 191, 1)",
                       borderRadius: "3px",
                     }}
-                    onClick={() => navigate("/mentors?type=topmentor")}
+                    onClick={() => navigate("/mentors?req=topmentor")}
                   >
                     View All
                   </p>
-                </div> */}
+                </div>
               </div>
 
               <div className="content flex flex-col gap-2 py-2 px-2 overflow-x-auto">
@@ -323,7 +329,6 @@ export const Mentee = () => {
 
           {/* <div className="col-span-5 sm:col-span-5 md:col-span-3 lg:col-span-4"> */}
           <div className="col-span-5 sm:col-span-5 md:col-span-5 lg:col-span-4">
-
             {searchParams.get("type") === null &&
               searchParams.get("is_bookmark") === null && (
                 <ProgramCard
