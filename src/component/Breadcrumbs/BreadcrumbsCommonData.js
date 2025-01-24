@@ -64,6 +64,8 @@ export const programStatusBreadcrumbs=[
     'Assign Programs',
     'Drafted Programs',
     'Bookmarked Programs',
+    'Upcoming Programs',
+    'Interested Programs',
     'Rescheduled Programs',
     'Completed Programs',
     'Cancelled Programs'
@@ -376,11 +378,11 @@ export const adminMy_approvedCertificate = (name) => {
 export const wait_certificate = (name) => {
   return [
     {
-      label: " Generate Certificates Request",
+      label: "Generate Certificates Request",
       path: `/certificates?tabType=${requestPageBreadcrumbs?.waitCertificateTab}`,
     },
     {
-      label: `View Accepted Member List`,
+      label: `View Member List`,
     },
   ];
 };
@@ -391,7 +393,7 @@ export const pending_Certificate = (name) => {
       path: `/certificates?tabType=${requestPageBreadcrumbs?.pendingCertificateTab}`,
     },
     {
-      label: `View Accepted Member List`,
+      label: `View Member List`,
     },
   ];
 };
@@ -402,7 +404,7 @@ export const Approved_Certificate = (name) => {
       path: `/certificates?tabType=${requestPageBreadcrumbs?.approvedCertificateTab}`,
     },
     {
-      label: `View Accepted Member List`,
+      label: `View Approved Certificates`,
     },
   ];
 };
