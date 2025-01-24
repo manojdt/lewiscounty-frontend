@@ -113,9 +113,9 @@ const EventModal = ({ open, closeModal, actionActionBtn, event = [] }) => {
                 </p>
               </div>
             </div>
-            <div className='w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300 transition-all duration-200'>
+            {/* <div className='w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300 transition-all duration-200'>
               <img src={EditIcon} alt='' />
-            </div>
+            </div> */}
           </div>
 
           <div className='space-y-3 ml-20 mt-3'>
@@ -141,9 +141,9 @@ const EventModal = ({ open, closeModal, actionActionBtn, event = [] }) => {
                 <p className='text-slate-400'>{event.guests.length} Waiting</p>
               </div>
             </div>
-            <div className='w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300 transition-all duration-200'>
+            {/* <div className='w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300 transition-all duration-200'>
               <img src={EditIcon} alt='' />
-            </div>
+            </div> */}
           </div>
 
           <div className='space-y-3 ml-20 mt-3'>

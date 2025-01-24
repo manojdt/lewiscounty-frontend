@@ -99,6 +99,7 @@ export default function ProgramCard({
     "new_program_request_rejected",
     "cancelled",
     "completed",
+    "inprogress",
   ];
 
   const handleClose = () => {
