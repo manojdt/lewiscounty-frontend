@@ -554,6 +554,14 @@ export const TaskDetails = () => {
                 <p className='!text-[16px]' fontWeight={600}>Task Description : </p>
                 <p className='text-[14px]'>&nbsp;&nbsp;{taskData?.task_description}</p>
               </div>
+
+              <div className="action-set action_cancelled mb-4 mt-4">
+                <div className="reason-title">{taskData?.reassign_task ? "Re Assign Task Reason" : "Reject Task Reason"}</div>
+                <div className="reason-content">
+                  {taskData?.reject_task_reason}
+                </div>
+              </div>
+                  
               {taskData.status === "rejected"&&!isPreview && (
                     <div className="flex gap-4 pt-10">
                       <button
@@ -1014,7 +1022,7 @@ export const TaskDetails = () => {
                         ) : null}
                       </div>
                     </>
-                  ) : null}
+                  ) : null}                  
                   <div className='reference-link flex justify-between mb-8'>
                     <div className='reference-view'>
                       <p className='py-4'>Reference View</p>
