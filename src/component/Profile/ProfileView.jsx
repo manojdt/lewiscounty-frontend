@@ -110,7 +110,7 @@ export default function ProfileView() {
     error: "",
   });
   const [notesActivity, setNotesActivity] = React.useState(false);
-  const [bookmarkLoading, setBookmarkLoading] = React.useState
+  const [bookmarkLoading, setBookmarkLoading] = React.useState;
 
   const { profile, loading } = useSelector((state) => state.profileInfo);
   const userInfo = useSelector((state) => state.userInfo);
@@ -123,6 +123,7 @@ export default function ProfileView() {
   } = useSelector((state) => state.requestList);
   const params = useParams();
   const [searchParams] = useSearchParams();
+  const type = searchParams.get("type");
   const from = searchParams.get("from");
   const pageType = window.location.href.includes("mentor-details")
     ? "Mentor"
@@ -625,14 +626,13 @@ export default function ProfileView() {
       [is_admin_assign_program ? "admin_program_id" : "program_id"]: program.id,
       marked: !program.is_bookmark,
     };
-    setBookmarkLoading(true)
+    setBookmarkLoading(true);
     const bookmark = await api.post("bookmark", payload);
     if (bookmark.status === 201 && bookmark.data) {
       setBookmarkLoading(false);
       handleFetchPrograms();
     }
   };
-
 
   const handleNavigateDetails = (program) => {
     let baseUrl = pipeUrls.programdetails;
@@ -1492,6 +1492,14 @@ export default function ProfileView() {
                   </div>
                 )}
 
+                {from !== "program_join" && type !== "view" && (
+                  <div
+                    className="w-8 h-8 rounded-md flex items-center justify-center bg-gray-200"
+                    onClick={handleClick}
+                  >
+                    <img src={MoreIcon} alt="" />
+                  </div>
+                )}
                 <Menu
                   anchorEl={anchorEl}
                   open={open}

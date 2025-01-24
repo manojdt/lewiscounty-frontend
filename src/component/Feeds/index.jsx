@@ -9,6 +9,8 @@ import UserIcon from "../../assets/images/user.jpg";
 import SuccessTik from "../../assets/images/blue_tik1x.png";
 import MaleIcon from "../../assets/images/male-profile1x.png";
 import FemaleIcon from "../../assets/images/female-profile1x.png";
+import NoProgramImageBg from "../../assets/icons/noProgramImageBg.svg";
+import NoProgramImageIcon from "../../assets/icons/noProgramImageIcon.svg";
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import SettingsModal from "./SettingsModal";
@@ -236,11 +238,12 @@ export default function Feeds() {
           <div className="px-4 sm:px-5 py-2 flex justify-center items-center">
             <div className="flex flex-col justify-center items-center gap-8 py-10 px-8 bg-white rounded-md shadow-lg">
               <img src={SuccessTik} alt="SuccessTik" />
-              <p className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
-                        style={{
-                          fontWeight: 600
-                        }}
-                        >
+              <p
+                className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
+                style={{
+                  fontWeight: 600,
+                }}
+              >
                 Your post is successfully uploaded
               </p>
             </div>
@@ -300,15 +303,42 @@ export default function Feeds() {
                       )
                     }
                   >
-                    <img
-                      className="feed-image h-[200px] sm:h-[250px] w-full object-cover rounded"
-                      src={
-                        (feed?.media_files?.length > 0 &&
-                          feed.media_files[0].media_files) ||
-                        FeedImage
-                      }
-                      alt="FeedImage"
-                    />
+                    {feed?.media_files?.length > 0 ? (
+                      <img
+                        className="feed-image h-[200px] sm:h-[250px] w-full object-cover rounded"
+                        src={
+                          feed?.media_files?.length > 0 &&
+                          feed.media_files[0].media_files
+                        }
+                        alt="FeedImage"
+                      />
+                    ) : (
+                      <div
+                        style={{
+                          position: "relative",
+                          display: "inline-block",
+                        }}
+                      >
+                        <img
+                          className="feed-image  h-[200px] sm:h-[250px] w-full object-cover rounded"
+                          src={NoProgramImageBg}
+                          alt="Background"
+                        />
+                        <div
+                          style={{
+                            position: "absolute",
+                            top: "50%",
+                            left: "50%",
+                            transform: "translate(-50%, -50%)",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <img src={NoProgramImageIcon} alt="Icon" />
+                        </div>
+                      </div>
+                    )}
                     <div className="feed-content flex justify-between pt-4 sm:pt-5">
                       <div className="flex gap-3 items-center">
                         <img
