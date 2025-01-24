@@ -44,6 +44,18 @@ export const deactivateUser = createAsyncThunk(
     }
 );
 
+export const activateUser = createAsyncThunk(
+    "activateUser",
+    async(data) =>{
+        const activateInfo = await api.post(`members/active`,data);
+        if(activateInfo.status===200 && activateInfo.data){
+            return activateInfo.data;
+
+        }
+        return activateInfo;
+    }
+)
+
 
 export const getAssignMentorProgram = createAsyncThunk(
     "getAssignMentorProgram",
