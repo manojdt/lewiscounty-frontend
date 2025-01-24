@@ -673,7 +673,7 @@ input[type='range']::-ms-thumb {
 
 .program-request .program-info .tab-list {
   display: flex;
-  gap: 40px;
+  gap: 10px;
 }
 
 .program-request .program-info .tab-list li {
@@ -1375,5 +1375,46 @@ input[type='number'] {
 
   .program-feeds .feed-list .program-user-img {
     width: 100px;
+  }
+}
+
+@media (max-width: 640px) {
+  .program-request .program-info .tab-list {
+    flex-direction: column;
+    gap: 0;
+  }
+  .program-request .program-info .tab-list li {
+    align-items: start;
+  }
+  .feedback .feedback-content {
+    padding: 0;
+  }
+
+}
+@media (max-width: 768px) {
+  .program-request .program-info .tab-list {
+    flex-direction: column;
+    gap: 0;
+  }
+  .program-request .program-info .tab-list li {
+    align-items: start;
+  }
+  .feedback .feedback-content {
+    padding: 0;
+  }
+}
+@media (max-width: 1024px) {
+  .program-request .program-info .tab-list {
+    flex-direction: column;
+    gap: 0;
+  }
+  .program-request .program-info .tab-list li {
+    align-items: start;
+  }
+  .program-request .program-info .tab-list li.active span{
+    width: 80%;
+  }
+  .feedback .feedback-content {
+    padding: 0;
   }
 }

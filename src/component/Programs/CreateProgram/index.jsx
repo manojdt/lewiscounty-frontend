@@ -1421,7 +1421,7 @@ export default function CreatePrograms() {
           )}
         </Backdrop>
         {!isDetailFetching && (
-          <div className="px-8 py-4">
+          <div className="px-3 py-4 sm:px-3 md:px-4 lg:px-8 xl:px-8">
             <div className="flex gap-3">
               {filteredProgramTabs.map((actionBtn, index) => (
                 <Tooltip title={actionBtn.name}>

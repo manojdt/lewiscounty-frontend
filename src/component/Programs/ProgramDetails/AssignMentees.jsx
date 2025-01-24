@@ -410,7 +410,7 @@ export default function AssignMentees() {
   };
 
   return (
-    <div className="px-9 my-6 grid">
+    <div className="px-4 sm:px-4 md:px-9 lg:px-9 xl:px-9 my-6 grid">
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={programLoading || apiLoading || loading}
@@ -514,7 +514,7 @@ export default function AssignMentees() {
               </nav>
             </div>
           )}
-          <div className="content px-8">
+          <div className="content px-4 sm:px-4 md:px-6 lg:px-8 xl:px-8">
             <div className="py-9">
               <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="flex flex-wrap gap-4">
@@ -767,7 +767,7 @@ export default function AssignMentees() {
                               <button
                                 // disabled={type === "edit"&&from_type !== "program"}
                                 type="button"
-                                className="h-[60px] mt-2 w-[13%] text-[14px]"
+                                className="h-[60px] mt-2 w-[13%] text-[12px] sm:text-[12px] md:text-[14px] lg:text-[14px]"
                                 style={{
                                   border: "1px dashed rgba(29, 91, 191, 1)",
                                   color: "rgba(29, 91, 191, 1)",
@@ -847,14 +847,14 @@ export default function AssignMentees() {
                 </div>
                 <div className="flex gap-6 justify-center align-middle py-16">
                   <Button
-                    btnName="Cancel"
-                    btnCls="w-[15%]"
+                    btnName="Cancel" 
+                    btnCls="w-[30%] sm:w-[30%] md:w-[20%] lg:w-[15%] xl:w-[15%]"
                     btnCategory="secondary"
                     onClick={() => navigate(-1)}
                   />
                   <Button
                     btnType="submit"
-                    btnCls="w-[15%]"
+                    btnCls="w-[30%] sm:w-[30%] md:w-[20%] lg:w-[15%] xl:w-[15%]"
                     btnName={"Submit"}
                     btnCategory="primary"
                   />

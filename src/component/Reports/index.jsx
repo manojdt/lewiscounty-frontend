@@ -416,7 +416,7 @@ const Reports = () => {
     }
    }, [selectedRequestedTab])
     return (
-        <div className="reports px-9 py-9">
+        <div className="reports px-2 py-9 sm:px-2 md:px-5 lg:px-9 xl:px-9">
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                 open={deleteModal || loading}
@@ -467,11 +467,11 @@ const Reports = () => {
             </Backdrop>
 
             <div className='px-3 py-5' style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}>
-                <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
+                <div className='flex justify-between px-0 sm:px-0 md:px-2 lg:px-5 xl:px-5 pb-4 mb-8 items-center border-b-2'>
                     <div className='flex gap-5 items-center '>
                         <p>Reports</p>
                     </div>
-                    <div className='flex gap-8 items-center'>
+                    <div className='flex gap-2 sm:gap-2 md:gap-6 lg:gap-8 xl:gap-8  items-center'>
                         {
                             (reportData.action === 'multiple' && reportData.selectedItem.length) ? <img className='cursor-pointer' onClick={handleDeleteSelectedRows} src={OverDeleteIcon} alt="OverDeleteIcon" /> : null
                         }
@@ -488,7 +488,7 @@ const Reports = () => {
                     </div>
                 </div>
 
-                <div className='mx-5'>
+                <div className='mx-2 sm:mx-2 md:mx-3 lg:mx-5 xl:mx-5'>
                     <div className='flex gap-7 mb-6'>
                         {
                             (role === "admin" ? requestAdminBtn : requestBtns).map((actionBtn, index) =>
@@ -506,18 +506,18 @@ const Reports = () => {
                         }
                     </div>
 
-                    <div className='reports-table-container'>
-                        <div className='flex justify-between px-5 pb-4 mb-8 items-center'>
+                    <div className='p-2 sm:p-2 md:p-4 lg:p-6 xl:p-6'>
+                        <div className='flex justify-between px-1 sm:px-1 md:px-2 lg:px-1 xl:px-1 pb-4  items-center'>
                             <div className='flex gap-5 items-center '>
                                 <p className='text-[18px] font-semibold'>{title}</p>
                             </div>
                             <div className='flex gap-8 items-center'>
                                 <div className="relative">
-                                    <input type="text" id="search-navbar" className="block w-full p-2 text-sm text-gray-900 border-none"
+                                    <input type="text" id="search-navbar" className="block  p-2 text-sm text-gray-900 border-none"
                                         placeholder="Search here..." style={{
                                             border: '1px solid rgba(29, 91, 191, 1)',
-                                            height: '60px',
-                                            width: '345px'
+                                            height: '41px',
+                                           
                                         }}
                                         value={filter.search}
                                         onChange={handleSearch}

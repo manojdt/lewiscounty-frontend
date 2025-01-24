@@ -78,7 +78,7 @@ export default function Feedback() {
   };
 
   return (
-    <div className='feedback px-9 py-9'>
+    <div className='feedback px-2 py-9 sm:px-2 md:px-4 lg:px-9 xl:px-9'>
       <div
         className='px-3 py-5'
         style={{
@@ -139,7 +139,7 @@ export default function Feedback() {
 
           <div className='feedback-info'>
             <div className='grid grid-cols-6 gap-7 py-5'>
-              <div className='col-span-4'>
+              <div className='col-span-6 sm:col-span-6 md:col-span-6 lg:col-span-4 xl:col-span-4'>
                 <div
                   className='post-content'
                   style={{
@@ -148,7 +148,7 @@ export default function Feedback() {
                   }}
                 >
                   <div className='grid grid-cols-5'>
-                    <div className='list-post col-span-2'>
+                    <div className='list-post col-span-5 sm:col-span-5 md:col-span-2 lg:col-span-2 xl:col-span-2 '>
                       <div className='title flex justify-between py-3 px-4 br-bt-blue'>
                         <h4 className='text-base'>Post</h4>
                         <p className='text-sm leading-8'>View All</p>
@@ -201,7 +201,7 @@ export default function Feedback() {
                         ))}
                     </div>
                     {activePostInfo && (
-                      <div className='post-program-detail list-post col-span-3'>
+                      <div className='post-program-detail list-post col-span-5 sm:col-span-5 md:col-span-3 lg:col-span-3 xl:col-span-3'>
                         <div className='title flex justify-between py-3 px-4 br-bt-blue'>
                           <h4 className='text-base'>
                             {activePostInfo.user_name}
@@ -458,7 +458,7 @@ export default function Feedback() {
                 </div>
               </div>
 
-              <div className='col-span-2'>
+              <div className='col-span-6 sm:col-span-6 md:col-span-6 lg:col-span-2 xl:col-span-2 '>
                 <div
                   className='recent-discussion pb-3'
                   style={{

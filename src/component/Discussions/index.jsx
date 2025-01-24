@@ -87,7 +87,7 @@ export default function Discussions() {
   ];
 
   return (
-    <div className='px-8 mt-10'>
+    <div className='px-2 mt-6 sm:px-2 md:px-6 lg:px-8 xl:px-8 sm:mt-6 md:mt-8 lg:mt-10 xl:mt-10'>
       <div className='mb-5'>Discussions</div>
       <div className='program-request '>
         <div className='col-span-4'>
@@ -97,8 +97,8 @@ export default function Discussions() {
               borderRadius: '10px',
             }}
           >
-            <div className='px-6 py-7 program-info'>
-              <div className='flex justify-between px-5 mb-8 items-center border-b-2 '>
+            <div className='px-4 py-7 program-info sm:px-4 md:px-4 lg:px-6 xl:px-6'>
+              <div className='flex justify-between px-0 sm:px-0 md:px-0 lg:px-5 xl:px-5 mb-2 sm:mb-2 md:mb-2 lg:mb-5 xl:mb-5 items-start border-b-2 sm:items-start md:items-start lg:items-center xl:items-center'>
                 <ul className='tab-list'>
                   {programRequestTab.map((discussion, index) => (
                     <li
@@ -118,12 +118,12 @@ export default function Discussions() {
                     <input
                       type='text'
                       id='search-navbar'
-                      className='block w-full p-2 text-sm text-gray-900 border-none'
+                      className='block p-2 text-sm text-gray-900 border-none'
                       placeholder='Search here...'
                       style={{
                         border: '1px solid rgba(29, 91, 191, 1)',
                         height: '41px',
-                        width: '345px',
+                        // width: '345px',
                       }}
                     />
                     <div className='absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none'>

@@ -398,8 +398,8 @@ const Members = () => {
     }
   }, [selectedRequestedTab]);
   return (
-    <div className="program-request px-4 sm:px-8 mt-10">
-      <div className="program-info px-4 sm:px-6">
+    <div className="program-request px:2 sm:px-2 md:px-4 lg:px-8 mt-10">
+      <div className="program-info px-4 sm:px-6 ">
         {membersTab.length ? (
           <div className="flex flex-col sm:flex-row justify-between mb-4 border-b-2 pb-2">
             <ul className="tab-list flex overflow-x-auto hide-scrollbar">
@@ -431,8 +431,8 @@ const Members = () => {
       </div>
 
       {/* Search and Filters */}
-      <div className="title flex flex-col sm:flex-row justify-between py-3 px-4 items-center gap-4">
-        <div className="relative w-full sm:w-auto">
+      <div className="title flex flex-row sm:flex-row justify-between py-3 px-4 items-center gap-4">
+        <div className="relative w-3/6 sm:w-auto">
           <input
             type="text"
             id="search-navbar"
