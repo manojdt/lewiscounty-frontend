@@ -521,7 +521,9 @@ const ProgramActions = ({
         (programdetails?.request_data?.request_type === "program_reschedule" &&
           programdetails?.request_data?.status === "new") ||
         (programdetails?.request_data?.request_type === "program_cancel" &&
-          programdetails?.request_data?.status === "new"));
+          programdetails?.request_data?.status === "new")
+          (programdetails?.request_data?.request_type === "program_new" &&
+            programdetails?.request_data?.status === "new"));
     const acceptType = [
       "program_reschedule",
       "program_new",

@@ -337,7 +337,8 @@ const Members = () => {
                   View
                 </MenuItem>
 
-                <MenuItem className="!text-[12px]">
+                <MenuItem className="!text-[12px]"
+                onClick={()=>navigate("/discussions")}>
                   <img
                     src={TickCircle}
                     alt="AcceptIcon"
@@ -367,14 +368,14 @@ const Members = () => {
                   </MenuItem>
                 )}
 
-                <MenuItem className="!text-[12px]">
+                {/* <MenuItem className="!text-[12px]">
                   <img
                     src={ShareIcon}
                     alt="ShareIcon"
                     className="pr-3 w-[27px]"
                   />
                   Share
-                </MenuItem>
+                </MenuItem> */}
 
                 {/* {seletedItem.member_active && (
                   <MenuItem

@@ -1865,19 +1865,22 @@ export const memberMentorRequestColumns = [
     id: 0,
     for: ["admin", "mentor"],
   },
-  {
-    field: "designation",
-    headerName: "Designation",
-    flex: 1,
-    id: 1,
-    for: ["admin", "mentor"],
-  },
+  // {
+  //   field: "designation",
+  //   headerName: "Designation",
+  //   flex: 1,
+  //   id: 1,
+  //   for: ["admin", "mentor"],
+  // },
   {
     field: "skills",
     headerName: "Skills",
     flex: 1,
     id: 2,
     for: ["admin"],
+    renderCell: (params) => {
+      return <div>{params.row.areas_of_expertise}</div>;
+    },
   },
   {
     field: "phone_number",
