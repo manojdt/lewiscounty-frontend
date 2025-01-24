@@ -184,7 +184,9 @@ export default function AllRequest() {
     setSelectedTab(newAlignment);
     // handleResetTab()
     navigate(
-      newAlignment === "admin" && role === "mentor"?`/all-request?type=mentor_change_request`:newAlignment === "admin" && role === "admin"
+      newAlignment === "admin" && role === "mentor"
+        ? `/all-request?type=mentor_change_request`
+        : newAlignment === "admin" && role === "admin"
         ? `/all-request?type=testimonial_request`
         : `/all-request?type=program_request`
     );
