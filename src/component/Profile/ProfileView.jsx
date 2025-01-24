@@ -599,6 +599,26 @@ export default function ProfileView() {
     ["Personal Information"]?.includes(section.title)
   );
 
+  const getApprovalStatus = () =>{
+    const member_status = searchParams.get('member_status');
+    let status ='' ;
+    const approvalStatus = userDetails?.approve_status;
+    if(member_status){
+       status = member_status
+    }else{
+    if( approvalStatus === "approved"){
+      status = 'approved'
+    }else if(approvalStatus==='rejected'){
+      status = 'rejected';
+    }else{
+      status = reqStatus[userDetails?.approve_status]
+    }
+  }
+  return status;
+  }
+
+  const approvalLabel = getApprovalStatus();
+  
   const handleBookmark = async (program) => {
     const is_admin_assign_program = program.hasOwnProperty(
       "admin_assign_program"
@@ -1402,19 +1422,15 @@ export default function ProfileView() {
                       className="py-3 px-16 text-white text-[14px] flex justify-center items-center"
                       style={{
                         ...reqStatusColor[
-                          userDetails?.approve_status === "approved"
-                            ? "approved"
-                            : userDetails?.approve_status === "rejected"
-                            ? "rejected"
-                            : userDetails?.approve_status
+                          (approvalLabel==='Active'||userDetails?.approve_status === "approved")
+                          ? "approved"
+                          : (approvalLabel==='Deactive' ||userDetails?.approve_status === "rejected")
+                          ? "rejected"
+                          : userDetails?.approve_status
                         ],
                       }}
                     >
-                      {userDetails?.approve_status === "approved"
-                        ? "Approved"
-                        : userDetails?.approve_status === "rejected"
-                        ? "Rejected"
-                        : reqStatus[userDetails?.approve_status]}
+                    {approvalLabel}
                     </div>
                   )}
 

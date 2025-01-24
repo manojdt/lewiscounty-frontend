@@ -54,6 +54,7 @@ export const Signup = () => {
         });
         return; // Stop further execution if the password contains spaces
       }
+      const updatedData = {...data,email:email.toLowerCase()}
       if (
         !verifyPasswordRule[PasswordRulesSet.character] ||
         !verifyPasswordRule[PasswordRulesSet.upperlowercase] ||
@@ -66,7 +67,7 @@ export const Signup = () => {
           message: "All Conditions must be satisfied",
         });
       } else {
-        dispatch(userAccountCreate(data));
+        dispatch(userAccountCreate(updatedData));
       }
     }
   };
