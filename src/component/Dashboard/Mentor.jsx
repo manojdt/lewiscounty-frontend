@@ -21,12 +21,15 @@ import { getUserProfile } from "../../services/profile";
 import ProgramFeeds from "../../shared/ProgramFeeds";
 import { getPost } from "../../services/feeds";
 import { requestPageBreadcrumbs } from "../Breadcrumbs/BreadcrumbsCommonData";
+import MaleIcon from "../../assets/images/male-profile1x.png";
+import FemaleIcon from "../../assets/images/female-profile1x.png";
 
 export const Mentor = () => {
   const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [topMentotList, setTopMentorList] = useState([]);
   const { programRequest } = useSelector((state) => state.requestList);
   const userpragrams = useSelector((state) => state.userPrograms);
   const userInfo = useSelector((state) => state.userInfo);
@@ -156,8 +159,16 @@ export const Mentor = () => {
       pageSize: 5,
     };
     dispatch(getPost(feedData));
+    getTopMentors();
     //   }
   }, []);
+
+  const getTopMentors = async () => {
+    const topMentor = await api.get("rating/top_mentor");
+    if (topMentor.status === 200 && topMentor.data?.results) {
+      setTopMentorList(topMentor.data.results);
+    }
+  };
 
   return (
     <>
@@ -181,6 +192,106 @@ export const Mentor = () => {
               <UserInfoCard />
               {/* <ViewImpression /> */}
               {/* <RecentActivities /> */}
+              <div
+                className="recent-request mt-4"
+                style={{
+                  boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.05)",
+                  borderRadius: "10px",
+                }}
+              >
+                <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
+                  <div className="flex gap-4">
+                    <div
+                      className="card-dash"
+                      style={{
+                        background:
+                          "linear-gradient(180deg, #00B1C0 0%, #005DC6 100%)",
+                      }}
+                    ></div>
+                    <h4>Top Mentors</h4>
+                  </div>
+                  <div className="flex justify-center mt-2 mb-2">
+                    <p
+                      className="text-[12px] py-2 px-2 cursor-pointer"
+                      style={{
+                        background: "rgba(217, 228, 242, 1)",
+                        color: "rgba(29, 91, 191, 1)",
+                        borderRadius: "3px",
+                      }}
+                      onClick={() => navigate("/mentors?req=topmentor")}
+                    >
+                      View All
+                    </p>
+                  </div>
+                </div>
+
+                <div className="content flex flex-col gap-2 py-2 px-2 overflow-x-auto">
+                  {topMentotList.map((recentReq, index) => {
+                    let name = `${recentReq.first_name} ${recentReq.last_name}`;
+                    return (
+                      <div
+                        key={index}
+                        className="py-3 px-3"
+                        style={{
+                          border: "1px solid rgba(29, 91, 191, 1)",
+                          borderRadius: "10px",
+                        }}
+                        onClick={()=>navigate(`/mentor-details/${recentReq?.id}?fromType=topmentor`)}
+                      >
+                        <div
+                          className="flex gap-2 pb-3"
+                          style={{
+                            borderBottom: "1px solid rgba(29, 91, 191, 1)",
+                          }}
+                        >
+                          <div className="w-1/4">
+                            {" "}
+                            <img
+                              src={index % 2 === 0 ? MaleIcon : FemaleIcon}
+                              alt="male-icon"
+                            />{" "}
+                          </div>
+                          <div className="flex flex-col gap-2">
+                            <p
+                              className="text-[12px]"
+                              style={{
+                                width: "100px",
+                                overflow: "hidden",
+                                whiteSpace: "nowrap",
+                                textOverflow: "ellipsis",
+                              }}
+                              title={name}
+                            >
+                              {name}
+                            </p>
+                            <p className="text-[10px]">{recentReq.role}</p>
+                          </div>
+                        </div>
+                        <div className="flex gap-3 pt-3">
+                          <div className="flex items-center gap-1">
+                            <span
+                              className="lg:w-2 lg:h-2  rounded-full"
+                              style={{ background: "rgba(29, 91, 191, 1)" }}
+                            ></span>
+                            <span className="lg:text-[8px]">
+                              Attended({recentReq.attended || 0})
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <span
+                              className="lg:w-2 lg:h-2  rounded-full"
+                              style={{ background: "rgba(0, 174, 189, 1)" }}
+                            ></span>
+                            <span className="lg:text-[8px]">
+                              Completed({recentReq.completed || 0})
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
               <Invite />
             </div>
           )}
