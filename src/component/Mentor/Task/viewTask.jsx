@@ -484,7 +484,7 @@ const ViewTask = () => {
                     }
 
                     {
-                        (taskDetails?.status === "pending" && role === "mentor") &&
+                        (taskDetails?.status === "pending" && (role === "mentor" || role === "admin")) &&
                         <Button
                             btnName="Re Assign"
                             btnCategory="secondary"
