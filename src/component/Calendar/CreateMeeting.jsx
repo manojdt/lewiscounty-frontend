@@ -267,7 +267,7 @@ export default function CreateMeeting() {
     };
 
     if (apiData && id) {
-      updateCalendarEvent({
+      return updateCalendarEvent({
         apiData,
         eventSelect: formValues.event,
         id,
@@ -319,7 +319,7 @@ export default function CreateMeeting() {
     };
 
     if (apiData && eventSelect && id) {
-      updateCalendarEvent({
+      return updateCalendarEvent({
         apiData,
         eventSelect,
         id,

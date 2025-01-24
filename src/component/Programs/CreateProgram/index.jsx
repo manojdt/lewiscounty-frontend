@@ -478,7 +478,9 @@ export default function CreatePrograms() {
             }
           }
           bodyFormData.append("program_admin", userInfo.data?.user_id);
-          bodyFormData.append("status", "started");
+          if (toggleRole === admin) {
+            bodyFormData.append("status", "started");
+          }
 
           // Handle re-open condition
           if (searchParams.get("type") === "re_open") {
