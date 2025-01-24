@@ -52,7 +52,7 @@ export const CategoryPopup = ({
                                     <Grid item xs={3}>
                                         <Box className={`border border-[${selectedCategory?.includes(e?.id) ? '#1D5BBF' : '#DBE0E5'}] rounded-[30px] flex items-center justify-center cursor-pointer bg-[${selectedCategory?.includes(e?.id) && '#DFEDFF'}]`}
                                             onClick={() => handleSelectCategory(e?.id)}>
-                                            <Typography className='text-[14px] text-[#000000] p-[12px]'>{e?.name}</Typography>
+                                            <Typography className='!text-[14px] text-[#000000] p-[12px]'>{e?.name}</Typography>
                                         </Box>
                                     </Grid>
                                 )
