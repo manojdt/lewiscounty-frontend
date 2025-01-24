@@ -416,7 +416,7 @@ export default function Admin() {
                       color: "rgba(29, 91, 191, 1)",
                       borderRadius: "3px",
                     }}
-                    onClick={() => navigate("/mentors?type=topmentor")}
+                    onClick={() => navigate("/mentors")}
                   >
                     View All
                   </p>
