@@ -33,39 +33,7 @@ const EventModal = ({ open, closeModal, actionActionBtn, event = [] }) => {
     if (["all", "upcoming", "reschedule"].includes(actionActionBtn)) {
       setShowGoogleMeetModal(true);
     } else if (["completed", "cancelled", "draft"].includes(actionActionBtn)) {
-      // navigate('/create-meeting');
-      // let attendees = [];
-      // data.attendees.forEach((attendee) => {
-      //   attendees.push(attendee.email);
-      // });
-      // let allGuest = [];
-      // if (data.guests !== '') {
-      //   let guestList = data.guests.split(',') || [];
-      //   guestList.forEach((guest) => {
-      //     allGuest.push(guest);
-      //   });
-      // }
-      // let apiData = {
-      //   ...data,
-      //   start: timeFormat(data.start),
-      //   end: timeFormat(data.end),
-      //   attendees: attendees,
-      //   guests: allGuest,
-      //   start_date: todayDate(customSelect.start_date),
-      //   end_date:
-      //     !customSelect.end_date || datePopup.type === 'do_not_repeat'
-      //       ? todayDate(customSelect.start_date)
-      //       : todayDate(customSelect.end_date),
-      //   byday: selectedDays.join(','),
-      //   req: customSelect.repeat_type,
-      //   interval: customSelect.repeat_time,
-      //   monthly_day: monthlyOn,
-      // };
-      // if (apiData && eventSelect && id) {
-      //   return dispatch(updateCalendarEvent({ apiData, eventSelect, id }));
-      // }
-      // return dispatch(createCalendarEvent(apiData));
-      // };
+      navigate(`/edit-meeting?id=${event.id}&status=${actionActionBtn}`)
     }
   };
 

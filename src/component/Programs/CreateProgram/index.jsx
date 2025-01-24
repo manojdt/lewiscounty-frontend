@@ -824,7 +824,7 @@ export default function CreatePrograms() {
       setTimeout(() => {
         setLoading({ create: false, success: false });
         if (allPrograms && allPrograms.length) {
-          navigate(`/dashboard?type=${programStatus.yetToPlan}`);
+          navigate(`/programs?type=${programStatus.yetToPlan}`);
         }
       }, [3000]);
     }
@@ -1028,7 +1028,7 @@ export default function CreatePrograms() {
 
         // Only navigate on success cases
         if (isProgramCreated || isProgramUpdated || isProgramReopenUpdated) {
-          navigate("/dashboard");
+          navigate("/programs");
         }
       }, 3000);
 
