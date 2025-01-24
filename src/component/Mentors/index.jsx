@@ -188,7 +188,7 @@ export const Mentors = () => {
                 onClick={() => { 
                   if(mentorType==="topmentor"){
 
-                    navigate(`/mentor-details/${selectedItem.id}?breadcrumbsType=${requestPageBreadcrumbs.topMentor}`)
+                    navigate(`/mentor-details/${selectedItem.id}?breadcrumbsType=${requestPageBreadcrumbs.topMentor}&fromType=topmentor`)
                   }else{
                     navigate(`/mentor-details/${selectedItem.id}?breadcrumbsType=${requestPageBreadcrumbs.myMentor}`)
 

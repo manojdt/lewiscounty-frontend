@@ -110,7 +110,7 @@ export default function ProfileView() {
     error: "",
   });
   const [notesActivity, setNotesActivity] = React.useState(false);
-  const [bookmarkLoading, setBookmarkLoading] = React.useState
+  const [bookmarkLoading, setBookmarkLoading] = React.useState(false)
 
   const { profile, loading } = useSelector((state) => state.profileInfo);
   const userInfo = useSelector((state) => state.userInfo);
@@ -124,6 +124,7 @@ export default function ProfileView() {
   const params = useParams();
   const [searchParams] = useSearchParams();
   const from = searchParams.get("from");
+  const fromType = searchParams.get("fromType")
   const pageType = window.location.href.includes("mentor-details")
     ? "Mentor"
     : "Mentee";
@@ -146,7 +147,7 @@ export default function ProfileView() {
   };
 
   const loadUserProfile = () => {
-    dispatch(getProfileInfo({ id: params.id }));
+    dispatch(getProfileInfo({ id: params.id, program_limit: 3 }));
     dispatch(getFollowList(params.id));
   };
 
@@ -601,22 +602,6 @@ export default function ProfileView() {
     ["Personal Information"]?.includes(section.title)
   );
 
-  const handleFetchPrograms = () => {
-    const payload = {
-      limit: 3,
-      page: 1,
-      status: "yettojoin",
-    };
-    dispatch(getallMyProgram(payload)).then((res) => {
-      // console.log("res ====>", res)
-      setProgramData(res?.payload);
-    });
-  };
-
-  React.useEffect(() => {
-    handleFetchPrograms();
-  }, []);
-
   const handleBookmark = async (program) => {
     const is_admin_assign_program = program.hasOwnProperty(
       "admin_assign_program"
@@ -629,7 +614,9 @@ export default function ProfileView() {
     const bookmark = await api.post("bookmark", payload);
     if (bookmark.status === 201 && bookmark.data) {
       setBookmarkLoading(false);
-      handleFetchPrograms();
+      if (params.id) {
+        loadUserProfile();
+      }
     }
   };
 
@@ -637,9 +624,16 @@ export default function ProfileView() {
   const handleNavigateDetails = (program) => {
     let baseUrl = pipeUrls.programdetails;
     if (Object.keys(program).length) {
-      navigate(
-        `${baseUrl}/${program.id}?breadcrumbsType=${requestPageBreadcrumbs.dashboardPrograms}`
-      );
+      if(program?.admin_assign_program){
+        navigate(
+          `${baseUrl}/${program.id}?breadcrumbsType=${requestPageBreadcrumbs.dashboardPrograms}&program_create_type=admin_program`
+        );
+      }else{
+        navigate(
+          `${baseUrl}/${program.id}?breadcrumbsType=${requestPageBreadcrumbs.dashboardPrograms}`
+        );
+      }
+      
     }
   };
 
@@ -1600,25 +1594,26 @@ export default function ProfileView() {
           )}
         </div>
 
-        <div className="bg-[#F9F9F9]">
+        {fromType === "topmentor" && <div className="bg-[#F9F9F9]">
           <div className="flex justify-between items-center border-b border-border-main px-5 py-3">
-            <p className="text-[18px] font-semibold">Current Program</p>
-            <p className="bg-background-primary-light rounded-[3px] text-[#6B6B6B] text-[12px] cursor-pointer px-2 py-1">
+            <p className="text-[18px] font-semibold">Upcoming Programs</p>
+            <p className="bg-background-primary-light rounded-[3px] text-[#6B6B6B] text-[12px] cursor-pointer px-2 py-1"
+            onClick={()=>navigate("/programs?type=upcoming&filter_by=month")}>
               View All
             </p>
           </div>
           <div>
             <ProgramCard
-              title="Current Programs"
+              title="Upcoming Programs"
               viewpage="/programs?type=yettojoin"
               handleNavigateDetails={handleNavigateDetails}
               handleBookmark={handleBookmark}
-              programs={programData?.programs ?? []}
+              programs={userDetails?.upcoming_programs ?? []}
               //   loadProgram={getPrograms}
               noTitle
             />
           </div>
-        </div>
+        </div>}
         <CancelPopup
           open={cancelPopup}
           header={"Reject Reason"}
