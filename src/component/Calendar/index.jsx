@@ -173,7 +173,7 @@ export default function Scheduler() {
               </div>
             </div>
 
-            <div
+            {/* <div
               className='events-calendar pb-3 px-2'
               style={{
                 boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)',
@@ -182,7 +182,7 @@ export default function Scheduler() {
               }}
             >
               <InlineCalendar />
-            </div>
+            </div> */}
           </div>
 
           {!loading && (

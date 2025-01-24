@@ -279,18 +279,11 @@ const ProgramSteps = ({
 
   const getDateValidation = (fieldName, index = null) => {
     return {
-      required: `${fieldName} is required`,
+      required: `${
+        fieldName === "end_date" ? "End Date" : "Start Date"
+      } is required`,
       validate: {
         isValid: (value) => !value || moment(value).isValid() || "Invalid date",
-        // futureDate: (value) => {
-        //   if (fieldName === "start_date") {
-        //     return (
-        //       moment(value).isSameOrAfter(moment(), "minute") ||
-        //       "Start date must be in the future"
-        //     );
-        //   }
-        //   return true;
-        // },
         dateOrder: (value) => {
           if (fieldName === "end_date") {
             const startDate =
@@ -327,6 +320,29 @@ const ProgramSteps = ({
           }
           return true;
         },
+        minDateTime: (value) => {
+          if (fieldName === "end_date") {
+            const startDate =
+              index !== null
+                ? getValues(`sub_programs.${index}.start_date`)
+                : getValues("start_date");
+
+            if (value && startDate) {
+              const minEndDate = moment(startDate)
+                .add(1, "day")
+                .add(1, "hour")
+                .startOf("hour");
+
+              return (
+                moment(value).isSameOrAfter(minEndDate) ||
+                `End date must be at least 1 day and 1 hour after the start date (${minEndDate.format(
+                  "MM/DD/YYYY hh:mm A"
+                )})`
+              );
+            }
+          }
+          return true;
+        },
       },
     };
   };
@@ -345,7 +361,6 @@ const ProgramSteps = ({
     });
   }, [fields.length]);
 
-  
   return (
     <div>
       <div className="flex flex-wrap gap-4">
@@ -919,7 +934,6 @@ const ProgramSteps = ({
               ) : field.type === "date" ? (
                 <div className="relative">
                   <CustomDateTimePicker
-                    // onError={handleDateFieldError(field.name)}
                     disabled={disableDateFields(field.name)}
                     {...register(field?.name, getDateValidation(field?.name))}
                     value={
@@ -936,18 +950,19 @@ const ProgramSteps = ({
                     }}
                     {...(field.name === "start_date"
                       ? {
-                          minDate: moment(new Date()),
+                          minDate: moment(), // Use moment object directly
                         }
                       : {})}
                     {...(field.name === "end_date"
                       ? {
                           minDate: getValues("start_date")
-                            ? moment(getValues("start_date"))
+                            ? moment(getValues("start_date")).add(1, "day") // Use moment object directly
                             : null,
                           minDateTime: getValues("start_date")
                             ? moment(getValues("start_date"))
-                                .add(1, "hour") // Add one hour to start_date time
-                                .startOf("hour") // Set to the start of that hour
+                                .add(1, "day")
+                                .add(1, "hour")
+                                .startOf("hour") // Use moment object directly
                             : null,
                         }
                       : {})}
