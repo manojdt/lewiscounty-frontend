@@ -376,7 +376,7 @@ const Members = () => {
                   Share
                 </MenuItem>
 
-                {seletedItem.member_active && (
+                {/* {seletedItem.member_active && (
                   <MenuItem
                     className="!text-[12px]"
                     onClick={handleAssignProgramOrTask}
@@ -389,7 +389,7 @@ const Members = () => {
                     Assign{" "}
                     {actionTab === "mentor" ? "Mentor Program" : "to Task"}
                   </MenuItem>
-                )}
+                )} */}
               </Menu>
             </>
           );
