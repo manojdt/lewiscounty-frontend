@@ -555,12 +555,12 @@ export const TaskDetails = () => {
                 <p className='text-[14px]'>&nbsp;&nbsp;{taskData?.task_description}</p>
               </div>
 
-              <div className="action-set action_cancelled mb-4 mt-4">
-                <div className="reason-title">{taskData?.reassign_task ? "Re Assign Task Reason" : "Reject Task Reason"}</div>
+              {(taskData?.reject_task_reason?.length > 0 && taskData?.status === "reassigned") && <div className="action-set action_cancelled mb-4 mt-4">
+                <div className="reason-title">{"Re Assign Task Reason"}</div>
                 <div className="reason-content">
                   {taskData?.reject_task_reason}
                 </div>
-              </div>
+              </div>}
                   
               {taskData.status === "rejected"&&!isPreview && (
                     <div className="flex gap-4 pt-10">
