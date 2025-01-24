@@ -267,6 +267,7 @@ export const Mentee = () => {
                         border: "1px solid rgba(29, 91, 191, 1)",
                         borderRadius: "10px",
                       }}
+                      onClick={()=>navigate(`/mentor-details/${recentReq?.id}?fromType=topmentor`)}
                     >
                       <div
                         className="flex gap-2 pb-3"
