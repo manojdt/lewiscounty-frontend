@@ -2708,7 +2708,7 @@ export const myMentorColumns = [
     id: 1,
   },
   {
-    field: "skills",
+    field: "areas_of_expertise",
     headerName: "Skills",
     flex: 1,
     id: 2,
