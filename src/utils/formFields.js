@@ -2243,7 +2243,7 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
           value: "Category 2",
         },
       ],
-      width: "width-32",
+      width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
       disabled: bool,
     },
     {
@@ -2255,7 +2255,7 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       inputRules: {
         required: "This field is required",
       },
-      width: "width-32",
+      width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
       disabled: bool,
       options: [],
     },
@@ -2268,7 +2268,7 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       inputRules: {
         // required: "This field is required",
       },
-      width: "width-32",
+      width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
       disabled: bool,
       options: [],
     },
@@ -2280,7 +2280,7 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       inputRules: {
         // required: "This field is required",
       },
-      width: "width-32",
+      width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
       disabled: true,
     },
     {
@@ -2291,7 +2291,7 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       inputRules: {
         // required: "This field is required",
       },
-      width: "width-32",
+      width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
       disabled: true,
     },
     {
@@ -2303,7 +2303,7 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       inputRules: {
         required: "This field is required",
       },
-      width: "width-32",
+      width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
       disabled: bool,
     },
     {
@@ -2384,7 +2384,7 @@ export const ReportFields = (bool = false) => [
       required: "This field is required",
     },
     options: [],
-    width: "w-[49.4%]",
+    width: "w-full lg:w-[48%] md:w-[48%] xl:w-[49.4%]",
     disabled: bool,
   },
   {
@@ -2396,7 +2396,7 @@ export const ReportFields = (bool = false) => [
       required: "This field is required",
     },
     options: [],
-    width: "w-[49.4%]",
+    width: "w-full lg:w-[48%] md:w-[48%] xl:w-[49.4%]",
     disabled: bool,
   },
 
@@ -2420,7 +2420,7 @@ export const ReportFields = (bool = false) => [
     inputRules: {
       // required: "This field is required",
     },
-    width: "width-32",
+    width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     disabled: true,
   },
   {
@@ -2431,7 +2431,7 @@ export const ReportFields = (bool = false) => [
     inputRules: {
       // required: "This field is required",
     },
-    width: "width-32",
+    width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     disabled: bool,
   },
   {
@@ -2442,7 +2442,7 @@ export const ReportFields = (bool = false) => [
     inputRules: {
       // required: "This field is required",
     },
-    width: "width-32",
+    width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     disabled: bool,
   },
   {

@@ -408,7 +408,7 @@ export default function Admin() {
                   ></div>
                   <h4>Top Mentors</h4>
                 </div>
-                <div className="flex justify-center mt-2 mb-2">
+                {/* <div className="flex justify-center mt-2 mb-2">
                   <p
                     className="text-[12px] py-2 px-2 cursor-pointer"
                     style={{
@@ -420,7 +420,7 @@ export default function Admin() {
                   >
                     View All
                   </p>
-                </div>
+                </div> */}
               </div>
 
               <div className="content flex flex-col gap-2 py-2 px-2 overflow-x-auto cursor-pointer">

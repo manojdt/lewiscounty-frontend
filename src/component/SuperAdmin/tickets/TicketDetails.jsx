@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Breadcrumbs, Skeleton, Typography } from '@mui/material';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import {  Skeleton, Typography } from '@mui/material';
+
 import {
   Link,
   useNavigate,
@@ -19,6 +19,8 @@ import { useSelector } from 'react-redux';
 import { user } from '../../../utils/constant';
 import { Button } from '../../../shared';
 import SuccessGradientMessage from '../../success-gradient-message';
+import { ticketHistoryView } from '../../Breadcrumbs/BreadcrumbsCommonData';
+import Breadcrumbs from '../../Breadcrumbs/Breadcrumbs';
 
 const TicketDetails = () => {
   const { id } = useParams();
@@ -28,6 +30,8 @@ const TicketDetails = () => {
   const [actionType, setActionType] = useState(null); // NEW: Track action type
 
   const [searchParams] = useSearchParams();
+  const breadcrumbsType = searchParams.get("breadcrumbsType") || "";
+    const [breadcrumbsArray, setBreadcrumbsArray] = useState([]);
   const userInfo = useSelector((state) => state.userInfo);
   const role = userInfo.data.role;
 
@@ -85,17 +89,24 @@ const TicketDetails = () => {
       View New Ticket
     </Typography>,
   ];
-
+  useEffect(() => {
+    const breadType=ticketHistoryView()
+    if (breadcrumbsType) {
+      setBreadcrumbsArray(breadType);
+    } else {
+      setBreadcrumbsArray(breadType);
+    }
+  }, [breadcrumbsType]);
   return (
     <div className='p-9'>
-      <Breadcrumbs
+      {/* <Breadcrumbs
         className='pb-4'
         separator={<NavigateNextIcon fontSize='small' />}
         aria-label='breadcrumb'
       >
         {breadcrumbs}
-      </Breadcrumbs>
-
+      </Breadcrumbs> */}
+<Breadcrumbs items={breadcrumbsArray}/>
       <div className='bg-white p-9 rounded-xl space-y-12'>
         {/* View Ticket Section */}
         {isTicketLoading ? (

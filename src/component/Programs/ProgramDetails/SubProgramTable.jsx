@@ -13,7 +13,7 @@ import {
 } from "../../../utils/constant";
 import ConfirmIcon from "../../../assets/icons/Popup-confirmation.svg";
 import CloseIcon from "../../../assets/icons/close_x.svg";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { Star } from "lucide-react";
@@ -133,10 +133,12 @@ const CourseCard = ({ data, series, handleMenuClick }) => {
 
       {/* Instructor Info */}
       <div className="flex items-center gap-3 mb-3">
-        <div className="flex items-center gap-1">
-          <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-          <span className="text-sm font-medium">{data?.mentor_rating}</span>
-        </div>
+        {data?.mentor_rating > 0 && (
+          <div className="flex items-center gap-1">
+            <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+            <span className="text-sm font-medium">{data?.mentor_rating}</span>
+          </div>
+        )}
         <div className="flex items-center gap-2">
           <div className="w-6 h-6 rounded-full bg-gray-200 overflow-hidden">
             <img
@@ -147,13 +149,15 @@ const CourseCard = ({ data, series, handleMenuClick }) => {
           </div>
           <div className="text-xs">
             <span className="text-gray-600">Instructor: </span>
-            <span className="text-blue-600 hover:underline cursor-pointer">
+            <Link
+              to={`/mentor-details/${data?.created_by}`}
+              className="text-blue-600 hover:underline cursor-pointer"
+            >
               {data?.mentor_name}
-            </span>
+            </Link>
           </div>
         </div>
       </div>
-
       {/* View Details Button */}
       <div className="flex justify-center">
         <button
@@ -167,15 +171,19 @@ const CourseCard = ({ data, series, handleMenuClick }) => {
           {isNotLaunch ? "Preview" : "View Details"}
         </button>
       </div>
+      <hr className="my-2" />
 
-      {data?.program_created_is_admin &&
-        data?.mentee_join_status === "program_join_request_submitted" && (
-          <div className="flex justify-center py-2 mt-4">
-            <span className="py-1 px-3 text-xs text-white bg-gray-400 rounded-sm">
-              {menteeProgramStatus[data.mentee_join_status]?.text}
-            </span>
-          </div>
-        )}
+      {data?.program_created_is_admin && data?.mentee_join_status && (
+        <div className="flex justify-center py-2">
+          <span
+            className={`py-1 px-3 text-xs text-white ${
+              menteeProgramStatus[data.mentee_join_status]?.bgColor
+            } rounded-sm`}
+          >
+            {menteeProgramStatus[data.mentee_join_status]?.text}
+          </span>
+        </div>
+      )}
     </div>
   );
 };

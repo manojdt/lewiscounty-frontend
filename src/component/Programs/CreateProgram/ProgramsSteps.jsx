@@ -128,13 +128,14 @@ const ProgramSteps = ({
     }));
   };
 
-  const mentorFooterComponent = ({ selectedRows }) => {
+  const mentorFooterComponent = ({ selectedRows, setMentorSearchValue }) => {
     const handleActionPopupData = () => {
       // For mentor_id, store just the ID of the single selected row
       const selectedId =
         selectedRows.length > 0 ? getRowIdentifier(selectedRows[0]) : null;
       setValue(currentField, selectedId);
       setCurrentField("");
+      setMentorSearchValue("");
     };
 
     return (
@@ -148,7 +149,7 @@ const ProgramSteps = ({
         <Button
           btnCategory="primary"
           btnName="Add"
-          onClick={handleActionPopupData}
+          onClick={() => handleActionPopupData()}
           disabled={selectedMentorsByField.length === 0}
         />
       </div>
@@ -344,6 +345,7 @@ const ProgramSteps = ({
     });
   }, [fields.length]);
 
+  
   return (
     <div>
       <div className="flex flex-wrap gap-4">
@@ -389,12 +391,7 @@ const ProgramSteps = ({
           const disableRecurringProgram =
             params?.id && field.name === "recurring_program" && role === mentor;
           return (
-            <div
-              className={`relative mb-6  ${
-                field.width
-              }`}
-              key={index}
-            >
+            <div className={`relative mb-6  ${field.width}`} key={index}>
               <label
                 className="block tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor={field.label}
@@ -1188,7 +1185,10 @@ const ProgramSteps = ({
       <MuiModal
         modalSize="md"
         modalOpen={!!currentField}
-        modalClose={() => setCurrentField("")}
+        modalClose={() => {
+          setCurrentField("");
+          setMentorSearchValue("");
+        }}
         title="Add mentor"
       >
         <TextField
@@ -1215,7 +1215,11 @@ const ProgramSteps = ({
           handleSelectedRow={(rows) => handleSelectedRow(rows, currentField)}
           footerAction={() => setCurrentField("")}
           footerComponent={(props) =>
-            mentorFooterComponent({ ...props, selectedMentorsByField })
+            mentorFooterComponent({
+              ...props,
+              selectedMentorsByField,
+              setMentorSearchValue,
+            })
           }
         />
       </MuiModal>

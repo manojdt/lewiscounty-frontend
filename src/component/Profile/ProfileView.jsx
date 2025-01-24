@@ -66,7 +66,6 @@ import { allProfileSections } from "./tabs/ProfileTab";
 import { roleBasedSections } from "./MyProfile";
 import Accordian from "../../shared/Accordian";
 import FormContextProvider from "./form-context-provider";
-import { getallMyProgram } from "../../services/programInfo";
 import api from "../../services/api";
 import ProgramCard from "../../shared/Card/ProgramCard";
 
@@ -77,7 +76,6 @@ export default function ProfileView() {
   console.log("state ===>", state);
 
   const { programRequest } = useSelector((state) => state.requestList);
-  const [programData, setProgramData] = React.useState({});
   const [confirmPopup, setConfirmPopup] = useState({
     show: false,
     category: false,
@@ -123,6 +121,7 @@ export default function ProfileView() {
   } = useSelector((state) => state.requestList);
   const params = useParams();
   const [searchParams] = useSearchParams();
+  const type = searchParams.get("type");
   const from = searchParams.get("from");
   const fromType = searchParams.get("fromType")
   const pageType = window.location.href.includes("mentor-details")
@@ -444,7 +443,6 @@ export default function ProfileView() {
     }
   }, [params]);
   useEffect(() => {
-    console.log("role=>", role);
     if (searchParams.get("request_id")) {
       if (role === "admin") {
         dispatch(getRequestView(parseInt(searchParams.get("request_id"))));
@@ -529,7 +527,6 @@ export default function ProfileView() {
     });
   };
 
-  console.log("userDetails", userDetails);
 
   const handleSaveNotes = () => {
     if (noteData?.text !== "") {
@@ -641,7 +638,7 @@ export default function ProfileView() {
     <div className="profile-container">
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => 999999 }}
-        open={loading || userInfoLoading || reportLoading || bookmarkLoading}
+        open={loading || userInfoLoading || reportLoading}
       >
         <CircularProgress color="inherit" />
       </Backdrop>
@@ -1444,40 +1441,7 @@ export default function ProfileView() {
                     </div>
                   )}
 
-                {
-                  // role === "mentor" &&
-                  searchParams.has("type") &&
-                    searchParams.get("type") === "mentee_request" &&
-                    searchParams.has("request_id") &&
-                    searchParams.get("request_id") !== "" &&
-                    ["new", "pending"].includes(requestData?.status) && (
-                      <div className="flex gap-4 pt-10">
-                        <button
-                          className="py-3 px-16 text-white text-[14px] flex items-center"
-                          style={{
-                            border: "1px solid #E0382D",
-                            borderRadius: "5px",
-                            color: "#E0382D",
-                          }}
-                          onClick={() => handleMemberCancelRequest()}
-                        >
-                          Reject
-                        </button>
-                        <button
-                          className="py-3 px-16 text-white text-[14px] flex items-center"
-                          style={{
-                            background: "#16B681",
-                            borderRadius: "5px",
-                          }}
-                          onClick={() => handleMemberAcceptRequest()}
-                        >
-                          Approve
-                        </button>
-                      </div>
-                    )
-                }
-
-                {from !== "program_join" && (
+                {from !== "program_join" && type !== "view" && (
                   <div
                     className="w-8 h-8 rounded-md flex items-center justify-center bg-gray-200"
                     onClick={handleClick}

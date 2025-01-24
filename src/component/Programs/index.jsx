@@ -265,7 +265,7 @@ export default function Programs() {
     };
     // setLoading(true);
     const pay = {
-      filter_by: programFilter.filter_by ? programFilter.filter_by : filterDate,
+      ...(filterDate && { filter_by: filterDate }),
     };
     const bookmark = await api.post("bookmark", payload);
     if (bookmark.status === 201 && bookmark.data) {
@@ -547,6 +547,7 @@ export default function Programs() {
       }
       return menu;
     });
+    console.log(programMenu,"programMenu")
     setProgramMenusList(programMenu);
   }, [userprograms.statusCounts, userprograms.programsCounts]);
 

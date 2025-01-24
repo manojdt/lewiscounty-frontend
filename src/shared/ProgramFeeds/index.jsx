@@ -12,12 +12,15 @@ export default function ProgramFeeds({
 }) {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [selectedItem, setSelectedItem] = React.useState({});
   const open = Boolean(anchorEl);
-  const handleClick = (event) => {
+  const handleClick = (event,row) => {
     setAnchorEl(event.currentTarget);
+    setSelectedItem(row)
   };
   const handleClose = () => {
     setAnchorEl(null);
+    setSelectedItem({})
   };
   return (
     <div
@@ -41,7 +44,8 @@ export default function ProgramFeeds({
         <div className="flex gap-4 items-center">
           {/* <img src={SearchIcon} alt="statistics" /> */}
           <p
-            className="text-[12px] py-2 px-2"
+            className="text-[12px] py-2 px-2 cursor-pointer"
+            onClick={() => navigate("/feeds")}
             style={{
               background: "rgba(223, 237, 255, 1)",
               borderRadius: "5px",
@@ -109,7 +113,7 @@ export default function ProgramFeeds({
                         aria-controls={open ? "basic-menu" : undefined}
                         aria-haspopup="true"
                         aria-expanded={open ? "true" : undefined}
-                        onClick={handleClick}
+                        onClick={(e)=>handleClick(e,programFeeds)}
                       >
                         <img src={MoreIcon} alt="MoreIcon" />
                       </div>
@@ -125,7 +129,7 @@ export default function ProgramFeeds({
                       >
                         <MenuItem
                           onClick={() =>
-                            navigate(`/feed-details/${programFeeds?.id}`)
+                            navigate(`/feed-details/${selectedItem?.id}`)
                           }
                         >
                           <img src={ViewIcon} alt="" />

@@ -3,7 +3,7 @@ import SearchIcon from '../../../assets/images/search1x.png';
 import EditTicketIcon from '../../../assets/icons/edit-ticket-icon.svg';
 import CancelRequestIcon from '../../../assets/icons/cancel-request-icon.svg';
 import ShareIcon from '../../../assets/icons/share-ticket-icon.svg';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import DataTable from '../../../shared/DataGrid';
 import TicketDeleteModal from './ticket-delete-modal';
 import {
@@ -27,6 +27,7 @@ import SuccessGradientMessage from '../../success-gradient-message';
 import { useSelector } from 'react-redux';
 import CancelRequestModal from './cancel-request';
 import { Button } from '../../../shared';
+import { requestPageBreadcrumbs } from '../../Breadcrumbs/BreadcrumbsCommonData';
 
 const Tickets = () => {
   const navigate = useNavigate();
@@ -34,7 +35,8 @@ const Tickets = () => {
   const userInfo = useSelector((state) => state.userInfo);
 
   const role = userInfo?.data?.role;
-
+    const [searchParams,setSearchParams] = useSearchParams();
+    const tabValue=searchParams.get("tab")||"all"
   const [requestTab, setRequestTab] = useState('all');
   const [seletedItem, setSelectedItem] = useState();
   const [isBackdropOpen, setIsBackdropOpen] = useState(false);
@@ -153,7 +155,7 @@ const Tickets = () => {
               }}
             >
               <MenuItem
-                onClick={() => navigate(`/tickets/${params.row.id}?type=view`)}
+                onClick={() => navigate(`/tickets/${params.row.id}?type=view&breadcrumbsType=${requestPageBreadcrumbs.ticketHistorys}`)}
                 className='!text-[12px]'
               >
                 <img src={ViewIcon} alt='ViewIcon' className='pr-3 w-[30px]' />
@@ -281,9 +283,13 @@ const Tickets = () => {
   ];
 
   const handleTab = (key) => {
-    setRequestTab(key);
+    const currentParams = new URLSearchParams(searchParams);
+    currentParams.set('tab', key);
+    setSearchParams(currentParams);
   };
-
+  useEffect(() => {
+    setRequestTab(tabValue);
+     }, [tabValue])
   return (
     <div className='p-9'>
       {(role === user.admin ||

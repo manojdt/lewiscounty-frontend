@@ -14,12 +14,14 @@ export const rtkQueryServiceTags = {
   GOALS: "Goals",
   MATERIAL: "Material",
   CERTIFICATE: "Certificate",
+  CALENDAR: "Calendar",
 };
 const {
   PROGRAM,
   GOALS,
   MATERIAL,
   CERTIFICATE,
+  CALENDAR
 } = rtkQueryServiceTags;
 
 export const rtkQueryApiServices = createApi({
@@ -41,6 +43,7 @@ export const rtkQueryApiServices = createApi({
     GOALS,
     MATERIAL,
     CERTIFICATE,
+    CALENDAR
   ], // Define the necessary tags
   endpoints: () => ({}),
 });
@@ -75,7 +78,8 @@ api.interceptors.response.use(
     const errMsg =
       error?.response?.data?.errors?.[0] ??
       error?.response?.data?.error ??
-      error?.response?.data?.message;
+      error?.response?.data?.message ??
+      error?.response?.data?.errors?.non_field_errors?.[0];
     if (errMsg?.length > 0) {
       toast.error(errMsg);
     }
