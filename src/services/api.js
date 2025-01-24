@@ -14,12 +14,14 @@ export const rtkQueryServiceTags = {
   GOALS: "Goals",
   MATERIAL: "Material",
   CERTIFICATE: "Certificate",
+  CALENDAR: "Calendar",
 };
 const {
   PROGRAM,
   GOALS,
   MATERIAL,
   CERTIFICATE,
+  CALENDAR
 } = rtkQueryServiceTags;
 
 export const rtkQueryApiServices = createApi({
@@ -41,6 +43,7 @@ export const rtkQueryApiServices = createApi({
     GOALS,
     MATERIAL,
     CERTIFICATE,
+    CALENDAR
   ], // Define the necessary tags
   endpoints: () => ({}),
 });
