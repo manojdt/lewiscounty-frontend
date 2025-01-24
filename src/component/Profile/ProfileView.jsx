@@ -1490,6 +1490,35 @@ export default function ProfileView() {
                 </Menu>
               </div>
             )}
+
+{requestData?.request_type === "program_join" &&
+              ["new", "pening"].includes(requestData?.status) &&
+              role === "admin" && (
+                <div className="flex gap-4 pt-10">
+                  <button
+                    className="py-3 px-16 text-white text-[14px] flex items-center"
+                    style={{
+                      border: "1px solid #E0382D",
+                      borderRadius: "5px",
+                      color: "#E0382D",
+                    }}
+                    onClick={() => handleOpenAdminApprove("rejected")}
+                  >
+                    Reject
+                  </button>
+                  <button
+                    className="py-3 px-16 text-white text-[14px] flex items-center"
+                    style={{
+                      background: "#16B681",
+                      borderRadius: "5px",
+                    }}
+                    onClick={() => handleOpenAdminApprove("approved")}
+                  >
+                    Approve
+                  </button>
+                </div>
+              )}
+              
           </div>
         </div>
 
