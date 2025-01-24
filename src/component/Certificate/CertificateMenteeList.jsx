@@ -29,11 +29,22 @@ import {
   getCertificateMember,
 } from "../../services/certificate";
 import MuiModal from "../../shared/Modal";
-import { updateCertificateRequest, updateLocalRequest } from "../../services/request";
+import {
+  updateCertificateRequest,
+  updateLocalRequest,
+} from "../../services/request";
 import TickColorIcon from "../../assets/icons/tickColorLatest.svg";
 import CancelColorIcon from "../../assets/icons/cancelCircle.svg";
 import { Typography } from "@mui/material";
-import { adminMy_approvedCertificate, adminMy_certificate, Approved_Certificate, pending_Certificate, request_certificate, requestPageBreadcrumbs, wait_certificate } from "../Breadcrumbs/BreadcrumbsCommonData";
+import {
+  adminMy_approvedCertificate,
+  adminMy_certificate,
+  Approved_Certificate,
+  pending_Certificate,
+  request_certificate,
+  requestPageBreadcrumbs,
+  wait_certificate,
+} from "../Breadcrumbs/BreadcrumbsCommonData";
 import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
 
 export default function CertificateMenteeList() {
@@ -245,7 +256,7 @@ export default function CertificateMenteeList() {
             type: "",
             activity: false,
           });
-           dispatch(updateLocalRequest({ status: '' }));
+          dispatch(updateLocalRequest({ status: "" }));
           navigate(-1);
         }, 3000);
       }
@@ -284,43 +295,43 @@ export default function CertificateMenteeList() {
       handleCancelCertificateApiRequest();
     }
   };
-   const handleBreadcrumbs = (key) => {
-        const request_certificat=request_certificate()
-        const admin_approvedreport=adminMy_approvedCertificate()
-        const admin_canceledreport=adminMy_certificate()
-        const mentorwait_canceledreport=wait_certificate()
-        const mentorpending_canceledreport=pending_Certificate()
-        const mentorApproved_canceledreport=Approved_Certificate()
-        switch (key) {
-          case requestPageBreadcrumbs.certificate_request:
-            setBreadcrumbsArray(request_certificat)
-            break;
-          case requestPageBreadcrumbs.adminCertificateApproveReportTab:
-            setBreadcrumbsArray(admin_approvedreport)
-            break;
-            case requestPageBreadcrumbs.adminCertificateTab:
-            setBreadcrumbsArray(admin_canceledreport)
-            break;
-            case requestPageBreadcrumbs.waitCertificateTab:
-            setBreadcrumbsArray(mentorwait_canceledreport)
-            break;
-            case requestPageBreadcrumbs.pendingCertificateTab:
-            setBreadcrumbsArray(mentorpending_canceledreport)
-            break;
-            case requestPageBreadcrumbs.approvedCertificateTab:
-            setBreadcrumbsArray(mentorApproved_canceledreport)
-            break;
-          case "discussion":
-            break;
-          default:
-            break;
-        }
-      };
-    useEffect(() => {
-      if(breadcrumbsType){
-      handleBreadcrumbs(breadcrumbsType)
-     }
-     }, [breadcrumbsType])
+  const handleBreadcrumbs = (key) => {
+    const request_certificat = request_certificate();
+    const admin_approvedreport = adminMy_approvedCertificate();
+    const admin_canceledreport = adminMy_certificate();
+    const mentorwait_canceledreport = wait_certificate();
+    const mentorpending_canceledreport = pending_Certificate();
+    const mentorApproved_canceledreport = Approved_Certificate();
+    switch (key) {
+      case requestPageBreadcrumbs.certificate_request:
+        setBreadcrumbsArray(request_certificat);
+        break;
+      case requestPageBreadcrumbs.adminCertificateApproveReportTab:
+        setBreadcrumbsArray(admin_approvedreport);
+        break;
+      case requestPageBreadcrumbs.adminCertificateTab:
+        setBreadcrumbsArray(admin_canceledreport);
+        break;
+      case requestPageBreadcrumbs.waitCertificateTab:
+        setBreadcrumbsArray(mentorwait_canceledreport);
+        break;
+      case requestPageBreadcrumbs.pendingCertificateTab:
+        setBreadcrumbsArray(mentorpending_canceledreport);
+        break;
+      case requestPageBreadcrumbs.approvedCertificateTab:
+        setBreadcrumbsArray(mentorApproved_canceledreport);
+        break;
+      case "discussion":
+        break;
+      default:
+        break;
+    }
+  };
+  useEffect(() => {
+    if (breadcrumbsType) {
+      handleBreadcrumbs(breadcrumbsType);
+    }
+  }, [breadcrumbsType]);
   return (
     <div className="px-8 mt-10 pb-5">
       <div
@@ -373,27 +384,30 @@ export default function CertificateMenteeList() {
           </div>
         </Backdrop>
         <div className="flex justify-between px-5 pb-4 mb-8 items-center border-b-2">
-        {breadcrumbsType&& <Breadcrumbs items={breadcrumbsArray}/>}
-         {!breadcrumbsType&&
-          <div className="flex gap-5 items-center text-[14px]">
-            <p style={{ color: "rgba(89, 117, 162, 1)", fontWeight: 500 }}>
-              Generate Certificates Requests
-            </p>
-            <img src={ArrowRightIcon} alt="ArrowRightIcon" />
-            {searchParams.get("type") === "approved" ? (
-              <>
-                <p style={{ color: "rgba(89, 117, 162, 1)", fontWeight: 500 }}>
-                  Member List
-                </p>
-                <img src={ArrowRightIcon} alt="ArrowRightIcon" />
-                <p>Accept</p>
-              </>
-            ) : (
-              <>
-                <p>View Member List</p>
-              </>
-            )}
-          </div>}
+          {breadcrumbsType && <Breadcrumbs items={breadcrumbsArray} />}
+          {!breadcrumbsType && (
+            <div className="flex gap-5 items-center text-[14px]">
+              <p style={{ color: "rgba(89, 117, 162, 1)", fontWeight: 500 }}>
+                Generate Certificates Requests
+              </p>
+              <img src={ArrowRightIcon} alt="ArrowRightIcon" />
+              {searchParams.get("type") === "approved" ? (
+                <>
+                  <p
+                    style={{ color: "rgba(89, 117, 162, 1)", fontWeight: 500 }}
+                  >
+                    Member List
+                  </p>
+                  <img src={ArrowRightIcon} alt="ArrowRightIcon" />
+                  <p>Accept</p>
+                </>
+              ) : (
+                <>
+                  <p>View Member List</p>
+                </>
+              )}
+            </div>
+          )}
           <div className="cursor-pointer" onClick={() => navigate(-1)}>
             <img src={Cancel} alt="link" className="w-[20px] h[10px]" />
           </div>
@@ -417,30 +431,31 @@ export default function CertificateMenteeList() {
           }}
         >
           {role === "admin" && state?.status === "approved" ? (
-            <button
-              className="py-3 px-16 text-white text-[14px] flex items-center"
-              style={{
-                ...StatusbuttonStyles.base,
-                ...StatusbuttonStyles.success,
-                cursor: "not-allowed",
-              }}
-              onClick={() => undefined}
-            >
-              Approved
-            </button>
+            // <button
+            //   className="py-3 px-16 text-white text-[14px] flex items-center"
+            //   style={{
+            //     ...StatusbuttonStyles.base,
+            //     ...StatusbuttonStyles.success,
+            //     cursor: "not-allowed",
+            //   }}
+            //   onClick={() => undefined}
+            // >
+            //   Approved
+            // </button>
+            <></>
           ) : state?.status === "rejected" ? (
             <div className="pr-2">
-            <button
-              className="py-3 px-16 text-white text-[14px] flex items-center"
-              style={{
-                ...StatusbuttonStyles.base,
-                ...StatusbuttonStyles.danger,
-                cursor: "not-allowed",
-              }}
-              onClick={() => undefined}
-            >
-              Rejected
-            </button>
+              <button
+                className="py-3 px-16 text-white text-[14px] flex items-center"
+                style={{
+                  ...StatusbuttonStyles.base,
+                  ...StatusbuttonStyles.danger,
+                  cursor: "not-allowed",
+                }}
+                onClick={() => undefined}
+              >
+                Rejected
+              </button>
             </div>
           ) : null}
           {role !== "admin" && state?.status !== "Wating_for_response" && (
@@ -595,7 +610,6 @@ export default function CertificateMenteeList() {
                 fontWeight: 600,
               }}
             >
-             
               Certificate Request Approved Successfully
             </p>
           </div>

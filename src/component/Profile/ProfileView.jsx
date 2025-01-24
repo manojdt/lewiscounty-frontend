@@ -108,7 +108,7 @@ export default function ProfileView() {
     error: "",
   });
   const [notesActivity, setNotesActivity] = React.useState(false);
-  const [bookmarkLoading, setBookmarkLoading] = React.useState(false)
+  const [bookmarkLoading, setBookmarkLoading] = React.useState(false);
 
   const { profile, loading } = useSelector((state) => state.profileInfo);
   const userInfo = useSelector((state) => state.userInfo);
@@ -123,7 +123,7 @@ export default function ProfileView() {
   const [searchParams] = useSearchParams();
   const type = searchParams.get("type");
   const from = searchParams.get("from");
-  const fromType = searchParams.get("fromType")
+  const fromType = searchParams.get("fromType");
   const pageType = window.location.href.includes("mentor-details")
     ? "Mentor"
     : "Mentee";
@@ -268,7 +268,7 @@ export default function ProfileView() {
         dispatch(
           updateProgramMenteeRequest({
             id: parseInt(searchParams.get("request_id")),
-            status: "accept",
+            status: "approved",
           })
         ).then(() => {
           setTimeout(() => {
@@ -527,7 +527,6 @@ export default function ProfileView() {
     });
   };
 
-
   const handleSaveNotes = () => {
     if (noteData?.text !== "") {
       const notesForm = new FormData();
@@ -599,26 +598,26 @@ export default function ProfileView() {
     ["Personal Information"]?.includes(section.title)
   );
 
-  const getApprovalStatus = () =>{
-    const member_status = searchParams.get('member_status');
-    let status ='' ;
+  const getApprovalStatus = () => {
+    const member_status = searchParams.get("member_status");
+    let status = "";
     const approvalStatus = userDetails?.approve_status;
-    if(member_status){
-       status = member_status
-    }else{
-    if( approvalStatus === "approved"){
-      status = 'approved'
-    }else if(approvalStatus==='rejected'){
-      status = 'rejected';
-    }else{
-      status = reqStatus[userDetails?.approve_status]
+    if (member_status) {
+      status = member_status;
+    } else {
+      if (approvalStatus === "approved") {
+        status = "approved";
+      } else if (approvalStatus === "rejected") {
+        status = "rejected";
+      } else {
+        status = reqStatus[userDetails?.approve_status];
+      }
     }
-  }
-  return status;
-  }
+    return status;
+  };
 
   const approvalLabel = getApprovalStatus();
-  
+
   const handleBookmark = async (program) => {
     const is_admin_assign_program = program.hasOwnProperty(
       "admin_assign_program"
@@ -627,7 +626,7 @@ export default function ProfileView() {
       [is_admin_assign_program ? "admin_program_id" : "program_id"]: program.id,
       marked: !program.is_bookmark,
     };
-    setBookmarkLoading(true)
+    setBookmarkLoading(true);
     const bookmark = await api.post("bookmark", payload);
     if (bookmark.status === 201 && bookmark.data) {
       setBookmarkLoading(false);
@@ -637,20 +636,18 @@ export default function ProfileView() {
     }
   };
 
-
   const handleNavigateDetails = (program) => {
     let baseUrl = pipeUrls.programdetails;
     if (Object.keys(program).length) {
-      if(program?.admin_assign_program){
+      if (program?.admin_assign_program) {
         navigate(
           `${baseUrl}/${program.id}?breadcrumbsType=${requestPageBreadcrumbs.dashboardPrograms}&program_create_type=admin_program`
         );
-      }else{
+      } else {
         navigate(
           `${baseUrl}/${program.id}?breadcrumbsType=${requestPageBreadcrumbs.dashboardPrograms}`
         );
       }
-      
     }
   };
 
@@ -1422,15 +1419,17 @@ export default function ProfileView() {
                       className="py-3 px-16 text-white text-[14px] flex justify-center items-center"
                       style={{
                         ...reqStatusColor[
-                          (approvalLabel==='Active'||userDetails?.approve_status === "approved")
-                          ? "approved"
-                          : (approvalLabel==='Deactive' ||userDetails?.approve_status === "rejected")
-                          ? "rejected"
-                          : userDetails?.approve_status
+                          approvalLabel === "Active" ||
+                          userDetails?.approve_status === "approved"
+                            ? "approved"
+                            : approvalLabel === "Deactive" ||
+                              userDetails?.approve_status === "rejected"
+                            ? "rejected"
+                            : userDetails?.approve_status
                         ],
                       }}
                     >
-                    {approvalLabel}
+                      {approvalLabel}
                     </div>
                   )}
 
@@ -1574,26 +1573,32 @@ export default function ProfileView() {
           )}
         </div>
 
-        {fromType === "topmentor" && <div className="bg-[#F9F9F9]">
-          <div className="flex justify-between items-center border-b border-border-main px-5 py-3">
-            <p className="text-[18px] font-semibold">Upcoming Programs</p>
-            <p className="bg-background-primary-light rounded-[3px] text-[#6B6B6B] text-[12px] cursor-pointer px-2 py-1"
-            onClick={()=>navigate("/programs?type=upcoming&filter_by=month")}>
-              View All
-            </p>
+        {fromType === "topmentor" && (
+          <div className="bg-[#F9F9F9]">
+            <div className="flex justify-between items-center border-b border-border-main px-5 py-3">
+              <p className="text-[18px] font-semibold">Upcoming Programs</p>
+              <p
+                className="bg-background-primary-light rounded-[3px] text-[#6B6B6B] text-[12px] cursor-pointer px-2 py-1"
+                onClick={() =>
+                  navigate("/programs?type=upcoming&filter_by=month")
+                }
+              >
+                View All
+              </p>
+            </div>
+            <div>
+              <ProgramCard
+                title="Upcoming Programs"
+                viewpage="/programs?type=yettojoin"
+                handleNavigateDetails={handleNavigateDetails}
+                handleBookmark={handleBookmark}
+                programs={userDetails?.upcoming_programs ?? []}
+                //   loadProgram={getPrograms}
+                noTitle
+              />
+            </div>
           </div>
-          <div>
-            <ProgramCard
-              title="Upcoming Programs"
-              viewpage="/programs?type=yettojoin"
-              handleNavigateDetails={handleNavigateDetails}
-              handleBookmark={handleBookmark}
-              programs={userDetails?.upcoming_programs ?? []}
-              //   loadProgram={getPrograms}
-              noTitle
-            />
-          </div>
-        </div>}
+        )}
         <CancelPopup
           open={cancelPopup}
           header={"Reject Reason"}
