@@ -2738,7 +2738,7 @@ export default function AllRequest() {
   };
 
   return (
-    <div className="program-request px-8 mt-10">
+    <div className="program-request px-2 sm:px-2 md:px-4 lg:px-8 mt-10">
       {role === "mentor" && (
         <div className="flex gap-x-4 mb-6">
           {requestActionTab.map((action) => {
@@ -2755,7 +2755,7 @@ export default function AllRequest() {
 
       {role === "admin" && (
         // requestAdminActionTab
-        <div className="flex gap-x-4 mb-6 overflow-x-auto">
+        <div className="flex gap-x-2 sm:gap-x-2 md:gap-x-4 lg:gap-x-4 mb-6 overflow-x-auto">
           {requestAdminActionTab.map((action) => {
             return (
               <Button
@@ -3076,7 +3076,7 @@ export default function AllRequest() {
               >
                 {/* Header */}
                 <div className="title flex flex-wrap justify-between py-3 px-4 border-b items-center">
-                  <div className="text-lg font-semibold text-gray-800 flex gap-4">
+                  <div className="text-lg font-semibold text-gray-800 flex gap-4 sm:mb-2 md:mb-2 mb-2">
                     {currentRequestTab?.name}
                   </div>
                   <div className="flex flex-wrap gap-4 items-center">

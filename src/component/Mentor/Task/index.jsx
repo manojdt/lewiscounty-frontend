@@ -691,7 +691,7 @@ const MentorTask = () => {
   };
 
   return (
-    <div className="mentor-task px-4 py-6 sm:px-6 lg:px-8">
+    <div className="mentor-task px:2 sm:px-2 md:px-4 lg:px-8">
       {/* Backdrop Popup */}
       {taskFilesPopup.modal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
@@ -724,9 +724,9 @@ const MentorTask = () => {
       )}
 
       {/* Header */}
-      <div className="bg-white p-5 rounded-lg shadow-sm border border-gray-300">
+      <div className="bg-white p-3 sm:p-2 md:p-2 lg:p-5 xl:p-5 rounded-lg shadow-sm border border-gray-300">
         <div className="flex flex-wrap items-center justify-between mb-4">
-          <h1 className="text-xl font-semibold text-gray-800">Mentees Tasks</h1>
+          <h1 className="text-xl mb-2 sm:mb-2 md:mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-800">Mentees Tasks</h1>
           <div className="flex items-center space-x-3">
             <div className="relative">
               <input

@@ -321,7 +321,7 @@ export default function CreateReport() {
   };
 
   return (
-    <div className="px-9 my-6 grid">
+    <div className="px-4 sm:px-4 md:px-8 lg:px-9 xl:px-9 my-6 grid ">
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={reportsLoading || apiLoading || commonLoading}
@@ -385,7 +385,7 @@ export default function CreateReport() {
             />
           </nav>
         </div>
-        <div className="content px-8">
+        <div className="content px-4 sm:px-4 md:px-6 lg:px-8 xl:px-8">
           <div className="py-9">
             <form id="create-report" onSubmit={handleSubmit(onSubmit)}>
               <div className="flex flex-wrap gap-4">
@@ -607,7 +607,7 @@ export default function CreateReport() {
                               onChange={() => handleInputChange(field.name)}
                             ></textarea>
                             <div
-                              className="flex flex-col gap-6 items-center justify-center input-bg w-[4%] cursor-pointer"
+                              className="flex flex-col gap-6 items-center justify-center input-bg w-[9%] sm:w-[9%] md:w-[9%] lg:w-[9%] xl:w-[9%] cursor-pointer"
                               style={{ borderRadius: "3px" }}
                               onClick={() => handleOpenHtmlReport()}
                             >
@@ -629,7 +629,7 @@ export default function CreateReport() {
               <div className="flex gap-6 justify-center align-middle py-16">
                 <Button
                   btnName="Cancel"
-                  btnCls="w-[13%]"
+                  btnCls="w-[30%] sm:w-[30%] md:w-[20%] lg:w-[15%] xl:w-[15%]"
                   btnCategory="secondary"
                   onClick={() => handleCancelReportAction()}
                 />
@@ -640,7 +640,7 @@ export default function CreateReport() {
                       background: "rgba(29, 91, 191, 1)",
                       color: "#fff",
                     }}
-                    btnCls="w-[13%]"
+                    btnCls="w-[30%] sm:w-[30%] md:w-[20%] lg:w-[15%] xl:w-[15%]"
                     btnCategory="secondary"
                     onClick={handleSubmit((d) =>
                       onSubmit({ ...d, action: "draft" })
@@ -649,7 +649,7 @@ export default function CreateReport() {
                 )}
                 <Button
                   btnType="submit"
-                  btnCls="w-[13%]"
+                  btnCls="w-[30%] sm:w-[30%] md:w-[20%] lg:w-[15%] xl:w-[15%]"
                   btnName="Submit"
                   btnCategory="primary"
                 />

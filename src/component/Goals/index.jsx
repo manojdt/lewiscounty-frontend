@@ -1303,7 +1303,7 @@ const Goals = () => {
     },
   ];
   return (
-    <div className="goals px-9 py-9">
+    <div className="goals px-4 py-9 sm:px-4 md:px-6 lg:px-9 xl:px-9">
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={loading}
@@ -1423,7 +1423,7 @@ const Goals = () => {
           )}
         </div>
 
-        <div className="mx-5">
+        <div className="mx-0 sm:mx-0 md:mx-2 lg:mx-5 xl:mx-5">
           {role === "mentor" && (
             <div className="flex gap-7 mb-6 ">
               <Tabs
@@ -1697,7 +1697,7 @@ const Goals = () => {
                   justifyContent="space-between"
                   p={2}
                 >
-                  <Typography className="text-[#18283D] text-[20px]">
+                  <Typography className="text-[#18283D] text-[20px] !mb-2">
                     {adminTab === "mentor" ? "Mentor Goals" : "Mentee Goals"}
                   </Typography>
                   <div
