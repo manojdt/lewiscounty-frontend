@@ -940,7 +940,6 @@ export default function CreatePrograms() {
       }
 
       // Set initial values from currentProgramDetail
-      // Set initial values from currentProgramDetail
       ProgramFields.flat().forEach((field) => {
         const fieldName = field.name;
 

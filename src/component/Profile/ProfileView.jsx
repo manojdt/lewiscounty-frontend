@@ -1475,17 +1475,17 @@ export default function ProfileView() {
                   }}
                 >
                   {["new", "pending"].includes(userDetails?.approve_status) && (
-                    <MenuItem onClick={handleMemberAcceptRequest}>
+                    <MenuItem className="!text-[12px]" onClick={handleMemberAcceptRequest}>
                       Approve
                     </MenuItem>
                   )}
                   {["new", "pending"].includes(userDetails?.approve_status) && (
-                    <MenuItem onClick={() => setCancelPopup(true)}>
+                    <MenuItem className="!text-[12px]" onClick={() => setCancelPopup(true)}>
                       Reject
                     </MenuItem>
                   )}
-                  <MenuItem onClick={handleRedirectDocuSign}>DocuSign</MenuItem>
-                  <MenuItem onClick={() => navigate("/bgVerify")}>
+                  <MenuItem className="!text-[12px]" onClick={handleRedirectDocuSign}>DocuSign</MenuItem>
+                  <MenuItem className="!text-[12px]" onClick={() => navigate("/bgVerify")}>
                     Bg-verification
                   </MenuItem>
                 </Menu>

@@ -42,7 +42,6 @@ import MuiModal from "../../shared/Modal";
 import { CategoryPopup } from "../Dashboard/categoryPopup";
 import { acceptMember, getCategory } from "../../services/category";
 import { useGetAllProgramsQuery } from "../../features/program/programApi.services";
-import RequestSelectBox from "../../shared/RequestSelectBox";
 import ProgramMobileDropDown from "../../shared/ProgramMobileDropDown";
 
 const CustomPagination = ({
@@ -547,7 +546,7 @@ export default function Programs() {
       }
       return menu;
     });
-    console.log(programMenu,"programMenu")
+
     setProgramMenusList(programMenu);
   }, [userprograms.statusCounts, userprograms.programsCounts]);
 

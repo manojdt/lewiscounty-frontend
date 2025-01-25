@@ -120,7 +120,7 @@ export const LoginType = () => {
                       </div>
 
                       {error && (
-                        <p className='error' role='alert'>
+                        <p className='error text-center' role='alert'>
                           Please Select type
                         </p>
                       )}
