@@ -17,6 +17,8 @@ import { ReactComponent as EyeCloseIcon } from "../../assets/icons/eyeClose.svg"
 import { ReactComponent as EyeOpenIcon } from "../../assets/icons/eyeOpen.svg";
 import SuccessIcon from "../../assets/images/Success_tic1x.png";
 import FailedIcon from "../../assets/images/cancel3x.png";
+import SuccessTik from "../../assets/images/blue_tik1x.png";
+import { useUserAccountLoginMutation } from "../../features/login/loginapi.services";
 
 const Login = () => {
   // Internal State
@@ -26,7 +28,7 @@ const Login = () => {
     email: "",
     password: "",
   });
-
+const[setVerificationPopup] = React.useState(false)
   const location = useLocation();
 
   // Redux
@@ -42,24 +44,110 @@ const Login = () => {
     reset,
   } = useForm();
 
-  const onSubmit = (data) => {
+  const [userAccountLogin, {data: loginData}]= useUserAccountLoginMutation()
+
+  // const onSubmit = async (data) => {
+  //   const { email, password } = data;
+  //   if (email !== "" && password !== "") {
+  //     if (/\s/.test(password)) {
+  //       setError("password", {
+  //         type: "manual",
+  //         message: "Password must not contain spaces",
+  //       });
+  //       return; // Stop further execution if the password contains spaces
+  //     }
+  //     if (localStorage.getItem("rememberme") === "true") {
+  //       localStorage.setItem("useremail", email);
+  //       localStorage.setItem("userpassword", btoa(password));
+  //     }
+
+  //     const apiData = await userAccountLogin(data).unwrap()
+  //     if(apiData){
+  //       console.log("apiData ==>", apiData)
+  //     }
+
+  //     // dispatch(userAccountLogin(data)).then((res)=>{
+  //     //   console.log("res ===>",  res)
+  //     //   if(res?.error?.message === "Please verify your email address. A verification link has been sent to your registered email address."){
+  //     //     setVerificationPopup(true)
+  //     //     setTimeout(() => {
+  //     //       setVerificationPopup(false)
+  //     //     }, 3000);
+  //     //   }
+  //     // })
+  //     setFormDetails(data);
+  //   }
+  // };
+
+  const onSubmit = async (data) => {
     const { email, password } = data;
+  
     if (email !== "" && password !== "") {
+      // Check if password contains spaces
       if (/\s/.test(password)) {
         setError("password", {
           type: "manual",
           message: "Password must not contain spaces",
         });
-        return; // Stop further execution if the password contains spaces
+        return; // Stop further execution
       }
+  
+      // Remember the user's credentials if the "Remember Me" option is enabled
       if (localStorage.getItem("rememberme") === "true") {
         localStorage.setItem("useremail", email);
-        localStorage.setItem("userpassword", btoa(password));
+        localStorage.setItem("userpassword", btoa(password)); // Store password securely in Base64
       }
-      dispatch(userAccountLogin(data));
-      setFormDetails(data);
+  
+      try {
+        // Login API call using RTK Query
+        const apiData = await userAccountLogin(data).unwrap();
+        console.log("apiData ==>", apiData);
+  
+        if (apiData?.is_verify_email) {
+          // Handle unverified email
+          setVerificationPopup(true); // Show verification popup
+          setTimeout(() => {
+            setVerificationPopup(false);
+          }, 3000); // Hide popup after 3 seconds
+        } else {
+          // If login is successful, proceed with form details
+          setFormDetails(data);
+        }
+      } catch (error) {
+        console.error("Login error:", error);
+  
+        // Handle API errors
+        if (error?.status === 401) {
+          if (error?.data?.is_verify_email) {
+            // Show a specific error message for unverified email
+            setError("email", {
+              type: "manual",
+              message: error?.data?.message || "Please verify your email address.",
+            });
+            setVerificationPopup(true);
+            setTimeout(() => {
+              setVerificationPopup(false);
+            }, 3000);
+          } else {
+            // Handle other 401 errors (e.g., invalid credentials)
+            setError("password", {
+              type: "manual",
+              message: "Invalid email or password.",
+            });
+          }
+        } else {
+          // Handle unexpected errors
+          setError("form", {
+            type: "manual",
+            message: "An unexpected error occurred. Please try again later.",
+          });
+        }
+      }
     }
   };
+  
+
+  console.log("loginData ==>", loginData)
 
   const handleRemeberPassword = () => {
     localStorage.setItem("rememberme", !remeberPassword);
