@@ -176,8 +176,6 @@ const Login = () => {
 
   const handleRedirect = () => {
     dispatch(updateInfo()).then((res) => {
-      console.log("adfsdfs", res)
-      debugger
       if (res?.meta?.requestStatus === "fulfilled") {
         const user_data = res?.payload
         if (
@@ -290,7 +288,7 @@ const Login = () => {
 
           {/* Login Form */}
           <form onSubmit={handleSubmit(onSubmit)} onKeyDown={handleKeyDown}>
-            <SocialMediaLogin />
+            <SocialMediaLogin setVerificationPopup={setVerificationPopup} location={location} />
             <div className='mb-8 mt-8 flex items-center before:mt-0.5 before:flex-1 before:border-t before:border-neutral-300 after:mt-0.5 after:flex-1 after:border-t after:border-neutral-300 dark:before:border-neutral-500 dark:after:border-neutral-500'>
               <p
                 className='mx-4 mb-0 text-center font-semibold dark:text-neutral-200'
