@@ -155,9 +155,6 @@ const Login = () => {
   };
 
 
-
-  console.log("loginData ==>", loginData)
-
   const handleRemeberPassword = () => {
     localStorage.setItem("rememberme", !remeberPassword);
     setRememberPassword(!remeberPassword);
