@@ -29,6 +29,7 @@ import NoProgramImageIcon from "../../assets/icons/noProgramImageIcon.svg";
 import Balck_Heart_Icon from "../../assets/icons/gray-heart.svg";
 import Crown_Icon from "../../assets/icons/cronwn.svg";
 import moment from "moment";
+import NoDataIcon from "../../assets/icons/noDataIcon.svg"
 
 export default function ProgramCard({
   title,
@@ -319,8 +320,8 @@ export default function ProgramCard({
           </div>
         )}
 
-        <div className="py-3 px-3 ">
-          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        <div className={`py-3 px-3 ${programs?.length < 6 ? 'h-[1070px]' : ""}`}>
+          <div className={programs?.length > 0 ? `grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3`: "h-full" }>
             {programs && programs.length ? (
               programs.map((currentProgram, index) => {
                 let startDate = "";
@@ -358,16 +359,16 @@ export default function ProgramCard({
                     className={`curated-programs program-container flex gap-1 items-center py-5 px-5`}
                     style={{
                       ...(currentProgram.status === "yettoapprove" &&
-                      !currentProgram?.mentor_id
+                        !currentProgram?.mentor_id
                         ? role === "admin" &&
                           userdetails?.data?.user_id !==
-                            currentProgram?.created_by
+                          currentProgram?.created_by
                           ? {}
                           : {
-                              opacity: "0.5",
-                              pointerEvents: "none",
-                              cursor: "not-allowed",
-                            }
+                            opacity: "0.5",
+                            pointerEvents: "none",
+                            cursor: "not-allowed",
+                          }
                         : {}),
                     }}
                   >
@@ -424,9 +425,8 @@ export default function ProgramCard({
                               currentProgram.status
                             ) && (
                               <div
-                                className={`absolute top-2 left-3 cursor-pointer  ${
-                                  hoverIndex === index ? "block" : "hidden"
-                                }`}
+                                className={`absolute top-2 left-3 cursor-pointer  ${hoverIndex === index ? "block" : "hidden"
+                                  }`}
                                 style={{
                                   background: "#fff",
                                   borderRadius: "50%",
@@ -495,11 +495,10 @@ export default function ProgramCard({
                                       )
                                     ) {
                                       navigate(
-                                        `/update-program/${currentProgram.id}${
-                                          "admin_assign_program" in
+                                        `/update-program/${currentProgram.id}${"admin_assign_program" in
                                           currentProgram
-                                            ? `?program_create_type=admin_program`
-                                            : ""
+                                          ? `?program_create_type=admin_program`
+                                          : ""
                                         }`
                                       );
                                     }
@@ -587,9 +586,9 @@ export default function ProgramCard({
                         <div className="flex justify-center pt-2">
                           {(currentProgram.status === "yettoapprove" &&
                             !currentProgram?.mentor_id) ||
-                          currentProgram.status === "draft" ? (
+                            currentProgram.status === "draft" ? (
                             role === "admin" &&
-                            userdetails?.data?.user_id !==
+                              userdetails?.data?.user_id !==
                               currentProgram?.created_by ? (
                               <button
                                 className="text-white text-[12px] py-3 w-[140px]"
@@ -605,22 +604,21 @@ export default function ProgramCard({
                               </button>
                             ) : (
                               <button
-                                className={`text-white text-[12px] py-3 ${
-                                  currentProgram.status === "draft"
+                                className={`text-white text-[12px] py-3 ${currentProgram.status === "draft"
                                     ? "w-[110px]"
                                     : "w-[170px]"
-                                }`}
+                                  }`}
                                 onClick={() =>
                                   currentProgram.status === "draft"
                                     ? navigate(
-                                        `/update-program/${currentProgram.id}`
-                                      )
+                                      `/update-program/${currentProgram.id}`
+                                    )
                                     : undefined
                                 }
                                 style={{
                                   background:
                                     currentProgram.status === "yettoapprove" &&
-                                    !currentProgram?.mentor_id
+                                      !currentProgram?.mentor_id
                                       ? "#76818E"
                                       : "rgba(29, 91, 191, 1)",
                                   borderRadius: "5px",
@@ -667,13 +665,11 @@ export default function ProgramCard({
                           <div
                             className="text-[12px] px-2 py-2"
                             style={{
-                              background: `${
-                                ProgramStatusInCard[currentProgram.status]?.bg
-                              }`,
-                              color: `${
-                                ProgramStatusInCard[currentProgram.status]
+                              background: `${ProgramStatusInCard[currentProgram.status]?.bg
+                                }`,
+                              color: `${ProgramStatusInCard[currentProgram.status]
                                   ?.color
-                              }`,
+                                }`,
                               borderRadius: "3px",
                             }}
                           >
@@ -696,7 +692,17 @@ export default function ProgramCard({
                 );
               })
             ) : (
-              <div>No Programs found</div>
+              <div className="flex items-center justify-center h-full"
+              // style={{
+              //   position: "relative",
+              //   top: "50%",
+              //   left: "50%",
+              //   transform: "translate(-50%, -50%)",
+
+              // }}
+              >
+                <img src={NoDataIcon} alt="noDataImage" />
+              </div>
             )}
           </div>
         </div>

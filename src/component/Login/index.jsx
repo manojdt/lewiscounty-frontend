@@ -18,6 +18,9 @@ import { ReactComponent as EyeOpenIcon } from "../../assets/icons/eyeOpen.svg";
 import SuccessIcon from "../../assets/images/Success_tic1x.png";
 import FailedIcon from "../../assets/images/cancel3x.png";
 import SuccessTik from "../../assets/images/blue_tik1x.png";
+import { useUserAccountLoginMutation } from "../../features/login/loginapi.services";
+import { jwtDecode } from "jwt-decode";
+import { toast } from "react-toastify";
 
 const Login = () => {
   // Internal State
@@ -44,32 +47,113 @@ const Login = () => {
     reset,
   } = useForm();
 
-  const onSubmit = (data) => {
+  const [userAccountLogin, { data: loginData }] = useUserAccountLoginMutation()
+
+  // const onSubmit = async (data) => {
+  //   const { email, password } = data;
+  //   if (email !== "" && password !== "") {
+  //     if (/\s/.test(password)) {
+  //       setError("password", {
+  //         type: "manual",
+  //         message: "Password must not contain spaces",
+  //       });
+  //       return; // Stop further execution if the password contains spaces
+  //     }
+  //     if (localStorage.getItem("rememberme") === "true") {
+  //       localStorage.setItem("useremail", email);
+  //       localStorage.setItem("userpassword", btoa(password));
+  //     }
+
+  //     const apiData = await userAccountLogin(data).unwrap()
+  //     if(apiData){
+  //       console.log("apiData ==>", apiData)
+  //     }
+
+  //     // dispatch(userAccountLogin(data)).then((res)=>{
+  //     //   console.log("res ===>",  res)
+  //     //   if(res?.error?.message === "Please verify your email address. A verification link has been sent to your registered email address."){
+  //     //     setVerificationPopup(true)
+  //     //     setTimeout(() => {
+  //     //       setVerificationPopup(false)
+  //     //     }, 3000);
+  //     //   }
+  //     // })
+  //     setFormDetails(data);
+  //   }
+  // };
+
+  const onSubmit = async (data) => {
     const { email, password } = data;
+
     if (email !== "" && password !== "") {
+      // Check if password contains spaces
       if (/\s/.test(password)) {
         setError("password", {
           type: "manual",
           message: "Password must not contain spaces",
         });
-        return; // Stop further execution if the password contains spaces
+        return; // Stop further execution
       }
+
+      // Remember the user's credentials if the "Remember Me" option is enabled
       if (localStorage.getItem("rememberme") === "true") {
         localStorage.setItem("useremail", email);
-        localStorage.setItem("userpassword", btoa(password));
+        localStorage.setItem("userpassword", btoa(password)); // Encode password in Base64
       }
-      dispatch(userAccountLogin(data)).then((res)=>{
-        console.log("res ===>",  res)
-        if(res?.error?.message === "Please verify your email address. A verification link has been sent to your registered email address."){
-          setVerificationPopup(true)
-          setTimeout(() => {
-            setVerificationPopup(false)
-          }, 3000);
+
+      try {
+        // Login API call using RTK Query
+        const apiData = await userAccountLogin(data).unwrap();
+
+        // if (apiData.status === 200) {
+        const { access, refresh } = apiData;
+
+        // Decode the JWT token to extract user info
+        const decoded = jwtDecode(access);
+
+        // Optional: Add checks based on decoded data
+        // if (decoded?.userinfo?.approve_status === 'new') {
+        //   return {}; // Handle specific approval status if required
+        // }
+
+        // Store tokens in localStorage
+        localStorage.setItem("access_token", access);
+        localStorage.setItem("refresh_token", refresh);
+
+        console.log("Login successful. Tokens stored in localStorage.");
+        handleRedirect()
+        // return decoded; // Return the decoded token for further use
+        // }
+      } catch (error) {
+        console.error("Login error:", error);
+        if(!error?.data?.is_verify_email){
+        toast.error(error.data.message)}
+        // Handle API errors
+        if (error?.status === 401) {
+          if (error?.data?.is_verify_email) {
+            // Handle unverified email
+            setVerificationPopup(true);
+            setTimeout(() => {
+              setVerificationPopup(false);
+            }, 3000);
+          } else {
+            // Handle invalid credentials or other 401 errors
+            setError("password", {
+              type: "manual",
+              message: "Invalid email or password.",
+            });
+          }
+        } else {
+          // Handle unexpected errors
+          setError("form", {
+            type: "manual",
+            message: "An unexpected error occurred. Please try again later.",
+          });
         }
-      })
-      setFormDetails(data);
+      }
     }
   };
+
 
   const handleRemeberPassword = () => {
     localStorage.setItem("rememberme", !remeberPassword);
@@ -88,24 +172,29 @@ const Login = () => {
     new URLSearchParams(location.search).get("redirect") || "/dashboard";
 
   const handleRedirect = () => {
-    dispatch(updateInfo());
-    if (
-      userData.data.role === "super_admin" &&
-      userData.data.is_registered === true
-    ) {
-      navigate("/super-members");
-    } else if (userData.data.role === "fresher") {
-      navigate("/login-type");
-    } else if (userData.data.is_registered) {
-      navigate(redirectPath);
-    } else if (
-      userData.data.role === "mentee" &&
-      !userData.data.is_registered
-    ) {
-      navigate("/programs");
-    } else {
-      navigate("/questions");
-    }
+    dispatch(updateInfo()).then((res) => {
+      if (res?.meta?.requestStatus === "fulfilled") {
+        const user_data = res?.payload
+        if (
+          user_data?.role === "super_admin" &&
+          user_data?.is_registered === true
+        ) {
+          navigate("/super-members");
+        } else if (user_data?.role === "fresher") {
+          navigate("/login-type");
+        } else if (user_data?.is_registered) {
+          navigate(redirectPath);
+        } else if (
+          user_data?.role === "mentee" &&
+          !user_data?.is_registered
+        ) {
+          navigate("/programs");
+        } else {
+          navigate("/questions");
+        }
+      }
+    })
+
   };
 
   React.useEffect(() => {
@@ -196,7 +285,7 @@ const Login = () => {
 
           {/* Login Form */}
           <form onSubmit={handleSubmit(onSubmit)} onKeyDown={handleKeyDown}>
-            <SocialMediaLogin />
+            <SocialMediaLogin setVerificationPopup={setVerificationPopup} location={location} />
             <div className='mb-8 mt-8 flex items-center before:mt-0.5 before:flex-1 before:border-t before:border-neutral-300 after:mt-0.5 after:flex-1 after:border-t after:border-neutral-300 dark:before:border-neutral-500 dark:after:border-neutral-500'>
               <p
                 className='mx-4 mb-0 text-center font-semibold dark:text-neutral-200'
