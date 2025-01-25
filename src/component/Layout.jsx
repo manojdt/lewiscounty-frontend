@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Navbar } from "../shared";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Menu } from "primereact/menu";
 import ReportIcon from "../assets/icons/Reports.svg";
 import FeedbackIcon from "../assets/icons/FeedbackMenu.svg";
@@ -13,8 +13,10 @@ import TaskIcon from "../assets/icons/TaskMenu.svg";
 import GoalIcon from "../assets/icons/GoalMenu.svg";
 import DiscussionIcon from "../assets/icons/discussionIcon.svg";
 import { user } from "../utils/constant";
+import { docuSign } from "../services/activities";
 
 export default function Layout({ subheader }) {
+  const dispatch = useDispatch()
   const navigate = useNavigate();
   const location = useLocation();
   const userInfo = useSelector((state) => state.userInfo);
@@ -30,11 +32,20 @@ export default function Layout({ subheader }) {
   const menuRight = useRef(null);
   const moreMenu = useRef(null);
 
+  const handleRedirectDocuSign = () => {
+    dispatch(docuSign()).then((res) => {
+      if (res?.meta?.requestStatus === "fulfilled") {
+        const url = res?.payload?.url ?? "#";
+        window.open(url, "_blank");
+      }
+    });
+  };
+
   let items = [
     {
       label: (
         <div className="flex gap-4 items-center">
-          <img className ="p-2 h-8" src={TaskIcon} alt="TaskIcon" />
+          <img className="p-2 h-8" src={TaskIcon} alt="TaskIcon" />
           <p>Task</p>
         </div>
       ),
@@ -44,7 +55,7 @@ export default function Layout({ subheader }) {
     {
       label: (
         <div className="flex gap-4 items-center">
-          <img className ="p-2 h-8" src={GoalIcon} alt="GoalIcon" />
+          <img className="p-2 h-8" src={GoalIcon} alt="GoalIcon" />
           <p>Goal</p>
         </div>
       ),
@@ -56,7 +67,7 @@ export default function Layout({ subheader }) {
     items.unshift({
       label: (
         <div className="flex gap-4 items-center">
-          <img className ="p-2 h-8" src={TaskIcon} alt="TaskIcon" />
+          <img className="p-2 h-8" src={TaskIcon} alt="TaskIcon" />
           <p>Launch Program</p>
         </div>
       ),
@@ -68,7 +79,7 @@ export default function Layout({ subheader }) {
     {
       label: (
         <div className="flex gap-4 items-center">
-          <img className ="p-2 h-8" src={DiscussionIcon} alt="DiscussionIcon" />
+          <img className="p-2 h-8" src={DiscussionIcon} alt="DiscussionIcon" />
           <p>Discussions</p>
         </div>
       ),
@@ -77,7 +88,7 @@ export default function Layout({ subheader }) {
     {
       label: (
         <div className="flex gap-4 items-center">
-          <img className ="p-2 h-8" src={FeedbackIcon} alt="FeedbackIcon" />
+          <img className="p-2 h-8" src={FeedbackIcon} alt="FeedbackIcon" />
           <p>Feedback</p>
         </div>
       ),
@@ -86,7 +97,7 @@ export default function Layout({ subheader }) {
     {
       label: (
         <div className="flex gap-4 items-center">
-          <img className ="p-2 h-8" src={CertificateIcon} alt="CertificateIcon" />
+          <img className="p-2 h-8" src={CertificateIcon} alt="CertificateIcon" />
           <p>Certificate</p>
         </div>
       ),
@@ -95,7 +106,7 @@ export default function Layout({ subheader }) {
     {
       label: (
         <div className="flex gap-4 items-center">
-          <img className ="p-2 h-8" src={FeedIcon} alt="FeedIcon" />
+          <img className="p-2 h-8" src={FeedIcon} alt="FeedIcon" />
           <p>Feed</p>
         </div>
       ),
@@ -106,7 +117,7 @@ export default function Layout({ subheader }) {
     moreitems.push({
       label: (
         <div className="flex gap-4 items-center">
-          <img className ="p-2 h-8" src={ReportIcon} alt="FeedIcon" />
+          <img className="p-2 h-8" src={ReportIcon} alt="FeedIcon" />
           <p>BG Verification</p>
         </div>
       ),
@@ -118,7 +129,19 @@ export default function Layout({ subheader }) {
     moreitems.push({
       label: (
         <div className="flex gap-4 items-center">
-          <img className ="p-2 h-8" src={ReportIcon} alt="FeedIcon" />
+          <img className="p-2 h-8" src={ReportIcon} alt="FeedIcon" />
+          <p>DocuSign</p>
+        </div>
+      ),
+      command: () => handleRedirectDocuSign(),
+    });
+  }
+
+  if (role === "admin") {
+    moreitems.push({
+      label: (
+        <div className="flex gap-4 items-center">
+          <img className="p-2 h-8" src={ReportIcon} alt="FeedIcon" />
           <p>Mentee Report</p>
         </div>
       ),
@@ -135,7 +158,7 @@ export default function Layout({ subheader }) {
     moreitems.push({
       label: (
         <div className="flex gap-4 items-center">
-          <img className ="p-2 h-8" src={ReportIcon} alt="FeedIcon" />
+          <img className="p-2 h-8" src={ReportIcon} alt="FeedIcon" />
           <p>Mentor Report</p>
         </div>
       ),
@@ -152,7 +175,7 @@ export default function Layout({ subheader }) {
     moreitems.unshift({
       label: (
         <div className="flex gap-4 items-center">
-          <img className ="p-2 h-8"src={ReportIcon} alt="ReportIcon" />
+          <img className="p-2 h-8" src={ReportIcon} alt="ReportIcon" />
           <p>Reports</p>
         </div>
       ),
@@ -196,26 +219,24 @@ export default function Layout({ subheader }) {
     <div>
       <Navbar />
       {!subheader &&
-      userInfo?.data?.is_registered &&
-      (userInfo?.data?.userinfo?.approve_status === "accept" ||
-        role === "admin") &&
-      userInfo.data.role !== user.super_admin ? (
+        userInfo?.data?.is_registered &&
+        (userInfo?.data?.userinfo?.approve_status === "accept" ||
+          role === "admin") &&
+        userInfo.data.role !== user.super_admin ? (
         <div
           className="secondary-menu py-8 sm:py-2 md:py-4"
           style={{ boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.05)" }}
         >
           <ul
             // style={{ gap: "40px" }}
-            className={`flex ${
-              !userInfo?.data?.is_registered ? "ml-[150px]" : "justify-center"
-            } items-center p-2 md:p-0 mt-4 border border-gray-100 
+            className={`flex ${!userInfo?.data?.is_registered ? "ml-[150px]" : "justify-center"
+              } items-center p-2 md:p-0 mt-4 border border-gray-100 
           rounded-lg md:space-x-8 rtl:space-x-reverse flex-row md:mt-0 md:border-0`}
           >
             {userInfo?.data?.is_registered && (
               <li
-                className={`transition-all duration-300 ${
-                  pathname === "/dashboard" ? "dashboard-menu-active" : ""
-                }`}
+                className={`transition-all duration-300 ${pathname === "/dashboard" ? "dashboard-menu-active" : ""
+                  }`}
               >
                 <span
                   onClick={() => navigate("/dashboard")}
@@ -228,9 +249,8 @@ export default function Layout({ subheader }) {
             )}
 
             <li
-              className={`transition-all duration-300 ${
-                pathname === "/programs" ? "dashboard-menu-active" : ""
-              }`}
+              className={`transition-all duration-300 ${pathname === "/programs" ? "dashboard-menu-active" : ""
+                }`}
             >
               <span
                 onClick={() => navigate("/programs")}
@@ -241,9 +261,8 @@ export default function Layout({ subheader }) {
             </li>
             {role === "mentee" && userInfo?.data?.is_registered && (
               <li
-                className={`transition-all duration-300 ${
-                  pathname === "/mentors" ? "dashboard-menu-active" : ""
-                }`}
+                className={`transition-all duration-300 ${pathname === "/mentors" ? "dashboard-menu-active" : ""
+                  }`}
               >
                 <span
                   onClick={() => navigate("/mentors")}
@@ -256,9 +275,8 @@ export default function Layout({ subheader }) {
 
             {role === "mentor" && userInfo?.data?.is_registered && (
               <li
-                className={`transition-all duration-300 ${
-                  pathname === "/mentees" ? "dashboard-menu-active" : ""
-                }`}
+                className={`transition-all duration-300 ${pathname === "/mentees" ? "dashboard-menu-active" : ""
+                  }`}
               >
                 <span
                   onClick={() => navigate("/mentees")}
@@ -271,9 +289,8 @@ export default function Layout({ subheader }) {
 
             {role === "admin" && (
               <li
-                className={`transition-all duration-300 ${
-                  pathname === "/members" ? "dashboard-menu-active" : ""
-                }`}
+                className={`transition-all duration-300 ${pathname === "/members" ? "dashboard-menu-active" : ""
+                  }`}
               >
                 <span
                   onClick={() => navigate("/members")}
@@ -286,9 +303,8 @@ export default function Layout({ subheader }) {
 
             {userInfo?.data?.is_registered && (
               <li
-                className={`transition-all duration-300 ${
-                  pathname === "/all-request" ? "dashboard-menu-active" : ""
-                }`}
+                className={`transition-all duration-300 ${pathname === "/all-request" ? "dashboard-menu-active" : ""
+                  }`}
               >
                 <span
                   onClick={() => navigate("/all-request")}
@@ -322,11 +338,10 @@ export default function Layout({ subheader }) {
             {userInfo?.data?.is_registered && (
               <>
                 <li
-                  className={`transition-all duration-300 ${
-                    pathname === "/mentee-tasks" || pathname === "/mentor-tasks"
+                  className={`transition-all duration-300 ${pathname === "/mentee-tasks" || pathname === "/mentor-tasks"
                       ? "dashboard-menu-active"
                       : ""
-                  }`}
+                    }`}
                 >
                   <span
                     onClick={() =>
@@ -341,9 +356,8 @@ export default function Layout({ subheader }) {
                 </li>
 
                 <li
-                  className={`transition-all duration-300 ${
-                    pathname === "/goals" ? "dashboard-menu-active" : ""
-                  }`}
+                  className={`transition-all duration-300 ${pathname === "/goals" ? "dashboard-menu-active" : ""
+                    }`}
                 >
                   <span
                     onClick={() => navigate("/goals")}
@@ -354,9 +368,8 @@ export default function Layout({ subheader }) {
                 </li>
 
                 <li
-                  className={`transition-all duration-300 ${
-                    pathname === "/calendar" ? "dashboard-menu-active" : ""
-                  }`}
+                  className={`transition-all duration-300 ${pathname === "/calendar" ? "dashboard-menu-active" : ""
+                    }`}
                 >
                   <span
                     onClick={() => navigate("/calendar")}

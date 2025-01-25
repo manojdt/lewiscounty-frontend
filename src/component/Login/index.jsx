@@ -17,6 +17,7 @@ import { ReactComponent as EyeCloseIcon } from "../../assets/icons/eyeClose.svg"
 import { ReactComponent as EyeOpenIcon } from "../../assets/icons/eyeOpen.svg";
 import SuccessIcon from "../../assets/images/Success_tic1x.png";
 import FailedIcon from "../../assets/images/cancel3x.png";
+import SuccessTik from "../../assets/images/blue_tik1x.png";
 
 const Login = () => {
   // Internal State
@@ -26,6 +27,7 @@ const Login = () => {
     email: "",
     password: "",
   });
+  const [verificationPopup, setVerificationPopup] = React.useState(false)
 
   const location = useLocation();
 
@@ -56,7 +58,15 @@ const Login = () => {
         localStorage.setItem("useremail", email);
         localStorage.setItem("userpassword", btoa(password));
       }
-      dispatch(userAccountLogin(data));
+      dispatch(userAccountLogin(data)).then((res)=>{
+        console.log("res ===>",  res)
+        if(res?.error?.message === "Please verify your email address. A verification link has been sent to your registered email address."){
+          setVerificationPopup(true)
+          setTimeout(() => {
+            setVerificationPopup(false)
+          }, 3000);
+        }
+      })
       setFormDetails(data);
     }
   };
@@ -160,20 +170,20 @@ const Login = () => {
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={userData.loading}
       >
-          <CircularProgress color='inherit' />
+        <CircularProgress color='inherit' />
       </Backdrop>
 
       {/* Right Section */}
       <div className='w-full flex items-center justify-center'>
         <div className='w-4/5 max-w-md'>
-        <div className="flex gap-1">
-          <h2 className='text-2xl font-bold text-gray-800 mb-6'>
-            Log in to
-          </h2>
-          <h2 className='pb-1 text-2xl font-semibold bg-gradient-to-r from-[#00AEBD] to-[#1D5BBF] text-transparent bg-clip-text'>
-            MMA
-          </h2>
-        </div>
+          <div className="flex gap-1">
+            <h2 className='text-2xl font-bold text-gray-800 mb-6'>
+              Log in to
+            </h2>
+            <h2 className='pb-1 text-2xl font-semibold bg-gradient-to-r from-[#00AEBD] to-[#1D5BBF] text-transparent bg-clip-text'>
+              MMA
+            </h2>
+          </div>
           <p className='text-sm text-gray-600 mb-4'>
             Don’t have an account?{" "}
             <span
@@ -217,17 +227,15 @@ const Login = () => {
                         : field.fieldtype
                       : field.fieldtype
                   }
-                  className={`w-full rounded px-3 py-[0.32rem] text-[14px] leading-[2.15] h-[60px] ${
-                    errors[field.name]
-                      ? "focus:border-teal focus:outline-none focus:ring-0"
-                      : ""
-                  }`}
+                  className={`w-full rounded px-3 py-[0.32rem] text-[14px] leading-[2.15] h-[60px] ${errors[field.name]
+                    ? "focus:border-teal focus:outline-none focus:ring-0"
+                    : ""
+                    }`}
                   placeholder={field.placeholder}
                   style={{
                     color: "#232323",
-                    border: `1px solid ${
-                      errors[field.name] ? "rgb(239 68 68)" : "#3E3E3E"
-                    }`,
+                    border: `1px solid ${errors[field.name] ? "rgb(239 68 68)" : "#3E3E3E"
+                      }`,
                   }}
                   {...register(field.name, field.inputRules)}
                   aria-invalid={errors[field.name] ? "true" : "false"}
@@ -289,6 +297,24 @@ const Login = () => {
             </div>
           </form>
         </div>
+        <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={verificationPopup}
+        // onClick={() => setCreateMeetingLoading(false)}
+        >
+          <div className="px-5 py-1 flex justify-center items-center">
+            <div
+              className="flex justify-center items-center flex-col gap-5 py-[4rem] px-[3rem] mt-20 mb-20"
+              style={{ background: "#fff", borderRadius: "10px" }}
+            >
+              <img src={SuccessTik} alt="SuccessTik" />
+              <div className="flex justify-center items-center flex-col gap-2">
+                <p className="text-[18px] text-font-primary-main font-bold">Thank You!</p>
+                <p className="text-[16px] text-font-primary-main font-semibold text-center">Please verify your email address. A verification link has been <br /> sent to your registered email address.</p>
+              </div>
+            </div>
+          </div>
+        </Backdrop>
       </div>
     </React.Fragment>
   );
