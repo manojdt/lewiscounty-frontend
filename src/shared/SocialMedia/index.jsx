@@ -5,7 +5,7 @@ import {
     LoginSocialInstagram,
     // LoginSocialInstagram,
 } from "reactjs-social-login";
-import { updateInfo, userAccountLogin } from "../../services/loginInfo";
+import { updateInfo } from "../../services/loginInfo";
 // import FacebookLogin from 'react-facebook-login';
 import GoogleIcon from '../../assets/images/google1x.png';
 import FacebookIcon from '../../assets/images/facebook1x.png';
@@ -63,9 +63,9 @@ export default function SocialMediaLogin({ view = 'vertical', setVerificationPop
                 if (error?.data?.is_verify_email) {
                     // Handle unverified email
                     setVerificationPopup(true);
-                    setTimeout(() => {
-                        setVerificationPopup(false);
-                    }, 3000);
+                    // setTimeout(() => {
+                    //     setVerificationPopup(false);
+                    // }, 3000);
                 } else {
                 }
             } else {

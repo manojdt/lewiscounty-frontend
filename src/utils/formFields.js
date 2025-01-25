@@ -1486,12 +1486,12 @@ export const ProgramInformationFields = [
     },
     options: [
       {
-        value: "Short-term (within 3 months)",
-        key: "Short term(within 3 months)",
+        value: "Short-term ",
+        key: "Short term",
       },
       {
-        value: "Long-term (more than 3 months)",
-        key: "Long term(more than 3 months)",
+        value: "Long-term ",
+        key: "Long term",
       },
     ],
     width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",

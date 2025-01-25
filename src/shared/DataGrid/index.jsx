@@ -13,6 +13,7 @@ import IconButton from "@mui/material/IconButton";
 import { styled, useTheme } from "@mui/material/styles";
 import { Avatar } from "@mui/material";
 import SearchIcon from "../../assets/images/search1x.png";
+import no_data_image from "../../assets/icons/noDataIcon.svg";
 
 const StyledSearchInput = styled(GridToolbarQuickFilter)(({ theme }) => ({
   width: "100%",
@@ -285,7 +286,9 @@ export default function DataTable({
       </div>
     );
   }
-
+  const NoDataImage = () => (
+    <img src={no_data_image} className="mx-auto mt-5" alt="no-data-image" />
+  );
   return (
     <div
       // className="w-full"
@@ -324,6 +327,7 @@ export default function DataTable({
                   showToolbar ? (
                     <CustomToolbar toolBarComponent={toolBarComponent} />
                   ) : null,
+                noRowsOverlay: NoDataImage,
               },
               slotProps: {
                 footer: { footerAction, selectedRows },
@@ -337,6 +341,7 @@ export default function DataTable({
               },
               slots: {
                 pagination: CustomPagination,
+                noRowsOverlay: NoDataImage,
               },
               pageSizeOptions: { options },
             })}

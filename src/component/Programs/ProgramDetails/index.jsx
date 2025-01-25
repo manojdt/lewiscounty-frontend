@@ -1952,7 +1952,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                               className="pr-3 w-[25px]"
                             />
                             Share
-                          </MenuItem>                          
+                          </MenuItem>
                           {!("admin_assign_program" in programdetails) &&
                             (programdetails.status === "cancelled" ||
                               programdetails.status ===
@@ -2068,8 +2068,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                   Complete
                                 </MenuItem>
                               )}
-                              {programdetails?.created_by ===
-                                userdetails?.data?.user_id && (
+                              {!("admin_assign_program" in programdetails) && (
                                 <MenuItem
                                   onClick={() => handleNewTaskFromAdmin()}
                                   className="!text-[12px]"
@@ -2685,7 +2684,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   })}
                 </Menu>
               </MuiCustomModal>
-              {/* Subject Program List */}             
+              {/* Subject Program List */}
               {role === "mentee" && (
                 <Grid container spacing={2}>
                   {programdetails?.active_sub_program?.map((e) => {
@@ -2890,13 +2889,12 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                         </div>
                       </div>
                     )}
-                    {role !== "admin" &&
-                      !programdetails?.admin_assign_program && (
-                        <div className="benefits py-3">
-                          <div className="font-semibold pb-3">Benefits</div>
-                          {programdetails.benefits}
-                        </div>
-                      )}
+                    {!("admin_assign_program" in programdetails) && (
+                      <div className="benefits py-3">
+                        <div className="font-semibold pb-3">Benefits</div>
+                        {programdetails.benefits}
+                      </div>
+                    )}
                     <div className="program-certificate pt-8">
                       <div className="font-semibold pb-3">
                         Types of Certificates
