@@ -81,7 +81,8 @@ api.interceptors.response.use(
       error?.response?.data?.message ??
       error?.response?.data?.errors?.non_field_errors?.[0];
     if (errMsg?.length > 0) {
-      toast.error(errMsg);
+      if(errMsg !== "Please verify your email address. A verification link has been sent to your registered email address."){
+      toast.error(errMsg);}
     }
     if (
       error.code &&
