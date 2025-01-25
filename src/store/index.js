@@ -19,6 +19,7 @@ import categoryReducer from '../features/category/categorySlice';
 import { paymentApi } from '../features/payment/paymentSlice';
 import { ticketsApi } from '../features/tickets/tickets-slice';
 import { rtkQueryApiServices } from '../services/api';
+import loginApiSlice from '../features/login/loginapi.services';
 
 const combinedReducer = combineReducers({
   userInfo: userReducer,
@@ -38,6 +39,7 @@ const combinedReducer = combineReducers({
   launchProgram: launchProgramReducer,
   members: memberReducer,
   category: categoryReducer,
+  [loginApiSlice.reducerPath]: rtkQueryApiServices.reducer,
   [rtkQueryApiServices.reducerPath]: rtkQueryApiServices.reducer,
 });
 
@@ -55,6 +57,6 @@ export const store = configureStore({
 
   middleware: (getDefaultMiddleware) => [
     ...getDefaultMiddleware()
-      .concat(rtkQueryApiServices.middleware)
+      .concat(rtkQueryApiServices.middleware,loginApiSlice.middleware)
   ],
 });

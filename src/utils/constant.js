@@ -1031,6 +1031,13 @@ export const myRequestOverview = [
     status: RequestStatus.programRequest.key,
     for: ['admin', 'mentor', 'mentee'],
   },
+  {
+    name: 'Member Join Requests',
+    key: RequestStatus.memberJoinRequest,
+    count: 0,
+    status: RequestStatus.memberJoinRequest.key,
+    for: ['admin'],
+  },
   // {
   //   name: 'Resource Access Requests',
   //   key: RequestStatus.resourceAccessRequest,
@@ -1072,14 +1079,7 @@ export const myRequestOverview = [
   //   count: 0,
   //   status: RequestStatus.technicalSupportRequest.key,
   //   for: ['admin'],
-  // },
-  {
-    name: 'Member Join Requests',
-    key: RequestStatus.memberJoinRequest,
-    count: 0,
-    status: RequestStatus.memberJoinRequest.key,
-    for: ['admin'],
-  },
+  // },  
   {
     name: 'Goal Requests',
     key: RequestStatus.goalRequest,

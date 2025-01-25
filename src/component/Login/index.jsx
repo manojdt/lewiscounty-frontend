@@ -19,6 +19,8 @@ import SuccessIcon from "../../assets/images/Success_tic1x.png";
 import FailedIcon from "../../assets/images/cancel3x.png";
 import SuccessTik from "../../assets/images/blue_tik1x.png";
 import { useUserAccountLoginMutation } from "../../features/login/loginapi.services";
+import { jwtDecode } from "jwt-decode";
+import { toast } from "react-toastify";
 
 const Login = () => {
   // Internal State
@@ -28,7 +30,8 @@ const Login = () => {
     email: "",
     password: "",
   });
-const[setVerificationPopup] = React.useState(false)
+  const [verificationPopup, setVerificationPopup] = React.useState(false)
+
   const location = useLocation();
 
   // Redux
@@ -44,7 +47,7 @@ const[setVerificationPopup] = React.useState(false)
     reset,
   } = useForm();
 
-  const [userAccountLogin, {data: loginData}]= useUserAccountLoginMutation()
+  const [userAccountLogin, { data: loginData }] = useUserAccountLoginMutation()
 
   // const onSubmit = async (data) => {
   //   const { email, password } = data;
@@ -81,7 +84,7 @@ const[setVerificationPopup] = React.useState(false)
 
   const onSubmit = async (data) => {
     const { email, password } = data;
-  
+
     if (email !== "" && password !== "") {
       // Check if password contains spaces
       if (/\s/.test(password)) {
@@ -91,45 +94,50 @@ const[setVerificationPopup] = React.useState(false)
         });
         return; // Stop further execution
       }
-  
+
       // Remember the user's credentials if the "Remember Me" option is enabled
       if (localStorage.getItem("rememberme") === "true") {
         localStorage.setItem("useremail", email);
-        localStorage.setItem("userpassword", btoa(password)); // Store password securely in Base64
+        localStorage.setItem("userpassword", btoa(password)); // Encode password in Base64
       }
-  
+
       try {
         // Login API call using RTK Query
         const apiData = await userAccountLogin(data).unwrap();
-        console.log("apiData ==>", apiData);
-  
-        if (apiData?.is_verify_email) {
-          // Handle unverified email
-          setVerificationPopup(true); // Show verification popup
-          setTimeout(() => {
-            setVerificationPopup(false);
-          }, 3000); // Hide popup after 3 seconds
-        } else {
-          // If login is successful, proceed with form details
-          setFormDetails(data);
-        }
+
+        // if (apiData.status === 200) {
+        const { access, refresh } = apiData;
+
+        // Decode the JWT token to extract user info
+        const decoded = jwtDecode(access);
+
+        // Optional: Add checks based on decoded data
+        // if (decoded?.userinfo?.approve_status === 'new') {
+        //   return {}; // Handle specific approval status if required
+        // }
+
+        // Store tokens in localStorage
+        localStorage.setItem("access_token", access);
+        localStorage.setItem("refresh_token", refresh);
+
+        console.log("Login successful. Tokens stored in localStorage.");
+        handleRedirect()
+        // return decoded; // Return the decoded token for further use
+        // }
       } catch (error) {
         console.error("Login error:", error);
-  
+        if(!error?.data?.is_verify_email){
+        toast.error(error.data.message)}
         // Handle API errors
         if (error?.status === 401) {
           if (error?.data?.is_verify_email) {
-            // Show a specific error message for unverified email
-            setError("email", {
-              type: "manual",
-              message: error?.data?.message || "Please verify your email address.",
-            });
+            // Handle unverified email
             setVerificationPopup(true);
             setTimeout(() => {
               setVerificationPopup(false);
             }, 3000);
           } else {
-            // Handle other 401 errors (e.g., invalid credentials)
+            // Handle invalid credentials or other 401 errors
             setError("password", {
               type: "manual",
               message: "Invalid email or password.",
@@ -145,7 +153,8 @@ const[setVerificationPopup] = React.useState(false)
       }
     }
   };
-  
+
+
 
   console.log("loginData ==>", loginData)
 
@@ -166,24 +175,31 @@ const[setVerificationPopup] = React.useState(false)
     new URLSearchParams(location.search).get("redirect") || "/dashboard";
 
   const handleRedirect = () => {
-    dispatch(updateInfo());
-    if (
-      userData.data.role === "super_admin" &&
-      userData.data.is_registered === true
-    ) {
-      navigate("/super-members");
-    } else if (userData.data.role === "fresher") {
-      navigate("/login-type");
-    } else if (userData.data.is_registered) {
-      navigate(redirectPath);
-    } else if (
-      userData.data.role === "mentee" &&
-      !userData.data.is_registered
-    ) {
-      navigate("/programs");
-    } else {
-      navigate("/questions");
-    }
+    dispatch(updateInfo()).then((res) => {
+      console.log("adfsdfs", res)
+      debugger
+      if (res?.meta?.requestStatus === "fulfilled") {
+        const user_data = res?.payload
+        if (
+          user_data?.role === "super_admin" &&
+          user_data?.is_registered === true
+        ) {
+          navigate("/super-members");
+        } else if (user_data?.role === "fresher") {
+          navigate("/login-type");
+        } else if (user_data?.is_registered) {
+          navigate(redirectPath);
+        } else if (
+          user_data?.role === "mentee" &&
+          !user_data?.is_registered
+        ) {
+          navigate("/programs");
+        } else {
+          navigate("/questions");
+        }
+      }
+    })
+
   };
 
   React.useEffect(() => {
@@ -248,20 +264,20 @@ const[setVerificationPopup] = React.useState(false)
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={userData.loading}
       >
-          <CircularProgress color='inherit' />
+        <CircularProgress color='inherit' />
       </Backdrop>
 
       {/* Right Section */}
       <div className='w-full flex items-center justify-center'>
         <div className='w-4/5 max-w-md'>
-        <div className="flex gap-1">
-          <h2 className='text-2xl font-bold text-gray-800 mb-6'>
-            Log in to
-          </h2>
-          <h2 className='pb-1 text-2xl font-semibold bg-gradient-to-r from-[#00AEBD] to-[#1D5BBF] text-transparent bg-clip-text'>
-            MMA
-          </h2>
-        </div>
+          <div className="flex gap-1">
+            <h2 className='text-2xl font-bold text-gray-800 mb-6'>
+              Log in to
+            </h2>
+            <h2 className='pb-1 text-2xl font-semibold bg-gradient-to-r from-[#00AEBD] to-[#1D5BBF] text-transparent bg-clip-text'>
+              MMA
+            </h2>
+          </div>
           <p className='text-sm text-gray-600 mb-4'>
             Don’t have an account?{" "}
             <span
@@ -305,17 +321,15 @@ const[setVerificationPopup] = React.useState(false)
                         : field.fieldtype
                       : field.fieldtype
                   }
-                  className={`w-full rounded px-3 py-[0.32rem] text-[14px] leading-[2.15] h-[60px] ${
-                    errors[field.name]
-                      ? "focus:border-teal focus:outline-none focus:ring-0"
-                      : ""
-                  }`}
+                  className={`w-full rounded px-3 py-[0.32rem] text-[14px] leading-[2.15] h-[60px] ${errors[field.name]
+                    ? "focus:border-teal focus:outline-none focus:ring-0"
+                    : ""
+                    }`}
                   placeholder={field.placeholder}
                   style={{
                     color: "#232323",
-                    border: `1px solid ${
-                      errors[field.name] ? "rgb(239 68 68)" : "#3E3E3E"
-                    }`,
+                    border: `1px solid ${errors[field.name] ? "rgb(239 68 68)" : "#3E3E3E"
+                      }`,
                   }}
                   {...register(field.name, field.inputRules)}
                   aria-invalid={errors[field.name] ? "true" : "false"}
@@ -377,6 +391,24 @@ const[setVerificationPopup] = React.useState(false)
             </div>
           </form>
         </div>
+        <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={verificationPopup}
+        // onClick={() => setCreateMeetingLoading(false)}
+        >
+          <div className="px-5 py-1 flex justify-center items-center">
+            <div
+              className="flex justify-center items-center flex-col gap-5 py-[4rem] px-[3rem] mt-20 mb-20"
+              style={{ background: "#fff", borderRadius: "10px" }}
+            >
+              <img src={SuccessTik} alt="SuccessTik" />
+              <div className="flex justify-center items-center flex-col gap-2">
+                <p className="text-[18px] text-font-primary-main font-bold">Thank You!</p>
+                <p className="text-[16px] text-font-primary-main font-semibold text-center">Please verify your email address. A verification link has been <br /> sent to your registered email address.</p>
+              </div>
+            </div>
+          </div>
+        </Backdrop>
       </div>
     </React.Fragment>
   );
