@@ -29,6 +29,50 @@ export default function SocialMediaLogin({ view = 'vertical', setVerificationPop
         // alert("login start");
     }, []);
 
+    const handleLoginAction = async (data) =>{
+        try {
+            // Login API call using RTK Query
+            const apiData = await userAccountLogin(data).unwrap();
+
+            // if (apiData.status === 200) {
+            const { access, refresh } = apiData;
+
+            // Decode the JWT token to extract user info
+            const decoded = jwtDecode(access);
+
+            // Optional: Add checks based on decoded data
+            // if (decoded?.userinfo?.approve_status === 'new') {
+            //   return {}; // Handle specific approval status if required
+            // }
+
+            // Store tokens in localStorage
+            localStorage.setItem("access_token", access);
+            localStorage.setItem("refresh_token", refresh);
+
+            console.log("Login successful. Tokens stored in localStorage.");
+            handleRedirect()
+            // return decoded; // Return the decoded token for further use
+            // }
+        } catch (error) {
+            console.error("Login error:", error);
+            if (!error?.data?.is_verify_email) {
+                toast.error(error.data.message)
+            }
+            // Handle API errors
+            if (error?.status === 401) {
+                if (error?.data?.is_verify_email) {
+                    // Handle unverified email
+                    setVerificationPopup(true);
+                    setTimeout(() => {
+                        setVerificationPopup(false);
+                    }, 3000);
+                } else {
+                }
+            } else {
+            }
+        }
+    }
+
     const onLoginSuccess = async (data) => {
         if (data && Object.keys(data).length && data.hasOwnProperty('name') && data.hasOwnProperty('email')) {
             let l = { first_name: data.name, last_name: data.name, email: data.email, auth_type: 'google' }
@@ -39,57 +83,7 @@ export default function SocialMediaLogin({ view = 'vertical', setVerificationPop
             }
             // dispatch(userAccountLogin(l))
 
-            try {
-                // Login API call using RTK Query
-                const apiData = await userAccountLogin(data).unwrap();
-
-                // if (apiData.status === 200) {
-                const { access, refresh } = apiData;
-
-                // Decode the JWT token to extract user info
-                const decoded = jwtDecode(access);
-
-                // Optional: Add checks based on decoded data
-                // if (decoded?.userinfo?.approve_status === 'new') {
-                //   return {}; // Handle specific approval status if required
-                // }
-
-                // Store tokens in localStorage
-                localStorage.setItem("access_token", access);
-                localStorage.setItem("refresh_token", refresh);
-
-                console.log("Login successful. Tokens stored in localStorage.");
-                handleRedirect()
-                // return decoded; // Return the decoded token for further use
-                // }
-            } catch (error) {
-                console.error("Login error:", error);
-                if (!error?.data?.is_verify_email) {
-                    toast.error(error.data.message)
-                }
-                // Handle API errors
-                if (error?.status === 401) {
-                    if (error?.data?.is_verify_email) {
-                        // Handle unverified email
-                        setVerificationPopup(true);
-                        setTimeout(() => {
-                            setVerificationPopup(false);
-                        }, 3000);
-                    } else {
-                        // Handle invalid credentials or other 401 errors
-                        // setError("password", {
-                        //     type: "manual",
-                        //     message: "Invalid email or password.",
-                        // });
-                    }
-                } else {
-                    // Handle unexpected errors
-                    // setError("form", {
-                    //     type: "manual",
-                    //     message: "An unexpected error occurred. Please try again later.",
-                    // });
-                }
-            }
+            handleLoginAction(l)
         }
     }
 
@@ -144,7 +138,8 @@ export default function SocialMediaLogin({ view = 'vertical', setVerificationPop
                     auth_access_token: response?.data?.accessToken,
                     auth_type: 'facebook'
                 }
-                dispatch(userAccountLogin(l))
+                // dispatch(userAccountLogin(l))
+                handleLoginAction(l)
             }
         } catch (error) {
             console.error('Facebook login error:', error);
