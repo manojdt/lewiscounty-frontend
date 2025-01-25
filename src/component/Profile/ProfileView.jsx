@@ -1404,6 +1404,7 @@ export default function ProfileView() {
                       btnType="button"
                       btnName="Chat"
                       btnCls={"w-[150px]"}
+                      onClick={()=>navigate("/discussions")}
                     />
                   </>
                 )}

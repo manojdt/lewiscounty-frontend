@@ -12,7 +12,7 @@ import CancelIcon from '../../assets/images/cancel1x.png'
 import SearchIcon from '../../assets/icons/search.svg';
 import MoreIcon from '../../assets/icons/moreIcon.svg'
 import CloseCircle from "../../assets/icons/closeCircle.svg";
-import PowerIcon from "../../assets/icons/PowerIcon.svg";
+import TickCircle from "../../assets/icons/tickCircle.svg";
 import ViewIcon from "../../assets/images/view1x.png";
 import { Backdrop, CircularProgress, Menu, MenuItem } from '@mui/material';
 import { cancelMemberRequest, getCategoryList, getMemberRequest, updateLocalRequest, updateMemberRequest } from '../../services/request';
@@ -113,7 +113,7 @@ export default function MemberRequest() {
                             View
                         </MenuItem>
                         <MenuItem onClick={handleMemberAcceptRequest} className='!text-[12px]'>
-                            <img src={PowerIcon} alt="AcceptIcon" className='pr-3 w-[27px]' />
+                            <img src={TickCircle} alt="AcceptIcon" className='pr-3 w-[27px]' />
                             Approve
                         </MenuItem>
                         <MenuItem onClick={handleMemberCancelRequest} className='!text-[12px]'>
