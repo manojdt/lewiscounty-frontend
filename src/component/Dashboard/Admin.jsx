@@ -211,7 +211,7 @@ export default function Admin() {
 
   return (
     <div className="dashboard-content px-8 mt-10 py-5">
-      <div className="grid grid-cols-7 gap-7 max-md:block">
+      <div className="grid grid-cols-8 gap-7 max-md:block">
         <div className="col-span-2">
           <div
             className="pb-3 w-full  bg-white rounded-lg"
@@ -333,7 +333,7 @@ export default function Admin() {
                 </div> */}
             </div>
 
-            <div className="content flex flex-col gap-2 py-2 px-2 overflow-x-auto cursor-pointer mt-4 h-[740px]">
+            <div className="content flex flex-col gap-2 py-2 px-2 overflow-x-auto">
               {topMentotList.map((recentReq, index) => {
                 let name = `${recentReq.first_name} ${recentReq.last_name}`;
                 return (
@@ -402,7 +402,7 @@ export default function Admin() {
           </div>
         </div>
 
-        <div className="col-span-5">
+        <div className="col-span-6">
           <CardWrapper title="Metrics at a Glance">
             <ProgramMetrix />
           </CardWrapper>

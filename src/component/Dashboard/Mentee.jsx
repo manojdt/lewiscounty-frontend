@@ -263,7 +263,7 @@ export const Mentee = () => {
                   return (
                     <div
                       key={index}
-                      className="py-3 px-3"
+                      className="py-3 px-3 cursor-pointer"
                       style={{
                         border: "1px solid rgba(29, 91, 191, 1)",
                         borderRadius: "10px",
