@@ -42,7 +42,7 @@ export default function Scheduler() {
       view: ["admin", "mentor", "mentee"],
     },
     {
-      name: "Rescheduld Meetings",
+      name: "Rescheduled Meetings",
       key: "reschedule",
       total: 10,
       view: ["admin", "mentor"],
