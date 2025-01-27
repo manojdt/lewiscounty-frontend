@@ -1,3 +1,6 @@
+export const baseUrlLink = `${process.env.REACT_APP_BASE_URL}/api`;
+
+
 export const StepsList = [
   {
     name: 'Personal Information',

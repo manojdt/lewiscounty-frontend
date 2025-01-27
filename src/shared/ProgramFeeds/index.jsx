@@ -5,7 +5,10 @@ import { Box, Grid, Menu, MenuItem, Stack, Typography } from "@mui/material";
 import MoreIcon from "../../assets/icons/moreIcon.svg";
 import ViewIcon from "../../assets/icons/View.svg";
 import { useNavigate } from "react-router-dom";
+import NoProgramImageBg from "../../assets/icons/noProgramImageBg.svg";
+import NoProgramImageIcon from "../../assets/icons/noProgramImageIcon.svg";
 import "./ProgramFeeds.css";
+
 export default function ProgramFeeds({
   title = "Program Feeds",
   feedsList = [],
@@ -14,13 +17,13 @@ export default function ProgramFeeds({
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selectedItem, setSelectedItem] = React.useState({});
   const open = Boolean(anchorEl);
-  const handleClick = (event,row) => {
+  const handleClick = (event, row) => {
     setAnchorEl(event.currentTarget);
-    setSelectedItem(row)
+    setSelectedItem(row);
   };
   const handleClose = () => {
     setAnchorEl(null);
-    setSelectedItem({})
+    setSelectedItem({});
   };
   return (
     <div
@@ -72,7 +75,8 @@ export default function ProgramFeeds({
               alignItems={"center"}
               justifyContent={"space-between"}
               m={"22px"}
-              className="!border !border-background-primary-main p-2 rounded-[10px]"
+              className="!border !border-background-primary-main p-2 rounded-[10px] cursor-pointer hover:bg-blue-50 active:bg-blue-100 transition-all duration-300"
+              onClick={() => navigate(`/feed-details/${selectedItem?.id}`)}
             >
               <Stack
                 direction={"row"}
@@ -81,13 +85,39 @@ export default function ProgramFeeds({
                 width={"100%"}
               >
                 <Box className="w-[140px]">
-                  <img
-                    src={
-                      programFeeds?.media_files?.[0]?.media_files ?? FeedImage
-                    }
-                    alt=""
-                    className="h-[120px] w-[100%] rounded-[10px]"
-                  />
+                  {programFeeds?.media_files?.[0]?.media_files ? (
+                    <img
+                      src={programFeeds?.media_files?.[0]?.media_files}
+                      alt=""
+                      className="h-[100px] w-[100%] rounded-[10px] object-cover"
+                    />
+                  ) : (
+                    <div
+                      style={{
+                        position: "relative",
+                        display: "inline-block",
+                      }}
+                    >
+                      <img
+                        className="feed-image  h-[100px] w-[100%] object-cover rounded"
+                        src={NoProgramImageBg}
+                        alt="Background"
+                      />
+                      <div
+                        style={{
+                          position: "absolute",
+                          top: "50%",
+                          left: "50%",
+                          transform: "translate(-50%, -50%)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <img src={NoProgramImageIcon} alt="Icon" />
+                      </div>
+                    </div>
+                  )}
                 </Box>
                 <Stack spacing={1} width={"100%"}>
                   <Stack spacing={1}>
@@ -100,7 +130,7 @@ export default function ProgramFeeds({
                       <Typography className="!text-font-secondary-black !text-[18px] font-bold">
                         {programFeeds.title}
                       </Typography>
-                      <div
+                      {/* <div
                         className="bg-background-primary-light"
                         style={{
                           padding: "14px 18px",
@@ -113,7 +143,7 @@ export default function ProgramFeeds({
                         aria-controls={open ? "basic-menu" : undefined}
                         aria-haspopup="true"
                         aria-expanded={open ? "true" : undefined}
-                        onClick={(e)=>handleClick(e,programFeeds)}
+                        onClick={(e) => handleClick(e, programFeeds)}
                       >
                         <img src={MoreIcon} alt="MoreIcon" />
                       </div>
@@ -137,35 +167,7 @@ export default function ProgramFeeds({
                             View
                           </Typography>
                         </MenuItem>
-                        {/* <MenuItem
-                          onClick={() =>
-                            navigate(`/feed-details/${programFeeds?.id}`)
-                          }
-                        >
-                          <img src={EditIcon} alt="" />
-                          <Typography className="!text-font-secondary-black text-[12px] font-semibold pl-2">
-                            Edit
-                          </Typography>
-                        </MenuItem>                        
-                        <MenuItem onClick={handleClose}>
-                          <img src={UnFollowIcon} alt="" />
-                          <Typography className="!text-font-secondary-black text-[12px] font-semibold pl-2">
-                            Unfollow
-                          </Typography>
-                        </MenuItem>
-                        <MenuItem onClick={handleClose}>
-                          <img src={HideIcon} alt="" />
-                          <Typography className="!text-font-secondary-black text-[12px] font-semibold pl-2">
-                            Hide
-                          </Typography>
-                        </MenuItem>
-                        <MenuItem onClick={handleClose}>
-                          <img src={ReportIcon} alt="" />
-                          <Typography className="!text-font-secondary-black text-[12px] font-semibold pl-2">
-                            Report
-                          </Typography>
-                        </MenuItem> */}
-                      </Menu>
+                      </Menu> */}
                     </Stack>
                     <Typography className="!text-font-primary-main !text-[12px]">
                       {programFeeds?.time_since_action}

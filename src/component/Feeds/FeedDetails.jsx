@@ -171,7 +171,7 @@ export default function FeedDetails() {
                           alt="FeedImage"
                         />
                       </a>
-                    ) : feedDetails?.media_files > 0 ? (
+                    ) : feedDetails?.media_files.length > 0 ? (
                       <img
                         className="feed-detail-image !h-[400px] object-cover"
                         src={

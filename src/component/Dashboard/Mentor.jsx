@@ -12,6 +12,8 @@ import {
   getProgramCounts,
   getUserPrograms,
 } from "../../services/userprograms";
+import UserIcon from "../../assets/icons/user-icon.svg";
+
 import { pipeUrls } from "../../utils/constant";
 import "./dashboard.css";
 import UserInfoCard from "./UserInfoCard";
@@ -231,12 +233,16 @@ export const Mentor = () => {
                     return (
                       <div
                         key={index}
-                        className="py-3 px-3"
+                        className="py-3 px-3 cursor-pointer hover:bg-blue-50 active:bg-blue-100 transition-all duration-300"
                         style={{
                           border: "1px solid rgba(29, 91, 191, 1)",
                           borderRadius: "10px",
                         }}
-                        onClick={()=>navigate(`/mentor-details/${recentReq?.id}?fromType=topmentor`)}
+                        onClick={() =>
+                          navigate(
+                            `/mentor-details/${recentReq?.id}?fromType=topmentor`
+                          )
+                        }
                       >
                         <div
                           className="flex gap-2 pb-3"
@@ -244,12 +250,13 @@ export const Mentor = () => {
                             borderBottom: "1px solid rgba(29, 91, 191, 1)",
                           }}
                         >
+                          {console.log(recentReq)}
                           <div className="w-1/4">
                             {" "}
                             <img
-                              src={index % 2 === 0 ? MaleIcon : FemaleIcon}
+                              src={recentReq?.profile_image || UserIcon}
                               alt="male-icon"
-                            />{" "}
+                            />
                           </div>
                           <div className="flex flex-col gap-2">
                             <p
