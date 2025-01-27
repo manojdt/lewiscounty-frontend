@@ -387,12 +387,12 @@ const ProgramSteps = ({
           }
 
           const disableFields =
-            params?.id && field.name === "program_name" && role === mentor;
+            params?.id && field.name === "program_name" && toggleRole === mentor;
 
           const disableSelectFields =
             params?.id &&
             (field.name === "course_level" || field.name === "category") &&
-            role === mentor;
+            toggleRole === mentor;
           // const disableDateFields = (fieldName) =>
           //   params?.id &&
           //   (fieldName === "start_date" || fieldName === "end_date") &&
