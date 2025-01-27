@@ -37,6 +37,7 @@ const ProgramSteps = ({
   handleAction,
   handleProgramCheck,
   setToggleRole,
+  toggleRole,
   mentorSearchValue,
   isMentorDataLoading,
   setMentorSearchValue,
@@ -400,11 +401,13 @@ const ProgramSteps = ({
           const disableDateFields = (fieldName) =>
             params?.id &&
             (fieldName === "start_date" || fieldName === "end_date") &&
-            role === mentor &&
+            toggleRole === mentor &&
             searchParams.get("type") !== "re_open";
 
           const disableRecurringProgram =
-            params?.id && field.name === "recurring_program" && role === mentor;
+            params?.id &&
+            field.name === "recurring_program" &&
+            toggleRole === mentor;
           return (
             <div className={`relative mb-6  ${field.width}`} key={index}>
               <label
@@ -1187,6 +1190,7 @@ const ProgramSteps = ({
                     })}
                     <div className="flex justify-end items-center mb-4">
                       <MuiButton
+                        disabled={params?.id && toggleRole === mentor}
                         variant="text"
                         onClick={() =>
                           appendRecurringFields({

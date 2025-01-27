@@ -29,7 +29,7 @@ import NoProgramImageIcon from "../../assets/icons/noProgramImageIcon.svg";
 import Balck_Heart_Icon from "../../assets/icons/gray-heart.svg";
 import Crown_Icon from "../../assets/icons/cronwn.svg";
 import moment from "moment";
-import NoDataIcon from "../../assets/icons/noDataIcon.svg"
+import NoDataIcon from "../../assets/icons/no-data-2.svg"
 
 export default function ProgramCard({
   title,

@@ -259,7 +259,7 @@ export const Signup = () => {
           </p>
 
           <form onSubmit={handleSubmit(onSubmit)}>
-            <SocialMediaLogin />
+            <SocialMediaLogin setVerificationPopup={setShowBackdrop} />
 
             <div
               className="mb-8 mt-8 flex items-center before:mt-0.5 before:flex-1 before:border-t
