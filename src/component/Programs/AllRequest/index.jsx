@@ -225,7 +225,7 @@ export default function AllRequest() {
       forTabs: role === "mentee" ? ["my"] : role === "admin" ? ["mentees"] : [],
     },
     {
-      name: "Program Cancel",
+      name: "Cancelled Programs",
       key: "program_cancel",
       for: ["mentor", "mentee", "admin"],
       forTabs: ["my", "mentees"],

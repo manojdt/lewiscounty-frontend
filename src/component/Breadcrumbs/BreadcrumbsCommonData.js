@@ -189,7 +189,7 @@ export const request_goalNew = (name,menteeQuery) => {
 export const request_testimonial = (name) => {
     return [
       {
-        label: "Testimonials Requests",
+        label: "Testimonial Requests",
         path: `/all-request?type=testimonial_request`,
       },
       {
@@ -200,7 +200,7 @@ export const request_testimonial = (name) => {
 export const request_testimonial_admin = (name) => {
     return [
       {
-        label: "Testimonials Requests",
+        label: "Testimonial Requests",
         path: `/all-request?type=testimonial_request&mainTab=${requestPageBreadcrumbs.main_admin_test_tab}`,
       },
       {

@@ -18,6 +18,7 @@ import {
 } from "../../services/userprograms";
 
 import "./dashboard.css";
+import UserIcon from "../../assets/icons/user-icon.svg";
 import ProgramCard from "../../shared/Card/ProgramCard";
 import { programFeeds } from "../../utils/mock";
 import Invite from "./Invite";
@@ -278,7 +279,7 @@ export const Mentee = () => {
                         <div className="w-1/4">
                           {" "}
                           <img
-                            src={index % 2 === 0 ? MaleIcon : FemaleIcon}
+                            src={recentReq?.profile_image || UserIcon}
                             alt="male-icon"
                           />{" "}
                         </div>

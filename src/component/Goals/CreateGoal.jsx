@@ -307,7 +307,7 @@ export default function CreateGoal({
 
                 <div className='relative pb-8'>
                   <label className='block tracking-wide text-gray-700 text-xs font-bold mb-2'>
-                    Goals Description
+                    Goal Description
                   </label>
 
                   <div className='relative'>

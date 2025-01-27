@@ -1070,7 +1070,7 @@ export const mentorTaskColumns = [
 export const goalsColumns = [
   {
     field: "goal_name",
-    headerName: "Goals Name",
+    headerName: "Goal Name",
     id: 0,
     flex: 1,
   },
@@ -1130,7 +1130,7 @@ export const menteeGoalsRequestColumn = [
   },
   {
     field: "goal_name",
-    headerName: "Goals Name",
+    headerName: "Goal Name",
     id: 0,
     flex: 1,
   },
@@ -1169,7 +1169,7 @@ export const mentorMenteeGoalsColumn = [
   },
   {
     field: "goal_name",
-    headerName: "Goals Name",
+    headerName: "Goal Name",
     id: 0,
     flex: 1,
   },
@@ -1267,7 +1267,7 @@ export const discussionColumns = [
 export const goalsHistoryColumn = [
   {
     field: "goal_name",
-    headerName: "Goals Name",
+    headerName: "Goal Name",
     flex: 1,
     id: 0,
   },
@@ -2489,7 +2489,7 @@ export const programRequestData = programRequestList();
 
 const discussionList = () => {
   const data = [];
-  for (let a = 1; a <= 50; a++) {
+  for (let a = 1; a <= 5; a++) {
     data.push({
       id: a,
       program_name: `Program Name ${a}`,
@@ -2498,7 +2498,7 @@ const discussionList = () => {
       task: `Task ${a}`,
       users: `User ${a}`,
       comments: "Test Comment",
-      last_update_by: `Uset ${a}`,
+      last_update_by: `User ${a}`,
     });
   }
   return data;

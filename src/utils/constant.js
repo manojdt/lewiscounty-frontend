@@ -952,7 +952,7 @@ export const RequestStatusArray = [
   },
   {
     key: "goal_request",
-    name: "Goals Requests",
+    name: "Goal Requests",
   },
   {
     key: "resource_access_request",
@@ -964,7 +964,7 @@ export const RequestStatusArray = [
   },
   {
     key: "testimonial_request",
-    name: "Testimonials Requests",
+    name: "Testimonial Requests",
   },
   {
     key: "certificate_request",
@@ -980,7 +980,7 @@ export const RequestStatusArray = [
   },
   {
     key: "new_goals_request",
-    name: "Goals Requests",
+    name: "Goal Requests",
   },
 ];
 
@@ -995,7 +995,7 @@ export const RequestStatus = {
   },
   goalRequest: {
     key: "goal_request",
-    name: "Goals Requests",
+    name: "Goal Requests",
   },
   resourceAccessRequest: {
     key: "resource_access_request",
@@ -1007,7 +1007,7 @@ export const RequestStatus = {
   },
   testimonicalRequest: {
     key: "testimonial_request",
-    name: "Testimonials Requests",
+    name: "Testimonial Requests",
   },
   certificateRequest: {
     key: "certificate_request",
@@ -1023,7 +1023,7 @@ export const RequestStatus = {
   },
   newGoalsRequests: {
     key: "new_goals_request",
-    name: "Goals Requests",
+    name: "Goal Requests",
   },
   extendedRequests: {
     key: "extended_request",
@@ -1062,7 +1062,7 @@ export const myRequestOverview = [
   //   for: ['admin', 'mentor'],
   // },
   {
-    name: "Goals Requests",
+    name: "Goal Requests",
     key: RequestStatus.newGoalsRequests.key,
     count: 0,
     status: RequestStatus.newGoalsRequests.key,

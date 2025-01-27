@@ -515,8 +515,11 @@ export default function ProgramCard({
                         }
                         <div className="flex justify-between py-1">
                           <h4
-                            className="text-[16px]"
+                            className="text-[16px] cursor-pointer"
                             title={currentProgram.program_name}
+                            onClick={() =>
+                              handleNavigateDetails(currentProgram)
+                            }
                             style={{
                               overflow: "hidden",
                               whiteSpace: "nowrap",

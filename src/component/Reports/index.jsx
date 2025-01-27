@@ -180,7 +180,7 @@ const Reports = () => {
       key: "all",
     },
     {
-      name: "Approval Reports",
+      name: "Approved Reports",
       key: "approved",
     },
     {

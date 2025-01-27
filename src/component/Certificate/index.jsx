@@ -292,7 +292,7 @@ export default function Certificate() {
       key: "all",
     },
     {
-      name: "Approve Certificates",
+      name: "Approved Certificates",
       key: "approved",
     },
   ];

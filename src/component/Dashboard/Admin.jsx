@@ -11,16 +11,11 @@ import {
 } from "../../utils/constant";
 
 import RightArrow from "../../assets/icons/rightArrow.svg";
-import BlueStarIcon from "../../assets/icons/bluefilledStar.svg";
-import MoreIcon from "../../assets/icons/moreIcon.svg";
 import ListCard from "../../shared/Card/ListCard";
 import ProgramMetrix from "./ProgramMetrix";
 import CardWrapper from "../../shared/Card/CardWrapper";
 import DashboardPrograms from "./Admin/DashboardPrograms";
-import ProgramPerformance from "./ProgramPerformance";
-import ReportsInfo from "./Admin/ReportsInfo";
 import Tooltip from "../../shared/Tooltip";
-import { programFeeds } from "../../utils/mock";
 import {
   chartProgramList,
   getProgramCounts,
@@ -31,9 +26,7 @@ import { getPost } from "../../services/feeds";
 import ProgramFeeds from "../../shared/ProgramFeeds";
 import { useWindowSize } from "../../utils/windowResize";
 import api from "../../services/api";
-import MaleIcon from "../../assets/images/male-profile1x.png";
-import FemaleIcon from "../../assets/images/female-profile1x.png";
-
+import UserIcon from "../../assets/icons/user-icon.svg";
 export default function Admin() {
   const { width } = useWindowSize();
   const navigate = useNavigate();
@@ -362,7 +355,7 @@ export default function Admin() {
                       <div className="w-1/4">
                         {" "}
                         <img
-                          src={index % 2 === 0 ? MaleIcon : FemaleIcon}
+                          src={recentReq?.profile_image || UserIcon}
                           alt="male-icon"
                         />{" "}
                       </div>
