@@ -42,7 +42,7 @@ const EventModal = ({ open, closeModal, actionActionBtn, event = [] }) => {
       modalOpen={open}
       modalClose={closeModal}
       title={event.title}
-      rightIcon={EditIcon}
+     // rightIcon={EditIcon}
       onClick={() =>
         navigate(`/edit-meeting?id=${event.id}&status=${actionActionBtn}`)
       }

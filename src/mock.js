@@ -520,13 +520,13 @@ export const GoalColumns = [
   //   flex: 1,
   //   id: 2,
   // },
-  {
-    field: "action",
-    headerName: "Action",
-    align: "center",
-    flex: 1,
-    id: 3,
-  },
+  // {
+  //   field: "action",
+  //   headerName: "Action",
+  //   align: "center",
+  //   flex: 1,
+  //   id: 3,
+  // },
 ];
 
 export const MemberColumns = [
