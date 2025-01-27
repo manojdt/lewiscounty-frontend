@@ -729,6 +729,8 @@ export const Navbar = () => {
                         Help
                       </MenuItem>
 
+                    </div>
+                  )}
                       <MenuItem onClick={handleProfile}>
                         <img
                           src={ProfileIcon}
@@ -737,8 +739,6 @@ export const Navbar = () => {
                         />
                         Profile
                       </MenuItem>
-                    </div>
-                  )}
 
                   <MenuItem
                     onClick={() => {

@@ -2,10 +2,8 @@ import { Box, Grid, Menu, MenuItem, Stack, Typography } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import ShowMoreText from "react-show-more-text";
-import ViewIcon from "../../assets/icons/View.svg";
-import MoreIcon from "../../assets/icons/moreIcon.svg";
-import FeedImage from "../../assets/images/feed1.png";
-
+import NoProgramImageBg from "../../assets/icons/noProgramImageBg.svg";
+import NoProgramImageIcon from "../../assets/icons/noProgramImageIcon.svg";
 export const FeedCard = ({ programFeeds = "" }) => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -27,13 +25,41 @@ export const FeedCard = ({ programFeeds = "" }) => {
       onClick={() => navigate(`/feed-details/${programFeeds?.id}`)}
     >
       <Stack direction={"row"} alignItems={"start"} spacing={2} width={"100%"}>
-        <Box className="w-[140px]">
-          <img
-            src={programFeeds?.media_files?.[0]?.media_files ?? FeedImage}
-            alt=""
-            className="h-[120px] w-[100%] rounded-[10px]"
-          />
-        </Box>
+      <Box className="w-[140px]">
+                  {programFeeds?.media_files?.[0]?.media_files ? (
+                    <img
+                      src={programFeeds?.media_files?.[0]?.media_files}
+                      alt=""
+                      className="h-[100px] w-[100%] rounded-[10px] object-cover"
+                    />
+                  ) : (
+                    <div
+                      style={{
+                        position: "relative",
+                        display: "inline-block",
+                      }}
+                    >
+                      <img
+                        className="feed-image  h-[100px] w-[100%] object-cover rounded"
+                        src={NoProgramImageBg}
+                        alt="Background"
+                      />
+                      <div
+                        style={{
+                          position: "absolute",
+                          top: "50%",
+                          left: "50%",
+                          transform: "translate(-50%, -50%)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <img src={NoProgramImageIcon} alt="Icon" />
+                      </div>
+                    </div>
+                  )}
+                </Box>
         <Stack spacing={1} width={"100%"}>
           <Stack spacing={1}>
             <Stack

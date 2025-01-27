@@ -45,7 +45,7 @@ export default function Scheduler() {
       name: "Rescheduled Meetings",
       key: "reschedule",
       total: 10,
-      view: ["admin", "mentor"],
+      view: ["admin", "mentor","mentee"],
     },
     {
       name: "Completed Meetings",
