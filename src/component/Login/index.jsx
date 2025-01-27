@@ -46,6 +46,7 @@ const Login = () => {
     formState: { errors },
     setError,
     reset,
+    clearErrors
   } = useForm();
 
   const [userAccountLogin, { data: loginData }] = useUserAccountLoginMutation();
@@ -143,12 +144,14 @@ const Login = () => {
               message: "Invalid email or password.",
             });
           }
+          clearErrors();
         } else {
           // Handle unexpected errors
           setError("form", {
             type: "manual",
             message: "An unexpected error occurred. Please try again later.",
           });
+          clearErrors();
         }
       }
     }
