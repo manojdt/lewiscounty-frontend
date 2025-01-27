@@ -1957,7 +1957,9 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             (programdetails.status === "cancelled" ||
                               programdetails.status ===
                                 "new_program_request_rejected" ||
-                              programdetails.status === "completed") && (
+                              programdetails.status === "completed") &&
+                              programdetails?.created_by ===
+                              userdetails?.data?.user_id && (
                               <MenuItem
                                 onClick={() =>
                                   navigate(
