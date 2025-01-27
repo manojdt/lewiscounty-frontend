@@ -73,19 +73,19 @@ const AuthLayout = () => {
       title: 'Welcome',
       subtitle: 'Mentoring Management Application',
       description:
-        'Simplify, Scale, Succeed with our Mentoring And Volunteer Management Software',
+        'Simplify, Scale, Succeed with our Mentoring Management Software',
     },
     {
       title: 'Welcome',
       subtitle: 'Mentoring Management Application',
       description:
-        'Simplify, Scale, Succeed with our Mentoring And Volunteer Management Software',
+        'Simplify, Scale, Succeed with our Mentoring Management Software',
     },
     {
       title: 'Welcome',
       subtitle: 'Mentoring Management Application',
       description:
-        'Simplify, Scale, Succeed with our Mentoring And Volunteer Management Software',
+        'Simplify, Scale, Succeed with our Mentoring Management Software',
     },
   ];
 
