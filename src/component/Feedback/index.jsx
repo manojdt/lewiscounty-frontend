@@ -30,6 +30,11 @@ import { PostList, RecentDiscussion } from "../../mock";
 import ReadableDate from "../../shared/ReadableDateTime";
 import { Button } from "../../shared";
 
+
+
+
+
+
 export default function Feedback() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [activePost, setActivePost] = useState(0);
@@ -45,6 +50,8 @@ export default function Feedback() {
   // const [activePostCommentsReplies, setActivePostCommentsReplies] = useState({
   //   commentId: null
   // })
+const [activeComment,setActiveComment] = useState('')
+  const [showComments,setShowComments]  = useState(false)
   const dispatch = useDispatch();
   const open = Boolean(anchorEl);
 
@@ -120,6 +127,203 @@ export default function Feedback() {
     }));
   };
 
+  console.log('feeds',feeds)
+
+
+  const displayCommentBtns = (
+    replyData,rIndex,marginLeft) =>{
+    return  <>
+            <div
+              className={`post-list-comments ml-${marginLeft} mt-4`}
+              key={rIndex}
+            >
+              <img
+                className="user-img"
+                src={ChatImage}
+                alt="Userimage"
+              />
+              <div
+                style={{
+                  width:
+                    "calc(100% - 50px)",
+                }}
+              >
+                <div className="flex gap-3 items-center py-1">
+                  <p className="text-[14px] capitalize">
+                    <span
+                      style={{
+                        fontWeight: 700,
+                      }}
+                    >
+                      {replyData.user_name}
+                    </span>{" "}
+                    ({replyData.role})
+                  </p>
+                  <p className="text-[10px]">
+                    {
+                      replyData.time_since_action
+                    }
+                  </p>
+                </div>
+                <div
+                  className="py-5 my-2 text-[13px]"
+                  style={{
+                    background:
+                      "rgba(217, 217, 217, 0.15)",
+                    padding: "10px",
+                  }}
+                >
+                  {replyData.content}
+                </div>
+              </div>
+            </div>
+            <div className={`flex gap-3 py-1 ml-${marginLeft}`}>
+              <div
+                className="count-content cursor-pointer"
+                onClick={() =>
+                  handleCommentLike(
+                    "comment",
+                    replyData.id
+                  )
+                }
+              >
+                <img
+                  src={LikeIcon}
+                  alt="likeicon"
+                />
+                <p>
+                  Like{" "}
+                  {/* {replyData.like_count > 0
+                    ? `(${replyData.like_count})`
+                    : null} */}
+                </p>
+              </div>
+           {  replyData?.comment_count>0 && <div
+                                          className="count-content"
+                                          style={{
+                                            background:
+                                              "rgba(255, 219, 225, 1)",
+                                            color: "rgba(243, 81, 109, 1)",
+                                          }}
+                                        >
+                                          <img
+                                            src={CommentIcon}
+                                            alt="CommentIcon"
+                                          />
+                                          <p>
+                                            Comment(
+                                            {replyData?.comment_count})
+                                          </p>
+                                        </div>
+  }
+              {/* <div
+                className="count-content cursor-pointer"
+                style={{
+                  color:
+                    "rgba(0, 174, 189, 1)",
+                }}
+              >
+                <img
+                  src={ShareFeedbackIcon}
+                  alt="ShareFeedbackIcon"
+                />
+                <p>Share</p>
+              </div> */}
+              <div
+                className="count-content cursor-pointer"
+                style={{
+                  background:'#C9EFD6',
+                  color:
+                    "rgba(51, 161, 90, 1)",
+                }}
+                onClick={() =>
+                  handleReply(replyData.id)
+                }
+              >
+                <img
+                  src={ReplyFeedbackIcon}
+                  alt="ReplyFeedbackIcon"
+                />
+                <p>
+                  Reply
+                  {/* {replyData.replies
+                    .length > 0
+                    ? `(${replyData.replies.length})`
+                    : null} */}
+                </p>
+              </div>
+            </div>
+  
+            {replyInfo.id ===
+              replyData.id && (
+              <>
+                <div className="add-comments relative">
+                  {/* <img
+                    src={imageUrl}
+                    alt="UserIcon"
+                  /> */}
+                  <input
+                    className={`py-3 pl-1 my-2 text-[13px] ml-${marginLeft} border-none w-full`}
+                    type="text"
+                    value={replyInfo.msg}
+                    placeholder="Add Reply..."
+                    onChange={(e) =>
+                      setReplyInfo({
+                        ...replyInfo,
+                        msg: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+  
+                <div className="flex gap-2 justify-end">
+                  <button
+                    btnType="button"
+                    btnCls="w-[150px]"
+                    className="w-[100px] p-[4px] !border !border-background-primary-main rounded-[3px] h-[30px] text-[12px] text-font-primary-main"
+                    btnName={"Cancel"}
+                    onClick={
+                      handleCancelReplyComment
+                    }
+                  >Cancel</button>
+                  <button
+                    btnType="button"
+                    btnCls="w-[150px]"
+                    btnName={"Reply"}
+                    className="w-[100px] p-[4px] !border !border-background-primary-main rounded-[3px] h-[30px] text-[12px] text-font-secondary-white"
+                    btnCategory="primary"
+                    onClick={
+                      handleReplyComment
+                    }
+                    style={{background:'linear-gradient(to right, #00AEBD, #1D5BBF'}}
+                  >Reply</button>
+                </div>
+              </>
+            )}
+          </>
+  }
+
+  const getCommentsData  = (comment) =>{
+   return comment?.replies.map((reply,index)=>{
+    let elements=null;
+     let marginLeft = 7;
+    elements =   displayCommentBtns(reply,index,marginLeft);
+     if(reply?.replies?.length>0){
+      elements =  getCommentsData(reply,marginLeft*2)
+     }
+     return elements;
+    })
+ }
+  
+const onCommentClick  = (comment) =>{
+
+  if(comment?.id){
+    setActiveComment(comment?.id);
+    if(activeComment===comment?.id){
+      setShowComments(!showComments)
+    }
+  }
+}
   return (
     <div className="feedback px-2 py-9 sm:px-2 md:px-4 lg:px-9 xl:px-9">
       <div
@@ -300,7 +504,7 @@ export default function Feedback() {
                                 activePostInfo?.comments?.map((comment) => (
                                   <div
                                     key={comment.id}
-                                    className="comment-details"
+                                    className="comment-details pb-[20px]"
                                   >
                                     <img
                                       className="user-img"
@@ -351,7 +555,8 @@ export default function Feedback() {
                                           <p>Like({comment.like_count})</p>
                                         </div>
                                         <div
-                                          className="count-content"
+                                          className="count-content cursor-pointer"
+                                          onClick={()=>onCommentClick(comment)}
                                           style={{
                                             background:
                                               "rgba(255, 219, 225, 1)",
@@ -370,19 +575,19 @@ export default function Feedback() {
                                         <div
                                           className="count-content"
                                           style={{
-                                            background:
-                                              "rgba(255, 219, 225, 1)",
+                                            background:'#C9EFD6',
                                             color: "rgba(51, 161, 90, 1)",
+                                            cursor:'pointer'
                                           }}
                                           onClick={() =>
                                             handleReply(comment.id)
                                           }
                                         >
                                           <img
-                                            src={CommentIcon}
-                                            alt="CommentIcon"
+                                            src={ReplyFeedbackIcon}
+                                            alt="ReplyIcon"
                                           />
-                                          {console.log(activePostInfo)}
+                                         
                                           <p>Replies({comment.reply_count})</p>
                                         </div>
                                         {/* <div
@@ -425,179 +630,28 @@ export default function Feedback() {
                                           </div>
 
                                           <div className="flex gap-2 justify-end">
-                                            <Button
+                                            <button
                                               btnType="button"
-                                              btnCls="w-[150px]"
+                                              className="w-[100px] p-[4px] !border !border-background-primary-main rounded-[3px] h-[30px] text-[12px] text-font-primary-main"
                                               btnName={"Cancel"}
                                               onClick={handleCancelReplyComment}
-                                            />
-                                            <Button
+                                              btnCategory ='secondary'
+                                            >{"Cancel"}</button>
+                                            <button
                                               btnType="button"
-                                              btnCls="w-[150px]"
+                                               className="w-[100px] p-[4px] !border !border-background-primary-main rounded-[3px] h-[30px] text-[12px] text-font-secondary-white"
                                               btnName={"Reply"}
                                               btnCategory="primary"
                                               onClick={handleReplyComment}
-                                            />
+                                              style={{background:'linear-gradient(to right, #00AEBD, #1D5BBF'}}
+                                            >Reply</button>
                                           </div>
                                         </>
                                       )}
 
-                                      {comment?.replies?.length > 0 &&
-                                        comment.replies.map(
-                                          (replyData, rIndex) => {
-                                            return (
-                                              <>
-                                                <div
-                                                  className="post-list-comments ml-7 mt-4"
-                                                  key={rIndex}
-                                                >
-                                                  <img
-                                                    className="user-img"
-                                                    src={ChatImage}
-                                                    alt="Userimage"
-                                                  />
-                                                  <div
-                                                    style={{
-                                                      width:
-                                                        "calc(100% - 50px)",
-                                                    }}
-                                                  >
-                                                    <div className="flex gap-3 items-center py-1">
-                                                      <p className="text-[14px] capitalize">
-                                                        <span
-                                                          style={{
-                                                            fontWeight: 700,
-                                                          }}
-                                                        >
-                                                          {replyData.user_name}
-                                                        </span>{" "}
-                                                        ({replyData.role})
-                                                      </p>
-                                                      <p className="text-[10px]">
-                                                        {
-                                                          replyData.time_since_action
-                                                        }
-                                                      </p>
-                                                    </div>
-                                                    <div
-                                                      className="py-5 my-2 text-[13px]"
-                                                      style={{
-                                                        background:
-                                                          "rgba(217, 217, 217, 0.15)",
-                                                        padding: "10px",
-                                                      }}
-                                                    >
-                                                      {replyData.content}
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                                <div className="flex pl-20">
-                                                  <div
-                                                    className="count-content cursor-pointer"
-                                                    onClick={() =>
-                                                      handleCommentLike(
-                                                        "comment",
-                                                        replyData.id
-                                                      )
-                                                    }
-                                                  >
-                                                    <img
-                                                      src={LikeIcon}
-                                                      alt="likeicon"
-                                                    />
-                                                    <p>
-                                                      Like{" "}
-                                                      {/* {replyData.like_count > 0
-                                                        ? `(${replyData.like_count})`
-                                                        : null} */}
-                                                    </p>
-                                                  </div>
-
-                                                  <div
-                                                    className="count-content cursor-pointer"
-                                                    style={{
-                                                      color:
-                                                        "rgba(0, 174, 189, 1)",
-                                                    }}
-                                                  >
-                                                    <img
-                                                      src={ShareFeedbackIcon}
-                                                      alt="ShareFeedbackIcon"
-                                                    />
-                                                    <p>Share</p>
-                                                  </div>
-                                                  <div
-                                                    className="count-content cursor-pointer"
-                                                    style={{
-                                                      color:
-                                                        "rgba(51, 161, 90, 1)",
-                                                    }}
-                                                    onClick={() =>
-                                                      handleReply(replyData.id)
-                                                    }
-                                                  >
-                                                    <img
-                                                      src={ReplyFeedbackIcon}
-                                                      alt="ReplyFeedbackIcon"
-                                                    />
-                                                    <p>
-                                                      Reply
-                                                      {/* {replyData.replies
-                                                        .length > 0
-                                                        ? `(${replyData.replies.length})`
-                                                        : null} */}
-                                                    </p>
-                                                  </div>
-                                                </div>
-
-                                                {replyInfo.id ===
-                                                  replyData.id && (
-                                                  <>
-                                                    <div className="add-comments relative">
-                                                      {/* <img
-                                                        src={imageUrl}
-                                                        alt="UserIcon"
-                                                      /> */}
-                                                      <input
-                                                        className="comment-input"
-                                                        type="text"
-                                                        value={replyInfo.msg}
-                                                        placeholder="Add Reply..."
-                                                        onChange={(e) =>
-                                                          setReplyInfo({
-                                                            ...replyInfo,
-                                                            msg: e.target.value,
-                                                          })
-                                                        }
-                                                      />
-                                                    </div>
-
-                                                    <div className="flex gap-2 justify-end">
-                                                      <Button
-                                                        btnType="button"
-                                                        btnCls="w-[150px]"
-                                                        btnName={"Cancel"}
-                                                        onClick={
-                                                          handleCancelReplyComment
-                                                        }
-                                                      />
-                                                      <Button
-                                                        btnType="button"
-                                                        btnCls="w-[150px]"
-                                                        btnName={"Reply"}
-                                                        btnCategory="primary"
-                                                        onClick={
-                                                          handleReplyComment
-                                                        }
-                                                      />
-                                                    </div>
-                                                  </>
-                                                )}
-                                              </>
-                                            );
-                                          }
-                                        )}
-
+                                      {comment?.replies?.length > 0 && showComments&& activeComment===comment.id &&
+                                         getCommentsData(comment)
+                                        }
                                       {activePostComments.commentId ===
                                         comment?.id &&
                                         comment?.replies &&
