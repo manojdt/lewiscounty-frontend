@@ -23,7 +23,8 @@ export const FeedCard = ({ programFeeds = "" }) => {
       alignItems={"center"}
       justifyContent={"space-between"}
       m={"22px"}
-      className="!border !border-background-primary-main p-2 rounded-[10px]"
+      className="!border !border-background-primary-main p-2 rounded-[10px] cursor-pointer hover:bg-blue-50 active:bg-blue-100 transition-all duration-300"
+      onClick={() => navigate(`/feed-details/${programFeeds?.id}`)}
     >
       <Stack direction={"row"} alignItems={"start"} spacing={2} width={"100%"}>
         <Box className="w-[140px]">
@@ -41,73 +42,6 @@ export const FeedCard = ({ programFeeds = "" }) => {
               justifyContent={"space-between"}
               width={"100%"}
             >
-              <Typography className="!text-font-secondary-black !text-[18px] font-bold">
-                {programFeeds.title}
-              </Typography>
-              <div
-                className="bg-background-primary-light"
-                style={{
-                  padding: "14px 18px",
-                  cursor: "pointer",
-                }}
-                // onClick={() =>
-                //   navigate(`/feed-details/${programFeeds?.id}`)
-                // }
-                id="basic-button"
-                aria-controls={open ? "basic-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? "true" : undefined}
-                onClick={handleClick}
-              >
-                <img src={MoreIcon} alt="MoreIcon" />
-              </div>
-
-              <Menu
-                id="basic-menu"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                MenuListProps={{
-                  "aria-labelledby": "basic-button",
-                }}
-              >
-                <MenuItem
-                  onClick={() => navigate(`/feed-details/${programFeeds?.id}`)}
-                >
-                  <img src={ViewIcon} alt="" />
-                  <Typography className="!text-font-secondary-black text-[12px] font-semibold pl-2">
-                    View
-                  </Typography>
-                </MenuItem>
-                {/* <MenuItem
-                          onClick={() =>
-                            navigate(`/feed-details/${programFeeds?.id}`)
-                          }
-                        >
-                          <img src={EditIcon} alt="" />
-                          <Typography className="!text-font-secondary-black text-[12px] font-semibold pl-2">
-                            Edit
-                          </Typography>
-                        </MenuItem>                        
-                        <MenuItem onClick={handleClose}>
-                          <img src={UnFollowIcon} alt="" />
-                          <Typography className="!text-font-secondary-black text-[12px] font-semibold pl-2">
-                            Unfollow
-                          </Typography>
-                        </MenuItem>
-                        <MenuItem onClick={handleClose}>
-                          <img src={HideIcon} alt="" />
-                          <Typography className="!text-font-secondary-black text-[12px] font-semibold pl-2">
-                            Hide
-                          </Typography>
-                        </MenuItem>
-                        <MenuItem onClick={handleClose}>
-                          <img src={ReportIcon} alt="" />
-                          <Typography className="!text-font-secondary-black text-[12px] font-semibold pl-2">
-                            Report
-                          </Typography>
-                        </MenuItem> */}
-              </Menu>
             </Stack>
             <Typography className="!text-font-primary-main !text-[12px]">
               {programFeeds?.time_since_action}

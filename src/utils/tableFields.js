@@ -42,7 +42,7 @@ export const myMenteeColumns = [
   },
   {
     field: "last_attend_program",
-    headerName: "Last Attend Program",
+    headerName: "Last Attended Program",
     flex: 1,
     id: 1,
   },

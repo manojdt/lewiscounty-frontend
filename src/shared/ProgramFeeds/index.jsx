@@ -76,7 +76,7 @@ export default function ProgramFeeds({
               justifyContent={"space-between"}
               m={"22px"}
               className="!border !border-background-primary-main p-2 rounded-[10px] cursor-pointer hover:bg-blue-50 active:bg-blue-100 transition-all duration-300"
-              onClick={() => navigate(`/feed-details/${selectedItem?.id}`)}
+              onClick={() => navigate(`/feed-details/${programFeeds?.id}`)}
             >
               <Stack
                 direction={"row"}

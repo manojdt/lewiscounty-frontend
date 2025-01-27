@@ -1567,7 +1567,7 @@ const Goals = () => {
                           <div className="goal-title-container flex justify-between items-center mb-10">
                             <div className="flex gap-5 items-center ">
                               <p className="text-[18px] font-semibold">
-                                Goals History
+                                Goal History
                               </p>
                             </div>
                             <div className="flex gap-8 items-center">

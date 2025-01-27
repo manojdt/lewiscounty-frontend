@@ -108,12 +108,12 @@ export default function Discussions() {
                       key={index}
                       onClick={() => setActiveTab(discussion.key)}
                     >
-                      <div> {`${discussion.name}(10)`}</div>
+                      <div> {`${discussion.name}(5)`}</div>
                       {actionTab === discussion.key && <span></span>}
                     </li>
                   ))}
                 </ul>
-                <div>
+                {/* <div>
                   <div className='relative'>
                     <input
                       type='text'
@@ -130,7 +130,7 @@ export default function Discussions() {
                       <img src={SearchIcon} alt='SearchIcon' />
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
               <DataTable
                 rows={discussionData}
