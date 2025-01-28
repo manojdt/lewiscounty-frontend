@@ -41,7 +41,6 @@ const Reports = () => {
   const userInfo = useSelector((state) => state.userInfo);
   const role = userInfo.data.role;
   const [anchorEl, setAnchorEl] = useState(null);
-
   const open = Boolean(anchorEl);
   const [deleteModal, setDeleteModal] = useState(false);
   const [filter, setFilter] = useState({ search: "", filter_by: "" });
@@ -218,7 +217,13 @@ const Reports = () => {
       renderCell: (params) => {
         return (
           <>
-            <a href={params.row.html_content_link} target="_blank" className="text-font-primary-main">{params.row.html_content_link ?? "..."}</a>
+            <a
+              href={params.row.html_content_link}
+              target="_blank"
+              className="text-font-primary-main" rel="noreferrer"
+            >
+              {params.row.html_content_link ?? "..."}
+            </a>
           </>
         );
       },
@@ -444,23 +449,13 @@ const Reports = () => {
     if (role === "admin" && requestTab === "all") {
       delete query.request_by;
     }
-    if (query.status) {
-      dispatch(
-        getAllReports({
-          ...query,
-          page: paginationModel?.page + 1,
-          limit: paginationModel?.pageSize,
-        })
-      );
-    } else {
-      dispatch(
-        getAllReports({
-          ...query,
-          page: paginationModel?.page + 1,
-          limit: paginationModel?.pageSize,
-        })
-      );
-    }
+    dispatch(
+      getAllReports({
+        ...query,
+        page: paginationModel?.page + 1,
+        limit: paginationModel?.pageSize,
+      })
+    );
   };
 
   const handleCancelDelete = () => {
@@ -490,7 +485,7 @@ const Reports = () => {
 
   useEffect(() => {
     getReports();
-  }, [searchParams, role, paginationModel, requestTab]);
+  }, [searchParams, paginationModel, requestTab]);
 
   useEffect(() => {
     if (status === reportsStatus.delete) {

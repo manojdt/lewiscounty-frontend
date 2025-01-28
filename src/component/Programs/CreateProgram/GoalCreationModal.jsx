@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import { MuiCustomModal } from "../../../shared/Modal/MuiCustomModal";
 import { useCreateGoalMutation } from "../../../features/goals/goalsApi.services";
-import SuccessTik from '../../../assets/images/blue_tik1x.png';
+import SuccessTik from "../../../assets/images/blue_tik1x.png";
+import ErrorTik from "../../../assets/icons/programErrorIcon.svg";
 
 const GoalCreationModal = (props) => {
   const [description, setDescription] = React.useState("");
@@ -15,8 +16,10 @@ const GoalCreationModal = (props) => {
       isError: IsErrorGoalsCreating,
       data,
       reset,
+      error,
     },
   ] = useCreateGoalMutation();
+
   const { isOpen, handleCloseModal } = props;
   const handleGoalCreate = () => {
     createGoals({ description, goal_name: description });
@@ -31,11 +34,9 @@ const GoalCreationModal = (props) => {
         setShowBackdrop(false);
 
         // Only navigate on success cases
-        if (isGoalsCreated) {
-          reset();
-          handleCloseModal();
-          setDescription("");
-        }
+        reset();
+        handleCloseModal();
+        setDescription("");
       }, 3000);
       return () => {
         clearTimeout(timer);
@@ -95,14 +96,16 @@ const GoalCreationModal = (props) => {
             className="flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20 w-full"
             style={{ background: "#fff", borderRadius: "10px" }}
           >
-            <img src={SuccessTik} alt="SuccessTik" />
+            {isGoalsCreated && <img src={SuccessTik} alt="SuccessTik" />}{" "}
+            {IsErrorGoalsCreating && <img src={ErrorTik} alt="ErrorTik" />}
             <p
               className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
               style={{
                 fontWeight: 600,
               }}
             >
-              {data?.message}
+              {isGoalsCreated && data?.message}
+              {IsErrorGoalsCreating && error.data?.message}
             </p>
           </div>
         </div>

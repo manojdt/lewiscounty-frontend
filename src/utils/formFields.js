@@ -1,3 +1,4 @@
+import moment from "moment";
 import { dateFormat } from ".";
 import { getCurrentWeekAndDay } from "./constant";
 
@@ -3340,6 +3341,7 @@ export const reportAdminColumns = [
     headerName: "Create Date",
     flex: 1,
     id: 1,
+    renderCell: ({ row }) => moment(row?.created_at).format("MM-DD-YYYY"),
     status: ["all"],
   },
   {

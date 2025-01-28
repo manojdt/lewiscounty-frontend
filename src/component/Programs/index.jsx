@@ -520,9 +520,9 @@ export default function Programs() {
       listPrograms = listPrograms.filter(
         (list) => list.status === programActionStatus.yettojoin
       );
-      if(role === "mentee"){
-        navigate("/programs?type=planned&filter_by=month");
-      }
+      // if(role === "mentee"){
+      //   navigate("/programs?type=planned&filter_by=month");
+      // }
     }
 
     const programMenu = [...listPrograms].map((menu) => {

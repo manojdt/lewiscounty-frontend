@@ -102,10 +102,7 @@ const ProgramSteps = ({
   const handleInputChange = (e, field) => {
     const { value } = e.target;
 
-    if (
-      field.name === "phone_number" ||
-      field.name === "secondary_phone_number"
-    ) {
+    if (field.name === "phone_number") {
       const formattedValue = formatPhoneNumber(value);
       setValue(field.name, formattedValue);
     } else if (field.name === "zip_code") {
@@ -387,7 +384,9 @@ const ProgramSteps = ({
           }
 
           const disableFields =
-            params?.id && field.name === "program_name" && toggleRole === mentor;
+            params?.id &&
+            field.name === "program_name" &&
+            toggleRole === mentor;
 
           const disableSelectFields =
             params?.id &&
@@ -471,14 +470,18 @@ const ProgramSteps = ({
                         type={field.fieldtype}
                         placeholder={field.placeholder}
                         disabled={disableFields}
-                        {...controlledField}
-                        onChange={(e) => handleInputChange(e, field)}
-                        onBlur={() => {
-                          controlledField.onBlur();
-                          if (field.name === "program_name") {
-                            // handelProgramCheck(e?.target?.value);
+                        value={formValues[field.name] || ""} // Use formValues directly instead of controlledField.value
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          if (field.name === "enrollment_fees") {
+                            controlledField.onChange(
+                              value === "" ? "" : Number(value)
+                            );
+                          } else {
+                            handleInputChange(e, field);
                           }
                         }}
+                        onBlur={controlledField.onBlur}
                         InputProps={{
                           startAdornment: field.name === "enrollment_fees" && (
                             <AttachMoneyIcon />
