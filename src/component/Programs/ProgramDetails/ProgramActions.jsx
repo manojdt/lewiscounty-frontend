@@ -117,7 +117,8 @@ const ProgramActions = ({
     if (!programCompleted.includes(programdetails.status)) return null;
 
     return (
-      <div className="py-9">
+      <>{
+        !type && <div className="py-9">
         {/* <button
           className="py-3 px-10 text-white text-[14px] flex justify-center items-center"
           style={{
@@ -133,7 +134,8 @@ const ProgramActions = ({
           <VerifiedIcon />
           <p>Program Completed</p>
         </div>
-      </div>
+      </div>}
+      </>
     );
   };
 
