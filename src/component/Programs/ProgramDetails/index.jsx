@@ -2306,7 +2306,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
 
                   {Array.isArray(programdetails?.learning_materials) &&
                     programdetails?.learning_materials?.length > 0 && (
-                      <div className="py-10">
+                      <div className="pt-3 pb-8">
                         <p className="text-[14px] font-normal mb-2">
                           Our Learning Materials
                         </p>
@@ -2331,7 +2331,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                       </div>
                     )}
 
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 pb-[26px]">
                     {programdetails?.group_chat_requirement && (
                       <p
                         onClick={() => navigate("/discussions")}

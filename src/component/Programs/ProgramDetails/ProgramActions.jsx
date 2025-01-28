@@ -14,6 +14,28 @@ import { Button } from "../../../shared";
 import { Button as MuiButton } from "@mui/material";
 import { useJoinAllProgramMutation } from "../../../features/program/programApi.services";
 import { useSelector } from "react-redux";
+import TaskAltIcon from "@mui/icons-material/TaskAlt";
+import VerifiedIcon from "@mui/icons-material/Verified";
+import CancelIcon from "@mui/icons-material/Cancel";
+import EventBusyIcon from '@mui/icons-material/EventBusy';
+
+export const ApprovedTag = () => {
+  return (
+    <div className="flex flex-row gap-1 text-[#16B681] text-[15px] font-semibold">
+      <VerifiedIcon />
+      <p>Approved</p>
+    </div>
+  );
+};
+
+export const RejectedTag = () => {
+  return (
+    <div className="flex flex-row gap-1 text-[#E0382D] text-[15px] font-semibold">
+      <CancelIcon />
+      <p>Rejected</p>
+    </div>
+  );
+};
 
 const ProgramActions = ({
   role,
@@ -49,7 +71,7 @@ const ProgramActions = ({
       background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
     },
     success: {
-      background: "#16B681",
+      // background: "#16B681",
     },
     danger: {
       border: "1px solid #E0382D",
@@ -140,13 +162,14 @@ const ProgramActions = ({
       ) {
         return (
           <div className="flex item-center gap-x-3">
-            <button
+            {/* <button
               className="py-3 px-16 mt-7 text-white text-[14px] flex items-center"
               style={{ ...buttonStyles.base, ...buttonStyles.success }}
               onClick={() => undefined}
             >
               Approved
-            </button>
+            </button> */}
+            <ApprovedTag />
             <button
               className="py-3 px-16 mt-7 text-white text-[14px] flex items-center"
               style={{ ...buttonStyles.base, ...buttonStyles.danger }}
@@ -163,13 +186,14 @@ const ProgramActions = ({
         programdetails?.request_data?.status === "rejected"
       ) {
         return (
-          <button
-            className="py-3 mt-7 px-16 text-white text-[14px] flex items-center"
-            style={{ ...buttonStyles.base, ...buttonStyles.danger }}
-            onClick={() => undefined}
-          >
-            Rejected
-          </button>
+          // <button
+          //   className="py-3 mt-7 px-16 text-white text-[14px] flex items-center"
+          //   style={{ ...buttonStyles.base, ...buttonStyles.danger }}
+          //   onClick={() => undefined}
+          // >
+          //   Rejected
+          // </button>
+          <RejectedTag />
         );
       }
     }
@@ -210,17 +234,15 @@ const ProgramActions = ({
     // }
 
     // Admin Approve Reject Button
-    
+
     const showApproveRejectButtons =
       (programdetails?.status === "inprogress" ||
         programdetails?.status === "yettostart") &&
       (programdetails?.request_data?.request_type === "program_new" ||
         programdetails?.request_data?.request_type === "program_cancel") &&
       ["new", "pending"].includes(programdetails?.request_data?.status) &&
-        acceptType && 
-        programdetails?.request_data?.created_by !== userInfo?.data?.user_id
-      ;
-
+      acceptType &&
+      programdetails?.request_data?.created_by !== userInfo?.data?.user_id;
     if (showApproveRejectButtons) {
       return (
         <Box mt={2}>
@@ -284,8 +306,8 @@ const ProgramActions = ({
     // Program approval stage
     if (
       programApprovalStage[programdetails.status] &&
-      !programdetails?.admin_program
-      && !type
+      !programdetails?.admin_program &&
+      !type
     ) {
       return (
         <div className="space-y-4 pt-10">
@@ -313,27 +335,26 @@ const ProgramActions = ({
             </button>
           )}
 
-          {(["new", "pending"].includes(
-            programdetails?.request_data?.status
-          ) && type !== "program_reschedule") && (
-            <div className="flex items-center justify-start gap-6">
-              <button
-                onClick={() => setCancelPopup(true)}
-                className="!border-[2px] border-red-500 rounded-md text-red-500 px-4 py-2 font-semibold text-sm flex items-center"
-              >
-                Cancel Request
-              </button>
-              <Button
-                btnType="button"
-                btnCls="w-[110px] h-11"
-                btnName={"Edit"}
-                btnCategory="primary"
-                onClick={() =>
-                  navigate(`/update-program/${programdetails?.id}`)
-                }
-              />
-            </div>
-          )}
+          {["new", "pending"].includes(programdetails?.request_data?.status) &&
+            type !== "program_reschedule" && (
+              <div className="flex items-center justify-start gap-6">
+                <button
+                  onClick={() => setCancelPopup(true)}
+                  className="!border-[2px] border-red-500 rounded-md text-red-500 px-4 py-2 font-semibold text-sm flex items-center"
+                >
+                  Cancel Request
+                </button>
+                <Button
+                  btnType="button"
+                  btnCls="w-[110px] h-11"
+                  btnName={"Edit"}
+                  btnCategory="primary"
+                  onClick={() =>
+                    navigate(`/update-program/${programdetails?.id}`)
+                  }
+                />
+              </div>
+            )}
         </div>
       );
     }
@@ -383,13 +404,16 @@ const ProgramActions = ({
         return (
           <div className="mt-6">
             <span
-              className="py-3 px-16 text-white text-[14px] rounded"
+              className="py-3 text-white text-[15px] rounded text-[#16B681] font-semibold"
               style={{
                 ...buttonStyles.success,
                 cursor: "not-allowed",
               }}
             >
-              Interested
+              <span>
+                <TaskAltIcon className="text-[#16B681]" />
+              </span>
+              &nbsp;&nbsp; Interested
             </span>
           </div>
         );
@@ -421,13 +445,14 @@ const ProgramActions = ({
 
     if (programdetails?.request_data?.status === "rejected") {
       return (
-        <button
-          className="py-3 mt-7 mb-4 px-16 text-white text-[14px] flex items-center cursor-default"
-          style={{ ...buttonStyles.base, ...buttonStyles.danger }}
-          onClick={() => undefined}
-        >
-          Rejected
-        </button>
+        // <button
+        //   className="py-3 mt-7 mb-4 px-16 text-white text-[14px] flex items-center cursor-default"
+        //   style={{ ...buttonStyles.base, ...buttonStyles.danger }}
+        //   onClick={() => undefined}
+        // >
+        //   Rejected
+        // </button>
+        <RejectedTag />
       );
     }
 
@@ -521,10 +546,9 @@ const ProgramActions = ({
         (programdetails?.request_data?.request_type === "program_reschedule" &&
           programdetails?.request_data?.status === "new") ||
         (programdetails?.request_data?.request_type === "program_cancel" &&
-          programdetails?.request_data?.status === "new")
-          // (programdetails?.request_data?.request_type === "program_new" &&
-          //   programdetails?.request_data?.status === "new")
-          );
+          programdetails?.request_data?.status === "new"));
+    // (programdetails?.request_data?.request_type === "program_new" &&
+    //   programdetails?.request_data?.status === "new")
     const acceptType = [
       "program_reschedule",
       "program_new",
@@ -562,7 +586,7 @@ const ProgramActions = ({
     if (programdetails?.request_data?.status === "approved") {
       return (
         <Box mt={2}>
-          <button
+          {/* <button
             className="py-3 px-16 text-white text-[14px] flex items-center"
             style={{
               ...buttonStyles.base,
@@ -572,7 +596,8 @@ const ProgramActions = ({
             onClick={() => undefined}
           >
             Approved
-          </button>
+          </button> */}
+          <ApprovedTag />
         </Box>
       );
     }
@@ -583,7 +608,7 @@ const ProgramActions = ({
     ) {
       return (
         <Box mt={2}>
-          <button
+          {/* <button
             className="py-3 px-16 text-white text-[14px] flex items-center"
             style={{
               ...buttonStyles.base,
@@ -593,7 +618,8 @@ const ProgramActions = ({
             onClick={() => undefined}
           >
             Rejected
-          </button>
+          </button> */}
+          <RejectedTag />
         </Box>
       );
     }
@@ -706,7 +732,7 @@ const ProgramActions = ({
     if (programdetails.status === "cancelled") {
       return (
         <div className="flex gap-4 pt-10">
-          <button
+          {/* <button
             className="py-3 px-16 text-white text-[14px] flex items-center"
             style={{
               ...buttonStyles.base,
@@ -716,7 +742,11 @@ const ProgramActions = ({
             onClick={() => undefined}
           >
             {requestId ? "Program Cancelled" : "Cancelled"}
-          </button>
+          </button> */}
+          <div className="flex flex-row gap-1 text-[#E0382D] text-[15px] font-semibold">
+           {requestId ? <EventBusyIcon /> : <CancelIcon />}
+            <p>{requestId ? "Program Cancelled" : "Cancelled"}</p>
+          </div>
         </div>
       );
     }
@@ -724,8 +754,10 @@ const ProgramActions = ({
     if (
       ["new", "pending"].includes(programdetails?.request_data?.status) &&
       role === "mentor" &&
-      (type === "program_reschedule" || type === "program_cancel" || type === "program_new")
-      && (programdetails?.request_data?.created_by === userInfo?.data?.user_id)
+      (type === "program_reschedule" ||
+        type === "program_cancel" ||
+        type === "program_new") &&
+      programdetails?.request_data?.created_by === userInfo?.data?.user_id
     ) {
       return (
         <button
@@ -737,16 +769,20 @@ const ProgramActions = ({
       );
     }
 
-    if (role === "mentor" && programdetails.status === "assign_program_accepted" && from === "subprogram") {
-      return(
+    if (
+      role === "mentor" &&
+      programdetails.status === "assign_program_accepted" &&
+      from === "subprogram"
+    ) {
+      return (
         <Button
-        btnType="button"
-        btnCls="w-[110px] h-11"
-        btnName={"Edit"}
-        btnCategory="primary"
-        onClick={() => navigate(`/update-program/${programdetails?.id}`)}
-      />
-      )
+          btnType="button"
+          btnCls="w-[110px] h-11"
+          btnName={"Edit"}
+          btnCategory="primary"
+          onClick={() => navigate(`/update-program/${programdetails?.id}`)}
+        />
+      );
     }
 
     return null;
