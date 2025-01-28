@@ -226,7 +226,7 @@ export const Signup = () => {
             />
             <span style={{ color: "#232323", fontWeight: 600 }}>
               {userData.status === userStatus.pending
-                ? "Waiting for admin approval"
+                ? "Waiting for Admin Approval"
                 : " Login  Successful!"}
             </span>
           </div>

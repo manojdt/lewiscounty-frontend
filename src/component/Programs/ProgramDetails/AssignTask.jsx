@@ -535,23 +535,23 @@ export default function AssignTask() {
   const programApprovalStage = {
     yettoapprove: {
       status: 'yettoapprove',
-      text: 'Waiting for admin approval',
+      text: 'Waiting for Admin Approval',
     },
     join_request_submitted: {
       status: 'join_request_submitted',
-      text: 'Waiting for admin approval',
+      text: 'Waiting for Admin Approval',
     },
     start_request_submitted: {
       status: 'start_request_submitted',
-      text: 'Waiting for admin approval',
+      text: 'Waiting for Admin Approval',
     },
     schedule_request_submitted: {
       status: 'schedule_request_submitted',
-      text: 'Waiting for admin approval',
+      text: 'Waiting for Admin Approval',
     },
     cancel_request_submitted: {
       status: 'cancel_request_submitted',
-      text: 'Waiting for admin approval',
+      text: 'Waiting for Admin Approval',
     },
   };
 

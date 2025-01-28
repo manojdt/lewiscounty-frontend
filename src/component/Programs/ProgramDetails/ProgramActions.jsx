@@ -17,7 +17,7 @@ import { useSelector } from "react-redux";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import CancelIcon from "@mui/icons-material/Cancel";
-import EventBusyIcon from '@mui/icons-material/EventBusy';
+import EventBusyIcon from "@mui/icons-material/EventBusy";
 
 export const ApprovedTag = () => {
   return (
@@ -33,6 +33,15 @@ export const RejectedTag = () => {
     <div className="flex flex-row gap-1 text-[#E0382D] text-[15px] font-semibold">
       <CancelIcon />
       <p>Rejected</p>
+    </div>
+  );
+};
+
+export const CancelledTag = () => {
+  return (
+    <div className="flex flex-row gap-1 text-[#E0382D] text-[15px] font-semibold">
+      <CancelIcon />
+      <p>Cancelled</p>
     </div>
   );
 };
@@ -71,7 +80,7 @@ const ProgramActions = ({
       background: "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
     },
     success: {
-      // background: "#16B681",
+      background: "#16B681",
     },
     danger: {
       border: "1px solid #E0382D",
@@ -109,7 +118,7 @@ const ProgramActions = ({
 
     return (
       <div className="py-9">
-        <button
+        {/* <button
           className="py-3 px-10 text-white text-[14px] flex justify-center items-center"
           style={{
             ...buttonStyles.base,
@@ -118,7 +127,12 @@ const ProgramActions = ({
           }}
         >
           Program Completed
-        </button>
+        </button> */}
+
+        <div className="flex flex-row gap-1 text-[#16B681] text-[15px] font-semibold">
+          <VerifiedIcon />
+          <p>Program Completed</p>
+        </div>
       </div>
     );
   };
@@ -126,6 +140,12 @@ const ProgramActions = ({
   // Render mentor specific actions
   const renderMentorActions = () => {
     if (role !== "mentor") return null;
+
+    if(programdetails?.request_data?.status === "approved"){
+      return(
+        <ApprovedTag />
+      )
+    }
 
     // Accept Program button for admin programs
     if (
@@ -196,7 +216,10 @@ const ProgramActions = ({
           <RejectedTag />
         );
       }
+      
+      
     }
+    
     // const showRequestButtons =
     //   (programdetails?.status === "inprogress" ||
     //     programdetails?.status === "yettostart") &&
@@ -313,11 +336,13 @@ const ProgramActions = ({
         <div className="space-y-4 pt-10">
           {searchParams.get("type") !== "program_new" && (
             <button
-              className="py-3 px-16 text-white text-[14px] flex items-center"
+              className="py-3 px-[0px] text-[15px] flex items-center font-semibold"
               style={{
                 ...buttonStyles.base,
                 ...buttonStyles.danger,
-                cursor: "not-allowed",
+                border: "none !important",
+                cursor: "text",
+                padding: "12px 0px !important"
               }}
               onClick={() => undefined}
             >
@@ -340,7 +365,7 @@ const ProgramActions = ({
               <div className="flex items-center justify-start gap-6">
                 <button
                   onClick={() => setCancelPopup(true)}
-                  className="!border-[2px] border-red-500 rounded-md text-red-500 px-4 py-2 font-semibold text-sm flex items-center"
+                  className="!border-none bg-red-500 rounded-[3px] text-[#fff] px-6 py-3 font-regular text-sm flex items-center"
                 >
                   Cancel Request
                 </button>
@@ -389,6 +414,12 @@ const ProgramActions = ({
     )
       return null;
 
+    if(type === "program_cancel" && programdetails?.request_data?.status === "approved"){
+      return(
+        <ApprovedTag />
+      )
+    }
+
     if (programdetails?.status === programActionStatus.yettojoin) {
       if (!programdetails?.program_interest) {
         return (
@@ -404,16 +435,16 @@ const ProgramActions = ({
         return (
           <div className="mt-6">
             <span
-              className="py-3 text-white text-[15px] rounded text-[#16B681] font-semibold"
+              className="py-3 text-[15px]"
               style={{
-                ...buttonStyles.success,
+                // ...buttonStyles.success,
                 cursor: "not-allowed",
               }}
             >
               <span>
                 <TaskAltIcon className="text-[#16B681]" />
               </span>
-              &nbsp;&nbsp; Interested
+              &nbsp;&nbsp; <span className="text-[#16B681] font-semibold">Interested</span>
             </span>
           </div>
         );
@@ -465,7 +496,7 @@ const ProgramActions = ({
             ) && (
               <button
                 onClick={() => setCancelPopup(true)}
-                className="border-[2px] border-red-500 rounded-md text-red-500 px-4 py-2 font-semibold text-sm flex items-center"
+                className="!border-none bg-red-500 rounded-[3px] text-[#fff] px-6 py-3 font-regular text-sm flex items-center"
               >
                 Cancel Request
               </button>
@@ -476,11 +507,13 @@ const ProgramActions = ({
                 {searchParams.get("type") !== "program_join" &&
                   !programdetails?.admin_assign_program && (
                     <button
-                      className="py-3 px-16 text-white text-[14px] flex items-center"
+                      className="py-3 px-[0px] text-[15px] flex items-center font-semibold mt-3"
                       style={{
                         ...buttonStyles.base,
                         ...buttonStyles.danger,
-                        cursor: "not-allowed",
+                        border: "none !important",
+                        cursor: "text",
+                        padding: "12px 0px !important"
                       }}
                       onClick={() => undefined}
                     >
@@ -729,7 +762,7 @@ const ProgramActions = ({
     }
 
     // Cancelled status
-    if (programdetails.status === "cancelled") {
+    if (programdetails.status === "cancelled" && type !== "program_cancel") {
       return (
         <div className="flex gap-4 pt-10">
           {/* <button
@@ -744,8 +777,8 @@ const ProgramActions = ({
             {requestId ? "Program Cancelled" : "Cancelled"}
           </button> */}
           <div className="flex flex-row gap-1 text-[#E0382D] text-[15px] font-semibold">
-           {requestId ? <EventBusyIcon /> : <CancelIcon />}
-            <p>{requestId ? "Program Cancelled" : "Cancelled"}</p>
+            {requestId ? <EventBusyIcon /> : <EventBusyIcon />}
+            <p>{requestId ? "Program Cancelled" : "Program Cancelled"}</p>
           </div>
         </div>
       );
@@ -762,7 +795,7 @@ const ProgramActions = ({
       return (
         <button
           onClick={() => setCancelPopup(true)}
-          className="!border-[2px] border-red-500 rounded-md text-red-500 px-4 py-2 font-semibold text-sm flex items-center mt-4"
+          className="!border-none bg-red-500 rounded-[3px] text-[#fff] px-6 py-3 font-regular text-sm flex items-center mt-4"
         >
           Cancel Request
         </button>
