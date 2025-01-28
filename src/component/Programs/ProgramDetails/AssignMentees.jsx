@@ -681,7 +681,7 @@ export default function AssignMentees() {
                                 })()}
                                 showTime={field.name !== "due_date"}
                                 hourFormat="12"
-                                dateFormat="dd/mm/yy"
+                                dateFormat="mm-dd-yy"
                                 style={{ width: "42%" }}
                                 ref={(el) => (calendarRef.current[index] = el)}
                               />
