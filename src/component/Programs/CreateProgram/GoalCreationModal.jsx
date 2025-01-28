@@ -32,6 +32,7 @@ const GoalCreationModal = (props) => {
 
         // Only navigate on success cases
         if (isGoalsCreated) {
+          reset();
           handleCloseModal();
           setDescription("");
         }
