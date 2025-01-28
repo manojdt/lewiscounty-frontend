@@ -404,7 +404,7 @@ export const Mentor = () => {
                   Welcome to Mentoring Management Application
                 </p>
                 <p className="text-[18px] text-font-primary-main font-bold">
-                  Waiting for Admin approval
+                  Waiting for Admin Approval
                 </p>
                 <Invite />
               </div>

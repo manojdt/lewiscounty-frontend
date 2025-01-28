@@ -1270,47 +1270,47 @@ export const ProgramStatusInCard = {
 export const programApprovalStage = {
   yettojoin: {
     status: "yettojoin",
-    text: "Waiting for admin approval",
+    text: "Waiting for Admin Approval",
     type: "waiting",
   },
   yettoapprove: {
     status: "yettoapprove",
-    text: "Waiting for admin approval",
+    text: "Waiting for Admin Approval",
     type: "waiting",
   },
   new_program_request_rejected: {
     status: "new_program_request_rejected",
-    text: "Program request rejected by admin",
+    text: "Program Request Rejected by Admin",
     type: "reject",
   },
   join_request_submitted: {
     status: "join_request_submitted",
-    text: "Waiting for join request admin approval",
+    text: "Waiting for Join Request Admin Approval",
     type: "waiting",
   },
   join_request_rejected: {
     status: "join_request_rejected",
-    text: "Join request rejected by admin",
+    text: "Join Request Rejected by Admin",
     type: "reject",
   },
   start_request_submitted: {
     status: "start_request_submitted",
-    text: "Waiting for start request admin approval",
+    text: "Waiting for Start Request Admin Approval",
     type: "waiting",
   },
   start_request_rejected: {
     status: "start_request_rejected",
-    text: "Start request rejected by admin",
+    text: "Start Request Rejected by Admin",
     type: "reject",
   },
   schedule_request_submitted: {
     status: "schedule_request_submitted",
-    text: "Waiting for schedule request admin approval",
+    text: "Waiting for Schedule Request Admin Approval",
     type: "waiting",
   },
   cancel_request_submitted: {
     status: "cancel_request_submitted",
-    text: "Waiting for cancel request admin approval",
+    text: "Waiting for Cancel Request Admin Approval",
     type: "waiting",
   },
 };
@@ -1360,7 +1360,7 @@ export const menteeNotJoinCondition = [
 export const menteeProgramStatus = {
   program_join_request_submitted: {
     status: "program_join_request_submitted",
-    text: "Waiting for mentor approval",
+    text: "Waiting for Mentor Approval",
     type: "waiting",
     bgColor: "bg-gray-400",
   },
