@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import CloseReqPopup from "../../assets/icons/blackCloseIcon.svg"
 import CancelReq from "../../assets/icons/cancelRequest.svg"
 import { useNavigate } from 'react-router-dom';
+import { useWindowSize } from '../../utils/windowResize';
 
 const initialDeleteState = {
     bool: false,
@@ -24,6 +25,7 @@ const initialDeleteState = {
     activity: false
 }
 const Category = () => {
+    const { width } = useWindowSize();
 
     const { categories, loading, formDetails } = useSelector((state) => state.category)
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -262,18 +264,18 @@ const Category = () => {
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
-            <Box className={"p-[16px] border border-[#DBE0E5] rounded-[10px] m-[32px] bg-[#fff]"}>
+            <Box className={"p-[16px] border border-[#DBE0E5] rounded-[10px] m-[10px] sm:m-[10px] md:m-[18px] lg:m-[32px] xl:m-[32px] bg-[#fff]"}>
                 <Stack direction={"row"} alignItems={"center"} justifyContent={"space-between"} mb={"20px"}>
                     <Typography className='text-[22px] text-[#18283D] font-bold' sx={{ fontWeight: 600 }}>Category</Typography>
 
                     <Stack direction={"row"} alignItems={"center"} spacing={"30px"}>
                         <div>
                             <div className="relative">
-                                <input type="text" id="search-navbar" className="block w-full p-2 text-sm text-gray-900 border-none"
+                                <input type="text" id="search-navbar" className="block w-full p-2 text-sm text-gray-900 border-none md:w-[320px] lg:w-[345px]"
                                     placeholder="Search here..." style={{
                                         border: '1px solid rgba(29, 91, 191, 1)',
                                         height: '41px',
-                                        width: '345px'
+                                        // width: '345px'
                                     }}
                                     value={search}
                                     onChange={(e) => handleSearch(e.target.value)} />
@@ -283,10 +285,9 @@ const Category = () => {
                             </div>
 
                         </div>
-
                         <Button btnName={
                             <Stack direction={"row"} alignItems={"center"} spacing={2}>
-                                <img src={AddCategory} />
+                               {width <= 768 ? null :<img src={AddCategory} />}
                                 <Typography className='!text-[14px]'>Add Category</Typography>
                             </Stack>
                         }
@@ -347,8 +348,8 @@ const Category = () => {
                 open={deletePopup?.bool}
             >
 
-                <div className="popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[330px] p-[12px] justify-center items-center">
-                    <div className='border border-[#E50027] rounded-[15px] h-[100%] w-[100%] justify-center items-center flex flex-col relative'>
+                <div className="popup-content w-[85%] md:w-2/4 sm:w-[85%] bg-white flex flex-col gap-2 h-[330px] p-[12px] justify-center items-center">
+                    <div className='border border-[#E50027] rounded-[15px] h-[100%] w-[100%] justify-center items-center flex flex-col relative text-center'>
                         <div className='absolute top-[12px] right-[12px]' onClick={() => handleCloseDeletePopup()}>
                             <img src={CloseReqPopup} />
                         </div>
