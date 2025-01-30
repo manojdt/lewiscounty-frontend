@@ -123,7 +123,7 @@ const StepComponenRender = ({
   }, [stepFields, stepData]);
   return (
     <>
-      <div className='form-container'>
+      <div className='py-6 px-6 sm:px-6 md:px-8 lg:px-16 xl:px-16'>
         {/* {errorNot && (
           <ToastNotification
             openToaster={errorNot}
@@ -150,9 +150,11 @@ const StepComponenRender = ({
               // const fileUpload = field.type === 'file'? register(field.name, field.inputRules):undefined
               return (
                 <div
-                  className={`relative mb-6 ${
-                    field.size ? 'width-49' : 'w-full'
-                  }`}
+                // className={`relative mb-6 ${
+                //   field.size ? 'width-49' : 'w-full'
+                // }`}
+
+                  className={`relative mb-6 ${field.widthQuestion}`}
                   key={index}
                 >
                   <label
@@ -372,7 +374,7 @@ const StepComponenRender = ({
                     </>
                   ) : field.type === 'checkbox' ? (
                     <>
-                      <div className='flex items-center me-4'>
+                      <div className='flex me-4 flex-col sm:flex-col md:flex-col lg:flex-row xl:flex-row items-start sm:items-start md:items-start lg:items-center xl:items-center'>
                         {field.options.map((option, index) => {
                           return (
                             <div className='flex items-center me-4' key={index}>

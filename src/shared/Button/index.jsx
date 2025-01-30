@@ -12,7 +12,7 @@ export const Button = (props) => {
     return (
         <button
             type={btnType}
-            className={`inline-block rounded px-7 pb-3 pt-3 text-sm font-medium 
+            className={`inline-block rounded px-7 pb-3 pt-3 text-sm font-medium !ml-[15px]
                 ${btnCategory === 'primary' ? 'text-white' : 'text-black'} ${btnCls}`}
             data-twe-ripple-init
             data-twe-ripple-color="light"

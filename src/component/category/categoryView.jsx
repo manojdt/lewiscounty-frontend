@@ -329,7 +329,13 @@ const CategoryView = () => {
         <CircularProgress color="inherit" />
       </Backdrop>
 
-      <Box p={4}>
+      <Box 
+      sx={{
+        p: 2, // default padding for small screens
+        '@media (min-width:600px)': { p: 2 }, // padding for medium screens
+        '@media (min-width:1200px)': { p: 4 } // padding for large screens
+      }}
+      >
         <Stack direction={"row"} alignItems={"center"} spacing={1}>
           <Typography
             className="text-[#5975A2] !text-[12px] cursor-pointer"
@@ -350,6 +356,9 @@ const CategoryView = () => {
           value={value}
           onChange={handleChange}
           aria-label="wrapped label tabs example"
+          variant="scrollable"
+          scrollButtons
+          allowScrollButtonsMobile
           style={{ borderBottom: "1px soild #1D5BBF" }}
           sx={{
             marginTop: "18px",
@@ -391,9 +400,22 @@ const CategoryView = () => {
           className={
             "border border-[#DBE0E5] bg-[#FFFFFF] rounded-[10px] mt-[20px]"
           }
-          p={3}
+          sx={{
+            p: 2, // default padding for small screens
+            '@media (min-width:600px)': { p: 2 }, // padding for medium screens
+            '@media (min-width:1200px)': { p: 3 } // padding for large screens
+          }}
         >
-          <Stack direction={"row"} width={"100%"} justifyContent={"end"}>
+          <Stack
+          direction="row"
+          width="100%"
+          sx={{
+            justifyContent: "flex-start", // default to 'flex-start' for small screens 
+            '@media (min-width:600px)': {
+              justifyContent: "flex-end", // change to 'flex-end' on larger screens (600px and above)
+              }
+              }}
+>
             <div>
               <div className="relative">
                 <input
