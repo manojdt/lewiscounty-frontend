@@ -381,7 +381,7 @@ export default function Admin() {
                           className="lg:w-2 lg:h-2  rounded-full"
                           style={{ background: "rgba(29, 91, 191, 1)" }}
                         ></span>
-                        <span className="lg:text-[8px]">
+                        <span className="text-[8px]">
                           Attended({recentReq.attended || 0})
                         </span>
                       </div>
@@ -390,7 +390,7 @@ export default function Admin() {
                           className="lg:w-2 lg:h-2  rounded-full"
                           style={{ background: "rgba(0, 174, 189, 1)" }}
                         ></span>
-                        <span className="lg:text-[8px]">
+                        <span className="text-[8px]">
                           Completed({recentReq.completed || 0})
                         </span>
                       </div>
