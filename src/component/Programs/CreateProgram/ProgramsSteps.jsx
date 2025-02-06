@@ -109,7 +109,7 @@ const ProgramSteps = ({
       const zipCodeFormatValue = formatZipCode(value);
       setValue(field.name, zipCodeFormatValue);
     } else {
-      setValue(field.name, value);
+      setValue(field.name, value.trimStart());
     }
   };
   const handleSelectedRow = (newSelectedRows, fieldId) => {
@@ -935,8 +935,8 @@ const ProgramSteps = ({
                       ...field.inputRules,
                       onChange: (e) => {
                         // Handle change specifically for this field
-                        setValue(field.name, e.target.value, {
-                          shouldValidate: true,
+                        setValue(field.name, e.target.value.trimStart(), {
+                          shouldValidate: false,
                           shouldDirty: true,
                           shouldTouch: true,
                         });

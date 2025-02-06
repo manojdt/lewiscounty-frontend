@@ -38,7 +38,7 @@ export const LoginType = () => {
     }
 
     if (role === "mentee") {
-      navigate("/programs");
+      navigate("/programs?type=planned&filter_by=month");
     }
   }, [userInfo]);
 
