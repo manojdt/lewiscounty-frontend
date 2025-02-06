@@ -86,26 +86,22 @@ export const userListSlice = createSlice({
 
     builder
       .addCase(getProfileInfo.pending, (state) => {
-        return {
-          ...state,
-          loading: true,
-        };
+          state.loading = true;
+          state.userDetails = {}; 
       })
       .addCase(getProfileInfo.fulfilled, (state, action) => {
-        return {
-          ...state,
-          mentorDetails: {},
-          menteeDetails: {},
-          userDetails: action.payload,
-          loading: false,
-        };
+     
+          state.mentorDetails= {}
+          state.menteeDetails= {}
+          state.loading = false;
+          state.userDetails = action.payload;
+      
       })
       .addCase(getProfileInfo.rejected, (state, action) => {
-        return {
-          ...state,
-          loading: false,
-          error: action.error.message,
-        };
+      
+        state.loading = false;
+        state.error = action.error.message;
+        
       });
 
     builder

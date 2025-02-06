@@ -211,7 +211,8 @@ export default function Layout({ subheader }) {
     }
 
     if (role === "mentee" && !userInfo?.data?.is_registered) {
-      navigate("/programs");
+      navigate("/programs?type=planned&filter_by=month");
+      
     }
   }, [userInfo]);
 

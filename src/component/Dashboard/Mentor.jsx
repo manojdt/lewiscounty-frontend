@@ -321,7 +321,7 @@ export const Mentor = () => {
               {(searchParams.get("type") === "yettojoin" ||
                 searchParams.get("type") === "planned") && (
                 <ProgramCard
-                  title="Planned Programs"
+                  title="Active Programs"
                   viewpage="/programs?type=yettojoin"
                   handleNavigateDetails={handleNavigateDetails}
                   handleBookmark={handleBookmark}
@@ -332,7 +332,7 @@ export const Mentor = () => {
 
               {searchParams.get("type") === "yettostart" && (
                 <ProgramCard
-                  title="Recent  Programs"
+                  title="Recent Joined Programs"
                   viewpage="/programs?type=yettostart"
                   handleNavigateDetails={handleNavigateDetails}
                   handleBookmark={handleBookmark}

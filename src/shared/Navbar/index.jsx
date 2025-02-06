@@ -38,6 +38,7 @@ import NavHead from './NavHead';
 import useWindowWidth from '../../utils/useWindowWidth';
 import { useWindowSize } from '../../utils/windowResize';
 import MobileDrawer from '../../component/MobileDrawer';
+import { useDebounce } from '../../utils';
 
 const HtmlTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} arrow />
@@ -154,13 +155,29 @@ export const Navbar = () => {
   };
 
   const handleGlobalChange = async (value) => {
-    const getSearchData = await api.get(
-      `globalsearch?keyword=${searchProps.searchType}&search=${value}`
-    );
-    if (getSearchData.status === 200 && getSearchData.data) {
-      setSearchProps({ ...searchProps, searchData: getSearchData.data });
-    }
+    setSearchProps((prev) => ({ ...prev, search: value }))
   };
+  const debouncedSearch = useDebounce(searchProps.search, 300); // Debounce input value
+
+  useEffect(() => {
+    if (!debouncedSearch) return; // Prevent empty searches
+
+    const fetchSearchResults = async () => {
+      try {
+        const response = await api.get(
+          `globalsearch?keyword=${searchProps.searchType}&search=${debouncedSearch}`
+        );
+
+        if (response.status === 200 && response.data) {
+          setSearchProps((prev) => ({ ...prev, searchData: response.data }));
+        }
+      } catch (error) {
+        console.error("API Error:", error);
+      }
+    };
+
+    fetchSearchResults();
+  }, [debouncedSearch, searchProps.searchType]); // Run effect when debounced search or type changes
 
   const handleSelectFilter = (key) => {
     setSearchProps({ ...searchProps, searchType: key, searchData: [] });

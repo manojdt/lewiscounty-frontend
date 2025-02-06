@@ -28,6 +28,8 @@ const FormContextProvider = ({ children, onSubmit, initialValues }) => {
           </Link>
         )),
       });
+    }else{
+      methods.reset({})
     }
   }, [initialValues, methods]);
 

@@ -109,6 +109,7 @@ export default function ProfileView() {
   });
   const [notesActivity, setNotesActivity] = React.useState(false);
   const [bookmarkLoading, setBookmarkLoading] = React.useState(false);
+  const [userInfoState, setUserInfoState] = React.useState({});
 
   const { profile, loading } = useSelector((state) => state.profileInfo);
   const userInfo = useSelector((state) => state.userInfo);
@@ -149,6 +150,7 @@ export default function ProfileView() {
     dispatch(getProfileInfo({ id: params.id, program_limit: 3 }));
     dispatch(getFollowList(params.id));
   };
+
 
   const followResponseHandle = () => {
     setActivity({
@@ -650,7 +652,12 @@ export default function ProfileView() {
       }
     }
   };
-
+  useEffect(() => {
+    setUserInfoState(userDetails)
+  }, [userDetails])
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <div className="profile-container">
       <Backdrop
@@ -659,6 +666,13 @@ export default function ProfileView() {
       >
         <CircularProgress color="inherit" />
       </Backdrop>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => 999999 }}
+        open={!userInfoState?.id}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+     
 
       {/* Admin Popup start*/}
 
@@ -1539,7 +1553,7 @@ export default function ProfileView() {
           ))}
         </div> */}
 
-        <FormContextProvider initialValues={userDetails}>
+        <FormContextProvider initialValues={userInfoState}>
           {profileSection.map((section, index) => (
             <Accordian key={index} title={section.title} defaultValue={true}>
               {section.component}
