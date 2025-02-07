@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import SearchIcon from "../../assets/icons/SearchColor.svg";
 import FeedImage from "../../assets/images/feed1.png";
 import MoreIcon from "../../assets/icons/moreIcon.svg";
-import UserIcon from "../../assets/images/user.jpg";
 import SuccessTik from "../../assets/images/blue_tik1x.png";
 import MaleIcon from "../../assets/images/male-profile1x.png";
 import FemaleIcon from "../../assets/images/female-profile1x.png";
@@ -24,6 +23,7 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import { Button } from "../../shared";
 import { requestPageBreadcrumbs } from "../Breadcrumbs/BreadcrumbsCommonData";
+import UserIcon from "../../assets/icons/user-icon.svg";
 
 export default function Feeds() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -218,7 +218,7 @@ export default function Feeds() {
               className="cursor-pointer w-6 h-6"
             /> */}
             <Button
-              btnName="Add Posts"
+              btnName="Add Post"
               btnCls="w-[140px] sm:w-[170px]"
               onClick={handleCreatePostPopup}
             />
@@ -290,7 +290,8 @@ export default function Feeds() {
                 let imageUrl = feed?.image_url || "";
 
                 if (imageUrl === "") {
-                  imageUrl = feed.gender === "male" ? MaleIcon : FemaleIcon;
+                  // imageUrl = feed.gender === "male" ? MaleIcon : FemaleIcon;
+                  imageUrl = UserIcon;
                 }
 
                 return (

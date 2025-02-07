@@ -27,6 +27,7 @@ import MuiModal from "../../shared/Modal";
 import { useForm } from "react-hook-form";
 import { Button } from "../../shared";
 import AssignMentorProgram from "./AssignMentorProgram";
+import { useDebounce } from "../../utils";
 
 const Members = () => {
   const navigate = useNavigate();
@@ -41,6 +42,8 @@ const Members = () => {
     column: [],
     data: [],
   });
+  const [searchTerm, setSearchTerm] = useState("");
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const [seletedItem, setSelectedItem] = useState({});
   const [anchorEl, setAnchorEl] = useState(null);
   const [actionColumnInfo, setActionColumnInfo] = useState({
@@ -176,7 +179,8 @@ const Members = () => {
   };
 
   const handleSearch = (value) => {
-    setFilterInfo({ ...filterInfo, search: value });
+    // setFilterInfo({ ...filterInfo, search: value });
+    setSearchTerm(value);
     // if (value !== '') {
     //   setPaginationModel({
     //     page: 0,
@@ -184,7 +188,9 @@ const Members = () => {
     //   });
     // }
   };
-
+  useEffect(() => {
+    setFilterInfo({ ...filterInfo, search: debouncedSearchTerm });
+  }, [debouncedSearchTerm]);
   const handleAssignProgramOrTask = () => {
     handleClose();
     setAssignProgramInfo({ assignPopup: true, message: "" });
@@ -463,6 +469,7 @@ const Members = () => {
             id="search-navbar"
             className="block w-full p-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Search here..."
+            value={searchTerm}
             onChange={(e) => handleSearch(e.target.value)}
           />
           <div className="absolute inset-y-0 end-0 flex items-center pe-3">
