@@ -491,10 +491,10 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   };
 
   const handleInstructor = (programdetails) => {
-    const mentorId = programdetails?.mentor_info?.id || "";
+    const mentorId = programdetails?.mentor_info?.id?programdetails?.mentor_info?.id:programdetails?.created_by?programdetails?.created_by:"";
 
     // if (mentorId !== '' && mentorId !== userdetails?.data?.user_id) {
-    navigate(`/mentor-profile/${mentorId}?breadcrumbsType=${requestPageBreadcrumbs.ProgramsDetails}`);
+    navigate(`/mentor-profile/${mentorId}?type=view&breadcrumbsType=${requestPageBreadcrumbs.ProgramsDetails}`);
     // }
   };
 
