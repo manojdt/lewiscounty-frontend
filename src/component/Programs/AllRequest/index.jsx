@@ -2007,6 +2007,8 @@ export default function AllRequest() {
       // created_by: "mentee",
       ...(filter.search !== "" && { search: filter.search }),
     };
+    //console.log("Search Query in Payload:", filter.search);
+    console.log("Final Payload:", payload);
     if (role === "admin") {
       if (selectedTab === "my") {
         payload = {
@@ -2077,7 +2079,6 @@ export default function AllRequest() {
         ...(filterStatus !== "all" && { status: filterStatus }),
         page: paginationModel?.page + 1,
         limit: paginationModel?.pageSize,
-        // request_type: "testimonial",
         ...(role === "admin" && {
           request_by:
             selectedTab === "admin"
@@ -2087,12 +2088,11 @@ export default function AllRequest() {
               : "mentor",
         }),
         ...(filter.search !== "" && { search: filter.search }),
-        // ...(filter.filter_by !== ""
-        //     ? { filter_by: filter.filter_by }
-        //     : { filter_by: "month" }),
+        ...(filter.filter_by !== "" && filter.filter_by !== "all" && { filter_by: filter.filter_by }),
       })
     );
   };
+  
 
   const getCerificateRequestAPi = () => {
     dispatch(

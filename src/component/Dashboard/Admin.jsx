@@ -31,6 +31,7 @@ export default function Admin() {
   const { width } = useWindowSize();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const categoryId = searchParams.get("category_id"); // Extract category ID
   const userInfo = useSelector((state) => state.userInfo);
   const userpragrams = useSelector((state) => state.userPrograms);
   const { feeds } = useSelector((state) => state.feeds);
@@ -409,7 +410,7 @@ export default function Admin() {
           </CardWrapper>
 
           <div className="py-3">
-            <DashboardPrograms />
+          <DashboardPrograms categoryId={categoryId} />
           </div>
         </div>
       </div>
