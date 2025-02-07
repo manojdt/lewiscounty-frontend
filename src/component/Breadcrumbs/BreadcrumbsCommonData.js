@@ -27,6 +27,7 @@ export const requestPageBreadcrumbs = {
   adminMemberMenteeTab:"mentee",
   new_goals_request:"new_goals_request",
   feed:'fead',
+  dashboardfeed:'dashBoardfead',
   myMentee:"myMentee",
   newFollowRequest:"new_follow_request",
   myMentor:"myMentor",
@@ -55,6 +56,9 @@ export const requestPageBreadcrumbs = {
   taskMenteeDraftReport:'draft',
   dashboardPrograms:'dashboardProgramDetails',
   ticketHistorys:'ticketHistoryView',
+  dashboardProgramsCard:'dashboardProgramscard',
+  ProgramsCard:'programscard',
+  ProgramsDetails:'programDetails',
 };
 export const programStatusBreadcrumbs=[
     'All Programs',
@@ -476,7 +480,18 @@ export const user_feed = (name) => {
     return [
       {
         label: `Feeds`,
-        path: `/feeds`,
+        path: -1,
+      },
+      {
+        label: `View ${name}`,
+      },
+    ];
+  };
+export const dashboard_feed = (name) => {
+    return [
+      {
+        label: `Dashboard`,
+        path: -1,
       },
       {
         label: `View ${name}`,
@@ -846,6 +861,39 @@ export const programProfileBreadCrumb = () => {
     },
     {
       label: `View Mentee Profile`,
+    },
+  ];
+};
+export const programcardDashBoard = () => {
+  return [
+    {
+      label: `Dashboard`,
+      path: -1,
+    },
+    {
+      label: `View Profile`,
+    },
+  ];
+};
+export const programcardProgrampage = () => {
+  return [
+    {
+      label: `Programs`,
+      path: -1,
+    },
+    {
+      label: `View Profile`,
+    },
+  ];
+};
+export const programDetailsProfile = () => {
+  return [
+    {
+      label: `Program Details`,
+      path: -1,
+    },
+    {
+      label: `View Profile`,
     },
   ];
 };

@@ -95,7 +95,7 @@ export default function Card({
             >
               <span className="text-sm">{menu.name}</span>
               <span className="text-base" style={{ color: cardCountColor }}>
-                {menu.count > 0 ? menu.count : ""}
+                {menu.count}
               </span>
             </div>
           </li>
