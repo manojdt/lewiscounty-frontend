@@ -83,26 +83,26 @@ export default function Certificate() {
   };
 
   const handleSearch = (value) => {
-    let query = "";
-    if (value !== "") {
-      query = `?search=${value}`;
-    }
+    let query = value !== "" ? `?search=${value}` : "";
+  
     dispatch(
       getCertificateList(
-        query + role === "admin"
-          ? `&page=${paginationModel?.page + 1}&limit=${
-              paginationModel?.pageSize
-            }&request_type=certificate${
-              role === "admin" && requestTab !== "all"
-                ? "&request_by=mentor"
-                : ""
-            }`
-          : `&page=${paginationModel?.page + 1}&limit=${
-              paginationModel?.pageSize
-            }&request_type=certificate`
+        query +
+          (role === "admin"
+            ? `&page=${paginationModel?.page + 1}&limit=${
+                paginationModel?.pageSize
+              }&request_type=certificate${
+                role === "admin" && requestTab !== "all"
+                  ? "&request_by=mentor"
+                  : ""
+              }`
+            : `&page=${paginationModel?.page + 1}&limit=${
+                paginationModel?.pageSize
+              }&request_type=certificate`)
       )
     );
   };
+  
   const handleClose = () => {
     setAnchorEl(null);
   };

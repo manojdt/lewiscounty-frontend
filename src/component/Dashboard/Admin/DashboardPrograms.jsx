@@ -11,7 +11,7 @@ import { getUserPrograms } from "../../../services/userprograms";
 import ProgramCard from "../../../shared/Card/ProgramCard";
 import api from "../../../services/api";
 
-export default function DashboardPrograms() {
+export default function DashboardPrograms({ categoryId }) {
   const dispatch = useDispatch();
   const [programData, setProgramData] = React.useState({});
   const [searchParams] = useSearchParams();
@@ -53,19 +53,27 @@ export default function DashboardPrograms() {
     },
   ];
   const handleFetchPrograms = () => {
+    // if (!categoryId) {
+    //   console.error("Category ID is missing!");
+    //   return;
+    // }
     const payload = {
       limit: 6,
       page: 1,
       status: "yettojoin",
     };
+     // Only include category_id if it's defined and not null
+  if (categoryId) {
+    payload.category_id = categoryId;
+  }
     dispatch(getallMyProgram(payload)).then((res) => {
-      // console.log("res ====>", res)
+      console.log("res ====>", res)
       setProgramData(res?.payload);
     });
   };
   React.useEffect(() => {
     handleFetchPrograms();
-  }, []);
+  }, [categoryId]);
 
   
   return (
