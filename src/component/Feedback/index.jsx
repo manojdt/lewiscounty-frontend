@@ -72,6 +72,7 @@ const [activeComment,setActiveComment] = useState('')
     )
       .then(() => {
         handleCancelReplyComment();
+        dispatch(getPost());
       })
       .catch((error) => {
         console.error("Failed to post comment:", error);

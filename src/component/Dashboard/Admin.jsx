@@ -352,11 +352,12 @@ export default function Admin() {
                         borderBottom: "1px solid rgba(29, 91, 191, 1)",
                       }}
                     >
-                      <div className="w-1/4">
+                      <div className="w-12 h-12 flex items-center justify-center">
                         {" "}
                         <img
                           src={recentReq?.profile_image || UserIcon}
                           alt="male-icon"
+                           className="w-full h-full object-cover rounded-full"
                         />{" "}
                       </div>
                       <div className="flex flex-col gap-2">

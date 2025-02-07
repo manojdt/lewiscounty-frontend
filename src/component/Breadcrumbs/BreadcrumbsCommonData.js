@@ -287,7 +287,7 @@ export const admin_Canceledreport = (name) => {
 export const mentor_allreport = (name) => {
   return [
     {
-      label: "Reports",
+      label: "All Reports",
       path: `/reports`,
     },
     {
@@ -298,7 +298,7 @@ export const mentor_allreport = (name) => {
 export const mentor_Newreport = (name) => {
   return [
     {
-      label: "Reports",
+      label: "New Reports",
       path: `/reports?tabType=${requestPageBreadcrumbs?.menteeNewReport}`,
     },
     {
@@ -309,7 +309,7 @@ export const mentor_Newreport = (name) => {
 export const mentor_Pendingreport = (name) => {
   return [
     {
-      label: "Reports",
+      label: "Pending Reports",
       path: `/reports?tabType=${requestPageBreadcrumbs?.menteePendingReport}`,
     },
     {
@@ -320,7 +320,7 @@ export const mentor_Pendingreport = (name) => {
 export const mentor_Completedreport = (name) => {
   return [
     {
-      label: "Reports",
+      label: "Completed Reports",
       path: `/reports?tabType=${requestPageBreadcrumbs?.menteeCompletedReport}&tr=fsdbj`,
     },
     {
@@ -331,7 +331,7 @@ export const mentor_Completedreport = (name) => {
 export const mentor_Rejectedreport = (name) => {
   return [
     {
-      label: "Reports",
+      label: "Rejected Reports",
       path: `/reports?tabType=${requestPageBreadcrumbs?.menteeRejectedReport}`,
     },
     {
@@ -342,7 +342,7 @@ export const mentor_Rejectedreport = (name) => {
 export const mentor_Draftreport = (name) => {
   return [
     {
-      label: "Reports",
+      label: "Draft Reports",
       path: `/reports?tabType=${requestPageBreadcrumbs?.menteeDraftReport}`,
     },
     {

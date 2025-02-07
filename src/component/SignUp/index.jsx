@@ -241,7 +241,7 @@ export const Signup = () => {
             MMA
           </h4>
           <h2 className="text-2xl font-bold text-gray-800 mb-6">
-            Welcome to Create Account
+          Let's Get Started with Creating Your Account!
           </h2>
           <p className="text-[12px] pb-10">
             Already have an account?
