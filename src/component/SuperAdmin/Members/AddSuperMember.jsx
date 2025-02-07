@@ -170,7 +170,7 @@ function AddSuperMember() {
   };
 
   return (
-    <div className="px-9 my-6 grid">
+    <div className="px-4 my-6 grid sm:px-4 md:px-6 lg:px-9 xl:px-9">
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={loading}
@@ -187,7 +187,7 @@ function AddSuperMember() {
       >
         <div className="breadcrum">
           <nav
-            className="flex px-7 pt-6 pb-5 mx-2 border-b-2 justify-between"
+            className="flex px-3 sm:px-3 md:px-7 lg:px-7 xl:px-7 pt-6 pb-5 mx-2 border-b-2 justify-between"
             aria-label="Breadcrumb"
           >
             <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
@@ -206,11 +206,11 @@ function AddSuperMember() {
             />
           </nav>
         </div>
-        <div className="content px-8">
+        <div className="content px-4 sm:px-4 md:px-8 lg:px-8 xl:px-8">
           <div className="py-9">
             <form onSubmit={handleSubmit}>
               <div className="grid grid-cols-12 gap-3">
-                <div className="col-span-6">
+                <div className="col-span-12 sm:col-span-12 md:col-span-6 lg:col-span-12 xl:col-span-12">
                   <FormField label="First Name" required>
                     <input
                       name="FirstName"
@@ -234,7 +234,7 @@ function AddSuperMember() {
                   </FormField>
                 </div>
 
-                <div className="col-span-6">
+                <div className="col-span-12 sm:col-span-12 md:col-span-6 lg:col-span-12 xl:col-span-12">
                   <FormField label="Last Name" required>
                     <input
                       name="LastName"
@@ -252,7 +252,7 @@ function AddSuperMember() {
                   </FormField>
                 </div>
 
-                <div className="col-span-6">
+                <div className="col-span-12 sm:col-span-12 md:col-span-6 lg:col-span-12 xl:col-span-12">
                   <FormField label="Personal Email Id" required>
                     <input
                       name="EmailId"
@@ -276,7 +276,7 @@ function AddSuperMember() {
                   </FormField>
                 </div>
 
-                <div className="col-span-6">
+                <div className="col-span-12 sm:col-span-12 md:col-span-6 lg:col-span-12 xl:col-span-12">
                   <FormField label="User ID">
                     <input
                       name="OrgEmailId"
@@ -301,7 +301,7 @@ function AddSuperMember() {
                   </FormField>
                 </div>
 
-                <div className="col-span-6">
+                <div className="col-span-12 sm:col-span-12 md:col-span-6 lg:col-span-12 xl:col-span-12">
                   <FormField label="Primary Phone Number" required>
                     <input
                       name="PrimaryPhoneNumber"
@@ -327,7 +327,7 @@ function AddSuperMember() {
                   </FormField>
                 </div>
 
-                <div className="col-span-6">
+                <div className="col-span-12 sm:col-span-12 md:col-span-6 lg:col-span-12 xl:col-span-12">
                   <FormField label="Secondary Phone Number">
                     <input
                       name="SecondaryPhoneNumber"
@@ -389,14 +389,14 @@ function AddSuperMember() {
               <div className="flex gap-6 justify-center align-middle py-16">
                 <Button
                   btnName="Cancel"
-                  btnCls="w-[18%]"
+                  btnCls="w-[30%] sm:w-[30%] md:w-[20%] lg:w-[15%] xl:w-[15%]"
                   btnCategory="secondary"
                   onClick={() => navigate("/certificates")}
                 />
                 <Button
                   btnType="submit"
-                  btnCls="w-[18%]"
-                  btnName="Add New Admin"
+                   btnCls="w-[30%] sm:w-[30%] md:w-[20%] lg:w-[15%] xl:w-[15%]"
+                  btnName="Submit"
                   btnCategory="primary"
                 />
               </div>

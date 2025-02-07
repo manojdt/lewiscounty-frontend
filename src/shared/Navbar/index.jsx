@@ -294,22 +294,22 @@ export const Navbar = () => {
       {!questionUpload && !documentUpload && (
         <nav className='bg-white border-gray-200'>
           <div className='flex justify-between'>
-            <div className='contain gap-24 flex justify-between w-3/12 p-4'>
+            <div className='contain gap-8 sm:gap-8 md:gap-12 lg:gap-24 xl:gap-24 flex justify-between w-3/12 p-4'>
               <NavHead
                 role={userInfo?.data?.role}
                 handleLogoClick={handleLogoClick}
               />
               {userInfo?.data?.role === user.super_admin && (
-                <div>
+                <div className='hidden sm:hidden md:flex lg:flex xl:flex'>
                   <ul
                     // className='flex items-center justify-between h-full'
                     style={{ gap: '40px' }}
                     className={`flex flex-col ${
                       !userInfo?.data?.is_registered
                         ? 'ml-[150px]'
-                        : 'justify-center'
-                    } items-center p-4 md:p-0 mt-4 h-full font-medium border border-gray-100
-                    rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0`}
+                        : 'justify-center' 
+                    } items-center p-0 sm:p-0 md:p-0 mt-0 h-full font-medium border border-gray-100
+                    rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row sm:flex-row sm:mt-0 md:mt-0 `}
                   >
                     {/* {userInfo?.data?.is_registered && (
                       <li
@@ -352,7 +352,7 @@ export const Navbar = () => {
                       >
                         <span
                           onClick={() => navigate('/tickets')}
-                          className='block py-2 px-3 rounded md:p-0 cursor-pointer'
+                          className='block py-2 px-3 rounded cursor-pointer'
                           aria-current='page'
                         >
                           Tickets
@@ -611,10 +611,10 @@ export const Navbar = () => {
 
               {userInfo?.data.role === user.super_admin && (
                 <div className='flex items-center relative'>
-                  <img className='absolute ml-4' src={AddTicketIcon} alt='' />
+                  <img className='absolute ml-6' src={AddTicketIcon} alt='' />
                   <Button
                     btnType='button'
-                    btnCls='w-[160px] h-12 pl-12'
+                    btnCls='w-[160px] h-10 sm:h-10 md:h-12 lg:h-12 xl:h-12 pl-12'
                     btnName={'Add Ticket'}
                     btnCategory='primary'
                     onClick={() => navigate('/add-new-ticket')}

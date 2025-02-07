@@ -18,7 +18,7 @@ import {
   ticketStatusText,
   user,
 } from '../../../utils/constant';
-import { Menu, MenuItem, Skeleton } from '@mui/material';
+import { Box, FormControl, Menu, MenuItem, Select, Skeleton } from '@mui/material';
 import MoreIcon from '../../../assets/icons/moreIcon.svg';
 import StartIcon from '../../../assets/icons/start-icon.svg';
 import RejectIcon from '../../../assets/icons/reject-icon.svg';
@@ -290,8 +290,16 @@ const Tickets = () => {
   useEffect(() => {
     setRequestTab(tabValue);
      }, [tabValue])
+
+     const [mobileValue, setMobileValue] = useState('');
+
+  const handleMobileChange = (event) => {
+    const value = event.target.value;
+    setMobileValue(value);
+    handleTab(value);
+  };
   return (
-    <div className='p-9'>
+    <div className='p-2 sm:p-2 md:p-6 lg:p-9 xl:p-9'>
       {(role === user.admin ||
         role === user.mentee ||
         role === user.mentor) && (
@@ -316,7 +324,7 @@ const Tickets = () => {
         className='px-3 py-5'
         style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}
       >
-        <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
+        <div className="flex justify-between px-5 pb-4 mb-4 sm:mb-4 md:mb-4 lg:mb-8 xl:mb-8 items-center border-b-2 ">
           <div className='flex gap-5 items-center text-[20px]'>
             <p>Tickets</p>
           </div>
@@ -326,12 +334,12 @@ const Tickets = () => {
               <input
                 type='text'
                 id='search-navbar'
-                className='block w-full p-2 text-sm text-gray-900 border-none'
+                className='block w-full p-2 text-sm text-gray-900 border-none md:w-[320px] lg:w-[345px]'
                 placeholder='Search here...'
                 style={{
                   border: '1px solid rgba(29, 91, 191, 1)',
                   height: '41px',
-                  width: '345px',
+                  // width: '345px',
                 }}
                 // value={searchTask}
                 // onChange={(e) => handleTaskSearch(e.target.value)}
@@ -342,27 +350,70 @@ const Tickets = () => {
             </div>
           </div>
         </div>
-        <div className='mx-5'>
-          <div className='flex gap-3 mb-6'>
-            {taskMenuList.map((actionBtn, index) => (
-              <button
-                key={index}
-                className='px-5 py-4 text-[14px]'
-                style={{
-                  background:
-                    requestTab === actionBtn.key
-                      ? 'linear-gradient(97.86deg, #005DC6 -15.07%, #00B1C0 112.47%)'
-                      : 'rgba(249, 249, 249, 1)',
-                  color: requestTab === actionBtn.key ? '#fff' : '#000',
-                  borderRadius: '3px',
-                }}
-                onClick={() => handleTab(actionBtn.key)}
-              >
-                {actionBtn.name}
-              </button>
-            ))}
-          </div>
-
+        <div className='mx-1 sm:mx-1 md:mx-2 lg:mx-5 xl:mx-5'>
+       
+        <div className="hidden gap-3 mb-6 sm:hidden md:hidden lg:flex xl:flex">
+        {taskMenuList.map((actionBtn, index) => (
+          <button
+            key={index}
+            className="p-3.5 text-[14px]"
+            style={{
+              background:
+                requestTab === actionBtn.key
+                  ? 'linear-gradient(97.86deg, #005DC6 -15.07%, #00B1C0 112.47%)'
+                  : 'rgba(249, 249, 249, 1)',
+              color: requestTab === actionBtn.key ? '#fff' : '#000',
+              borderRadius: '3px',
+            }}
+            onClick={() => handleTab(actionBtn.key)}
+          >
+            {actionBtn.name}
+          </button>
+        ))}
+      </div>
+      <div>
+              <Box className="lg:hidden mb-4" sx={{ width: "100%", maxWidth: 360 }}>
+                <FormControl fullWidth>
+                  <Select
+                    value={mobileValue}
+                    onChange={handleMobileChange}
+                    displayEmpty
+                    className="bg-gray-50"
+                    sx={{
+                      "& .MuiSelect-select": {
+                        padding: "12px 16px",
+                      },
+                    }}
+                  >
+                    <MenuItem value="" disabled>
+                      Select Option
+                    </MenuItem>
+                    {taskMenuList.map((actionBtn, index) => (
+                      <MenuItem
+                        key={index}
+                        value={actionBtn.key}
+                        sx={{
+                          background:
+                            requestTab === actionBtn.key
+                              ? "linear-gradient(97.86deg, #005DC6 -15.07%, #00B1C0 112.47%)"
+                              : "transparent",
+                          color: requestTab === actionBtn.key ? "#fff" : "#000",
+                          "&:hover": {
+                            background:
+                              requestTab === actionBtn.key
+                                ? "linear-gradient(97.86deg, #005DC6 -15.07%, #00B1C0 112.47%)"
+                                : "rgba(0, 0, 0, 0.04)",
+                          },
+                        }}
+                      >
+                        {actionBtn.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Box>
+            
+    </div>
           <div></div>
           {isLoading ? (
             <div className='flex justify-center items-center'>

@@ -38,8 +38,8 @@ const ViewTicket = ({ ticket, type }) => {
 
   return (
     <div>
-      <div className='p-8 mt-6 grid grid-cols-4 gap-4'>
-        <div className='col-span-1 flex items-center justify-center flex-col'>
+      <div className='p-4 sm:p-4 md:p-6 lg:p-8 xl:p-8 sm: mt-6 grid grid-cols-4 gap-4'>
+        <div className='col-span-4 sm:col-span-4 md:col-span-1 lg:col-span-1 xl:col-span-1 flex items-center justify-center flex-col'>
           <img
             src={ticket?.created_by_detail?.profile_image || UserImage}
             className='ring-8 ring-[#1D5BBF] rounded-full'
@@ -51,7 +51,7 @@ const ViewTicket = ({ ticket, type }) => {
             {ticket?.created_by_detail?.role})
           </p>
         </div>
-        <div className='grid col-span-3 border rounded-lg'>
+        <div className='grid col-span-4 sm:col-span-4 md:col-span-3 lg:col-span-3 xl:col-span-3  border rounded-lg'>
           <div className='flex-1'>
             <table className='w-full'>
               <tbody>
@@ -91,7 +91,7 @@ const ViewTicket = ({ ticket, type }) => {
           </div>
         </div>
       </div>
-      <div className='mx-9 my-9 space-y-12'>
+      <div className='m-3 sm:m-3 md:m-6 lg:m-9 xl:m-9 space-y-12'>
         {/* Ticket Details */}
         <div className='border p-6 rounded-lg flex items-center justify-start gap-4'>
           <h2 className='text-[#1D5BBF] font-semibold'>Description:</h2>

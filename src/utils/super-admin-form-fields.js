@@ -10,7 +10,7 @@ export const NewTicketFields = [
     },
     size: true,
     disable: true,
-    width: 'col-span-1',
+    width: 'col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1',
   },
   {
     type: 'input',
@@ -23,7 +23,7 @@ export const NewTicketFields = [
     },
     size: true,
     disable: true,
-    width: 'col-span-1',
+    width: 'col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1',
   },
   {
     type: 'input',
@@ -36,7 +36,7 @@ export const NewTicketFields = [
     },
     size: true,
     disable: true,
-    width: 'col-span-1',
+    width: 'col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1',
   },
   {
     type: 'radio',
@@ -61,7 +61,7 @@ export const NewTicketFields = [
       // required: "This field is required",
     },
     size: true,
-    width: 'col-span-1',
+    width: 'col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1',
   },
   {
     type: 'input',
@@ -74,6 +74,7 @@ export const NewTicketFields = [
     },
     size: true,
     disable: true,
+    width: 'col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1'
   },
 
   {
@@ -86,7 +87,7 @@ export const NewTicketFields = [
       // required: "This field is required",
     },
     size: true,
-    width: 'col-span-1',
+    width: 'col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1',
   },
   {
     type: 'file',

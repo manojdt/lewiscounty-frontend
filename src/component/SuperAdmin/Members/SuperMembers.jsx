@@ -14,8 +14,13 @@ import protectedApi from "../../../services/api";
 import PopupMenu from "../../PopupMenu";
 import Swal from "sweetalert2"; // Import SweetAlert2
 import MuiModal from "../../../shared/Modal";
+import AddTicketIcon from '../../../assets/icons/add-ticket-icon.svg';
+import { useWindowSize } from "../../../utils/windowResize";
+import { toast } from "react-toastify";
+
 
 function SuperMembers() {
+   const { width } = useWindowSize();
   const [taskSuccess, setTaskSuccess] = useState(false);
   const [seletedItem, setSelectedItem] = useState({});
   const [anchorEl, setAnchorEl] = useState(null);
@@ -24,6 +29,46 @@ function SuperMembers() {
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
   const navigate = useNavigate();
   const open = Boolean(anchorEl);
+
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+const [selectedUser, setSelectedUser] = useState({ userId: null, currentStatus: false });
+
+ // New state for delete confirmation dialog
+ const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+ const [userToDelete, setUserToDelete] = useState(null);
+
+
+ const handleDeleteClick = (userId) => {
+  handleClose(); // Close the menu
+  setUserToDelete(userId);
+  setIsDeleteDialogOpen(true);
+};
+
+const handleConfirmDelete = async () => {
+  try {
+    await protectedApi.delete(`/user/delete/?user_id=${userToDelete}`);
+    
+    setSupermemberData((prevData) =>
+      prevData.filter((item) => item.id !== userToDelete)
+    );
+
+    toast("User has been deleted successfully.", {
+      type: "success",
+      position: "bottom-right",
+      autoClose: 4000,
+    });
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    toast("Failed to delete the user.", {
+      type: "error",
+      position: "bottom-right",
+      autoClose: 4000,
+    });
+  } finally {
+    setIsDeleteDialogOpen(false);
+    setUserToDelete(null);
+  }
+};
 
   const handleMoreClick = (event, data) => {
     setSelectedItem(data);
@@ -86,45 +131,95 @@ function SuperMembers() {
     [supermemberData]
   );
 
-   const handleToggleStatus = async (userId, currentStatus) => {
-    handleClose();
-    const action = currentStatus ? "Deactivate" : "Activate";
-    const status = currentStatus ? false : true; // Toggle status (false = inactive, true = active)
+  //  const handleToggleStatus = async (userId, currentStatus) => {
+  //   handleClose();
+  //   const action = currentStatus ? "Deactivate" : "Activate";
+  //   const status = currentStatus ? false : true; // Toggle status (false = inactive, true = active)
 
-    Swal.fire({
-      title: `Are you sure you want to ${action} this user?`,
-      text: `Do you want to ${action.toLowerCase()} the user?`,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#5BC4BF",
-      cancelButtonColor: "#D3D3D3",
-      confirmButtonText: `${action}`,
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          await protectedApi.put(`/user/update/?user_id=${userId}`, {
-            is_active: status, 
-          });
+  //   Swal.fire({
+  //     title: `Are you sure you want to ${action} this user?`,
+  //     text: `Do you want to ${action.toLowerCase()} the user?`,
+  //     icon: "warning",
+  //     showCancelButton: true,
+  //     confirmButtonColor: "#5BC4BF",
+  //     cancelButtonColor: "#D3D3D3",
+  //     confirmButtonText: `${action}`,
+  //     customClass: {
+  //       title: 'text-[24px]', // This uses Tailwind's font size class for the title
+  //       text: 'text-sm', 
+  //     }
+  //   }).then(async (result) => {
+  //     if (result.isConfirmed) {
+  //       try {
+  //         await protectedApi.put(`/user/update/?user_id=${userId}`, {
+  //           is_active: status, 
+  //         });
 
-          Swal.fire(
-            `${action}d!`,
-            `The user has been ${action.toLowerCase()}d successfully.`,
-            "success"
-          );
+  //         Swal.fire(
+  //           `${action}d!`,
+  //           `The user has been ${action.toLowerCase()}d successfully.`,
+  //           "success"
+  //         );
 
-          setSupermemberData((prevData) =>
-            prevData.map((item) =>
-              item.id === userId ? { ...item, is_active: status } : item
-            )
-          );
-        } catch (error) {
-          console.error("Error updating user status:", error);
-          Swal.fire("Error", "Failed to update the user status.", "error");
-        }
-      }
-    });
-  };
+  //         setSupermemberData((prevData) =>
+  //           prevData.map((item) =>
+  //             item.id === userId ? { ...item, is_active: status } : item
+  //           )
+  //         );
+  //       } catch (error) {
+  //         console.error("Error updating user status:", error);
+  //         Swal.fire("Error", "Failed to update the user status.", "error");
+  //       }
+  //     }
+  //   });
+  // };
   // Filter the members based on search query
+  const handleToggleStatus = (userId, currentStatus) => {
+    handleClose();
+    setSelectedUser({ userId, currentStatus });
+    setIsConfirmDialogOpen(true);
+  };
+
+  const handleConfirmAction = async () => {
+    const { userId, currentStatus } = selectedUser;
+    const action = currentStatus ? "Deactivate" : "Activate";
+    const status = !currentStatus;
+  
+    try {
+      await protectedApi.put(`/user/update/?user_id=${userId}`, {
+        is_active: status,
+      });
+  
+      // Swal.fire(
+      //   `${action}d!`,
+      //   `The user has been ${action.toLowerCase()}d successfully.`,
+      //   "success"
+      // );
+      toast(`The user has been ${action.toLowerCase()}d successfully.`, {
+        type: "success",
+        position: "bottom-right",
+        autoClose: 4000,
+      });
+  
+      setSupermemberData((prevData) =>
+        prevData.map((item) =>
+          item.id === userId ? { ...item, is_active: status } : item
+        )
+      );
+    } catch (error) {
+      console.error("Error updating user status:", error);
+      // Swal.fire("Error", "Failed to update the user status.", "error");
+      toast(`Failed to update the user status.`, {
+        type: "error",
+        position: "bottom-right",
+        autoClose: 4000,
+      });
+    }
+    setIsConfirmDialogOpen(false);
+  };
+
+
+  
   const filteredMembers = supermemberData.filter((member) =>
     (member.users_name || "").toLowerCase().includes(searchQuery) ||
   (member.email || "").toLowerCase().includes(searchQuery) 
@@ -300,7 +395,7 @@ function SuperMembers() {
               {/* Delete Option */}
               <MenuItem
                 className="!text-[12px]"
-                onClick={() => handleDelete(seletedItem.id)} // Call handleDelete on click
+                onClick={() => handleDeleteClick(seletedItem.id)} // Call handleDelete on click
               >
                 <img
                   src={DeleteIcon}
@@ -317,36 +412,115 @@ function SuperMembers() {
   ];
 
   return (
+    
     <div>
-      <div className="px-8 mt-10 ">
-        <Backdrop
-          sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          open={loading} // Show loading spinner while data is being fetched
-        >
-          <CircularProgress color="inherit" />
-        </Backdrop>
+      {/* Status Toggle Backdrop */}
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isConfirmDialogOpen}
+      >
+        <div className="popup-content w-[95%] sm:w-[95%] md:w-[50%] lg:w-[50%] xl:[50%] bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
+          <span style={{ color: "#232323", fontWeight: 600, fontSize: "24px" }}>
+            {selectedUser.currentStatus ? "Deactivate" : "Activate"} User
+          </span>
 
+          <div className="py-5">
+            <p
+              style={{
+                color: "rgba(24, 40, 61, 1)",
+                fontWeight: 600,
+                fontSize: "18px",
+              }}
+            >
+              Are you sure you want to {selectedUser.currentStatus ? "deactivate" : "activate"} this user?
+            </p>
+          </div>
+          <div className="flex justify-center">
+            <div className="flex gap-6 justify-center align-middle">
+              <Button
+                btnName="Cancel"
+                btnCls="w-[42%]"
+                btnCategory="secondary"
+                onClick={() => setIsConfirmDialogOpen(false)}
+              />
+              <Button
+                btnType="button"
+                btnCls="w-[42%]"
+                btnName={selectedUser.currentStatus ? "Deactivate" : "Activate"}
+                btnCategory="primary"
+                onClick={handleConfirmAction}
+              />
+            </div>
+          </div>
+        </div>
+      </Backdrop>
+
+      {/* Separate Delete Confirmation Backdrop */}
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isDeleteDialogOpen}
+      >
+        <div className="popup-content w-[95%] sm:w-[95%] md:w-[50%] lg:w-[50%] xl:[50%] bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
+          <img src={DeleteIcon} alt="Delete Icon" className="w-[48px] h-[48px]" />
+          <span style={{ color: "#232323", fontWeight: 600, fontSize: "24px" }}>
+            Delete User
+          </span>
+
+          <div className="py-5">
+            <p style={{ color: "rgba(24, 40, 61, 1)", fontWeight: 600, fontSize: "18px" }}>
+              Are you sure you want to delete this user?
+            </p>
+          </div>
+          <div className="flex justify-center">
+            <div className="flex gap-6 justify-center align-middle">
+              <Button
+                btnName="Cancel"
+                btnCls="w-[42%]"
+                btnCategory="secondary"
+                onClick={() => setIsDeleteDialogOpen(false)}
+              />
+              <Button
+                btnType="button"
+                btnCls="w-[42%]"
+                btnName="Delete"
+                btnCategory="primary"
+                onClick={handleConfirmDelete}
+              />
+            </div>
+          </div>
+        </div>
+      </Backdrop>
+
+      {/* Loading Backdrop */}
+      <Backdrop
+        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+
+      <div>
         <div
           className="px-3 py-5"
           style={{ boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.15)" }}
         >
-          <div className="flex justify-between px-5 pb-4 mb-8 items-center border-b-2">
+          <div className="flex justify-between px-1 sm:px-1 md:px-5 lg:px-5 xl:px-5 pb-4 mb-8 items-center border-b-2">
             <div className="flex gap-5 items-center text-[18px] font-semibold">
               <p>Admin List</p>
             </div>
 
-            <div className="flex gap-5">
+            <div className="flex gap-0 sm:gap-0 md:gap-5 lg:gap-5 xl:gap-5">
               <div className="relative">
                 <input
                   type="text"
                   id="search-navbar"
-                  className="block w-full p-2 text-sm text-gray-900 border-none"
+                  className="block w-full p-2 text-sm text-gray-900 border-none md:w-[320px] lg:w-[345px]"
                   placeholder="Search here..."
                   style={{
                     border: "1px solid rgba(29, 91, 191, 1)",
                     borderRadius: "1px",
                     height: "45px",
-                    width: "280px",
+                    // width: "280px",
                   }}
                   onChange={(e) => setSearchQuery(e.target.value.toLowerCase())}
                 />
@@ -354,16 +528,18 @@ function SuperMembers() {
                   <img src={SearchIcon} alt="SearchIcon" />
                 </div>
               </div>
-
+              <div className='flex items-center relative'>
+              {width <= 640 && ( <img className='absolute ml-[34px] ' src={AddTicketIcon} alt='' />)}
               <Button
-                btnName="Add Admin"
+                btnName={width <= 640 ? "." : "Add Admin"} // Empty button text below 640px
                 onClick={() => navigate("/super-members/add")}
               />
+              </div>
             </div>
           </div>
 
           <div>
-            <div className="px-6 py-70">
+            <div className="px-0 sm:px-0 md:px-6 lg:px-6 xl:px-6">
               <DataTable
                 hideCheckbox
                 rows={filteredMembers} // Use filtered data

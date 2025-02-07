@@ -226,7 +226,25 @@ const MobileDrawer = ({ isOpen, onClose }) => {
               )}
 
               {/* Main Navigation Items */}
-              {userInfo?.data?.is_registered && (
+              
+              {
+                userInfo?.data?.role === 'super_admin' &&(
+                <>
+                 <MenuItem
+                    label="Super Members"
+                    path="/super-members"
+                    onClick={() => handleNavigation("/super-members")}
+                  />
+                   <MenuItem
+                    label="Tickets"
+                    path="/tickets"
+                    onClick={() => handleNavigation("/tickets")}
+                  />
+                </>
+                )
+              }
+
+              {userInfo?.data?.is_registered && userInfo?.data?.role !== 'super_admin' &&  (
                 <>
                   <MenuItem
                     label="Dashboard"

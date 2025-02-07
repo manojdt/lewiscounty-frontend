@@ -39,7 +39,7 @@ const CustomTicketAccordian = ({ title, children, defaultValue }) => {
           isOpen ? 'max-h-screen' : 'max-h-0'
         }`}
       >
-        <div className='p-4'>{children}</div>
+        <div className='p-1 sm:p-1 md:p-2 lg:p-4 xl:p-4'>{children}</div>
       </div>
     </div>
   );
