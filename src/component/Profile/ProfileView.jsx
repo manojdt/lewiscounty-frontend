@@ -1624,7 +1624,7 @@ export default function ProfileView() {
               <p
                 className="bg-background-primary-light rounded-[3px] text-[#6B6B6B] text-[12px] cursor-pointer px-2 py-1"
                 onClick={() =>
-                  navigate("/programs?type=upcoming&filter_by=month")
+                  navigate("/programs?filter_by=month")
                 }
               >
                 View All

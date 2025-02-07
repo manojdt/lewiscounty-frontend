@@ -866,7 +866,7 @@ export const programMenus = (page = "dashboard") => {
       status: programActionStatus.inprogress,
     },
     {
-      name: "Assign Programs",
+      name: "Assigned Programs",
       count: 0,
       page: `${pipeUrl}${programFilterUrls.programAssign}`,
       for: ["mentor", "admin"],

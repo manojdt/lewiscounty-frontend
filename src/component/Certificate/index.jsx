@@ -359,7 +359,7 @@ export default function Certificate() {
         <div className="flex justify-between px-5 pb-4 mb-8 items-center border-b-2">
           <div className="flex gap-5 items-center text-[18px] font-semibold">
             <p>
-              {role !== "mentee" && "Generate "} Certificates{" "}
+              {role !== "mentee" && "Generate "} {role === "mentor" || role === "admin" ? "Certificate" : "Certificates"} {" "}
               {role === "mentor" ? "Requests" : ""}
             </p>
           </div>
