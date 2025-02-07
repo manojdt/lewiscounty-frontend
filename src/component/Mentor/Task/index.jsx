@@ -453,7 +453,7 @@ const MentorTask = () => {
         return (
           <div>
             {params?.row?.due_date
-              ? dayjs(params.row.due_date).format("DD/MM/YYYY")
+              ? dayjs(params.row.due_date).format("MM-DD-YYYY")
               : "..."}
           </div>
         );

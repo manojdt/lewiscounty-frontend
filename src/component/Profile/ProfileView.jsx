@@ -56,6 +56,9 @@ import {
   admin_mentorMember,
   myMentorPage,
   myMneteePage,
+  programcardDashBoard,
+  programcardProgrampage,
+  programDetailsProfile,
   request_join,
   request_memberJoin,
   requestPageBreadcrumbs,
@@ -562,6 +565,9 @@ export default function ProfileView() {
     const myMentee = myMneteePage();
     const TopMentor = topMentorPage();
     const myMentor = myMentorPage();
+    const dashBoardCard = programcardDashBoard();
+    const programCard = programcardProgrampage();
+    const programDetails = programDetailsProfile();
     switch (key) {
       case requestPageBreadcrumbs.member_join_request:
         setBreadcrumbsArray(admin_request);
@@ -583,6 +589,15 @@ export default function ProfileView() {
         break;
       case requestPageBreadcrumbs.topMentor:
         setBreadcrumbsArray(TopMentor);
+        break;
+      case requestPageBreadcrumbs.dashboardProgramsCard:
+        setBreadcrumbsArray(dashBoardCard);
+        break;
+      case requestPageBreadcrumbs.ProgramsCard:
+        setBreadcrumbsArray(programCard);
+        break;
+      case requestPageBreadcrumbs.ProgramsDetails:
+        setBreadcrumbsArray(programDetails);
         break;
       case "discussion":
         break;
@@ -1624,7 +1639,7 @@ export default function ProfileView() {
               <p
                 className="bg-background-primary-light rounded-[3px] text-[#6B6B6B] text-[12px] cursor-pointer px-2 py-1"
                 onClick={() =>
-                  navigate("/programs?type=upcoming&filter_by=month")
+                  navigate("/programs?filter_by=month")
                 }
               >
                 View All

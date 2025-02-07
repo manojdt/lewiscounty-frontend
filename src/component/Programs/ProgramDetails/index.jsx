@@ -494,7 +494,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     const mentorId = programdetails?.mentor_info?.id || "";
 
     // if (mentorId !== '' && mentorId !== userdetails?.data?.user_id) {
-    navigate(`/mentor-profile/${mentorId}`);
+    navigate(`/mentor-profile/${mentorId}?breadcrumbsType=${requestPageBreadcrumbs.ProgramsDetails}`);
     // }
   };
 
@@ -2278,9 +2278,9 @@ export default function ProgramDetails({ setProgramDetailsId }) {
 
                       <span>Instructor :</span>
                       {role !== "mentor" ? (
-                        <Link
-                          to={`/mentor-details/${programdetails?.created_by}?type=view`}
-                        >
+                        // <Link
+                        //   to={`/mentor-details/${programdetails?.created_by}?type=view&breadcrumbsType=${requestPageBreadcrumbs.ProgramsDetails}`}
+                        // >
                           <span
                             style={{
                               color: "rgba(29, 91, 191, 1)",
@@ -2291,10 +2291,10 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                           >
                             {programdetails?.mentor_name}
                           </span>
-                        </Link>
+                        // </Link>
                       ) : (
                         <Link
-                          to={`/mentor-details/${programdetails?.created_by}`}
+                          to={`/mentor-details/${programdetails?.created_by}?breadcrumbsType=${requestPageBreadcrumbs.ProgramsDetails}`}
                         >
                           <span style={{ color: "rgba(29, 91, 191, 1)" }}>
                             {programdetails?.mentor_name}
@@ -2953,6 +2953,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                       activeTab === "program_testimonials" ? "block" : "hidden"
                     }`}
                   >
+                    {programdetails?.testimonial_content?.length>0&&
                     <div className="testimonials bg-white px-5 py-7">
                       <div className="grid grid-cols-3 gap-8">
                         {programdetails?.testimonial_content?.map((e) => {
@@ -3001,7 +3002,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                           );
                         })}
                       </div>
-                    </div>
+                    </div>}
                   </div>
                 </div>
               </div>

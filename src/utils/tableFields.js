@@ -161,7 +161,7 @@ export const memberRequestColumns = [
     id: 2,
   },
   {
-    field: "location",
+    field: "address",
     headerName: "Location",
     flex: 1,
     id: 3,

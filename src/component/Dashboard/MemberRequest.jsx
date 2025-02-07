@@ -160,7 +160,7 @@ export default function MemberRequest() {
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
-            <CardWrapper title='Recent Member Requests' viewAll={memberRequest.length > 0}>
+            <CardWrapper title='Recent Member Requests' viewAll={memberRequest?.results?.length > 0} handleViewAll={()=>navigate("/all-request?type=member_join_request")}>
                 <div className='py-6 px-3'>
                     <DataTable rows={memberRequest?.results ?? []} columns={memberRequestColumn} hideFooter hideCheckbox rowCount={memberRequest?.count} />
                 </div>

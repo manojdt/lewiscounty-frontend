@@ -147,7 +147,7 @@ const EventModal = ({ open, closeModal, actionActionBtn, event = [] }) => {
           />
           {(actionActionBtn === "all" ||
             actionActionBtn === "upcoming" ||
-            actionActionBtn === "reschedule") && (
+            actionActionBtn === "reschedule") && event.status!=="cancelled" && (
             <Button
               btnName="Delete"
               btnCls="w-[120px]"

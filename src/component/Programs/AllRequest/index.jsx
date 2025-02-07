@@ -96,6 +96,7 @@ import { docuSign } from "../../../services/activities";
 import ShareIcon from "../../../assets/images/share1x.png";
 import LinkIcon from "../../../assets/images/link1x.png";
 import RequestSelectBox from "../../../shared/RequestSelectBox";
+import { useDebounce } from "../../../utils";
 
 export default function AllRequest() {
   const navigate = useNavigate();
@@ -135,6 +136,8 @@ export default function AllRequest() {
   const selectedRequestedTab = searchParams.get("tabType");
   const selectedMainRequestedTab = searchParams.get("mainTab");
   const [actionTab, setActiveTab] = useState(currentTab);
+  const [searchTerm, setSearchTerm] = useState("");
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const [actionTabFilter, setActionTabFilter] = useState([]);
   const [requestOverview, setRequestOverview] = useState([]);
   const [activeTableDetails, setActiveTableDetails] = useState({
@@ -1987,7 +1990,7 @@ export default function AllRequest() {
         page: paginationModel?.page + 1,
         limit: paginationModel?.pageSize,
         ...(filter.search !== "" && { search: filter.search }),
-        ...(filter.filter_by !== "" ? { filter_by: filter.filter_by } : {}),
+        ...(filter.filter_by !== "" ? { time_frame: filter.filter_by } : {}),
       })
     );
   };
@@ -2596,13 +2599,13 @@ export default function AllRequest() {
     handleStatus("all");
   };
 
-   const handleSearch = (e) => {
-    const searchQuery = e.target.value;
-    console.log("Search Query Updated:", searchQuery);
-   setFilter({ ...filter, search: e.target.value });
-   
-   };
-
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+    // setFilter({ ...filter, search: e.target.value });
+  };
+  useEffect(() => {
+    setFilter({ ...filter, search: debouncedSearchTerm });
+  }, [debouncedSearchTerm]);
   useEffect(() => {
     if (filter.search !== "") {
       searchParams.set("search", filter.search);
@@ -3088,7 +3091,7 @@ export default function AllRequest() {
                         id="search-navbar"
                         className="block w-full p-2 text-sm text-gray-900 rounded border border-blue-600 sm:w-72"
                         placeholder="Search here..."
-                        value={filter.search}
+                        value={searchTerm}
                         onChange={handleSearch}
                       />
                       <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">

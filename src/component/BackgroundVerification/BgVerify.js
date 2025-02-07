@@ -47,7 +47,7 @@ export default function BgVerify() {
                     console.log(res.data.invitation_url)
                     window.open(res.data.invitation_url, '_blank');
                     setTimeout(() => {
-                        navigate("/dashboard")
+                        navigate(-1)
                     }, 2000);
                 }).catch((err) => {
                     console.log("Inv error")

@@ -11,7 +11,7 @@ const MultiEventModal = ({ open, closeModal, events, actionActionBtn }) => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [itemId, setItemId] = useState(null);
   const [deleteModal, setDeleteModal] = useState(false);
-
+console.log(events,"events")
   const toggleModal = () => {
     setShowModal(!showModal);
   };
@@ -58,6 +58,7 @@ const MultiEventModal = ({ open, closeModal, events, actionActionBtn }) => {
               >
                 <div className='event-title flex justify-between'>
                   <div className='event-name text-[18px]'>{item.title}</div>
+                  {item.status!=="cancelled"&&
                   <img
                     src={DeleteIcon}
                     onClick={(e) => {
@@ -66,7 +67,7 @@ const MultiEventModal = ({ open, closeModal, events, actionActionBtn }) => {
                     }}
                     className='cursor-pointer'
                     alt='DeleteIcon'
-                  />
+                  />}
                 </div>
                 <div className='scheduler py-1'>Instructor : John Doe</div>
                 <div className='event-details flex gap-4 py-2'>

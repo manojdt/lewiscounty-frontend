@@ -72,6 +72,7 @@ const [activeComment,setActiveComment] = useState('')
     )
       .then(() => {
         handleCancelReplyComment();
+        dispatch(getPost());
       })
       .catch((error) => {
         console.error("Failed to post comment:", error);
@@ -139,7 +140,7 @@ const [activeComment,setActiveComment] = useState('')
             >
               <img
                 className="user-img"
-                src={ChatImage}
+                src={replyData?.image_url??UserIcon}
                 alt="Userimage"
               />
               <div
@@ -193,9 +194,9 @@ const [activeComment,setActiveComment] = useState('')
                 />
                 <p>
                   Like{" "}
-                  {/* {replyData.like_count > 0
+                  {replyData.like_count > 0
                     ? `(${replyData.like_count})`
-                    : null} */}
+                    : null}
                 </p>
               </div>
            {  replyData?.comment_count>0 && <div
@@ -554,7 +555,7 @@ const onCommentClick  = (comment) =>{
                                           <img src={LikeIcon} alt="likeicon" />
                                           <p>Like({comment.like_count})</p>
                                         </div>
-                                        <div
+                                        {/* <div
                                           className="count-content cursor-pointer"
                                           onClick={()=>onCommentClick(comment)}
                                           style={{
@@ -571,7 +572,7 @@ const onCommentClick  = (comment) =>{
                                             Comment(
                                             {activePostInfo.comment_count})
                                           </p>
-                                        </div>
+                                        </div> */}
                                         <div
                                           className="count-content"
                                           style={{
@@ -649,7 +650,7 @@ const onCommentClick  = (comment) =>{
                                         </>
                                       )}
 
-                                      {comment?.replies?.length > 0 && showComments&& activeComment===comment.id &&
+                                      {comment?.replies?.length > 0 && 
                                          getCommentsData(comment)
                                         }
                                       {activePostComments.commentId ===

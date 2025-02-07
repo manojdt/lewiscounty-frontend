@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import MuiModal from '../../shared/Modal';
 import Tooltip from '../../shared/Tooltip';
-import UserIcon from '../../assets/images/user.jpg';
+import UserIcon from "../../assets/icons/user-icon.svg";
 import CancelIcon from '../../assets/images/cancel-colour1x.png';
 import AddImageIcon from '../../assets/icons/add-image.svg';
 import AddFilesIcon from '../../assets/icons/add-files.svg';
@@ -28,9 +28,9 @@ export default function CreatePostModal({
   reportData = []
 }) {
   const { data } = useSelector((state) => state.userInfo);
+   const { profile } = useSelector((state) => state.profileInfo);
   const imageInputRef = useRef();
   const [imageView, setImageView] = useState([]);
-
   useEffect(() => {
     reset();
   }, []);
@@ -77,7 +77,7 @@ export default function CreatePostModal({
           className='flex gap-4 create-post cursor-pointer'
           onClick={handleVisibilty}
         >
-          <img className='user-image' src={UserIcon} alt='UserIcon' />
+          <img className='user-image' src={profile?.image||UserIcon} alt='UserIcon' />
           <div>
             <div className='flex gap-3 items-center'>
               <p>

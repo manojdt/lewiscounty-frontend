@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import NoProgramImageBg from "../../assets/icons/noProgramImageBg.svg";
 import NoProgramImageIcon from "../../assets/icons/noProgramImageIcon.svg";
 import "./ProgramFeeds.css";
+import { requestPageBreadcrumbs } from "../../component/Breadcrumbs/BreadcrumbsCommonData";
 
 export default function ProgramFeeds({
   title = "Program Feeds",
@@ -76,7 +77,7 @@ export default function ProgramFeeds({
               justifyContent={"space-between"}
               m={"22px"}
               className="!border !border-background-primary-main p-2 rounded-[10px] cursor-pointer hover:bg-blue-50 active:bg-blue-100 transition-all duration-300"
-              onClick={() => navigate(`/feed-details/${programFeeds?.id}`)}
+              onClick={() => navigate(`/feed-details/${programFeeds?.id}?breadcrumbsType=${requestPageBreadcrumbs.dashboardfeed}`)}
             >
               <Stack
                 direction={"row"}
