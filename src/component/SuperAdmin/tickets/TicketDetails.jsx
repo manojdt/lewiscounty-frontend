@@ -98,7 +98,7 @@ const TicketDetails = () => {
     }
   }, [breadcrumbsType]);
   return (
-    <div className='p-9'>
+    <div className='p-3 sm:p-3 md:p-6 lg:p-9 xl:p-9'>
       {/* <Breadcrumbs
         className='pb-4'
         separator={<NavigateNextIcon fontSize='small' />}
@@ -107,7 +107,7 @@ const TicketDetails = () => {
         {breadcrumbs}
       </Breadcrumbs> */}
 <Breadcrumbs items={breadcrumbsArray}/>
-      <div className='bg-white p-9 rounded-xl space-y-12'>
+      <div className='bg-white p-3 sm:p-3 md:p-6 lg:p-9 xl:p-9 rounded-xl space-y-12'>
         {/* View Ticket Section */}
         {isTicketLoading ? (
           <div className='flex justify-center items-center'>

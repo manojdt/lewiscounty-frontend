@@ -87,7 +87,7 @@ const AddNewTicket = ({ type }) => {
   };
 
   return (
-    <div className='p-9'>
+    <div className='p-3 sm:p-3 md:p-6 lg:p-9 xl:p-9'>
       <div>
         <Breadcrumbs
           className='pb-4'
@@ -105,7 +105,7 @@ const AddNewTicket = ({ type }) => {
           <p className='text-lg font-semibold'>New ticket</p>
         </div>
 
-        <div className='grid grid-cols-2 gap-4 p-6'>
+        <div className='grid grid-cols-2 gap-4 p-3 sm:p-3 md:p-6 lg:p-6 xl:p-6'>
           {NewTicketFields.map((field) => {
             switch (field.type) {
               case 'input':

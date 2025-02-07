@@ -115,7 +115,7 @@ const TicketUpdate = ({ ticket }) => {
     <div>
       <form
         action=''
-        className='p-9 grid grid-cols-1'
+        className='p-3 sm:p-3 md:p-6 lg:p-9 xl:p-9 grid grid-cols-1'
         onSubmit={handleSubmit((data) => handleFormSubmit(data))}
       >
         {UpdateTicketFields.map((field) => {
@@ -302,7 +302,7 @@ const TicketUpdate = ({ ticket }) => {
 
         <div className='mx-9 my-9 space-y-8'>{/* form fields */}</div>
         {role === user.super_admin && (
-          <div className='flex gap-6 justify-center align-middle'>
+          <div className='flex gap-0 sm:gap-0 md:gap-6 lg:gap-6 xl:gap-6 justify-center align-middle'>
             <Button
               btnName='Reject'
               btnCls='w-[170px]'

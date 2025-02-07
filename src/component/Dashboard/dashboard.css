@@ -14,7 +14,7 @@
 /* Medium screens (tablets) */
 @media (min-width: 577px) and (max-width: 992px) {
   .dashboard-menu-active {
-    padding: 6px; /* Adjust the padding for medium screens */
+    padding: 4px; /* Adjust the padding for medium screens */
   }
 }
 
