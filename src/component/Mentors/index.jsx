@@ -85,7 +85,7 @@ export const Mentors = () => {
 
   const mentorOption = [
     {
-      name: "My Mentor",
+      name: "My Mentors",
       value: "mymentor",
     },
     {

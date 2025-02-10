@@ -1041,16 +1041,16 @@ export const TaskDetails = () => {
                 taskData.result !== null &&
                 taskData.result !== '----' && (
                   <Stack direction={"row"} alignItems={"center"} spacing={3}>
-                    <div className='mr-96'>Result :</div>
+                    <div className='mr-96 !text-[#18283D]' style={{ fontWeight: 600 }}>Result :</div>
                     <div
                       style={{
                         background:
                           taskData.result === 'Pass'
                             ? 'rgba(235, 255, 243, 1)'
                             : 'rgba(255, 231, 231, 1)',
-                        padding: '8px 16px',
-                        textAlign: 'center',
-                        fontSize: '18px',
+                            borderRadius: "6px",
+                            padding: "4px 22px",
+                            marginLeft: "15px"
                       }}
                     >
                       <span
@@ -1079,13 +1079,14 @@ export const TaskDetails = () => {
                       <Button
                         btnType='submit'
                         btnCls={`${startTask ? 'w-[14%]' : 'w-[12%]'}`}
-                        btnName='Draft'
+                        btnName={taskData.status===TaskAllStatus.draft?'Save':'Draft'}
                         style={{
                           background: 'rgba(217, 228, 242, 1)',
                           color: 'rgba(29, 91, 191, 1)',
                         }}
                         onClick={() => setFormAction('draft')}
                       />
+                      {taskData.status!==TaskAllStatus.draft&&
                       <Button
                         btnType='button'
                         btnCls={`${startTask ? 'w-[14%]' : 'w-[12%]'}`}
@@ -1095,7 +1096,7 @@ export const TaskDetails = () => {
                           background: '#A7B5CA',
                           color: '#18283D',
                         }}
-                      />
+                      />}
                       <Button
                         btnType='submit'
                         btnCls={`${startTask ? 'w-[14%]' : 'w-[12%]'}`}

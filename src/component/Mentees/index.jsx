@@ -36,6 +36,7 @@ import { Button } from "../../shared";
 import SuccessTik from "../../assets/images/blue_tik1x.png";
 import MuiModal from "../../shared/Modal";
 import { requestPageBreadcrumbs } from "../Breadcrumbs/BreadcrumbsCommonData";
+import { useDebounce } from "../../utils";
 
 export const Mentees = () => {
   const navigate = useNavigate();
@@ -71,7 +72,7 @@ export const Mentees = () => {
     id: "",
   });
   const [search, setSearch] = React.useState("");
-
+  const debouncedSearchTerm = useDebounce(search, 500);
   const menteeOption = [
     {
       name: "My Mentees",
@@ -260,7 +261,7 @@ export const Mentees = () => {
                 <img src={ViewIcon} alt="ViewIcon" className="pr-3 w-[30px]" />
                 View
               </MenuItem>
-              {(selectedMentee?.status === "new" ||
+              {(selectedMentee?.status === "new" ||selectedMentee?.status === "cancel" ||
                 selectedMentee?.status === "pending") && (
                 // ||selectedMentee?.status === 'cancel'
                 <MenuItem
@@ -277,7 +278,7 @@ export const Mentees = () => {
                   Connect
                 </MenuItem>
               )}
-              {(selectedMentee?.status === "new" ||
+              {(selectedMentee?.status === "new" ||selectedMentee?.status === "accept" ||
                 selectedMentee?.status === "pending") && (
                 // || selectedMentee?.status === 'accept'
                 <MenuItem
@@ -383,9 +384,10 @@ export const Mentees = () => {
 
   const handleSearch = (searchText) => {
     setSearch(searchText);
-    getTableData(searchText);
   };
-
+  useEffect(() => {
+      getTableData(debouncedSearchTerm);
+  }, [debouncedSearchTerm]);
   return (
     <div className="px-2 py-9 sm:px-2 md:px-4 lg:px-9 xl:px-9">
       <Backdrop

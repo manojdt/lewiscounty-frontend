@@ -35,7 +35,7 @@ export const myMenteeColumns = [
     id: 2,
   },
   {
-    field: "attn_program",
+    field: "attended_program_count",
     headerName: "Attended Programs",
     flex: 1,
     id: 2,

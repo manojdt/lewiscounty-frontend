@@ -587,6 +587,16 @@ export const taskStatusText = {
   completed: "Completed",
   reassigned: "Re Assigned",
 };
+export const taskStatusTextMentee = {
+  draft: "Draft",
+  inprogress: "In-Progress",
+  rejected: "Cancel",
+  pending: "Pending",
+  newtask: "New",
+  waiting_for_approval: "Waiting for mentor approval",
+  completed: "Completed",
+  reassigned: "Re Assigned",
+};
 
 export const ticketStatusText = {
   all: "All",
@@ -639,8 +649,8 @@ export const TicketStatusColor = {
 
 export const taskStatusColor = {
   draft: {
-    color: "rgba(255, 212, 27, 1)",
-    bg: "rgba(255, 247, 216, 1)",
+    color: "black",
+    bg: "#c6c6c6",
   },
   rejected: {
     color: "rgba(224, 56, 45, 1)",
@@ -655,8 +665,8 @@ export const taskStatusColor = {
     bg: "rgba(207, 225, 255, 1)",
   },
   waiting_for_approval: {
-    color: "rgba(255, 213, 0, 1)",
-    bg: "rgba(255, 251, 233, 1)",
+    color: "rgba(29, 91, 191, 1)",
+    bg: "",
   },
   newtask: {
     color: "rgba(29, 91, 191, 1)",
@@ -866,10 +876,19 @@ export const programMenus = (page = "dashboard") => {
       status: programActionStatus.inprogress,
     },
     {
+      name: "Admin Assigned Programs",
+      count: 0,
+      page: `${pipeUrl}${programFilterUrls.programAssign}`,
+      for: ["mentor"],
+      mentorStatus: programActionStatus.program_assign,
+      adminStatus: programActionStatus.program_assign,
+      status: programActionStatus.program_assign,
+    },
+    {
       name: "Assigned Programs",
       count: 0,
       page: `${pipeUrl}${programFilterUrls.programAssign}`,
-      for: ["mentor", "admin"],
+      for: ["admin"],
       mentorStatus: programActionStatus.program_assign,
       adminStatus: programActionStatus.program_assign,
       status: programActionStatus.program_assign,

@@ -24,6 +24,7 @@ import {
   programActionStatus,
   programCompleted,
   requestStatus,
+  user,
 } from "../../../utils/constant";
 import { getMenteeJoinedInProgram } from "../../../services/userprograms";
 import {
@@ -68,7 +69,7 @@ import {
   getProgramMentees,
   insertProgramNotes,
 } from "../../../services/programInfo";
-import ConfirmIcon from "../../../assets/icons/Popup-confirmation.svg";
+import ConfirmIcon from "../../../assets/icons/tickColorCircle.svg";
 import CloseIcon from "../../../assets/icons/close_x.svg";
 import {
   useAcceptProgramMutation,
@@ -1462,13 +1463,13 @@ export default function ProgramDetails({ setProgramDetailsId }) {
         open={openPopup}
       >
         <div className="popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[330px] p-[12px] justify-center items-center">
-          <div className="border border-[#E50027] rounded-[15px] h-[100%] w-[100%] justify-center items-center flex flex-col relative">
-            <div
+          <div className="h-[100%] w-[100%] justify-center items-center flex flex-col relative">
+            {/* <div
               className="absolute top-[12px] right-[12px]"
               onClick={() => setOpenPopup(false)}
             >
               <img src={CloseIcon} alt="ConfirmIcon" />
-            </div>
+            </div> */}
             <img src={ConfirmIcon} alt="ConfirmIcon" />
 
             <div className="py-5">
@@ -1479,7 +1480,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   fontSize: "18px",
                 }}
               >
-                Are you sure want to Accept this Program?
+                Are you sure you want to Accept this Program?
               </p>
             </div>
             <div className="flex justify-center">
@@ -1487,12 +1488,12 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                 <Button
                   btnName="No"
                   btnCategory="secondary"
-                  btnCls="border !border-[#1D5BBF] !text-[#1D5BBF] w-[110px]"
+                  btnCls="border !border-[#1D5BBF] !text-[#1D5BBF] w-[120px]"
                   onClick={() => setOpenPopup(false)}
                 />
                 <Button
                   btnType="button"
-                  btnCls="w-[110px]"
+                  btnCls="w-[120px]"
                   btnName={"Yes"}
                   btnCategory="primary"
                   onClick={() => {
@@ -2124,7 +2125,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                 />
                                 Not Interested
                               </MenuItem>
-                            )}
+                            )} 
                           {(programdetails.status ===
                             programActionStatus.inprogress ||
                             programdetails.mentee_join_status ===
@@ -2251,7 +2252,39 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     <div
                       style={{ borderRight: "1px solid rgba(24, 40, 61, 1)" }}
                     ></div>
-
+{/* {programdetails?.admin_assign_program&&role===user.admin?  <div className="flex items-center gap-3 text-[12px]">
+                      {!profileLoading && (
+                        <img
+                          src={
+                            programdetails?.mentor_profile_image || UserImage
+                          }
+                          style={{
+                            borderRadius: "50%",
+                            width: "35px",
+                            height: "35px",
+                          }}
+                          alt="UserImage"
+                        />
+                      )}
+                      <span>{"Created By"}</span>
+                     
+                          <span
+                            style={{
+                              color: "rgba(29, 91, 191, 1)",
+                              textDecoration: "underline",
+                              cursor: "pointer",
+                            }}
+                            onClick={() => handleInstructor(programdetails)}
+                          >
+                            {programdetails?.mentor_name}
+                          </span>
+                    </div>:
+                    <div className="flex gap-3 items-center">
+                      <img src={CalendarIcon} alt="CalendarIcon" />
+                      <span className="text-[12px]">
+                        {formatDateTimeISO(programdetails?.start_date)}
+                      </span>
+                    </div>} */}
                     <div className="flex gap-3 items-center">
                       <img src={CalendarIcon} alt="CalendarIcon" />
                       <span className="text-[12px]">
@@ -2276,7 +2309,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                         />
                       )}
 
-                      <span>Instructor :</span>
+                      <span>{programdetails?.admin_assign_program&&role===user.admin?"Program Admin":"Instructor :"}</span>
                       {role !== "mentor" ? (
                         // <Link
                         //   to={`/mentor-details/${programdetails?.created_by}?type=view&breadcrumbsType=${requestPageBreadcrumbs.ProgramsDetails}`}
