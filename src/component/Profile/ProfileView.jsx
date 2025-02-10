@@ -150,7 +150,7 @@ export default function ProfileView() {
   };
 
   const loadUserProfile = () => {
-    dispatch(getProfileInfo({ id: params.id, program_limit: 3 }));
+    dispatch(getProfileInfo({ id: params.id, program_limit: 3 ,list:fromType === "topmentor"}));
     dispatch(getFollowList(params.id));
   };
 
@@ -427,7 +427,7 @@ export default function ProfileView() {
       setTimeout(() => {
         resetMenteeRequest();
         dispatch(updateLocalRequest({ status: "" }));
-        dispatch(getProfileInfo({ id: params.id }));
+        dispatch(getProfileInfo({ id: params.id ,list:fromType === "topmentor"}));
         navigate(pathe);
       }, 3000);
     }
