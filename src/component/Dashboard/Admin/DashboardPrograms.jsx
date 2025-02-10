@@ -62,12 +62,12 @@ export default function DashboardPrograms({ categoryId }) {
       page: 1,
       status: "yettojoin",
     };
-     // Only include category_id if it's defined and not null
-  if (categoryId) {
-    payload.category_id = categoryId;
-  }
+    // Only include category_id if it's defined and not null
+    if (categoryId) {
+      payload.category_id = categoryId;
+    }
     dispatch(getallMyProgram(payload)).then((res) => {
-      console.log("res ====>", res)
+      console.log("res ====>", res);
       setProgramData(res?.payload);
     });
   };
@@ -75,7 +75,6 @@ export default function DashboardPrograms({ categoryId }) {
     handleFetchPrograms();
   }, [categoryId]);
 
-  
   return (
     // <DashboardCard
     //     title="Planned Programs"
@@ -87,13 +86,38 @@ export default function DashboardPrograms({ categoryId }) {
     //     action={actionItem}
     // />
 
-    <ProgramCard
-      title="Active Programs"
-      viewpage="/programs?type=yettojoin"
-      handleNavigateDetails={handleNavigateDetails}
-      handleBookmark={handleBookmark}
-      programs={programData?.programs ?? []}
-      //   loadProgram={getPrograms}
-    />
+    <div className="programs-list">
+      {searchParams.get("type") === "yettostart" && (
+        <ProgramCard
+          title="Recent  Programs"
+          viewpage="/programs?type=yettostart"
+          handleNavigateDetails={handleNavigateDetails}
+          handleBookmark={handleBookmark}
+          programs={programData?.programs}
+          // loadProgram={handleFetchPrograms}
+        />
+      )}
+      {(searchParams.get("type") === "yettojoin" ||
+        searchParams.get("type") === null) && (
+        <ProgramCard
+          title="Active Programs"
+          viewpage="/programs?type=yettojoin"
+          handleNavigateDetails={handleNavigateDetails}
+          handleBookmark={handleBookmark}
+          programs={programData?.programs ?? []}
+          //   loadProgram={getPrograms}
+        />
+      )}
+      {searchParams.get("type") === "inprogress" && (
+        <ProgramCard
+          title="Ongoing  Programs"
+          viewpage="/programs?type=inprogress"
+          handleNavigateDetails={handleNavigateDetails}
+          handleBookmark={handleBookmark}
+          programs={programData?.programs}
+          // loadProgram={handleFetchPrograms}
+        />
+      )}
+    </div>
   );
 }
