@@ -11,10 +11,10 @@ import { getUserPrograms } from "../../../services/userprograms";
 import ProgramCard from "../../../shared/Card/ProgramCard";
 import api from "../../../services/api";
 
-export default function DashboardPrograms({ categoryId }) {
+export default function DashboardPrograms({searchParams, categoryId,type }) {
   const dispatch = useDispatch();
   const [programData, setProgramData] = React.useState({});
-  const [searchParams] = useSearchParams();
+  // const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const handleNavigateDetails = (program) => {
     let baseUrl = pipeUrls.programdetails;
@@ -60,7 +60,8 @@ export default function DashboardPrograms({ categoryId }) {
     const payload = {
       limit: 6,
       page: 1,
-      status: "yettojoin",
+      status: type||"yettojoin",
+      ...categoryId && { category_id: categoryId }
     };
     // Only include category_id if it's defined and not null
     if (categoryId) {
@@ -73,7 +74,7 @@ export default function DashboardPrograms({ categoryId }) {
   };
   React.useEffect(() => {
     handleFetchPrograms();
-  }, [categoryId]);
+  }, [type,categoryId]);
 
   return (
     // <DashboardCard
