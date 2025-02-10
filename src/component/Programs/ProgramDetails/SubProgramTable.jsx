@@ -28,7 +28,7 @@ const columns = [
   { field: "mentor_name", headerName: "Mentor Name", flex: 1 },
   {
     field: "admin_program_series",
-    headerName: "Sub program",
+    headerName: "Subject",
     flex: 1,
     renderCell: (params) => {
       const sub_program_count = params.row?.admin_program_series;
@@ -36,8 +36,8 @@ const columns = [
       return (
         <div>
           {sub_program_count
-            ? sub_program_count
-            : params.api.getSortedRowIds().indexOf(params.id) + 1}
+            ? `${sub_program_count}. Subject`
+            : `${params.api.getSortedRowIds().indexOf(params.id) + 1}.  Subject`}
         </div>
       );
     },

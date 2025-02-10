@@ -912,13 +912,28 @@ export const taskColumns = [
   },
   {
     field: "submited_date",
-    headerName: "Completed  Date",
+    headerName: "End  Date",
     flex: 1,
     id: 2,
     renderCell: (params) => {
       return <div>{dateFormat(params.row.submited_date)}</div>;
     },
   },
+  {
+    field: "updated_at",
+    headerName: "Last Updated Date",
+    flex: 1,
+    id: 9,
+    renderCell: (params) => {
+      return <div>{dateFormat(params.row.updated_at)}</div>;
+    },
+  },
+  // {
+  //   field: "updated_by",
+  //   headerName: "Last Updated By",
+  //   flex: 1,
+  //   id: 6,
+  // },
   {
     field: "mentor_name",
     headerName: "Task Sent by",

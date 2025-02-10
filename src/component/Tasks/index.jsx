@@ -22,6 +22,7 @@ import {
   pipeUrls,
   taskStatusColor,
   taskStatusText,
+  taskStatusTextMentee,
 } from '../../utils/constant';
 import { fileNameFromUrl, fileNameString } from '../../utils';
 
@@ -51,35 +52,35 @@ export const Tasks = () => {
 
   const taskMenuList = [
     {
-      name: 'All Tasks',
+      name: 'All ',
       key: 'all',
     },
     {
-      name: 'New Tasks',
+      name: 'New ',
       key: 'newtask',
     },
     {
-      name: 'Pending Tasks',
+      name: 'Pending ',
       key: 'pending',
     },
     {
-      name: 'Waiting Tasks',
+      name: 'Waiting ',
       key: 'waiting_for_approval',
     },
     {
-      name: 'Re Assign Tasks',
+      name: 'Re-Assigned ',
       key: 'reassigned',
     },
     {
-      name: 'Completed Tasks',
+      name: 'Completed ',
       key: 'completed',
     },
     {
-      name: 'Rejected Tasks',
+      name: 'Cancelled ',
       key: 'rejected',
     },
     {
-        name: 'Draft',
+        name: 'Drafted',
         key: 'draft'
     },
   ];
@@ -93,19 +94,19 @@ export const Tasks = () => {
             <>
               <div className='cursor-pointer flex items-center h-full relative'>
                 <span
-                  className='w-[80px] flex justify-center h-[30px] px-3'
+                  className='w-[150px] flex justify-center h-[30px] px-3'
                   style={{
                     background: taskStatusColor[params.row.status]?.bg || '',
                     lineHeight: '30px',
                     borderRadius: '3px',
-                    width: '110px',
+                    width: params.row.status==="waiting_for_approval"?'150px':'110px',
                     height: '34px',
                     color: taskStatusColor[params.row.status]?.color || '',
                     fontSize: '12px',
                   }}
                 >
                   {' '}
-                  {taskStatusText[params.row.status]}
+                  {taskStatusTextMentee[params.row.status]}
                 </span>
               </div>
             </>
