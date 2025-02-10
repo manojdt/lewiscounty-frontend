@@ -32,6 +32,7 @@ export default function Admin() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const categoryId = searchParams.get("category_id"); // Extract category ID
+  const filterType = searchParams.get("type");
   const userInfo = useSelector((state) => state.userInfo);
   const userpragrams = useSelector((state) => state.userPrograms);
   const { feeds } = useSelector((state) => state.feeds);
@@ -91,6 +92,7 @@ export default function Admin() {
       setTopMentorList(topMentor.data.results);
     }
   };
+  
 
   useEffect(() => {
     const totalCount = userpragrams.statusCounts;
@@ -415,7 +417,7 @@ export default function Admin() {
           </CardWrapper>
 
           <div className="py-3">
-          <DashboardPrograms categoryId={categoryId} />
+          <DashboardPrograms searchParams={searchParams} type={filterType} categoryId={categoryId} />
           </div>
         </div>
       </div>
