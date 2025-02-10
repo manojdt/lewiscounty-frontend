@@ -79,7 +79,7 @@ export const allProfileSections = [
     component: <MentorshipExperienceSection type={view.viewOnly} />,
   },
   {
-    title: "Document upload",
+    title: "Documents upload",
     component: <DocumentUploadSection type={view.viewOnly} />,
   },
   {

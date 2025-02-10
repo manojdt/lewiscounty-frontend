@@ -267,7 +267,12 @@ export default function Admin() {
                           : ""
                         }`}
                       aria-current="page"
-                      onClick={() => navigate(menu.page)}
+                      
+                      onClick={(e) => {
+                        e.preventDefault();
+                        console.log("Navigating to:", menu.page);
+                        navigate(menu.page);
+                      }}
                     >
                       <span className="text-sm max-lg:text-[12px]">{menu.name}</span>
                       <span className="text-base max-lg:text-[12px]">{menu.count}</span>
