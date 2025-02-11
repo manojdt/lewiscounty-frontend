@@ -277,37 +277,33 @@ const ProfileTab = ({ setEditMode }) => {
 
       <div>
         <div>
-          <div className="py-4 relative w-[12%]">
-            <div className="upload-profile">
-              <label
-                className="w-[40%] pb-3 rounded-lg text-white text-[14px] cursor-pointer"
-                style={{
-                  border: "none",
-                }}
-              >
-                <img
-                  src={profile?.image || ProfileImageIcon}
-                  style={{ borderRadius: "50%", height: "143px" }}
-                  alt="ProfileImageIcon"
-                />
-                {userInfo?.data?.userinfo?.approve_status === "accept" && (
-                  <img
-                    src={ProfileImagePencilIcon}
-                    className="absolute top-[50%] left-2 cursor-pointer"
-                    alt="ProfileImagePencilIcon"
-                  />
-                )}
-
-                {userInfo?.data?.userinfo?.approve_status === "accept" && (
-                  <input
-                    type="file"
-                    class="hidden"
-                    onChange={uploadUserImage}
-                  />
-                )}
-              </label>
-            </div>
-          </div>
+        <div className="py-4 relative w-full sm:w-[50%] md:w-[30%] lg:w-[12%]">
+  <div className="upload-profile">
+    <label className="relative block aspect-square w-32 sm:w-36 md:w-40 cursor-pointer">
+      <img
+        src={profile?.image || ProfileImageIcon}
+        className="w-full h-full rounded-full object-cover"
+        alt="ProfileImageIcon"
+      />
+      
+      {userInfo?.data?.userinfo?.approve_status === "accept" && (
+        <>
+          <img
+            src={ProfileImagePencilIcon}
+            className="absolute top-1/2 left-2 w-6 h-6 cursor-pointer transform -translate-y-1/2"
+            alt="ProfileImagePencilIcon"
+          />
+          
+          <input
+            type="file"
+            className="hidden"
+            onChange={uploadUserImage}
+          />
+        </>
+      )}
+    </label>
+  </div>
+</div>
 
           {/* <div className='grid grid-cols-6 gap-3 mt-12'>
             {PersonalInfoFields.map((profilefield, index) => {
@@ -338,7 +334,7 @@ const ProfileTab = ({ setEditMode }) => {
             style={{
               maxHeight: showAll
                 ? `${contentRef.current.scrollHeight}px`
-                : "350px",
+                : "w-[100%]",
               overflow: "hidden",
               transition: "max-height 0.5s ease",
             }}

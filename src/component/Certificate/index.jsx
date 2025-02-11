@@ -9,7 +9,7 @@ import DataTable from "../../shared/DataGrid";
 import TickCircle from "../../assets/icons/tickCircle.svg";
 import ViewIcon from "../../assets/images/view1x.png";
 import MoreIcon from "../../assets/icons/moreIcon.svg";
-
+import AddTicketIcon from '../../assets/icons/add-ticket-icon.svg';
 import { certificateColumns } from "../../utils/tableFields";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import {
@@ -25,6 +25,7 @@ import {
   requestStatusText,
 } from "../../utils/constant";
 import Ratings from "../Programs/Ratings";
+import { useWindowSize } from "../../utils/windowResize";
 
 export default function Certificate() {
   const navigate = useNavigate();
@@ -53,6 +54,7 @@ export default function Certificate() {
     pageSize: 10,
   });
   const dispatch = useDispatch();
+  const { width } = useWindowSize();
   const ratingModalSuccess = () => {
     if (role) {
       dispatch(
@@ -339,7 +341,7 @@ export default function Certificate() {
     }
   }, [selectedRequestedTab]);
   return (
-    <div className="program-request px-8 mt-10">
+    <div className="program-request px-2 sm:px-2 md:px-4 lg:px-8 xl:px-8 mt-10">
       <Backdrop
         sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={loading}
@@ -356,7 +358,7 @@ export default function Certificate() {
         className="px-3 py-5"
         style={{ boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.15)" }}
       >
-        <div className="flex justify-between px-5 pb-4 mb-8 items-center border-b-2">
+        <div className="flex justify-between px-1 sm:px-1 md:px-5 lg:px-5 xl:px-5 pb-4 mb-8 items-center border-b-2">
           <div className="flex gap-5 items-center text-[18px] font-semibold">
             <p>
               {role !== "mentee" && "Generate "} {role === "mentor" || role === "admin" ? "Certificate" : "Certificates"} {" "}
@@ -364,18 +366,18 @@ export default function Certificate() {
             </p>
           </div>
 
-          <div className="flex gap-5">
+          <div className="flex gap-0 sm:gap-0 md:gap-5 lg:gap-5 xl:gap-5">
             <div className="relative">
               <input
                 type="text"
                 id="search-navbar"
-                className="block w-full p-2 text-sm text-gray-900 border-none"
+                className="block w-full p-2 text-sm text-gray-900 border-none md:w-[320px] lg:w-[345px]"
                 placeholder="Search here..."
                 style={{
                   border: "1px solid rgba(29, 91, 191, 1)",
                   borderRadius: "1px",
                   height: "45px",
-                  width: "280px",
+                  // width: "280px",
                 }}
                 onChange={(e) => handleSearch(e.target.value)}
               />
@@ -383,22 +385,26 @@ export default function Certificate() {
                 <img src={SearchIcon} alt="SearchIcon" />
               </div>
             </div>
+            <div className='flex items-center relative'>
+            {width <= 640 && ( <img className='absolute ml-[34px] ' src={AddTicketIcon} alt='' />)}
             {role !== "mentee" && (
               <Button
-                btnName="Create Certificate"
+                btnName={width <= 640 ? "." : "Create Certificate"} // Empty button text below 640px
                 onClick={() =>
                   navigate("/create-certificate", { state: { type: "new" } })
                 }
               />
             )}
+            </div>
+            
           </div>
         </div>
 
         <div
-          className="mx-4"
+          className="mx-0 sm:mx-0 md:mx-0 lg:mx-4 xl:mx-4"
           style={{ border: "1px solid #D9E4F2", borderRadius: "3px" }}
         >
-          <div className="px-6 py-7 program-info">
+          <div className="px-2 sm:px-2 md:px-2 lg:px-6 xl:px-6 py-7 program-info">
             {role === "admin" ? (
               <>
                 <div className="flex gap-7 mb-6">

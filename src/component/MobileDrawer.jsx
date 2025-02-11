@@ -79,7 +79,15 @@ const MobileDrawer = ({ isOpen, onClose }) => {
   };
 
   const handleProfile = () => {
-    navigate('/profile');
+    // navigate('/profile');
+    if (
+      userInfo?.data?.role === 'super_admin' &&
+      userInfo?.data?.is_registered === true
+    ) {
+      navigate('/my-profile-admin');
+    } else {
+      navigate('/profile');
+    }
     onClose();
   };
 

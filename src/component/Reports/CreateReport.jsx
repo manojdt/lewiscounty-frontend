@@ -370,7 +370,7 @@ export default function CreateReport() {
       >
         <div className="breadcrum">
           <nav
-            className="flex px-7 pt-6 pb-5 mx-2 border-b-2 justify-between"
+            className="flex px-4 sm:px-4 md:px-5 lg:px-7 xl:px-7 pt-6 pb-5 mx-2 border-b-2 justify-between"
             aria-label="Breadcrumb"
           >
             <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">

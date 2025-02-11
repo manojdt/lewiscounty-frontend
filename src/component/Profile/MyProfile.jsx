@@ -74,32 +74,32 @@ export default function MyProfile() {
         </p>
       </div>
       {!editMode ? (
-        <div className='border grid grid-cols-5 rounded-xl bg-white'>
-          {/* Sidebar */}
-          <div className='grid col-span-1 border-r pl-6 py-10'>
-            <div className='flex flex-col gap-1'>
-              {tabs.map((tab, index) => (
-                <div
-                  key={index}
-                  className={`p-4 font-semibold pl-6 flex items-start cursor-pointer gap-4 transition-all duration-300 ease-in-out ${
-                    activeTab === index
-                      ? 'text-blue-500 bg-[#F0F5FF] border-r-4 rounded-tl-lg rounded-bl-lg border-blue-500'
-                      : 'text-gray-500 hover:text-blue-500'
-                  }`}
-                  onClick={() => setActiveTab(index)}
-                >
-                  <img src={tab.icon} alt='' />
-                  {tab.label}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Tab Content */}
-          <div className='grid col-span-4 p-12 overflow-hidden'>
-            <div className='relative'>{tabs[activeTab].content}</div>
+        <div className='border rounded-xl bg-white lg:grid lg:grid-cols-5 flex flex-col'>
+        {/* Sidebar */}
+        <div className='lg:grid lg:col-span-1 lg:border-r lg:pl-6 lg:py-10 overflow-x-auto'>
+          <div className='flex lg:flex-col gap-1 p-2 lg:p-0'>
+            {tabs.map((tab, index) => (
+              <div
+                key={index}
+                className={`p-2 lg:p-4 font-semibold lg:pl-6 flex items-center lg:items-start cursor-pointer gap-2 lg:gap-4 whitespace-nowrap transition-all duration-300 ease-in-out ${
+                  activeTab === index
+                    ? 'text-blue-500 bg-[#F0F5FF] lg:border-r-4 lg:rounded-tl-lg lg:rounded-bl-lg border-blue-500'
+                    : 'text-gray-500 hover:text-blue-500'
+                }`}
+                onClick={() => setActiveTab(index)}
+              >
+                <img src={tab.icon} alt='' className='w-5 h-5 lg:w-auto lg:h-auto' />
+                <span className='text-sm lg:text-base'>{tab.label}</span>
+              </div>
+            ))}
           </div>
         </div>
+      
+        {/* Tab Content */}
+        <div className='lg:grid lg:col-span-4 p-4 lg:p-12 overflow-hidden'>
+          <div className='relative'>{tabs[activeTab].content}</div>
+        </div>
+      </div>
       ) : (
         <EditProfile setEditMode={setEditMode} />
       )}

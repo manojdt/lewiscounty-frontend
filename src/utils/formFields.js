@@ -2938,7 +2938,7 @@ export const CreateCertificateFields = [
       required: "This field is required",
     },
     options: [],
-    width: "width-32",
+    width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
   },
   {
     type: "dropdown",
@@ -2949,7 +2949,7 @@ export const CreateCertificateFields = [
       required: "This field is required",
     },
     options: [],
-    width: "width-32",
+    width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
   },
   {
     type: "input",
@@ -2958,7 +2958,7 @@ export const CreateCertificateFields = [
     label: "Mentor Name",
     placeholder: "Mentor Name",
     inputRules: {},
-    width: "width-32",
+    width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     disabled: true,
   },
   {
@@ -2968,7 +2968,7 @@ export const CreateCertificateFields = [
     label: "Course Level",
     placeholder: "Course Level",
     inputRules: {},
-    width: "width-32",
+    width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     disabled: true,
   },
   {
@@ -2977,7 +2977,7 @@ export const CreateCertificateFields = [
     label: "Program Start Date and Time",
     placeholder: "Select Program Start Date and Time",
     inputRules: {},
-    width: "width-32",
+    width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     disabled: true,
   },
   {
@@ -2986,7 +2986,7 @@ export const CreateCertificateFields = [
     label: "Program End Date and Time",
     placeholder: "Select Program End Date and Time",
     inputRules: {},
-    width: "width-32",
+    width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     disabled: true,
   },
   {
@@ -2995,7 +2995,7 @@ export const CreateCertificateFields = [
     label: "Duration",
     placeholder: "Duration",
     inputRules: {},
-    width: "w-[49%]",
+    width: "w-full lg:w-[49%] md:w-[48%]",
     disabled: true,
   },
   {
@@ -3005,7 +3005,7 @@ export const CreateCertificateFields = [
     placeholder: "Select Meneteed",
     inputRules: {},
     options: [],
-    width: "w-[49%]",
+    width: "w-full lg:w-[49%] md:w-[48%]",
   },
   {
     type: "popup-input",
@@ -3014,7 +3014,7 @@ export const CreateCertificateFields = [
     placeholder: "Select Meneteed",
     inputRules: {},
     options: [],
-    width: "w-[49%]",
+    width: "w-full lg:w-[49%] md:w-[48%]",
   },
   {
     type: "popup-input",
@@ -3023,7 +3023,7 @@ export const CreateCertificateFields = [
     placeholder: "Select Meneteed",
     inputRules: {},
     options: [],
-    width: "w-[49%]",
+    width: "w-full lg:w-[49%] md:w-[48%]",
   },
 ];
 

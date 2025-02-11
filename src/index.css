@@ -220,7 +220,7 @@ input[type='range']::-ms-thumb {
 
 .reports .reports-table-container {
   border: 1px solid rgba(217, 228, 242, 1);
-  padding: 40px 30px;
+  /* padding: 40px 30px; */
 }
 
 .goals .goals-container {
@@ -424,6 +424,20 @@ input[type='range']::-ms-thumb {
 .discussion-container .discussion-table .tab-list {
   display: flex;
   gap: 40px;
+  overflow-x: auto;         /* Enable horizontal scrolling */
+  scrollbar-width: none;    /* Hide scrollbar for Firefox */
+  -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
+  padding-bottom: 8px;      /* Add some padding for the scrollbar space */
+  white-space: nowrap;      /* Prevent text wrapping */
+}
+/* Hide scrollbar for Chrome, Safari and Opera */
+.discussion-container .discussion-table .tab-list::-webkit-scrollbar {
+  display: none;
+}
+
+/* Optional: Add smooth scrolling behavior */
+.discussion-container .discussion-table {
+  scroll-behavior: smooth;
 }
 
 .discussion-container .discussion-table .tab-list li {
@@ -511,12 +525,26 @@ input[type='range']::-ms-thumb {
 .profile-container .profile-details .detail-tab .tab-list {
   display: flex;
   gap: 40px;
+  overflow-x: auto;         /* Enable horizontal scrolling */
+  scrollbar-width: none;    /* Hide scrollbar for Firefox */
+  -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
+  padding-bottom: 8px;      /* Add some padding for the scrollbar space */
+  white-space: nowrap;      /* Prevent text wrapping */
+}
+/* Hide scrollbar for Chrome, Safari and Opera */
+.profile-container .profile-details .detail-tab .tab-list::-webkit-scrollbar {
+  display: none;
+}
+
+/* Optional: Add smooth scrolling behavior */
+.profile-container .profile-details .detail-tab {
+  scroll-behavior: smooth;
 }
 
 .profile-container .profile-details .detail-tab .tab-list li {
   cursor: pointer;
   font-size: 14px;
-  padding: 10px 10px 29px;
+  padding: 10px;
 }
 
 .profile-container .profile-details .detail-tab .tab-list li.active {
@@ -571,7 +599,7 @@ input[type='range']::-ms-thumb {
 }
 
 .profile-container .profile-details .detail-tab .activity-details .user-image {
-  width: 50px;
+  width: 3rem;
 }
 
 .profile-container
@@ -674,6 +702,20 @@ input[type='range']::-ms-thumb {
 .program-request .program-info .tab-list {
   display: flex;
   gap: 10px;
+  overflow-x: auto;         /* Enable horizontal scrolling */
+  scrollbar-width: none;    /* Hide scrollbar for Firefox */
+  -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
+  padding-bottom: 8px;      /* Add some padding for the scrollbar space */
+  white-space: nowrap;      /* Prevent text wrapping */
+}
+/* Hide scrollbar for Chrome, Safari and Opera */
+.program-request .program-info .tab-list::-webkit-scrollbar {
+  display: none;
+}
+
+/* Optional: Add smooth scrolling behavior */
+.program-request .program-info {
+  scroll-behavior: smooth;
 }
 
 .program-request .program-info .tab-list li {
@@ -1376,44 +1418,53 @@ input[type='number'] {
   .program-feeds .feed-list .program-user-img {
     width: 100px;
   }
+  /* .profile-container .profile-details .detail-tab .activity-details .user-image {
+    width: 14rem;
+  } */
 }
 
 @media (max-width: 640px) {
-  .program-request .program-info .tab-list {
+  /* .program-request .program-info .tab-list {
     flex-direction: column;
     gap: 0;
-  }
-  .program-request .program-info .tab-list li {
+  } */
+  /* .program-request .program-info .tab-list li {
     align-items: start;
-  }
+  } */
   .feedback .feedback-content {
     padding: 0;
   }
+  /* .profile-container .profile-details .detail-tab .activity-details .user-image {
+    width: 9rem !important;
+  } */
 
 }
 @media (max-width: 768px) {
-  .program-request .program-info .tab-list {
+  /* .program-request .program-info .tab-list {
     flex-direction: column;
     gap: 0;
   }
   .program-request .program-info .tab-list li {
     align-items: start;
-  }
+  } */
   .feedback .feedback-content {
     padding: 0;
   }
+  /* .profile-container .profile-details .detail-tab .activity-details .user-image {
+    width: 8rem;
+  } */
 }
 @media (max-width: 1024px) {
-  .program-request .program-info .tab-list {
+  /* .program-request .program-info .tab-list {
     flex-direction: column;
     gap: 0;
   }
   .program-request .program-info .tab-list li {
     align-items: start;
-  }
-  .program-request .program-info .tab-list li.active span{
+  } */
+  /* .program-request .program-info .tab-list li.active span{
     width: 80%;
-  }
+  } */
   .feedback .feedback-content {
     padding: 0;
   }
@@ -1421,4 +1472,7 @@ input[type='number'] {
     margin-top: 5px;
     padding: 15px 15px;
   }
+  /* .profile-container .profile-details .detail-tab .activity-details .user-image {
+    width: 3rem;
+  } */
 }

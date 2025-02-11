@@ -506,7 +506,7 @@ const Reports = () => {
     }
   }, [selectedRequestedTab]);
   return (
-    <div className="reports px-9 py-9">
+    <div className="reports px-4 sm:px-4 md:px-6 lg:px-9 xl:px-9 py-9">
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={deleteModal || loading}
@@ -584,7 +584,7 @@ const Reports = () => {
         className="px-3 py-5"
         style={{ boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.15)" }}
       >
-        <div className="flex justify-between px-5 pb-4 mb-8 items-center border-b-2">
+        <div className="flex justify-between px-1 sm:px-1 md:px-3 lg:px-5 xl:px-5 pb-4 mb-8 items-center border-b-2">
           <div className="flex gap-5 items-center ">
             <p>Reports</p>
           </div>
@@ -631,60 +631,68 @@ const Reports = () => {
           </div>
         </div>
 
-        <div className="mx-5">
-          <div className="flex gap-7 mb-6">
-            {(role === "admin" ? requestAdminBtn : requestBtns).map(
-              (actionBtn, index) => (
-                <button
-                  key={index}
-                  className="px-5 py-4 text-[14px]"
-                  style={{
-                    background:
-                      requestTab === actionBtn.key
-                        ? "linear-gradient(97.86deg, #005DC6 -15.07%, #00B1C0 112.47%)"
-                        : "#fff",
-                    border:
-                      requestTab !== actionBtn.key
-                        ? "1px solid rgba(136, 178, 232, 1)"
-                        : "none",
-                    color: requestTab === actionBtn.key ? "#fff" : "#000",
-                    borderRadius: "3px",
-                    width: "180px",
-                  }}
-                  onClick={() => handleTab(actionBtn.key)}
-                >
-                  {actionBtn.name}
-                </button>
-              )
-            )}
-          </div>
+        <div className="mx-0 sm:mx-0 md:mx-2 lg:mx-5 xl:mx-5">
+        <div className="flex flex-wrap sm:flex-nowrap gap-3 sm:gap-4 lg:gap-7 mb-6">
+  {(role === "admin" ? requestAdminBtn : requestBtns).map(
+    (actionBtn, index) => (
+      <button
+        key={index}
+        className={`
+          px-3 sm:px-4 lg:px-5 
+          py-3 sm:py-3 lg:py-4 
+          text-sm sm:text-sm lg:text-[14px]
+          rounded
+          transition-all duration-300
+          w-full sm:w-[160px] lg:w-[180px]
+          ${
+            requestTab === actionBtn.key
+              ? 'bg-gradient-to-r from-[#005DC6] to-[#00B1C0] text-white'
+              : 'bg-white border border-[#88B2E8] text-black'
+          }
+        `}
+        onClick={() => handleTab(actionBtn.key)}
+      >
+        {actionBtn.name}
+      </button>
+    )
+  )}
+</div>
 
-          <div className="reports-table-container">
-            <div className="flex justify-between px-5 pb-4 mb-8 items-center">
-              <div className="flex gap-5 items-center ">
-                <p className="text-[18px] font-semibold">{title}</p>
-              </div>
-              <div className="flex gap-8 items-center">
-                <div className="relative">
-                  <input
-                    type="text"
-                    id="search-navbar"
-                    className="block w-full p-2 text-sm text-gray-900 border-none"
-                    placeholder="Search here..."
-                    style={{
-                      border: "1px solid rgba(29, 91, 191, 1)",
-                      height: "60px",
-                      width: "345px",
-                    }}
-                    value={searchTerm}
-                    onChange={handleSearch}
-                  />
-                  <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
-                    <img src={SearchIcon} alt="SearchIcon" />
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div className="reports-table-container p-4">
+          <div className="flex flex-col sm:flex-row justify-between gap-4 sm:gap-0 px-1 sm:px-1 md:px-3 lg:px-3 xl:px-2 pb-4 mb-8 items-start sm:items-center">
+  {/* Title Section */}
+  <div className="flex gap-5 items-center">
+    <p className="text-base sm:text-lg lg:text-[18px] font-semibold">
+      {title}
+    </p>
+  </div>
+
+  {/* Search Section */}
+  <div className="w-full sm:w-auto">
+    <div className="relative">
+      <input
+        type="text"
+        id="search-navbar"
+        className="w-full sm:w-[260px] md:w-[300px] lg:w-[345px] 
+                 p-2 sm:p-3 lg:p-4
+                 h-12 sm:h-14 lg:h-[60px]
+                 text-sm text-gray-900 
+                 border border-blue-600 rounded
+                 focus:outline-none focus:ring-2 focus:ring-blue-200"
+        placeholder="Search here..."
+        value={searchTerm}
+        onChange={handleSearch}
+      />
+      <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+        <img 
+          src={SearchIcon} 
+          alt="SearchIcon"
+          className="w-5 h-5" 
+        />
+      </div>
+    </div>
+  </div>
+</div>
             <DataTable
               rows={allreports?.results ?? []}
               columns={

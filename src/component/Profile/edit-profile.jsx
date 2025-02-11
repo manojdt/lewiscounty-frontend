@@ -168,7 +168,7 @@ const EditProfile = ({ setEditMode }) => {
       try {
         const response = await dispatch(updateProfileImage(bodyFormData)).unwrap();
         // Only update the image in the form state
-        console.log(response,"res")
+        // console.log(response,"res")
         setValue('image', response.profile_image); // Adjust the field name based on your form structure
       } catch (error) {
         console.error('Error uploading image:', error);
@@ -370,33 +370,36 @@ const EditProfile = ({ setEditMode }) => {
 
   return (
     <FormContextProvider onSubmit={onSubmit} initialValues={profile}>
-      <div className='border px-12 py-6 rounded-lg bg-white'>
-        <div className='flex items-center  justify-between'>
-          <div className='py-4 relative w-[12%]'>
-            <div className='upload-profile'>
-              <label
-                className='w-[40%] pb-3 rounded-lg text-white text-[14px] cursor-pointer'
-                style={{
-                  border: "none",
-                }}
-              >
-                <img
-                  src={methods.watch('image') || ProfileImageIcon}
-                  style={{ borderRadius: "50%", height: "143px" }}
-                  alt='ProfileImageIcon'
-                />
-                <img
-                  src={ProfileImagePencilIcon}
-                  className='absolute top-[50%] left-2 cursor-pointer'
-                  alt='ProfileImagePencilIcon'
-                />
+      <div className='border px-4 sm:px-4 md:px-8 lg:px-12 xl:px-12 py-6 rounded-lg bg-white'>
 
-                <input type='file' class='hidden' onChange={uploadUserImage} />
-              </label>
-            </div>
-          </div>
-          <div className='space-x-4'>
-            <Button
+        <div className='flex flex-col sm:flex-row items-center gap-6 sm:justify-between'>
+  {/* Profile Image Section */}
+  <div className='relative w-full sm:w-[50%] md:w-[30%] lg:w-[12%]'>
+    <div className='upload-profile'>
+      <label className='relative block aspect-square w-32 sm:w-36 md:w-40 cursor-pointer mx-auto sm:mx-0'>
+        <img
+          src={methods.watch('image') || ProfileImageIcon}
+          className='w-full h-full rounded-full object-cover'
+          alt='ProfileImageIcon'
+        />
+        <img
+          src={ProfileImagePencilIcon}
+          className='absolute top-1/2 left-2 w-6 h-6 transform -translate-y-1/2 cursor-pointer'
+          alt='ProfileImagePencilIcon'
+        />
+        <input 
+          type='file' 
+          className='hidden' 
+          onChange={uploadUserImage} 
+        />
+      </label>
+    </div>
+  </div>
+
+  {/* Buttons Section */}
+  <div className='flex flex-col sm:flex-row gap-4 sm:space-x-4 w-full sm:w-auto'>
+    <div className="flex justify-center mb-5">
+    <Button
               btnName='Cancel'
               btnCls='w-[140px]'
               btnStyle={{
@@ -411,15 +414,17 @@ const EditProfile = ({ setEditMode }) => {
               btnName={`${loading ? "Saving..." : "Save Changes"}`}
               btnCls={"w-[160px]"}
             />
-          </div>
-        </div>
+    </div>
+  
+  </div>
+</div>
 
         <div
           ref={contentRef}
           style={{
             maxHeight: showAll
               ? `${contentRef.current.scrollHeight}px`
-              : "825px",
+              : "w-[100%]",
             overflow: "hidden",
             transition: "max-height 0.5s ease",
           }}
