@@ -195,7 +195,7 @@ export default function ProgramCompletion() {
                         scope="row"
                         className="px-6 py-4 font-medium  whitespace-nowrap text-font-secondary-black"
                       >
-                        Durations
+                        Duration
                       </th>
                       <td
                         className="px-6 py-4 text-white"

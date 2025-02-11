@@ -18,6 +18,7 @@ import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import CancelIcon from "@mui/icons-material/Cancel";
 import EventBusyIcon from "@mui/icons-material/EventBusy";
+import { ThumbUpOffAlt } from "@mui/icons-material";
 
 export const ApprovedTag = () => {
   return (
@@ -429,7 +430,16 @@ const ProgramActions = ({
             className="!my-4"
             onClick={() => !markingInterest && handleMarkInterestClick(true)}
           >
-            {markingInterest ? "Loading..." : "I'm Interested"}
+            {markingInterest ? (
+              "Loading..."
+            ) : (
+              <>
+                <ThumbUpOffAlt  />
+               <span className="pl-2">
+                I'm Interested
+                </span> 
+              </>
+            )}
           </MuiButton>
         );
       }

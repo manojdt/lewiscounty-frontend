@@ -157,12 +157,22 @@ const EditProfile = ({ setEditMode }) => {
   const loadUserProfile = () => {
     dispatch(getUserProfile());
   };
-
-  const uploadUserImage = (e) => {
+  const methods = useForm({
+    defaultValues: profile
+  });
+  const { setValue } = methods;
+  const uploadUserImage =async (e) => {
     if (e.target.files && e.target.files[0]) {
       let bodyFormData = new FormData();
       bodyFormData.append("profile_image", e.target.files[0]);
-      dispatch(updateProfileImage(bodyFormData)).then(() => loadUserProfile());
+      try {
+        const response = await dispatch(updateProfileImage(bodyFormData)).unwrap();
+        // Only update the image in the form state
+        console.log(response,"res")
+        setValue('image', response.profile_image); // Adjust the field name based on your form structure
+      } catch (error) {
+        console.error('Error uploading image:', error);
+      }
     }
   };
 
@@ -371,7 +381,7 @@ const EditProfile = ({ setEditMode }) => {
                 }}
               >
                 <img
-                  src={profile?.image || ProfileImageIcon}
+                  src={methods.watch('image') || ProfileImageIcon}
                   style={{ borderRadius: "50%", height: "143px" }}
                   alt='ProfileImageIcon'
                 />

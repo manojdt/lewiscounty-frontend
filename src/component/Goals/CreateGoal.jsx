@@ -11,6 +11,7 @@ import { Backdrop, CircularProgress } from '@mui/material';
 import { goalPeriods } from '../../utils/constant';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
+import { FormLabelRequired } from '../../utils';
 
 export default function CreateGoal({
   open,
@@ -171,14 +172,13 @@ export default function CreateGoal({
                                     error !== '' ? <p className="error" role="alert">{error}</p> : null
                                 } */}
                 <div className='relative pb-8'>
-                  <label className='block tracking-wide text-gray-700 text-xs font-bold mb-2'>
+                  <FormLabelRequired required>
                     {recreate
                       ? 'Goal Name'
                       : editMode
                       ? 'Edit Goal'
                       : 'Goal Name'}
-                  </label>
-
+                  </FormLabelRequired>
                   <div className='relative'>
                     <input
                       {...register('goal_name', {
@@ -202,10 +202,9 @@ export default function CreateGoal({
                 </div>
 
                 <div className='relative pb-8'>
-                  <label className='block tracking-wide text-gray-700 text-xs font-bold mb-2'>
+                  <FormLabelRequired required>
                     Goal Designation
-                  </label>
-
+                  </FormLabelRequired>
                   <div className='relative'>
                     <input
                       {...register('goal_designation', {
@@ -229,9 +228,9 @@ export default function CreateGoal({
                 </div>
 
                 <div className='relative pb-8'>
-                  <label className='block tracking-wide text-gray-700 text-xs font-bold mb-2'>
+                  <FormLabelRequired required>
                     Start Date
-                  </label>
+                  </FormLabelRequired>
                   <div className='relative'>
                     <Calendar
                       className='calendar-control input-bg demo-cc'
@@ -271,9 +270,9 @@ export default function CreateGoal({
                 </div>
 
                 <div className='relative pb-8'>
-                  <label className='block tracking-wide text-gray-700 text-xs font-bold mb-2'>
+                  <FormLabelRequired required>
                     Duration
-                  </label>
+                  </FormLabelRequired>
 
                   <div className='relative'>
                     <>
@@ -306,9 +305,9 @@ export default function CreateGoal({
                 </div>
 
                 <div className='relative pb-8'>
-                  <label className='block tracking-wide text-gray-700 text-xs font-bold mb-2'>
+                  <FormLabelRequired required>
                     Goal Description
-                  </label>
+                  </FormLabelRequired>
 
                   <div className='relative'>
                     <textarea

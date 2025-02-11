@@ -26,6 +26,7 @@ import { calendarStatus } from "../../utils/constant";
 import { useUpdateCalendarEventMutation } from "../../features/schedule/scheduleApi.services";
 import { Avatar } from "@mui/material";
 import { MuiCustomModal } from "../../shared/Modal/MuiCustomModal";
+import { FormLabelRequired } from "../../utils";
 
 export default function CreateMeeting() {
   const [updateCalendarEvent, { isSuccess, isError, data }] =
@@ -942,12 +943,11 @@ export default function CreateMeeting() {
                     }`}
                     key={index}
                   >
-                    <label
-                      className="block tracking-wide text-gray-700 text-xs font-bold mb-2"
+                    <FormLabelRequired required={field?.inputRules?.required}
                       htmlFor={field.label}
                     >
                       {field.label}
-                    </label>
+                    </FormLabelRequired>
                     {field.type === "input" ? (
                       <div className="relative">
                         <input

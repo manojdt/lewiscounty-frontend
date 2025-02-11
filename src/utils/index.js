@@ -376,3 +376,10 @@ export const useDebounce = (value, delay) => {
 
   return debouncedValue;
 };
+
+export const FormLabelRequired = ({ required, children, className = "" }) => (
+  <label className={`block text-sm font-bold text-gray-700 ${className}`}>
+    {children}
+    {required &&children&& <span className="text-red-500 ml-1">*</span>}
+  </label>
+)

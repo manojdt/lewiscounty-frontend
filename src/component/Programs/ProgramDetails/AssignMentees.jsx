@@ -44,6 +44,7 @@ import {
 import dayjs from "dayjs";
 import CloseIcon from "../../../assets/icons/closeIcon.svg";
 import { useGetSpecificProgramDetailsQuery } from "../../../features/program/programApi.services";
+import { FormLabelRequired } from "../../../utils";
 
 export default function AssignMentees() {
   const {
@@ -528,12 +529,11 @@ export default function AssignMentees() {
                         className={`relative mb-6 ${field.width}`}
                         key={index}
                       >
-                        <label
-                          className="block tracking-wide text-gray-700 text-xs font-bold mb-2"
+                        <FormLabelRequired required={field?.inputRules?.required}
                           htmlFor={field.label}
                         >
                           {field.label}
-                        </label>
+                        </FormLabelRequired>
                         {field.type === "input" ? (
                           <>
                             <input
