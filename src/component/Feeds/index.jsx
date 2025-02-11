@@ -209,7 +209,7 @@ export default function Feeds() {
       >
         <div className="flex flex-wrap justify-between items-center px-4 sm:px-5 pb-4 mb-8 border-b-2">
           <div>
-            <p className="text-lg font-bold text-gray-800">Feeds</p>
+            <p className="text-lg font-bold text-gray-800">Feed</p>
           </div>
           <div className="flex items-center gap-4 sm:gap-8">
             {/* <img

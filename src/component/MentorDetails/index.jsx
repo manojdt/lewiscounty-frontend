@@ -759,7 +759,7 @@ export default function MentorDetails() {
                                                 <div className="flex gap-4">
                                                     <div className="card-dash" style={{ background: 'linear-gradient(180deg, #00B1C0 0%, #005DC6 100%)' }} ></div>
                                                     <h4>
-                                                        {role === 'mentor' ? 'Program' : 'Mentor'} Feeds
+                                                        {role === 'mentor' ? 'Program' : 'Mentor'} Feed
                                                     </h4>
                                                 </div>
                                                 <div className="flex gap-4 items-center">
