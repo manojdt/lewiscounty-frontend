@@ -162,7 +162,7 @@ export const PersonalInformationFields = [
       // },
       {
         key: "nonbinary",
-        value: "nonbinary",
+        value: "Nonbinary",
       },
       {
         key: "prefer not to answer",
@@ -458,7 +458,7 @@ export const MentorDocumentUplaod = [
     type: "file",
     name: "documents",
     fieldtype: "file",
-    label: "Document Upload",
+    label: "Documents Upload",
     placeholder: "",
     inputRules: {
       required: "At least one file is required",
@@ -550,8 +550,8 @@ export const MenteePersonalInformationFields = [
     type: "input",
     name: "phone_number",
     // fieldtype: 'number',
-    label: "Primary Number",
-    placeholder: "Primary Number",
+    label: "Primary Contact Number",
+    placeholder: "Primary Contact Number",
     inputRules: {
       required: "This field is required",
       pattern: {
@@ -631,11 +631,11 @@ export const MenteePersonalInformationFields = [
     options: [
       {
         key: "male",
-        value: "male",
+        value: "Male",
       },
       {
         key: "female",
-        value: "female",
+        value: "Female",
       },
       // {
       //   key: "others",
@@ -643,11 +643,11 @@ export const MenteePersonalInformationFields = [
       // },
       {
         key: "nonbinary",
-        value: "nonbinary",
+        value: "Nonbinary",
       },
       {
         key: "prefer not to answer",
-        value: "prefer not to answer",
+        value: "Prefer not to answer",
       },
     ],
     inputRules: {
@@ -1367,7 +1367,7 @@ export const MenteeDocumentUplaod = [
     type: "file",
     name: "documents",
     fieldtype: "file",
-    label: "Document Upload",
+    label: "Documents Upload",
     placeholder: "",
     inputRules: {
       required: "This field is required",
@@ -3204,7 +3204,7 @@ export const PersonalInfoFields = [
     type: "input",
     name: "phone_number",
     // fieldtype: 'number',
-    label: "Primary Number",
+    label: "Primary Contact Number",
     placeholder: "Enter Primary Contact Number",
     inputRules: {
       required: "This field is required",
@@ -3294,7 +3294,7 @@ export const PersonalInfoFields = [
     options: [
       {
         key: "male",
-        value: "male",
+        value: "Male",
       },
       {
         key: "female",
@@ -3433,7 +3433,7 @@ export const menteeTicketCreationField = [
     type: "file",
     name: "attachments",
     fieldtype: "file",
-    label: "Document Upload",
+    label: "Documents Upload",
     placeholder: "",
     inputRules: {
       required: "This field is required",

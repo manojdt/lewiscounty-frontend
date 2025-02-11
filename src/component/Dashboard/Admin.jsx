@@ -32,6 +32,7 @@ export default function Admin() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const categoryId = searchParams.get("category_id"); // Extract category ID
+  const filterType = searchParams.get("type");
   const userInfo = useSelector((state) => state.userInfo);
   const userpragrams = useSelector((state) => state.userPrograms);
   const { feeds } = useSelector((state) => state.feeds);
@@ -91,6 +92,7 @@ export default function Admin() {
       setTopMentorList(topMentor.data.results);
     }
   };
+  
 
   useEffect(() => {
     const totalCount = userpragrams.statusCounts;
@@ -267,7 +269,12 @@ export default function Admin() {
                           : ""
                         }`}
                       aria-current="page"
-                      onClick={() => navigate(menu.page)}
+                      
+                      onClick={(e) => {
+                        e.preventDefault();
+                        console.log("Navigating to:", menu.page);
+                        navigate(menu.page);
+                      }}
                     >
                       <span className="text-sm max-lg:text-[12px]">{menu.name}</span>
                       <span className="text-base max-lg:text-[12px]">{menu.count}</span>
@@ -410,7 +417,7 @@ export default function Admin() {
           </CardWrapper>
 
           <div className="py-3">
-          <DashboardPrograms categoryId={categoryId} />
+          <DashboardPrograms searchParams={searchParams} type={filterType} categoryId={categoryId} />
           </div>
         </div>
       </div>

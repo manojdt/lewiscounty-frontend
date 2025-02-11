@@ -344,7 +344,7 @@ export const Mentee = () => {
                 />
               )}
 
-            {(searchParams.get("type") === "yettojoin" ||
+            {/* {(searchParams.get("type") === "yettojoin" ||
               searchParams.get("type") === "planned") && (
               <ProgramCard
                 title="Active Programs"
@@ -354,7 +354,7 @@ export const Mentee = () => {
                 programs={userpragrams.yettojoin}
                 loadProgram={getPrograms}
               />
-            )}
+            )} */}
 
             {searchParams.get("type") === "yettostart" && (
               <ProgramCard

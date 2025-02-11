@@ -8,7 +8,7 @@ export const StepsList = [
     key: "personal_information",
   },
   {
-    name: "Skills and Area of Expertise",
+    name: "Skills and Areas of Expertise",
     status: "Waiting",
     key: "area_of_expertise",
   },
@@ -28,7 +28,7 @@ export const StepsList = [
     key: "goals_expectations",
   },
   {
-    name: "Document Upload",
+    name: "Documents Upload",
     status: "Waiting",
     key: "document_upload",
   },
@@ -61,7 +61,7 @@ export const MenteeStepsList = [
     key: "long_term_vision",
   },
   {
-    name: "Document Upload",
+    name: "Documents Upload",
     status: "Waiting",
     key: "document_upload",
   },
