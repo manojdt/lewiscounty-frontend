@@ -228,7 +228,7 @@ export default function AllRequest() {
       forTabs: role === "mentee" ? ["my"] : role === "admin" ? ["mentees"] : [],
     },
     {
-      name: "Cancelled Programs",
+      name: "Cancelling Requests",
       key: "program_cancel",
       for: ["mentor", "mentee", "admin"],
       forTabs: ["my", "mentees"],
@@ -1965,7 +1965,12 @@ export default function AllRequest() {
       payload.request_by = selectedTab === "mentees" ? "mentee" : "mentor";
     }
     // handleResetTab(actionTab)
+    // Ensure request_type exists before dispatching API call
+  if (payload.request_type) {
     dispatch(getprogramRequest(payload));
+  }else {
+    console.warn("API call prevented: request_type is missing");
+  }
   };
 
   const getLearningAccessApi = async () => {
