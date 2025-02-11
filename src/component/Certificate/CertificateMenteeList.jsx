@@ -476,7 +476,7 @@ export default function CertificateMenteeList() {
                   <div className="flex gap-6 justify-center align-middle py-16">
                     <Button
                       btnName="Cancel"
-                      btnCls="w-[16%]"
+                      btnCls="w-[30%] sm:w-[30%] md:w-[20%] lg:w-[16%] xl:w-[16%]"
                       btnCategory="secondary"
                       onClick={() => navigate("/certificates")}
                     />
@@ -484,7 +484,7 @@ export default function CertificateMenteeList() {
                       certificatesMembers?.results?.length > 0 && (
                         <Button
                           btnType="button"
-                          btnCls="w-[16%]"
+                          btnCls="w-[30%] sm:w-[30%] md:w-[20%] lg:w-[16%] xl:w-[16%]"
                           onClick={() => handleSubmit()}
                           btnName="Submit Request to Admin"
                           btnCategory="primary"

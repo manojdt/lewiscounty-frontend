@@ -209,7 +209,7 @@ export default function CreateCertificate() {
 
 
     return (
-        <div className="px-9 my-6 grid">
+        <div className="px-1 sm:px-1 md:px-2 lg:px-9 xl:px-9 my-6 grid">
 
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -477,8 +477,8 @@ export default function CreateCertificate() {
                                 }
                             </div>
                             <div className="flex gap-6 justify-center align-middle py-16">
-                                <Button btnName='Cancel' btnCls="w-[13%]" btnCategory="secondary" onClick={() => navigate('/certificates')} />
-                                <Button btnType="submit" btnCls="w-[13%]" btnName='Submit' btnCategory="primary" />
+                                <Button btnName='Cancel' btnCls="w-[30%] sm:w-[30%] md:w-[20%] lg:w-[15%] xl:w-[15%]" btnCategory="secondary" onClick={() => navigate('/certificates')} />
+                                <Button btnType="submit" btnCls="w-[30%] sm:w-[30%] md:w-[20%] lg:w-[15%] xl:w-[15%]" btnName='Submit' btnCategory="primary" />
                             </div>
                         </form>
 

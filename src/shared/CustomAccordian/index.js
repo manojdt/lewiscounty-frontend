@@ -23,7 +23,7 @@ const Accordian = ({ title, children, defaultValue }) => {
       </div>
       <div
         className={`overflow-hidden transition-all duration-500 ease-in-out ${
-          isOpen ? 'max-h-screen' : 'max-h-0'
+          isOpen ? 'max-h-full' : 'max-h-0'
         }`}
       >
         <div className='p-4 w-full'>{children}</div>

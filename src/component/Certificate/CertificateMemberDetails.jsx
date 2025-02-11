@@ -239,13 +239,13 @@ console.log(res,"res")
           <div className="flex gap-6 justify-center align-middle py-16">
             <Button
               btnName="Cancel"
-              btnCls="w-[13%]"
+              btnCls="w-[30%] sm:w-[30%] md:w-[20%] lg:w-[15%] xl:w-[15%]"
               btnCategory="secondary"
               onClick={() => navigate(-1)}
             />
             <Button
               btnType="button"
-              btnCls="w-[13%]"
+              btnCls="w-[30%] sm:w-[30%] md:w-[20%] lg:w-[15%] xl:w-[15%]"
               onClick={() => handleSubmit()}
               btnName="Submit"
               btnCategory="primary"

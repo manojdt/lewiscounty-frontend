@@ -100,10 +100,10 @@ export default function Profile() {
 
       <div className='profile-content'>
         <div className='grid grid-cols-8 gap-3'>
-          <div className='col-span-2'>
+          <div className='col-span-8 sm:col-span-8 md:col-span-8 lg:col-span-2 xl:col-span-2'>
             <div className='profile-info'>
               <div className='user-information'>
-                <div className='flex gap-4 px-7 py-6'>
+                <div className='flex gap-4 p-2 sm:p-2 md:p-4 lg:p-6 xl:p-6'>
                   <div className='user-image w-[26%]'>
                     <img src={UserImage} alt='UserImage' />
                   </div>
@@ -146,7 +146,7 @@ export default function Profile() {
               </div>
 
               <div className='professional-bio'>
-                <div className='px-7 py-6'>
+                <div className='p-2 sm:p-2 md:p-4 lg:p-6 xl:p-6'>
                   <div className='text-[14px] font-semibold pb-3'>
                     Professional Bio :
                   </div>
@@ -184,7 +184,7 @@ export default function Profile() {
               </div>
 
               <div className='contact-information'>
-                <div className='px-7 py-4'>
+                <div className='p-2 sm:p-2 md:p-4 lg:p-6 xl:p-6'>
                   <div className='text-[14px] font-semibold pb-3'>
                     Contact Information :
                   </div>
@@ -206,7 +206,7 @@ export default function Profile() {
               </div>
 
               <div className='social-media'>
-                <div className='px-7 py-4'>
+                <div className='p-2 sm:p-2 md:p-4 lg:p-6 xl:p-6'>
                   <div className='flex gap-4 items-center'>
                     <div className='text-[14px] font-semibold'>
                       Social Networks :
@@ -233,7 +233,7 @@ export default function Profile() {
                   <h4>Skills</h4>
                 </div>
               </div>
-              <div className='py-4 px-6'>
+              <div className='p-2 sm:p-2 md:p-4 lg:p-6 xl:p-6'>
                 <div className='py-3'>
                   <p className='flex justify-between text-[14px]'>
                     <span>Teaching skill</span>
@@ -318,7 +318,7 @@ export default function Profile() {
             </div>
           </div>
 
-          <div className='col-span-6'>
+          <div className='col-span-8 sm:col-span-8 md:col-span-8 lg:col-span-6 xl:col-span-6'>
             <div className='profile-details'>
               <div className='detail-tab'>
                 <div className='px-3 py-5'>
@@ -339,7 +339,7 @@ export default function Profile() {
                     </ul>
                   </div>
 
-                  <div className='detail-content'>
+                  <div className='detail-content px-0 py-3 sm:px-0 md:px-0 lg:px-0 xl:px-4'>
                     <div
                       className={`activity-tab ${
                         actionTab === 'activity' ? 'show' : 'hidden'
@@ -347,8 +347,8 @@ export default function Profile() {
                     >
                       <div className='activity-details flex gap-4'>
                         <div className='batch-container'>E</div>
-                        <div className=''>
-                          <div className='flex justify-between text-[13px] pb-2'>
+                        <div className='w-[100%]'>
+                          <div className='flex justify-between text-[13px] pb-2 flex-col sm:flex-col md:flex-col lg:flex-row xl:flex-row'>
                             <p className='font-semibold'>Program Report 1</p>
                             <p className='text-[12px]'>24,Dec 2022 - 14:34</p>
                           </div>
@@ -373,8 +373,8 @@ export default function Profile() {
                         <div className='user-image'>
                           <img src={UserImage} alt='UserImage' />
                         </div>
-                        <div className=''>
-                          <div className='flex justify-between text-[13px] pb-2'>
+                        <div className='w-[100%]'>
+                          <div className='flex justify-between text-sm pb-2 flex-col sm:flex-col md:flex-col lg:flex-row xl:flex-row'>
                             <p className='font-semibold'>Program Report 1</p>
                             <p className='text-[12px]'>24,Dec 2022 - 14:34</p>
                           </div>
@@ -398,8 +398,8 @@ export default function Profile() {
                         <div className='user-image'>
                           <img src={UserImage} alt='UserImage' />
                         </div>
-                        <div className=''>
-                          <div className='flex justify-between text-[13px] pb-2'>
+                        <div className='w-[100%]'>
+                          <div className='flex justify-between text-[13px] pb-2 flex-col sm:flex-col md:flex-col lg:flex-row xl:flex-row'>
                             <p className='font-semibold'>
                               Yoga Content Created
                             </p>
@@ -423,8 +423,8 @@ export default function Profile() {
 
                       <div className='activity-details flex gap-4'>
                         <div className='batch-container'>E</div>
-                        <div className=''>
-                          <div className='flex justify-between text-[13px] pb-2'>
+                        <div className='w-[100%]'>
+                          <div className='flex justify-between text-[13px] pb-2 flex-col sm:flex-col md:flex-col lg:flex-row xl:flex-row'>
                             <p className='font-semibold'>
                               Program 1 Report Lorem ipsum dolor sit amet
                               consectetur adipisicing elit. Re
@@ -449,8 +449,8 @@ export default function Profile() {
                         <div className='user-image'>
                           <img src={UserImage} alt='UserImage' />
                         </div>
-                        <div className=''>
-                          <div className='flex justify-between text-[13px] pb-2'>
+                        <div className='w-[100%]'>
+                          <div className='flex justify-between text-[13px] pb-2 flex-col sm:flex-col md:flex-col lg:flex-row xl:flex-row'>
                             <p className='font-semibold'>
                               Yoga Content Created
                             </p>
@@ -647,8 +647,8 @@ export default function Profile() {
                         actionTab === 'colleagues' ? 'show' : 'hidden'
                       }`}
                     >
-                      <div className='px-6 py-2'>
-                        <div className='grid grid-cols-3 gap-20'>
+                      <div className='px-0 py-2 sm:px-0 md:px-2 lg:px-6 xl:px-6'>
+                        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-8 lg:gap-20'>
                           {allCollegues.map((collegue) => (
                             <div className='collegue-list' key={collegue.id}>
                               <div className='flex gap-3'>
@@ -682,7 +682,7 @@ export default function Profile() {
                       }`}
                     >
                       <div className='px-3'>
-                        <div className='grid grid-cols-3 gap-3'>
+                        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-3'>
                           <img
                             style={{ borderRadius: '6px' }}
                             src={ReportSampleImage}

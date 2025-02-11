@@ -794,7 +794,7 @@ export default function EditReport() {
                 <div className="flex gap-6 justify-center align-middle py-16">
                   <Button
                     btnName="Cancel"
-                    btnCls="w-[13%]"
+                    btnCls="w-[30%] sm:w-[30%] md:w-[20%] lg:w-[15%] xl:w-[15%]"
                     btnCategory="secondary"
                     onClick={() => {
                       reset();
@@ -815,7 +815,7 @@ export default function EditReport() {
                         background: "rgba(29, 91, 191, 1)",
                         color: "#fff",
                       }}
-                      btnCls="w-[13%]"
+                      btnCls="w-[30%] sm:w-[30%] md:w-[20%] lg:w-[15%] xl:w-[15%]"
                       btnCategory="secondary"
                       onClick={handleSubmit((d) =>
                         onSubmit({ ...d, action: "draft" })
@@ -825,7 +825,7 @@ export default function EditReport() {
 
                   <Button
                     btnType="submit"
-                    btnCls="w-[13%]"
+                    btnCls="w-[30%] sm:w-[30%] md:w-[20%] lg:w-[15%] xl:w-[15%]"
                     btnName={
                       searchParams.get("type") === "re-open" ||
                       reportDetails.status === "draft"

@@ -179,13 +179,13 @@ export default function SettingsModal({
             <div className='flex gap-6 justify-end align-middle pt-8 pb-3'>
               <Button
                 btnName='Back'
-                btnCls='w-[13%]'
+                btnCls='w-[30%] sm:w-[30%] md:w-[20%] lg:w-[15%] xl:w-[15%]'
                 btnCategory='secondary'
                 onClick={handleSettingsBack}
               />
               <Button
                 btnType='submit'
-                btnCls='w-[13%]'
+                btnCls='w-[30%] sm:w-[30%] md:w-[20%] lg:w-[15%] xl:w-[15%]'
                 btnName='Save'
                 btnCategory='primary'
               />
@@ -255,13 +255,13 @@ export default function SettingsModal({
             <div className='flex gap-6 justify-end align-middle pt-8 pb-3'>
               <Button
                 btnName='Back'
-                btnCls='w-[13%]'
+                btnCls='w-[30%] sm:w-[30%] md:w-[20%] lg:w-[15%] xl:w-[15%]'
                 btnCategory='secondary'
                 onClick={handleControlBack}
               />
               <Button
                 btnType='submit'
-                btnCls='w-[13%]'
+                btnCls='w-[30%] sm:w-[30%] md:w-[20%] lg:w-[15%] xl:w-[15%]'
                 btnName='Save'
                 btnCategory='primary'
               />

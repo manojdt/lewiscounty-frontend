@@ -203,8 +203,8 @@ export default function Help() {
                             </div>
 
                             <div className="flex gap-6 justify-center align-middle py-16">
-                                <Button btnName='Cancel' btnCls="w-[13%]" btnCategory="secondary" onClick={() => navigate('/dashboard')} />
-                                <Button btnType="submit" btnName='Sent  to Help desk admin' btnCategory="primary" />
+                                <Button btnName='Cancel' btnCls="w-[30%] sm:w-[30%] md:w-[20%] lg:w-[15%] xl:w-[15%]" btnCategory="secondary" onClick={() => navigate('/dashboard')} />
+                                <Button btnType="submit" btnCls="w-[30%] sm:w-[30%] md:w-[20%] lg:w-[15%] xl:w-[15%]" btnName='Sent  to Help desk admin' btnCategory="primary" />
                             </div>
                         </form>
                     </div>
