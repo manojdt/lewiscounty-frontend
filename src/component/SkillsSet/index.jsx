@@ -10,13 +10,13 @@ import { Backdrop, CircularProgress, Menu, MenuItem } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUserProgramInfo } from "../../services/userprograms";
 import api from "../../services/api";
-import { TaskAllStatus } from "../../utils/constant";
+import { TaskAllStatus, user } from "../../utils/constant";
 import DataTable from "../../shared/DataGrid";
 import ViewIcon from "../../assets/icons/View.svg"
 import moment from "moment";
 import MoreIcon from "../../assets/icons/moreIcon.svg";
 
-export default function SkillsSet({ programdetails }) {
+export default function SkillsSet({ programdetails,role }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [activeTask, setActiveTask] = useState(0);
@@ -59,25 +59,31 @@ export default function SkillsSet({ programdetails }) {
   };
 
   const handleTaskAction = async () => {
-    if (
-      activeTaskDetails.status === TaskAllStatus.yettostart ||
-      activeTaskDetails.status === TaskAllStatus.newtask ||
-      activeTaskDetails.status === TaskAllStatus.pending
-    ) {
-      setSuccessModal({ loading: true, success: false });
-      const startTask = await api.patch("program_task_assign/task_start", {
-        task_id: activeTaskDetails.assign_task.id,
-      });
-      if (startTask.status === 200 && startTask.data) {
-        setSuccessModal({ loading: false, success: true });
-        setTimeout(() => {
-          dispatch(updateUserProgramInfo({ status: "" }));
-          setSuccessModal({ loading: false, success: false });
-          navigate(`/submit-task-program/${startTask.data.task_id}`);
-        }, [2000]);
+    if(role===user.mentee){
+
+      if (
+        activeTaskDetails.status === TaskAllStatus.yettostart ||
+        activeTaskDetails.status === TaskAllStatus.newtask ||
+        activeTaskDetails.status === TaskAllStatus.pending
+      ) {
+        setSuccessModal({ loading: true, success: false });
+        const startTask = await api.patch("program_task_assign/task_start", {
+          task_id: activeTaskDetails.assign_task.id,
+        });
+        if (startTask.status === 200 && startTask.data) {
+          setSuccessModal({ loading: false, success: true });
+          setTimeout(() => {
+            dispatch(updateUserProgramInfo({ status: "" }));
+            setSuccessModal({ loading: false, success: false });
+            navigate(`/submit-task-program/${startTask.data.task_id}`);
+          }, [2000]);
+        }
+      } else {
+        navigate(`/submit-task-program/${activeTaskDetails.assign_task.id}`);
       }
-    } else {
-      navigate(`/submit-task-program/${activeTaskDetails.assign_task.id}`);
+    }else{
+      navigate(`/mentor-tasks-details/${activeTaskDetails.id}`);
+
     }
   };
 
@@ -122,7 +128,7 @@ export default function SkillsSet({ programdetails }) {
       renderCell: (params) => {
         return (
           <div className="flex gap-2 items-center">
-            {params.row.assign_task.task_name ?? "..."}
+            {params.row.assign_task?.task_name ?params.row.assign_task?.task_name ?? "...":params.row?.task_name?? "..." }
           </div>
         );
       },
@@ -135,7 +141,7 @@ export default function SkillsSet({ programdetails }) {
       renderCell: (params) => {
         return (
           <div className="flex gap-2 items-center">
-            {params.row.assign_task.task_details ?? "..."}
+            {params.row.assign_task?.task_details?params.row.assign_task?.task_details ?? "...":params.row?.task_details?? "..."}
           </div>
         );
       },
@@ -148,8 +154,8 @@ export default function SkillsSet({ programdetails }) {
       renderCell: (params) => {
         return (
           <div className="flex gap-2 items-center">
-            {params.row.assign_task.assign_task_created_at
-              ? moment(params.row.assign_task.assign_task_created_at).format(
+            {params.row.assign_task?.assign_task_created_at||params.row?.assign_task_created_at
+              ? moment(params.row.assign_task?.assign_task_created_at||params.row?.assign_task_created_at).format(
                   "MM-DD-YYYY"
                 )
               : "..."}
@@ -165,8 +171,8 @@ export default function SkillsSet({ programdetails }) {
       renderCell: (params) => {
         return (
           <div className="flex gap-2 items-center">
-            {params.row.assign_task.due_date
-              ? moment(params.row.assign_task.due_date).format("MM-DD-YYYY")
+            {params.row.assign_task?.due_date||params.row?.due_date
+              ? moment(params.row.assign_task?.due_date||params.row?.due_date).format("MM-DD-YYYY")
               : "..."}
           </div>
         );
@@ -207,7 +213,7 @@ export default function SkillsSet({ programdetails }) {
                   field={params.id}
                   className="pr-3 w-[30px]"
                 />
-                {activeTaskDetails.status === TaskAllStatus.start
+                {role!==user.mentee? "View Task":activeTaskDetails.status === TaskAllStatus.start
                   ? "Submit Task"
                   : activeTaskDetails.status === TaskAllStatus.yettostart ||
                     activeTaskDetails.status === TaskAllStatus.newtask ||

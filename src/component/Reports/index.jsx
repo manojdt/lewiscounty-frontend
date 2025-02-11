@@ -33,6 +33,7 @@ import CreatePostModal from "../Feeds/CreatePostModal";
 import SettingsModal from "../Feeds/SettingsModal";
 import SuccessTik from "../../assets/images/blue_tik1x.png";
 import { tabQuertyData } from "../Breadcrumbs/BreadcrumbsCommonData";
+import { useDebounce } from "../../utils";
 
 const Reports = () => {
   const navigate = useNavigate();
@@ -44,6 +45,8 @@ const Reports = () => {
   const open = Boolean(anchorEl);
   const [deleteModal, setDeleteModal] = useState(false);
   const [filter, setFilter] = useState({ search: "", filter_by: "" });
+  const [searchTerm, setSearchTerm] = useState("");
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const [requestTab, setRequestTab] = useState("all");
   const [searchParams, setSearchParams] = useSearchParams();
   const [reportData, setReportData] = useState({
@@ -475,9 +478,11 @@ const Reports = () => {
   };
 
   const handleSearch = (e) => {
-    setFilter({ ...filter, search: e.target.value });
+    setSearchTerm(e.target.value);
   };
-
+  useEffect(() => {
+    setFilter({ ...filter, search: debouncedSearchTerm });
+  }, [debouncedSearchTerm]);
   useEffect(() => {
     let query = getQueryString();
     setSearchParams(query);
@@ -671,7 +676,7 @@ const Reports = () => {
                       height: "60px",
                       width: "345px",
                     }}
-                    value={filter.search}
+                    value={searchTerm}
                     onChange={handleSearch}
                   />
                   <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">

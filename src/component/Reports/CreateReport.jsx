@@ -25,7 +25,7 @@ import {
   updateReportLocalState,
 } from "../../services/reportsInfo";
 import ToastNotification from "../../shared/Toast";
-import { dateTimeFormat } from "../../utils";
+import { dateTimeFormat, FormLabelRequired } from "../../utils";
 import MuiModal from "../../shared/Modal";
 import HtmlReport from "../Docusign/Docusignn";
 import AddGoalIcon from "../../assets/icons/addGoal.svg";
@@ -401,12 +401,11 @@ export default function CreateReport() {
                       : undefined;
                   return (
                     <div className={`relative mb-6 ${field.width}`} key={index}>
-                      <label
-                        className="block tracking-wide text-gray-700 text-xs font-bold mb-2"
+                      <FormLabelRequired required={field?.inputRules?.required}
                         htmlFor={field.label}
                       >
                         {field.label}
-                      </label>
+                      </FormLabelRequired>
                       {field.type === "input" ? (
                         <>
                           <input

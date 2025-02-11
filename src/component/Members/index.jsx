@@ -462,7 +462,7 @@ const Members = () => {
       </div>
 
       {/* Search and Filters */}
-      <div className="title flex flex-row sm:flex-row justify-between py-3 px-4 items-center gap-4">
+      <div className="title flex flex-row sm:flex-row justify-end py-3 px-4 items-center gap-4 mr-4">
         <div className="relative w-3/6 sm:w-3/6 md:w-[35%] lg:w-[35%] xl:w-[25%] ">
           <input
             type="text"

@@ -437,7 +437,7 @@ console.log(key,"key")
                   <div className="flex flex-col gap-3 mb-10">
                     <div>Report Name : {reportDetails.name}</div>
 
-                    <div>Report Description : {reportDetails.comments}</div>
+                    {/* <div>Report Description : {reportDetails.comments}</div> */}
                   </div>
                   {reportDetails?.rejection_reason && (
                     <div className="border border-[#E0382D] rounded-[5px] bg-[#FFE7E7] mt-[20px]">

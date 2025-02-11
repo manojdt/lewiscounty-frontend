@@ -40,6 +40,7 @@ import CancelReq from "../../assets/icons/cancelRequest.svg";
 import dayjs from "dayjs";
 import moment from "moment";
 import { requestPageBreadcrumbs } from "../Breadcrumbs/BreadcrumbsCommonData";
+import { useDebounce } from "../../utils";
 
 export const Mentors = () => {
   const navigate = useNavigate();
@@ -69,6 +70,7 @@ export const Mentors = () => {
     pageSize: 10,
   });
   const [search, setSearch] = React.useState("");
+  const debouncedSearchTerm = useDebounce(search, 500);
   const [followPopup, setFollowPopup] = React.useState({
     bool: false,
     data: {},
@@ -93,7 +95,7 @@ export const Mentors = () => {
       value: "topmentor",
     },
     {
-      name: "Follow Mentors",
+      name: "Request Mentors",
       value: "requestmentor",
     },
   ];
@@ -154,7 +156,7 @@ export const Mentors = () => {
       renderCell: (params) => {
         return (
           <div className="flex h-full gap-2 items-center">
-            {Array.from(
+            {/* {Array.from(
               {
                 length: params?.row?.average_rating,
               },
@@ -166,7 +168,17 @@ export const Mentors = () => {
                   className="w-4 h-4"
                 />
               )
-            )}
+            )} */}
+            {params?.row?.average_rating>0&&params?.row?.average_rating&&<>
+              <img
+                   // key={index}
+                   src={StarIcon}
+                   alt="StarIcon"
+                   className="w-4 h-4"
+                 />
+             <span className="text-blue-700 font-bold pt-[2px]">{params?.row?.average_rating}</span>
+            </>
+      }
           </div>
         );
       },
@@ -254,10 +266,18 @@ export const Mentors = () => {
         return (
           <div className="flex gap-2 items-center">
             {" "}
-            <img src={StarIcon} alt="StarIcon" />
-            {params?.row?.average_rating === 0
-              ? 3
-              : params?.row?.average_rating}
+            {/* <img src={StarIcon} alt="StarIcon" /> */}
+          
+                {params?.row?.average_rating>0&&params?.row?.average_rating&&<>
+              <img
+                   // key={index}
+                   src={StarIcon}
+                   alt="StarIcon"
+                   className="w-4 h-4"
+                 />
+             <span className="text-blue-700 font-bold pt-[2px]">  {params?.row?.average_rating}</span>
+            </>
+      }
           </div>
         );
       },
@@ -477,22 +497,24 @@ export const Mentors = () => {
 
   const handleSearch = (value) => {
     setSearch(value);
+
+  };
+  useEffect(() => {
     if (mentorType === "topmentor") {
-      dispatch(getMyTopMentors({ ...paginationModel, search: value }));
+      dispatch(getMyTopMentors({ ...paginationModel, search: debouncedSearchTerm }));
     } else if (mentorType === "requestmentor") {
       dispatch(
         getMyReqMentors({
           page: paginationModel?.page + 1,
           limit: paginationModel?.pageSize,
-          search: value,
+          search: debouncedSearchTerm,
           status: requestTab,
         })
       );
     } else {
-      dispatch(getMyMentors({ ...paginationModel, search: value }));
+      dispatch(getMyMentors({ ...paginationModel, search: debouncedSearchTerm }));
     }
-  };
-
+}, [debouncedSearchTerm]);
   const handleOpenFollowPopup = (id, type) => {
     handleClose();
     setFollowPopup({

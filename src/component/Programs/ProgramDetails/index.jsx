@@ -114,6 +114,7 @@ import ProgramCard from "../../../shared/Card/ProgramCard";
 import SubDetailCardWrapper from "../../../shared/Card/SubDetailCardWrapper";
 import { CustomModal } from "../../../shared/CustomModal/CustomModal";
 import { DataGrid } from "@mui/x-data-grid";
+import { ThumbDownOffAlt } from "@mui/icons-material";
 
 export default function ProgramDetails({ setProgramDetailsId }) {
   const [showBackdrop, setShowBackdrop] = React.useState(false);
@@ -2118,14 +2119,10 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                 }}
                                 className="!text-[12px]"
                               >
-                                <img
-                                  src={AbortIcon}
-                                  alt="AbortIcon"
-                                  className="pr-3 w-[25px]"
-                                />
+                               <ThumbDownOffAlt className="pr-3" sx={{fontSize:'1.6rem'}}/>
                                 Not Interested
                               </MenuItem>
-                            )} 
+                           )} 
                           {(programdetails.status ===
                             programActionStatus.inprogress ||
                             programdetails.mentee_join_status ===
@@ -2808,7 +2805,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     handleAcceptProgram={handleAcceptProgram}
                   />
                 )}
-              {role === "mentee" &&
+              {
                 (programdetails.status === programActionStatus.inprogress ||
                   programdetails.status === programActionStatus.paused) && (
                   <CustomAccordian
@@ -2820,22 +2817,22 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                           <Button
                             btnName="View All"
                             btnCls="w-[140px]"
-                            onClick={() => navigate("/mentee-tasks")}
+                            onClick={() => navigate(role===user.mentee?"/mentee-tasks":"/mentor-tasks?type=menteetask")}
                           />
                         </div>
-                        <SkillsSet programdetails={programdetails} />
+                        <SkillsSet programdetails={programdetails} role={role}/>
                       </div>
                     }
                   />
                 )}
-              {/* Detail Section */}
-              <div
+               {/* Detail Section */}
+               <div
                 className="details-section px-6 py-11 mb-10"
                 style={{
                   background: "rgba(249, 249, 249, 1)",
                   borderRadius: "10px",
                 }}
-              >
+               >
                 <div className="tabs flex gap-4">
                   {tabs.map((tab) => (
                     <button
