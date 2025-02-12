@@ -166,7 +166,7 @@ export const PersonalInformationFields = [
       },
       {
         key: "prefer not to answer",
-        value: "prefer not to answer",
+        value: "Prefer not to answer",
       },
     ],
     inputRules: {
@@ -3190,7 +3190,7 @@ export const PersonalInfoFields = [
     label: "Last Name",
     placeholder: "Enter Last Name",
     inputRules: {
-      // required: "This field is required",
+      required: "This field is required",
     },
     size: true,
     disabled: true,
@@ -3307,11 +3307,19 @@ export const PersonalInfoFields = [
       },
       {
         key: "female",
-        value: "female",
+        value: "Female",
+      },
+      // {
+      //   key: "others",
+      //   value: "others",
+      // },
+      {
+        key: "nonbinary",
+        value: "Nonbinary",
       },
       {
-        key: "others",
-        value: "others",
+        key: "prefer not to answer",
+        value: "Prefer not to answer",
       },
     ],
     inputRules: {

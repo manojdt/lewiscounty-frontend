@@ -671,7 +671,7 @@ export const TaskDetails = () => {
               )}
 
               {(!isPreview && ["inprogress","waiting_for_approval","completed","pending","draft", "reassigned"].includes(taskData.status)) && (
-                <div className='py-6 mb-16'>
+                <div className='py-6 mb-10'>
                   {taskData.status === TaskAllStatus.inprogress ||
                     taskData.status === TaskAllStatus.pending ||
                     taskData.status === TaskAllStatus.draft ||
@@ -1023,7 +1023,7 @@ export const TaskDetails = () => {
                       </div>
                     </>
                   ) : null}                  
-                  <div className='reference-link flex justify-between mb-8'>
+                  <div className='reference-link flex justify-between mb-2'>
                     <div className='reference-view'>
                       <p className='py-4'>Reference View</p>
                       <ul className='leading-10'>

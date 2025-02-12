@@ -135,10 +135,12 @@ const PersonalInfoSection = ({ type }) => {
                             >
                               <input
                                 type='radio'
-                                value={option.value}
-                                checked={controllerField.value === option.value}
-                                onChange={(e) =>
+                                value={option.key}
+                                checked={controllerField.value === option.key}
+                                onChange={(e) =>{
+                                  console.log(e.target.value,"e.target.value")
                                   controllerField.onChange(e.target.value)
+                                }
                                 }
                               />
                               {option.value}
@@ -190,8 +192,8 @@ const PersonalInfoSection = ({ type }) => {
                             >
                               <input
                                 type='radio'
-                                value={option.value}
-                                checked={controllerField.value === option.value}
+                                value={option.key}
+                                checked={controllerField.value === option.key}
                                 onChange={(e) =>
                                   controllerField.onChange(e.target.value)
                                 }
