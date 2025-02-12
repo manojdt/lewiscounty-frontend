@@ -93,6 +93,8 @@ import Tickets from "./component/SuperAdmin/tickets/Tickets";
 import PaymentSuccessfull from "./shared/paymentButton/payment-successfull";
 import BgVerify from "./component/BackgroundVerification/BgVerify";
 import HistoryNotes from "./component/Programs/ProgramDetails/notesHistory";
+import ScrollToTop from "./component/ScrollToTop/ScrollToTop";
+
 
 function App() {
   const PrivateRoute = () => {
@@ -122,7 +124,8 @@ function App() {
   const [programDetailsId, setProgramDetailsId] = useState(null);
 
   return (
-    <>
+   <>
+    <ScrollToTop>
       {/* {clientSecret && (
         <Elements
           stripe={stripePromise}
@@ -287,6 +290,7 @@ function App() {
       </Routes>
       {/* </Elements>
       )} */}
+    </ScrollToTop>
     </>
   );
 }

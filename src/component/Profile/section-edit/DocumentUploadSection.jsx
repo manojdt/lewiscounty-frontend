@@ -215,7 +215,7 @@ const DocumentUploadSection = ({ type, setRemoveFiles }) => {
                             getValues(field.name).map((item, index) => {
                               return (
                                 <div
-                                  className='flex justify-between items-center w-[25%] mt-5 px-4 py-4'
+                                  className='flex justify-between items-center w-[100%] mt-5 px-4 py-4 sm:w-[100%] md:w-[35%] lg:w-[35%] xl:w-[40%]'
                                   style={{
                                     border: '1px solid rgba(29, 91, 191, 0.5)',
                                     borderRadius: '3px',

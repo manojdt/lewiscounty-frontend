@@ -52,6 +52,18 @@ import { useDebounce } from "../../../utils";
 const EquipMentListMenuItems = [{ label: "View", action: "view" }];
 const DEFAULT_VALUE = 1;
 
+const scrollToTop = () => {
+  const dashboardContent = document.querySelector('.dashboard-content');
+  if (dashboardContent) {
+    dashboardContent.scrollIntoView({  block: 'start' });
+  } else {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+    });
+  }
+};
+
 export default function CreatePrograms() {
   const { admin, mentor, mentee } = user;
   const navigate = useNavigate();
@@ -67,6 +79,9 @@ export default function CreatePrograms() {
   const [mentorSearchValue, setMentorSearchValue] = useState("");
   const searchValue = useDebounce(mentorSearchValue, 500);
 
+  useEffect(() => {
+    scrollToTop();
+  }, [currentStep]); 
   const program_create_type = searchParams.get("program_create_type") || "";
   const re_open_type = searchParams.get("type") || "";
 
@@ -323,6 +338,7 @@ export default function CreatePrograms() {
     setCurrentStep(nextIndex);
     setTabActionInfo({ ...tabActionInfo, activeTab: key });
     // }
+    scrollToTop();
   };
 
   const handleNextStep = async (data, stData) => {
@@ -540,6 +556,7 @@ export default function CreatePrograms() {
             ...tabActionInfo,
             activeTab: filteredProgramTabs[nextStep - 1]?.key || "",
           });
+          scrollToTop();
           return nextStep;
         });
       }
@@ -552,6 +569,7 @@ export default function CreatePrograms() {
       ...tabActionInfo,
       activeTab: filteredProgramTabs[currentStep - 2].key,
     });
+    scrollToTop();
   };
 
   const handleAction = (key) => {
@@ -1076,6 +1094,7 @@ export default function CreatePrograms() {
       return newStepData;
     });
     handleNextStep(data);
+    scrollToTop();
   };
 
   useEffect(() => {
