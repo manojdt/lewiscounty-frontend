@@ -20,7 +20,7 @@ import SuccessTik from "../../assets/images/blue_tik1x.png";
 import ViewIcon from "../../assets/images/view1x.png";
 import ShareIcon from "../../assets/icons/Share.svg";
 import { useDispatch, useSelector } from "react-redux";
-import { activateUser, deactivateUser, getMembersList } from "../../services/members";
+import { activateUser, deactivateUser, deleteUser, getMembersList } from "../../services/members";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { memberStatusColor } from "../../utils/constant";
 import MuiModal from "../../shared/Modal";
@@ -28,7 +28,10 @@ import { useForm } from "react-hook-form";
 import { Button } from "../../shared";
 import AssignMentorProgram from "./AssignMentorProgram";
 import { useDebounce } from "../../utils";
-
+import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
+import { MemberMain } from "../Breadcrumbs/BreadcrumbsCommonData";
+import DeleteIcon from "../../assets/icons/Delete.svg"
+import OverDeleteIcon from "../../assets/images/delete_1x.png";
 const Members = () => {
   const navigate = useNavigate();
   const {
@@ -45,7 +48,9 @@ const Members = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const [seletedItem, setSelectedItem] = useState({});
+  // const [breadArray, setBreadArry] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [isDeleteModal,setDeleteModal] = useState(false);
   const [actionColumnInfo, setActionColumnInfo] = useState({
     cancelPopup: false,
     menteecancel: false,
@@ -220,7 +225,25 @@ const Members = () => {
   const handleChange = (row) => {
     console.log("Approval", row);
   };
-
+  const mentroDeleteHandler = () => {
+    if (seletedItem?.id) {
+      dispatch(
+        deleteUser({
+          user_id: seletedItem.id,
+        })
+      ).then(() => {
+        setDeleteModal(false);
+        handleClose();
+        dispatch(
+          getMembersList({
+            role_name: actionTab,
+            page: paginationModel?.page + 1,
+            limit: paginationModel?.pageSize,
+          })
+        );
+      });
+    }
+  };
   useEffect(() => {
     if (assignProgramInfo.message !== "") {
       setTimeout(() => {
@@ -264,7 +287,12 @@ const Members = () => {
         return column;
       });
     }
-
+    const onViewClick = () =>{
+      handleClose();
+              const adminview = `&breadcrumbsType=${actionTab}`;
+              const memberStatus = seletedItem.member_active?'Active':'Deactive';
+              navigate(`/mentor-details/${seletedItem.id}?member_status=${memberStatus}${adminview}`);
+    }
     const updatedColumns = [
       ...columns,
       {
@@ -307,12 +335,7 @@ const Members = () => {
         align: "center",
         renderCell: (params) => {
 
-          const onViewClick = () =>{
-            handleClose();
-                    const adminview = `&breadcrumbsType=${actionTab}`;
-                    const memberStatus = seletedItem.member_active?'Active':'Deactive';
-                    navigate(`/mentor-details/${seletedItem.id}?member_status=${memberStatus}${adminview}`);
-          }
+         
           return (
             <>
               <div
@@ -330,10 +353,7 @@ const Members = () => {
                   "aria-labelledby": "basic-button",
                 }}
               >
-                <MenuItem
-                  onClick={onViewClick}
-                  className="!text-[12px]"
-                >
+                <MenuItem onClick={()=>onViewClick()} className="!text-[12px]">
                   <img
                     src={ViewIcon}
                     alt="ViewIcon"
@@ -343,8 +363,10 @@ const Members = () => {
                   View
                 </MenuItem>
 
-                <MenuItem className="!text-[12px]"
-                onClick={()=>navigate("/discussions")}>
+                <MenuItem
+                  className="!text-[12px]"
+                  onClick={() => navigate("/discussions")}
+                >
                   <img
                     src={TickCircle}
                     alt="AcceptIcon"
@@ -370,10 +392,23 @@ const Members = () => {
                       alt="CancelIcon"
                       className="pr-3 w-[27px]"
                     />
-                    Deactive
+                    Deactivate
                   </MenuItem>
                 )}
-
+                <MenuItem
+                  className="!text-[12px]"
+                  onClick={() => {
+                    setDeleteModal(true);
+                    setAnchorEl(null);
+                  }}
+                >
+                  <img
+                    src={DeleteIcon}
+                    alt="CancelIcon"
+                    className="pr-3 w-[27px]"
+                  />
+                  Delete
+                </MenuItem>
                 {/* <MenuItem className="!text-[12px]">
                   <img
                     src={ShareIcon}
@@ -428,8 +463,14 @@ const Members = () => {
       setActionTab(selectedRequestedTab);
     }
   }, [selectedRequestedTab]);
+  // useEffect(() => {
+  //   if(actionTab){
+  //     setBreadArry(MemberMain(actionTab==="mentor"?"Mentors":"Mentees")) 
+  //   }
+  // }, [actionTab]);
   return (
     <div className="program-request px:2 sm:px-2 md:px-4 lg:px-8 mt-10">
+      {/* <Breadcrumbs items={breadArray} /> */}
       <div className="program-info px-4 sm:px-6 ">
         {membersTab.length ? (
           <div className="flex flex-col sm:flex-row justify-between mb-4 border-b-2 pb-2">
@@ -483,7 +524,7 @@ const Members = () => {
           >
             <option value="all">All</option>
             <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
+            <option value="inactive">Deactive</option>
           </select>
         </div>
       </div>
@@ -560,6 +601,44 @@ const Members = () => {
           </div>
         </div>
       </MuiModal>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => 1 }}
+        open={isDeleteModal}
+      >
+        <div className="popup-content w-2/6 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
+          <img src={OverDeleteIcon} alt="TickColorIcon" />
+
+          <div className="py-5">
+            <p
+              style={{
+                color: "rgba(24, 40, 61, 1)",
+                fontWeight: 600,
+                fontSize: "18px",
+              }}
+            >
+              Are you sure want to Delete ?
+            </p>
+          </div>
+          <div className="flex justify-center">
+            <div className="flex gap-6 justify-center align-middle">
+              <Button
+                btnCls="w-[150px]"
+                btnName={"Cancel"}
+                btnCategory="secondary"
+                onClick={()=>setDeleteModal(false)}
+              />
+              <Button
+                btnType="button"
+                btnCls="w-[150px]"
+                btnName={"Delete"}
+                style={{   background: "rgba(229, 0, 39, 1)" }}
+                btnCategory="primary"
+                onClick={mentroDeleteHandler}
+              />
+            </div>
+          </div>
+        </div>
+      </Backdrop> 
     </div>
   );
 };

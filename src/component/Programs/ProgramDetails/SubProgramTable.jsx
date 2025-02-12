@@ -21,6 +21,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import moment from "moment/moment";
 import { Button } from "../../../shared";
 import { Backdrop } from "@mui/material";
+import UserImage from "../../../assets/icons/user-icon.svg";
 import { MuiCustomModal } from "../../../shared/Modal/MuiCustomModal";
 
 const dateFormat = "MM-DD-YYYY";
@@ -142,7 +143,7 @@ const CourseCard = ({ data, series, handleMenuClick }) => {
         <div className="flex items-center gap-2">
           <div className="w-6 h-6 rounded-full bg-gray-200 overflow-hidden">
             <img
-              src={data?.mentor_profile_image}
+              src={data?.mentor_profile_image || UserImage}
               alt="Instructor"
               className="w-full h-full object-cover"
             />

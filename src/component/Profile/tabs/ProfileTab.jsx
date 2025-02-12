@@ -55,11 +55,11 @@ export const allProfileSections = [
     component: <MenteeCurrentStatusSection type={view.viewOnly} />,
   },
   {
-    title: "Skill and Interests",
+    title: "Skills and Interests",
     component: <MenteeSkillandInterestsSection type={view.viewOnly} />,
   },
   {
-    title: "Expectation and goals",
+    title: "Expectations and Goals",
     component: <MenteeExpectionAndGoalsSection type={view.viewOnly} />,
   },
   {
@@ -71,7 +71,7 @@ export const allProfileSections = [
     component: <EducationalBackgroundSection type={view.viewOnly} />,
   },
   {
-    title: "Area of expertise",
+    title: "Areas of expertise",
     component: <AreaOfExpertiseSection type={view.viewOnly} />,
   },
   {
@@ -138,7 +138,7 @@ export const allProfileSections = [
     component: <MentorshipPreferenceSection type={view.viewOnly} />,
   },
   {
-    title: "Goals and Expections",
+    title: "Goals and Expectations",
     component: <GoalsAndExpectatonsSection type={view.viewOnly} />,
   },
   {

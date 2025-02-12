@@ -76,6 +76,7 @@ import {
   useGetSpecificProgramDetailsQuery,
   useLaunchProgramMutation,
   useMarkProgramInterestMutation,
+  useUpdateAdminProgramStatusMutation,
   useUpdateProgramStatusMutation,
 } from "../../../features/program/programApi.services";
 import SubprogramsDataGrid from "./SubProgramTable";
@@ -170,7 +171,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   });
   const [openRecurringModal, setOpenRecurringModal] = useState(false);
   const [gridCellParams, setgridCellParams] = React.useState();
-
+  const [adminProgramCancel, setAdminProgramCancel] = React.useState(false)
+  const [cancelProgramActivity, setCancelProgramActivity] = React.useState(false)
   const [completeProgram, setCompleteProgram] = React.useState({
     bool: false,
     activity: false,
@@ -190,6 +192,15 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       error: errorUpdateProgramMessage,
     },
   ] = useUpdateProgramStatusMutation();
+  const [
+    updateAdminProgramStatus,
+    {
+      isLoading: isAdminProgramUpdating,
+      isSuccess: isAdminProgramUpdated,
+      isError: IsErrorAdminProgramUpdating,
+      error: errorUpdateAdminProgramMessage,
+    },
+  ] = useUpdateAdminProgramStatusMutation();
   const {
     data: programdetails,
     isLoading: programLoading,
@@ -335,6 +346,13 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   };
 
   const handleComplete = async () => {
+    if (programdetails.admin_assign_program && role === "admin") {
+      await updateAdminProgramStatus({
+        "admin_program": programdetails?.id,
+        "status": "completed",
+        "request_type": "admin_program_complete"
+      })
+    } else {
     await updateProgramStatus({
       id: programdetails?.id,
       status: programActionStatus.completed,
@@ -342,10 +360,11 @@ export default function ProgramDetails({ setProgramDetailsId }) {
         is_admin_program: true,
       }),
     });
+  }
   };
 
   useEffect(() => {
-    if (isProgramUpdated) {
+    if (isProgramUpdated ||  (isAdminProgramUpdated && !adminProgramCancel)) {
       setCompleteProgram({
         bool: false,
         activity: true,
@@ -366,8 +385,15 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       }, 2000);
       handleClose();
     }
-    if (IsErrorProgramUpdating) {
-      toast.error(errorUpdateProgramMessage.data?.error);
+    if(isAdminProgramUpdated && adminProgramCancel){
+      setMoreMenuModal({ ...moreMenuModal, cancel: false });
+      setCancelProgramActivity(true)      
+      setTimeout(() => {
+        setCancelProgramActivity(false)
+      },3000)
+    }
+    if (IsErrorProgramUpdating || IsErrorAdminProgramUpdating) {
+      toast.error(role === "admin" ? errorUpdateAdminProgramMessage?.data?.errors?.[0] : errorUpdateProgramMessage?.data?.error);
       handleClose();
     }
   }, [
@@ -375,6 +401,9 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     programdetails?.id,
     IsErrorProgramUpdating,
     errorUpdateProgramMessage?.data?.error,
+    isAdminProgramUpdated,
+    IsErrorAdminProgramUpdating,
+    errorUpdateAdminProgramMessage?.data?.error
   ]);
 
   const handleJoinProgram = async (request_type) => {
@@ -682,13 +711,25 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     }
 
     if (moreMenuModal.cancel) {
+      if (programdetails.hasOwnProperty("admin_assign_program") && role === "admin") {
+        setAdminProgramCancel(true)
+        updateAdminProgramStatus({
+          "admin_program": programdetails?.id,
+          "status": "cancelled",
+          "request_type": "admin_program_cancel",
+          rejection_reason: data.cancel_reason
+        })
+      } else {
       dispatch(
         programCancelRequest({
           program: params.id,
           comments: data.cancel_reason,
           request_type: "program_cancel",
         })
-      );
+      ).then((res) => {
+        refetch();
+      })
+    }
     }
   };
 
@@ -1188,7 +1229,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={
           requestProgramStatus === requestStatus.reschedule ||
-          requestProgramStatus === requestStatus.cancel
+          requestProgramStatus === requestStatus.cancel || 
+          cancelProgramActivity
         }
       >
         <div className="px-5 py-1 flex justify-center items-center">
@@ -1206,7 +1248,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
               Program{" "}
               {requestProgramStatus === requestStatus.reschedule
                 ? "Rescheduled "
-                : requestProgramStatus === requestStatus.cancel
+                :  (requestProgramStatus === requestStatus.cancel || cancelProgramActivity)
                 ? "Cancelled "
                 : ""}{" "}
               Successfully
@@ -1919,7 +1961,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                       "program_cancel",
                     ].includes(typeParams)) ||
                   (role === "mentee" &&
-                    (programdetails.status === programActionStatus.inprogress ||
+                    (
                       programdetails.mentee_join_status ===
                         programActionStatus.program_join_request_accepted ||
                       programdetails?.program_interest) &&
@@ -2072,7 +2114,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                   Complete
                                 </MenuItem>
                               )}
-                              {!("admin_assign_program" in programdetails) && (
+                              {!("admin_assign_program" in programdetails) &&programdetails?.created_by ===
+                                userdetails?.data?.user_id&& (
                                 <MenuItem
                                   onClick={() => handleNewTaskFromAdmin()}
                                   className="!text-[12px]"
@@ -2123,8 +2166,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                 Not Interested
                               </MenuItem>
                            )} 
-                          {(programdetails.status ===
-                            programActionStatus.inprogress ||
+                          {(
                             programdetails.mentee_join_status ===
                               programActionStatus.program_join_request_accepted) && (
                             <MenuItem
@@ -2141,7 +2183,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                           )}
                           {["cancelled", "inprogress", "completed"].includes(
                             programdetails?.status
-                          ) && (
+                          ) &&programdetails.mentee_join_status ===
+                          programActionStatus.program_join_request_accepted&& (
                             <MenuItem
                               onClick={() =>
                                 navigate(`/historyNotes/${params.id}`)
@@ -2737,7 +2780,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
 
               {/* Notes Section */}
               {["inprogress"].includes(programdetails?.status) &&
-                (role === "mentee" ||
+                ((role === "mentee"&&programdetails.mentee_join_status ===
+                  programActionStatus.program_join_request_accepted) ||
                   programdetails?.created_by === userdetails?.data?.user_id) &&
                 !typeParams && (
                   <Box>
@@ -2807,7 +2851,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                 )}
               {
                 (programdetails.status === programActionStatus.inprogress ||
-                  programdetails.status === programActionStatus.paused) && (
+                  programdetails.status === programActionStatus.paused) &&programdetails.task.length>0&& (
                   <CustomAccordian
                     title={"Program Task"}
                     defaultValue

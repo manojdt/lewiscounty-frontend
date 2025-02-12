@@ -2,6 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import ProfileIcon from '../../assets/icons/profile-icon.svg';
 import SecurityIcon from '../../assets/icons/security-icon.svg';
 import PermissionIcon from '../../assets/icons/permission-icon.svg';
+import SecurityIconblue from '../../assets/icons/security-icon-black.svg';
+import PermissionIconblue from '../../assets/icons/permission-icon-black.svg';
+import ProfileIconblack from '../../assets/icons/profile-icon-black.svg';
 import ProfileTab from './tabs/ProfileTab';
 import PermissionTab from './tabs/PermissionTab';
 import SecurityTab from './tabs/SecurityTab';
@@ -12,19 +15,19 @@ export const roleBasedSections = {
     'Personal Information',
     'Professional Background',
     'Educational Background',
-    'Area of expertise',
+    'Areas of Expertise',
     'Mentorship Experience',
-    'Document upload',
+    'Documents upload',
     'Mentorship Preference',
-    'Goals and Expections',
+    'Goals and Expectations',
     'Availability and Commitment',
     'Additional Information',
   ],
   mentee: [
     'Personal Information',
     'Current Status',
-    'Skill and Interests',
-    'Expectation and goals',
+    'Skills and Interests',
+    'Expectations and Goals',
     'Document upload',
     'Career/Academic Goals',
     'Mentoring Preferences',
@@ -52,16 +55,19 @@ export default function MyProfile() {
     {
       label: 'Profile',
       icon: ProfileIcon,
+      iconblack: ProfileIconblack,
       content: <ProfileTab setEditMode={() => setEditMode(true)} />,
     },
     {
       label: 'Security',
-      icon: SecurityIcon,
+      iconblack: SecurityIcon,
+      icon: SecurityIconblue,
       content: <SecurityTab />,
     },
     {
       label: 'Permissions',
-      icon: PermissionIcon,
+      iconblack: PermissionIcon,
+      icon: PermissionIconblue,
       content: <PermissionTab />,
     },
   ];
@@ -70,7 +76,7 @@ export default function MyProfile() {
     <div className='profile-container'>
       <div className='flex justify-between items-center mb-6'>
         <p className='text-color text-2xl font-semibold'>
-          {editMode ? 'Edit Profile' : 'Settings'}
+          {editMode ? 'Edit Profile' : tabs[activeTab]?.label}
         </p>
       </div>
       {!editMode ? (
@@ -88,7 +94,7 @@ export default function MyProfile() {
                 }`}
                 onClick={() => setActiveTab(index)}
               >
-                <img src={tab.icon} alt='' className='w-5 h-5 lg:w-auto lg:h-auto' />
+                <img src={activeTab === index?tab.icon:tab.iconblack} alt='' className='w-5 h-5 lg:w-auto lg:h-auto' />
                 <span className='text-sm lg:text-base'>{tab.label}</span>
               </div>
             ))}

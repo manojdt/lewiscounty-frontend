@@ -59,11 +59,11 @@ const EditProfile = ({ setEditMode }) => {
       component: <MenteeCurrentStatusSection />,
     },
     {
-      title: "Skill and Interests",
+      title: "Skills and Interests",
       component: <MenteeSkillandInterestsSection />,
     },
     {
-      title: "Expectation and goals",
+      title: "Expectations and Goals",
       component: <MenteeExpectionAndGoalsSection />,
     },
     {
@@ -74,13 +74,13 @@ const EditProfile = ({ setEditMode }) => {
       title: "Educational Background",
       component: <EducationalBackgroundSection />,
     },
-    { title: "Area of expertise", component: <AreaOfExpertiseSection /> },
+    { title: "Areas of Expertise", component: <AreaOfExpertiseSection /> },
     {
       title: "Mentorship Experience",
       component: <MentorshipExperienceSection />,
     },
     {
-      title: "Document upload",
+      title: "Documents upload",
       component: <DocumentUploadSection setRemoveFiles={setRemoveFiles} />,
     },
     {
@@ -133,7 +133,7 @@ const EditProfile = ({ setEditMode }) => {
       component: <MentorshipPreferenceSection />,
     },
     {
-      title: "Goals and Expections",
+      title: "Goals and Expectations",
       component: <GoalsAndExpectatonsSection />,
     },
     {

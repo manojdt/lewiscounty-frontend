@@ -15,7 +15,16 @@ export const getMembers = createAsyncThunk(
         return getActivities;
     }
 );
-
+export const deleteUser = createAsyncThunk(
+    "deleteUser",
+    async (data) => {
+        const deleteUserInfo = await api.post(`users/delete`, data);
+        if (deleteUserInfo.status === 200 && deleteUserInfo.data) {
+            return deleteUserInfo.data;
+        }
+        return deleteUserInfo;
+    }
+);
 
 export const getMembersList = createAsyncThunk(
     "getMembersList",

@@ -60,7 +60,6 @@ export default function SkillsSet({ programdetails,role }) {
 
   const handleTaskAction = async () => {
     if(role===user.mentee){
-
       if (
         activeTaskDetails.status === TaskAllStatus.yettostart ||
         activeTaskDetails.status === TaskAllStatus.newtask ||
@@ -82,7 +81,7 @@ export default function SkillsSet({ programdetails,role }) {
         navigate(`/submit-task-program/${activeTaskDetails.assign_task.id}`);
       }
     }else{
-      navigate(`/mentor-tasks-details/${activeTaskDetails.id}`);
+      navigate(`/mentor-tasks-details/${activeTaskDetails?.id}`);
 
     }
   };
