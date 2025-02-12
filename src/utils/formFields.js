@@ -199,7 +199,7 @@ export const ProfessionalBackgroundFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-2",
+    width: "col-span-4 sm:col-span-4 md:col-span-2 lg:col-span-2 xl:col-span-2",
   },
   {
     type: "input",
@@ -211,7 +211,7 @@ export const ProfessionalBackgroundFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-2",
+     width:"col-span-4 sm:col-span-4 md:col-span-2 lg:col-span-2 xl:col-span-2"
   },
   {
     type: "input",
@@ -251,6 +251,7 @@ export const EducationalBackgroundFields = [
     },
     size: true,
     widthQuestion: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
+    width:"col-span-4 sm:col-span-4 md:col-span-3 lg:col-span-2 xl:col-span-2"
   },
   {
     type: "input",
@@ -263,6 +264,7 @@ export const EducationalBackgroundFields = [
     },
     size: true,
     widthQuestion: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
+     width:"col-span-4 sm:col-span-4 md:col-span-3 lg:col-span-2 xl:col-span-2"
   },
   {
     type: "input",
@@ -275,6 +277,7 @@ export const EducationalBackgroundFields = [
     },
     size: false,
     widthQuestion: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
+     width:"col-span-4 sm:col-span-4 md:col-span-3 lg:col-span-2 xl:col-span-2"
   },
   {
     type: "input",
@@ -287,6 +290,7 @@ export const EducationalBackgroundFields = [
     },
     size: false,
     widthQuestion: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
+     width:"col-span-4 sm:col-span-4 md:col-span-3 lg:col-span-2 xl:col-span-2"
   },
 ];
 
@@ -302,6 +306,7 @@ export const AreaOfExpertiseFields = [
     },
     size: false,
     widthQuestion: "w-full",
+    width:"col-span-2 sm:col-span-2 md:col-span-2 lg:col-span-1 xl:col-span-1"
   },
   {
     type: "input",
@@ -315,6 +320,7 @@ export const AreaOfExpertiseFields = [
     },
     size: false,
     widthQuestion: "w-full",
+    width:"col-span-2 sm:col-span-2 md:col-span-2 lg:col-span-1 xl:col-span-1"
   },
 ];
 
@@ -330,6 +336,7 @@ export const MentorShipExperienceFields = [
     },
     size: false,
     widthQuestion: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
+    width:"col-span-2 sm:col-span-2 md:col-span-2 lg:col-span-1 xl:col-span-1"
   },
   {
     type: "radio",
@@ -350,6 +357,7 @@ export const MentorShipExperienceFields = [
     },
     size: false,
     widthQuestion: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
+    width:"col-span-2 sm:col-span-2 md:col-span-2 lg:col-span-1 xl:col-span-1"
   },
   {
     type: "input",
@@ -359,6 +367,7 @@ export const MentorShipExperienceFields = [
     placeholder: "mentorship experience",
     size: false,
     widthQuestion: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
+    width:"col-span-2"
   },
 ];
 
@@ -374,7 +383,7 @@ export const MentorshipPreferenceFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-1",
+    width: "col-span-2 sm:col-span-2 md:col-span-2 lg:col-span-1 xl:col-span-1",
   },
   {
     type: "input",
@@ -386,7 +395,7 @@ export const MentorshipPreferenceFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-1",
+    width: "col-span-2 sm:col-span-2 md:col-span-2 lg:col-span-1 xl:col-span-1",
   },
   {
     type: "input",
@@ -654,7 +663,7 @@ export const MenteePersonalInformationFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-2 xl:col-span-2",
+    width: "col-span-6 sm:col-span-6 md:col-span-6 lg:col-span-6 xl:col-span-3",
   },
   {
     type: "input",
@@ -666,7 +675,7 @@ export const MenteePersonalInformationFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-2 xl:col-span-2",
+    width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-3 xl:col-span-3",
     widthQuestion:"w-full"
   },
   {
@@ -696,7 +705,7 @@ export const MenteePersonalInformationFields = [
       required: "This field is required",
     },
     size: false,
-    width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-2 xl:col-span-2",
+    width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-3 xl:col-span-3",
      widthQuestion:"w-full"
   },
 ];
@@ -829,7 +838,7 @@ export const MenteeMentoringPreferenceFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-1",
+    width: "col-span-2 sm:col-span-2 md:col-span-2 lg:col-span-1 xl:col-span-1",
     widthQuestion:"w-full lg:w-[48%] md:w-full xl:w-[48%]"
   },
   {
@@ -847,7 +856,7 @@ export const MenteeMentoringPreferenceFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-1",
+    width: "col-span-2 sm:col-span-2 md:col-span-2 lg:col-span-1 xl:col-span-1",
     widthQuestion:"w-full lg:w-[48%] md:w-full xl:w-[48%]"
   },
   {

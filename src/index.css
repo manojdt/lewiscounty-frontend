@@ -1476,3 +1476,14 @@ input[type='number'] {
     width: 3rem;
   } */
 }
+
+/* .dashboard-content {
+  scroll-margin-top: 0;
+  scroll-behavior: smooth;
+}
+
+@media (min-width: 768px) {
+  .dashboard-content {
+    scroll-margin-top: 2rem;
+  }
+} */
