@@ -20,7 +20,7 @@ import {
 import DataTable from "../../../shared/DataGrid";
 import { MentorAssignColumns } from "../../../mock";
 import MuiModal from "../../../shared/Modal";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Button } from "../../../shared";
 import { Button as MuiButton } from "@mui/material";
 import { formatPhoneNumber, formatZipCode } from "../../../utils/formFields";
@@ -29,6 +29,8 @@ import moment from "moment";
 import DeleteIconRounded from "../../../assets/icons/delete-icon.svg";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import { user } from "../../../utils/constant";
+import { OverlayPanel } from "primereact/overlaypanel";
+import { getProgramAddressDetails } from "../../../services/programInfo";
 
 const ProgramSteps = ({
   stepFields,
@@ -49,7 +51,7 @@ const ProgramSteps = ({
 }) => {
   const params = useParams();
   const { admin, mentor } = user;
-
+  const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
 
   const [currentField, setCurrentField] = useState();
@@ -57,6 +59,9 @@ const ProgramSteps = ({
   const getRowIdentifier = (row) => {
     return row.id;
   };
+  const [filteredData, setFilteredData] = useState([]);
+  const [isLoading,setLoading] = useState(false);
+  const searchBar = React.useRef(null);
   const role = useSelector((state) => state.userInfo?.data?.role);
 
   const {
@@ -98,6 +103,33 @@ const ProgramSteps = ({
     "recurring_program",
     "recurring_dates",
   ]);
+  const handleInputClick = (e, field) => {
+    if (["zip_code", "state", "city"].includes(field.name))
+      if (!document.getElementById("fields_overlay") && e.target.value) {
+        searchBar?.current?.toggle(e);
+      }
+  };
+
+  const handleAddressFieldsAPI = (fieldName, value) => {
+    if (fieldName === "zip_code") {
+      const zipCodeFormatValue = formatZipCode(value);
+      setValue(fieldName, zipCodeFormatValue);
+    } else {
+      setValue(fieldName, value);
+    }
+    if (!!value) {
+      setTimeout(() => {
+        dispatch(
+          getProgramAddressDetails({ id: value, fieldName: fieldName })
+        ).then((response) => {
+          if (isLoading) setLoading(false);
+          if (!!response?.payload?.data?.length) {
+            setFilteredData(response?.payload?.data);
+          }
+        });
+      }, 2000);
+    }
+  };
 
   const handleInputChange = (e, field) => {
     const { value } = e.target;
@@ -105,10 +137,16 @@ const ProgramSteps = ({
     if (field.name === "phone_number") {
       const formattedValue = formatPhoneNumber(value);
       setValue(field.name, formattedValue);
-    } else if (field.name === "zip_code") {
-      const zipCodeFormatValue = formatZipCode(value);
-      setValue(field.name, zipCodeFormatValue);
-    } else {
+    }else if(["zip_code", "state", "city"].includes(field.name)) {
+      if (!document.getElementById("fields_overlay") && e.target.value) {
+        searchBar?.current?.toggle(e);
+      }
+      if (!isLoading) {
+        setLoading(true);
+      }
+      handleAddressFieldsAPI(field.name, value);
+    }
+     else {
       setValue(field.name, value.trimStart());
     }
   };
@@ -397,6 +435,13 @@ const ProgramSteps = ({
           //   params?.id &&
           //   (fieldName === "start_date" || fieldName === "end_date") &&
           //   role === mentor;
+          const onFilteredDataChange = (programInfo) => {
+            ["zip_code", "state", "city"].map((item) => {
+              const updated_item = item === "state" ? "state_name" : item;
+              setValue(item, programInfo[updated_item]);
+            });
+            setValue("location", programInfo.id);
+          };
 
           const disableDateFields = (fieldName) =>
             params?.id &&
@@ -460,6 +505,7 @@ const ProgramSteps = ({
                   />
                 </FormControl>
               ) : field.type === "input" ? (
+                <>
                 <div className="relative">
                   <Controller
                     name={field.name}
@@ -482,6 +528,7 @@ const ProgramSteps = ({
                             handleInputChange(e, field);
                           }
                         }}
+                        onClick={(e) => handleInputClick(e, field)}
                         onBlur={controlledField.onBlur}
                         InputProps={{
                           startAdornment: field.name === "enrollment_fees" && (
@@ -495,6 +542,40 @@ const ProgramSteps = ({
                     )}
                   />
                 </div>
+                 {["zip_code", "state", "city"].includes(field.name) && (
+                  <OverlayPanel
+                    ref={searchBar}
+                    id="fields-overlay"
+                    style={{
+                      width: "350px",
+                      top: "63px !important",
+                      height: "200px",
+                      overflow: "auto",
+                    }}
+                    className={isLoading ? "custom-overlay" : ""}
+                    onClose={() => console.log("Close")}
+                  >
+                    {!!filteredData?.length &&
+                      !isLoading &&
+                      filteredData?.map((item) => {
+                        return (
+                          <div
+                            key={item.id}
+                            className=" flex cursor-pointer"
+                            style={{ height: "50px" }}
+                            onClick={() => onFilteredDataChange(item)}
+                          >
+                            <div className="pr-1">{item.city},</div>
+                            <div className="pr-1">{item.state_code},</div>
+                            <div>{item.zip_code}</div>
+                          </div>
+                        );
+                      })}
+                    {isLoading && <div className="loader"></div>}
+                  </OverlayPanel>
+                  
+                )}
+                </>
               ) : field.type === "popup-input" ? (
                 <div className="relative">
                   <div

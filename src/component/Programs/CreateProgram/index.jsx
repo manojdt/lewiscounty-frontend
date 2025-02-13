@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import Backdrop from "@mui/material/Backdrop";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import ReactPlayer from "react-player";
 import MoreIcon from "../../../assets/icons/moreIcon.svg";
@@ -93,7 +93,9 @@ export default function CreatePrograms() {
         ? { no_of_subprograms: 1, sub_programs: [] }
         : undefined,
   });
-
+  const location = useLocation(); // Get query parameters
+  const queryParams = new URLSearchParams(location.search);
+  const isReopen = queryParams.get("type") === "re_open";
   const { handleSubmit, reset, setValue, watch, unregister } = methods;
   // const state = watch('state');
   const formValues = watch();
@@ -396,6 +398,7 @@ export default function CreatePrograms() {
     let fieldData = {
       ...filteredStepData,
       ...currentStepData,
+      location: data.location ? data.location : null,
     };
 
     // Remove specific fields based on is_sponsored condition
@@ -507,6 +510,14 @@ export default function CreatePrograms() {
             });
           } else {
             if (params?.id) {
+              if (isReopen) {
+                bodyFormData.append("reopen_program_id", params?.id);
+                await createProgram({
+                  bodyFormData,
+                  role: toggleRole === admin ? toggleRole : "",
+                });
+              }
+          else{
               if (
                 currentProgramDetail.status === "draft" &&
                 status !== "draft"
@@ -524,6 +535,7 @@ export default function CreatePrograms() {
                 bodyFormData,
                 role: toggleRole === admin ? toggleRole : "",
               });
+            }
             } else {
               await createProgram({
                 bodyFormData,
@@ -1005,18 +1017,29 @@ export default function CreatePrograms() {
           if (ID_ONLY_FIELDS.includes(fieldName)) {
             value = currentProgramDetail[fieldName]?.map((item) => item?.id);
           }
-          if (fieldName === "state") {
-            value = currentProgramDetail["state_details"]?.id;
-            setValue(fieldName, value);
-          }
+          // if (fieldName === "state") {
+          //   value = currentProgramDetail["state_details"]?.id;
+          //   setValue(fieldName, value);
+          // }
           // Remove city initialization from here as it's handled by the separate effect
           if (fieldName === "recurring_dates") {
             value = currentProgramDetail["recurring_programs_details"];
           }
-
-          if (fieldName !== "state" && fieldName !== "city") {
+          if(['state','city','zip_code'].includes(fieldName)){
+            const filteredName = fieldName === "state" ? "state_name" : fieldName;
+            if(currentProgramDetail?.location_details){
+               setValue(fieldName,currentProgramDetail?.location_details[filteredName])
+              }
+            if (currentProgramDetail?.location_details?.id) {
+                setValue("location", currentProgramDetail.location_details.id);
+              }
+          }else{
             setValue(fieldName, value);
           }
+
+          // if (fieldName !== "state" && fieldName !== "city") {
+          //   setValue(fieldName, value);
+          // }
         }
       });
     }
@@ -1085,7 +1108,22 @@ export default function CreatePrograms() {
     }
   }, [formValues?.program_mode, unregister]);
 
-  const onSubmit = (data) => {
+  const onSubmit = (program_data) => {
+    const { state, city, zip_code, ...data } = program_data;
+    if (isReopen) {
+      const { end_date, start_date } = data;
+      const startDate = new Date(start_date).getTime();
+      const endDate = new Date(end_date).getTime();
+      const current_date = new Date().getTime();
+      if (startDate < current_date || endDate <= current_date) {
+        setTabActionInfo({
+          ...tabActionInfo,
+          error: true,
+          message: "Please change the start and end date",
+        });
+        return null;
+      }
+    }
     setStepWiseData((prevStData) => {
       const newStepData = {
         ...prevStData,

@@ -2285,7 +2285,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                         {/* {programdetails.venue} */}
                         {programdetails?.program_mode === "virtual_meeting"
                           ? "Online"
-                          : `${programdetails.city_details?.name}, ${programdetails.state_details?.abbreviation}`}
+                          : `${programdetails.location_details?.city}, ${programdetails.location_details?.state_name}`}
                       </span>
                     </div>
 

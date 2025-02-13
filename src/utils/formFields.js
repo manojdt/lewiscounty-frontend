@@ -1986,7 +1986,7 @@ export const ProgramInformationFields = [
     for: ["admin", "mentor"],
   },
   {
-    type: "dropdown",
+    type: "input",
     name: "state",
     label: "State",
     placeholder: "Enter State",
@@ -1998,7 +1998,7 @@ export const ProgramInformationFields = [
     for: ["admin", "mentor"],
   },
   {
-    type: "dropdown",
+    type: "input",
     name: "city",
     label: "City",
     placeholder: "Enter City",
