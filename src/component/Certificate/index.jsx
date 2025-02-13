@@ -389,7 +389,7 @@ export default function Certificate() {
             {width <= 640 && ( <img className='absolute ml-[34px] ' src={AddTicketIcon} alt='' />)}
             {role !== "mentee" && (
               <Button
-                btnName={width <= 640 ? "." : "Create Certificate"} // Empty button text below 640px
+                btnName={width <= 640 ? "." : "Request Certificate"} // Empty button text below 640px
                 onClick={() =>
                   navigate("/create-certificate", { state: { type: "new" } })
                 }

@@ -2521,7 +2521,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             paddingTop: "14px",
                           }}
                         >
-                          <span>Session</span>
+                          <span>No of sessions</span>
                           <span>{programdetails.session_count}</span>
                         </li>
                       )}

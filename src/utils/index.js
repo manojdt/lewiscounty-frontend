@@ -219,7 +219,7 @@ export const formatDateTimeISO = (isoString) => {
   }
   // const suffix = suffixes[(day % 10)] || 'th';
 
-  return `Begins ${monthDay}${suffix} at ${time}`;
+  return `Begins ${monthDay} at ${time}`;
 };
 export const getStartAndEndDates = (value) => {
   const currentDate = new Date();

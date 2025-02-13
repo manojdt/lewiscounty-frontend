@@ -243,7 +243,7 @@ export const Signup = () => {
           <h2 className="text-2xl font-bold text-gray-800 mb-6">
           Let's Get Started with Creating Your Account!
           </h2>
-          <p className="text-[12px] pb-10">
+          <p className="text-[12px]">
             Already have an account?
             <span
               className="cursor-pointer pl-1"
@@ -306,6 +306,7 @@ export const Signup = () => {
                             : field.fieldtype
                           : field.fieldtype
                       }
+                      autoComplete="off"
                       className={`w-full rounded px-3 py-[0.32rem] text-[14px] leading-[2.15] h-[60px] ${
                         errors[field.name]
                           ? "focus:border-teal focus:outline-none focus:ring-0"
