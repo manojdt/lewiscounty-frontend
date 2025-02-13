@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import Backdrop from "@mui/material/Backdrop";
@@ -18,8 +18,6 @@ export const ForgotPassword = () => {
     formState: { errors },
     getValues,
   } = useForm();
-
-  const [cooldown, setCooldown] = useState(0);
 
   const onSubmit = (data) => {
     if (data.email !== "") {
@@ -41,21 +39,7 @@ export const ForgotPassword = () => {
       localStorage.setItem("forgotEmail", forgotEmail);
       navigate("/verify-otp?email=" + forgotEmail);
     }
-
-    // Check for 429 error
-    if (userInfo.error.includes("429")) {
-      setCooldown(60);
-    }
   }, [userInfo]);
-
-  useEffect(() => {
-    if (cooldown > 0) {
-      const timer = setInterval(() => {
-        setCooldown((prev) => prev - 1);
-      }, 1000);
-      return () => clearInterval(timer);
-    }
-  }, [cooldown]);
 
   return (
     <React.Fragment>
@@ -80,7 +64,7 @@ export const ForgotPassword = () => {
               <div className="pb-7">
                 <p className="error" role="alert">
                   {/* {userInfo.error} */}
-                  </p>
+                </p>
               </div>
             ) : null}
 
@@ -114,17 +98,16 @@ export const ForgotPassword = () => {
                 type="submit"
                 className="inline-block w-full rounded px-7 pb-3 pt-3 text-sm font-medium text-white"
                 style={{
-                  background: cooldown > 0
-                    ? "gray"
-                    : "linear-gradient(to right, #00AEBD, #1D5BBF)",
-                  cursor: cooldown > 0 ? "not-allowed" : "pointer",
+                  background: "linear-gradient(to right, #00AEBD, #1D5BBF)",
                 }}
-                disabled={cooldown > 0}
               >
-                {cooldown > 0 ? `00:${String(cooldown).padStart(2, "0")}` : "Request OTP"}
+                Request OTP
               </button>
 
-              <p className="mb-0 mt-2 pt-1 text-sm font-semibold" style={{ color: "#232323" }}>
+              <p
+                className="mb-0 mt-2 pt-1 text-sm font-semibold"
+                style={{ color: "#232323" }}
+              >
                 Already have an account?
                 <button
                   className="text-danger transition duration-150 ease-in-out hover:text-danger-600 focus:text-danger-600 active:text-danger-700 pl-1"

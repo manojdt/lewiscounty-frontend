@@ -59,6 +59,7 @@ export const requestPageBreadcrumbs = {
   dashboardProgramsCard:'dashboardProgramscard',
   ProgramsCard:'programscard',
   ProgramsDetails:'programDetails',
+  dashboardtopmentor : 'dashboardtopmentor',
 };
 export const programStatusBreadcrumbs=[
     'All Programs',
@@ -79,7 +80,7 @@ export const programStatusBreadcrumbs=[
 export const request_newProgramRequest = (name) => {
   return [
     {
-      label: "New Program Requests",
+      label: "Program Requests",
       path: "/all-request?type=program_request",
     },
     {
@@ -891,6 +892,18 @@ export const programDetailsProfile = () => {
   return [
     {
       label: `Program Details`,
+      path: -1,
+    },
+    {
+      label: `View Profile`,
+    },
+  ];
+};
+
+export const topmentorDashBoard = () => {
+  return [
+    {
+      label: `Dashboard`,
       path: -1,
     },
     {

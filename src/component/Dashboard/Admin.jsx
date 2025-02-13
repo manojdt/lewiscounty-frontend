@@ -28,6 +28,7 @@ import ProgramFeeds from "../../shared/ProgramFeeds";
 import { useWindowSize } from "../../utils/windowResize";
 import api from "../../services/api";
 import UserIcon from "../../assets/icons/user-icon.svg";
+import { requestPageBreadcrumbs } from "../Breadcrumbs/BreadcrumbsCommonData";
 export default function Admin() {
   const { width } = useWindowSize();
   const navigate = useNavigate();
@@ -37,6 +38,7 @@ export default function Admin() {
   const userInfo = useSelector((state) => state.userInfo);
   const userpragrams = useSelector((state) => state.userPrograms);
   const { feeds } = useSelector((state) => state.feeds);
+  const breadcrumbsType = searchParams.get("breadcrumbsType") || "";
 
   const [programMenusList, setProgramMenusList] = useState([]);
   const [chartList, setChartList] = useState([]);
@@ -361,7 +363,8 @@ export default function Admin() {
                       border: "1px solid rgba(29, 91, 191, 1)",
                       borderRadius: "10px",
                     }}
-                    onClick={() => navigate(`/mentor-details/${recentReq?.id}?fromType=topmentor`)}
+                    onClick={() => navigate(`/mentor-details/${recentReq?.id}?fromType=topmentor&breadcrumbsType=${requestPageBreadcrumbs.dashboardtopmentor || requestPageBreadcrumbs.dashboardtopmentor}`)}
+
                   >
                     <div
                       className="flex gap-2 pb-3"
