@@ -244,3 +244,19 @@ export const getRequestView = createAsyncThunk('getRequestView', async (id) => {
   }
   return getRequestView;
 });
+
+export const getProfileNotesList = createAsyncThunk('getProfileNotesList', async (id) => {
+  const profileNotesList = await api.get(`profile/user-notes/?user=${id}`);
+  if (profileNotesList.status === 200 && profileNotesList.data) {
+    return profileNotesList.data;
+  }
+  return profileNotesList;
+});
+
+export const addUpdateProfileNotes = createAsyncThunk('addUpdateProfileNotes', async (data) => {
+  const addUpdateProfileNotes = await api.post(`profile/user-notes/`, data);
+  if (addUpdateProfileNotes.status === 200 && addUpdateProfileNotes.data) {
+    return addUpdateProfileNotes.data;
+  }
+  return addUpdateProfileNotes;
+});

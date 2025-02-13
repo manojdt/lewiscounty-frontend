@@ -21,6 +21,7 @@ import {
   Backdrop,
   Checkbox,
   CircularProgress,
+  Divider,
   Link,
   Menu,
   MenuItem,
@@ -28,8 +29,10 @@ import {
 } from "@mui/material";
 import { ProfileFields } from "../../utils/formFields";
 import {
+  addUpdateProfileNotes,
   getFollowList,
   getProfileInfo,
+  getProfileNotesList,
   getRequestView,
   userFollow,
   userUnFollow,
@@ -72,12 +75,12 @@ import Accordian from "../../shared/Accordian";
 import FormContextProvider from "./form-context-provider";
 import api from "../../services/api";
 import ProgramCard from "../../shared/Card/ProgramCard";
+import { dateFormat } from "../../utils";
 
 export default function ProfileView() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const state = useLocation()?.state;
-  console.log("state ===>", state);
 
   const { programRequest } = useSelector((state) => state.requestList);
   const [confirmPopup, setConfirmPopup] = useState({
@@ -105,6 +108,7 @@ export default function ProfileView() {
     userDetails,
     loading: userInfoLoading,
     followInfo,
+    programNotesList,
   } = useSelector((state) => state.userList);
   const pathe = state?.reqType ? -1 : "/all-request";
   const [noteData, setNoteData] = React.useState({
@@ -141,7 +145,6 @@ export default function ProfileView() {
     handleSubmit,
     reset,
   } = useForm();
-
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -283,7 +286,6 @@ export default function ProfileView() {
           })
         ).then(() => {
           setTimeout(() => {
-            console.log("MMMM");
             dispatch(updateLocalRequest({ status: "" }));
             resetMenteeRequest();
             navigate(pathe);
@@ -389,7 +391,6 @@ export default function ProfileView() {
           })
         ).then(() => {
           setTimeout(() => {
-            console.log("MMMM");
             dispatch(updateLocalRequest({ status: "" }));
             resetMenteeRequest();
             navigate(pathe);
@@ -453,6 +454,7 @@ export default function ProfileView() {
   useEffect(() => {
     if (params.id) {
       loadUserProfile();
+      dispatch(getProfileNotesList(params?.id));
     }
   }, [params]);
   useEffect(() => {
@@ -542,15 +544,20 @@ export default function ProfileView() {
 
   const handleSaveNotes = () => {
     if (noteData?.text !== "") {
-      const notesForm = new FormData();
-      notesForm.append("id", userDetails?.id);
-      notesForm.append("profile_notes", noteData?.text);
-      dispatch(updateProfile(notesForm)).then((res) => {
+      const payload = {
+        user: userDetails?.id,
+        notes: noteData?.text,
+      };
+      // const notesForm = new FormData();
+      // notesForm.append("id", userDetails?.id);
+      // notesForm.append("profile_notes", noteData?.text);
+      dispatch(addUpdateProfileNotes(payload)).then((res) => {
         if (res?.meta?.requestStatus === "fulfilled") {
           setNotesActivity(true);
           setTimeout(() => {
             setNotesActivity(false);
             loadUserProfile();
+            dispatch(getProfileNotesList(userDetails?.id));
             setNoteData({
               text: "",
               error: "",
@@ -1629,6 +1636,28 @@ export default function ProfileView() {
 
           {role === "admin" && (
             <>
+              {programNotesList?.length > 0 && <div className="mb-3">
+                <p className="mt-6 text-[18px] font-semibold text-font-primary-main">
+                  Notes History
+                </p>
+                <Stack spacing={2} mt={1}>
+                  {programNotesList?.map((e, i, len) => {
+                    return (
+                      <>
+                      <Stack
+                        direction={"row"}
+                        alignItems={"center"}
+                        justifyContent={"space-between"}
+                      >
+                        <p className="text-[16px] font-semibold">{e?.notes}</p>
+                        <p className="text-[14px] font-normal">{dateFormat(e?.created_at)}</p>
+                      </Stack>
+                      {len?.length -1 !== i && <Divider></Divider>}
+                      </>
+                    );
+                  })}
+                </Stack>
+              </div>}
               <p className="mt-6">Notes:</p>
               <div className="flex flex-col gap-2 mt-4">
                 <textarea

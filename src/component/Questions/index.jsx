@@ -123,7 +123,6 @@ export const Questions = () => {
             });
 
             if (updateToken.status === 200) {
-              console.log('updateToken', updateToken);
               localStorage.setItem('access_token', updateToken.data.access);
               localStorage.setItem('refresh_token', updateToken.data.refresh);
               handleSubmitData(updateToken);
@@ -144,7 +143,6 @@ export const Questions = () => {
         });
 
         if (updateToken.status === 200) {
-          console.log('updateToken', updateToken);
           localStorage.setItem('access_token', updateToken.data.access);
           localStorage.setItem('refresh_token', updateToken.data.refresh);
           handleSubmitData(updateToken);
@@ -423,12 +421,11 @@ export const Questions = () => {
       )
     );
   };
-  
+
   const handleBack = () =>{
     dispatch(updateUserRole({ role: "fresher" })).then((res)=>{
-      console.log(res)
-      dispatch(updateUserInfo({ data: res?.payload }));
-      navigate(-1)
+      dispatch(updateUserInfo({ data: res?.payload, status: "" }));
+      navigate("/login-type")
     })
   }
 
