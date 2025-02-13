@@ -545,6 +545,7 @@ export default function AssignMentees() {
                               style={{
                                 color: "#232323",
                                 borderRadius: "3px",
+                                opacity:field?.disabled?0.5:1
                               }}
                               disabled={field.disabled}
                               aria-invalid={!!errors[field.name]}
@@ -682,7 +683,7 @@ export default function AssignMentees() {
                                 showTime={field.name !== "due_date"}
                                 hourFormat="12"
                                 dateFormat="mm-dd-yy"
-                                style={{ width: "42%" }}
+                                style={{ width: "42%",opacity:field?.disabled?0.5:1 }}
                                 ref={(el) => (calendarRef.current[index] = el)}
                               />
                               <img

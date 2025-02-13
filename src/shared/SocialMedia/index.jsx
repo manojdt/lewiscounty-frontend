@@ -188,7 +188,7 @@ export default function SocialMediaLogin({ view = 'vertical', setVerificationPop
                                 Continue With Google
                             </Button>
                         </LoginSocialGoogle>
-                        <LoginSocialInstagram
+                        {/* <LoginSocialInstagram
                             client_id={process.env.REACT_APP_SOCIAL_AUTH_INSTA_KEY}
                             client_secret={process.env.REACT_APP_SOCIAL_AUTH_INSTA_SECRET}
                             fields={
@@ -216,7 +216,7 @@ export default function SocialMediaLogin({ view = 'vertical', setVerificationPop
                             <Button fullWidth color='inherit' size='large' variant="outlined" startIcon={<img src={FacebookIcon} className='w-[20px]' alt='FacebookIcon' />}>
                                 Continue with Facebook
                             </Button>
-                        </LoginSocialFacebook>
+                        </LoginSocialFacebook> */}
 
                     </>
                     :
@@ -240,7 +240,7 @@ export default function SocialMediaLogin({ view = 'vertical', setVerificationPop
                                 Continue With Google
                             </Button>
                         </LoginSocialGoogle>
-                        <Button fullWidth color='inherit' size='large' variant="outlined" startIcon={<img src={InstagramIcon} className='w-[20px]' alt='InstagramIcon' />}>
+                        {/* <Button fullWidth color='inherit' size='large' variant="outlined" startIcon={<img src={InstagramIcon} className='w-[20px]' alt='InstagramIcon' />}>
                             Continue with Instagram
                         </Button>
                         <LoginSocialFacebook
@@ -257,7 +257,7 @@ export default function SocialMediaLogin({ view = 'vertical', setVerificationPop
                             <Button fullWidth color='inherit' size='large' variant="outlined" startIcon={<img src={FacebookIcon} className='w-[20px]' alt='FacebookIcon' />}>
                                 Continue with Facebook
                             </Button>
-                        </LoginSocialFacebook>
+                        </LoginSocialFacebook> */}
                     </>
             }
 

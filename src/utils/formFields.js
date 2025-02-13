@@ -2309,7 +2309,7 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
         // required: "This field is required",
       },
       width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
-      disabled: bool,
+      disabled: true,
       options: [],
     },
     {
@@ -2344,12 +2344,12 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
         required: "This field is required",
       },
       width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
-      disabled: bool,
+      disabled: true,
     },
     {
       type: "text",
       name: "mentees_list",
-      label: "Add Mentees for this Program",
+      label: "Add Mentees for this Task",
       width: "w-full",
       inputRules: {
         required: "This field is required",
@@ -2361,9 +2361,9 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       fieldtype: "text",
       label: "Reference Book",
       placeholder: "Enter Reference Book with comma(,) seperators",
-      inputRules: {
-        required: "This field is required",
-      },
+      // inputRules: {
+      //   required: "This field is required",
+      // },
       width: "w-full",
     },
     {
