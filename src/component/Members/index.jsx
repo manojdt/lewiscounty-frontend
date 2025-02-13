@@ -471,7 +471,7 @@ const Members = () => {
   return (
     <div className="program-request px:2 sm:px-2 md:px-4 lg:px-8 mt-10">
       {/* <Breadcrumbs items={breadArray} /> */}
-      <div className="pl-6 pb-2 font-medium">
+      <div className="pl-6 pb-8 font-medium text-[18px]">
             <p>Members</p>
           </div>
       <div className="program-info px-4 sm:px-6 ">

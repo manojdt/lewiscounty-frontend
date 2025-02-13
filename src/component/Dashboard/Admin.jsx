@@ -28,7 +28,11 @@ import ProgramFeeds from "../../shared/ProgramFeeds";
 import { useWindowSize } from "../../utils/windowResize";
 import api from "../../services/api";
 import UserIcon from "../../assets/icons/user-icon.svg";
+<<<<<<< Updated upstream
 import { requestPageBreadcrumbs } from "../Breadcrumbs/BreadcrumbsCommonData";
+=======
+import UserInfoCard from "./UserInfoCard";
+>>>>>>> Stashed changes
 export default function Admin() {
   const { width } = useWindowSize();
   const navigate = useNavigate();
@@ -233,7 +237,8 @@ export default function Admin() {
               background: "rgba(255, 255, 255, 1)",
             }}
           >
-            <div className="flex flex-col items-center pb-10 pt-14 border-b-2">
+              <UserInfoCard />
+            {/* <div className="flex flex-col items-center pb-10 pt-14 border-b-2">
               <img
                 className="w-24 h-24 mb-3 rounded-full shadow-lg object-cover"
                 src={UserImage}
@@ -255,7 +260,7 @@ export default function Admin() {
                       ? "Organizational Admin"
                       : ""}
               </span>
-            </div>
+            </div> */}
 
             <ul className="flex flex-col gap-2 p-4 md:p-0 mt-4 font-medium">
               {programMenusList.map((menu, index) => {

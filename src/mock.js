@@ -1912,7 +1912,7 @@ export const memberMentorRequestColumns = [
     for: ["mentor"],
   },
   {
-    field: "address",
+    field: "location",
     headerName: "Location",
     flex: 1,
     id: 5,

@@ -334,7 +334,7 @@ const ProfileTab = ({ setEditMode }) => {
             style={{
               maxHeight: showAll
                 ? `${contentRef.current.scrollHeight}px`
-                : "w-[100%]",
+                : "350px",
               overflow: "hidden",
               transition: "max-height 0.5s ease",
             }}
