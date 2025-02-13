@@ -20,6 +20,8 @@ import {
 import "./dashboard.css";
 import UserIcon from "../../assets/icons/user-icon.svg";
 import ProgramCard from "../../shared/Card/ProgramCard";
+import GridViewIcon from "../../assets/icons/gridviewIcon.svg";
+import ListViewIcon from "../../assets/icons/listviewIcon.svg";
 import { programFeeds } from "../../utils/mock";
 import Invite from "./Invite";
 import api from "../../services/api";
@@ -31,6 +33,7 @@ import { jwtDecode } from "jwt-decode";
 import { FeedCard } from "./feedCard";
 import { getPost } from "../../services/feeds";
 import { requestPageBreadcrumbs } from "../Breadcrumbs/BreadcrumbsCommonData";
+import { ProgramTableView } from "./ProgramTableView/ProgramTableView";
 
 export const Mentee = () => {
   const dispatch = useDispatch();
@@ -44,7 +47,7 @@ export const Mentee = () => {
   const { feeds } = useSelector((state) => state.feeds);
   const token = localStorage.getItem("access_token");
   let decoded = jwtDecode(token);
-
+  const [programView, setProgramView] = useState("grid");
   React.useEffect(() => {
     if (!decoded?.category_added) {
       setOpenCategory(true);
@@ -60,7 +63,18 @@ export const Mentee = () => {
   }
 
   const role = userInfo.data.role;
+  const handleViewChange = () => {
+    setProgramView(programView === "grid" ? "list" : "grid");
+  };
 
+  const ImageComponent = (
+      <img
+      src={programView === "grid" ? ListViewIcon : GridViewIcon}
+      className="cursor-pointer"
+      alt="viewicon"
+      onClick={handleViewChange}
+    />
+    )
   const getPrograms = () => {
     const filterType = searchParams.get("type");
     const isBookmark = searchParams.get("is_bookmark");
@@ -332,6 +346,8 @@ export const Mentee = () => {
 
           {/* <div className="col-span-5 sm:col-span-5 md:col-span-3 lg:col-span-4"> */}
           <div className="col-span-5 sm:col-span-5 md:col-span-5 lg:col-span-4">
+          {programView === "grid" && (
+                <>
             {searchParams.get("type") === null &&
               searchParams.get("is_bookmark") === null && (
                 <ProgramCard
@@ -341,10 +357,11 @@ export const Mentee = () => {
                   handleBookmark={handleBookmark}
                   programs={userpragrams.allprograms}
                   loadProgram={getPrograms}
+                  tableIcon={ImageComponent}
                 />
               )}
 
-            {/* {(searchParams.get("type") === "yettojoin" ||
+            {(searchParams.get("type") === "yettojoin" ||
               searchParams.get("type") === "planned") && (
               <ProgramCard
                 title="Active Programs"
@@ -352,9 +369,10 @@ export const Mentee = () => {
                 handleNavigateDetails={handleNavigateDetails}
                 handleBookmark={handleBookmark}
                 programs={userpragrams.yettojoin}
+                tableIcon={ImageComponent}
                 loadProgram={getPrograms}
               />
-            )} */}
+            )}
 
             {searchParams.get("type") === "yettostart" && (
               <ProgramCard
@@ -363,6 +381,7 @@ export const Mentee = () => {
                 handleNavigateDetails={handleNavigateDetails}
                 handleBookmark={handleBookmark}
                 programs={userpragrams.yettostart}
+                tableIcon={ImageComponent}
                 loadProgram={getPrograms}
               />
             )}
@@ -374,10 +393,42 @@ export const Mentee = () => {
                 handleNavigateDetails={handleNavigateDetails}
                 handleBookmark={handleBookmark}
                 programs={userpragrams.inprogress}
+                tableIcon={ImageComponent}
                 loadProgram={getPrograms}
               />
             )}
-
+ </>
+              )}
+               {programView === "list" && (
+                              <div>
+                                <ProgramTableView
+                                  title={searchParams.get("type") === null &&
+                                    searchParams.get("is_bookmark") === null?"All Programs":
+                                    searchParams.get("type") === "yettostart"
+                                      ? "Recently Joined Programs"
+                                      :searchParams.get("type") === "yettojoin" ||
+                                  searchParams.get("type") === "planned"
+                                      ? "Active Programs"
+                                      : searchParams.get("type") === "inprogress"
+                                      ? "Ongoing  Programs"
+                                      : ""
+                                  }
+                                  tableIcon={ImageComponent}
+                                  programData={searchParams.get("type") === null &&
+                                    searchParams.get("is_bookmark") === null?userpragrams.allprograms:
+                                    searchParams.get("type") === "yettostart"
+                                      ? userpragrams.yettostart
+                                      :searchParams.get("type") === "yettojoin" ||
+                                  searchParams.get("type") === "planned"
+                                      ? userpragrams.yettojoin
+                                      : searchParams.get("type") === "inprogress"
+                                      ? userpragrams.inprogress
+                                      : []}
+                                  programView={programView}
+                                  setProgramView={setProgramView}
+                                />
+                              </div>
+                            )}
             <div className="mt-4">
               <div
                 className="program-feeds"

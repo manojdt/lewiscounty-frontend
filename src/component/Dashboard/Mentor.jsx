@@ -13,7 +13,8 @@ import {
   getUserPrograms,
 } from "../../services/userprograms";
 import UserIcon from "../../assets/icons/user-icon.svg";
-
+import GridViewIcon from "../../assets/icons/gridviewIcon.svg";
+import ListViewIcon from "../../assets/icons/listviewIcon.svg";
 import { pipeUrls } from "../../utils/constant";
 import "./dashboard.css";
 import UserInfoCard from "./UserInfoCard";
@@ -25,6 +26,7 @@ import { getPost } from "../../services/feeds";
 import { requestPageBreadcrumbs } from "../Breadcrumbs/BreadcrumbsCommonData";
 import MaleIcon from "../../assets/images/male-profile1x.png";
 import FemaleIcon from "../../assets/images/female-profile1x.png";
+import { ProgramTableView } from "./ProgramTableView/ProgramTableView";
 
 export const Mentor = () => {
   const dispatch = useDispatch();
@@ -36,7 +38,7 @@ export const Mentor = () => {
   const userpragrams = useSelector((state) => state.userPrograms);
   const userInfo = useSelector((state) => state.userInfo);
   const { feeds } = useSelector((state) => state.feeds);
-
+  const [programView, setProgramView] = useState("grid");
   const handlePerformanceFilter = (e) => {
     const res = e?.target?.value || "date";
     dispatch(chartProgramList(res));
@@ -107,7 +109,18 @@ export const Mentor = () => {
     //   }
     // })
   }, []);
+  const handleViewChange = () => {
+    setProgramView(programView === "grid" ? "list" : "grid");
+  };
 
+  const ImageComponent = (
+      <img
+      src={programView === "grid" ? ListViewIcon : GridViewIcon}
+      className="cursor-pointer"
+      alt="viewicon"
+      onClick={handleViewChange}
+    />
+    )
   useEffect(() => {
     const fetchAndUpdateTokens = async () => {
       try {
@@ -256,7 +269,7 @@ export const Mentor = () => {
                             <img
                               src={recentReq?.profile_image || UserIcon}
                               alt="male-icon"
-                               className="w-full h-full object-cover rounded-full"
+                              className="w-full h-full object-cover rounded-full"
                             />
                           </div>
                           <div className="flex flex-col gap-2">
@@ -308,52 +321,58 @@ export const Mentor = () => {
             userInfo?.data?.userinfo?.approve_status
           ) ? (
             <div className="col-span-5 sm:col-span-5 md:col-span-3 lg:col-span-4">
-              {searchParams.get("type") === null &&
-                searchParams.get("is_bookmark") === null && (
-                  <ProgramCard
-                    title="All Programs"
-                    viewpage="/programs"
-                    handleNavigateDetails={handleNavigateDetails}
-                    handleBookmark={handleBookmark}
-                    programs={userpragrams.allprograms}
-                    loadProgram={getPrograms}
-                  />
-                )}
-              {(searchParams.get("type") === "yettojoin" ||
-                searchParams.get("type") === "planned") && (
-                <ProgramCard
-                  title="Active Programs"
-                  viewpage="/programs?type=yettojoin"
-                  handleNavigateDetails={handleNavigateDetails}
-                  handleBookmark={handleBookmark}
-                  programs={userpragrams.yettojoin}
-                  loadProgram={getPrograms}
-                />
-              )}
+              {programView === "grid" && (
+                <>
+                  {searchParams.get("type") === null &&
+                    searchParams.get("is_bookmark") === null && (
+                      <ProgramCard
+                        title="All Programs"
+                        viewpage="/programs"
+                        handleNavigateDetails={handleNavigateDetails}
+                        handleBookmark={handleBookmark}
+                        programs={userpragrams.allprograms}
+                        tableIcon={ImageComponent}
+                        loadProgram={getPrograms}
+                      />
+                    )}
+                  {(searchParams.get("type") === "yettojoin" ||
+                    searchParams.get("type") === "planned") && (
+                    <ProgramCard
+                      title="Active Programs"
+                      viewpage="/programs?type=yettojoin"
+                      handleNavigateDetails={handleNavigateDetails}
+                      handleBookmark={handleBookmark}
+                      programs={userpragrams.yettojoin}
+                      tableIcon={ImageComponent}
+                      loadProgram={getPrograms}
+                    />
+                  )}
 
-              {searchParams.get("type") === "yettostart" && (
-                <ProgramCard
-                  title="Recently Joined Programs"
-                  viewpage="/programs?type=yettostart"
-                  handleNavigateDetails={handleNavigateDetails}
-                  handleBookmark={handleBookmark}
-                  programs={userpragrams.yettostart}
-                  loadProgram={getPrograms}
-                />
-              )}
+                  {searchParams.get("type") === "yettostart" && (
+                    <ProgramCard
+                      title="Recently Joined Programs"
+                      viewpage="/programs?type=yettostart"
+                      handleNavigateDetails={handleNavigateDetails}
+                      handleBookmark={handleBookmark}
+                      programs={userpragrams.yettostart}
+                      tableIcon={ImageComponent}
+                      loadProgram={getPrograms}
+                    />
+                  )}
 
-              {searchParams.get("type") === "inprogress" && (
-                <ProgramCard
-                  title="Ongoing  Programs"
-                  viewpage="/programs?type=inprogress"
-                  handleNavigateDetails={handleNavigateDetails}
-                  handleBookmark={handleBookmark}
-                  programs={userpragrams.inprogress}
-                  loadProgram={getPrograms}
-                />
-              )}
+                  {searchParams.get("type") === "inprogress" && (
+                    <ProgramCard
+                      title="Ongoing  Programs"
+                      viewpage="/programs?type=inprogress"
+                      handleNavigateDetails={handleNavigateDetails}
+                      handleBookmark={handleBookmark}
+                      programs={userpragrams.inprogress}
+                      tableIcon={ImageComponent}
+                      loadProgram={getPrograms}
+                    />
+                  )}
 
-              {/* {
+                  {/* {
                             searchParams.get("type") === 'planned' &&
                             <ProgramCard
                                 title="PLanned Programs"
@@ -365,28 +384,59 @@ export const Mentor = () => {
                             />
                         } */}
 
-              {searchParams.get("is_bookmark") === "true" && (
-                <ProgramCard
-                  title="Bookmarked  Programs"
-                  viewpage="/programs?type=bookmarked"
-                  handleNavigateDetails={handleNavigateDetails}
-                  handleBookmark={handleBookmark}
-                  programs={userpragrams.bookmarked}
-                  loadProgram={getPrograms}
-                />
-              )}
+                  {searchParams.get("is_bookmark") === "true" && (
+                    <ProgramCard
+                      title="Bookmarked  Programs"
+                      viewpage="/programs?type=bookmarked"
+                      handleNavigateDetails={handleNavigateDetails}
+                      handleBookmark={handleBookmark}
+                      programs={userpragrams.bookmarked}
+                      loadProgram={getPrograms}
+                    />
+                  )}
 
-              {searchParams.get("type") === "completed" && (
-                <ProgramCard
-                  title="Completed  Programs"
-                  viewpage="/programs?type=completed"
-                  handleNavigateDetails={handleNavigateDetails}
-                  handleBookmark={handleBookmark}
-                  programs={userpragrams.completed}
-                  loadProgram={getPrograms}
-                />
+                  {searchParams.get("type") === "completed" && (
+                    <ProgramCard
+                      title="Completed  Programs"
+                      viewpage="/programs?type=completed"
+                      handleNavigateDetails={handleNavigateDetails}
+                      handleBookmark={handleBookmark}
+                      programs={userpragrams.completed}
+                      loadProgram={getPrograms}
+                    />
+                  )}
+                  </>
+                )}
+              {programView === "list" && (
+                <div>
+                  <ProgramTableView
+                    title={searchParams.get("type") === null &&
+                      searchParams.get("is_bookmark") === null?"All Programs":
+                      searchParams.get("type") === "yettostart"
+                        ? "Recently Joined Programs"
+                        :searchParams.get("type") === "yettojoin" ||
+                    searchParams.get("type") === "planned"
+                        ? "Active Programs"
+                        : searchParams.get("type") === "inprogress"
+                        ? "Ongoing  Programs"
+                        : ""
+                    }
+                    tableIcon={ImageComponent}
+                    programData={searchParams.get("type") === null &&
+                      searchParams.get("is_bookmark") === null?userpragrams.allprograms:
+                      searchParams.get("type") === "yettostart"
+                        ? userpragrams.yettostart
+                        :searchParams.get("type") === "yettojoin" ||
+                    searchParams.get("type") === "planned"
+                        ? userpragrams.yettojoin
+                        : searchParams.get("type") === "inprogress"
+                        ? userpragrams.inprogress
+                        : []}
+                    programView={programView}
+                    setProgramView={setProgramView}
+                  />
+                </div>
               )}
-
               <div className="root-layer grid grid-cols-2 gap-8 pt-6">
                 <div className="layer-first flex flex-col sm:gap-6 gap-4">
                   <RecentRequests data={programRequest} />

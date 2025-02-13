@@ -377,6 +377,7 @@ export const Mentors = () => {
                       state: {
                         row_id: selectedItem?.id,
                         user_id: selectedItem?.following,
+                        rejection_reason: selectedItem?.cancelled_reason,
                         page: "requested_mentor",
                       },
                     }

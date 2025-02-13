@@ -8,6 +8,7 @@ import {
   programActionStatus,
   programMenus,
   statusAction,
+  user,
 } from "../../utils/constant";
 
 import RightArrow from "../../assets/icons/rightArrow.svg";
@@ -48,7 +49,14 @@ export default function Admin() {
   const handleViewAllMembers = () => {
     navigate("/members")
   };
+  const onItemClick = (menu) => {
+    if(menu.role===user.mentor){
+  navigate("/members")
+}else{
+  navigate("/members?tabType=mentee")
 
+}
+}
   // const membersList = [
   //     {
   //         name: 'Mentor Managers',
@@ -302,8 +310,9 @@ export default function Admin() {
           <div className="mt-4">
             <ListCard
               title="Members"
-              viewall
-              handleViewall={handleViewAllMembers}
+              // viewall
+              // handleViewall={handleViewAllMembers}
+              onItemClick={onItemClick}
               items={membersCount}
             />
           </div>

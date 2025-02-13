@@ -1632,7 +1632,7 @@ export default function ProfileView() {
           )}
         </div>
 
-        {fromType === "topmentor" && (
+        {fromType === "topmentor" &&userDetails?.upcoming_programs?.length>0&& (
           <div className="bg-[#F9F9F9]">
             <div className="flex justify-between items-center border-b border-border-main px-5 py-3">
               <p className="text-[18px] font-semibold">Upcoming Programs</p>

@@ -776,7 +776,7 @@ const ProgramActions = ({
     // Cancelled status
     if (programdetails.status === "cancelled" && type !== "program_cancel") {
       return (
-        <div className="flex gap-4 pt-10">
+        <div className="flex gap-4 pt-5">
           {/* <button
             className="py-3 px-16 text-white text-[14px] flex items-center"
             style={{
