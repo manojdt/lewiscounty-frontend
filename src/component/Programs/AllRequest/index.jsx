@@ -738,7 +738,6 @@ export default function AllRequest() {
     request.for.includes(role)
   );
 
-  console.log(testimonialRequest);
   let programExtendRequestColumn = programExtendRequestColumns.filter(
     (request) => request.for.includes(role)
   );
@@ -2013,7 +2012,6 @@ export default function AllRequest() {
       ...(filter.search !== "" && { search: filter.search }),
     };
     //console.log("Search Query in Payload:", filter.search);
-    console.log("Final Payload:", payload);
     if (role === "admin") {
       if (selectedTab === "my") {
         payload = {
@@ -2289,7 +2287,7 @@ export default function AllRequest() {
         }
       }
     }
-  }, [searchParams, role, selectedTab]);
+  }, [role, selectedTab]);
 
   useEffect(() => {
     // Program update action
@@ -2564,7 +2562,7 @@ export default function AllRequest() {
         });
       }
     }
-  }, [actionTab, searchParams, filterStatus, role, paginationModel]);
+  }, [actionTab, filterStatus, role, paginationModel,searchParams,filter]);
 
   const footerComponent = (props) => {
     return (
