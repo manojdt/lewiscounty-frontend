@@ -107,7 +107,7 @@ export default function Layout({ subheader }) {
       label: (
         <div className="flex gap-4 items-center">
           <img className="p-2 h-8" src={FeedIcon} alt="FeedIcon" />
-          <p>Feed</p>
+          <p>Channel</p>
         </div>
       ),
       command: () => navigate("/feeds"),

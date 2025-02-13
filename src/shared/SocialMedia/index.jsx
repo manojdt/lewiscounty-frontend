@@ -167,7 +167,7 @@ export default function SocialMediaLogin({ view = 'vertical', setVerificationPop
     };
     //   console.log(process.env.REACT_APP_SOCIAL_AUTH_INSTA_KEY,process.env.REACT_APP_SOCIAL_AUTH_INSTA_SECRET)
     return (
-        <div className={`flex gap-7 ${view === 'vertical' ? 'flex-col justify-center' : ''}`}>
+        <div className={`flex gap-7 ${view === 'vertical' ? 'flex-col justify-center' : ''}`} style={{margin:'30px 0 50px 0'}}>
             {
                 view === 'vertical' ?
                     <>
