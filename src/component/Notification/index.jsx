@@ -30,11 +30,10 @@ export default function Notification({ handleClose }) {
     switch (actionType) {
       case "program":
         handleClose && handleClose();
-        navigate(
-          data.related_data?.type
-            ? `/program-details/${data.related_data.program_id}`
-            : `/program-details/${data.related_data.program_id}?request_id=${data.related_data.program_request_id}`
-        );
+        const baseUrl = `/program-details/${data.related_data?.program_id}`;
+        const requestId = data.related_data?.program_request_id;
+        const requestType = data.related_data?.request_type;
+        navigate(requestId ? `${baseUrl}?request_id=${requestId}${requestType ? `&type=${requestType}` : ''}` : baseUrl);
         break;
       case "task":
         const url =
@@ -67,25 +66,23 @@ export default function Notification({ handleClose }) {
       //     break;
       case "member":
         const memberurl =
-          role === "mentor"
-            ? data.related_data?.program_request_id
-              ? `/mentee-details/${data.related_data.member_id}?type=mentee_request&request_id=${data.related_data?.program_request_id}`
-              : `/mentee-details/${data.related_data.member_id}`
-            : `mentor-details/${data.related_data.member_id}?request_id=${data.related_data?.member_request_id}`;
-        handleClose && handleClose();
-        navigate(
-          memberurl,
-          role === "mentor" && data.related_data?.program_request_id
-            ? {
-                state: {
-                  data: {
-                    id: data.related_data?.program_request_id,
-                    status: "new",
-                  },
+        role === "mentor"|| role==="admin"
+          ?data.related_data?.program_request_id? `/mentee-details/${data.related_data.member_id}?type=mentee_request&request_id=${data.related_data?.program_request_id}${role==="admin"?'&from=program_join':""}`:`/mentee-details/${data.related_data.member_id}`
+          : `mentor-details/${data.related_data.member_id}?request_id=${data.related_data?.member_request_id}`;
+      handleClose && handleClose();
+      navigate(
+        memberurl,
+        (role === "mentor"||role==="admin")&&data.related_data?.program_request_id
+          ? {
+              state: {
+                data: {
+                  id: data.related_data?.program_request_id,
+                  status: "new",
                 },
-              }
-            : {}
-        );
+              },
+            }
+          : {}
+      );
         break;
       case "follow":
         const followurl =
