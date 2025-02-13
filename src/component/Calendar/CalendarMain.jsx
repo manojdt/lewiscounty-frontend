@@ -278,7 +278,7 @@ const CalendarMain = ({
     <div className=''>
       <div className={`space-y-5 m-5 ${showModal ? 'opacity-50' : ''}`}>
         <div className='flex justify-between items-center w-full'>
-          <div className='text-gray-900 text-2xl font-medium' id='calendarPage'>
+          <div className='text-gray-900 text-base font-semibold' id='calendarPage'>
             {title}
           </div>
           {addSection && (
@@ -306,7 +306,7 @@ const CalendarMain = ({
           )}
         </div>
         <div
-          className='flex flex-col bg-white border-1 border-teal-400 rounded-md p-10 space-y-3'
+          className='flex flex-col bg-white border-1 border-teal-400 rounded-md p-0 sm:p-0 md:p-5 lg:p-10 xl:p-10 space-y-3'
           style={{ background: '#FAFBFC' }}
         >
           <CalendarHeader

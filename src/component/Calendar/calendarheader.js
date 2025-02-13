@@ -58,31 +58,37 @@ const CalendarHeader = ({
   };
 
   return (
+    <div>
     <div className='flex flex-row items-center justify-between mb-4'>
-      <div className='flex gap-6'>
-        <div className='flex'>
+      <div className='flex gap-0 sm:gap-0 md:gap-3 lg:gap-6 xl:gap-6'>
+      <div className="flex">
+          {/* Left Arrow */}
           <div
-            style={{
-              border: '1px solid rgba(62, 62, 62, 0.5)',
-              padding: '10px 20px',
-              cursor: 'pointer',
-            }}
+            className="border border-gray-500 p-2 sm:p-3 md:p-4 lg:p-4 cursor-pointer"
             onClick={onDecrement}
           >
-            <img src={ArrowLeftIcon} alt='ArrowLeftIcon' />
+            <img
+              src={ArrowLeftIcon}
+              alt="ArrowLeftIcon"
+              className="w-4 h-4 sm:w-5 sm:h-5 md:w-4 md:h-4 lg:w-3 lg:h-3" // Responsive image size
+            />
           </div>
+
+          {/* Right Arrow */}
           <div
-            style={{
-              border: '1px solid rgba(62, 62, 62, 0.5)',
-              padding: '10px 20px',
-              cursor: 'pointer',
-            }}
+            className="border border-gray-500 p-2 sm:p-3 md:p-4 lg:p-4 cursor-pointer"
             onClick={onIncrement}
           >
-            <img src={ArrowRightIcon} alt='ArrowRightIcon' />
+            <img
+              src={ArrowRightIcon}
+              alt="ArrowRightIcon"
+              className="w-4 h-4 sm:w-5 sm:h-5 md:w-4 md:h-4 lg:w-3 lg:h-3" // Responsive image size
+            />
           </div>
         </div>
-        <Button btnName='Today' />
+        <div className='hidden sm:hidden md:block lg:block xl:block self-center'>
+          <Button btnName='Today' />
+        </div>
       </div>
       <div>
         <div className='flex items-center justify-center text-[18px]'>
@@ -131,7 +137,12 @@ const CalendarHeader = ({
       {/* {currentCalendarView !== "Today" && ( */}
 
       {/* )} */}
+      
     </div>
+    {/* <div className='block sm:block md:hidden lg:hidden xl:hidden self-center'>
+    <Button btnName='Today' />
+    </div> */}
+</div>
   );
 };
 
