@@ -63,7 +63,7 @@ const EditProfile = ({ setEditMode }) => {
       component: <MenteeSkillandInterestsSection />,
     },
     {
-      title: "Expectations and Goals",
+      title: "Goals",
       component: <MenteeExpectionAndGoalsSection />,
     },
     {
@@ -133,7 +133,7 @@ const EditProfile = ({ setEditMode }) => {
       component: <MentorshipPreferenceSection />,
     },
     {
-      title: "Goals and Expectations",
+      title: "Goals",
       component: <GoalsAndExpectatonsSection />,
     },
     {
