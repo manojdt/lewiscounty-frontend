@@ -17,6 +17,8 @@ import {
   menteeUnFollowReq,
   menteeCancelReq,
   getRequestView,
+  getProfileNotesList,
+  addUpdateProfileNotes,
 } from '../../services/userList';
 
 const initialState = {
@@ -29,6 +31,7 @@ const initialState = {
   followInfo: {},
   menteeFollowReqInfo: {},
   requestData: {},
+  programNotesList: [],
   loading: false,
   status: '',
   error: '',
@@ -399,6 +402,51 @@ export const userListSlice = createSlice({
         };
       })
       .addCase(getRequestView.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
+
+
+      builder
+      .addCase(getProfileNotesList.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(getProfileNotesList.fulfilled, (state, action) => {
+        return {
+          ...state,
+          programNotesList: action.payload,
+          loading: false,
+        };
+      })
+      .addCase(getProfileNotesList.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
+
+
+      builder
+      .addCase(addUpdateProfileNotes.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(addUpdateProfileNotes.fulfilled, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+        };
+      })
+      .addCase(addUpdateProfileNotes.rejected, (state, action) => {
         return {
           ...state,
           loading: false,
