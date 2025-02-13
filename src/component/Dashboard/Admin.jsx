@@ -28,11 +28,8 @@ import ProgramFeeds from "../../shared/ProgramFeeds";
 import { useWindowSize } from "../../utils/windowResize";
 import api from "../../services/api";
 import UserIcon from "../../assets/icons/user-icon.svg";
-<<<<<<< Updated upstream
 import { requestPageBreadcrumbs } from "../Breadcrumbs/BreadcrumbsCommonData";
-=======
 import UserInfoCard from "./UserInfoCard";
->>>>>>> Stashed changes
 export default function Admin() {
   const { width } = useWindowSize();
   const navigate = useNavigate();
