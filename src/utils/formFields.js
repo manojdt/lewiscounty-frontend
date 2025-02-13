@@ -469,9 +469,9 @@ export const MentorDocumentUplaod = [
     fieldtype: "file",
     label: "Documents Upload",
     placeholder: "",
-    inputRules: {
-      required: "At least one file is required",
-    },
+    // inputRules: {
+    //   required: "At least one file is required",
+    // },
     size: false,
     widthQuestion: "w-full",
   },
@@ -1378,9 +1378,9 @@ export const MenteeDocumentUplaod = [
     fieldtype: "file",
     label: "Documents Upload",
     placeholder: "",
-    inputRules: {
-      required: "This field is required",
-    },
+    // inputRules: {
+    //   required: "This field is required",
+    // },
     size: false,
     widthQuestion:"w-full"
   },

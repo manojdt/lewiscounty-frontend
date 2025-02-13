@@ -157,7 +157,7 @@ export default function Programs() {
   const [seletedItem, setSelectedItem] = useState({});
   const [programFilter, setProgramFilter] = useState({
     search: "",
-    filter_by: "month",
+    filter_by: "",
   });
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
@@ -495,7 +495,7 @@ export default function Programs() {
         pageSize: 6,
       });
     }
-    setProgramFilter({ search: "", filter_by: "month" });
+    setProgramFilter({ search: "", filter_by: "" });
   };
 
   useEffect(() => {

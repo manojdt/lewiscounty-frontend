@@ -362,7 +362,7 @@ const ProfileTab = ({ setEditMode }) => {
             </div>
           )}
 
-          {(userRole === "mentee" || userRole === "mentor") && (
+          {/* {(userRole === "mentee" || userRole === "mentor") && (
             <div className="mt-6 h-40">
               <p className="text-[#2260D9] text-[16px] font-bold border-b border-border-main pb-4">
                 Admin Notes
@@ -371,7 +371,7 @@ const ProfileTab = ({ setEditMode }) => {
                 {profile?.profile_notes ?? "-"}
               </p>
             </div>
-          )}
+          )} */}
         </div>
       </div>
     </FormContextProvider>
