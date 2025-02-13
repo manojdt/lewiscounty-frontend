@@ -426,7 +426,7 @@ export default function Admin() {
         </div>
 
         <div className="col-span-6">
-          <CardWrapper title="Metrics at a Glance">
+          <CardWrapper title="Program Status">
             <ProgramMetrix />
           </CardWrapper>
 

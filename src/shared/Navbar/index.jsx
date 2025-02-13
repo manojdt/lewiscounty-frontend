@@ -652,7 +652,7 @@ export const Navbar = () => {
                       title={
                         <React.Fragment>
                           <Stack spacing={3}>
-                            <Stack
+                            {/* <Stack
                               direction={'row'}
                               alignItems={'center'}
                               spacing={'12px'}
@@ -665,7 +665,7 @@ export const Navbar = () => {
                               <Typography className='text-[#18283D] !text-[14px]'>
                                 Permission
                               </Typography>
-                            </Stack>
+                            </Stack> */}
 
                             <Stack
                               direction={'row'}

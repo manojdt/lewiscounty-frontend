@@ -6,6 +6,7 @@ import Backdrop from "@mui/material/Backdrop";
 import { updateUserRole } from "../../services/loginInfo";
 import { userStatus } from "../../utils/constant";
 import bg_image from "../../assets/images/role-selection-screen-bg.svg";
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 
 export const LoginType = () => {
   const navigate = useNavigate();
@@ -42,6 +43,11 @@ export const LoginType = () => {
     }
   }, [userInfo]);
 
+  const handleBack = () =>{    
+    navigate(-1)
+    localStorage.clear()
+  }
+
   return (
     <div className='h-full'>
       <div className='flex flex-wrap h-full'>
@@ -56,6 +62,12 @@ export const LoginType = () => {
             className='block bg-white shadow-lg h-full'
             style={{ background: `url(${bg_image}) center / cover ` }}
           >
+            <div className="p-2">
+            <div className="border border-black rounded-full h-[30px] w-[30px] flex items-center cursor-pointer" 
+            onClick={()=>handleBack()}>
+              <KeyboardArrowLeftIcon />
+            </div>
+            </div>
             <div className='g-0 flex justify-center items-center h-full'>
               <div className='px-4 md:px-0 lg:w-4/6 flex justify-center items-center'>
                 <div className='w-9/12'>

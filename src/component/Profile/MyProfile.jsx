@@ -59,17 +59,17 @@ export default function MyProfile() {
       content: <ProfileTab setEditMode={() => setEditMode(true)} />,
     },
     {
-      label: 'Security',
+      label: 'Manager Password',
       iconblack: SecurityIcon,
       icon: SecurityIconblue,
       content: <SecurityTab />,
     },
-    {
-      label: 'Permissions',
-      iconblack: PermissionIcon,
-      icon: PermissionIconblue,
-      content: <PermissionTab />,
-    },
+    // {
+    //   label: 'Permissions',
+    //   iconblack: PermissionIcon,
+    //   icon: PermissionIconblue,
+    //   content: <PermissionTab />,
+    // },
   ];
 
   return (

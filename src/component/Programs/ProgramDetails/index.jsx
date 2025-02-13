@@ -2078,7 +2078,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                               ].includes(programdetails?.status) &&
                               !reqRole &&
                               programdetails?.created_by ===
-                                userdetails?.data?.user_id && (
+                                userdetails?.data?.user_id && 
+                                !programdetails?.cancel_request_raise && (
                                 // role !== 'admin' && (
                                 <MenuItem
                                   onClick={() => handleMenu("cancel")}

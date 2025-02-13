@@ -22,6 +22,7 @@ import {
   updateQuestions,
   updateToken,
   updateUserInfo,
+  updateUserRole,
 } from '../../services/loginInfo';
 import SuccessIcon from '../../assets/images/Success_tic1x.png';
 import ToastNotification from '../../shared/Toast';
@@ -92,7 +93,7 @@ export const Questions = () => {
     setActionInfo({ loading: true, modal: false });
     let allFiles = [];
     let bodyFormData = new FormData();
-    if (data.documents.length) {
+    if (data?.documents?.length) {
       data.documents.forEach((file) =>
         bodyFormData.append('documents', file[0])
       );
@@ -406,8 +407,10 @@ export const Questions = () => {
   }, [errorNot]);
   const skipAall = () => {
     return (
-      ((role === 'mentor' && currentStep >= 2) ||
-        (role === 'mentee' && currentStep > 1)) &&
+      // (
+        // (role === 'mentor' && currentStep >= 2) ||
+        // (role === 'mentee' && currentStep > 1)) &&
+        currentStep > 1 &&
       currentStep !== formFields.length && (
         <div className='flex items-center gap-2' onClick={handleSkip}>
           <p style={{ fontWeight: 'bold', cursor: 'pointer' }}>Skip All</p>
@@ -420,6 +423,14 @@ export const Questions = () => {
       )
     );
   };
+  
+  const handleBack = () =>{
+    dispatch(updateUserRole({ role: "fresher" })).then((res)=>{
+      console.log(res)
+      dispatch(updateUserInfo({ data: res?.payload }));
+      navigate(-1)
+    })
+  }
 
   return (
     <>
@@ -486,6 +497,7 @@ export const Questions = () => {
             />
           </div>
         )} */}
+        <div className='mb-1'><Button btnName="Back" btnCategory="secondary" onClick={()=>handleBack()} /></div>
         <div style={{ boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.15)" }}>
           <div
             className="steps pl-24 pr-28"
