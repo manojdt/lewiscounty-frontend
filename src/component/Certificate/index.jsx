@@ -83,13 +83,20 @@ export default function Certificate() {
   const ratingModalClose = () => {
     setRatingModal({ modal: false, success: false });
   };
-
-  const handleSearch = (value) => {
-    let query = value !== "" ? `?search=${value}` : "";
+  const debounce = (func, delay) => {
+    let timer;
+    return (...args) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => func(...args), delay);
+    };
+  };
+  
+  const handleSearch = debounce((value) => {
+    let query = value.trim() !== "" ? `?search=${value}` : "";
   
     dispatch(
       getCertificateList(
-        query +
+        (query || "?") + // Ensures the request is made even when query is empty
           (role === "admin"
             ? `&page=${paginationModel?.page + 1}&limit=${
                 paginationModel?.pageSize
@@ -103,7 +110,8 @@ export default function Certificate() {
               }&request_type=certificate`)
       )
     );
-  };
+  }, 300);
+  
   
   const handleClose = () => {
     setAnchorEl(null);

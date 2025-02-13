@@ -63,6 +63,7 @@ import {
   request_memberJoin,
   requestPageBreadcrumbs,
   topMentorPage,
+  topmentorDashBoard,
 } from "../Breadcrumbs/BreadcrumbsCommonData";
 import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
 import { allProfileSections } from "./tabs/ProfileTab";
@@ -131,7 +132,7 @@ export default function ProfileView() {
   const pageType = window.location.href.includes("mentor-details")
     ? "Mentor"
     : "Mentee";
-  const breadcrumbsType = searchParams.get("breadcrumbsType") || "";
+  const breadcrumbsType = searchParams.get("breadcrumbsType") || "";  
   const [breadcrumbsArray, setBreadcrumbsArray] = useState([]);
   const { requestData } = useSelector((state) => state.userList);
   const {
@@ -150,10 +151,15 @@ export default function ProfileView() {
   };
 
   const loadUserProfile = () => {
-    dispatch(getProfileInfo({ id: params.id, program_limit: 3 ,list:fromType === "topmentor"}));
+    dispatch(
+      getProfileInfo({
+        id: params.id,
+        program_limit: 3,
+        list: fromType === "topmentor",
+      })
+    );
     dispatch(getFollowList(params.id));
   };
-
 
   const followResponseHandle = () => {
     setActivity({
@@ -427,7 +433,9 @@ export default function ProfileView() {
       setTimeout(() => {
         resetMenteeRequest();
         dispatch(updateLocalRequest({ status: "" }));
-        dispatch(getProfileInfo({ id: params.id ,list:fromType === "topmentor"}));
+        dispatch(
+          getProfileInfo({ id: params.id, list: fromType === "topmentor" })
+        );
         navigate(pathe);
       }, 3000);
     }
@@ -568,6 +576,7 @@ export default function ProfileView() {
     const dashBoardCard = programcardDashBoard();
     const programCard = programcardProgrampage();
     const programDetails = programDetailsProfile();
+    const dashBoardTop = topmentorDashBoard();
     switch (key) {
       case requestPageBreadcrumbs.member_join_request:
         setBreadcrumbsArray(admin_request);
@@ -598,6 +607,9 @@ export default function ProfileView() {
         break;
       case requestPageBreadcrumbs.ProgramsDetails:
         setBreadcrumbsArray(programDetails);
+        break;
+      case requestPageBreadcrumbs.dashboardtopmentor:     
+        setBreadcrumbsArray(dashBoardTop);
         break;
       case "discussion":
         break;
@@ -668,8 +680,8 @@ export default function ProfileView() {
     }
   };
   useEffect(() => {
-    setUserInfoState(userDetails)
-  }, [userDetails])
+    setUserInfoState(userDetails);
+  }, [userDetails]);
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -687,7 +699,6 @@ export default function ProfileView() {
       >
         <CircularProgress color="inherit" />
       </Backdrop>
-     
 
       {/* Admin Popup start*/}
 
@@ -1433,7 +1444,7 @@ export default function ProfileView() {
                       btnType="button"
                       btnName="Chat"
                       btnCls={"w-[150px]"}
-                      onClick={()=>navigate("/discussions")}
+                      onClick={() => navigate("/discussions")}
                     />
                   </>
                 )}
@@ -1504,24 +1515,38 @@ export default function ProfileView() {
                   }}
                 >
                   {["new", "pending"].includes(userDetails?.approve_status) && (
-                    <MenuItem className="!text-[12px]" onClick={handleMemberAcceptRequest}>
+                    <MenuItem
+                      className="!text-[12px]"
+                      onClick={handleMemberAcceptRequest}
+                    >
                       Approve
                     </MenuItem>
                   )}
                   {["new", "pending"].includes(userDetails?.approve_status) && (
-                    <MenuItem className="!text-[12px]" onClick={() => setCancelPopup(true)}>
+                    <MenuItem
+                      className="!text-[12px]"
+                      onClick={() => setCancelPopup(true)}
+                    >
                       Reject
                     </MenuItem>
                   )}
-                  <MenuItem className="!text-[12px]" onClick={handleRedirectDocuSign}>DocuSign</MenuItem>
-                  <MenuItem className="!text-[12px]" onClick={() => navigate("/bgVerify")}>
+                  <MenuItem
+                    className="!text-[12px]"
+                    onClick={handleRedirectDocuSign}
+                  >
+                    DocuSign
+                  </MenuItem>
+                  <MenuItem
+                    className="!text-[12px]"
+                    onClick={() => navigate("/bgVerify")}
+                  >
                     Bg-verification
                   </MenuItem>
                 </Menu>
               </div>
             )}
 
-{requestData?.request_type === "program_join" &&
+            {requestData?.request_type === "program_join" &&
               ["new", "pening"].includes(requestData?.status) &&
               role === "admin" && (
                 <div className="flex gap-4 pt-10">
@@ -1548,7 +1573,6 @@ export default function ProfileView() {
                   </button>
                 </div>
               )}
-              
           </div>
         </div>
 
@@ -1638,9 +1662,7 @@ export default function ProfileView() {
               <p className="text-[18px] font-semibold">Upcoming Programs</p>
               <p
                 className="bg-background-primary-light rounded-[3px] text-[#6B6B6B] text-[12px] cursor-pointer px-2 py-1"
-                onClick={() =>
-                  navigate("/programs?filter_by=month")
-                }
+                onClick={() => navigate("/programs?filter_by=month")}
               >
                 View All
               </p>

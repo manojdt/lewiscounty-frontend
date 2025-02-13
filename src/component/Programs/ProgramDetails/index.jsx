@@ -961,7 +961,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     },
     {
       type: "textbox",
-      label: "Location",
+      label: "Address",
       isRequired: true,
       col: 4,
       key: "location",

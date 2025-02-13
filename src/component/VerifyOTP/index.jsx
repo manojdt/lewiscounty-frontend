@@ -20,7 +20,7 @@ export const VerifyOTP = () => {
   const [otp, setOtp] = useState(new Array(numberOfDigits).fill(""));
   const [disableSubmit, setDisableSubmit] = useState(true);
   const [seconds, setSeconds] = useState(60);
-  const [isActive, setIsActive] = useState(false);
+  const [isActive, setIsActive] = useState(true);
   const [error, setError] = useState("");
   const otpBoxReference = useRef([]);
 
@@ -141,7 +141,7 @@ export const VerifyOTP = () => {
             {userInfo.error !== "" ? (
               <div className='pb-7'>
                 <p className='error' role='alert'>
-                  {userInfo.error}
+                  {/* {userInfo.error} */}
                 </p>
               </div>
             ) : error ? (
