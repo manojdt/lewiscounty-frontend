@@ -23,7 +23,7 @@ export const StepsList = [
     key: "mentor_ship_experience",
   },
   {
-    name: "Goals and Expectations",
+    name: "Goals",
     status: "Waiting",
     key: "goals_expectations",
   },
@@ -51,7 +51,7 @@ export const MenteeStepsList = [
     key: "skills_and_interests",
   },
   {
-    name: "Expectations & Goals",
+    name: "Goals",
     status: "Waiting",
     key: "expectations_goals",
   },

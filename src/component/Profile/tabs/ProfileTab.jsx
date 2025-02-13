@@ -59,7 +59,7 @@ export const allProfileSections = [
     component: <MenteeSkillandInterestsSection type={view.viewOnly} />,
   },
   {
-    title: "Expectations and Goals",
+    title: "Goals",
     component: <MenteeExpectionAndGoalsSection type={view.viewOnly} />,
   },
   {
@@ -138,7 +138,7 @@ export const allProfileSections = [
     component: <MentorshipPreferenceSection type={view.viewOnly} />,
   },
   {
-    title: "Goals and Expectations",
+    title: "Goals",
     component: <GoalsAndExpectatonsSection type={view.viewOnly} />,
   },
   {
