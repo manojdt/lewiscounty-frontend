@@ -306,6 +306,7 @@ export const Signup = () => {
                             : field.fieldtype
                           : field.fieldtype
                       }
+                      autoComplete="off"
                       className={`w-full rounded px-3 py-[0.32rem] text-[14px] leading-[2.15] h-[60px] ${
                         errors[field.name]
                           ? "focus:border-teal focus:outline-none focus:ring-0"

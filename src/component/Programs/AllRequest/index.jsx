@@ -216,7 +216,7 @@ export default function AllRequest() {
       forTabs: ["mentees"],
     },
     {
-      name: "Rescheduled Programs",
+      name: "Reschedule Requests",
       key: "program_reschedule",
       for: ["mentor", "admin"],
       forTabs: ["my"],
@@ -228,7 +228,7 @@ export default function AllRequest() {
       forTabs: role === "mentee" ? ["my"] : role === "admin" ? ["mentees"] : [],
     },
     {
-      name: "Cancelling Requests",
+      name: "Cancellation Requests",
       key: "program_cancel",
       for: ["mentor", "mentee", "admin"],
       forTabs: ["my", "mentees"],

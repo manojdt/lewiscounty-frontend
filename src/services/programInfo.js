@@ -328,3 +328,10 @@ export const getProgramNotesUserList = createAsyncThunk(
     return notes;
   }
 );
+
+export const getProgramAddressDetails =createAsyncThunk('getZipCode',async({id,fieldName})=>{
+  const details = await api.get(`locations?${fieldName}=${id}`);
+  if(details.status===200){
+    return details;
+  }
+})
