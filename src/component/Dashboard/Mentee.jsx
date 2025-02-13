@@ -70,7 +70,7 @@ export const Mentee = () => {
   const ImageComponent = (
       <img
       src={programView === "grid" ? ListViewIcon : GridViewIcon}
-      className="cursor-pointer"
+      className="cursor-pointer w-[17px] pt-[2px]"
       alt="viewicon"
       onClick={handleViewChange}
     />
@@ -412,6 +412,17 @@ export const Mentee = () => {
                                       : searchParams.get("type") === "inprogress"
                                       ? "Ongoing  Programs"
                                       : ""
+                                  }
+                                  viewpage={searchParams.get("type") === null &&
+                                    searchParams.get("is_bookmark") === null?"/programs":
+                                    searchParams.get("type") === "yettostart"
+                                      ? "/programs?type=yettostart"
+                                      :searchParams.get("type") === "yettojoin" ||
+                                  searchParams.get("type") === "planned"
+                                      ? "/programs?type=yettojoin"
+                                      : searchParams.get("type") === "inprogress"
+                                      ? "/programs?type=inprogress"
+                                      : "/programs"
                                   }
                                   tableIcon={ImageComponent}
                                   programData={searchParams.get("type") === null &&

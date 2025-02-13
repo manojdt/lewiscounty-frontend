@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllCategories } from "../../../services/programInfo";
 import { Button } from "../../../shared";
 import SearchIcon from "../../../assets/icons/SearchColor.svg";
-export const ProgramTableView = ({ programView,title,tableIcon, setProgramView,programData=[] }) => {
+export const ProgramTableView = ({ programView,title,tableIcon,viewpage, setProgramView,programData=[] }) => {
   // const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [seletedItem, setSelectedItem] = useState({});
@@ -162,6 +162,8 @@ const { category, loading: apiLoading } = useSelector(
     }, []);
   return (
     <div>
+           <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
+
          <div className="flex gap-4">
               <div
                 className="card-dash"
@@ -179,6 +181,20 @@ const { category, loading: apiLoading } = useSelector(
               />
               {tableIcon}
             </div>
+            {programData && programData.length ? (
+              <p
+                className="text-[12px] py-2 px-2 cursor-pointer"
+                style={{
+                  background: "rgba(217, 228, 242, 1)",
+                  color: "rgba(29, 91, 191, 1)",
+                  borderRadius: "3px",
+                }}
+                onClick={() => navigate(viewpage)}
+              >
+                View All
+              </p>
+            ) : null}
+           </div>
       <div className="py-6 px-6">
         <DataTable
           // loading={isLoading || isFetching}

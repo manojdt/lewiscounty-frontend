@@ -138,7 +138,6 @@ const PersonalInfoSection = ({ type }) => {
                                 value={option.key}
                                 checked={controllerField.value === option.key}
                                 onChange={(e) =>{
-                                  console.log(e.target.value,"e.target.value")
                                   controllerField.onChange(e.target.value)
                                 }
                                 }
