@@ -1963,8 +1963,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   (role === "mentee" &&
                     (
                       programdetails.mentee_join_status ===
-                        programActionStatus.program_join_request_accepted ||
-                      programdetails?.program_interest) &&
+                        programActionStatus.program_join_request_accepted
+                      ) &&
                     !["program_join", "program_cancel"].includes(
                       typeParams
                     ))) && (
@@ -2403,7 +2403,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                         </div>
                       </div>
                     )}
-
+{(programdetails?.group_chat_requirement||programdetails?.individual_chat_requirement) &&
                   <div className="flex gap-2 pb-[26px]">
                     {programdetails?.group_chat_requirement && (
                       <p
@@ -2421,7 +2421,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                         Individual Discussions
                       </p>
                     )}
-                  </div>
+                  </div>}
 
                   {/* payment button section */}
 

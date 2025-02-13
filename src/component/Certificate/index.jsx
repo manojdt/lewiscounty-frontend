@@ -126,7 +126,7 @@ export default function Certificate() {
       key: "pending",
     },
     {
-      name: "Generate Certificates",
+      name: "Generated Certificates",
       key: "approved",
     },
   ];

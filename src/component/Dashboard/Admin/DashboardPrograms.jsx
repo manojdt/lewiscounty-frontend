@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import DashboardCard from "../../../shared/Card/DashboardCard";
 import ViewAllIcon from "../../../assets/icons/viewAll.svg";
 import CreateIcon from "../../../assets/icons/createNewProgram.svg";
 import { pipeUrls } from "../../../utils/constant";
+import GridViewIcon from "../../../assets/icons/gridviewIcon.svg";
+import ListViewIcon from "../../../assets/icons/listviewIcon.svg";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { requestPageBreadcrumbs } from "../../Breadcrumbs/BreadcrumbsCommonData";
 import { useDispatch } from "react-redux";
@@ -10,10 +12,15 @@ import { getallMyProgram } from "../../../services/programInfo";
 import { getUserPrograms } from "../../../services/userprograms";
 import ProgramCard from "../../../shared/Card/ProgramCard";
 import api from "../../../services/api";
+import DataTable from "../../../shared/DataGrid";
+import { programListColumns } from "../../../utils/tableFields";
+import { Menu, MenuItem } from "@mui/material";
+import { ProgramTableView } from "../ProgramTableView/ProgramTableView";
 
 export default function DashboardPrograms({searchParams, categoryId,type }) {
   const dispatch = useDispatch();
-  const [programData, setProgramData] = React.useState({});
+  const [programData, setProgramData] = useState({});
+  const [programView, setProgramView] = useState("grid");
   // const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const handleNavigateDetails = (program) => {
@@ -72,6 +79,19 @@ export default function DashboardPrograms({searchParams, categoryId,type }) {
       setProgramData(res?.payload);
     });
   };
+  const handleViewChange = () => {
+    setProgramView(programView === "grid" ? "list" : "grid");
+  };
+
+  const ImageComponent = (
+      <img
+      src={programView === "grid" ? ListViewIcon : GridViewIcon}
+      className="cursor-pointer"
+      alt="viewicon"
+      onClick={handleViewChange}
+    />
+    )
+  
   React.useEffect(() => {
     handleFetchPrograms();
   }, [type,categoryId]);
@@ -88,6 +108,9 @@ export default function DashboardPrograms({searchParams, categoryId,type }) {
     // />
 
     <div className="programs-list">
+     
+      {programView === "grid"&&
+      <>
       {searchParams.get("type") === "yettostart" && (
         <ProgramCard
           title="Recent  Programs"
@@ -95,6 +118,7 @@ export default function DashboardPrograms({searchParams, categoryId,type }) {
           handleNavigateDetails={handleNavigateDetails}
           handleBookmark={handleBookmark}
           programs={programData?.programs}
+          tableIcon={ImageComponent}
           // loadProgram={handleFetchPrograms}
         />
       )}
@@ -106,6 +130,7 @@ export default function DashboardPrograms({searchParams, categoryId,type }) {
           handleNavigateDetails={handleNavigateDetails}
           handleBookmark={handleBookmark}
           programs={programData?.programs ?? []}
+          tableIcon={ImageComponent}
           //   loadProgram={getPrograms}
         />
       )}
@@ -116,9 +141,18 @@ export default function DashboardPrograms({searchParams, categoryId,type }) {
           handleNavigateDetails={handleNavigateDetails}
           handleBookmark={handleBookmark}
           programs={programData?.programs}
+          tableIcon={ImageComponent}
           // loadProgram={handleFetchPrograms}
         />
       )}
+      </>}
+      {programView === "list" && (
+                    <div>
+                   <ProgramTableView  title={searchParams.get("type") === "yettostart"?"Recent  Programs":(searchParams.get("type") === "yettojoin" ||
+        searchParams.get("type") === null)?"Active Programs":searchParams.get("type") === "inprogress"?"Ongoing  Programs":''}  tableIcon={ImageComponent} programData={programData?.programs} programView={programView} setProgramView={setProgramView} />
+                    </div>
+                  )}
     </div>
+    
   );
 }

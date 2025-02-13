@@ -252,6 +252,7 @@ export const Mentees = () => {
                         user_id: selectedMentee?.follower,
                         is_approved: selectedMentee?.is_approved,
                         status: selectedMentee?.status,
+                        rejection_reason: selectedMentee?.cancelled_reason,
                       },
                     }
                   )

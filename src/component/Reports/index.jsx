@@ -186,7 +186,7 @@ const Reports = () => {
       key: "approved",
     },
     {
-      name: "Cancel Reports",
+      name: "Cancelled Reports",
       key: "rejected",
     },
   ];

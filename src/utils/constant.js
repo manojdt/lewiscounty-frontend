@@ -462,6 +462,7 @@ export const certificateRequestStatusText = {
 };
 export const programStatusText = {
   inprogress: "Ongoing",
+  started: "Ongoing",
   completed: "Completed",
   cancelled: "Cancelled",
   new_program_request_rejected: "Rejected",
@@ -502,6 +503,10 @@ export const programStatusColor = {
     color: "rgba(224, 56, 45, 1)",
   },
   inprogress: {
+    bgColor: "#ffead1",
+    color: "#ffb155",
+  },
+  started: {
     bgColor: "#ffead1",
     color: "#ffb155",
   },

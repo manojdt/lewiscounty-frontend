@@ -409,13 +409,13 @@ export const programListColumns = [
   //     id: 6
   // },
   {
-      field: 'members',
+      field: 'participated_mentees_count',
       headerName: 'Mentees',
       flex: 1,
       id: 7,
-      renderCell : (params) => {
-          return <div className="pl-4">{params.row?.members?.length}</div>
-      }
+      // renderCell : (params) => {
+      //     return <div className="pl-4">{params.row?.members?.length}</div>
+      // }
   },
   {
       field: 'ratings',

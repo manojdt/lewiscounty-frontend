@@ -42,6 +42,7 @@ export default function ProgramCard({
   action = [],
   noTitle = false,
   loadProgram,
+  tableIcon
 }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -269,6 +270,7 @@ export default function ProgramCard({
                 src={FilterIcon}
                 alt="statistics"
               />
+              {tableIcon}
             </div>
             {programs && programs.length ? (
               <p
