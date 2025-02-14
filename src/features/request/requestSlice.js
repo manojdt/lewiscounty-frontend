@@ -28,7 +28,8 @@ import {
     getTestimonialRequest,
     getReopenRequest,
     updateTestimonial,
-    getTestimonialView
+    getTestimonialView,
+    reviewMemberRequest
 } from "../../services/request";
 
 const initialState = {
@@ -352,6 +353,27 @@ export const requestSlice = createSlice({
                 };
             })
             .addCase(cancelMemberRequest.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
+        builder
+            .addCase(reviewMemberRequest.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(reviewMemberRequest.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    status: requestStatus.membercancel,
+                    loading: false,
+                };
+            })
+            .addCase(reviewMemberRequest.rejected, (state, action) => {
                 return {
                     ...state,
                     loading: false,

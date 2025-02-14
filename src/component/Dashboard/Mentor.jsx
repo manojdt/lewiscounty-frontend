@@ -37,6 +37,7 @@ export const Mentor = () => {
   const { programRequest } = useSelector((state) => state.requestList);
   const userpragrams = useSelector((state) => state.userPrograms);
   const userInfo = useSelector((state) => state.userInfo);
+  console.log(userInfo,"userInfo")
   const { feeds } = useSelector((state) => state.feeds);
   const [programView, setProgramView] = useState("grid");
   const handlePerformanceFilter = (e) => {
@@ -317,7 +318,7 @@ export const Mentor = () => {
             </div>
           )}
 
-          {!["new", "pending"].includes(
+          {!["new", "pending","inreview"].includes(
             userInfo?.data?.userinfo?.approve_status
           ) ? (
             <div className="col-span-5 sm:col-span-5 md:col-span-3 lg:col-span-4">
@@ -465,9 +466,18 @@ export const Mentor = () => {
                 <p className="text-[24px] text-font-primary-main font-bold">
                   Welcome to Mentoring Management Application
                 </p>
+                {userInfo?.data?.userinfo?.approve_status!=="inreview"&&
                 <p className="text-[18px] text-font-primary-main font-bold">
                   Waiting for Admin Approval
+                </p>}
+                {userInfo?.data?.userinfo?.approve_status==="inreview"&&userInfo?.data?.userinfo?.in_review&&
+        <div className="flex gap-2">
+<p  className="text-[16px] font-bold">Admin Comments:</p>
+                <p className="text-[15px] text-font-primary-main font-bold">
+               {userInfo?.data?.userinfo?.in_review}
                 </p>
+        </div>
+            }
                 <Invite />
               </div>
             </div>

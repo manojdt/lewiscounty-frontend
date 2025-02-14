@@ -207,6 +207,16 @@ export const cancelMemberRequest = createAsyncThunk(
         return cancelMemberInfo;
     }
 );
+export const reviewMemberRequest = createAsyncThunk(
+    "reviewMemberRequest",
+    async (data) => {
+        const cancelMemberInfo = await api.post('user/inreview_member', data);
+        if (cancelMemberInfo.status === 200 && cancelMemberInfo.data) {
+            return cancelMemberInfo.data;
+        }
+        return cancelMemberInfo;
+    }
+);
 
 
 

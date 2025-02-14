@@ -433,6 +433,7 @@ export const requestStatusText = {
   approved: "Approved",
   in_progress: "In Progress",
   cancelled: "Cancelled",
+  inreview: "Review",
 };
 export const requestStatusTextForFollowRequest = {
   new: "New",
@@ -446,7 +447,7 @@ export const requestStatusTextForFollowRequest = {
   rejected: "Rejected",
   approved: "Approved",
   in_progress: "In Progress",
-  cancelled: "Cancelled",
+  cancelled: "Cancelled"
 };
 export const certificateRequestStatusText = {
   new: "New",
@@ -562,6 +563,10 @@ export const requestStatusColor = {
     color: "rgba(22, 182, 129, 1)",
   },
   in_progress: {
+    bgColor: "rgba(255, 242, 231, 1)",
+    color: "rgba(255, 118, 0, 1)",
+  },
+  inreview: {
     bgColor: "rgba(255, 242, 231, 1)",
     color: "rgba(255, 118, 0, 1)",
   },

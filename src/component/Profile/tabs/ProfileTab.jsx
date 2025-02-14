@@ -217,9 +217,9 @@ const ProfileTab = ({ setEditMode }) => {
     }
   }, [profile]);
 
-  // useEffect(() => {
-  //   loadUserProfile();
-  // }, []);
+  useEffect(() => {
+    loadUserProfile();
+  }, []);
 
   // useEffect(() => {
   //   if (status === profileStatus.update) {

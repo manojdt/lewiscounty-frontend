@@ -42,9 +42,28 @@ export const getMyReqMentors = createAsyncThunk(
     let queryString = new URLSearchParams(filteredQuery).toString();
     const myMentors = await api.get(`/rating/request-mentor?${queryString}`);
     if (myMentors.status === 200 && myMentors.data) {
-      return myMentors.data.mentor || myMentors.data;
+      return myMentors.data;
     }
     return myMentors;
+  }
+);
+export const getMyTopPrograms = createAsyncThunk(
+  'getMyMentors',
+  async (query) => {
+    let filteredQuery = Object.fromEntries(
+      Object.entries(query).filter(
+        ([key, value]) =>
+          !(key === 'search' && value.trim().length === 0) &&
+          !(key === 'status' && value === 'all')
+      )
+    );
+    let queryString = new URLSearchParams(filteredQuery).toString();
+    const MyTopPrograms = await api.get(`/rating/top_programs?${queryString}`);
+    console.log(MyTopPrograms,"my")
+    if (MyTopPrograms.status === 200 && MyTopPrograms.data) {
+      return MyTopPrograms.data.mentor || MyTopPrograms.data;
+    }
+    return MyTopPrograms;
   }
 );
 
