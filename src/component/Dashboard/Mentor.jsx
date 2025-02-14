@@ -37,7 +37,6 @@ export const Mentor = () => {
   const { programRequest } = useSelector((state) => state.requestList);
   const userpragrams = useSelector((state) => state.userPrograms);
   const userInfo = useSelector((state) => state.userInfo);
-  console.log(userInfo,"userInfo")
   const { feeds } = useSelector((state) => state.feeds);
   const [programView, setProgramView] = useState("grid");
   const handlePerformanceFilter = (e) => {

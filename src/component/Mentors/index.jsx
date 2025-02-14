@@ -56,7 +56,6 @@ export const Mentors = () => {
   const { mentorList, loading, status } = useSelector(
     (state) => state.userList
   );
-console.log(mentorList,"mentor")
   const [mentorType, setMentorType] = useState(
     mentortypereq
       ? mentortypereq
