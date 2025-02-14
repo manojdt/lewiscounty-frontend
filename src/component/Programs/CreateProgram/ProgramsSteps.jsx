@@ -31,6 +31,7 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import { user } from "../../../utils/constant";
 import { OverlayPanel } from "primereact/overlaypanel";
 import { getProgramAddressDetails } from "../../../services/programInfo";
+import { useDebounce } from "../../../utils";
 
 const ProgramSteps = ({
   stepFields,
@@ -59,11 +60,13 @@ const ProgramSteps = ({
   const getRowIdentifier = (row) => {
     return row.id;
   };
+  const[searchTerm,setSearchTerm] = useState('');
+  const [selectedField,setSelectedField]  =useState('')
   const [filteredData, setFilteredData] = useState([]);
   const [isLoading,setLoading] = useState(false);
   const searchBar = React.useRef(null);
   const role = useSelector((state) => state.userInfo?.data?.role);
-
+  
   const {
     register,
     formState: { errors },
@@ -78,6 +81,23 @@ const ProgramSteps = ({
     control,
     name: "sub_programs",
   });
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+  React.useEffect(()=>{
+    const handleAddressFieldsAPI = (fieldName, value) => {
+     
+      if (!!value) {
+       
+          dispatch(
+            getProgramAddressDetails({ id: value, fieldName: fieldName })
+          ).then((response) => {
+            if (isLoading) {setLoading(false)};
+              setFilteredData(response?.payload?.data); 
+          });
+        }
+      }
+      handleAddressFieldsAPI(selectedField.name,debouncedSearchTerm)
+     
+  },[debouncedSearchTerm])
 
   const {
     fields: recurringFields,
@@ -104,32 +124,23 @@ const ProgramSteps = ({
     "recurring_dates",
   ]);
   const handleInputClick = (e, field) => {
-    if (["zip_code", "state", "city"].includes(field.name))
-      if (!document.getElementById("fields_overlay") && e.target.value) {
+    setSelectedField(field)
+    if (["zip_code", "state", "city"].includes(field.name)){
+     if (!document.getElementById("fields_overlay") && e.target.value) {
         searchBar?.current?.toggle(e);
       }
-  };
-
-  const handleAddressFieldsAPI = (fieldName, value) => {
-    if (fieldName === "zip_code") {
-      const zipCodeFormatValue = formatZipCode(value);
-      setValue(fieldName, zipCodeFormatValue);
-    } else {
-      setValue(fieldName, value);
-    }
-    if (!!value) {
-      setTimeout(() => {
-        dispatch(
-          getProgramAddressDetails({ id: value, fieldName: fieldName })
-        ).then((response) => {
-          if (isLoading) setLoading(false);
-          if (!!response?.payload?.data?.length) {
-            setFilteredData(response?.payload?.data);
-          }
-        });
-      }, 2000);
     }
   };
+  
+  const onSearchChange= (value, fieldName) =>{
+    setSearchTerm(value)
+   if (fieldName === "zip_code") {
+    const zipCodeFormatValue = formatZipCode(value);
+    setValue(fieldName, zipCodeFormatValue);
+  } else {
+    setValue(fieldName, value);
+  }
+  }
 
   const handleInputChange = (e, field) => {
     const { value } = e.target;
@@ -138,13 +149,15 @@ const ProgramSteps = ({
       const formattedValue = formatPhoneNumber(value);
       setValue(field.name, formattedValue);
     }else if(["zip_code", "state", "city"].includes(field.name)) {
+       setSelectedField(field)
       if (!document.getElementById("fields_overlay") && e.target.value) {
         searchBar?.current?.toggle(e);
       }
       if (!isLoading) {
         setLoading(true);
       }
-      handleAddressFieldsAPI(field.name, value);
+      onSearchChange(value,field.name)
+     
     }
      else {
       setValue(field.name, value.trimStart());
@@ -555,7 +568,7 @@ const ProgramSteps = ({
                     className={isLoading ? "custom-overlay" : ""}
                     onClose={() => console.log("Close")}
                   >
-                    {!!filteredData?.length &&
+                  {!!filteredData?.length &&
                       !isLoading &&
                       filteredData?.map((item) => {
                         return (
