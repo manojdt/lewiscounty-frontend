@@ -251,11 +251,7 @@ export default function ProfileView() {
       member_id: params.id,
       categories_id: confirmPopup?.selectedItem,
     };
-    dispatch(updateMemberRequest(payload)).then((res) => {
-      if (res?.meta?.requestStatus === "fulfilled") {
-        navigate(pathe);
-      }
-    });
+    dispatch(updateMemberRequest(payload))
   };
 
   // Confirm Accept Popup
