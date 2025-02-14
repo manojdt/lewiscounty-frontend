@@ -2287,7 +2287,7 @@ export default function AllRequest() {
         }
       }
     }
-  }, [role, selectedTab]);
+  }, [role, selectedTab,searchParams]);
 
   useEffect(() => {
     // Program update action
