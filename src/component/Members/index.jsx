@@ -29,6 +29,11 @@ import { Button } from "../../shared";
 import AssignMentorProgram from "./AssignMentorProgram";
 import { useDebounce } from "../../utils";
 import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
+import {
+  memberMentorDashBoard,
+  memberMenteeDashBoard,
+  requestPageBreadcrumbs,
+} from "../Breadcrumbs/BreadcrumbsCommonData";
 import { MemberMain } from "../Breadcrumbs/BreadcrumbsCommonData";
 import DeleteIcon from "../../assets/icons/Delete.svg"
 import OverDeleteIcon from "../../assets/images/delete_1x.png";
@@ -46,6 +51,9 @@ const Members = () => {
     data: [],
   });
   const [searchTerm, setSearchTerm] = useState("");
+  const [search] = useSearchParams();
+  const breadcrumbsType = search.get("breadcrumbsType") || "";  
+   const [breadcrumbsArray, setBreadcrumbsArray] = useState([]);
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const [seletedItem, setSelectedItem] = useState({});
   // const [breadArray, setBreadArry] = useState([]);
@@ -468,9 +476,34 @@ const Members = () => {
   //     setBreadArry(MemberMain(actionTab==="mentor"?"Mentors":"Mentees")) 
   //   }
   // }, [actionTab]);
+    const handleBreadcrumbs = (key) => {
+      const dashboardMemberMentor = memberMentorDashBoard();
+      const dashboardMemberMentee = memberMenteeDashBoard();
+    
+      switch (key) {
+        case requestPageBreadcrumbs.dashboardMemberMentor:
+          setBreadcrumbsArray(dashboardMemberMentor);
+          break;
+          case requestPageBreadcrumbs.dashboardMemberMentee:
+            setBreadcrumbsArray(dashboardMemberMentee);
+            break;
+        case "discussion":
+          break;
+        default:
+          break;
+      }
+    };
+    useEffect(() => {
+      if (breadcrumbsType) {
+        handleBreadcrumbs(breadcrumbsType);
+      }
+    }, [breadcrumbsType]);
   return (
     <div className="program-request px:2 sm:px-2 md:px-4 lg:px-8 mt-10">
       {/* <Breadcrumbs items={breadArray} /> */}
+      <div className="pb-3">
+        {breadcrumbsType && <Breadcrumbs items={breadcrumbsArray} />}
+      </div>
       <div className="pl-6 pb-8 font-medium text-[18px]">
             <p>Members</p>
           </div>

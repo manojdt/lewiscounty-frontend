@@ -1,4 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
+import {
+  useSearchParams,
+} from "react-router-dom";
 import ProfileIcon from '../../assets/icons/profile-icon.svg';
 import SecurityIcon from '../../assets/icons/security-icon.svg';
 import PermissionIcon from '../../assets/icons/permission-icon.svg';
@@ -9,6 +12,12 @@ import ProfileTab from './tabs/ProfileTab';
 import PermissionTab from './tabs/PermissionTab';
 import SecurityTab from './tabs/SecurityTab';
 import EditProfile from './edit-profile';
+import {
+  requestPageBreadcrumbs,
+  navbarProfile,
+} from "../Breadcrumbs/BreadcrumbsCommonData";
+import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
+
 
 export const roleBasedSections = {
   mentor: [
@@ -50,6 +59,9 @@ export default function MyProfile() {
   const [editMode, setEditMode] = useState(false);
   const [contentHeights, setContentHeights] = useState([]);
   const contentRefs = useRef([]);
+  const [searchParams] = useSearchParams();
+  const breadcrumbsType = searchParams.get("breadcrumbsType") || "";  
+  const [breadcrumbsArray, setBreadcrumbsArray] = useState([]);
 
   const tabs = [
     {
@@ -71,9 +83,28 @@ export default function MyProfile() {
     //   content: <PermissionTab />,
     // },
   ];
-
+  const handleBreadcrumbs = (key) => {
+    const navbar_Profile = navbarProfile();
+    switch (key) {
+      case requestPageBreadcrumbs.navbarProfile:
+        setBreadcrumbsArray(navbar_Profile);
+        break;
+      case "discussion":
+        break;
+      default:
+        break;
+    }
+  };
+  useEffect(() => {
+    if (breadcrumbsType) {
+      handleBreadcrumbs(breadcrumbsType);
+    }
+  }, [breadcrumbsType]);
   return (
     <div className='profile-container'>
+      <div className="pb-3">
+        {breadcrumbsType && <Breadcrumbs items={breadcrumbsArray} />}
+      </div>
       <div className='flex justify-between items-center mb-6'>
         <p className='text-color text-2xl font-semibold'>
           {editMode ? 'Edit Profile' : tabs[activeTab]?.label}

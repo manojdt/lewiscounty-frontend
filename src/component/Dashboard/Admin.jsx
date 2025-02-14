@@ -54,10 +54,9 @@ export default function Admin() {
   };
   const onItemClick = (menu) => {
     if(menu.role===user.mentor){
-  navigate("/members")
+      navigate(`/members?breadcrumbsType=${requestPageBreadcrumbs.dashboardMemberMentor || ""}`);
 }else{
-  navigate("/members?tabType=mentee")
-
+  navigate(`/members?tabType=mentee&breadcrumbsType=${requestPageBreadcrumbs.dashboardMemberMentee || ""}`);
 }
 }
   // const membersList = [

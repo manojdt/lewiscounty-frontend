@@ -60,6 +60,9 @@ export const requestPageBreadcrumbs = {
   ProgramsCard:'programscard',
   ProgramsDetails:'programDetails',
   dashboardtopmentor : 'dashboardtopmentor',
+  dashboardMemberMentor : 'dashboardMemberMentor',
+  dashboardMemberMentee : 'dashboardMemberMentee',
+  navbarProfile : 'navbarProfile',
 };
 export const programStatusBreadcrumbs=[
     'All Programs',
@@ -91,7 +94,7 @@ export const request_newProgramRequest = (name) => {
 export const request_programReschedule = (name) => {
   return [
     {
-      label: "Program Reschedule Requests",
+      label: "Reschedule Requests",
       path: `/all-request?type=program_request&tabType=${requestPageBreadcrumbs?.program_reschedule}`,
     },
     {
@@ -102,7 +105,7 @@ export const request_programReschedule = (name) => {
 export const request_programCancel = (name) => {
   return [
     {
-      label: "Program Cancel Requests",
+      label: "Cancellation Requests",
       path: `/all-request?type=program_request&tabType=${requestPageBreadcrumbs?.program_cancel}`,
     },
     {
@@ -113,7 +116,7 @@ export const request_programCancel = (name) => {
 export const request_programMenteeCancel = (name) => {
   return [
     {
-      label: "Program Cancel Requests",
+      label: "Cancellation Requests",
       path: `/all-request?type=program_request&tabType=${requestPageBreadcrumbs?.program_cancel}&mainTab=${requestPageBreadcrumbs.main_mentee_tab}`,
     },
     {
@@ -246,7 +249,7 @@ export const request_report = (name) => {
 export const request_join = (name) => {
     return [
       {
-        label: "Program Join Requests",
+        label: "Join Requests",
         path: `/all-request?type=program_request&tabType=${requestPageBreadcrumbs?.program_join}&mainTab=${requestPageBreadcrumbs.main_mentee_tab}`,
       },
       {
@@ -666,7 +669,7 @@ export const newFollowRequestMentorPage = (status) => {
     
     return [
       {
-        label: "Tasks",
+        label: "All Tasks",
         path: `/mentee-tasks`,
       },
       {
@@ -678,7 +681,7 @@ export const newFollowRequestMentorPage = (status) => {
     
     return [
       {
-        label: "Tasks",
+        label: "New Tasks",
         path: `/mentee-tasks?type=newtask`,
       },
       {
@@ -690,7 +693,7 @@ export const newFollowRequestMentorPage = (status) => {
     
     return [
       {
-        label: "Tasks",
+        label: "Pending Tasks",
         path: `/mentee-tasks?type=pending`,
       },
       {
@@ -702,7 +705,7 @@ export const newFollowRequestMentorPage = (status) => {
     
     return [
       {
-        label: "Tasks",
+        label: "Waiting Tasks",
         path: `/mentee-tasks?type=waiting_for_approval`,
       },
       {
@@ -714,7 +717,7 @@ export const newFollowRequestMentorPage = (status) => {
     
     return [
       {
-        label: "Tasks",
+        label: "Reassigned Tasks",
         path: `/mentee-tasks?type=reassigned`,
       },
       {
@@ -726,7 +729,7 @@ export const newFollowRequestMentorPage = (status) => {
     
     return [
       {
-        label: "Tasks",
+        label: "Completed Tasks",
         path: `/mentee-tasks?type=completed`,
       },
       {
@@ -738,7 +741,7 @@ export const newFollowRequestMentorPage = (status) => {
     
     return [
       {
-        label: "Tasks",
+        label: "Cancelled Tasks",
         path: `/mentee-tasks?type=rejected`,
       },
       {
@@ -750,7 +753,7 @@ export const newFollowRequestMentorPage = (status) => {
     
     return [
       {
-        label: "Tasks",
+        label: "Draft Tasks",
         path: `/mentee-tasks?type=draft`,
       },
       {
@@ -908,6 +911,41 @@ export const topmentorDashBoard = () => {
     },
     {
       label: `View Profile`,
+    },
+  ];
+};
+
+export const memberMentorDashBoard = () => {
+  return [
+    {
+      label: `Dashboard`,
+      path: -1,
+    },
+    {
+      label: `Mentors`,
+    },
+  ];
+};
+export const memberMenteeDashBoard = () => {
+  return [
+    {
+      label: `Dashboard`,
+      path: -1,
+    },
+    {
+      label: `Mentees`,
+    },
+  ];
+};
+
+export const navbarProfile = () => {
+  return [
+    {
+      label: `Dashboard`,
+      path: -1,
+    },
+    {
+      label: `Profile`,
     },
   ];
 };
