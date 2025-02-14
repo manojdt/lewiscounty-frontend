@@ -42,6 +42,7 @@ import {
   cancelMemberRequest,
   getCategoryList,
   getprogramRequest,
+  reviewMemberRequest,
   updateLocalRequest,
   updateMemberRequest,
   updateProgramMenteeRequest,
@@ -97,6 +98,7 @@ export default function ProfileView() {
     cancel: false,
   });
   const [cancelPopup, setCancelPopup] = useState(false);
+  const [review, setReview] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const [activity, setActivity] = useState({
@@ -401,6 +403,7 @@ export default function ProfileView() {
   };
   const handleCloseConfirmPopup = () => {
     setCancelPopup(false);
+    setReview(false)
   };
   const handleCancelSubmit = (reas) => {
     if (role === "admin") {
@@ -408,6 +411,20 @@ export default function ProfileView() {
         cancelMemberRequest({
           member_id: params.id,
           reason: reas,
+        })
+      ).then((res) => {
+        if (res?.meta?.requestStatus === "fulfilled") {
+          navigate(pathe);
+        }
+      });
+    }
+  };
+  const handleReviewSubmit = (reas) => {
+    if (role === "admin") {
+      dispatch(
+        reviewMemberRequest({
+          member_id: params.id,
+          inreview_notes: reas,
         })
       ).then((res) => {
         if (res?.meta?.requestStatus === "fulfilled") {
@@ -1534,6 +1551,18 @@ export default function ProfileView() {
                   {["new", "pending"].includes(userDetails?.approve_status) && (
                     <MenuItem
                       className="!text-[12px]"
+                      onClick={() =>{
+                        setReview(true)
+                        setCancelPopup(true)
+                      }
+                    }
+                    >
+                      Review
+                    </MenuItem>
+                  )}
+                  {["new", "pending"].includes(userDetails?.approve_status) && (
+                    <MenuItem
+                      className="!text-[12px]"
                       onClick={() => setCancelPopup(true)}
                     >
                       Reject
@@ -1720,10 +1749,14 @@ export default function ProfileView() {
           )}
         <CancelPopup
           open={cancelPopup}
-          header={"Reject Reason"}
+          header={review?"Review Reason":"Reject Reason"}
           handleClosePopup={() => handleCloseConfirmPopup("cancel")}
           handleSubmit={(reason) => {
-            handleCancelSubmit(reason);
+            if(review){
+              handleReviewSubmit(reason)
+            }else{
+              handleCancelSubmit(reason);
+            }
           }}
         />
       </div>

@@ -113,7 +113,7 @@ api.interceptors.response.use(
     }
     if (
       !reasons.includes(error.code) &&
-      error.response.status === 401 &&
+      error?.response?.status === 401 &&
       !refresh
     ) {
       refresh = true;

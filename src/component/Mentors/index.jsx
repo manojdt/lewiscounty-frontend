@@ -19,6 +19,7 @@ import {
   getMyMentors,
   getMyReqMentors,
   getMyTopMentors,
+  getMyTopPrograms,
   menteeCancelReq,
   menteeFollowReq,
   menteeUnFollowReq,
@@ -40,7 +41,7 @@ import CancelReq from "../../assets/icons/cancelRequest.svg";
 import dayjs from "dayjs";
 import moment from "moment";
 import { requestPageBreadcrumbs } from "../Breadcrumbs/BreadcrumbsCommonData";
-import { useDebounce } from "../../utils";
+import { dateFormat, useDebounce } from "../../utils";
 
 export const Mentors = () => {
   const navigate = useNavigate();
@@ -55,7 +56,6 @@ export const Mentors = () => {
   const { mentorList, loading, status } = useSelector(
     (state) => state.userList
   );
-
   const [mentorType, setMentorType] = useState(
     mentortypereq
       ? mentortypereq
@@ -93,6 +93,10 @@ export const Mentors = () => {
     {
       name: "Top Mentors",
       value: "topmentor",
+    },
+    {
+      name: "Top Programs",
+      value: "top_programs",
     },
     {
       name: "Request Mentors",
@@ -432,6 +436,97 @@ export const Mentors = () => {
       },
     },
   ];
+  const topProgramsColumn = [
+    {
+      field: "program_name",
+      headerName: "Program Name",
+      flex: 1,
+      id: 0,
+    },
+    { field: "created_by", headerName: "Mentor Name", flex: 1, id: 2, },
+    {
+      field: 'participated_mentees',
+      headerName: 'Mentees',
+      flex: 1,
+      id: 7,
+  },
+  //  {
+  //       field: 'to_request',
+  //       headerName: 'Start date & End Date',
+  //       flex: 1,
+  //       id: 4,
+  //       renderCell: (params) => {
+  //         return <div>{dateFormat(params.row.start_date)} & {dateFormat(params.row.end_date)}</div>
+  //     }
+  //   },
+    {
+      field: "average_rating",
+      headerName: "Ratings",
+      flex: 1,
+      id: 5,
+      renderCell: (params) => {
+        return (
+          <div className="flex gap-2 items-center">
+            {" "}
+            {/* <img src={StarIcon} alt="StarIcon" /> */}
+          
+                {params?.row?.average_rating>0&&params?.row?.average_rating&&<>
+              <img
+                   // key={index}
+                   src={StarIcon}
+                   alt="StarIcon"
+                   className="w-4 h-4"
+                 />
+             <span className="text-blue-700 font-bold pt-[2px]">  {params?.row?.average_rating}</span>
+            </>
+      }
+          </div>
+        );
+      },
+    },
+   
+    {
+      field: "action",
+      headerName: "Action",
+      flex: 1,
+      id: 6,
+      renderCell: (params) => {
+        return (
+          <>
+            <div
+              className="cursor-pointer flex items-center h-full"
+              onClick={(event) => {
+                handleClick(event, params.row);
+              }}
+            >
+              <img src={MoreIcon} alt="MoreIcon" />
+            </div>
+            <Menu
+              id="basic-menu"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              MenuListProps={{
+                "aria-labelledby": "basic-button",
+              }}
+            >
+              <MenuItem
+                onClick={() =>
+                  navigate(
+                    `/program-details/${selectedItem.program}`
+                  )
+                }
+                className="!text-[12px]"
+              >
+                <img src={ViewIcon} alt="ViewIcon" className="pr-3 w-[30px]" />
+                View
+              </MenuItem>
+            </Menu>
+          </>
+        );
+      },
+    },
+  ];
 
   const title =
     mentorOption.find((option) => option.value === mentorType)?.name || "";
@@ -449,7 +544,15 @@ export const Mentors = () => {
           status: breadcrumbsStatusType || requestTab,
         })
       );
-    } else {
+    }else if (mentorType === "top_programs") {
+      dispatch(
+        getMyTopPrograms({
+          page: paginationModel?.page + 1,
+          limit: paginationModel?.pageSize,
+          search: debouncedSearchTerm,
+        })
+      );
+    } else if (type === "mymentor"){
       dispatch(getMyMentors(paginationModel));
     }
   };
@@ -460,7 +563,7 @@ export const Mentors = () => {
     }
   }, [searchParams]);
   useEffect(() => {
-    getMentorDatas();
+    getMentorDatas(searchParams.get("req")||mentorType);
   }, [paginationModel]);
 
   useEffect(() => {
@@ -488,7 +591,7 @@ export const Mentors = () => {
 
   const handleMentorTypeChange = (value) => {
     setMentorType(value);
-    getMentorDatas(value);
+    // getMentorDatas(value);
     setPaginationModel({
       page: 0,
       pageSize: 10,
@@ -512,7 +615,15 @@ export const Mentors = () => {
           status: requestTab,
         })
       );
-    } else {
+    }else if (mentorType === "top_programs") {
+      dispatch(
+        getMyTopPrograms({
+          page: paginationModel?.page + 1,
+          limit: paginationModel?.pageSize,
+          search: debouncedSearchTerm,
+        })
+      );
+    } else if (mentorType === "mymentor"){
       dispatch(getMyMentors({ ...paginationModel, search: debouncedSearchTerm }));
     }
 }, [debouncedSearchTerm]);
@@ -696,7 +807,7 @@ export const Mentors = () => {
           <DataTable
             rows={mentorList?.results}
             columns={
-              mentorType === "requestmentor" ? reqMentorColumn : mentorColumn
+              mentorType==="top_programs"?topProgramsColumn: mentorType === "requestmentor" ? reqMentorColumn : mentorColumn
             }
             hideCheckbox
             rowCount={mentorList?.count}

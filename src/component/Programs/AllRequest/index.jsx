@@ -32,6 +32,7 @@ import SearchIcon from "../../../assets/icons/search.svg";
 import Edit_Icon from "../../../assets/icons/editIcon.svg";
 // import CalendarIcon from "../../../assets/images/calender_1x.png";
 import CalendarIcon from "../../../assets/icons/CalenderIcon.svg";
+import ReviewIcon from "../../../assets/icons/Reports.svg";
 import MoreIcon from "../../../assets/icons/moreIcon.svg";
 import TickCircle from "../../../assets/icons/tickCircle.svg";
 import CloseCircle from "../../../assets/icons/closeCircle.svg";
@@ -75,6 +76,7 @@ import {
   getResourceRequest,
   getTestimonialRequest,
   goalsRequest,
+  reviewMemberRequest,
   updateCertificateRequest,
   updateGoalRequest,
   updateLocalRequest,
@@ -152,7 +154,7 @@ export default function AllRequest() {
     type: "",
     action: "",
   });
-  const [cancelPopup, setCancelPopup] = useState({ show: false, page: "" });
+  const [cancelPopup, setCancelPopup] = useState({ show: false, page: "" ,type:''});
   const [showToast, setShowToast] = useState({ show: false, message: "" });
   const [categoryPopup, setCategoryPopup] = useState({
     show: false,
@@ -319,6 +321,10 @@ export default function AllRequest() {
       label: "Approved",
       value: "approved",
     },
+    ...(selectedRequestedtype === "member_join_request" ? [{
+      label: "Review",
+      value: "inreview"
+    }] : []),
     {
       label:
         selectedRequestedtype === "report_request" ? "Reviewed" : "Rejected",
@@ -495,7 +501,7 @@ export default function AllRequest() {
 
   // Reset Cancel Popup
   const resetCancelReasonPopup = () => {
-    setCancelPopup({ show: false, page: "" });
+    setCancelPopup({ show: false, page: "" ,type:''});
   };
 
   // Cancel Reason Popup Submit
@@ -560,16 +566,30 @@ export default function AllRequest() {
           });
         }
         if (cancelPopup.page === "member_join_request") {
-          dispatch(
-            cancelMemberRequest({
-              member_id: seletedItem.id,
-              reason: data.cancel_reason,
-            })
-          ).then((res) => {
-            if (res?.meta?.requestStatus === "fulfilled") {
-              handleCloseCancelReasonPopup();
-            }
-          });
+          if(cancelPopup.type==="review"){
+            dispatch(
+              reviewMemberRequest({
+                member_id: seletedItem.id,
+                inreview_notes: data.cancel_reason,
+              })
+            ).then((res) => {
+              if (res?.meta?.requestStatus === "fulfilled") {
+                handleCloseCancelReasonPopup();
+              }
+            });
+          }else{
+
+            dispatch(
+              cancelMemberRequest({
+                member_id: seletedItem.id,
+                reason: data.cancel_reason,
+              })
+            ).then((res) => {
+              if (res?.meta?.requestStatus === "fulfilled") {
+                handleCloseCancelReasonPopup();
+              }
+            });
+          }
         }
 
         if (
@@ -614,14 +634,14 @@ export default function AllRequest() {
   };
 
   // Member Drodown Cancel
-  const handleMemberCancelRequest = () => {
+  const handleMemberCancelRequest = (pageType) => {
     // handleOpenConfirmPopup(
     //   `${actionTab === 'mentor' ? 'Mentor ' : 'Mentee '} Request`,
     //   currentRequestTab.key,
     //   actionTab,
     //   'reject'
     // );
-    setCancelPopup({ show: true, page: currentRequestTab.key });
+    setCancelPopup({ show: true, page: currentRequestTab.key,type:pageType });
     handleClose();
   };
 
@@ -1244,8 +1264,21 @@ export default function AllRequest() {
               {role === "admin" && (
                 <>
                   {(seletedItem.status === "new" ||
-                    seletedItem.status === "pending") && (
+                    seletedItem.status === "pending"||seletedItem.status === "inreview") && (
                     <>
+                    {(seletedItem.status === "new" ||
+                    seletedItem.status === "pending")&&
+                      <MenuItem
+                        onClick={()=>handleMemberCancelRequest("review")}
+                        className="!text-[12px]"
+                      >
+                        <img
+                          src={ReviewIcon}
+                          alt="AcceptIcon"
+                          className="pr-3 w-[27px]"
+                        />
+                        Review
+                      </MenuItem>}
                       <MenuItem
                         onClick={handleMemberAcceptRequest}
                         className="!text-[12px]"
@@ -2915,7 +2948,7 @@ export default function AllRequest() {
                   style={{ color: "rgba(0, 0, 0, 1)" }}
                 >
                   {role === "admin"
-                    ? selectedRequestedtype === "report_request"
+                    ? selectedRequestedtype === "report_request"||cancelPopup.type==="review"
                       ? "Review Reason"
                       : "Reject Request Reason"
                     : "Cancel Reason"}
@@ -2939,7 +2972,7 @@ export default function AllRequest() {
                   <div className="relative pb-8">
                     <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
                       {role === "admin"
-                        ? selectedRequestedtype === "report_request"
+                        ? selectedRequestedtype === "report_request"||cancelPopup.type==="review"
                           ? "Review Reason"
                           : "Reject Reason"
                         : "Cancel Reason"}
