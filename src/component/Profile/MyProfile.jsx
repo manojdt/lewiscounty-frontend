@@ -59,7 +59,7 @@ export default function MyProfile() {
       content: <ProfileTab setEditMode={() => setEditMode(true)} />,
     },
     {
-      label: 'Manager Password',
+      label: 'Manage Password',
       iconblack: SecurityIcon,
       icon: SecurityIconblue,
       content: <SecurityTab />,

@@ -37,12 +37,12 @@ export default function ProgramMetrix() {
                             borderColor: 'rgba(0, 174, 189, 1)',
                             data: data.activate_program,  // Data for active programs
                         },
-                        {
-                            label: 'Joined Members',
-                            backgroundColor: 'rgba(199, 222, 255, 1)',
-                            borderColor: 'rgba(199, 222, 255, 1)',
-                            data: data.joined_members,  // Data for joined members
-                        }
+                        // {
+                        //     label: 'Joined Members',
+                        //     backgroundColor: 'rgba(199, 222, 255, 1)',
+                        //     borderColor: 'rgba(199, 222, 255, 1)',
+                        //     data: data.joined_members,  // Data for joined members
+                        // }
                     ]
                 };
 

@@ -136,7 +136,7 @@ export default function ProfileView() {
   const pageType = window.location.href.includes("mentor-details")
     ? "Mentor"
     : "Mentee";
-  const breadcrumbsType = searchParams.get("breadcrumbsType") || "";  
+  const breadcrumbsType = searchParams.get("breadcrumbsType") || "";
   const [breadcrumbsArray, setBreadcrumbsArray] = useState([]);
   const { requestData } = useSelector((state) => state.userList);
   const {
@@ -454,7 +454,9 @@ export default function ProfileView() {
   useEffect(() => {
     if (params.id) {
       loadUserProfile();
-      dispatch(getProfileNotesList(params?.id));
+      if (role === "admin") {
+        dispatch(getProfileNotesList(params?.id));
+      }
     }
   }, [params]);
   useEffect(() => {
@@ -615,7 +617,7 @@ export default function ProfileView() {
       case requestPageBreadcrumbs.ProgramsDetails:
         setBreadcrumbsArray(programDetails);
         break;
-      case requestPageBreadcrumbs.dashboardtopmentor:     
+      case requestPageBreadcrumbs.dashboardtopmentor:
         setBreadcrumbsArray(dashBoardTop);
         break;
       case "discussion":
@@ -1636,28 +1638,34 @@ export default function ProfileView() {
 
           {role === "admin" && (
             <>
-              {programNotesList?.length > 0 && <div className="mb-3">
-                <p className="mt-6 text-[18px] font-semibold text-font-primary-main">
-                  Notes History
-                </p>
-                <Stack spacing={2} mt={1}>
-                  {programNotesList?.map((e, i, len) => {
-                    return (
-                      <>
-                      <Stack
-                        direction={"row"}
-                        alignItems={"center"}
-                        justifyContent={"space-between"}
-                      >
-                        <p className="text-[16px] font-semibold">{e?.notes}</p>
-                        <p className="text-[14px] font-normal">{dateFormat(e?.created_at)}</p>
-                      </Stack>
-                      {len?.length -1 !== i && <Divider></Divider>}
-                      </>
-                    );
-                  })}
-                </Stack>
-              </div>}
+              {programNotesList?.length > 0 && (
+                <div className="mb-3">
+                  <p className="mt-6 text-[18px] font-semibold text-font-primary-main">
+                    Notes History
+                  </p>
+                  <Stack spacing={2} mt={1}>
+                    {programNotesList?.map((e, i, len) => {
+                      return (
+                        <>
+                          <Stack
+                            direction={"row"}
+                            alignItems={"center"}
+                            justifyContent={"space-between"}
+                          >
+                            <p className="text-[16px] font-semibold">
+                              {e?.notes}
+                            </p>
+                            <p className="text-[14px] font-normal">
+                              {dateFormat(e?.created_at)}
+                            </p>
+                          </Stack>
+                          {len?.length - 1 !== i && <Divider></Divider>}
+                        </>
+                      );
+                    })}
+                  </Stack>
+                </div>
+              )}
               <p className="mt-6">Notes:</p>
               <div className="flex flex-col gap-2 mt-4">
                 <textarea
@@ -1685,30 +1693,31 @@ export default function ProfileView() {
           )}
         </div>
 
-        {fromType === "topmentor" &&userDetails?.upcoming_programs?.length>0&& (
-          <div className="bg-[#F9F9F9]">
-            <div className="flex justify-between items-center border-b border-border-main px-5 py-3">
-              <p className="text-[18px] font-semibold">Upcoming Programs</p>
-              <p
-                className="bg-background-primary-light rounded-[3px] text-[#6B6B6B] text-[12px] cursor-pointer px-2 py-1"
-                onClick={() => navigate("/programs?filter_by=month")}
-              >
-                View All
-              </p>
+        {fromType === "topmentor" &&
+          userDetails?.upcoming_programs?.length > 0 && (
+            <div className="bg-[#F9F9F9]">
+              <div className="flex justify-between items-center border-b border-border-main px-5 py-3">
+                <p className="text-[18px] font-semibold">Upcoming Programs</p>
+                <p
+                  className="bg-background-primary-light rounded-[3px] text-[#6B6B6B] text-[12px] cursor-pointer px-2 py-1"
+                  onClick={() => navigate("/programs?filter_by=month")}
+                >
+                  View All
+                </p>
+              </div>
+              <div>
+                <ProgramCard
+                  title="Upcoming Programs"
+                  viewpage="/programs?type=yettojoin"
+                  handleNavigateDetails={handleNavigateDetails}
+                  handleBookmark={handleBookmark}
+                  programs={userDetails?.upcoming_programs ?? []}
+                  //   loadProgram={getPrograms}
+                  noTitle
+                />
+              </div>
             </div>
-            <div>
-              <ProgramCard
-                title="Upcoming Programs"
-                viewpage="/programs?type=yettojoin"
-                handleNavigateDetails={handleNavigateDetails}
-                handleBookmark={handleBookmark}
-                programs={userDetails?.upcoming_programs ?? []}
-                //   loadProgram={getPrograms}
-                noTitle
-              />
-            </div>
-          </div>
-        )}
+          )}
         <CancelPopup
           open={cancelPopup}
           header={"Reject Reason"}
