@@ -12,6 +12,7 @@ import ProfileIcon from '../../assets/icons/Profile.svg';
 import LogoutIcon from '../../assets/icons/Logout.svg';
 import LogoutColorIcon from '../../assets/icons/Logoutpop.svg';
 import AddTicketIcon from '../../assets/icons/add-ticket-icon.svg';
+import { requestPageBreadcrumbs } from "../../component/Breadcrumbs/BreadcrumbsCommonData";
 import MenuIcon from "../../assets/images/menuIcon.svg";
 import {
   Backdrop,
@@ -115,7 +116,7 @@ export const Navbar = () => {
     ) {
       navigate('/my-profile-admin');
     } else {
-      navigate('/profile');
+      navigate(`/profile?breadcrumbsType=${requestPageBreadcrumbs.navbarProfile}`);
     }
   };
 
