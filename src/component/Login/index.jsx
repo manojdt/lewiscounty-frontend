@@ -185,7 +185,7 @@ const Login = () => {
         } else if (user_data?.role === "fresher") {
           navigate("/login-type");
         } else if (user_data?.is_registered) {
-          if(user_data?.userinfo?.is_questions_completed){
+          if(user_data?.userinfo?.is_questions_completed||user_data.role==="admin"){
             navigate(redirectPath);
           }else{
             navigate("/questions");

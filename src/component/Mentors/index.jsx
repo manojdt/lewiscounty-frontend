@@ -218,6 +218,10 @@ export const Mentors = () => {
                     navigate(
                       `/mentor-details/${selectedItem.id}?breadcrumbsType=${requestPageBreadcrumbs.topMentor}&fromType=topmentor`
                     );
+                  }else if (mentorType === "mymentor") {
+                    navigate(
+                      `/mentor-details/${selectedItem.id}?breadcrumbsType=${requestPageBreadcrumbs.myMentor}&fromType=mymentor`
+                    );
                   } else {
                     navigate(
                       `/mentor-details/${selectedItem.id}?breadcrumbsType=${requestPageBreadcrumbs.myMentor}`
