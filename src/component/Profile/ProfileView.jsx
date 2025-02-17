@@ -160,7 +160,7 @@ export default function ProfileView() {
       getProfileInfo({
         id: params.id,
         program_limit: 3,
-        list: fromType === "topmentor",
+        list: fromType === "topmentor"||fromType === "mymentor",
       })
     );
     dispatch(getFollowList(params.id));
@@ -460,7 +460,7 @@ export default function ProfileView() {
         resetMenteeRequest();
         dispatch(updateLocalRequest({ status: "" }));
         dispatch(
-          getProfileInfo({ id: params.id, list: fromType === "topmentor" })
+          getProfileInfo({ id: params.id, list: fromType === "topmentor"||fromType === "mymentor" })
         );
         navigate(pathe);
       }, 3000);
@@ -1730,7 +1730,7 @@ export default function ProfileView() {
           )}
         </div>
 
-        {(fromType === "topmentor" && role === "mentee") &&
+        {(fromType === "topmentor" && role === "mentee")||(fromType === "mymentor" && role === "mentee") &&
           userDetails?.upcoming_programs?.length > 0 && (
             <div className="bg-[#F9F9F9]">
               <div className="flex justify-between items-center border-b border-border-main px-5 py-3">
