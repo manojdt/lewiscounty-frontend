@@ -37,7 +37,7 @@ export const roleBasedSections = {
     'Current Status',
     'Skills and Interests',
     'Goals',
-    'Document upload',
+    'Documents upload',
     'Career/Academic Goals',
     'Mentoring Preferences',
     'Availability',

@@ -298,6 +298,7 @@ export default function ProfileView() {
     new: "New",
     cancel: "Rejected",
     accept: "Approved",
+    inreview: "In-Review"
   };
   const reqStatusColor = {
     approved: {
@@ -326,7 +327,18 @@ export default function ProfileView() {
       // width: "300px",
       cursor: "not-allowed",
     },
+    inreview: {
+      border: "1px solid rgba(255, 242, 231, 1)",
+      borderRadius: "5px",
+      color: "rgba(255, 118, 0, 1)",
+      // width: "300px",
+      cursor: "not-allowed",
+      background: "rgba(255, 242, 231, 1)"
+    }
   };
+
+  // color: "rgba(255, 118, 0, 1)",
+  //   bg: "rgba(255, 242, 231, 1)",
   const footerComponent = (props) => {
     return (
       <div className="flex gap-6 justify-center items-center py-4">
@@ -1536,7 +1548,7 @@ export default function ProfileView() {
                     "aria-labelledby": "basic-button",
                   }}
                 >
-                  {["new", "pending"].includes(userDetails?.approve_status) && (
+                  {["new", "pending", "inreview"].includes(userDetails?.approve_status) && (
                     <MenuItem
                       className="!text-[12px]"
                       onClick={handleMemberAcceptRequest}
@@ -1556,7 +1568,7 @@ export default function ProfileView() {
                       Review
                     </MenuItem>
                   )}
-                  {["new", "pending"].includes(userDetails?.approve_status) && (
+                  {["new", "pending", "inreview"].includes(userDetails?.approve_status) && (
                     <MenuItem
                       className="!text-[12px]"
                       onClick={() => setCancelPopup(true)}
@@ -1718,7 +1730,7 @@ export default function ProfileView() {
           )}
         </div>
 
-        {fromType === "topmentor" &&
+        {(fromType === "topmentor" && role === "mentee") &&
           userDetails?.upcoming_programs?.length > 0 && (
             <div className="bg-[#F9F9F9]">
               <div className="flex justify-between items-center border-b border-border-main px-5 py-3">

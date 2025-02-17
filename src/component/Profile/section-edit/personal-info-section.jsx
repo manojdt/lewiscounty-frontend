@@ -245,7 +245,7 @@ const PersonalInfoSection = ({ type }) => {
                             value={value}
                             disabled={field.disabled}
                             onChange={(e) => dateField.onChange(e.value)}
-                            dateFormat='dd/mm/yy'
+                            dateFormat='mm-dd-yy'
                           />
                         );
                       }}

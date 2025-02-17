@@ -322,7 +322,7 @@ export default function AllRequest() {
       value: "approved",
     },
     ...(selectedRequestedtype === "member_join_request" ? [{
-      label: "Review",
+      label: "In-Review",
       value: "inreview"
     }] : []),
     {

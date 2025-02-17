@@ -263,7 +263,8 @@ const EditProfile = ({ setEditMode }) => {
           formData.append(field, data[field]);
         }
       });
-      formData.append("dob", dayjs(data.dob).format("YYYY-MM-DD"));
+
+      formData.append("dob", data.dob ? dayjs(data.dob).format("YYYY-MM-DD") : "");
 
       if (data.documents) {
         if (Array.isArray(data.documents)) {
