@@ -401,7 +401,7 @@ const onCommentClick  = (comment) =>{
                         <h4 className="text-base">Post</h4>
                         {/* <pn className="text-sm leading-8">View All</pn> */}
                       </div>
-
+                    <div className="h-[500px] overflow-auto">
                       {feeds &&
                         feeds?.results &&
                         feeds?.results?.length > 0 &&
@@ -447,6 +447,7 @@ const onCommentClick  = (comment) =>{
                             </div>
                           </div>
                         ))}
+                    </div>
                     </div>
                     {activePostInfo && (
                       <div className="post-program-detail list-post col-span-5 sm:col-span-5 md:col-span-3 lg:col-span-3 xl:col-span-3">
@@ -499,7 +500,7 @@ const onCommentClick  = (comment) =>{
                             style={{ width: "calc(100% - 50px)" }}
                             className="relative"
                           >
-                            <div className="comments-section">
+                            <div className="comments-section h-[500px] overflow-auto">
                               {activePostInfo?.comments &&
                                 activePostInfo?.comments?.length > 0 &&
                                 activePostInfo?.comments?.map((comment) => (
@@ -734,10 +735,7 @@ const onCommentClick  = (comment) =>{
                                     </div>
                                   </div>
                                 ))}
-                            </div>
-                            <div className="">
-                              <input type="text" className="absolute" />
-                            </div>
+                            </div>                            
                           </div>
                         </div>
                       </div>

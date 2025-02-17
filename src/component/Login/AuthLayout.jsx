@@ -73,19 +73,19 @@ const AuthLayout = () => {
       title: 'Welcome',
       subtitle: 'Mentoring Management Application',
       description:
-        'Simplify, Scale, Succeed with our Mentoring Management Software',
+        'Turn mentor matches into success stories. Simple tools, powerful outcomes, lasting connections',
     },
     {
       title: 'Welcome',
       subtitle: 'Mentoring Management Application',
       description:
-        'Simplify, Scale, Succeed with our Mentoring Management Software',
+        'Your all-in-one mentoring solution. Smart matching, easy tracking, meaningful outcomes',
     },
     {
       title: 'Welcome',
       subtitle: 'Mentoring Management Application',
       description:
-        'Simplify, Scale, Succeed with our Mentoring Management Software',
+        'Empower mentors, inspire growth. Your complete solution for building impactful relationships',
     },
   ];
 

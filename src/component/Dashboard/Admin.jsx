@@ -46,6 +46,7 @@ export default function Admin() {
   const [membersCount, setMembersCount] = useState([]);
   const [loading, setLoading] = useState(true); // Track loading state
   const [topMentotList, setTopMentorList] = useState([]);
+  const [listActivity, setListActivity] = React.useState([]);
 
   const role = userInfo.data.role;
   const dispatch = useDispatch();
@@ -94,6 +95,7 @@ export default function Admin() {
     fetchMembersCount();
     dispatch(getProgramCounts());
     getTopMentors()
+    getActivityListDetails();
   }, []);
 
   const getTopMentors = async () => {
@@ -103,6 +105,15 @@ export default function Admin() {
     }
   };
   
+  const getActivityListDetails = async () => {
+    const listActivity = await api.get(
+      "recent_activities/recent-activities?limit=5"
+    );
+    setListActivity(listActivity?.data?.results);
+    // if (topMentor.status === 200 && topMentor.data?.results) {
+    //   setTopMentorList(topMentor.data.results);
+    // }
+  };
 
   useEffect(() => {
     const totalCount = userpragrams.statusCounts;
@@ -454,49 +465,25 @@ export default function Admin() {
           <div>
           <CardWrapper title="Recent Activities">
             <div style={{ height: "700px" }}>
-              {activityList.length ? (
+              {listActivity?.length ? (
                 <div className="program-status flex items-center flex-col justify-center w-max py-4 px-4">
-                  {activityList.map((recentActivity) => (
-                    <div
-                      className="flex items-center flex-col relative"
-                      key={recentActivity.id}
-                    >
-                      <div className="absolute top-0 left-full ml-4 w-max">
-                        <Tooltip title={recentActivity.name}>
-                          <p className="activity-name text-[14px]">
-                            {recentActivity.name}
-                          </p>
-                        </Tooltip>
-                        <Tooltip title={recentActivity.action_message}>
-                          <h6
-                            className="text-[10px] activity-msg"
-                            style={{
-                              color: activityStatusColor[recentActivity.action],
-                            }}
-                          >
-                            {recentActivity.action_message}
-                          </h6>
-                        </Tooltip>
-                        {/* <div className="timeline absolute lg:right-[-205px] md:right-[-227px] sm:right-[-200px] text-[10px]"> */}
-                        <div className="timeline absolute text-[10px]">
-                        {recentActivity.time_since_action}
-                      </div>
-                      </div>
-                      
-                      <div className="w-8 h-10  mx-[-1px]  flex items-center justify-center">
-                        <span
-                          className="w-3 h-3  rounded-full"
-                          style={{
-                            background:
-                              activityStatusColor[recentActivity.action],
-                          }}
-                        ></span>
-                      </div>
-                      <div
-                        className="w-1 h-16 "
-                        style={{ background: "rgba(0, 174, 189, 1)" }}
-                      ></div>
-                    </div>
+                  {listActivity?.map((recentActivity) => (                    
+                    <div className="flex items-center flex-col relative" key={recentActivity.id}>
+                                                    <div className="absolute top-0 left-full ml-4 w-max">
+                                                        <Tooltip title={recentActivity.name}>
+                                                            <p className="activity-name text-[14px]" >{recentActivity.name}</p>
+                                                        </Tooltip>
+                                                        <Tooltip title={recentActivity.action_message}>
+                                                            <h6 className="text-[10px] activity-msg" style={{ color: activityStatusColor[recentActivity.action] }}>{recentActivity.action_message}</h6>
+                                                        </Tooltip>
+                                                    </div>
+                                                    <div className="timeline absolute lg:right-[-205px] md:right-[-227px] sm:right-[-200px] text-[10px]">{recentActivity.time_since_action}</div>
+                                                    <div
+                                                        className="w-8 h-3  mx-[-1px]  flex items-center justify-center">
+                                                        <span className="w-3 h-3  rounded-full" style={{ background: activityStatusColor[recentActivity.action] }}></span>
+                                                    </div>
+                                                    <div className="w-1 h-16 " style={{ background: 'rgba(0, 174, 189, 1)' }}></div>
+                                                </div>
                   ))}
                 </div>
               ) : (
