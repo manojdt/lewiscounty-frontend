@@ -63,20 +63,31 @@ export const Mentor = () => {
     dispatch(getUserPrograms(query));
   };
 
-  const handleNavigateDetails = (programdetails) => {
-    let baseUrl = pipeUrls.programdetails;
-    if (Object.keys(programdetails).length) {
-      navigate(
-        `${baseUrl}/${programdetails?.id ?? programdetails.program}${
-          programdetails?.admin_program_request_id
-            ? `?request_id=${programdetails?.admin_program_request_id}&type=admin_assign_program`
-            : "admin_assign_program" in programdetails
-            ? `?program_create_type=admin_program`
-            : ""
-        }`
-      );
+const handleNavigateDetails = (programdetails) => {
+  let baseUrl = pipeUrls.programdetails;
+
+  if (Object.keys(programdetails).length) {
+    let queryParams = [];
+
+    if (programdetails?.admin_program_request_id) {
+      queryParams.push(`request_id=${programdetails.admin_program_request_id}`);
+      queryParams.push(`type=admin_assign_program`);
+    } else if ("admin_assign_program" in programdetails) {
+      queryParams.push(`program_create_type=admin_program`);
     }
-  };
+
+    // Add breadcrumbs parameter
+    queryParams.push(`breadcrumbsType=${requestPageBreadcrumbs.dashboardPrograms}`);
+
+    // Construct the full URL
+    const fullUrl = `${baseUrl}/${programdetails?.id ?? programdetails.program}${
+      queryParams.length ? `?${queryParams.join("&")}` : ""
+    }`;
+
+    navigate(fullUrl);
+  }
+};
+
 
   const handleBookmark = async (program) => {
     const payload = {
@@ -253,7 +264,7 @@ export const Mentor = () => {
                         }}
                         onClick={() =>
                           navigate(
-                            `/mentor-details/${recentReq?.id}?fromType=topmentor`
+                            `/mentor-details/${recentReq?.id}?fromType=topmentor&breadcrumbsType=${requestPageBreadcrumbs.dashboardtopmentor}`
                           )
                         }
                       >

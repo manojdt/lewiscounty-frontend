@@ -44,6 +44,7 @@ import {
   request_certificate,
   requestPageBreadcrumbs,
   wait_certificate,
+  mentorGeneratedCertificate,
 } from "../Breadcrumbs/BreadcrumbsCommonData";
 import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
 
@@ -297,7 +298,7 @@ export default function CertificateMenteeList() {
   };
   const handleBreadcrumbs = (key) => {
     const request_certificat = request_certificate();
-    const admin_approvedreport = adminMy_approvedCertificate();
+    const admin_approvedreport =  role === "mentor" ? mentorGeneratedCertificate():adminMy_approvedCertificate();
     const admin_canceledreport = adminMy_certificate();
     const mentorwait_canceledreport = wait_certificate();
     const mentorpending_canceledreport = pending_Certificate();
