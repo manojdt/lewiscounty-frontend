@@ -185,7 +185,11 @@ const Login = () => {
         } else if (user_data?.role === "fresher") {
           navigate("/login-type");
         } else if (user_data?.is_registered) {
-          navigate(redirectPath);
+          if(user_data?.userinfo?.is_questions_completed){
+            navigate(redirectPath);
+          }else{
+            navigate("/questions");
+          }
         } else if (user_data?.role === "mentee" && !user_data?.is_registered) {
           navigate("/programs");
         } else {
