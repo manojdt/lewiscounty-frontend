@@ -62,7 +62,7 @@ export const requestPageBreadcrumbs = {
   dashboardtopmentor : 'dashboardtopmentor',
   dashboardMemberMentor : 'dashboardMemberMentor',
   dashboardMemberMentee : 'dashboardMemberMentee',
-  navbarProfile : 'navbarProfile',
+  // navbarProfile : 'navbarProfile',
 };
 export const programStatusBreadcrumbs=[
     'All Programs',
@@ -185,7 +185,7 @@ export const request_goalMentee = (name,menteeQuery) => {
 export const request_goalNew = (name,menteeQuery) => {
     return [
       {
-        label: "New Goal Requests",
+        label: "Goal Requests",
         path: `/all-request?type=new_goals_request`,
       },
       {
@@ -372,10 +372,10 @@ export const adminMy_certificate = (name) => {
       },
     ];
   };
-export const adminMy_approvedCertificate = (name) => {
+  export const adminMy_approvedCertificate = (name) => {
     return [
       {
-        label: "Certificate Requests",
+        label: "Approved Certificate Requests",
         path: `/certificates?tabType=${requestPageBreadcrumbs?.adminCertificateApproveReportTab}`,
       },
       {
@@ -387,7 +387,7 @@ export const adminMy_approvedCertificate = (name) => {
 export const wait_certificate = (name) => {
   return [
     {
-      label: "Generate Certificates Request",
+      label: "Waiting Certificates Request",
       path: `/certificates?tabType=${requestPageBreadcrumbs?.waitCertificateTab}`,
     },
     {
@@ -398,7 +398,7 @@ export const wait_certificate = (name) => {
 export const pending_Certificate = (name) => {
   return [
     {
-      label: "Generate Certificates Request",
+      label: "Pending Certificates Request",
       path: `/certificates?tabType=${requestPageBreadcrumbs?.pendingCertificateTab}`,
     },
     {
@@ -409,7 +409,7 @@ export const pending_Certificate = (name) => {
 export const Approved_Certificate = (name) => {
   return [
     {
-      label: "Generate Certificates Request",
+      label: "Generated Certificates Request",
       path: `/certificates?tabType=${requestPageBreadcrumbs?.approvedCertificateTab}`,
     },
     {
@@ -417,6 +417,18 @@ export const Approved_Certificate = (name) => {
     },
   ];
 };
+export const mentorGeneratedCertificate = (name) => {
+  return [
+    {
+      label: "Generated Certificate Requests",
+      path: `/certificates?tabType=${requestPageBreadcrumbs?.adminCertificateApproveReportTab}`,
+    },
+    {
+      label: `View Accepted Member List`,
+    },
+  ];
+};
+
 // Mentee Certificate
 export const mentee_Certificate_list = (name) => {
   return [
@@ -470,7 +482,7 @@ export const admin_menteeMember = (name) => {
     return [
       {
         label: `Dashboard`,
-        path: -1,
+        path: "/dashboard", // Corrected: Use string instead of navigate function
       },
       {
         label: `${name}`,
@@ -578,18 +590,25 @@ export const newFollowRequestMentorPage = (status) => {
 
  // Goals
 
-  export const goal_history = (name,queryString) => {
-      const query=queryString?`?adminTabType=${queryString}`:""
-    return [
-      {
-        label: "Goals",
-        path: `/goals${query}`,
-      },
-      {
-        label: `View ${name}`,
-      },
-    ];
-  };
+ export const goal_history = (name, queryString) => {
+  // Set label based on queryString value
+  let label = "";
+  if (queryString === "mentor") {
+    label = "Mentor Goals";
+  } else if (queryString === "mentee") {
+    label = "Mentee Goals";
+  }
+  const query = queryString ? `?adminTabType=${queryString}` : "";
+  return [
+    {
+      label: label,
+      path: `/goals${query}`,
+    },
+    {
+      label: `View ${name}`,
+    },
+  ];
+};
   export const goal_active = (name,queryString) => {
      const query=queryString?`&adminTabType=${queryString}`:""
     return [
@@ -938,14 +957,14 @@ export const memberMenteeDashBoard = () => {
   ];
 };
 
-export const navbarProfile = () => {
-  return [
-    {
-      label: `Dashboard`,
-      path: -1,
-    },
-    {
-      label: `Profile`,
-    },
-  ];
-};
+// export const navbarProfile = () => {
+//   return [
+//     {
+//       label: `Dashboard`,
+//       path: -1,
+//     },
+//     {
+//       label: `Profile`,
+//     },
+//   ];
+// };
