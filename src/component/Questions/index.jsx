@@ -29,6 +29,7 @@ import ToastNotification from '../../shared/Toast';
 import api from '../../services/api';
 import { jwtDecode } from 'jwt-decode';
 import { launchProgram } from '../../services/userprograms';
+import { useGetMentorQuestionsQuery } from '../../features/questions/questionsapi.service';
 
 export const Questions = () => {
   const navigate = useNavigate();
@@ -55,7 +56,7 @@ export const Questions = () => {
   const [customLoading, setCustomLoading] = useState(false);
 
   const role = userInfo.data.role || '';
-
+const { data, isLoading, refetch, isFetching}=useGetMentorQuestionsQuery()
   const submitQuestionsData = (apiData) => {
     if (role === 'mentee') {
       const menteeApiData = {
@@ -83,6 +84,7 @@ export const Questions = () => {
           : null,
         phone_number: apiData.phone_number,
         documents: undefined,
+     is_questions_completed:true
       };
       dispatch(updateQuestions(mentorApiData)).then((res) => {
         docUpload(apiData);
@@ -519,6 +521,7 @@ export const Questions = () => {
               totalSteps={formFields.length}
               role={role}
               handleSkip={skipAall}
+              apiData={!isLoading && !isFetching ? data : null} //
             />
           ) : null}
         </div>

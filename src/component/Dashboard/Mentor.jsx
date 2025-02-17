@@ -27,6 +27,7 @@ import { requestPageBreadcrumbs } from "../Breadcrumbs/BreadcrumbsCommonData";
 import MaleIcon from "../../assets/images/male-profile1x.png";
 import FemaleIcon from "../../assets/images/female-profile1x.png";
 import { ProgramTableView } from "./ProgramTableView/ProgramTableView";
+import { TopProgramsCard } from "../TopPrograms/TopProgramsCard";
 
 export const Mentor = () => {
   const dispatch = useDispatch();
@@ -39,6 +40,7 @@ export const Mentor = () => {
   const userInfo = useSelector((state) => state.userInfo);
   const { feeds } = useSelector((state) => state.feeds);
   const [programView, setProgramView] = useState("grid");
+  const [topPrograms, setTopPrograms] = useState([]);
   const handlePerformanceFilter = (e) => {
     const res = e?.target?.value || "date";
     dispatch(chartProgramList(res));
@@ -112,7 +114,18 @@ export const Mentor = () => {
   const handleViewChange = () => {
     setProgramView(programView === "grid" ? "list" : "grid");
   };
-
+  const fetchTopPrograms = async () => {
+    setLoading(true); // Set loading to true while fetching
+    try {
+      const response = await api.get("/rating/top_programs");
+      console.log(response?.data?.results,"response?.data?.results")
+      setTopPrograms(response?.data?.results);
+    } catch (error) {
+      console.error("Error fetching Top programs data:", error);
+    } finally {
+      setLoading(false); // Set loading to false after data is fetched
+    }
+  };
   const ImageComponent = (
       <img
       src={programView === "grid" ? ListViewIcon : GridViewIcon}
@@ -175,6 +188,7 @@ export const Mentor = () => {
     };
     dispatch(getPost(feedData));
     getTopMentors();
+    fetchTopPrograms()
     //   }
   }, []);
 
@@ -207,6 +221,10 @@ export const Mentor = () => {
               <UserInfoCard />
               {/* <ViewImpression /> */}
               {/* <RecentActivities /> */}
+              {topPrograms&&topPrograms?.length>0&&
+          <div className="mt-4">
+            <TopProgramsCard topProgramsList={topPrograms}/>
+          </div>}
               <div
                 className="recent-request mt-4"
                 style={{

@@ -34,6 +34,7 @@ import { FeedCard } from "./feedCard";
 import { getPost } from "../../services/feeds";
 import { requestPageBreadcrumbs } from "../Breadcrumbs/BreadcrumbsCommonData";
 import { ProgramTableView } from "./ProgramTableView/ProgramTableView";
+import { TopProgramsCard } from "../TopPrograms/TopProgramsCard";
 
 export const Mentee = () => {
   const dispatch = useDispatch();
@@ -47,6 +48,7 @@ export const Mentee = () => {
   const { feeds } = useSelector((state) => state.feeds);
   const token = localStorage.getItem("access_token");
   let decoded = jwtDecode(token);
+  const [topPrograms, setTopPrograms] = useState([]);
   const [programView, setProgramView] = useState("grid");
   React.useEffect(() => {
     if (!decoded?.category_added) {
@@ -103,7 +105,18 @@ export const Mentee = () => {
       setTopMentorList(topMentor.data.results);
     }
   };
-
+  const fetchTopPrograms = async () => {
+    setLoading(true); // Set loading to true while fetching
+    try {
+      const response = await api.get("/rating/top_programs");
+      console.log(response?.data?.results,"response?.data?.results")
+      setTopPrograms(response?.data?.results);
+    } catch (error) {
+      console.error("Error fetching Top programs data:", error);
+    } finally {
+      setLoading(false); // Set loading to false after data is fetched
+    }
+  };
   useEffect(() => {
     if (role !== "" && userInfo?.data?.is_registered) {
       getPrograms();
@@ -115,6 +128,7 @@ export const Mentee = () => {
     const isBookmark = searchParams.get("is_bookmark");
     dispatch(getMenteeProgramCount());
     getTopMentors();
+    fetchTopPrograms()
     if (
       filterType === null &&
       isBookmark === null &&
@@ -238,6 +252,10 @@ export const Mentee = () => {
           {/* <div className="col-span-5 sm:col-span-5 md:col-span-2 lg:col-span-1"> */}
           <div className="col-span-5 sm:col-span-5 md:col-span-5 lg:col-span-1">
             <UserInfoCard />
+              {topPrograms&&topPrograms?.length>0&&
+                      <div className="mt-4">
+                        <TopProgramsCard topProgramsList={topPrograms}/>
+                      </div>}
             <div
               className="recent-request mt-4"
               style={{

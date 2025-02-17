@@ -32,7 +32,7 @@ export const LoginType = () => {
       }
 
       if (userInfo?.data?.role && userInfo?.data?.role !== "fresher") {
-        if (userInfo.data.is_registered) {
+        if (userInfo.data.is_registered&&userInfo?.is_questions_completed) {
           navigate("/dashboard");
         } else navigate("/questions");
       }
