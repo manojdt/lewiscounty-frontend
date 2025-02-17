@@ -102,7 +102,11 @@ export default function SocialMediaLogin({ view = 'vertical', setVerificationPop
                 } else if (user_data?.role === "fresher") {
                     navigate("/login-type");
                 } else if (user_data?.is_registered) {
-                    navigate(redirectPath);
+                    if(user_data?.userinfo?.is_questions_completed||user_data.role==="admin"||user_data.role==="mentee"){
+                        navigate(redirectPath);
+                      }else{
+                        navigate("/questions");
+                      }
                 } else if (
                     user_data?.role === "mentee" &&
                     !user_data?.is_registered
