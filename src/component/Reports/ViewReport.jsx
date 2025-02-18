@@ -136,7 +136,7 @@ const ViewReport = () => {
      const mentee_completed = mentor_Completedreport(reportDetails.name);
      const mentee_rejected = mentor_Rejectedreport(reportDetails.name);
      const mentee_draft = mentor_Draftreport(reportDetails.name);
-console.log(key,"key")
+
      switch (key) {
       case requestPageBreadcrumbs.menteeAllReport:
         setBreadcrumbsArray(mentee_all);
@@ -476,22 +476,7 @@ console.log(key,"key")
                   )}
 
   {/* Rejection Reason Section */}
-  {reportDetails?.rejection_reason && (
-    <div className="border border-[#E0382D] rounded-[5px] bg-[#FFE7E7] mt-4 sm:mt-5 lg:mt-[20px]">
-      <Typography
-        className="text-[#E0382D] !text-base sm:!text-lg lg:!text-[18px] border-b border-[#E0382D]"
-        p={"8px 16px sm:12px 20px"}
-      >
-        Reviewed Reason
-      </Typography>
-      <Typography
-        className="text-[#18283D] !text-xs sm:!text-sm lg:!text-[14px]"
-        p={"8px 16px sm:12px 20px"}
-      >
-        {reportDetails?.rejection_reason}
-      </Typography>
-    </div>
-  )}
+
 
   {/* HTML Content */}
   {reportDetails?.html_content && (
