@@ -20,6 +20,7 @@ import {
   updateInfo,
   updateMenteeQuestions,
   updateQuestions,
+  updateQuestionsPost,
   updateToken,
   updateUserInfo,
   updateUserRole,
@@ -55,7 +56,7 @@ export const Questions = () => {
   const [searchParams] = useSearchParams();
   const [customLoading, setCustomLoading] = useState(false);
 
-  const role = userInfo.data.role || '';
+  const role = userInfo?.data?.role || '';
 const { data, isLoading, refetch, isFetching}=useGetMentorQuestionsQuery()
   const submitQuestionsData = (apiData) => {
     if (role === 'mentee') {
@@ -86,9 +87,16 @@ const { data, isLoading, refetch, isFetching}=useGetMentorQuestionsQuery()
         documents: undefined,
      is_questions_completed:true
       };
-      dispatch(updateQuestions(mentorApiData)).then((res) => {
-        docUpload(apiData);
-      });
+      if(data?.data){
+        dispatch(updateQuestions(mentorApiData)).then((res) => {
+          docUpload(apiData);
+        });
+      }else{
+        dispatch(updateQuestionsPost(mentorApiData)).then((res) => {
+          docUpload(apiData);
+        });
+
+      }
     }
   };
   const docUpload = async (data) => {

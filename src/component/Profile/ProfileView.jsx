@@ -51,7 +51,7 @@ import {
 import MuiModal from "../../shared/Modal";
 import DataTable from "../../shared/DataGrid";
 import { categoryColumns } from "../../mock";
-import { pipeUrls, requestStatus } from "../../utils/constant";
+import { followBtnText, pipeUrls, requestStatus } from "../../utils/constant";
 import { useForm } from "react-hook-form";
 import { CancelPopup } from "../Mentor/Task/cancelPopup";
 import { updateProfile } from "../../services/profile";
@@ -1465,13 +1465,7 @@ export default function ProfileView() {
                       btnType="button"
                       btnCategory="secondary"
                       disabled={followInfo.is_follow === "waiting"}
-                      btnName={
-                        followInfo.is_follow === "waiting"
-                          ? "Requested"
-                          : followInfo.is_following
-                          ? "Unfollow"
-                          : "Follow"
-                      }
+                      btnName={followBtnText[userDetails?.is_follow]}
                       btnCls={"w-[150px]"}
                     />
                     <Button
