@@ -16,6 +16,8 @@ import ConnectPopupIcon from "../../assets/images/Connectpop1x.png";
 import SearchIcon from "../../assets/images/search1x.png";
 import RejectIcon from "../../assets/icons/reject.svg";
 import RejectPopupIcon from "../../assets/icons/rejectPopup.svg";
+import GridViewIcon from "../../assets/icons/gridviewIcon.svg";
+import ListViewIcon from "../../assets/icons/listviewIcon.svg";
 import Dropdown from "../../shared/Dropdown";
 import {
   getMyMentees,
@@ -37,6 +39,7 @@ import SuccessTik from "../../assets/images/blue_tik1x.png";
 import MuiModal from "../../shared/Modal";
 import { requestPageBreadcrumbs } from "../Breadcrumbs/BreadcrumbsCommonData";
 import { useDebounce } from "../../utils";
+import MentorCardView from "../Mentors/MentorCardView";
 
 export const Mentees = () => {
   const navigate = useNavigate();
@@ -47,6 +50,7 @@ export const Mentees = () => {
   const [reasonError, setReasonError] = React.useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const dispatch = useDispatch();
+    const [viewType, setViewType] = useState('table');
   const { menteeList, loading, status } = useSelector(
     (state) => state.userList
   );
@@ -382,7 +386,9 @@ export const Mentees = () => {
     });
     setReason("");
   };
-
+  const handleViewChange = () => {
+    setViewType(viewType === "table" ? "card" : "table");
+  };
   const handleSearch = (searchText) => {
     setSearch(searchText);
   };
@@ -404,6 +410,14 @@ export const Mentees = () => {
         <div className="flex justify-between px-5 pb-4 mb-8 border-b-2 flex-col sm:flex-col md:flex-row lg:flex-row xl:flex-row md:items-center lg:items-center xl:items-center">
           <div className="flex gap-5 items-center ">
             <p>{title}</p>
+            {mentorType === "my-mentee"&&
+            <img
+                  src={viewType === "table" ? ListViewIcon : GridViewIcon}
+                  className="cursor-pointer"
+                  alt="viewicon"
+                  onClick={handleViewChange}
+                />
+              }
             <p>{/* <img src={FilterIcon} alt='FilterIcon' /> */}</p>
           </div>
           <div className="flex gap-8 items-center">
@@ -432,6 +446,7 @@ export const Mentees = () => {
               handleDropdown={(event) => {
                 setMentorType(event.target.value);
                 navigate(`/mentees?req=${event.target.value}`);
+                setViewType("table")
               }}
             />
           </div>
@@ -462,17 +477,36 @@ export const Mentees = () => {
             </div>
           )}
 
-          <DataTable
-            rows={menteeList?.results}
-            columns={
-              mentorType === "my-mentee" ? myMenteeColumn : myReqMenteeColumn
-            }
-            hideCheckbox
-            rowCount={menteeList?.count}
-            paginationModel={paginationModel}
-            setPaginationModel={setPaginationModel}
-          />
-
+        
+{viewType==="table"?
+           <DataTable
+           rows={menteeList?.results}
+           columns={
+             mentorType === "my-mentee" ? myMenteeColumn : myReqMenteeColumn
+           }
+           hideCheckbox
+           rowCount={menteeList?.count}
+           paginationModel={paginationModel}
+           setPaginationModel={setPaginationModel}
+         />:
+           <MentorCardView
+      mentors={menteeList?.results}
+      onViewProfile={(mentee) => {
+        if (mentorType === "my-mentee") {
+          navigate(
+             `/mentee-details/${mentee.id}?breadcrumbsType=${requestPageBreadcrumbs.myMentee}`
+          );
+        }
+      }}
+      // onFollow={(mentor) => {
+      //   mentor?.is_follow !== "waiting" &&
+      //     handleOpenFollowPopup(mentor.id, mentor?.is_follow);
+      // }}
+      loading={loading}
+      paginationModel={paginationModel}
+      setPaginationModel={setPaginationModel}
+      totalCount={menteeList?.count}
+    />}
           <Backdrop
             sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
             open={confirmation?.activity && confirmation?.type !== "reject"}

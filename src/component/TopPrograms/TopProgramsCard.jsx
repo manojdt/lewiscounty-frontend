@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import UserIcon from "../../assets/icons/user-icon.svg";
-export const TopProgramsCard = ({ topProgramsList }) => {
+export const TopProgramsCard = ({ topProgramsList,view=true }) => {
   const navigate = useNavigate();
   return (
     <div
@@ -21,6 +21,7 @@ export const TopProgramsCard = ({ topProgramsList }) => {
           ></div>
           <h4>Top Programs</h4>
         </div>
+        {view&&
         <div className="flex justify-center mt-2 mb-2">
           <p
             className="text-[12px] py-2 px-2 cursor-pointer"
@@ -29,11 +30,11 @@ export const TopProgramsCard = ({ topProgramsList }) => {
               color: "rgba(29, 91, 191, 1)",
               borderRadius: "3px",
             }}
-            onClick={() => navigate("/programs")}
+            onClick={() => navigate("/mentors?req=top_programs")}
           >
             View All
           </p>
-        </div>
+        </div>}
       </div>
 
       <div className="content flex flex-col gap-2 py-2 px-2 overflow-x-auto">
