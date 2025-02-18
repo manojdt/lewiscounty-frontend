@@ -143,9 +143,6 @@ const ViewReport = () => {
   };
   const handleBreadcrumbs = (key) => {
     if (!reportDetails?.name) return; // Prevent running if reportDetails.name is missing
-
-    console.log(key, "key");
-
     if (role === "admin") {
       // Admin-related breadcrumb options
       const admin_repor = admin_report(reportDetails.name);

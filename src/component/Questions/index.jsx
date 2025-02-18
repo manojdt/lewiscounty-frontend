@@ -496,7 +496,18 @@ const { data, isLoading, refetch, isFetching}=useGetMentorQuestionsQuery()
             />
           </div>
         )} */}
-        <div className='mb-1'><Button btnName="Back" btnCategory="secondary" onClick={()=>handleBack()} /></div>
+        <div className='mb-1'>
+        <div className='flex items-center gap-1'onClick={()=>handleBack()}>
+          <img
+            src={rightArrow}
+            className='h-[20px] w-[20px] cursor-pointer rotate-180'
+            alt='right'
+          />
+          <p style={{ fontWeight: 'bold', cursor: 'pointer' }}>Back</p>
+        </div>
+        {/* <Button btnName="Back" btnCategory="secondary" onClick={()=>handleBack()} /> */}
+
+        </div>
         <div style={{ boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.15)" }}>
           <div
             className="steps pl-24 pr-28"

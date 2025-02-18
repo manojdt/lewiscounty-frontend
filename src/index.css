@@ -847,7 +847,7 @@ input[type='range']::-ms-thumb {
 }
 
 .feed-details .feed-info {
-  padding: 0px 40px;
+  /* padding: 0px 40px; */
 }
 
 .feed-details .feed-info .feed-detail-image {
@@ -944,7 +944,7 @@ input[type='range']::-ms-thumb {
 }
 
 .help-desk-details {
-  padding: 10px 20px;
+  padding: 10px;
 }
 
 .help-question-list .toggle-data-list .toggle-data {

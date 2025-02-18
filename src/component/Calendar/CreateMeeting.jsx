@@ -829,7 +829,7 @@ export default function CreateMeeting() {
                 </div>
               </div>
               <div className="flex justify-center mb-4">
-                <div className="flex gap-6 justify-center align-middle">
+                <div className="flex gap-0 sm:gap-0 md:gap-6 lg:gap-6 xl:gap-6 justify-center align-middle">
                   <Button
                     btnName="Cancel"
                     btnCategory="secondary"
@@ -912,9 +912,9 @@ export default function CreateMeeting() {
           />
         </MuiModal>
 
-        <div className="px-8 py-4">
+        <div className="px-4 sm:px-4 md:px:6 lg:px-8 xl:px-8 py-4">
           <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="flex flex-wrap gap-4">
+            <div className="grid grid-cols-6 gap-4  ">
               {CreateMeetingFields.map((field, index) => {
                 if (
                   field.name === "event" &&
@@ -1146,7 +1146,7 @@ export default function CreateMeeting() {
                   </select>
                 </div>
               )} */}
-            <div className="flex gap-6 justify-center align-middle">
+            <div className="flex gap-0 sm:gap-0 md:gap-6 lg:gap-6 xl:gap-6 justify-center align-middle">
               <Button
                 btnName="Cancel"
                 btnCls="w-[170px]"

@@ -347,7 +347,7 @@ export default function Admin() {
           </div>
           {topPrograms&&topPrograms?.length>0&&
           <div className="mt-4">
-            <TopProgramsCard topProgramsList={topPrograms}/>
+            <TopProgramsCard topProgramsList={topPrograms} view={false}/>
           </div>}
           {/* asdfsdfsd */}
           <div

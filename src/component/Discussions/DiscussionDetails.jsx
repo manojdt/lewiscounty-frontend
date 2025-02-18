@@ -9,10 +9,10 @@ import ChatSendIcon from '../../assets/icons/chatSend.svg';
 
 export default function DiscussionDetails() {
   return (
-    <div className='px-8 mt-10'>
+    <div className='px-4 mt-10 sm:px-4 md:px-6 lg:px-8 xl:px-8'>
       <div className='mb-5'>Discussions</div>
       <div className='grid grid-cols-7 gap-3 mb-10'>
-        <div className='col-span-2 flex flex-col gap-8'>
+        <div className='col-span-7 sm:col-span-7 md:col-span-7 lg:col-span-2 xl:col-span-2 flex flex-col gap-8'>
           <div
             style={{
               boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)',
@@ -94,7 +94,7 @@ export default function DiscussionDetails() {
           </div>
         </div>
 
-        <div className='col-span-5'>
+        <div className='col-span-7 sm:col-span-7 md:col-span-7 lg:col-span-5 xl:col-span-5'>
           <div
             style={{
               boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)',
