@@ -115,7 +115,7 @@ const PersonalInfoSection = ({ type }) => {
                   {field.label}
                 </label>
                 {type === view.viewOnly ? (
-                  <p className='text-[14px] pt-3'>
+                  <p className={`text-[14px] pt-3  ${field?.name === "gender" ? 'capitalize': ""}`}>
                     {getValues(field.name) ? getValues(field.name) : "-"}
                   </p>
                 ) : (

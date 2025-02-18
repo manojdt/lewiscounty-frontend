@@ -658,7 +658,7 @@ export default function CreateReport() {
                   btnCategory="secondary"
                   onClick={() => handleCancelReportAction()}
                 />
-                {/* {role !== "admin" && (
+                {role !== "admin" && (
                   <Button
                     btnName="Save To Draft"
                     style={{
@@ -671,7 +671,7 @@ export default function CreateReport() {
                       onSubmit({ ...d, action: "draft" })
                     )}
                   />
-                )} */}
+                )}
                 <Button
                   btnType="submit"
                   btnCls="w-[30%] sm:w-[30%] md:w-[20%] lg:w-[15%] xl:w-[15%]"
