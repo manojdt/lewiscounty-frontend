@@ -30,6 +30,7 @@ import api from "../../services/api";
 import UserIcon from "../../assets/icons/user-icon.svg";
 import { requestPageBreadcrumbs } from "../Breadcrumbs/BreadcrumbsCommonData";
 import UserInfoCard from "./UserInfoCard";
+import { TopProgramsCard } from "../TopPrograms/TopProgramsCard";
 export default function Admin() {
   const { width } = useWindowSize();
   const navigate = useNavigate();
@@ -44,6 +45,7 @@ export default function Admin() {
   const [programMenusList, setProgramMenusList] = useState([]);
   const [chartList, setChartList] = useState([]);
   const [membersCount, setMembersCount] = useState([]);
+  const [topPrograms, setTopPrograms] = useState([]);
   const [loading, setLoading] = useState(true); // Track loading state
   const [topMentotList, setTopMentorList] = useState([]);
   const [listActivity, setListActivity] = React.useState([]);
@@ -91,11 +93,24 @@ export default function Admin() {
       setLoading(false); // Set loading to false after data is fetched
     }
   };
+  const fetchTopPrograms = async () => {
+    setLoading(true); // Set loading to true while fetching
+    try {
+      const response = await protectedApi.get("/rating/top_programs");
+      console.log(response?.data?.results,"response?.data?.results")
+      setTopPrograms(response?.data?.results);
+    } catch (error) {
+      console.error("Error fetching Top programs data:", error);
+    } finally {
+      setLoading(false); // Set loading to false after data is fetched
+    }
+  };
   useEffect(() => {
     fetchMembersCount();
     dispatch(getProgramCounts());
     getTopMentors()
     getActivityListDetails();
+    fetchTopPrograms()
   }, []);
 
   const getTopMentors = async () => {
@@ -330,6 +345,10 @@ export default function Admin() {
               items={membersCount}
             />
           </div>
+          {topPrograms&&topPrograms?.length>0&&
+          <div className="mt-4">
+            <TopProgramsCard topProgramsList={topPrograms}/>
+          </div>}
           {/* asdfsdfsd */}
           <div
             className="recent-request"

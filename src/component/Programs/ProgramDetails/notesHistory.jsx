@@ -16,6 +16,9 @@ import {
   getProgramNotesUserList,
 } from "../../../services/programInfo";
 import { SelectBox } from "../../../shared/SelectBox";
+import {
+  requestPageBreadcrumbs,
+}from "../../Breadcrumbs/BreadcrumbsCommonData";
 
 const HistoryNotes = () => {
   const { id } = useParams();
@@ -54,7 +57,7 @@ const HistoryNotes = () => {
     </Typography>,
     <Typography
       className="!text-[14px] !text-font-secondary-black cursor-pointer"
-      onClick={() => navigate(`/program-details/${id}`)}
+      onClick={() => navigate(`/program-details/${id}?breadcrumbsType=${requestPageBreadcrumbs.dashboardPrograms}`)}
     >
       Program Details
     </Typography>,

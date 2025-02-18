@@ -1962,9 +1962,12 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     ].includes(typeParams)) ||
                   (role === "mentee" &&
                     (
-                      programdetails.mentee_join_status ===
-                        programActionStatus.program_join_request_accepted
-                      ) &&
+                    programdetails.mentee_join_status ===
+                        programActionStatus.program_join_request_accepted ||[
+                          "yettoapprove",
+                          "yettojoin",
+                        ].includes(programdetails?.status)
+                      ) && programdetails?.program_interest&&
                     !["program_join", "program_cancel"].includes(
                       typeParams
                     ))) && (

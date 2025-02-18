@@ -11,6 +11,11 @@ import DeleteIcon from '../../assets/images/delete_1x.png';
 import ToastNotification from '../../shared/Toast';
 import { formatPhoneNumber } from '../../utils/formFields';
 import { useDispatch } from 'react-redux';
+import api from '../../services/api';
+import { jwtDecode } from 'jwt-decode';
+import { updateUserInfo } from '../../services/loginInfo';
+import { user } from '../../utils/constant';
+import { toast } from 'react-toastify';
 
 const StepComponenRender = ({
   stepFields,
@@ -22,6 +27,7 @@ const StepComponenRender = ({
   stepName,
   handleSkip,
   totalSteps,
+  apiData
 }) => {
   const navigate = useNavigate();
   const calendarRef = useRef([]);
@@ -40,9 +46,58 @@ const StepComponenRender = ({
   const [disabledFields, setDisabledFields] = useState({});
   const [errorNot, setErrorNot] = useState(false);
   const [idProof, setIdProof] = useState([]);
+  const [allFormValues, setAllFormValues] = useState({});
+  const [apiDocuments, setApiDocuments] = useState([]);
+  const [actionInfo, setActionInfo] = useState({ loading: false, modal: false });
+  const [customLoading, setCustomLoading] = useState(false);
   const onSubmit = (data) => {
-    handleNextStep(data);
-    reset();
+      handleNextStep(data);
+      reset();
+  };
+    const handleSubmitData = (submitDocument) => {
+      localStorage.setItem('access_token', submitDocument.data.access);
+      localStorage.setItem('refresh_token', submitDocument.data.refresh);
+      let decoded = jwtDecode(submitDocument.data.access);
+      dispatch(updateUserInfo({ data: decoded }));
+      // reset()
+      // setIdProof([])
+      setActionInfo({ loading: false, modal: true });
+    };
+  const docUpload = async (data) => {
+    setActionInfo({ loading: true, modal: false });
+    let allFiles = [];
+    let bodyFormData = new FormData();
+    if (data?.documents?.length) {
+      data.documents.forEach((file) =>
+        bodyFormData.append('documents', file[0])
+      );
+    }
+    const headers = {
+      'Content-Type': 'multipart/form-data',
+    };
+
+    setCustomLoading(true);
+    const submitDocument = await api.post('user/documents', bodyFormData, {
+      headers: headers,
+    });
+
+    if (submitDocument.status === 201 || submitDocument.status === 200) {
+     
+        // handleSubmitData(submitDocument);
+        const updateToken = await api.post('generate_new_token', {
+          headers: headers,
+        });
+
+        if (updateToken.status === 200) {
+          localStorage.setItem('access_token', updateToken.data.access);
+          localStorage.setItem('refresh_token', updateToken.data.refresh);
+          handleSubmitData(updateToken);
+          // setCustomLoading(false);
+        }
+      
+
+      // dispatch(updateToken());
+    }
   };
   const handleLogout = () => {
     localStorage.removeItem("access_token");
@@ -50,6 +105,41 @@ const StepComponenRender = ({
     dispatch({ type: "logout" });
     navigate("/login");
   };
+  const submitMentorData = async (data) => {
+    try {
+      // Merge form values with existing data
+      const allValues = {
+        ...allFormValues,
+        ...data,
+      };
+
+      const formData = {
+        ...allValues,
+        gender: allValues.gender
+          ? Array.isArray(allValues.gender)
+            ? allValues.gender[0]
+            : allValues.gender
+          : null,
+        phone_number: allValues.phone_number,
+        documents: undefined
+      };
+
+      const response = apiData?.data 
+        ? await api.put('user_info_update', formData)
+        : await api.post('user_info_update', formData);
+      
+      if (response.status === 200 || response.status === 201) {
+        toast.success(response?.data?.message)
+       await docUpload(allValues)
+        handleLogout()
+        reset();
+      }
+    } catch (error) {
+      console.error('Error submitting data:', error);
+    }
+  };
+
+ 
   const handleInputChange = (e, field) => {
     const { value } = e.target;
 
@@ -59,10 +149,84 @@ const StepComponenRender = ({
     ) {
       const formattedValue = formatPhoneNumber(value);
       setValue(field.name, formattedValue);
+      setAllFormValues(prev => ({
+        ...prev,
+        [field.name]: formattedValue
+      }))
     } else {
       setValue(field.name, value);
+      setAllFormValues(prev => ({
+        ...prev,
+        [field.name]: value
+      }))
     }
   };
+  const populateFormWithApiData = (data) => {
+    if (!data) return;
+    
+    const newFormValues = {};
+    
+    Object.keys(data).forEach(key => {
+      const field = stepFields.find(f => f.name === key);
+      if (field) {
+        if (field.type === 'date' && data[key]) {
+          const date = new Date(data[key]);
+          setValue(key, date);
+          setDateFormat(prev => ({
+            ...prev,
+            [key]: date
+          }));
+          newFormValues[key] = date;
+        } else if (field.type === 'radio' || field.type === 'checkbox') {
+          const value = data[key] != null ? data[key].toString() : '';
+          setValue(key, value);
+          if (field.type === 'radio') {
+            handleRadioBox({ target: { value } });
+          } else {
+            setCheckBoxValue(value);
+          }
+          newFormValues[key] = value;
+        } else {
+          setValue(key, data[key]);
+          newFormValues[key] = data[key];
+        }
+      }
+    });
+    
+    // Update allFormValues with the API data
+    setAllFormValues(prev => ({
+      ...prev,
+      ...newFormValues
+    }));
+  };
+  const handleDeleteDocument = async (id) => {
+    try {
+      const response = await api.delete(`user_info_update`,{data:{document_ids:[id]}});
+      if (response.status === 204) {
+        const updatedIdProof = apiDocuments.filter(doc => doc.id !== id);
+        setApiDocuments(updatedIdProof);
+      }
+    } catch (error) {
+      console.error('Error deleting document:', error);
+    }
+  };
+  useEffect(() => {
+    if (stepData && Object.keys(stepData).length > 0&&role===user.mentor) {
+      setAllFormValues(prev => ({
+        ...prev,
+        ...stepData
+      }));
+    }
+  }, [stepData]);
+  // Call populate function when API data changes
+  useEffect(() => {
+    if (apiData?.data&&role===user.mentor) {
+      populateFormWithApiData(apiData?.data);
+      if (apiData?.data?.user_documents) {
+        setApiDocuments(apiData?.data?.user_documents);
+      }
+    }
+  }, [apiData, stepFields]);
 
   const handleDeleteImage = (index) => {
     const files = idProof.filter((fil, i) => i !== index);
@@ -298,6 +462,36 @@ const StepComponenRender = ({
                           </div>
                         </>
                       )}
+                      {apiDocuments.length > 0 && (
+                        <>
+                          <div>
+                            {apiDocuments.map((proof, i) => (
+                              <div
+                                key={i}
+                                className='flex justify-between items-center w-[30%] mt-5 px-4 py-4'
+                                style={{
+                                  border: '1px solid rgba(29, 91, 191, 0.5)',
+                                  borderRadius: '3px',
+                                }}
+                              >
+                                <div className='flex w-[80%] gap-3 items-center'>
+                                  <img src={UploadIcon} alt='altlogo' />
+                                  <span className='text-[12px]'>
+                                    {' '}
+                                    {proof?.file_display_name}
+                                  </span>
+                                </div>
+                                <img
+                                  className='w-[30px] cursor-pointer'
+                                  onClick={() => handleDeleteDocument(proof?.id)}
+                                  src={DeleteIcon}
+                                  alt='DeleteIcon'
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        </>
+                      )}
                     </>
                   ) : field.type === 'date' ? (
                     <div className='relative'>
@@ -431,6 +625,13 @@ const StepComponenRender = ({
                 onClick={previousStep}
               />
             )}
+            {role===user.mentor && (
+              <Button
+                btnName='Save'
+                btnCategory='primary'
+                onClick={()=>submitMentorData(getValues())}
+              />
+             )} 
             <Button
               btnType='submit'
               btnCls='w-[100px]'

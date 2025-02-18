@@ -1221,6 +1221,7 @@ const Goals = () => {
     setShowAdmin(false);
     setCreatedBy(type);
     getAllGoalData(type, seletedItem?.created_by);
+    navigate(`?created_by=${type}`);
   };
 
   const handleCloseAdmin = (tab) => {

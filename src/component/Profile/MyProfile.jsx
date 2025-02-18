@@ -12,11 +12,11 @@ import ProfileTab from './tabs/ProfileTab';
 import PermissionTab from './tabs/PermissionTab';
 import SecurityTab from './tabs/SecurityTab';
 import EditProfile from './edit-profile';
-import {
-  requestPageBreadcrumbs,
-  navbarProfile,
-} from "../Breadcrumbs/BreadcrumbsCommonData";
-import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
+// import {
+//   requestPageBreadcrumbs,
+//   navbarProfile,
+// } from "../Breadcrumbs/BreadcrumbsCommonData";
+// import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
 
 
 export const roleBasedSections = {
@@ -83,28 +83,28 @@ export default function MyProfile() {
     //   content: <PermissionTab />,
     // },
   ];
-  const handleBreadcrumbs = (key) => {
-    const navbar_Profile = navbarProfile();
-    switch (key) {
-      case requestPageBreadcrumbs.navbarProfile:
-        setBreadcrumbsArray(navbar_Profile);
-        break;
-      case "discussion":
-        break;
-      default:
-        break;
-    }
-  };
-  useEffect(() => {
-    if (breadcrumbsType) {
-      handleBreadcrumbs(breadcrumbsType);
-    }
-  }, [breadcrumbsType]);
+  // const handleBreadcrumbs = (key) => {
+  //   const navbar_Profile = navbarProfile();
+  //   switch (key) {
+  //     case requestPageBreadcrumbs.navbarProfile:
+  //       setBreadcrumbsArray(navbar_Profile);
+  //       break;
+  //     case "discussion":
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  // };
+  // useEffect(() => {
+  //   if (breadcrumbsType) {
+  //     handleBreadcrumbs(breadcrumbsType);
+  //   }
+  // }, [breadcrumbsType]);
   return (
     <div className='profile-container'>
-      <div className="pb-3">
+      {/* <div className="pb-3">
         {breadcrumbsType && <Breadcrumbs items={breadcrumbsArray} />}
-      </div>
+      </div> */}
       <div className='flex justify-between items-center mb-6'>
         <p className='text-color text-2xl font-semibold'>
           {editMode ? 'Edit Profile' : tabs[activeTab]?.label}
