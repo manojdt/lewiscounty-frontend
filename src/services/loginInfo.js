@@ -139,15 +139,32 @@ export const updatePassword = createAsyncThunk(
 export const updateQuestions = createAsyncThunk(
   'userUpdateQuestions',
   async (data) => {
-    const updateQuestion = await api.put('user_info_update', data);
-    if (updateQuestion.status === 200) {
-      let decoded = jwtDecode(updateQuestion.data.access);
-      localStorage.setItem('access_token', updateQuestion.data.access);
-      localStorage.setItem('refresh_token', updateQuestion.data.refresh);
-      return decoded;
-    }
-    return updateQuestion;
+ 
+      const updateQuestion = await api.put('user_info_update', data);
+      if (updateQuestion.status === 200) {
+        let decoded = jwtDecode(updateQuestion.data.access);
+        localStorage.setItem('access_token', updateQuestion.data.access);
+        localStorage.setItem('refresh_token', updateQuestion.data.refresh);
+        return decoded;
+      }
+      return updateQuestion;
+
   }
+);
+export const updateQuestionsPost = createAsyncThunk(
+  'userUpdateQuestions',
+  async (data,type) => {
+    console.log(type,type)
+   
+      const updateQuestion = await api.post('user_info_update', data);
+      if (updateQuestion.status === 201) {
+        let decoded = jwtDecode(updateQuestion.data.access);
+        localStorage.setItem('access_token', updateQuestion.data.access);
+        localStorage.setItem('refresh_token', updateQuestion.data.refresh);
+        return decoded;
+      }
+      return updateQuestion;
+    }
 );
 
 // Update Mentee Questions
