@@ -30,6 +30,7 @@ import { dateTimeFormat } from "../../utils";
 import ToastNotification from "../../shared/Toast";
 import HtmlReport from "../Docusign/Docusignn";
 import MuiModal from "../../shared/Modal";
+import AddGoalIcon from "../../assets/icons/addGoal.svg";
 
 export default function EditReport() {
   const navigate = useNavigate();
@@ -61,6 +62,7 @@ export default function EditReport() {
     useState(MenteeAssignColumns);
   const [reportData, setReportData] = React.useState({});
   const [openReport, setOpenReport] = useState(false);
+  const [htmlBlock, setHtmlBlock] = React.useState([])
 
   const {
     register,
@@ -70,6 +72,7 @@ export default function EditReport() {
     getValues,
     setValue,
     trigger,
+    clearErrors
   } = useForm();
 
   const onSubmit = (data) => {
@@ -146,6 +149,7 @@ export default function EditReport() {
         description: reportDetails.html_content_link,
       };
       reset(updateFormValues);
+      setHtmlBlock(reportDetails?.html_form_builder ? JSON.parse(reportDetails?.html_form_builder) : [])
     }
   }, [programDetails]);
 
@@ -274,26 +278,26 @@ export default function EditReport() {
 
     if (isValid) {
       // setOpenReport(true);
-      const apiData = {
-        // "category": parseInt(data.category),
-        id: params?.id,
-        request_type: "report",
-        program: parseInt(getValues("program")),
-        name: getValues("report_name"),
-        participated_mentees: getValues("participated_mentees"),
-        comments: "none",
-        status: "new",
-        is_active: false,
-        report: "none",
-      };
-      dispatch(createReport(apiData)).then((res) => {
-        // debugger
-        if (res?.meta?.requestStatus === "fulfilled") {
-          setReportData(res?.payload);
-          setOpenReport(true);
-          dispatch(updateReportLocalState({ status: "" }));
-        }
-      });
+    //   const apiData = {
+    //     // "category": parseInt(data.category),
+    //     request_type: "report",
+    //     program: parseInt(getValues("program")),
+    //     name: getValues("report_name"),
+    //     participated_mentees: getValues("participated_mentees"),
+    //     comments: "none",
+    //     status: "new",
+    //     is_active: false,
+    //     report: "none",
+    //   };
+    //   dispatch(createReport(apiData)).then((res) => {
+    //     if (res?.meta?.requestStatus === "fulfilled") {
+    //       setReportData(res?.payload);
+    //       setOpenReport(true);
+    //       dispatch(updateReportLocalState({ status: "" }));
+    //     }
+    //   });
+    setReportData(reportDetails)
+    setOpenReport(true);
     } else {
       const firstErrorField = Object.keys(errors)[0];
       if (firstErrorField) {
@@ -317,6 +321,11 @@ export default function EditReport() {
   //       navigate("/reports");
   //     }
   //   };
+
+  const handleInputChange = (field_name) => {
+    // Clears the error when the user starts typing
+    clearErrors(field_name);
+  };
 
   return (
     <div className="px-9 my-6 grid">
@@ -670,8 +679,8 @@ export default function EditReport() {
                           </>
                         ) : field.type === "editor" ? (
                           <>
-                            <div className="flex gap-3">
-                              <textarea
+                            <div className="flex gap-2">
+                              {/* <textarea
                                 id="message"
                                 rows="4"
                                 className={`block p-2.5 input-bg w-[100%] h-[200px] text-sm text-gray-900  rounded-lg border
@@ -683,7 +692,7 @@ export default function EditReport() {
                                                                                             }`}
                                 placeholder={field.placeholder}
                                 {...register(field.name, field.inputRules)}
-                              ></textarea>
+                              ></textarea> */}
                               {/* <div
                                 className="flex flex-col gap-6 items-center justify-center input-bg w-[4%]"
                                 style={{ borderRadius: "3px" }}
@@ -692,6 +701,33 @@ export default function EditReport() {
                                 <img src={TextIcon} alt="TextIcon" />
                                 <img src={HTMLIcon} alt="HTMLIcon" />
                               </div> */}
+
+                            <div
+                              className="border border-dashed border-background-primary-main text-font-primary-main whitespace-nowrap flex items-center justify-center p-3 px-7 rounded-[2px] gap-3 cursor-pointer"
+                              onClick={() => handleOpenHtmlReport()}
+                            >
+                              <img
+                                src={AddGoalIcon}
+                                alt="AddGoalIcon"
+                                className="h-[20px] w-[20px]"
+                              />
+                              <p>Generate Report Link</p>
+                            </div>
+                            <input
+                              {...register(field.name, field.inputRules)}
+                              type={field.fieldtype}
+                              className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none 
+                                                                    focus-visible:outline-none text-[14px] h-[60px]"
+                              placeholder={field.placeholder}
+                              style={{
+                                color: "#232323",
+                                borderRadius: "3px",
+                              }}
+                              disabled={field.disabled}
+                              aria-invalid={!!errors[field.name]}
+                              onChange={() => handleInputChange(field.name)}
+                            />
+
                             </div>
                             {errors[field.name] && (
                               <p className="error" role="alert">
@@ -854,8 +890,10 @@ export default function EditReport() {
           onSave={(data) => {
             setOpenReport(false);
             setValue("description", data?.data?.data?.html_content_link);
+            setHtmlBlock(data?.data?.data?.html_form_builder ? JSON.parse(data?.data?.data?.html_form_builder) : [])
           }}
-          reportId={reportData?.data?.request_id}
+          reportId={reportData?.id}
+          htmlBlock={htmlBlock}
         />
       </MuiModal>
     </div>

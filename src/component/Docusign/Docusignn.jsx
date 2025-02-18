@@ -34,13 +34,14 @@ const HtmlReport = ({
   onSave = () => false,
   onCancel = () => false,
   reportId = "",
+  htmlBlock= []
 }) => {
   const navigate = useNavigate();
   const [url, setUrl] = useState();
   const [videoUrl, setVideoUrl] = useState("");
   const [activeUploadBlockId, setActiveUploadBlockId] = useState(null);
   const dispatch = useDispatch();
-  const [blocks, setBlocks] = useState([
+  const [blocks, setBlocks] = useState(htmlBlock?.length > 0 ? htmlBlock : [
     {
       id: reportId,
       type: BlockTypes.TEXT_IMAGE,
@@ -309,7 +310,7 @@ const HtmlReport = ({
     const completeHtml = `<div style="max-width: 896px; margin: 0 auto; padding: 1.5rem;">${htmlContent}</div>`;
     let formValue = new FormData();
     formValue.append("text", `${completeHtml}`);
-
+    formValue.append("html_form_builder", JSON.stringify(blocks))
     const payload = JSON.stringify({
       text: completeHtml,
     });
