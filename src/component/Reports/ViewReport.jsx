@@ -16,11 +16,28 @@ import { getReportDetails } from "../../services/reportsInfo";
 import { dateTimeFormat } from "../../utils";
 import { reportAllStatus, StatusbuttonStyles } from "../../utils/constant";
 import TickColorIcon from "../../assets/icons/tickColorLatest.svg";
-import { updateLocalRequest, updateReportRequest } from "../../services/request";
+import {
+  updateLocalRequest,
+  updateReportRequest,
+} from "../../services/request";
 import { CancelPopup } from "../Mentor/Task/cancelPopup";
 import { Typography } from "@mui/material";
 import CustomAccordian from "../../shared/CustomAccordian/CustomAccordian";
-import { admin_Approvedreport, admin_Canceledreport, admin_report, mentor_allreport, mentor_Completedreport, mentor_Draftreport, mentor_Newreport, mentor_Pendingreport, mentor_Rejectedreport, request_report, requestPageBreadcrumbs } from "../Breadcrumbs/BreadcrumbsCommonData";
+import {
+  admin_Approvedreport,
+  admin_Canceledreport,
+  admin_report,
+  mentor_allreport,
+  mentor_Completedreport,
+  mentor_Draftreport,
+  mentor_Newreport,
+  mentor_Pendingreport,
+  mentor_Rejectedreport,
+  request_report,
+  requestPageBreadcrumbs,
+  admin_Allreport,
+  
+} from "../Breadcrumbs/BreadcrumbsCommonData";
 import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
 
 const ViewReport = () => {
@@ -29,17 +46,16 @@ const ViewReport = () => {
   const [startTask, setStartTask] = useState(false);
   const params = useParams();
   const dispatch = useDispatch();
-  const [searchParams] = useSearchParams();	 
+  const [searchParams] = useSearchParams();
 
   const breadcrumbsType = searchParams.get("breadcrumbsType") || "";
-    const [breadcrumbsArray, setBreadcrumbsArray] = useState([]);
-  
+  const [breadcrumbsArray, setBreadcrumbsArray] = useState([]);
+
   const { reportDetails, loading: reportsLoading } = useSelector(
     (state) => state.reports
   );
   const userInfo = useSelector((state) => state.userInfo);
   const role = userInfo.data.role;
-
 
   const [confirmPopup, setConfirmPopup] = React.useState({
     bool: false,
@@ -119,67 +135,93 @@ const ViewReport = () => {
             activity: false,
             type: "",
           });
-          dispatch(updateLocalRequest({ status: '' }));
+          dispatch(updateLocalRequest({ status: "" }));
           dispatch(getReportDetails(params.id));
         }, 2000);
       }
     });
   };
-   const handleBreadcrumbs = (key) => {
-     const admin_repor = admin_report(reportDetails.name);
-     const admin_approvedreport = admin_Approvedreport(reportDetails.name);
-     const admin_canceledreport = admin_Canceledreport(reportDetails.name);
-     const admin_request = request_report(reportDetails.name);
-     const mentee_all = mentor_allreport(reportDetails.name);
-     const mentee_new = mentor_Newreport(reportDetails.name);
-     const mentee_pending = mentor_Pendingreport(reportDetails.name);
-     const mentee_completed = mentor_Completedreport(reportDetails.name);
-     const mentee_rejected = mentor_Rejectedreport(reportDetails.name);
-     const mentee_draft = mentor_Draftreport(reportDetails.name);
-console.log(key,"key")
-     switch (key) {
-      case requestPageBreadcrumbs.menteeAllReport:
-        setBreadcrumbsArray(mentee_all);
-        break;
-      case requestPageBreadcrumbs.menteeNewReport:
-        setBreadcrumbsArray(mentee_new);
-        break;
-      case requestPageBreadcrumbs.menteePendingReport:
-        setBreadcrumbsArray(mentee_pending);
-        break;
-      case requestPageBreadcrumbs.menteeCompletedReport:
-        setBreadcrumbsArray(mentee_completed);
-        break;
-      case requestPageBreadcrumbs.menteeRejectedReport:
-        setBreadcrumbsArray(mentee_rejected);
-        break;
-      case requestPageBreadcrumbs.menteeDraftReport:
-        setBreadcrumbsArray(mentee_draft);
-        break;
-       case requestPageBreadcrumbs.report_request:
-         setBreadcrumbsArray(admin_request);
-         break;
-       case requestPageBreadcrumbs.adminApproveReportTab:
-         setBreadcrumbsArray(admin_approvedreport);
-         break;
-       case requestPageBreadcrumbs.adminCancelReportTab:
-         setBreadcrumbsArray(admin_canceledreport);
-         break;
-    
-       case "discussion":
-         break;
-       default:
-         break;
-     }
-   };
+  const handleBreadcrumbs = (key) => {
+    if (!reportDetails?.name) return; // Prevent running if reportDetails.name is missing
+
+    console.log(key, "key");
+
+    if (role === "admin") {
+      // Admin-related breadcrumb options
+      const admin_repor = admin_report(reportDetails.name);
+      const admin_All = admin_Allreport(reportDetails.name);
+      const admin_approvedreport = admin_Approvedreport(reportDetails.name);
+      const admin_canceledreport = admin_Canceledreport(reportDetails.name);
+      const admin_request = request_report(reportDetails.name);
+
+      switch (key) {
+        case requestPageBreadcrumbs.report_request:
+          setBreadcrumbsArray(admin_request);
+          break;
+        case requestPageBreadcrumbs.adminApproveReportTab:
+          setBreadcrumbsArray(admin_approvedreport);
+          break;
+        case requestPageBreadcrumbs.adminCancelReportTab:
+          setBreadcrumbsArray(admin_canceledreport);
+          break;
+          case requestPageBreadcrumbs.adminReportTab:
+            setBreadcrumbsArray(admin_All);
+            break;
+        case "discussion":
+          break;
+        default:
+          console.log("Invalid breadcrumb key for admin");
+          break;
+      }
+    } else {
+      // Mentee-related breadcrumb options
+      const mentee_all = mentor_allreport(reportDetails.name);
+      const mentee_new = mentor_Newreport(reportDetails.name);
+      const mentee_pending = mentor_Pendingreport(reportDetails.name);
+      const mentee_completed = mentor_Completedreport(reportDetails.name);
+      const mentee_rejected = mentor_Rejectedreport(reportDetails.name);
+      const mentee_draft = mentor_Draftreport(reportDetails.name);
+
+      switch (key) {
+        case requestPageBreadcrumbs.menteeAllReport:
+          setBreadcrumbsArray(mentee_all);
+          break;
+        case requestPageBreadcrumbs.menteeNewReport:
+          setBreadcrumbsArray(mentee_new);
+          break;
+        case requestPageBreadcrumbs.menteePendingReport:
+          setBreadcrumbsArray(mentee_pending);
+          break;
+        case requestPageBreadcrumbs.menteeCompletedReport:
+          setBreadcrumbsArray(mentee_completed);
+          break;
+        case requestPageBreadcrumbs.menteeRejectedReport:
+          setBreadcrumbsArray(mentee_rejected);
+          break;
+        case requestPageBreadcrumbs.menteeDraftReport:
+          setBreadcrumbsArray(mentee_draft);
+          break;
+        case "discussion":
+          break;
+        default:
+          console.log("Invalid breadcrumb key for mentee");
+          break;
+      }
+    }
+  };
+
+  // Run function inside useEffect when dependencies change
   useEffect(() => {
-    if(breadcrumbsType&&reportDetails.name){
-    handleBreadcrumbs(breadcrumbsType)
-   }
-   }, [breadcrumbsType,reportDetails])	
+    if (breadcrumbsType && reportDetails?.name) {
+      handleBreadcrumbs(breadcrumbsType);
+    }
+  }, [breadcrumbsType, reportDetails, role]); // Include role as a dependency
+
+  // Debugging: Log updated breadcrumbs
   useEffect(() => {
-   console.log(breadcrumbsArray,"selectedRequestedTab")
-   }, [breadcrumbsArray])	
+    console.log(breadcrumbsArray, "selectedRequestedTab");
+  }, [breadcrumbsArray]);
+
   return (
     <div className="px-3 sm:px-3 md:px-6 lg:px-9 xl:px-9 py-9">
       <Backdrop
@@ -216,8 +258,8 @@ console.log(key,"key")
         >
           <div className="flex justify-between px-5 pb-4 mb-8 items-center border-b-2">
             <div className="flex gap-5 items-center text-[20px]">
-             {!breadcrumbsType&& <p>View {reportDetails?.report_name} </p>}
-             {breadcrumbsType&&<Breadcrumbs items={breadcrumbsArray}/>}
+              {!breadcrumbsType && <p>View {reportDetails?.report_name} </p>}
+              {breadcrumbsType && <Breadcrumbs items={breadcrumbsArray} />}
               {reportDetails?.report_status === "pending" && (
                 <div
                   className="inset-y-0 end-0 flex items-center pe-3 cursor-pointer"
@@ -246,76 +288,101 @@ console.log(key,"key")
               title={"Report Details"}
               children={
                 <div className="relative w-full overflow-x-auto pb-4">
-  <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 min-w-[768px]">
-    {/* First Table */}
-    <table className="w-full lg:w-[50%] text-sm text-left rtl:text-right text-gray-500">
-      <tbody className="border border-[rgba(0,174,189,1)]">
-        <tr className="bg-white border-b">
-          <th scope="row" className="px-4 lg:px-6 py-4 font-medium whitespace-nowrap border border-[rgba(0,174,189,1)]">
-            Category
-          </th>
-          <td className="px-4 lg:px-6 py-4 text-white bg-[rgba(0,174,189,1)]">
-            {reportDetails.category_name}
-          </td>
-        </tr>
-        <tr className="bg-white border-b">
-          <th scope="row" className="px-4 lg:px-6 py-4 font-medium whitespace-nowrap border border-[rgba(0,174,189,1)]">
-            Program Name
-          </th>
-          <td className="px-4 lg:px-6 py-4 text-white bg-[rgba(0,174,189,1)]">
-            {reportDetails.program_name}
-          </td>
-        </tr>
-        <tr className="bg-white border-b">
-          <th scope="row" className="px-4 lg:px-6 py-4 font-medium whitespace-nowrap border border-[rgba(0,174,189,1)]">
-            Course Level
-          </th>
-          <td className="px-4 lg:px-6 py-4 text-white bg-[rgba(0,174,189,1)] capitalize">
-            {reportDetails?.program_course_level}
-          </td>
-        </tr>
-        <tr className="bg-white border-b">
-          <th scope="row" className="px-4 lg:px-6 py-4 font-medium whitespace-nowrap border border-[rgba(0,174,189,1)]">
-            Mentor Name
-          </th>
-          <td className="px-4 lg:px-6 py-4 text-white bg-[rgba(0,174,189,1)]">
-            {reportDetails.created_by_full_name}
-          </td>
-        </tr>
-      </tbody>
-    </table>
+                  <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 min-w-[768px]">
+                    {/* First Table */}
+                    <table className="w-full lg:w-[50%] text-sm text-left rtl:text-right text-gray-500">
+                      <tbody className="border border-[rgba(0,174,189,1)]">
+                        <tr className="bg-white border-b">
+                          <th
+                            scope="row"
+                            className="px-4 lg:px-6 py-4 font-medium whitespace-nowrap border border-[rgba(0,174,189,1)]"
+                          >
+                            Category
+                          </th>
+                          <td className="px-4 lg:px-6 py-4 text-white bg-[rgba(0,174,189,1)]">
+                            {reportDetails.category_name}
+                          </td>
+                        </tr>
+                        <tr className="bg-white border-b">
+                          <th
+                            scope="row"
+                            className="px-4 lg:px-6 py-4 font-medium whitespace-nowrap border border-[rgba(0,174,189,1)]"
+                          >
+                            Program Name
+                          </th>
+                          <td className="px-4 lg:px-6 py-4 text-white bg-[rgba(0,174,189,1)]">
+                            {reportDetails.program_name}
+                          </td>
+                        </tr>
+                        <tr className="bg-white border-b">
+                          <th
+                            scope="row"
+                            className="px-4 lg:px-6 py-4 font-medium whitespace-nowrap border border-[rgba(0,174,189,1)]"
+                          >
+                            Course Level
+                          </th>
+                          <td className="px-4 lg:px-6 py-4 text-white bg-[rgba(0,174,189,1)] capitalize">
+                            {reportDetails?.program_course_level}
+                          </td>
+                        </tr>
+                        <tr className="bg-white border-b">
+                          <th
+                            scope="row"
+                            className="px-4 lg:px-6 py-4 font-medium whitespace-nowrap border border-[rgba(0,174,189,1)]"
+                          >
+                            Mentor Name
+                          </th>
+                          <td className="px-4 lg:px-6 py-4 text-white bg-[rgba(0,174,189,1)]">
+                            {reportDetails.created_by_full_name}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
 
-    {/* Second Table */}
-    <table className="w-full lg:w-[50%] text-sm text-left rtl:text-right text-gray-500">
-      <tbody className="border border-[rgba(29,91,191,1)]">
-        <tr className="bg-white border-b">
-          <th scope="row" className="px-4 lg:px-6 py-4 font-medium whitespace-nowrap border border-[rgba(29,91,191,1)]">
-            Program Start Date and Time
-          </th>
-          <td className="px-4 lg:px-6 py-4 text-white bg-[rgba(29,91,191,1)]">
-            {dateTimeFormat(reportDetails.program_start_date_and_time)}
-          </td>
-        </tr>
-        <tr className="bg-white border-b">
-          <th scope="row" className="px-4 lg:px-6 py-4 font-medium whitespace-nowrap border border-[rgba(29,91,191,1)]">
-            Program End Date and Time
-          </th>
-          <td className="px-4 lg:px-6 py-4 text-white bg-[rgba(29,91,191,1)]">
-            {dateTimeFormat(reportDetails.program_end_date_and_time)}
-          </td>
-        </tr>
-        <tr className="bg-white border-b">
-          <th scope="row" className="px-4 lg:px-6 py-4 font-medium whitespace-nowrap border border-[rgba(29,91,191,1)]">
-            Participated Mentees
-          </th>
-          <td className="px-4 lg:px-6 py-4 text-white bg-[rgba(29,91,191,1)]">
-            {reportDetails?.participates?.length} Member
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
+                    {/* Second Table */}
+                    <table className="w-full lg:w-[50%] text-sm text-left rtl:text-right text-gray-500">
+                      <tbody className="border border-[rgba(29,91,191,1)]">
+                        <tr className="bg-white border-b">
+                          <th
+                            scope="row"
+                            className="px-4 lg:px-6 py-4 font-medium whitespace-nowrap border border-[rgba(29,91,191,1)]"
+                          >
+                            Program Start Date and Time
+                          </th>
+                          <td className="px-4 lg:px-6 py-4 text-white bg-[rgba(29,91,191,1)]">
+                            {dateTimeFormat(
+                              reportDetails.program_start_date_and_time
+                            )}
+                          </td>
+                        </tr>
+                        <tr className="bg-white border-b">
+                          <th
+                            scope="row"
+                            className="px-4 lg:px-6 py-4 font-medium whitespace-nowrap border border-[rgba(29,91,191,1)]"
+                          >
+                            Program End Date and Time
+                          </th>
+                          <td className="px-4 lg:px-6 py-4 text-white bg-[rgba(29,91,191,1)]">
+                            {dateTimeFormat(
+                              reportDetails.program_end_date_and_time
+                            )}
+                          </td>
+                        </tr>
+                        <tr className="bg-white border-b">
+                          <th
+                            scope="row"
+                            className="px-4 lg:px-6 py-4 font-medium whitespace-nowrap border border-[rgba(29,91,191,1)]"
+                          >
+                            Participated Mentees
+                          </th>
+                          <td className="px-4 lg:px-6 py-4 text-white bg-[rgba(29,91,191,1)]">
+                            {reportDetails?.participates?.length} Member
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               }
             />
             <CustomAccordian
@@ -410,51 +477,47 @@ console.log(key,"key")
                 //         __html: reportDetails?.html_content,
                 //       }}
                 //     ></div>
-                //   )}                  
+                //   )}
                 // </div>
 
-                <div
-  className="task-desc mt-3 sm:mt-4 lg:mt-5 px-3 sm:px-4 lg:px-5 py-4 sm:py-5 lg:py-6 border border-[rgba(29,91,191,0.5)]"
->
-  {/* First Section with Image */}
-  <div
-    className="hidden flex flex-col lg:flex-row items-center bg-[#F8F9FA]"
-  >
-    <p className="text-base sm:text-lg lg:text-[20px] w-full lg:w-[50%] px-4 sm:px-8 lg:px-20 leading-8 sm:leading-9 lg:leading-10">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-      incididunt ut labore et dolore magna aliqua.
-    </p>
-    <img
-      className="w-full lg:w-[50%] mt-4 lg:mt-0"
-      src={ReportUserIcon}
-      alt="ReportUserIcon"
-    />
-  </div>
+                <div className="task-desc mt-3 sm:mt-4 lg:mt-5 px-3 sm:px-4 lg:px-5 py-4 sm:py-5 lg:py-6 border border-[rgba(29,91,191,0.5)]">
+                  {/* First Section with Image */}
+                  <div className="hidden flex flex-col lg:flex-row items-center bg-[#F8F9FA]">
+                    <p className="text-base sm:text-lg lg:text-[20px] w-full lg:w-[50%] px-4 sm:px-8 lg:px-20 leading-8 sm:leading-9 lg:leading-10">
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                      incididunt ut labore et dolore magna aliqua.
+                    </p>
+                    <img
+                      className="w-full lg:w-[50%] mt-4 lg:mt-0"
+                      src={ReportUserIcon}
+                      alt="ReportUserIcon"
+                    />
+                  </div>
 
-  {/* Second Section - Text Content */}
-  <div className="leading-7 sm:leading-8 lg:leading-10 py-4 sm:py-5 lg:py-6 hidden">
-    any organizations rely on PL/SQL for data integration, but
-    Informatica ETL offers a more efficient approach...
-  </div>
+                  {/* Second Section - Text Content */}
+                  <div className="leading-7 sm:leading-8 lg:leading-10 py-4 sm:py-5 lg:py-6 hidden">
+                    any organizations rely on PL/SQL for data integration, but
+                    Informatica ETL offers a more efficient approach...
+                  </div>
 
-  {/* Video Image */}
-  <img
-    className="w-full hidden"
-    src={ReportVideoIcon}
-    alt="ReportVideoIcon"
-  />
+                  {/* Video Image */}
+                  <img
+                    className="w-full hidden"
+                    src={ReportVideoIcon}
+                    alt="ReportVideoIcon"
+                  />
 
-  {/* Large Text Section */}
-  <div className="py-4 sm:py-6 lg:py-8 leading-7 sm:leading-8 lg:leading-9 hidden">
-    Lorem ipsum dolor sit amet...
-  </div>
+                  {/* Large Text Section */}
+                  <div className="py-4 sm:py-6 lg:py-8 leading-7 sm:leading-8 lg:leading-9 hidden">
+                    Lorem ipsum dolor sit amet...
+                  </div>
 
-  {/* Report Details Section */}
-  <div className="flex flex-col gap-2 sm:gap-3 mb-6 sm:mb-8 lg:mb-10 text-sm sm:text-base">
-    <div className="break-words">
-      <span className="font-medium">Report Name:</span>{" "}
-      {reportDetails.name}
-    </div>
+                  {/* Report Details Section */}
+                  <div className="flex flex-col gap-2 sm:gap-3 mb-6 sm:mb-8 lg:mb-10 text-sm sm:text-base">
+                    <div className="break-words">
+                      <span className="font-medium">Report Name:</span>{" "}
+                      {reportDetails.name}
+                    </div>
 
                     {/* <div>Report Description : {reportDetails.comments}</div> */}
                   </div>
@@ -475,104 +538,103 @@ console.log(key,"key")
                     </div>
                   )}
 
-  {/* Rejection Reason Section */}
-  {reportDetails?.rejection_reason && (
-    <div className="border border-[#E0382D] rounded-[5px] bg-[#FFE7E7] mt-4 sm:mt-5 lg:mt-[20px]">
-      <Typography
-        className="text-[#E0382D] !text-base sm:!text-lg lg:!text-[18px] border-b border-[#E0382D]"
-        p={"8px 16px sm:12px 20px"}
-      >
-        Reviewed Reason
-      </Typography>
-      <Typography
-        className="text-[#18283D] !text-xs sm:!text-sm lg:!text-[14px]"
-        p={"8px 16px sm:12px 20px"}
-      >
-        {reportDetails?.rejection_reason}
-      </Typography>
-    </div>
-  )}
+                  {/* Rejection Reason Section */}
+                  {reportDetails?.rejection_reason && (
+                    <div className="border border-[#E0382D] rounded-[5px] bg-[#FFE7E7] mt-4 sm:mt-5 lg:mt-[20px]">
+                      <Typography
+                        className="text-[#E0382D] !text-base sm:!text-lg lg:!text-[18px] border-b border-[#E0382D]"
+                        p={"8px 16px sm:12px 20px"}
+                      >
+                        Reviewed Reason
+                      </Typography>
+                      <Typography
+                        className="text-[#18283D] !text-xs sm:!text-sm lg:!text-[14px]"
+                        p={"8px 16px sm:12px 20px"}
+                      >
+                        {reportDetails?.rejection_reason}
+                      </Typography>
+                    </div>
+                  )}
 
-  {/* HTML Content */}
-  {reportDetails?.html_content && (
-    <div 
-      className="mt-4 sm:mt-6 lg:mt-8 text-sm sm:text-base"
-      dangerouslySetInnerHTML={{
-        __html: reportDetails?.html_content,
-      }}
-    />
-  )}
-</div>
+                  {/* HTML Content */}
+                  {reportDetails?.html_content && (
+                    <div
+                      className="mt-4 sm:mt-6 lg:mt-8 text-sm sm:text-base"
+                      dangerouslySetInnerHTML={{
+                        __html: reportDetails?.html_content,
+                      }}
+                    />
+                  )}
+                </div>
               }
             />
 
-<div
-                    style={{
-                      marginTop: 20,
-                      display: "flex",
-                      flexDirection: "row",
-                      width: "100%",
-                      justifyContent: "center",
+            <div
+              style={{
+                marginTop: 20,
+                display: "flex",
+                flexDirection: "row",
+                width: "100%",
+                justifyContent: "center",
+              }}
+            >
+              {role === "admin" && reportDetails?.status === "approved" ? (
+                <>
+                  <Box className="pr-2">
+                    <button
+                      className="py-3 !px-8  text-white text-[14px] flex items-center"
+                      style={{
+                        ...StatusbuttonStyles.base,
+                        ...StatusbuttonStyles.success,
+                        cursor: "not-allowed",
+                      }}
+                      onClick={() => undefined}
+                    >
+                      Approved
+                    </button>
+                  </Box>
+                  <Button
+                    btnType="button"
+                    btnCls="w-[120px]"
+                    onClick={() => {
+                      navigate(-1);
                     }}
-                  >
-                    {role === "admin" &&
-                    reportDetails?.status === "approved" ? (
-                      <>
-                        <Box className="pr-2">
-                          <button
-                            className="py-3 !px-8  text-white text-[14px] flex items-center"
-                            style={{
-                              ...StatusbuttonStyles.base,
-                              ...StatusbuttonStyles.success,
-                              cursor: "not-allowed",
-                            }}
-                            onClick={() => undefined}
-                          >
-                            Approved
-                          </button>
-                        </Box>
-                        <Button
-                          btnType="button"
-                          btnCls="w-[120px]"
-                          onClick={() => {
-                            navigate(-1);
-                          }}
-                          btnName="Close"
-                          btnCategory="secondary"
-                        />
-                      </>
-                    ) : role === "admin" &&
-                      (reportDetails?.status === "rejected" ||
-                        reportDetails?.status === "cancelled") ? (
-                      <>
-                        <Box pr={2}>
-                          <button
-                            className="py-3 px-16 text-white text-[14px] flex items-center"
-                            style={{
-                              ...StatusbuttonStyles.base,
-                              ...StatusbuttonStyles.danger,
-                              cursor: "not-allowed",
-                            }}
-                            onClick={() => undefined}
-                          >
-                            Reviewed
-                          </button>
-                        </Box>
-                        <Button
-                          btnType="button"
-                          btnCls="w-[120px]"
-                          onClick={() => {
-                            navigate(-1);
-                          }}
-                          btnName="Close"
-                          btnCategory="secondary"
-                        />
-                      </>
-                    ) : null}
+                    btnName="Close"
+                    btnCategory="secondary"
+                  />
+                </>
+              ) : role === "admin" &&
+                (reportDetails?.status === "rejected" ||
+                  reportDetails?.status === "cancelled") ? (
+                <>
+                  <Box pr={2}>
+                    <button
+                      className="py-3 px-16 text-white text-[14px] flex items-center"
+                      style={{
+                        ...StatusbuttonStyles.base,
+                        ...StatusbuttonStyles.danger,
+                        cursor: "not-allowed",
+                      }}
+                      onClick={() => undefined}
+                    >
+                      Reviewed
+                    </button>
+                  </Box>
+                  <Button
+                    btnType="button"
+                    btnCls="w-[120px]"
+                    onClick={() => {
+                      navigate(-1);
+                    }}
+                    btnName="Close"
+                    btnCategory="secondary"
+                  />
+                </>
+              ) : null}
 
-                    {role !== "admin" && (
-                      <span className="pr-2">
-                        {/* <Button
+              {role !== "admin" && (
+                <span className="pr-2">
+                  {/* <Button
                     btnType="button"
                     btnCls="w-[14%]"
                     onClick={() => {
@@ -582,60 +644,60 @@ console.log(key,"key")
                     btnCategory="secondary"
                   /> */}
 
-                        {
-                          // reportDetails.report_status === reportAllStatus.pending &&
-                          ["new", "draft", "pending"].includes(
-                            reportDetails?.status
-                          ) && (
-                            <Button
-                              btnType="button"
-                              btnCls="w-[120px]"
-                              onClick={() => {
-                                navigate(`/edit-report/${reportDetails.id}`);
-                              }}
-                              btnName="Edit"
-                              btnStyle={{ background: "rgba(0, 174, 189, 1)" }}
-                            />
-                          )
-                        }
-
-                        {/* <Button btnType="button" btnCls="w-[14%]"
-                                    onClick={() => { navigate('/reports') }} btnName='Close'
-                                    btnStyle={{ background: 'rgba(29, 91, 191, 1)' }}
-                                /> */}
-                      </span>
-                    )}
-                    {role !== "admin" && (
+                  {
+                    // reportDetails.report_status === reportAllStatus.pending &&
+                    ["new", "draft", "pending"].includes(
+                      reportDetails?.status
+                    ) && (
                       <Button
                         btnType="button"
                         btnCls="w-[120px]"
                         onClick={() => {
-                          navigate(-1);
+                          navigate(`/edit-report/${reportDetails.id}`);
                         }}
-                        btnName="Close"
-                        btnCategory="secondary"
+                        btnName="Edit"
+                        btnStyle={{ background: "rgba(0, 174, 189, 1)" }}
                       />
-                    )}
-                  </div>
-                  {role === "admin" && reportDetails?.status === "new" ? (
-                    <div className="close-btn flex justify-center gap-7 pb-5 pt-2">
-                      <Button
-                        btnType="button"
-                        btnCategory="secondary"
-                        btnName="Review"
-                        btnCls="!border !border-[#E0382D] !text-[#E0382D] w-[200px]"
-                        onClick={() => handleOpenPopup("reject")}
-                      />
+                    )
+                  }
 
-                      {
-                        <Button
-                          btnType="button"
-                          btnCls="w-[200px]"
-                          onClick={() => handleOpenPopup("approve")}
-                          btnName="Approve"
-                        />
-                      }
-                      {/* <Button
+                  {/* <Button btnType="button" btnCls="w-[14%]"
+                                    onClick={() => { navigate('/reports') }} btnName='Close'
+                                    btnStyle={{ background: 'rgba(29, 91, 191, 1)' }}
+                                /> */}
+                </span>
+              )}
+              {role !== "admin" && (
+                <Button
+                  btnType="button"
+                  btnCls="w-[120px]"
+                  onClick={() => {
+                    navigate(-1);
+                  }}
+                  btnName="Close"
+                  btnCategory="secondary"
+                />
+              )}
+            </div>
+            {role === "admin" && reportDetails?.status === "new" ? (
+              <div className="close-btn flex justify-center gap-7 pb-5 pt-2">
+                <Button
+                  btnType="button"
+                  btnCategory="secondary"
+                  btnName="Review"
+                  btnCls="!border !border-[#E0382D] !text-[#E0382D] w-[200px]"
+                  onClick={() => handleOpenPopup("reject")}
+                />
+
+                {
+                  <Button
+                    btnType="button"
+                    btnCls="w-[200px]"
+                    onClick={() => handleOpenPopup("approve")}
+                    btnName="Approve"
+                  />
+                }
+                {/* <Button
                   btnType="button"
                   btnCls="w-[120px]"
                   onClick={() => {
@@ -644,8 +706,8 @@ console.log(key,"key")
                   btnName="Close"
                   btnCategory="secondary"
                 /> */}
-                    </div>
-                  ) : null}
+              </div>
+            ) : null}
           </div>
 
           <Backdrop

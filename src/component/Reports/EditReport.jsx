@@ -19,7 +19,7 @@ import { getAllCategories } from "../../services/programInfo";
 
 import { reportsStatus } from "../../utils/constant";
 import {
-    createReport,
+  createReport,
   getProgramsByCategoryId,
   getReportDetails,
   getReportProgramDetails,
@@ -30,13 +30,22 @@ import { dateTimeFormat } from "../../utils";
 import ToastNotification from "../../shared/Toast";
 import HtmlReport from "../Docusign/Docusignn";
 import MuiModal from "../../shared/Modal";
+import {
+  requestPageBreadcrumbs,
+  mentor_edit_newreport,
+  mentor_edit_pendingreport,
+  mentor_edit_draftreport,
+  mentor_edit_allreport,
+} from "../Breadcrumbs/BreadcrumbsCommonData";
+import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
 
 export default function EditReport() {
   const navigate = useNavigate();
   const [addMenteeModal, setMentalModal] = useState(false);
   const [taskSuccess, setTaskSuccess] = useState(false);
   const [searchParams] = useSearchParams();
-
+  const breadcrumbsType = searchParams.get("breadcrumbsType") || "";
+  const [breadcrumbsArray, setBreadcrumbsArray] = useState([]);
   const params = useParams();
 
   const dispatch = useDispatch();
@@ -317,9 +326,48 @@ export default function EditReport() {
   //       navigate("/reports");
   //     }
   //   };
+  const handleBreadcrumbs = (key) => {
+    console.log(key, "key");
+    if (!reportDetails?.name) return; // Prevent execution if reportDetails.name is missing
+    // Declare variables before using them in the switch case
+    const mentorAllEdit = mentor_edit_allreport(reportDetails.name);
+    const mentorNewEdit = mentor_edit_newreport(reportDetails.name);
+    const mentorPendingEdit = mentor_edit_pendingreport(reportDetails.name);
+    const mentorDraftEdit = mentor_edit_draftreport(reportDetails.name);
+
+    switch (key) {
+      case requestPageBreadcrumbs.mentorNewEditReport:
+        setBreadcrumbsArray(mentorNewEdit);
+        break;
+      case requestPageBreadcrumbs.mentorPendingEditReport:
+        setBreadcrumbsArray(mentorPendingEdit);
+        break;
+      case requestPageBreadcrumbs.mentorDraftEditReport:
+        setBreadcrumbsArray(mentorDraftEdit);
+        break;
+      case requestPageBreadcrumbs.mentorAllEditReport:
+        setBreadcrumbsArray(mentorAllEdit);
+        break;
+      case "discussion":
+        break;
+      default:
+        console.log("Invalid breadcrumb key for admin");
+        break;
+    }
+  };
+
+  // Run function inside useEffect when dependencies change
+  useEffect(() => {
+    if (breadcrumbsType && reportDetails.name) {
+      handleBreadcrumbs(breadcrumbsType);
+    }
+  }, [breadcrumbsType,reportDetails.name]); // Include reportDetails as a dependency
 
   return (
     <div className="px-9 my-6 grid">
+      <div className="pb-3">
+      {breadcrumbsArray?.length > 0 && <Breadcrumbs items={breadcrumbsArray} />}
+    </div>
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={reportsLoading || apiCategoryLoading}
