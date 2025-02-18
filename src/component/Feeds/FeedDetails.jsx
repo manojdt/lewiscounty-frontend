@@ -282,7 +282,7 @@ export default function FeedDetails() {
         <CircularProgress color="inherit" />
       </Backdrop>
       {Object.keys(feedDetails).length > 0 && (
-        <div className="feed-container px-9 py-9">
+        <div className="feed-container px-2 sm:px-2 md:px-6 lg:px-9 xl:px-9 py-9">
           <div
             className="px-3 pt-5 pb-56 mb-8"
             style={{
@@ -311,8 +311,8 @@ export default function FeedDetails() {
             </div>
             <div className="feed-details">
               <div className="grid grid-cols-6 gap-7">
-                <div className="col-span-4">
-                  <div className="feed-info">
+                <div className="col-span-6">
+                  <div className="feed-info px-3 sm:px-3 md:px-6 lg:px-9 xl:px-9">
                     {feedDetails?.related_request?.html_content_link ? (
                       <a
                         href={feedDetails?.related_request?.html_content_link}

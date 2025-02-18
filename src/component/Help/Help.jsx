@@ -81,7 +81,7 @@ export default function HelpPage() {
   }, []);
 
   return (
-    <div className='feedback px-9 py-9'>
+    <div className='feedback px-3 sm:px-3 md:px-6 lg:px-9 xl:px-9 py-9'>
       <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={loading}
@@ -149,7 +149,7 @@ export default function HelpPage() {
                   key={index}
                   className='flex w-[80%] justify-between py-3 items-center'
                 >
-                  <div className='text-[20px] font-semibold'>
+                  <div className='text-base font-semibold'>
                     {index + 1} . {questionList.name}
                   </div>
                   <div

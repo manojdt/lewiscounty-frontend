@@ -186,7 +186,7 @@ function MentorProfile() {
     { name: " MCA", collage: "RS", year: "2024" },
   ];
   return (
-    <div className="px-8 mt-10 pb-5">
+    <div className="px-4 sm:px-4 md:px-6 lg:px-8 xl:px-8">
       <div
         className="px-3 py-5"
         style={{ boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.15)" }}
