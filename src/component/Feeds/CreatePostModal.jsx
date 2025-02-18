@@ -191,7 +191,7 @@ export default function CreatePostModal({
           </div>
           <button
             type='submit'
-            className='text-white py-2 px-7 w-[20%]'
+            className='text-white py-2 px-7 w-[30%] sm:w-[30%] md:w-[20%] lg:w-[15%] xl:w-[15%]'
             style={{
               background:
                 'linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)',
