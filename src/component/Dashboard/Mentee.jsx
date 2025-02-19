@@ -295,7 +295,7 @@ export const Mentee = () => {
                   return (
                     <div
                       key={index}
-                      className="py-3 px-3 cursor-pointer"
+                      className="py-3 px-2 sm:px-2 md:px-2 lg:px-3 xl:px-3 cursor-pointer"
                       style={{
                         border: "1px solid rgba(29, 91, 191, 1)",
                         borderRadius: "10px",

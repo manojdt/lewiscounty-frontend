@@ -64,7 +64,7 @@ export default function Day({
 
       {renderData.length > 0 && (
         <div
-          className="mx-2 mb-2 cursor-pointer bg-white rounded relative"
+          className="mx-1 sm:mx-1 md:mx-1 lg:mx-2 xl:mx-2 mb-2 cursor-pointer bg-white rounded relative"
           style={{
             boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)'
           }}
@@ -80,7 +80,7 @@ export default function Day({
             {renderData[0]?.title}
           </div>
           
-          <div className="p-2">
+          <div className="p-1 sm:p-1 md:p-1 lg:p-2 xl:p-2">
             <div className="text-xs truncate mb-1">
               Mentor: John Doe
             </div>
