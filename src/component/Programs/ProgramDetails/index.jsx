@@ -1967,7 +1967,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                           "yettoapprove",
                           "yettojoin",
                         ].includes(programdetails?.status)
-                      ) && programdetails?.program_interest&&
+                      ) &&
                     !["program_join", "program_cancel"].includes(
                       typeParams
                     ))) && (

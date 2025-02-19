@@ -112,7 +112,7 @@ export default function ProfileView() {
     followInfo,
     programNotesList,
   } = useSelector((state) => state.userList);
-  const pathe = state?.reqType ? -1 : "/all-request";
+  const pathe = state?.reqType==="dashborad"?"/dashboard": state?.reqType ? -1 : "/all-request";
   const [noteData, setNoteData] = React.useState({
     text: "",
     error: "",
@@ -1729,12 +1729,12 @@ export default function ProfileView() {
             <div className="bg-[#F9F9F9]">
               <div className="flex justify-between items-center border-b border-border-main px-5 py-3">
                 <p className="text-[18px] font-semibold">Upcoming Programs</p>
-                <p
+                {/* <p
                   className="bg-background-primary-light rounded-[3px] text-[#6B6B6B] text-[12px] cursor-pointer px-2 py-1"
                   onClick={() => navigate("/programs?filter_by=month")}
                 >
                   View All
-                </p>
+                </p> */}
               </div>
               <div>
                 <ProgramCard

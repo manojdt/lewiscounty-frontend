@@ -50,6 +50,9 @@ export const Mentee = () => {
   let decoded = jwtDecode(token);
   const [topPrograms, setTopPrograms] = useState([]);
   const [programView, setProgramView] = useState("grid");
+  const categoryId = searchParams.get("category_id");
+  const categoryIDParams=categoryId?`&category_id=${categoryId}`:""
+  const categoryIDParamsAll=categoryId?`?category_id=${categoryId}`:""
   React.useEffect(() => {
     if (!decoded?.category_added) {
       setOpenCategory(true);
@@ -370,7 +373,7 @@ export const Mentee = () => {
               searchParams.get("is_bookmark") === null && (
                 <ProgramCard
                   title="All Programs"
-                  viewpage="/programs"
+                  viewpage={`/programs${categoryIDParamsAll}`}
                   handleNavigateDetails={handleNavigateDetails}
                   handleBookmark={handleBookmark}
                   programs={userpragrams.allprograms}
@@ -383,7 +386,7 @@ export const Mentee = () => {
               searchParams.get("type") === "planned") && (
               <ProgramCard
                 title="Active Programs"
-                viewpage="/programs?type=yettojoin"
+                viewpage={`/programs?type=yettojoin${categoryIDParams}`}
                 handleNavigateDetails={handleNavigateDetails}
                 handleBookmark={handleBookmark}
                 programs={userpragrams.yettojoin}
@@ -392,22 +395,22 @@ export const Mentee = () => {
               />
             )}
 
-            {searchParams.get("type") === "yettostart" && (
+            {/* {searchParams.get("type") === "yettostart" && (
               <ProgramCard
                 title="Recently Joined Programs"
-                viewpage="/programs?type=yettostart"
+                viewpage={`/programs?type=yettostart${categoryIDParams}`}
                 handleNavigateDetails={handleNavigateDetails}
                 handleBookmark={handleBookmark}
                 programs={userpragrams.yettostart}
                 tableIcon={ImageComponent}
                 loadProgram={getPrograms}
               />
-            )}
+            )} */}
 
             {searchParams.get("type") === "inprogress" && (
               <ProgramCard
                 title="Ongoing Programs"
-                viewpage="/programs?type=inprogress"
+                viewpage={`/programs?type=inprogress${categoryIDParams}`}
                 handleNavigateDetails={handleNavigateDetails}
                 handleBookmark={handleBookmark}
                 programs={userpragrams.inprogress}

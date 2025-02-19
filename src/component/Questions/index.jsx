@@ -432,13 +432,19 @@ const { data, isLoading, refetch, isFetching}=useGetMentorQuestionsQuery()
     );
   };
 
-  const handleBack = () =>{
-    dispatch(updateUserRole({ role: "fresher" })).then((res)=>{
-      dispatch(updateUserInfo({ data: res?.payload, status: "" }));
-      navigate("/login-type")
-    })
-  }
-
+  // const handleBack = () =>{
+  //   dispatch(updateUserRole({ role: "fresher" })).then((res)=>{
+  //     dispatch(updateUserInfo({ data: res?.payload, status: "" }));
+  //     navigate("/login-type")
+  //   })
+  // }
+  const handleLogout = () => {
+    // localStorage.removeItem("access_token");
+    // localStorage.removeItem("refresh_token");
+    localStorage.clear()
+    dispatch({ type: "logout" });
+    navigate("/login");
+  };
   return (
     <>
       <Navbar />
@@ -505,13 +511,13 @@ const { data, isLoading, refetch, isFetching}=useGetMentorQuestionsQuery()
           </div>
         )} */}
         <div className='mb-1'>
-        <div className='flex items-center gap-1'onClick={()=>handleBack()}>
+        <div className='flex items-center gap-1'onClick={()=>handleLogout()}>
           <img
             src={rightArrow}
             className='h-[20px] w-[20px] cursor-pointer rotate-180'
             alt='right'
           />
-          <p style={{ fontWeight: 'bold', cursor: 'pointer' }}>Back</p>
+          <p style={{ fontWeight: 'bold', cursor: 'pointer' }}>Go to Login</p>
         </div>
         {/* <Button btnName="Back" btnCategory="secondary" onClick={()=>handleBack()} /> */}
 

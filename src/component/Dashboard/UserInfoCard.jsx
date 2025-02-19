@@ -83,7 +83,7 @@ export default function UserInfoCard() {
                 <ul className="flex flex-col gap-2 p-4 md:p-0 mt-4 font-medium">
                     {
                         programMenusList.map((menu, index) => {
-                            if (index > 3) return null
+                            if (index > 2) return null
                             return (
                                 <li className="" key={index}>
                                     <div className={`flex justify-between py-2 px-6 rounded cursor-pointer menu-content 

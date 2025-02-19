@@ -368,7 +368,7 @@ export default function Programs() {
       query.date = { date: "filter_by", value: filterDate };
     }
     if (categoryFilter && categoryFilter !== "") {
-      query.date = { date: "category_id", value: categoryFilter };
+      query = { ...query, category_id: categoryFilter };
     }
     if (!filterDate) {
       query.date = { date: "filter_by", value: programFilter.filter_by };
@@ -394,6 +394,7 @@ export default function Programs() {
     const payload = {
       page: paginationModel1?.page + 1,
       limit: paginationModel1?.pageSize,
+      ...(categoryFilter && { category_id: categoryFilter }),
     };
     if (filterType && filterType !== "") {
       payload.status = filterType;
@@ -485,6 +486,9 @@ export default function Programs() {
     let query = {};
     if (filterType && filterType !== "") {
       query = { type: filterType };
+    }
+    if (categoryFilter && categoryFilter !== "") {
+      query = { ...query, category_id: categoryFilter };
     }
     if (isBookmark && isBookmark !== "") {
       query.type = "bookmarked";
@@ -594,11 +598,11 @@ export default function Programs() {
     if (userprograms.status === programStatus.bookmarked) {
       let query = {};
       const pay = {
+        ...(categoryFilter && { category_id: categoryFilter }),
         ...((programFilter.filter_by || filterDate) && {
           filter_by: programFilter.filter_by
             ? programFilter.filter_by
             : filterDate,
-            ...(categoryFilter && { category_id: categoryFilter }),
         }),
       };
       if (filterType && filterType !== "") {
@@ -609,7 +613,7 @@ export default function Programs() {
         query = { type: "status", value: "bookmarked" };
       }
       if (categoryFilter && categoryFilter !== "") {
-        query = { type: "category_id", value: categoryFilter };
+        query = { ...query, category_id: categoryFilter };
       }
 
       if (role === "mentee") {
@@ -682,7 +686,7 @@ export default function Programs() {
         })
       );
     }
-  }, [role, searchParams, programFilter]);
+  }, [role, searchParams, programFilter,categoryFilter]);
   const getProgramMenuDisplayName = ({
     filterType,
     role,
