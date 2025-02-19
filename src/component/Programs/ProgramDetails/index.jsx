@@ -1997,12 +1997,13 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                       "program_cancel",
                     ].includes(typeParams)) ||
                   (role === "mentee" &&
-                    (programdetails.mentee_join_status ===
-                      programActionStatus.program_join_request_accepted ||
-                      ["yettoapprove", "yettojoin"].includes(
-                        programdetails?.status
-                      )) &&
-                    programdetails?.program_interest &&
+                    (
+                    programdetails.mentee_join_status ===
+                        programActionStatus.program_join_request_accepted ||[
+                          "yettoapprove",
+                          "yettojoin",
+                        ].includes(programdetails?.status)
+                      ) &&
                     !["program_join", "program_cancel"].includes(
                       typeParams
                     ))) && (

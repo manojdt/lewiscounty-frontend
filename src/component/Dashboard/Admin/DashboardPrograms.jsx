@@ -22,6 +22,8 @@ export default function DashboardPrograms({searchParams, categoryId,type }) {
   const [programData, setProgramData] = useState({});
   const [programView, setProgramView] = useState("grid");
   // const [searchParams] = useSearchParams();
+  const categoryIDParams=categoryId?`&category_id=${categoryId}`:""
+  console.log(categoryIDParams,"categoryIDParams")
   const navigate = useNavigate();
   const handleNavigateDetails = (program) => {
     let baseUrl = pipeUrls.programdetails;
@@ -110,22 +112,22 @@ export default function DashboardPrograms({searchParams, categoryId,type }) {
     <div className="programs-list">
       {programView === "grid" && (
         <>
-          {searchParams.get("type") === "yettostart" && (
+          {/* {searchParams.get("type") === "yettostart" && (
             <ProgramCard
-              title="Recent  Programs"
-              viewpage="/programs?type=yettostart"
+              title="Recently Joined Programs"
+              viewpage={`/programs?type=yettostart${categoryIDParams}`}
               handleNavigateDetails={handleNavigateDetails}
               handleBookmark={handleBookmark}
               programs={programData?.programs}
               tableIcon={ImageComponent}
               // loadProgram={handleFetchPrograms}
             />
-          )}
+          )} */}
           {(searchParams.get("type") === "yettojoin" ||
             searchParams.get("type") === null) && (
             <ProgramCard
               title="Active Programs"
-              viewpage="/programs?type=yettojoin"
+              viewpage={`/programs?type=yettojoin${categoryIDParams}`}
               handleNavigateDetails={handleNavigateDetails}
               handleBookmark={handleBookmark}
               programs={programData?.programs ?? []}
@@ -136,7 +138,7 @@ export default function DashboardPrograms({searchParams, categoryId,type }) {
           {searchParams.get("type") === "inprogress" && (
             <ProgramCard
               title="Ongoing  Programs"
-              viewpage="/programs?type=inprogress"
+              viewpage={`/programs?type=inprogress${categoryIDParams}`}
               handleNavigateDetails={handleNavigateDetails}
               handleBookmark={handleBookmark}
               programs={programData?.programs}

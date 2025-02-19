@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 export const CategoryCreateEdit = ({
   handleCancelForm = () => false,
   onSubmit = () => false,
+  type,
 }) => {
   const { formDetails } = useSelector((state) => state.category);
   const {
@@ -21,7 +22,7 @@ export const CategoryCreateEdit = ({
   } = useForm();
 
   React.useEffect(() => {
-    reset(formDetails);
+      reset(formDetails);
   }, [formDetails]);
 
   return (

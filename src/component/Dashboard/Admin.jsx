@@ -249,8 +249,8 @@ export default function Admin() {
   }, []);
 
   return (
-    <div className="dashboard-content px-8 mt-10 py-5">
-      <div className="grid grid-cols-8 gap-7 max-md:block">
+    <div className="dashboard-content px-4 sm:px-4 md:px-4 lg:px-8 xl:px-8 mt-10 py-5">
+      <div className="grid grid-cols-8 gap-4 max-md:block">
         <div className="col-span-2">
           <div
             className="pb-3 w-full  bg-white rounded-lg"
@@ -286,7 +286,7 @@ export default function Admin() {
 
             <ul className="flex flex-col gap-2 p-4 md:p-0 mt-4 font-medium">
               {programMenusList.map((menu, index) => {
-                if (role === "admin" && index > 3) return null;
+                if (role === "admin" && index > 2) return null;
                 return (
                   <li className="" key={index}>
                     <div
@@ -389,7 +389,7 @@ export default function Admin() {
                 return (
                   <div
                     key={index}
-                    className="py-3 px-3 cursor-pointer"
+                    className="py-3 px-2 sm:px-2 md:px-2 lg:px-3 xl:px-3 cursor-pointer"
                     style={{
                       border: "1px solid rgba(29, 91, 191, 1)",
                       borderRadius: "10px",
@@ -462,26 +462,11 @@ export default function Admin() {
           <div className="py-3">
           <DashboardPrograms searchParams={searchParams} type={filterType} categoryId={categoryId} />
           </div>
-        </div>
-      </div>
-
-      {/* <div className="grid grid-cols-8 gap-7 mt-4">
-                <div className='col-span-3'>
-                    <ProgramPerformance data={userpragrams?.chartProgramDetails?.data &&
-                        userpragrams?.chartProgramDetails?.data?.length > 0 ?
-                        userpragrams?.chartProgramDetails?.data : data} total={userpragrams?.chartProgramDetails?.total_program_count || 10} handleFilter={handlePerformanceFilter} handleDetails={handleDetails} height={'440px'} />
-                </div>
-                <div className='col-span-5'>
-                    <ReportsInfo />
-                </div>
-
-            </div> */}
-
-      <div className="grid grid-cols-10 gap-7 mt-4 max-md:block">
-        <div className="col-span-2 sm:col-span-2 md:col-span-5 lg:col-span-5 xl:col-span-2">
+          <div className="grid grid-cols-10 md:grid-cols-12 gap-7 mt-3 max-md:block">
+        {/* <div className="col-span-2 sm:col-span-2 md:col-span-5 lg:col-span-5 xl:col-span-2"> */}
           
 
-          <div>
+          {/* <div>
           <CardWrapper title="Recent Activities">
             <div style={{ height: "700px" }}>
               {listActivity?.length ? (
@@ -512,77 +497,21 @@ export default function Admin() {
               )}
             </div>
           </CardWrapper>
-          </div>
+          </div> */}
 
-        </div>
-        <div className="col-span-4 sm:col-span-4 md:col-span-5 lg:col-span-5 xl:col-span-4">
+        {/* </div> */}
+        <div className="col-span-5 sm:col-span-5 md:col-span-12 lg:col-span-6 xl:col-span-6">
           <MemberRequest />
-          {/* <div style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', borderRadius: '10px', padding: '20px', marginTop: '20px' }} >
-                        <div className='flex justify-evenly items-center'>
-                            <div style={{ background: 'rgba(217, 228, 242, 1)', color: 'rgba(29, 91, 191, 1)', borderRadius: '3px', padding: '10px', fontWeight: 600 }}>
-                                NGO Performance
-                            </div>
-                            <div className='flex items-center gap-2'>
-                                <span style={{ fontWeight: 600 }}>4.6</span>
-                                <p>
-                                    <img className='h-[24px]' src={BlueStarIcon} alt="BlueStarIcon" />
-                                </p>
-                            </div>
-                            <div>
-                                (78,293,393 <span style={{ color: 'rgba(29, 91, 191, 1)', fontWeight: 600 }}> Views</span>)
-                            </div>
-                        </div>
-                    </div> */}
         </div>
 
-        <div className="col-span-4 sm:col-span-4 md:col-span-10 lg:col-span-10 xl:col-span-4">
-          {/* <CardWrapper title="Program Feeds" viewAll>
-            <div style={{ height: "640px", overflowY: "scroll" }}>
-              {programFeeds.map((programFeeds, index) => (
-                <div key={index} className="program-feed-root mx-7 my-3">
-                  <div className="flex items-center py-3 px-3 gap-4">
-                    <img
-                      src={UserImage}
-                      className={`program-user-image ${
-                        getWindowDimensions().width <= 1536 ? "w-1/4" : "w-1/6"
-                      } rounded-xl`}
-                      style={{
-                        height:
-                          getWindowDimensions().width <= 1536
-                            ? "105px"
-                            : "100px",
-                      }}
-                      alt=""
-                    />
-                    <div className="feed-content flex flex-col gap-4">
-                      <h3>{programFeeds.title}</h3>
-                      <h4
-                        className="text-[12px]"
-                        style={{ color: "rgba(29, 91, 191, 1)" }}
-                      >
-                        {"10 Mins ago"}
-                      </h4>
-                      <h4 className="text-[12px]">{programFeeds.desc}</h4>
-                    </div>
-                    <div
-                      style={{
-                        background: "rgba(241, 247, 255, 1)",
-                        padding: "14px 18px",
-                      }}
-                    >
-                      <img src={MoreIcon} alt="MoreIcon" />
-                    </div>
-                  </div>
-                </div>
-
-                
-              ))}
-            </div>
-          </CardWrapper> */}
-
+        <div className="col-span-5 sm:col-span-5 md:col-span-12 lg:col-span-6 xl:col-span-6">
           <ProgramFeeds feedsList={feeds?.results} />
         </div>
       </div>
+        </div>
+      </div>
+
+     
     </div>
   );
 }

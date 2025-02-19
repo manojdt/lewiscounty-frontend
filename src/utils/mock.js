@@ -13,11 +13,11 @@ export const menusList = [{
     count: 62,
     page: '/programs?type=curated'
   },
-  {
-    name: "Recently Joined Programs",
-    count: 12,
-    page: '/programs?type=yettoplan'
-  },
+  // {
+  //   name: "Recently Joined Programs",
+  //   count: 12,
+  //   page: '/programs?type=yettoplan'
+  // },
   {
     name: "Ongoing Programs",
     count: 78,
