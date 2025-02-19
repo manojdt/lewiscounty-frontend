@@ -68,30 +68,39 @@ export const Mentor = () => {
     dispatch(getUserPrograms(query));
   };
 
-const handleNavigateDetails = (programdetails) => {
-  let baseUrl = pipeUrls.programdetails;
-
-  if (Object.keys(programdetails).length) {
-    let queryParams = [];
-
-    if (programdetails?.admin_program_request_id) {
-      queryParams.push(`request_id=${programdetails.admin_program_request_id}`);
-      queryParams.push(`type=admin_assign_program`);
-    } else if ("admin_assign_program" in programdetails) {
-      queryParams.push(`program_create_type=admin_program`);
+  const handleNavigateDetails = (programdetails) => {
+    let baseUrl = pipeUrls.programdetails;
+  
+    // Get the 'type' from search params
+    const searchParams = new URLSearchParams(window.location.search);
+    const type = searchParams.get("type");
+  
+    if (Object.keys(programdetails).length) {
+      let queryParams = [];
+  
+      if (type) {
+        queryParams.push(`type=${type}`);
+      }
+  
+      if (programdetails?.admin_program_request_id) {
+        queryParams.push(`request_id=${programdetails.admin_program_request_id}`);
+        queryParams.push(`type=admin_assign_program`);
+      } else if ("admin_assign_program" in programdetails) {
+        queryParams.push(`program_create_type=admin_program`);
+      }
+  
+      // Add breadcrumbs parameter
+      queryParams.push(`breadcrumbsType=${requestPageBreadcrumbs.mentorDashboardProgram}`);
+  
+      // Construct the full URL
+      const fullUrl = `${baseUrl}/${programdetails?.id ?? programdetails.program}${
+        queryParams.length ? `?${queryParams.join("&")}` : ""
+      }`;
+  
+      navigate(fullUrl);
     }
-
-    // Add breadcrumbs parameter
-    queryParams.push(`breadcrumbsType=${requestPageBreadcrumbs.dashboardPrograms}`);
-
-    // Construct the full URL
-    const fullUrl = `${baseUrl}/${programdetails?.id ?? programdetails.program}${
-      queryParams.length ? `?${queryParams.join("&")}` : ""
-    }`;
-
-    navigate(fullUrl);
-  }
-};
+  };
+  
 
 
   const handleBookmark = async (program) => {

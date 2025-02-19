@@ -104,6 +104,7 @@ import {
   request_programMenteeCancel,
   request_programReschedule,
   requestPageBreadcrumbs,
+  request_mentor_dashboardprogram,
 } from "../../Breadcrumbs/BreadcrumbsCommonData";
 import EditSVGIcon from "../../../assets/icons/editIcon.svg";
 import PaidTickIcon from "../../../assets/icons/paidTickIcon.svg";
@@ -171,8 +172,9 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   });
   const [openRecurringModal, setOpenRecurringModal] = useState(false);
   const [gridCellParams, setgridCellParams] = React.useState();
-  const [adminProgramCancel, setAdminProgramCancel] = React.useState(false)
-  const [cancelProgramActivity, setCancelProgramActivity] = React.useState(false)
+  const [adminProgramCancel, setAdminProgramCancel] = React.useState(false);
+  const [cancelProgramActivity, setCancelProgramActivity] =
+    React.useState(false);
   const [completeProgram, setCompleteProgram] = React.useState({
     bool: false,
     activity: false,
@@ -348,23 +350,23 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   const handleComplete = async () => {
     if (programdetails.admin_assign_program && role === "admin") {
       await updateAdminProgramStatus({
-        "admin_program": programdetails?.id,
-        "status": "completed",
-        "request_type": "admin_program_complete"
-      })
+        admin_program: programdetails?.id,
+        status: "completed",
+        request_type: "admin_program_complete",
+      });
     } else {
-    await updateProgramStatus({
-      id: programdetails?.id,
-      status: programActionStatus.completed,
-      ...(programdetails.hasOwnProperty("admin_assign_program") && {
-        is_admin_program: true,
-      }),
-    });
-  }
+      await updateProgramStatus({
+        id: programdetails?.id,
+        status: programActionStatus.completed,
+        ...(programdetails.hasOwnProperty("admin_assign_program") && {
+          is_admin_program: true,
+        }),
+      });
+    }
   };
 
   useEffect(() => {
-    if (isProgramUpdated ||  (isAdminProgramUpdated && !adminProgramCancel)) {
+    if (isProgramUpdated || (isAdminProgramUpdated && !adminProgramCancel)) {
       setCompleteProgram({
         bool: false,
         activity: true,
@@ -385,15 +387,19 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       }, 2000);
       handleClose();
     }
-    if(isAdminProgramUpdated && adminProgramCancel){
+    if (isAdminProgramUpdated && adminProgramCancel) {
       setMoreMenuModal({ ...moreMenuModal, cancel: false });
-      setCancelProgramActivity(true)      
+      setCancelProgramActivity(true);
       setTimeout(() => {
-        setCancelProgramActivity(false)
-      },3000)
+        setCancelProgramActivity(false);
+      }, 3000);
     }
     if (IsErrorProgramUpdating || IsErrorAdminProgramUpdating) {
-      toast.error(role === "admin" ? errorUpdateAdminProgramMessage?.data?.errors?.[0] : errorUpdateProgramMessage?.data?.error);
+      toast.error(
+        role === "admin"
+          ? errorUpdateAdminProgramMessage?.data?.errors?.[0]
+          : errorUpdateProgramMessage?.data?.error
+      );
       handleClose();
     }
   }, [
@@ -403,7 +409,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     errorUpdateProgramMessage?.data?.error,
     isAdminProgramUpdated,
     IsErrorAdminProgramUpdating,
-    errorUpdateAdminProgramMessage?.data?.error
+    errorUpdateAdminProgramMessage?.data?.error,
   ]);
 
   const handleJoinProgram = async (request_type) => {
@@ -522,10 +528,16 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   };
 
   const handleInstructor = (programdetails) => {
-    const mentorId = programdetails?.mentor_info?.id?programdetails?.mentor_info?.id:programdetails?.created_by?programdetails?.created_by:"";
+    const mentorId = programdetails?.mentor_info?.id
+      ? programdetails?.mentor_info?.id
+      : programdetails?.created_by
+      ? programdetails?.created_by
+      : "";
 
     // if (mentorId !== '' && mentorId !== userdetails?.data?.user_id) {
-    navigate(`/mentor-profile/${mentorId}?type=view&breadcrumbsType=${requestPageBreadcrumbs.ProgramsDetails}`);
+    navigate(
+      `/mentor-profile/${mentorId}?type=view&breadcrumbsType=${requestPageBreadcrumbs.ProgramsDetails}`
+    );
     // }
   };
 
@@ -606,6 +618,18 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   };
   const handleBreadcrumbs = (key) => {
     const decodedKey = decodeURIComponent(key);
+    // Get 'type' from URL search params
+    const searchParams = new URLSearchParams(window.location.search);
+    const type = searchParams.get("type");
+
+    // Define labels based on 'type'
+    const typeLabels = {
+      yettojoin: "Active Programs",
+      yettostart: "Recently Joined Programs",
+      inprogress: "Ongoing Programs",
+    };
+    // Get the correct label for the current type
+    const typeLabel = typeLabels[type] || "All Programs";
     const program_detailsData = program_details(
       state?.from,
       programdetails?.program_name
@@ -613,6 +637,11 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     const program_New = request_newProgramRequest(programdetails?.program_name);
     const program_re = request_programReschedule(programdetails?.program_name);
     const program_cancel = request_programCancel(programdetails?.program_name);
+    const mentor_dashboard_program = request_mentor_dashboardprogram(
+      programdetails?.program_name,
+      type,
+      typeLabel
+    );
     const dashBoardProgram = dashboard_program_details_main(
       programdetails?.program_name
     );
@@ -647,6 +676,9 @@ export default function ProgramDetails({ setProgramDetailsId }) {
         break;
       case requestPageBreadcrumbs.dashboardPrograms:
         setBreadcrumbsArray(dashBoardProgram);
+        break;
+      case requestPageBreadcrumbs.mentorDashboardProgram:
+        setBreadcrumbsArray(mentor_dashboard_program);
         break;
       case "discussion":
         break;
@@ -711,25 +743,28 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     }
 
     if (moreMenuModal.cancel) {
-      if (programdetails.hasOwnProperty("admin_assign_program") && role === "admin") {
-        setAdminProgramCancel(true)
+      if (
+        programdetails.hasOwnProperty("admin_assign_program") &&
+        role === "admin"
+      ) {
+        setAdminProgramCancel(true);
         updateAdminProgramStatus({
-          "admin_program": programdetails?.id,
-          "status": "cancelled",
-          "request_type": "admin_program_cancel",
-          rejection_reason: data.cancel_reason
-        })
+          admin_program: programdetails?.id,
+          status: "cancelled",
+          request_type: "admin_program_cancel",
+          rejection_reason: data.cancel_reason,
+        });
       } else {
-      dispatch(
-        programCancelRequest({
-          program: params.id,
-          comments: data.cancel_reason,
-          request_type: "program_cancel",
-        })
-      ).then((res) => {
-        refetch();
-      })
-    }
+        dispatch(
+          programCancelRequest({
+            program: params.id,
+            comments: data.cancel_reason,
+            request_type: "program_cancel",
+          })
+        ).then((res) => {
+          refetch();
+        });
+      }
     }
   };
 
@@ -1229,7 +1264,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={
           requestProgramStatus === requestStatus.reschedule ||
-          requestProgramStatus === requestStatus.cancel || 
+          requestProgramStatus === requestStatus.cancel ||
           cancelProgramActivity
         }
       >
@@ -1248,7 +1283,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
               Program{" "}
               {requestProgramStatus === requestStatus.reschedule
                 ? "Rescheduled "
-                :  (requestProgramStatus === requestStatus.cancel || cancelProgramActivity)
+                : requestProgramStatus === requestStatus.cancel ||
+                  cancelProgramActivity
                 ? "Cancelled "
                 : ""}{" "}
               Successfully
@@ -2005,7 +2041,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                               programdetails.status ===
                                 "new_program_request_rejected" ||
                               programdetails.status === "completed") &&
-                              programdetails?.created_by ===
+                            programdetails?.created_by ===
                               userdetails?.data?.user_id && (
                               <MenuItem
                                 onClick={() =>
@@ -2081,8 +2117,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                               ].includes(programdetails?.status) &&
                               !reqRole &&
                               programdetails?.created_by ===
-                                userdetails?.data?.user_id && 
-                                !programdetails?.cancel_request_raise && (
+                                userdetails?.data?.user_id &&
+                              !programdetails?.cancel_request_raise && (
                                 // role !== 'admin' && (
                                 <MenuItem
                                   onClick={() => handleMenu("cancel")}
@@ -2118,20 +2154,21 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                   Complete
                                 </MenuItem>
                               )}
-                              {!("admin_assign_program" in programdetails) &&programdetails?.created_by ===
-                                userdetails?.data?.user_id&& (
-                                <MenuItem
-                                  onClick={() => handleNewTaskFromAdmin()}
-                                  className="!text-[12px]"
-                                >
-                                  <img
-                                    src={PlusCircle}
-                                    alt="PlusCircle"
-                                    className="pr-3 w-[25px]"
-                                  />
-                                  Assign Task to Mentees
-                                </MenuItem>
-                              )}
+                              {!("admin_assign_program" in programdetails) &&
+                                programdetails?.created_by ===
+                                  userdetails?.data?.user_id && (
+                                  <MenuItem
+                                    onClick={() => handleNewTaskFromAdmin()}
+                                    className="!text-[12px]"
+                                  >
+                                    <img
+                                      src={PlusCircle}
+                                      alt="PlusCircle"
+                                      className="pr-3 w-[25px]"
+                                    />
+                                    Assign Task to Mentees
+                                  </MenuItem>
+                                )}
                             </>
                           )}
 
@@ -2166,13 +2203,15 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                 }}
                                 className="!text-[12px]"
                               >
-                               <ThumbDownOffAlt className="pr-3" sx={{fontSize:'1.6rem'}}/>
+                                <ThumbDownOffAlt
+                                  className="pr-3"
+                                  sx={{ fontSize: "1.6rem" }}
+                                />
                                 Not Interested
                               </MenuItem>
-                           )} 
-                          {(
-                            programdetails.mentee_join_status ===
-                              programActionStatus.program_join_request_accepted) && (
+                            )}
+                          {programdetails.mentee_join_status ===
+                            programActionStatus.program_join_request_accepted && (
                             <MenuItem
                               onClick={() => handleMenu("cancel")}
                               className="!text-[12px]"
@@ -2187,22 +2226,23 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                           )}
                           {["cancelled", "inprogress", "completed"].includes(
                             programdetails?.status
-                          ) &&programdetails.mentee_join_status ===
-                          programActionStatus.program_join_request_accepted&& (
-                            <MenuItem
-                              onClick={() =>
-                                navigate(`/historyNotes/${params.id}`)
-                              }
-                              className="!text-[12px]"
-                            >
-                              <img
-                                src={ProgramHistoryIcon}
-                                alt="ProgramHistoryIcon"
-                                className="pr-3 w-[25px]"
-                              />
-                              Program Notes History
-                            </MenuItem>
-                          )}
+                          ) &&
+                            programdetails.mentee_join_status ===
+                              programActionStatus.program_join_request_accepted && (
+                              <MenuItem
+                                onClick={() =>
+                                  navigate(`/historyNotes/${params.id}`)
+                                }
+                                className="!text-[12px]"
+                              >
+                                <img
+                                  src={ProgramHistoryIcon}
+                                  alt="ProgramHistoryIcon"
+                                  className="pr-3 w-[25px]"
+                                />
+                                Program Notes History
+                              </MenuItem>
+                            )}
                         </>
                       )}
                     </Menu>
@@ -2296,7 +2336,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     <div
                       style={{ borderRight: "1px solid rgba(24, 40, 61, 1)" }}
                     ></div>
-{/* {programdetails?.admin_assign_program&&role===user.admin?  <div className="flex items-center gap-3 text-[12px]">
+                    {/* {programdetails?.admin_assign_program&&role===user.admin?  <div className="flex items-center gap-3 text-[12px]">
                       {!profileLoading && (
                         <img
                           src={
@@ -2353,23 +2393,28 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                         />
                       )}
 
-                      <span>{programdetails?.admin_assign_program&&role===user.admin?"Program Admin":"Instructor :"}</span>
+                      <span>
+                        {programdetails?.admin_assign_program &&
+                        role === user.admin
+                          ? "Program Admin"
+                          : "Instructor :"}
+                      </span>
                       {role !== "mentor" ? (
                         // <Link
                         //   to={`/mentor-details/${programdetails?.created_by}?type=view&breadcrumbsType=${requestPageBreadcrumbs.ProgramsDetails}`}
                         // >
-                          <span
-                            style={{
-                              color: "rgba(29, 91, 191, 1)",
-                              textDecoration: "underline",
-                              cursor: "pointer",
-                            }}
-                            onClick={() => handleInstructor(programdetails)}
-                          >
-                            {programdetails?.mentor_name}
-                          </span>
-                        // </Link>
+                        <span
+                          style={{
+                            color: "rgba(29, 91, 191, 1)",
+                            textDecoration: "underline",
+                            cursor: "pointer",
+                          }}
+                          onClick={() => handleInstructor(programdetails)}
+                        >
+                          {programdetails?.mentor_name}
+                        </span>
                       ) : (
+                        // </Link>
                         <Link
                           to={`/mentor-details/${programdetails?.created_by}?breadcrumbsType=${requestPageBreadcrumbs.ProgramsDetails}`}
                         >
@@ -2407,25 +2452,27 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                         </div>
                       </div>
                     )}
-{(programdetails?.group_chat_requirement||programdetails?.individual_chat_requirement) &&
-                  <div className="flex gap-2 pb-[26px]">
-                    {programdetails?.group_chat_requirement && (
-                      <p
-                        onClick={() => navigate("/discussions")}
-                        className="text-[14px] font-semibold text-font-primary-main px-4 py-2 border border-dashed border-background-primary-main rounded-[3px] bg-background-primary-light cursor-pointer"
-                      >
-                        Group Discussions
-                      </p>
-                    )}
-                    {programdetails?.individual_chat_requirement && (
-                      <p
-                        onClick={() => navigate("/discussions/32")}
-                        className="text-[14px] font-semibold text-font-primary-main px-4 py-2 border border-dashed border-background-primary-main rounded-[3px] bg-background-primary-light cursor-pointer"
-                      >
-                        Individual Discussions
-                      </p>
-                    )}
-                  </div>}
+                  {(programdetails?.group_chat_requirement ||
+                    programdetails?.individual_chat_requirement) && (
+                    <div className="flex gap-2 pb-[26px]">
+                      {programdetails?.group_chat_requirement && (
+                        <p
+                          onClick={() => navigate("/discussions")}
+                          className="text-[14px] font-semibold text-font-primary-main px-4 py-2 border border-dashed border-background-primary-main rounded-[3px] bg-background-primary-light cursor-pointer"
+                        >
+                          Group Discussions
+                        </p>
+                      )}
+                      {programdetails?.individual_chat_requirement && (
+                        <p
+                          onClick={() => navigate("/discussions/32")}
+                          className="text-[14px] font-semibold text-font-primary-main px-4 py-2 border border-dashed border-background-primary-main rounded-[3px] bg-background-primary-light cursor-pointer"
+                        >
+                          Individual Discussions
+                        </p>
+                      )}
+                    </div>
+                  )}
 
                   {/* payment button section */}
 
@@ -2784,8 +2831,9 @@ export default function ProgramDetails({ setProgramDetailsId }) {
 
               {/* Notes Section */}
               {["inprogress"].includes(programdetails?.status) &&
-                ((role === "mentee"&&programdetails.mentee_join_status ===
-                  programActionStatus.program_join_request_accepted) ||
+                ((role === "mentee" &&
+                  programdetails.mentee_join_status ===
+                    programActionStatus.program_join_request_accepted) ||
                   programdetails?.created_by === userdetails?.data?.user_id) &&
                 !typeParams && (
                   <Box>
@@ -2853,9 +2901,9 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     handleAcceptProgram={handleAcceptProgram}
                   />
                 )}
-              {
-                (programdetails.status === programActionStatus.inprogress ||
-                  programdetails.status === programActionStatus.paused) &&programdetails.task.length>0&& (
+              {(programdetails.status === programActionStatus.inprogress ||
+                programdetails.status === programActionStatus.paused) &&
+                programdetails.task.length > 0 && (
                   <CustomAccordian
                     title={"Program Task"}
                     defaultValue
@@ -2865,22 +2913,31 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                           <Button
                             btnName="View All"
                             btnCls="w-[140px]"
-                            onClick={() => navigate(role===user.mentee?"/mentee-tasks":"/mentor-tasks?type=menteetask")}
+                            onClick={() =>
+                              navigate(
+                                role === user.mentee
+                                  ? "/mentee-tasks"
+                                  : "/mentor-tasks?type=menteetask"
+                              )
+                            }
                           />
                         </div>
-                        <SkillsSet programdetails={programdetails} role={role}/>
+                        <SkillsSet
+                          programdetails={programdetails}
+                          role={role}
+                        />
                       </div>
                     }
                   />
                 )}
-               {/* Detail Section */}
-               <div
+              {/* Detail Section */}
+              <div
                 className="details-section px-6 py-11 mb-10"
                 style={{
                   background: "rgba(249, 249, 249, 1)",
                   borderRadius: "10px",
                 }}
-               >
+              >
                 <div className="tabs flex gap-4">
                   {tabs.map((tab) => (
                     <button
@@ -3031,56 +3088,59 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                       activeTab === "program_testimonials" ? "block" : "hidden"
                     }`}
                   >
-                    {programdetails?.testimonial_content?.length>0&&
-                    <div className="testimonials bg-white px-5 py-7">
-                      <div className="grid grid-cols-3 gap-8">
-                        {programdetails?.testimonial_content?.map((e) => {
-                          return (
-                            <div
-                              className="pt-16 pb-2 px-7 leading-5 relative"
-                              style={{
-                                background: "rgba(248, 249, 250, 1)",
-                              }}
-                            >
-                              <img
-                                src={QuoteIcon}
-                                className="absolute top-[-16px]"
-                                alt="QuoteIcon"
-                              />
-                              <div className="relative">
-                                <p className="pb-7">{e?.comments ?? "-"}</p>
-                                <hr
-                                  className="absolute"
-                                  style={{ width: "100%" }}
-                                />
-                              </div>
-
-                              <div className="flex gap-3 py-5">
+                    {programdetails?.testimonial_content?.length > 0 && (
+                      <div className="testimonials bg-white px-5 py-7">
+                        <div className="grid grid-cols-3 gap-8">
+                          {programdetails?.testimonial_content?.map((e) => {
+                            return (
+                              <div
+                                className="pt-16 pb-2 px-7 leading-5 relative"
+                                style={{
+                                  background: "rgba(248, 249, 250, 1)",
+                                }}
+                              >
                                 <img
-                                  src={e?.profile_image ?? UserImage}
-                                  alt="user"
-                                  style={{
-                                    borderRadius: "50%",
-                                    width: "38px",
-                                    height: "35px",
-                                  }}
+                                  src={QuoteIcon}
+                                  className="absolute top-[-16px]"
+                                  alt="QuoteIcon"
                                 />
-                                <div className="flex flex-col">
-                                  <span
+                                <div className="relative">
+                                  <p className="pb-7">{e?.comments ?? "-"}</p>
+                                  <hr
+                                    className="absolute"
+                                    style={{ width: "100%" }}
+                                  />
+                                </div>
+
+                                <div className="flex gap-3 py-5">
+                                  <img
+                                    src={e?.profile_image ?? UserImage}
+                                    alt="user"
                                     style={{
-                                      color: "rgba(0, 174, 189, 1)",
+                                      borderRadius: "50%",
+                                      width: "38px",
+                                      height: "35px",
                                     }}
-                                  >
-                                    {e?.name}
-                                  </span>
-                                  <span className="capitalize">{e?.role}</span>
+                                  />
+                                  <div className="flex flex-col">
+                                    <span
+                                      style={{
+                                        color: "rgba(0, 174, 189, 1)",
+                                      }}
+                                    >
+                                      {e?.name}
+                                    </span>
+                                    <span className="capitalize">
+                                      {e?.role}
+                                    </span>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          );
-                        })}
+                            );
+                          })}
+                        </div>
                       </div>
-                    </div>}
+                    )}
                   </div>
                 </div>
               </div>

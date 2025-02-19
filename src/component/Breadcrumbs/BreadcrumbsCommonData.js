@@ -73,6 +73,7 @@ export const requestPageBreadcrumbs = {
   mentorNewEditReport : 'new',
   mentorPendingEditReport : 'pending',
   mentorDraftEditReport : 'draft',
+  mentorDashboardProgram : "mentorDashboardProgram"
   // navbarProfile : 'navbarProfile',
 };
 export const programStatusBreadcrumbs=[
@@ -90,6 +91,7 @@ export const programStatusBreadcrumbs=[
     'Completed Programs',
     'Cancelled Programs'
   ];
+  
 // Program Request
 export const request_newProgramRequest = (name) => {
   return [
@@ -140,7 +142,7 @@ export const request_programMenteeCancel = (name) => {
 export const program_details = (state,name) => {
   return [
     {
-      label: state === "category" ? "Category View" : "Program",
+      label: state === "category" ? "Category View" : "Program Details",
       path: -1,
     },
     {
@@ -659,20 +661,19 @@ export const newFollowRequestMentorPage = (status) => {
 
  export const goal_history = (name, queryString) => {
   // Set label based on queryString value
-  let label = "";
-  if (queryString === "mentor") {
-    label = "Mentor Goals";
-  } else if (queryString === "mentee") {
-    label = "Mentee Goals";
-  }
-  const query = queryString ? `?adminTabType=${queryString}` : "";
+  let label = queryString === "mentor" ? "Mentor Goals" : "Mentee Goals";
+
+  // Build query string correctly
+  const query = queryString === "mentor" || "mentee" ? `?created_by=${queryString}` : `?adminTabType=${queryString}`;
+
   return [
     {
       label: label,
-      path: `/goals${query}`,
+      path: `/goals${query}`, // Properly concatenated query string
     },
     {
       label: `View ${name}`,
+      path: `/goals/view?name=${encodeURIComponent(name)}`, // Optional path for "View"
     },
   ];
 };
@@ -1123,3 +1124,20 @@ export const rejectedTicket = (name) => {
     },
   ];
 }; 
+
+//mentor dashboard program
+export const request_mentor_dashboardprogram = (name, type, typeLabel) => {
+  const path = type ? `/dashboard?type=${type}` : `/dashboard`; // Fallback if type is null
+
+  return [
+    {
+      label: typeLabel, // Correct label
+      path: path,       // Dynamic path with fallback
+    },
+    {
+      label: `View ${name}`,
+    },
+  ];
+};
+
+
