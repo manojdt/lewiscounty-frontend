@@ -1,5 +1,5 @@
 import { IconButton } from "@mui/material";
-import { dateFormat } from "./utils";
+import { dateFormat, formatRenderCellDateValues } from "./utils";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { taskStatusColor, taskStatusText } from "./utils/constant";
 import moment from "moment";
@@ -880,7 +880,7 @@ export const taskColumns = [
     flex: 1,
     id: 0,
     renderCell: (params) => {
-      return <div>{dateFormat(params.row.created_at)}</div>;
+      return formatRenderCellDateValues(params?.row?.created_at)
     },
   },
   {
@@ -907,7 +907,7 @@ export const taskColumns = [
     flex: 1,
     id: 2,
     renderCell: (params) => {
-      return <div>{dateFormat(params.row.start_date)}</div>;
+      return formatRenderCellDateValues(params?.row?.start_date)
     },
   },
   {
@@ -916,7 +916,7 @@ export const taskColumns = [
     flex: 1,
     id: 2,
     renderCell: (params) => {
-      return <div>{dateFormat(params.row.submited_date)}</div>;
+      return formatRenderCellDateValues(params?.row?.submited_date)
     },
   },
   {
@@ -925,7 +925,7 @@ export const taskColumns = [
     flex: 1,
     id: 9,
     renderCell: (params) => {
-      return <div>{dateFormat(params.row.updated_at)}</div>;
+      return formatRenderCellDateValues(params?.row?.updated_at)
     },
   },
   // {
@@ -1011,7 +1011,7 @@ export const mentorTaskColumns = [
     flex: 1,
     id: 2,
     renderCell: (params) => {
-      return <div>{dateFormat(params.row.created_at)}</div>;
+      return formatRenderCellDateValues(params?.row?.created_at)
     },
   },
   {
@@ -1020,7 +1020,7 @@ export const mentorTaskColumns = [
     flex: 1,
     id: 2,
     renderCell: (params) => {
-      return <div>{dateFormat(params.row.submited_date)}</div>;
+      return formatRenderCellDateValues(params?.row?.submited_date)
     },
   },
   {
@@ -1292,7 +1292,7 @@ export const goalsHistoryColumn = [
     flex: 1,
     id: 1,
     renderCell: (params) => {
-      return <div>{dateFormat(params.row.start_date)}</div>;
+      return formatRenderCellDateValues(params?.row?.start_date)
     },
   },
 ];
@@ -1422,7 +1422,7 @@ export const listCertificateColumn = [
     flex: 1,
     id: 1,
     renderCell: (params) => {
-      return <div>{dateFormat(params.row.start_date)}</div>;
+      return formatRenderCellDateValues(params?.row?.start_date)
     },
   },
   {
@@ -1431,7 +1431,7 @@ export const listCertificateColumn = [
     flex: 1,
     id: 1,
     renderCell: (params) => {
-      return <div>{dateFormat(params.row.end_date)}</div>;
+      return formatRenderCellDateValues(params?.row?.end_date)
     },
   },
   {
@@ -1537,7 +1537,7 @@ export const programRequestColumns = [
     mainTab: ["my", "mentees", "admin"],
     tab:["program_cancel","program_join","program_reschedule","program_new"],
     renderCell: (params) => {
-      return <div>{dateFormat(params.row.created_at)}</div>;
+      return formatRenderCellDateValues(params?.row?.created_at)
     },
   },
   {
@@ -1549,7 +1549,7 @@ export const programRequestColumns = [
     tab:["program_reschedule"],
     mainTab: ["my", "mentees", "admin"],
     renderCell: (params) => {
-      return <div>{`${dateFormat(params.row.start_date)} & ${dateFormat(params.row.end_date)}`}</div>;
+      return <div>{`${formatRenderCellDateValues(params.row.start_date)} & ${formatRenderCellDateValues(params.row.end_date)}`}</div>;
     },
   },
   // {
@@ -1585,7 +1585,7 @@ export const programRequestColumns = [
     mainTab: ["my", "mentees", "admin"],
     tab:["program_cancel","program_join","program_reschedule","program_new"],
     renderCell: (params) => {
-      return <div>{dateFormat(params.row.updated_at)}</div>;
+      return formatRenderCellDateValues(params?.row?.updated_at)
     },
   },
   {
@@ -1702,7 +1702,7 @@ export const programExtendRequestColumns = [
     id: 5,
     for: ["admin", "mentor", "mentee"],
     renderCell: (params) => {
-      return <div>{dateFormat(params.row.created_at)}</div>;
+      return formatRenderCellDateValues(params.row.created_at)
     },
   },
   {
@@ -1712,7 +1712,7 @@ export const programExtendRequestColumns = [
     id: 7,
     for: ["admin", "mentee", "mentor"],
     renderCell: (params) => {
-      return <div>{dateFormat(params.row.updated_at)}</div>;
+      return formatRenderCellDateValues(params.row.updated_at)
     },
   },
   {
@@ -2096,7 +2096,7 @@ export const goalsRequestColumns = [
     id: 8,
     for: ["mentee"],
     renderCell: (params) => {
-      return <div>{dateFormat(params.row.requested_date)}</div>;
+      return formatRenderCellDateValues(params?.row?.requested_date)
     },
   },
   {
@@ -2106,7 +2106,7 @@ export const goalsRequestColumns = [
     id: 2,
     for: ["admin", "mentor"],
     renderCell: (params) => {
-      return <div>{dateFormat(params.row.requested_date)}</div>;
+      return formatRenderCellDateValues(params?.row?.requested_date)
     },
   },
 
@@ -2124,7 +2124,7 @@ export const goalsRequestColumns = [
     id: 4,
     for: ["admin","mentor","mentee"],
     renderCell: (params) => {
-      return <div>{dateFormat(params.row.updated_at)}</div>;
+      return formatRenderCellDateValues(params?.row?.updated_at)
     },
   },
   {
@@ -2378,7 +2378,7 @@ export const certificateRequestColumns = [
     id: 3,
     for: ["admin"],
     renderCell: (params) => {
-      return <div>{dateFormat(params.row.created_at)}</div>;
+      return formatRenderCellDateValues(params?.row?.created_at)
     },
   },
 
@@ -2389,7 +2389,7 @@ export const certificateRequestColumns = [
     id: 3,
     for: ["admin"],
     renderCell: (params) => {
-      return <div>{dateFormat(params.row.updated_at)}</div>;
+      return formatRenderCellDateValues(params?.row?.updated_at)
     },
   },
   {
@@ -2444,7 +2444,7 @@ export const reportRequestColumns = [
     id: 3,
     for: ["admin","mentor"],
     renderCell: (params) => {
-      return <div>{dateFormat(params.row.created_at)}</div>;
+      return formatRenderCellDateValues(params?.row?.created_at)
     },
   },
   {
@@ -2454,7 +2454,7 @@ export const reportRequestColumns = [
     id: 3,
     for: ["admin", "mentor"],
     renderCell: (params) => {
-      return <div>{dateFormat(params.row.updated_at)}</div>;
+      return formatRenderCellDateValues(params?.row?.updated_at)
     },
   },
   {

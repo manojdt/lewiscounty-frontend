@@ -1,4 +1,4 @@
-import { dateFormat } from ".";
+import { dateFormat, formatRenderCellDateValues } from ".";
 import { CourseLevelOptions } from "./formFields";
 import StarColorIcon from '../assets/icons/starColor.svg';
 import { programStatusColor, programStatusText, requestStatusColor, requestStatusText } from "./constant";
@@ -85,7 +85,7 @@ export const myReqMenteeColumns = [
     flex: 1,
     id: 1,
     renderCell: (params) => {
-        return <div>{dateFormat(params.row?.created_at)}</div>
+        return formatRenderCellDateValues(params?.row?.created_at)
     }
 },
 {
@@ -94,7 +94,7 @@ export const myReqMenteeColumns = [
     flex: 1,
     id: 1,
     renderCell: (params) => {
-        return <div>{dateFormat(params.row?.last_updated_date)}</div>
+      return formatRenderCellDateValues(params?.row?.last_updated_date)
     }
 },
 ]
@@ -118,7 +118,7 @@ export const discussionColumns = [
     flex: 1,
     id: 3,
     renderCell: (params) => {
-      return <div>{dateFormat(params.row.date)}</div>;
+      return formatRenderCellDateValues(params.row.date)
     },
   },
   {
@@ -225,7 +225,7 @@ export const certificateColumns = [{
         id: 1,
         for: ['mentee'],
         renderCell: (params) => {
-            return <div>{dateFormat(params.row.program_start_date_and_time)}</div>
+            return formatRenderCellDateValues(params?.row?.program_start_date_and_time)
         }
     },
     {
@@ -235,7 +235,7 @@ export const certificateColumns = [{
         id: 1,
         for: ['mentee'],
         renderCell: (params) => {
-            return <div>{dateFormat(params.row.program_end_date_and_time)}</div>
+            return formatRenderCellDateValues(params?.row?.program_end_date_and_time)
         }
     },
     {
@@ -245,7 +245,7 @@ export const certificateColumns = [{
         id: 1,
         for: ['mentee'],
         renderCell: (params) => {
-            return <div>{dateFormat(params.row.approved_date)}</div>
+            return formatRenderCellDateValues(params?.row?.approved_date)
         }
     },
     {
@@ -283,7 +283,9 @@ export const certificateColumns = [{
         id: 1,
         for: ['mentor','admin'],
         renderCell: (params) => {
-            return <div>{dateFormat(params.row.created_at)}</div>
+          // return <div>{dateFormat(params.row.created_at)}</div>
+
+            return formatRenderCellDateValues(params?.row?.created_at)
         }
     },
     {
@@ -300,7 +302,7 @@ export const certificateColumns = [{
         id: 1,
         for: ['mentor','admin'],
         renderCell: (params) => {
-            return <div>{dateFormat(params.row.updated_at)}</div>
+            return formatRenderCellDateValues(params?.row?.updated_at)
         }
     },
     {
@@ -337,7 +339,7 @@ export const programListColumns = [
       flex: 1,
       id: 0,
       renderCell : (params) => {
-        return <>{params.row.categories && params.row.categories[0]?.name}</>
+        return formatRenderCellDateValues(params?.row?.categories[0]?.name)
       }
   },
   {
@@ -352,7 +354,7 @@ export const programListColumns = [
       flex: 1,
       id: 2,
       renderCell: (params) => {
-        return <div className="pl-4">{params.row.session_count}</div>
+        return formatRenderCellDateValues(params?.row?.session_count)
       }
   },
   {
@@ -370,7 +372,7 @@ export const programListColumns = [
       flex: 1,
       id: 4,
       renderCell: (params) => {
-        return <div>{dateFormat(params.row.start_date)} & {dateFormat(params.row.end_date)}</div>
+        return <div>{formatRenderCellDateValues(params?.row?.start_date)} & {formatRenderCellDateValues(params?.row?.end_date)}</div>
     }
   },
   {

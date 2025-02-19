@@ -25,11 +25,33 @@ import {
 import { requestStatus } from "../../utils/constant";
 import { categoryColumns } from "../../mock";
 import { Button } from "../../shared";
+import { formatTableNullValues } from "../../utils";
 
 export default function MemberRequest() {
   const { memberRequest, categoryList, loading, status, error } = useSelector(
     (state) => state.requestList
   );
+  const [formattedMemberRequest, setFormattedMemberRequest] = React.useState([])
+
+  const [formattedCategoryList, setFormttedCategoryList] = React.useState([])
+
+  React.useEffect(()=>{
+    if(categoryList){
+      const formattedRowData = formatTableNullValues(categoryList)
+      setFormttedCategoryList(formattedRowData)
+    }
+  },[categoryList])
+
+  React.useEffect(()=>{
+    if(memberRequest?.results){
+      const formattedRowData = formatTableNullValues(memberRequest?.results)
+      setFormattedMemberRequest(formattedRowData)
+    }
+  },[memberRequest])
+
+  React.useEffect(()=>{
+
+  },[])
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -238,7 +260,7 @@ export default function MemberRequest() {
       >
         <div className="py-6 px-3">
           <DataTable
-            rows={memberRequest?.results ?? []}
+            rows={formattedMemberRequest ?? []}
             columns={memberRequestColumn}
             hideFooter
             hideCheckbox
@@ -297,7 +319,7 @@ export default function MemberRequest() {
             </div>
 
             <DataTable
-              rows={categoryList}
+              rows={formattedCategoryList}
               columns={categoryColumns}
               height={"460px"}
               footerComponent={footerComponent}

@@ -44,7 +44,7 @@ import {
 import dayjs from "dayjs";
 import CloseIcon from "../../../assets/icons/closeIcon.svg";
 import { useGetSpecificProgramDetailsQuery } from "../../../features/program/programApi.services";
-import { FormLabelRequired } from "../../../utils";
+import { formatTableNullValues, FormLabelRequired } from "../../../utils";
 
 export default function AssignMentees() {
   const {
@@ -73,6 +73,14 @@ export default function AssignMentees() {
     status,
     programMenteeList,
   } = useSelector((state) => state.userPrograms);
+
+  const [formattedProgramMenteeList, setFormattedProgramMenteeList] = React.useState([])
+  React.useEffect(()=>{
+    if(programMenteeList){
+      const formattedRowData = formatTableNullValues(programMenteeList)
+      setFormattedProgramMenteeList(formattedRowData)
+    }
+  },[programMenteeList])
   const {
     category,
     loading: apiLoading,
@@ -868,7 +876,7 @@ export default function AssignMentees() {
                 modalClose={() => setMentalModal(false)}
               >
                 <DataTable
-                  rows={programMenteeList}
+                  rows={formattedProgramMenteeList ?? []}
                   columns={updatedMemberColumn}
                   footerAction={footerAction}
                   footerComponent={CustomFooterStatusComponent}

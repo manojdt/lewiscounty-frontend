@@ -24,7 +24,7 @@ import {
   taskStatusText,
   taskStatusTextMentee,
 } from '../../utils/constant';
-import { fileNameFromUrl, fileNameString } from '../../utils';
+import { fileNameFromUrl, fileNameString, formatTableNullValues } from '../../utils';
 
 export const Tasks = () => {
   const [requestTab, setRequestTab] = useState('all');
@@ -41,6 +41,13 @@ export const Tasks = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { taskList, loading } = useSelector((state) => state.tasks);
+  const [formattedTaskList, setFormattedTaskList] = React.useState([])
+  React.useEffect(()=>{
+    if(taskList?.results){
+      const formattedRowData = formatTableNullValues(taskList?.results)
+      setFormattedTaskList(formattedRowData)
+    }
+  },[taskList])
   const [paginationModel, setPaginationModel] = React.useState({
     page: 0,
     pageSize: 10,
@@ -470,7 +477,7 @@ export const Tasks = () => {
 
           {!loading && (
             <DataTable
-              rows={taskList?.results ?? []}
+              rows={formattedTaskList ?? []}
               columns={mentorColumn}
               hideCheckbox
               rowCount={taskList?.count}

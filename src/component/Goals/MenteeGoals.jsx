@@ -14,6 +14,7 @@ import { goalDataStatus, goalStatusColor } from '../../utils/constant';
 import dayjs from 'dayjs';
 import moment from 'moment';
 import { requestPageBreadcrumbs } from '../Breadcrumbs/BreadcrumbsCommonData';
+import { formatTableNullValues } from '../../utils';
 
 export default function MenteeGoals() {
     const [anchorEl, setAnchorEl] = useState(null);
@@ -45,7 +46,14 @@ export default function MenteeGoals() {
 
     const dispatch = useDispatch()
     const { goalHistory } = useSelector(state => state.goals)
+    const [formattedGoalHistory, setFormattedGoalHistory] = React.useState([])
 
+    React.useEffect(()=>{
+        if(goalHistory?.results){
+            const formattedRowData = formatTableNullValues(goalHistory?.results)
+            setFormattedGoalHistory(formattedRowData)
+        }
+    },[goalHistory])
     const handleClick = (event, data) => {
         setSelectedItem(data)
         setAnchorEl(event.currentTarget);
@@ -191,7 +199,7 @@ export default function MenteeGoals() {
 
             </div>
             <div className='py-8 px-3 sm:px-2 md:px-3 lg:px-6 xl:px-6'>
-                <DataTable rows={goalHistory?.results} columns={menteeGoalsColumn}
+                <DataTable rows={formattedGoalHistory ?? []} columns={menteeGoalsColumn}
                     rowCount={goalHistory?.count}
                     paginationModel={paginationModel} setPaginationModel={setPaginationModel} 
                     hideFooter={goalHistory?.results?.length === 0} hideCheckbox />

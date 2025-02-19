@@ -60,6 +60,7 @@ import {
   convertDateFormat,
   formatDateFunToAll,
   formatDateTimeISO,
+  formatTableNullValues,
   todatDateInfo,
 } from '../../../utils';
 import Ratings from '../Ratings';
@@ -99,6 +100,13 @@ export default function AssignTask() {
   const { allPrograms, programDetails, programMentees } = useSelector(
     (state) => state.programInfo
   );
+  const [formattedProgramMentees, setFormattedProgramMentees] = React.useState([])
+  React.useEffect(()=>{
+    if(programMentees){
+      const formattedRowData = formatTableNullValues(programMentees)
+      setFormattedProgramMentees(formattedRowData)
+    }
+  },[programMentees])
   const userdetails = useSelector((state) => state.userInfo);
   // const programdetails = programData
   const { profile, loading: profileLoading } = useSelector(
@@ -685,7 +693,7 @@ export default function AssignTask() {
             </div>
             <div className='px-5'>
               <DataTable
-                rows={programMentees?.length > 0 && programMentees}
+                rows={formattedProgramMentees ?? []}
                 columns={JoinMenteeColumn}
                 hideCheckbox
               />

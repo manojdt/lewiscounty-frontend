@@ -32,7 +32,7 @@ import CloseReqPopup from "../../assets/icons/blackCloseIcon.svg"
 import CancelReq from "../../assets/icons/cancelRequest.svg"
 import dayjs from 'dayjs'
 import CreateGoal from './CreateGoal'
-import { dateFormat, dateFormatRever } from '../../utils'
+import { dateFormat, dateFormatRever, formatRenderCellDateValues } from '../../utils'
 import { goal_active, goal_cancelled, goal_completed, goal_history, goal_program_details, goal_progress, mentee_goal_view, request_goalMentee, request_goalMentor, request_goalNew, requestPageBreadcrumbs } from '../Breadcrumbs/BreadcrumbsCommonData'
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs'
 import ViewIcon from "../../assets/images/view1x.png";
@@ -104,7 +104,7 @@ const ViewGoal = ({ type = '',headTreeList="" }) => {
             flex: 1,
             id: 1,
             renderCell: (params) => {
-                return <div>{dateFormat(params.row.start_date)}</div>;
+                return formatRenderCellDateValues(params?.row?.start_date)
             },
         },
         {
@@ -113,7 +113,7 @@ const ViewGoal = ({ type = '',headTreeList="" }) => {
             flex: 1,
             id: 1,
             renderCell: (params) => {
-                return <div>{dateFormat(params.row.end_date)}</div>;
+                return formatRenderCellDateValues(params?.row?.end_date)
             },
         },
         // {

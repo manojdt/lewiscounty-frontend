@@ -98,7 +98,7 @@ import { docuSign } from "../../../services/activities";
 import ShareIcon from "../../../assets/images/share1x.png";
 import LinkIcon from "../../../assets/images/link1x.png";
 import RequestSelectBox from "../../../shared/RequestSelectBox";
-import { useDebounce } from "../../../utils";
+import { formatTableNullValues, useDebounce } from "../../../utils";
 
 export default function AllRequest() {
   const navigate = useNavigate();
@@ -146,6 +146,8 @@ export default function AllRequest() {
     column: [],
     data: [],
   });
+
+  const [formattedActiveTableDetails, setFormattedActiveTableDetails] = React.useState([])
 
   const [seletedItem, setSelectedItem] = useState({});
   const [confirmPopup, setConfirmPopup] = useState({
@@ -2545,6 +2547,13 @@ export default function AllRequest() {
     goalsList,
   ]);
 
+  React.useEffect(()=>{
+    if(activeTableDetails?.data){
+      const formattedRowData = formatTableNullValues(activeTableDetails?.data)
+      setFormattedActiveTableDetails(formattedRowData)
+    }
+  },[activeTableDetails])
+
   useEffect(() => {
     if (role !== "") {
       if (
@@ -3221,7 +3230,7 @@ export default function AllRequest() {
                   </Backdrop>
 
                   <DataTable
-                    rows={activeTableDetails.data}
+                    rows={formattedActiveTableDetails}
                     columns={activeTableDetails.column}
                     hideFooter={!activeTableDetails?.data?.length}
                     rowCount={activeTableDetails?.rowCount}

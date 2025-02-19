@@ -1,7 +1,7 @@
 import { Menu, MenuItem } from '@mui/material';
 import MoreIcon from '../assets/icons/moreIcon.svg';
 
-import { dateFormat } from '../utils';
+import { dateFormat, formatRenderCellDateValues } from '../utils';
 
 export const TicketsColumns = [
   {
@@ -46,7 +46,7 @@ export const TicketsColumns = [
     flex: 1,
     id: 4,
     renderCell: (params) => {
-      return <div>{dateFormat(params.row.created_at)}</div>;
+      return formatRenderCellDateValues(params.row.created_at)
     },
   },
   {
@@ -91,7 +91,7 @@ export const TicketsColumns = [
     flex: 1,
     id: 8,
     renderCell: (params) => {
-      return <div>{dateFormat(params.row.due_date)}</div>;
+      return formatRenderCellDateValues(params.row.due_date)
     },
   },
   {
@@ -100,7 +100,7 @@ export const TicketsColumns = [
     flex: 1,
     id: 9,
     renderCell: (params) => {
-      return <div>{dateFormat(params.row.changed_at)}</div>;
+      return formatRenderCellDateValues(params.row.changed_at)
     },
   },
   {

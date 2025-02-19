@@ -41,7 +41,7 @@ import CancelReq from "../../assets/icons/cancelRequest.svg";
 import dayjs from "dayjs";
 import moment from "moment";
 import { requestPageBreadcrumbs } from "../Breadcrumbs/BreadcrumbsCommonData";
-import { dateFormat, useDebounce } from "../../utils";
+import { dateFormat, formatTableNullValues, useDebounce } from "../../utils";
 
 export const Mentors = () => {
   const navigate = useNavigate();
@@ -56,6 +56,13 @@ export const Mentors = () => {
   const { mentorList, loading, status } = useSelector(
     (state) => state.userList
   );
+  const [formattedMentorList, setFormattedMentorList] = React.useState([])
+  React.useEffect(()=>{
+    if(mentorList?.results){
+      const formattedRowData = formatTableNullValues(mentorList?.results)
+      setFormattedMentorList(formattedRowData)
+    }
+  },[mentorList])
   const [mentorType, setMentorType] = useState(
     mentortypereq
       ? mentortypereq
@@ -809,7 +816,7 @@ export const Mentors = () => {
           )}
 
           <DataTable
-            rows={mentorList?.results}
+            rows={formattedMentorList ?? []}
             columns={
               mentorType==="top_programs"?topProgramsColumn: mentorType === "requestmentor" ? reqMentorColumn : mentorColumn
             }

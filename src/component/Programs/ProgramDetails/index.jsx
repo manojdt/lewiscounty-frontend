@@ -2551,7 +2551,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             paddingTop: "14px",
                           }}
                         >
-                          <span>Sub Programs</span>
+                          <span>Subjects</span>
                           <span style={{ textTransform: "capitalize" }}>
                             {programdetails.sub_programs?.length}
                           </span>

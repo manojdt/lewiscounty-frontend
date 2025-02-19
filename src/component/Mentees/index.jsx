@@ -36,7 +36,7 @@ import { Button } from "../../shared";
 import SuccessTik from "../../assets/images/blue_tik1x.png";
 import MuiModal from "../../shared/Modal";
 import { requestPageBreadcrumbs } from "../Breadcrumbs/BreadcrumbsCommonData";
-import { useDebounce } from "../../utils";
+import { formatTableNullValues, useDebounce } from "../../utils";
 
 export const Mentees = () => {
   const navigate = useNavigate();
@@ -46,10 +46,32 @@ export const Mentees = () => {
   const [reason, setReason] = useState("");
   const [reasonError, setReasonError] = React.useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [menteeListFormatted, setMenteeListFormatted] = React.useState([])
   const dispatch = useDispatch();
   const { menteeList, loading, status } = useSelector(
     (state) => state.userList
   );
+
+  React.useEffect(()=>{
+    if(menteeList?.results){
+      // const formattedEmpty = menteeList.results.map((item, index)=>{
+      //   const formattedItem = {}
+      //   for (let key in item){
+      //     if(item[key] === "" || item[key] === null){
+      //       formattedItem[key] = ". . ." 
+      //     }
+      //     else{
+      //       formattedItem[key] = item[key]
+      //     }
+      //   }
+      // return formattedItem;
+      // })
+      // setMenteeListFormatted(formattedEmpty);
+      const formattedMenteeList = formatTableNullValues(menteeList?.results)
+      setMenteeListFormatted(formattedMenteeList)
+
+    }
+  },[menteeList?.results])
 
   const breadcrumbsStatusType = searchParams.get("status") || "";
   const [mentorType, setMentorType] = useState(
@@ -318,6 +340,7 @@ export const Mentees = () => {
 
   const getTableData = (search = "") => {
     if (mentorType === "my-mentee") {
+      console.log("=======ifff=========")
       dispatch(
         getMyMentees({
           page: paginationModel?.page + 1,
@@ -326,6 +349,7 @@ export const Mentees = () => {
         })
       );
     } else {
+      console.log('elseeeeeeeeeeeee')
       dispatch(
         getMyReqMentees({
           page: paginationModel?.page + 1,
@@ -463,7 +487,7 @@ export const Mentees = () => {
           )}
 
           <DataTable
-            rows={menteeList?.results}
+            rows={menteeListFormatted ?? []}
             columns={
               mentorType === "my-mentee" ? myMenteeColumn : myReqMenteeColumn
             }

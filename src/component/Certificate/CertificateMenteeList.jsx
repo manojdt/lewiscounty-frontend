@@ -47,6 +47,7 @@ import {
   mentorGeneratedCertificate,
 } from "../Breadcrumbs/BreadcrumbsCommonData";
 import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
+import { formatTableNullValues } from "../../utils";
 
 export default function CertificateMenteeList() {
   const navigate = useNavigate();
@@ -61,7 +62,14 @@ export default function CertificateMenteeList() {
   const { status, certificatesMembers } = useSelector(
     (state) => state.certificates
   );
+  const [formattedCertificatesMembers, setFormattedCertificatesMembers] = React.useState([])
 
+  React.useEffect(()=>{
+    if(certificatesMembers?.results){
+      const formattedRowData = formatTableNullValues(certificatesMembers?.results)
+      setFormattedCertificatesMembers(formattedRowData)
+    }
+  },[certificatesMembers])
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -409,12 +417,19 @@ export default function CertificateMenteeList() {
               )}
             </div>
           )}
-          <div className="cursor-pointer" onClick={() => navigate(-1)}>
+          <div className="cursor-pointer" onClick={() => {
+            if(state?.from){
+              navigate(`/certificates?tabType=${state?.status?.toLowerCase()}`)
+            }
+            else{
+              navigate(-1)
+            }
+            }}>
             <img src={Cancel} alt="link" className="w-[20px] h[10px]" />
           </div>
         </div>
         <DataTable
-          rows={certificatesMembers?.results || []}
+          rows={formattedCertificatesMembers || []}
           columns={certificateColumn}
           hideCheckbox
           hideFooter={certificatesMembers?.results?.length <= 10}
@@ -459,7 +474,7 @@ export default function CertificateMenteeList() {
               </button>
             </div>
           ) : null}
-          {role !== "admin" && state?.status !== "Wating_for_response" && (
+          {role !== "admin" && state?.status !== "wating_for_response" && (
             <Button
               btnName="Close"
               btnCategory="secondary"

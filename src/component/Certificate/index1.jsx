@@ -10,6 +10,7 @@ import { getCertificates } from '../../services/certificate';
 import FeedbackIcon from '../../assets/icons/feedback.svg'
 import SearchIcon from '../../assets/icons/SearchColor.svg'
 import ActionIcon from '../../assets/images/certficate_action.png'
+import { formatTableNullValues } from '../../utils';
 
 
 export default function Certificate() {
@@ -17,7 +18,14 @@ export default function Certificate() {
 
     const dispatch = useDispatch()
     const { certificates, loading } = useSelector(state => state.certificates)
+    const [formattedCertificates, setFormattedCertificates] = React.useState([])
 
+    React.useEffect(()=>{
+        if(certificates){
+            const formattedRowData = formatTableNullValues(certificates)
+            setFormattedCertificates(formattedRowData)
+        }
+    },[certificates])
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -107,7 +115,7 @@ export default function Certificate() {
                     </div>
 
                     <div className='certificate-table py-9'>
-                        <DataTable rows={certificates} columns={listCertificatesColumn} hideCheckbox />
+                        <DataTable rows={formattedCertificates} columns={listCertificatesColumn} hideCheckbox />
                     </div>
                 </div>
             </div>

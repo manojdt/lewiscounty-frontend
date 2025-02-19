@@ -95,7 +95,7 @@ export default function CertificateDetails() {
             <Button
               btnType="button"
               btnCls="w-[100px]"
-              onClick={() => navigate("/certificates")}
+              onClick={() => navigate(-1)}
               btnName="Close"
               btnCategory="secondary"
             />

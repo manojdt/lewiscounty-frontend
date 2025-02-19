@@ -19,7 +19,7 @@ import {
   MenuItem,
   Stack,
 } from "@mui/material";
-import { fileNameFromUrl, fileNameString } from "../../../utils";
+import { fileNameFromUrl, fileNameString, formatTableNullValues } from "../../../utils";
 import dayjs from "dayjs";
 import EditIcon from "../../../assets/icons/editIcon.svg";
 import moment from "moment";
@@ -42,6 +42,14 @@ const MentorTask = () => {
     loading: menteeTaskLoading,
     status,
   } = useSelector((state) => state.tasks);
+  const [formattedMenteeTask, setFormattedMenteeTask] = React.useState([])
+
+  React.useEffect(()=>{
+    if(menteeTask?.results){
+      const formattedRowData = formatTableNullValues(menteeTask?.results)
+      setFormattedMenteeTask(formattedRowData)
+    }
+  },[menteeTask])
   const navigate = useNavigate();
   const [paginationModel, setPaginationModel] = React.useState({
     page: 0,
@@ -834,7 +842,7 @@ const MentorTask = () => {
               </>
             ) : (
               <DataTable
-                rows={menteeTask?.results ?? []}
+                rows={formattedMenteeTask ?? []}
                 columns={mentorTaskColumn}
                 hideCheckbox
                 rowCount={menteeTask?.count}

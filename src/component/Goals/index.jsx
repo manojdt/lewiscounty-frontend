@@ -69,6 +69,7 @@ import TickCircleIcon from "../../assets/icons/tickCircle.svg";
 import moment from "moment";
 import { requestPageBreadcrumbs } from "../Breadcrumbs/BreadcrumbsCommonData";
 import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
+import { formatTableNullValues } from "../../utils";
 
 const Goals = () => {
   const navigate = useNavigate();
@@ -87,6 +88,7 @@ const Goals = () => {
   const [requestTab, setRequestTab] = useState("mentor-goals");
   const [actionModal, setActionModal] = useState(false);
   const [goals, setGoals] = useState([]);
+  const [formattedGoals, setFormattedGoals] = React.useState([])
   const [seletedItem, setSelectedItem] = useState({});
   const [recentActivityCheck, setRecentActivityCheck] = useState(false);
   const [popupModal, setPopupModal] = useState("");
@@ -153,6 +155,13 @@ const Goals = () => {
     goalRequest,
     goalHistory,
   } = useSelector((state) => state.goals);
+  const [formattedGoalHistory, setFormattedGoalHistory] = React.useState([])
+  React.useEffect(()=>{
+    if(goalHistory?.results){
+      const formattedRowData = formatTableNullValues(goalHistory?.results)
+      setFormattedGoalHistory(formattedRowData)
+    }
+  },[goalHistory])
   const dispatch = useDispatch();
 
   const requestBtns = [
@@ -952,6 +961,10 @@ const Goals = () => {
 
   useEffect(() => {
     setGoals(goalsList);
+    if(goalsList?.results){
+      const formattedRowData = formatTableNullValues(goalsList?.results)
+      setFormattedGoals(formattedRowData)
+    }
   }, [goalsList]);
 
   const handleChangeHistoryTimeFrame = (value) => {
@@ -1603,7 +1616,7 @@ const Goals = () => {
                             </div>
                           </div>
                           <DataTable
-                            rows={goalHistory?.results}
+                            rows={formattedGoalHistory ?? []}
                             columns={goalHistoryColumn}
                             handleSelectedRow={handleSelectedRow}
                             height={650}
@@ -1623,7 +1636,7 @@ const Goals = () => {
                       >
                         <div className="px-2 py-5">{title}</div>
                         <DataTable
-                          rows={goals?.results}
+                          rows={formattedGoals || []}
                           columns={goalColumn}
                           handleSelectedRow={handleSelectedRow}
                           rowCount={goals?.count}
@@ -1729,7 +1742,7 @@ const Goals = () => {
 
                 <div className="mt-2">
                   <DataTable
-                    rows={goalHistory?.results ?? []}
+                    rows={formattedGoalHistory ?? []}
                     columns={
                       adminTab === "mentor"
                         ? adminMentorColumns

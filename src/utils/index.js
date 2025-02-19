@@ -383,3 +383,29 @@ export const FormLabelRequired = ({ required, children, className = "" }) => (
     {required &&children&& <span className="text-red-500 ml-1">*</span>}
   </label>
 )
+
+export function formatRenderCellDateValues(value){
+  if(value !== "" || value !== null){
+    return <div>{dateFormat(value)}</div>
+  }
+  return value
+}
+
+export function formatTableNullValues(rowData){
+  console.log("intially  ", rowData)
+  const formattedEmpty = rowData?.map((item, index)=>{
+    const formattedItem = {}
+    for (let key in item){
+      if(item[key] === "" || item[key] === null){
+        formattedItem[key] = ". . ." 
+      }
+      else{
+        formattedItem[key] = item[key]
+      }
+    }
+  return formattedItem;
+  })
+  console.log("formattedEmpty  ", formattedEmpty)
+  return formattedEmpty
+  
+}
