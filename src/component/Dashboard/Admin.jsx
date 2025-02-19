@@ -249,8 +249,8 @@ export default function Admin() {
   }, []);
 
   return (
-    <div className="dashboard-content px-8 mt-10 py-5">
-      <div className="grid grid-cols-8 gap-7 max-md:block">
+    <div className="dashboard-content px-4 sm:px-4 md:px-4 lg:px-8 xl:px-8 mt-10 py-5">
+      <div className="grid grid-cols-8 gap-4 max-md:block">
         <div className="col-span-2">
           <div
             className="pb-3 w-full  bg-white rounded-lg"
@@ -389,7 +389,7 @@ export default function Admin() {
                 return (
                   <div
                     key={index}
-                    className="py-3 px-3 cursor-pointer"
+                    className="py-3 px-2 sm:px-2 md:px-2 lg:px-3 xl:px-3 cursor-pointer"
                     style={{
                       border: "1px solid rgba(29, 91, 191, 1)",
                       borderRadius: "10px",
