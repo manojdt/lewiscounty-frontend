@@ -1,26 +1,35 @@
-import React, { useEffect, useState } from 'react';
-import {  Skeleton, Typography } from '@mui/material';
+import React, { useEffect, useState } from "react";
+import { Skeleton, Typography } from "@mui/material";
 
 import {
   Link,
   useNavigate,
   useParams,
   useSearchParams,
-} from 'react-router-dom';
-import CustomTicketAccordian from '../../../shared/custom-accordian/CustomTicketAccordian';
-import TicketUpdate from './ticket-update';
-import ViewTicket from './ViewTicket';
+} from "react-router-dom";
+import CustomTicketAccordian from "../../../shared/custom-accordian/CustomTicketAccordian";
+import TicketUpdate from "./ticket-update";
+import ViewTicket from "./ViewTicket";
 import {
   useGetTicketQuery,
   useUpdateStatusMutation,
-} from '../../../features/tickets/tickets-slice';
-import TicketComments from './ticket-comments';
-import { useSelector } from 'react-redux';
-import { user } from '../../../utils/constant';
-import { Button } from '../../../shared';
-import SuccessGradientMessage from '../../success-gradient-message';
-import { ticketHistoryView } from '../../Breadcrumbs/BreadcrumbsCommonData';
-import Breadcrumbs from '../../Breadcrumbs/Breadcrumbs';
+} from "../../../features/tickets/tickets-slice";
+import TicketComments from "./ticket-comments";
+import { useSelector } from "react-redux";
+import { user } from "../../../utils/constant";
+import { Button } from "../../../shared";
+import SuccessGradientMessage from "../../success-gradient-message";
+import {
+  allTicket,
+  newTask,
+  pendingTicket,
+  inprogressTicket,
+  closedTicket,
+  resolvedTickets,
+  rejectedTicket,
+  requestPageBreadcrumbs,
+} from "../../Breadcrumbs/BreadcrumbsCommonData";
+import Breadcrumbs from "../../Breadcrumbs/Breadcrumbs";
 
 const TicketDetails = () => {
   const { id } = useParams();
@@ -31,7 +40,7 @@ const TicketDetails = () => {
 
   const [searchParams] = useSearchParams();
   const breadcrumbsType = searchParams.get("breadcrumbsType") || "";
-    const [breadcrumbsArray, setBreadcrumbsArray] = useState([]);
+  const [breadcrumbsArray, setBreadcrumbsArray] = useState([]);
   const userInfo = useSelector((state) => state.userInfo);
   const role = userInfo.data.role;
 
@@ -50,7 +59,7 @@ const TicketDetails = () => {
     }
   }, [isStatusSuccess]);
 
-  const type = searchParams.get('type');
+  const type = searchParams.get("type");
 
   const {
     data: ticket,
@@ -69,36 +78,70 @@ const TicketDetails = () => {
 
   const breadcrumbs = [
     <Link
-      variant='body2'
-      underline='hover'
-      key='1'
-      color='inherit'
+      variant="body2"
+      underline="hover"
+      key="1"
+      color="inherit"
       to={`${
         role === user.admin || role === user.mentee || role === user.mentor
-          ? '/ticket-history'
-          : '/tickets'
+          ? "/ticket-history"
+          : "/tickets"
       }`}
     >
       {`${
         role === user.admin || role === user.mentee || role === user.mentor
-          ? 'History'
-          : 'Tickets kiler'
+          ? "History"
+          : "Tickets kiler"
       }`}
     </Link>,
-    <Typography key='2' variant='body2' color={'primary'}>
+    <Typography key="2" variant="body2" color={"primary"}>
       View New Ticket
     </Typography>,
   ];
+  const handleBreadcrumbs = (key) => {
+    const ticket = allTicket();
+    const newTicketPage = newTask();
+    const pendingTicketPage = pendingTicket();
+    const inprogressTicketPage = inprogressTicket();
+    const closedTicketPage = closedTicket();
+    const resolvedTicketPage = resolvedTickets();
+    const rejectedTicketPage = rejectedTicket();
+
+    switch (key) {
+      case requestPageBreadcrumbs.ticketAll:
+        setBreadcrumbsArray(ticket);
+        break;
+      case requestPageBreadcrumbs.ticketNew:
+        setBreadcrumbsArray(newTicketPage);
+        break;
+      case requestPageBreadcrumbs.ticketPending:
+        setBreadcrumbsArray(pendingTicketPage);
+        break;
+      case requestPageBreadcrumbs.ticketInprogress:
+        setBreadcrumbsArray(inprogressTicketPage);
+        break;
+      case requestPageBreadcrumbs.ticketClosed:
+        setBreadcrumbsArray(closedTicketPage);
+        break;
+      case requestPageBreadcrumbs.ticketResolved:
+        setBreadcrumbsArray(resolvedTicketPage);
+        break;
+      case requestPageBreadcrumbs.ticketReject:
+        setBreadcrumbsArray(rejectedTicketPage);
+        break;
+      case "discussion":
+        break;
+      default:
+        break;
+    }
+  };
   useEffect(() => {
-    const breadType=ticketHistoryView()
     if (breadcrumbsType) {
-      setBreadcrumbsArray(breadType);
-    } else {
-      setBreadcrumbsArray(breadType);
+      handleBreadcrumbs(breadcrumbsType);
     }
   }, [breadcrumbsType]);
   return (
-    <div className='p-3 sm:p-3 md:p-6 lg:p-9 xl:p-9'>
+    <div className="p-3 sm:p-3 md:p-6 lg:p-9 xl:p-9">
       {/* <Breadcrumbs
         className='pb-4'
         separator={<NavigateNextIcon fontSize='small' />}
@@ -106,14 +149,14 @@ const TicketDetails = () => {
       >
         {breadcrumbs}
       </Breadcrumbs> */}
-<Breadcrumbs items={breadcrumbsArray}/>
-      <div className='bg-white p-3 sm:p-3 md:p-6 lg:p-9 xl:p-9 rounded-xl space-y-12'>
+      <Breadcrumbs items={breadcrumbsArray} />
+      <div className="bg-white p-3 sm:p-3 md:p-6 lg:p-9 xl:p-9 rounded-xl space-y-12">
         {/* View Ticket Section */}
         {isTicketLoading ? (
-          <div className='flex justify-center items-center'>
+          <div className="flex justify-center items-center">
             <Skeleton
-              variant='rectangular'
-              sx={{ width: '100%', height: '500px', borderRadius: '10px' }}
+              variant="rectangular"
+              sx={{ width: "100%", height: "500px", borderRadius: "10px" }}
             />
           </div>
         ) : (
@@ -121,7 +164,7 @@ const TicketDetails = () => {
             <CustomTicketAccordian
               title={`${ticket?.created_by_detail?.first_name} ${ticket?.created_by_detail?.last_name} (
             ${ticket?.created_by_detail?.role}) - ${ticket?.id}`}
-              defaultValue={type === 'view' ? true : false}
+              defaultValue={type === "view" ? true : false}
             >
               <ViewTicket ticket={ticket} type={type} />
             </CustomTicketAccordian>
@@ -144,27 +187,27 @@ const TicketDetails = () => {
         </div>
 
         {/* Update Ticket Section */}
-        <div className='bg-white rounded-xl space-y-12'>
+        <div className="bg-white rounded-xl space-y-12">
           {isTicketLoading ? (
-            <div className='flex justify-center items-center'>
+            <div className="flex justify-center items-center">
               <Skeleton
-                variant='rectangular'
-                sx={{ width: '100%', height: '500px', borderRadius: '10px' }}
+                variant="rectangular"
+                sx={{ width: "100%", height: "500px", borderRadius: "10px" }}
               />
             </div>
           ) : (
             <>
               {
                 // role === user.super_admin &&
-                ticket?.status !== 'new' &&
-                  ticket?.status !== 'rejected' &&
-                  ticket?.status !== 'reopened' && (
+                ticket?.status !== "new" &&
+                  ticket?.status !== "rejected" &&
+                  ticket?.status !== "reopened" && (
                     <div>
                       <CustomTicketAccordian
                         title={
                           role === user.super_admin
-                            ? 'Enter your update'
-                            : 'Additional Information'
+                            ? "Enter your update"
+                            : "Additional Information"
                         }
                         defaultValue={true}
                       >
@@ -176,41 +219,41 @@ const TicketDetails = () => {
             </>
           )}
         </div>
-        {type === 'view' &&
+        {type === "view" &&
           (role === user.mentor ||
             role === user.mentee ||
             role === user.admin) &&
-          ticket?.status === 'resolved' && (
-            <div className='flex gap-6 my-12 justify-center align-middle'>
+          ticket?.status === "resolved" && (
+            <div className="flex gap-6 my-12 justify-center align-middle">
               <Button
-                btnCls='w-[170px]'
-                btnName={`${isStatusLoading ? 'Reopening...' : 'Reopen'}`}
+                btnCls="w-[170px]"
+                btnName={`${isStatusLoading ? "Reopening..." : "Reopen"}`}
                 disabled={isStatusLoading}
-                btnCategory='secondary'
+                btnCategory="secondary"
                 onClick={() => {
-                  setActionType('reopen');
-                  updateStatus({ id: ticket.id, status: 'in_progress' });
+                  setActionType("reopen");
+                  updateStatus({ id: ticket.id, status: "in_progress" });
                 }}
               />
 
               <Button
-                btnType='submit'
-                btnCls='w-[170px]'
-                btnName={`${isStatusLoading ? 'Closing...' : 'Close'}`}
+                btnType="submit"
+                btnCls="w-[170px]"
+                btnName={`${isStatusLoading ? "Closing..." : "Close"}`}
                 disabled={isStatusLoading}
                 onClick={() => {
-                  setActionType('close');
-                  updateStatus({ id: ticket.id, status: 'closed' });
+                  setActionType("close");
+                  updateStatus({ id: ticket.id, status: "closed" });
                 }}
-                btnCategory='primary'
+                btnCategory="primary"
               />
             </div>
           )}
         <SuccessGradientMessage
           message={
-            actionType === 'reopen'
-              ? 'The ticket has been reopened successfully'
-              : 'This ticket has been closed successfully'
+            actionType === "reopen"
+              ? "The ticket has been reopened successfully"
+              : "This ticket has been closed successfully"
           }
           isBackdropOpen={isBackdropOpen}
           setIsBackdropOpen={setIsBackdropOpen}

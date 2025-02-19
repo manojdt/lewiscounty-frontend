@@ -20,6 +20,7 @@ import {
   updateInfo,
   updateMenteeQuestions,
   updateQuestions,
+  updateQuestionsPost,
   updateToken,
   updateUserInfo,
   updateUserRole,
@@ -55,7 +56,7 @@ export const Questions = () => {
   const [searchParams] = useSearchParams();
   const [customLoading, setCustomLoading] = useState(false);
 
-  const role = userInfo.data.role || '';
+  const role = userInfo?.data?.role || '';
 const { data, isLoading, refetch, isFetching}=useGetMentorQuestionsQuery()
   const submitQuestionsData = (apiData) => {
     if (role === 'mentee') {
@@ -86,9 +87,16 @@ const { data, isLoading, refetch, isFetching}=useGetMentorQuestionsQuery()
         documents: undefined,
      is_questions_completed:true
       };
-      dispatch(updateQuestions(mentorApiData)).then((res) => {
-        docUpload(apiData);
-      });
+      if(data?.data){
+        dispatch(updateQuestions(mentorApiData)).then((res) => {
+          docUpload(apiData);
+        });
+      }else{
+        dispatch(updateQuestionsPost(mentorApiData)).then((res) => {
+          docUpload(apiData);
+        });
+
+      }
     }
   };
   const docUpload = async (data) => {
@@ -496,7 +504,18 @@ const { data, isLoading, refetch, isFetching}=useGetMentorQuestionsQuery()
             />
           </div>
         )} */}
-        <div className='mb-1'><Button btnName="Back" btnCategory="secondary" onClick={()=>handleBack()} /></div>
+        <div className='mb-1'>
+        <div className='flex items-center gap-1'onClick={()=>handleBack()}>
+          <img
+            src={rightArrow}
+            className='h-[20px] w-[20px] cursor-pointer rotate-180'
+            alt='right'
+          />
+          <p style={{ fontWeight: 'bold', cursor: 'pointer' }}>Back</p>
+        </div>
+        {/* <Button btnName="Back" btnCategory="secondary" onClick={()=>handleBack()} /> */}
+
+        </div>
         <div style={{ boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.15)" }}>
           <div
             className="steps pl-24 pr-28"

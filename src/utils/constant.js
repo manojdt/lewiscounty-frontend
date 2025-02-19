@@ -1219,6 +1219,7 @@ export const TaskAllStatus = {
   draft: "draft",
   newtask: "newtask",
   inprogress: "inprogress",
+  waiting_for_approval:"waiting_for_approval"
 };
 
 export const TaskStatus = {
