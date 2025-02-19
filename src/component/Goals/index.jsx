@@ -273,7 +273,16 @@ const Goals = () => {
       })
     );
   };
+  // Add this useEffect to handle URL params on initial load
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const createdByParam = urlParams.get("created_by");
 
+    if (createdByParam) {
+      setCreatedBy(createdByParam);
+      setShowAdmin(false);
+    }
+  }, []); // Run only on mount
   useEffect(() => {
     if (role === "admin") {
       handleGetAdminTableData(adminTimeFrame, adminTab);
@@ -338,7 +347,7 @@ const Goals = () => {
       getAllGoalData();
       setTimeout(() => {
         setPopupModal("");
-      }, [3000]);
+      }, 3000);
     }
 
     if (status === goalStatus.update) {
@@ -348,7 +357,7 @@ const Goals = () => {
       getAllGoalData();
       setTimeout(() => {
         setPopupModal("");
-      }, [3000]);
+      }, 3000);
     }
   }, [status]);
 
@@ -932,7 +941,7 @@ const Goals = () => {
       setPopupModal("Requested");
       setTimeout(() => {
         setPopupModal("");
-      }, [3000]);
+      }, 3000);
 
       const filterType = searchParams.get("type");
       let query = "";
