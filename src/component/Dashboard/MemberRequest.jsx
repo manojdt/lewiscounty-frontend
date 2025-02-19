@@ -139,7 +139,7 @@ export default function MemberRequest() {
                   handleClose();
                   navigate(`/mentor-details/${seletedItem.id}`, {
                     state: {
-                      reqType: "member_join_request",
+                      reqType: "dashborad",
                     },
                   });
                 }}

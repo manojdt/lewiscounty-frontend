@@ -40,6 +40,9 @@ export const Mentor = () => {
   const userInfo = useSelector((state) => state.userInfo);
   const { feeds } = useSelector((state) => state.feeds);
   const [programView, setProgramView] = useState("grid");
+  const categoryId = searchParams.get("category_id");
+    const categoryIDParams=categoryId?`&category_id=${categoryId}`:""
+    const categoryIDParamsAll=categoryId?`?category_id=${categoryId}`:""
   // const [topPrograms, setTopPrograms] = useState([]);
   const handlePerformanceFilter = (e) => {
     const res = e?.target?.value || "date";
@@ -254,7 +257,7 @@ const handleNavigateDetails = (programdetails) => {
                     ></div>
                     <h4>Top Mentors</h4>
                   </div>
-                  <div className="flex justify-center mt-2 mb-2">
+                  {/* <div className="flex justify-center mt-2 mb-2">
                     <p
                       className="text-[12px] py-2 px-2 cursor-pointer"
                       style={{
@@ -266,7 +269,7 @@ const handleNavigateDetails = (programdetails) => {
                     >
                       View All
                     </p>
-                  </div>
+                  </div> */}
                 </div>
 
                 <div className="content flex flex-col gap-2 py-2 px-2 overflow-x-auto">
@@ -356,7 +359,7 @@ const handleNavigateDetails = (programdetails) => {
                     searchParams.get("is_bookmark") === null && (
                       <ProgramCard
                         title="All Programs"
-                        viewpage="/programs"
+                        viewpage={`/programs${categoryIDParamsAll}`}
                         handleNavigateDetails={handleNavigateDetails}
                         handleBookmark={handleBookmark}
                         programs={userpragrams.allprograms}
@@ -368,7 +371,7 @@ const handleNavigateDetails = (programdetails) => {
                     searchParams.get("type") === "planned") && (
                     <ProgramCard
                       title="Active Programs"
-                      viewpage="/programs?type=yettojoin"
+                      viewpage={`/programs?type=yettojoin${categoryIDParams}`}
                       handleNavigateDetails={handleNavigateDetails}
                       handleBookmark={handleBookmark}
                       programs={userpragrams.yettojoin}
@@ -377,22 +380,22 @@ const handleNavigateDetails = (programdetails) => {
                     />
                   )}
 
-                  {searchParams.get("type") === "yettostart" && (
+                  {/* {searchParams.get("type") === "yettostart" && (
                     <ProgramCard
                       title="Recently Joined Programs"
-                      viewpage="/programs?type=yettostart"
+                      viewpage={`/programs?type=yettostart${categoryIDParams}`}
                       handleNavigateDetails={handleNavigateDetails}
                       handleBookmark={handleBookmark}
                       programs={userpragrams.yettostart}
                       tableIcon={ImageComponent}
                       loadProgram={getPrograms}
                     />
-                  )}
+                  )} */}
 
                   {searchParams.get("type") === "inprogress" && (
                     <ProgramCard
                       title="Ongoing  Programs"
-                      viewpage="/programs?type=inprogress"
+                      viewpage={`/programs?type=inprogress${categoryIDParams}`}
                       handleNavigateDetails={handleNavigateDetails}
                       handleBookmark={handleBookmark}
                       programs={userpragrams.inprogress}

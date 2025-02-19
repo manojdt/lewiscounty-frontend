@@ -1037,6 +1037,13 @@ export const TaskDetails = () => {
                   </div>
                 </div>
               )}
+              {taskData?.fail_reason&&taskData.result !== 'Pass'&&
+               <div className="action-set action_cancelled mb-4">
+            <div className="reason-title">{"Task Fail Reason"}</div>
+            <div className="reason-content">
+              {taskData?.fail_reason}
+            </div>
+          </div>}
               {taskData.result !== '' &&
                 taskData.result !== null &&
                 taskData.result !== '----' && (
