@@ -323,6 +323,7 @@ const Category = () => {
                     <CategoryCreateEdit
                         handleCancelForm={() => handleCloseForm()}
                         onSubmit={onSubmit}
+                        type={createEditForm?.type}
                     />
                 </Box>
             </MuiModal>

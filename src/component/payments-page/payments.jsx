@@ -11,7 +11,7 @@ const PaymentPage = ({ programDetailsId }) => {
   const navigate = useNavigate();
   const [clientSecret, setClientSecret] = useState();
   const stripePromise = loadStripe(
-    "pk_test_51QThrEKalAFoHITwOWO9dbQ3kl8kUUfBANhS3U4dNzYvmRsXl8j196jDww2VCJGGehlc7XSBkhagvMVajsoGWfDo00KOCPJQiq"
+    process.env.REACT_APP_STRIP_SECRET_KEY
   );
   console.log(programDetailsId);
 

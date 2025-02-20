@@ -957,6 +957,9 @@ export const taskColumns = [
     headerName: "Result",
     flex: 1,
     id: 2,
+    renderCell: (params) => {
+      return <div>{params.row.result==="Fail"?"No Pass":params.row.result}</div>
+  }
   },
 ];
 

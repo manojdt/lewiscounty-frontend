@@ -663,7 +663,7 @@ export const MenteePersonalInformationFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-6 sm:col-span-6 md:col-span-6 lg:col-span-6 xl:col-span-3",
+    width: "col-span-6 sm:col-span-6 md:col-span-6 lg:col-span-6 xl:col-span-2",
   },
   {
     type: "input",
@@ -675,7 +675,7 @@ export const MenteePersonalInformationFields = [
       // required: "This field is required",
     },
     size: true,
-    width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-3 xl:col-span-3",
+    width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-3 xl:col-span-2",
     widthQuestion:"w-full"
   },
   {
@@ -705,7 +705,7 @@ export const MenteePersonalInformationFields = [
       required: "This field is required",
     },
     size: false,
-    width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-3 xl:col-span-3",
+    width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-3 xl:col-span-2",
      widthQuestion:"w-full"
   },
 ];
@@ -2777,7 +2777,7 @@ export const CreateMeetingFields = [
     inputRules: {
       required: "This field is required",
     },
-    width: "w-full",
+    width: "col-span-6",
   },
   {
     type: "dropdown",
@@ -2809,7 +2809,7 @@ export const CreateMeetingFields = [
         value: "Custom",
       },
     ],
-    width: "width-32",
+    width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-2 xl:col-span-2",
   },
   {
     type: "time",
@@ -2820,7 +2820,7 @@ export const CreateMeetingFields = [
     inputRules: {
       required: "This field is required",
     },
-    width: "width-32",
+    width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-2 xl:col-span-2",
   },
   {
     type: "time",
@@ -2831,7 +2831,7 @@ export const CreateMeetingFields = [
     inputRules: {
       required: "This field is required",
     },
-    width: "width-32",
+    width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-2 xl:col-span-2",
   },
   {
     type: "dropdown",
@@ -2867,7 +2867,7 @@ export const CreateMeetingFields = [
         value: "30",
       },
     ],
-    width: "w-[10%]",
+    width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-2 xl:col-span-2",
   },
 
   {
@@ -2888,7 +2888,7 @@ export const CreateMeetingFields = [
         value: "Hours",
       },
     ],
-    width: "w-[21.5%]",
+    width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-2 xl:col-span-2",
   },
   {
     type: "input",
@@ -2897,7 +2897,7 @@ export const CreateMeetingFields = [
     label: "Add Guest(Optional)",
     placeholder: "Enter Guests",
     inputRules: {},
-    width: "w-[66%]",
+    width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-2 xl:col-span-2",
   },
   {
     type: "popup-input",
@@ -2908,7 +2908,7 @@ export const CreateMeetingFields = [
     inputRules: {
       required: "This field is required",
     },
-    width: "w-full",
+    width: "col-span-6",
     icon: "add",
   },
   {
@@ -2933,7 +2933,7 @@ export const CreateMeetingFields = [
         value: "This Event And Following Events",
       },
     ],
-    width: "w-full",
+    width: "col-span-6",
   },
 ];
 

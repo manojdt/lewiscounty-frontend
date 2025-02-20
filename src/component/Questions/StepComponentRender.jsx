@@ -36,14 +36,18 @@ const StepComponenRender = ({
     formState: { errors },
     handleSubmit,
     reset,
+    watch,
     getValues,
     setError,
+    unregister,
     setValue,
   } = useForm();
   const dispatch = useDispatch();
   const [dateFormat, setDateFormat] = useState({});
-  const [checkBoxValue, setCheckBoxValue] = useState('');
-  const [disabledFields, setDisabledFields] = useState({});
+  const [checkBoxValue, setCheckBoxValue] = useState(false);
+  const [disabledFields, setDisabledFields] = useState({
+    mentor_exp_desc: true // Initially disabled
+  });
   const [errorNot, setErrorNot] = useState(false);
   const [idProof, setIdProof] = useState([]);
   const [allFormValues, setAllFormValues] = useState({});
@@ -99,6 +103,8 @@ const StepComponenRender = ({
       // dispatch(updateToken());
     }
   };
+ 
+  
   const handleLogout = () => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
@@ -177,16 +183,38 @@ const StepComponenRender = ({
             [key]: date
           }));
           newFormValues[key] = date;
-        } else if (field.type === 'radio' || field.type === 'checkbox') {
-          const value = data[key] != null ? data[key].toString() : '';
+        } 
+        else if (field.type === 'radio') {
+          const value = data[key];
           setValue(key, value);
-          if (field.type === 'radio') {
-            handleRadioBox({ target: { value } });
-          } else {
-            setCheckBoxValue(value);
+          setCheckBoxValue(value);
+          
+          // Handle mentor_exp_desc field state based on radio value
+          if (key === 'prev_mentorship') {
+            setDisabledFields(prev => ({
+              ...prev,
+              mentor_exp_desc: !value
+            }));
+            
+            if (value) {
+              register('mentor_exp_desc', {
+                required: 'This field is required'
+              });
+            } else {
+              unregister('mentor_exp_desc');
+              setValue('mentor_exp_desc', '');
+            }
           }
+          
           newFormValues[key] = value;
-        } else {
+        } 
+        else if (field.type === 'checkbox') {
+          const value = data[key];
+          setValue(key, value);
+          setCheckBoxValue(value);
+          newFormValues[key] = value;
+        } 
+        else {
           setValue(key, data[key]);
           newFormValues[key] = data[key];
         }
@@ -199,6 +227,12 @@ const StepComponenRender = ({
       ...newFormValues
     }));
   };
+  // useEffect(() => {
+  //   const subscription = watch((value, { name }) => {
+  //    console.log(value,name,"watch")
+  //   });
+  //   return () => subscription.unsubscribe();
+  // }, [watch]);
   const handleDeleteDocument = async (id) => {
     try {
       const response = await api.delete(`user_info_update`,{data:{document_ids:[id]}});
@@ -253,27 +287,35 @@ const StepComponenRender = ({
     setCheckBoxValue(e.target.value);
   };
 
-  const handleRadioBox = (e) => {
-    const value = e.target.value;
-    if (value === 'true') {
-      setDisabledFields((prev) => ({
+  const handleRadioBox = (e,field) => {
+    const value = e.target.value === 'true'; // Convert string 'true'/'false' to boolean
+    console.log('Selected value:', value);
+  
+    // Set the radio value in form
+    setValue(field.name, value);
+    
+    if (value) {
+      // When Yes is selected
+      setDisabledFields(prev => ({
         ...prev,
-        mentor_exp_desc: false, // Disable the field if value is false
+        mentor_exp_desc: false
       }));
+      
       register('mentor_exp_desc', {
-        required: 'This field is required',
+        required: 'This field is required'
       });
     } else {
-      setDisabledFields((prev) => ({
+      // When No is selected
+      setDisabledFields(prev => ({
         ...prev,
-        mentor_exp_desc: true, // Disable the field if value is false
+        mentor_exp_desc: true
       }));
-      register('mentor_exp_desc', {
-        required: false,
-      });
+      
+      unregister('mentor_exp_desc');
       setValue('mentor_exp_desc', '');
     }
-    setCheckBoxValue(e.target.value);
+    
+    setCheckBoxValue(value);
   };
 
   useEffect(() => {
@@ -285,6 +327,7 @@ const StepComponenRender = ({
     }
     reset(f);
   }, [stepFields, stepData]);
+  
   return (
     <>
       <div className='py-6 px-6 sm:px-6 md:px-8 lg:px-16 xl:px-16'>
@@ -549,9 +592,10 @@ const StepComponenRender = ({
                                 {...radiobox}
                                 onChange={(e) => {
                                   radiobox.onChange(e);
-                                  handleRadioBox(e);
+                                  handleRadioBox(e,field.name);
                                 }}
-                                value={option.key}
+                                value={String(option.key)}
+                                checked={checkBoxValue === option.key}
                               />
                               <label className='ms-2 text-sm font-medium text-gray-900 dark:text-gray-300'>
                                 {option.value}

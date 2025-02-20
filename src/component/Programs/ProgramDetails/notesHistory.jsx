@@ -49,15 +49,15 @@ const HistoryNotes = () => {
   };
 
   const breadcrumbs = [
+    // <Typography
+    //   className="!text-[14px] !text-font-secondary-black cursor-pointer"
+    //   onClick={() => navigate(`/dashboard`)}
+    // >
+    //   Dashboard
+    // </Typography>,
     <Typography
       className="!text-[14px] !text-font-secondary-black cursor-pointer"
-      onClick={() => navigate(`/dashboard`)}
-    >
-      Dashboard
-    </Typography>,
-    <Typography
-      className="!text-[14px] !text-font-secondary-black cursor-pointer"
-      onClick={() => navigate(`/program-details/${id}?breadcrumbsType=${requestPageBreadcrumbs.dashboardPrograms}`)}
+      onClick={() =>  navigate(-1)}
     >
       Program Details
     </Typography>,

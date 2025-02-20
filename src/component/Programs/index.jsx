@@ -43,6 +43,7 @@ import { CategoryPopup } from "../Dashboard/categoryPopup";
 import { acceptMember, getCategory } from "../../services/category";
 import { useGetAllProgramsQuery } from "../../features/program/programApi.services";
 import ProgramMobileDropDown from "../../shared/ProgramMobileDropDown";
+import CategoryFilter from "../../shared/Card/CategoryFilterPopup";
 
 const CustomPagination = ({
   totalItems = 200,
@@ -171,6 +172,7 @@ export default function Programs() {
   const filterDate = searchParams.get("filter_by");
   const isBookmark = searchParams.get("is_bookmark");
   const programListView = searchParams.get("programView");
+  const categoryFilter = searchParams.get("category_id");
   const { data, isLoading, refetch, isFetching } = useGetAllProgramsQuery(
     {
       limit:
@@ -192,6 +194,7 @@ export default function Programs() {
       ...(filterDate && { filter_by: filterDate }),
       // ...(isBookmark && { is_bookmark: isBookmark }),
       ...(debouncedSearch && { search: debouncedSearch }),
+      ...(categoryFilter && { category_id: categoryFilter }),
     },
     {
       refetchOnMountOrArgChange: true,
@@ -205,7 +208,8 @@ export default function Programs() {
   const decoded = React.useMemo(() => jwtDecode(token), [token]);
   const [selectedCategory, setSelectedCategory] = React.useState([]);
   const [category, setCategory] = React.useState([]);
-
+  const [categoryList, setCategoryList] = React.useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const handleGetCategory = (searchText = "") => {
     const payload = {
       search: searchText,
@@ -213,6 +217,16 @@ export default function Programs() {
     dispatch(getCategory(payload)).then((res) => {
       if (res?.meta?.requestStatus === "fulfilled") {
         setCategory(res?.payload ?? []);
+      }
+    });
+  };
+  const handleGetCategoryforFilter = (searchText = "") => {
+    const payload = {
+      search: searchText,
+    };
+    dispatch(getCategory(payload)).then((res) => {
+      if (res?.meta?.requestStatus === "fulfilled") {
+        setCategoryList(res?.payload ?? []);
       }
     });
   };
@@ -265,6 +279,7 @@ export default function Programs() {
     // setLoading(true);
     const pay = {
       ...(filterDate && { filter_by: filterDate }),
+      ...(categoryFilter && { category_id: categoryFilter }),
     };
     const bookmark = await api.post("bookmark", payload);
     if (bookmark.status === 201 && bookmark.data) {
@@ -276,7 +291,18 @@ export default function Programs() {
 
     // dispatch(updateProgram({ id: program.id, is_bookmark: !program.is_bookmark }))
   };
-
+ 
+  
+  const handleFilter = (selectedIds) => {
+    setSelectedCategories(selectedIds);
+    // Update URL params if needed
+    if (selectedIds.length) {
+      searchParams.set("category_id", selectedIds.toString());
+    } else {
+      searchParams.delete("category_id");
+    }
+    setSearchParams(searchParams);
+  };
   const handleNavigation = (programdetails) => {
     let baseUrl = pipeUrls.programdetails;
     if (Object.keys(programdetails).length) {
@@ -312,10 +338,12 @@ export default function Programs() {
 
   const getPrograms = () => {
     const pay = {
+      ...(categoryFilter && { category_id: categoryFilter }),
       ...((programFilter.filter_by || filterDate) && {
         filter_by: programFilter.filter_by
           ? programFilter.filter_by
           : filterDate,
+         
       }),
     };
     let query = {};
@@ -338,6 +366,9 @@ export default function Programs() {
 
     if (filterDate && filterDate !== "") {
       query.date = { date: "filter_by", value: filterDate };
+    }
+    if (categoryFilter && categoryFilter !== "") {
+      query = { ...query, category_id: categoryFilter };
     }
     if (!filterDate) {
       query.date = { date: "filter_by", value: programFilter.filter_by };
@@ -363,6 +394,7 @@ export default function Programs() {
     const payload = {
       page: paginationModel1?.page + 1,
       limit: paginationModel1?.pageSize,
+      ...(categoryFilter && { category_id: categoryFilter }),
     };
     if (filterType && filterType !== "") {
       payload.status = filterType;
@@ -454,6 +486,9 @@ export default function Programs() {
     let query = {};
     if (filterType && filterType !== "") {
       query = { type: filterType };
+    }
+    if (categoryFilter && categoryFilter !== "") {
+      query = { ...query, category_id: categoryFilter };
     }
     if (isBookmark && isBookmark !== "") {
       query.type = "bookmarked";
@@ -563,6 +598,7 @@ export default function Programs() {
     if (userprograms.status === programStatus.bookmarked) {
       let query = {};
       const pay = {
+        ...(categoryFilter && { category_id: categoryFilter }),
         ...((programFilter.filter_by || filterDate) && {
           filter_by: programFilter.filter_by
             ? programFilter.filter_by
@@ -575,6 +611,9 @@ export default function Programs() {
 
       if (isBookmark && isBookmark !== "") {
         query = { type: "status", value: "bookmarked" };
+      }
+      if (categoryFilter && categoryFilter !== "") {
+        query = { ...query, category_id: categoryFilter };
       }
 
       if (role === "mentee") {
@@ -625,10 +664,12 @@ export default function Programs() {
     if (role === "mentor" || role === "admin") {
       dispatch(
         getProgramCounts({
+          ...(categoryFilter && { category_id: categoryFilter }),
           ...((programFilter.filter_by || filterDate) && {
             filter_by: programFilter.filter_by
               ? programFilter.filter_by
               : filterDate,
+            
           }),
         })
       );
@@ -636,6 +677,7 @@ export default function Programs() {
     if (role === "mentee") {
       dispatch(
         getMenteeProgramCount({
+          ...(categoryFilter && { category_id: categoryFilter }),
           ...((programFilter.filter_by || filterDate) && {
             filter_by: programFilter.filter_by
               ? programFilter.filter_by
@@ -644,7 +686,7 @@ export default function Programs() {
         })
       );
     }
-  }, [role, searchParams, programFilter]);
+  }, [role, searchParams, programFilter,categoryFilter]);
   const getProgramMenuDisplayName = ({
     filterType,
     role,
@@ -744,6 +786,14 @@ export default function Programs() {
             <div className="title flex flex-wrap justify-between py-3 px-4 border-b-2 items-center">
               <div className="flex gap-4 mb-2 md:mb-0">
                 <div>{displayName}</div>
+                <CategoryFilter
+      categories={categoryList}
+      onFilter={handleFilter}
+      categories_id={categoryFilter}
+      initialSelected={selectedCategories}
+      handleGetCategory={handleGetCategoryforFilter}
+      // triggerIcon={}
+    />
                 <img
                   src={programView === "grid" ? ListViewIcon : GridViewIcon}
                   className="cursor-pointer"

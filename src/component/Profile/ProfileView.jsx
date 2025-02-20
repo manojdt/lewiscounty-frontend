@@ -51,7 +51,7 @@ import {
 import MuiModal from "../../shared/Modal";
 import DataTable from "../../shared/DataGrid";
 import { categoryColumns } from "../../mock";
-import { pipeUrls, requestStatus } from "../../utils/constant";
+import { followBtnText, pipeUrls, requestStatus } from "../../utils/constant";
 import { useForm } from "react-hook-form";
 import { CancelPopup } from "../Mentor/Task/cancelPopup";
 import { updateProfile } from "../../services/profile";
@@ -112,7 +112,7 @@ export default function ProfileView() {
     followInfo,
     programNotesList,
   } = useSelector((state) => state.userList);
-  const pathe = state?.reqType ? -1 : "/all-request";
+  const pathe = state?.reqType==="dashborad"?"/dashboard": state?.reqType ? -1 : "/all-request";
   const [noteData, setNoteData] = React.useState({
     text: "",
     error: "",
@@ -1465,13 +1465,7 @@ export default function ProfileView() {
                       btnType="button"
                       btnCategory="secondary"
                       disabled={followInfo.is_follow === "waiting"}
-                      btnName={
-                        followInfo.is_follow === "waiting"
-                          ? "Requested"
-                          : followInfo.is_following
-                          ? "Unfollow"
-                          : "Follow"
-                      }
+                      btnName={followBtnText[userDetails?.is_follow]}
                       btnCls={"w-[150px]"}
                     />
                     <Button
@@ -1730,17 +1724,17 @@ export default function ProfileView() {
           )}
         </div>
 
-        {(fromType === "topmentor" && role === "mentee")||(fromType === "mymentor" && role === "mentee") &&
+        {((fromType === "topmentor" && role === "mentee")||(fromType === "mymentor" && role === "mentee")) &&
           userDetails?.upcoming_programs?.length > 0 && (
             <div className="bg-[#F9F9F9]">
               <div className="flex justify-between items-center border-b border-border-main px-5 py-3">
                 <p className="text-[18px] font-semibold">Upcoming Programs</p>
-                <p
+                {/* <p
                   className="bg-background-primary-light rounded-[3px] text-[#6B6B6B] text-[12px] cursor-pointer px-2 py-1"
                   onClick={() => navigate("/programs?filter_by=month")}
                 >
                   View All
-                </p>
+                </p> */}
               </div>
               <div>
                 <ProgramCard

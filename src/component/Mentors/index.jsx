@@ -12,7 +12,8 @@ import ViewIcon from "../../assets/images/view1x.png";
 import SearchIcon from "../../assets/images/search1x.png";
 import ReportIcon from "../../assets/icons/report.svg";
 import FollowIcon from "../../assets/images/connect1x.png";
-
+import GridViewIcon from "../../assets/icons/gridviewIcon.svg";
+import ListViewIcon from "../../assets/icons/listviewIcon.svg";
 import Dropdown from "../../shared/Dropdown";
 import { mentorColumns, mentorRows } from "../../mock";
 import {
@@ -42,6 +43,7 @@ import dayjs from "dayjs";
 import moment from "moment";
 import { requestPageBreadcrumbs } from "../Breadcrumbs/BreadcrumbsCommonData";
 import { dateFormat, formatTableNullValues, useDebounce } from "../../utils";
+import MentorCardView from "./MentorCardView";
 
 export const Mentors = () => {
   const navigate = useNavigate();
@@ -52,7 +54,7 @@ export const Mentors = () => {
   const mentortypereq = searchParams.get("req");
   const breadcrumbsStatusType = searchParams.get("status") || "";
   const state = useLocation()?.state;
-
+  const [viewType, setViewType] = useState('table');
   const { mentorList, loading, status } = useSelector(
     (state) => state.userList
   );
@@ -608,6 +610,7 @@ export const Mentors = () => {
       pageSize: 10,
     });
     navigate(`/mentors?req=${value}`);
+    setViewType("table")
   };
 
   const handleSearch = (value) => {
@@ -738,6 +741,9 @@ export const Mentors = () => {
       }
     });
   };
+  const handleViewChange = () => {
+    setViewType(viewType === "table" ? "card" : "table");
+  };
   useEffect(() => {
     if (breadcrumbsStatusType) {
       setRequestTab(breadcrumbsStatusType);
@@ -758,7 +764,15 @@ export const Mentors = () => {
         <div className="flex justify-between px-5 pb-4 mb-8 border-b-2 flex-col sm:flex-col md:flex-row lg:flex-row xl:flex-row md:items-center lg:items-center xl:items-center">
           <div className="flex gap-5 items-center ">
             <p>{title}</p>
-            <p>{/* <img src={FilterIcon} alt='FilterIcon' /> */}</p>
+            {mentorType === "mymentor"&&
+            <img
+                  src={viewType === "table" ? ListViewIcon : GridViewIcon}
+                  className="cursor-pointer"
+                  alt="viewicon"
+                  onClick={handleViewChange}
+                />
+              }
+              <p>{/* <img src={FilterIcon} alt='FilterIcon' /> */}</p>
           </div>
           <div className="flex gap-8 items-center">
             <div className="relative">
@@ -814,7 +828,7 @@ export const Mentors = () => {
               ))}
             </div>
           )}
-
+{viewType==="table"?
           <DataTable
             rows={formattedMentorList ?? []}
             columns={
@@ -824,7 +838,33 @@ export const Mentors = () => {
             rowCount={mentorList?.count}
             paginationModel={paginationModel}
             setPaginationModel={setPaginationModel}
-          />
+          />:
+           <MentorCardView
+      mentors={mentorList?.results}
+      onViewProfile={(mentor) => {
+        if (mentorType === "topmentor") {
+          navigate(
+            `/mentor-details/${mentor.id}?breadcrumbsType=${requestPageBreadcrumbs.topMentor}&fromType=topmentor`
+          );
+        } else if (mentorType === "mymentor") {
+          navigate(
+            `/mentor-details/${mentor.id}?breadcrumbsType=${requestPageBreadcrumbs.myMentor}&fromType=mymentor`
+          );
+        } else {
+          navigate(
+            `/mentor-details/${mentor.id}?breadcrumbsType=${requestPageBreadcrumbs.myMentor}`
+          );
+        }
+      }}
+      onFollow={(mentor) => {
+        mentor?.is_follow !== "waiting" &&
+          handleOpenFollowPopup(mentor.id, mentor?.is_follow);
+      }}
+      loading={loading}
+      paginationModel={paginationModel}
+      setPaginationModel={setPaginationModel}
+      totalCount={mentorList?.count}
+    />}
         </div>
       </div>
 

@@ -40,7 +40,10 @@ export const Mentor = () => {
   const userInfo = useSelector((state) => state.userInfo);
   const { feeds } = useSelector((state) => state.feeds);
   const [programView, setProgramView] = useState("grid");
-  const [topPrograms, setTopPrograms] = useState([]);
+  const categoryId = searchParams.get("category_id");
+    const categoryIDParams=categoryId?`&category_id=${categoryId}`:""
+    const categoryIDParamsAll=categoryId?`?category_id=${categoryId}`:""
+  // const [topPrograms, setTopPrograms] = useState([]);
   const handlePerformanceFilter = (e) => {
     const res = e?.target?.value || "date";
     dispatch(chartProgramList(res));
@@ -65,30 +68,39 @@ export const Mentor = () => {
     dispatch(getUserPrograms(query));
   };
 
-const handleNavigateDetails = (programdetails) => {
-  let baseUrl = pipeUrls.programdetails;
-
-  if (Object.keys(programdetails).length) {
-    let queryParams = [];
-
-    if (programdetails?.admin_program_request_id) {
-      queryParams.push(`request_id=${programdetails.admin_program_request_id}`);
-      queryParams.push(`type=admin_assign_program`);
-    } else if ("admin_assign_program" in programdetails) {
-      queryParams.push(`program_create_type=admin_program`);
+  const handleNavigateDetails = (programdetails) => {
+    let baseUrl = pipeUrls.programdetails;
+  
+    // Get the 'type' from search params
+    const searchParams = new URLSearchParams(window.location.search);
+    const type = searchParams.get("type");
+  
+    if (Object.keys(programdetails).length) {
+      let queryParams = [];
+  
+      if (type) {
+        queryParams.push(`type=${type}`);
+      }
+  
+      if (programdetails?.admin_program_request_id) {
+        queryParams.push(`request_id=${programdetails.admin_program_request_id}`);
+        queryParams.push(`type=admin_assign_program`);
+      } else if ("admin_assign_program" in programdetails) {
+        queryParams.push(`program_create_type=admin_program`);
+      }
+  
+      // Add breadcrumbs parameter
+      queryParams.push(`breadcrumbsType=${requestPageBreadcrumbs.mentorDashboardProgram}`);
+  
+      // Construct the full URL
+      const fullUrl = `${baseUrl}/${programdetails?.id ?? programdetails.program}${
+        queryParams.length ? `?${queryParams.join("&")}` : ""
+      }`;
+  
+      navigate(fullUrl);
     }
-
-    // Add breadcrumbs parameter
-    queryParams.push(`breadcrumbsType=${requestPageBreadcrumbs.dashboardPrograms}`);
-
-    // Construct the full URL
-    const fullUrl = `${baseUrl}/${programdetails?.id ?? programdetails.program}${
-      queryParams.length ? `?${queryParams.join("&")}` : ""
-    }`;
-
-    navigate(fullUrl);
-  }
-};
+  };
+  
 
 
   const handleBookmark = async (program) => {
@@ -125,18 +137,18 @@ const handleNavigateDetails = (programdetails) => {
   const handleViewChange = () => {
     setProgramView(programView === "grid" ? "list" : "grid");
   };
-  const fetchTopPrograms = async () => {
-    setLoading(true); // Set loading to true while fetching
-    try {
-      const response = await api.get("/rating/top_programs");
-      console.log(response?.data?.results,"response?.data?.results")
-      setTopPrograms(response?.data?.results);
-    } catch (error) {
-      console.error("Error fetching Top programs data:", error);
-    } finally {
-      setLoading(false); // Set loading to false after data is fetched
-    }
-  };
+  // const fetchTopPrograms = async () => {
+  //   setLoading(true); // Set loading to true while fetching
+  //   try {
+  //     const response = await api.get("/rating/top_programs");
+  //     console.log(response?.data?.results,"response?.data?.results")
+  //     setTopPrograms(response?.data?.results);
+  //   } catch (error) {
+  //     console.error("Error fetching Top programs data:", error);
+  //   } finally {
+  //     setLoading(false); // Set loading to false after data is fetched
+  //   }
+  // };
   const ImageComponent = (
       <img
       src={programView === "grid" ? ListViewIcon : GridViewIcon}
@@ -199,7 +211,7 @@ const handleNavigateDetails = (programdetails) => {
     };
     dispatch(getPost(feedData));
     getTopMentors();
-    fetchTopPrograms()
+    // fetchTopPrograms()
     //   }
   }, []);
 
@@ -232,10 +244,10 @@ const handleNavigateDetails = (programdetails) => {
               <UserInfoCard />
               {/* <ViewImpression /> */}
               {/* <RecentActivities /> */}
-              {topPrograms&&topPrograms?.length>0&&
+              {/* {topPrograms&&topPrograms?.length>0&&
           <div className="mt-4">
             <TopProgramsCard topProgramsList={topPrograms}/>
-          </div>}
+          </div>} */}
               <div
                 className="recent-request mt-4"
                 style={{
@@ -254,7 +266,7 @@ const handleNavigateDetails = (programdetails) => {
                     ></div>
                     <h4>Top Mentors</h4>
                   </div>
-                  <div className="flex justify-center mt-2 mb-2">
+                  {/* <div className="flex justify-center mt-2 mb-2">
                     <p
                       className="text-[12px] py-2 px-2 cursor-pointer"
                       style={{
@@ -266,7 +278,7 @@ const handleNavigateDetails = (programdetails) => {
                     >
                       View All
                     </p>
-                  </div>
+                  </div> */}
                 </div>
 
                 <div className="content flex flex-col gap-2 py-2 px-2 overflow-x-auto">
@@ -275,7 +287,7 @@ const handleNavigateDetails = (programdetails) => {
                     return (
                       <div
                         key={index}
-                        className="py-3 px-3 cursor-pointer hover:bg-blue-50 active:bg-blue-100 transition-all duration-300"
+                        className="py-3 px-2 sm:px-2 md:px-2 lg:px-3 xl:px-3 cursor-pointer hover:bg-blue-50 active:bg-blue-100 transition-all duration-300"
                         style={{
                           border: "1px solid rgba(29, 91, 191, 1)",
                           borderRadius: "10px",
@@ -356,7 +368,7 @@ const handleNavigateDetails = (programdetails) => {
                     searchParams.get("is_bookmark") === null && (
                       <ProgramCard
                         title="All Programs"
-                        viewpage="/programs"
+                        viewpage={`/programs${categoryIDParamsAll}`}
                         handleNavigateDetails={handleNavigateDetails}
                         handleBookmark={handleBookmark}
                         programs={userpragrams.allprograms}
@@ -368,7 +380,7 @@ const handleNavigateDetails = (programdetails) => {
                     searchParams.get("type") === "planned") && (
                     <ProgramCard
                       title="Active Programs"
-                      viewpage="/programs?type=yettojoin"
+                      viewpage={`/programs?type=yettojoin${categoryIDParams}`}
                       handleNavigateDetails={handleNavigateDetails}
                       handleBookmark={handleBookmark}
                       programs={userpragrams.yettojoin}
@@ -377,22 +389,22 @@ const handleNavigateDetails = (programdetails) => {
                     />
                   )}
 
-                  {searchParams.get("type") === "yettostart" && (
+                  {/* {searchParams.get("type") === "yettostart" && (
                     <ProgramCard
                       title="Recently Joined Programs"
-                      viewpage="/programs?type=yettostart"
+                      viewpage={`/programs?type=yettostart${categoryIDParams}`}
                       handleNavigateDetails={handleNavigateDetails}
                       handleBookmark={handleBookmark}
                       programs={userpragrams.yettostart}
                       tableIcon={ImageComponent}
                       loadProgram={getPrograms}
                     />
-                  )}
+                  )} */}
 
                   {searchParams.get("type") === "inprogress" && (
                     <ProgramCard
                       title="Ongoing  Programs"
-                      viewpage="/programs?type=inprogress"
+                      viewpage={`/programs?type=inprogress${categoryIDParams}`}
                       handleNavigateDetails={handleNavigateDetails}
                       handleBookmark={handleBookmark}
                       programs={userpragrams.inprogress}

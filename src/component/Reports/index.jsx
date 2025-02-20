@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Menu from "@mui/material/Menu";
 import { Backdrop, CircularProgress } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams, useLocation } from "react-router-dom";
 
 import DataTable from "../../shared/DataGrid";
 import MoreIcon from "../../assets/icons/moreIcon.svg";
@@ -38,6 +38,7 @@ import { formatTableNullValues, useDebounce } from "../../utils";
 const Reports = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
   const { allreports, loading, status } = useSelector((state) => state.reports);
   const [formattedAllReports, setFormattedAllReports] = React.useState([])
   React.useEffect(()=>{
@@ -316,7 +317,7 @@ const Reports = () => {
                       <MenuItem
                         onClick={() =>
                           navigate(
-                            `/edit-report/${reportData.selectedItem[0].id}`
+                            `/edit-report/${reportData.selectedItem[0].id}?breadcrumbsType=${requestTab}`
                           )
                         }
                         className="!text-[12px]"
@@ -415,6 +416,17 @@ const Reports = () => {
       pageSize: 10,
     });
   };
+ 
+
+    // Sync requestTab with URL on page load or URL change
+    useEffect(() => {
+      const queryParams = new URLSearchParams(location.search);
+      const typeFromUrl = queryParams.get("type");
+    
+      // Ensure the requestTab state remains "all" if no valid type is present in the URL
+      setRequestTab(typeFromUrl || "all");
+    }, [location.search]);
+    
 
   const handleSelectedRow = (row) => {
     setReportData({ action: "multiple", selectedItem: row });

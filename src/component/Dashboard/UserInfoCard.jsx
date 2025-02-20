@@ -83,7 +83,7 @@ export default function UserInfoCard() {
                 <ul className="flex flex-col gap-2 p-4 md:p-0 mt-4 font-medium">
                     {
                         programMenusList.map((menu, index) => {
-                            if (index > 3) return null
+                            if (index > 2) return null
                             return (
                                 <li className="" key={index}>
                                     <div className={`flex justify-between py-2 px-6 rounded cursor-pointer menu-content 
@@ -93,7 +93,7 @@ export default function UserInfoCard() {
                                             || (searchParams.get("type") === null && searchParams.get("is_bookmark") === null && menu.status === programActionStatus.all) ? 'active' : ''}`} aria-current="page"
                                         onClick={() => navigate(menu.page)}>
                                         <span className="text-sm max-lg:text-[12px]">{menu.name}</span>
-                                        <span className="text-base max-lg:text-[12px]">{menu.count > 0 ? menu.count : ''}</span>
+                                        <span className="text-base max-lg:text-[12px]">{menu.count > 0 ? menu.count : '0'}</span>
                                     </div>
                                 </li>
                             )

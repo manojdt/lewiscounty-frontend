@@ -164,7 +164,7 @@ const Tickets = () => {
               }}
             >
               <MenuItem
-                onClick={() => navigate(`/tickets/${params.row.id}?type=view&breadcrumbsType=${requestPageBreadcrumbs.ticketHistorys}`)}
+                onClick={() => navigate(`/tickets/${params.row.id}?type=view&breadcrumbsType=${requestTab}`)}
                 className='!text-[12px]'
               >
                 <img src={ViewIcon} alt='ViewIcon' className='pr-3 w-[30px]' />
@@ -433,7 +433,7 @@ const Tickets = () => {
             </div>
           ) : (
             <DataTable
-              rows={formattedFilteredData}
+              rows={formattedFilteredData ?? []}
               columns={TicketsListColumns}
               hideCheckbox
               // rowCount={taskList?.count}

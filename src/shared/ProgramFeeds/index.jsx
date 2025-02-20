@@ -49,7 +49,7 @@ export default function ProgramFeeds({
           {/* <img src={SearchIcon} alt="statistics" /> */}
           <p
             className="text-[12px] py-2 px-2 cursor-pointer"
-            onClick={() => navigate("/feed")}
+            onClick={() => navigate("/feeds")}
             style={{
               background: "rgba(223, 237, 255, 1)",
               borderRadius: "5px",

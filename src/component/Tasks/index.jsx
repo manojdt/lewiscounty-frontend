@@ -10,21 +10,26 @@ import ViewIcon from '../../assets/images/view1x.png';
 import SearchIcon from '../../assets/images/search1x.png';
 import RequestIcon from '../../assets/images/Requesttask1x.png';
 import CancelIcon from '../../assets/images/cancel-colour1x.png';
-
+import SuccessTik from '../../assets/images/blue_tik1x.png';
 import { taskColumns } from '../../mock';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import MuiModal from '../../shared/Modal';
 import { Button } from '../../shared';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllTasks } from '../../services/task';
+import StartIcon from '../../assets/icons/startIcon.svg';
+import EditIcon from '../../assets/icons/editIcon.svg';
 import { Backdrop, CircularProgress } from '@mui/material';
 import {
   pipeUrls,
+  TaskAllStatus,
   taskStatusColor,
   taskStatusText,
   taskStatusTextMentee,
 } from '../../utils/constant';
 import { fileNameFromUrl, fileNameString, formatTableNullValues } from '../../utils';
+import { updateUserProgramInfo } from '../../services/userprograms';
+import api from '../../services/api';
 
 export const Tasks = () => {
   const [requestTab, setRequestTab] = useState('all');
@@ -52,9 +57,28 @@ export const Tasks = () => {
     page: 0,
     pageSize: 10,
   });
-
+  const [successModal, setSuccessModal] = useState({
+    loading: false,
+    success: false,
+  });
   const handleFileLink = (files) => {
     setTaskFilesPopup({ modal: true, files: files });
+  };
+  const handleTaskAction = async () => {
+    handleClose()
+    setSuccessModal({ loading: true, success: false });
+    const startTask = await api.patch('program_task_assign/task_start', {
+      task_id: seletedItem.id,
+    });
+    if (startTask.status === 200 && startTask.data) {
+      setSuccessModal({ loading: false, success: true });
+      setTimeout(() => {
+        dispatch(updateUserProgramInfo({ status: '' }));
+        setSuccessModal({ loading: false, success: false });
+        // dispatch(getSpecificTask({ task_id: params.id }));
+        navigate(`/mentee-tasks-details/${seletedItem.id}?breadcrumbsType=${requestTab}`)
+      }, [2000]);
+    }
   };
 
   const taskMenuList = [
@@ -207,10 +231,37 @@ export const Tasks = () => {
                 <img src={ViewIcon} alt='ViewIcon' className='pr-3 w-[30px]' />
                 View
               </MenuItem>
+              {(seletedItem.status===TaskAllStatus.newtask ||seletedItem.status===TaskAllStatus.pending )&&
+              <>
+              <MenuItem
+                onClick={() =>
+
+                  handleTaskAction()
+                }
+                className='!text-[12px]'
+              >
+                <img src={StartIcon} alt='StartIcon' className='pr-3 w-[30px]' />
+                Start Task
+              </MenuItem>
+              </>}
+              {seletedItem.status===TaskAllStatus.waiting_for_approval &&
+              <>
+              <MenuItem
+                onClick={() =>
+
+                  navigate(`/mentee-tasks-details/${seletedItem.id}?breadcrumbsType=${requestTab}`)
+                }
+                className='!text-[12px]'
+              >
+                <img src={EditIcon} alt='StartIcon' className='pr-3 w-[30px]' />
+               Edit Task
+              </MenuItem>
+              </>}
               {/* <MenuItem onClick={() => { setAnchorEl(null); setRequestTask(true) }} className='!text-[12px]'>
                             <img src={RequestIcon} alt="RequestIcon" className='pr-3 w-[27px]' />
                             Request Task
                         </MenuItem> */}
+                        
             </Menu>
           </>
         );
@@ -424,7 +475,31 @@ export const Tasks = () => {
           </div>
         </div>
       </Backdrop>
-
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading || successModal.loading || successModal.success}
+      >
+        {successModal.success ? (
+          <div className='px-5 py-1 flex justify-center items-center'>
+            <div
+              className='flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20'
+              style={{ background: '#fff', borderRadius: '10px' }}
+            >
+              <img src={SuccessTik} alt='SuccessTik' />
+              <p
+                className='text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]'
+                style={{
+                  fontWeight: 600,
+                }}
+              >
+                Successfully task is started
+              </p>
+            </div>
+          </div>
+        ) : (
+          <CircularProgress color='inherit' />
+        )}
+      </Backdrop>
       <div
         className='px-3 py-5'
         style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.15)' }}

@@ -62,6 +62,18 @@ export const requestPageBreadcrumbs = {
   dashboardtopmentor : 'dashboardtopmentor',
   dashboardMemberMentor : 'dashboardMemberMentor',
   dashboardMemberMentee : 'dashboardMemberMentee',
+  ticketAll : "all",
+  ticketNew : "new",
+  ticketPending : "pending",
+  ticketInprogress : "in_progress",
+  ticketClosed : "closed",
+  ticketResolved : "resolved",
+  ticketReject : "rejected",
+  mentorAllEditReport : 'all',
+  mentorNewEditReport : 'new',
+  mentorPendingEditReport : 'pending',
+  mentorDraftEditReport : 'draft',
+  mentorDashboardProgram : "mentorDashboardProgram"
   // navbarProfile : 'navbarProfile',
 };
 export const programStatusBreadcrumbs=[
@@ -79,6 +91,7 @@ export const programStatusBreadcrumbs=[
     'Completed Programs',
     'Cancelled Programs'
   ];
+  
 // Program Request
 export const request_newProgramRequest = (name) => {
   return [
@@ -129,7 +142,7 @@ export const request_programMenteeCancel = (name) => {
 export const program_details = (state,name) => {
   return [
     {
-      label: state === "category" ? "Category View" : "Program",
+      label: state === "category" ? "Category View" : "Program Details",
       path: -1,
     },
     {
@@ -273,8 +286,8 @@ export const admin_report = (name) => {
 export const admin_Approvedreport = (name) => {
     return [
       {
-        label: "Reports",
-        path: `/reports?tabType=${requestPageBreadcrumbs?.adminApproveReportTab}`,
+        label: "Approved Reports",
+        path: `/reports?type=${requestPageBreadcrumbs?.adminApproveReportTab}`,
       },
       {
         label: `View ${name}`,
@@ -284,8 +297,19 @@ export const admin_Approvedreport = (name) => {
 export const admin_Canceledreport = (name) => {
     return [
       {
-        label: "Reports",
-        path: `/reports?tabType=${requestPageBreadcrumbs?.adminCancelReportTab}`,
+        label: "Cancelled Reports",
+        path: `/reports?type=${requestPageBreadcrumbs?.adminCancelReportTab}`,
+      },
+      {
+        label: `View ${name}`,
+      },
+    ];
+  };
+  export const admin_Allreport = (name) => {
+    return [
+      {
+        label: "My Reports",
+        path: `/reports?Type=${requestPageBreadcrumbs?.adminReportTab}`,
       },
       {
         label: `View ${name}`,
@@ -356,6 +380,51 @@ export const mentor_Draftreport = (name) => {
     },
     {
       label: `View ${name}`,
+    },
+  ];
+};
+//Mentor Edit Report
+export const mentor_edit_allreport = (name) => {
+  return [
+    {
+      label: "All Reports",
+      path: `/reports`,
+    },
+    {
+      label: `${name}`,
+    },
+  ];
+};
+export const mentor_edit_newreport = (name) => {
+  return [
+    {
+      label: " New Reports",
+      path: `/reports?type=${requestPageBreadcrumbs?.mentorNewEditReport}`,
+    },
+    {
+      label: `${name}`,
+    },
+  ];
+};
+export const mentor_edit_pendingreport = (name) => {
+  return [
+    {
+      label: "Pending Reports",
+      path: `/reports?type=${requestPageBreadcrumbs?.mentorPendingEditReport}`,
+    },
+    {
+      label: `${name}`,
+    },
+  ];
+};
+export const mentor_edit_draftreport = (name) => {
+  return [
+    {
+      label: "Draft Reports",
+      path: `/reports?type=${requestPageBreadcrumbs?.mentorDraftEditReport}`,
+    },
+    {
+      label: `${name}`,
     },
   ];
 };
@@ -592,20 +661,19 @@ export const newFollowRequestMentorPage = (status) => {
 
  export const goal_history = (name, queryString) => {
   // Set label based on queryString value
-  let label = "";
-  if (queryString === "mentor") {
-    label = "Mentor Goals";
-  } else if (queryString === "mentee") {
-    label = "Mentee Goals";
-  }
-  const query = queryString ? `?adminTabType=${queryString}` : "";
+  let label = queryString === "mentor" ? "Mentor Goals" : "Mentee Goals";
+
+  // Build query string correctly
+  const query = queryString === "mentor" || "mentee" ? `?created_by=${queryString}` : `?adminTabType=${queryString}`;
+
   return [
     {
       label: label,
-      path: `/goals${query}`,
+      path: `/goals${query}`, // Properly concatenated query string
     },
     {
       label: `View ${name}`,
+      path: `/goals/view?name=${encodeURIComponent(name)}`, // Optional path for "View"
     },
   ];
 };
@@ -968,3 +1036,108 @@ export const memberMenteeDashBoard = () => {
 //     },
 //   ];
 // };
+
+//Tickets Breadcrumbs
+export const allTicket = (name) => {
+    
+  return [
+    {
+      label: "All Tickets",
+      path: `/ticket-history?tab=all`,
+    },
+    {
+      label: `View Tickets`,
+    },
+  ];
+};
+
+export const newTicket = (name) => {
+    
+  return [
+    {
+      label: "New Tickets",
+      path: `/ticket-history?tab=new`,
+    },
+    {
+      label: `View Tickets`,
+    },
+  ];
+}; 
+export const pendingTicket = (name) => {
+  
+  return [
+    {
+      label: "Pending Tickets",
+      path: `/ticket-history?tab=pending`,
+    },
+    {
+      label: `View Tickets`,
+    },
+  ];
+}; 
+export const inprogressTicket = (name) => {
+  
+  return [
+    {
+      label: "Inprogress Tickets",
+      path: `/ticket-history?tab=in_progress`,
+    },
+    {
+      label: `View Tickets`,
+    },
+  ];
+}; 
+export const closedTicket = (name) => {
+  
+  return [
+    {
+      label: "Closed Tickets",
+      path: `/ticket-history?tab=closed`,
+    },
+    {
+      label: `View Tickets`,
+    },
+  ];
+}; 
+export const resolvedTickets = (name) => {
+  
+  return [
+    {
+      label: "Resolved Tickets",
+      path: `/ticket-history?tab=resolved`,
+    },
+    {
+      label: `View Tickets`,
+    },
+  ];
+}; 
+ 
+export const rejectedTicket = (name) => {
+  
+  return [
+    {
+      label: "Rejected Tickets",
+      path: `/ticket-history?tab=rejected`,
+    },
+    {
+      label: `View Tickets`,
+    },
+  ];
+}; 
+
+//mentor dashboard program
+export const request_mentor_dashboardprogram = (name, type, typeLabel) => {
+  const path = type ? `/dashboard?type=${type}` : `/dashboard`; // Fallback if type is null
+
+  return [
+    {
+      label: typeLabel, // Correct label
+      path: path,       // Dynamic path with fallback
+    },
+    {
+      label: `View ${name}`,
+    },
+  ];
+};
+
+

@@ -315,7 +315,7 @@ const ViewGoal = ({ type = '',headTreeList="" }) => {
             setTimeout(() => {
                 resetActionModal()
                 navigate('/goals')
-            }, [2000])
+            }, 2000)
         }
 
         if (status === goalStatus.complete) {
@@ -323,7 +323,7 @@ const ViewGoal = ({ type = '',headTreeList="" }) => {
             setTimeout(() => {
                 resetActionModal()
                 navigate('/goals')
-            }, [2000])
+            }, 2000)
         }
 
 
@@ -332,7 +332,7 @@ const ViewGoal = ({ type = '',headTreeList="" }) => {
             setTimeout(() => {
                 resetActionModal()
                 navigate('/goals')
-            }, [2000])
+            }, 2000)
         }
 
     }, [status])

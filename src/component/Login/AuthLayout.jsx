@@ -114,7 +114,7 @@ const AuthLayout = () => {
         </div>
       </div>}
       
-      <div className='w-full overflow-y-auto py-20 max-lg:py-2'>
+      <div className='w-full overflow-y-auto py-20 max-lg:py-2 content-center '>
         <Outlet />
       </div>
     </div>

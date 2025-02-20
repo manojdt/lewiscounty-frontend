@@ -864,17 +864,17 @@ export const programMenus = (page = "dashboard") => {
       menteeStatus: "planned",
       status: programActionStatus.yettojoin,
     },
-    {
-      name: "Recently Joined Programs",
-      count: 0,
-      page: `${pipeUrl}${programFilterUrls.yettostart}`,
-      menteePage: `${pipeUrl}${programFilterUrls.recent_join}`,
-      for: ["mentor", "admin", "mentee"],
-      mentorStatus: programActionStatus.yettostart,
-      adminStatus: programActionStatus.yettostart,
-      menteeStatus: "recently_joined",
-      status: programActionStatus.yettostart,
-    },
+    // {
+    //   name: "Recently Joined Programs",
+    //   count: 0,
+    //   page: `${pipeUrl}${programFilterUrls.yettostart}`,
+    //   menteePage: `${pipeUrl}${programFilterUrls.recent_join}`,
+    //   for: ["mentor", "admin", "mentee"],
+    //   mentorStatus: programActionStatus.yettostart,
+    //   adminStatus: programActionStatus.yettostart,
+    //   menteeStatus: "recently_joined",
+    //   status: programActionStatus.yettostart,
+    // },
     {
       name: "Ongoing Programs",
       count: 0,
@@ -1219,6 +1219,7 @@ export const TaskAllStatus = {
   draft: "draft",
   newtask: "newtask",
   inprogress: "inprogress",
+  waiting_for_approval:"waiting_for_approval"
 };
 
 export const TaskStatus = {

@@ -361,7 +361,7 @@ export default function ProgramCard({
                 return (
                   <div
                     key={index}
-                    className={`curated-programs program-container flex gap-1 items-center py-5 px-5`}
+                    className={`curated-programs program-container flex gap-1 items-center py-5 px-2 sm:px-2 md:px-2 lg:px-5 xl:px-5`}
                     style={{
                       ...(currentProgram.status === "yettoapprove" &&
                         !currentProgram?.mentor_id
@@ -386,7 +386,7 @@ export default function ProgramCard({
                         borderRadius: "10px",
                       }}
                     >
-                      <div className="py-6 px-7 border-b-2 relative">
+                      <div className="py-6 px-4 sm:px-4 md:px-4 lg:px-7 xl:px-7 border-b-2 relative">
                         <div
                           className="h-full relative"
                           style={{ borderRadius: "10px" }}
@@ -654,7 +654,7 @@ export default function ProgramCard({
                         </div>
                       </div>
 
-                      <div className="flex justify-between pb-3 mx-4 my-4 items-center">
+                      <div className="flex justify-between pb-3 mx-2 sm:mx-2 md:mx-2 lg:mx-4 xl:mx-4 my-4 items-center">
                         <div className="program-time-info flex text-[12px] gap-1 items-center">
                           <img src={CalenderIcon} alt="CalendarImage" />
                           <span className="program-date">
