@@ -385,7 +385,7 @@ export const FormLabelRequired = ({ required, children, className = "" }) => (
 )
 
 export function formatRenderCellDateValues(value){
-  if(value !== "" || value !== null || value !== undefined){
+  if(value !== "" && value !== null && value !== undefined && value !== ". . ."){
     return dateFormat(value)
   }
   return ". . ."
@@ -395,7 +395,7 @@ export function formatTableNullValues(rowData){
   const formattedEmpty = rowData?.map((item, index)=>{
     const formattedItem = {}
     for (let key in item){
-      if(item[key] === "" || item[key] === null){
+      if(item[key] === "" || item[key] === null || item[key] === undefined){
         formattedItem[key] = ". . ." 
       }
       else{
