@@ -414,6 +414,8 @@ export default function FeedDetails() {
                     </div>
 
                     <div className="post-comments">
+                      {feedDetails?.comment_access&&
+                      <>
                       <h3>
                         Post Comments{" "}
                         {feedDetails.comments.length > 0
@@ -447,6 +449,7 @@ export default function FeedDetails() {
                           />
                         </div>
                       )}
+                      </>}
                       {feedDetails.comments.length > 0 && (
                         <div>
                           {feedDetails.comments.map((postComment, index) => (

@@ -147,7 +147,7 @@ export default function SettingsModal({
                 </div>
               </div>
 
-              <div className='flex justify-between pt-8'>
+              {/* <div className='flex justify-between pt-8'>
                 <div>
                   <p className='text-[14px]'>Brand Partnership</p>
                   <p className='text-[12px]'>
@@ -174,7 +174,7 @@ export default function SettingsModal({
                     ></div>
                   </label>
                 </div>
-              </div>
+              </div> */}
             </div>
             <div className='flex gap-6 justify-end align-middle pt-8 pb-3'>
               <Button

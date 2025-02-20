@@ -201,6 +201,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       isSuccess: isAdminProgramUpdated,
       isError: IsErrorAdminProgramUpdating,
       error: errorUpdateAdminProgramMessage,
+      reset: resetAdminProgramStatus
     },
   ] = useUpdateAdminProgramStatusMutation();
   const {
@@ -403,11 +404,14 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     }
     if (IsErrorProgramUpdating || IsErrorAdminProgramUpdating) {
       toast.error(
-        role === "admin"
+        role === "admin"&& programdetails?.admin_assign_program
           ? errorUpdateAdminProgramMessage?.data?.errors?.[0]
           : errorUpdateProgramMessage?.data?.error
       );
       handleClose();
+      if (IsErrorAdminProgramUpdating) {
+        resetAdminProgramStatus();
+      }
     }
   }, [
     isProgramUpdated,
@@ -1550,12 +1554,12 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       >
         <div className="popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[330px] p-[12px] justify-center items-center">
           <div className="h-[100%] w-[100%] justify-center items-center flex flex-col relative">
-            {/* <div
-              className="absolute top-[12px] right-[12px]"
+            <div
+              className="absolute top-[12px] right-[12px] cursor-pointer"
               onClick={() => setOpenPopup(false)}
             >
               <img src={CloseIcon} alt="ConfirmIcon" />
-            </div> */}
+            </div>
             <img src={ConfirmIcon} alt="ConfirmIcon" />
 
             <div className="py-5">

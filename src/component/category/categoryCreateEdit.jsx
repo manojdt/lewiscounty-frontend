@@ -20,9 +20,12 @@ export const CategoryCreateEdit = ({
     getValues,
     setValue,
   } = useForm();
-
   React.useEffect(() => {
+    if(type==="edit"){
       reset(formDetails);
+    }else{
+      reset()
+    }
   }, [formDetails]);
 
   return (
@@ -37,7 +40,7 @@ export const CategoryCreateEdit = ({
           className='text-[18px] text-[#1D5BBF]'
           sx={{ fontWeight: 600 }}
         >
-          Create Category
+         {type==="edit"?"Edit Category":"Create Category"}
         </Typography>
         <Box className='cursor-pointer' onClick={handleCancelForm}>
           <img src={CloseIcon} alt='close' />

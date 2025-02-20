@@ -329,6 +329,9 @@ const EditProfile = ({ setEditMode }) => {
         data.mentorship_achievement || ""
       );
       formData.append("mentor_expectations", data.mentor_expectations || "");
+      formData.append("expectations_mentoring_relationship", data.expectations_mentoring_relationship || "");
+      formData.append("goals_from_mentorship", data.goals_from_mentorship || "");
+      formData.append("mentee_thoughts_mentor", data.mentee_thoughts_mentor || "");
       formData.append("max_mentee_count", data.max_mentee_count || null);
       formData.append(
         "pref_mentorship_duration",
