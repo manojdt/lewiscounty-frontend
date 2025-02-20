@@ -388,7 +388,6 @@ export default function Programs() {
       // dispatch(getUserPrograms(query));
     }
 
-    // if (role === '') dispatch(getUserPrograms(query));
   };
   const getTableData = (search = "") => {
     const payload = {
