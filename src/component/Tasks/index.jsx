@@ -552,7 +552,7 @@ export const Tasks = () => {
 
           {!loading && (
             <DataTable
-              rows={formattedTaskList ?? []}
+              rows={taskList?.results ?? []}
               columns={mentorColumn}
               hideCheckbox
               rowCount={taskList?.count}
