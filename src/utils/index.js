@@ -352,7 +352,7 @@ export const fileNameFromUrl = (file) => {
 
 export const fileNameString = (data) => {
 
-  const fileNames = data.map(item => item.files.split('/').pop());
+  const fileNames = data?.map(item => item.files.split('/').pop());
   const firstImageName = fileNames[0].slice(0, 6);
   const remainingImagesCount = fileNames?.length - 1;
   return {
