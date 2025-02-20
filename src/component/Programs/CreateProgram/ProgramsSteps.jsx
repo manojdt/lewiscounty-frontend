@@ -549,6 +549,7 @@ const ProgramSteps = ({
                           ),
                         }}
                         error={!!errors[field.name]}
+                        autoComplete={field?.autoComplete}
                         helperText={errors[field.name]?.message}
                         onWheel={(e) => e.target.blur()}
                       />
