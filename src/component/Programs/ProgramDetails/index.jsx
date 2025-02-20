@@ -1138,7 +1138,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     }
   };
   return (
-    <div className="px-9 my-6 grid">
+    <div className="px-4 sm:px-4 md:px-6 lg:px-9 xl:px-9 my-6 md:grid lg:grid xl:grid">
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={
@@ -1329,7 +1329,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
         modalClose={undefined}
         noheader
       >
-        <div className="px-5 py-5">
+        <div className="px-0 sm:px-0 md:px-5 lg:px-5 xl:px-5 py-5">
           <div
             className="flex justify-center flex-col gap-5  mt-4 mb-4"
             style={{
@@ -1412,7 +1412,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
           modalClose={resetAcceptCancelPopup}
           noheader
         >
-          <div className="px-5 py-5">
+          <div className="px-0 sm:px-0 md:px-5 lg:px-5 xl:px-5 py-5">
             <div
               className="flex justify-center flex-col gap-5  mt-4 mb-4"
               style={{
@@ -1474,13 +1474,13 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   <div className="flex justify-center gap-5 items-center pt-5 pb-10">
                     <Button
                       btnName="Cancel"
-                      btnCls="w-[18%]"
+                      btnCls="w-[40%] sm:w-[40%] md:w-[20%] lg:w-[15%] xl:w-[15%]"
                       btnCategory="secondary"
                       onClick={resetAcceptCancelPopup}
                     />
                     <button
                       type="submit"
-                      className="text-white py-3 px-7 w-[18%]"
+                      className="text-white py-3 px-7 w-[40%] sm:w-[40%] md:w-[20%] lg:w-[15%] xl:w-[15%]"
                       style={{
                         background:
                           "linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)",
@@ -1613,11 +1613,22 @@ export default function ProgramDetails({ setProgramDetailsId }) {
           <div className="flex justify-center items-center flex-col gap-8 py-10 px-20 mt-5">
             <div>{programdetails?.program_name}</div>
             <input
-              className="input-bg text-[12px] h-[60px] w-[396px] px-5"
-              style={{ borderRadius: "27px" }}
-              disabled
-              value={url}
-            />
+        className="input-bg text-xs 
+          h-12 sm:h-14 md:h-[60px]
+          w-full sm:w-80 md:w-96
+          px-4 sm:px-5
+          rounded-3xl
+          text-center sm:text-left
+          whitespace-normal sm:whitespace-nowrap
+          overflow-hidden
+          disabled:bg-gray-100
+          disabled:text-gray-700"
+        disabled
+        value={url}
+        style={{
+          textOverflow: 'ellipsis'
+        }}
+      />
             <div className="flex gap-7">
               <img
                 className="cursor-pointer"
@@ -1663,7 +1674,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="px-4 py-7">
                 <div className="flex flex-wrap gap-4">
-                  <div className={`relative mb-6 w-[48%]`}>
+                  <div className={`relative mb-6 w-full sm:w-full md:w-[48%] lg:w-[48%] xl:w-[48%]`}>
                     <label
                       className="block tracking-wide text-gray-700 text-xs font-bold mb-2"
                       htmlFor={"Reschedule Date"}
@@ -1725,7 +1736,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     )}
                   </div>
 
-                  <div className={`relative mb-6 w-[48%]`}>
+                  <div className={`relative mb-6 w-full sm:w-full md:w-[48%] lg:w-[48%] xl:w-[48%]`}>
                     <label
                       className="block tracking-wide text-gray-700 text-xs font-bold mb-2"
                       htmlFor={"Reschedule Date"}
@@ -1893,7 +1904,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
           modalClose={handleMoreMenuClosePopup}
           noheader
         >
-          <div className="px-5 py-5">
+          <div className="px-0 sm:px-0 md:px-5 lg:px-5 xl:px-5 py-5">
             <div
               className="flex justify-center flex-col gap-5  mt-4 mb-4"
               style={{
@@ -1955,13 +1966,13 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   <div className="flex justify-center gap-5 items-center pt-5 pb-10">
                     <Button
                       btnName="Cancel"
-                      btnCls="w-[18%]"
+                      btnCls="w-[40%] sm:w-[40%] md:w-[20%] lg:w-[15%] xl:w-[15%]"
                       btnCategory="secondary"
                       onClick={handleMoreMenuClosePopup}
                     />
                     <button
                       type="submit"
-                      className="text-white py-3 px-7 w-[18%]"
+                      className="text-white py-3 px-7 w-[40%] sm:w-[40%] md:w-[20%] lg:w-[15%] xl:w-[15%]"
                       style={{
                         background:
                           "linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)",
@@ -1982,7 +1993,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       programdetails &&
       Object.keys(programdetails)?.length ? (
         <div
-          className="grid mb-10"
+          className=" mb-10 md:grid lg:grid xl:grid"
           style={{
             boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.15)",
             borderRadius: "5px",
@@ -2258,10 +2269,10 @@ export default function ProgramDetails({ setProgramDetailsId }) {
               </>
             </nav>
 
-            <div className="content px-8">
+            <div className="content px-4 sm:px-4 md:px-6 lg:px-8 xl:px-8">
               <div className="grid grid-cols-3 gap-4 py-6">
                 {/* Left Side Content */}
-                <div className="left-side-content col-span-2">
+                <div className="left-side-content col-span-3 sm:col-span-3 md:col-span-3 lg:col-span-2 xl:col-span-2">
                   <div className="flex items-center gap-6 pb-6">
                     <h3
                       className="font-semibold text-[18px]"
@@ -2329,7 +2340,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     </div>
                   )}
 
-                  <div className="flex gap-6 py-6">
+                  <div className="flex flex-col gap-2 sm:gap-2 md:gap-6 lg:gap-6 xl:gap-6 py-6 sm:flex-col md:flex-row lg:flex-row xl:flex-row">
                     <div className="flex gap-2 items-center">
                       <img src={LocationIcon} alt="LocationIcon" />
                       <span className="text-[12px]">
@@ -2561,7 +2572,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                 </div>
 
                 {/* Right Side Content */}
-                <div className="right-side-content">
+                <div className="right-side-content col-span-3 sm:col-span-3 md:col-span-3 lg:col-span-1 xl:col-span-1">
                   <div
                     style={{
                       border: "1px solid rgba(223, 237, 255, 1)",
@@ -2937,9 +2948,9 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     }
                   />
                 )}
-              {/* Detail Section */}
-              <div
-                className="details-section px-6 py-11 mb-10"
+               {/* Detail Section */}
+               <div
+                className="details-section px-0 sm:px-0 md:px-3 lg:px-6 xl:px-6 py-11 mb-10"
                 style={{
                   background: "rgba(249, 249, 249, 1)",
                   borderRadius: "10px",
@@ -2949,7 +2960,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   {tabs.map((tab) => (
                     <button
                       key={tab.key}
-                      className={`px-12 py-3 text-[12px] ${
+                      className={`px-4 sm:px-4 md:px-6 lg:px-12 xl:px-12 py-3 text-[12px] ${
                         activeTab === tab.key ? "tab-active" : "tab"
                       } `}
                       onClick={() => handleTab(tab.key)}
@@ -2959,7 +2970,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   ))}
                 </div>
 
-                <div className="tab-content px-6 pt-10 text-[12px]">
+                <div className="tab-content px-0 sm:px-0 md:px-3 lg:px-6 xl:px-6 pt-10 text-[12px]">
                   <div
                     className={`about-programs ${
                       activeTab === "about_program" ? "block" : "hidden"
@@ -3066,26 +3077,39 @@ export default function ProgramDetails({ setProgramDetailsId }) {
 
                       {participatedTabs.map((participatedTab) => (
                         <div
-                          className={`certificate-tab-content flex items-center justify-between relative ${
-                            participatedTab.key === certificateActiveTab
-                              ? "block"
-                              : "hidden"
-                          }`}
-                          key={participatedTab.key}
+                        className={`certificate-tab-content relative 
+                          ${participatedTab.key === certificateActiveTab ? "block" : "hidden"}
+                          flex flex-col md:flex-row items-center justify-between
+                          p-4 sm:p-6 md:p-8`}
+                        key={participatedTab.key}
+                      >
+                        {/* Text Content */}
+                        <div className="w-full md:w-4/6 space-y-4 
+                          px-4 sm:px-6 md:px-9 
+                          py-8 sm:py-12 md:py-16 
+                          text-sm sm:text-base 
+                          leading-5 sm:leading-6"
                         >
-                          <div className="px-9 py-16 w-4/6 leading-6">
-                            {participatedTab.key === "participated" &&
-                              "The ability for members to earn badges and receive certifications is another essential feature of our Mentoring Management program. It helps in creating engaging and impactful relationships between mentors and mentees."}
-
-                            {participatedTab.key === "completed" &&
-                              "All the badges and certifications are secured through a blockchain system to ensure authenticity and traceability. This innovative approach not only enhances motivation but also provides tangible recognition of achievements, encouraging continuous growth and engagement."}
-                          </div>
+                          {participatedTab.key === "participated" && (
+                            "The ability for members to earn badges and receive certifications is another essential feature of our Mentoring Management program. It helps in creating engaging and impactful relationships between mentors and mentees."
+                          )}
+                  
+                          {participatedTab.key === "completed" && (
+                            "All the badges and certifications are secured through a blockchain system to ensure authenticity and traceability. This innovative approach not only enhances motivation but also provides tangible recognition of achievements, encouraging continuous growth and engagement."
+                          )}
+                        </div>
+                  
+                        {/* Certificate Image */}
+                        <div className="relative w-full md:w-2/6 flex justify-center md:justify-end">
                           <img
-                            className="absolute right-0"
+                            className="w-48 sm:w-56 md:w-auto 
+                              mt-4 md:mt-0
+                              static md:relative md:right-0"
                             src={CertificateIcon}
                             alt="CertificateIcon"
                           />
                         </div>
+                      </div>
                       ))}
                     </div>
                   </div>
