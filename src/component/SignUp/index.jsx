@@ -41,7 +41,6 @@ export const Signup = () => {
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
     getValues,
     setError,
@@ -91,7 +90,6 @@ export const Signup = () => {
           } else {
             setShowBackdrop(true);
           }
-          reset();
         } catch (error) {
           toast.error("error", error);
         }
