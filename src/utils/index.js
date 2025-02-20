@@ -386,9 +386,9 @@ export const FormLabelRequired = ({ required, children, className = "" }) => (
 
 export function formatRenderCellDateValues(value){
   if(value !== "" || value !== null || value !== undefined){
-    return <div>{dateFormat(value)}</div>
+    return dateFormat(value)
   }
-  return value
+  return ". . ."
 }
 
 export function formatTableNullValues(rowData){

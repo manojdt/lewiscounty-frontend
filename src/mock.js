@@ -1552,7 +1552,7 @@ export const programRequestColumns = [
     tab:["program_reschedule"],
     mainTab: ["my", "mentees", "admin"],
     renderCell: (params) => {
-      return <div>{`${formatRenderCellDateValues(params.row.start_date)} & ${formatRenderCellDateValues(params.row.end_date)}`}</div>;
+      return `${formatRenderCellDateValues(params?.row?.start_date)} & ${formatRenderCellDateValues(params.row.end_date)}`
     },
   },
   // {
