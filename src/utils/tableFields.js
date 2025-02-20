@@ -339,7 +339,7 @@ export const programListColumns = [
       flex: 1,
       id: 0,
       renderCell : (params) => {
-        return formatRenderCellDateValues(params?.row?.categories[0]?.name)
+        return <>{params?.row?.categories[0]?.name}</>
       }
   },
   {
@@ -354,7 +354,7 @@ export const programListColumns = [
       flex: 1,
       id: 2,
       renderCell: (params) => {
-        return formatRenderCellDateValues(params?.row?.session_count)
+        return <div className="pl-4">{params?.row?.session_count}</div>
       }
   },
   {
