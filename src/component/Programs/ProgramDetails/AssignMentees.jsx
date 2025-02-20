@@ -377,8 +377,8 @@ export default function AssignMentees() {
       dispatch(getAllCategories());
     }
     if (type !== "new") {
-      // const editPay=`&type=edit&task_id=${state?.data?.task_id}`
-      dispatch(getProgramTaskMentees(state?.data?.program_id));
+      const editPay=`&type=edit_task&task_id=${state?.data?.task_id}`
+      dispatch(getProgramTaskMentees(state?.data?.program_id+editPay));
     }
   }, [category, type, state?.data?.program_id, dispatch]);
 
@@ -557,6 +557,7 @@ export default function AssignMentees() {
                                 opacity:field?.disabled?0.5:1
                               }}
                               disabled={field.disabled}
+                              autoComplete={field?.autoComplete}
                               aria-invalid={!!errors[field.name]}
                             />
 

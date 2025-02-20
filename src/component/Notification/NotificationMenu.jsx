@@ -7,7 +7,7 @@ import {
   userActivities,
   userActivitiyVisited,
 } from "../../services/activities";
-import { getTimeFromDate } from "../../utils";
+import { getTimeFromDate, useDebounce } from "../../utils";
 import { useNavigate } from "react-router-dom";
 
 export default function NotificationMenu() {
@@ -17,12 +17,13 @@ export default function NotificationMenu() {
   const role = data?.role || "";
   const [searchKey, setSearchKey] = useState("");
   const { activity } = useSelector((state) => state.activity);
-
+  const debouncedSearchTerm = useDebounce(searchKey, 500);
   const handleSearch = (e) => {
     setSearchKey(e.target.value);
-    dispatch(userActivities({ search: e.target.value }));
   };
-
+  useEffect(() => {
+    dispatch(userActivities({ search: debouncedSearchTerm }));
+  }, [debouncedSearchTerm]);
   useEffect(() => {
     dispatch(userActivities());
   }, []);
@@ -159,6 +160,7 @@ export default function NotificationMenu() {
                     width: "400px",
                     borderRadius: "6px",
                   }}
+                  value={searchKey}
                   onChange={handleSearch}
                 />
                 <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">

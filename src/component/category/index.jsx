@@ -177,7 +177,7 @@ const Category = () => {
             name: data?.category_name,
             description: data?.description,
         }
-        if (formDetails?.id) {
+        if (formDetails?.id&&createEditForm.type==="edit") {
             Object.assign(payload, { id: formDetails?.id })
             dispatch(editCategory(payload)).then((res) => {
                 if (res?.meta?.requestStatus === "fulfilled") {
@@ -300,7 +300,8 @@ const Category = () => {
                         }
                             onClick={() => setCreateEditForm({
                                 ...createEditForm,
-                                bool: true
+                                bool: true,
+                                type:'create'
                             })}
                         />
                     </Stack>
