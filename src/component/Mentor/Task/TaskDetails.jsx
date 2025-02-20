@@ -38,6 +38,7 @@ import {
   dateFormat,
   dateFormatRever,
   dateTimeFormat,
+  formatRenderCellDateValues,
   formatTableNullValues,
   getFiles,
 } from "../../../utils";
@@ -241,11 +242,7 @@ const MentorTaskDetails = () => {
       id: 0,
       renderCell: (params) => {
         return (
-          <div className="flex gap-2 items-center">{`${
-            params?.row?.submited_date
-              ? moment(params?.row?.submited_date).format("MM-DD-YYYY")
-              : "..."
-          }`}</div>
+          formatRenderCellDateValues(params?.row?.submited_date)
         );
       },
     },
@@ -256,11 +253,7 @@ const MentorTaskDetails = () => {
       id: 0,
       renderCell: (params) => {
         return (
-          <div className="flex gap-2 items-center">{`${
-            params?.row?.cancel_date
-              ? moment(params?.row?.cancel_date).format("MM-DD-YYYY")
-              : "..."
-          }`}</div>
+          formatRenderCellDateValues(params?.row?.cancel_date)
         );
       },
     },
@@ -271,11 +264,7 @@ const MentorTaskDetails = () => {
       id: 0,
       renderCell: (params) => {
         return (
-          <div className="flex gap-2 items-center">{`${
-            params?.row?.completed_date
-              ? moment(params?.row?.completed_date).format("MM-DD-YYYY")
-              : "..."
-          }`}</div>
+          formatRenderCellDateValues(params?.row?.completed_date)
         );
       },
     },
