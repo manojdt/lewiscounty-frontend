@@ -33,13 +33,20 @@ import CreatePostModal from "../Feeds/CreatePostModal";
 import SettingsModal from "../Feeds/SettingsModal";
 import SuccessTik from "../../assets/images/blue_tik1x.png";
 import { tabQuertyData } from "../Breadcrumbs/BreadcrumbsCommonData";
-import { useDebounce } from "../../utils";
+import { formatTableNullValues, useDebounce } from "../../utils";
 
 const Reports = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
   const { allreports, loading, status } = useSelector((state) => state.reports);
+  const [formattedAllReports, setFormattedAllReports] = React.useState([])
+  React.useMemo(()=>{
+    if(allreports?.results){
+      const formattedRowData = formatTableNullValues(allreports?.results)
+      setFormattedAllReports(formattedRowData)
+    }
+  },[allreports])
   const userInfo = useSelector((state) => state.userInfo);
   const role = userInfo.data.role;
   const [anchorEl, setAnchorEl] = useState(null);
@@ -706,7 +713,7 @@ const Reports = () => {
   </div>
 </div>
             <DataTable
-              rows={allreports?.results ?? []}
+              rows={formattedAllReports ?? []}
               columns={
                 role === "admin" && requestTab === "all"
                   ? reportColumn?.filter((e) => e?.field !== "report_status")

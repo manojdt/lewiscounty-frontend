@@ -30,7 +30,7 @@ import { Backdrop, CircularProgress, Switch } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import MediaPost from '../Dashboard/MediaPost';
 import { getFollowList, getMenteeProgramActivity, getMentorProgramActivity, getProfileInfo, userFollow, userUnFollow } from '../../services/userList';
-import { dateFormat } from '../../utils';
+import { dateFormat, formatRenderCellDateValues } from '../../utils';
 import { cancelMemberRequest, getCategoryList, updateLocalRequest, updateMemberRequest, updateMentorAutoApproval } from '../../services/request';
 import { requestStatus } from '../../utils/constant';
 import MuiModal from '../../shared/Modal';
@@ -83,9 +83,7 @@ export default function MentorDetails() {
         width: 200,
         id: 2,
         renderCell: (params) => {
-            return <div className='flex items-center gap-2'>
-                {dateFormat(params.row.start_date)}
-            </div>
+            return formatRenderCellDateValues(params?.row?.start_date)
         }
     },
     {
@@ -94,9 +92,7 @@ export default function MentorDetails() {
         width: 150,
         id: 3,
         renderCell: (params) => {
-            return <div className='flex items-center gap-2'>
-                {dateFormat(params.row.end_date)}
-            </div>
+            return formatRenderCellDateValues(params?.row?.end_date)
         }
     },
     {

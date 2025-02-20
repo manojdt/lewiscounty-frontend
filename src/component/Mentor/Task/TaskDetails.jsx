@@ -38,6 +38,7 @@ import {
   dateFormat,
   dateFormatRever,
   dateTimeFormat,
+  formatTableNullValues,
   getFiles,
 } from "../../../utils";
 import {
@@ -67,6 +68,13 @@ const MentorTaskDetails = () => {
        const tabValue=searchParams.get("status")||""
     const dispatch = useDispatch()
     const { task: taskDetails, loading: taskDetailsLoading, status, menteeTaskList } = useSelector(state => state.tasks)
+    const [formattedMenteeTaskList, setFormattedMenteeTaskList] = React.useState([])
+    React.useMemo(()=>{
+      if(menteeTaskList?.results){
+        const formattedRowData = formatTableNullValues(menteeTaskList?.results)
+        setFormattedMenteeTaskList(formattedRowData)
+      }
+    },[menteeTaskList])
     const state = useLocation()?.state
     const [selectedTab, setSelectedTab] = React.useState("")
     const [paginationModel, setPaginationModel] = React.useState({
@@ -1005,7 +1013,7 @@ const MentorTaskDetails = () => {
 
             <Box mt={"48px"}>
               <DataTable
-                rows={menteeTaskList?.results ?? []}
+                rows={formattedMenteeTaskList?? []}
                 columns={menteeTaskListFromMentor}
                 rowCount={menteeTaskList?.count}
                 paginationModel={paginationModel}

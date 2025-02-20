@@ -26,6 +26,7 @@ import {
 } from "../../utils/constant";
 import Ratings from "../Programs/Ratings";
 import { useWindowSize } from "../../utils/windowResize";
+import { formatTableNullValues } from "../../utils";
 
 export default function Certificate() {
   const navigate = useNavigate();
@@ -46,6 +47,13 @@ export default function Certificate() {
   const { certificatesList, certificateHTML, loading } = useSelector(
     (state) => state.certificates
   );
+  const [formattedCertificateList, setFormattedCertificateList] = React.useState([])
+  React.useMemo(()=>{
+    if(certificatesList?.results){
+      const formattedRowData = formatTableNullValues(certificatesList?.results)
+      setFormattedCertificateList(formattedRowData)
+    }
+  },[certificatesList])
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const [seletedItem, setSelectedItem] = useState({});
@@ -229,17 +237,18 @@ export default function Certificate() {
               ) : null}
               {role === "mentor" ? (
                 <MenuItem
-                  onClick={() =>
+                  onClick={() => {
                     navigate(
                       `/certificate_mentees/${seletedItem.id}?type=${actionTab}&breadcrumbsType=${actionTab}`,
                       {
                         state: {
                           rowId: seletedItem?.id,
                           status: seletedItem?.status,
+                          from: window.location.pathname
                         },
                       }
                     )
-                  }
+                  }}
                   className="!text-[12px]"
                 >
                   <img
@@ -290,6 +299,7 @@ export default function Certificate() {
 
   const handleMenteeTabChange = async (key) => {
     setActiveTab(key);
+    setSearchParams({ tabType: key });
     await setPaginationModel({
       page: 0,
       pageSize: 10,
@@ -473,7 +483,7 @@ export default function Certificate() {
             ) : null}
 
             <DataTable
-              rows={certificatesList?.results || []}
+              rows={formattedCertificateList || []}
               columns={certificateColumn}
               hideFooter={certificatesList?.results?.length === 0}
               rowCount={certificatesList?.count}

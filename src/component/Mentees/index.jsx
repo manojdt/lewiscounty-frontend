@@ -38,7 +38,7 @@ import { Button } from "../../shared";
 import SuccessTik from "../../assets/images/blue_tik1x.png";
 import MuiModal from "../../shared/Modal";
 import { requestPageBreadcrumbs } from "../Breadcrumbs/BreadcrumbsCommonData";
-import { useDebounce } from "../../utils";
+import { formatTableNullValues, useDebounce } from "../../utils";
 import MentorCardView from "../Mentors/MentorCardView";
 
 export const Mentees = () => {
@@ -49,11 +49,33 @@ export const Mentees = () => {
   const [reason, setReason] = useState("");
   const [reasonError, setReasonError] = React.useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [menteeListFormatted, setMenteeListFormatted] = React.useState([])
   const dispatch = useDispatch();
     const [viewType, setViewType] = useState('table');
   const { menteeList, loading, status } = useSelector(
     (state) => state.userList
   );
+
+  React.useEffect(()=>{
+    if(menteeList?.results){
+      // const formattedEmpty = menteeList.results.map((item, index)=>{
+      //   const formattedItem = {}
+      //   for (let key in item){
+      //     if(item[key] === "" || item[key] === null){
+      //       formattedItem[key] = ". . ." 
+      //     }
+      //     else{
+      //       formattedItem[key] = item[key]
+      //     }
+      //   }
+      // return formattedItem;
+      // })
+      // setMenteeListFormatted(formattedEmpty);
+      const formattedMenteeList = formatTableNullValues(menteeList?.results)
+      setMenteeListFormatted(formattedMenteeList)
+
+    }
+  },[menteeList?.results])
 
   const breadcrumbsStatusType = searchParams.get("status") || "";
   const [mentorType, setMentorType] = useState(
@@ -480,7 +502,7 @@ export const Mentees = () => {
         
 {viewType==="table"?
            <DataTable
-           rows={menteeList?.results}
+           rows={menteeListFormatted ?? []}
            columns={
              mentorType === "my-mentee" ? myMenteeColumn : myReqMenteeColumn
            }

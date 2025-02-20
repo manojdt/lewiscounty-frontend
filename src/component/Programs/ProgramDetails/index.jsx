@@ -53,7 +53,7 @@ import CancelIcon from "../../../assets/images/cancel1x.png";
 import CompleteIcon from "../../../assets/images/completed1x.png";
 import { Button } from "../../../shared";
 import { Button as MuiButton } from "@mui/material";
-import { convertDateFormat, formatDateTimeISO } from "../../../utils";
+import { convertDateFormat, formatDateTimeISO, formatTableNullValues } from "../../../utils";
 import "./program-details.css";
 import Ratings from "../Ratings";
 import { getUserProfile } from "../../../services/profile";
@@ -248,6 +248,13 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     (state) => state.profileInfo
   );
   const { programMentees } = useSelector((state) => state.programInfo);
+  const [formattedProgramMentees, setFormattedProgramMentees] = React.useState([])
+  React.useMemo(()=>{
+    if(programMentees){
+      const formattedRowData = formatTableNullValues(programMentees)
+      setFormattedProgramMentees(formattedRowData)
+    }
+  },[programMentees])
   const { menteeJoined, status } = useSelector((state) => state.userPrograms);
   const {
     loading: requestLoading,
@@ -1346,7 +1353,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
             </div>
             <div className="px-5">
               <DataTable
-                rows={programMentees?.length > 0 && programMentees}
+                rows={formattedProgramMentees ?? []}
                 columns={JoinMenteeColumn}
                 hideCheckbox
               />
@@ -2609,7 +2616,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             paddingTop: "14px",
                           }}
                         >
-                          <span>Sub Programs</span>
+                          <span>Subjects</span>
                           <span style={{ textTransform: "capitalize" }}>
                             {programdetails.sub_programs?.length}
                           </span>

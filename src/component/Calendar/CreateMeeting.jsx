@@ -26,7 +26,7 @@ import { calendarStatus } from "../../utils/constant";
 import { useUpdateCalendarEventMutation } from "../../features/schedule/scheduleApi.services";
 import { Avatar } from "@mui/material";
 import { MuiCustomModal } from "../../shared/Modal/MuiCustomModal";
-import { FormLabelRequired } from "../../utils";
+import { formatTableNullValues, FormLabelRequired } from "../../utils";
 
 export default function CreateMeeting() {
   const [updateCalendarEvent, { isSuccess, isError, data }] =
@@ -35,6 +35,7 @@ export default function CreateMeeting() {
   const [searchParams] = useSearchParams();
   const location = useLocation();
   const id = searchParams.get("id");
+  const [formattedProgramMenteeList, setFormattedProgramMenteeList] = React.useState([])
   const { programMenteeList, loading: menteeLoading } = useSelector(
     (state) => state.userPrograms
   );
@@ -43,6 +44,12 @@ export default function CreateMeeting() {
     status,
     getEvent,
   } = useSelector((state) => state.events);
+  React.useMemo(()=>{
+    if(programMenteeList){
+      const programMenteeListFormatted = formatTableNullValues(programMenteeList)
+      setFormattedProgramMenteeList(programMenteeListFormatted)
+    }
+  },[programMenteeList])
   const [internalLoading, setInternalLoading] = useState(false);
   const [createMeetingLoading, setCreateMeetingLoading] = useState(false);
   const [addMenteeModal, setMentalModal] = useState(false);
@@ -903,7 +910,7 @@ export default function CreateMeeting() {
         >
           <DataTable
           showToolbar={true}
-            rows={programMenteeList}
+            rows={formattedProgramMenteeList ?? []}
             columns={CalendarMentee}
             footerAction={footerAction}
             footerComponent={CustomFooterStatusComponent}

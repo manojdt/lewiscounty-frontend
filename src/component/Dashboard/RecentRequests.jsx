@@ -30,6 +30,7 @@ import {
   mentorAcceptReq,
   updateUserList,
 } from '../../services/userList';
+import { formatTableNullValues } from '../../utils';
 
 export default function RecentRequests({ data = [] }) {
   const navigate = useNavigate();
@@ -40,6 +41,13 @@ export default function RecentRequests({ data = [] }) {
   const { menteeList, status: tabStatus } = useSelector(
     (state) => state.userList
   );
+  const [formattedMenteeList, setFormattedMenteeList] = React.useState([])
+  React.useMemo(()=>{
+    if(menteeList?.results){
+      const formattedRowData = formatTableNullValues(menteeList?.results)
+      setFormattedMenteeList(formattedRowData)
+    }
+  },[menteeList])
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const [seletedItem, setSelectedItem] = useState({});
@@ -329,7 +337,7 @@ export default function RecentRequests({ data = [] }) {
 
       <div className='content flex gap-4 py-5 px-5 overflow-x-auto'>
         <DataTable
-          rows={menteeList?.results || []}
+          rows={formattedMenteeList || []}
           columns={recentRequestColumn}
           height={'460px'}
           hideCheckbox

@@ -18,6 +18,7 @@ import CloseReqPopup from "../../assets/icons/blackCloseIcon.svg"
 import CancelReq from "../../assets/icons/cancelRequest.svg"
 import { useNavigate } from 'react-router-dom';
 import { useWindowSize } from '../../utils/windowResize';
+import { formatTableNullValues } from '../../utils';
 
 const initialDeleteState = {
     bool: false,
@@ -26,8 +27,14 @@ const initialDeleteState = {
 }
 const Category = () => {
     const { width } = useWindowSize();
-
+    const [formattedCategories, setFormattedCategories] = React.useState([])
     const { categories, loading, formDetails } = useSelector((state) => state.category)
+    React.useMemo(()=>{
+        if(categories?.results){
+            const formattedRowData = formatTableNullValues(categories?.results)
+            setFormattedCategories(formattedRowData)
+        }
+    },[categories])
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const dispatch = useDispatch()
@@ -302,7 +309,7 @@ const Category = () => {
                 <Divider className='mt-[20px]'></Divider>
 
                 <Box>
-                    <DataTable rows={categories?.results ?? []} columns={adminCategoryColumn} hideCheckbox
+                    <DataTable rows={formattedCategories ?? []} columns={adminCategoryColumn} hideCheckbox
                         rowCount={categories?.count}
                         paginationModel={paginationModel} setPaginationModel={setPaginationModel} />
                 </Box>

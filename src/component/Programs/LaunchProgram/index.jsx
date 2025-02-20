@@ -12,12 +12,21 @@ import { getLaunchPrograms } from '../../../services/launchProgram';
 import { launchProgramColumns } from '../../../utils/tableFields';
 import { requestStatusColor, requestStatusText } from '../../../utils/constant';
 import { useNavigate } from 'react-router-dom';
+import { formatTableNullValues } from '../../../utils';
 
 
 export default function LaunchProgram() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const { launchProgram, loading, error, status } = useSelector(state => state.launchProgram)
+    const [formattedLaunchProgram, setFormattedLaunchProgram] = React.useState([])
+
+    React.useMemo(()=>{
+        if(launchProgram){
+            const formattedRowData = formatTableNullValues(launchProgram)
+            setFormattedLaunchProgram(formattedRowData)
+        }
+    },[launchProgram])
 
     const [anchorEl, setAnchorEl] = useState(null);
     const [seletedItem, setSelectedItem] = useState({})
@@ -150,7 +159,7 @@ export default function LaunchProgram() {
 
 
                 <div className='px-4'>
-                    <DataTable rows={launchProgram} columns={launchProgramColumn} hideFooter={!launchProgram.length} hideCheckbox />
+                    <DataTable rows={formattedLaunchProgram} columns={launchProgramColumn} hideFooter={!launchProgram.length} hideCheckbox />
                 </div>
             </div>
 

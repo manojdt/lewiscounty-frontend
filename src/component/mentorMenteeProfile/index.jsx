@@ -331,9 +331,9 @@ const MentorMenteeProfile = () => {
           <div className='text-[#353F4F] text-[20px] font-medium'>
             Profile
           </div>
-          {
-            ((role === "mentor")) &&state?.status !=="accept"&&state?.status !=="cancel"&&
-            <div className='flex gap-4 pt-10'>
+          
+          <div className='flex gap-4 pt-10'>
+          {((role === "mentor")) && state?.status !== "cancel" &&
               <button
                 className='py-3 px-16 text-white text-[14px] flex items-center'
                 style={{
@@ -345,6 +345,8 @@ const MentorMenteeProfile = () => {
               >
                 Reject
               </button>
+              }
+          {((role === "mentor")) && state?.status !== "accept" &&
               <button
                 className='py-3 px-16 text-white text-[14px] flex items-center'
                 style={{
@@ -355,8 +357,8 @@ const MentorMenteeProfile = () => {
               >
                 Connect
               </button>
-            </div>
-          }
+              }
+           </div>
           
           {state?.page !== 'requested_mentor' ? (
             // <Box

@@ -28,6 +28,7 @@ import { useSelector } from 'react-redux';
 import CancelRequestModal from './cancel-request';
 import { Button } from '../../../shared';
 import { requestPageBreadcrumbs } from '../../Breadcrumbs/BreadcrumbsCommonData';
+import { formatTableNullValues } from '../../../utils';
 
 const Tickets = () => {
   const navigate = useNavigate();
@@ -66,6 +67,14 @@ const Tickets = () => {
     requestTab === 'all'
       ? data
       : data?.filter((ticket, index) => ticket.status === requestTab);
+    const [formattedFilteredData, setFormattedFilteredData] = React.useState([])
+
+    React.useMemo(()=>{
+      if(filteredData){
+        const formattedRowData = formatTableNullValues(filteredData)
+        setFormattedFilteredData(formattedRowData)
+      }
+    },[filteredData])
 
   // const { data, isLoading, error, isError, isSuccess } = useGetAllTicketsQuery({
   //   status: requestTab,
@@ -424,7 +433,7 @@ const Tickets = () => {
             </div>
           ) : (
             <DataTable
-              rows={filteredData}
+              rows={formattedFilteredData ?? []}
               columns={TicketsListColumns}
               hideCheckbox
               // rowCount={taskList?.count}

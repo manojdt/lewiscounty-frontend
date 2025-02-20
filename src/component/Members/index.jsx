@@ -27,7 +27,7 @@ import MuiModal from "../../shared/Modal";
 import { useForm } from "react-hook-form";
 import { Button } from "../../shared";
 import AssignMentorProgram from "./AssignMentorProgram";
-import { useDebounce } from "../../utils";
+import { formatTableNullValues, useDebounce } from "../../utils";
 import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
 import {
   memberMentorDashBoard,
@@ -72,6 +72,8 @@ const Members = () => {
   const { mentor, mentee, loading, error } = useSelector(
     (state) => state.members
   );
+  const [formattedMentor, setFormattedMentor] = React.useState([])
+  const [formattedMentee, setFormattedMentee] = React.useState([])
   const [paginationModel, setPaginationModel] = React.useState({
     page: 0,
     pageSize: 10,
@@ -446,8 +448,9 @@ const Members = () => {
         },
       },
     ];
+    const formattedRowData = formatTableNullValues(tableData?.results)
 
-    setActiveTableDetails({ data: tableData, column: updatedColumns });
+    setActiveTableDetails({ data: formattedRowData, column: updatedColumns });
   }, [mentor, mentee, anchorEl]);
   useEffect(() => {
     let payload = {
@@ -575,7 +578,7 @@ const Members = () => {
         </Backdrop>
 
         <DataTable
-          rows={activeTableDetails?.data?.results || []}
+          rows={activeTableDetails?.data || []}
           columns={activeTableDetails.column}
           rowCount={activeTableDetails?.data?.count}
           paginationModel={paginationModel}

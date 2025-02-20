@@ -17,7 +17,7 @@ import {
   categoryViewProgram,
 } from "../../mock";
 import StarIcon from "../../assets/icons/goldStar.svg";
-import { requestStatusColor, requestStatusText } from "../../utils/constant";
+import { requestStatusColor, requestStatusText, view } from "../../utils/constant";
 import DataTable from "../../shared/DataGrid";
 import { useDispatch, useSelector } from "react-redux";
 import { getCategoryView } from "../../services/category";
@@ -25,9 +25,18 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import ArrowRight from "../../assets/icons/breadCrumbsArrow.svg";
 import MoreIcon from "../../assets/icons/moreIcon.svg";
 import ViewIcon from "../../assets/images/view1x.png";
+import { formatTableNullValues } from "../../utils";
 
 const CategoryView = () => {
   const { viewData, loading } = useSelector((state) => state.category);
+  const [formattedViewData, setFormattedViewData] = React.useState([])
+
+  React.useMemo(()=>{
+    if(viewData?.results){
+      const formattedRowData = formatTableNullValues(viewData?.results)
+      setFormattedViewData(formattedRowData)
+    }
+  },[viewData])
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -439,7 +448,7 @@ const CategoryView = () => {
 
           <Box mt={3}>
             <DataTable
-              rows={viewData?.results ?? []}
+              rows={formattedViewData ?? []}
               columns={columns[value]}
               hideCheckbox
               rowCount={viewData?.count}
