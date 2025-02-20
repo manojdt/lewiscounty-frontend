@@ -170,9 +170,19 @@ const ProfileTab = ({ setEditMode }) => {
     setValue,
   } = useForm();
 
-  const profileSection = allProfileSections.filter((section) =>
-    roleBasedSections[userRole]?.includes(section.title)
-  );
+  const profileSection = allProfileSections.filter((section) => {
+    // Skip duplicate Goals sections
+    if (section.title === "Goals") {
+      // For mentor, only keep GoalsAndExpectatonsSection
+      if (userRole === "mentor") {
+        return section.component.type === GoalsAndExpectatonsSection;
+      }
+      // For mentee, only keep MenteeExpectionAndGoalsSection
+      return section.component.type === MenteeExpectionAndGoalsSection;
+    }
+    // Keep all other sections that match the role
+    return roleBasedSections[userRole]?.includes(section.title);
+  });
 
   const loadUserProfile = () => {
     dispatch(getUserProfile());

@@ -146,9 +146,19 @@ const EditProfile = ({ setEditMode }) => {
     },
   ];
 
-  const profileSection = allProfileSections.filter((section) =>
-    roleBasedSections[userRole]?.includes(section.title)
-  );
+  const profileSection = allProfileSections.filter((section) => {
+    // Skip duplicate Goals sections
+    if (section.title === "Goals") {
+      // For mentor, only keep GoalsAndExpectatonsSection
+      if (userRole === "mentor") {
+        return section.component.type === GoalsAndExpectatonsSection;
+      }
+      // For mentee, only keep MenteeExpectionAndGoalsSection
+      return section.component.type === MenteeExpectionAndGoalsSection;
+    }
+    // Keep all other sections that match the role
+    return roleBasedSections[userRole]?.includes(section.title);
+  });
 
   const { profile, loading, status } = useSelector(
     (state) => state.profileInfo
@@ -329,9 +339,9 @@ const EditProfile = ({ setEditMode }) => {
         data.mentorship_achievement || ""
       );
       formData.append("mentor_expectations", data.mentor_expectations || "");
-      formData.append("expectations_mentoring_relationship", data.expectations_mentoring_relationship || "");
-      formData.append("goals_from_mentorship", data.goals_from_mentorship || "");
-      formData.append("mentee_thoughts_mentor", data.mentee_thoughts_mentor || "");
+      // formData.append("expectations_mentoring_relationship", data.expectations_mentoring_relationship || "");
+      // formData.append("goals_from_mentorship", data.goals_from_mentorship || "");
+      // formData.append("mentee_thoughts_mentor", data.mentee_thoughts_mentor || "");
       formData.append("max_mentee_count", data.max_mentee_count || null);
       formData.append(
         "pref_mentorship_duration",

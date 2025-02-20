@@ -7,7 +7,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import SuccessTik from '../../assets/images/blue_tik1x.png';
 import rightArrow from '../../assets/images/right.png';
 import { Button, Navbar, Stepper } from '../../shared';
-import { MenteeStepsList, StepsList, userStatus } from '../../utils/constant';
+import { MenteeStepsList, StepsList, user, userStatus } from '../../utils/constant';
 import {
   StepFormFields,
   Stepname,
@@ -511,6 +511,7 @@ const { data, isLoading, refetch, isFetching}=useGetMentorQuestionsQuery()
           </div>
         )} */}
         <div className='mb-1'>
+          {role===user.mentor&&
         <div className='flex items-center gap-1'onClick={()=>handleLogout()}>
           <img
             src={rightArrow}
@@ -518,7 +519,7 @@ const { data, isLoading, refetch, isFetching}=useGetMentorQuestionsQuery()
             alt='right'
           />
           <p style={{ fontWeight: 'bold', cursor: 'pointer' }}>Go to Login</p>
-        </div>
+        </div>}
         {/* <Button btnName="Back" btnCategory="secondary" onClick={()=>handleBack()} /> */}
 
         </div>
