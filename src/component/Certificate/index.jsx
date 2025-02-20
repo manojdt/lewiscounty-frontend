@@ -48,10 +48,9 @@ export default function Certificate() {
     (state) => state.certificates
   );
   const [formattedCertificateList, setFormattedCertificateList] = React.useState([])
-  React.useEffect(()=>{
+  React.useMemo(()=>{
     if(certificatesList?.results){
       const formattedRowData = formatTableNullValues(certificatesList?.results)
-      console.log("formattttt ",formattedRowData)
       setFormattedCertificateList(formattedRowData)
     }
   },[certificatesList])
@@ -299,7 +298,6 @@ export default function Certificate() {
   };
 
   const handleMenteeTabChange = async (key) => {
-    console.log("===============", key, window.location.pathname)
     setActiveTab(key);
     setSearchParams({ tabType: key });
     await setPaginationModel({

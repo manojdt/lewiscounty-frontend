@@ -75,7 +75,7 @@ export default function AssignMentees() {
   } = useSelector((state) => state.userPrograms);
 
   const [formattedProgramMenteeList, setFormattedProgramMenteeList] = React.useState([])
-  React.useEffect(()=>{
+  React.useMemo(()=>{
     if(programMenteeList){
       const formattedRowData = formatTableNullValues(programMenteeList)
       setFormattedProgramMenteeList(formattedRowData)

@@ -101,7 +101,7 @@ export default function AssignTask() {
     (state) => state.programInfo
   );
   const [formattedProgramMentees, setFormattedProgramMentees] = React.useState([])
-  React.useEffect(()=>{
+  React.useMemo(()=>{
     if(programMentees){
       const formattedRowData = formatTableNullValues(programMentees)
       setFormattedProgramMentees(formattedRowData)

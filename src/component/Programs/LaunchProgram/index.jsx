@@ -21,7 +21,7 @@ export default function LaunchProgram() {
     const { launchProgram, loading, error, status } = useSelector(state => state.launchProgram)
     const [formattedLaunchProgram, setFormattedLaunchProgram] = React.useState([])
 
-    React.useEffect(()=>{
+    React.useMemo(()=>{
         if(launchProgram){
             const formattedRowData = formatTableNullValues(launchProgram)
             setFormattedLaunchProgram(formattedRowData)

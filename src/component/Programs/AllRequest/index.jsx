@@ -2547,7 +2547,7 @@ export default function AllRequest() {
     goalsList,
   ]);
 
-  React.useEffect(()=>{
+  React.useMemo(()=>{
     if(activeTableDetails?.data){
       const formattedRowData = formatTableNullValues(activeTableDetails?.data)
       setFormattedActiveTableDetails(formattedRowData)

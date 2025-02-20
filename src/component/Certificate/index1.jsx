@@ -20,7 +20,7 @@ export default function Certificate() {
     const { certificates, loading } = useSelector(state => state.certificates)
     const [formattedCertificates, setFormattedCertificates] = React.useState([])
 
-    React.useEffect(()=>{
+    React.useMemo(()=>{
         if(certificates){
             const formattedRowData = formatTableNullValues(certificates)
             setFormattedCertificates(formattedRowData)

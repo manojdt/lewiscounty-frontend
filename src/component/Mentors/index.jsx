@@ -59,7 +59,7 @@ export const Mentors = () => {
     (state) => state.userList
   );
   const [formattedMentorList, setFormattedMentorList] = React.useState([])
-  React.useEffect(()=>{
+  React.useMemo(()=>{
     if(mentorList?.results){
       const formattedRowData = formatTableNullValues(mentorList?.results)
       setFormattedMentorList(formattedRowData)

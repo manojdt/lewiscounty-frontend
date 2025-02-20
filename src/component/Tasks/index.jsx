@@ -47,7 +47,7 @@ export const Tasks = () => {
   const dispatch = useDispatch();
   const { taskList, loading } = useSelector((state) => state.tasks);
   const [formattedTaskList, setFormattedTaskList] = React.useState([])
-  React.useEffect(()=>{
+  React.useMemo(()=>{
     if(taskList?.results){
       const formattedRowData = formatTableNullValues(taskList?.results)
       setFormattedTaskList(formattedRowData)

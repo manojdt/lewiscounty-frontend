@@ -69,7 +69,7 @@ const Tickets = () => {
       : data?.filter((ticket, index) => ticket.status === requestTab);
     const [formattedFilteredData, setFormattedFilteredData] = React.useState([])
 
-    React.useEffect(()=>{
+    React.useMemo(()=>{
       if(filteredData){
         const formattedRowData = formatTableNullValues(filteredData)
         setFormattedFilteredData(formattedRowData)

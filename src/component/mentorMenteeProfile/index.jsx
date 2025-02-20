@@ -331,7 +331,6 @@ const MentorMenteeProfile = () => {
           <div className='text-[#353F4F] text-[20px] font-medium'>
             Profile
           </div>
-          {console.log("stateeeeeeeeeeeeeeeeeeee ",state)}
           
           <div className='flex gap-4 pt-10'>
           {((role === "mentor")) && state?.status !== "cancel" &&

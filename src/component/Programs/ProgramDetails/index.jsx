@@ -249,7 +249,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   );
   const { programMentees } = useSelector((state) => state.programInfo);
   const [formattedProgramMentees, setFormattedProgramMentees] = React.useState([])
-  React.useEffect(()=>{
+  React.useMemo(()=>{
     if(programMentees){
       const formattedRowData = formatTableNullValues(programMentees)
       setFormattedProgramMentees(formattedRowData)

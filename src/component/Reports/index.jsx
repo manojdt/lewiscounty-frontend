@@ -41,7 +41,7 @@ const Reports = () => {
   const location = useLocation();
   const { allreports, loading, status } = useSelector((state) => state.reports);
   const [formattedAllReports, setFormattedAllReports] = React.useState([])
-  React.useEffect(()=>{
+  React.useMemo(()=>{
     if(allreports?.results){
       const formattedRowData = formatTableNullValues(allreports?.results)
       setFormattedAllReports(formattedRowData)

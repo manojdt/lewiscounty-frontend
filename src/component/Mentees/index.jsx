@@ -344,7 +344,6 @@ export const Mentees = () => {
 
   const getTableData = (search = "") => {
     if (mentorType === "my-mentee") {
-      console.log("=======ifff=========")
       dispatch(
         getMyMentees({
           page: paginationModel?.page + 1,
@@ -353,7 +352,6 @@ export const Mentees = () => {
         })
       );
     } else {
-      console.log('elseeeeeeeeeeeee')
       dispatch(
         getMyReqMentees({
           page: paginationModel?.page + 1,

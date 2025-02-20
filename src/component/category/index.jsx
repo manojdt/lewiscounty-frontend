@@ -29,7 +29,7 @@ const Category = () => {
     const { width } = useWindowSize();
     const [formattedCategories, setFormattedCategories] = React.useState([])
     const { categories, loading, formDetails } = useSelector((state) => state.category)
-    React.useEffect(()=>{
+    React.useMemo(()=>{
         if(categories?.results){
             const formattedRowData = formatTableNullValues(categories?.results)
             setFormattedCategories(formattedRowData)

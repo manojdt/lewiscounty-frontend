@@ -44,7 +44,7 @@ export default function CreateMeeting() {
     status,
     getEvent,
   } = useSelector((state) => state.events);
-  React.useEffect(()=>{
+  React.useMemo(()=>{
     if(programMenteeList){
       const programMenteeListFormatted = formatTableNullValues(programMenteeList)
       setFormattedProgramMenteeList(programMenteeListFormatted)

@@ -42,7 +42,7 @@ export default function RecentRequests({ data = [] }) {
     (state) => state.userList
   );
   const [formattedMenteeList, setFormattedMenteeList] = React.useState([])
-  React.useEffect(()=>{
+  React.useMemo(()=>{
     if(menteeList?.results){
       const formattedRowData = formatTableNullValues(menteeList?.results)
       setFormattedMenteeList(formattedRowData)

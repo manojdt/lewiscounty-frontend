@@ -44,7 +44,7 @@ const MentorTask = () => {
   } = useSelector((state) => state.tasks);
   const [formattedMenteeTask, setFormattedMenteeTask] = React.useState([])
 
-  React.useEffect(()=>{
+  React.useMemo(()=>{
     if(menteeTask?.results){
       const formattedRowData = formatTableNullValues(menteeTask?.results)
       setFormattedMenteeTask(formattedRowData)

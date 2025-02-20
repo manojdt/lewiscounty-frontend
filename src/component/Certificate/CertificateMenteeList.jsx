@@ -64,7 +64,7 @@ export default function CertificateMenteeList() {
   );
   const [formattedCertificatesMembers, setFormattedCertificatesMembers] = React.useState([])
 
-  React.useEffect(()=>{
+  React.useMemo(()=>{
     if(certificatesMembers?.results){
       const formattedRowData = formatTableNullValues(certificatesMembers?.results)
       setFormattedCertificatesMembers(formattedRowData)

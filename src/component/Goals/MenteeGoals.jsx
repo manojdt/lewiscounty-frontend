@@ -48,7 +48,7 @@ export default function MenteeGoals() {
     const { goalHistory } = useSelector(state => state.goals)
     const [formattedGoalHistory, setFormattedGoalHistory] = React.useState([])
 
-    React.useEffect(()=>{
+    React.useMemo(()=>{
         if(goalHistory?.results){
             const formattedRowData = formatTableNullValues(goalHistory?.results)
             setFormattedGoalHistory(formattedRowData)

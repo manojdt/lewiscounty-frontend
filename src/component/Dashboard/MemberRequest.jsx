@@ -35,14 +35,14 @@ export default function MemberRequest() {
 
   const [formattedCategoryList, setFormttedCategoryList] = React.useState([])
 
-  React.useEffect(()=>{
+  React.useMemo(()=>{
     if(categoryList){
       const formattedRowData = formatTableNullValues(categoryList)
       setFormttedCategoryList(formattedRowData)
     }
   },[categoryList])
 
-  React.useEffect(()=>{
+  React.useMemo(()=>{
     if(memberRequest?.results){
       const formattedRowData = formatTableNullValues(memberRequest?.results)
       setFormattedMemberRequest(formattedRowData)

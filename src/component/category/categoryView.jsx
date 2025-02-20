@@ -31,7 +31,7 @@ const CategoryView = () => {
   const { viewData, loading } = useSelector((state) => state.category);
   const [formattedViewData, setFormattedViewData] = React.useState([])
 
-  React.useEffect(()=>{
+  React.useMemo(()=>{
     if(viewData?.results){
       const formattedRowData = formatTableNullValues(viewData?.results)
       setFormattedViewData(formattedRowData)

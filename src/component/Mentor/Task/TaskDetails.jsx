@@ -69,10 +69,9 @@ const MentorTaskDetails = () => {
     const dispatch = useDispatch()
     const { task: taskDetails, loading: taskDetailsLoading, status, menteeTaskList } = useSelector(state => state.tasks)
     const [formattedMenteeTaskList, setFormattedMenteeTaskList] = React.useState([])
-    React.useEffect(()=>{
+    React.useMemo(()=>{
       if(menteeTaskList?.results){
         const formattedRowData = formatTableNullValues(menteeTaskList?.results)
-        console.log("formattedRow ",formattedRowData)
         setFormattedMenteeTaskList(formattedRowData)
       }
     },[menteeTaskList])
