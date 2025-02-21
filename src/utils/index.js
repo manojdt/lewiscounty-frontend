@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
-
+import UserIcon from "../assets/icons/user-icon.svg";
 export function getMonth(date = dayjs()) {
   const currDate = dayjs(date);
   const month = Math.floor(currDate.month());
@@ -134,7 +134,15 @@ export const capitalizeFirstLetter = (string) => {
 export const permissionDeniedMessage = "You do not have permission to view this page. Please contact the administrator for more information";
 
 
-
+export function NotificationImg (data) {
+  const listimage=data?.profile_details?.profile_image||UserIcon
+  return(
+    <img
+    src={listimage}
+    alt="MaleIcon"
+  />
+  )
+}
 
 export const formatTime = (timeString) => {
   const [hours, minutes, seconds] = timeString.split(':').map(Number);

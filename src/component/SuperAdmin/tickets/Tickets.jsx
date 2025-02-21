@@ -6,6 +6,7 @@ import ShareIcon from '../../../assets/icons/share-ticket-icon.svg';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import DataTable from '../../../shared/DataGrid';
 import TicketDeleteModal from './ticket-delete-modal';
+import LinkIcon from "../../../assets/images/link1x.png";
 import {
   useGetAllTicketsQuery,
   useUpdateStatusMutation,
@@ -29,6 +30,8 @@ import CancelRequestModal from './cancel-request';
 import { Button } from '../../../shared';
 import { requestPageBreadcrumbs } from '../../Breadcrumbs/BreadcrumbsCommonData';
 import { formatTableNullValues } from '../../../utils';
+import MuiModal from '../../../shared/Modal';
+import { useToast } from '../../ToastComponet/ToastComponent';
 
 const Tickets = () => {
   const navigate = useNavigate();
@@ -40,17 +43,20 @@ const Tickets = () => {
     const tabValue=searchParams.get("tab")||"all"
   const [requestTab, setRequestTab] = useState('all');
   const [seletedItem, setSelectedItem] = useState();
+  const [selectedRow, setSelectedRow] = useState();
   const [isBackdropOpen, setIsBackdropOpen] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState({ anchorEl: null, rowId: null });
   const [ticketId, setTicketId] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
+const toast = useToast()
   const [isCancelRequestModal, setIsCancelRequestModal] = useState(false);
 
   const [
     updateStatus,
     { isLoading: isUpdateLoading, isSuccess: isUpdateSuccess },
   ] = useUpdateStatusMutation();
-
+  const url = `${process.env.REACT_APP_SITE_URL}/tickets/${selectedRow?.id}?type=view&breadcrumbsType=${requestTab}`;
   // const [paginationModel, setPaginationModel] = React.useState({
   //   page: 0,
   //   limit: 10,
@@ -62,7 +68,22 @@ const Tickets = () => {
   const handleClose = () => {
     setMenuAnchor({ anchorEl: null, rowId: null });
   };
-
+  const handleCopy = () => {
+    navigator.clipboard
+      .writeText(url)
+      .then(() => {
+       toast.success("URL copied!")
+    setTimeout(() => {
+      setShareOpen(false)
+    }, 1000);
+      })
+  };
+  const handleMoreMenuClosePopup =()=>{
+    setShareOpen(false)
+  }
+  const handleMoreMenuOpenPopup =()=>{
+    setShareOpen(true)
+  }
   const filteredData =
     requestTab === 'all'
       ? data
@@ -84,6 +105,7 @@ const Tickets = () => {
 
   const handleClick = (event, data) => {
     setMenuAnchor({ anchorEl: event.currentTarget, rowId: data?.id });
+    setSelectedRow(data)
   };
 
   const handleStartTicket = (row) => {
@@ -243,7 +265,7 @@ const Tickets = () => {
                     </div>
                   )}
 
-                  <MenuItem onClick={() => {}} className='!text-[12px]'>
+                  <MenuItem onClick={() => handleMoreMenuOpenPopup()} className='!text-[12px]'>
                     <img
                       src={ShareIcon}
                       alt='ViewIcon'
@@ -462,6 +484,55 @@ const Tickets = () => {
           ticketId={ticketId}
         />
       )}
+      
+      <MuiModal
+        modalOpen={shareOpen}
+        modalClose={handleMoreMenuClosePopup}
+        noheader
+      >
+        <div
+          className="px-5 py-1 flex justify-center items-center"
+          style={{ border: "1px solid rgba(29, 91, 191, 1)" }}
+        >
+          <div className="flex justify-center items-center flex-col gap-8 py-10 px-20 mt-5">
+            <div>{"Share Ticket"}</div>
+            <input
+        className="input-bg text-xs 
+          h-12 sm:h-14 md:h-[60px]
+          w-full sm:w-80 md:w-96
+          px-4 sm:px-5
+          rounded-3xl
+          text-center sm:text-left
+          whitespace-normal sm:whitespace-nowrap
+          overflow-hidden
+          disabled:bg-gray-100
+          disabled:text-gray-700"
+        disabled
+        value={url}
+        style={{
+          textOverflow: 'ellipsis'
+        }}
+      />
+            <div className="flex gap-7">
+              <img
+                className="cursor-pointer"
+                src={LinkIcon}
+                alt="LinkIcon"
+                onClick={handleCopy}
+              />
+            </div>
+
+            <div className="flex  justify-center align-middle pt-4">
+              <Button
+                btnType="button"
+                onClick={handleMoreMenuClosePopup}
+                btnName="Close"
+                btnCategory="primary"
+              />
+            </div>
+          </div>
+        </div>
+      </MuiModal>
     </div>
   );
 };
