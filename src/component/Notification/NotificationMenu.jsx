@@ -7,7 +7,7 @@ import {
   userActivities,
   userActivitiyVisited,
 } from "../../services/activities";
-import { getTimeFromDate, useDebounce } from "../../utils";
+import { getTimeFromDate, NotificationImg, useDebounce } from "../../utils";
 import { useNavigate } from "react-router-dom";
 
 export default function NotificationMenu() {
@@ -179,10 +179,11 @@ export default function NotificationMenu() {
                     onClick={() => handleVisitActivity(list)}
                     className="cursor-pointer"
                   >
-                    <img
+                    {/* <img
                       src={index % 2 === 0 ? MaleIcon : FemaleIcon}
                       alt="MaleIcon"
-                    />
+                    /> */}
+                    <NotificationImg data={list}/>
                     <div className="flex justify-between w-full">
                       <p className="notification-message">
                         <p className="font-semibold">{list.content}</p>

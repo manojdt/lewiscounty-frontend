@@ -3,7 +3,7 @@ import MaleIcon from "../../assets/images/male-profile1x.png";
 import FemaleIcon from "../../assets/images/female-profile1x.png";
 import RightArrowIcon from "../../assets/icons/RightSingleArrow.svg";
 import { useNavigate } from "react-router-dom";
-import { getTimeFromDate } from "../../utils";
+import { getTimeFromDate, NotificationImg } from "../../utils";
 import { useDispatch, useSelector } from "react-redux";
 import {
   userActivities,
@@ -140,10 +140,11 @@ export default function Notification({ handleClose }) {
                     onClick={() => handleVisitActivity(list)}
                     key={index}
                   >
-                    <img
+                    {/* <img
                       src={index % 2 === 0 ? MaleIcon : FemaleIcon}
                       alt="MaleIcon"
-                    />
+                    /> */}
+                         <NotificationImg data={list}/>
                     <p className="notification-message">{list.content}</p>
                     <p className="text-[12px]">{list.created_time}</p>
                   </li>

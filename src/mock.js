@@ -4,8 +4,9 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { taskStatusColor, taskStatusText } from "./utils/constant";
 import moment from "moment";
 import EditIcon from "@mui/icons-material/Edit";
-import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import formatSize from "./utils/sizeFormatUtil";
+import StarIcon from "./assets/icons/filledStar.svg";
 export const loginUser = [
   {
     email: "tsubramaniyan2@gmail.com",
@@ -449,7 +450,7 @@ export const MaterialColumns = [
     headerName: "Material Size",
     flex: 1,
     id: 2,
-    renderCell: ({ row }) => formatSize(row?.material_size)
+    renderCell: ({ row }) => formatSize(row?.material_size),
   },
   {
     field: "action",
@@ -498,7 +499,12 @@ export const RecurringListMenuItems = [
     visible: false,
     icon: <EditIcon sx={{ mr: 1 }} fontSize="small" />,
   },
-  { label: "View", action: "view", visible: false, icon: <VisibilityOutlinedIcon sx={{ mr: 1 }} fontSize="small" /> },
+  {
+    label: "View",
+    action: "view",
+    visible: false,
+    icon: <VisibilityOutlinedIcon sx={{ mr: 1 }} fontSize="small" />,
+  },
 ];
 
 export const GoalColumns = [
@@ -880,7 +886,7 @@ export const taskColumns = [
     flex: 1,
     id: 0,
     renderCell: (params) => {
-      return formatRenderCellDateValues(params?.row?.created_at)
+      return formatRenderCellDateValues(params?.row?.created_at);
     },
   },
   {
@@ -907,7 +913,7 @@ export const taskColumns = [
     flex: 1,
     id: 2,
     renderCell: (params) => {
-      return formatRenderCellDateValues(params?.row?.start_date)
+      return formatRenderCellDateValues(params?.row?.start_date);
     },
   },
   {
@@ -916,7 +922,7 @@ export const taskColumns = [
     flex: 1,
     id: 2,
     renderCell: (params) => {
-      return formatRenderCellDateValues(params?.row?.submited_date)
+      return formatRenderCellDateValues(params?.row?.submited_date);
     },
   },
   {
@@ -925,7 +931,7 @@ export const taskColumns = [
     flex: 1,
     id: 9,
     renderCell: (params) => {
-      return formatRenderCellDateValues(params?.row?.updated_at)
+      return formatRenderCellDateValues(params?.row?.updated_at);
     },
   },
   // {
@@ -958,8 +964,14 @@ export const taskColumns = [
     flex: 1,
     id: 2,
     renderCell: (params) => {
-      return <div>{params.row.result==="Fail"?"No Pass":params.row.result ?? "..."}</div>
-  }
+      return (
+        <div>
+          {params.row.result === "Fail"
+            ? "No Pass"
+            : params.row.result ?? "..."}
+        </div>
+      );
+    },
   },
 ];
 
@@ -1014,7 +1026,7 @@ export const mentorTaskColumns = [
     flex: 1,
     id: 2,
     renderCell: (params) => {
-      return formatRenderCellDateValues(params?.row?.created_at)
+      return formatRenderCellDateValues(params?.row?.created_at);
     },
   },
   {
@@ -1023,7 +1035,7 @@ export const mentorTaskColumns = [
     flex: 1,
     id: 2,
     renderCell: (params) => {
-      return formatRenderCellDateValues(params?.row?.submited_date)
+      return formatRenderCellDateValues(params?.row?.submited_date);
     },
   },
   {
@@ -1295,7 +1307,7 @@ export const goalsHistoryColumn = [
     flex: 1,
     id: 1,
     renderCell: (params) => {
-      return formatRenderCellDateValues(params?.row?.start_date)
+      return formatRenderCellDateValues(params?.row?.start_date);
     },
   },
 ];
@@ -1425,7 +1437,7 @@ export const listCertificateColumn = [
     flex: 1,
     id: 1,
     renderCell: (params) => {
-      return formatRenderCellDateValues(params?.row?.start_date)
+      return formatRenderCellDateValues(params?.row?.start_date);
     },
   },
   {
@@ -1434,7 +1446,7 @@ export const listCertificateColumn = [
     flex: 1,
     id: 1,
     renderCell: (params) => {
-      return formatRenderCellDateValues(params?.row?.end_date)
+      return formatRenderCellDateValues(params?.row?.end_date);
     },
   },
   {
@@ -1478,7 +1490,12 @@ export const programRequestColumns = [
     id: 0,
     for: ["admin", "mentor", "mentee"],
     mainTab: ["my", "mentees", "admin"],
-    tab:["program_cancel","program_join","program_reschedule","program_new"]
+    tab: [
+      "program_cancel",
+      "program_join",
+      "program_reschedule",
+      "program_new",
+    ],
   },
   {
     field: "program_name",
@@ -1487,7 +1504,12 @@ export const programRequestColumns = [
     id: 1,
     for: ["admin", "mentor", "mentee"],
     mainTab: ["my", "mentees", "admin"],
-    tab:["program_cancel","program_join","program_reschedule","program_new"]
+    tab: [
+      "program_cancel",
+      "program_join",
+      "program_reschedule",
+      "program_new",
+    ],
   },
   {
     field: "created_by_full_name",
@@ -1496,7 +1518,7 @@ export const programRequestColumns = [
     id: 2,
     for: ["admin", "mentor", "mentee"],
     mainTab: ["mentees"],
-    tab:["program_join","program_cancel"]
+    tab: ["program_join", "program_cancel"],
   },
   // {
   //   field: 'created_by_full_name',
@@ -1507,13 +1529,13 @@ export const programRequestColumns = [
   //   tab:["program_cancel","program_join","program_reschedule","program_new"]
   // },
   {
-    field: 'created_by_full_name',
-    headerName: 'Requested By',
+    field: "created_by_full_name",
+    headerName: "Requested By",
     flex: 1,
     id: 3,
-    for: ['admin'],
+    for: ["admin"],
     mainTab: ["my", "admin"],
-    tab:["program_cancel","program_reschedule","program_new"]
+    tab: ["program_cancel", "program_reschedule", "program_new"],
   },
   {
     field: "position",
@@ -1522,7 +1544,7 @@ export const programRequestColumns = [
     id: 4,
     for: ["admin"],
     mainTab: ["my", "mentees", "admin"],
-    tab:["program_cancel","program_reschedule","program_new"]
+    tab: ["program_cancel", "program_reschedule", "program_new"],
   },
   // {
   //   field: 'to_request',
@@ -1538,9 +1560,14 @@ export const programRequestColumns = [
     id: 5,
     for: ["admin", "mentor", "mentee"],
     mainTab: ["my", "mentees", "admin"],
-    tab:["program_cancel","program_join","program_reschedule","program_new"],
+    tab: [
+      "program_cancel",
+      "program_join",
+      "program_reschedule",
+      "program_new",
+    ],
     renderCell: (params) => {
-      return formatRenderCellDateValues(params?.row?.created_at)
+      return formatRenderCellDateValues(params?.row?.created_at);
     },
   },
   {
@@ -1549,10 +1576,12 @@ export const programRequestColumns = [
     flex: 1,
     id: 6,
     for: ["admin", "mentor", "mentee"],
-    tab:["program_reschedule"],
+    tab: ["program_reschedule"],
     mainTab: ["my", "mentees", "admin"],
     renderCell: (params) => {
-      return `${formatRenderCellDateValues(params?.row?.start_date)} & ${formatRenderCellDateValues(params.row.end_date)}`
+      return `${formatRenderCellDateValues(
+        params?.row?.start_date
+      )} & ${formatRenderCellDateValues(params.row.end_date)}`;
     },
   },
   // {
@@ -1573,7 +1602,7 @@ export const programRequestColumns = [
     flex: 1,
     id: 8,
     for: ["admin", "mentor"],
-    tab:["program_reschedule"],
+    tab: ["program_reschedule"],
     mainTab: ["my", "admin"],
     renderCell: (params) => {
       return <div>{params.row.comments}</div>;
@@ -1586,9 +1615,14 @@ export const programRequestColumns = [
     id: 9,
     for: ["admin", "mentee", "mentor"],
     mainTab: ["my", "mentees", "admin"],
-    tab:["program_cancel","program_join","program_reschedule","program_new"],
+    tab: [
+      "program_cancel",
+      "program_join",
+      "program_reschedule",
+      "program_new",
+    ],
     renderCell: (params) => {
-      return formatRenderCellDateValues(params?.row?.updated_at)
+      return formatRenderCellDateValues(params?.row?.updated_at);
     },
   },
   {
@@ -1598,25 +1632,35 @@ export const programRequestColumns = [
     id: 10,
     for: ["admin", "mentee", "mentor"],
     mainTab: ["my", "mentees", "admin"],
-    tab:["program_cancel","program_join","program_reschedule","program_new"]
+    tab: [
+      "program_cancel",
+      "program_join",
+      "program_reschedule",
+      "program_new",
+    ],
   },
   {
-    field: 'comments',
-    headerName: 'Cancel Reason',
+    field: "comments",
+    headerName: "Cancel Reason",
     flex: 1,
     id: 11,
-    for: ['admin', 'mentee', 'mentor'],
+    for: ["admin", "mentee", "mentor"],
     mainTab: ["my", "mentees", "admin"],
-    tab:["program_cancel"]
+    tab: ["program_cancel"],
   },
   {
-    field: 'auto_approval',
-    headerName: 'Auto Approval',
+    field: "auto_approval",
+    headerName: "Auto Approval",
     flex: 1,
     id: 12,
     for: ["admin"],
     mainTab: ["my", "mentees", "admin"],
-    tab:["program_cancel","program_join","program_reschedule","program_new"]
+    tab: [
+      "program_cancel",
+      "program_join",
+      "program_reschedule",
+      "program_new",
+    ],
   },
   // {
   //   field: 'approved_date_time',
@@ -1705,7 +1749,7 @@ export const programExtendRequestColumns = [
     id: 5,
     for: ["admin", "mentor", "mentee"],
     renderCell: (params) => {
-      return formatRenderCellDateValues(params.row.created_at)
+      return formatRenderCellDateValues(params.row.created_at);
     },
   },
   {
@@ -1715,7 +1759,7 @@ export const programExtendRequestColumns = [
     id: 7,
     for: ["admin", "mentee", "mentor"],
     renderCell: (params) => {
-      return formatRenderCellDateValues(params.row.updated_at)
+      return formatRenderCellDateValues(params.row.updated_at);
     },
   },
   {
@@ -2053,7 +2097,7 @@ export const goalsRequestColumns = [
     headerName: "Goal Name",
     flex: 1,
     id: 0,
-    for: ["admin", "mentor","mentee"],
+    for: ["admin", "mentor", "mentee"],
     renderCell: (params) => {
       return (
         <div className="flex gap-2 items-center">
@@ -2099,7 +2143,7 @@ export const goalsRequestColumns = [
     id: 8,
     for: ["mentee"],
     renderCell: (params) => {
-      return formatRenderCellDateValues(params?.row?.requested_date)
+      return formatRenderCellDateValues(params?.row?.requested_date);
     },
   },
   {
@@ -2109,7 +2153,7 @@ export const goalsRequestColumns = [
     id: 2,
     for: ["admin", "mentor"],
     renderCell: (params) => {
-      return formatRenderCellDateValues(params?.row?.requested_date)
+      return formatRenderCellDateValues(params?.row?.requested_date);
     },
   },
 
@@ -2118,16 +2162,16 @@ export const goalsRequestColumns = [
     headerName: "Requested By",
     flex: 1,
     id: 3,
-    for: ["admin","mentee", "mentor"],
+    for: ["admin", "mentee", "mentor"],
   },
   {
     field: "updated_at",
     headerName: "Last Updated Date",
     flex: 1,
     id: 4,
-    for: ["admin","mentor","mentee"],
+    for: ["admin", "mentor", "mentee"],
     renderCell: (params) => {
-      return formatRenderCellDateValues(params?.row?.updated_at)
+      return formatRenderCellDateValues(params?.row?.updated_at);
     },
   },
   {
@@ -2135,7 +2179,7 @@ export const goalsRequestColumns = [
     headerName: "Last Updated By",
     flex: 1,
     id: 5,
-    for: ["admin", "mentor","mentee"],
+    for: ["admin", "mentor", "mentee"],
   },
 ];
 
@@ -2261,7 +2305,7 @@ export const testimonialRequestColumns = [
     headerName: "Category",
     flex: 1,
     id: 7,
-    for: ["admin", "mentor",],
+    for: ["admin", "mentor"],
   },
   {
     field: "program_description",
@@ -2381,7 +2425,7 @@ export const certificateRequestColumns = [
     id: 3,
     for: ["admin"],
     renderCell: (params) => {
-      return formatRenderCellDateValues(params?.row?.created_at)
+      return formatRenderCellDateValues(params?.row?.created_at);
     },
   },
 
@@ -2392,7 +2436,7 @@ export const certificateRequestColumns = [
     id: 3,
     for: ["admin"],
     renderCell: (params) => {
-      return formatRenderCellDateValues(params?.row?.updated_at)
+      return formatRenderCellDateValues(params?.row?.updated_at);
     },
   },
   {
@@ -2445,9 +2489,9 @@ export const reportRequestColumns = [
     headerName: "Requested Date",
     flex: 1,
     id: 3,
-    for: ["admin","mentor"],
+    for: ["admin", "mentor"],
     renderCell: (params) => {
-      return formatRenderCellDateValues(params?.row?.created_at)
+      return formatRenderCellDateValues(params?.row?.created_at);
     },
   },
   {
@@ -2457,7 +2501,7 @@ export const reportRequestColumns = [
     id: 3,
     for: ["admin", "mentor"],
     renderCell: (params) => {
-      return formatRenderCellDateValues(params?.row?.updated_at)
+      return formatRenderCellDateValues(params?.row?.updated_at);
     },
   },
   {
@@ -2569,20 +2613,20 @@ export const allMembersColumns = [
     id: 1,
     for: ["mentor", "mentee"],
   },
-  // {
-  //   field: "designation",
-  //   headerName: "Designation",
-  //   flex: 1,
-  //   id: 2,
-  //   for: ["mentee", "mentee"],
-  // },
-  // {
-  //   field: "skills",
-  //   headerName: "Skills",
-  //   flex: 1,
-  //   id: 3,
-  //   for: ["mentee", "mentee"],
-  // },
+  {
+    field: "designation",
+    headerName: "Designation",
+    flex: 1,
+    id: 2,
+    for: ["mentee", "mentee"],
+  },
+  {
+    field: "skills",
+    headerName: "Skills",
+    flex: 1,
+    id: 3,
+    for: ["mentee", "mentee"],
+  },
   {
     field: "phone_number",
     headerName: "Phone Number",
@@ -2597,35 +2641,72 @@ export const allMembersColumns = [
     id: 5,
     for: ["mentor", "mentee"],
   },
-  // {
-  //   field: "location",
-  //   headerName: "Location",
-  //   flex: 1,
-  //   id: 5,
-  //   for: ["mentor", "mentee"],
-  // },
-  // {
-  //   field: "years_of_experience",
-  //   headerName: "Experience",
-  //   flex: 1,
-  //   id: 5,
-  //   align: "center",
-  //   for: ["mentor", "mentee"],
-  // },
+  {
+    field: "location",
+    headerName: "Location",
+    flex: 1,
+    id: 6,
+    for: ["mentor"],
+  },
+  {
+    field: "address",
+    headerName: "Location",
+    flex: 1,
+    id: 16,
+    for: ["mentee"],
+  },
+  {
+    field: "years_of_experience",
+    headerName: "Experience",
+    flex: 1,
+    id: 7,
+    align: "center",
+    for: ["mentor"],
+  },
+  {
+    field: "experience",
+    headerName: "Experience",
+    flex: 1,
+    id: 11,
+    align: "center",
+    for: ["mentee"],
+  },
   {
     field: "attended_program_count",
     headerName: "Attended Programs",
     flex: 1,
-    id: 5,
+    id: 8,
     for: ["mentor", "mentee"],
   },
+  {
+    field: "current_program_count",
+    headerName: "Current Programs",
+    flex: 1,
+    id: 9,
+    for: ["mentor"],
+  },
+  {
+    field: "enrolled_program",
+    headerName: "Enrolled Programs",
+    flex: 1,
+    id: 12,
+    for: ["mentee"],
+  },
+  {
+    field: "certificate",
+    headerName: "Certificates",
+    flex: 1,
+    id: 13,
+    for: ["mentee"],
+  },
   // {
-  //   field: "certificates",
-  //   headerName: "Certificates",
+  //   field: "designation",
+  //   headerName: "Designation",
   //   flex: 1,
-  //   id: 5,
-  //   for: ["mentor", "mentee"],
+  //   id: 10,
+  //   for: ["mentor","mentee"],
   // },
+  
   // {
   //   field: "auto_approval",
   //   headerName: "Auto Approval",
@@ -2639,6 +2720,26 @@ export const allMembersColumns = [
     flex: 1,
     id: 5,
     for: ["mentor"],
+    renderCell: (params) => {
+      return (
+        <div className="flex gap-2 items-center">
+          {" "}
+          {params?.row?.average_rating > 0 && params?.row?.average_rating && (
+            <>
+              <img
+                src={StarIcon}
+                alt="StarIcon"
+                className="w-4 h-4"
+              />
+              <span className="text-blue-700 font-bold pt-[2px]">
+                {" "}
+                {params?.row?.average_rating}
+              </span>
+            </>
+          )}
+        </div>
+      );
+    },
   },
 ];
 export const assignMentorColumns = [

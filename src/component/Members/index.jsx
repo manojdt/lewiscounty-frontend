@@ -50,6 +50,7 @@ const Members = () => {
     column: [],
     data: [],
   });
+  const [allData, setAllData] = useState();
   const [searchTerm, setSearchTerm] = useState("");
   const [search] = useSearchParams();
   const breadcrumbsType = search.get("breadcrumbsType") || "";  
@@ -69,7 +70,7 @@ const Members = () => {
   });
   const [filterInfo, setFilterInfo] = useState({ search: "", status: "" });
   const dispatch = useDispatch();
-  const { mentor, mentee, loading, error } = useSelector(
+  const {  mentor, mentee, loading, error } = useSelector(
     (state) => state.members
   );
   const [formattedMentor, setFormattedMentor] = React.useState([])
@@ -307,7 +308,7 @@ const Members = () => {
       ...columns,
       {
         field: "status",
-        headerName: "Status",
+        headerName: "Activity",
         flex: 1,
         id: 2,
         renderCell: (params) => {
@@ -449,7 +450,7 @@ const Members = () => {
       },
     ];
     const formattedRowData = formatTableNullValues(tableData?.results)
-
+    setAllData(tableData)
     setActiveTableDetails({ data: formattedRowData, column: updatedColumns });
   }, [mentor, mentee, anchorEl]);
   useEffect(() => {
@@ -580,7 +581,7 @@ const Members = () => {
         <DataTable
           rows={activeTableDetails?.data || []}
           columns={activeTableDetails.column}
-          rowCount={activeTableDetails?.data?.count}
+          rowCount={allData?.count}
           paginationModel={paginationModel}
           setPaginationModel={setPaginationModel}
         />

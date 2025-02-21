@@ -377,7 +377,7 @@ export default function AssignMentees() {
       dispatch(getAllCategories());
     }
     if (type !== "new") {
-      const editPay=`&type=edit_task&task_id=${state?.data?.task_id}`
+      const editPay=state?.data?.task_id?`&type=edit_task&task_id=${state?.data?.task_id}`:""
       dispatch(getProgramTaskMentees(state?.data?.program_id+editPay));
     }
   }, [category, type, state?.data?.program_id, dispatch]);
