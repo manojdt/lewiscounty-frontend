@@ -54,7 +54,7 @@ const ProgramSteps = ({
   const { admin, mentor } = user;
   const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
-
+const editType=searchParams.get("type")
   const [currentField, setCurrentField] = useState();
   const [selectedMentorsByField, setSelectedMentorsByField] = useState({});
   const getRowIdentifier = (row) => {
@@ -464,7 +464,7 @@ const ProgramSteps = ({
 
           const disableRecurringProgram =
             params?.id &&
-            field.name === "recurring_program" &&
+            (field.name === "recurring_program"||(field.name==="is_sponsored"&&editType==="admin_assign_edit")) &&
             toggleRole === mentor;
           return (
             <div className={`relative mb-6  ${field.width}`} key={index}>

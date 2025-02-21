@@ -520,7 +520,6 @@ const { data, isLoading, refetch, isFetching}=useGetMentorQuestionsQuery()
           />
           <p style={{ fontWeight: 'bold', cursor: 'pointer' }}>Go to Login</p>
         </div>}
-        {/* <Button btnName="Back" btnCategory="secondary" onClick={()=>handleBack()} /> */}
 
         </div>
         <div style={{ boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.15)" }}>

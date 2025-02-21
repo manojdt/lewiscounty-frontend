@@ -620,6 +620,9 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       case "edit":
         navigate(`/update-program/${params?.id}`);
         break;
+      case "editadmin":
+        navigate(`/update-program/${params?.id}?program_create_type=admin_program`);
+        break;
       case "not_interested":
         setMoreMenuModal({ ...moreMenuModal, not_interested: true });
         break;
@@ -2058,6 +2061,23 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             />
                             Share
                           </MenuItem>
+                          {role==="admin"&&
+                            programdetails?.created_by ===
+                              userdetails?.data?.user_id &&
+                            programdetails?.admin_assign_program &&
+                           programdetails?.sub_programs.every((val)=>val.status==="yettoapprove") && (
+                              <MenuItem
+                                onClick={() => handleMenu("editadmin")}
+                                className="!text-[12px]"
+                              >
+                                <img
+                                  src={EditSVGIcon}
+                                  alt="EditSVGIcon"
+                                  className="pr-3 w-[25px]"
+                                />
+                                Edit
+                              </MenuItem>
+                            )}
                           {!("admin_assign_program" in programdetails) &&
                             (programdetails.status === "cancelled" ||
                               programdetails.status ===
@@ -2081,7 +2101,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                 Re-Open
                               </MenuItem>
                             )}
-                          {programdetails.participated_mentees_count === 0 &&
+                           {role==="mentor"&&programdetails.participated_mentees_count === 0 &&
                             programdetails?.created_by ===
                               userdetails?.data?.user_id &&
                             programdetails?.admin_program === null &&
@@ -2102,7 +2122,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                 Edit
                               </MenuItem>
                             )}
-                          {!requestStatusParams &&
+                          
+                           {!requestStatusParams &&
                             ![
                               "yettoapprove",
                               "cancelled",
@@ -2129,7 +2150,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                               </MenuItem>
                             )}
 
-                          {
+                           {
                             !requestStatusParams &&
                               ![
                                 "yettoapprove",
@@ -2156,6 +2177,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                               )
                             // )
                           }
+                          
                           {[
                             programActionStatus.inprogress,
                             programActionStatus.assigned,

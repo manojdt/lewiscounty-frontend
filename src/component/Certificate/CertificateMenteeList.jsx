@@ -419,7 +419,8 @@ export default function CertificateMenteeList() {
           )}
           <div className="cursor-pointer" onClick={() => {
             if(state?.from){
-              navigate(`/certificates?tabType=${state?.status?.toLowerCase()}`)
+              // Fix for the view page of the waiting_for_response page redirecting
+              navigate(`/certificates?tabType=${state?.status==="Wating_for_response"?"waiting_for_response":state?.status?.toLowerCase()}`)
             }
             else{
               navigate(-1)
