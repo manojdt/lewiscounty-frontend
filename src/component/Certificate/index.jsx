@@ -98,7 +98,6 @@ export default function Certificate() {
       timer = setTimeout(() => func(...args), delay);
     };
   };
-  
   const handleSearch = debounce((value) => {
     let query = value.trim() !== "" ? `?search=${value}` : "";
   

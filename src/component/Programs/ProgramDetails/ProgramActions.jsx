@@ -825,7 +825,7 @@ const ProgramActions = ({
           btnCls="w-[110px] h-11"
           btnName={"Edit"}
           btnCategory="primary"
-          onClick={() => navigate(`/update-program/${programdetails?.id}`)}
+          onClick={() => navigate(`/update-program/${programdetails?.id}?type=admin_assign_edit`)}
         />
       );
     }

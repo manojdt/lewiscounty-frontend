@@ -381,6 +381,12 @@ export const TaskDetails = () => {
 
         {!loading && Object.keys(taskData).length && (
           <div className='px-4'>
+            { (taskData.status === TaskAllStatus.newtask ||
+                                  taskData.status === TaskAllStatus.pending)&& 
+              <div className='flex gap-2 pb-1'>
+              <p className='!text-[15px]' fontWeight={700}>Task Name : </p>
+              <p className='text-[13px] pt-[3px]'>{taskData?.task_name}</p>
+              </div>}
             <div className='relative flex gap-6 justify-between'>
               <table className='w-[50%] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400'>
                 <tbody style={{ border: '1px solid rgba(0, 174, 189, 1)' }}>
@@ -540,13 +546,15 @@ export const TaskDetails = () => {
             </div>
 
             <form onSubmit={handleSubmit((data) => onSubmit(data, formAction))}>
+              { taskData.status !== TaskAllStatus.newtask &&
+                                  taskData.status !== TaskAllStatus.pending&& 
               <div
                 className='task-desc flex mt-5 px-5 py-6'
                 style={{ border: '1px solid rgba(29, 91, 191, 0.5)' }}
               >
                 <p className='!text-[16px]' fontWeight={600}>Task Name : </p>
                 <p className='text-[14px]'>&nbsp;&nbsp;{taskData?.task_name}</p>
-              </div>
+              </div>}
               <div
                 className='task-desc flex mt-5 px-5 py-6'
                 style={{ border: '1px solid rgba(29, 91, 191, 0.5)', marginBottom: "20px" }}

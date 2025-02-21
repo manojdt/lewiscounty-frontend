@@ -120,7 +120,7 @@ const CourseCard = ({ data, series, handleMenuClick }) => {
       {/* Category Badge */}
       <div className="flex justify-between items-center mb-3">
         <h2 className="text-base font-semibold">
-          {series}. {`${data?.program_name?.substring(0, 18)}...`}
+          {series}. {`${data?.program_name?.substring(0, 18)}`}
         </h2>
         <span className="px-3 py-1 text-xs text-gray-600 border border-gray-100 rounded-full">
           {data?.category_name}
@@ -169,7 +169,7 @@ const CourseCard = ({ data, series, handleMenuClick }) => {
           } text-white rounded transition-colors`}
           onClick={handleViewDetails}
         >
-          {isNotLaunch ? "Preview" : "View Details"}
+          {isNotLaunch ? "View Details" : "View Details"}
         </button>
       </div>
       <hr className="my-2" />
@@ -312,6 +312,16 @@ const SubprogramsDataGrid = ({ data, handleAcceptProgram }) => {
             "& .MuiDataGrid-row:hover": {
               backgroundColor: "#F9FAFB",
             },
+            "& .MuiDataGrid-columnHeaders": {
+              backgroundColor: "#F9FAFB",
+              borderBottom: "1px solid rgba(224, 224, 224, 1)",
+            },
+            "& .MuiDataGrid-columnHeader:last-child": {
+              paddingRight: "0",
+            },
+            "& .MuiDataGrid-columnHeaderTitle": {
+              fontWeight: 600,
+            }
           }}
           hideFooter={true}
           onCellClick={handleClick}
