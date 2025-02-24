@@ -104,7 +104,7 @@ export default function EditReport() {
       participated_mentees: data.participated_mentees,
       comments: "none",
       report_links: "none",
-      status: data?.action ?? "new",
+      status: data?.action ?? "submit",
       is_active: true,
     };
     if (reportData?.data?.request_id) {

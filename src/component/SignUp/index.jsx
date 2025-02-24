@@ -329,6 +329,9 @@ export const Signup = () => {
                       // onBlur={(e) => handleField(field.fieldtype, e.target.value)}
                       aria-invalid={errors[field.name] ? "true" : "false"}
                       tabIndex={index + 1}
+                      name={
+                        field?.name
+                      }
                     />
                     {field.fieldtype === "password" && (
                       <button
