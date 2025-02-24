@@ -24,8 +24,8 @@ export default function Notification({ handleClose }) {
   };
 
   const handleVisitActivity = (data) => {
-    // dispatch(userActivitiyVisited(data.id));
-    console.log(data, "notification");
+    dispatch(userActivitiyVisited(data.id));
+    // console.log(data, "notification");
     const actionType = data?.notification_type;
     switch (actionType) {
       case "program":
@@ -38,7 +38,7 @@ export default function Notification({ handleClose }) {
       case "task":
         const url =
           role === "mentee"
-            ? `mentee-tasks-details/${data.related_data.task_id}`
+            ? `/mentee-tasks-details/${data.related_data.task_id}`
             : `/viewTask/${data.related_data.task_id}`;
         handleClose && handleClose();
         navigate(url);
@@ -91,11 +91,13 @@ export default function Notification({ handleClose }) {
             : `/mentee-details/${data.related_data.member_id}`;
         navigate(followurl);
         break;
-      case "certificate":
-        const certificateurl =
-          role === "mentor" || role === "mentee"
-            ? `certificate_mentees/${data.related_data.program_id}`
-            : `certificate_mentees/${data.related_data.program_id}?request_id=${data.related_data?.certificate_id}`;
+        case "certificate":
+          const certificateurl =
+            role === "mentor"
+              ? `/certificate_mentees/${data.related_data.program_id}`
+              : role === "mentee"
+              ? "/certificates"
+              : `/certificate_mentees/${data.related_data.program_id}?request_id=${data.related_data?.certificate_id}`;
         handleClose && handleClose();
         navigate(
           certificateurl,
