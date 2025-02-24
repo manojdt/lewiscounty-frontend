@@ -843,16 +843,16 @@ export const menteeCountStatus = {
 export const programMenus = (page = "dashboard") => {
   const pipeUrl = page === "program" ? pipeUrls.programs : pipeUrls.dashboard;
   return [
-    {
-      name: "All Programs",
-      count: 0,
-      page: pipeUrls.programs,
-      for: ["mentor", "mentee", "admin"],
-      mentorStatus: "all",
-      menteeStatus: "allprogram",
-      adminStatus: "all",
-      status: "all",
-    },
+    // {
+    //   name: "All Programs",
+    //   count: 0,
+    //   page: pipeUrls.programs,
+    //   for: ["mentor", "mentee", "admin"],
+    //   mentorStatus: "all",
+    //   menteeStatus: "allprogram",
+    //   adminStatus: "all",
+    //   status: "all",
+    // },
     {
       name: "Active Programs",
       count: 0,

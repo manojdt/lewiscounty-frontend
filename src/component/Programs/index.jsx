@@ -480,11 +480,23 @@ export default function Programs() {
       page: newPage,
     }));
   };
+  const getDefaultType = () => {
+    // If filterType exists, use it
+    if (filterType) return filterType;
 
+    // If no filterType, set default based on role
+    if (role === "mentee") return "planned";
+    if (role === "mentor" || role === "admin") return "yettojoin";
+    
+    // Fallback case
+    return "";
+  };
   const getQueryString = () => {
     let query = {};
-    if (filterType && filterType !== "") {
-      query = { type: filterType };
+    if (!filterType) {
+      query.type = getDefaultType();
+    } else if (filterType !== "") {
+      query.type = filterType;
     }
     if (categoryFilter && categoryFilter !== "") {
       query = { ...query, category_id: categoryFilter };

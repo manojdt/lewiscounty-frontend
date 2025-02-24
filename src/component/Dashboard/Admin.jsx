@@ -34,7 +34,7 @@ import { TopProgramsCard } from "../TopPrograms/TopProgramsCard";
 export default function Admin() {
   const { width } = useWindowSize();
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const [searchParams,setSearchParams] = useSearchParams();
   const categoryId = searchParams.get("category_id"); // Extract category ID
   const filterType = searchParams.get("type");
   const userInfo = useSelector((state) => state.userInfo);
@@ -247,7 +247,22 @@ export default function Admin() {
     dispatch(getPost(feedData));
     //   }
   }, []);
-
+  useEffect(() => {
+    // If there's no type and no bookmark parameter, set type to planned while preserving other params
+    if (!filterType) {
+      const newSearchParams = new URLSearchParams(searchParams);
+      
+      // Preserve all existing parameters
+      for (const [key, value] of searchParams.entries()) {
+        newSearchParams.set(key, value);
+      }
+      
+      // Add the type parameter
+      newSearchParams.set("type", "yettojoin");
+      
+      setSearchParams(newSearchParams);
+    }
+  }, []);
   return (
     <div className="dashboard-content px-4 sm:px-4 md:px-4 lg:px-8 xl:px-8 mt-10 py-5">
       <div className="grid grid-cols-8 gap-4 max-md:block">
@@ -286,7 +301,7 @@ export default function Admin() {
 
             <ul className="flex flex-col gap-2 p-4 md:p-0 mt-4 font-medium">
               {programMenusList.map((menu, index) => {
-                if (role === "admin" && index > 2) return null;
+                if (role === "admin" && index > 1) return null;
                 return (
                   <li className="" key={index}>
                     <div

@@ -38,7 +38,7 @@ import { TopProgramsCard } from "../TopPrograms/TopProgramsCard";
 
 export const Mentee = () => {
   const dispatch = useDispatch();
-  const [searchParams] = useSearchParams();
+  const [searchParams,setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [topMentotList, setTopMentorList] = useState([]);
@@ -140,7 +140,24 @@ export const Mentee = () => {
       dispatch(getMenteePrograms({}));
     }
   }, []);
-
+  useEffect(() => {
+    const currentType = searchParams.get("type");
+    
+    // If there's no type and no bookmark parameter, set type to planned while preserving other params
+    if (!currentType) {
+      const newSearchParams = new URLSearchParams(searchParams);
+      
+      // Preserve all existing parameters
+      for (const [key, value] of searchParams.entries()) {
+        newSearchParams.set(key, value);
+      }
+      
+      // Add the type parameter
+      newSearchParams.set("type", "planned");
+      
+      setSearchParams(newSearchParams);
+    }
+  }, []);
   const handleNavigateDetails = (program) => {
     let baseUrl = pipeUrls.programdetails;
     if (Object.keys(program).length) {
@@ -369,7 +386,7 @@ export const Mentee = () => {
           <div className="col-span-5 sm:col-span-5 md:col-span-5 lg:col-span-4">
           {programView === "grid" && (
                 <>
-            {searchParams.get("type") === null &&
+            {/* {searchParams.get("type") === null &&
               searchParams.get("is_bookmark") === null && (
                 <ProgramCard
                   title="All Programs"
@@ -380,7 +397,7 @@ export const Mentee = () => {
                   loadProgram={getPrograms}
                   tableIcon={ImageComponent}
                 />
-              )}
+              )} */}
 
             {(searchParams.get("type") === "yettojoin" ||
               searchParams.get("type") === "planned") && (

@@ -31,7 +31,7 @@ import { TopProgramsCard } from "../TopPrograms/TopProgramsCard";
 
 export const Mentor = () => {
   const dispatch = useDispatch();
-  const [searchParams] = useSearchParams();
+  const [searchParams,setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [topMentotList, setTopMentorList] = useState([]);
@@ -41,8 +41,8 @@ export const Mentor = () => {
   const { feeds } = useSelector((state) => state.feeds);
   const [programView, setProgramView] = useState("grid");
   const categoryId = searchParams.get("category_id");
-    const categoryIDParams=categoryId?`&category_id=${categoryId}`:""
-    const categoryIDParamsAll=categoryId?`?category_id=${categoryId}`:""
+  const categoryIDParams=categoryId?`&category_id=${categoryId}`:""
+  const categoryIDParamsAll=categoryId?`?category_id=${categoryId}`:""
   // const [topPrograms, setTopPrograms] = useState([]);
   const handlePerformanceFilter = (e) => {
     const res = e?.target?.value || "date";
@@ -173,7 +173,7 @@ export const Mentor = () => {
           if (updateToken.status === 200) {
             localStorage.setItem("access_token", updateToken.data.access);
             localStorage.setItem("refresh_token", updateToken.data.refresh);
-            navigate("/dashboard");
+            navigate("/dashboard?type=yettojoin");
           }
         }
       } catch (error) {
@@ -221,7 +221,24 @@ export const Mentor = () => {
       setTopMentorList(topMentor.data.results);
     }
   };
-
+  useEffect(() => {
+    const currentType = searchParams.get("type");
+    
+    // If there's no type and no bookmark parameter, set type to planned while preserving other params
+    if (!currentType) {
+      const newSearchParams = new URLSearchParams(searchParams);
+      
+      // Preserve all existing parameters
+      for (const [key, value] of searchParams.entries()) {
+        newSearchParams.set(key, value);
+      }
+      
+      // Add the type parameter
+      newSearchParams.set("type", "yettojoin");
+      
+      setSearchParams(newSearchParams);
+    }
+  }, []);
   return (
     <>
       <div className="dashboard-content px-8 mt-10">
@@ -364,7 +381,7 @@ export const Mentor = () => {
             <div className="col-span-5 sm:col-span-5 md:col-span-3 lg:col-span-4">
               {programView === "grid" && (
                 <>
-                  {searchParams.get("type") === null &&
+                  {/* {searchParams.get("type") === null &&
                     searchParams.get("is_bookmark") === null && (
                       <ProgramCard
                         title="All Programs"
@@ -375,7 +392,7 @@ export const Mentor = () => {
                         tableIcon={ImageComponent}
                         loadProgram={getPrograms}
                       />
-                    )}
+                    )} */}
                   {(searchParams.get("type") === "yettojoin" ||
                     searchParams.get("type") === "planned") && (
                     <ProgramCard
