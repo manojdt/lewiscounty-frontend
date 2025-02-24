@@ -515,7 +515,7 @@ export const mentee_Certificate_list = (name) => {
 export const admin_mentorMember = (name) => {
     return [
       {
-        label: "Members",
+        label: "Users",
         path: `/members?tabType=${requestPageBreadcrumbs?.adminMemberMentorTab}`,
       },
       {
@@ -526,7 +526,7 @@ export const admin_mentorMember = (name) => {
 export const admin_menteeMember = (name) => {
     return [
       {
-        label: "Members",
+        label: "Users",
         path: `/members?tabType=${requestPageBreadcrumbs?.adminMemberMenteeTab}`,
       },
       {
@@ -756,7 +756,7 @@ export const newFollowRequestMentorPage = (status) => {
     
     return [
       {
-        label: "All Tasks",
+        label: "All Interaction Points",
         path: `/mentee-tasks`,
       },
       {
@@ -768,7 +768,7 @@ export const newFollowRequestMentorPage = (status) => {
     
     return [
       {
-        label: "New Tasks",
+        label: "New Interaction Points",
         path: `/mentee-tasks?type=newtask`,
       },
       {
@@ -780,7 +780,7 @@ export const newFollowRequestMentorPage = (status) => {
     
     return [
       {
-        label: "Pending Tasks",
+        label: "Pending Interaction Points",
         path: `/mentee-tasks?type=pending`,
       },
       {
@@ -792,7 +792,7 @@ export const newFollowRequestMentorPage = (status) => {
     
     return [
       {
-        label: "Waiting Tasks",
+        label: "Waiting Interaction Points",
         path: `/mentee-tasks?type=waiting_for_approval`,
       },
       {
@@ -804,7 +804,7 @@ export const newFollowRequestMentorPage = (status) => {
     
     return [
       {
-        label: "Reassigned Tasks",
+        label: "Reassigned Interaction Points",
         path: `/mentee-tasks?type=reassigned`,
       },
       {
@@ -816,7 +816,7 @@ export const newFollowRequestMentorPage = (status) => {
     
     return [
       {
-        label: "Completed Tasks",
+        label: "Completed Interaction Points",
         path: `/mentee-tasks?type=completed`,
       },
       {
@@ -828,7 +828,7 @@ export const newFollowRequestMentorPage = (status) => {
     
     return [
       {
-        label: "Cancelled Tasks",
+        label: "Cancelled Interaction Points",
         path: `/mentee-tasks?type=rejected`,
       },
       {
@@ -840,7 +840,7 @@ export const newFollowRequestMentorPage = (status) => {
     
     return [
       {
-        label: "Draft Tasks",
+        label: "Draft Interaction Points",
         path: `/mentee-tasks?type=draft`,
       },
       {
@@ -852,7 +852,7 @@ export const newFollowRequestMentorPage = (status) => {
     
     return [
       {
-        label: "MenteesTask",
+        label: "Mentees Interaction Points",
         path: "/mentor-tasks?type=menteetask",
       },
       {

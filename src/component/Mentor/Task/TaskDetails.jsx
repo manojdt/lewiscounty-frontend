@@ -89,7 +89,7 @@ const MentorTaskDetails = () => {
         cancel: false,
         type: "",
         activity: false,
-        title: "Cancel Task Reason",
+        title: "Cancel Interaction Point Reason",
         pass: false
     })
     const [newType, setNewType] = React.useState("")
@@ -270,7 +270,7 @@ const MentorTaskDetails = () => {
     },
     {
       field: "status",
-      headerName: "Task status",
+      headerName: "Interaction Points Status",
       flex: 1,
       id: 0,
       renderCell: (params) => {
@@ -418,7 +418,7 @@ const MentorTaskDetails = () => {
                       onClick={() =>
                         handleOpenConfirmPopup(
                           "cancel",
-                          "Cancel Task Reason",
+                          "Cancel Interaction Point Reason",
                           "newTab"
                         )
                       }
@@ -429,7 +429,7 @@ const MentorTaskDetails = () => {
                         alt="Cancel"
                         className="pr-3 w-[30px]"
                       />
-                      Cancel Task
+                      Cancel Interaction point
                     </MenuItem>
                   )}
 
@@ -551,7 +551,7 @@ const MentorTaskDetails = () => {
     setConfirmPopup({
       ...confirmPopup,
       cancel: true,
-      title: "Cancel Task Reason",
+      title: "Cancel Interaction Point Reason",
     });
   };
 
@@ -756,7 +756,7 @@ const MentorTaskDetails = () => {
             <Stack direction={"row"} alignItems={"center"} justifyContent={"space-between"} mb={"30px"}>
                 <Stack direction={"row"} alignItems={"center"} spacing={"14px"}>
                     <Typography className=' text-blue-600 !text-[14px] cursor-pointer' fontWeight={500}
-                        onClick={() => navigate("/mentor-tasks?type=menteetask")}>MenteesTask</Typography>
+                        onClick={() => navigate("/mentor-tasks?type=menteetask")}>Mentees Interaction Points</Typography>
                     <img src={BreadCrumbsArrow} alt="" />
                     <Typography className='!text-[#18283D] !text-[14px] cursor-pointer' fontWeight={500}>View {menteeTaskList?.program_name}</Typography>
                 </Stack>
@@ -765,7 +765,7 @@ const MentorTaskDetails = () => {
           <Button
             btnType="button"
             btnCls="w-[auto]"
-            btnName={"Edit Task"}
+            btnName={"Edit Interaction Point"}
             btnCategory="primary"
             onClick={() => handleEditTask()}
           />
@@ -951,7 +951,7 @@ const MentorTaskDetails = () => {
                 className="!text-[#18283D] !text-[16px]"
                 sx={{ fontWeight: 500 }}
               >
-                {`Reference Book: `}
+                {`Reference: `}
                 <span className="!text-[#18283D] !text-[14px]">
                   {menteeTaskList?.reference_link}
                 </span>
@@ -960,7 +960,7 @@ const MentorTaskDetails = () => {
                 className="!text-[#18283D] !text-[16px]"
                 sx={{ fontWeight: 500 }}
               >
-                {`Task Details: `}
+                {`Interaction Point Details: `}
                 <span>{menteeTaskList?.task_details}</span>
               </Typography>
             </Stack>
@@ -1061,7 +1061,7 @@ const MentorTaskDetails = () => {
                   <Button
                     btnType="button"
                     btnCls="w-[225px] h-[45px]"
-                    btnName={"Edit Task"}
+                    btnName={"Edit Interaction Point"}
                     btnCategory="primary"
                     onClick={() => handleEditTask()}
                   />

@@ -280,7 +280,7 @@ const ViewTask = () => {
                     </Stack>
                     <Stack spacing={3} className='px-[35px] py-[22px]'>
                         <Typography className='!text-[#18283D] !text-[16px]' sx={{ fontWeight: 500 }}>
-                            {`Reference Book: `}
+                            {`Reference: `}
                             <span className='!text-[#18283D] !text-[14px]'>
                                 {
                                     docs?.map((doc, index) => <span>{doc}</span>)
@@ -288,7 +288,7 @@ const ViewTask = () => {
                             </span>
                         </Typography>
                         <Typography className='!text-[#18283D] !text-[14px]' sx={{ fontWeight: 500 }}>
-                            Task Details:
+                        Interaction Point Details:
                             <span>
                                 {taskDetails?.task_description}
                             </span>
@@ -308,7 +308,7 @@ const ViewTask = () => {
                 {
                     ["completed", "pending", "completed"].includes(taskDetails?.status) &&
                     <div style={{ marginTop: "40px" }}>
-                        <Typography className='!text-[14px] !text-[#18283D]'>Task Solution</Typography>
+                        <Typography className='!text-[14px] !text-[#18283D]'>Interaction Point Solution</Typography>
 
                         <Box className="bg-[#1D5BBF] px-[20px] py-[12px] rounded-[3px]" mt={1}>
                             <Typography className='!text-[14px] !text-[#fff]'>{taskDetails?.task_solution}</Typography>
@@ -468,7 +468,7 @@ const ViewTask = () => {
                         taskDetails?.status === "new" &&
                         <Stack direction={"row"} alignItems={"center"} spacing={"20px"}>
                             <Button
-                                btnName='Cancel Task'
+                                btnName='Cancel Interaction Point'
                                 btnCategory='secondary'
                                 onClick={() => handleOpenPopup()}
                                 btnCls='w-[auto] !border !border-[#E0382D] rounded-[3px] !text-[#E0382D] h-[45px]'
@@ -507,7 +507,7 @@ const ViewTask = () => {
                     }
                 </Stack>
             </div>
-            <CancelPopup open={cancelPopup?.bool} handleClosePopup={handleClosePopup} header={cancelPopup?.type === "reassign" ? "Re Assign Reason" : "Cancel Task Reason"}
+            <CancelPopup open={cancelPopup?.bool} handleClosePopup={handleClosePopup} header={cancelPopup?.type === "reassign" ? "Re Assign Reason" : "Cancel Interaction Point Reason"}
                 handleSubmit={(reason) => handleCancelSubmit(reason)} />
 
             <Backdrop

@@ -448,10 +448,10 @@ export default function AssignMentees() {
                 sx={{ fontWeight: 600 }}
               >
                 {type === "new"
-                  ? "Create New Task"
+                  ? "Create New Interaction Point"
                   : from_type === "program"
-                  ? "Create New Task"
-                  : "Edit Task"}
+                  ? "Create New Interaction Point"
+                  : "Edit Interaction Points"}
               </Typography>
               <div className="cursor-pointer" onClick={() => navigate(-1)}>
                 <img src={CloseIcon} alt="CloseIcon" />
@@ -516,7 +516,7 @@ export default function AssignMentees() {
                   <li>
                     <div className="flex items-center">
                       <span className="ms-1 text-sm font-medium cursor-pointer text-gray-700">
-                        Assign Task to Mentees{" "}
+                        Assign Interaction Point to Mentees{" "}
                       </span>
                     </div>
                   </li>
