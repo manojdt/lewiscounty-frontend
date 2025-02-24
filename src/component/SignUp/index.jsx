@@ -49,7 +49,14 @@ export const Signup = () => {
   const handleClosePopup = () => {
     setShowBackdrop(false);
   };
+  const handleCreateAccount = (event) => {
+    event.preventDefault();
 
+    // Simulate a successful account creation process
+    setTimeout(() => {
+      navigate("/login"); // Redirect to login page
+    }, 1000); // Add delay if needed
+  };
   const onSubmit = async (data) => {
     const { first_name, last_name, email, password } = data;
     if (
@@ -241,7 +248,7 @@ export const Signup = () => {
             MMA
           </h4>
           <h2 className="text-2xl font-bold text-gray-800 mb-6">
-          Let's Get Started with Creating Your Account!
+            Let's Get Started with Creating Your Account!
           </h2>
           <p className="text-[12px]">
             Already have an account?
@@ -438,6 +445,7 @@ export const Signup = () => {
                   background: "linear-gradient(to right, #00AEBD, #1D5BBF)",
                 }}
                 tabIndex={SignupFields.length + 2}
+                onClick={handleCreateAccount}
               >
                 Create Account
               </button>

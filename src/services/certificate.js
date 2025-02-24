@@ -47,7 +47,9 @@ export const certificateDownload = createAsyncThunk(
 export const getCertificateList = createAsyncThunk(
     "getCertificateList",
     async (data) => {
+        console.log("API Request URL:", `request/${data}`); // Debugging
         const createRept = await api.get(`request/${data}`);
+        console.log("API Response:", createRept.data); // Debugging
         if (createRept.status === 200 && createRept.data) {
             return createRept.data;
         }
