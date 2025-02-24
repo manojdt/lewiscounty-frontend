@@ -180,12 +180,12 @@ export default function ProfileView() {
   };
 
   const handleFollow = () => {
-    if (followInfo.is_following) {
+    if (followInfo.is_follow === "accepted") {
       dispatch(userUnFollow({ user_id: params.id })).then(() => {
         followResponseHandle();
       });
     }
-    if (!followInfo.is_following) {
+    if (!followInfo.is_follow === "accepted") {
       dispatch(userFollow({ user_id: params.id })).then(() => {
         followResponseHandle();
       });
@@ -743,7 +743,7 @@ export default function ProfileView() {
         <div className="popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
           <img src={ConnectIcon} alt="ConnectIcon" />
           {/* <span style={{ color: '#232323', fontWeight: 600, fontSize: '24px' }}>
-            {followInfo.is_following ? 'Unfollow' : 'Follow'}
+            {followInfo.is_follow === "accepted" ? 'Unfollow' : 'Follow'}
           </span> */}
 
           <div className="py-5">
@@ -792,7 +792,7 @@ export default function ProfileView() {
         <div className="popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
           <img src={ConnectIcon} alt="ConnectIcon" />
           <span style={{ color: "#232323", fontWeight: 600, fontSize: "24px" }}>
-            {followInfo.is_following ? "Unfollow" : "Follow"}
+            {followInfo.is_follow === "accepted" ? "Unfollow" : "Follow"}
           </span>
 
           <div className="py-5">
@@ -804,7 +804,7 @@ export default function ProfileView() {
               }}
             >
               Are you sure you want to{" "}
-              {followInfo.is_following ? "Unfollow" : "Follow"} {pageType}?
+              {followInfo.is_follow === "accepted" ? "Unfollow" : "Follow"} {pageType}?
             </p>
           </div>
           <div className="flex justify-center">
@@ -817,7 +817,7 @@ export default function ProfileView() {
               <Button
                 btnType="button"
                 btnCls="w-[110px]"
-                btnName={followInfo.is_following ? "Unfollow" : "Follow"}
+                btnName={followInfo.is_follow === "accepted" ? "Unfollow" : "Follow"}
                 btnCategory="primary"
                 onClick={handleFollow}
               />
@@ -869,7 +869,7 @@ export default function ProfileView() {
             >
               {" "}
               Successfully{" "}
-              {followInfo.is_following ? "followed " : "unfollowed "}{" "}
+              {followInfo.is_follow === "accepted" ? "followed " : "unfollowed "}{" "}
               {pageType.toLowerCase()}
             </p>
           </div>
@@ -1238,7 +1238,7 @@ export default function ProfileView() {
                               btnName={
                                 followInfo.is_follow === "waiting"
                                   ? "Requested"
-                                  : followInfo.is_following
+                                  : followInfo.is_follow === "accepted"
                                   ? "Unfollow"
                                   : "Follow"
                               }
@@ -1465,7 +1465,7 @@ export default function ProfileView() {
                       btnType="button"
                       btnCategory="secondary"
                       disabled={followInfo.is_follow === "waiting"}
-                      btnName={followBtnText[userDetails?.is_follow]}
+                      btnName={followBtnText[followInfo?.is_follow]}
                       btnCls={"w-[150px]"}
                     />
                     <Button

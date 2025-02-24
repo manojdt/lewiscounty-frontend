@@ -9,7 +9,7 @@ import {
   userActivities,
   userActivitiyVisited,
 } from "../../services/activities";
-
+import UserIcon from "../../assets/icons/user-icon.svg";
 export default function Notification({ handleClose }) {
   const { activity, loading } = useSelector((state) => state.activity);
   const { data } = useSelector((state) => state.userInfo);
@@ -24,8 +24,8 @@ export default function Notification({ handleClose }) {
   };
 
   const handleVisitActivity = (data) => {
-    dispatch(userActivitiyVisited(data.id));
-    // console.log(data, "notification");
+    // dispatch(userActivitiyVisited(data.id));
+    console.log(data, "notification");
     const actionType = data?.notification_type;
     switch (actionType) {
       case "program":
@@ -140,11 +140,12 @@ export default function Notification({ handleClose }) {
                     onClick={() => handleVisitActivity(list)}
                     key={index}
                   >
-                    {/* <img
-                      src={index % 2 === 0 ? MaleIcon : FemaleIcon}
+                    <img
+                      src={list?.profile_details?.profile_image?list?.profile_details?.profile_image:UserIcon}
                       alt="MaleIcon"
-                    /> */}
-                         <NotificationImg data={list}/>
+                      className="w-[40px] h-[40px]" 
+                    />
+                         {/* <NotificationImg data={list?.profile_details?.profile_image?list?.profile_details?.profile_image:UserIcon}/> */}
                     <p className="notification-message">{list.content}</p>
                     <p className="text-[12px]">{list.created_time}</p>
                   </li>

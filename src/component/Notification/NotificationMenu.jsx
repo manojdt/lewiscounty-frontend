@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import SearchIcon from "../../assets/icons/SearchColor.svg";
 import MaleIcon from "../../assets/images/male-profile1x.png";
 import FemaleIcon from "../../assets/images/female-profile1x.png";
+import UserIcon from "../../assets/icons/user-icon.svg";
 import { useDispatch, useSelector } from "react-redux";
 import {
   userActivities,
@@ -34,9 +35,9 @@ export default function NotificationMenu() {
   };
 
   const handleVisitActivity = (data) => {
-    dispatch(userActivitiyVisited(data.id));
-    // console.log(data, "notification");
-    const actionType = data?.notification_type;
+    // dispatch(userActivitiyVisited(data.id));
+    console.log(data, "notification");
+    const actionType = data?.notification_type.trim();
     switch (actionType) {
       case "program":
         const baseUrl = `/program-details/${data.related_data?.program_id}`;
@@ -47,7 +48,7 @@ export default function NotificationMenu() {
       case "task":
         const url =
           role === "mentee"
-            ? `mentee-tasks-details/${data.related_data.task_id}`
+            ? `/mentee-tasks-details/${data.related_data.task_id}`
             : `/viewTask/${data.related_data.task_id}`;
         //handleClose && handleClose();
         navigate(url);
@@ -179,11 +180,12 @@ export default function NotificationMenu() {
                     onClick={() => handleVisitActivity(list)}
                     className="cursor-pointer"
                   >
-                    {/* <img
-                      src={index % 2 === 0 ? MaleIcon : FemaleIcon}
+                    <img
+                      src={list?.profile_details?.profile_image?list?.profile_details?.profile_image:UserIcon}
                       alt="MaleIcon"
-                    /> */}
-                    <NotificationImg data={list}/>
+                      className="w-[40px] h-[40px]" 
+                    />
+                    {/* <NotificationImg data={list?.profile_details?.profile_image?data?.profile_details?.profile_image:UserIcon}/> */}
                     <div className="flex justify-between w-full">
                       <p className="notification-message">
                         <p className="font-semibold">{list.content}</p>

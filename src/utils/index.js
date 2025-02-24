@@ -135,7 +135,8 @@ export const permissionDeniedMessage = "You do not have permission to view this 
 
 
 export function NotificationImg (data) {
-  const listimage=data?.profile_details?.profile_image||UserIcon
+  const listimage=data
+  console.log(listimage,data)
   return(
     <img
     src={listimage}

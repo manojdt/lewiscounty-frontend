@@ -462,13 +462,14 @@ const ProgramActions = ({
         );
       }
     }
-    const isSubProgramAccepted = programdetails?.sub_programs?.every(
-      (program) => program?.status === "yettojoin"
+   const isSubProgramAccepted = programdetails?.sub_programs?.every(
+      (program) =>
+        ["inprogress", "yettostart"].includes(program?.status) 
     );
 
     if (
       programdetails?.admin_assign_program &&
-      !isSubProgramAccepted &&
+      isSubProgramAccepted &&
       ![
         "program_join_payment_initiate",
         "program_join_payment_pending",
@@ -774,7 +775,7 @@ const ProgramActions = ({
     }
 
     // Cancelled status
-    if (programdetails.status === "cancelled" && type !== "program_cancel") {
+    if ((programdetails.status === "cancelled" && (role === "mentee" || type !== "program_cancel"))) {
       return (
         <div className="flex gap-4 pt-5">
           {/* <button

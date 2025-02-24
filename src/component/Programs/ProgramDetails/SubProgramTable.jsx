@@ -164,7 +164,7 @@ const CourseCard = ({ data, series, handleMenuClick }) => {
         <button
           className={`p-2 text-xs ${
             isNotLaunch
-              ? "bg-background-primary-dark"
+              ? "bg-background-primary-main"
               : "bg-background-primary-main"
           } text-white rounded transition-colors`}
           onClick={handleViewDetails}
