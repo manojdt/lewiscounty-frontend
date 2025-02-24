@@ -503,14 +503,7 @@ const MentorMenteeProfile = () => {
                 </Typography>
               )}
           </Stack>
-
-          {state?.rejection_reason && 
-          <div className="action-set action_cancelled mb-4">
-            <div className="reason-title">{state.is_active?"Request Rejected Reason":"Request Cancelled Reason"}</div>
-            <div className="reason-content">
-              {state?.rejection_reason}
-            </div>
-          </div>}
+          
 
           <Grid container spacing={4}>
             {MentorMenteeProfileViewList(
@@ -556,6 +549,15 @@ const MentorMenteeProfile = () => {
               );
             })}
           </Grid>
+
+          {state?.rejection_reason && 
+          <div className="action-set action_cancelled mt-4">
+            <div className="reason-title">{state.is_active?"Request Rejected Reason":"Request Cancelled Reason"}</div>
+            <div className="reason-content">
+              {state?.rejection_reason}
+            </div>
+          </div>}
+
         </Box>
       </div>
 

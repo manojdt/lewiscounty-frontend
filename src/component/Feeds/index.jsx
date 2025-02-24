@@ -111,6 +111,7 @@ export default function Feeds() {
 
   const handleClose = () => {
     setPostModal(defaultState);
+    setFormData(defaultForm);
   };
 
   const handleVisibilty = () => {
@@ -157,7 +158,6 @@ export default function Feeds() {
   const onSubmit = (data) => {
     const formDatas = new FormData();
 
-    console.log("data", data);
 
     if (data?.uploaded_files) {
       if (Array.isArray(data.uploaded_files)) {
@@ -176,10 +176,12 @@ export default function Feeds() {
     formDatas.append("visibility", formData.visibility);
     formDatas.append("is_published", formData.is_published);
 
-    console.log("formData", formDatas);
-
-    console.log(formDatas);
-    dispatch(createPost(formDatas));
+    dispatch(createPost(formDatas)).then((res)=>{
+      if(res?.meta?.requestStatus === "fulfilled"){
+        reset()
+        setFormData(defaultForm);
+      }
+    })
   };
 
   const handlePrevious = () => {
