@@ -1525,14 +1525,14 @@ export default function ProfileView() {
                     </div>
                   )}
 
-                {from !== "program_join" && type !== "view" && (
+                 {from !== "program_join" && type !== "view" && (
                   <div
                     className="w-8 h-8 rounded-md flex items-center justify-center bg-gray-200"
                     onClick={handleClick}
                   >
                     <img src={MoreIcon} alt="" />
                   </div>
-                )}
+                 )}
 
                 <Menu
                   anchorEl={anchorEl}

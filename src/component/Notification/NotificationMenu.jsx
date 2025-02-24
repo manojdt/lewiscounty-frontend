@@ -35,8 +35,8 @@ export default function NotificationMenu() {
   };
 
   const handleVisitActivity = (data) => {
-    dispatch(userActivitiyVisited(data.id));
-    // console.log(data, "notification");
+    // dispatch(userActivitiyVisited(data.id));
+    console.log(data, "notification");
     const actionType = data?.notification_type;
     switch (actionType) {
       case "program":
