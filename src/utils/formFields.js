@@ -2200,7 +2200,7 @@ export const ProgramTestimonialsFields = [
   {
     type: "popup-input",
     name: "members",
-    label: "Members",
+    label: "Users",
     placeholder: "Add request for testimonials",
     fieldtype: "text",
     inputRules: {
@@ -2352,7 +2352,7 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
     {
       type: "text",
       name: "mentees_list",
-      label: "Add Mentees for this Task",
+      label: "Add Mentees for this Interaction Point",
       width: "w-full",
       inputRules: {
         required: "This field is required",
@@ -2362,7 +2362,7 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       type: "input",
       name: "reference_links",
       fieldtype: "text",
-      label: "Reference Book",
+      label: "Reference",
       placeholder: "Enter Reference Book with comma(,) seperators",
       // inputRules: {
       //   required: "This field is required",
@@ -2386,8 +2386,8 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       type: "input",
       name: "task_name",
       fieldtype: "text",
-      label: "Task Name",
-      placeholder: "Enter Task Name",
+      label: "Interaction Point Name",
+      placeholder: "Enter Interaction Points",
       inputRules: {
         required: "This field is required",
       },
@@ -2397,8 +2397,8 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       type: "editor",
       name: "task_details",
       fieldtype: "text",
-      label: "Task Details",
-      placeholder: "List out Task Details",
+      label: "Interaction Point Details",
+      placeholder: "List out Interaction Point Details",
       inputRules: {
         required: "This field is required",
       },

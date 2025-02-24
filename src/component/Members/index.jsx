@@ -509,7 +509,7 @@ const Members = () => {
         {breadcrumbsType && <Breadcrumbs items={breadcrumbsArray} />}
       </div>
       <div className="pl-6 pb-8 font-medium text-[18px]">
-            <p>Members</p>
+            <p>Users</p>
           </div>
       <div className="program-info px-4 sm:px-6 ">
         {membersTab.length ? (

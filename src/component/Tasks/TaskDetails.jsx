@@ -306,8 +306,8 @@ export const TaskDetails = () => {
               }}
             >
               {formAction === 'draft'
-                ? 'Task Drafted Successfully'
-                : 'Task Submitted Successfully'}
+                ? 'Interaction Point Drafted Successfully'
+                : 'Interaction Point Submitted Successfully'}
             </p>
           </div>
         </div>
@@ -332,7 +332,7 @@ export const TaskDetails = () => {
                   fontWeight: 600,
                 }}
               >
-                Successfully task is started
+                Successfully Interaction Point is started
               </p>
             </div>
           </div>
@@ -355,7 +355,7 @@ export const TaskDetails = () => {
       >
         <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
           <div className='flex gap-5 items-center text-[20px]'>
-           {!breadcrumbsType? <p>Task Details</p>:
+           {!breadcrumbsType? <p>Interaction Point Details</p>:
             <Breadcrumbs items={breadcrumbsArray} />}
             {params.id === '2' && !startTask && (
               <div
@@ -384,7 +384,7 @@ export const TaskDetails = () => {
             { (taskData.status === TaskAllStatus.newtask ||
                                   taskData.status === TaskAllStatus.pending)&& 
               <div className='flex gap-2 pb-1'>
-              <p className='!text-[15px]' fontWeight={700}>Task Name : </p>
+              <p className='!text-[15px]' fontWeight={700}>Interaction Point Name : </p>
               <p className='text-[13px] pt-[3px]'>{taskData?.task_name}</p>
               </div>}
             <div className='relative flex gap-6 justify-between'>
@@ -417,7 +417,7 @@ export const TaskDetails = () => {
                       scope='row'
                       className='px-6 py-4 font-medium  whitespace-nowrap '
                     >
-                      Task Name
+                      Interaction Point Name
                     </th>
                     <td
                       className='px-6 py-4 text-white'
@@ -496,7 +496,7 @@ export const TaskDetails = () => {
                       scope='row'
                       className='px-6 py-4 font-medium  whitespace-nowrap '
                     >
-                      Task assigned by
+                      Interaction Point assigned by
                     </th>
                     <td
                       className='px-6 py-4 text-white'
@@ -552,19 +552,19 @@ export const TaskDetails = () => {
                 className='task-desc flex mt-5 px-5 py-6'
                 style={{ border: '1px solid rgba(29, 91, 191, 0.5)' }}
               >
-                <p className='!text-[16px]' fontWeight={600}>Task Name : </p>
+                <p className='!text-[16px]' fontWeight={600}>Interaction Point Name : </p>
                 <p className='text-[14px]'>&nbsp;&nbsp;{taskData?.task_name}</p>
               </div>}
               <div
                 className='task-desc flex mt-5 px-5 py-6'
                 style={{ border: '1px solid rgba(29, 91, 191, 0.5)', marginBottom: "20px" }}
               >
-                <p className='!text-[16px]' fontWeight={600}>Task Description : </p>
+                <p className='!text-[16px]' fontWeight={600}>Interaction Point Description : </p>
                 <p className='text-[14px]'>&nbsp;&nbsp;{taskData?.task_description}</p>
               </div>
 
               {(taskData?.reject_task_reason?.length > 0 && taskData?.status === "reassigned") && <div className="action-set action_cancelled mb-4 mt-4">
-                <div className="reason-title">{"Re Assign Task Reason"}</div>
+                <div className="reason-title">{"Re Assign Interction Point Reason"}</div>
                 <div className="reason-content">
                   {taskData?.reject_task_reason}
                 </div>
@@ -590,7 +590,7 @@ export const TaskDetails = () => {
                 <Box mb={3}>
                   <div style={{ marginTop: '40px' }}>
                     <Typography className='!text-[14px] !text-[#18283D]'>
-                      Task Solution
+                    Interaction Point Solution
                     </Typography>
 
                     <Box
@@ -688,7 +688,7 @@ export const TaskDetails = () => {
                     <>
                       <div className='relative'>
                         <label className='block tracking-wide text-gray-700 text-xs font-bold mb-2'>
-                          Task Solution
+                          Interaction Point Solution
                         </label>
                         <textarea
                           id='message'
@@ -924,7 +924,7 @@ export const TaskDetails = () => {
                           className='task-desc flex mt-5 px-5 py-6'
                           style={{ border: '1px solid rgba(29, 91, 191, 0.5)' }}
                         >
-                          <p className='w-[30%]'>Task Solution : </p>
+                          <p className='w-[30%]'>Interaction Point Solution : </p>
                           <p className='text-[14px]'>
                             {taskData?.task_solution}
                           </p>
@@ -1128,7 +1128,7 @@ export const TaskDetails = () => {
                       btnType='button'
                       btnCls={`${startTask ? 'w-[14%]' : 'w-[12%]'}`}
                       onClick={handleTaskAction}
-                      btnName='Start Task'
+                      btnName='Start Interaction Point'
                       btnCategory='primary'
                     />
                   )}

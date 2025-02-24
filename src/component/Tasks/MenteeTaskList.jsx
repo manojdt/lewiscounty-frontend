@@ -58,7 +58,7 @@ export default function MenteeTaskList() {
         <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
           <div className='flex w-full gap-5 items-center justify-between'>
             <p style={{ color: 'rgba(24, 40, 61, 1)', fontWeight: 500 }}>
-              View Mentee Task List
+              View Mentee Interaction Point List
             </p>
           </div>
           <div
@@ -129,14 +129,14 @@ export default function MenteeTaskList() {
                           )
                         }
                       >
-                        View Task
+                        View Interaction Point
                       </button>
                     </div>
                   </li>
                 ))}
               </ul>
             ) : (
-              <div>No Task found</div>
+              <div>No Interaction Point found</div>
             )}
           </div>
         </div>

@@ -297,7 +297,7 @@ export default function Layout({ subheader }) {
                   onClick={() => navigate("/members")}
                   className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer md:text-[14px] lg:text-[16px]"
                 >
-                  Members
+                  Users
                 </span>
               </li>
             )}
@@ -311,7 +311,7 @@ export default function Layout({ subheader }) {
                   onClick={() => navigate("/all-request")}
                   className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer md:text-[14px] lg:text-[16px]"
                 >
-                  My Requests
+                  Requests
                 </span>
               </li>
             )}
@@ -352,7 +352,7 @@ export default function Layout({ subheader }) {
                     }
                     className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer md:text-[14px] lg:text-[16px]"
                   >
-                    Tasks
+                    Interaction Points
                   </span>
                 </li>
 

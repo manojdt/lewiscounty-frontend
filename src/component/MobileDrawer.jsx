@@ -283,20 +283,20 @@ const MobileDrawer = ({ isOpen, onClose }) => {
                   
                   {role === "admin" && (
                     <MenuItem
-                      label="Members"
+                      label="Users"
                       path="/members"
                       onClick={() => handleNavigation("/members")}
                     />
                   )}
                   
                   <MenuItem
-                    label="My Requests"
+                    label="Requests"
                     path="/all-request"
                     onClick={() => handleNavigation("/all-request")}
                   />
                   
                   <MenuItem
-                    label="Tasks"
+                    label="Interaction Points"
                     path={role === "mentee" ? "/mentee-tasks" : "/mentor-tasks"}
                     // icon={TaskIcon}
                     onClick={() => handleNavigation(role === "mentee" ? "/mentee-tasks" : "/mentor-tasks")}

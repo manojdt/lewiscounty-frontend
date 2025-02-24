@@ -121,7 +121,7 @@ export default function SkillsSet({ programdetails,role }) {
   const taskTableColumn = [
     {
       field: "name",
-      headerName: "Task Name",
+      headerName: "Interaction Point Name",
       flex: 1,
       id: 0,
       renderCell: (params) => {

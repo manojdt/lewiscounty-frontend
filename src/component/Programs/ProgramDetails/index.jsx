@@ -2210,7 +2210,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                       alt="PlusCircle"
                                       className="pr-3 w-[25px]"
                                     />
-                                    Assign Task to Mentees
+                                    Assign Interaction Point to Mentees
                                   </MenuItem>
                                 )}
                             </>

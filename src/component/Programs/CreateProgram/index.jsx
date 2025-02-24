@@ -764,10 +764,10 @@ export default function CreatePrograms() {
       // onCreateBtnClick: handleCertificateCreateBtnClick,
     },
     members: {
-      modalTitle: "Add members",
+      modalTitle: "Add Users",
       rows: "members",
       columns: updatedMemberColumn,
-      btnName: "Add Members",
+      btnName: "Add Users",
     },
     goals: {
       modalTitle: "Add goals",

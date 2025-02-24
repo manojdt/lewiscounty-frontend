@@ -338,7 +338,7 @@ export default function Admin() {
 
           <div className="mt-4">
             <ListCard
-              title="Members"
+              title="Users"
               // viewall
               // handleViewall={handleViewAllMembers}
               onItemClick={onItemClick}
