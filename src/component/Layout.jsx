@@ -171,17 +171,17 @@ export default function Layout({ subheader }) {
     });
   }
 
-  if (role !== "mentee") {
-    moreitems.unshift({
-      label: (
-        <div className="flex gap-4 items-center">
-          <img className="p-2 h-8" src={ReportIcon} alt="ReportIcon" />
-          <p>Reports</p>
-        </div>
-      ),
-      command: () => navigate("/reports"),
-    });
-  }
+  // if (role !== "mentee") {
+  //   moreitems.unshift({
+  //     label: (
+  //       <div className="flex gap-4 items-center">
+  //         <img className="p-2 h-8" src={ReportIcon} alt="ReportIcon" />
+  //         <p>Reports</p>
+  //       </div>
+  //     ),
+  //     command: () => navigate("/reports"),
+  //   });
+  // }
 
   const notValidUser = (userInfo) => {
     if (Object.keys(userInfo?.data).length && !userInfo?.data?.is_registered)
@@ -356,7 +356,7 @@ export default function Layout({ subheader }) {
                   </span>
                 </li>
 
-                <li
+                {/* <li
                   className={`transition-all duration-300 ${pathname === "/goals" ? "dashboard-menu-active" : ""
                     }`}
                 >
@@ -366,8 +366,20 @@ export default function Layout({ subheader }) {
                   >
                     Goals
                   </span>
+                </li> */}
+                {(role===user.admin||role===user.mentor)&&
+                <li
+                  className={`transition-all duration-300 ${pathname === "/reports" ? "dashboard-menu-active" : ""
+                    }`}
+                >
+                  <span
+                    onClick={() => navigate("/reports")}
+                    className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer md:text-[14px] lg:text-[16px]"
+                  >
+                    Reports
+                  </span>
                 </li>
-
+}
                 <li
                   className={`transition-all duration-300 ${pathname === "/calendar" ? "dashboard-menu-active" : ""
                     }`}
