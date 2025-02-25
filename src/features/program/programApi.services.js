@@ -361,6 +361,11 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
         ).toString()}`;
       },
     }),
+    
+    getProgramName: builder.query({
+      query: (programName) => 
+        `/program/completed-program-list?category_id=5&type=task&program_name=${programName}`,
+    }),    
   }),
 });
 
@@ -405,5 +410,6 @@ export const {
   useGetCitiesQuery,
   useValidateProgramNameQuery,
   useGetProgramListWithCategoryQuery,
-  useUpdateAdminProgramStatusMutation
+  useUpdateAdminProgramStatusMutation,
+  useGetProgramNameQuery,
 } = programsApi;

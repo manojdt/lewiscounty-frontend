@@ -22,13 +22,13 @@ export const formatPhoneNumber = (value) => {
 export const formatZipCode = (value) => {
   value = value.replace(/\D/g, "");
 
-    if (value.length > 5) {
-      value = value.slice(0, 5) + "-" + value.slice(5, 9);
-    }
+  if (value.length > 5) {
+    value = value.slice(0, 5) + "-" + value.slice(5, 9);
+  }
 
-    value = value.slice(0, 10);
+  value = value.slice(0, 10);
 
-    return value;
+  return value;
 };
 
 // export const handleChange = (e) => {
@@ -51,7 +51,7 @@ export const PersonalInformationFields = [
     },
     size: true,
     disable: true,
-    widthQuestion:"w-full lg:w-[32%] md:w-[48%] xl:w-[32%]"
+    widthQuestion: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
   },
   {
     type: "input",
@@ -64,7 +64,7 @@ export const PersonalInformationFields = [
     },
     size: true,
     disable: true,
-    widthQuestion:"w-full lg:w-[32%] md:w-[48%] xl:w-[32%]"
+    widthQuestion: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
   },
   {
     type: "input",
@@ -77,7 +77,7 @@ export const PersonalInformationFields = [
     },
     size: true,
     disable: true,
-    widthQuestion:"w-full lg:w-[32%] md:w-[48%] xl:w-[32%]"
+    widthQuestion: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
   },
   {
     type: "input",
@@ -93,7 +93,7 @@ export const PersonalInformationFields = [
       },
     },
     size: true,
-    widthQuestion:"w-full lg:w-[32%] md:w-[48%] xl:w-[32%]"
+    widthQuestion: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
   },
   {
     type: "input",
@@ -109,7 +109,7 @@ export const PersonalInformationFields = [
       },
     },
     size: true,
-    widthQuestion:"w-full lg:w-[32%] md:w-[48%] xl:w-[32%]"
+    widthQuestion: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
   },
   //  {
   //   type: "dropdown",
@@ -140,7 +140,7 @@ export const PersonalInformationFields = [
       // required: "This field is required",
     },
     size: true,
-    widthQuestion:"w-full lg:w-[32%] md:w-[48%] xl:w-[32%]"
+    widthQuestion: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
   },
   {
     type: "checkbox",
@@ -184,7 +184,7 @@ export const PersonalInformationFields = [
       // required: "This field is required",
     },
     size: true,
-    widthQuestion:"w-full"
+    widthQuestion: "w-full",
   },
 ];
 
@@ -211,7 +211,7 @@ export const ProfessionalBackgroundFields = [
       // required: "This field is required",
     },
     size: true,
-     width:"col-span-4 sm:col-span-4 md:col-span-2 lg:col-span-2 xl:col-span-2"
+    width: "col-span-4 sm:col-span-4 md:col-span-2 lg:col-span-2 xl:col-span-2",
   },
   {
     type: "input",
@@ -251,7 +251,7 @@ export const EducationalBackgroundFields = [
     },
     size: true,
     widthQuestion: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
-    width:"col-span-4 sm:col-span-4 md:col-span-3 lg:col-span-2 xl:col-span-2"
+    width: "col-span-4 sm:col-span-4 md:col-span-3 lg:col-span-2 xl:col-span-2",
   },
   {
     type: "input",
@@ -264,7 +264,7 @@ export const EducationalBackgroundFields = [
     },
     size: true,
     widthQuestion: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
-     width:"col-span-4 sm:col-span-4 md:col-span-3 lg:col-span-2 xl:col-span-2"
+    width: "col-span-4 sm:col-span-4 md:col-span-3 lg:col-span-2 xl:col-span-2",
   },
   {
     type: "input",
@@ -277,7 +277,7 @@ export const EducationalBackgroundFields = [
     },
     size: false,
     widthQuestion: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
-     width:"col-span-4 sm:col-span-4 md:col-span-3 lg:col-span-2 xl:col-span-2"
+    width: "col-span-4 sm:col-span-4 md:col-span-3 lg:col-span-2 xl:col-span-2",
   },
   {
     type: "input",
@@ -290,7 +290,7 @@ export const EducationalBackgroundFields = [
     },
     size: false,
     widthQuestion: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
-     width:"col-span-4 sm:col-span-4 md:col-span-3 lg:col-span-2 xl:col-span-2"
+    width: "col-span-4 sm:col-span-4 md:col-span-3 lg:col-span-2 xl:col-span-2",
   },
 ];
 
@@ -306,7 +306,7 @@ export const AreaOfExpertiseFields = [
     },
     size: false,
     widthQuestion: "w-full",
-    width:"col-span-2 sm:col-span-2 md:col-span-2 lg:col-span-1 xl:col-span-1"
+    width: "col-span-2 sm:col-span-2 md:col-span-2 lg:col-span-1 xl:col-span-1",
   },
   {
     type: "input",
@@ -320,7 +320,7 @@ export const AreaOfExpertiseFields = [
     },
     size: false,
     widthQuestion: "w-full",
-    width:"col-span-2 sm:col-span-2 md:col-span-2 lg:col-span-1 xl:col-span-1"
+    width: "col-span-2 sm:col-span-2 md:col-span-2 lg:col-span-1 xl:col-span-1",
   },
 ];
 
@@ -336,7 +336,7 @@ export const MentorShipExperienceFields = [
     },
     size: false,
     widthQuestion: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
-    width:"col-span-2 sm:col-span-2 md:col-span-2 lg:col-span-1 xl:col-span-1"
+    width: "col-span-2 sm:col-span-2 md:col-span-2 lg:col-span-1 xl:col-span-1",
   },
   {
     type: "radio",
@@ -357,7 +357,7 @@ export const MentorShipExperienceFields = [
     },
     size: false,
     widthQuestion: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
-    width:"col-span-2 sm:col-span-2 md:col-span-2 lg:col-span-1 xl:col-span-1"
+    width: "col-span-2 sm:col-span-2 md:col-span-2 lg:col-span-1 xl:col-span-1",
   },
   {
     type: "input",
@@ -367,7 +367,7 @@ export const MentorShipExperienceFields = [
     placeholder: "mentorship experience",
     size: false,
     widthQuestion: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
-    width:"col-span-2"
+    width: "col-span-2",
   },
 ];
 
@@ -422,7 +422,7 @@ export const GoalsandExperienceFields = [
       // required: "This field is required",
     },
     size: false,
-    widthQuestion:"w-full lg:w-[48%] md:w-full xl:w-[48%]"
+    widthQuestion: "w-full lg:w-[48%] md:w-full xl:w-[48%]",
   },
   {
     type: "input",
@@ -434,7 +434,7 @@ export const GoalsandExperienceFields = [
       // required: "This field is required",
     },
     size: false,
-    widthQuestion:"w-full lg:w-[48%] md:w-full xl:w-[48%]"
+    widthQuestion: "w-full lg:w-[48%] md:w-full xl:w-[48%]",
   },
 ];
 
@@ -523,7 +523,7 @@ export const MenteePersonalInformationFields = [
     disabled: true,
     disable: true,
     width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-2 xl:col-span-2",
-    widthQuestion:"w-full lg:w-[32%] md:w-[48%] xl:w-[32%]"
+    widthQuestion: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
   },
   {
     type: "input",
@@ -538,7 +538,7 @@ export const MenteePersonalInformationFields = [
     disabled: true,
     disable: true,
     width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-2 xl:col-span-2",
-    widthQuestion:"w-full lg:w-[32%] md:w-[48%] xl:w-[32%]"
+    widthQuestion: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
   },
   {
     type: "input",
@@ -553,7 +553,7 @@ export const MenteePersonalInformationFields = [
     disabled: true,
     disable: true,
     width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-2 xl:col-span-2",
-    widthQuestion:"w-full lg:w-[32%] md:w-[48%] xl:w-[32%]"
+    widthQuestion: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
   },
   {
     type: "input",
@@ -570,7 +570,7 @@ export const MenteePersonalInformationFields = [
     },
     size: true,
     width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-2 xl:col-span-2",
-    widthQuestion:"w-full lg:w-[32%] md:w-[48%] xl:w-[32%]"
+    widthQuestion: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
   },
   {
     type: "input",
@@ -586,7 +586,7 @@ export const MenteePersonalInformationFields = [
     },
     size: true,
     width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-2 xl:col-span-2",
-    widthQuestion:"w-full lg:w-[32%] md:w-[48%] xl:w-[32%]"
+    widthQuestion: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
   },
   // {
   //   type: "input",
@@ -630,7 +630,7 @@ export const MenteePersonalInformationFields = [
     // disabled: true,
     size: true,
     width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-2 xl:col-span-2",
-    widthQuestion:"w-full lg:w-[32%] md:w-[48%] xl:w-[32%]"
+    widthQuestion: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
   },
   {
     type: "checkbox",
@@ -676,7 +676,7 @@ export const MenteePersonalInformationFields = [
     },
     size: true,
     width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-3 xl:col-span-2",
-    widthQuestion:"w-full"
+    widthQuestion: "w-full",
   },
   {
     type: "dropdown",
@@ -706,7 +706,7 @@ export const MenteePersonalInformationFields = [
     },
     size: false,
     width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-3 xl:col-span-2",
-     widthQuestion:"w-full"
+    widthQuestion: "w-full",
   },
 ];
 
@@ -722,7 +722,7 @@ export const MenteeCareerInformationFields = [
     },
     size: true,
     width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
-    widthQuestion:"w-full lg:w-[48%] md:w-full xl:w-[48%]"
+    widthQuestion: "w-full lg:w-[48%] md:w-full xl:w-[48%]",
   },
   {
     type: "input",
@@ -736,7 +736,7 @@ export const MenteeCareerInformationFields = [
     },
     size: true,
     width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
-    widthQuestion:"w-full lg:w-[48%] md:w-full xl:w-[48%]"
+    widthQuestion: "w-full lg:w-[48%] md:w-full xl:w-[48%]",
   },
   {
     type: "input",
@@ -749,7 +749,7 @@ export const MenteeCareerInformationFields = [
     },
     size: true,
     width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
-    widthQuestion:"w-full lg:w-[48%] md:w-full xl:w-[48%]"
+    widthQuestion: "w-full lg:w-[48%] md:w-full xl:w-[48%]",
   },
   {
     type: "dropdown",
@@ -775,7 +775,7 @@ export const MenteeCareerInformationFields = [
     },
     size: true,
     width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
-    widthQuestion:"w-full lg:w-[48%] md:w-full xl:w-[48%]"
+    widthQuestion: "w-full lg:w-[48%] md:w-full xl:w-[48%]",
   },
 ];
 
@@ -791,7 +791,7 @@ export const MenteeCurrentStatusFields = [
     },
     size: true,
     width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
-    widthQuestion:"w-full lg:w-[48%] md:w-full xl:w-[48%]"
+    widthQuestion: "w-full lg:w-[48%] md:w-full xl:w-[48%]",
   },
   {
     type: "input",
@@ -804,7 +804,7 @@ export const MenteeCurrentStatusFields = [
     },
     size: true,
     width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
-    widthQuestion:"w-full lg:w-[48%] md:w-full xl:w-[48%]"
+    widthQuestion: "w-full lg:w-[48%] md:w-full xl:w-[48%]",
   },
   {
     type: "input",
@@ -818,7 +818,7 @@ export const MenteeCurrentStatusFields = [
     },
     size: false,
     width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
-    widthQuestion:"w-full lg:w-[48%] md:w-full xl:w-[48%]"
+    widthQuestion: "w-full lg:w-[48%] md:w-full xl:w-[48%]",
   },
 ];
 
@@ -839,7 +839,7 @@ export const MenteeMentoringPreferenceFields = [
     },
     size: true,
     width: "col-span-2 sm:col-span-2 md:col-span-2 lg:col-span-1 xl:col-span-1",
-    widthQuestion:"w-full lg:w-[48%] md:w-full xl:w-[48%]"
+    widthQuestion: "w-full lg:w-[48%] md:w-full xl:w-[48%]",
   },
   {
     type: "dropdown",
@@ -857,7 +857,7 @@ export const MenteeMentoringPreferenceFields = [
     },
     size: true,
     width: "col-span-2 sm:col-span-2 md:col-span-2 lg:col-span-1 xl:col-span-1",
-    widthQuestion:"w-full lg:w-[48%] md:w-full xl:w-[48%]"
+    widthQuestion: "w-full lg:w-[48%] md:w-full xl:w-[48%]",
   },
   {
     type: "dropdown",
@@ -875,7 +875,7 @@ export const MenteeMentoringPreferenceFields = [
     },
     size: false,
     width: "col-span-2",
-    widthQuestion:"w-full lg:w-[48%] md:w-full xl:w-[48%]"
+    widthQuestion: "w-full lg:w-[48%] md:w-full xl:w-[48%]",
   },
 ];
 
@@ -1338,7 +1338,7 @@ export const MenteeLongTermFields = [
     },
     size: true,
     width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
-    widthQuestion:"w-full lg:w-[48%] md:w-full xl:w-[48%]"
+    widthQuestion: "w-full lg:w-[48%] md:w-full xl:w-[48%]",
   },
   {
     type: "input",
@@ -1353,7 +1353,7 @@ export const MenteeLongTermFields = [
     },
     size: true,
     width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
-    widthQuestion:"w-full lg:w-[48%] md:w-full xl:w-[48%]"
+    widthQuestion: "w-full lg:w-[48%] md:w-full xl:w-[48%]",
   },
   {
     type: "input",
@@ -1368,7 +1368,7 @@ export const MenteeLongTermFields = [
     },
     size: false,
     width: "col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1",
-    widthQuestion:"w-full lg:w-[48%] md:w-full xl:w-[48%]"
+    widthQuestion: "w-full lg:w-[48%] md:w-full xl:w-[48%]",
   },
 ];
 export const MenteeDocumentUplaod = [
@@ -1382,7 +1382,7 @@ export const MenteeDocumentUplaod = [
     //   required: "This field is required",
     // },
     size: false,
-    widthQuestion:"w-full"
+    widthQuestion: "w-full",
   },
 ];
 
@@ -1708,7 +1708,7 @@ export const ProgramInformationFields = [
         },
         width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
         for: ["admin"],
-      },      
+      },
       {
         type: "radio",
         name: "flexible_time",
@@ -1731,7 +1731,7 @@ export const ProgramInformationFields = [
         placeholder: "Select Mentor",
         fieldtype: "text",
         inputRules: {
-          required: 'This field is required',
+          required: "This field is required",
         },
         width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
         icon: "add",
@@ -1994,7 +1994,7 @@ export const ProgramInformationFields = [
       required: "This field is required",
     },
     options: [],
-    autoComplete:"off",
+    autoComplete: "off",
     width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     for: ["admin", "mentor"],
   },
@@ -2007,7 +2007,7 @@ export const ProgramInformationFields = [
       required: "This field is required",
     },
     options: [],
-   autoComplete:"off",
+    autoComplete: "off",
     width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     for: ["admin", "mentor"],
   },
@@ -2019,11 +2019,11 @@ export const ProgramInformationFields = [
     inputRules: {
       required: "This field is required",
       pattern: {
-        value: /^\d{5}(-\d{4})?$/, 
+        value: /^\d{5}(-\d{4})?$/,
         message: "ZIP code must be in the format XXXXX or XXXXX-XXXX.",
       },
     },
-    autoComplete:"off",
+    autoComplete: "off",
     width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     for: ["admin", "mentor"],
   },
@@ -2189,7 +2189,7 @@ export const AboutProgramFields = [
     fieldtype: "text",
     placeholder: "Multiple Skills added",
     inputRules: {
-      required: "This field is required"
+      required: "This field is required",
     },
     width: "w-full",
     for: ["admin", "mentor"],
@@ -2268,29 +2268,30 @@ export const ProgramFields = [
 
 export const AssignMenteesFields = (bool = true, type, getValues) => {
   return [
+    // {
+    //   type: "dropdown",
+    //   name: "category_id",
+    //   label: "Category",
+    //   placeholder: "Select Category",
+    //   inputRules: {
+    //     required: "This field is required",
+    //   },
+    //   options: [
+    //     {
+    //       key: "yes",
+    //       value: "Category 1",
+    //     },
+    //     {
+    //       key: "no",
+    //       value: "Category 2",
+    //     },
+    //   ],
+    //   width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
+    //   disabled: bool,
+    // },
     {
-      type: "dropdown",
-      name: "category_id",
-      label: "Category",
-      placeholder: "Select Category",
-      inputRules: {
-        required: "This field is required",
-      },
-      options: [
-        {
-          key: "yes",
-          value: "Category 1",
-        },
-        {
-          key: "no",
-          value: "Category 2",
-        },
-      ],
-      width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
-      disabled: bool,
-    },
-    {
-      type: type === "new" ? "dropdown" : "input",
+      // type: type === "new" ? "dropdown" : "input",
+      type: "input",
       name: "program_id",
       fieldtype: "text",
       label: "Program Name",
@@ -2299,56 +2300,80 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
         required: "This field is required",
       },
       width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
-      disabled: bool,
+      // disabled: bool,
       options: [],
     },
     {
       type: "input",
-      name: "mentor",
+      name: "task_id",
       fieldtype: "text",
-      label: "Mentor Name",
-      placeholder: "Enter Mentor Name",
+      label: "Task Name",
+      placeholder: "Enter Task Name",
       inputRules: {
         // required: "This field is required",
       },
       width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
-      disabled: true,
+      disabled: false,
       options: [],
     },
     {
+      type: "input",
+      name: "task_description",
+      fieldtype: "text",
+      label: "Task Description",
+      placeholder: "Enter Task Description",
+      inputRules: {
+        // required: "This field is required",
+      },
+      width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
+      disabled: false,
+      options: [],
+    },
+    // {
+    //   type: "input",
+    //   name: "mentor",
+    //   fieldtype: "text",
+    //   label: "Mentor Name",
+    //   placeholder: "Enter Mentor Name",
+    //   inputRules: {
+    //     // required: "This field is required",
+    //   },
+    //   width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
+    //   disabled: true,
+    //   options: [],
+    // },
+    {
       type: "date",
       name: "start_date",
-      label: "Program Start Date and Time",
+      label: "Task Start Date and Time",
       placeholder: "Select Program Start Date and Time",
       inputRules: {
         // required: "This field is required",
       },
       width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
-      disabled: true,
     },
     {
       type: "date",
       name: "end_date",
-      label: "Program End Date and Time",
+      label: "Task End Date and Time",
       placeholder: "Select Program End Date and Time",
       inputRules: {
         // required: "This field is required",
       },
       width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
-      disabled: true,
     },
-    {
-      type: "input",
-      name: "duration",
-      label: "Program Duration",
-      fieldtype: "text",
-      placeholder: "Program Duration",
-      inputRules: {
-        required: "This field is required",
-      },
-      width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
-      disabled: true,
-    },
+    // {
+    //   type: "input",
+    //   name: "duration",
+    //   label: "Program Duration",
+    //   fieldtype: "text",
+    //   placeholder: "Program Duration",
+    //   inputRules: {
+    //     required: "This field is required",
+    //   },
+    //   width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
+    //   disabled: true,
+    // },
     {
       type: "text",
       name: "mentees_list",
@@ -2358,17 +2383,7 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
         required: "This field is required",
       },
     },
-    {
-      type: "input",
-      name: "reference_links",
-      fieldtype: "text",
-      label: "Reference",
-      placeholder: "Enter Reference Book with comma(,) seperators",
-      // inputRules: {
-      //   required: "This field is required",
-      // },
-      width: "w-full",
-    },
+
     {
       type: "dropdown",
       name: "goal_id",
@@ -2412,6 +2427,17 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       inputRules: {
         required: "This field is required",
       },
+      width: "w-full",
+    },
+    {
+      type: "input",
+      name: "reference_links",
+      fieldtype: "text",
+      label: "Reference",
+      placeholder: "Enter Reference Book with comma(,) seperators",
+      // inputRules: {
+      //   required: "This field is required",
+      // },
       width: "w-full",
     },
   ];
@@ -2695,7 +2721,16 @@ export const reportColumns = [
     flex: 1,
     id: 5,
     status: ["all", "approved"],
-    renderCell: (params) => <span>{dateFormat(params.row.approved_date)}</span>,
+    renderCell: (params) => {
+      const dateValue = params.row.approved_date;
+
+      // Show ". . ." if the value is null, undefined, or empty
+      if (!dateValue || dateValue === ". . .") {
+        return <span>. . .</span>;
+      }
+
+      return <span>{dateFormat(dateValue)}</span>;
+    },
   },
   {
     field: "approved_by_full_name",

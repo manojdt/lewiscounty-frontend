@@ -334,7 +334,7 @@ export const Signup = () => {
                       aria-invalid={errors[field.name] ? "true" : "false"}
                       tabIndex={index + 1}
                       name={
-                        field?.name
+                        field?.name === "email"?"regemail":field?.name === "password"?"regpassword":field?.name
                       }
                     />
                     {field.fieldtype === "password" && (

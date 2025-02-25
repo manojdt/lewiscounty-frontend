@@ -524,6 +524,8 @@ const Reports = () => {
       handleTab(selectedRequestedTab);
     }
   }, [selectedRequestedTab]);
+  
+  
   return (
     <div className="reports px-4 sm:px-4 md:px-6 lg:px-9 xl:px-9 py-9">
       <Backdrop

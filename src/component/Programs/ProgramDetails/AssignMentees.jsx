@@ -9,7 +9,7 @@ import { Calendar } from "primereact/calendar";
 import { useForm } from "react-hook-form";
 import { Backdrop, CircularProgress, Stack, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-
+import { useGetProgramNameQuery } from "../../../features/program/programApi.services";
 import { AssignMenteesFields } from "../../../utils/formFields";
 import CalendarIcon from "../../../assets/images/calender_1x.png";
 import UserImage from "../../../assets/icons/user-icon.svg";
@@ -45,6 +45,7 @@ import dayjs from "dayjs";
 import CloseIcon from "../../../assets/icons/closeIcon.svg";
 import { useGetSpecificProgramDetailsQuery } from "../../../features/program/programApi.services";
 import { formatTableNullValues, FormLabelRequired } from "../../../utils";
+import { SelectBox } from "../../../shared/SelectBox"
 
 export default function AssignMentees() {
   const {
@@ -73,14 +74,32 @@ export default function AssignMentees() {
     status,
     programMenteeList,
   } = useSelector((state) => state.userPrograms);
+  const [searchTerm, setSearchTerm] = useState(""); // For program_id
+  const [searchResults, setSearchResults] = useState([]); // For program_id
 
-  const [formattedProgramMenteeList, setFormattedProgramMenteeList] = React.useState([])
-  React.useMemo(()=>{
-    if(programMenteeList){
-      const formattedRowData = formatTableNullValues(programMenteeList)
-      setFormattedProgramMenteeList(formattedRowData)
+  const { data, isLoading } = useGetProgramNameQuery(searchTerm, {
+    skip: !searchTerm, // Only call API if searchTerm is not empty
+  });
+
+  useEffect(() => {
+    if (data) {
+      setSearchResults(data); // Store results in state
     }
-  },[programMenteeList])
+  }, [data]);
+
+
+  useEffect(() => {
+    console.log("API Call Status:", { isLoading, data, error });
+  }, [data, isLoading, error]);
+
+  const [formattedProgramMenteeList, setFormattedProgramMenteeList] =
+    React.useState([]);
+  React.useMemo(() => {
+    if (programMenteeList) {
+      const formattedRowData = formatTableNullValues(programMenteeList);
+      setFormattedProgramMenteeList(formattedRowData);
+    }
+  }, [programMenteeList]);
   const {
     category,
     loading: apiLoading,
@@ -377,8 +396,10 @@ export default function AssignMentees() {
       dispatch(getAllCategories());
     }
     if (type !== "new") {
-      const editPay=state?.data?.task_id?`&type=edit_task&task_id=${state?.data?.task_id}`:""
-      dispatch(getProgramTaskMentees(state?.data?.program_id+editPay));
+      const editPay = state?.data?.task_id
+        ? `&type=edit_task&task_id=${state?.data?.task_id}`
+        : "";
+      dispatch(getProgramTaskMentees(state?.data?.program_id + editPay));
     }
   }, [category, type, state?.data?.program_id, dispatch]);
 
@@ -538,7 +559,8 @@ export default function AssignMentees() {
                         className={`relative mb-6 ${field.width}`}
                         key={index}
                       >
-                        <FormLabelRequired required={field?.inputRules?.required}
+                        <FormLabelRequired
+                          required={field?.inputRules?.required}
                           htmlFor={field.label}
                         >
                           {field.label}
@@ -548,17 +570,39 @@ export default function AssignMentees() {
                             <input
                               {...register(field.name, field.inputRules)}
                               type={field.fieldtype}
-                              className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none 
-                                                                    focus-visible:outline-none text-[14px] h-[60px]"
+                              className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
                               placeholder={field.placeholder}
                               style={{
                                 color: "#232323",
                                 borderRadius: "3px",
-                                opacity:field?.disabled?0.5:1
+                                opacity: field?.disabled ? 0.5 : 1,
                               }}
                               disabled={field.disabled}
                               autoComplete={field?.autoComplete}
                               aria-invalid={!!errors[field.name]}
+                              onClick={()=>{
+                                if (
+                                  field.name === "program_id" &&
+                                  getValues(field.name).length > 2
+                                ){
+                                  setSearchTerm(getValues(field.name)); // Update state for API call
+                                }
+                              }}
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                setValue(field.name, value); // Update form state
+
+                                // Only trigger the API call for "program_id" field
+                                if (
+                                  field.name === "program_id" &&
+                                  value.length > 2
+                                ) {
+                                  setSearchTerm(value); // Update state for API call
+                                } else if (value === "") {
+                                  setSearchTerm(""); // Clear search term if input is empty
+                                  setSearchResults([]); // Clear search results when input is empty
+                                }
+                              }}
                             />
 
                             {errors[field.name] && (
@@ -566,6 +610,37 @@ export default function AssignMentees() {
                                 {errors[field.name].message}
                               </p>
                             )}
+
+                            {/* Only show dropdown for program_id */}
+                            {field.name === "program_id" &&
+                              searchTerm.trim() !== "" && (
+                                <>
+                                  {searchResults.length > 0 ? (
+                                    <ul className="absolute bg-white border border-gray-300 w-full z-10">
+                                      {searchResults.map((program) => (
+                                        <li
+                                          key={program.id}
+                                          className="p-2 hover:bg-background-primary-light hover:text-font-primary-main cursor-pointer"
+                                          onClick={() => {
+                                            setValue(
+                                              field.name,
+                                              program.program_name
+                                            ); // Set selected value
+                                            setSearchResults([]); // Hide dropdown after selection
+                                            setSearchTerm(""); // Clear search term after selection
+                                          }}
+                                        >
+                                          {program.program_name}
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  ) : (
+                                    <div className="absolute bg-white border border-gray-300 w-full p-2 text-gray-500">
+                                      No data found
+                                    </div>
+                                  )}
+                                </>
+                              )}
                           </>
                         ) : field.type === "dropdown" ? (
                           <>
@@ -693,7 +768,10 @@ export default function AssignMentees() {
                                 showTime={field.name !== "due_date"}
                                 hourFormat="12"
                                 dateFormat="mm-dd-yy"
-                                style={{ width: "42%",opacity:field?.disabled?0.5:1 }}
+                                style={{
+                                  width: "42%",
+                                  opacity: field?.disabled ? 0.5 : 1,
+                                }}
                                 ref={(el) => (calendarRef.current[index] = el)}
                               />
                               <img
@@ -858,7 +936,7 @@ export default function AssignMentees() {
                 </div>
                 <div className="flex gap-6 justify-center align-middle py-16">
                   <Button
-                    btnName="Cancel" 
+                    btnName="Cancel"
                     btnCls="w-[30%] sm:w-[30%] md:w-[20%] lg:w-[15%] xl:w-[15%]"
                     btnCategory="secondary"
                     onClick={() => navigate(-1)}
