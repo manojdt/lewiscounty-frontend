@@ -44,6 +44,7 @@ export const Mentee = () => {
   const [topMentotList, setTopMentorList] = useState([]);
   const [openCategory, setOpenCategory] = React.useState(false);
   const userpragrams = useSelector((state) => state.userPrograms);
+  console.log(userpragrams)
   const userInfo = useSelector((state) => state.userInfo);
   const { feeds } = useSelector((state) => state.feeds);
   const token = localStorage.getItem("access_token");
@@ -53,6 +54,7 @@ export const Mentee = () => {
   const categoryId = searchParams.get("category_id");
   const categoryIDParams=categoryId?`&category_id=${categoryId}`:""
   const categoryIDParamsAll=categoryId?`?category_id=${categoryId}`:""
+  const currentType = searchParams.get("type");
   React.useEffect(() => {
     if (!decoded?.category_added) {
       setOpenCategory(true);
@@ -89,6 +91,9 @@ export const Mentee = () => {
 
     if (filterType && filterType !== "") {
       query = { type: "status", value: filterType };
+    }else{
+      setSearchParams({ type: "yettojoin" });
+      query = { type: "status", value: "yettojoin" };
     }
 
     if (isBookmark && isBookmark !== "") {
@@ -129,6 +134,13 @@ export const Mentee = () => {
   useEffect(() => {
     const filterType = searchParams.get("type");
     const isBookmark = searchParams.get("is_bookmark");
+    let query = {};
+    if (filterType && filterType !== "") {
+      query = { type: "status", value: filterType };
+    }else{
+      setSearchParams({ type: "yettojoin" });
+      query = { type: "status", value: "yettojoin" };
+    }
     dispatch(getMenteeProgramCount());
     getTopMentors();
     fetchTopPrograms()
@@ -137,27 +149,10 @@ export const Mentee = () => {
       isBookmark === null &&
       userInfo?.data?.is_registered
     ) {
-      dispatch(getMenteePrograms({}));
+      dispatch(getMenteePrograms(query));
     }
   }, []);
-  useEffect(() => {
-    const currentType = searchParams.get("type");
-    
-    // If there's no type and no bookmark parameter, set type to planned while preserving other params
-    if (!currentType) {
-      const newSearchParams = new URLSearchParams(searchParams);
-      
-      // Preserve all existing parameters
-      for (const [key, value] of searchParams.entries()) {
-        newSearchParams.set(key, value);
-      }
-      
-      // Add the type parameter
-      newSearchParams.set("type", "planned");
-      
-      setSearchParams(newSearchParams);
-    }
-  }, []);
+
   const handleNavigateDetails = (program) => {
     let baseUrl = pipeUrls.programdetails;
     if (Object.keys(program).length) {

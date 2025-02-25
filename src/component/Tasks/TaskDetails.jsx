@@ -681,7 +681,6 @@ export const TaskDetails = () => {
               {(!isPreview && ["inprogress","waiting_for_approval","completed","pending","draft", "reassigned"].includes(taskData.status)) && (
                 <div className='py-6 mb-10'>
                   {taskData.status === TaskAllStatus.inprogress ||
-                    taskData.status === TaskAllStatus.pending ||
                     taskData.status === TaskAllStatus.draft ||
                     taskData?.status === "reassigned"
                      ? (

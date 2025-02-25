@@ -56,7 +56,11 @@ export const Mentor = () => {
     const categoryFilter = searchParams.get("category_id");
     if (filterType && filterType !== "") {
       query = { type: "status", value: filterType };
+    }else{
+      setSearchParams({ type: "yettojoin" });
+      query = { type: "status", value: "yettojoin" };
     }
+
 
     if (isBookmark && isBookmark !== "") {
       query = { type: "is_bookmark", value: isBookmark };
@@ -191,9 +195,16 @@ export const Mentor = () => {
   useEffect(() => {
     const filterType = searchParams.get("type");
     const isBookmark = searchParams.get("is_bookmark");
+    let query = {};
+    if (filterType && filterType !== "") {
+      query = { type: "status", value: filterType };
+    }else{
+      setSearchParams({ type: "yettojoin" });
+      query = { type: "status", value: "yettojoin" };
+    }
     dispatch(getProgramCounts());
     if (filterType === null && isBookmark === null) {
-      dispatch(getUserPrograms({}));
+      dispatch(getUserPrograms(query));
     }
   }, []);
 
@@ -221,24 +232,6 @@ export const Mentor = () => {
       setTopMentorList(topMentor.data.results);
     }
   };
-  useEffect(() => {
-    const currentType = searchParams.get("type");
-    
-    // If there's no type and no bookmark parameter, set type to planned while preserving other params
-    if (!currentType) {
-      const newSearchParams = new URLSearchParams(searchParams);
-      
-      // Preserve all existing parameters
-      for (const [key, value] of searchParams.entries()) {
-        newSearchParams.set(key, value);
-      }
-      
-      // Add the type parameter
-      newSearchParams.set("type", "yettojoin");
-      
-      setSearchParams(newSearchParams);
-    }
-  }, []);
   return (
     <>
       <div className="dashboard-content px-8 mt-10">

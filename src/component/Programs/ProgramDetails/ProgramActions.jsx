@@ -144,7 +144,7 @@ const ProgramActions = ({
   const renderMentorActions = () => {
     if (role !== "mentor") return null;
 
-    if(programdetails?.request_data?.status === "approved"){
+    if(programdetails?.request_data?.status === "approved"&&programdetails?.request_data?.request_type !== "program_assign"){
       return(
         <ApprovedTag />
       )
