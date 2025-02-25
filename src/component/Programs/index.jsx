@@ -291,8 +291,7 @@ export default function Programs() {
 
     // dispatch(updateProgram({ id: program.id, is_bookmark: !program.is_bookmark }))
   };
- 
-  
+
   const handleFilter = (selectedIds) => {
     setSelectedCategories(selectedIds);
     // Update URL params if needed
@@ -343,7 +342,6 @@ export default function Programs() {
         filter_by: programFilter.filter_by
           ? programFilter.filter_by
           : filterDate,
-         
       }),
     };
     let query = {};
@@ -387,7 +385,6 @@ export default function Programs() {
       refetch();
       // dispatch(getUserPrograms(query));
     }
-
   };
   const getTableData = (search = "") => {
     const payload = {
@@ -428,6 +425,17 @@ export default function Programs() {
       }
     }
   };
+  const buttonStyle = {
+    background: "rgb(29, 91, 191)",
+    color: "rgb(255, 255, 255)",
+    padding: "2px 20px",
+    height: "32px",
+    margin: "9px 0px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: "3px",
+  };
 
   useEffect(() => {
     if (programView === "list") {
@@ -445,13 +453,17 @@ export default function Programs() {
       renderCell: (params) => {
         return (
           <>
-            <div
-              className="cursor-pointer flex items-center h-full"
-              onClick={(e) => handleMoreClick(e, params.row)}
-            >
-              <img src={MoreIcon} alt="MoreIcon" />
+            <div className="flex justify-start">
+              {/* <img src={MoreIcon} alt="MoreIcon" /> */}
+              
+              <button
+                onClick={() => handleNavigation(params.row)}
+                style={buttonStyle}
+              >
+                View
+              </button>
             </div>
-            <Menu
+            {/* <Menu
               id="basic-menu"
               anchorEl={anchorEl}
               open={open}
@@ -467,7 +479,7 @@ export default function Programs() {
                 <img src={ViewIcon} alt="ViewIcon" className="pr-3 w-[30px]" />
                 View
               </MenuItem>
-            </Menu>
+            </Menu> */}
           </>
         );
       },
@@ -487,7 +499,7 @@ export default function Programs() {
     // If no filterType, set default based on role
     if (role === "mentee") return "planned";
     if (role === "mentor" || role === "admin") return "yettojoin";
-    
+
     // Fallback case
     return "";
   };
@@ -680,7 +692,6 @@ export default function Programs() {
             filter_by: programFilter.filter_by
               ? programFilter.filter_by
               : filterDate,
-            
           }),
         })
       );
@@ -697,7 +708,7 @@ export default function Programs() {
         })
       );
     }
-  }, [role, searchParams, programFilter,categoryFilter]);
+  }, [role, searchParams, programFilter, categoryFilter]);
   const getProgramMenuDisplayName = ({
     filterType,
     role,
@@ -798,13 +809,13 @@ export default function Programs() {
               <div className="flex gap-4 mb-2 md:mb-0">
                 <div>{displayName}</div>
                 <CategoryFilter
-      categories={categoryList}
-      onFilter={handleFilter}
-      categories_id={categoryFilter}
-      initialSelected={selectedCategories}
-      handleGetCategory={handleGetCategoryforFilter}
-      // triggerIcon={}
-    />
+                  categories={categoryList}
+                  onFilter={handleFilter}
+                  categories_id={categoryFilter}
+                  initialSelected={selectedCategories}
+                  handleGetCategory={handleGetCategoryforFilter}
+                  // triggerIcon={}
+                />
                 <img
                   src={programView === "grid" ? ListViewIcon : GridViewIcon}
                   className="cursor-pointer"

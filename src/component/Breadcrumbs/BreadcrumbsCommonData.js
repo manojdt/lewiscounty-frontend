@@ -518,10 +518,10 @@ export const admin_mentorMember = (name) => {
     return [
       {
         label: "Users",
-        path: `/members?tabType=${requestPageBreadcrumbs?.adminMemberMentorTab}`,
+        path: `/members`,
       },
       {
-        label: `Mentor Profile`,
+        label: `User Profile`,
       },
     ];
   };
@@ -529,10 +529,10 @@ export const admin_menteeMember = (name) => {
     return [
       {
         label: "Users",
-        path: `/members?tabType=${requestPageBreadcrumbs?.adminMemberMenteeTab}`,
+        path: `/members`,
       },
       {
-        label: `Mentee Profile`,
+        label: `User Profile`,
       },
     ];
   };
@@ -1011,7 +1011,7 @@ export const memberMentorDashBoard = () => {
       path: -1,
     },
     {
-      label: `Mentors`,
+      label: `Users`,
     },
   ];
 };
@@ -1022,7 +1022,7 @@ export const memberMenteeDashBoard = () => {
       path: -1,
     },
     {
-      label: `Mentees`,
+      label: `Users`,
     },
   ];
 };
