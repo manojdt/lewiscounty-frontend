@@ -1033,7 +1033,7 @@ export const TaskDetails = () => {
                   ) : null}                  
                   <div className='reference-link flex justify-between mb-2'>
                     <div className='reference-view'>
-                      <p className='py-4'>Reference View</p>
+                      <p className='py-4'>Reference</p>
                       <ul className='leading-10'>
                         {docs?.map((doc, index) => (
                           <li key={index}>
